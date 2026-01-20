@@ -36,7 +36,7 @@ This file tracks the implementation progress for Active Memory CLI.
 - [x] Write integration tests for CLI commands
 - [x] Create `scripts/build-all.sh` for cross-platform builds
 - [x] Create `.github/workflows/release.yml` for GitHub Actions
-- [ ] Create `examples/demo/` with sample `.context/` directory
+- [x] Create `examples/demo/` with sample `.context/` directory
 - [ ] Update README.md with installation and usage instructions
 
 ## Notes
