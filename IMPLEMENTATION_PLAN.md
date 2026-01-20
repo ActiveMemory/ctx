@@ -9,7 +9,7 @@ This file tracks the implementation progress for Active Memory CLI.
 - [x] Add all template files to `templates/` directory
 
 ## Milestone 2: Core Commands (MVP)
-- [ ] Implement `amem init` — Create `.context/` with template files
+- [x] Implement `amem init` — Create `.context/` with template files
 - [ ] Implement `amem status` — Show context summary with token estimate
 - [ ] Implement `amem load` — Output assembled context markdown
 
