@@ -34,7 +34,7 @@ This file tracks the implementation progress for Active Memory CLI.
 - [x] Write unit tests for `internal/context/` (loader, parser)
 - [x] Write unit tests for `internal/drift/` (detector)
 - [x] Write integration tests for CLI commands
-- [ ] Create `scripts/build-all.sh` for cross-platform builds
+- [x] Create `scripts/build-all.sh` for cross-platform builds
 - [ ] Create `.github/workflows/release.yml` for GitHub Actions
 - [ ] Create `examples/demo/` with sample `.context/` directory
 - [ ] Update README.md with installation and usage instructions
