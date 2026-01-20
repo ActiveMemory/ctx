@@ -21,7 +21,7 @@ This file tracks the implementation progress for Active Memory CLI.
 ## Milestone 4: Maintenance Commands
 - [x] Implement `amem drift` — Detect stale paths, broken refs (text output)
 - [x] Implement `amem drift --json` — JSON output for automation
-- [ ] Implement `amem sync` — Reconcile context with codebase
+- [x] Implement `amem sync` — Reconcile context with codebase
 - [ ] Implement `amem compact` — Archive completed tasks
 - [ ] Implement `amem watch` — Watch for context-update commands
 
