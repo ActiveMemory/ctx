@@ -14,7 +14,7 @@ This file tracks the implementation progress for Active Memory CLI.
 - [x] Implement `amem load` — Output assembled context markdown
 
 ## Milestone 3: Context Operations
-- [ ] Implement `amem add` — Add decision/task/learning/convention
+- [x] Implement `amem add` — Add decision/task/learning/convention
 - [ ] Implement `amem complete` — Mark task as done
 - [ ] Implement `amem agent` — Print AI-ready context packet
 
