@@ -34,6 +34,7 @@ func init() {
 	rootCmd.AddCommand(cli.SyncCmd())
 	rootCmd.AddCommand(cli.CompactCmd())
 	rootCmd.AddCommand(cli.WatchCmd())
+	rootCmd.AddCommand(cli.HookCmd())
 }
 
 func main() {

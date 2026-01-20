@@ -26,9 +26,9 @@ This file tracks the implementation progress for Active Memory CLI.
 - [x] Implement `amem watch` — Watch for context-update commands
 
 ## Milestone 5: Integration
-- [ ] Implement `amem hook` — Generate AI tool integration configs
-- [ ] Add `--help` text for all commands
-- [ ] Add `--version` flag with build-time version
+- [x] Implement `amem hook` — Generate AI tool integration configs
+- [x] Add `--help` text for all commands
+- [x] Add `--version` flag with build-time version
 
 ## Milestone 6: Testing & Release
 - [ ] Write unit tests for `internal/context/` (loader, parser)
