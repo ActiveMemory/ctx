@@ -25,6 +25,7 @@ then use 'amem status', 'amem load', and 'amem agent' to work with context.`,
 
 func init() {
 	rootCmd.AddCommand(cli.InitCmd())
+	rootCmd.AddCommand(cli.StatusCmd())
 }
 
 func main() {
