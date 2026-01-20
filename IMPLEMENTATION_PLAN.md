@@ -5,8 +5,8 @@ This file tracks the implementation progress for Active Memory CLI.
 ## Milestone 1: Project Scaffolding
 - [x] Initialize Go module and directory structure
 - [x] Create Cobra CLI skeleton in `cmd/amem/main.go`
-- [ ] Create embedded templates in `internal/templates/`
-- [ ] Add all template files to `templates/` directory
+- [x] Create embedded templates in `internal/templates/`
+- [x] Add all template files to `templates/` directory
 
 ## Milestone 2: Core Commands (MVP)
 - [ ] Implement `amem init` — Create `.context/` with template files
