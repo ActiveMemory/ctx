@@ -60,44 +60,45 @@ Read `IMPLEMENTATION_PLAN.md` and pick the **first unchecked item**.
 
 **IF NO UNCHECKED ITEMS:** Output `<promise>DONE</promise>` and exit.
 
-**Task Priority Order** (if no plan exists yet):
+**NOTE:** Task tracking is done in `IMPLEMENTATION_PLAN.md`, not here.
+The milestones below are for reference only when creating a new plan.
 
 ### Milestone 1: Project Scaffolding
-- [ ] Initialize Go module and directory structure
-- [ ] Create Cobra CLI skeleton in `cmd/amem/main.go`
-- [ ] Create embedded templates in `internal/templates/`
-- [ ] Add all template files to `templates/` directory
+- Initialize Go module and directory structure
+- Create Cobra CLI skeleton in `cmd/amem/main.go`
+- Create embedded templates in `internal/templates/`
+- Add all template files to `templates/` directory
 
 ### Milestone 2: Core Commands (MVP)
-- [ ] Implement `amem init` — Create `.context/` with template files
-- [ ] Implement `amem status` — Show context summary with token estimate
-- [ ] Implement `amem load` — Output assembled context markdown
+- Implement `amem init` — Create `.context/` with template files
+- Implement `amem status` — Show context summary with token estimate
+- Implement `amem load` — Output assembled context markdown
 
 ### Milestone 3: Context Operations
-- [ ] Implement `amem add` — Add decision/task/learning/convention
-- [ ] Implement `amem complete` — Mark task as done
-- [ ] Implement `amem agent` — Print AI-ready context packet
+- Implement `amem add` — Add decision/task/learning/convention
+- Implement `amem complete` — Mark task as done
+- Implement `amem agent` — Print AI-ready context packet
 
 ### Milestone 4: Maintenance Commands
-- [ ] Implement `amem drift` — Detect stale paths, broken refs (text output)
-- [ ] Implement `amem drift --json` — JSON output for automation
-- [ ] Implement `amem sync` — Reconcile context with codebase
-- [ ] Implement `amem compact` — Archive completed tasks
-- [ ] Implement `amem watch` — Watch for context-update commands
+- Implement `amem drift` — Detect stale paths, broken refs (text output)
+- Implement `amem drift --json` — JSON output for automation
+- Implement `amem sync` — Reconcile context with codebase
+- Implement `amem compact` — Archive completed tasks
+- Implement `amem watch` — Watch for context-update commands
 
 ### Milestone 5: Integration
-- [ ] Implement `amem hook` — Generate AI tool integration configs
-- [ ] Add `--help` text for all commands
-- [ ] Add `--version` flag with build-time version
+- Implement `amem hook` — Generate AI tool integration configs
+- Add `--help` text for all commands
+- Add `--version` flag with build-time version
 
 ### Milestone 6: Testing & Release
-- [ ] Write unit tests for `internal/context/` (loader, parser)
-- [ ] Write unit tests for `internal/drift/` (detector)
-- [ ] Write integration tests for CLI commands
-- [ ] Create `scripts/build-all.sh` for cross-platform builds
-- [ ] Create `.github/workflows/release.yml` for GitHub Actions
-- [ ] Create `examples/demo/` with sample `.context/` directory
-- [ ] Update README.md with installation and usage instructions
+- Write unit tests for `internal/context/` (loader, parser)
+- Write unit tests for `internal/drift/` (detector)
+- Write integration tests for CLI commands
+- Create `scripts/build-all.sh` for cross-platform builds
+- Create `.github/workflows/release.yml` for GitHub Actions
+- Create `examples/demo/` with sample `.context/` directory
+- Update README.md with installation and usage instructions
 
 ---
 
@@ -306,14 +307,14 @@ Never assume. If you don't see it in files, you don't know it.
 
 ## EXIT CONDITIONS
 
-Output `<promise>DONE</promise>` ONLY when ALL are true:
+Output `<promise>DONE</promise>` ONLY when ALL of these are true:
 
-- [ ] All commands in `specs/cli.md` are implemented
-- [ ] `go build ./...` passes
-- [ ] `go test ./...` passes
-- [ ] `amem init && amem status && amem drift` works end-to-end
-- [ ] `scripts/build-all.sh` produces binaries for linux/darwin/windows
-- [ ] README.md has installation instructions
+1. All commands in `specs/cli.md` are implemented
+2. `go build ./...` passes
+3. `go test ./...` passes
+4. `amem init && amem status && amem drift` works end-to-end
+5. `scripts/build-all.sh` produces binaries for linux/darwin/windows
+6. README.md has installation instructions
 
 ---
 
