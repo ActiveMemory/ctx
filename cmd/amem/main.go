@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/josealekhine/ActiveMemory/internal/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +24,7 @@ then use 'amem status', 'amem load', and 'amem agent' to work with context.`,
 }
 
 func init() {
-	// Subcommands will be added here as they are implemented
+	rootCmd.AddCommand(cli.InitCmd())
 }
 
 func main() {
