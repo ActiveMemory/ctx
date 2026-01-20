@@ -29,6 +29,7 @@ func init() {
 	rootCmd.AddCommand(cli.LoadCmd())
 	rootCmd.AddCommand(cli.AddCmd())
 	rootCmd.AddCommand(cli.CompleteCmd())
+	rootCmd.AddCommand(cli.AgentCmd())
 }
 
 func main() {

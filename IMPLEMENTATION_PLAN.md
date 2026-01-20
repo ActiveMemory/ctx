@@ -16,7 +16,7 @@ This file tracks the implementation progress for Active Memory CLI.
 ## Milestone 3: Context Operations
 - [x] Implement `amem add` — Add decision/task/learning/convention
 - [x] Implement `amem complete` — Mark task as done
-- [ ] Implement `amem agent` — Print AI-ready context packet
+- [x] Implement `amem agent` — Print AI-ready context packet
 
 ## Milestone 4: Maintenance Commands
 - [ ] Implement `amem drift` — Detect stale paths, broken refs (text output)
