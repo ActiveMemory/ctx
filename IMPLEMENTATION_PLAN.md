@@ -11,7 +11,7 @@ This file tracks the implementation progress for Active Memory CLI.
 ## Milestone 2: Core Commands (MVP)
 - [x] Implement `amem init` — Create `.context/` with template files
 - [x] Implement `amem status` — Show context summary with token estimate
-- [ ] Implement `amem load` — Output assembled context markdown
+- [x] Implement `amem load` — Output assembled context markdown
 
 ## Milestone 3: Context Operations
 - [ ] Implement `amem add` — Add decision/task/learning/convention
