@@ -5,7 +5,6 @@
 ## Next Up
 
 ### Auto-Save Enhancements `#priority:medium` `#area:cli`
-- [ ] Add PreCompact behavior — auto-save before `ctx compact` runs
 - [ ] Extract key decisions/learnings from transcript automatically
 - [ ] Consider `ctx watch --auto-save` mode
 
@@ -16,6 +15,7 @@
 
 ## Completed (Recent)
 
+- [x] Add PreCompact behavior — auto-save before `ctx compact` runs — 2026-01-21
 - [x] Implement `ctx session parse` — convert .jsonl transcript to readable markdown — 2026-01-21
 - [x] Implement `ctx session load <file>` — load/summarize a previous session — 2026-01-21
 - [x] Implement `ctx session list` — list saved sessions with summaries — 2026-01-21
