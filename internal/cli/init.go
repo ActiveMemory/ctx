@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/josealekhine/ActiveMemory/internal/claude"
@@ -21,11 +22,15 @@ const (
 	claudeHooksDirName  = ".claude/hooks"
 	settingsFileName    = ".claude/settings.local.json"
 	autoSaveScriptName  = "auto-save-session.sh"
+	claudeMdFileName    = "CLAUDE.md"
+	ctxMarkerStart      = "<!-- ctx:context -->"
+	ctxMarkerEnd        = "<!-- ctx:end -->"
 )
 
 var (
 	initForce   bool
 	initMinimal bool
+	initMerge   bool
 )
 
 // minimalTemplates are the essential files created with --minimal flag
@@ -60,6 +65,7 @@ Use --minimal to only create essential files (TASKS.md, DECISIONS.md, CONSTITUTI
 
 	cmd.Flags().BoolVarP(&initForce, "force", "f", false, "Overwrite existing context files")
 	cmd.Flags().BoolVarP(&initMinimal, "minimal", "m", false, "Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)")
+	cmd.Flags().BoolVar(&initMerge, "merge", false, "Auto-merge ctx content into existing CLAUDE.md without prompting")
 
 	return cmd
 }
@@ -99,9 +105,9 @@ func runInit(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("failed to list templates: %w", err)
 		}
-		// Filter out IMPLEMENTATION_PLAN.md - it goes in project root, not .context/
+		// Filter out files that go in project root, not .context/
 		for _, t := range allTemplates {
-			if t != "IMPLEMENTATION_PLAN.md" {
+			if t != "IMPLEMENTATION_PLAN.md" && t != "CLAUDE.md" {
 				templatesToCreate = append(templatesToCreate, t)
 			}
 		}
@@ -143,6 +149,12 @@ func runInit(cmd *cobra.Command, args []string) error {
 	if err := createClaudeHooks(initForce); err != nil {
 		// Non-fatal: warn but continue
 		fmt.Printf("  %s Claude hooks: %v\n", color.YellowString("⚠"), err)
+	}
+
+	// Handle CLAUDE.md creation/merge
+	if err := handleClaudeMd(initForce, initMerge); err != nil {
+		// Non-fatal: warn but continue
+		fmt.Printf("  %s CLAUDE.md: %v\n", color.YellowString("⚠"), err)
 	}
 
 	fmt.Println("\nNext steps:")
@@ -286,5 +298,127 @@ func createImplementationPlan(force bool) error {
 	}
 
 	fmt.Printf("  %s %s (orchestrator directive)\n", green("✓"), planFileName)
+	return nil
+}
+
+// handleClaudeMd creates or merges CLAUDE.md in the project root.
+// - If CLAUDE.md doesn't exist: create it from template
+// - If it exists but has no ctx markers: offer to merge (or auto-merge with --merge)
+// - If it exists with ctx markers: update the ctx section only (or skip if not --force)
+func handleClaudeMd(force, autoMerge bool) error {
+	green := color.New(color.FgGreen).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+
+	// Get template content
+	templateContent, err := templates.GetTemplate("CLAUDE.md")
+	if err != nil {
+		return fmt.Errorf("failed to read CLAUDE.md template: %w", err)
+	}
+
+	// Check if CLAUDE.md exists
+	existingContent, err := os.ReadFile(claudeMdFileName)
+	fileExists := err == nil
+
+	if !fileExists {
+		// File doesn't exist - create it
+		if err := os.WriteFile(claudeMdFileName, templateContent, 0644); err != nil {
+			return fmt.Errorf("failed to write %s: %w", claudeMdFileName, err)
+		}
+		fmt.Printf("  %s %s\n", green("✓"), claudeMdFileName)
+		return nil
+	}
+
+	// File exists - check for ctx markers
+	existingStr := string(existingContent)
+	hasCtxMarkers := strings.Contains(existingStr, ctxMarkerStart)
+
+	if hasCtxMarkers {
+		// Already has ctx content
+		if !force {
+			fmt.Printf("  %s %s (ctx content exists, skipped)\n", yellow("○"), claudeMdFileName)
+			return nil
+		}
+		// Force update - replace existing ctx section
+		return updateCtxSection(existingStr, templateContent, green)
+	}
+
+	// No ctx markers - need to merge
+	if !autoMerge {
+		// Prompt user
+		fmt.Printf("\n%s exists but has no ctx content.\n", claudeMdFileName)
+		fmt.Println("Would you like to append ctx context management instructions?")
+		fmt.Print("[y/N] ")
+		reader := bufio.NewReader(os.Stdin)
+		response, err := reader.ReadString('\n')
+		if err != nil {
+			return fmt.Errorf("failed to read input: %w", err)
+		}
+		response = strings.TrimSpace(strings.ToLower(response))
+		if response != "y" && response != "yes" {
+			fmt.Printf("  %s %s (skipped)\n", yellow("○"), claudeMdFileName)
+			return nil
+		}
+	}
+
+	// Backup existing file
+	timestamp := time.Now().Unix()
+	backupName := fmt.Sprintf("%s.%d.bak", claudeMdFileName, timestamp)
+	if err := os.WriteFile(backupName, existingContent, 0644); err != nil {
+		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
+	}
+	fmt.Printf("  %s %s (backup)\n", green("✓"), backupName)
+
+	// Append ctx content to existing file
+	mergedContent := existingStr + "\n" + string(templateContent)
+	if err := os.WriteFile(claudeMdFileName, []byte(mergedContent), 0644); err != nil {
+		return fmt.Errorf("failed to write merged %s: %w", claudeMdFileName, err)
+	}
+	fmt.Printf("  %s %s (merged)\n", green("✓"), claudeMdFileName)
+
+	return nil
+}
+
+// updateCtxSection replaces the existing ctx section between markers with new content
+func updateCtxSection(existing string, newTemplate []byte, green func(...interface{}) string) error {
+	// Find the start marker
+	startIdx := strings.Index(existing, ctxMarkerStart)
+	if startIdx == -1 {
+		return fmt.Errorf("ctx start marker not found")
+	}
+
+	// Find the end marker
+	endIdx := strings.Index(existing, ctxMarkerEnd)
+	if endIdx == -1 {
+		// No end marker - append from start marker to end
+		endIdx = len(existing)
+	} else {
+		endIdx += len(ctxMarkerEnd)
+	}
+
+	// Extract the ctx content from template (between markers)
+	templateStr := string(newTemplate)
+	templateStart := strings.Index(templateStr, ctxMarkerStart)
+	templateEnd := strings.Index(templateStr, ctxMarkerEnd)
+	if templateStart == -1 || templateEnd == -1 {
+		return fmt.Errorf("template missing ctx markers")
+	}
+	ctxContent := templateStr[templateStart : templateEnd+len(ctxMarkerEnd)]
+
+	// Build new content: before ctx + new ctx content + after ctx
+	newContent := existing[:startIdx] + ctxContent + existing[endIdx:]
+
+	// Backup before updating
+	timestamp := time.Now().Unix()
+	backupName := fmt.Sprintf("%s.%d.bak", claudeMdFileName, timestamp)
+	if err := os.WriteFile(backupName, []byte(existing), 0644); err != nil {
+		return fmt.Errorf("failed to create backup: %w", err)
+	}
+	fmt.Printf("  %s %s (backup)\n", green("✓"), backupName)
+
+	if err := os.WriteFile(claudeMdFileName, []byte(newContent), 0644); err != nil {
+		return fmt.Errorf("failed to update %s: %w", claudeMdFileName, err)
+	}
+	fmt.Printf("  %s %s (updated ctx section)\n", green("✓"), claudeMdFileName)
+
 	return nil
 }

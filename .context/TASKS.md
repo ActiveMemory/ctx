@@ -4,14 +4,6 @@
 
 ## Next Up
 
-### Handle CLAUDE.md Creation/Merge `#priority:high` `#area:cli`
-- [ ] Create CLAUDE.md if it doesn't exist
-- [ ] If CLAUDE.md exists, backup to CLAUDE.md.<unix_timestamp>.bak before any modification
-- [ ] Detect existing ctx content via marker comment (`<!-- ctx:context -->`)
-- [ ] If no ctx content, offer to merge (output snippet + prompt)
-- [ ] Add `--merge` flag to auto-append without prompting
-- [ ] Ensure idempotency — running init twice doesn't duplicate content
-
 ### Session Management Commands `#priority:high` `#area:cli`
 - [ ] Implement `ctx session save` — manually dump context to sessions/
 - [ ] Implement `ctx session list` — list saved sessions with summaries
@@ -30,6 +22,7 @@
 
 ## Completed (Recent)
 
+- [x] Handle CLAUDE.md creation/merge in `ctx init` (template, backup, markers, --merge flag, idempotency) — 2026-01-21
 - [x] Enhance `ctx init` to create Claude hooks (embedded scripts, settings.local.json, platform detection) — 2025-01-21
 - [x] Set up PreToolUse hook for auto-load — 2025-01-20
 - [x] Set up SessionEnd hook for auto-save — 2025-01-20
