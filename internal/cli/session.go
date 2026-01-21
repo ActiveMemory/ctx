@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -36,6 +38,7 @@ Subcommands:
 	cmd.AddCommand(sessionSaveCmd())
 	cmd.AddCommand(sessionListCmd())
 	cmd.AddCommand(sessionLoadCmd())
+	cmd.AddCommand(sessionParseCmd())
 
 	return cmd
 }
@@ -408,6 +411,205 @@ func parseIndex(s string) (int, error) {
 		return 0, fmt.Errorf("index must be positive")
 	}
 	return idx, nil
+}
+
+var parseOutput string
+
+// sessionParseCmd returns the session parse subcommand.
+func sessionParseCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "parse <file.jsonl>",
+		Short: "Convert .jsonl transcript to readable markdown",
+		Long: `Parse a Claude Code .jsonl transcript file and convert it to readable markdown.
+
+The .jsonl files are auto-saved by the SessionEnd hook and contain the full
+conversation transcript including tool calls and results.
+
+Examples:
+  ctx session parse .context/sessions/2026-01-21-072504-session.jsonl
+  ctx session parse .context/sessions/2026-01-21-072504-session.jsonl -o conversation.md`,
+		Args: cobra.ExactArgs(1),
+		RunE: runSessionParse,
+	}
+
+	cmd.Flags().StringVarP(&parseOutput, "output", "o", "", "Output file (default: stdout)")
+
+	return cmd
+}
+
+func runSessionParse(cmd *cobra.Command, args []string) error {
+	inputPath := args[0]
+
+	// Check file exists
+	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+		return fmt.Errorf("file not found: %s", inputPath)
+	}
+
+	// Parse the jsonl file
+	content, err := parseJsonlTranscript(inputPath)
+	if err != nil {
+		return fmt.Errorf("failed to parse transcript: %w", err)
+	}
+
+	// Output
+	if parseOutput != "" {
+		if err := os.WriteFile(parseOutput, []byte(content), 0644); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+		green := color.New(color.FgGreen).SprintFunc()
+		fmt.Printf("%s Parsed transcript saved to %s\n", green("✓"), parseOutput)
+	} else {
+		fmt.Println(content)
+	}
+
+	return nil
+}
+
+// transcriptEntry represents a single entry in the jsonl transcript.
+type transcriptEntry struct {
+	Type      string          `json:"type"`
+	Message   transcriptMsg   `json:"message"`
+	Timestamp string          `json:"timestamp"`
+	UUID      string          `json:"uuid"`
+}
+
+// transcriptMsg represents the message content.
+type transcriptMsg struct {
+	Role    string      `json:"role"`
+	Content interface{} `json:"content"` // Can be string or []interface{}
+}
+
+// contentBlock represents a block in assistant content array.
+type contentBlock struct {
+	Type     string `json:"type"`
+	Text     string `json:"text,omitempty"`
+	Thinking string `json:"thinking,omitempty"`
+	Name     string `json:"name,omitempty"`     // tool name
+	Input    interface{} `json:"input,omitempty"` // tool input
+}
+
+// parseJsonlTranscript parses a .jsonl file and returns formatted markdown.
+func parseJsonlTranscript(path string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	var sb strings.Builder
+	sb.WriteString("# Conversation Transcript\n\n")
+	sb.WriteString(fmt.Sprintf("**Source**: %s\n\n", filepath.Base(path)))
+	sb.WriteString("---\n\n")
+
+	scanner := bufio.NewScanner(file)
+	// Increase buffer size for large lines
+	buf := make([]byte, 0, 64*1024)
+	scanner.Buffer(buf, 10*1024*1024) // 10MB max line size
+
+	messageCount := 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+
+		var entry transcriptEntry
+		if err := json.Unmarshal([]byte(line), &entry); err != nil {
+			// Skip unparseable lines
+			continue
+		}
+
+		// Skip non-message entries
+		if entry.Type != "user" && entry.Type != "assistant" {
+			continue
+		}
+
+		messageCount++
+		formatted := formatTranscriptEntry(entry)
+		if formatted != "" {
+			sb.WriteString(formatted)
+			sb.WriteString("\n---\n\n")
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return "", fmt.Errorf("error reading file: %w", err)
+	}
+
+	sb.WriteString(fmt.Sprintf("*Total messages: %d*\n", messageCount))
+
+	return sb.String(), nil
+}
+
+// formatTranscriptEntry formats a single transcript entry as markdown.
+func formatTranscriptEntry(entry transcriptEntry) string {
+	var sb strings.Builder
+
+	// Header with role and timestamp
+	role := strings.ToUpper(entry.Message.Role[:1]) + entry.Message.Role[1:]
+	sb.WriteString(fmt.Sprintf("## %s\n\n", role))
+
+	if entry.Timestamp != "" {
+		// Parse and format timestamp
+		if t, err := time.Parse(time.RFC3339, entry.Timestamp); err == nil {
+			sb.WriteString(fmt.Sprintf("*%s*\n\n", t.Format("2006-01-02 15:04:05")))
+		}
+	}
+
+	// Handle content
+	switch content := entry.Message.Content.(type) {
+	case string:
+		sb.WriteString(content)
+		sb.WriteString("\n")
+	case []interface{}:
+		for _, block := range content {
+			blockMap, ok := block.(map[string]interface{})
+			if !ok {
+				continue
+			}
+
+			blockType, _ := blockMap["type"].(string)
+			switch blockType {
+			case "text":
+				if text, ok := blockMap["text"].(string); ok {
+					sb.WriteString(text)
+					sb.WriteString("\n")
+				}
+			case "thinking":
+				if thinking, ok := blockMap["thinking"].(string); ok {
+					sb.WriteString("<details>\n<summary>💭 Thinking</summary>\n\n")
+					sb.WriteString(thinking)
+					sb.WriteString("\n</details>\n\n")
+				}
+			case "tool_use":
+				name, _ := blockMap["name"].(string)
+				sb.WriteString(fmt.Sprintf("**🔧 Tool: %s**\n", name))
+				if input, ok := blockMap["input"].(map[string]interface{}); ok {
+					// Show key parameters
+					for k, v := range input {
+						vStr := fmt.Sprintf("%v", v)
+						if len(vStr) > 100 {
+							vStr = vStr[:100] + "..."
+						}
+						sb.WriteString(fmt.Sprintf("- %s: `%s`\n", k, vStr))
+					}
+				}
+				sb.WriteString("\n")
+			case "tool_result":
+				sb.WriteString("**📋 Tool Result**\n")
+				if result, ok := blockMap["content"].(string); ok {
+					if len(result) > 500 {
+						result = result[:500] + "...(truncated)"
+					}
+					sb.WriteString("```\n")
+					sb.WriteString(result)
+					sb.WriteString("\n```\n\n")
+				}
+			}
+		}
+	}
+
+	return sb.String()
 }
 
 // sanitizeFilename converts a topic string to a safe filename component.
