@@ -5,7 +5,7 @@
 ## Next Up
 
 ### Auto-Save Enhancements `#priority:medium` `#area:cli`
-- [ ] Consider `ctx watch --auto-save` mode
+- [x] Implement `ctx watch --auto-save` mode — 2026-01-21
 
 ### Documentation `#priority:medium` `#area:docs`
 - [ ] Document Claude Code integration in README

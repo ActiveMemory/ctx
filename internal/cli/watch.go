@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/josealekhine/ActiveMemory/internal/context"
@@ -14,8 +16,9 @@ import (
 )
 
 var (
-	watchLog    string
-	watchDryRun bool
+	watchLog      string
+	watchDryRun   bool
+	watchAutoSave bool
 )
 
 // WatchCmd returns the watch command.
@@ -34,6 +37,7 @@ This command parses AI output looking for structured update commands:
 
 Use --log to watch a specific file instead of stdin.
 Use --dry-run to see what would be updated without making changes.
+Use --auto-save to periodically save session snapshots (every 5 updates).
 
 Press Ctrl+C to stop watching.`,
 		RunE: runWatch,
@@ -41,6 +45,7 @@ Press Ctrl+C to stop watching.`,
 
 	cmd.Flags().StringVar(&watchLog, "log", "", "Log file to watch (default: stdin)")
 	cmd.Flags().BoolVar(&watchDryRun, "dry-run", false, "Show updates without applying")
+	cmd.Flags().BoolVar(&watchAutoSave, "auto-save", false, "Save session snapshots periodically")
 
 	return cmd
 }
@@ -81,6 +86,9 @@ func runWatch(cmd *cobra.Command, args []string) error {
 	return processStream(reader)
 }
 
+// autoSaveInterval is the number of updates between auto-saves.
+const autoSaveInterval = 5
+
 func processStream(reader io.Reader) error {
 	scanner := bufio.NewScanner(reader)
 	// Use a larger buffer for long lines
@@ -92,6 +100,11 @@ func processStream(reader io.Reader) error {
 
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
+	cyan := color.New(color.FgCyan).SprintFunc()
+
+	// Track applied updates for auto-save
+	updateCount := 0
+	appliedUpdates := []ContextUpdate{}
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -113,9 +126,29 @@ func processStream(reader io.Reader) error {
 						fmt.Printf("%s Failed to apply [%s]: %v\n", color.RedString("✗"), update.Type, err)
 					} else {
 						fmt.Printf("%s Applied: [%s] %s\n", green("✓"), update.Type, update.Content)
+						updateCount++
+						appliedUpdates = append(appliedUpdates, update)
+
+						// Auto-save every N updates
+						if watchAutoSave && updateCount%autoSaveInterval == 0 {
+							if err := watchAutoSaveSession(appliedUpdates); err != nil {
+								fmt.Printf("%s Auto-save failed: %v\n", yellow("⚠"), err)
+							} else {
+								fmt.Printf("%s Auto-saved session after %d updates\n", cyan("📸"), updateCount)
+							}
+						}
 					}
 				}
 			}
+		}
+	}
+
+	// Final auto-save if there are remaining updates
+	if watchAutoSave && len(appliedUpdates) > 0 && updateCount%autoSaveInterval != 0 {
+		if err := watchAutoSaveSession(appliedUpdates); err != nil {
+			fmt.Printf("%s Final auto-save failed: %v\n", yellow("⚠"), err)
+		} else {
+			fmt.Printf("%s Final auto-save completed (%d total updates)\n", cyan("📸"), updateCount)
 		}
 	}
 
@@ -242,4 +275,76 @@ func runCompleteSilent(args []string) error {
 
 	lines[matchedLine] = taskPattern.ReplaceAllString(lines[matchedLine], "$1- [x] $2")
 	return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0644)
+}
+
+// watchAutoSaveSession saves a session snapshot during watch mode.
+func watchAutoSaveSession(updates []ContextUpdate) error {
+	// Ensure sessions directory exists
+	sessionsDir := filepath.Join(contextDirName, "sessions")
+	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
+		return fmt.Errorf("failed to create sessions directory: %w", err)
+	}
+
+	// Generate filename
+	now := time.Now()
+	filename := fmt.Sprintf("%s-watch.md", now.Format("2006-01-02-150405"))
+	filePath := filepath.Join(sessionsDir, filename)
+
+	// Build session content
+	content := buildWatchSession(now, updates)
+
+	// Write file
+	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+		return fmt.Errorf("failed to write session file: %w", err)
+	}
+
+	return nil
+}
+
+// buildWatchSession creates a session snapshot from watch mode updates.
+func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
+	var sb strings.Builder
+
+	sb.WriteString("# Watch Mode Session\n\n")
+	sb.WriteString(fmt.Sprintf("**Date**: %s\n", timestamp.Format("2006-01-02")))
+	sb.WriteString(fmt.Sprintf("**Time**: %s\n", timestamp.Format("15:04:05")))
+	sb.WriteString("**Type**: watch-auto-save\n\n")
+	sb.WriteString("---\n\n")
+
+	sb.WriteString("## Applied Updates\n\n")
+
+	// Group updates by type
+	updatesByType := make(map[string][]string)
+	for _, u := range updates {
+		updatesByType[u.Type] = append(updatesByType[u.Type], u.Content)
+	}
+
+	// Write updates by type
+	typeOrder := []string{"task", "decision", "learning", "convention", "complete"}
+	for _, t := range typeOrder {
+		contents, ok := updatesByType[t]
+		if !ok || len(contents) == 0 {
+			continue
+		}
+		sb.WriteString(fmt.Sprintf("### %s\n\n", strings.Title(t+"s")))
+		for _, c := range contents {
+			sb.WriteString(fmt.Sprintf("- %s\n", c))
+		}
+		sb.WriteString("\n")
+	}
+
+	// Add current context snapshot
+	sb.WriteString("---\n\n")
+	sb.WriteString("## Context Snapshot\n\n")
+
+	// Read TASKS.md
+	tasksPath := filepath.Join(contextDirName, "TASKS.md")
+	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
+		sb.WriteString("### Current Tasks\n\n")
+		sb.WriteString("```markdown\n")
+		sb.WriteString(string(tasksContent))
+		sb.WriteString("\n```\n\n")
+	}
+
+	return sb.String()
 }
