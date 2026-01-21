@@ -5,7 +5,6 @@
 ## Next Up
 
 ### Session Management Commands `#priority:high` `#area:cli`
-- [ ] Implement `ctx session load <file>` — load/summarize a previous session
 - [ ] Implement `ctx session parse` — convert .jsonl transcript to readable markdown
 
 ### Auto-Save Enhancements `#priority:medium` `#area:cli`
@@ -20,6 +19,7 @@
 
 ## Completed (Recent)
 
+- [x] Implement `ctx session load <file>` — load/summarize a previous session — 2026-01-21
 - [x] Implement `ctx session list` — list saved sessions with summaries — 2026-01-21
 - [x] Implement `ctx session save` — manually dump context to sessions/ — 2026-01-21
 - [x] Handle CLAUDE.md creation/merge in `ctx init` (template, backup, markers, --merge flag, idempotency) — 2026-01-21

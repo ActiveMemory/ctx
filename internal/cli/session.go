@@ -35,6 +35,7 @@ Subcommands:
 
 	cmd.AddCommand(sessionSaveCmd())
 	cmd.AddCommand(sessionListCmd())
+	cmd.AddCommand(sessionLoadCmd())
 
 	return cmd
 }
@@ -276,6 +277,137 @@ func truncate(s string, maxLen int) string {
 		return s
 	}
 	return s[:maxLen-3] + "..."
+}
+
+// sessionLoadCmd returns the session load subcommand.
+func sessionLoadCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "load <file>",
+		Short: "Load and display a previous session",
+		Long: `Load and display the contents of a saved session.
+
+The file argument can be:
+  - A full filename (e.g., 2025-01-21-004900-ctx-rename.md)
+  - A partial match (e.g., "ctx-rename" or "2025-01-21")
+  - A number from 'ctx session list' output (1 = most recent)
+
+Examples:
+  ctx session load 2025-01-21-004900-ctx-rename.md
+  ctx session load ctx-rename
+  ctx session load 1`,
+		Args: cobra.ExactArgs(1),
+		RunE: runSessionLoad,
+	}
+
+	return cmd
+}
+
+func runSessionLoad(cmd *cobra.Command, args []string) error {
+	query := args[0]
+
+	// Check if sessions directory exists
+	if _, err := os.Stat(sessionsDirName); os.IsNotExist(err) {
+		return fmt.Errorf("no sessions directory found. Run 'ctx session save' first")
+	}
+
+	// Find matching session file
+	filePath, err := findSessionFile(query)
+	if err != nil {
+		return err
+	}
+
+	// Read and display
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to read session file: %w", err)
+	}
+
+	cyan := color.New(color.FgCyan).SprintFunc()
+	fmt.Printf("%s Loading: %s\n\n", cyan("●"), filepath.Base(filePath))
+	fmt.Println(string(content))
+
+	return nil
+}
+
+// findSessionFile finds a session file matching the query.
+// Query can be a full filename, partial match, or numeric index.
+func findSessionFile(query string) (string, error) {
+	// Read directory
+	entries, err := os.ReadDir(sessionsDirName)
+	if err != nil {
+		return "", fmt.Errorf("failed to read sessions directory: %w", err)
+	}
+
+	// Collect .md files (excluding -summary.md)
+	var sessions []string
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if !strings.HasSuffix(name, ".md") {
+			continue
+		}
+		if strings.HasSuffix(name, "-summary.md") {
+			continue
+		}
+		sessions = append(sessions, name)
+	}
+
+	if len(sessions) == 0 {
+		return "", fmt.Errorf("no sessions found")
+	}
+
+	// Reverse sort (newest first) for numeric indexing
+	for i, j := 0, len(sessions)-1; i < j; i, j = i+1, j-1 {
+		sessions[i], sessions[j] = sessions[j], sessions[i]
+	}
+
+	// Check if query is a number (index)
+	if idx, err := parseIndex(query); err == nil {
+		if idx < 1 || idx > len(sessions) {
+			return "", fmt.Errorf("index %d out of range (1-%d)", idx, len(sessions))
+		}
+		return filepath.Join(sessionsDirName, sessions[idx-1]), nil
+	}
+
+	// Check for exact match
+	for _, name := range sessions {
+		if name == query {
+			return filepath.Join(sessionsDirName, name), nil
+		}
+	}
+
+	// Check for partial match
+	query = strings.ToLower(query)
+	var matches []string
+	for _, name := range sessions {
+		if strings.Contains(strings.ToLower(name), query) {
+			matches = append(matches, name)
+		}
+	}
+
+	if len(matches) == 0 {
+		return "", fmt.Errorf("no session found matching %q", query)
+	}
+	if len(matches) > 1 {
+		return "", fmt.Errorf("multiple sessions match %q: %v", query, matches)
+	}
+
+	return filepath.Join(sessionsDirName, matches[0]), nil
+}
+
+// parseIndex attempts to parse a string as a positive integer index.
+func parseIndex(s string) (int, error) {
+	var idx int
+	_, err := fmt.Sscanf(s, "%d", &idx)
+	if err != nil {
+		return 0, err
+	}
+	if idx < 1 {
+		return 0, fmt.Errorf("index must be positive")
+	}
+	return idx, nil
 }
 
 // sanitizeFilename converts a topic string to a safe filename component.
