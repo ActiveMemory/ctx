@@ -125,9 +125,13 @@ ctx drift
 | `ctx complete <query>` | Mark matching task as done |
 | `ctx drift [--json]` | Detect stale paths, broken refs |
 | `ctx sync [--auto]` | Reconcile context with codebase |
-| `ctx compact` | Archive completed tasks |
-| `ctx watch [--log FILE]` | Watch for context-update commands |
+| `ctx compact` | Archive completed tasks (auto-saves first) |
+| `ctx watch [--auto-save]` | Watch for context-update commands |
 | `ctx hook <tool>` | Generate AI tool integration config |
+| `ctx session save [topic]` | Save context snapshot to sessions/ |
+| `ctx session list` | List saved sessions |
+| `ctx session load <file>` | Load/display a previous session |
+| `ctx session parse <file>` | Parse JSONL transcript to markdown |
 
 ### Examples
 
@@ -164,7 +168,11 @@ ctx drift --json
 ├── DEPENDENCIES.md     # Key dependencies and why chosen
 ├── GLOSSARY.md         # Domain terms and abbreviations
 ├── DRIFT.md            # Staleness signals and update triggers
-└── AGENT_PLAYBOOK.md   # How AI agents should use this system
+├── AGENT_PLAYBOOK.md   # How AI agents should use this system
+└── sessions/           # Session snapshots (auto-saved and manual)
+    ├── 2026-01-20-experiment.md
+    ├── 2026-01-21-feature-auth.md
+    └── ...
 ```
 
 ## AI Tool Integration
@@ -179,29 +187,56 @@ ctx hook copilot      # GitHub Copilot
 ctx hook windsurf     # Windsurf IDE
 ```
 
-### Claude Code
+### Claude Code (Full Integration)
 
-Add to your project's `CLAUDE.md`:
+Running `ctx init` automatically sets up Claude Code integration:
 
-```markdown
-## Active Memory Context
-
-Before starting any task, load the project context:
-
-1. Read .context/CONSTITUTION.md — These rules are INVIOLABLE
-2. Read .context/TASKS.md — Current work items
-3. Read .context/CONVENTIONS.md — Project patterns
-4. Read .context/ARCHITECTURE.md — System overview
-5. Read .context/DECISIONS.md — Why things are the way they are
-
-When you make changes:
-- Add decisions: <context-update type="decision">Your decision</context-update>
-- Add tasks: <context-update type="task">New task</context-update>
-- Add learnings: <context-update type="learning">What you learned</context-update>
-- Complete tasks: <context-update type="complete">task description</context-update>
-
-Run 'ctx agent' for a quick context summary.
+```bash
+ctx init
+# Creates:
+#   .context/           - Context files
+#   .claude/hooks/      - Auto-save scripts
+#   .claude/settings.local.json - Hook configuration
+#   CLAUDE.md           - Bootstrap instructions for Claude
 ```
+
+**What gets configured:**
+
+| Component | Purpose |
+|-----------|---------|
+| `PreToolUse` hook | Runs `ctx agent` before every tool use — context auto-loads |
+| `SessionEnd` hook | Saves session snapshot when conversation ends |
+| `CLAUDE.md` | Tells Claude to read `.context/` files on session start |
+
+**Session Management:**
+
+```bash
+# Save current session (context snapshot)
+ctx session save "feature-auth"
+
+# List previous sessions
+ctx session list
+
+# Load a previous session
+ctx session load 1              # by index
+ctx session load 2026-01-21     # by date
+ctx session load auth           # by topic
+
+# Parse Claude transcript to readable markdown
+ctx session parse ~/.claude/projects/.../transcript.jsonl
+
+# Extract decisions and learnings from transcript
+ctx session parse transcript.jsonl --extract
+```
+
+**How it works:**
+
+1. **Session start**: Claude reads `CLAUDE.md`, which tells it to check `.context/`
+2. **During session**: `PreToolUse` hook runs `ctx agent --budget 4000` before each tool use
+3. **Session end**: `SessionEnd` hook saves context snapshot to `.context/sessions/`
+4. **Next session**: Claude sees previous sessions in `.context/sessions/`
+
+This gives Claude **temporal continuity** — it knows what happened in previous sessions.
 
 ### Automated Context Updates
 

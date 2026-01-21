@@ -8,7 +8,7 @@
 - [x] Implement `ctx watch --auto-save` mode — 2026-01-21
 
 ### Documentation `#priority:medium` `#area:docs`
-- [ ] Document Claude Code integration in README
+- [x] Document Claude Code integration in README — 2026-01-21
 - [ ] Add "Dogfooding Guide" — how to use ctx on ctx itself
 - [ ] Document session auto-save setup for new users
 
