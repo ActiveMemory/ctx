@@ -34,6 +34,7 @@ Subcommands:
 	}
 
 	cmd.AddCommand(sessionSaveCmd())
+	cmd.AddCommand(sessionListCmd())
 
 	return cmd
 }
@@ -104,6 +105,177 @@ func runSessionSave(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("%s Session saved to %s\n", green("✓"), filePath)
 	return nil
+}
+
+var listLimit int
+
+// sessionListCmd returns the session list subcommand.
+func sessionListCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list",
+		Short: "List saved sessions with summaries",
+		Long: `List all saved sessions in .context/sessions/.
+
+Shows session date, topic, type, and a brief summary for each session.
+Sessions are sorted by date (newest first).
+
+Examples:
+  ctx session list
+  ctx session list --limit 5`,
+		RunE: runSessionList,
+	}
+
+	cmd.Flags().IntVarP(&listLimit, "limit", "n", 10, "Maximum number of sessions to display")
+
+	return cmd
+}
+
+func runSessionList(cmd *cobra.Command, args []string) error {
+	cyan := color.New(color.FgCyan).SprintFunc()
+	gray := color.New(color.FgHiBlack).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+
+	// Check if sessions directory exists
+	if _, err := os.Stat(sessionsDirName); os.IsNotExist(err) {
+		fmt.Println("No sessions found. Use 'ctx session save' to create one.")
+		return nil
+	}
+
+	// Read directory
+	entries, err := os.ReadDir(sessionsDirName)
+	if err != nil {
+		return fmt.Errorf("failed to read sessions directory: %w", err)
+	}
+
+	// Filter and collect session files
+	var sessions []sessionInfo
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		// Only show .md files (not .jsonl transcripts)
+		if !strings.HasSuffix(name, ".md") {
+			continue
+		}
+		// Skip summary files that accompany jsonl files
+		if strings.HasSuffix(name, "-summary.md") {
+			continue
+		}
+
+		info, err := parseSessionFile(filepath.Join(sessionsDirName, name))
+		if err != nil {
+			// Skip files that can't be parsed
+			continue
+		}
+		info.Filename = name
+		sessions = append(sessions, info)
+	}
+
+	if len(sessions) == 0 {
+		fmt.Println("No sessions found. Use 'ctx session save' to create one.")
+		return nil
+	}
+
+	// Sort by date (newest first) - filenames are date-prefixed so reverse sort works
+	for i, j := 0, len(sessions)-1; i < j; i, j = i+1, j-1 {
+		sessions[i], sessions[j] = sessions[j], sessions[i]
+	}
+
+	// Limit output
+	if listLimit > 0 && len(sessions) > listLimit {
+		sessions = sessions[:listLimit]
+	}
+
+	// Display
+	fmt.Printf("Sessions in %s:\n\n", sessionsDirName)
+	for _, s := range sessions {
+		fmt.Printf("%s %s\n", cyan("●"), s.Topic)
+		fmt.Printf("  %s %s | %s %s\n",
+			gray("Date:"), s.Date,
+			gray("Type:"), s.Type)
+		if s.Summary != "" {
+			fmt.Printf("  %s %s\n", gray("Summary:"), truncate(s.Summary, 60))
+		}
+		fmt.Printf("  %s %s\n", yellow("File:"), s.Filename)
+		fmt.Println()
+	}
+
+	fmt.Printf("Total: %d session(s)\n", len(sessions))
+	return nil
+}
+
+// sessionInfo holds parsed information about a session file.
+type sessionInfo struct {
+	Filename string
+	Topic    string
+	Date     string
+	Type     string
+	Summary  string
+}
+
+// parseSessionFile extracts metadata from a session file.
+func parseSessionFile(path string) (sessionInfo, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return sessionInfo{}, err
+	}
+
+	contentStr := string(content)
+	info := sessionInfo{}
+
+	// Extract topic from first line (# Session: topic)
+	if strings.HasPrefix(contentStr, "# Session:") {
+		lineEnd := strings.Index(contentStr, "\n")
+		if lineEnd != -1 {
+			info.Topic = strings.TrimSpace(contentStr[11:lineEnd])
+		}
+	} else if strings.HasPrefix(contentStr, "# ") {
+		// Alternative format: # Topic
+		lineEnd := strings.Index(contentStr, "\n")
+		if lineEnd != -1 {
+			info.Topic = strings.TrimSpace(contentStr[2:lineEnd])
+		}
+	}
+
+	// Extract date
+	if idx := strings.Index(contentStr, "**Date**:"); idx != -1 {
+		lineEnd := strings.Index(contentStr[idx:], "\n")
+		if lineEnd != -1 {
+			info.Date = strings.TrimSpace(contentStr[idx+9 : idx+lineEnd])
+		}
+	}
+
+	// Extract type
+	if idx := strings.Index(contentStr, "**Type**:"); idx != -1 {
+		lineEnd := strings.Index(contentStr[idx:], "\n")
+		if lineEnd != -1 {
+			info.Type = strings.TrimSpace(contentStr[idx+9 : idx+lineEnd])
+		}
+	}
+
+	// Extract summary (first non-empty line after ## Summary)
+	if idx := strings.Index(contentStr, "## Summary"); idx != -1 {
+		afterSummary := contentStr[idx+10:]
+		lines := strings.Split(afterSummary, "\n")
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			if line != "" && !strings.HasPrefix(line, "#") && !strings.HasPrefix(line, "---") && !strings.HasPrefix(line, "[") {
+				info.Summary = line
+				break
+			}
+		}
+	}
+
+	return info, nil
+}
+
+// truncate shortens a string to maxLen characters, adding "..." if truncated.
+func truncate(s string, maxLen int) string {
+	if len(s) <= maxLen {
+		return s
+	}
+	return s[:maxLen-3] + "..."
 }
 
 // sanitizeFilename converts a topic string to a safe filename component.
