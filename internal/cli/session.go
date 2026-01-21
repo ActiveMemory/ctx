@@ -413,7 +413,10 @@ func parseIndex(s string) (int, error) {
 	return idx, nil
 }
 
-var parseOutput string
+var (
+	parseOutput  string
+	parseExtract bool
+)
 
 // sessionParseCmd returns the session parse subcommand.
 func sessionParseCmd() *cobra.Command {
@@ -433,6 +436,7 @@ Examples:
 	}
 
 	cmd.Flags().StringVarP(&parseOutput, "output", "o", "", "Output file (default: stdout)")
+	cmd.Flags().BoolVar(&parseExtract, "extract", false, "Extract potential decisions and learnings from transcript")
 
 	return cmd
 }
@@ -443,6 +447,48 @@ func runSessionParse(cmd *cobra.Command, args []string) error {
 	// Check file exists
 	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
 		return fmt.Errorf("file not found: %s", inputPath)
+	}
+
+	green := color.New(color.FgGreen).SprintFunc()
+
+	if parseExtract {
+		// Extract decisions and learnings
+		decisions, learnings, err := extractInsights(inputPath)
+		if err != nil {
+			return fmt.Errorf("failed to extract insights: %w", err)
+		}
+
+		// Display extracted insights
+		fmt.Println("# Extracted Insights")
+		fmt.Println()
+		fmt.Printf("**Source**: %s\n\n", filepath.Base(inputPath))
+
+		fmt.Println("## Potential Decisions")
+		fmt.Println()
+		if len(decisions) == 0 {
+			fmt.Println("No decisions detected.")
+			fmt.Println()
+		} else {
+			for _, d := range decisions {
+				fmt.Printf("- %s\n", d)
+			}
+			fmt.Println()
+		}
+
+		fmt.Println("## Potential Learnings")
+		fmt.Println()
+		if len(learnings) == 0 {
+			fmt.Println("No learnings detected.")
+			fmt.Println()
+		} else {
+			for _, l := range learnings {
+				fmt.Printf("- %s\n", l)
+			}
+			fmt.Println()
+		}
+
+		fmt.Printf("\n*Found %d potential decisions and %d potential learnings*\n", len(decisions), len(learnings))
+		return nil
 	}
 
 	// Parse the jsonl file
@@ -456,7 +502,6 @@ func runSessionParse(cmd *cobra.Command, args []string) error {
 		if err := os.WriteFile(parseOutput, []byte(content), 0644); err != nil {
 			return fmt.Errorf("failed to write output: %w", err)
 		}
-		green := color.New(color.FgGreen).SprintFunc()
 		fmt.Printf("%s Parsed transcript saved to %s\n", green("✓"), parseOutput)
 	} else {
 		fmt.Println(content)
@@ -787,4 +832,140 @@ func readRecentLearnings() (string, error) {
 	}
 
 	return strings.Join(matches[len(matches)-limit:], "\n"), nil
+}
+
+// extractInsights parses a jsonl transcript and extracts potential decisions and learnings.
+func extractInsights(path string) ([]string, []string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer file.Close()
+
+	var decisions []string
+	var learnings []string
+
+	// Patterns for detecting decisions
+	decisionPatterns := []*regexp.Regexp{
+		regexp.MustCompile(`(?i)decided to\s+(.{20,100})`),
+		regexp.MustCompile(`(?i)decision:\s*(.{20,100})`),
+		regexp.MustCompile(`(?i)we('ll| will) use\s+(.{10,80})`),
+		regexp.MustCompile(`(?i)going with\s+(.{10,80})`),
+		regexp.MustCompile(`(?i)chose\s+(.{10,80})\s+(over|instead)`),
+	}
+
+	// Patterns for detecting learnings
+	learningPatterns := []*regexp.Regexp{
+		regexp.MustCompile(`(?i)learned that\s+(.{20,100})`),
+		regexp.MustCompile(`(?i)gotcha:\s*(.{20,100})`),
+		regexp.MustCompile(`(?i)lesson:\s*(.{20,100})`),
+		regexp.MustCompile(`(?i)TIL:?\s*(.{20,100})`),
+		regexp.MustCompile(`(?i)turns out\s+(.{20,100})`),
+		regexp.MustCompile(`(?i)important to (note|remember):\s*(.{20,100})`),
+	}
+
+	scanner := bufio.NewScanner(file)
+	buf := make([]byte, 0, 64*1024)
+	scanner.Buffer(buf, 10*1024*1024)
+
+	seen := make(map[string]bool) // Deduplicate
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+
+		var entry transcriptEntry
+		if err := json.Unmarshal([]byte(line), &entry); err != nil {
+			continue
+		}
+
+		// Only look at assistant messages
+		if entry.Type != "assistant" {
+			continue
+		}
+
+		// Extract text content
+		texts := extractTextContent(entry)
+
+		for _, text := range texts {
+			// Check for decisions
+			for _, pattern := range decisionPatterns {
+				matches := pattern.FindAllStringSubmatch(text, -1)
+				for _, match := range matches {
+					if len(match) > 1 {
+						insight := cleanInsight(match[1])
+						if insight != "" && !seen[insight] {
+							seen[insight] = true
+							decisions = append(decisions, insight)
+						}
+					}
+				}
+			}
+
+			// Check for learnings
+			for _, pattern := range learningPatterns {
+				matches := pattern.FindAllStringSubmatch(text, -1)
+				for _, match := range matches {
+					if len(match) > 1 {
+						insight := cleanInsight(match[len(match)-1])
+						if insight != "" && !seen[insight] {
+							seen[insight] = true
+							learnings = append(learnings, insight)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, nil, err
+	}
+
+	return decisions, learnings, nil
+}
+
+// extractTextContent extracts all text content from a transcript entry.
+func extractTextContent(entry transcriptEntry) []string {
+	var texts []string
+
+	switch content := entry.Message.Content.(type) {
+	case string:
+		texts = append(texts, content)
+	case []interface{}:
+		for _, block := range content {
+			blockMap, ok := block.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			if text, ok := blockMap["text"].(string); ok {
+				texts = append(texts, text)
+			}
+			if thinking, ok := blockMap["thinking"].(string); ok {
+				texts = append(texts, thinking)
+			}
+		}
+	}
+
+	return texts
+}
+
+// cleanInsight cleans and truncates an extracted insight.
+func cleanInsight(s string) string {
+	s = strings.TrimSpace(s)
+	// Remove trailing punctuation fragments
+	s = strings.TrimRight(s, ".,;:!?")
+	// Truncate if too long
+	if len(s) > 150 {
+		// Try to cut at word boundary
+		idx := strings.LastIndex(s[:150], " ")
+		if idx > 100 {
+			s = s[:idx] + "..."
+		} else {
+			s = s[:147] + "..."
+		}
+	}
+	return s
 }
