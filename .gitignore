@@ -38,6 +38,7 @@ dist/
 
 # Local Claude Code settings (machine-specific paths)
 .claude/settings.local.json
+.claude/ralph-loop.local.md
 
 # Session transcripts (personal, potentially large)
 .context/sessions/
