@@ -14,7 +14,8 @@ import (
 )
 
 var (
-	compactArchive bool
+	compactArchive    bool
+	compactNoAutoSave bool
 )
 
 // CompactCmd returns the compact command.
@@ -35,6 +36,7 @@ Use --archive to create .context/archive/ for old content.`,
 	}
 
 	cmd.Flags().BoolVar(&compactArchive, "archive", false, "Create .context/archive/ for old content")
+	cmd.Flags().BoolVar(&compactNoAutoSave, "no-auto-save", false, "Skip auto-saving session before compact")
 
 	return cmd
 }
@@ -51,6 +53,13 @@ func runCompact(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	cyan := color.New(color.FgCyan).SprintFunc()
+
+	// Auto-save session before compact
+	if !compactNoAutoSave {
+		if err := preCompactAutoSave(); err != nil {
+			fmt.Printf("%s Auto-save failed: %v (continuing anyway)\n", yellow("⚠"), err)
+		}
+	}
 
 	fmt.Println(cyan("Compact Analysis"))
 	fmt.Println(cyan("================"))
@@ -234,4 +243,58 @@ func truncateString(s string, maxLen int) string {
 		return s
 	}
 	return s[:maxLen-3] + "..."
+}
+
+// preCompactAutoSave saves a session snapshot before compacting.
+func preCompactAutoSave() error {
+	green := color.New(color.FgGreen).SprintFunc()
+
+	// Ensure sessions directory exists
+	sessionsDir := filepath.Join(contextDirName, "sessions")
+	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
+		return fmt.Errorf("failed to create sessions directory: %w", err)
+	}
+
+	// Generate filename
+	now := time.Now()
+	filename := fmt.Sprintf("%s-pre-compact.md", now.Format("2006-01-02-150405"))
+	filePath := filepath.Join(sessionsDir, filename)
+
+	// Build minimal session content
+	content := buildPreCompactSession(now)
+
+	// Write file
+	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+		return fmt.Errorf("failed to write session file: %w", err)
+	}
+
+	fmt.Printf("%s Auto-saved pre-compact snapshot to %s\n\n", green("✓"), filePath)
+	return nil
+}
+
+// buildPreCompactSession creates a minimal session snapshot before compact.
+func buildPreCompactSession(timestamp time.Time) string {
+	var sb strings.Builder
+
+	sb.WriteString("# Pre-Compact Snapshot\n\n")
+	sb.WriteString(fmt.Sprintf("**Date**: %s\n", timestamp.Format("2006-01-02")))
+	sb.WriteString(fmt.Sprintf("**Time**: %s\n", timestamp.Format("15:04:05")))
+	sb.WriteString("**Type**: pre-compact\n\n")
+	sb.WriteString("---\n\n")
+
+	sb.WriteString("## Purpose\n\n")
+	sb.WriteString("This snapshot was automatically created before running `ctx compact`.\n")
+	sb.WriteString("It preserves the state of context files before any cleanup operations.\n\n")
+	sb.WriteString("---\n\n")
+
+	// Read and include current TASKS.md content
+	tasksPath := filepath.Join(contextDirName, "TASKS.md")
+	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
+		sb.WriteString("## Tasks (Before Compact)\n\n")
+		sb.WriteString("```markdown\n")
+		sb.WriteString(string(tasksContent))
+		sb.WriteString("\n```\n\n")
+	}
+
+	return sb.String()
 }
