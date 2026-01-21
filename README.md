@@ -238,6 +238,21 @@ ctx session parse transcript.jsonl --extract
 
 This gives Claude **temporal continuity** — it knows what happened in previous sessions.
 
+### Verifying It Works
+
+After setting up and starting a new AI session, verify memory is working:
+
+1. **Ask:** "Do you remember?"
+2. **Expect:** Your AI should cite specific context:
+   - Current tasks from `.context/TASKS.md`
+   - Recent decisions or learnings
+   - Previous session topics from `.context/sessions/`
+
+If it can't recall anything, check:
+- Hooks are configured: `cat .claude/settings.local.json`
+- Context files exist: `ls .context/`
+- Run `ctx status` to see what context is available
+
 ### Session Auto-Save Setup
 
 After running `ctx init`, session auto-save is configured automatically. Here's how to verify and use it:
