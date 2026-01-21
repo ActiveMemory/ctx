@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/josealekhine/ActiveMemory/internal/context"
+	"github.com/josealekhine/ctx/internal/context"
 	"github.com/spf13/cobra"
 )
 
@@ -101,7 +101,7 @@ func outputStatusText(ctx *context.Context) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 	cyan := color.New(color.FgCyan).SprintFunc()
 
-	fmt.Println(cyan("Active Memory Status"))
+	fmt.Println(cyan("Context Status"))
 	fmt.Println(cyan("===================="))
 	fmt.Println()
 

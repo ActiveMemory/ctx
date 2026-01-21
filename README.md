@@ -1,4 +1,4 @@
-# Active Memory
+# Context
 
 > **Context is a system, not a prompt.**
 
@@ -38,7 +38,7 @@ Most AI coding assistants fail not because models are weak—they fail because c
 
 ## The Solution
 
-Active Memory treats context as infrastructure:
+Context treats context as infrastructure:
 
 - **Persist** — Tasks, decisions, learnings survive session boundaries
 - **Reuse** — Decisions don't get rediscovered; lessons stay learned
@@ -49,32 +49,32 @@ Active Memory treats context as infrastructure:
 
 ### Binary Downloads (Recommended)
 
-Download pre-built binaries from the [releases page](https://github.com/josealekhine/ActiveMemory/releases).
+Download pre-built binaries from the [releases page](https://github.com/josealekhine/ctx/releases).
 
 **Linux (x86_64):**
 ```bash
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-linux-amd64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-amd64
 chmod +x ctx-linux-amd64
 sudo mv ctx-linux-amd64 /usr/local/bin/ctx
 ```
 
 **Linux (ARM64):**
 ```bash
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-linux-arm64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-arm64
 chmod +x ctx-linux-arm64
 sudo mv ctx-linux-arm64 /usr/local/bin/ctx
 ```
 
 **macOS (Intel):**
 ```bash
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-darwin-amd64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-amd64
 chmod +x ctx-darwin-amd64
 sudo mv ctx-darwin-amd64 /usr/local/bin/ctx
 ```
 
 **macOS (Apple Silicon):**
 ```bash
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-darwin-arm64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-arm64
 chmod +x ctx-darwin-arm64
 sudo mv ctx-darwin-arm64 /usr/local/bin/ctx
 ```
@@ -88,8 +88,8 @@ Download `ctx-windows-amd64.exe` from the releases page and add it to your PATH.
 Requires Go 1.22+:
 
 ```bash
-git clone https://github.com/josealekhine/ActiveMemory.git
-cd ActiveMemory
+git clone https://github.com/josealekhine/ctx.git
+cd ctx
 CGO_ENABLED=0 go build -o ctx ./cmd/ctx
 sudo mv ctx /usr/local/bin/
 ```
@@ -177,7 +177,7 @@ ctx drift --json
 
 ## AI Tool Integration
 
-Active Memory works with any AI tool that can read files. Generate tool-specific configs:
+Context works with any AI tool that can read files. Generate tool-specific configs:
 
 ```bash
 ctx hook claude-code  # Claude Code CLI
@@ -362,7 +362,7 @@ This project uses ctx to manage its own development. Here's how it works:
 ### Project Structure
 
 ```
-ActiveMemory/
+ctx/
 ├── .context/                    # ctx manages this
 │   ├── TASKS.md                 # Current work items
 │   ├── DECISIONS.md             # Architecture decisions

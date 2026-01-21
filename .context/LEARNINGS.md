@@ -29,7 +29,7 @@
 
 **Lesson**: The built binary is in `dist/ctx-linux-arm64`, not at project root. Use full path in hooks.
 
-**Application**: Always verify binary location with `ls dist/` before configuring hooks. For this project: `/home/parallels/WORKSPACE/ActiveMemory/dist/ctx-linux-arm64`
+**Application**: Always verify binary location with `ls dist/` before configuring hooks. For this project: `./dist/ctx-linux-arm64`
 
 ### `.context/` Is NOT a Claude Code Primitive
 **Discovered**: 2025-01-20

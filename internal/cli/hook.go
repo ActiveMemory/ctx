@@ -13,7 +13,7 @@ func HookCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hook <tool>",
 		Short: "Generate AI tool integration configs",
-		Long: `Generate configuration and instructions for integrating Active Memory with AI tools.
+		Long: `Generate configuration and instructions for integrating Context with AI tools.
 
 Supported tools:
   claude-code  - Anthropic's Claude Code CLI
@@ -45,7 +45,7 @@ func runHook(cmd *cobra.Command, args []string) error {
 		fmt.Println("Add this to your project's CLAUDE.md or system prompt:")
 		fmt.Println()
 		fmt.Println(green("```markdown"))
-		fmt.Print(`## Active Memory Context
+		fmt.Print(`## Context
 
 Before starting any task, load the project context:
 
@@ -142,7 +142,7 @@ Key conventions:
 		fmt.Println("Add to your .windsurfrules file:")
 		fmt.Println()
 		fmt.Println(green("```markdown"))
-		fmt.Print(`# Active Memory Context
+		fmt.Print(`# Context
 
 Read order for context:
 1. .context/CONSTITUTION.md

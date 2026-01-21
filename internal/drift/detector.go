@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/josealekhine/ActiveMemory/internal/context"
+	"github.com/josealekhine/ctx/internal/context"
 )
 
 // Issue represents a detected drift issue.

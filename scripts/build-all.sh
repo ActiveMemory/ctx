@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Build Active Memory CLI for multiple platforms
+# Build Context CLI for multiple platforms
 #
 # Usage: ./scripts/build-all.sh [version]
 #   version: The version string to embed (default: dev)
@@ -24,7 +24,7 @@ TARGETS=(
     "windows/arm64"
 )
 
-echo "Building Active Memory CLI v${VERSION}"
+echo "Building Context CLI v${VERSION}"
 echo "========================================="
 
 # Clean and create output directory

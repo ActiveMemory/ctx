@@ -69,7 +69,7 @@ Minimal dependencies (standard library preferred):
 
 ```go
 // go.mod
-module github.com/josealekhine/ActiveMemory
+module github.com/josealekhine/ctx
 
 go 1.22
 
@@ -191,7 +191,7 @@ package main
 import (
     "os"
     "github.com/spf13/cobra"
-    "github.com/josealekhine/ActiveMemory/internal/cli"
+    "github.com/josealekhine/ctx/internal/cli"
 )
 
 var Version = "dev"
@@ -199,7 +199,7 @@ var Version = "dev"
 func main() {
     root := &cobra.Command{
         Use:     "ctx",
-        Short:   "Active Memory - persistent context for AI coding assistants",
+        Short:   "Context - persistent context for AI coding assistants",
         Version: Version,
     }
     

@@ -334,7 +334,7 @@ Update context when:
 
 ### AGENT_PLAYBOOK.md
 
-**Purpose**: Explicit instructions for how AI agents should read, apply, and update Active Memory.
+**Purpose**: Explicit instructions for how AI agents should read, apply, and update Context.
 
 **Structure**:
 ```markdown

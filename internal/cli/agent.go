@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/josealekhine/ActiveMemory/internal/context"
+	"github.com/josealekhine/ctx/internal/context"
 	"github.com/spf13/cobra"
 )
 
@@ -91,7 +91,7 @@ func outputAgentMarkdown(ctx *context.Context) error {
 	var sb strings.Builder
 
 	timestamp := time.Now().UTC().Format(time.RFC3339)
-	sb.WriteString("# Active Memory Context Packet\n")
+	sb.WriteString("# Context Packet\n")
 	sb.WriteString(fmt.Sprintf("Generated: %s | Budget: %d tokens | Used: %d\n\n", timestamp, agentBudget, ctx.TotalTokens))
 
 	// Read order

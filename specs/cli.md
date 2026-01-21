@@ -2,37 +2,37 @@
 
 ## Overview
 
-The Active Memory CLI provides commands for initializing, managing, and inspecting project context. It's the primary human interface to the system.
+The Context CLI provides commands for initializing, managing, and inspecting project context. It's the primary human interface to the system.
 
 ## Implementation
 
 - **Language**: Go (minimal dependencies, single binary)
 - **Distribution**: GitHub Releases (pre-built binaries for Linux, macOS, Windows)
-- **Repository**: https://github.com/josealekhine/ActiveMemory
+- **Repository**: https://github.com/josealekhine/ctx
 
 ## Installation
 
 ```bash
 # Download the latest release for your platform
-# From: https://github.com/josealekhine/ActiveMemory/releases
+# From: https://github.com/josealekhine/ctx/releases
 
 # Linux (amd64)
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-linux-amd64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-amd64
 chmod +x ctx-linux-amd64
 sudo mv ctx-linux-amd64 /usr/local/bin/ctx
 
 # Linux (arm64)
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-linux-arm64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-arm64
 chmod +x ctx-linux-arm64
 sudo mv ctx-linux-arm64 /usr/local/bin/ctx
 
 # macOS (Apple Silicon)
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-darwin-arm64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-arm64
 chmod +x ctx-darwin-arm64
 sudo mv ctx-darwin-arm64 /usr/local/bin/ctx
 
 # macOS (Intel)
-curl -LO https://github.com/josealekhine/ActiveMemory/releases/latest/download/ctx-darwin-amd64
+curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-amd64
 chmod +x ctx-darwin-amd64
 sudo mv ctx-darwin-amd64 /usr/local/bin/ctx
 
@@ -85,7 +85,7 @@ ctx status [--json] [--verbose]
 
 **Output**:
 ```
-Active Memory Status
+Context Status
 ====================
 
 📁 Context Directory: .context/
@@ -131,7 +131,7 @@ ctx agent [--budget <tokens>] [--format md|json]
 
 **Output**:
 ```markdown
-# Active Memory Context Packet
+# Context Context Packet
 Generated: 2025-01-19T10:30:00Z | Budget: 8000 tokens | Used: 3850
 
 ## Read These Files (in order)

@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/josealekhine/ActiveMemory/internal/context"
+	"github.com/josealekhine/ctx/internal/context"
 	"github.com/spf13/cobra"
 )
 
@@ -89,7 +89,7 @@ func outputAssembled(ctx *context.Context, budget int) error {
 	var sb strings.Builder
 
 	// Header
-	sb.WriteString("# Active Memory Context\n\n")
+	sb.WriteString("# Context\n\n")
 	sb.WriteString(fmt.Sprintf("Token Budget: %d | Available: %d\n\n", budget, ctx.TotalTokens))
 	sb.WriteString("---\n\n")
 

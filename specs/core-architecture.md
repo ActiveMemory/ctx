@@ -2,7 +2,7 @@
 
 ## Overview
 
-Active Memory is a file-based context engineering system that persists project knowledge across AI coding sessions. It treats context as infrastructure, not ephemeral prompt content.
+Context is a file-based context engineering system that persists project knowledge across AI coding sessions. It treats context as infrastructure, not ephemeral prompt content.
 
 ## Design Philosophy
 
@@ -82,7 +82,7 @@ A single Go binary (`ctx`) with commands for human operators:
 
 **Implementation**: Go with minimal dependencies. Single binary, cross-platform.
 
-**Distribution**: GitHub Releases at https://github.com/josealekhine/ActiveMemory
+**Distribution**: GitHub Releases at https://github.com/josealekhine/ctx
 
 ## Constraints
 

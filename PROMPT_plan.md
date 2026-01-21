@@ -1,4 +1,4 @@
-# PROMPT_plan.md — Active Memory (Planning Mode)
+# PROMPT_plan.md — Context (Planning Mode)
 
 ## CORE PRINCIPLE
 
@@ -23,7 +23,7 @@ Check if `specs/` directory exists.
 
 ## PHASE 1: ORIENT
 
-0a. Study `specs/*` with up to 250 parallel Sonnet subagents to learn the Active Memory system specifications.
+0a. Study `specs/*` with up to 250 parallel Sonnet subagents to learn the Context system specifications.
 0b. Study @IMPLEMENTATION_PLAN.md (if present) to understand the plan so far.
 0c. Study `internal/*` with up to 250 parallel Sonnet subagents to understand internal packages.
 0d. For reference, the application source code is in `cmd/` and `internal/`.
@@ -84,11 +84,11 @@ Future building iterations depend entirely on what you write now.
 
 ## ULTIMATE GOAL
 
-Build "Active Memory" — a lightweight, file-based system that lets AI coding assistants persist project knowledge across sessions.
+Build "Context" — a lightweight, file-based system that lets AI coding assistants persist project knowledge across sessions.
 
 **Implementation**: Go CLI (`ctx`) distributed as single binary via GitHub Releases.
 
-**Repository**: https://github.com/josealekhine/ActiveMemory
+**Repository**: https://github.com/josealekhine/ctx
 
 The system must:
 1. **Persist knowledge** — Tasks, decisions, learnings survive session boundaries

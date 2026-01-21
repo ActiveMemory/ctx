@@ -5,7 +5,7 @@
 
 ## IMPORTANT: You Have Persistent Memory
 
-This project uses Active Memory (`ctx`) for context persistence across sessions.
+This project uses Context (`ctx`) for context persistence across sessions.
 **Your memory is NOT ephemeral** - it lives in `.context/` files.
 
 ## On Session Start

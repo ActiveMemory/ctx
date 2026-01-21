@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/josealekhine/ActiveMemory/internal/claude"
-	"github.com/josealekhine/ActiveMemory/internal/templates"
+	"github.com/josealekhine/ctx/internal/claude"
+	"github.com/josealekhine/ctx/internal/templates"
 	"github.com/spf13/cobra"
 )
 
@@ -136,7 +136,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 		fmt.Printf("  %s %s\n", green("✓"), name)
 	}
 
-	fmt.Printf("\n%s initialized in %s/\n", green("Active Memory"), contextDir)
+	fmt.Printf("\n%s initialized in %s/\n", green("Context"), contextDir)
 
 	// Create IMPLEMENTATION_PLAN.md in project root (orchestrator directive)
 	if err := createImplementationPlan(initForce); err != nil {

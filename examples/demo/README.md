@@ -1,8 +1,8 @@
 # Demo Project
 
-This is a sample project demonstrating Active Memory context structure.
+This is a sample project demonstrating Context context structure.
 
-## Using Active Memory
+## Using Context
 
 1. View the context files in `.context/`:
    - `CONSTITUTION.md` - Inviolable rules
@@ -11,7 +11,7 @@ This is a sample project demonstrating Active Memory context structure.
    - `ARCHITECTURE.md` - System overview
    - `DECISIONS.md` - Technical decisions
 
-2. Run Active Memory commands:
+2. Run Context commands:
    ```bash
    # View context status
    ctx status

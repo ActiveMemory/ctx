@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/josealekhine/ActiveMemory/internal/context"
+	"github.com/josealekhine/ctx/internal/context"
 	"github.com/spf13/cobra"
 )
 

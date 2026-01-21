@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Context Updater handles the write path of the Active Memory system. It parses structured update commands from AI responses and writes them back to the appropriate context files while maintaining format consistency.
+The Context Updater handles the write path of the Context system. It parses structured update commands from AI responses and writes them back to the appropriate context files while maintaining format consistency.
 
 ## Responsibilities
 

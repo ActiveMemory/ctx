@@ -1,8 +1,8 @@
-# Active Memory - Claude Code Context
+# Context - Claude Code Context
 
 ## IMPORTANT: You Have Persistent Memory
 
-This project uses Active Memory (ctx) for context persistence across sessions.
+This project uses Context (ctx) for context persistence across sessions.
 **Your memory is NOT ephemeral** - it lives in `.context/` files.
 
 ## On Session Start
@@ -50,7 +50,7 @@ CGO_ENABLED=0 go test ./...                   # Run tests
 
 ## This Project
 
-Active Memory (`ctx`) is a CLI tool for persistent AI context. It was built using the Ralph Loop technique.
+Context (`ctx`) is a CLI tool for persistent AI context. It was built using the Ralph Loop technique.
 
 - **ctx** = context management tool (creates `.context/`)
 - **Ralph Loop** = iterative AI development workflow (uses PROMPT.md)

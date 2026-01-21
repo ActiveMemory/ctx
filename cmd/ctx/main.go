@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/josealekhine/ActiveMemory/internal/cli"
+	"github.com/josealekhine/ctx/internal/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -13,8 +13,8 @@ var Version = "dev"
 
 var rootCmd = &cobra.Command{
 	Use:   "ctx",
-	Short: "Active Memory - persistent context for AI coding assistants",
-	Long: `Active Memory (ctx) maintains persistent context files that help
+	Short: "Context - persistent context for AI coding assistants",
+	Long: `Context (ctx) maintains persistent context files that help
 AI coding assistants understand your project's architecture, conventions,
 decisions, and current tasks.
 

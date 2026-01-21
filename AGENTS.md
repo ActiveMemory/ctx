@@ -1,4 +1,4 @@
-# AGENTS.md — Active Memory Operational Guide
+# AGENTS.md — Context Operational Guide
 
 ## Core Principle
 

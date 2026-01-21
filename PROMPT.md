@@ -1,4 +1,4 @@
-# PROMPT.md — Active Memory Go CLI Implementation
+# PROMPT.md — Context Go CLI Implementation
 
 ## CORE PRINCIPLE
 
@@ -9,8 +9,8 @@ Your goal: advance the project by exactly ONE task, update context, commit, and 
 
 ## PROJECT CONTEXT
 
-**Project**: Active Memory — persistent context for AI coding assistants
-**Repository**: https://github.com/josealekhine/ActiveMemory
+**Project**: Context — persistent context for AI coding assistants
+**Repository**: https://github.com/josealekhine/ctx
 **Language**: Go 1.25+
 **Distribution**: Single binary via GitHub Releases
 
@@ -21,7 +21,7 @@ Your goal: advance the project by exactly ONE task, update context, commit, and 
 Check if `go.mod` exists.
 
 **IF NOT:**
-1. Run `go mod init github.com/josealekhine/ActiveMemory`
+1. Run `go mod init github.com/josealekhine/ctx`
 2. Create directory structure:
    ```
    cmd/ctx/main.go
