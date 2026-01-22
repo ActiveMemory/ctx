@@ -558,7 +558,9 @@ See `specs/` for detailed specifications:
 
 ## Contributing
 
-Contributions are welcome! Please read our guidelines before getting started:
+Contributions are welcome.
+
+Please read our guidelines before getting started:
 
 * **[Contributing Guide](CONTRIBUTING.md)**: How to set up, submit changes, and
   code style
