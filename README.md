@@ -1,14 +1,18 @@
-# Context
+```text
+ /
+,'`./ Context:
+`.,'\   do you remember?
+  \
+```
 
 > **Context is a system, not a prompt.**
 
-A lightweight, file-based approach that lets AI coding assistants persist project knowledge across sessions.
+A lightweight, file-based system that enables AI coding assistants to persist,
+structure, and rehydrate project context across sessions.
 
-It gives temporal continuity to your AI assistants, among many other things.
+It provides intentional continuity across sessions.
 
-It is one of those tools you will not know how badly you needed it until you start using it.
-
-Don't trust me? Trust Claude, then:
+Still skeptical? Here's a concrete example, explained by Claude itself:
 
 ```text
 ❯ one last question. in the next session when I ask you 1) "do you
@@ -17,7 +21,7 @@ Don't trust me? Trust Claude, then:
   the concept of a session in the context of `ctx`)
 
 ● Correct on both counts:
- 
+
   1. "Do you remember?" → Yes. The PreToolUse hook runs ctx agent, and
   CLAUDE.md (auto-read by Claude Code) tells me to check .context/sessions/. 
   I'll have context.
@@ -29,66 +33,76 @@ Don't trust me? Trust Claude, then:
   As we have more sessions, that list grows - and I can trace the full arc of
    the project's evolution.
 
-  That's the whole point of ctx: temporal continuity for AI assistants.  
 ```
+
+That's the whole point of `ctx`: **Temporal continuity across sessions**.
+`ctx` is not something you paste into a prompt—it's a system that 
+that maintains continuity over time.
 
 ## The Problem
 
-Most AI coding assistants fail not because models are weak—they fail because context is ephemeral. Every new session starts near zero. Architectural decisions, conventions, and lessons learned decay. The user re-explains. The AI repeats mistakes. Progress feels far less cumulative than it should.
+Most LLM-driven development fail not because models are weak: They fail because
+*context is ephemeral*. Every new session starts near zero. Architectural
+decisions, conventions, and lessons learned decay:
+* The user re-explains;
+* The AI repeats mistakes;
+* Progress feels far less cumulative than it should.
 
 ## The Solution
 
-Context treats context as infrastructure:
+`ctx` treats context as infrastructure:
 
-- **Persist** — Tasks, decisions, learnings survive session boundaries
-- **Reuse** — Decisions don't get rediscovered; lessons stay learned
-- **Align** — Context structure mirrors how engineers actually think
-- **Integrate** — Works with any AI tool that can read files
+* **Persist**: Tasks, decisions, learnings survive session boundaries.
+* **Reuse**: Decisions don't get rediscovered; lessons stay learned.
+* **Align**: Context structure mirrors how engineers actually think.
+* **Integrate**: Works with any AI tool that can read files.
 
 ## Installation
 
 ### Binary Downloads (Recommended)
 
-Download pre-built binaries from the [releases page](https://github.com/josealekhine/ctx/releases).
+Download pre-built binaries from the 
+[releases page](https://github.com/ActiveMemory/ctx/releases).
 
 **Linux (x86_64):**
 ```bash
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-amd64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-linux-amd64
 chmod +x ctx-linux-amd64
 sudo mv ctx-linux-amd64 /usr/local/bin/ctx
 ```
 
 **Linux (ARM64):**
 ```bash
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-arm64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-linux-arm64
 chmod +x ctx-linux-arm64
 sudo mv ctx-linux-arm64 /usr/local/bin/ctx
 ```
 
 **macOS (Intel):**
 ```bash
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-amd64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-darwin-amd64
 chmod +x ctx-darwin-amd64
 sudo mv ctx-darwin-amd64 /usr/local/bin/ctx
 ```
 
 **macOS (Apple Silicon):**
 ```bash
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-arm64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-darwin-arm64
 chmod +x ctx-darwin-arm64
 sudo mv ctx-darwin-arm64 /usr/local/bin/ctx
 ```
 
 **Windows:**
 
-Download `ctx-windows-amd64.exe` from the releases page and add it to your PATH.
+Download `ctx-windows-amd64.exe` from the releases page and add it 
+to your `PATH`.
 
 ### Build from Source
 
-Requires Go 1.22+:
+Requires [Go 1.26+](https://go.dev/):
 
 ```bash
-git clone https://github.com/josealekhine/ctx.git
+git clone https://github.com/ActiveMemory/ctx.git
 cd ctx
 CGO_ENABLED=0 go build -o ctx ./cmd/ctx
 sudo mv ctx /usr/local/bin/
@@ -106,7 +120,7 @@ ctx status
 # Load full context (what AI sees)
 ctx load
 
-# Get AI-ready context packet (optimized for LLMs)
+# Get an AI-ready context packet (optimized for LLMs)
 ctx agent
 
 # Detect stale context
@@ -115,23 +129,23 @@ ctx drift
 
 ## Command Reference
 
-| Command | Description |
-|---------|-------------|
-| `ctx init` | Create `.context/` directory with template files |
-| `ctx status` | Show context summary with token estimate |
-| `ctx load` | Output assembled context markdown |
-| `ctx agent [--budget N]` | Print AI-ready context packet (default 4000 tokens) |
-| `ctx add <type> <content>` | Add decision/task/learning/convention |
-| `ctx complete <query>` | Mark matching task as done |
-| `ctx drift [--json]` | Detect stale paths, broken refs |
-| `ctx sync [--auto]` | Reconcile context with codebase |
-| `ctx compact` | Archive completed tasks (auto-saves first) |
-| `ctx watch [--auto-save]` | Watch for context-update commands |
-| `ctx hook <tool>` | Generate AI tool integration config |
-| `ctx session save [topic]` | Save context snapshot to sessions/ |
-| `ctx session list` | List saved sessions |
-| `ctx session load <file>` | Load/display a previous session |
-| `ctx session parse <file>` | Parse JSONL transcript to markdown |
+| Command                    | Description                                         |
+|----------------------------|-----------------------------------------------------|
+| `ctx init`                 | Create `.context/` directory with template files    |
+| `ctx status`               | Show context summary with token estimate            |
+| `ctx load`                 | Output assembled context markdown                   |
+| `ctx agent [--budget N]`   | Print AI-ready context packet (default 4000 tokens) |
+| `ctx add <type> <content>` | Add decision/task/learning/convention               |
+| `ctx complete <query>`     | Mark matching task as done                          |
+| `ctx drift [--json]`       | Detect stale paths, broken refs                     |
+| `ctx sync [--auto]`        | Reconcile context with codebase                     |
+| `ctx compact`              | Archive completed tasks (auto-saves first)          |
+| `ctx watch [--auto-save]`  | Watch for context-update commands                   |
+| `ctx hook <tool>`          | Generate AI tool integration config                 |
+| `ctx session save [topic]` | Save context snapshot to sessions/                  |
+| `ctx session list`         | List saved sessions                                 |
+| `ctx session load <file>`  | Load/display a previous session                     |
+| `ctx session parse <file>` | Parse JSONL transcript to markdown                  |
 
 ### Examples
 
@@ -177,7 +191,8 @@ ctx drift --json
 
 ## AI Tool Integration
 
-Context works with any AI tool that can read files. Generate tool-specific configs:
+Context works with any AI tool that can read files. Generate tool-specific 
+configs:
 
 ```bash
 ctx hook claude-code  # Claude Code CLI
@@ -202,11 +217,49 @@ ctx init
 
 **What gets configured:**
 
-| Component | Purpose |
-|-----------|---------|
+| Component         | Purpose                                                     |
+|-------------------|-------------------------------------------------------------|
 | `PreToolUse` hook | Runs `ctx agent` before every tool use — context auto-loads |
-| `SessionEnd` hook | Saves session snapshot when conversation ends |
-| `CLAUDE.md` | Tells Claude to read `.context/` files on session start |
+| `SessionEnd` hook | Saves session snapshot when conversation ends               |
+| `CLAUDE.md`       | Tells Claude to read `.context/` files on session start     |
+
+**Generated `.claude/settings.local.json`:**
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ctx agent --budget 4000 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/auto-save-session.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+* **PreToolUse**: Before every tool call, injects context via `ctx agent`. 
+The `2>/dev/null || true` ensures Claude continues even if ctx isn't installed.
+* **SessionEnd**: Runs the auto-save script when you exit Claude Code, 
+preserving session context.
+
+You can customize the token budget (*default 4000*) or add additional hooks 
+as needed.
 
 **Session Management:**
 
@@ -231,12 +284,16 @@ ctx session parse transcript.jsonl --extract
 
 **How it works:**
 
-1. **Session start**: Claude reads `CLAUDE.md`, which tells it to check `.context/`
-2. **During session**: `PreToolUse` hook runs `ctx agent --budget 4000` before each tool use
-3. **Session end**: `SessionEnd` hook saves context snapshot to `.context/sessions/`
+1. **Session start**: Claude reads `CLAUDE.md`, which tells it to 
+   check `.context/`
+2. **During session**: `PreToolUse` hook runs `ctx agent --budget 4000` 
+   before each tool use
+3. **Session end**: `SessionEnd` hook saves context snapshot 
+   to `.context/sessions/`
 4. **Next session**: Claude sees previous sessions in `.context/sessions/`
 
-This gives Claude **temporal continuity** — it knows what happened in previous sessions.
+This gives Claude **temporal continuity**:
+It knows what happened in previous sessions.
 
 ### Verifying It Works
 
@@ -244,18 +301,19 @@ After setting up and starting a new AI session, verify memory is working:
 
 1. **Ask:** "Do you remember?"
 2. **Expect:** Your AI should cite specific context:
-   - Current tasks from `.context/TASKS.md`
-   - Recent decisions or learnings
-   - Previous session topics from `.context/sessions/`
+   * Current tasks from `.context/TASKS.md`
+   * Recent decisions or learnings
+   * Previous session topics from `.context/sessions/`
 
 If it can't recall anything, check:
-- Hooks are configured: `cat .claude/settings.local.json`
-- Context files exist: `ls .context/`
-- Run `ctx status` to see what context is available
+* Hooks are configured: `cat .claude/settings.local.json`
+* Context files exist: `ls .context/`
+* Run `ctx status` to see what context is available
 
 ### Session Auto-Save Setup
 
-After running `ctx init`, session auto-save is configured automatically. Here's how to verify and use it:
+After running `ctx init`, session auto-save is configured automatically.
+Here's how to verify and use it:
 
 **1. Verify the setup:**
 
@@ -272,10 +330,10 @@ cat .claude/settings.local.json
 **2. What gets saved:**
 
 When a Claude Code session ends, the `SessionEnd` hook saves:
-- Current date/time
-- Session type (auto-save)
-- Summary of active tasks from `.context/TASKS.md`
-- Recent decisions and learnings
+* Current date/time
+* Session type (auto-save)
+* Summary of active tasks from `.context/TASKS.md`
+* Recent decisions and learnings
 
 Sessions are saved to: `.context/sessions/YYYY-MM-DD-HHMMSS-session-*.md`
 
@@ -289,7 +347,7 @@ ctx session list
 ctx session load 1  # most recent
 ```
 
-**4. Manual save (if hooks aren't working):**
+**4. Manual save (*if hooks aren't working*):**
 
 ```bash
 # Save current context snapshot
@@ -301,11 +359,11 @@ ctx session save "description"
 
 **5. Troubleshooting:**
 
-| Issue | Solution |
-|-------|----------|
-| No sessions saved | Check `.claude/settings.local.json` has `SessionEnd` hook |
-| Hook script fails | Ensure `ctx` binary path in script is correct |
-| Missing sessions dir | Run `mkdir -p .context/sessions` |
+| Issue                | Solution                                                  |
+|----------------------|-----------------------------------------------------------|
+| No sessions saved    | Check `.claude/settings.local.json` has `SessionEnd` hook |
+| Hook script fails    | Ensure `ctx` binary path in script is correct             |
+| Missing sessions dir | Run `mkdir -p .context/sessions`                          |
 
 ### Automated Context Updates
 
@@ -324,55 +382,90 @@ ctx watch --dry-run
 
 ## Design Philosophy
 
-1. **File-based** — No database, no daemon. Just markdown and convention.
-2. **Git-native** — Context versions with code, branches with code, merges with code.
-3. **Human-readable** — Engineers can read, edit, and understand context directly.
-4. **Token-efficient** — Markdown is cheaper than JSON/XML.
-5. **Tool-agnostic** — Works with Claude Code, Cursor, Aider, Copilot, or raw CLI.
+1. **File-based**: No database, no daemon. Just markdown and convention.
+2. **Git-native**: Context versions with code, branches with code, merges with
+   code.
+3. **Human-readable**: Engineers can read, edit, and understand context
+   directly.
+4. **Token-efficient**: Markdown is cheaper than JSON/XML.
+5. **Tool-agnostic**: Works with Claude Code, Cursor, Aider, Copilot, or raw
+   CLI.
 
-## Building with Ralph Wiggum
+## Pairing with Ralph Wiggum
 
-This project is designed to be built using the [Ralph Wiggum](https://ghuntley.com/ralph/) technique—an iterative AI development loop.
+**ctx works great on its own** — just run `ctx init` and start coding with your
+AI workflows. The hooks handle context automatically.
+
+That said, ctx and [Ralph Wiggum](https://ghuntley.com/ralph/) complement each
+other nicely:
+
+* **ctx** provides the *memory*: persistent context that survives across sessions
+* **Ralph** provides the *loop*: an iterative AI development workflow that
+  runs autonomously
+
+Together, they enable fully autonomous AI development where the agent remembers 
+everything across iterations.
+
+### What is Ralph?
+
+At its core, Ralph is just a loop that repeatedly invokes an AI with a prompt 
+file.
+
+**Claude Code** has a built-in Ralph Loop plugin: Just run `/ralph-loop` to 
+start an autonomous loop directly in your session.
+
+For other AI tools (*or custom setups*), you can create your own `loop.sh`:
 
 ```bash
-# Make the loop executable
-chmod +x loop.sh
+#!/bin/bash
+# loop.sh — a minimal Ralph loop
 
-# Planning mode: Generate implementation plan
-./loop.sh plan
+PROMPT_FILE="${1:-PROMPT.md}"
+MAX_ITERATIONS="${2:-10}"
 
-# Building mode: Implement from plan
-./loop.sh 20  # Max 20 iterations
+for i in $(seq 1 $MAX_ITERATIONS); do
+    echo "=== Iteration $i ==="
 
-# Unlimited building (Ctrl+C to stop)
-./loop.sh
+    # Pipe the prompt to your AI CLI tool
+    cat "$PROMPT_FILE" | claude --print
+
+    # Check for completion signals
+    if grep -q "SYSTEM_CONVERGED\|SYSTEM_BLOCKED" /tmp/last_output 2>/dev/null; then
+        echo "Loop complete."
+        break
+    fi
+
+    sleep 2
+done
 ```
 
-### Completion Promises
+The prompt file (`PROMPT.md`) instructs the AI to:
+1. Read context from `.context/`
+2. Pick one task and complete it
+3. Update context files
+4. Commit and exit
 
-The loop automatically detects and stops on these signals:
+Since ctx persists context to files, each loop iteration starts with full 
+knowledge of previous work.
 
-| Promise | Meaning |
-|---------|---------|
-| `SYSTEM_CONVERGED` | All tasks complete — project is done |
-| `BOOTSTRAP_COMPLETE` | Initial context created — ready to build |
-| `PLANNING_CONVERGED` | Plan is complete — ready to build |
-| `SYSTEM_BLOCKED` | All remaining tasks blocked — needs human input |
+### Completion Signals
 
-### Ralph Files
+Your prompt can instruct the AI to output these signals:
 
-| File | Purpose |
-|------|---------|
-| `PROMPT_build.md` | Building mode instructions |
-| `PROMPT_plan.md` | Planning mode instructions |
-| `AGENTS.md` | Operational guide (how to build/run) |
-| `IMPLEMENTATION_PLAN.md` | Generated task list |
-| `specs/*.md` | Feature specifications |
-| `loop.sh` | The Ralph loop script |
+| Signal               | Meaning                                         |
+|----------------------|-------------------------------------------------|
+| `SYSTEM_CONVERGED`   | All tasks complete — project is done            |
+| `SYSTEM_BLOCKED`     | Remaining tasks need human input                |
+| `BOOTSTRAP_COMPLETE` | Initial setup done — ready to build             |
 
-## Dogfooding: Using ctx on ctx
+See [ghuntley.com/ralph](https://ghuntley.com/ralph/) for the full technique
+and examples.
 
-This project uses ctx to manage its own development. Here's how it works:
+## Sipping Our Own Champagne: Using `ctx` on `ctx`
+
+This project uses ctx to manage its own development. 
+
+Here's how it works:
 
 ### Project Structure
 
@@ -428,49 +521,66 @@ claude
 ./dist/ctx-linux-arm64 compact
 ```
 
-### Key Files for Dogfooding
+### Key Files
 
-| File | Role |
-|------|------|
-| `.context/TASKS.md` | Where Claude finds work items |
-| `.context/DECISIONS.md` | Records why things are built this way |
+| File                    | Role                                         |
+|-------------------------|----------------------------------------------|
+| `.context/TASKS.md`     | Where Claude finds work items                |
+| `.context/DECISIONS.md` | Records why things are built this way        |
 | `.context/LEARNINGS.md` | Captures gotchas (e.g., "use --no-gpg-sign") |
-| `.context/sessions/` | Full conversation dumps for context |
-| `CLAUDE.md` | Tells Claude about ctx on first read |
+| `.context/sessions/`    | Full conversation dumps for context          |
+| `CLAUDE.md`             | Tells Claude about ctx on first read         |
 
 ### The Feedback Loop
 
-1. **Use ctx** to build ctx
-2. **Discover friction** (missing features, unclear docs)
-3. **Add tasks** to `.context/TASKS.md`
-4. **Implement fixes** using ctx for context
+1. **Use `ctx`** to build `ctx`.
+2. **Discover friction** (*missing features, unclear docs*).
+3. **Add tasks** to `.context/TASKS.md`.
+4. **Implement fixes** using `ctx` for `ctx`.
 5. **Repeat**
 
-This is how ctx validates itself — every improvement comes from using it.
+This is how `ctx` validates itself: Every improvement comes from using it.
 
 ## Specifications
 
 See `specs/` for detailed specifications:
 
-- [Core Architecture](specs/core-architecture.md)
-- [Context File Formats](specs/context-file-formats.md)
-- [Context Loader](specs/context-loader.md)
-- [Context Updater](specs/context-updater.md)
-- [CLI](specs/cli.md)
-- [AI Tool Integration](specs/ai-tool-integration.md)
+* [Core Architecture](specs/core-architecture.md)
+* [Context File Formats](specs/context-file-formats.md)
+* [Context Loader](specs/context-loader.md)
+* [Context Updater](specs/context-updater.md)
+* [CLI](specs/cli.md)
+* [AI Tool Integration](specs/ai-tool-integration.md)
 
 ## Contributing
 
-1. Read the specs
-2. Run `./loop.sh plan` to see current state
-3. Run `./loop.sh` to let Ralph build
-4. Review and commit changes
+Contributions are welcome! Please read our guidelines before getting started:
+
+* **[Contributing Guide](CONTRIBUTING.md)**: How to set up, submit changes, and
+  code style
+* **[Developer Certificate of Origin](CONTRIBUTING_DCO.md)**: Sign-off
+  requirements for commits
+* **[Code of Conduct](CODE_OF_CONDUCT.md)**: Community standards
+  (*Contributor Covenant*)
+* **[Security Policy](SECURITY.md)**: How to report vulnerabilities
+
+### Quick Start
+
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/ctx.git
+cd ctx
+
+# Build and test
+CGO_ENABLED=0 go build -o ctx ./cmd/ctx
+CGO_ENABLED=0 go test ./...
+
+# Make changes, then submit a PR
+```
+
+All commits must be signed off (`git commit -s`) to certify the 
+[DCO](CONTRIBUTING_DCO.md).
 
 ## License
 
-MIT
-
----
-
-*"Ralph is a Bash loop. The technique is deterministically bad in an undeterministic world."*
-— Geoffrey Huntley
+[Apache 2.0](LICENSE)

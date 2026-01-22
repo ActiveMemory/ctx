@@ -88,7 +88,7 @@ Build "Context" — a lightweight, file-based system that lets AI coding assista
 
 **Implementation**: Go CLI (`ctx`) distributed as single binary via GitHub Releases.
 
-**Repository**: https://github.com/josealekhine/ctx
+**Repository**: https://github.com/ActiveMemory/ctx
 
 The system must:
 1. **Persist knowledge** — Tasks, decisions, learnings survive session boundaries

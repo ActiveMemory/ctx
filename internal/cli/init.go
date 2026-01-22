@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/josealekhine/ctx/internal/claude"
-	"github.com/josealekhine/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/claude"
+	"github.com/ActiveMemory/ctx/internal/templates"
 	"github.com/spf13/cobra"
 )
 

@@ -8,31 +8,31 @@ The Context CLI provides commands for initializing, managing, and inspecting pro
 
 - **Language**: Go (minimal dependencies, single binary)
 - **Distribution**: GitHub Releases (pre-built binaries for Linux, macOS, Windows)
-- **Repository**: https://github.com/josealekhine/ctx
+- **Repository**: https://github.com/ActiveMemory/ctx
 
 ## Installation
 
 ```bash
 # Download the latest release for your platform
-# From: https://github.com/josealekhine/ctx/releases
+# From: https://github.com/ActiveMemory/ctx/releases
 
 # Linux (amd64)
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-amd64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-linux-amd64
 chmod +x ctx-linux-amd64
 sudo mv ctx-linux-amd64 /usr/local/bin/ctx
 
 # Linux (arm64)
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-linux-arm64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-linux-arm64
 chmod +x ctx-linux-arm64
 sudo mv ctx-linux-arm64 /usr/local/bin/ctx
 
 # macOS (Apple Silicon)
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-arm64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-darwin-arm64
 chmod +x ctx-darwin-arm64
 sudo mv ctx-darwin-arm64 /usr/local/bin/ctx
 
 # macOS (Intel)
-curl -LO https://github.com/josealekhine/ctx/releases/latest/download/ctx-darwin-amd64
+curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-darwin-amd64
 chmod +x ctx-darwin-amd64
 sudo mv ctx-darwin-amd64 /usr/local/bin/ctx
 

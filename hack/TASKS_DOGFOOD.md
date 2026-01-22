@@ -7,7 +7,7 @@ This project is a dogfooding exercise: rebuild the `ctx` CLI from scratch using 
 ## Next Up
 
 ### Phase 1: Project Scaffolding `#priority:high`
-- [ ] Initialize Go module (`go mod init github.com/josealekhine/ctx`)
+- [ ] Initialize Go module (`go mod init github.com/ActiveMemory/ctx`)
 - [ ] Create directory structure (cmd/ctx, internal/cli, internal/context, internal/templates, etc.)
 - [ ] Set up Cobra CLI skeleton in cmd/ctx/main.go
 - [ ] Add dependencies (cobra, color, yaml)

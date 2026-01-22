@@ -10,7 +10,7 @@ Your goal: advance the project by exactly ONE task, update context, commit, and 
 ## PROJECT CONTEXT
 
 **Project**: Context — persistent context for AI coding assistants
-**Repository**: https://github.com/josealekhine/ctx
+**Repository**: https://github.com/ActiveMemory/ctx
 **Language**: Go 1.25+
 **Distribution**: Single binary via GitHub Releases
 
@@ -21,7 +21,7 @@ Your goal: advance the project by exactly ONE task, update context, commit, and 
 Check if `go.mod` exists.
 
 **IF NOT:**
-1. Run `go mod init github.com/josealekhine/ctx`
+1. Run `go mod init github.com/ActiveMemory/ctx`
 2. Create directory structure:
    ```
    cmd/ctx/main.go

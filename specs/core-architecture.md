@@ -82,7 +82,7 @@ A single Go binary (`ctx`) with commands for human operators:
 
 **Implementation**: Go with minimal dependencies. Single binary, cross-platform.
 
-**Distribution**: GitHub Releases at https://github.com/josealekhine/ctx
+**Distribution**: GitHub Releases at https://github.com/ActiveMemory/ctx
 
 ## Constraints
 

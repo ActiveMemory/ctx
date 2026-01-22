@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/josealekhine/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/spf13/cobra"
 )
 

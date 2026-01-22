@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/josealekhine/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context"
 )
 
 func TestReportStatus(t *testing.T) {

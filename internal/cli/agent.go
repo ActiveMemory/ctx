@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/josealekhine/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/spf13/cobra"
 )
 

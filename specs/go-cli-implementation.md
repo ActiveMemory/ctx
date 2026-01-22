@@ -69,7 +69,7 @@ Minimal dependencies (standard library preferred):
 
 ```go
 // go.mod
-module github.com/josealekhine/ctx
+module github.com/ActiveMemory/ctx
 
 go 1.22
 
@@ -191,7 +191,7 @@ package main
 import (
     "os"
     "github.com/spf13/cobra"
-    "github.com/josealekhine/ctx/internal/cli"
+    "github.com/ActiveMemory/ctx/internal/cli"
 )
 
 var Version = "dev"

@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#   /    Context:
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2025-present Context contributors.
+#        SPDX-License-Identifier: Apache-2.0
+
 # Auto-save session transcript on exit (including Ctrl+C)
 # This hook is triggered by Claude Code's SessionEnd event
 #

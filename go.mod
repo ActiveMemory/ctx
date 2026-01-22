@@ -1,4 +1,4 @@
-module github.com/josealekhine/ctx
+module github.com/ActiveMemory/ctx
 
 go 1.25.6
 

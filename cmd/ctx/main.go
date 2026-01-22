@@ -1,10 +1,16 @@
+//   /    Context:
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//        SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/josealekhine/ctx/internal/cli"
+	"github.com/ActiveMemory/ctx/internal/cli"
 	"github.com/spf13/cobra"
 )
 

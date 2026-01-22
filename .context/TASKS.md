@@ -1,7 +1,7 @@
 # Tasks — Context CLI
 
 ### Phase 1: Project Scaffolding `#priority:high` `#area:setup`
-- [x] Initialize Go module (`go mod init github.com/josealekhine/ctx`)
+- [x] Initialize Go module (`go mod init github.com/ActiveMemory/ctx`)
 - [x] Create directory structure (cmd/ctx, internal/cli, internal/context, internal/templates)
 - [x] Set up Cobra CLI skeleton in cmd/ctx/main.go
 - [x] Add dependencies (cobra, color, yaml)
@@ -69,12 +69,23 @@
 - [ ] Create `/ctx-add-task` skill — calls `ctx add task`
 - [ ] Create `/ctx-agent` skill — calls `ctx agent` (manual context load)
 - [ ] Create `/ctx-archive` skill — calls `ctx tasks archive`
+- [ ] Create `/ctx-loop` skill — calls `ctx loop` (generate Ralph loop script)
 - [ ] Update `ctx init` to create skill definitions in `.claude/commands/`
+
+### Phase 9b: Ralph Loop Integration `#priority:medium` `#area:cli`
+- [ ] Implement `ctx loop` command — generate a ready-to-use loop.sh script
+  - [ ] Detect AI tool in use (claude, aider, etc.) and generate appropriate invocation
+  - [ ] Include configurable max iterations, prompt file path
+  - [ ] Include completion signal detection (SYSTEM_CONVERGED, SYSTEM_BLOCKED)
+  - [ ] Make script executable by default
+- [ ] Add `ctx loop --prompt PROMPT.md` — specify custom prompt file
+- [ ] Add `ctx loop --tool claude|aider|generic` — target specific AI CLI
+- [ ] Document in README that `/ralph-loop` exists for Claude Code users
 
 ### Phase 10: Project Rename `#priority:medium` `#area:branding`
 - [x] Rename project from "Active Memory" to "Context"
   - [x] Update README.md title and references
-  - [x] Update Go module path (github.com/josealekhine/ctx)
+  - [x] Update Go module path (github.com/ActiveMemory/ctx)
   - [x] Update all import paths in Go files
   - [x] Update CLAUDE.md references
   - [x] Keep `ctx` as binary name (short for context)
@@ -84,6 +95,13 @@
 - [x] Document Claude Code integration in README
 - [x] Add "Dogfooding Guide" — how to use ctx on ctx itself
 - [x] Document session auto-save setup for new users
+- [ ] Create actual documentation site in `docs/` folder
+  - [ ] Getting started guide
+  - [ ] CLI command reference
+  - [ ] Context file format reference
+  - [ ] Integration guides (Claude Code, Cursor, Aider, etc.)
+  - [ ] Ralph Loop pairing guide
+- [ ] Set up Cloudflare Pages to serve docs at ctx.ist
 
 ## Blocked
 
