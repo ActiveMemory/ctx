@@ -36,7 +36,8 @@ Still skeptical? Here's a concrete example, explained by Claude itself:
 ```
 
 That's the whole point of `ctx`: **Temporal continuity across sessions**.
-`ctx` is not something you paste into a prompt—it's a system that 
+
+`ctx` is not something you paste into a prompt—it's a system that
 that maintains continuity over time.
 
 ## The Problem
@@ -391,9 +392,9 @@ ctx watch --dry-run
 5. **Tool-agnostic**: Works with Claude Code, Cursor, Aider, Copilot, or raw
    CLI.
 
-## Pairing with Ralph Wiggum
+## `ctx` and `ralph`: Like Peanut Butter and Jelly
 
-**ctx works great on its own** — just run `ctx init` and start coding with your
+**ctx works great on its own**: Just run `ctx init` and start coding with your
 AI workflows. The hooks handle context automatically.
 
 That said, ctx and [Ralph Wiggum](https://ghuntley.com/ralph/) complement each
@@ -403,7 +404,7 @@ other nicely:
 * **Ralph** provides the *loop*: an iterative AI development workflow that
   runs autonomously
 
-Together, they enable fully autonomous AI development where the agent remembers 
+Together, they enable fully autonomous AI development where the agent remembers
 everything across iterations.
 
 ### What is Ralph?
@@ -424,18 +425,19 @@ PROMPT_FILE="${1:-PROMPT.md}"
 MAX_ITERATIONS="${2:-10}"
 
 for i in $(seq 1 $MAX_ITERATIONS); do
-    echo "=== Iteration $i ==="
+  echo "=== Iteration $i ==="
 
-    # Pipe the prompt to your AI CLI tool
-    cat "$PROMPT_FILE" | claude --print
+  # Pipe the prompt to your AI CLI tool
+  cat "$PROMPT_FILE" | claude --print
 
-    # Check for completion signals
-    if grep -q "SYSTEM_CONVERGED\|SYSTEM_BLOCKED" /tmp/last_output 2>/dev/null; then
-        echo "Loop complete."
-        break
-    fi
+  # Check for completion signals
+  if grep -q "SYSTEM_CONVERGED\|SYSTEM_BLOCKED" \
+        /tmp/last_output 2>/dev/null; then
+    echo "Loop complete."
+    break
+  fi
 
-    sleep 2
+  sleep 2
 done
 ```
 
