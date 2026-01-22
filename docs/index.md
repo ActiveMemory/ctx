@@ -2,174 +2,166 @@
 icon: lucide/rocket
 ---
 
-```text
-  ,--...,
- .''-..'     _
-/@    `.-:  _/`
-> )<  ,-.: (_)  
- `..-',:-
-   `-'
-```
+# Getting Started with `ctx`
 
-# Get started
+Context (`ctx`) is a file-based system that enables AI coding assistants to persist project knowledge across sessions. Instead of re-explaining your codebase every time, context files let AI tools remember decisions, conventions, and learnings.
 
-For full documentation visit [zensical.org](https://zensical.org/docs/).
+## Why `ctx`?
 
-## Commands
+Most AI-driven development fails not because models are weak—they fail because **context is ephemeral**. Every new session starts near zero:
 
-* [`zensical new`][new] - Create a new project
-* [`zensical serve`][serve] - Start local web server
-* [`zensical build`][build] - Build your site
+- You re-explain architecture
+- The AI repeats past mistakes
+- Decisions get rediscovered instead of remembered
 
-  [new]: https://zensical.org/docs/usage/new/
-  [serve]: https://zensical.org/docs/usage/preview/
-  [build]: https://zensical.org/docs/usage/build/
+Context solves this by treating context as infrastructure: files that version with your code and persist across sessions.
 
-## Examples
+## Installation
 
-### Admonitions
+### Binary Downloads (Recommended)
 
-> Go to [documentation](https://zensical.org/docs/authoring/admonitions/)
+Download pre-built binaries from the [releases page](https://github.com/ActiveMemory/ctx/releases).
 
-!!! note
+=== "Linux (x86_64)"
 
-    This is a **note** admonition. Use it to provide helpful information.
-
-!!! warning
-
-    This is a **warning** admonition. Be careful!
-
-### Details
-
-> Go to [documentation](https://zensical.org/docs/authoring/admonitions/#collapsible-blocks)
-
-??? info "Click to expand for more info"
-    
-    This content is hidden until you click to expand it.
-    Great for FAQs or long explanations.
-
-## Code Blocks
-
-> Go to [documentation](https://zensical.org/docs/authoring/code-blocks/)
-
-``` python hl_lines="2" title="Code blocks"
-def greet(name):
-    print(f"Hello, {name}!") # (1)!
-
-greet("Python")
-```
-
-1.  > Go to [documentation](https://zensical.org/docs/authoring/code-blocks/#code-annotations)
-
-    Code annotations allow to attach notes to lines of code.
-
-Code can also be highlighted inline: `#!python print("Hello, Python!")`.
-
-## Content tabs
-
-> Go to [documentation](https://zensical.org/docs/authoring/content-tabs/)
-
-=== "Python"
-
-    ``` python
-    print("Hello from Python!")
+    ```bash
+    curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-linux-amd64
+    chmod +x ctx-linux-amd64
+    sudo mv ctx-linux-amd64 /usr/local/bin/ctx
     ```
 
-=== "Rust"
+=== "Linux (ARM64)"
 
-    ``` rs
-    println!("Hello from Rust!");
+    ```bash
+    curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-linux-arm64
+    chmod +x ctx-linux-arm64
+    sudo mv ctx-linux-arm64 /usr/local/bin/ctx
     ```
 
-## Diagrams
+=== "macOS (Apple Silicon)"
 
-> Go to [documentation](https://zensical.org/docs/authoring/diagrams/)
+    ```bash
+    curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-darwin-arm64
+    chmod +x ctx-darwin-arm64
+    sudo mv ctx-darwin-arm64 /usr/local/bin/ctx
+    ```
 
-``` mermaid
-graph LR
-  A[Start] --> B{Error?};
-  B -->|Yes| C[Hmm...];
-  C --> D[Debug];
-  D --> B;
-  B ---->|No| E[Yay!];
+=== "macOS (Intel)"
+
+    ```bash
+    curl -LO https://github.com/ActiveMemory/ctx/releases/latest/download/ctx-darwin-amd64
+    chmod +x ctx-darwin-amd64
+    sudo mv ctx-darwin-amd64 /usr/local/bin/ctx
+    ```
+
+=== "Windows"
+
+    Download `ctx-windows-amd64.exe` from the releases page and add it to your `PATH`.
+
+### Build from Source
+
+Requires [Go 1.22+](https://go.dev/):
+
+```bash
+git clone https://github.com/ActiveMemory/ctx.git
+cd ctx
+CGO_ENABLED=0 go build -o ctx ./cmd/ctx
+sudo mv ctx /usr/local/bin/
 ```
 
-## Footnotes
+Verify installation:
 
-> Go to [documentation](https://zensical.org/docs/authoring/footnotes/)
+```bash
+ctx --version
+```
 
-Here's a sentence with a footnote.[^1]
+## Quick Start
 
-Hover it, to see a tooltip.
+### 1. Initialize Context
 
-[^1]: This is the footnote.
+```bash
+cd your-project
+ctx init
+```
 
+This creates a `.context/` directory with template files and configures AI tool hooks (for Claude Code).
 
-## Formatting
+### 2. Check Status
 
-> Go to [documentation](https://zensical.org/docs/authoring/formatting/)
+```bash
+ctx status
+```
 
-- ==This was marked (highlight)==
-- ^^This was inserted (underline)^^
-- ~~This was deleted (strikethrough)~~
-- H~2~O
-- A^T^A
-- ++ctrl+alt+del++
+Shows context summary: files present, token estimate, and recent activity.
 
-## Icons, Emojis
+### 3. Start Using with AI
 
-> Go to [documentation](https://zensical.org/docs/authoring/icons-emojis/)
+With Claude Code, context loads automatically via hooks. For other tools, paste the output of:
 
-* :sparkles: `:sparkles:`
-* :rocket: `:rocket:`
-* :tada: `:tada:`
-* :memo: `:memo:`
-* :eyes: `:eyes:`
+```bash
+ctx agent --budget 8000
+```
 
-## Maths
+### 4. Verify It Works
 
-> Go to [documentation](https://zensical.org/docs/authoring/math/)
+Ask your AI: **"Do you remember?"**
 
-$$
-\cos x=\sum_{k=0}^{\infty}\frac{(-1)^k}{(2k)!}x^{2k}
-$$
+It should cite specific context: current tasks, recent decisions, or previous session topics.
 
-!!! warning "Needs configuration"
-    Note that MathJax is included via a `script` tag on this page and is not
-    configured in the generated default configuration to avoid including it
-    in a pages that do not need it. See the documentation for details on how
-    to configure it on all your pages if they are more Maths-heavy than these
-    simple starter pages.
+## What Gets Created
 
-<script id="MathJax-script" async src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [["\\(", "\\)"]],
-      displayMath: [["\\[", "\\]"]],
-      processEscapes: true,
-      processEnvironments: true
-    },
-    options: {
-      ignoreHtmlClass: ".*|",
-      processHtmlClass: "arithmatex"
-    }
-  };
-</script>
+```
+.context/
+├── CONSTITUTION.md     # Hard rules — NEVER violate these
+├── TASKS.md            # Current and planned work
+├── DECISIONS.md        # Architectural decisions with rationale
+├── LEARNINGS.md        # Lessons learned, gotchas, tips
+├── CONVENTIONS.md      # Project patterns and standards
+├── ARCHITECTURE.md     # System overview
+├── DEPENDENCIES.md     # Key dependencies and why chosen
+├── GLOSSARY.md         # Domain terms and abbreviations
+├── DRIFT.md            # Staleness signals
+├── AGENT_PLAYBOOK.md   # How AI agents should use this
+└── sessions/           # Session snapshots
+```
 
-## Task Lists
+See [Context Files](context-files.md) for detailed documentation of each file.
 
-> Go to [documentation](https://zensical.org/docs/authoring/lists/#using-task-lists)
+## Common Workflows
 
-* [x] Install Zensical
-* [x] Configure `zensical.toml`
-* [x] Write amazing documentation
-* [ ] Deploy anywhere
+### Add a Task
 
-## Tooltips
+```bash
+ctx add task "Implement user authentication"
+```
 
-> Go to [documentation](https://zensical.org/docs/authoring/tooltips/)
+### Record a Decision
 
-[Hover me][example]
+```bash
+ctx add decision "Use PostgreSQL for primary database"
+```
 
-  [example]: https://example.com "I'm a tooltip!"
+### Note a Learning
+
+```bash
+ctx add learning "Mock functions must be hoisted in Jest"
+```
+
+### Mark Task Complete
+
+```bash
+ctx complete "user auth"
+```
+
+### Check for Stale Context
+
+```bash
+ctx drift
+```
+
+## Next Steps
+
+- [CLI Reference](cli-reference.md) — All commands and options
+- [Context Files](context-files.md) — File formats and structure
+- [Ralph Loop Integration](ralph-loop.md) — Autonomous AI development workflows
+- [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider

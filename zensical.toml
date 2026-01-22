@@ -11,7 +11,7 @@
 # The site_name is shown in the page header and the browser window title
 #
 # Read more: https://zensical.org/docs/setup/basics/#site_name
-site_name = "Documentation"
+site_name = "ctx: do you remember?"
 
 # The site_description is included in the HTML head and should contain a
 # meaningful description of the site content for use by search engines.
@@ -34,7 +34,9 @@ site_author = "<your name here>"
 #
 # Read more: https://zensical.org/docs/setup/basics/#copyright
 copyright = """
-Copyright &copy; 2026 The authors
+Copyright &copy; 2026&ndash;present Context conributors.<br>
+Context's code is distributed under Apache (v2.0).<br>
+The documentation on this website is distributed under CC-BY-4.0.
 """
 
 # Zensical supports both implicit navigation and explicitly defined navigation.
@@ -44,10 +46,13 @@ Copyright &copy; 2026 The authors
 # can be defined using TOML syntax.
 #
 # Read more: https://zensical.org/docs/setup/navigation/
-# nav = [
-#   { "Get started" = "index.md" },
-#   { "Markdown in 5min" = "markdown.md" },
-# ]
+nav = [
+  { "Getting Started" = "index.md" },
+  { "CLI Reference" = "cli-reference.md" },
+  { "Context Files" = "context-files.md" },
+  { "Ralph Loop Integration" = "ralph-loop.md" },
+  { "Integrations" = "integrations.md" },
+]
 
 # With the "extra_css" option you can add your own CSS styling to customize
 # your Zensical project according to your needs. You can add any number of
@@ -292,8 +297,8 @@ toggle.name = "Switch to light mode"
 # - https://zensical.org/docs/setup/logo-and-icons
 # - https://zensical.org/docs/authoring/icons-emojis/#search
 # ----------------------------------------------------------------------------
-#[project.theme.icon]
-#logo = "lucide/smile"
+[project.theme.icon]
+logo = "lucide/bird"
 #repo = "lucide/smile"
 
 # ----------------------------------------------------------------------------
@@ -303,4 +308,5 @@ toggle.name = "Switch to light mode"
 #icon = "fontawesome/brands/github"
 #link = "https://github.com/user/repo"
 
-
+[project.extra]
+generator = false
