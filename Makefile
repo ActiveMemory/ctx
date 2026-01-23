@@ -2,7 +2,7 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint clean all release dogfood help
+.PHONY: build test vet fmt lint clean all release dogfood help test-coverage
 
 # Default binary name and output
 BINARY := ctx
@@ -26,6 +26,26 @@ test-v:
 ## test-cover: Run tests with coverage
 test-cover:
 	CGO_ENABLED=0 go test -cover ./...
+
+## test-coverage: Run tests with coverage and check against target (70%)
+test-coverage:
+	@echo "Running coverage check (target: 70%)..."
+	@echo ""
+	@CGO_ENABLED=0 go test -cover ./internal/context ./internal/cli 2>&1 | tee /tmp/ctx-coverage.txt
+	@echo ""
+	@CONTEXT_COV=$$(grep 'internal/context' /tmp/ctx-coverage.txt | grep -oE '[0-9]+\.[0-9]+%' | sed 's/%//'); \
+	CLI_COV=$$(grep 'internal/cli' /tmp/ctx-coverage.txt | grep -oE '[0-9]+\.[0-9]+%' | sed 's/%//'); \
+	echo "Coverage summary:"; \
+	echo "  internal/context: $${CONTEXT_COV}% (target: 70%)"; \
+	echo "  internal/cli: $${CLI_COV}% (target: 70% - aspirational)"; \
+	echo ""; \
+	if [ $$(echo "$$CONTEXT_COV < 70" | bc -l) -eq 1 ]; then \
+		echo "FAIL: internal/context coverage below 70%"; \
+		rm -f /tmp/ctx-coverage.txt; \
+		exit 1; \
+	fi; \
+	echo "Coverage check passed (internal/context >= 70%)"; \
+	rm -f /tmp/ctx-coverage.txt
 
 ## vet: Run go vet
 vet:
