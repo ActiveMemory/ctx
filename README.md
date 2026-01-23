@@ -146,6 +146,9 @@ ctx drift
 | `ctx session list`         | List saved sessions                                 |
 | `ctx session load <file>`  | Load/display a previous session                     |
 | `ctx session parse <file>` | Parse JSONL transcript to markdown                  |
+| `ctx tasks archive`        | Move completed tasks to archive                     |
+| `ctx tasks snapshot`       | Create point-in-time snapshot of TASKS.md           |
+| `ctx loop [--tool T]`      | Generate a Ralph loop script (claude/aider/generic) |
 
 ### Examples
 
@@ -411,10 +414,37 @@ everything across iterations.
 At its core, Ralph is just a loop that repeatedly invokes an AI with a prompt 
 file.
 
-**Claude Code** has a built-in Ralph Loop plugin: Just run `/ralph-loop` to 
+**Claude Code** has a built-in Ralph Loop plugin: Just run `/ralph-loop` to
 start an autonomous loop directly in your session.
 
-For other AI tools (*or custom setups*), you can create your own `loop.sh`:
+**ctx slash commands**: When you run `ctx init`, it also installs Claude Code
+slash commands for quick context operations:
+
+| Command            | Description                        |
+|--------------------|------------------------------------|
+| `/ctx-status`      | Show context summary               |
+| `/ctx-agent`       | Load full context packet           |
+| `/ctx-save`        | Save context to session file       |
+| `/ctx-add-task`    | Add a task                         |
+| `/ctx-add-learning`| Add a learning                     |
+| `/ctx-add-decision`| Add a decision                     |
+| `/ctx-archive`     | Archive completed tasks            |
+| `/ctx-loop`        | Generate a Ralph loop script       |
+
+For other AI tools (*or custom setups*), generate a loop script with `ctx loop`:
+
+```bash
+# Generate a loop script for Claude
+ctx loop --tool claude --prompt PROMPT.md
+
+# Generate for Aider
+ctx loop --tool aider --max-iterations 20
+
+# Run the generated script
+./loop.sh
+```
+
+Or create your own minimal loop:
 
 ```bash
 #!/bin/bash

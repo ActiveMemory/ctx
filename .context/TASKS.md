@@ -81,7 +81,7 @@
   - [x] Make script executable by default
 - [x] Add `ctx loop --prompt PROMPT.md` — specify custom prompt file
 - [x] Add `ctx loop --tool claude|aider|generic` — target specific AI CLI
-- [ ] Document in README that `/ralph-loop` exists for Claude Code users
+- [x] Document in README that `/ralph-loop` exists for Claude Code users
 
 ### Phase 10: Project Rename `#priority:medium` `#area:branding`
 - [x] Rename project from "Active Memory" to "Context"
