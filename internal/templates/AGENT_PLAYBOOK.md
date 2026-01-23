@@ -1,5 +1,17 @@
 # Agent Playbook
 
+## Invoking ctx
+
+Always use `ctx` from PATH:
+```bash
+ctx status        # ✓ correct
+ctx agent         # ✓ correct
+./dist/ctx        # ✗ avoid hardcoded paths
+go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
+```
+
+Check with `which ctx` if unsure whether it's installed.
+
 ## Read Order
 
 1. CONSTITUTION.md — Hard rules, NEVER violate
@@ -19,9 +31,9 @@ If you're confused about context or need a deep dive into past discussions:
 ls .context/sessions/
 ```
 
-**Curated session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md` (e.g., `2025-01-20-164600-feature-discussion.md`). These are updated throughout the session.
+**Curated session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md` (e.g., `2026-01-15-164600-feature-discussion.md`). These are updated throughout the session.
 
-**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` (e.g., `2025-01-20-170830-pre-compact.jsonl`). These are immutable once created.
+**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` (e.g., `2026-01-15-170830-pre-compact.jsonl`). These are immutable once created.
 
 **Auto-save triggers** (for Claude Code users):
 - **SessionEnd hook** → auto-saves transcript on exit, including Ctrl+C
