@@ -56,6 +56,33 @@ ls .context/sessions/
 
 See `.claude/hooks/auto-save-session.sh` for the implementation.
 
+## Timestamp-Based Session Correlation
+
+Context entries (tasks, learnings, decisions) include timestamps that allow
+you to determine which session created them.
+
+### Timestamp Format
+
+All timestamps use `YYYY-MM-DD-HHMM` format:
+- **Tasks**: `- [ ] Do something #added:2026-01-23-1430`
+- **Learnings**: `- **[2026-01-23-1430]** Discovered that...`
+- **Decisions**: `## [2026-01-23-1430] Use PostgreSQL`
+- **Sessions**: `**start_time**: 2026-01-23-1400` / `**end_time**: 2026-01-23-1530`
+
+### Correlating Entries to Sessions
+
+To find which session added an entry:
+
+1. **Extract the entry's timestamp** (e.g., `2026-01-23-1430`)
+2. **List sessions** from that day: `ls .context/sessions/2026-01-23*`
+3. **Check session time bounds**: Entry timestamp should fall between session's start_time and end_time
+
+### When Timestamps Help
+
+- **Tracing decisions**: "Why did we decide X?" → Find the session that added it
+- **Understanding context**: Read the full session for the discussion that led to an entry
+- **Debugging issues**: Correlate when a learning was discovered with what was happening
+
 ## Session File Structure (Suggested)
 
 Adapt this structure based on session type. Not all sections are needed for every session.

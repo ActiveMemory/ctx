@@ -136,7 +136,7 @@
 - [x] Increase timestamp precision in formatDecision() — change from YYYY-MM-DD to YYYY-MM-DD-HHMM
 - [x] Add start_time field to session summary files — record when session began
 - [-] Add last_update_time field to session summary files — skipped: end_time provides session bounds; tracking live updates requires state persistence
-- [ ] Document timestamp correlation approach in AGENT_PLAYBOOK.md — explain how to correlate entries to sessions by time overlap
+- [x] Document timestamp correlation approach in AGENT_PLAYBOOK.md — explain how to correlate entries to sessions by time overlap
 
 ### Phase 13: Rich Context Entries `#priority:medium` `#area:cli`
 - [ ] Add --file flag to ctx add — read entry content from a file instead of CLI arg
