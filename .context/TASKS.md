@@ -131,9 +131,9 @@
 - `#in-progress` — currently being worked on (add inline, don't move task)
 
 ### Phase 12: Timestamp-Based Session Correlation `#priority:medium` `#area:cli`
-- [ ] Add timestamp to formatTask() in add.go — currently tasks have no timestamp, add `#added:YYYY-MM-DD-HHMM` or similar
-- [ ] Increase timestamp precision in formatLearning() — change from YYYY-MM-DD to YYYY-MM-DD-HHMM
-- [ ] Increase timestamp precision in formatDecision() — change from YYYY-MM-DD to YYYY-MM-DD-HHMM
+- [x] Add timestamp to formatTask() in add.go — currently tasks have no timestamp, add `#added:YYYY-MM-DD-HHMM` or similar
+- [x] Increase timestamp precision in formatLearning() — change from YYYY-MM-DD to YYYY-MM-DD-HHMM
+- [x] Increase timestamp precision in formatDecision() — change from YYYY-MM-DD to YYYY-MM-DD-HHMM
 - [ ] Add start_time field to session summary files — record when session began
 - [ ] Add last_update_time field to session summary files — update on each ctx add call during session
 - [ ] Document timestamp correlation approach in AGENT_PLAYBOOK.md — explain how to correlate entries to sessions by time overlap
