@@ -27,3 +27,8 @@ TASKS.md must remain a replayable checklist. Uncheck all items and re-run = veri
 - [ ] **Use inline labels for status** — add `#in-progress` to task text, don't move it
 - [ ] **No "In Progress" / "Next Up" sections** — these encourage moving tasks
 - [ ] **Ask before restructuring** — if structure changes seem needed, ask the user first
+
+## Context Preservation Invariants
+
+- [ ] **Archival is allowed, deletion is not** — use `ctx tasks archive` to move completed tasks to `.context/archive/`, never delete context history
+- [ ] **Archive preserves structure** — archived tasks keep their Phase headers for traceability

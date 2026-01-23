@@ -59,7 +59,7 @@
 - [x] Implement `ctx tasks snapshot` — create point-in-time snapshot of TASKS.md
 - [x] Archive location: `.context/archive/tasks-YYYY-MM-DD.md`
 - [x] Keep Phase structure in archives for traceability
-- [ ] Update CONSTITUTION.md: archival is allowed, deletion is not
+- [x] Update CONSTITUTION.md: archival is allowed, deletion is not
 
 ### Phase 9: Claude Slash Commands (Skills) `#priority:medium` `#area:cli`
 - [ ] Research how existing skills are registered (check ralph-loop pattern)
