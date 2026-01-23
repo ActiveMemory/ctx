@@ -16,6 +16,12 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 - [ ] All architectural changes require a decision record
 
+## ctx Invocation Invariants
+
+- [ ] **ALWAYS use `ctx` from PATH** — never `./ctx`, `./dist/ctx`, or `go run ./cmd/ctx`
+- [ ] **Never add fallback commands** — if `ctx` fails, report the error; do not attempt alternatives
+- [ ] **If unsure ctx is installed** — check with `which ctx`, don't guess with fallbacks
+
 ## TASKS.md Structure Invariants
 
 TASKS.md must remain a replayable checklist. Uncheck all items and re-run 
