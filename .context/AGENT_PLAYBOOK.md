@@ -167,6 +167,65 @@ For complex sessions (architecture, debugging), include:
 | Completed task              | Mark [x] in TASKS.md  |
 | Had important discussion    | Save to sessions/     |
 
+## Rich Entries with Templates
+
+For complex learnings or decisions that need more structure, use the `--file` flag
+with entry templates located in `.context/templates/`.
+
+### Available Templates
+
+| Template | Structure | Use When |
+|----------|-----------|----------|
+| `learning.md` | Context → Lesson → Application | Documenting complex discoveries with actionable guidance |
+| `decision.md` | Context → Options → Decision → Rationale → Consequences | Recording architectural choices with full reasoning |
+
+### Workflow: Inline vs File
+
+**Use inline** (`ctx add learning "message"`) for:
+- Quick, simple observations
+- One-liner tips or gotchas
+- Discoveries that need no context
+
+**Use --file** (`ctx add learning --file entry.md`) for:
+- Multi-paragraph explanations
+- Decisions requiring trade-off analysis
+- Learnings that need context and application guidance
+
+### Example: Rich Learning
+
+```bash
+# Copy template
+cp .context/templates/learning.md /tmp/my-learning.md
+
+# Edit with your content
+# Then add:
+ctx add learning --file /tmp/my-learning.md
+```
+
+### Example: Rich Decision
+
+```bash
+# Copy template
+cp .context/templates/decision.md /tmp/my-decision.md
+
+# Fill in:
+# - Context: What situation prompted this?
+# - Options: What alternatives were considered?
+# - Decision: What was chosen?
+# - Rationale: Why this choice?
+# - Consequences: What changes as a result?
+
+ctx add decision --file /tmp/my-decision.md
+```
+
+### Stdin Support
+
+You can also pipe content directly:
+```bash
+echo "Quick learning from exploration" | ctx add learning
+cat detailed-analysis.md | ctx add decision
+```
+
 ## Before Session Ends
 
 **CRITICAL**: Before the user ends the session, offer to save context:

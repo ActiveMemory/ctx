@@ -151,6 +151,12 @@ func runInit(cmd *cobra.Command, _ []string) error {
 
 	cmd.Printf("\n%s initialized in %s/\n", green("Context"), contextDir)
 
+	// Create entry templates in .context/templates/
+	if err := createEntryTemplates(cmd, contextDir, initForce); err != nil {
+		// Non-fatal: warn but continue
+		cmd.Printf("  %s Entry templates: %v\n", color.YellowString("⚠"), err)
+	}
+
 	// Create IMPLEMENTATION_PLAN.md in project root (orchestrator directive)
 	if err := createImplementationPlan(cmd, initForce); err != nil {
 		// Non-fatal: warn but continue
@@ -489,6 +495,47 @@ func updateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte, g
 		return fmt.Errorf("failed to update %s: %w", claudeMdFileName, err)
 	}
 	cmd.Printf("  %s %s (updated ctx section)\n", green("✓"), claudeMdFileName)
+
+	return nil
+}
+
+// createEntryTemplates creates .context/templates/ with entry templates for rich entries.
+// These templates help users format detailed learnings and decisions using --file flag.
+func createEntryTemplates(cmd *cobra.Command, contextDir string, force bool) error {
+	green := color.New(color.FgGreen).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+
+	templatesDir := filepath.Join(contextDir, "templates")
+	if err := os.MkdirAll(templatesDir, 0755); err != nil {
+		return fmt.Errorf("failed to create %s: %w", templatesDir, err)
+	}
+
+	// Get list of entry templates
+	entryTemplates, err := templates.ListEntryTemplates()
+	if err != nil {
+		return fmt.Errorf("failed to list entry templates: %w", err)
+	}
+
+	for _, name := range entryTemplates {
+		targetPath := filepath.Join(templatesDir, name)
+
+		// Check if file exists and --force not set
+		if _, err := os.Stat(targetPath); err == nil && !force {
+			cmd.Printf("  %s templates/%s (exists, skipped)\n", yellow("○"), name)
+			continue
+		}
+
+		content, err := templates.GetEntryTemplate(name)
+		if err != nil {
+			return fmt.Errorf("failed to read entry template %s: %w", name, err)
+		}
+
+		if err := os.WriteFile(targetPath, content, 0644); err != nil {
+			return fmt.Errorf("failed to write %s: %w", targetPath, err)
+		}
+
+		cmd.Printf("  %s templates/%s\n", green("✓"), name)
+	}
 
 	return nil
 }
