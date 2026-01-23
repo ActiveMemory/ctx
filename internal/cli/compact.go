@@ -62,21 +62,21 @@ func runCompact(cmd *cobra.Command, args []string) error {
 
 	// Auto-save session before compact
 	if !compactNoAutoSave {
-		if err := preCompactAutoSave(); err != nil {
-			fmt.Printf("%s Auto-save failed: %v (continuing anyway)\n", yellow("⚠"), err)
+		if err := preCompactAutoSave(cmd); err != nil {
+			cmd.Printf("%s Auto-save failed: %v (continuing anyway)\n", yellow("⚠"), err)
 		}
 	}
 
-	fmt.Println(cyan("Compact Analysis"))
-	fmt.Println(cyan("================"))
-	fmt.Println()
+	cmd.Println(cyan("Compact Analysis"))
+	cmd.Println(cyan("================"))
+	cmd.Println()
 
 	changes := 0
 
 	// Process TASKS.md
-	tasksChanges, err := compactTasks(ctx, compactArchive)
+	tasksChanges, err := compactTasks(cmd, ctx, compactArchive)
 	if err != nil {
-		fmt.Printf("%s Error processing TASKS.md: %v\n", yellow("⚠"), err)
+		cmd.Printf("%s Error processing TASKS.md: %v\n", yellow("⚠"), err)
 	} else {
 		changes += tasksChanges
 	}
@@ -89,22 +89,22 @@ func runCompact(cmd *cobra.Command, args []string) error {
 		cleaned, count := removeEmptySections(string(f.Content))
 		if count > 0 {
 			if err := os.WriteFile(f.Path, []byte(cleaned), 0644); err == nil {
-				fmt.Printf("%s Removed %d empty sections from %s\n", green("✓"), count, f.Name)
+				cmd.Printf("%s Removed %d empty sections from %s\n", green("✓"), count, f.Name)
 				changes += count
 			}
 		}
 	}
 
 	if changes == 0 {
-		fmt.Printf("%s Nothing to compact — context is already clean\n", green("✓"))
+		cmd.Printf("%s Nothing to compact — context is already clean\n", green("✓"))
 	} else {
-		fmt.Printf("\n%s Compacted %d items\n", green("✓"), changes)
+		cmd.Printf("\n%s Compacted %d items\n", green("✓"), changes)
 	}
 
 	return nil
 }
 
-func compactTasks(ctx *context.Context, archive bool) (int, error) {
+func compactTasks(cmd *cobra.Command, ctx *context.Context, archive bool) (int, error) {
 	var tasksFile *context.FileInfo
 	for i := range ctx.Files {
 		if ctx.Files[i].Name == "TASKS.md" {
@@ -145,7 +145,7 @@ func compactTasks(ctx *context.Context, archive bool) (int, error) {
 			matches := completedPattern.FindStringSubmatch(line)
 			if len(matches) > 1 {
 				completedTasks = append(completedTasks, matches[1])
-				fmt.Printf("%s Moving completed task: %s\n", green("✓"), truncateString(matches[1], 50))
+				cmd.Printf("%s Moving completed task: %s\n", green("✓"), truncateString(matches[1], 50))
 				changes++
 				continue // Don't add to newLines
 			}
@@ -189,7 +189,7 @@ func compactTasks(ctx *context.Context, archive bool) (int, error) {
 				archiveContent += fmt.Sprintf("- [x] %s\n", task)
 			}
 			if err := os.WriteFile(archiveFile, []byte(archiveContent), 0644); err == nil {
-				fmt.Printf("%s Archived %d tasks to %s\n", green("✓"), len(completedTasks), archiveFile)
+				cmd.Printf("%s Archived %d tasks to %s\n", green("✓"), len(completedTasks), archiveFile)
 			}
 		}
 	}
@@ -252,7 +252,7 @@ func truncateString(s string, maxLen int) string {
 }
 
 // preCompactAutoSave saves a session snapshot before compacting.
-func preCompactAutoSave() error {
+func preCompactAutoSave(cmd *cobra.Command) error {
 	green := color.New(color.FgGreen).SprintFunc()
 
 	// Ensure sessions directory exists
@@ -274,7 +274,7 @@ func preCompactAutoSave() error {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}
 
-	fmt.Printf("%s Auto-saved pre-compact snapshot to %s\n\n", green("✓"), filePath)
+	cmd.Printf("%s Auto-saved pre-compact snapshot to %s\n\n", green("✓"), filePath)
 	return nil
 }
 

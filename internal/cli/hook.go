@@ -45,13 +45,13 @@ func runHook(cmd *cobra.Command, args []string) error {
 
 	switch tool {
 	case "claude-code", "claude":
-		fmt.Println(cyan("Claude Code Integration"))
-		fmt.Println(cyan("======================="))
-		fmt.Println()
-		fmt.Println("Add this to your project's CLAUDE.md or system prompt:")
-		fmt.Println()
-		fmt.Println(green("```markdown"))
-		fmt.Print(`## Context
+		cmd.Println(cyan("Claude Code Integration"))
+		cmd.Println(cyan("======================="))
+		cmd.Println()
+		cmd.Println("Add this to your project's CLAUDE.md or system prompt:")
+		cmd.Println()
+		cmd.Println(green("```markdown"))
+		cmd.Print(`## Context
 
 Before starting any task, load the project context:
 
@@ -69,26 +69,26 @@ When you make changes:
 
 Run 'ctx agent' for a quick context summary.
 `)
-		fmt.Println(green("```"))
-		fmt.Println()
-		fmt.Println("Or use a hook in .claude/settings.json:")
-		fmt.Println()
-		fmt.Println(green("```json"))
-		fmt.Println(`{
+		cmd.Println(green("```"))
+		cmd.Println()
+		cmd.Println("Or use a hook in .claude/settings.json:")
+		cmd.Println()
+		cmd.Println(green("```json"))
+		cmd.Println(`{
   "hooks": {
     "preToolCall": "ctx agent --budget 4000"
   }
 }`)
-		fmt.Println(green("```"))
+		cmd.Println(green("```"))
 
 	case "cursor":
-		fmt.Println(cyan("Cursor IDE Integration"))
-		fmt.Println(cyan("======================"))
-		fmt.Println()
-		fmt.Println("Add to your .cursorrules file:")
-		fmt.Println()
-		fmt.Println(green("```markdown"))
-		fmt.Print(`# Project Context
+		cmd.Println(cyan("Cursor IDE Integration"))
+		cmd.Println(cyan("======================"))
+		cmd.Println()
+		cmd.Println("Add to your .cursorrules file:")
+		cmd.Println()
+		cmd.Println(green("```markdown"))
+		cmd.Print(`# Project Context
 
 Always read these files before making changes:
 - .context/CONSTITUTION.md (NEVER violate these rules)
@@ -99,37 +99,37 @@ Always read these files before making changes:
 Run 'ctx agent' for a context summary.
 Run 'ctx drift' to check for stale context.
 `)
-		fmt.Println(green("```"))
+		cmd.Println(green("```"))
 
 	case "aider":
-		fmt.Println(cyan("Aider Integration"))
-		fmt.Println(cyan("================="))
-		fmt.Println()
-		fmt.Println("Add to your .aider.conf.yml:")
-		fmt.Println()
-		fmt.Println(green("```yaml"))
-		fmt.Println(`read:
+		cmd.Println(cyan("Aider Integration"))
+		cmd.Println(cyan("================="))
+		cmd.Println()
+		cmd.Println("Add to your .aider.conf.yml:")
+		cmd.Println()
+		cmd.Println(green("```yaml"))
+		cmd.Println(`read:
   - .context/CONSTITUTION.md
   - .context/TASKS.md
   - .context/CONVENTIONS.md
   - .context/ARCHITECTURE.md
   - .context/DECISIONS.md`)
-		fmt.Println(green("```"))
-		fmt.Println()
-		fmt.Println("Or pass context via command line:")
-		fmt.Println()
-		fmt.Println(green("```bash"))
-		fmt.Println(`ctx agent | aider --message "$(cat -)"`)
-		fmt.Println(green("```"))
+		cmd.Println(green("```"))
+		cmd.Println()
+		cmd.Println("Or pass context via command line:")
+		cmd.Println()
+		cmd.Println(green("```bash"))
+		cmd.Println(`ctx agent | aider --message "$(cat -)"`)
+		cmd.Println(green("```"))
 
 	case "copilot":
-		fmt.Println(cyan("GitHub Copilot Integration"))
-		fmt.Println(cyan("=========================="))
-		fmt.Println()
-		fmt.Println("Add to your .github/copilot-instructions.md:")
-		fmt.Println()
-		fmt.Println(green("```markdown"))
-		fmt.Print(`# Project Context
+		cmd.Println(cyan("GitHub Copilot Integration"))
+		cmd.Println(cyan("=========================="))
+		cmd.Println()
+		cmd.Println("Add to your .github/copilot-instructions.md:")
+		cmd.Println()
+		cmd.Println(green("```markdown"))
+		cmd.Print(`# Project Context
 
 Before generating code, review:
 - .context/CONSTITUTION.md for inviolable rules
@@ -139,16 +139,16 @@ Before generating code, review:
 Key conventions:
 - [Add your key conventions here]
 `)
-		fmt.Println(green("```"))
+		cmd.Println(green("```"))
 
 	case "windsurf":
-		fmt.Println(cyan("Windsurf Integration"))
-		fmt.Println(cyan("===================="))
-		fmt.Println()
-		fmt.Println("Add to your .windsurfrules file:")
-		fmt.Println()
-		fmt.Println(green("```markdown"))
-		fmt.Print(`# Context
+		cmd.Println(cyan("Windsurf Integration"))
+		cmd.Println(cyan("===================="))
+		cmd.Println()
+		cmd.Println("Add to your .windsurfrules file:")
+		cmd.Println()
+		cmd.Println(green("```markdown"))
+		cmd.Print(`# Context
 
 Read order for context:
 1. .context/CONSTITUTION.md
@@ -159,16 +159,16 @@ Read order for context:
 
 Run 'ctx agent' for AI-ready context packet.
 `)
-		fmt.Println(green("```"))
+		cmd.Println(green("```"))
 
 	default:
-		fmt.Printf("Unknown tool: %s\n\n", tool)
-		fmt.Println("Supported tools:")
-		fmt.Println("  claude-code  - Anthropic's Claude Code CLI")
-		fmt.Println("  cursor       - Cursor IDE")
-		fmt.Println("  aider        - Aider AI coding assistant")
-		fmt.Println("  copilot      - GitHub Copilot")
-		fmt.Println("  windsurf     - Windsurf IDE")
+		cmd.Printf("Unknown tool: %s\n\n", tool)
+		cmd.Println("Supported tools:")
+		cmd.Println("  claude-code  - Anthropic's Claude Code CLI")
+		cmd.Println("  cursor       - Cursor IDE")
+		cmd.Println("  aider        - Aider AI coding assistant")
+		cmd.Println("  copilot      - GitHub Copilot")
+		cmd.Println("  windsurf     - Windsurf IDE")
 		return fmt.Errorf("unsupported tool: %s", tool)
 	}
 

@@ -89,7 +89,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	if _, err := os.Stat(contextDir); err == nil {
 		if !initForce {
 			// Prompt for confirmation
-			fmt.Printf("%s already exists. Overwrite? [y/N] ", contextDir)
+			cmd.Printf("%s already exists. Overwrite? [y/N] ", contextDir)
 			reader := bufio.NewReader(os.Stdin)
 			response, err := reader.ReadString('\n')
 			if err != nil {
@@ -97,7 +97,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
 			if response != "y" && response != "yes" {
-				fmt.Println("Aborted.")
+				cmd.Println("Aborted.")
 				return nil
 			}
 		}
@@ -132,7 +132,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 		// Check if file exists and --force not set
 		if _, err := os.Stat(targetPath); err == nil && !initForce {
-			fmt.Printf("  %s %s (exists, skipped)\n", color.YellowString("○"), name)
+			cmd.Printf("  %s %s (exists, skipped)\n", color.YellowString("○"), name)
 			continue
 		}
 
@@ -145,41 +145,41 @@ func runInit(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
 
-		fmt.Printf("  %s %s\n", green("✓"), name)
+		cmd.Printf("  %s %s\n", green("✓"), name)
 	}
 
-	fmt.Printf("\n%s initialized in %s/\n", green("Context"), contextDir)
+	cmd.Printf("\n%s initialized in %s/\n", green("Context"), contextDir)
 
 	// Create IMPLEMENTATION_PLAN.md in project root (orchestrator directive)
-	if err := createImplementationPlan(initForce); err != nil {
+	if err := createImplementationPlan(cmd, initForce); err != nil {
 		// Non-fatal: warn but continue
-		fmt.Printf("  %s IMPLEMENTATION_PLAN.md: %v\n", color.YellowString("⚠"), err)
+		cmd.Printf("  %s IMPLEMENTATION_PLAN.md: %v\n", color.YellowString("⚠"), err)
 	}
 
 	// Create Claude Code hooks
-	fmt.Println("\nSetting up Claude Code integration...")
-	if err := createClaudeHooks(initForce); err != nil {
+	cmd.Println("\nSetting up Claude Code integration...")
+	if err := createClaudeHooks(cmd, initForce); err != nil {
 		// Non-fatal: warn but continue
-		fmt.Printf("  %s Claude hooks: %v\n", color.YellowString("⚠"), err)
+		cmd.Printf("  %s Claude hooks: %v\n", color.YellowString("⚠"), err)
 	}
 
 	// Handle CLAUDE.md creation/merge
-	if err := handleClaudeMd(initForce, initMerge); err != nil {
+	if err := handleClaudeMd(cmd, initForce, initMerge); err != nil {
 		// Non-fatal: warn but continue
-		fmt.Printf("  %s CLAUDE.md: %v\n", color.YellowString("⚠"), err)
+		cmd.Printf("  %s CLAUDE.md: %v\n", color.YellowString("⚠"), err)
 	}
 
-	fmt.Println("\nNext steps:")
-	fmt.Println("  1. Edit .context/TASKS.md to add your current tasks")
-	fmt.Println("  2. Run 'ctx status' to see context summary")
-	fmt.Println("  3. Run 'ctx agent' to get AI-ready context packet")
+	cmd.Println("\nNext steps:")
+	cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
+	cmd.Println("  2. Run 'ctx status' to see context summary")
+	cmd.Println("  3. Run 'ctx agent' to get AI-ready context packet")
 
 	return nil
 }
 
 // createClaudeHooks creates .claude/hooks/ directory and settings.local.json
 // It merges hooks into existing settings rather than overwriting.
-func createClaudeHooks(force bool) error {
+func createClaudeHooks(cmd *cobra.Command, force bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
@@ -197,7 +197,7 @@ func createClaudeHooks(force bool) error {
 	// Create auto-save-session.sh script
 	scriptPath := filepath.Join(claudeHooksDirName, autoSaveScriptName)
 	if _, err := os.Stat(scriptPath); err == nil && !force {
-		fmt.Printf("  %s %s (exists, skipped)\n", yellow("○"), scriptPath)
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), scriptPath)
 	} else {
 		scriptContent, err := claude.GetAutoSaveScript()
 		if err != nil {
@@ -206,11 +206,11 @@ func createClaudeHooks(force bool) error {
 		if err := os.WriteFile(scriptPath, scriptContent, 0755); err != nil {
 			return fmt.Errorf("failed to write %s: %w", scriptPath, err)
 		}
-		fmt.Printf("  %s %s\n", green("✓"), scriptPath)
+		cmd.Printf("  %s %s\n", green("✓"), scriptPath)
 	}
 
 	// Handle settings.local.json - merge rather than overwrite
-	if err := mergeSettingsHooks(cwd, force); err != nil {
+	if err := mergeSettingsHooks(cmd, cwd, force); err != nil {
 		return err
 	}
 
@@ -218,7 +218,7 @@ func createClaudeHooks(force bool) error {
 }
 
 // mergeSettingsHooks creates or merges hooks into settings.local.json
-func mergeSettingsHooks(projectDir string, force bool) error {
+func mergeSettingsHooks(cmd *cobra.Command, projectDir string, force bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
@@ -241,7 +241,7 @@ func mergeSettingsHooks(projectDir string, force bool) error {
 	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
 
 	if fileExists && hasPreToolUse && hasSessionEnd && !force {
-		fmt.Printf("  %s %s (hooks exist, skipped)\n", yellow("○"), settingsFileName)
+		cmd.Printf("  %s %s (hooks exist, skipped)\n", yellow("○"), settingsFileName)
 		return nil
 	}
 
@@ -257,7 +257,7 @@ func mergeSettingsHooks(projectDir string, force bool) error {
 	}
 
 	if !modified {
-		fmt.Printf("  %s %s (no changes needed)\n", yellow("○"), settingsFileName)
+		cmd.Printf("  %s %s (no changes needed)\n", yellow("○"), settingsFileName)
 		return nil
 	}
 
@@ -277,9 +277,9 @@ func mergeSettingsHooks(projectDir string, force bool) error {
 	}
 
 	if fileExists {
-		fmt.Printf("  %s %s (merged hooks)\n", green("✓"), settingsFileName)
+		cmd.Printf("  %s %s (merged hooks)\n", green("✓"), settingsFileName)
 	} else {
-		fmt.Printf("  %s %s\n", green("✓"), settingsFileName)
+		cmd.Printf("  %s %s\n", green("✓"), settingsFileName)
 	}
 
 	return nil
@@ -287,7 +287,7 @@ func mergeSettingsHooks(projectDir string, force bool) error {
 
 // createImplementationPlan creates IMPLEMENTATION_PLAN.md in project root
 // This is the orchestrator directive that points to .context/TASKS.md
-func createImplementationPlan(force bool) error {
+func createImplementationPlan(cmd *cobra.Command, force bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
@@ -295,7 +295,7 @@ func createImplementationPlan(force bool) error {
 
 	// Check if file exists
 	if _, err := os.Stat(planFileName); err == nil && !force {
-		fmt.Printf("  %s %s (exists, skipped)\n", yellow("○"), planFileName)
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), planFileName)
 		return nil
 	}
 
@@ -309,7 +309,7 @@ func createImplementationPlan(force bool) error {
 		return fmt.Errorf("failed to write file: %w", err)
 	}
 
-	fmt.Printf("  %s %s (orchestrator directive)\n", green("✓"), planFileName)
+	cmd.Printf("  %s %s (orchestrator directive)\n", green("✓"), planFileName)
 	return nil
 }
 
@@ -317,7 +317,7 @@ func createImplementationPlan(force bool) error {
 // - If CLAUDE.md doesn't exist: create it from template
 // - If it exists but has no ctx markers: offer to merge (or auto-merge with --merge)
 // - If it exists with ctx markers: update the ctx section only (or skip if not --force)
-func handleClaudeMd(force, autoMerge bool) error {
+func handleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
@@ -336,7 +336,7 @@ func handleClaudeMd(force, autoMerge bool) error {
 		if err := os.WriteFile(claudeMdFileName, templateContent, 0644); err != nil {
 			return fmt.Errorf("failed to write %s: %w", claudeMdFileName, err)
 		}
-		fmt.Printf("  %s %s\n", green("✓"), claudeMdFileName)
+		cmd.Printf("  %s %s\n", green("✓"), claudeMdFileName)
 		return nil
 	}
 
@@ -347,19 +347,19 @@ func handleClaudeMd(force, autoMerge bool) error {
 	if hasCtxMarkers {
 		// Already has ctx content
 		if !force {
-			fmt.Printf("  %s %s (ctx content exists, skipped)\n", yellow("○"), claudeMdFileName)
+			cmd.Printf("  %s %s (ctx content exists, skipped)\n", yellow("○"), claudeMdFileName)
 			return nil
 		}
 		// Force update - replace existing ctx section
-		return updateCtxSection(existingStr, templateContent, green)
+		return updateCtxSection(cmd, existingStr, templateContent, green)
 	}
 
 	// No ctx markers - need to merge
 	if !autoMerge {
 		// Prompt user
-		fmt.Printf("\n%s exists but has no ctx content.\n", claudeMdFileName)
-		fmt.Println("Would you like to append ctx context management instructions?")
-		fmt.Print("[y/N] ")
+		cmd.Printf("\n%s exists but has no ctx content.\n", claudeMdFileName)
+		cmd.Println("Would you like to append ctx context management instructions?")
+		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
@@ -367,7 +367,7 @@ func handleClaudeMd(force, autoMerge bool) error {
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != "y" && response != "yes" {
-			fmt.Printf("  %s %s (skipped)\n", yellow("○"), claudeMdFileName)
+			cmd.Printf("  %s %s (skipped)\n", yellow("○"), claudeMdFileName)
 			return nil
 		}
 	}
@@ -378,20 +378,20 @@ func handleClaudeMd(force, autoMerge bool) error {
 	if err := os.WriteFile(backupName, existingContent, 0644); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
-	fmt.Printf("  %s %s (backup)\n", green("✓"), backupName)
+	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
 
 	// Append ctx content to existing file
 	mergedContent := existingStr + "\n" + string(templateContent)
 	if err := os.WriteFile(claudeMdFileName, []byte(mergedContent), 0644); err != nil {
 		return fmt.Errorf("failed to write merged %s: %w", claudeMdFileName, err)
 	}
-	fmt.Printf("  %s %s (merged)\n", green("✓"), claudeMdFileName)
+	cmd.Printf("  %s %s (merged)\n", green("✓"), claudeMdFileName)
 
 	return nil
 }
 
 // updateCtxSection replaces the existing ctx section between markers with new content
-func updateCtxSection(existing string, newTemplate []byte, green func(...interface{}) string) error {
+func updateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte, green func(...interface{}) string) error {
 	// Find the start marker
 	startIdx := strings.Index(existing, ctxMarkerStart)
 	if startIdx == -1 {
@@ -425,12 +425,12 @@ func updateCtxSection(existing string, newTemplate []byte, green func(...interfa
 	if err := os.WriteFile(backupName, []byte(existing), 0644); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
-	fmt.Printf("  %s %s (backup)\n", green("✓"), backupName)
+	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
 
 	if err := os.WriteFile(claudeMdFileName, []byte(newContent), 0644); err != nil {
 		return fmt.Errorf("failed to update %s: %w", claudeMdFileName, err)
 	}
-	fmt.Printf("  %s %s (updated ctx section)\n", green("✓"), claudeMdFileName)
+	cmd.Printf("  %s %s (updated ctx section)\n", green("✓"), claudeMdFileName)
 
 	return nil
 }
@@ -448,21 +448,23 @@ func checkCtxInPath() error {
 
 	_, err := exec.LookPath("ctx")
 	if err != nil {
+		// Use os.Stderr for error messages since we don't have cmd here
+		// This function is called before we know if we'll proceed
 		red := color.New(color.FgRed).SprintFunc()
 		yellow := color.New(color.FgYellow).SprintFunc()
 
-		fmt.Printf("%s ctx is not in your PATH\n\n", red("Error:"))
-		fmt.Println("The hooks created by 'ctx init' require ctx to be in your PATH.")
-		fmt.Println("Without this, Claude Code hooks will fail silently.")
-		fmt.Println()
-		fmt.Printf("%s\n", yellow("To fix this:"))
-		fmt.Println("  1. Build:   make build")
-		fmt.Println("  2. Install: sudo make install")
-		fmt.Println()
-		fmt.Println("Or manually:")
-		fmt.Println("  sudo cp ./ctx /usr/local/bin/")
-		fmt.Println()
-		fmt.Println("Then run 'ctx init' again.")
+		fmt.Fprintf(os.Stderr, "%s ctx is not in your PATH\n\n", red("Error:"))
+		fmt.Fprintln(os.Stderr, "The hooks created by 'ctx init' require ctx to be in your PATH.")
+		fmt.Fprintln(os.Stderr, "Without this, Claude Code hooks will fail silently.")
+		fmt.Fprintln(os.Stderr)
+		fmt.Fprintf(os.Stderr, "%s\n", yellow("To fix this:"))
+		fmt.Fprintln(os.Stderr, "  1. Build:   make build")
+		fmt.Fprintln(os.Stderr, "  2. Install: sudo make install")
+		fmt.Fprintln(os.Stderr)
+		fmt.Fprintln(os.Stderr, "Or manually:")
+		fmt.Fprintln(os.Stderr, "  sudo cp ./ctx /usr/local/bin/")
+		fmt.Fprintln(os.Stderr)
+		fmt.Fprintln(os.Stderr, "Then run 'ctx init' again.")
 
 		return fmt.Errorf("ctx not found in PATH")
 	}

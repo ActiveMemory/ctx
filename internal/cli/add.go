@@ -105,7 +105,7 @@ func runAdd(cmd *cobra.Command, args []string) error {
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
-	fmt.Printf("%s Added to %s\n", green("✓"), fileName)
+	cmd.Printf("%s Added to %s\n", green("✓"), fileName)
 
 	return nil
 }

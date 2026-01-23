@@ -69,13 +69,13 @@ func runWatch(cmd *cobra.Command, args []string) error {
 	}
 
 	cyan := color.New(color.FgCyan).SprintFunc()
-	fmt.Println(cyan("Watching for context updates..."))
+	cmd.Println(cyan("Watching for context updates..."))
 	if watchDryRun {
 		yellow := color.New(color.FgYellow).SprintFunc()
-		fmt.Println(yellow("DRY RUN — No changes will be made"))
+		cmd.Println(yellow("DRY RUN — No changes will be made"))
 	}
-	fmt.Println("Press Ctrl+C to stop")
-	fmt.Println()
+	cmd.Println("Press Ctrl+C to stop")
+	cmd.Println()
 
 	var reader io.Reader
 	if watchLog != "" {
@@ -89,13 +89,13 @@ func runWatch(cmd *cobra.Command, args []string) error {
 		reader = os.Stdin
 	}
 
-	return processStream(reader)
+	return processStream(cmd, reader)
 }
 
 // autoSaveInterval is the number of updates between auto-saves.
 const autoSaveInterval = 5
 
-func processStream(reader io.Reader) error {
+func processStream(cmd *cobra.Command, reader io.Reader) error {
 	scanner := bufio.NewScanner(reader)
 	// Use a larger buffer for long lines
 	buf := make([]byte, 0, 64*1024)
@@ -125,22 +125,22 @@ func processStream(reader io.Reader) error {
 				}
 
 				if watchDryRun {
-					fmt.Printf("%s Would apply: [%s] %s\n", yellow("○"), update.Type, update.Content)
+					cmd.Printf("%s Would apply: [%s] %s\n", yellow("○"), update.Type, update.Content)
 				} else {
 					err := applyUpdate(update)
 					if err != nil {
-						fmt.Printf("%s Failed to apply [%s]: %v\n", color.RedString("✗"), update.Type, err)
+						cmd.Printf("%s Failed to apply [%s]: %v\n", color.RedString("✗"), update.Type, err)
 					} else {
-						fmt.Printf("%s Applied: [%s] %s\n", green("✓"), update.Type, update.Content)
+						cmd.Printf("%s Applied: [%s] %s\n", green("✓"), update.Type, update.Content)
 						updateCount++
 						appliedUpdates = append(appliedUpdates, update)
 
 						// Auto-save every N updates
 						if watchAutoSave && updateCount%autoSaveInterval == 0 {
 							if err := watchAutoSaveSession(appliedUpdates); err != nil {
-								fmt.Printf("%s Auto-save failed: %v\n", yellow("⚠"), err)
+								cmd.Printf("%s Auto-save failed: %v\n", yellow("⚠"), err)
 							} else {
-								fmt.Printf("%s Auto-saved session after %d updates\n", cyan("📸"), updateCount)
+								cmd.Printf("%s Auto-saved session after %d updates\n", cyan("📸"), updateCount)
 							}
 						}
 					}
@@ -152,9 +152,9 @@ func processStream(reader io.Reader) error {
 	// Final auto-save if there are remaining updates
 	if watchAutoSave && len(appliedUpdates) > 0 && updateCount%autoSaveInterval != 0 {
 		if err := watchAutoSaveSession(appliedUpdates); err != nil {
-			fmt.Printf("%s Final auto-save failed: %v\n", yellow("⚠"), err)
+			cmd.Printf("%s Final auto-save failed: %v\n", yellow("⚠"), err)
 		} else {
-			fmt.Printf("%s Final auto-save completed (%d total updates)\n", cyan("📸"), updateCount)
+			cmd.Printf("%s Final auto-save completed (%d total updates)\n", cyan("📸"), updateCount)
 		}
 	}
 

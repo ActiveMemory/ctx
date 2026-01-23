@@ -113,7 +113,7 @@ func runSessionSave(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}
 
-	fmt.Printf("%s Session saved to %s\n", green("✓"), filePath)
+	cmd.Printf("%s Session saved to %s\n", green("✓"), filePath)
 	return nil
 }
 
@@ -147,7 +147,7 @@ func runSessionList(cmd *cobra.Command, args []string) error {
 
 	// Check if sessions directory exists
 	if _, err := os.Stat(sessionsDirName); os.IsNotExist(err) {
-		fmt.Println("No sessions found. Use 'ctx session save' to create one.")
+		cmd.Println("No sessions found. Use 'ctx session save' to create one.")
 		return nil
 	}
 
@@ -183,7 +183,7 @@ func runSessionList(cmd *cobra.Command, args []string) error {
 	}
 
 	if len(sessions) == 0 {
-		fmt.Println("No sessions found. Use 'ctx session save' to create one.")
+		cmd.Println("No sessions found. Use 'ctx session save' to create one.")
 		return nil
 	}
 
@@ -198,20 +198,20 @@ func runSessionList(cmd *cobra.Command, args []string) error {
 	}
 
 	// Display
-	fmt.Printf("Sessions in %s:\n\n", sessionsDirName)
+	cmd.Printf("Sessions in %s:\n\n", sessionsDirName)
 	for _, s := range sessions {
-		fmt.Printf("%s %s\n", cyan("●"), s.Topic)
-		fmt.Printf("  %s %s | %s %s\n",
+		cmd.Printf("%s %s\n", cyan("●"), s.Topic)
+		cmd.Printf("  %s %s | %s %s\n",
 			gray("Date:"), s.Date,
 			gray("Type:"), s.Type)
 		if s.Summary != "" {
-			fmt.Printf("  %s %s\n", gray("Summary:"), truncate(s.Summary, 60))
+			cmd.Printf("  %s %s\n", gray("Summary:"), truncate(s.Summary, 60))
 		}
-		fmt.Printf("  %s %s\n", yellow("File:"), s.Filename)
-		fmt.Println()
+		cmd.Printf("  %s %s\n", yellow("File:"), s.Filename)
+		cmd.Println()
 	}
 
-	fmt.Printf("Total: %d session(s)\n", len(sessions))
+	cmd.Printf("Total: %d session(s)\n", len(sessions))
 	return nil
 }
 
@@ -332,8 +332,8 @@ func runSessionLoad(cmd *cobra.Command, args []string) error {
 	}
 
 	cyan := color.New(color.FgCyan).SprintFunc()
-	fmt.Printf("%s Loading: %s\n\n", cyan("●"), filepath.Base(filePath))
-	fmt.Println(string(content))
+	cmd.Printf("%s Loading: %s\n\n", cyan("●"), filepath.Base(filePath))
+	cmd.Println(string(content))
 
 	return nil
 }
@@ -465,35 +465,35 @@ func runSessionParse(cmd *cobra.Command, args []string) error {
 		}
 
 		// Display extracted insights
-		fmt.Println("# Extracted Insights")
-		fmt.Println()
-		fmt.Printf("**Source**: %s\n\n", filepath.Base(inputPath))
+		cmd.Println("# Extracted Insights")
+		cmd.Println()
+		cmd.Printf("**Source**: %s\n\n", filepath.Base(inputPath))
 
-		fmt.Println("## Potential Decisions")
-		fmt.Println()
+		cmd.Println("## Potential Decisions")
+		cmd.Println()
 		if len(decisions) == 0 {
-			fmt.Println("No decisions detected.")
-			fmt.Println()
+			cmd.Println("No decisions detected.")
+			cmd.Println()
 		} else {
 			for _, d := range decisions {
-				fmt.Printf("- %s\n", d)
+				cmd.Printf("- %s\n", d)
 			}
-			fmt.Println()
+			cmd.Println()
 		}
 
-		fmt.Println("## Potential Learnings")
-		fmt.Println()
+		cmd.Println("## Potential Learnings")
+		cmd.Println()
 		if len(learnings) == 0 {
-			fmt.Println("No learnings detected.")
-			fmt.Println()
+			cmd.Println("No learnings detected.")
+			cmd.Println()
 		} else {
 			for _, l := range learnings {
-				fmt.Printf("- %s\n", l)
+				cmd.Printf("- %s\n", l)
 			}
-			fmt.Println()
+			cmd.Println()
 		}
 
-		fmt.Printf("\n*Found %d potential decisions and %d potential learnings*\n", len(decisions), len(learnings))
+		cmd.Printf("\n*Found %d potential decisions and %d potential learnings*\n", len(decisions), len(learnings))
 		return nil
 	}
 
@@ -508,9 +508,9 @@ func runSessionParse(cmd *cobra.Command, args []string) error {
 		if err := os.WriteFile(parseOutput, []byte(content), 0644); err != nil {
 			return fmt.Errorf("failed to write output: %w", err)
 		}
-		fmt.Printf("%s Parsed transcript saved to %s\n", green("✓"), parseOutput)
+		cmd.Printf("%s Parsed transcript saved to %s\n", green("✓"), parseOutput)
 	} else {
-		fmt.Println(content)
+		cmd.Println(content)
 	}
 
 	return nil

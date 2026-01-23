@@ -111,7 +111,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
-	fmt.Printf("%s Completed: %s\n", green("✓"), matchedTask)
+	cmd.Printf("%s Completed: %s\n", green("✓"), matchedTask)
 
 	return nil
 }

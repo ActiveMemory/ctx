@@ -64,34 +64,34 @@ func runSync(cmd *cobra.Command, args []string) error {
 
 	if len(actions) == 0 {
 		green := color.New(color.FgGreen).SprintFunc()
-		fmt.Printf("%s Context is in sync with codebase\n", green("✓"))
+		cmd.Printf("%s Context is in sync with codebase\n", green("✓"))
 		return nil
 	}
 
 	cyan := color.New(color.FgCyan).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
-	fmt.Println(cyan("Sync Analysis"))
-	fmt.Println(cyan("============="))
-	fmt.Println()
+	cmd.Println(cyan("Sync Analysis"))
+	cmd.Println(cyan("============="))
+	cmd.Println()
 
 	if syncDryRun {
-		fmt.Println(yellow("DRY RUN — No changes will be made"))
-		fmt.Println()
+		cmd.Println(yellow("DRY RUN — No changes will be made"))
+		cmd.Println()
 	}
 
 	for i, action := range actions {
-		fmt.Printf("%d. [%s] %s\n", i+1, action.Type, action.Description)
+		cmd.Printf("%d. [%s] %s\n", i+1, action.Type, action.Description)
 		if action.Suggestion != "" {
-			fmt.Printf("   Suggestion: %s\n", action.Suggestion)
+			cmd.Printf("   Suggestion: %s\n", action.Suggestion)
 		}
-		fmt.Println()
+		cmd.Println()
 	}
 
 	if syncDryRun {
-		fmt.Printf("Found %d items to sync. Run without --dry-run to apply suggestions.\n", len(actions))
+		cmd.Printf("Found %d items to sync. Run without --dry-run to apply suggestions.\n", len(actions))
 	} else {
-		fmt.Printf("Found %d items. Review and update context files manually.\n", len(actions))
+		cmd.Printf("Found %d items. Review and update context files manually.\n", len(actions))
 	}
 
 	return nil

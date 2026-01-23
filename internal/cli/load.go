@@ -72,26 +72,26 @@ func runLoad(cmd *cobra.Command, args []string) error {
 	}
 
 	if loadRaw {
-		return outputRaw(ctx)
+		return outputRaw(cmd, ctx)
 	}
 
-	return outputAssembled(ctx, loadBudget)
+	return outputAssembled(cmd, ctx, loadBudget)
 }
 
-func outputRaw(ctx *context.Context) error {
+func outputRaw(cmd *cobra.Command, ctx *context.Context) error {
 	// Sort files by read order
 	files := sortByReadOrder(ctx.Files)
 
 	for i, f := range files {
 		if i > 0 {
-			fmt.Println()
+			cmd.Println()
 		}
-		fmt.Print(string(f.Content))
+		cmd.Print(string(f.Content))
 	}
 	return nil
 }
 
-func outputAssembled(ctx *context.Context, budget int) error {
+func outputAssembled(cmd *cobra.Command, ctx *context.Context, budget int) error {
 	var sb strings.Builder
 
 	// Header
@@ -129,7 +129,7 @@ func outputAssembled(ctx *context.Context, budget int) error {
 		tokensUsed += fileTokens
 	}
 
-	fmt.Print(sb.String())
+	cmd.Print(sb.String())
 	return nil
 }
 

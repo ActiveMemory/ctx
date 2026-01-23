@@ -9,7 +9,6 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/context"
@@ -67,13 +66,13 @@ func runDrift(cmd *cobra.Command, args []string) error {
 	report := drift.Detect(ctx)
 
 	if driftJSON {
-		return outputDriftJSON(report)
+		return outputDriftJSON(cmd, report)
 	}
 
-	return outputDriftText(report)
+	return outputDriftText(cmd, report)
 }
 
-func outputDriftJSON(report *drift.Report) error {
+func outputDriftJSON(cmd *cobra.Command, report *drift.Report) error {
 	output := DriftJSONOutput{
 		Timestamp:  time.Now().UTC().Format(time.RFC3339),
 		Status:     report.Status(),
@@ -82,41 +81,41 @@ func outputDriftJSON(report *drift.Report) error {
 		Passed:     report.Passed,
 	}
 
-	enc := json.NewEncoder(os.Stdout)
+	enc := json.NewEncoder(cmd.OutOrStdout())
 	enc.SetIndent("", "  ")
 	return enc.Encode(output)
 }
 
-func outputDriftText(report *drift.Report) error {
+func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
 	cyan := color.New(color.FgCyan).SprintFunc()
 
-	fmt.Println(cyan("Drift Detection Report"))
-	fmt.Println(cyan("======================"))
-	fmt.Println()
+	cmd.Println(cyan("Drift Detection Report"))
+	cmd.Println(cyan("======================"))
+	cmd.Println()
 
 	// Violations
 	if len(report.Violations) > 0 {
-		fmt.Printf("%s VIOLATIONS (%d)\n\n", red("❌"), len(report.Violations))
+		cmd.Printf("%s VIOLATIONS (%d)\n\n", red("❌"), len(report.Violations))
 		for _, v := range report.Violations {
 			if v.Line > 0 {
-				fmt.Printf("  - %s:%d %s", v.File, v.Line, v.Message)
+				cmd.Printf("  - %s:%d %s", v.File, v.Line, v.Message)
 			} else {
-				fmt.Printf("  - %s: %s", v.File, v.Message)
+				cmd.Printf("  - %s: %s", v.File, v.Message)
 			}
 			if v.Rule != "" {
-				fmt.Printf(" (rule: %s)", v.Rule)
+				cmd.Printf(" (rule: %s)", v.Rule)
 			}
-			fmt.Println()
+			cmd.Println()
 		}
-		fmt.Println()
+		cmd.Println()
 	}
 
 	// Warnings
 	if len(report.Warnings) > 0 {
-		fmt.Printf("%s WARNINGS (%d)\n\n", yellow("⚠️ "), len(report.Warnings))
+		cmd.Printf("%s WARNINGS (%d)\n\n", yellow("⚠️ "), len(report.Warnings))
 
 		// Group by type
 		pathRefs := []drift.Issue{}
@@ -135,49 +134,49 @@ func outputDriftText(report *drift.Report) error {
 		}
 
 		if len(pathRefs) > 0 {
-			fmt.Println("  Path References:")
+			cmd.Println("  Path References:")
 			for _, w := range pathRefs {
-				fmt.Printf("  - %s:%d references '%s' (not found)\n", w.File, w.Line, w.Path)
+				cmd.Printf("  - %s:%d references '%s' (not found)\n", w.File, w.Line, w.Path)
 			}
-			fmt.Println()
+			cmd.Println()
 		}
 
 		if len(staleness) > 0 {
-			fmt.Println("  Staleness:")
+			cmd.Println("  Staleness:")
 			for _, w := range staleness {
-				fmt.Printf("  - %s %s\n", w.File, w.Message)
+				cmd.Printf("  - %s %s\n", w.File, w.Message)
 			}
-			fmt.Println()
+			cmd.Println()
 		}
 
 		if len(other) > 0 {
-			fmt.Println("  Other:")
+			cmd.Println("  Other:")
 			for _, w := range other {
-				fmt.Printf("  - %s: %s\n", w.File, w.Message)
+				cmd.Printf("  - %s: %s\n", w.File, w.Message)
 			}
-			fmt.Println()
+			cmd.Println()
 		}
 	}
 
 	// Passed
 	if len(report.Passed) > 0 {
-		fmt.Printf("%s PASSED (%d)\n", green("✅"), len(report.Passed))
+		cmd.Printf("%s PASSED (%d)\n", green("✅"), len(report.Passed))
 		for _, p := range report.Passed {
-			fmt.Printf("  - %s\n", formatCheckName(p))
+			cmd.Printf("  - %s\n", formatCheckName(p))
 		}
-		fmt.Println()
+		cmd.Println()
 	}
 
 	// Summary
 	status := report.Status()
 	switch status {
 	case "violation":
-		fmt.Printf("\nStatus: %s — Constitution violations detected\n", red("VIOLATION"))
+		cmd.Printf("\nStatus: %s — Constitution violations detected\n", red("VIOLATION"))
 		return fmt.Errorf("drift detection found violations")
 	case "warning":
-		fmt.Printf("\nStatus: %s — Issues detected that should be addressed\n", yellow("WARNING"))
+		cmd.Printf("\nStatus: %s — Issues detected that should be addressed\n", yellow("WARNING"))
 	default:
-		fmt.Printf("\nStatus: %s — No drift detected\n", green("OK"))
+		cmd.Printf("\nStatus: %s — No drift detected\n", green("OK"))
 	}
 
 	return nil

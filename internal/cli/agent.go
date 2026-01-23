@@ -9,7 +9,6 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -70,13 +69,13 @@ func runAgent(cmd *cobra.Command, args []string) error {
 	}
 
 	if agentFormat == "json" {
-		return outputAgentJSON(ctx)
+		return outputAgentJSON(cmd, ctx)
 	}
 
-	return outputAgentMarkdown(ctx)
+	return outputAgentMarkdown(cmd, ctx)
 }
 
-func outputAgentJSON(ctx *context.Context) error {
+func outputAgentJSON(cmd *cobra.Command, ctx *context.Context) error {
 	packet := AgentPacket{
 		Generated:    time.Now().UTC().Format(time.RFC3339),
 		Budget:       agentBudget,
@@ -88,12 +87,12 @@ func outputAgentJSON(ctx *context.Context) error {
 		Decisions:    extractRecentDecisions(ctx, 3),
 	}
 
-	enc := json.NewEncoder(os.Stdout)
+	enc := json.NewEncoder(cmd.OutOrStdout())
 	enc.SetIndent("", "  ")
 	return enc.Encode(packet)
 }
 
-func outputAgentMarkdown(ctx *context.Context) error {
+func outputAgentMarkdown(cmd *cobra.Command, ctx *context.Context) error {
 	var sb strings.Builder
 
 	timestamp := time.Now().UTC().Format(time.RFC3339)
@@ -147,7 +146,7 @@ func outputAgentMarkdown(ctx *context.Context) error {
 		sb.WriteString("\n")
 	}
 
-	fmt.Print(sb.String())
+	cmd.Print(sb.String())
 	return nil
 }
 

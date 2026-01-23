@@ -9,7 +9,6 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"sort"
 	"time"
 
@@ -71,13 +70,13 @@ func runStatus(cmd *cobra.Command, args []string) error {
 	}
 
 	if statusJSON {
-		return outputStatusJSON(ctx)
+		return outputStatusJSON(cmd, ctx)
 	}
 
-	return outputStatusText(ctx)
+	return outputStatusText(cmd, ctx)
 }
 
-func outputStatusJSON(ctx *context.Context) error {
+func outputStatusJSON(cmd *cobra.Command, ctx *context.Context) error {
 	output := StatusOutput{
 		ContextDir:  ctx.Dir,
 		TotalFiles:  len(ctx.Files),
@@ -97,26 +96,26 @@ func outputStatusJSON(ctx *context.Context) error {
 		})
 	}
 
-	enc := json.NewEncoder(os.Stdout)
+	enc := json.NewEncoder(cmd.OutOrStdout())
 	enc.SetIndent("", "  ")
 	return enc.Encode(output)
 }
 
-func outputStatusText(ctx *context.Context) error {
+func outputStatusText(cmd *cobra.Command, ctx *context.Context) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	cyan := color.New(color.FgCyan).SprintFunc()
 
-	fmt.Println(cyan("Context Status"))
-	fmt.Println(cyan("===================="))
-	fmt.Println()
+	cmd.Println(cyan("Context Status"))
+	cmd.Println(cyan("===================="))
+	cmd.Println()
 
-	fmt.Printf("Context Directory: %s\n", ctx.Dir)
-	fmt.Printf("Total Files: %d\n", len(ctx.Files))
-	fmt.Printf("Token Estimate: %s tokens\n", formatNumber(ctx.TotalTokens))
-	fmt.Println()
+	cmd.Printf("Context Directory: %s\n", ctx.Dir)
+	cmd.Printf("Total Files: %d\n", len(ctx.Files))
+	cmd.Printf("Token Estimate: %s tokens\n", formatNumber(ctx.TotalTokens))
+	cmd.Println()
 
-	fmt.Println("Files:")
+	cmd.Println("Files:")
 
 	// Sort files by a logical order
 	sortedFiles := make([]context.FileInfo, len(ctx.Files))
@@ -133,16 +132,16 @@ func outputStatusText(ctx *context.Context) error {
 			indicator = green("✓")
 			status = f.Summary
 		}
-		fmt.Printf("  %s %s (%s)\n", indicator, f.Name, status)
+		cmd.Printf("  %s %s (%s)\n", indicator, f.Name, status)
 	}
 
 	// Recent activity
-	fmt.Println()
-	fmt.Println("Recent Activity:")
+	cmd.Println()
+	cmd.Println("Recent Activity:")
 	recentFiles := getRecentFiles(ctx.Files, 3)
 	for _, f := range recentFiles {
 		ago := formatTimeAgo(f.ModTime)
-		fmt.Printf("  - %s modified %s\n", f.Name, ago)
+		cmd.Printf("  - %s modified %s\n", f.Name, ago)
 	}
 
 	return nil
