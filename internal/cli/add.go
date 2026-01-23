@@ -111,7 +111,8 @@ func runAdd(cmd *cobra.Command, args []string) error {
 }
 
 func formatDecision(content string) string {
-	date := time.Now().Format("2006-01-02")
+	// Use YYYY-MM-DD-HHMM for precise timestamp correlation with sessions
+	timestamp := time.Now().Format("2006-01-02-1504")
 	return fmt.Sprintf(`## [%s] %s
 
 **Status**: Accepted
@@ -123,20 +124,23 @@ func formatDecision(content string) string {
 **Rationale**: [Add rationale here]
 
 **Consequences**: [Add consequences here]
-`, date, content, content)
+`, timestamp, content, content)
 }
 
 func formatTask(content string, priority string) string {
+	// Use YYYY-MM-DD-HHMM timestamp for session correlation
+	timestamp := time.Now().Format("2006-01-02-1504")
 	var priorityTag string
 	if priority != "" {
 		priorityTag = fmt.Sprintf(" #priority:%s", priority)
 	}
-	return fmt.Sprintf("- [ ] %s%s\n", content, priorityTag)
+	return fmt.Sprintf("- [ ] %s%s #added:%s\n", content, priorityTag, timestamp)
 }
 
 func formatLearning(content string) string {
-	date := time.Now().Format("2006-01-02")
-	return fmt.Sprintf("- **[%s]** %s\n", date, content)
+	// Use YYYY-MM-DD-HHMM for precise timestamp correlation with sessions
+	timestamp := time.Now().Format("2006-01-02-1504")
+	return fmt.Sprintf("- **[%s]** %s\n", timestamp, content)
 }
 
 func formatConvention(content string) string {
