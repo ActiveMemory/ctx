@@ -50,7 +50,7 @@
   - [x] `ctx session save` creates session file
   - [x] `ctx agent` returns context packet
 - [x] Set unit test coverage target (70% for internal/cli, internal/context)
-- [ ] Add coverage reporting to `make test`
+- [x] Add coverage reporting to `make test`
 - [ ] Add smoke test to CI/Makefile: build binary, run basic commands
 - [ ] Verify built binary executes subcommands (not silently falling through to root help)
 

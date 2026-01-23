@@ -15,9 +15,9 @@ all: build
 build:
 	CGO_ENABLED=0 go build -o $(OUTPUT) ./cmd/ctx
 
-## test: Run tests
+## test: Run tests with coverage summary
 test:
-	CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
+	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test -cover ./...
 
 ## test-v: Run tests with verbose output
 test-v:
