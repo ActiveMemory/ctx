@@ -55,10 +55,10 @@
 - [x] Verify built binary executes subcommands (not silently falling through to root help)
 
 ### Phase 8: Task Archival & Snapshots `#priority:medium` `#area:cli`
-- [ ] Implement `ctx tasks archive` — move completed tasks to timestamped archive file
-- [ ] Implement `ctx tasks snapshot` — create point-in-time snapshot of TASKS.md
-- [ ] Archive location: `.context/archive/tasks-YYYY-MM-DD.md`
-- [ ] Keep Phase structure in archives for traceability
+- [x] Implement `ctx tasks archive` — move completed tasks to timestamped archive file
+- [x] Implement `ctx tasks snapshot` — create point-in-time snapshot of TASKS.md
+- [x] Archive location: `.context/archive/tasks-YYYY-MM-DD.md`
+- [x] Keep Phase structure in archives for traceability
 - [ ] Update CONSTITUTION.md: archival is allowed, deletion is not
 
 ### Phase 9: Claude Slash Commands (Skills) `#priority:medium` `#area:cli`
