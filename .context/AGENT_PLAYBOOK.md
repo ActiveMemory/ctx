@@ -1,5 +1,17 @@
 # Agent Playbook
 
+## Invoking ctx
+
+Always use `ctx` from PATH:
+```bash
+ctx status        # ✓ correct
+ctx agent         # ✓ correct
+./dist/ctx        # ✗ avoid hardcoded paths
+go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
+```
+
+Check with `which ctx` if unsure whether it's installed.
+
 ## Read Order
 
 1. CONSTITUTION.md — Hard rules, NEVER violate

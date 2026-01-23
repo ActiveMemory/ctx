@@ -507,19 +507,19 @@ claude
 
 ```bash
 # Check current context
-./dist/ctx-linux-arm64 status
+ctx status
 
 # Get AI-ready packet
-./dist/ctx-linux-arm64 agent --budget 4000
+ctx agent --budget 4000
 
 # Save session manually
-./dist/ctx-linux-arm64 session save "feature-name"
+ctx session save "feature-name"
 
 # List previous sessions
-./dist/ctx-linux-arm64 session list
+ctx session list
 
 # Clean up completed tasks
-./dist/ctx-linux-arm64 compact
+ctx compact
 ```
 
 ### Key Files

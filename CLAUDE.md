@@ -15,10 +15,10 @@ This project uses Context (ctx) for context persistence across sessions.
 
 ```bash
 # Get AI-optimized context packet (what you should know)
-./dist/ctx-linux-arm64 agent --budget 4000
+ctx agent --budget 4000
 
 # Or see full status
-./dist/ctx-linux-arm64 status
+ctx status
 ```
 
 ## Context Files
@@ -36,8 +36,8 @@ This project uses Context (ctx) for context persistence across sessions.
 
 **ALWAYS offer to persist context before the user quits:**
 
-1. Add learnings: `./dist/ctx-linux-arm64 add learning "..."`
-2. Add decisions: `./dist/ctx-linux-arm64 add decision "..."`
+1. Add learnings: `ctx add learning "..."`
+2. Add decisions: `ctx add decision "..."`
 3. Save full session: Write to `.context/sessions/YYYY-MM-DD-<topic>.md`
 
 ## Build Commands
