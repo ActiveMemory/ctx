@@ -70,17 +70,17 @@
 - [x] Create `/ctx-add-task` skill — calls `ctx add task`
 - [x] Create `/ctx-agent` skill — calls `ctx agent` (manual context load)
 - [x] Create `/ctx-archive` skill — calls `ctx tasks archive`
-- [ ] Create `/ctx-loop` skill — calls `ctx loop` (generate Ralph loop script)
+- [x] Create `/ctx-loop` skill — calls `ctx loop` (generate Ralph loop script)
 - [x] Update `ctx init` to create skill definitions in `.claude/commands/`
 
 ### Phase 9b: Ralph Loop Integration `#priority:medium` `#area:cli`
-- [ ] Implement `ctx loop` command — generate a ready-to-use loop.sh script
-  - [ ] Detect AI tool in use (claude, aider, etc.) and generate appropriate invocation
-  - [ ] Include configurable max iterations, prompt file path
-  - [ ] Include completion signal detection (SYSTEM_CONVERGED, SYSTEM_BLOCKED)
-  - [ ] Make script executable by default
-- [ ] Add `ctx loop --prompt PROMPT.md` — specify custom prompt file
-- [ ] Add `ctx loop --tool claude|aider|generic` — target specific AI CLI
+- [x] Implement `ctx loop` command — generate a ready-to-use loop.sh script
+  - [x] Detect AI tool in use (claude, aider, etc.) and generate appropriate invocation
+  - [x] Include configurable max iterations, prompt file path
+  - [x] Include completion signal detection (SYSTEM_CONVERGED, SYSTEM_BLOCKED)
+  - [x] Make script executable by default
+- [x] Add `ctx loop --prompt PROMPT.md` — specify custom prompt file
+- [x] Add `ctx loop --tool claude|aider|generic` — target specific AI CLI
 - [ ] Document in README that `/ralph-loop` exists for Claude Code users
 
 ### Phase 10: Project Rename `#priority:medium` `#area:branding`
