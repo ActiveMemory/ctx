@@ -137,12 +137,12 @@ Examples:
 	return cmd
 }
 
-func runSessionList(cmd *cobra.Command, args []string) error {
+func runSessionList(cmd *cobra.Command, _ []string) error {
 	cyan := color.New(color.FgCyan).SprintFunc()
 	gray := color.New(color.FgHiBlack).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
-	// Check if sessions directory exists
+	// Check if the `sessions` directory exists
 	if _, err := os.Stat(sessionsDirName); os.IsNotExist(err) {
 		cmd.Println("No sessions found. Use 'ctx session save' to create one.")
 		return nil
@@ -527,14 +527,6 @@ type transcriptMsg struct {
 	Content interface{} `json:"content"` // Can be string or []interface{}
 }
 
-// contentBlock represents a block in assistant content array.
-type contentBlock struct {
-	Type     string      `json:"type"`
-	Text     string      `json:"text,omitempty"`
-	Thinking string      `json:"thinking,omitempty"`
-	Name     string      `json:"name,omitempty"`  // tool name
-	Input    interface{} `json:"input,omitempty"` // tool input
-}
 
 // parseJsonlTranscript parses a .jsonl file and returns formatted markdown.
 func parseJsonlTranscript(path string) (string, error) {
