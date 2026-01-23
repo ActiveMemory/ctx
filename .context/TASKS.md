@@ -129,3 +129,18 @@
 - `[x]` — completed
 - `[-]` — skipped (with reason)
 - `#in-progress` — currently being worked on (add inline, don't move task)
+
+### Phase 12: Timestamp-Based Session Correlation `#priority:medium` `#area:cli`
+- [ ] Add timestamp to formatTask() in add.go — currently tasks have no timestamp, add `#added:YYYY-MM-DD-HHMM` or similar
+- [ ] Increase timestamp precision in formatLearning() — change from YYYY-MM-DD to YYYY-MM-DD-HHMM
+- [ ] Increase timestamp precision in formatDecision() — change from YYYY-MM-DD to YYYY-MM-DD-HHMM
+- [ ] Add start_time field to session summary files — record when session began
+- [ ] Add last_update_time field to session summary files — update on each ctx add call during session
+- [ ] Document timestamp correlation approach in AGENT_PLAYBOOK.md — explain how to correlate entries to sessions by time overlap
+
+### Phase 13: Rich Context Entries `#priority:medium` `#area:cli`
+- [ ] Add --file flag to ctx add — read entry content from a file instead of CLI arg
+- [ ] Add stdin support to ctx add — if no content arg and stdin is pipe, read from stdin
+- [ ] Create learning template with Context/Lesson/Application structure for --file usage
+- [ ] Create decision template with Context/Options/Decision/Rationale structure for --file usage
+- [ ] Document rich entry workflow in AGENT_PLAYBOOK.md — explain when/how agents should use --file vs inline
