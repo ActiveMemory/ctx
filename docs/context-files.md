@@ -1,31 +1,41 @@
 ---
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 icon: lucide/files
 ---
 
-# Context Files Reference
+![ctx](images/ctx-banner.png)
 
-Each context file in `.context/` serves a specific purpose. Files are designed to be human-readable, AI-parseable, and token-efficient.
+## Context Files Reference
+
+Each context file in `.context/` serves a specific purpose. Files are designed 
+to be human-readable, AI-parseable, and token-efficient.
 
 ## File Overview
 
-| File | Purpose | Priority |
-|------|---------|----------|
-| CONSTITUTION.md | Hard rules that must NEVER be violated | 1 (highest) |
-| TASKS.md | Current and planned work | 2 |
-| DECISIONS.md | Architectural decisions with rationale | 3 |
-| CONVENTIONS.md | Project patterns and standards | 4 |
-| ARCHITECTURE.md | System overview and components | 5 |
-| GLOSSARY.md | Domain terms and abbreviations | 6 |
-| LEARNINGS.md | Lessons learned, gotchas, tips | 7 |
-| DEPENDENCIES.md | Key dependencies and why chosen | 8 |
-| DRIFT.md | Staleness signals and update triggers | 9 |
-| AGENT_PLAYBOOK.md | Instructions for AI agents | 10 |
+| File              | Purpose                                | Priority    |
+|-------------------|----------------------------------------|-------------|
+| CONSTITUTION.md   | Hard rules that must NEVER be violated | 1 (highest) |
+| TASKS.md          | Current and planned work               | 2           |
+| DECISIONS.md      | Architectural decisions with rationale | 3           |
+| CONVENTIONS.md    | Project patterns and standards         | 4           |
+| ARCHITECTURE.md   | System overview and components         | 5           |
+| GLOSSARY.md       | Domain terms and abbreviations         | 6           |
+| LEARNINGS.md      | Lessons learned, gotchas, tips         | 7           |
+| DEPENDENCIES.md   | Key dependencies and why chosen        | 8           |
+| DRIFT.md          | Staleness signals and update triggers  | 9           |
+| AGENT_PLAYBOOK.md | Instructions for AI agents             | 10          |
 
 ---
 
 ## CONSTITUTION.md
 
-**Purpose:** Define hard invariants—rules that must NEVER be violated, regardless of task.
+**Purpose:** Define hard invariants—rules that must NEVER be violated, 
+regardless of task.
 
 AI agents read this first and should refuse tasks that violate these rules.
 
@@ -34,7 +44,8 @@ AI agents read this first and should refuse tasks that violate these rules.
 ```markdown
 # Constitution
 
-These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
+These rules are INVIOLABLE. If a task requires violating these, the task 
+is wrong.
 
 ## Security Invariants
 
@@ -99,20 +110,20 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 Use inline backtick-wrapped tags for metadata:
 
-| Tag | Values | Purpose |
-|-----|--------|---------|
-| `#priority` | `high`, `medium`, `low` | Task urgency |
-| `#area` | `core`, `cli`, `docs`, `tests` | Codebase area |
-| `#estimate` | `1h`, `4h`, `1d` | Time estimate (optional) |
-| `#in-progress` | (none) | Currently being worked on |
+| Tag            | Values                         | Purpose                   |
+|----------------|--------------------------------|---------------------------|
+| `#priority`    | `high`, `medium`, `low`        | Task urgency              |
+| `#area`        | `core`, `cli`, `docs`, `tests` | Codebase area             |
+| `#estimate`    | `1h`, `4h`, `1d`               | Time estimate (optional)  |
+| `#in-progress` | (none)                         | Currently being worked on |
 
 ### Status Markers
 
-| Marker | Meaning |
-|--------|---------|
-| `[ ]` | Pending |
-| `[x]` | Completed |
-| `[-]` | Skipped (include reason) |
+| Marker | Meaning                  |
+|--------|--------------------------|
+| `[ ]`  | Pending                  |
+| `[x]`  | Completed                |
+| `[-]`  | Skipped (include reason) |
 
 ### Guidelines
 
@@ -124,7 +135,8 @@ Use inline backtick-wrapped tags for metadata:
 
 ## DECISIONS.md
 
-**Purpose:** Record architectural decisions with rationale so they don't get re-debated.
+**Purpose:** Record architectural decisions with rationale so they don't
+get re-debated.
 
 ### Structure
 
@@ -182,7 +194,8 @@ third-party libraries need type assertions.
 
 ## LEARNINGS.md
 
-**Purpose:** Capture lessons learned, gotchas, and tips that shouldn't be forgotten.
+**Purpose:** Capture lessons learned, gotchas, and tips that shouldn't
+be forgotten.
 
 ### Structure
 
@@ -373,10 +386,10 @@ What's in scope vs out of scope for this codebase.
 
 ## Abbreviations
 
-| Abbrev | Expansion | Context |
-|--------|-----------|---------|
-| ADR | Architectural Decision Record | Decision documentation |
-| SUT | System Under Test | Testing |
+| Abbrev | Expansion                     | Context                |
+|--------|-------------------------------|------------------------|
+| ADR    | Architectural Decision Record | Decision documentation |
+| SUT    | System Under Test             | Testing                |
 ```
 
 ### Guidelines
@@ -428,17 +441,18 @@ Update context when:
 ## Staleness Indicators
 
 | File | Stale If | Action |
-|------|----------|--------|
+|-----------------|----------|--------|
 | ARCHITECTURE.md | >30 days old | Review component list |
-| TASKS.md | >50% completed | Archive and refresh |
-| LEARNINGS.md | >20 items | Consolidate or archive |
+| TASKS.md        | >50% completed | Archive and refresh |
+| LEARNINGS.md    | >20 items | Consolidate or archive |
 ```
 
 ---
 
 ## AGENT_PLAYBOOK.md
 
-**Purpose:** Explicit instructions for how AI agents should read, apply, and update context.
+**Purpose:** Explicit instructions for how AI agents should read, apply, 
+and update context.
 
 ### Key Sections
 
@@ -470,7 +484,8 @@ See [Integrations](integrations.md#context-update-commands) for full documentati
 
 All context files follow these conventions:
 
-1. **Headers define structure** — `#` for title, `##` for sections, `###` for items
+1. **Headers define structure** — `#` for title, `##` for sections, `###` for 
+   items
 2. **Bold keys for fields** — `**Key**:` followed by value
 3. **Code blocks are literal** — Never parse code block content as structure
 4. **Lists are ordered** — Items appear in priority/chronological order

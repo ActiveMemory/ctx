@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 // Package context provides functionality for loading and managing .context/ files.
 package context
 
@@ -14,14 +20,14 @@ const (
 
 // FileInfo represents metadata about a context file.
 type FileInfo struct {
-	Name     string
-	Path     string
-	Size     int64
-	ModTime  time.Time
-	Content  []byte
-	IsEmpty  bool
-	Tokens   int
-	Summary  string
+	Name    string
+	Path    string
+	Size    int64
+	ModTime time.Time
+	Content []byte
+	IsEmpty bool
+	Tokens  int
+	Summary string
 }
 
 // Context represents the loaded context from a .context/ directory.

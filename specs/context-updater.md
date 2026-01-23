@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Context Updater handles the write path of the Context system. It parses structured update commands from AI responses and writes them back to the appropriate context files while maintaining format consistency.
+The Context Updater handles the write path of the Context system. It parses
+structured update commands from AI responses and writes them back to the
+appropriate context files while maintaining format consistency.
 
 ## Responsibilities
 
@@ -39,12 +41,12 @@ AI outputs updates using a simple, parseable format:
 
 ### Actions
 
-| Action | Behavior |
-|--------|----------|
-| `add` | Append content to section (or file if no section) |
-| `update` | Replace content matching `id` |
-| `remove` | Delete content matching `id` |
-| `complete` | Mark task as done (checkbox toggle) |
+| Action     | Behavior                                          |
+|------------|---------------------------------------------------|
+| `add`      | Append content to section (or file if no section) |
+| `update`   | Replace content matching `id`                     |
+| `remove`   | Delete content matching `id`                      |
+| `complete` | Mark task as done (checkbox toggle)               |
 
 ## API
 
@@ -147,13 +149,13 @@ Before writing, validate:
 
 ## Error Handling
 
-| Error | Behavior |
-|-------|----------|
-| File not found | Create if `add`, error otherwise |
-| Section not found | Create if `add`, error otherwise |
-| ID not found | Error with suggestions |
-| Parse error | Return partial results with errors |
-| Write error | Restore from backup if available |
+| Error             | Behavior                           |
+|-------------------|------------------------------------|
+| File not found    | Create if `add`, error otherwise   |
+| Section not found | Create if `add`, error otherwise   |
+| ID not found      | Error with suggestions             |
+| Parse error       | Return partial results with errors |
+| Write error       | Restore from backup if available   |
 
 ## Conflict Resolution
 

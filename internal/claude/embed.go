@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 // Package claude provides Claude Code integration templates and utilities.
 package claude
 
@@ -6,12 +12,12 @@ import (
 	"fmt"
 )
 
-//go:embed auto-save-session.sh
+//go:embed tpl/auto-save-session.sh
 var FS embed.FS
 
 // GetAutoSaveScript returns the auto-save session script.
 func GetAutoSaveScript() ([]byte, error) {
-	content, err := FS.ReadFile("auto-save-session.sh")
+	content, err := FS.ReadFile("tpl/auto-save-session.sh")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read auto-save-session.sh: %w", err)
 	}

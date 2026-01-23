@@ -12,16 +12,20 @@
 
 ## Session History
 
-**IMPORTANT**: Check `.context/sessions/` for full conversation dumps from previous sessions.
+**IMPORTANT**: Check `.context/sessions/` for full conversation dumps from 
+previous sessions.
 
 If you're confused about context or need a deep dive into past discussions:
 ```
 ls .context/sessions/
 ```
 
-**Curated session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md` (e.g., `2025-01-20-164600-feature-discussion.md`). These are updated throughout the session.
+**Curated session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md`
+(e.g., `2026-01-20-164600-feature-discussion.md`). 
+These are updated throughout the session.
 
-**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` (e.g., `2025-01-20-170830-pre-compact.jsonl`). These are immutable once created.
+**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` 
+(e.g., `2026-01-20-170830-pre-compact.jsonl`). These are immutable once created.
 
 **Auto-save triggers** (for Claude Code users):
 - **SessionEnd hook** → auto-saves transcript on exit, including Ctrl+C
@@ -32,7 +36,8 @@ See `.claude/hooks/auto-save-session.sh` for the implementation.
 
 ## Session File Structure (Suggested)
 
-Adapt this structure based on session type. Not all sections are needed for every session.
+Adapt this structure based on session type. 
+Not all sections are needed for every session.
 
 ### Core Sections (Always Include)
 ```markdown
@@ -56,14 +61,14 @@ What to pick up next
 
 ### Context-Dependent Sections
 
-| Session Type | Additional Sections |
-|--------------|---------------------|
-| **Feature discussion** | Requirements, Design options, Implementation plan |
-| **Bug investigation** | Symptoms, Root cause, Fix applied, Prevention |
+| Session Type              | Additional Sections                               |
+|---------------------------|---------------------------------------------------|
+| **Feature discussion**    | Requirements, Design options, Implementation plan |
+| **Bug investigation**     | Symptoms, Root cause, Fix applied, Prevention     |
 | **Architecture decision** | Context, Options considered, Trade-offs, Decision |
-| **Exploration/Research** | Questions, Findings, Open questions |
-| **Planning** | Goals, Milestones, Dependencies, Risks |
-| **Quick fix** | Problem, Solution, Files changed (minimal format) |
+| **Exploration/Research**  | Questions, Findings, Open questions               |
+| **Planning**              | Goals, Milestones, Dependencies, Risks            |
+| **Quick fix**             | Problem, Solution, Files changed (minimal format) |
 
 ### When to Go Minimal
 
@@ -87,13 +92,13 @@ For complex sessions (architecture, debugging), include:
 
 ## When to Update Memory
 
-| Event | Action |
-|-------|--------|
-| Made architectural decision | Add to DECISIONS.md |
-| Discovered gotcha/bug | Add to LEARNINGS.md |
-| Established new pattern | Add to CONVENTIONS.md |
-| Completed task | Mark [x] in TASKS.md |
-| Had important discussion | Save to sessions/ |
+| Event                       | Action                |
+|-----------------------------|-----------------------|
+| Made architectural decision | Add to DECISIONS.md   |
+| Discovered gotcha/bug       | Add to LEARNINGS.md   |
+| Established new pattern     | Add to CONVENTIONS.md |
+| Completed task              | Mark [x] in TASKS.md  |
+| Had important discussion    | Save to sessions/     |
 
 ## Before Session Ends
 
@@ -103,7 +108,7 @@ For complex sessions (architecture, debugging), include:
 
 ## How to Avoid Hallucinating Memory
 
-Never assume. If you don't see it in files, you don't know it.
+Never assume: If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
 - Don't invent history - check sessions/ for actual discussions

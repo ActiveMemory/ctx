@@ -25,4 +25,5 @@ TASKS.md must remain a replayable checklist. Uncheck all items and re-run = veri
 - [ ] **Never merge or collapse Phase sections** — each phase is a logical unit
 - [ ] **Never delete tasks** — mark as `[x]` completed, or `[-]` skipped with reason
 - [ ] **Use inline labels for status** — add `#in-progress` to task text, don't move it
+- [ ] **No "In Progress" / "Next Up" sections** — these encourage moving tasks
 - [ ] **Ask before restructuring** — if structure changes seem needed, ask the user first

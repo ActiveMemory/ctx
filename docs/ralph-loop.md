@@ -1,15 +1,26 @@
 ---
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 icon: lucide/repeat
 ---
 
+![ctx](images/ctx-banner.png)
+
 # Ralph Loop Integration
 
-The [Ralph Wiggum technique](https://ghuntley.com/ralph/) is an iterative AI development workflow where an agent works autonomously on tasks until completion. Context (`ctx`) and Ralph complement each other perfectly:
+The [Ralph Wiggum technique](https://ghuntley.com/ralph/) is an iterative AI development workflow where 
+an agent works autonomously on tasks until completion. Context (`ctx`) and 
+Ralph complement each other perfectly:
 
 - **ctx** provides the *memory*: persistent context that survives across sessions
 - **Ralph** provides the *loop*: autonomous iteration that runs until done
 
-Together, they enable fully autonomous AI development where the agent remembers everything across iterations.
+Together, they enable fully autonomous AI development where the agent remembers 
+everything across iterations.
 
 ## How It Works
 
@@ -157,11 +168,11 @@ End your response with exactly ONE of:
 
 The loop watches for these signals in AI output:
 
-| Signal | Meaning | When to Use |
-|--------|---------|-------------|
-| `SYSTEM_CONVERGED` | All tasks complete | No pending tasks in TASKS.md |
-| `SYSTEM_BLOCKED` | Cannot proceed | Needs clarification, access, or decision |
-| `BOOTSTRAP_COMPLETE` | Initial setup done | Project scaffolding finished |
+| Signal               | Meaning            | When to Use                              |
+|----------------------|--------------------|------------------------------------------|
+| `SYSTEM_CONVERGED`   | All tasks complete | No pending tasks in TASKS.md             |
+| `SYSTEM_BLOCKED`     | Cannot proceed     | Needs clarification, access, or decision |
+| `BOOTSTRAP_COMPLETE` | Initial setup done | Project scaffolding finished             |
 
 ### Example Usage
 
@@ -191,12 +202,12 @@ SYSTEM_BLOCKED
 
 ### Why ctx + Ralph Work Well Together
 
-| Without ctx | With ctx |
-|-------------|----------|
-| Each iteration starts fresh | Each iteration has full history |
-| Decisions get re-made | Decisions persist in DECISIONS.md |
-| Learnings are lost | Learnings accumulate in LEARNINGS.md |
-| Tasks can be forgotten | Tasks tracked in TASKS.md |
+| Without ctx                 | With ctx                             |
+|-----------------------------|--------------------------------------|
+| Each iteration starts fresh | Each iteration has full history      |
+| Decisions get re-made       | Decisions persist in DECISIONS.md    |
+| Learnings are lost          | Learnings accumulate in LEARNINGS.md |
+| Tasks can be forgotten      | Tasks tracked in TASKS.md            |
 
 ### Automatic Context Updates
 
@@ -239,7 +250,8 @@ Run `ctx watch` alongside the loop to automatically process context updates:
 ctx watch --log /tmp/loop.log --auto-save
 ```
 
-The `--auto-save` flag periodically saves session snapshots, creating a history of the loop's progress.
+The `--auto-save` flag periodically saves session snapshots, creating a 
+history of the loop's progress.
 
 ## Example Project Setup
 
@@ -318,7 +330,7 @@ Order of operations:
 4. Then signal status
 ```
 
-### AI violating constitution
+### AI violating Constitution
 
 **Cause:** Constitution not read first
 

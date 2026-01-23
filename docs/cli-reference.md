@@ -1,8 +1,16 @@
 ---
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 icon: lucide/terminal
 ---
 
-# CLI Reference
+![ctx](images/ctx-banner.png)
+
+## CLI Reference
 
 Complete reference for all `ctx` commands.
 
@@ -10,13 +18,13 @@ Complete reference for all `ctx` commands.
 
 All commands support these flags:
 
-| Flag | Description |
-|------|-------------|
-| `--help` | Show command help |
-| `--version` | Show version |
+| Flag                   | Description                                      |
+|------------------------|--------------------------------------------------|
+| `--help`               | Show command help                                |
+| `--version`            | Show version                                     |
 | `--context-dir <path>` | Override context directory (default: `.context`) |
-| `--quiet` | Suppress non-essential output |
-| `--no-color` | Disable colored output |
+| `--quiet`              | Suppress non-essential output                    |
+| `--no-color`           | Disable colored output                           |
 
 ## Commands
 
@@ -30,11 +38,11 @@ ctx init [flags]
 
 **Flags:**
 
-| Flag | Short | Description |
-|------|-------|-------------|
-| `--force` | `-f` | Overwrite existing context files |
-| `--minimal` | `-m` | Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md) |
-| `--merge` | | Auto-merge ctx content into existing CLAUDE.md |
+| Flag        | Short | Description                                                           |
+|-------------|-------|-----------------------------------------------------------------------|
+| `--force`   | `-f`  | Overwrite existing context files                                      |
+| `--minimal` | `-m`  | Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md) |
+| `--merge`   |       | Auto-merge ctx content into existing CLAUDE.md                        |
 
 **What it creates:**
 
@@ -63,7 +71,7 @@ ctx init --merge
 
 ### ctx status
 
-Show current context summary.
+Show the current context summary.
 
 ```bash
 ctx status [flags]
@@ -71,10 +79,10 @@ ctx status [flags]
 
 **Flags:**
 
-| Flag | Short | Description |
-|------|-------|-------------|
-| `--json` | | Output as JSON |
-| `--verbose` | `-v` | Include file contents summary |
+| Flag        | Short | Description                   |
+|-------------|-------|-------------------------------|
+| `--json`    |       | Output as JSON                |
+| `--verbose` | `-v`  | Include file contents summary |
 
 **Output includes:**
 
@@ -104,10 +112,10 @@ ctx agent [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag                | Description                  |
+|---------------------|------------------------------|
 | `--budget <tokens>` | Token budget (default: 8000) |
-| `--format md\|json` | Output format (default: md) |
+| `--format md\|json` | Output format (default: md)  |
 
 **Output includes:**
 
@@ -144,10 +152,10 @@ ctx load [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag                | Description                               |
+|---------------------|-------------------------------------------|
 | `--budget <tokens>` | Token budget for assembly (default: 8000) |
-| `--raw` | Output raw file contents without assembly |
+| `--raw`             | Output raw file contents without assembly |
 
 **Example:**
 
@@ -169,20 +177,20 @@ ctx add <type> <content> [flags]
 
 **Types:**
 
-| Type | Target File |
-|------|-------------|
-| `task` | TASKS.md |
-| `decision` | DECISIONS.md |
-| `learning` | LEARNINGS.md |
+| Type         | Target File    |
+|--------------|----------------|
+| `task`       | TASKS.md       |
+| `decision`   | DECISIONS.md   |
+| `learning`   | LEARNINGS.md   |
 | `convention` | CONVENTIONS.md |
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag                 | Description                                 |
+|----------------------|---------------------------------------------|
 | `--priority <level>` | Priority for tasks: `high`, `medium`, `low` |
-| `--section <name>` | Target section within file |
-| `--edit` | Open editor for full entry |
+| `--section <name>`   | Target section within file                  |
+| `--edit`             | Open editor for full entry                  |
 
 **Examples:**
 
@@ -237,10 +245,10 @@ ctx drift [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag     | Description                  |
+|----------|------------------------------|
 | `--json` | Output machine-readable JSON |
-| `--fix` | Auto-fix simple issues |
+| `--fix`  | Auto-fix simple issues       |
 
 **Checks performed:**
 
@@ -259,11 +267,11 @@ ctx drift --fix
 
 **Exit codes:**
 
-| Code | Meaning |
-|------|---------|
-| 0 | All checks passed |
-| 1 | Warnings found |
-| 2 | Violations found |
+| Code | Meaning           |
+|------|-------------------|
+| 0    | All checks passed |
+| 1    | Warnings found    |
+| 2    | Violations found  |
 
 ---
 
@@ -277,8 +285,8 @@ ctx sync [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag        | Description                              |
+|-------------|------------------------------------------|
 | `--dry-run` | Show what would change without modifying |
 
 **What it does:**
@@ -307,8 +315,8 @@ ctx compact [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag        | Description                                |
+|-------------|--------------------------------------------|
 | `--archive` | Create `.context/archive/` for old content |
 
 **What it does:**
@@ -336,11 +344,11 @@ ctx watch [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
-| `--log <file>` | Log file to watch (default: stdin) |
-| `--dry-run` | Preview updates without applying |
-| `--auto-save` | Periodically save session snapshots |
+| Flag           | Description                         |
+|----------------|-------------------------------------|
+| `--log <file>` | Log file to watch (default: stdin)  |
+| `--dry-run`    | Preview updates without applying    |
+| `--auto-save`  | Periodically save session snapshots |
 
 **What it does:**
 
@@ -371,13 +379,13 @@ ctx hook <tool>
 
 **Supported tools:**
 
-| Tool | Description |
-|------|-------------|
+| Tool          | Description     |
+|---------------|-----------------|
 | `claude-code` | Claude Code CLI |
-| `cursor` | Cursor IDE |
-| `aider` | Aider CLI |
-| `copilot` | GitHub Copilot |
-| `windsurf` | Windsurf IDE |
+| `cursor`      | Cursor IDE      |
+| `aider`       | Aider CLI       |
+| `copilot`     | GitHub Copilot  |
+| `windsurf`    | Windsurf IDE    |
 
 **Example:**
 
@@ -403,8 +411,8 @@ ctx session save [topic] [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag            | Description                                              |
+|-----------------|----------------------------------------------------------|
 | `--type <type>` | Session type: `feature`, `bugfix`, `refactor`, `session` |
 
 **Example:**
@@ -457,8 +465,8 @@ ctx session parse <file> [flags]
 
 **Flags:**
 
-| Flag | Description |
-|------|-------------|
+| Flag        | Description                                     |
+|-------------|-------------------------------------------------|
 | `--extract` | Extract decisions and learnings from transcript |
 
 **Example:**
@@ -472,20 +480,20 @@ ctx session parse transcript.jsonl --extract
 
 ## Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | General error |
-| 2 | Context not found |
-| 3 | Invalid arguments |
-| 4 | File operation error |
+| Code | Meaning              |
+|------|----------------------|
+| 0    | Success              |
+| 1    | General error        |
+| 2    | Context not found    |
+| 3    | Invalid arguments    |
+| 4    | File operation error |
 
 ## Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `CTX_DIR` | Override default context directory path |
-| `NO_COLOR` | Disable colored output when set |
+| Variable   | Description                             |
+|------------|-----------------------------------------|
+| `CTX_DIR`  | Override default context directory path |
+| `NO_COLOR` | Disable colored output when set         |
 
 ## Configuration File
 

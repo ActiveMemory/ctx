@@ -23,14 +23,14 @@ This project uses Context (ctx) for context persistence across sessions.
 
 ## Context Files
 
-| File | Purpose |
-|------|---------|
-| `.context/CONSTITUTION.md` | Hard rules - NEVER violate |
-| `.context/TASKS.md` | Current work items |
-| `.context/DECISIONS.md` | Architectural decisions with rationale |
-| `.context/LEARNINGS.md` | Gotchas, tips, lessons learned |
-| `.context/CONVENTIONS.md` | Code patterns and standards |
-| `.context/sessions/` | **Full conversation dumps** - check here for deep context |
+| File                       | Purpose                                                   |
+|----------------------------|-----------------------------------------------------------|
+| `.context/CONSTITUTION.md` | Hard rules - NEVER violate                                |
+| `.context/TASKS.md`        | Current work items                                        |
+| `.context/DECISIONS.md`    | Architectural decisions with rationale                    |
+| `.context/LEARNINGS.md`    | Gotchas, tips, lessons learned                            |
+| `.context/CONVENTIONS.md`  | Code patterns and standards                               |
+| `.context/sessions/`       | **Full conversation dumps** - check here for deep context |
 
 ## Before Session Ends
 
@@ -50,7 +50,8 @@ CGO_ENABLED=0 go test ./...                   # Run tests
 
 ## This Project
 
-Context (`ctx`) is a CLI tool for persistent AI context. It was built using the Ralph Loop technique.
+Context (`ctx`) is a CLI tool for persistent AI context. It was built using 
+the Ralph Loop technique.
 
 - **ctx** = context management tool (creates `.context/`)
 - **Ralph Loop** = iterative AI development workflow (uses PROMPT.md)

@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 package cli
 
 import (
@@ -18,13 +24,13 @@ var (
 
 // fileTypeMap maps short names to actual file names
 var fileTypeMap = map[string]string{
-	"decision":   "DECISIONS.md",
-	"decisions":  "DECISIONS.md",
-	"task":       "TASKS.md",
-	"tasks":      "TASKS.md",
-	"learning":   "LEARNINGS.md",
-	"learnings":  "LEARNINGS.md",
-	"convention": "CONVENTIONS.md",
+	"decision":    "DECISIONS.md",
+	"decisions":   "DECISIONS.md",
+	"task":        "TASKS.md",
+	"tasks":       "TASKS.md",
+	"learning":    "LEARNINGS.md",
+	"learnings":   "LEARNINGS.md",
+	"convention":  "CONVENTIONS.md",
 	"conventions": "CONVENTIONS.md",
 }
 

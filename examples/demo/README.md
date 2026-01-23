@@ -1,3 +1,5 @@
+![ctx](../../assets/ctx-banner.png)
+
 # Demo Project
 
 This is a sample project demonstrating Context context structure.

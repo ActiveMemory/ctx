@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Context Loader discovers, reads, parses, and assembles context files into a unified context payload suitable for AI consumption. It's the read path of the Context system.
+The Context Loader discovers, reads, parses, and assembles context files into a 
+unified context payload suitable for AI consumption. It's the read path of the 
+Context system.
 
 ## Responsibilities
 

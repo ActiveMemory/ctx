@@ -1,26 +1,40 @@
 ---
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 icon: lucide/rocket
 ---
 
+![ctx](images/ctx-banner.png)
+
 # Getting Started with `ctx`
 
-Context (`ctx`) is a file-based system that enables AI coding assistants to persist project knowledge across sessions. Instead of re-explaining your codebase every time, context files let AI tools remember decisions, conventions, and learnings.
+`ctx` (*Context*) is a file-based system that enables AI coding assistants to
+persist project knowledge across sessions. Instead of re-explaining your
+codebase every time, context files let AI tools remember decisions,
+conventions, and learnings.
 
 ## Why `ctx`?
 
-Most AI-driven development fails not because models are weak—they fail because **context is ephemeral**. Every new session starts near zero:
+Most AI-driven development fails not because models are weak—they fail because 
+**context is ephemeral**. Every new session starts near zero:
 
-- You re-explain architecture
-- The AI repeats past mistakes
-- Decisions get rediscovered instead of remembered
+* You re-explain architecture
+* The AI repeats past mistakes
+* Decisions get rediscovered instead of remembered
 
-Context solves this by treating context as infrastructure: files that version with your code and persist across sessions.
+Context solves this by treating context as infrastructure: 
+files that version with your code and persist across sessions.
 
 ## Installation
 
 ### Binary Downloads (Recommended)
 
-Download pre-built binaries from the [releases page](https://github.com/ActiveMemory/ctx/releases).
+Download pre-built binaries from the 
+[releases page](https://github.com/ActiveMemory/ctx/releases).
 
 === "Linux (x86_64)"
 
@@ -84,7 +98,8 @@ cd your-project
 ctx init
 ```
 
-This creates a `.context/` directory with template files and configures AI tool hooks (for Claude Code).
+This creates a `.context/` directory with template files and configures 
+AI tool hooks (*for Claude Code*).
 
 ### 2. Check Status
 
@@ -96,7 +111,8 @@ Shows context summary: files present, token estimate, and recent activity.
 
 ### 3. Start Using with AI
 
-With Claude Code, context loads automatically via hooks. For other tools, paste the output of:
+With Claude Code, context loads automatically via hooks. For other tools,
+paste the output of:
 
 ```bash
 ctx agent --budget 8000
@@ -106,7 +122,8 @@ ctx agent --budget 8000
 
 Ask your AI: **"Do you remember?"**
 
-It should cite specific context: current tasks, recent decisions, or previous session topics.
+It should cite specific context: current tasks, recent decisions, 
+or previous session topics.
 
 ## What Gets Created
 

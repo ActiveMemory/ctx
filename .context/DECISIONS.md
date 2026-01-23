@@ -1,12 +1,14 @@
 # Decisions
 
-## [2025-01-20] Generic Core with Optional Claude Code Enhancements
+## [2026-01-20] Generic Core with Optional Claude Code Enhancements
 
 **Status**: Accepted
 
-**Context**: `ctx` should work with any AI tool, but Claude Code users could benefit from deeper integration (auto-load, auto-save via hooks).
+**Context**: `ctx` should work with any AI tool, but Claude Code users could 
+benefit from deeper integration (auto-load, auto-save via hooks).
 
-**Decision**: Keep `ctx` generic as the core tool, but provide optional Claude Code-specific enhancements:
+**Decision**: Keep `ctx` generic as the core tool, but provide optional 
+Claude Code-specific enhancements:
 - `ctx hook claude-code` generates Claude-specific configs
 - `.claude/hooks/` contains Claude Code hook scripts
 - Features work without Claude Code, but are enhanced with it
@@ -24,11 +26,12 @@
 
 ---
 
-## [2025-01-20] Always Generate Claude Hooks in Init (No Flag Needed)
+## [2026-01-20] Always Generate Claude Hooks in Init (No Flag Needed)
 
 **Status**: Accepted (to be implemented)
 
-**Context**: Setting up Claude Code hooks manually is error-prone. Considered `--claude` flag but realized it's unnecessary.
+**Context**: Setting up Claude Code hooks manually is error-prone. 
+Considered `--claude` flag but realized it's unnecessary.
 
 **Decision**: `ctx init` ALWAYS creates `.claude/hooks/` alongside `.context/`:
 ```bash
@@ -50,17 +53,18 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 ---
 
-## [2025-01-20] Two-Tier Context Persistence Model
+## [2026-01-20] Two-Tier Context Persistence Model
 
 **Status**: Accepted
 
-**Context**: Need to persist context across sessions. Token budgets limit what can be loaded. But nothing should be truly lost.
+**Context**: Need to persist context across sessions. Token budgets limit
+what can be loaded. But nothing should be truly lost.
 
 **Decision**: Implement two tiers of persistence:
 
-| Tier | Purpose | Location | Token Cost |
-|------|---------|----------|------------|
-| **Curated** | Quick context reload | `.context/*.md` | Low (budgeted) |
+| Tier          | Purpose                 | Location                 | Token Cost             |
+|---------------|-------------------------|--------------------------|------------------------|
+| **Curated**   | Quick context reload    | `.context/*.md`          | Low (budgeted)         |
 | **Full dump** | Safety net, archaeology | `.context/sessions/*.md` | Zero (not auto-loaded) |
 
 **Rationale**:
@@ -76,13 +80,15 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 ---
 
-## [2025-01-20] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
+## [2026-01-20] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
 
 **Status**: Accepted
 
-**Context**: Multiple sessions per day would overwrite each other. Also, multiple compacts in the same minute could collide.
+**Context**: Multiple sessions per day would overwrite each other. 
+Also, multiple compacts in the same minute could collide.
 
-**Decision**: Use `YYYY-MM-DD-HHMMSS-<topic>.md` format for session files. Two file types:
+**Decision**: Use `YYYY-MM-DD-HHMMSS-<topic>.md` format for session files. 
+Two file types:
 - **Curated sessions**: `HHMMSS-<topic>.md` - updated throughout session
 - **Auto-snapshots**: `HHMMSS-<event>.jsonl` - immutable once created
 
@@ -99,11 +105,12 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 ---
 
-## [2025-01-20] Auto-Save Before Compact
+## [2026-01-20] Auto-Save Before Compact
 
 **Status**: Accepted (to be implemented)
 
-**Context**: `ctx compact` archives old tasks. Information could be lost if not captured.
+**Context**: `ctx compact` archives old tasks. Information could be 
+lost if not captured.
 
 **Decision**: `ctx compact` should auto-save a session dump before archiving:
 1. Save current state to `.context/sessions/YYYY-MM-DD-HHMM-pre-compact.md`
@@ -121,16 +128,19 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 ---
 
-## [2025-01-20] Handle CLAUDE.md Creation/Merge in ctx init
+## [2026-01-20] Handle CLAUDE.md Creation/Merge in ctx init
 
 **Status**: Accepted (to be implemented)
 
-**Context**: Both `claude init` and `ctx init` want to create/modify CLAUDE.md. Users of ctx will likely want ctx's context-aware version, but may already have a CLAUDE.md from `claude init`.
+**Context**: Both `claude init` and `ctx init` want to create/modify CLAUDE.md. 
+Users of ctx will likely want ctx's context-aware version, 
+but may already have a CLAUDE.md from `claude init`.
 
 **Decision**: `ctx init` handles CLAUDE.md intelligently:
 - **No CLAUDE.md exists** → Create it with ctx's context-loading template
 - **CLAUDE.md exists** → Don't overwrite. Instead:
-  1. **Backup first** → Copy to `CLAUDE.md.<unix_timestamp>.bak` (e.g., `CLAUDE.md.1737399000.bak`)
+  1. **Backup first** → Copy to `CLAUDE.md.<unix_timestamp>.bak` 
+     (e.g., `CLAUDE.md.1737399000.bak`)
   2. Check if it already has ctx content (idempotent check via marker comment)
   3. If not, output the snippet to append and offer to merge
   4. `ctx init --merge` flag to auto-append without prompting
@@ -154,7 +164,9 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 **Status**: Accepted (implemented)
 
-**Context**: Original implementation hardcoded absolute paths in hooks (e.g., `/home/parallels/WORKSPACE/ActiveMemory/dist/ctx-linux-arm64`). This breaks when:
+**Context**: Original implementation hardcoded absolute paths in hooks 
+(e.g., `/home/parallels/WORKSPACE/ActiveMemory/dist/ctx-linux-arm64`). 
+This breaks when:
 - Sharing configs with other developers
 - Moving projects
 - Dogfooding in separate directories
@@ -177,7 +189,7 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 ---
 
-## [2025-01-20] Use SessionEnd Hook for Auto-Save
+## [2026-01-20] Use SessionEnd Hook for Auto-Save
 
 **Status**: Accepted (implemented)
 
@@ -201,17 +213,22 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 ---
 
-## [2025-01-21] Separate Orchestrator Directive from Agent Tasks
+## [2026-01-21] Separate Orchestrator Directive from Agent Tasks
 
 **Status**: Accepted
 
-**Context**: Two task systems existed: `IMPLEMENTATION_PLAN.md` (Ralph Loop orchestrator) and `.context/TASKS.md` (ctx's own context). Ralph would find IMPLEMENTATION_PLAN.md complete and exit, ignoring .context/TASKS.md.
+**Context**: Two task systems existed: `IMPLEMENTATION_PLAN.md` 
+(Ralph Loop orchestrator) and `.context/TASKS.md` (ctx's own context). 
+Ralph would find IMPLEMENTATION_PLAN.md complete and exit, 
+ignoring .context/TASKS.md.
 
 **Decision**: Clean separation of concerns:
 - **`.context/TASKS.md`** = Agent's mind. Tasks the agent decided need doing.
-- **`IMPLEMENTATION_PLAN.md`** = Orchestrator's directive. A single meta-task: "Check your tasks."
+- **`IMPLEMENTATION_PLAN.md`** = Orchestrator's directive. 
+  A single meta-task: "Check your tasks."
 
-The orchestrator doesn't maintain a parallel ledger — it just tells the agent to check its own mind.
+The orchestrator doesn't maintain a parallel ledger — it just tells the 
+agent to check its own mind.
 
 **Rationale**:
 - Agent autonomy: the agent owns its task list

@@ -1,4 +1,6 @@
-# Contributing to Context
+![ctx](assets/ctx-banner.png)
+
+## Contributing to Context
 
 Thank you for your interest in contributing to `ctx`.
 

@@ -2,7 +2,8 @@
 
 ## Overview
 
-The Context CLI provides commands for initializing, managing, and inspecting project context. It's the primary human interface to the system.
+The Context CLI provides commands for initializing, managing, and inspecting 
+project context. It's the primary human interface to the system.
 
 ## Implementation
 

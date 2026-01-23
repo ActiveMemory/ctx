@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 // Package drift provides functionality for detecting stale or invalid context.
 package drift
 

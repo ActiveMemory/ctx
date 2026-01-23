@@ -4,7 +4,8 @@
 
 **You have NO conversational memory. Your memory IS the file system.**
 
-Everything important must be written to files. Future iterations depend entirely on what you write now.
+Everything important must be written to files. Future iterations depend 
+entirely on what you write now.
 
 ## Context Read Order
 

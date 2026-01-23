@@ -18,7 +18,8 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 ## TASKS.md Structure Invariants
 
-TASKS.md must remain a replayable checklist. Uncheck all items and re-run the loop = verify/redo all tasks in order.
+TASKS.md must remain a replayable checklist. Uncheck all items and re-run 
+the loop = verify/redo all tasks in order.
 
 - [ ] **Never move tasks** — tasks stay in their Phase section permanently
 - [ ] **Never remove Phase headers** — Phase labels provide structure and order

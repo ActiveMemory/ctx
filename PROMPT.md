@@ -3,7 +3,8 @@
 ## CORE PRINCIPLE
 
 You have NO conversational memory. Your memory IS the file system.
-Your goal: advance the project by exactly ONE task, update context, commit, and exit.
+Your goal: advance the project by exactly ONE task, update context, commit, 
+and exit.
 
 ---
 
@@ -65,7 +66,9 @@ Check if `go.mod` exists.
 2. Remind user about Endgame goals before exiting
 3. Output `<promise>DONE</promise>`
 
-**Philosophy:** Tasks live in the agent's mind (`.context/TASKS.md`). The orchestrator (`IMPLEMENTATION_PLAN.md`) provides the meta-directive, not the task list
+**Philosophy:** Tasks live in the agent's mind (`.context/TASKS.md`). 
+The orchestrator (`IMPLEMENTATION_PLAN.md`) provides the meta-directive, 
+not the task list
 
 ---
 
@@ -103,8 +106,8 @@ go vet ./...            # No vet errors
 
 1. Mark completed task `[x]` in `.context/TASKS.md`
 2. Move task to "Completed (Recent)" section with date
-3. If you made an architectural decision → document in `.context/DECISIONS.md`
-4. If you learned a gotcha → add to `.context/LEARNINGS.md`
+3. If you made an architectural decision → run `ctx add decision "description"`
+4. If you learned a gotcha → run `ctx add learning "description"`
 5. If build commands changed → update `AGENTS.md`
 
 ---
@@ -151,7 +154,8 @@ When implementing `ctx init`, embed these templates:
 ```markdown
 # Constitution
 
-These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
+These rules are INVIOLABLE. If a task requires violating these, 
+the task is wrong.
 
 ## Security Invariants
 
@@ -286,19 +290,19 @@ Output `<promise>DONE</promise>` ONLY when ALL of these are true:
 
 ## REFERENCE: CLI COMMANDS
 
-| Command | Description |
-|---------|-------------|
-| `ctx init` | Create `.context/` with templates |
-| `ctx status` | Show context summary |
-| `ctx load` | Output assembled context |
-| `ctx agent` | Print AI-ready context packet |
-| `ctx add <type> "content"` | Add decision/task/learning |
-| `ctx complete <task>` | Mark task done |
-| `ctx drift` | Detect stale context |
-| `ctx sync` | Reconcile with codebase |
-| `ctx compact` | Archive old items |
-| `ctx watch` | Watch for update commands |
-| `ctx hook <tool>` | Generate tool config |
+| Command                    | Description                       |
+|----------------------------|-----------------------------------|
+| `ctx init`                 | Create `.context/` with templates |
+| `ctx status`               | Show context summary              |
+| `ctx load`                 | Output assembled context          |
+| `ctx agent`                | Print AI-ready context packet     |
+| `ctx add <type> "content"` | Add decision/task/learning        |
+| `ctx complete <task>`      | Mark task done                    |
+| `ctx drift`                | Detect stale context              |
+| `ctx sync`                 | Reconcile with codebase           |
+| `ctx compact`              | Archive old items                 |
+| `ctx watch`                | Watch for update commands         |
+| `ctx hook <tool>`          | Generate tool config              |
 
 ---
 

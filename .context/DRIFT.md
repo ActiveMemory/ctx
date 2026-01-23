@@ -19,8 +19,8 @@
 
 ## Staleness Indicators
 
-| File | Stale If | Action |
-|------|----------|--------|
-| `docs/cli-reference.md` | CLI source newer | Review and update |
-| `docs/context-files.md` | Templates changed | Review and update |
-| `docs/integrations.md` | Hook logic changed | Review and update |
+| File                    | Stale If           | Action            |
+|-------------------------|--------------------|-------------------|
+| `docs/cli-reference.md` | CLI source newer   | Review and update |
+| `docs/context-files.md` | Templates changed  | Review and update |
+| `docs/integrations.md`  | Hook logic changed | Review and update |

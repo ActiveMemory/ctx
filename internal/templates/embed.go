@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 // Package templates provides embedded template files for initializing .context/ directories.
 package templates
 

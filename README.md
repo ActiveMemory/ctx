@@ -1,9 +1,6 @@
-```text
- /
-,'`./ Context:
-`.,'\   do you remember?
-  \
-```
+![ctx](assets/ctx-banner.png)
+
+## `ctx` (*Context*)
 
 > **Context is a system, not a prompt.**
 

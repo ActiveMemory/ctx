@@ -1,3 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+        <loc>https://ctx.ist/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli-reference/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/context-files/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/ralph-loop/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/integrations/</loc>
+      </url>
 </urlset>

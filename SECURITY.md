@@ -1,3 +1,5 @@
+![ctx](assets/ctx-banner.png)
+
 # Security Policy
 
 ## Reporting a Vulnerability

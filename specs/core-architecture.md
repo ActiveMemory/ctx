@@ -2,17 +2,24 @@
 
 ## Overview
 
-Context is a file-based context engineering system that persists project knowledge across AI coding sessions. It treats context as infrastructure, not ephemeral prompt content.
+Context is a file-based context engineering system that persists project 
+knowledge across AI coding sessions. It treats context as infrastructure, 
+not ephemeral prompt content.
 
 ## Design Philosophy
 
 ### First Principles
 
-1. **Memory IS the filesystem** — AI agents have no conversational memory; everything important must be written to files
-2. **Context is a system, not a prompt** — Context should be structured, versioned, and maintained like code
-3. **Decisions compound** — Every architectural choice, pattern selection, and lesson learned should persist
-4. **Memory matches workflow** — Context structure mirrors how engineers actually think about projects
-5. **Tool-agnostic by design** — Works with any AI tool that can read files (Claude Code, Cursor, Aider, etc.)
+1. **Memory IS the filesystem** — AI agents have no conversational memory; 
+   everything important must be written to files
+2. **Context is a system, not a prompt** — Context should be structured, 
+   versioned, and maintained like code
+3. **Decisions compound** — Every architectural choice, pattern selection, 
+   and lesson learned should persist
+4. **Memory matches workflow** — Context structure mirrors how engineers 
+   actually think about projects
+5. **Tool-agnostic by design** — Works with any AI tool that can read files 
+   (Claude Code, Cursor, Aider, etc.)
 6. **Git-native** — Context files are text, diffable, and committable
 
 ### Why File-Based?

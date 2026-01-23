@@ -1,4 +1,6 @@
-# Developer Certificate of Origin
+![ctx](assets/ctx-banner.png)
+
+## Developer Certificate of Origin
 
 Version 1.1
 

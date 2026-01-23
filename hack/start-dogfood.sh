@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2025-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 #
 # Start dogfooding Context CLI in a fresh project
 #

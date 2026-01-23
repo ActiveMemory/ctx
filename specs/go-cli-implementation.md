@@ -2,7 +2,8 @@
 
 ## Overview
 
-The `ctx` CLI is implemented in Go for single-binary distribution with zero runtime dependencies.
+The `ctx` CLI is implemented in Go for single-binary distribution with zero 
+runtime dependencies.
 
 ## Project Structure
 
@@ -225,14 +226,14 @@ func main() {
 
 ## Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | General error |
-| 2 | Context not found |
-| 3 | Invalid arguments |
-| 4 | File operation error |
-| 5 | Drift detected (for CI usage) |
+| Code | Meaning                       |
+|------|-------------------------------|
+| 0    | Success                       |
+| 1    | General error                 |
+| 2    | Context not found             |
+| 3    | Invalid arguments             |
+| 4    | File operation error          |
+| 5    | Drift detected (for CI usage) |
 
 ## Testing
 

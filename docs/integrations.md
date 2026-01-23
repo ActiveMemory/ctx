@@ -1,14 +1,24 @@
 ---
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 icon: lucide/plug
 ---
 
+![ctx](images/ctx-banner.png)
+
 # AI Tool Integrations
 
-Context works with any AI tool that can read files. This guide covers setup for popular AI coding assistants.
+Context works with any AI tool that can read files. This guide covers setup 
+for popular AI coding assistants.
 
 ## Claude Code (Full Integration)
 
-Claude Code has the deepest integration with automatic context loading and session persistence.
+Claude Code has the deepest integration with automatic context loading and 
+session persistence.
 
 ### Automatic Setup
 
@@ -20,12 +30,12 @@ ctx init
 
 This creates:
 
-| File/Directory | Purpose |
-|----------------|---------|
-| `.context/` | All context files |
-| `.claude/hooks/` | Auto-save scripts |
-| `.claude/settings.local.json` | Hook configuration |
-| `CLAUDE.md` | Bootstrap instructions |
+| File/Directory                | Purpose                |
+|-------------------------------|------------------------|
+| `.context/`                   | All context files      |
+| `.claude/hooks/`              | Auto-save scripts      |
+| `.claude/settings.local.json` | Hook configuration     |
+| `CLAUDE.md`                   | Bootstrap instructions |
 
 ### How It Works
 
@@ -40,7 +50,8 @@ graph LR
 ```
 
 1. **Session start**: Claude reads `CLAUDE.md`, which tells it to check `.context/`
-2. **During session**: `PreToolUse` hook runs `ctx agent --budget 4000` before each tool use
+2. **During session**: `PreToolUse` hook runs `ctx agent --budget 4000` 
+   before each tool use
 3. **Session end**: `SessionEnd` hook saves context snapshot to `.context/sessions/`
 4. **Next session**: Claude sees previous sessions and continues with context
 
@@ -95,12 +106,12 @@ Edit the PreToolUse command to change the token budget:
 
 ### Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| Context not loading | Check `ctx` is in PATH: `which ctx` |
-| No sessions saved | Verify `.claude/settings.local.json` has `SessionEnd` hook |
-| Hook errors | Check script permissions: `chmod +x .claude/hooks/*.sh` |
-| Missing sessions dir | Create it: `mkdir -p .context/sessions` |
+| Issue                | Solution                                                   |
+|----------------------|------------------------------------------------------------|
+| Context not loading  | Check `ctx` is in PATH: `which ctx`                        |
+| No sessions saved    | Verify `.claude/settings.local.json` has `SessionEnd` hook |
+| Hook errors          | Check script permissions: `chmod +x .claude/hooks/*.sh`    |
+| Missing sessions dir | Create it: `mkdir -p .context/sessions`                    |
 
 ### Manual Context Load
 
@@ -118,7 +129,8 @@ cat .context/TASKS.md
 
 ## Cursor IDE
 
-Cursor can use context files through its system prompt or by reading files directly.
+Cursor can use context files through its system prompt or by reading 
+files directly.
 
 ### Setup
 
@@ -136,7 +148,7 @@ Add to Cursor settings (`.cursor/settings.json`):
 
 ```json
 {
-  "ai.systemPrompt": "Read .context/TASKS.md and .context/CONVENTIONS.md before responding. Follow rules in .context/CONSTITUTION.md."
+  "ai.systemPrompt": "Read .context/TASKS.md and .context/CONVENTIONS.md before responding. Follow rules in .context/CONSTITUTION.md.",
 }
 ```
 
@@ -144,7 +156,8 @@ Add to Cursor settings (`.cursor/settings.json`):
 
 1. Open your project in Cursor
 2. Context files are available in the file tree
-3. Reference them in prompts: "Check .context/DECISIONS.md for our approach to..."
+3. Reference them in prompts: 
+   "Check .context/DECISIONS.md for our approach to..."
 
 ### Manual Context Injection
 
@@ -212,7 +225,8 @@ ctx watch --log /tmp/aider.log
 
 ## GitHub Copilot
 
-Copilot reads open files for context. Keep context files open or reference them in comments.
+Copilot reads open files for context. Keep context files open or reference 
+them in comments.
 
 ### Setup
 
@@ -345,13 +359,13 @@ The `ctx watch` command parses update commands from AI output. Use this format:
 
 ### Supported Types
 
-| Type | Target File | Example |
-|------|-------------|---------|
-| `task` | TASKS.md | `<context-update type="task">Implement caching</context-update>` |
-| `decision` | DECISIONS.md | `<context-update type="decision">Use Redis for caching</context-update>` |
-| `learning` | LEARNINGS.md | `<context-update type="learning">Mocks must be hoisted</context-update>` |
+| Type         | Target File    | Example                                                                       |
+|--------------|----------------|-------------------------------------------------------------------------------|
+| `task`       | TASKS.md       | `<context-update type="task">Implement caching</context-update>`              |
+| `decision`   | DECISIONS.md   | `<context-update type="decision">Use Redis for caching</context-update>`      |
+| `learning`   | LEARNINGS.md   | `<context-update type="learning">Mocks must be hoisted</context-update>`      |
 | `convention` | CONVENTIONS.md | `<context-update type="convention">Use kebab-case for files</context-update>` |
-| `complete` | TASKS.md | `<context-update type="complete">user auth</context-update>` |
+| `complete`   | TASKS.md       | `<context-update type="complete">user auth</context-update>`                  |
 
 ### Examples
 

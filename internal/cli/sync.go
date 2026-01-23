@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 package cli
 
 import (
@@ -6,8 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -162,11 +168,11 @@ func checkPackageFiles(ctx *context.Context) []SyncAction {
 	actions := []SyncAction{}
 
 	packageFiles := map[string]string{
-		"package.json": "Node.js dependencies",
-		"go.mod":       "Go module dependencies",
-		"Cargo.toml":   "Rust dependencies",
+		"package.json":     "Node.js dependencies",
+		"go.mod":           "Go module dependencies",
+		"Cargo.toml":       "Rust dependencies",
 		"requirements.txt": "Python dependencies",
-		"Gemfile":      "Ruby dependencies",
+		"Gemfile":          "Ruby dependencies",
 	}
 
 	for file, desc := range packageFiles {

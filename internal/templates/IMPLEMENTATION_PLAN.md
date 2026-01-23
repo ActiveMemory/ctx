@@ -8,7 +8,7 @@ This file is the orchestrator's directive. The agent's actual tasks live in `.co
 
 ## Completion Criteria
 
-When `.context/TASKS.md` has no unchecked items in "Next Up", the directive is complete.
+When `.context/TASKS.md` has no unchecked items remaining, the directive is complete.
 
 ## North Star (Endgame)
 

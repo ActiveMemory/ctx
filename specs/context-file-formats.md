@@ -2,13 +2,16 @@
 
 ## Overview
 
-Each context file serves a specific purpose and follows a consistent markdown structure. Files are designed to be human-readable, AI-parseable, and token-efficient.
+Each context file serves a specific purpose and follows a consistent markdown 
+structure. Files are designed to be human-readable, AI-parseable, 
+and token-efficient.
 
 ## File Specifications
 
 ### DECISIONS.md
 
-**Purpose**: Record architectural decisions with rationale so they don't get re-debated.
+**Purpose**: Record architectural decisions with rationale so they don't 
+get re-debated.
 
 **Structure**:
 ```markdown
@@ -41,9 +44,11 @@ Each context file serves a specific purpose and follows a consistent markdown st
 
 **Decision**: Enable TypeScript strict mode with all strict flags.
 
-**Rationale**: Catches more bugs at compile time. Team has experience with strict mode. Upfront cost pays off in reduced runtime errors.
+**Rationale**: Catches more bugs at compile time. Team has experience with 
+strict mode. Upfront cost pays off in reduced runtime errors.
 
-**Consequences**: More verbose type annotations required. Some third-party libraries need type assertions.
+**Consequences**: More verbose type annotations required. Some third-party 
+libraries need type assertions.
 
 **Alternatives Considered**:
 - Basic TypeScript: Rejected because it misses null checks
@@ -88,7 +93,8 @@ Each context file serves a specific purpose and follows a consistent markdown st
 
 ### LEARNINGS.md
 
-**Purpose**: Capture lessons learned, gotchas, and tips that shouldn't be forgotten.
+**Purpose**: Capture lessons learned, gotchas, and tips that shouldn't be 
+forgotten.
 
 **Structure**:
 ```markdown
@@ -117,9 +123,11 @@ Each context file serves a specific purpose and follows a consistent markdown st
 
 **Context**: Tests were failing intermittently when mocking fs module.
 
-**Lesson**: Vitest requires `vi.mock()` calls to be hoisted to the top of the file. Dynamic mocks need `vi.doMock()` instead.
+**Lesson**: Vitest requires `vi.mock()` calls to be hoisted to the top of the 
+file. Dynamic mocks need `vi.doMock()` instead.
 
-**Application**: Always use `vi.mock()` at file top. Use `vi.doMock()` only when mock needs runtime values.
+**Application**: Always use `vi.mock()` at file top. Use `vi.doMock()` only 
+when mock needs runtime values.
 ```
 
 ---
@@ -224,13 +232,15 @@ What's in scope vs out of scope for this codebase.
 
 ### CONSTITUTION.md
 
-**Purpose**: Define hard invariants — rules that must NEVER be violated, regardless of task.
+**Purpose**: Define hard invariants — rules that must NEVER be violated, 
+regardless of task.
 
 **Structure**:
 ```markdown
 # Constitution
 
-These rules are INVIOLABLE. If a task requires violating these, the task is wrong.
+These rules are INVIOLABLE. If a task requires violating these, 
+the task is wrong.
 
 ## Security Invariants
 
@@ -251,13 +261,15 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 - [ ] Generated files are never committed
 ```
 
-**Usage**: AI agents MUST read this first and refuse tasks that violate invariants.
+**Usage**: AI agents MUST read this first and refuse tasks that 
+violate invariants.
 
 ---
 
 ### GLOSSARY.md
 
-**Purpose**: Define domain terms, abbreviations, and project vocabulary to ensure consistent language.
+**Purpose**: Define domain terms, abbreviations, and project vocabulary to 
+ensure consistent language.
 
 **Structure**:
 ```markdown
@@ -272,10 +284,10 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 ## Abbreviations
 
-| Abbrev | Expansion | Context |
-|--------|-----------|---------|
-| ADR | Architectural Decision Record | Decision documentation |
-| SUT | System Under Test | Testing |
+| Abbrev | Expansion                     | Context                |
+|--------|-------------------------------|------------------------|
+| ADR    | Architectural Decision Record | Decision documentation |
+| SUT    | System Under Test             | Testing                |
 
 ## Project-Specific Terms
 
@@ -288,7 +300,8 @@ See: [Ralph Wiggum technique](https://ghuntley.com/ralph/)
 
 ### DRIFT.md
 
-**Purpose**: Define signals that context is stale and needs updating. Used by `ctx drift` command.
+**Purpose**: Define signals that context is stale and needs updating. 
+Used by `ctx drift` command.
 
 **Structure**:
 ```markdown
@@ -322,19 +335,20 @@ Update context when:
 
 ## Staleness Indicators
 
-| File | Stale If | Action |
-|------|----------|--------|
-| ARCHITECTURE.md | >30 days old | Review component list |
-| TASKS.md | >50% completed | Archive and refresh |
-| LEARNINGS.md | >20 items | Consolidate or archive |
-| DECISIONS.md | References old patterns | Mark superseded |
+| File            | Stale If                | Action                 |
+|-----------------|-------------------------|------------------------|
+| ARCHITECTURE.md | >30 days old            | Review component list  |
+| TASKS.md        | >50% completed          | Archive and refresh    |
+| LEARNINGS.md    | >20 items               | Consolidate or archive |
+| DECISIONS.md    | References old patterns | Mark superseded        |
 ```
 
 ---
 
 ### AGENT_PLAYBOOK.md
 
-**Purpose**: Explicit instructions for how AI agents should read, apply, and update Context.
+**Purpose**: Explicit instructions for how AI agents should read, apply, and 
+update Context.
 
 **Structure**:
 ```markdown
@@ -373,7 +387,8 @@ Load context files in this order (most critical first):
 
 ## How to Avoid Hallucinating Memory
 
-**CRITICAL**: You have NO memory between sessions. All knowledge comes from files.
+**CRITICAL**: You have NO memory between sessions. All knowledge comes 
+from files.
 
 1. **Never assume** — If you don't see it in files, you don't know it
 2. **Never invent history** — Don't claim "we discussed" or "we decided" without file evidence

@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 package cli
 
 import (
@@ -512,10 +518,10 @@ func runSessionParse(cmd *cobra.Command, args []string) error {
 
 // transcriptEntry represents a single entry in the jsonl transcript.
 type transcriptEntry struct {
-	Type      string          `json:"type"`
-	Message   transcriptMsg   `json:"message"`
-	Timestamp string          `json:"timestamp"`
-	UUID      string          `json:"uuid"`
+	Type      string        `json:"type"`
+	Message   transcriptMsg `json:"message"`
+	Timestamp string        `json:"timestamp"`
+	UUID      string        `json:"uuid"`
 }
 
 // transcriptMsg represents the message content.
@@ -526,10 +532,10 @@ type transcriptMsg struct {
 
 // contentBlock represents a block in assistant content array.
 type contentBlock struct {
-	Type     string `json:"type"`
-	Text     string `json:"text,omitempty"`
-	Thinking string `json:"thinking,omitempty"`
-	Name     string `json:"name,omitempty"`     // tool name
+	Type     string      `json:"type"`
+	Text     string      `json:"text,omitempty"`
+	Thinking string      `json:"thinking,omitempty"`
+	Name     string      `json:"name,omitempty"`  // tool name
 	Input    interface{} `json:"input,omitempty"` // tool input
 }
 

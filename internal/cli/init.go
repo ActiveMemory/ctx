@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 // Package cli implements the CLI commands for ctx.
 package cli
 
@@ -11,21 +17,21 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
 const (
-	contextDirName      = ".context"
-	claudeDirName       = ".claude"
-	claudeHooksDirName  = ".claude/hooks"
-	settingsFileName    = ".claude/settings.local.json"
-	autoSaveScriptName  = "auto-save-session.sh"
-	claudeMdFileName    = "CLAUDE.md"
-	ctxMarkerStart      = "<!-- ctx:context -->"
-	ctxMarkerEnd        = "<!-- ctx:end -->"
+	contextDirName     = ".context"
+	claudeDirName      = ".claude"
+	claudeHooksDirName = ".claude/hooks"
+	settingsFileName   = ".claude/settings.local.json"
+	autoSaveScriptName = "auto-save-session.sh"
+	claudeMdFileName   = "CLAUDE.md"
+	ctxMarkerStart     = "<!-- ctx:context -->"
+	ctxMarkerEnd       = "<!-- ctx:end -->"
 )
 
 var (

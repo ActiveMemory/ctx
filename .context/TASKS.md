@@ -42,6 +42,7 @@
 - [x] Document session persistence in AGENT_PLAYBOOK.md
 
 ### Phase 7: Testing & Verification `#priority:high` `#area:quality`
+- [ ] Add headers to all files
 - [ ] Add integration tests — invoke actual binary, verify output
   - [ ] `ctx init` creates expected files
   - [ ] `ctx status` returns valid status (not just help text)
@@ -95,13 +96,21 @@
 - [x] Document Claude Code integration in README
 - [x] Add "Dogfooding Guide" — how to use ctx on ctx itself
 - [x] Document session auto-save setup for new users
-- [ ] Create actual documentation site in `docs/` folder
-  - [ ] Getting started guide
-  - [ ] CLI command reference
-  - [ ] Context file format reference
-  - [ ] Integration guides (Claude Code, Cursor, Aider, etc.)
-  - [ ] Ralph Loop pairing guide
+- [x] Create actual documentation site in `docs/` folder
+  - [x] Getting started guide
+  - [x] CLI command reference
+  - [x] Context file format reference
+  - [x] Integration guides (Claude Code, Cursor, Aider, etc.)
+  - [x] Ralph Loop pairing guide
 - [ ] Set up Cloudflare Pages to serve docs at ctx.ist
+- [ ] Review docs/ and README.md for accuracy and completeness `#human-in-the-loop`
+  - Verify CLI examples work as documented
+  - Check for inconsistencies between README.md and docs/
+  - Requires human confirmation before marking complete
+- [ ] Simplify `docs/index.md` to avoid README.md duplication `#blocked-by:ctx.ist-live`
+  - Keep minimal intro + installation
+  - Link to full docs at ctx.ist for details
+  - Reduces drift between README.md and docs/
 
 ## Blocked
 

@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2025-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 package cli
 
 import (
@@ -8,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
