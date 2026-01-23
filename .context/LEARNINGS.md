@@ -253,3 +253,27 @@ Exit criteria must include:
 2. Set coverage targets (e.g., 70% for core packages)
 3. Add verification tasks to TASKS.md — we have the same blind spot
 4. Being proud of our achievement doesn't prove its validity
+
+## ctx agent vs Manual File Reading
+
+### Tool vs Direct Access Trade-offs
+**Discovered**: 2026-01-23
+**Session**: 2026-01-23-* (check sessions/ for "do you remember" discussion)
+
+**Context**: User asked "Do you remember?" and agent used parallel file reads instead of `ctx agent`. Compared outputs to understand the delta.
+
+**Lesson**: `ctx agent` is optimized for task execution:
+- Filters to pending tasks only
+- Surfaces constitution rules inline
+- Provides prioritized read order
+- Token-budget aware
+
+Manual file reading is better for exploratory/memory questions:
+- Session history access
+- Timestamps ("modified 8 min ago")
+- Completed task context
+- Parallel reads for speed
+
+**Application**: No need to mandate one approach. Agents naturally pick appropriately:
+- "Do you remember?" → parallel file reads (need history)
+- "What should I work on?" → `ctx agent` (need tasks)
