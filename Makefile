@@ -101,9 +101,11 @@ dogfood:
 	@test -n "$(TARGET)" || (echo "Usage: make dogfood TARGET=~/WORKSPACE/ctx-dogfood" && exit 1)
 	./hack/start-dogfood.sh $(TARGET)
 
-## install: Install to /usr/local/bin
-install: build
-	sudo cp $(BINARY) /usr/local/bin/$(BINARY)
+## install: Install to /usr/local/bin (run as: make build && sudo make install)
+install:
+	@test -f $(BINARY) || (echo "Binary not found. Run 'make build' first, then 'sudo make install'" && exit 1)
+	cp $(BINARY) /usr/local/bin/$(BINARY)
+	@echo "Installed ctx to /usr/local/bin/ctx"
 
 ## help: Show this help
 help:

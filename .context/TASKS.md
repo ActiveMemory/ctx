@@ -62,16 +62,16 @@
 - [x] Update CONSTITUTION.md: archival is allowed, deletion is not
 
 ### Phase 9: Claude Slash Commands (Skills) `#priority:medium` `#area:cli`
-- [ ] Research how existing skills are registered (check ralph-loop pattern)
-- [ ] Create `/ctx-save` skill — calls `ctx session save`
-- [ ] Create `/ctx-status` skill — calls `ctx status`
-- [ ] Create `/ctx-add-learning` skill — calls `ctx add learning`
-- [ ] Create `/ctx-add-decision` skill — calls `ctx add decision`
-- [ ] Create `/ctx-add-task` skill — calls `ctx add task`
-- [ ] Create `/ctx-agent` skill — calls `ctx agent` (manual context load)
-- [ ] Create `/ctx-archive` skill — calls `ctx tasks archive`
+- [x] Research how existing skills are registered (check ralph-loop pattern)
+- [x] Create `/ctx-save` skill — calls `ctx session save`
+- [x] Create `/ctx-status` skill — calls `ctx status`
+- [x] Create `/ctx-add-learning` skill — calls `ctx add learning`
+- [x] Create `/ctx-add-decision` skill — calls `ctx add decision`
+- [x] Create `/ctx-add-task` skill — calls `ctx add task`
+- [x] Create `/ctx-agent` skill — calls `ctx agent` (manual context load)
+- [x] Create `/ctx-archive` skill — calls `ctx tasks archive`
 - [ ] Create `/ctx-loop` skill — calls `ctx loop` (generate Ralph loop script)
-- [ ] Update `ctx init` to create skill definitions in `.claude/commands/`
+- [x] Update `ctx init` to create skill definitions in `.claude/commands/`
 
 ### Phase 9b: Ralph Loop Integration `#priority:medium` `#area:cli`
 - [ ] Implement `ctx loop` command — generate a ready-to-use loop.sh script

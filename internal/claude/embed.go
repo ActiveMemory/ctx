@@ -12,7 +12,7 @@ import (
 	"fmt"
 )
 
-//go:embed tpl/auto-save-session.sh tpl/block-non-path-ctx.sh
+//go:embed tpl/auto-save-session.sh tpl/block-non-path-ctx.sh tpl/commands/*.md
 var FS embed.FS
 
 // GetAutoSaveScript returns the auto-save session script.
@@ -29,6 +29,31 @@ func GetBlockNonPathCtxScript() ([]byte, error) {
 	content, err := FS.ReadFile("tpl/block-non-path-ctx.sh")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read block-non-path-ctx.sh: %w", err)
+	}
+	return content, nil
+}
+
+// ListCommands returns the list of embedded command file names.
+func ListCommands() ([]string, error) {
+	entries, err := FS.ReadDir("tpl/commands")
+	if err != nil {
+		return nil, fmt.Errorf("failed to read commands directory: %w", err)
+	}
+
+	var names []string
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			names = append(names, entry.Name())
+		}
+	}
+	return names, nil
+}
+
+// GetCommand returns the content of a command file.
+func GetCommand(name string) ([]byte, error) {
+	content, err := FS.ReadFile("tpl/commands/" + name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read command %s: %w", name, err)
 	}
 	return content, nil
 }

@@ -277,3 +277,5 @@ Manual file reading is better for exploratory/memory questions:
 **Application**: No need to mandate one approach. Agents naturally pick appropriately:
 - "Do you remember?" → parallel file reads (need history)
 - "What should I work on?" → `ctx agent` (need tasks)
+
+- **[2026-01-23]** Claude Code skills are markdown files in .claude/commands/ with YAML frontmatter (description, argument-hint, allowed-tools). Body is the prompt. Use code blocks with ! prefix for shell execution. $ARGUMENTS passes command args.
