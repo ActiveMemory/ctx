@@ -8,6 +8,7 @@ package cli
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -54,10 +55,11 @@ type DriftJSONOutput struct {
 	Passed     []string      `json:"passed"`
 }
 
-func runDrift(cmd *cobra.Command, args []string) error {
+func runDrift(cmd *cobra.Command, _ []string) error {
 	ctx, err := context.Load("")
 	if err != nil {
-		if _, ok := err.(*context.NotFoundError); ok {
+		var notFoundError *context.NotFoundError
+		if errors.As(err, &notFoundError) {
 			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 		}
 		return err
@@ -118,9 +120,9 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 		cmd.Printf("%s WARNINGS (%d)\n\n", yellow("⚠️ "), len(report.Warnings))
 
 		// Group by type
-		pathRefs := []drift.Issue{}
-		staleness := []drift.Issue{}
-		other := []drift.Issue{}
+		var pathRefs []drift.Issue
+		var staleness []drift.Issue
+		var other []drift.Issue
 
 		for _, w := range report.Warnings {
 			switch w.Type {

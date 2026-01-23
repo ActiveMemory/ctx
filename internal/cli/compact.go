@@ -7,6 +7,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -47,10 +48,11 @@ Use --archive to create .context/archive/ for old content.`,
 	return cmd
 }
 
-func runCompact(cmd *cobra.Command, args []string) error {
+func runCompact(cmd *cobra.Command, _ []string) error {
 	ctx, err := context.Load("")
 	if err != nil {
-		if _, ok := err.(*context.NotFoundError); ok {
+		var notFoundError *context.NotFoundError
+		if errors.As(err, &notFoundError) {
 			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 		}
 		return err
@@ -120,7 +122,7 @@ func compactTasks(cmd *cobra.Command, ctx *context.Context, archive bool) (int, 
 	content := string(tasksFile.Content)
 	lines := strings.Split(content, "\n")
 
-	completedPattern := regexp.MustCompile(`^-\s*\[x\]\s*(.+)$`)
+	completedPattern := regexp.MustCompile(`^-\s*\[x]\s*(.+)$`)
 
 	var completedTasks []string
 	var newLines []string
@@ -140,7 +142,7 @@ func compactTasks(cmd *cobra.Command, ctx *context.Context, archive bool) (int, 
 			inCompletedSection = false
 		}
 
-		// If completed task outside Completed section, collect it
+		// If completed task outside the Completed section, collect it
 		if !inCompletedSection && completedPattern.MatchString(line) {
 			matches := completedPattern.FindStringSubmatch(line)
 			if len(matches) > 1 {
@@ -216,7 +218,7 @@ func removeEmptySections(content string) (string, int) {
 
 		// Check if this is a section header
 		if strings.HasPrefix(line, "## ") {
-			// Look ahead to see if section is empty
+			// Look ahead to see if the section is empty
 			sectionStart := i
 			i++
 
@@ -225,7 +227,7 @@ func removeEmptySections(content string) (string, int) {
 				i++
 			}
 
-			// Check if we hit another section or end of file
+			// Check if we hit another section or end of the file
 			if i >= len(lines) || strings.HasPrefix(lines[i], "## ") || strings.HasPrefix(lines[i], "# ") {
 				// Section is empty, skip it
 				removed++
@@ -269,7 +271,7 @@ func preCompactAutoSave(cmd *cobra.Command) error {
 	// Build minimal session content
 	content := buildPreCompactSession(now)
 
-	// Write file
+	// Write the file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}

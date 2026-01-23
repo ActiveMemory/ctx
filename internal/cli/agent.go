@@ -8,6 +8,7 @@ package cli
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -59,10 +60,11 @@ type AgentPacket struct {
 	Decisions    []string `json:"decisions"`
 }
 
-func runAgent(cmd *cobra.Command, args []string) error {
+func runAgent(cmd *cobra.Command, _ []string) error {
 	ctx, err := context.Load("")
 	if err != nil {
-		if _, ok := err.(*context.NotFoundError); ok {
+		var notFoundError *context.NotFoundError
+		if errors.As(err, &notFoundError) {
 			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 		}
 		return err
@@ -151,7 +153,7 @@ func outputAgentMarkdown(cmd *cobra.Command, ctx *context.Context) error {
 }
 
 func getReadOrder(ctx *context.Context) []string {
-	order := []string{}
+	var order []string
 	for _, name := range fileReadOrder {
 		for _, f := range ctx.Files {
 			if f.Name == name && !f.IsEmpty {
@@ -200,7 +202,7 @@ func extractRecentDecisions(ctx *context.Context, limit int) []string {
 }
 
 func extractCheckboxItems(content string) []string {
-	re := regexp.MustCompile(`(?m)^-\s*\[[ x]\]\s*(.+)$`)
+	re := regexp.MustCompile(`(?m)^-\s*\[[ x]]\s*(.+)$`)
 	matches := re.FindAllStringSubmatch(content, -1)
 	items := make([]string, 0, len(matches))
 	for _, m := range matches {
@@ -210,7 +212,7 @@ func extractCheckboxItems(content string) []string {
 }
 
 func extractUncheckedTasks(content string) []string {
-	re := regexp.MustCompile(`(?m)^-\s*\[\s*\]\s*(.+)$`)
+	re := regexp.MustCompile(`(?m)^-\s*\[\s*]\s*(.+)$`)
 	matches := re.FindAllStringSubmatch(content, -1)
 	items := make([]string, 0, len(matches))
 	for _, m := range matches {
@@ -237,7 +239,7 @@ func extractBulletItems(content string, limit int) []string {
 }
 
 func extractDecisionTitles(content string, limit int) []string {
-	re := regexp.MustCompile(`(?m)^##\s+\[[\d-]+\]\s*(.+)$`)
+	re := regexp.MustCompile(`(?m)^##\s+\[[\d-]+]\s*(.+)$`)
 	matches := re.FindAllStringSubmatch(content, -1)
 	items := make([]string, 0, limit)
 	// Get the most recent (last) decisions

@@ -7,6 +7,7 @@
 package drift
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -65,7 +66,12 @@ func TestDetect(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func(path string) {
+		err := os.RemoveAll(path)
+		if err != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, err)
+		}
+	}(tmpDir)
 
 	// Save and restore the current working directory
 	origDir, err := os.Getwd()
@@ -75,7 +81,12 @@ func TestDetect(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func(dir string) {
+		err := os.Chdir(dir)
+		if err != nil {
+			fmt.Printf("failed to chdir: %v", err)
+		}
+	}(origDir)
 
 	// Create a .context directory with test files
 	ctxDir := filepath.Join(tmpDir, ".context")
@@ -98,7 +109,7 @@ func TestDetect(t *testing.T) {
 		}
 	}
 
-	// Create the main.go file so path reference check passes
+	// Create the main.go file so the path reference check passes
 	mainGo := filepath.Join(tmpDir, "main.go")
 	if err := os.WriteFile(mainGo, []byte("package main"), 0644); err != nil {
 		t.Fatalf("failed to write main.go: %v", err)
@@ -130,7 +141,12 @@ func TestCheckPathReferences(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func(path string) {
+		err := os.RemoveAll(path)
+		if err != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, err)
+		}
+	}(tmpDir)
 
 	// Save and restore the current working directory
 	origDir, err := os.Getwd()
@@ -140,9 +156,14 @@ func TestCheckPathReferences(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func(dir string) {
+		err := os.Chdir(dir)
+		if err != nil {
+			fmt.Printf("failed to chdir: %v", err)
+		}
+	}(origDir)
 
-	// Create test context with a dead path reference
+	// Create a test context with a dead path reference
 	ctx := &context.Context{
 		Dir: ".context",
 		Files: []context.FileInfo{
@@ -244,7 +265,7 @@ func TestCheckRequiredFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			fileInfos := []context.FileInfo{}
+			var fileInfos []context.FileInfo
 			for _, name := range tt.files {
 				fileInfos = append(fileInfos, context.FileInfo{Name: name})
 			}

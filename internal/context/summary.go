@@ -50,7 +50,7 @@ func summarizeTasks(content []byte) string {
 		return "empty"
 	}
 
-	parts := []string{}
+	var parts []string
 	if active > 0 {
 		parts = append(parts, fmt.Sprintf("%d active", active))
 	}

@@ -56,7 +56,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 
 	// Parse tasks and find matching one
 	lines := strings.Split(string(content), "\n")
-	taskPattern := regexp.MustCompile(`^(\s*)-\s*\[\s*\]\s*(.+)$`)
+	taskPattern := regexp.MustCompile(`^(\s*)-\s*\[\s*]\s*(.+)$`)
 
 	var taskNumber int
 	isNumber := false

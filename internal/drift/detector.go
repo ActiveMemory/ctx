@@ -67,7 +67,7 @@ func Detect(ctx *context.Context) *Report {
 }
 
 func checkPathReferences(ctx *context.Context, report *Report) {
-	// Pattern to match file paths in markdown (backticks or code blocks)
+	// Pattern to match file paths in Markdown (backticks or code blocks)
 	pathPattern := regexp.MustCompile("`([^`]+\\.[a-zA-Z]{1,5})`")
 
 	foundDeadPaths := false
@@ -90,7 +90,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 				if strings.Contains(path, "{") || strings.Contains(path, "*") {
 					continue
 				}
-				// Check if file exists
+				// Check if the file exists
 				if _, err := os.Stat(path); os.IsNotExist(err) {
 					report.Warnings = append(report.Warnings, Issue{
 						File:    f.Name,
@@ -134,7 +134,7 @@ func checkStaleness(ctx *context.Context, report *Report) {
 	}
 }
 
-func checkConstitution(ctx *context.Context, report *Report) {
+func checkConstitution(_ *context.Context, report *Report) {
 	// Basic heuristic checks for constitution violations
 	// Check for potential secrets in common config files
 

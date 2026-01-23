@@ -39,13 +39,13 @@ type Context struct {
 }
 
 // Load reads all context files from the specified directory.
-// If dir is empty, it uses the default ".context" directory.
+// If `dir` is empty, it uses the default ".context" directory.
 func Load(dir string) (*Context, error) {
 	if dir == "" {
 		dir = DefaultContextDir
 	}
 
-	// Check if directory exists
+	// Check if the directory exists
 	info, err := os.Stat(dir)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -129,7 +129,8 @@ func (e *NotFoundError) Error() string {
 
 // isEffectivelyEmpty checks if a file only contains headers and whitespace.
 func isEffectivelyEmpty(content []byte) bool {
-	// Simple heuristic: if content is less than 100 bytes and mostly headers/whitespace
+	// Simple heuristic: if `content` is less than 100 bytes
+	// and mostly headers/whitespace
 	if len(content) < 20 {
 		return true
 	}

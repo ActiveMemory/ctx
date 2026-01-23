@@ -7,6 +7,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -51,10 +52,11 @@ type SyncAction struct {
 	Suggestion  string
 }
 
-func runSync(cmd *cobra.Command, args []string) error {
+func runSync(cmd *cobra.Command, _ []string) error {
 	ctx, err := context.Load("")
 	if err != nil {
-		if _, ok := err.(*context.NotFoundError); ok {
+		var notFoundError *context.NotFoundError
+		if errors.As(err, &notFoundError) {
 			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 		}
 		return err
@@ -98,7 +100,7 @@ func runSync(cmd *cobra.Command, args []string) error {
 }
 
 func detectSyncActions(ctx *context.Context) []SyncAction {
-	actions := []SyncAction{}
+	var actions []SyncAction
 
 	// Check for new top-level directories not mentioned in ARCHITECTURE.md
 	actions = append(actions, checkNewDirectories(ctx)...)
@@ -113,7 +115,7 @@ func detectSyncActions(ctx *context.Context) []SyncAction {
 }
 
 func checkNewDirectories(ctx *context.Context) []SyncAction {
-	actions := []SyncAction{}
+	var actions []SyncAction
 
 	// Get ARCHITECTURE.md content
 	var archContent string
@@ -165,7 +167,7 @@ func checkNewDirectories(ctx *context.Context) []SyncAction {
 }
 
 func checkPackageFiles(ctx *context.Context) []SyncAction {
-	actions := []SyncAction{}
+	var actions []SyncAction
 
 	packageFiles := map[string]string{
 		"package.json":     "Node.js dependencies",
@@ -201,7 +203,7 @@ func checkPackageFiles(ctx *context.Context) []SyncAction {
 }
 
 func checkConfigFiles(ctx *context.Context) []SyncAction {
-	actions := []SyncAction{}
+	var actions []SyncAction
 
 	// Check for config files that might indicate conventions
 	configPatterns := []struct {

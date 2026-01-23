@@ -7,6 +7,8 @@
 package context
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -18,7 +20,12 @@ func TestExists(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func(path string) {
+		err := os.RemoveAll(path)
+		if err != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, err)
+		}
+	}(tmpDir)
 
 	// Create a .context directory
 	ctxDir := filepath.Join(tmpDir, ".context")
@@ -70,7 +77,12 @@ func TestLoad(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func(path string) {
+		err := os.RemoveAll(path)
+		if err != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, err)
+		}
+	}(tmpDir)
 
 	// Create a .context directory
 	ctxDir := filepath.Join(tmpDir, ".context")
@@ -121,7 +133,8 @@ func TestLoadNonExistent(t *testing.T) {
 		t.Error("Load() should return error for non-existent directory")
 	}
 
-	_, ok := err.(*NotFoundError)
+	var notFoundError *NotFoundError
+	ok := errors.As(err, &notFoundError)
 	if !ok {
 		t.Errorf("error should be *NotFoundError, got %T", err)
 	}

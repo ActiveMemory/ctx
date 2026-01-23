@@ -115,7 +115,7 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 
 	// Track applied updates for auto-save
 	updateCount := 0
-	appliedUpdates := []ContextUpdate{}
+	var appliedUpdates []ContextUpdate
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -304,7 +304,7 @@ func watchAutoSaveSession(updates []ContextUpdate) error {
 	// Build session content
 	content := buildWatchSession(now, updates)
 
-	// Write file
+	// Write the file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}
@@ -344,7 +344,7 @@ func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 		sb.WriteString("\n")
 	}
 
-	// Add current context snapshot
+	// Add the current context snapshot
 	sb.WriteString("---\n\n")
 	sb.WriteString("## Context Snapshot\n\n")
 

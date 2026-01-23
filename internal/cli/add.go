@@ -73,7 +73,7 @@ func runAdd(cmd *cobra.Command, args []string) error {
 
 	filePath := filepath.Join(contextDirName, fileName)
 
-	// Check if file exists
+	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return fmt.Errorf("context file %s not found. Run 'ctx init' first", filePath)
 	}

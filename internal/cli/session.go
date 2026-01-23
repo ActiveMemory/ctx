@@ -86,7 +86,7 @@ func runSessionSave(cmd *cobra.Command, args []string) error {
 		topic = args[0]
 	}
 
-	// Sanitize topic for filename
+	// Sanitize the topic for filename
 	topic = sanitizeFilename(topic)
 
 	// Ensure sessions directory exists
@@ -105,7 +105,7 @@ func runSessionSave(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to build session content: %w", err)
 	}
 
-	// Write file
+	// Write the file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}
@@ -184,7 +184,8 @@ func runSessionList(cmd *cobra.Command, _ []string) error {
 		return nil
 	}
 
-	// Sort by date (newest first) - filenames are date-prefixed so reverse sort works
+	// Sort by date (newest first) - filenames are date-prefixed
+	// so the reverse sort works
 	for i, j := 0, len(sessions)-1; i < j; i, j = i+1, j-1 {
 		sessions[i], sessions[j] = sessions[j], sessions[i]
 	}
@@ -311,12 +312,12 @@ Examples:
 func runSessionLoad(cmd *cobra.Command, args []string) error {
 	query := args[0]
 
-	// Check if sessions directory exists
+	// Check if the sessions directory exists
 	if _, err := os.Stat(sessionsDirName); os.IsNotExist(err) {
 		return fmt.Errorf("no sessions directory found. Run 'ctx session save' first")
 	}
 
-	// Find matching session file
+	// Find the matching session file
 	filePath, err := findSessionFile(query)
 	if err != nil {
 		return err
@@ -369,7 +370,7 @@ func findSessionFile(query string) (string, error) {
 		sessions[i], sessions[j] = sessions[j], sessions[i]
 	}
 
-	// Check if query is a number (index)
+	// Check if the query is a number (index)
 	if idx, err := parseIndex(query); err == nil {
 		if idx < 1 || idx > len(sessions) {
 			return "", fmt.Errorf("index %d out of range (1-%d)", idx, len(sessions))
@@ -377,14 +378,14 @@ func findSessionFile(query string) (string, error) {
 		return filepath.Join(sessionsDirName, sessions[idx-1]), nil
 	}
 
-	// Check for exact match
+	// Check for the exact match
 	for _, name := range sessions {
 		if name == query {
 			return filepath.Join(sessionsDirName, name), nil
 		}
 	}
 
-	// Check for partial match
+	// Check for a partial match
 	query = strings.ToLower(query)
 	var matches []string
 	for _, name := range sessions {
@@ -447,7 +448,7 @@ Examples:
 func runSessionParse(cmd *cobra.Command, args []string) error {
 	inputPath := args[0]
 
-	// Check file exists
+	// Check if the file exists
 	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
 		return fmt.Errorf("file not found: %s", inputPath)
 	}
@@ -527,14 +528,18 @@ type transcriptMsg struct {
 	Content interface{} `json:"content"` // Can be string or []interface{}
 }
 
-
-// parseJsonlTranscript parses a .jsonl file and returns formatted markdown.
+// parseJsonlTranscript parses a .jsonl file and returns formatted Markdown.
 func parseJsonlTranscript(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			_ = fmt.Errorf("failed to close file: %w", err)
+		}
+	}(file)
 
 	var sb strings.Builder
 	sb.WriteString("# Conversation Transcript\n\n")
@@ -581,7 +586,7 @@ func parseJsonlTranscript(path string) (string, error) {
 	return sb.String(), nil
 }
 
-// formatTranscriptEntry formats a single transcript entry as markdown.
+// formatTranscriptEntry formats a single transcript entry as Markdown.
 func formatTranscriptEntry(entry transcriptEntry) string {
 	var sb strings.Builder
 
@@ -671,7 +676,7 @@ func sanitizeFilename(s string) string {
 	return s
 }
 
-// buildSessionContent creates the markdown content for a session file.
+// buildSessionContent creates the Markdown content for a session file.
 func buildSessionContent(topic, sessionType string, timestamp time.Time) (string, error) {
 	var sb strings.Builder
 
@@ -682,7 +687,7 @@ func buildSessionContent(topic, sessionType string, timestamp time.Time) (string
 	sb.WriteString(fmt.Sprintf("**Type**: %s\n", sessionType))
 	sb.WriteString("\n---\n\n")
 
-	// Summary section (placeholder for user to fill in)
+	// Summary section (placeholder for the user to fill in)
 	sb.WriteString("## Summary\n\n")
 	sb.WriteString("[Describe what was accomplished in this session]\n\n")
 	sb.WriteString("---\n\n")
@@ -771,7 +776,7 @@ func readRecentDecisions() (string, error) {
 	contentStr := string(content)
 
 	// Find decision headers (## [YYYY-MM-DD] Title)
-	re := regexp.MustCompile(`(?m)^## \[\d{4}-\d{2}-\d{2}\].*$`)
+	re := regexp.MustCompile(`(?m)^## \[\d{4}-\d{2}-\d{2}].*$`)
 	matches := re.FindAllStringIndex(contentStr, -1)
 
 	if len(matches) == 0 {
@@ -813,7 +818,7 @@ func readRecentLearnings() (string, error) {
 	contentStr := string(content)
 
 	// Find learning entries (- **[YYYY-MM-DD]** text)
-	re := regexp.MustCompile(`(?m)^- \*\*\[\d{4}-\d{2}-\d{2}\]\*\*.*$`)
+	re := regexp.MustCompile(`(?m)^- \*\*\[\d{4}-\d{2}-\d{2}]\*\*.*$`)
 	matches := re.FindAllString(contentStr, -1)
 
 	if len(matches) == 0 {
@@ -835,7 +840,12 @@ func extractInsights(path string) ([]string, []string, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			_ = fmt.Errorf("error closing file: %v", err)
+		}
+	}(file)
 
 	var decisions []string
 	var learnings []string

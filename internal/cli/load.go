@@ -7,6 +7,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -62,10 +63,11 @@ var fileReadOrder = []string{
 	"AGENT_PLAYBOOK.md",
 }
 
-func runLoad(cmd *cobra.Command, args []string) error {
+func runLoad(cmd *cobra.Command, _ []string) error {
 	ctx, err := context.Load("")
 	if err != nil {
-		if _, ok := err.(*context.NotFoundError); ok {
+		var notFoundError *context.NotFoundError
+		if errors.As(err, &notFoundError) {
 			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 		}
 		return err
@@ -110,15 +112,15 @@ func outputAssembled(cmd *cobra.Command, ctx *context.Context, budget int) error
 			continue
 		}
 
-		// Check if we have budget for this file
+		// Check if we have the budget for this file
 		fileTokens := f.Tokens
 		if tokensUsed+fileTokens > budget {
-			// Add truncation notice
+			// Add a truncation notice
 			sb.WriteString(fmt.Sprintf("\n---\n\n*[Truncated: %s and remaining files excluded due to token budget]*\n", f.Name))
 			break
 		}
 
-		// Add file section
+		// Add the file section
 		sb.WriteString(fmt.Sprintf("## %s\n\n", fileNameToTitle(f.Name)))
 		sb.Write(f.Content)
 		if !strings.HasSuffix(string(f.Content), "\n") {

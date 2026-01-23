@@ -8,6 +8,7 @@ package cli
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sort"
 	"time"
@@ -60,10 +61,11 @@ func StatusCmd() *cobra.Command {
 	return cmd
 }
 
-func runStatus(cmd *cobra.Command, args []string) error {
+func runStatus(cmd *cobra.Command, _ []string) error {
 	ctx, err := context.Load("")
 	if err != nil {
-		if _, ok := err.(*context.NotFoundError); ok {
+		var notFoundError *context.NotFoundError
+		if errors.As(err, &notFoundError) {
 			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 		}
 		return err
@@ -117,7 +119,7 @@ func outputStatusText(cmd *cobra.Command, ctx *context.Context) error {
 
 	cmd.Println("Files:")
 
-	// Sort files by a logical order
+	// Sort files in a logical order
 	sortedFiles := make([]context.FileInfo, len(ctx.Files))
 	copy(sortedFiles, ctx.Files)
 	sortFilesByPriority(sortedFiles)

@@ -138,7 +138,8 @@ echo ""
 if [ -d "${SOURCE_DIR}/specs" ]; then
   echo "Copying specs/ for reference..."
   cp -r "${SOURCE_DIR}/specs" "./specs"
-  echo -e "${GREEN}Installed:${NC} specs/ ($(find specs -maxdepth 1 -name "*.md" 2>/dev/null | wc -l) spec files)"
+  echo -e "${GREEN}Installed:${NC} specs/ \
+    ($(find specs -maxdepth 1 -name "*.md" 2>/dev/null | wc -l) spec files)"
   echo ""
 fi
 
