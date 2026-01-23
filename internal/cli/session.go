@@ -680,11 +680,22 @@ func sanitizeFilename(s string) string {
 func buildSessionContent(topic, sessionType string, timestamp time.Time) (string, error) {
 	var sb strings.Builder
 
-	// Header
+	// Header with timestamp fields for session correlation
 	sb.WriteString(fmt.Sprintf("# Session: %s\n\n", topic))
 	sb.WriteString(fmt.Sprintf("**Date**: %s\n", timestamp.Format("2006-01-02")))
 	sb.WriteString(fmt.Sprintf("**Time**: %s\n", timestamp.Format("15:04:05")))
 	sb.WriteString(fmt.Sprintf("**Type**: %s\n", sessionType))
+
+	// Session correlation timestamps (YYYY-MM-DD-HHMM format matches ctx add timestamps)
+	// start_time: When session began (use CTX_SESSION_START env var if available, else save time)
+	startTime := timestamp
+	if envStart := os.Getenv("CTX_SESSION_START"); envStart != "" {
+		if parsed, err := time.Parse("2006-01-02-1504", envStart); err == nil {
+			startTime = parsed
+		}
+	}
+	sb.WriteString(fmt.Sprintf("**start_time**: %s\n", startTime.Format("2006-01-02-1504")))
+	sb.WriteString(fmt.Sprintf("**end_time**: %s\n", timestamp.Format("2006-01-02-1504")))
 	sb.WriteString("\n---\n\n")
 
 	// Summary section (placeholder for the user to fill in)

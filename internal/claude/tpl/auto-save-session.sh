@@ -37,6 +37,24 @@ FILENAME="$SESSIONS_DIR/${TIMESTAMP}-session-${REASON}.jsonl"
 # Copy the transcript
 cp "$TRANSCRIPT_PATH" "$FILENAME"
 
+# Extract session start time from transcript (first entry timestamp) if possible
+START_TIME=""
+if [ -f "$TRANSCRIPT_PATH" ]; then
+    # Try to get timestamp from first line of transcript
+    FIRST_TS=$(head -1 "$TRANSCRIPT_PATH" | jq -r '.timestamp // empty' 2>/dev/null)
+    if [ -n "$FIRST_TS" ]; then
+        # Convert to YYYY-MM-DD-HHMM format
+        START_TIME=$(date -d "$FIRST_TS" +%Y-%m-%d-%H%M 2>/dev/null || echo "")
+    fi
+fi
+
+# Fall back to current time if we couldn't extract start time
+if [ -z "$START_TIME" ]; then
+    START_TIME=$(date +%Y-%m-%d-%H%M)
+fi
+
+END_TIME=$(date +%Y-%m-%d-%H%M)
+
 # Also create a human-readable summary
 SUMMARY_FILE="$SESSIONS_DIR/${TIMESTAMP}-session-${REASON}-summary.md"
 cat > "$SUMMARY_FILE" << EOF
@@ -46,6 +64,8 @@ cat > "$SUMMARY_FILE" << EOF
 **Reason**: $REASON
 **Session ID**: $SESSION_ID
 **Transcript**: ${TIMESTAMP}-session-${REASON}.jsonl
+**start_time**: $START_TIME
+**end_time**: $END_TIME
 
 This session was auto-saved by the SessionEnd hook.
 To analyze the full transcript, read the .jsonl file.
