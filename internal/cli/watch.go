@@ -62,7 +62,7 @@ type ContextUpdate struct {
 	Content string
 }
 
-func runWatch(cmd *cobra.Command, args []string) error {
+func runWatch(cmd *cobra.Command, _ []string) error {
 	// Check if context exists
 	if !context.Exists("") {
 		return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
@@ -83,7 +83,12 @@ func runWatch(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("failed to open log file: %w", err)
 		}
-		defer file.Close()
+		defer func(file *os.File) {
+			err := file.Close()
+			if err != nil {
+				fmt.Printf("failed to close log file: %v\n", err)
+			}
+		}(file)
 		reader = file
 	} else {
 		reader = os.Stdin
@@ -261,7 +266,7 @@ func runCompleteSilent(args []string) error {
 	}
 
 	lines := strings.Split(string(content), "\n")
-	taskPattern := regexp.MustCompile(`^(\s*)-\s*\[\s*\]\s*(.+)$`)
+	taskPattern := regexp.MustCompile(`^(\s*)-\s*\[\s*]\s*(.+)$`)
 
 	matchedLine := -1
 	for i, line := range lines {
@@ -332,7 +337,7 @@ func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 		if !ok || len(contents) == 0 {
 			continue
 		}
-		sb.WriteString(fmt.Sprintf("### %s\n\n", strings.Title(t+"s")))
+		sb.WriteString(fmt.Sprintf("### %ss\n\n", strings.ToUpper(t[:1])+t[1:]))
 		for _, c := range contents {
 			sb.WriteString(fmt.Sprintf("- %s\n", c))
 		}
