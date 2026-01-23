@@ -141,6 +141,6 @@
 ### Phase 13: Rich Context Entries `#priority:medium` `#area:cli`
 - [x] Add --file flag to ctx add — read entry content from a file instead of CLI arg
 - [x] Add stdin support to ctx add — if no content arg and stdin is pipe, read from stdin
-- [ ] Create learning template with Context/Lesson/Application structure for --file usage
-- [ ] Create decision template with Context/Options/Decision/Rationale structure for --file usage
-- [ ] Document rich entry workflow in AGENT_PLAYBOOK.md — explain when/how agents should use --file vs inline
+- [x] Create learning template with Context/Lesson/Application structure for --file usage
+- [x] Create decision template with Context/Options/Decision/Rationale structure for --file usage
+- [x] Document rich entry workflow in AGENT_PLAYBOOK.md — explain when/how agents should use --file vs inline
