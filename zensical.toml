@@ -10,6 +10,8 @@ site_name = "ctx: do you remember?"
 site_description = "ctx provides temporal continuity across sessions"
 site_author = "Jose Alekhinne <alekhinejose@gmail.com>"
 site_url = "https://ctx.ist/"
+repo_url = "https://github.com/ActiveMemory/ctx"
+repo_name = "ActiveMemory/ctx"
 copyright = """
 Copyright &copy; 2026&ndash;present Context conributors.<br>
 Context's code is distributed under
@@ -69,6 +71,10 @@ toggle.name = "Switch to light mode"
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
 link = "https://github.com/ActiveMemory/ctx"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/discord"
+link = "https://discord.gg/kampus"
 
 [project.extra]
 generator = false

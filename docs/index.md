@@ -176,6 +176,15 @@ ctx complete "user auth"
 ctx drift
 ```
 
+## Community
+
+Join the community to ask questions, share feedback, and connect with other users:
+
+- [:fontawesome-brands-discord: **Discord**](https://discord.gg/kampus) — Chat, get help, share your workflows
+- [:fontawesome-brands-github: **GitHub**](https://github.com/ActiveMemory/ctx) — Star the repo, report issues, contribute
+
+If `ctx` helps you, consider starring the repo — it helps others discover the project.
+
 ## Next Steps
 
 - [CLI Reference](cli-reference.md) — All commands and options
