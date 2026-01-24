@@ -4,7 +4,7 @@
 //   \    Copyright 2025-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package cli
+package session
 
 import (
 	"bufio"
@@ -16,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/init"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -748,7 +749,7 @@ func buildSessionContent(topic, sessionType string, timestamp time.Time) (string
 
 // readContextSection reads a section from a context file between two headers.
 func readContextSection(filename, startHeader, endHeader string) (string, error) {
-	filePath := filepath.Join(contextDirName, filename)
+	filePath := filepath.Join(init.contextDirName, filename)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
@@ -778,7 +779,7 @@ func readContextSection(filename, startHeader, endHeader string) (string, error)
 
 // readRecentDecisions extracts the most recent decisions from DECISIONS.md.
 func readRecentDecisions() (string, error) {
-	filePath := filepath.Join(contextDirName, "DECISIONS.md")
+	filePath := filepath.Join(init.contextDirName, "DECISIONS.md")
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
@@ -820,7 +821,7 @@ func readRecentDecisions() (string, error) {
 
 // readRecentLearnings extracts the most recent learnings from LEARNINGS.md.
 func readRecentLearnings() (string, error) {
-	filePath := filepath.Join(contextDirName, "LEARNINGS.md")
+	filePath := filepath.Join(init.contextDirName, "LEARNINGS.md")
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err

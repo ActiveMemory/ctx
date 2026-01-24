@@ -4,7 +4,7 @@
 //   \    Copyright 2025-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package cli
+package watch
 
 import (
 	"bufio"
@@ -16,6 +16,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/add"
+	"github.com/ActiveMemory/ctx/internal/cli/init"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -190,7 +192,7 @@ func applyUpdate(update ContextUpdate) error {
 func applyTaskUpdate(content string) error {
 	// Reuse the add command logic
 	args := []string{"task", content}
-	return runAdd(nil, args)
+	return add.runAdd(nil, args)
 }
 
 func applyDecisionUpdate(content string) error {
@@ -223,12 +225,12 @@ func runAddSilent(args []string) error {
 	fileType := strings.ToLower(args[0])
 	content := strings.Join(args[1:], " ")
 
-	fileName, ok := fileTypeMap[fileType]
+	fileName, ok := add.fileTypeMap[fileType]
 	if !ok {
 		return fmt.Errorf("unknown type %q", fileType)
 	}
 
-	filePath := contextDirName + "/" + fileName
+	filePath := init.contextDirName + "/" + fileName
 
 	existing, err := os.ReadFile(filePath)
 	if err != nil {
@@ -238,16 +240,16 @@ func runAddSilent(args []string) error {
 	var entry string
 	switch fileType {
 	case "decision", "decisions":
-		entry = formatDecision(content)
+		entry = add.formatDecision(content)
 	case "task", "tasks":
-		entry = formatTask(content, "")
+		entry = add.formatTask(content, "")
 	case "learning", "learnings":
-		entry = formatLearning(content)
+		entry = add.formatLearning(content)
 	case "convention", "conventions":
-		entry = formatConvention(content)
+		entry = add.formatConvention(content)
 	}
 
-	newContent := appendEntry(existing, entry, fileType, "")
+	newContent := add.appendEntry(existing, entry, fileType, "")
 	return os.WriteFile(filePath, newContent, 0644)
 }
 
@@ -258,7 +260,7 @@ func runCompleteSilent(args []string) error {
 	}
 
 	query := args[0]
-	filePath := contextDirName + "/TASKS.md"
+	filePath := init.contextDirName + "/TASKS.md"
 
 	content, err := os.ReadFile(filePath)
 	if err != nil {
@@ -291,7 +293,7 @@ func runCompleteSilent(args []string) error {
 // watchAutoSaveSession saves a session snapshot during watch mode.
 func watchAutoSaveSession(updates []ContextUpdate) error {
 	// Ensure sessions directory exists
-	sessionsDir := filepath.Join(contextDirName, "sessions")
+	sessionsDir := filepath.Join(init.contextDirName, "sessions")
 	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
@@ -349,7 +351,7 @@ func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 	sb.WriteString("## Context Snapshot\n\n")
 
 	// Read TASKS.md
-	tasksPath := filepath.Join(contextDirName, "TASKS.md")
+	tasksPath := filepath.Join(init.contextDirName, "TASKS.md")
 	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
 		sb.WriteString("### Current Tasks\n\n")
 		sb.WriteString("```markdown\n")

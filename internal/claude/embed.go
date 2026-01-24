@@ -1,10 +1,9 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package claude provides Claude Code integration templates and utilities.
 package claude
 
 import (
@@ -15,7 +14,14 @@ import (
 //go:embed tpl/auto-save-session.sh tpl/block-non-path-ctx.sh tpl/commands/*.md
 var FS embed.FS
 
-// GetAutoSaveScript returns the auto-save session script.
+// GetAutoSaveScript returns the auto-save session script content.
+//
+// The script automatically saves Claude Code session transcripts when a
+// session ends. It is installed to .claude/hooks/ during ctx init --claude.
+//
+// Returns:
+//   - []byte: Raw bytes of the auto-save-session.sh script
+//   - error: Non-nil if the embedded file cannot be read
 func GetAutoSaveScript() ([]byte, error) {
 	content, err := FS.ReadFile("tpl/auto-save-session.sh")
 	if err != nil {
@@ -24,7 +30,16 @@ func GetAutoSaveScript() ([]byte, error) {
 	return content, nil
 }
 
-// GetBlockNonPathCtxScript returns the script that blocks non-PATH ctx invocations.
+// GetBlockNonPathCtxScript returns the script that blocks non-PATH ctx
+// invocations.
+//
+// The script prevents Claude from running ctx via relative paths (./ctx,
+// ./dist/ctx) or "go run", ensuring only the installed PATH version is used.
+// It is installed to .claude/hooks/ during ctx init --claude.
+//
+// Returns:
+//   - []byte: Raw bytes of the block-non-path-ctx.sh script
+//   - error: Non-nil if the embedded file cannot be read
 func GetBlockNonPathCtxScript() ([]byte, error) {
 	content, err := FS.ReadFile("tpl/block-non-path-ctx.sh")
 	if err != nil {
@@ -34,6 +49,14 @@ func GetBlockNonPathCtxScript() ([]byte, error) {
 }
 
 // ListCommands returns the list of embedded command file names.
+//
+// These are Claude Code slash command definitions (e.g., "ctx-status.md",
+// "commit-local.md") from the tpl/commands directory. They can be installed
+// to .claude/commands/ via "ctx init --claude".
+//
+// Returns:
+//   - []string: Filenames of available command definitions
+//   - error: Non-nil if the commands directory cannot be read
 func ListCommands() ([]string, error) {
 	entries, err := FS.ReadDir("tpl/commands")
 	if err != nil {
@@ -49,7 +72,14 @@ func ListCommands() ([]string, error) {
 	return names, nil
 }
 
-// GetCommand returns the content of a command file.
+// GetCommand returns the content of a command file by name.
+//
+// Parameters:
+//   - name: Filename as returned by [ListCommands] (e.g., "ctx-status.md")
+//
+// Returns:
+//   - []byte: Raw bytes of the command definition file
+//   - error: Non-nil if the command file does not exist or cannot be read
 func GetCommand(name string) ([]byte, error) {
 	content, err := FS.ReadFile("tpl/commands/" + name)
 	if err != nil {
@@ -58,40 +88,27 @@ func GetCommand(name string) ([]byte, error) {
 	return content, nil
 }
 
-// SettingsHooks represents the hooks section of settings.local.json
-type SettingsHooks struct {
-	PreToolUse []HookMatcher `json:"PreToolUse,omitempty"`
-	SessionEnd []HookMatcher `json:"SessionEnd,omitempty"`
-}
-
-// HookMatcher represents a hook matcher with optional pattern
-type HookMatcher struct {
-	Matcher string `json:"matcher,omitempty"`
-	Hooks   []Hook `json:"hooks"`
-}
-
-// Hook represents a single hook command
-type Hook struct {
-	Type    string `json:"type"`
-	Command string `json:"command"`
-}
-
-// Settings represents the full settings.local.json structure
-type Settings struct {
-	Hooks       SettingsHooks          `json:"hooks,omitempty"`
-	Permissions map[string]interface{} `json:"permissions,omitempty"`
-}
-
-// CreateDefaultHooks returns the default ctx hooks configuration.
-// Hooks use "ctx" expecting it to be in PATH.
-func CreateDefaultHooks(projectDir string) SettingsHooks {
+// CreateDefaultHooks returns the default ctx hooks configuration for
+// Claude Code.
+//
+// The returned hooks configure PreToolUseHooks to block non-PATH ctx
+// invocations and auto-load context on every tool use, and SessionEndHooks
+// to run auto-save-session.sh for persisting session transcripts.
+//
+// Parameters:
+//   - projectDir: Project root directory for absolute hook paths; if empty,
+//     paths are relative (e.g., ".claude/hooks/")
+//
+// Returns:
+//   - HookConfig: Configured hooks for PreToolUse and SessionEnd events
+func CreateDefaultHooks(projectDir string) HookConfig {
 	hooksDir := ".claude/hooks"
 	if projectDir != "" {
 		hooksDir = fmt.Sprintf("%s/.claude/hooks", projectDir)
 	}
 
-	return SettingsHooks{
-		PreToolUse: []HookMatcher{
+	return HookConfig{
+		PreToolUseHooks: []HookMatcher{
 			{
 				// Block non-PATH ctx invocations (./ctx, ./dist/ctx, go run ./cmd/ctx)
 				Matcher: "Bash",
@@ -103,7 +120,7 @@ func CreateDefaultHooks(projectDir string) SettingsHooks {
 				},
 			},
 			{
-				// Auto-load context on every tool use
+				// Autoload context on every tool use
 				Matcher: ".*",
 				Hooks: []Hook{
 					{
@@ -113,7 +130,7 @@ func CreateDefaultHooks(projectDir string) SettingsHooks {
 				},
 			},
 		},
-		SessionEnd: []HookMatcher{
+		SessionEndHooks: []HookMatcher{
 			{
 				Hooks: []Hook{
 					{

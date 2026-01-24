@@ -4,7 +4,7 @@
 //   \    Copyright 2025-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package cli
+package task
 
 import (
 	"bufio"
@@ -15,13 +15,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/cli/session"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
 const (
-	tasksFileName   = ".context/TASKS.md"
-	archiveDirName  = ".context/archive"
+	tasksFileName  = ".context/TASKS.md"
+	archiveDirName = ".context/archive"
 )
 
 // TasksCmd returns the tasks command with subcommands.
@@ -268,7 +269,7 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 	now := time.Now()
 	name := "snapshot"
 	if len(args) > 0 {
-		name = sanitizeFilename(args[0])
+		name = session.sanitizeFilename(args[0])
 	}
 	snapshotFilename := fmt.Sprintf("tasks-%s-%s.md", name, now.Format("2006-01-02-1504"))
 	snapshotPath := filepath.Join(archiveDirName, snapshotFilename)
