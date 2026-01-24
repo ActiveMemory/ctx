@@ -5,7 +5,7 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package cli implements the CLI commands for ctx.
-package cli
+package init
 
 import (
 	"bufio"
@@ -67,19 +67,30 @@ The following files are created:
   - DRIFT.md         — Staleness signals and update triggers
   - AGENT_PLAYBOOK.md — How AI agents should use this system
 
-Use --minimal to only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md).
+Use --minimal to only create essential files 
+(TASKS.md, DECISIONS.md, CONSTITUTION.md).
 
 Examples:
-  ctx init                     # Full initialization with all templates
-  ctx init --minimal           # Only essential files (TASKS, DECISIONS, CONSTITUTION)
-  ctx init --force             # Overwrite existing files without prompting
-  ctx init --merge             # Auto-merge ctx content into existing CLAUDE.md`,
+  ctx init           # Full initialization with all templates
+  ctx init --minimal # Only essential files (TASKS, DECISIONS, CONSTITUTION)
+  ctx init --force   # Overwrite existing files without prompting
+  ctx init --merge   # Auto-merge ctx content into existing CLAUDE.md`,
 		RunE: runInit,
 	}
 
-	cmd.Flags().BoolVarP(&initForce, "force", "f", false, "Overwrite existing context files")
-	cmd.Flags().BoolVarP(&initMinimal, "minimal", "m", false, "Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)")
-	cmd.Flags().BoolVar(&initMerge, "merge", false, "Auto-merge ctx content into existing CLAUDE.md without prompting")
+	cmd.Flags().BoolVarP(
+		&initForce,
+		"force", "f", false, "Overwrite existing context files",
+	)
+	cmd.Flags().BoolVarP(
+		&initMinimal,
+		"minimal", "m", false,
+		"Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)",
+	)
+	cmd.Flags().BoolVar(
+		&initMerge, "merge", false,
+		"Auto-merge ctx content into existing CLAUDE.md without prompting",
+	)
 
 	return cmd
 }

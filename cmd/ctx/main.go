@@ -1,57 +1,23 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
+// package main is the main entry point of the app.
 package main
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/cli"
-	"github.com/spf13/cobra"
+	"github.com/ActiveMemory/ctx/internal/bootstrap"
 )
 
-// Version is set at build time via ldflags
-var Version = "dev"
-
-var rootCmd = &cobra.Command{
-	Use:   "ctx",
-	Short: "Context - persistent context for AI coding assistants",
-	Long: `Context (ctx) maintains persistent context files that help
-AI coding assistants understand your project's architecture, conventions,
-decisions, and current tasks.
-
-Use 'ctx init' to create a .context/ directory in your project,
-then use 'ctx status', 'ctx load', and 'ctx agent' to work with context.`,
-	Version: Version,
-}
-
-func init() {
-	rootCmd.AddCommand(cli.InitCmd())
-	rootCmd.AddCommand(cli.StatusCmd())
-	rootCmd.AddCommand(cli.LoadCmd())
-	rootCmd.AddCommand(cli.AddCmd())
-	rootCmd.AddCommand(cli.CompleteCmd())
-	rootCmd.AddCommand(cli.AgentCmd())
-	rootCmd.AddCommand(cli.DriftCmd())
-	rootCmd.AddCommand(cli.SyncCmd())
-	rootCmd.AddCommand(cli.CompactCmd())
-	rootCmd.AddCommand(cli.WatchCmd())
-	rootCmd.AddCommand(cli.HookCmd())
-	rootCmd.AddCommand(cli.SessionCmd())
-	rootCmd.AddCommand(cli.TasksCmd())
-	rootCmd.AddCommand(cli.LoopCmd())
-}
-
 func main() {
-	if err := rootCmd.Execute(); err != nil {
-		_, err := fmt.Fprintln(os.Stderr, err)
-		if err != nil {
-			return
-		}
+	cmd := bootstrap.Initialize(bootstrap.RootCmd())
+
+	if err := cmd.Execute(); err != nil {
+		cmd.PrintErrln("Error:", err)
 		os.Exit(1)
 	}
 }
