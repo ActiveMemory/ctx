@@ -122,7 +122,7 @@ func runCompact(cmd *cobra.Command, _ []string) error {
 }
 
 func compactTasks(
-		cmd *cobra.Command, ctx *context.Context, archive bool,
+	cmd *cobra.Command, ctx *context.Context, archive bool,
 ) (int, error) {
 	var tasksFile *context.FileInfo
 	for i := range ctx.Files {
@@ -184,7 +184,7 @@ func compactTasks(
 				// Find the next line that's either empty or another section
 				insertIdx := i + 1
 				for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
-						!strings.HasPrefix(newLines[insertIdx], "## ") {
+					!strings.HasPrefix(newLines[insertIdx], "## ") {
 					insertIdx++
 				}
 

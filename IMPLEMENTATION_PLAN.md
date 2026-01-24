@@ -16,6 +16,6 @@ the directive is complete.
 
 Before declaring DONE, remind the user about these goals:
 
-1. **Dogfood ctx on itself** — nuke repo, `ctx init` fresh, Ralph-loop build
-2. **Sample project** — bootstrap a RESTful app from scratch using ctx
-3. **Real-world validation** — apply to `github.com/spiffe/spike` and `spike-sdk-go`
+1. [x] **Dogfood ctx on itself** — nuke repo, `ctx init` fresh, Ralph-loop build
+2. [ ] **Sample project** — bootstrap a RESTful app from scratch using ctx
+3. [ ] **Real-world validation** — apply to `github.com/spiffe/spike` and `spike-sdk-go`

@@ -105,7 +105,16 @@ func runAdd(cmd *cobra.Command, args []string) error {
 	}
 
 	if content == "" {
-		return fmt.Errorf("no content provided. Use argument, --file, or pipe from stdin")
+		examples := getExamplesForType(fileType)
+		return fmt.Errorf(`no content provided
+
+Usage:
+  ctx add %s "your content here"
+  ctx add %s --file /path/to/content.md
+  echo "content" | ctx add %s
+
+Examples:
+%s`, fileType, fileType, fileType, examples)
 	}
 
 	fileName, ok := fileTypeMap[fileType]
@@ -187,6 +196,25 @@ func formatLearning(content string) string {
 
 func formatConvention(content string) string {
 	return fmt.Sprintf("- %s\n", content)
+}
+
+func getExamplesForType(fileType string) string {
+	switch fileType {
+	case "decision", "decisions":
+		return `  ctx add decision "Use PostgreSQL for primary database"
+  ctx add decision "Adopt Go 1.22 for range-over-func support"`
+	case "task", "tasks":
+		return `  ctx add task "Implement user authentication"
+  ctx add task "Fix login bug" --priority high`
+	case "learning", "learnings":
+		return `  ctx add learning "Vitest mocks must be hoisted above imports"
+  ctx add learning "Go embed requires files in same package directory"`
+	case "convention", "conventions":
+		return `  ctx add convention "Use camelCase for function names"
+  ctx add convention "All API responses use JSON"`
+	default:
+		return `  ctx add <type> "your content here"`
+	}
 }
 
 func appendEntry(existing []byte, entry string, fileType string, section string) []byte {
