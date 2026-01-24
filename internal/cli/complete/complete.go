@@ -1,7 +1,7 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package complete
@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -42,7 +42,7 @@ The task will be marked with [x] and optionally moved to the Completed section.`
 func runComplete(cmd *cobra.Command, args []string) error {
 	query := args[0]
 
-	filePath := filepath.Join(cli.contextDirName, "TASKS.md")
+	filePath := filepath.Join(config.ContextDirName, "TASKS.md")
 
 	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {

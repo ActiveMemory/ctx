@@ -1,7 +1,7 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package session
@@ -430,7 +430,7 @@ func sessionParseCmd() *cobra.Command {
 		Short: "Convert .jsonl transcript to readable markdown",
 		Long: `Parse a Claude Code .jsonl transcript file and convert it to readable markdown.
 
-The .jsonl files are auto-saved by the SessionEnd hook and contain the full
+The .jsonl files are auto-saved by the SessionEndHooks hook and contain the full
 conversation transcript including tool calls and results.
 
 Examples:
@@ -656,25 +656,6 @@ func formatTranscriptEntry(entry transcriptEntry) string {
 	}
 
 	return sb.String()
-}
-
-// sanitizeFilename converts a topic string to a safe filename component.
-func sanitizeFilename(s string) string {
-	// Replace spaces and special chars with hyphens
-	re := regexp.MustCompile(`[^a-zA-Z0-9-]+`)
-	s = re.ReplaceAllString(s, "-")
-	// Remove leading/trailing hyphens
-	s = strings.Trim(s, "-")
-	// Convert to lowercase
-	s = strings.ToLower(s)
-	// Limit length
-	if len(s) > 50 {
-		s = s[:50]
-	}
-	if s == "" {
-		s = "session"
-	}
-	return s
 }
 
 // buildSessionContent creates the Markdown content for a session file.

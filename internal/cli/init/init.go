@@ -1,7 +1,7 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package cli implements the CLI commands for ctx.
@@ -21,18 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/templates"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-)
-
-const (
-	contextDirName         = ".context"
-	claudeDirName          = ".claude"
-	claudeHooksDirName     = ".claude/hooks"
-	settingsFileName       = ".claude/settings.local.json"
-	autoSaveScriptName     = "auto-save-session.sh"
-	blockNonPathScriptName = "block-non-path-ctx.sh"
-	claudeMdFileName       = "CLAUDE.md"
-	ctxMarkerStart         = "<!-- ctx:context -->"
-	ctxMarkerEnd           = "<!-- ctx:end -->"
 )
 
 var (
@@ -318,8 +306,8 @@ func mergeSettingsHooks(cmd *cobra.Command, projectDir string, force bool) error
 	defaultHooks := claude.CreateDefaultHooks(projectDir)
 
 	// Check if hooks already exist
-	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0
-	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
+	hasPreToolUse := len(settings.Hooks.PreToolUseHooks) > 0
+	hasSessionEnd := len(settings.Hooks.SessionEndHooks) > 0
 
 	if fileExists && hasPreToolUse && hasSessionEnd && !force {
 		cmd.Printf("  %s %s (hooks exist, skipped)\n", yellow("○"), settingsFileName)
@@ -329,11 +317,11 @@ func mergeSettingsHooks(cmd *cobra.Command, projectDir string, force bool) error
 	// Merge hooks - only add what's missing
 	modified := false
 	if !hasPreToolUse || force {
-		settings.Hooks.PreToolUse = defaultHooks.PreToolUse
+		settings.Hooks.PreToolUseHooks = defaultHooks.PreToolUseHooks
 		modified = true
 	}
 	if !hasSessionEnd || force {
-		settings.Hooks.SessionEnd = defaultHooks.SessionEnd
+		settings.Hooks.SessionEndHooks = defaultHooks.SessionEndHooks
 		modified = true
 	}
 

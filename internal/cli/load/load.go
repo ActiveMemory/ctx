@@ -1,7 +1,7 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package load
@@ -48,19 +48,6 @@ Use --budget to limit output to a specific token count.`,
 	cmd.Flags().BoolVar(&loadRaw, "raw", false, "Output raw file contents without assembly")
 
 	return cmd
-}
-
-// fileReadOrder defines the priority order for reading context files.
-var fileReadOrder = []string{
-	"CONSTITUTION.md",
-	"TASKS.md",
-	"CONVENTIONS.md",
-	"ARCHITECTURE.md",
-	"DECISIONS.md",
-	"LEARNINGS.md",
-	"GLOSSARY.md",
-	"DRIFT.md",
-	"AGENT_PLAYBOOK.md",
 }
 
 func runLoad(cmd *cobra.Command, _ []string) error {

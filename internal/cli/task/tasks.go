@@ -1,7 +1,7 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package task
@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/cli/session"
+	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -269,7 +269,7 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 	now := time.Now()
 	name := "snapshot"
 	if len(args) > 0 {
-		name = session.sanitizeFilename(args[0])
+		name = validation.SanitizeFilename(args[0])
 	}
 	snapshotFilename := fmt.Sprintf("tasks-%s-%s.md", name, now.Format("2006-01-02-1504"))
 	snapshotPath := filepath.Join(archiveDirName, snapshotFilename)

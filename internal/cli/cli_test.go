@@ -1,7 +1,7 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
-//   \    Copyright 2025-present Context contributors.
+//   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package cli
@@ -12,6 +12,20 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/cli/add"
+	"github.com/ActiveMemory/ctx/internal/cli/agent"
+	"github.com/ActiveMemory/ctx/internal/cli/compact"
+	"github.com/ActiveMemory/ctx/internal/cli/complete"
+	"github.com/ActiveMemory/ctx/internal/cli/drift"
+	"github.com/ActiveMemory/ctx/internal/cli/hook"
+	"github.com/ActiveMemory/ctx/internal/cli/init"
+	"github.com/ActiveMemory/ctx/internal/cli/load"
+	"github.com/ActiveMemory/ctx/internal/cli/loop"
+	"github.com/ActiveMemory/ctx/internal/cli/session"
+	"github.com/ActiveMemory/ctx/internal/cli/status"
+	"github.com/ActiveMemory/ctx/internal/cli/sync"
+	"github.com/ActiveMemory/ctx/internal/cli/task"
 )
 
 // TestInitCommand tests the init command creates the .context directory
@@ -30,7 +44,7 @@ func TestInitCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// Run the init command
-	cmd := InitCmd()
+	cmd := init.InitCmd()
 	cmd.SetArgs([]string{})
 
 	if err := cmd.Execute(); err != nil {
@@ -79,7 +93,7 @@ func TestStatusCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
@@ -87,7 +101,7 @@ func TestStatusCommand(t *testing.T) {
 
 	// Then status - just verify it runs without error
 	// Output goes to stdout, not cmd.Out()
-	statusCmd := StatusCmd()
+	statusCmd := status.StatusCmd()
 	statusCmd.SetArgs([]string{})
 
 	if err := statusCmd.Execute(); err != nil {
@@ -110,14 +124,14 @@ func TestAddCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Test adding a task
-	addCmd := AddCmd()
+	addCmd := add.Cmd()
 	addCmd.SetArgs([]string{"task", "Test task for integration"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task command failed: %v", err)
@@ -150,21 +164,21 @@ func TestCompleteCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Add a task
-	addCmd := AddCmd()
+	addCmd := add.Cmd()
 	addCmd.SetArgs([]string{"task", "Task to complete"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task command failed: %v", err)
 	}
 
 	// Complete the task
-	completeCmd := CompleteCmd()
+	completeCmd := complete.CompleteCmd()
 	completeCmd.SetArgs([]string{"Task to complete"})
 	if err := completeCmd.Execute(); err != nil {
 		t.Fatalf("complete command failed: %v", err)
@@ -197,14 +211,14 @@ func TestDriftCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Run drift - just verify it runs without error
-	driftCmd := DriftCmd()
+	driftCmd := drift.DriftCmd()
 	driftCmd.SetArgs([]string{})
 
 	if err := driftCmd.Execute(); err != nil {
@@ -227,14 +241,14 @@ func TestLoadCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Run load - just verify it runs without error
-	loadCmd := LoadCmd()
+	loadCmd := load.LoadCmd()
 	loadCmd.SetArgs([]string{})
 
 	if err := loadCmd.Execute(); err != nil {
@@ -257,14 +271,14 @@ func TestAgentCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Run agent - just verify it runs without error
-	agentCmd := AgentCmd()
+	agentCmd := agent.Cmd()
 	agentCmd.SetArgs([]string{})
 
 	if err := agentCmd.Execute(); err != nil {
@@ -287,7 +301,7 @@ func TestHookCommand(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.tool, func(t *testing.T) {
-			hookCmd := HookCmd()
+			hookCmd := hook.HookCmd()
 			hookCmd.SetArgs([]string{tt.tool})
 
 			if err := hookCmd.Execute(); err != nil {
@@ -299,7 +313,7 @@ func TestHookCommand(t *testing.T) {
 
 // TestHookCommandUnknownTool tests hook command with unknown tool
 func TestHookCommandUnknownTool(t *testing.T) {
-	hookCmd := HookCmd()
+	hookCmd := hook.HookCmd()
 	hookCmd.SetArgs([]string{"unknown-tool"})
 
 	err := hookCmd.Execute()
@@ -329,7 +343,7 @@ func TestSanitizeFilename(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			result := sanitizeFilename(tt.input)
+			result := session.sanitizeFilename(tt.input)
 			if result != tt.expected {
 				t.Errorf("sanitizeFilename(%q) = %q, want %q", tt.input, result, tt.expected)
 			}
@@ -354,7 +368,7 @@ func TestTruncate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			result := truncate(tt.input, tt.maxLen)
+			result := session.truncate(tt.input, tt.maxLen)
 			if result != tt.expected {
 				t.Errorf("truncate(%q, %d) = %q, want %q", tt.input, tt.maxLen, result, tt.expected)
 			}
@@ -377,7 +391,7 @@ func TestTruncateString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			result := truncateString(tt.input, tt.maxLen)
+			result := compact.truncateString(tt.input, tt.maxLen)
 			if result != tt.expected {
 				t.Errorf("truncateString(%q, %d) = %q, want %q", tt.input, tt.maxLen, result, tt.expected)
 			}
@@ -404,7 +418,7 @@ func TestParseIndex(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			result, err := parseIndex(tt.input)
+			result, err := session.parseIndex(tt.input)
 			if tt.expectErr {
 				if err == nil {
 					t.Errorf("parseIndex(%q) expected error, got nil", tt.input)
@@ -457,7 +471,7 @@ func TestRemoveEmptySections(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, count := removeEmptySections(tt.input)
+			result, count := compact.removeEmptySections(tt.input)
 			if count != tt.removed {
 				t.Errorf("removeEmptySections() removed %d sections, want %d", count, tt.removed)
 			}
@@ -504,7 +518,7 @@ func TestSeparateTasks(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, stats := separateTasks(tt.input)
+			_, _, stats := task.separateTasks(tt.input)
 			if stats.completed != tt.expectedCompleted {
 				t.Errorf("separateTasks() completed = %d, want %d", stats.completed, tt.expectedCompleted)
 			}
@@ -531,7 +545,7 @@ func TestCleanInsight(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			result := cleanInsight(tt.input)
+			result := session.cleanInsight(tt.input)
 			if result != tt.expected {
 				t.Errorf("cleanInsight(%q) = %q, want %q", tt.input, result, tt.expected)
 			}
@@ -543,13 +557,13 @@ func TestCleanInsight(t *testing.T) {
 func TestExtractTextContent(t *testing.T) {
 	tests := []struct {
 		name     string
-		entry    transcriptEntry
+		entry    session.transcriptEntry
 		expected []string
 	}{
 		{
 			name: "string content",
-			entry: transcriptEntry{
-				Message: transcriptMsg{
+			entry: session.transcriptEntry{
+				Message: session.transcriptMsg{
 					Content: "Hello world",
 				},
 			},
@@ -557,8 +571,8 @@ func TestExtractTextContent(t *testing.T) {
 		},
 		{
 			name: "array content with text",
-			entry: transcriptEntry{
-				Message: transcriptMsg{
+			entry: session.transcriptEntry{
+				Message: session.transcriptMsg{
 					Content: []interface{}{
 						map[string]interface{}{
 							"type": "text",
@@ -575,8 +589,8 @@ func TestExtractTextContent(t *testing.T) {
 		},
 		{
 			name: "array content with thinking",
-			entry: transcriptEntry{
-				Message: transcriptMsg{
+			entry: session.transcriptEntry{
+				Message: session.transcriptMsg{
 					Content: []interface{}{
 						map[string]interface{}{
 							"type":     "thinking",
@@ -589,8 +603,8 @@ func TestExtractTextContent(t *testing.T) {
 		},
 		{
 			name: "empty content",
-			entry: transcriptEntry{
-				Message: transcriptMsg{
+			entry: session.transcriptEntry{
+				Message: session.transcriptMsg{
 					Content: nil,
 				},
 			},
@@ -600,7 +614,7 @@ func TestExtractTextContent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := extractTextContent(tt.entry)
+			result := session.extractTextContent(tt.entry)
 			if len(result) != len(tt.expected) {
 				t.Errorf("extractTextContent() returned %d items, want %d", len(result), len(tt.expected))
 				return
@@ -643,7 +657,7 @@ This is the summary of the session.
 		t.Fatalf("failed to write test session: %v", err)
 	}
 
-	info, err := parseSessionFile(sessionPath)
+	info, err := session.parseSessionFile(sessionPath)
 	if err != nil {
 		t.Fatalf("parseSessionFile() error: %v", err)
 	}
@@ -677,7 +691,7 @@ func TestSessionCommands(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
@@ -685,7 +699,7 @@ func TestSessionCommands(t *testing.T) {
 
 	// Test session save
 	t.Run("session save", func(t *testing.T) {
-		sessionCmd := SessionCmd()
+		sessionCmd := session.SessionCmd()
 		sessionCmd.SetArgs([]string{"save", "test-topic"})
 		if err := sessionCmd.Execute(); err != nil {
 			t.Fatalf("session save failed: %v", err)
@@ -710,7 +724,7 @@ func TestSessionCommands(t *testing.T) {
 
 	// Test session list
 	t.Run("session list", func(t *testing.T) {
-		sessionCmd := SessionCmd()
+		sessionCmd := session.SessionCmd()
 		sessionCmd.SetArgs([]string{"list"})
 		if err := sessionCmd.Execute(); err != nil {
 			t.Fatalf("session list failed: %v", err)
@@ -719,7 +733,7 @@ func TestSessionCommands(t *testing.T) {
 
 	// Test session load
 	t.Run("session load", func(t *testing.T) {
-		sessionCmd := SessionCmd()
+		sessionCmd := session.SessionCmd()
 		sessionCmd.SetArgs([]string{"load", "1"})
 		if err := sessionCmd.Execute(); err != nil {
 			t.Fatalf("session load failed: %v", err)
@@ -742,14 +756,14 @@ func TestCompactCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Run compact with --no-auto-save to skip pre-compact session
-	compactCmd := CompactCmd()
+	compactCmd := compact.Cmd()
 	compactCmd.SetArgs([]string{"--no-auto-save"})
 	if err := compactCmd.Execute(); err != nil {
 		t.Fatalf("compact failed: %v", err)
@@ -771,14 +785,14 @@ func TestTasksCommands(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Add some tasks
-	addCmd := AddCmd()
+	addCmd := add.Cmd()
 	addCmd.SetArgs([]string{"task", "Test task 1"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task failed: %v", err)
@@ -786,7 +800,7 @@ func TestTasksCommands(t *testing.T) {
 
 	// Test tasks snapshot
 	t.Run("tasks snapshot", func(t *testing.T) {
-		tasksCmd := TasksCmd()
+		tasksCmd := task.TasksCmd()
 		tasksCmd.SetArgs([]string{"snapshot", "test-snapshot"})
 		if err := tasksCmd.Execute(); err != nil {
 			t.Fatalf("tasks snapshot failed: %v", err)
@@ -811,7 +825,7 @@ func TestTasksCommands(t *testing.T) {
 
 	// Test tasks archive (dry-run)
 	t.Run("tasks archive dry-run", func(t *testing.T) {
-		tasksCmd := TasksCmd()
+		tasksCmd := task.TasksCmd()
 		tasksCmd.SetArgs([]string{"archive", "--dry-run"})
 		if err := tasksCmd.Execute(); err != nil {
 			t.Fatalf("tasks archive failed: %v", err)
@@ -839,7 +853,7 @@ func TestLoopCommand(t *testing.T) {
 	}
 
 	// Test loop command
-	loopCmd := LoopCmd()
+	loopCmd := loop.LoopCmd()
 	loopCmd.SetArgs([]string{"--tool", "generic"})
 	if err := loopCmd.Execute(); err != nil {
 		t.Fatalf("loop command failed: %v", err)
@@ -866,14 +880,14 @@ func TestSyncCommand(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Test sync command
-	syncCmd := SyncCmd()
+	syncCmd := sync.SyncCmd()
 	syncCmd.SetArgs([]string{})
 	if err := syncCmd.Execute(); err != nil {
 		t.Fatalf("sync command failed: %v", err)
@@ -895,7 +909,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
@@ -903,7 +917,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 
 	// Test adding a decision
 	t.Run("add decision", func(t *testing.T) {
-		addCmd := AddCmd()
+		addCmd := add.Cmd()
 		addCmd.SetArgs([]string{"decision", "Use PostgreSQL for database"})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add decision failed: %v", err)
@@ -920,7 +934,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 
 	// Test adding a learning
 	t.Run("add learning", func(t *testing.T) {
-		addCmd := AddCmd()
+		addCmd := add.Cmd()
 		addCmd.SetArgs([]string{"learning", "Always check for nil before dereferencing"})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add learning failed: %v", err)
@@ -937,7 +951,7 @@ func TestAddDecisionAndLearning(t *testing.T) {
 
 	// Test adding a convention
 	t.Run("add convention", func(t *testing.T) {
-		addCmd := AddCmd()
+		addCmd := add.Cmd()
 		addCmd.SetArgs([]string{"convention", "Use camelCase for variable names"})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add convention failed: %v", err)
@@ -968,7 +982,7 @@ func TestAddFromFile(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
@@ -981,7 +995,7 @@ func TestAddFromFile(t *testing.T) {
 	}
 
 	// Test adding from file
-	addCmd := AddCmd()
+	addCmd := add.Cmd()
 	addCmd.SetArgs([]string{"learning", "--file", contentFile})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add from file failed: %v", err)
@@ -1011,14 +1025,14 @@ func TestAgentJSONOutput(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Test agent with JSON output
-	agentCmd := AgentCmd()
+	agentCmd := agent.Cmd()
 	agentCmd.SetArgs([]string{"--format", "json"})
 	if err := agentCmd.Execute(); err != nil {
 		t.Fatalf("agent --format json failed: %v", err)
@@ -1040,14 +1054,14 @@ func TestDriftJSONOutput(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Test drift with JSON output
-	driftCmd := DriftCmd()
+	driftCmd := drift.DriftCmd()
 	driftCmd.SetArgs([]string{"--json"})
 	if err := driftCmd.Execute(); err != nil {
 		t.Fatalf("drift --json failed: %v", err)
@@ -1069,14 +1083,14 @@ func TestLoadRawOutput(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Test load with raw output
-	loadCmd := LoadCmd()
+	loadCmd := load.LoadCmd()
 	loadCmd.SetArgs([]string{"--raw"})
 	if err := loadCmd.Execute(); err != nil {
 		t.Fatalf("load --raw failed: %v", err)
@@ -1098,14 +1112,14 @@ func TestStatusJSONOutput(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Test status with JSON output
-	statusCmd := StatusCmd()
+	statusCmd := status.StatusCmd()
 	statusCmd.SetArgs([]string{"--json"})
 	if err := statusCmd.Execute(); err != nil {
 		t.Fatalf("status --json failed: %v", err)
@@ -1136,7 +1150,7 @@ func TestSessionParse(t *testing.T) {
 	}
 
 	// Test session parse
-	sessionCmd := SessionCmd()
+	sessionCmd := session.SessionCmd()
 	sessionCmd.SetArgs([]string{"parse", jsonlPath})
 	if err := sessionCmd.Execute(); err != nil {
 		t.Fatalf("session parse failed: %v", err)
@@ -1166,7 +1180,7 @@ func TestSessionParseWithExtract(t *testing.T) {
 	}
 
 	// Test session parse with --extract
-	sessionCmd := SessionCmd()
+	sessionCmd := session.SessionCmd()
 	sessionCmd.SetArgs([]string{"parse", jsonlPath, "--extract"})
 	if err := sessionCmd.Execute(); err != nil {
 		t.Fatalf("session parse --extract failed: %v", err)
@@ -1198,7 +1212,7 @@ func TestSessionParseWithOutput(t *testing.T) {
 	outputPath := filepath.Join(tmpDir, "output.md")
 
 	// Test session parse with --output
-	sessionCmd := SessionCmd()
+	sessionCmd := session.SessionCmd()
 	sessionCmd.SetArgs([]string{"parse", jsonlPath, "--output", outputPath})
 	if err := sessionCmd.Execute(); err != nil {
 		t.Fatalf("session parse --output failed: %v", err)
@@ -1214,15 +1228,15 @@ func TestSessionParseWithOutput(t *testing.T) {
 func TestFormatTranscriptEntry(t *testing.T) {
 	tests := []struct {
 		name     string
-		entry    transcriptEntry
+		entry    session.transcriptEntry
 		contains []string
 	}{
 		{
 			name: "simple text content",
-			entry: transcriptEntry{
+			entry: session.transcriptEntry{
 				Type:      "assistant",
 				Timestamp: "2025-01-21T10:00:00Z",
-				Message: transcriptMsg{
+				Message: session.transcriptMsg{
 					Role:    "assistant",
 					Content: "Hello world",
 				},
@@ -1231,10 +1245,10 @@ func TestFormatTranscriptEntry(t *testing.T) {
 		},
 		{
 			name: "array content with text",
-			entry: transcriptEntry{
+			entry: session.transcriptEntry{
 				Type:      "assistant",
 				Timestamp: "2025-01-21T10:00:00Z",
-				Message: transcriptMsg{
+				Message: session.transcriptMsg{
 					Role: "assistant",
 					Content: []interface{}{
 						map[string]interface{}{
@@ -1248,10 +1262,10 @@ func TestFormatTranscriptEntry(t *testing.T) {
 		},
 		{
 			name: "array content with thinking",
-			entry: transcriptEntry{
+			entry: session.transcriptEntry{
 				Type:      "assistant",
 				Timestamp: "2025-01-21T10:00:00Z",
-				Message: transcriptMsg{
+				Message: session.transcriptMsg{
 					Role: "assistant",
 					Content: []interface{}{
 						map[string]interface{}{
@@ -1265,10 +1279,10 @@ func TestFormatTranscriptEntry(t *testing.T) {
 		},
 		{
 			name: "array content with tool_use",
-			entry: transcriptEntry{
+			entry: session.transcriptEntry{
 				Type:      "assistant",
 				Timestamp: "2025-01-21T10:00:00Z",
-				Message: transcriptMsg{
+				Message: session.transcriptMsg{
 					Role: "assistant",
 					Content: []interface{}{
 						map[string]interface{}{
@@ -1285,10 +1299,10 @@ func TestFormatTranscriptEntry(t *testing.T) {
 		},
 		{
 			name: "array content with tool_result",
-			entry: transcriptEntry{
+			entry: session.transcriptEntry{
 				Type:      "assistant",
 				Timestamp: "2025-01-21T10:00:00Z",
-				Message: transcriptMsg{
+				Message: session.transcriptMsg{
 					Role: "user",
 					Content: []interface{}{
 						map[string]interface{}{
@@ -1304,7 +1318,7 @@ func TestFormatTranscriptEntry(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := formatTranscriptEntry(tt.entry)
+			result := session.formatTranscriptEntry(tt.entry)
 			for _, want := range tt.contains {
 				if !strings.Contains(result, want) {
 					t.Errorf("formatTranscriptEntry() result missing %q, got:\n%s", want, result)
@@ -1332,7 +1346,7 @@ func TestParseJsonlTranscript(t *testing.T) {
 		t.Fatalf("failed to create jsonl file: %v", err)
 	}
 
-	result, err := parseJsonlTranscript(jsonlPath)
+	result, err := session.parseJsonlTranscript(jsonlPath)
 	if err != nil {
 		t.Fatalf("parseJsonlTranscript() error: %v", err)
 	}
@@ -1370,7 +1384,7 @@ func TestExtractInsights(t *testing.T) {
 		t.Fatalf("failed to create jsonl file: %v", err)
 	}
 
-	decisions, learnings, err := extractInsights(jsonlPath)
+	decisions, learnings, err := session.extractInsights(jsonlPath)
 	if err != nil {
 		t.Fatalf("extractInsights() error: %v", err)
 	}
@@ -1398,27 +1412,27 @@ func TestCompactWithTasks(t *testing.T) {
 	defer os.Chdir(origDir)
 
 	// First init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Add and complete a task
-	addCmd := AddCmd()
+	addCmd := add.Cmd()
 	addCmd.SetArgs([]string{"task", "Task to complete"})
 	if err := addCmd.Execute(); err != nil {
 		t.Fatalf("add task failed: %v", err)
 	}
 
-	completeCmd := CompleteCmd()
+	completeCmd := complete.CompleteCmd()
 	completeCmd.SetArgs([]string{"Task to complete"})
 	if err := completeCmd.Execute(); err != nil {
 		t.Fatalf("complete task failed: %v", err)
 	}
 
 	// Run compact without auto-save
-	compactCmd := CompactCmd()
+	compactCmd := compact.Cmd()
 	compactCmd.SetArgs([]string{"--no-auto-save"})
 	if err := compactCmd.Execute(); err != nil {
 		t.Fatalf("compact failed: %v", err)
@@ -1457,7 +1471,7 @@ Some custom content here.
 	}
 
 	// Run init
-	initCmd := InitCmd()
+	initCmd := init.InitCmd()
 	initCmd.SetArgs([]string{})
 	if err := initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
@@ -1528,7 +1542,7 @@ func TestFindSessionFile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := findSessionFile(tt.query)
+			_, err := session.findSessionFile(tt.query)
 			if tt.expectErr {
 				if err == nil {
 					t.Errorf("findSessionFile(%q) expected error, got nil", tt.query)
@@ -1705,7 +1719,7 @@ func TestBinaryIntegration(t *testing.T) {
 			{[]string{"status"}, "Context"},
 			{[]string{"agent"}, "Context Packet"},
 			{[]string{"drift"}, "Drift"},
-			{[]string{"load"}, ""},       // load outputs context, varies by content
+			{[]string{"load"}, ""},                 // load outputs context, varies by content
 			{[]string{"hook", "cursor"}, "Cursor"}, // hook outputs integration instructions
 		}
 

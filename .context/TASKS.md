@@ -2,6 +2,21 @@
 
 ## In Progress
 
+## Phase 1
+
+- [ ] Verify all Markdown files by "actually reading them"; take notes for
+  follow-up actions.
+- [ ] All go code should have godoc and testing.
+- [ ] GitHub CI linter is giving errors that need fixing.
+- [ ] Manual code review. take notes.
+- [ ] Add tests per file.
+- [ ] validate everything in the docs with a skeptical eye.
+- [ ] consider the case where `ctx` is not called from within AI prompt:
+  - does the command still make sense?
+  - does it create the expected output?
+- [ ] Cut the first release.
+
+
 ## Next Up
 
 - [ ] Enforce test coverage targets in CI/Makefile #priority:medium #area:quality
