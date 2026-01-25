@@ -242,3 +242,62 @@ agent to check its own mind.
 - `IMPLEMENTATION_PLAN.md` becomes a thin directive layer
 - Historical milestones are archived, not active tasks
 - North Star goals live in IMPLEMENTATION_PLAN.md (meta-level, not tasks)
+
+---
+
+## [2026-01-25] Centralize Constants with Semantic Prefixes
+
+**Status**: Accepted (implemented)
+
+**Context**: YOLO-mode feature development scattered magic strings across the codebase. Same literals (`"TASKS.md"`, `"task"`, `".context"`) appeared in 10+ files. Human-guided refactoring session consolidated them.
+
+**Decision**: All repeated literals go in `internal/config/config.go` with semantic prefixes:
+- `Dir*` for directories (`DirContext`, `DirArchive`, `DirSessions`)
+- `File*` for file paths (`FileSettings`, `FileClaudeMd`)
+- `Filename*` for file names only (`FilenameTask`, `FilenameDecision`)
+- `UpdateType*` for entry types (`UpdateTypeTask`, `UpdateTypeDecision`)
+
+Maps must use constants as keys:
+```go
+var FileType = map[string]string{
+    UpdateTypeTask: FilenameTask,  // not "task": "TASKS.md"
+}
+```
+
+**Rationale**:
+- Single source of truth for all identifiers
+- Refactoring is find-replace on constant name
+- IDE navigation works (go-to-definition)
+- Typos caught at compile time, not runtime
+- Self-documenting code (constants have godoc)
+
+**Consequences**:
+- All new literals must go through config package
+- Existing code migrated to use constants
+- Slightly more verbose but much more maintainable
+
+---
+
+## [2026-01-25] Keep CONSTITUTION Minimal
+
+**Status**: Accepted
+
+**Context**: When codifying lessons learned, temptation was to add all conventions to CONSTITUTION.md as "invariants."
+
+**Decision**: CONSTITUTION.md contains only truly inviolable rules:
+- Security invariants (secrets, path traversal)
+- Correctness invariants (tests pass)
+- Process invariants (decision records)
+
+Style preferences and best practices go in CONVENTIONS.md instead.
+
+**Rationale**:
+- Overly strict constitution creates friction and gets ignored
+- "Crying wolf" effect — developers stop reading it
+- Conventions can be bent; constitution cannot
+- Security vs style are fundamentally different categories
+
+**Consequences**:
+- CONVENTIONS.md becomes the living style guide
+- CONSTITUTION.md stays short and scary
+- New rules must pass "is this truly inviolable?" test

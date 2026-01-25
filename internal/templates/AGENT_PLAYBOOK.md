@@ -162,3 +162,21 @@ Never assume. If you don't see it in files, you don't know it.
 - Don't invent history - check sessions/ for actual discussions
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
+
+## When to Consolidate vs Add Features
+
+**Signs you should consolidate first:**
+- Same string literal appears in 3+ files
+- Hardcoded paths use string concatenation
+- Test file is growing into a monolith (>500 lines)
+- Package name doesn't match folder name
+
+**YOLO mode creates debt** — rapid feature additions scatter patterns across the codebase. Periodic consolidation prevents this from compounding.
+
+**Human-guided refactoring catches:**
+- Magic strings that should be constants
+- Path construction that should use `filepath.Join()`
+- Tests that should be colocated with implementations
+- Naming inconsistencies
+
+When in doubt, ask: "Would a new contributor understand where this belongs?"

@@ -11,6 +11,7 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 - [ ] All code must pass tests before commit
 - [ ] No TODO comments in main branch (move to TASKS.md)
+- [ ] Path construction uses stdlib — no string concatenation (security: prevents path traversal)
 
 ## Process Invariants
 
