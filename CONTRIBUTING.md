@@ -18,7 +18,7 @@ This document provides guidelines and information for contributors.
 
 ### Prerequisites
 
-- [Go 1.26+](https://go.dev/)
+- [Go 1.25+](https://go.dev/)
 - Git
 
 ### Building
