@@ -85,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#context-files-reference" class="md-skip">
+        <a href="#context-files" class="md-skip">
           Skip to content
         </a>
       
@@ -357,10 +357,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context-files-reference" class="md-nav__link">
+  <a href="#context-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context Files Reference
+        Context Files
       
     </span>
   </a>
@@ -372,6 +372,17 @@
     <span class="md-ellipsis">
       
         File Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-order-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read Order Rationale
       
     </span>
   </a>
@@ -618,15 +629,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependenciesmd" class="md-nav__link">
+  <a href="#architecturemd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DEPENDENCIES.md
+        ARCHITECTURE.md
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DEPENDENCIES.md">
+    <nav class="md-nav" aria-label="ARCHITECTURE.md">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -865,10 +876,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context-files-reference" class="md-nav__link">
+  <a href="#context-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context Files Reference
+        Context Files
       
     </span>
   </a>
@@ -880,6 +891,17 @@
     <span class="md-ellipsis">
       
         File Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-order-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read Order Rationale
       
     </span>
   </a>
@@ -1126,15 +1148,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependenciesmd" class="md-nav__link">
+  <a href="#architecturemd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DEPENDENCIES.md
+        ARCHITECTURE.md
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DEPENDENCIES.md">
+    <nav class="md-nav" aria-label="ARCHITECTURE.md">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1310,7 +1332,7 @@
   <h1>Context files</h1>
 
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<h2 id="context-files-reference">Context Files Reference<a class="headerlink" href="#context-files-reference" title="Permanent link">&para;</a></h2>
+<h2 id="context-files">Context Files<a class="headerlink" href="#context-files" title="Permanent link">&para;</a></h2>
 <p>Each context file in <code>.context/</code> serves a specific purpose. Files are designed 
 to be human-readable, AI-parseable, and token-efficient.</p>
 <h2 id="file-overview">File Overview<a class="headerlink" href="#file-overview" title="Permanent link">&para;</a></h2>
@@ -1334,51 +1356,86 @@ to be human-readable, AI-parseable, and token-efficient.</p>
 <td>2</td>
 </tr>
 <tr>
-<td>DECISIONS.md</td>
-<td>Architectural decisions with rationale</td>
-<td>3</td>
-</tr>
-<tr>
 <td>CONVENTIONS.md</td>
 <td>Project patterns and standards</td>
-<td>4</td>
+<td>3</td>
 </tr>
 <tr>
 <td>ARCHITECTURE.md</td>
 <td>System overview and components</td>
-<td>5</td>
+<td>4</td>
 </tr>
 <tr>
-<td>GLOSSARY.md</td>
-<td>Domain terms and abbreviations</td>
-<td>6</td>
+<td>DECISIONS.md</td>
+<td>Architectural decisions with rationale</td>
+<td>5</td>
 </tr>
 <tr>
 <td>LEARNINGS.md</td>
 <td>Lessons learned, gotchas, tips</td>
-<td>7</td>
+<td>6</td>
 </tr>
 <tr>
-<td>DEPENDENCIES.md</td>
-<td>Key dependencies and why chosen</td>
-<td>8</td>
+<td>GLOSSARY.md</td>
+<td>Domain terms and abbreviations</td>
+<td>7</td>
 </tr>
 <tr>
 <td>DRIFT.md</td>
 <td>Staleness signals and update triggers</td>
-<td>9</td>
+<td>8</td>
 </tr>
 <tr>
 <td>AGENT_PLAYBOOK.md</td>
 <td>Instructions for AI agents</td>
-<td>10</td>
+<td>9 (lowest)</td>
 </tr>
 </tbody>
 </table>
+<h2 id="read-order-rationale">Read Order Rationale<a class="headerlink" href="#read-order-rationale" title="Permanent link">&para;</a></h2>
+<p>The priority order follows a logical progression for AI agents:</p>
+<ol>
+<li>
+<p><strong>CONSTITUTION</strong> — Inviolable rules first. The agent must know what it
+   <em>cannot</em> do before attempting anything.</p>
+</li>
+<li>
+<p><strong>TASKS</strong> — Current work items. What the agent should focus on.</p>
+</li>
+<li>
+<p><strong>CONVENTIONS</strong> — How to write code. Patterns and standards to follow
+   when implementing tasks.</p>
+</li>
+<li>
+<p><strong>ARCHITECTURE</strong> — System structure. Understanding of components and
+   boundaries before making changes.</p>
+</li>
+<li>
+<p><strong>DECISIONS</strong> — Historical context. Why things are the way they are,
+   to avoid re-debating settled decisions.</p>
+</li>
+<li>
+<p><strong>LEARNINGS</strong> — Gotchas and tips. Lessons from past work that inform
+   current implementation.</p>
+</li>
+<li>
+<p><strong>GLOSSARY</strong> — Reference material. Domain terms and abbreviations for
+   lookup as needed.</p>
+</li>
+<li>
+<p><strong>DRIFT</strong> — Staleness indicators. Lower priority since it's primarily
+   for maintenance workflows, not active development.</p>
+</li>
+<li>
+<p><strong>AGENT_PLAYBOOK</strong> — Meta instructions last. How to use this context
+   system itself. Loaded last because the agent should understand the
+   <em>content</em> (rules, tasks, patterns) before the <em>operating manual</em>.</p>
+</li>
+</ol>
 <hr />
 <h2 id="constitutionmd">CONSTITUTION.md<a class="headerlink" href="#constitutionmd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Define hard invariants—rules that must NEVER be violated, 
-regardless of task.</p>
+<p><strong>Purpose:</strong> Define hard invariants—rules that must <strong>NEVER</strong> be violated, 
+regardless of the task.</p>
 <p>AI agents read this first and should refuse tasks that violate these rules.</p>
 <h3 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h3>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh"># Constitution</span>
@@ -1611,7 +1668,7 @@ be forgotten.</p>
 </ul>
 <hr />
 <h2 id="conventionsmd">CONVENTIONS.md<a class="headerlink" href="#conventionsmd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Document project patterns, naming conventions, and standards.</p>
+<p><strong>Purpose</strong>: Document project patterns, naming conventions, and standards.</p>
 <h3 id="structure_4">Structure<a class="headerlink" href="#structure_4" title="Permanent link">&para;</a></h3>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gh"># Conventions</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
@@ -1629,112 +1686,76 @@ be forgotten.</p>
 </span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="gs">**When to use**</span>: Situation description
 </span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
 </span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="gs">**Implementation**</span>:
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>```code
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>// in triple backticks
 </span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>// Example code
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="gs">**Why**</span>: Rationale for this pattern
 </span></code></pre></div>
-<p><strong>Why</strong>: Rationale for this pattern
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>### Guidelines
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>- Include concrete examples
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>- Explain the &quot;why&quot; not just the &quot;what&quot;
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>- Keep patterns minimal—only document what&#39;s non-obvious
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>---
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>## ARCHITECTURE.md
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>**Purpose:** Provide system overview and component relationships.
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>### Structure
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>```markdown
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a># Architecture
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>## Overview
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>Brief description of what the system does and how it&#39;s organized.
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>## Components
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>### Component Name
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
-</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>**Responsibility**: What this component does
-</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
-</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>**Dependencies**: What it depends on
-</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
-</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>**Dependents**: What depends on it
-</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>
-</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>**Key Files**:
-</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>- `path/to/file.ts` — Description
-</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>
-</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>## Data Flow
-</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>
-</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>Description or diagram of how data moves through the system.
-</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>
-</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>## Boundaries
-</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>
-</span><span id="__span-7-41"><a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>What&#39;s in scope vs out of scope for this codebase.
-</span></code></pre></div></p>
 <h3 id="guidelines_2">Guidelines<a class="headerlink" href="#guidelines_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Include concrete examples</li>
+<li>Explain the "why" not just the "what"</li>
+<li>Keep patterns minimal—only document what's non-obvious</li>
+</ul>
+<hr />
+<h2 id="architecturemd">ARCHITECTURE.md<a class="headerlink" href="#architecturemd" title="Permanent link">&para;</a></h2>
+<p><strong>Purpose</strong>: Provide system overview and component relationships.</p>
+<h3 id="structure_5">Structure<a class="headerlink" href="#structure_5" title="Permanent link">&para;</a></h3>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gh"># Architecture</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="gu">## Overview</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Brief description of what the system does and how it&#39;s organized.
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="gu">## Components</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="gu">### Component Name</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="gs">**Responsibility**</span>: What this component does
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="gs">**Dependencies**</span>: What it depends on
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="gs">**Dependents**</span>: What depends on it
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="gs">**Key Files**</span>:
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="k">-</span><span class="w"> </span>path/to/file.ts — Description
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="gu">## Data Flow</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>Description or diagram of how data moves through the system.
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="gu">## Boundaries</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>What&#39;s in scope vs out of scope for this codebase.
+</span></code></pre></div>
+<h3 id="guidelines_3">Guidelines<a class="headerlink" href="#guidelines_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Keep diagrams simple (Mermaid works well)</li>
 <li>Focus on boundaries and interfaces</li>
 <li>Update when major structural changes occur</li>
 </ul>
 <hr />
-<h2 id="dependenciesmd">DEPENDENCIES.md<a class="headerlink" href="#dependenciesmd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Document key dependencies and why they were chosen.</p>
-<h3 id="structure_5">Structure<a class="headerlink" href="#structure_5" title="Permanent link">&para;</a></h3>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gh"># Dependencies</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="gu">## Runtime</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="gu">### dependency-name</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="gs">**Version**</span>: ^X.Y.Z
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="gs">**Purpose**</span>: What we use it for
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="gs">**Why this one**</span>: Why chosen over alternatives
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="gs">**Concerns**</span>: Any known issues or limitations
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="gu">## Development</span>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="gu">### dev-dependency-name</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="gs">**Version**</span>: ^X.Y.Z
-</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="gs">**Purpose**</span>: What we use it for
-</span></code></pre></div>
-<h3 id="guidelines_3">Guidelines<a class="headerlink" href="#guidelines_3" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Only document significant dependencies</li>
-<li>Explain why this library over alternatives</li>
-<li>Note any concerns or limitations</li>
-</ul>
-<hr />
 <h2 id="glossarymd">GLOSSARY.md<a class="headerlink" href="#glossarymd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Define domain terms, abbreviations, and project vocabulary.</p>
+<p><strong>Purpose</strong>: Define domain terms, abbreviations, and project vocabulary.</p>
 <h3 id="structure_6">Structure<a class="headerlink" href="#structure_6" title="Permanent link">&para;</a></h3>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gh"># Glossary</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gu">## Domain Terms</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="gu">### Term Name</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="gs">**Definition**</span>: What it means in this project&#39;s context
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="gs">**Not to be confused with**</span>: Similar terms that mean different things
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="gs">**Example**</span>: How it&#39;s used
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="gu">## Abbreviations</span>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>| Abbrev | Expansion                     | Context                |
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>|--------|-------------------------------|------------------------|
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>| ADR    | Architectural Decision Record | Decision documentation |
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>| SUT    | System Under Test             | Testing                |
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gh"># Glossary</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="gu">## Domain Terms</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="gu">### Term Name</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="gs">**Definition**</span>: What it means in this project&#39;s context
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="gs">**Not to be confused with**</span>: Similar terms that mean different things
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="gs">**Example**</span>: How it&#39;s used
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="gu">## Abbreviations</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>| Abbrev | Expansion                     | Context                |
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>|--------|-------------------------------|------------------------|
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>| ADR    | Architectural Decision Record | Decision documentation |
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>| SUT    | System Under Test             | Testing                |
 </span></code></pre></div>
 <h3 id="guidelines_4">Guidelines<a class="headerlink" href="#guidelines_4" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1744,53 +1765,53 @@ be forgotten.</p>
 </ul>
 <hr />
 <h2 id="driftmd">DRIFT.md<a class="headerlink" href="#driftmd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Define signals that context is stale and needs updating.</p>
+<p><strong>Purpose</strong>: Define signals that the context is stale and needs updating.</p>
 <p>Used by <code>ctx drift</code> command to detect staleness.</p>
 <h3 id="structure_7">Structure<a class="headerlink" href="#structure_7" title="Permanent link">&para;</a></h3>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="gh"># Drift Detection</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="gu">## Automatic Checks</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>These are checked by <span class="sb">`ctx drift`</span>:
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="gu">### Path References</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">- [ ]</span> All paths in ARCHITECTURE.md exist in filesystem
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">- [ ]</span> All paths in CONVENTIONS.md exist
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">- [ ]</span> All file references in DECISIONS.md are valid
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="gu">### Task References</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">- [ ]</span> All issues referenced in TASKS.md exist
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">- [ ]</span> No tasks older than 30 days without update
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="gu">### Constitution Violations</span>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="k">- [ ]</span> No secrets patterns detected in committed files
-</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
-</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="gu">## Manual Review Triggers</span>
-</span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
-</span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>Update context when:
-</span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>
-</span><span id="__span-10-26"><a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="k">- [ ]</span> New team member joins (review CONVENTIONS.md)
-</span><span id="__span-10-27"><a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="k">- [ ]</span> Major dependency upgraded (review DEPENDENCIES.md)
-</span><span id="__span-10-28"><a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="k">- [ ]</span> Sprint/milestone completed (archive old tasks)
-</span><span id="__span-10-29"><a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>
-</span><span id="__span-10-30"><a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="gu">## Staleness Indicators</span>
-</span><span id="__span-10-31"><a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>
-</span><span id="__span-10-32"><a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>| File | Stale If | Action |
-</span><span id="__span-10-33"><a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>|-----------------|----------|--------|
-</span><span id="__span-10-34"><a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>| ARCHITECTURE.md | &gt;30 days old | Review component list |
-</span><span id="__span-10-35"><a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>| TASKS.md        | &gt;50% completed | Archive and refresh |
-</span><span id="__span-10-36"><a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>| LEARNINGS.md    | &gt;20 items | Consolidate or archive |
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gh"># Drift Detection</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gu">## Automatic Checks</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>These are checked by <span class="sb">`ctx drift`</span>:
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="gu">### Path References</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">- [ ]</span> All paths in ARCHITECTURE.md exist in filesystem
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">- [ ]</span> All paths in CONVENTIONS.md exist
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">- [ ]</span> All file references in DECISIONS.md are valid
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="gu">### Task References</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="k">- [ ]</span> All issues referenced in TASKS.md exist
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="k">- [ ]</span> No tasks older than 30 days without update
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="gu">### Constitution Violations</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="k">- [ ]</span> No secrets patterns detected in committed files
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="gu">## Manual Review Triggers</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>Update context when:
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="k">- [ ]</span> New team member joins (review CONVENTIONS.md)
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="k">- [ ]</span> Major dependency upgraded (review ARCHITECTURE.md)
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="k">- [ ]</span> Sprint/milestone completed (archive old tasks)
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="gu">## Staleness Indicators</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>
+</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>| File            | Stale If       | Action                 |
+</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>|-----------------|----------------|------------------------|
+</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>| ARCHITECTURE.md | &gt;30 days old   | Review component list  |
+</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>| TASKS.md        | &gt;50% completed | Archive and refresh    |
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>| LEARNINGS.md    | &gt;20 items      | Consolidate or archive |
 </span></code></pre></div>
 <hr />
 <h2 id="agent_playbookmd">AGENT_PLAYBOOK.md<a class="headerlink" href="#agent_playbookmd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Explicit instructions for how AI agents should read, apply, 
+<p><strong>Purpose</strong>: Explicit instructions for how AI agents should read, apply, 
 and update context.</p>
 <h3 id="key-sections">Key Sections<a class="headerlink" href="#key-sections" title="Permanent link">&para;</a></h3>
-<p><strong>Read Order:</strong> Priority order for loading context files</p>
-<p><strong>When to Update:</strong> Events that trigger context updates</p>
+<p><strong>Read Order</strong>: Priority order for loading context files</p>
+<p><strong>When to Update</strong>: Events that trigger context updates</p>
 <p><strong>How to Avoid Hallucinating Memory:</strong> Critical rules:</p>
 <ol>
 <li>Never assume—if not in files, you don't know it</li>
@@ -1800,9 +1821,9 @@ and update context.</p>
 <li>Trust files over intuition</li>
 </ol>
 <p><strong>Context Update Commands:</strong> Format for automated updates via <code>ctx watch</code>:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span><span class="nt">&gt;</span>Key<span class="w"> </span>takeaway<span class="w"> </span>from<span class="w"> </span>today&#39;s<span class="w"> </span>work<span class="nt">&lt;/context-update&gt;</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span><span class="nt">&gt;</span>Use<span class="w"> </span>Redis<span class="w"> </span>for<span class="w"> </span>caching<span class="nt">&lt;/context-update&gt;</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>auth<span class="nt">&lt;/context-update&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span><span class="nt">&gt;</span>Key<span class="w"> </span>takeaway<span class="w"> </span>from<span class="w"> </span>today&#39;s<span class="w"> </span>work<span class="nt">&lt;/context-update&gt;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span><span class="nt">&gt;</span>Use<span class="w"> </span>Redis<span class="w"> </span>for<span class="w"> </span>caching<span class="nt">&lt;/context-update&gt;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>auth<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <p>See <a href="../integrations/#context-update-commands">Integrations</a> for full documentation.</p>
 <hr />

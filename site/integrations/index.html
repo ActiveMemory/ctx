@@ -27,7 +27,7 @@
     
     
       
-        <title>AI Tool Integrations - ctx: do you remember?</title>
+        <title>Integrations - ctx: do you remember?</title>
       
     
     
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AI Tool Integrations
+              Integrations
             
           </span>
         </div>
@@ -358,8 +358,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -407,14 +405,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ai-tool-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Tool Integrations
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#claude-code-full-integration" class="md-nav__link">
@@ -847,14 +854,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ai-tool-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Tool Integrations
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#claude-code-full-integration" class="md-nav__link">
@@ -1287,8 +1303,10 @@
   
 
 
+  <h1>Integrations</h1>
+
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<h1 id="ai-tool-integrations">AI Tool Integrations<a class="headerlink" href="#ai-tool-integrations" title="Permanent link">&para;</a></h1>
+<h2 id="ai-tool-integrations">AI Tool Integrations<a class="headerlink" href="#ai-tool-integrations" title="Permanent link">&para;</a></h2>
 <p>Context works with any AI tool that can read files. This guide covers setup 
 for popular AI coding assistants.</p>
 <h2 id="claude-code-full-integration">Claude Code (Full Integration)<a class="headerlink" href="#claude-code-full-integration" title="Permanent link">&para;</a></h2>
@@ -1370,7 +1388,7 @@ session persistence.</p>
 </span></code></pre></div>
 <h3 id="customizing-token-budget">Customizing Token Budget<a class="headerlink" href="#customizing-token-budget" title="Permanent link">&para;</a></h3>
 <p>Edit the PreToolUse command to change the token budget:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx agent --budget 8000 2&gt;/dev/null || true&quot;</span>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&quot;command&quot;: &quot;ctx agent --budget 8000 2&gt;/dev/null || true&quot;
 </span></code></pre></div>
 <h3 id="verifying-setup">Verifying Setup<a class="headerlink" href="#verifying-setup" title="Permanent link">&para;</a></h3>
 <ol>
@@ -1429,9 +1447,12 @@ files directly.</p>
 </span></code></pre></div>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
 <p>Add to Cursor settings (<code>.cursor/settings.json</code>):</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;ai.systemPrompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Read .context/TASKS.md and .context/CONVENTIONS.md before responding. Follow rules in .context/CONSTITUTION.md.&quot;</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">}</span>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>// split to multiple lines for readability
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>{
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  &quot;ai.systemPrompt&quot;: &quot;Read .context/TASKS.md and 
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  .context/CONVENTIONS.md before responding. 
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Follow rules in .context/CONSTITUTION.md.&quot;,
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>}
 </span></code></pre></div>
 <h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
 <ol>
@@ -1518,9 +1539,12 @@ them in comments.</p>
 </span></code></pre></div>
 <h3 id="configuration_2">Configuration<a class="headerlink" href="#configuration_2" title="Permanent link">&para;</a></h3>
 <p>Add to Windsurf settings:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;ai.customInstructions&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Always read .context/CONSTITUTION.md first. Check .context/TASKS.md for current work. Follow patterns in .context/CONVENTIONS.md.&quot;</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="p">}</span>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>// Split to multiple lines for readability
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>{
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  &quot;ai.customInstructions&quot;: &quot;Always read .context/CONSTITUTION.md first. 
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  Check .context/TASKS.md for current work. 
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  Follow patterns in .context/CONVENTIONS.md.&quot;
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>}
 </span></code></pre></div>
 <h3 id="usage_2">Usage<a class="headerlink" href="#usage_2" title="Permanent link">&para;</a></h3>
 <p>Context files appear in the file tree. Reference them when chatting:</p>
@@ -1606,16 +1630,16 @@ them in comments.</p>
 </tbody>
 </table>
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
-<p><strong>Add a task:</strong></p>
+<p><strong>Add a task</strong>:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;task&quot;</span><span class="nt">&gt;</span>Implement<span class="w"> </span>rate<span class="w"> </span>limiting<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p><strong>Record a decision:</strong></p>
+<p><strong>Record a decision</strong>:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span><span class="nt">&gt;</span>Use<span class="w"> </span>PostgreSQL<span class="w"> </span>for<span class="w"> </span>primary<span class="w"> </span>database<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p><strong>Note a learning:</strong></p>
+<p><strong>Note a "<em>learning</em>"</strong>:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span><span class="nt">&gt;</span>Mock<span class="w"> </span>functions<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>hoisted<span class="w"> </span>in<span class="w"> </span>Vitest<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p><strong>Complete a task (by partial match):</strong></p>
+<p><strong>Complete a task (<em>by partial match</em>)</strong>:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>rate<span class="w"> </span>limiting<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <h3 id="usage-with-ctx-watch">Usage with ctx watch<a class="headerlink" href="#usage-with-ctx-watch" title="Permanent link">&para;</a></h3>

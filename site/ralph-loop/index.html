@@ -29,7 +29,7 @@
     
     
       
-        <title>Ralph Loop Integration - ctx: do you remember?</title>
+        <title>Ralph loop - ctx: do you remember?</title>
       
     
     
@@ -85,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ralph-loop-integration" class="md-skip">
+        <a href="#ralph-context" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ralph Loop Integration
+              Ralph loop
             
           </span>
         </div>
@@ -331,8 +331,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -380,14 +378,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ralph-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ralph + Context
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
@@ -555,7 +562,7 @@
   <a href="#loop-runs-forever" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loop runs forever
+        Loop Runs Forever
       
     </span>
   </a>
@@ -566,7 +573,7 @@
   <a href="#context-not-persisting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context not persisting
+        Context Not Persisting
       
     </span>
   </a>
@@ -577,7 +584,7 @@
   <a href="#tasks-getting-repeated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tasks getting repeated
+        Tasks Getting Repeated
       
     </span>
   </a>
@@ -588,7 +595,7 @@
   <a href="#ai-violating-constitution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI violating Constitution
+        AI Violating Constitution
       
     </span>
   </a>
@@ -666,14 +673,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ralph-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ralph + Context
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
@@ -841,7 +857,7 @@
   <a href="#loop-runs-forever" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loop runs forever
+        Loop Runs Forever
       
     </span>
   </a>
@@ -852,7 +868,7 @@
   <a href="#context-not-persisting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context not persisting
+        Context Not Persisting
       
     </span>
   </a>
@@ -863,7 +879,7 @@
   <a href="#tasks-getting-repeated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tasks getting repeated
+        Tasks Getting Repeated
       
     </span>
   </a>
@@ -874,7 +890,7 @@
   <a href="#ai-violating-constitution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI violating Constitution
+        AI Violating Constitution
       
     </span>
   </a>
@@ -923,8 +939,11 @@
   
 
 
+  <h1>Ralph loop</h1>
+
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<h1 id="ralph-loop-integration">Ralph Loop Integration<a class="headerlink" href="#ralph-loop-integration" title="Permanent link">&para;</a></h1>
+<h2 id="ralph-context">Ralph + Context<a class="headerlink" href="#ralph-context" title="Permanent link">&para;</a></h2>
+<p><em>Like peanut butter and jelly: better together.</em></p>
 <p>The <a href="https://ghuntley.com/ralph/">Ralph Wiggum technique</a> is an iterative AI development workflow where 
 an agent works autonomously on tasks until completion. Context (<code>ctx</code>) and 
 Ralph complement each other perfectly:</p>
@@ -1194,32 +1213,32 @@ history of the loop's progress.</p>
 </span></code></pre></div>
 <p>The loop will work through these systematically, marking each complete.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="loop-runs-forever">Loop runs forever<a class="headerlink" href="#loop-runs-forever" title="Permanent link">&para;</a></h3>
+<h3 id="loop-runs-forever">Loop Runs Forever<a class="headerlink" href="#loop-runs-forever" title="Permanent link">&para;</a></h3>
 <p><strong>Cause:</strong> AI not emitting completion signals</p>
 <p><strong>Fix:</strong> Ensure PROMPT.md explicitly instructs signaling:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>End EVERY response with one of:
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">-</span><span class="w"> </span>SYSTEM_CONVERGED (if all tasks done)
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">-</span><span class="w"> </span>SYSTEM_BLOCKED (if stuck)
 </span></code></pre></div></p>
-<h3 id="context-not-persisting">Context not persisting<a class="headerlink" href="#context-not-persisting" title="Permanent link">&para;</a></h3>
-<p><strong>Cause:</strong> AI not updating context files</p>
-<p><strong>Fix:</strong> Add explicit instructions to PROMPT.md:
+<h3 id="context-not-persisting">Context Not Persisting<a class="headerlink" href="#context-not-persisting" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: AI not updating context files</p>
+<p><strong>Fix</strong>: Add explicit instructions to PROMPT.md:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>After completing a task, you MUST:
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">1.</span> Run: ctx complete &quot;&lt;task&gt;&quot;
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">2.</span> Add learnings: ctx add learning &quot;...&quot;
 </span></code></pre></div></p>
-<h3 id="tasks-getting-repeated">Tasks getting repeated<a class="headerlink" href="#tasks-getting-repeated" title="Permanent link">&para;</a></h3>
-<p><strong>Cause:</strong> Task not marked complete before next iteration</p>
-<p><strong>Fix:</strong> Ensure commit happens after context update:
+<h3 id="tasks-getting-repeated">Tasks Getting Repeated<a class="headerlink" href="#tasks-getting-repeated" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Task not marked complete before next iteration</p>
+<p><strong>Fix</strong>: Ensure commit happens after context update:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Order of operations:
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">1.</span> Complete coding work
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">2.</span> Update context files (ctx complete, ctx add)
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">3.</span> Commit ALL changes including .context/
 </span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">4.</span> Then signal status
 </span></code></pre></div></p>
-<h3 id="ai-violating-constitution">AI violating Constitution<a class="headerlink" href="#ai-violating-constitution" title="Permanent link">&para;</a></h3>
-<p><strong>Cause:</strong> Constitution not read first</p>
-<p><strong>Fix:</strong> Make constitution check explicit in PROMPT.md:
+<h3 id="ai-violating-constitution">AI Violating Constitution<a class="headerlink" href="#ai-violating-constitution" title="Permanent link">&para;</a></h3>
+<p><strong>Cause</strong>: Constitution not read first</p>
+<p><strong>Fix</strong>: Make constitution check explicit in PROMPT.md:
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>BEFORE any work:
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">1.</span> Read .context/CONSTITUTION.md
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">2.</span> If task would violate ANY rule, emit SYSTEM_BLOCKED
