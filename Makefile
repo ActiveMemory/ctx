@@ -96,6 +96,10 @@ release-version:
 	@test -n "$(VERSION)" || (echo "Usage: make release-version VERSION=1.0.0" && exit 1)
 	./hack/build-all.sh $(VERSION)
 
+## release-tag: Full release process (build, notes, signed tag)
+release-tag:
+	./hack/release.sh
+
 ## dogfood: Start dogfooding in a target folder
 dogfood:
 	@test -n "$(TARGET)" || (echo "Usage: make dogfood TARGET=~/WORKSPACE/ctx-dogfood" && exit 1)
