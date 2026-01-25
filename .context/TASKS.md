@@ -4,6 +4,10 @@
 
 ### Phase 1: Parser
 
+[ ] T1.1.0: Create a CLI command and a slash command (for Claude) to parse 
+    "summary" session capture markdowns, and enrich them by parsing the
+    corresponding JSONL file(s).
+
 - [ ] T1.1.1: Define data structures in `internal/recall/parser/types.go`
   - `SessionMessage`, `Session`, `ContentBlock` interface
   - `TextBlock`, `ThinkingBlock`, `ToolUseBlock`, `ToolResultBlock`
