@@ -279,3 +279,41 @@ Manual file reading is better for exploratory/memory questions:
 - "What should I work on?" → `ctx agent` (need tasks)
 
 - **[2026-01-23]** Claude Code skills are markdown files in .claude/commands/ with YAML frontmatter (description, argument-hint, allowed-tools). Body is the prompt. Use code blocks with ! prefix for shell execution. $ARGUMENTS passes command args.
+
+---
+
+## YOLO Mode vs Human-Guided Refactoring
+
+### Autonomous Mode Creates Technical Debt
+**Discovered**: 2026-01-25
+
+**Context**: Compared commits from autonomous "YOLO mode" (auto-accept, agent-driven) vs human-guided refactoring sessions.
+
+**Lesson**: YOLO mode is effective for feature velocity but accumulates technical debt:
+
+| YOLO Pattern                           | Human-Guided Fix                      |
+|----------------------------------------|---------------------------------------|
+| `"TASKS.md"` scattered in 10 files     | `config.FilenameTask` constant        |
+| `dir + "/" + file`                     | `filepath.Join(dir, file)`            |
+| `{"task": "TASKS.md"}`                 | `{UpdateTypeTask: FilenameTask}`      |
+| Monolithic `cli_test.go` (1500+ lines) | Colocated `package/package_test.go`   |
+| `package initcmd` in `init/` folder    | `package initialize` in `initialize/` |
+
+**Application**:
+1. Schedule periodic consolidation sessions (not just feature sprints)
+2. When same literal appears 3+ times, extract to constant
+3. Constants should reference constants (self-referential maps)
+4. Tests belong next to implementations, not in monoliths
+
+### Hook Regex Can Overfit
+**Discovered**: 2026-01-25
+
+**Context**: `.claude/hooks/block-non-path-ctx.sh` was blocking legitimate sed commands because the regex `ctx[^ ]*` matched paths containing "ctx" as a directory component (e.g., `/home/user/ctx/internal/...`).
+
+**Lesson**: When writing shell hook regexes:
+- Test against paths that contain the target string as a substring
+- `ctx` as binary vs `ctx` as directory name are different
+- Original: `(/home/|/tmp/|/var/)[^ ]*ctx[^ ]* ` — overfits
+- Fixed: `(/home/|/tmp/|/var/)[^ ]*/ctx( |$)` — matches binary only
+
+**Application**: Always test hooks with edge cases before deploying.
