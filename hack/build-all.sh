@@ -43,7 +43,7 @@ for target in "${TARGETS[@]}"; do
   GOOS="${target%/*}"
   GOARCH="${target#*/}"
 
-  output_name="${BINARY_NAME}-${GOOS}-${GOARCH}"
+  output_name="${BINARY_NAME}-${VERSION}-${GOOS}-${GOARCH}"
   if [ "${GOOS}" = "windows" ]; then
     output_name="${output_name}.exe"
   fi
@@ -60,15 +60,19 @@ echo ""
 echo "Build complete. Binaries:"
 ls -lh "${OUTPUT_DIR}/"
 
-# Create checksums
+# Create individual checksum files
 echo ""
 echo "Creating checksums..."
 cd "${OUTPUT_DIR}"
-if command -v sha256sum &> /dev/null; then
-  sha256sum ctx-* > checksums.txt
-elif command -v shasum &> /dev/null; then
-  shasum -a 256 ctx-* > checksums.txt
-fi
+for binary in ctx-*; do
+  # Skip if it's already a checksum file
+  [[ "${binary}" == *.sha256 ]] && continue
+  if command -v sha256sum &> /dev/null; then
+    sha256sum "${binary}" > "${binary}.sha256"
+  elif command -v shasum &> /dev/null; then
+    shasum -a 256 "${binary}" > "${binary}.sha256"
+  fi
+done
 cd ..
 
 echo ""

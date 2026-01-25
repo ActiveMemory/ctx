@@ -353,6 +353,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#verifying-checksums" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Checksums
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#build-from-source" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -729,6 +740,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#verifying-checksums" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Checksums
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#build-from-source" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -970,93 +992,102 @@ files that version with your code and persist across sessions.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux (x86_64)</label><label for="__tabbed_1_2">Linux (ARM64)</label><label for="__tabbed_1_3">macOS (Apple Silicon)</label><label for="__tabbed_1_4">macOS (Intel)</label><label for="__tabbed_1_5">Windows</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-linux-amd64
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-linux-amd64
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-linux-amd64<span class="w"> </span>/usr/local/bin/ctx
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-amd64
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-0.1.0-linux-amd64
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-0.1.0-linux-amd64<span class="w"> </span>/usr/local/bin/ctx
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-linux-arm64
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-linux-arm64
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-linux-arm64<span class="w"> </span>/usr/local/bin/ctx
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-arm64
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-0.1.0-linux-arm64
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-0.1.0-linux-arm64<span class="w"> </span>/usr/local/bin/ctx
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-darwin-arm64
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-darwin-arm64
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-darwin-arm64<span class="w"> </span>/usr/local/bin/ctx
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-darwin-arm64
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-0.1.0-darwin-arm64
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-0.1.0-darwin-arm64<span class="w"> </span>/usr/local/bin/ctx
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-darwin-amd64
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-darwin-amd64
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-darwin-amd64<span class="w"> </span>/usr/local/bin/ctx
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-darwin-amd64
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>ctx-0.1.0-darwin-amd64
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx-0.1.0-darwin-amd64<span class="w"> </span>/usr/local/bin/ctx
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<p>Download <code>ctx-windows-amd64.exe</code> from the releases page and add it to your <code>PATH</code>.</p>
+<p>Download <code>ctx-0.1.0-windows-amd64.exe</code> from the releases page and add it to your <code>PATH</code>.</p>
 </div>
 </div>
 </div>
+<h3 id="verifying-checksums">Verifying Checksums<a class="headerlink" href="#verifying-checksums" title="Permanent link">&para;</a></h3>
+<p>Each binary has a corresponding <code>.sha256</code> checksum file. To verify your download:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Download the checksum file</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-LO<span class="w"> </span>https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-amd64.sha256
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify the binary</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sha256sum<span class="w"> </span>-c<span class="w"> </span>ctx-0.1.0-linux-amd64.sha256
+</span></code></pre></div>
+<p>On macOS, use <code>shasum -a 256 -c</code> instead of <code>sha256sum -c</code>.</p>
 <h3 id="build-from-source">Build from Source<a class="headerlink" href="#build-from-source" title="Permanent link">&para;</a></h3>
 <p>Requires <a href="https://go.dev/">Go 1.25+</a>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ActiveMemory/ctx.git
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">cd</span><span class="w"> </span>ctx
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>ctx<span class="w"> </span>./cmd/ctx
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx<span class="w"> </span>/usr/local/bin/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ActiveMemory/ctx.git
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">cd</span><span class="w"> </span>ctx
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>ctx<span class="w"> </span>./cmd/ctx
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sudo<span class="w"> </span>mv<span class="w"> </span>ctx<span class="w"> </span>/usr/local/bin/
 </span></code></pre></div>
 <p>Verify installation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>--version
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>--version
 </span></code></pre></div>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <h3 id="1-initialize-context">1. Initialize Context<a class="headerlink" href="#1-initialize-context" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span><span class="w"> </span>your-project
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>init
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span>your-project
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
 <p>This creates a <code>.context/</code> directory with template files and configures 
 AI tool hooks (<em>for Claude Code</em>).</p>
 <h3 id="2-check-status">2. Check Status<a class="headerlink" href="#2-check-status" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>status
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <p>Shows context summary: files present, token estimate, and recent activity.</p>
 <h3 id="3-start-using-with-ai">3. Start Using with AI<a class="headerlink" href="#3-start-using-with-ai" title="Permanent link">&para;</a></h3>
 <p>With Claude Code, context loads automatically via hooks. For other tools,
 paste the output of:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
 <h3 id="4-verify-it-works">4. Verify It Works<a class="headerlink" href="#4-verify-it-works" title="Permanent link">&para;</a></h3>
 <p>Ask your AI: <strong>"Do you remember?"</strong></p>
 <p>It should cite specific context: current tasks, recent decisions, 
 or previous session topics.</p>
 <h2 id="what-gets-created">What Gets Created<a class="headerlink" href="#what-gets-created" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>.context/
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── CONSTITUTION.md     # Hard rules — NEVER violate these
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>├── TASKS.md            # Current and planned work
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>├── CONVENTIONS.md      # Project patterns and standards
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>├── ARCHITECTURE.md     # System overview
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>├── DECISIONS.md        # Architectural decisions with rationale
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>├── LEARNINGS.md        # Lessons learned, gotchas, tips
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>├── GLOSSARY.md         # Domain terms and abbreviations
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>├── DRIFT.md            # Staleness signals
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>├── AGENT_PLAYBOOK.md   # How AI agents should use this
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>└── sessions/           # Session snapshots
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>.context/
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>├── CONSTITUTION.md     # Hard rules — NEVER violate these
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>├── TASKS.md            # Current and planned work
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>├── CONVENTIONS.md      # Project patterns and standards
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>├── ARCHITECTURE.md     # System overview
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>├── DECISIONS.md        # Architectural decisions with rationale
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>├── LEARNINGS.md        # Lessons learned, gotchas, tips
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>├── GLOSSARY.md         # Domain terms and abbreviations
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>├── DRIFT.md            # Staleness signals
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>├── AGENT_PLAYBOOK.md   # How AI agents should use this
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>└── sessions/           # Session snapshots
 </span></code></pre></div>
 <p>See <a href="context-files/">Context Files</a> for detailed documentation of each file.</p>
 <h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
 <h3 id="add-a-task">Add a Task<a class="headerlink" href="#add-a-task" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
 </span></code></pre></div>
 <h3 id="record-a-decision">Record a Decision<a class="headerlink" href="#record-a-decision" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL for primary database&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL for primary database&quot;</span>
 </span></code></pre></div>
 <h3 id="note-a-learning">Note a Learning<a class="headerlink" href="#note-a-learning" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Mock functions must be hoisted in Jest&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Mock functions must be hoisted in Jest&quot;</span>
 </span></code></pre></div>
 <h3 id="mark-task-complete">Mark Task Complete<a class="headerlink" href="#mark-task-complete" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
 </span></code></pre></div>
 <h3 id="check-for-stale-context">Check for Stale Context<a class="headerlink" href="#check-for-stale-context" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>drift
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>drift
 </span></code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
