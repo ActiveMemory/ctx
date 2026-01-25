@@ -25,8 +25,8 @@ conventions, and learnings:
 
 **Open source is better together**.
 
-> ⭐️ **If the idea behind `ctx` resonates, a star helps it reach engineers  
-> who run into context drift every day.**
+<!-- the long line is required for zensical to render block quote -->
+> ⭐️ **If the idea behind `ctx` resonates, a star helps it reach engineers who run into context drift every day.**
 > 
 > → https://github.com/ActiveMemory/ctx
 
