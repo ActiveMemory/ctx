@@ -2,7 +2,7 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint clean all release dogfood help test-coverage smoke
+.PHONY: build test vet fmt lint clean all release build-all dogfood help test-coverage smoke
 
 # Default binary name and output
 BINARY := ctx
@@ -87,22 +87,13 @@ clean:
 	rm -f $(BINARY)
 	rm -rf dist/
 
-## release: Build for all platforms (reads VERSION file)
+## release: Full release process (build, tag, push)
 release:
-	./hack/build-all.sh $$(cat VERSION | tr -d '[:space:]')
-
-## release-version: Build for all platforms with version
-release-version:
-	@test -n "$(VERSION)" || (echo "Usage: make release-version VERSION=1.0.0" && exit 1)
-	./hack/build-all.sh $(VERSION)
-
-## release-tag: Full release process (build, notes, signed tag)
-release-tag:
 	./hack/release.sh
 
-## tag: Create signed git tag from VERSION file
-tag:
-	./hack/tag.sh
+## build-all: Build binaries for all platforms (no tag)
+build-all:
+	./hack/build-all.sh $$(cat VERSION | tr -d '[:space:]')
 
 ## release-notes: Generate release notes (use Claude Code slash command)
 release-notes:
