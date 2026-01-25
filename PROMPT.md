@@ -12,7 +12,7 @@ and exit.
 
 **Feature**: ctx recall — browse and search session history
 **Parent Project**: https://github.com/ActiveMemory/ctx
-**Language**: Go 1.26+
+**Language**: Go 1.25+
 **Scope**: Tier 1 only (Browsable Sessions)
 
 ---

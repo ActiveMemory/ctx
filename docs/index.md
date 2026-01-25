@@ -95,7 +95,7 @@ Download pre-built binaries from the
 
 ### Build from Source
 
-Requires [Go 1.26+](https://go.dev/):
+Requires [Go 1.25+](https://go.dev/):
 
 ```bash
 git clone https://github.com/ActiveMemory/ctx.git
