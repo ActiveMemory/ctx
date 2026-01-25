@@ -22,7 +22,7 @@
 #
 # Before running this script:
 #
-# 1. UPDATE THE VERSION below (currently hardcoded as v0.1.0)
+# 1. UPDATE THE VERSION in the VERSION file at the repository root
 #
 # 2. UPDATE DOCUMENTATION with new version:
 #    - docs/index.md: Change download URLs from "latest" to "v0.1.0"
@@ -46,8 +46,7 @@
 #    - Go to https://github.com/ActiveMemory/ctx/releases/new
 #    - Select the tag v0.1.0
 #    - Copy release notes from dist/RELEASE_NOTES.md
-#    - Upload all binaries from dist/
-#    - Upload dist/checksums.txt
+#    - Upload all binaries and .sha256 files from dist/
 #
 # 3. UPDATE the "latest" tag (optional, for docs compatibility):
 #    git tag -d latest 2>/dev/null || true
@@ -60,9 +59,17 @@
 set -e
 
 # -----------------------------------------------------------------------------
-# CONFIGURATION - Update this for each release
+# CONFIGURATION - Read from VERSION file
 # -----------------------------------------------------------------------------
-VERSION="v0.1.0"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+
+if [ ! -f "$ROOT_DIR/VERSION" ]; then
+    echo "ERROR: VERSION file not found"
+    exit 1
+fi
+
+VERSION="v$(cat "$ROOT_DIR/VERSION" | tr -d '[:space:]')"
 # -----------------------------------------------------------------------------
 
 # Derived values
@@ -128,34 +135,41 @@ This is the first stable release of `ctx`, providing:
 
 ### Linux (x86_64)
 ```bash
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-linux-amd64
-chmod +x ctx-linux-amd64
-sudo mv ctx-linux-amd64 /usr/local/bin/ctx
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-amd64
+chmod +x ctx-0.1.0-linux-amd64
+sudo mv ctx-0.1.0-linux-amd64 /usr/local/bin/ctx
 ```
 
 ### Linux (ARM64)
 ```bash
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-linux-arm64
-chmod +x ctx-linux-arm64
-sudo mv ctx-linux-arm64 /usr/local/bin/ctx
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-arm64
+chmod +x ctx-0.1.0-linux-arm64
+sudo mv ctx-0.1.0-linux-arm64 /usr/local/bin/ctx
 ```
 
 ### macOS (Apple Silicon)
 ```bash
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-darwin-arm64
-chmod +x ctx-darwin-arm64
-sudo mv ctx-darwin-arm64 /usr/local/bin/ctx
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-darwin-arm64
+chmod +x ctx-0.1.0-darwin-arm64
+sudo mv ctx-0.1.0-darwin-arm64 /usr/local/bin/ctx
 ```
 
 ### macOS (Intel)
 ```bash
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-darwin-amd64
-chmod +x ctx-darwin-amd64
-sudo mv ctx-darwin-amd64 /usr/local/bin/ctx
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-darwin-amd64
+chmod +x ctx-0.1.0-darwin-amd64
+sudo mv ctx-0.1.0-darwin-amd64 /usr/local/bin/ctx
 ```
 
 ### Windows
-Download `ctx-windows-amd64.exe` or `ctx-windows-arm64.exe` and add to your PATH.
+Download `ctx-0.1.0-windows-amd64.exe` or `ctx-0.1.0-windows-arm64.exe` and add to your PATH.
+
+### Verifying Checksums
+Each binary has a `.sha256` file. Verify with:
+```bash
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-amd64.sha256
+sha256sum -c ctx-0.1.0-linux-amd64.sha256
+```
 
 ## Quick Start
 
@@ -176,7 +190,7 @@ Full documentation available at [ctx.ist](https://ctx.ist)
 
 ## Checksums
 
-See `checksums.txt` for SHA256 checksums of all binaries.
+Each binary has a corresponding `.sha256` file for verification.
 NOTES_HEADER
 
 echo "Release notes written to ${RELEASE_NOTES}"
@@ -197,7 +211,7 @@ echo "=============================================="
 echo ""
 echo "Created:"
 echo "  - Binaries in dist/"
-echo "  - Checksums in dist/checksums.txt"
+echo "  - Checksums (.sha256 per binary) in dist/"
 echo "  - Release notes in dist/RELEASE_NOTES.md"
 echo "  - Signed tag: ${TAG_NAME}"
 echo ""
@@ -213,7 +227,7 @@ echo "  3. Create GitHub release at:"
 echo "     https://github.com/ActiveMemory/ctx/releases/new"
 echo ""
 echo "  4. Upload these files to the release:"
-ls -1 dist/ctx-* dist/checksums.txt 2>/dev/null | sed 's/^/     /'
+ls -1 dist/ctx-* 2>/dev/null | sed 's/^/     /'
 echo ""
 echo "  5. (Optional) Update 'latest' tag:"
 echo "     git tag -d latest 2>/dev/null || true"

@@ -37,8 +37,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/amem-*
-            dist/checksums.txt
+            dist/ctx-*
           draft: false
           prerelease: false
           generate_release_notes: true
