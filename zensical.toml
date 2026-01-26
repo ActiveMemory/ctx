@@ -22,6 +22,7 @@ The documentation on this website is distributed under
 
 nav = [
   { "Getting Started" = "index.md" },
+  { "ctx and Similar Tools" = "comparison.md"},
   { "CLI Reference" = "cli-reference.md" },
   { "Context Files" = "context-files.md" },
   { "Ralph Loop Integration" = "ralph-loop.md" },
