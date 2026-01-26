@@ -10,7 +10,7 @@ icon: lucide/git-compare
 
 ![ctx](images/ctx-banner.png)
 
-## Similar Tools and How `ctx` Differs
+## How `ctx` Differs from Similar Tools
 
 There are many tools in the AI ecosystem that touch *parts* of the context
 problem:
