@@ -57,8 +57,6 @@ These tools help you *start* a session.
 
 They do not help you *continue* one.
 
-### How they differ from `ctx`
-
 Prompt tools:
 * inject text at session start
 * are ephemeral by design
@@ -86,8 +84,6 @@ They are excellent for:
 * large knowledge bases
 * static documentation
 * reference material
-
-### How they differ from `ctx`
 
 RAG answers questions like:
 
@@ -129,8 +125,6 @@ These systems are powerful, but they typically assume that:
 * memory is external
 * context is injected
 * state is transient
-
-### How they differ from `ctx`
 
 Agent frameworks answer:
 
