@@ -284,6 +284,15 @@ Periodically ask yourself:
 
 If no — persist something before continuing.
 
+### Reflect Command
+
+Use `/ctx-reflect` to trigger a structured reflection checkpoint:
+- Reviews what was accomplished in the session
+- Identifies learnings, decisions, and task updates
+- Offers to persist before continuing
+
+Run this periodically during long sessions or at natural breakpoints.
+
 ### Task Lifecycle Timestamps
 
 Track task progress with timestamps for session correlation:
