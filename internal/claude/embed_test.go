@@ -109,20 +109,20 @@ func TestCreateDefaultHooks(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			hooks := CreateDefaultHooks(tt.projectDir)
 
-			// Check PreToolUseHooks hooks
-			if len(hooks.PreToolUseHooks) == 0 {
-				t.Error("CreateDefaultHooks() PreToolUseHooks is empty")
+			// Check PreToolUse hooks
+			if len(hooks.PreToolUse) == 0 {
+				t.Error("CreateDefaultHooks() PreToolUse is empty")
 			}
 
-			// Check SessionEndHooks hooks
-			if len(hooks.SessionEndHooks) == 0 {
-				t.Error("CreateDefaultHooks() SessionEndHooks is empty")
+			// Check SessionEnd hooks
+			if len(hooks.SessionEnd) == 0 {
+				t.Error("CreateDefaultHooks() SessionEnd is empty")
 			}
 
 			// Check that project dir is used in paths when provided
 			if tt.projectDir != "" {
 				found := false
-				for _, matcher := range hooks.PreToolUseHooks {
+				for _, matcher := range hooks.PreToolUse {
 					for _, hook := range matcher.Hooks {
 						if strings.Contains(hook.Command, tt.projectDir) {
 							found = true
@@ -147,8 +147,8 @@ func TestSettingsStructure(t *testing.T) {
 		},
 	}
 
-	if len(settings.Hooks.PreToolUseHooks) == 0 {
-		t.Error("Settings.Hooks.PreToolUseHooks should not be empty")
+	if len(settings.Hooks.PreToolUse) == 0 {
+		t.Error("Settings.Hooks.PreToolUse should not be empty")
 	}
 
 	if settings.Permissions == nil {

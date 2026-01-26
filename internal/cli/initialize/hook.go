@@ -130,8 +130,8 @@ func mergeSettingsHooks(
 	defaultHooks := claude.CreateDefaultHooks(projectDir)
 
 	// Check if hooks already exist
-	hasPreToolUse := len(settings.Hooks.PreToolUseHooks) > 0
-	hasSessionEnd := len(settings.Hooks.SessionEndHooks) > 0
+	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0
+	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
 
 	if fileExists && hasPreToolUse && hasSessionEnd && !force {
 		cmd.Printf(
@@ -143,11 +143,11 @@ func mergeSettingsHooks(
 	// Merge hooks - only add what's missing
 	modified := false
 	if !hasPreToolUse || force {
-		settings.Hooks.PreToolUseHooks = defaultHooks.PreToolUseHooks
+		settings.Hooks.PreToolUse = defaultHooks.PreToolUse
 		modified = true
 	}
 	if !hasSessionEnd || force {
-		settings.Hooks.SessionEndHooks = defaultHooks.SessionEndHooks
+		settings.Hooks.SessionEnd = defaultHooks.SessionEnd
 		modified = true
 	}
 

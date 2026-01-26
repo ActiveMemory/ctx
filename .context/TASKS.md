@@ -22,7 +22,7 @@
     #started:2026-01-26-034500 #done:2026-01-26-035700
   - [x] The LLM should also be proactive in saving decision when it makes
     sense; and suggesting new tasks. #started:2026-01-26-034500 #done:2026-01-26-035700
-  - [ ]: Bug in hook creation:
+  - [x] Bug in hook creation:
     ```text
     /home/volkan/WORKSPACE/spike/.claude/settings.local.json
     └ hooks
@@ -32,6 +32,7 @@
     1. the "Hooks" suffix is not in the schema;
     2. the generated settings.local.json had unicode characters that broke the interpretation.
     make sure the file is properly-generated, and it works as expected.
+    #started:2026-01-26-051500 #done:2026-01-26-052200
   - [ ]: `/ctx-save` slash command triggers approval prompt despite using ```` ```! ````
     auto-execute syntax. The command should run without requiring manual approval.
 
