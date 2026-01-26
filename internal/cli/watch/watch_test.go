@@ -30,7 +30,7 @@ func TestApplyUpdate(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Initialize context
 	initCmd := initialize.Cmd()
@@ -117,7 +117,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Initialize context
 	initCmd := initialize.Cmd()
@@ -211,7 +211,7 @@ func TestProcessStream(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Initialize context
 	initCmd := initialize.Cmd()
@@ -262,7 +262,7 @@ func TestRunCompleteSilentNoMatch(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Initialize context
 	initCmd := initialize.Cmd()

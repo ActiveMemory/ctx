@@ -187,7 +187,7 @@ func TestSessionCommands(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -252,7 +252,7 @@ func TestSessionParse(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create a test jsonl file
 	jsonlContent := `{"type":"user","message":{"role":"user","content":"Hello"},"timestamp":"2025-01-21T10:00:00Z"}
@@ -283,7 +283,7 @@ func TestSessionParseWithExtract(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create a test jsonl file with content that should trigger extraction
 	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"We decided to use PostgreSQL for the database. I learned that connection pooling is important."},"timestamp":"2025-01-21T10:00:00Z"}
@@ -313,7 +313,7 @@ func TestSessionParseWithOutput(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create a test jsonl file
 	jsonlContent := `{"type":"user","message":{"role":"user","content":"Hello"},"timestamp":"2025-01-21T10:00:00Z"}

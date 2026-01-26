@@ -97,7 +97,7 @@ func TestCompactCommand(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// First init
 	initCmd := initialize.Cmd()
@@ -126,7 +126,7 @@ func TestCompactWithTasks(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// First init
 	initCmd := initialize.Cmd()

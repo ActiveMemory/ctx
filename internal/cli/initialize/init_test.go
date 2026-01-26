@@ -26,7 +26,7 @@ func TestInitCommand(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Run the init command
 	cmd := Cmd()
@@ -137,7 +137,7 @@ func TestInitMergeInsertsAfterH1(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create CLAUDE.md with H1 but no ctx markers
 	existingContent := `# My Amazing Project
@@ -202,7 +202,7 @@ func TestInitMergeInsertsAtTopWhenNoH1(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create CLAUDE.md without H1 (starts with H2)
 	existingContent := `## Build Instructions
@@ -263,7 +263,7 @@ func TestInitWithExistingClaudeMdWithCtxMarker(t *testing.T) {
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create existing CLAUDE.md with ctx marker already present
 	existingContent := `# My Project
