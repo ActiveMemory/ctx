@@ -13,16 +13,16 @@ package claude
 // events. See https://docs.anthropic.com/en/docs/claude-code/hooks for details.
 //
 // Fields:
-//   - PreToolUseHooks: Matchers that run before each tool invocation
-//   - SessionEndHooks: Matchers that run when a session ends
+//   - PreToolUse: Matchers that run before each tool invocation
+//   - SessionEnd: Matchers that run when a session ends
 type HookConfig struct {
-	PreToolUseHooks []HookMatcher `json:"PreToolUseHooks,omitempty"`
-	SessionEndHooks []HookMatcher `json:"SessionEndHooks,omitempty"`
+	PreToolUse  []HookMatcher `json:"PreToolUse,omitempty"`
+	SessionEnd  []HookMatcher `json:"SessionEnd,omitempty"`
 }
 
 // HookMatcher associates a regex pattern with hooks to execute.
 //
-// For PreToolUseHooks, the Matcher pattern matches against the tool name
+// For PreToolUse hooks, the Matcher pattern matches against the tool name
 // (e.g., "Bash", "Read"). Use ".*" to match all tools.
 //
 // Fields:

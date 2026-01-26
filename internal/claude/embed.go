@@ -82,8 +82,8 @@ func GetCommand(name string) ([]byte, error) {
 // CreateDefaultHooks returns the default ctx hooks configuration for
 // Claude Code.
 //
-// The returned hooks configure PreToolUseHooks to block non-PATH ctx
-// invocations and auto-load context on every tool use, and SessionEndHooks
+// The returned hooks configure PreToolUse to block non-PATH ctx
+// invocations and auto-load context on every tool use, and SessionEnd
 // to run auto-save-session.sh for persisting session transcripts.
 //
 // Parameters:
@@ -99,7 +99,7 @@ func CreateDefaultHooks(projectDir string) HookConfig {
 	}
 
 	return HookConfig{
-		PreToolUseHooks: []HookMatcher{
+		PreToolUse: []HookMatcher{
 			{
 				// Block non-PATH ctx invocations (./ctx, ./dist/ctx, go run ./cmd/ctx)
 				Matcher: "Bash",
@@ -121,7 +121,7 @@ func CreateDefaultHooks(projectDir string) HookConfig {
 				},
 			},
 		},
-		SessionEndHooks: []HookMatcher{
+		SessionEnd: []HookMatcher{
 			{
 				Hooks: []Hook{
 					{
