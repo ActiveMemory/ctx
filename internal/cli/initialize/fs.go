@@ -98,7 +98,7 @@ func findInsertionPoint(content string) int {
 // Returns:
 //   - error: Non-nil if the markers are not found or file operations fail
 func updateCtxSection(
-		cmd *cobra.Command, existing string, newTemplate []byte,
+	cmd *cobra.Command, existing string, newTemplate []byte,
 ) error {
 	green := color.New(color.FgGreen).SprintFunc()
 
@@ -125,7 +125,7 @@ func updateCtxSection(
 		return fmt.Errorf("template missing ctx markers")
 	}
 	ctxContent := templateStr[templateStart : templateEnd+
-			len(config.CtxMarkerEnd)]
+		len(config.CtxMarkerEnd)]
 
 	// Build new content: before ctx + new ctx content + after ctx
 	newContent := existing[:startIdx] + ctxContent + existing[endIdx:]
