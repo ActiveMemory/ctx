@@ -7,12 +7,10 @@
 package claude
 
 import (
-	"embed"
 	"fmt"
-)
 
-//go:embed tpl/auto-save-session.sh tpl/block-non-path-ctx.sh tpl/commands/*.md
-var FS embed.FS
+	"github.com/ActiveMemory/ctx/internal/templates"
+)
 
 // GetAutoSaveScript returns the auto-save session script content.
 //
@@ -23,7 +21,7 @@ var FS embed.FS
 //   - []byte: Raw bytes of the auto-save-session.sh script
 //   - error: Non-nil if the embedded file cannot be read
 func GetAutoSaveScript() ([]byte, error) {
-	content, err := FS.ReadFile("tpl/auto-save-session.sh")
+	content, err := templates.GetClaudeHook("auto-save-session.sh")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read auto-save-session.sh: %w", err)
 	}
@@ -41,7 +39,7 @@ func GetAutoSaveScript() ([]byte, error) {
 //   - []byte: Raw bytes of the block-non-path-ctx.sh script
 //   - error: Non-nil if the embedded file cannot be read
 func GetBlockNonPathCtxScript() ([]byte, error) {
-	content, err := FS.ReadFile("tpl/block-non-path-ctx.sh")
+	content, err := templates.GetClaudeHook("block-non-path-ctx.sh")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read block-non-path-ctx.sh: %w", err)
 	}
@@ -51,23 +49,16 @@ func GetBlockNonPathCtxScript() ([]byte, error) {
 // ListCommands returns the list of embedded command file names.
 //
 // These are Claude Code slash command definitions (e.g., "ctx-status.md",
-// "commit-local.md") from the tpl/commands directory. They can be installed
-// to .claude/commands/ via "ctx init --claude".
+// "ctx-reflect.md") from internal/templates/claude/commands/. They can be
+// installed to .claude/commands/ via "ctx init".
 //
 // Returns:
 //   - []string: Filenames of available command definitions
 //   - error: Non-nil if the commands directory cannot be read
 func ListCommands() ([]string, error) {
-	entries, err := FS.ReadDir("tpl/commands")
+	names, err := templates.ListClaudeCommands()
 	if err != nil {
-		return nil, fmt.Errorf("failed to read commands directory: %w", err)
-	}
-
-	var names []string
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			names = append(names, entry.Name())
-		}
+		return nil, fmt.Errorf("failed to list commands: %w", err)
 	}
 	return names, nil
 }
@@ -81,7 +72,7 @@ func ListCommands() ([]string, error) {
 //   - []byte: Raw bytes of the command definition file
 //   - error: Non-nil if the command file does not exist or cannot be read
 func GetCommand(name string) ([]byte, error) {
-	content, err := FS.ReadFile("tpl/commands/" + name)
+	content, err := templates.GetClaudeCommand(name)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read command %s: %w", name, err)
 	}
