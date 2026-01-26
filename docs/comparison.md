@@ -100,11 +100,11 @@ They are excellent for:
 
 RAG answers questions like:
 
-> “What information might be relevant right now?”
+> "What information might be relevant right now?"
 
 `ctx` answers a different question:
 
-> “What have we already decided, learned, or committed to?”
+> "What have we already decided, learned, or committed to?"
 
 Here are some key differences:
 
@@ -141,11 +141,11 @@ These systems are powerful, but they typically assume that:
 
 Agent frameworks answer:
 
-> “How should the agent act?”
+> "How should the agent act?"
 
 `ctx` answers:
 
-> “What should the agent remember?”
+> "What should the agent remember?"
 
 Without persistent context, agents tend to:
 
