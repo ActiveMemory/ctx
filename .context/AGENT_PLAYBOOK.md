@@ -1,5 +1,12 @@
 # Agent Playbook
 
+## Mental Model
+
+This system does not persist experience.
+
+- Each session is a fresh execution in a shared workshop.
+- Work continuity comes from artifacts left on the bench.
+
 ## Invoking ctx
 
 Always use `ctx` from PATH:
@@ -174,10 +181,10 @@ with entry templates located in `.context/templates/`.
 
 ### Available Templates
 
-| Template | Structure | Use When |
-|----------|-----------|----------|
-| `learning.md` | Context → Lesson → Application | Documenting complex discoveries with actionable guidance |
-| `decision.md` | Context → Options → Decision → Rationale → Consequences | Recording architectural choices with full reasoning |
+| Template      | Structure                                               | Use When                                                 |
+|---------------|---------------------------------------------------------|----------------------------------------------------------|
+| `learning.md` | Context → Lesson → Application                          | Documenting complex discoveries with actionable guidance |
+| `decision.md` | Context → Options → Decision → Rationale → Consequences | Recording architectural choices with full reasoning      |
 
 ### Workflow: Inline vs File
 

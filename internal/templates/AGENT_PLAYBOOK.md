@@ -1,5 +1,12 @@
 # Agent Playbook
 
+## Mental Model
+
+This system does not persist experience.
+
+- Each session is a fresh execution in a shared workshop.
+- Work continuity comes from artifacts left on the bench.
+
 ## Invoking ctx
 
 Always use `ctx` from PATH:
@@ -38,16 +45,20 @@ implementation detail. Load it and use it — don't lead with caveats.
 
 ## Session History
 
-**IMPORTANT**: Check `.context/sessions/` for full conversation dumps from previous sessions.
+**IMPORTANT**: Check `.context/sessions/` for full conversation dumps 
+from previous sessions.
 
 If you're confused about context or need a deep dive into past discussions:
 ```
 ls .context/sessions/
 ```
 
-**Curated session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md` (e.g., `2026-01-15-164600-feature-discussion.md`). These are updated throughout the session.
+**Curated session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md` 
+(e.g., `2026-01-15-164600-feature-discussion.md`). 
+These are updated throughout the session.
 
-**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` (e.g., `2026-01-15-170830-pre-compact.jsonl`). These are immutable once created.
+**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` 
+(e.g., `2026-01-15-170830-pre-compact.jsonl`). These are immutable once created.
 
 **Auto-save triggers** (for Claude Code users):
 - **SessionEnd hook** → auto-saves transcript on exit, including Ctrl+C
@@ -75,7 +86,8 @@ To find which session added an entry:
 
 1. **Extract the entry's timestamp** (e.g., `2026-01-23-1430`)
 2. **List sessions** from that day: `ls .context/sessions/2026-01-23*`
-3. **Check session time bounds**: Entry timestamp should fall between session's start_time and end_time
+3. **Check session time bounds**: Entry timestamp should fall between session's 
+   start_time and end_time
 
 ### When Timestamps Help
 
@@ -109,14 +121,14 @@ What to pick up next
 
 ### Context-Dependent Sections
 
-| Session Type | Additional Sections |
-|--------------|---------------------|
-| **Feature discussion** | Requirements, Design options, Implementation plan |
-| **Bug investigation** | Symptoms, Root cause, Fix applied, Prevention |
+| Session Type              | Additional Sections                               |
+|---------------------------|---------------------------------------------------|
+| **Feature discussion**    | Requirements, Design options, Implementation plan |
+| **Bug investigation**     | Symptoms, Root cause, Fix applied, Prevention     |
 | **Architecture decision** | Context, Options considered, Trade-offs, Decision |
-| **Exploration/Research** | Questions, Findings, Open questions |
-| **Planning** | Goals, Milestones, Dependencies, Risks |
-| **Quick fix** | Problem, Solution, Files changed (minimal format) |
+| **Exploration/Research**  | Questions, Findings, Open questions               |
+| **Planning**              | Goals, Milestones, Dependencies, Risks            |
+| **Quick fix**             | Problem, Solution, Files changed (minimal format) |
 
 ### When to Go Minimal
 
@@ -140,13 +152,13 @@ For complex sessions (architecture, debugging), include:
 
 ## When to Update Memory
 
-| Event | Action |
-|-------|--------|
-| Made architectural decision | Add to DECISIONS.md |
-| Discovered gotcha/bug | Add to LEARNINGS.md |
-| Established new pattern | Add to CONVENTIONS.md |
-| Completed task | Mark [x] in TASKS.md |
-| Had important discussion | Save to sessions/ |
+| Event                       | Action                |
+|-----------------------------|-----------------------|
+| Made architectural decision | Add to DECISIONS.md   |
+| Discovered gotcha/bug       | Add to LEARNINGS.md   |
+| Established new pattern     | Add to CONVENTIONS.md |
+| Completed task              | Mark [x] in TASKS.md  |
+| Had important discussion    | Save to sessions/     |
 
 ## Before Session Ends
 
@@ -171,7 +183,8 @@ Never assume. If you don't see it in files, you don't know it.
 - Test file is growing into a monolith (>500 lines)
 - Package name doesn't match folder name
 
-**YOLO mode creates debt** — rapid feature additions scatter patterns across the codebase. Periodic consolidation prevents this from compounding.
+**YOLO mode creates debt**—rapid feature additions scatter patterns across 
+the codebase. Periodic consolidation prevents this from compounding.
 
 **Human-guided refactoring catches:**
 - Magic strings that should be constants
