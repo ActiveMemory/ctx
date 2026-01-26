@@ -108,8 +108,20 @@ func handleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	}
 	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
 
-	// Append ctx content to the existing file
-	mergedContent := existingStr + "\n" + string(templateContent)
+	// Find the best insertion point (after the H1 title, or at the top)
+	insertPos := findInsertionPoint(existingStr)
+
+	// Build merged content: before + ctx content + after
+	var mergedContent string
+	if insertPos == 0 {
+		// Insert at top
+		mergedContent = string(templateContent) + "\n" + existingStr
+	} else {
+		// Insert after H1 heading
+		mergedContent = existingStr[:insertPos] + "\n" +
+			string(templateContent) + "\n" + existingStr[insertPos:]
+	}
+
 	if err := os.WriteFile(
 		config.FileClaudeMd, []byte(mergedContent), 0644); err != nil {
 		return fmt.Errorf(

@@ -2,6 +2,42 @@
 
 # Tasks
 
+## Phase 0: Cleanup from the previous version
+
+- [ ] T0.1.0: Bugs
+  - [x] `ctx init` currently appends to the end of and existing CLAUDE.md file;
+    it would be better to find the first heading, and if it's a level one heading,
+    (likely the title of the document), insert the new section "after it" (since
+    the template has level-2 and lower headings), if not add it to the top of
+    the file—things get missing to see/recognize (for the human) and
+    (more importantly) deprioritized (for the machine) when
+    it is written all the way to the end of the file.
+  - [ ] feat: the instructions say "always offer to save context", however,
+    that's too late for the LLM because the session will be terminated before
+    it can take action. you (the LLM) have no control over offering stuff 
+    during context end; so, you need to be proactive: Maybe at every critical 
+    decision, and after every few interactions you have to offer to save context.
+    This needs to be arranged the best way possible (maybe a hint/instruction
+    to the LLM in the template files, or maybe something else)
+  - [ ]: The LLM should also be proactive in saving decision when it makes 
+    sense; and suggesting new tasks.
+  - [ ]: Bug in hook creation:
+    ```text
+    /home/volkan/WORKSPACE/spike/.claude/settings.local.json
+    └ hooks
+    ├ PreToolUseHooks: Invalid key in record
+    └ SessionEndHooks: Invalid key in record
+    ```
+    1. the "Hooks" suffix is not in the schema;
+    2. the generated settings.local.json had unicode characters that broke the interpretation.
+    make sure the file is properly-generated, and it works as expected.
+
+- [ ] T0.1.1: Social
+  - [ ] Trace the entire git history and sessions, create an extensive document
+    of what we did and how it progressed, and then create a blog post about it.
+    this may require a larger thinking budget; don't shy away from spending
+    tokens, we have plenty.
+
 ### Phase 1: Parser
 
 [ ] T1.1.0: Create a CLI command and a slash command (for Claude) to parse 
@@ -119,14 +155,12 @@
 - [x] consider the case where `ctx` is not called from within AI prompt:
   - does the command still make sense?
   - does it create the expected output?
-- [ ] Cut the first release.
+- [x] Cut the first release.
   - Versioning strategy.
   - Always have a `latest` tag pointing to the latest release.
   - Or, maybe just use the `latest` tag at all times?
 - [ ] have a proper email for security vulnerability reports.
-- [ ] compare versions of recent change and the last AI-assisted version and
+- [x] compare versions of recent change and the last AI-assisted version and
       ask AI what we have learned about this.
-- [ ] CREATE SHORTS and VODS
-- [ ] Trace the entire git history and sessions, create an extensive document
-      of what we did and how it progressed, and then create a blog post about it.
+
 
