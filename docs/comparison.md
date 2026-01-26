@@ -68,11 +68,13 @@ These tools help you *start* a session.
 They do not help you *continue* one.
 
 Prompt tools:
+
 * inject text at session start
 * are ephemeral by design
 * do not evolve with the project
 
 `ctx`:
+
 * persists knowledge over time
 * accumulates decisions and learnings
 * makes the context part of the repository itself
@@ -91,6 +93,7 @@ RAG systems typically:
 * retrieve chunks dynamically at runtime
 
 They are excellent for:
+
 * large knowledge bases
 * static documentation
 * reference material
