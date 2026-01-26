@@ -31,6 +31,8 @@
     1. the "Hooks" suffix is not in the schema;
     2. the generated settings.local.json had unicode characters that broke the interpretation.
     make sure the file is properly-generated, and it works as expected.
+  - [ ]: `/ctx-save` slash command triggers approval prompt despite using ```` ```! ````
+    auto-execute syntax. The command should run without requiring manual approval.
 
 - [ ] T0.1.1: Social
   - [ ] Trace the entire git history and sessions, create an extensive document
