@@ -13,8 +13,9 @@ icon: lucide/files
 
 ## `./context`
 
-Each context file in `.context/` serves a specific purpose. Files are designed 
-to be human-readable, AI-parseable, and token-efficient.
+Each context file in `.context/` serves a specific purpose. 
+
+Files are designed to be human-readable, AI-parseable, and token-efficient.
 
 ## File Overview
 
