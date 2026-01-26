@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: ralph + ctx
+title: Ralph and Context
 icon: lucide/repeat
 ---
 
 ![ctx](images/ctx-banner.png)
 
-## Ralph + Context
+## `ralph` + `ctx`
 
 *Like peanut butter and jelly: better together.*
 
