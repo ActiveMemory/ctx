@@ -14,7 +14,7 @@ import (
 // FormatTask formats a task entry as a markdown checkbox item.
 //
 // The output includes a timestamp tag for session correlation and an optional
-// priority tag. Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMM"
+// priority tag. Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
 //
 // Parameters:
 //   - content: Task description text
@@ -23,8 +23,8 @@ import (
 // Returns:
 //   - string: Formatted task line with trailing newline
 func FormatTask(content string, priority string) string {
-	// Use YYYY-MM-DD-HHMM timestamp for session correlation
-	timestamp := time.Now().Format("2006-01-02-1504")
+	// Use YYYY-MM-DD-HHMMSS timestamp for session correlation
+	timestamp := time.Now().Format("2006-01-02-150405")
 	var priorityTag string
 	if priority != "" {
 		priorityTag = fmt.Sprintf(" #priority:%s", priority)
@@ -34,7 +34,7 @@ func FormatTask(content string, priority string) string {
 
 // FormatLearning formats a learning entry as a timestamped markdown list item.
 //
-// Format: "- **[YYYY-MM-DD-HHMM]** content"
+// Format: "- **[YYYY-MM-DD-HHMMSS]** content"
 //
 // Parameters:
 //   - content: Learning description text
@@ -42,7 +42,7 @@ func FormatTask(content string, priority string) string {
 // Returns:
 //   - string: Formatted learning line with trailing newline
 func FormatLearning(content string) string {
-	timestamp := time.Now().Format("2006-01-02-1504")
+	timestamp := time.Now().Format("2006-01-02-150405")
 	return fmt.Sprintf("- **[%s]** %s\n", timestamp, content)
 }
 
@@ -70,7 +70,7 @@ func FormatConvention(content string) string {
 // Returns:
 //   - string: Formatted decision section with placeholders for details
 func FormatDecision(content string) string {
-	timestamp := time.Now().Format("2006-01-02-1504")
+	timestamp := time.Now().Format("2006-01-02-150405")
 	return fmt.Sprintf(`## [%s] %s
 
 **Status**: Accepted

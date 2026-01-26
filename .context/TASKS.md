@@ -12,15 +12,16 @@
     the file—things get missing to see/recognize (for the human) and
     (more importantly) deprioritized (for the machine) when
     it is written all the way to the end of the file.
-  - [ ] feat: the instructions say "always offer to save context", however,
+  - [x] feat: the instructions say "always offer to save context", however,
     that's too late for the LLM because the session will be terminated before
-    it can take action. you (the LLM) have no control over offering stuff 
-    during context end; so, you need to be proactive: Maybe at every critical 
+    it can take action. you (the LLM) have no control over offering stuff
+    during context end; so, you need to be proactive: Maybe at every critical
     decision, and after every few interactions you have to offer to save context.
     This needs to be arranged the best way possible (maybe a hint/instruction
     to the LLM in the template files, or maybe something else)
-  - [ ]: The LLM should also be proactive in saving decision when it makes 
-    sense; and suggesting new tasks.
+    #started:2026-01-26-034500 #done:2026-01-26-035700
+  - [x] The LLM should also be proactive in saving decision when it makes
+    sense; and suggesting new tasks. #started:2026-01-26-034500 #done:2026-01-26-035700
   - [ ]: Bug in hook creation:
     ```text
     /home/volkan/WORKSPACE/spike/.claude/settings.local.json

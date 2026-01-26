@@ -7,6 +7,25 @@ This system does not persist experience.
 - Each session is a fresh execution in a shared workshop.
 - Work continuity comes from artifacts left on the bench.
 
+### Work → Reflect → Persist
+
+After completing meaningful work, follow this cycle:
+
+```
+┌─────────┐     ┌─────────┐     ┌─────────┐
+│  Work   │ ──▶ │ Reflect │ ──▶ │ Persist │ ──▶ (continue)
+└─────────┘     └─────────┘     └─────────┘
+                     │
+                     ▼
+              Did I just...
+              • Complete a task?
+              • Make a decision?
+              • Learn something?
+              • Hit a milestone?
+```
+
+**Don't wait for session end** — it may never come cleanly. Persist as you go.
+
 ## Invoking ctx
 
 Always use `ctx` from PATH:
@@ -74,23 +93,20 @@ you to determine which session created them.
 
 ### Timestamp Format
 
-All timestamps use `YYYY-MM-DD-HHMM` format:
-- **Tasks**: `- [ ] Do something #added:2026-01-23-1430`
-- **Learnings**: `- **[2026-01-23-1430]** Discovered that...`
-- **Decisions**: `## [2026-01-23-1430] Use PostgreSQL`
-- **Sessions**: `**start_time**: 2026-01-23-1400` / `**end_time**: 2026-01-23-1530`
+All timestamps use `YYYY-MM-DD-HHMMSS` format (6-digit time for seconds precision):
+- **Tasks**: `- [ ] Do something #added:2026-01-23-143022`
+- **Learnings**: `- **[2026-01-23-143022]** Discovered that...`
+- **Decisions**: `## [2026-01-23-143022] Use PostgreSQL`
+- **Sessions**: `**start_time**: 2026-01-23-140000` / `**end_time**: 2026-01-23-153045`
 
 ### Correlating Entries to Sessions
 
 To find which session added an entry:
 
-1. **Extract the entry's timestamp** (e.g., `2026-01-23-1430`)
+1. **Extract the entry's timestamp** (e.g., `2026-01-23-143022`)
 2. **List sessions** from that day: `ls .context/sessions/2026-01-23*`
-3. **Check session time bounds**:
-   ```bash
-   grep -l "start_time.*2026-01-23-14" .context/sessions/*.md
-   ```
-4. **Match**: Entry timestamp should fall between session's start_time and end_time
+3. **Check session time bounds**: Entry timestamp should fall between session's start_time and end_time
+4. **Match**: The session file with matching time range contains the context
 
 ### Example
 
@@ -233,11 +249,72 @@ echo "Quick learning from exploration" | ctx add learning
 cat detailed-analysis.md | ctx add decision
 ```
 
-## Before Session Ends
+## Proactive Context Persistence
 
-**CRITICAL**: Before the user ends the session, offer to save context:
+**Don't wait for session end** — persist context at natural milestones.
+
+### Milestone Triggers
+
+Offer to persist context when you:
+
+| Milestone                          | Action                                          |
+|------------------------------------|-------------------------------------------------|
+| Complete a task                    | Mark done in TASKS.md, offer to add learnings   |
+| Make an architectural decision     | `ctx add decision "..."`                        |
+| Discover a gotcha or bug           | `ctx add learning "..."`                        |
+| Finish a significant code change   | Offer to summarize what was done                |
+| Encounter unexpected behavior      | Document it before moving on                    |
+| Resolve a tricky debugging session | Capture the root cause and fix                  |
+
+### How to Offer
+
+After hitting a milestone, briefly offer:
+
+> "I just completed X. Want me to capture this as a learning/decision before we continue?"
+
+Or proactively persist and inform:
+
+> "I've added that gotcha to LEARNINGS.md so we don't hit it again."
+
+### Self-Check Prompt
+
+Periodically ask yourself:
+
+> "If this session ended right now, would the next session know what happened?"
+
+If no — persist something before continuing.
+
+### Task Lifecycle Timestamps
+
+Track task progress with timestamps for session correlation:
+
+```markdown
+- [ ] Implement feature X #added:2026-01-25-220332
+- [ ] Fix bug Y #added:2026-01-25-220332 #started:2026-01-25-221500
+- [x] Refactor Z #added:2026-01-25-200000 #started:2026-01-25-210000 #done:2026-01-25-223045
+```
+
+| Tag        | When to Add                              | Format               |
+|------------|------------------------------------------|----------------------|
+| `#added`   | Auto-added by `ctx add task`             | `YYYY-MM-DD-HHMMSS`  |
+| `#started` | When you begin working on the task       | `YYYY-MM-DD-HHMMSS`  |
+| `#done`    | When you mark the task `[x]` complete    | `YYYY-MM-DD-HHMMSS`  |
+
+**Why this matters:**
+- Correlate tasks with session files by timestamp
+- See how long tasks took (across sessions)
+- Know which session started vs completed work
+
+**Example workflow:**
+1. Pick up task → add `#started:$(date +%Y-%m-%d-%H%M%S)`
+2. Work on it
+3. Complete → change `[ ]` to `[x]`, add `#done:$(date +%Y-%m-%d-%H%M%S)`
+
+### Session Saves
+
+For longer sessions with substantial work, offer to save a session summary:
 1. Curated summary → LEARNINGS.md, DECISIONS.md, TASKS.md
-2. Full conversation dump → `.context/sessions/YYYY-MM-DD-<topic>.md`
+2. Full session notes → `.context/sessions/YYYY-MM-DD-<topic>.md`
 
 ## How to Avoid Hallucinating Memory
 
