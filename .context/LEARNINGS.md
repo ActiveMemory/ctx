@@ -317,3 +317,11 @@ Manual file reading is better for exploratory/memory questions:
 - Fixed: `(/home/|/tmp/|/var/)[^ ]*/ctx( |$)` — matches binary only
 
 **Application**: Always test hooks with edge cases before deploying.
+
+- **[2026-01-25-2208]** AGENTS.md is not auto-loaded by Claude Code. Only CLAUDE.md is read automatically. Projects using ctx should rely on the CLAUDE.md → AGENT_PLAYBOOK.md chain, not AGENTS.md.
+
+- **[2026-01-25-2208]** CI tests need CTX_SKIP_PATH_CHECK=1 because ctx binary isn't installed on CI runners. Tests that call ctx init will fail without this env var.
+
+- **[2026-01-25-2208]** When golangci-lint is built with an older Go version than the project targets, use install-mode: goinstall in CI to build the linter from source using the project's Go version.
+
+- **[2026-01-25-2208]** defer os.Chdir(x) fails errcheck linter. Use defer func() { _ = os.Chdir(x) }() to explicitly ignore the error return value.

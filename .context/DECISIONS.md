@@ -301,3 +301,15 @@ Style preferences and best practices go in CONVENTIONS.md instead.
 - CONVENTIONS.md becomes the living style guide
 - CONSTITUTION.md stays short and scary
 - New rules must pass "is this truly inviolable?" test
+
+## [2026-01-25-2208] Removed AGENTS.md from project root. Consolidated on CLAUDE.md + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path. AGENTS.md was not auto-loaded by any tool and created confusion with redundant content.
+
+**Status**: Accepted
+
+**Context**: [Add context here]
+
+**Decision**: Removed AGENTS.md from project root. Consolidated on CLAUDE.md + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path. AGENTS.md was not auto-loaded by any tool and created confusion with redundant content.
+
+**Rationale**: [Add rationale here]
+
+**Consequences**: [Add consequences here]
