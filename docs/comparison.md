@@ -10,6 +10,15 @@ icon: lucide/git-compare
 
 ![ctx](images/ctx-banner.png)
 
+## High-Level Mental Model
+
+Many tools help AI *think*.
+
+`ctx` helps AI *remember*.
+
+**Not** by storing thoughts,
+**but** by preserving intent.
+
 ## How `ctx` Differs from Similar Tools
 
 There are many tools in the AI ecosystem that touch *parts* of the context
@@ -235,14 +244,3 @@ live next to code; **not** behind a service boundary.
 * you want black-box memory systems
 
 These are valid goals; just different ones.
-
----
-
-## Summary
-
-Many tools help AI *think*.
-
-`ctx` helps AI *remember*.
-
-**NOT** by storing thoughts,
-**BUT** by preserving intent.
