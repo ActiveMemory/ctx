@@ -35,6 +35,9 @@
     #started:2026-01-26-051500 #done:2026-01-26-052200
   - [ ]: `/ctx-save` slash command triggers approval prompt despite using ```` ```! ````
     auto-execute syntax. The command should run without requiring manual approval.
+  - [ ]: `/ctx-release` should also update the versions ind docs/index.md
+  - [ ]: docs should have a page that has links to snapshotted doc version (on GitHub for simplicity).
+    `/ctx-release` should update that page too.
 
 - [ ] T0.1.1: Social
   - [ ] Trace the entire git history and sessions, create an extensive document
