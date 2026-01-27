@@ -140,7 +140,7 @@ Use it at the end of the session or before switching topics.
 
 ---
 
-## Exploration & Research
+## Exploration and Research
 
 ### "Explore the codebase for X"
 
