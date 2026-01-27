@@ -36,10 +36,11 @@ type Context struct {
 }
 
 // Load reads all context files from the specified directory.
-// If `dir` is empty, it uses the default ".context" directory.
+// If `dir` is empty, it uses the configured context directory from
+// .contextrc, CTX_DIR environment variable, or the default ".context".
 func Load(dir string) (*Context, error) {
 	if dir == "" {
-		dir = config.DirContext
+		dir = config.GetContextDir()
 	}
 
 	// Check if the directory exists
@@ -107,9 +108,10 @@ func Load(dir string) (*Context, error) {
 }
 
 // Exists checks if a context directory exists.
+// If `dir` is empty, it uses the configured context directory.
 func Exists(dir string) bool {
 	if dir == "" {
-		dir = config.DirContext
+		dir = config.GetContextDir()
 	}
 	info, err := os.Stat(dir)
 	return err == nil && info.IsDir()

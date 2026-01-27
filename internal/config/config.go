@@ -118,6 +118,7 @@ var FileReadOrder = []string{
 }
 
 // filePriority maps filenames to their priority (derived from FileReadOrder).
+// This is initialized at startup; use FilePriority() which checks for .contextrc overrides.
 var filePriority = func() map[string]int {
 	m := make(map[string]int, len(FileReadOrder))
 	for i, name := range FileReadOrder {
@@ -157,6 +158,9 @@ var Patterns = []Pattern{
 
 // FilePriority returns the priority of a context file.
 //
+// If a priority_order is configured in .contextrc, that order is used.
+// Otherwise, the default FileReadOrder is used.
+//
 // Lower numbers indicate higher priority (1 = highest).
 // Unknown files return 100.
 //
@@ -166,6 +170,18 @@ var Patterns = []Pattern{
 // Returns:
 //   - int: Priority value (1-9 for known files, 100 for unknown)
 func FilePriority(name string) int {
+	// Check for .contextrc override
+	if order := GetPriorityOrder(); order != nil {
+		for i, fname := range order {
+			if fname == name {
+				return i + 1
+			}
+		}
+		// File not in custom order gets lowest priority
+		return 100
+	}
+
+	// Use default priority
 	if p, ok := filePriority[name]; ok {
 		return p
 	}
