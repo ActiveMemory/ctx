@@ -61,7 +61,7 @@ Download pre-built binaries from the
 === "Linux (x86_64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-amd64
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.1/ctx-0.1.1-linux-amd64
     chmod +x ctx-0.1.0-linux-amd64
     sudo mv ctx-0.1.0-linux-amd64 /usr/local/bin/ctx
     ```
@@ -69,7 +69,7 @@ Download pre-built binaries from the
 === "Linux (ARM64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-linux-arm64
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.1/ctx-0.1.1-linux-arm64
     chmod +x ctx-0.1.0-linux-arm64
     sudo mv ctx-0.1.0-linux-arm64 /usr/local/bin/ctx
     ```
@@ -77,7 +77,7 @@ Download pre-built binaries from the
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-darwin-arm64
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.1/ctx-0.1.1-darwin-arm64
     chmod +x ctx-0.1.0-darwin-arm64
     sudo mv ctx-0.1.0-darwin-arm64 /usr/local/bin/ctx
     ```
@@ -85,14 +85,14 @@ Download pre-built binaries from the
 === "macOS (Intel)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.0/ctx-0.1.0-darwin-amd64
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.1/ctx-0.1.1-darwin-amd64
     chmod +x ctx-0.1.0-darwin-amd64
     sudo mv ctx-0.1.0-darwin-amd64 /usr/local/bin/ctx
     ```
 
 === "Windows"
 
-    Download `ctx-0.1.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
+    Download `ctx-0.1.1-windows-amd64.exe` from the releases page and add it to your `PATH`.
 
 ### Verifying Checksums
 
