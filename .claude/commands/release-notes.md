@@ -18,6 +18,8 @@ Then synthesize release notes:
 Write the output to `dist/RELEASE_NOTES.md` in this format:
 
 ```markdown
+<img src="https://ctx.ist/images/ctx-banner.png" />
+
 # Context CLI v<version>
 
 <Brief summary paragraph>
