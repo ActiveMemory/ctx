@@ -28,7 +28,8 @@ nav = [
   { "Context Files" = "context-files.md" },
   { "ralph + ctx" = "ralph-loop.md" },
   { "Integrations" = "integrations.md" },
-  { "Version History" = "versions.md" }
+  { "Version History" = "versions.md" },
+  { "Security" = "security.md" }
 ]
 
 #extra_css = ["stylesheets/extra.css"]

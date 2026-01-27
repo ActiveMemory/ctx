@@ -54,7 +54,8 @@
     #done:2026-01-27 (created docs/versions.md, updated hack/release.sh)
 
 - [ ] T0.1.1: Social
-  - [ ] Remind to Human: have a proper email for security vulnerability reports.
+  - [x] Remind to Human: have a proper email for security vulnerability reports.
+    #done:2026-01-27 (security@ctx.ist added to SECURITY.md and docs/security.md)
   - [ ] Trace the entire git history and sessions, create an extensive document
     of what we did and how it progressed, and then create a blog post about it.
     this may require a larger thinking budget; don't shy away from spending

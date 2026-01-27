@@ -8,10 +8,15 @@ If you discover a security vulnerability in `ctx`, please report it responsibly.
 
 **Do NOT open a public issue for security vulnerabilities.**
 
-Instead, please email the maintainers directly or use GitHub's private 
-vulnerability reporting feature:
+Instead, please use one of these methods:
 
-1. Go to the [Security tab](https://github.com/ActiveMemory/ctx/security) of 
+### Email
+
+Send details to **security@ctx.ist**
+
+### GitHub Private Reporting
+
+1. Go to the [Security tab](https://github.com/ActiveMemory/ctx/security) of
    this repository
 2. Click "Report a vulnerability"
 3. Provide a detailed description of the issue
