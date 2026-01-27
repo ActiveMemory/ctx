@@ -81,7 +81,7 @@ fi
 echo "Found ${RELEASE_NOTES}"
 echo ""
 
-# Check for clean working tree
+# Check for clean working tree (before we make changes)
 if [ -n "$(git status --porcelain)" ]; then
     echo "ERROR: Working tree is not clean."
     echo "Please commit or stash your changes before releasing."
@@ -89,6 +89,27 @@ if [ -n "$(git status --porcelain)" ]; then
     git status --short
     exit 1
 fi
+
+# Update version references in documentation
+echo "Updating version references in docs/index.md..."
+VERSION_NUM="${VERSION#v}"  # Remove 'v' prefix
+sed -i.bak -E "s|/v[0-9]+\.[0-9]+\.[0-9]+/ctx-[0-9]+\.[0-9]+\.[0-9]+|/v${VERSION_NUM}/ctx-${VERSION_NUM}|g" docs/index.md
+sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-amd64|ctx-${VERSION_NUM}-linux-amd64|g" docs/index.md
+sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-arm64|ctx-${VERSION_NUM}-linux-arm64|g" docs/index.md
+sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-darwin-amd64|ctx-${VERSION_NUM}-darwin-amd64|g" docs/index.md
+sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-darwin-arm64|ctx-${VERSION_NUM}-darwin-arm64|g" docs/index.md
+sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-windows-amd64|ctx-${VERSION_NUM}-windows-amd64|g" docs/index.md
+rm -f docs/index.md.bak
+
+# Rebuild site with updated docs
+echo "Rebuilding documentation site..."
+make site
+
+# Commit docs and site updates
+echo "Committing documentation updates..."
+git add docs/index.md site/
+git commit -m "docs: update download links to ${VERSION}"
+echo ""
 
 # Check if tag already exists
 if git rev-parse "${TAG_NAME}" >/dev/null 2>&1; then
