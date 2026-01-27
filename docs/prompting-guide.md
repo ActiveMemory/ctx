@@ -237,4 +237,4 @@ Found a prompt that works well?
 1. The prompt text
 2. What behavior it triggers
 3. When to use it
-4. Why it works (optional but helpful)
+4. Why it works (*optional but helpful*)

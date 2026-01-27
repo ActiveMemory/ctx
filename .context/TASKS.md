@@ -38,10 +38,21 @@
     #done:2026-01-27 (ctx session:* permission added to settings.local.json)
   - [x]: `/ctx-release` should also update the versions in docs/index.md
     #done:2026-01-27 (hack/release.sh lines 94-102 handle this automatically)
-  - [ ]: docs should have a page that has links to snapshotted doc version (on GitHub for simplicity).
+  - [ ] Implement .contextrc config file support (YAML format)
+    #priority:low #added:2026-01-27-065231
+  - [ ] Change ctx add to prepend (not append) entries in DECISIONS.md and
+    LEARNINGS.md for reverse-chronological order #priority:medium
+    #added:2026-01-27-065902
+  - [ ] Add required --context, --rationale, --consequences flags to ctx add
+    decision command; command should fail if flags are missing to enforce
+    complete decision records #priority:medium #added:2026-01-27-070542  
+  - [ ]: docs should have a page that has links to snapshotted doc version 
+    (a list of links on the public docs in a separate page; links to 
+    tagged docs on GitHub for simplicity).
     `/ctx-release` should update that page too.
 
 - [ ] T0.1.1: Social
+  - [ ] Remind to Human: have a proper email for security vulnerability reports.
   - [ ] Trace the entire git history and sessions, create an extensive document
     of what we did and how it progressed, and then create a blog post about it.
     this may require a larger thinking budget; don't shy away from spending
@@ -154,13 +165,13 @@
 - [x] Why is agent runbook lowest in reading priority order?
   - follow-up: is it enforced?
 - [x] Create a list of what CLI options (if any) are not implemented yet.
-- [ ] Verify all Markdown files by "actually reading them"; take notes for
+- [x] Verify all Markdown files by "actually reading them"; take notes for
   follow-up actions.
 - [x] All go code should have godoc and testing.
-- [ ] GitHub CI linter is giving errors that need fixing.
+- [x] GitHub CI linter is giving errors that need fixing.
 - [x] Manual code review. take notes.
 - [x] Add tests per file.
-- [ ] validate everything in the docs with a skeptical eye.
+- [x] validate everything in the docs with a skeptical eye.
 - [x] consider the case where `ctx` is not called from within AI prompt:
   - does the command still make sense?
   - does it create the expected output?
@@ -168,14 +179,5 @@
   - Versioning strategy.
   - Always have a `latest` tag pointing to the latest release.
   - Or, maybe just use the `latest` tag at all times?
-- [ ] have a proper email for security vulnerability reports.
 - [x] compare versions of recent change and the last AI-assisted version and
       ask AI what we have learned about this.
-
-
-
-- [ ] Implement .contextrc config file support (YAML format) #priority:low #added:2026-01-27-065231
-
-- [ ] Change ctx add to prepend (not append) entries in DECISIONS.md and LEARNINGS.md for reverse-chronological order #priority:medium #added:2026-01-27-065902
-
-- [ ] Add required --context, --rationale, --consequences flags to ctx add decision command; command should fail if flags are missing to enforce complete decision records #priority:medium #added:2026-01-27-070542

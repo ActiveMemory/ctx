@@ -4,11 +4,17 @@
 
 **Status**: Accepted
 
-**Context**: With chronological order, oldest items consume tokens first, and newest (most relevant) items risk being truncated when budget is tight. The AI reads files from line 1 by default and has no way of knowing to read the tail first.
+**Context**: With chronological order, oldest items consume tokens first, and 
+newest (most relevant) items risk being truncated when budget is tight. The AI 
+reads files from line 1 by default and has no way of knowing to read the 
+tail first.
 
-**Decision**: Use reverse-chronological order (newest first) for DECISIONS.md and LEARNINGS.md. Prepending is slightly awkward but more robust than relying on AI cleverness to read file tails.
+**Decision**: Use reverse-chronological order (newest first) for DECISIONS.md 
+and LEARNINGS.md. Prepending is slightly awkward but more robust than relying 
+on AI cleverness to read file tails.
 
-**Rationale**: Ensures most recent/relevant items are read first regardless of token budget or whether AI uses ctx agent.
+**Rationale**: Ensures most recent/relevant items are read first regardless of 
+token budget or whether AI uses ctx agent.
 
 **Consequences**:
 - `ctx add` must prepend instead of append
@@ -21,11 +27,14 @@
 
 **Status**: Accepted
 
-**Context**: AGENTS.md was not auto-loaded by any AI tool and created confusion with redundant content alongside CLAUDE.md and .context/AGENT_PLAYBOOK.md.
+**Context**: AGENTS.md was not auto-loaded by any AI tool and created confusion 
+with redundant content alongside CLAUDE.md and .context/AGENT_PLAYBOOK.md.
 
-**Decision**: Consolidated on CLAUDE.md + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path.
+**Decision**: Consolidated on CLAUDE.md + .context/AGENT_PLAYBOOK.md as the 
+canonical agent instruction path.
 
-**Rationale**: Single source of truth; CLAUDE.md is auto-loaded by Claude Code, AGENT_PLAYBOOK.md provides ctx-specific instructions.
+**Rationale**: Single source of truth; CLAUDE.md is auto-loaded by Claude Code, 
+AGENT_PLAYBOOK.md provides ctx-specific instructions.
 
 **Consequences**: Projects using ctx should not create AGENTS.md.
 
@@ -35,7 +44,8 @@
 
 **Status**: Accepted
 
-**Context**: When codifying lessons learned, temptation was to add all conventions to CONSTITUTION.md as "invariants."
+**Context**: When codifying lessons learned, temptation was to add all 
+conventions to CONSTITUTION.md as "invariants."
 
 **Decision**: CONSTITUTION.md contains only truly inviolable rules:
 - Security invariants (secrets, path traversal)
@@ -61,9 +71,12 @@ Style preferences and best practices go in CONVENTIONS.md instead.
 
 **Status**: Accepted (implemented)
 
-**Context**: YOLO-mode feature development scattered magic strings across the codebase. Same literals (`"TASKS.md"`, `"task"`, `".context"`) appeared in 10+ files. Human-guided refactoring session consolidated them.
+**Context**: YOLO-mode feature development scattered magic strings across the 
+codebase. Same literals (`"TASKS.md"`, `"task"`, `".context"`) appeared in 
+10+ files. Human-guided refactoring session consolidated them.
 
-**Decision**: All repeated literals go in `internal/config/config.go` with semantic prefixes:
+**Decision**: All repeated literals go in `internal/config/config.go` with 
+semantic prefixes:
 - `Dir*` for directories (`DirContext`, `DirArchive`, `DirSessions`)
 - `File*` for file paths (`FileSettings`, `FileClaudeMd`)
 - `Filename*` for file names only (`FilenameTask`, `FilenameDecision`)
