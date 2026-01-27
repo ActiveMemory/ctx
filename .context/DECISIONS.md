@@ -1,162 +1,124 @@
 # Decisions
 
-## [2026-01-20] Generic Core with Optional Claude Code Enhancements
+## [2026-01-27-065902] Use reverse-chronological order (newest first) for DECISIONS.md and LEARNINGS.md
 
 **Status**: Accepted
 
-**Context**: `ctx` should work with any AI tool, but Claude Code users could 
-benefit from deeper integration (auto-load, auto-save via hooks).
+**Context**: With chronological order, oldest items consume tokens first, and newest (most relevant) items risk being truncated when budget is tight. The AI reads files from line 1 by default and has no way of knowing to read the tail first.
 
-**Decision**: Keep `ctx` generic as the core tool, but provide optional 
-Claude Code-specific enhancements:
-- `ctx hook claude-code` generates Claude-specific configs
-- `.claude/hooks/` contains Claude Code hook scripts
-- Features work without Claude Code, but are enhanced with it
+**Decision**: Use reverse-chronological order (newest first) for DECISIONS.md and LEARNINGS.md. Prepending is slightly awkward but more robust than relying on AI cleverness to read file tails.
 
-**Rationale**:
-- Maintains tool-agnostic philosophy from core-architecture.md
-- Doesn't lock users into Claude Code
-- Claude Code users get seamless experience without extra work
-- Other AI tools can be supported similarly (`ctx hook cursor`, etc.)
+**Rationale**: Ensures most recent/relevant items are read first regardless of token budget or whether AI uses ctx agent.
 
 **Consequences**:
-- Need to maintain both generic and Claude-specific documentation
-- Hook scripts are optional, not required
-- Testing must cover both with and without Claude Code
+- `ctx add` must prepend instead of append
+- File structure is self-documenting (newest = first)
+- Works correctly regardless of how file is consumed
 
 ---
 
-## [2026-01-20] Always Generate Claude Hooks in Init (No Flag Needed)
+## [2026-01-25-2208] Removed AGENTS.md from project root
 
-**Status**: Accepted (to be implemented)
+**Status**: Accepted
 
-**Context**: Setting up Claude Code hooks manually is error-prone. 
-Considered `--claude` flag but realized it's unnecessary.
+**Context**: AGENTS.md was not auto-loaded by any AI tool and created confusion with redundant content alongside CLAUDE.md and .context/AGENT_PLAYBOOK.md.
 
-**Decision**: `ctx init` ALWAYS creates `.claude/hooks/` alongside `.context/`:
-```bash
-ctx init    # Creates BOTH .context/ AND .claude/hooks/
+**Decision**: Consolidated on CLAUDE.md + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path.
+
+**Rationale**: Single source of truth; CLAUDE.md is auto-loaded by Claude Code, AGENT_PLAYBOOK.md provides ctx-specific instructions.
+
+**Consequences**: Projects using ctx should not create AGENTS.md.
+
+---
+
+## [2026-01-25] Keep CONSTITUTION Minimal
+
+**Status**: Accepted
+
+**Context**: When codifying lessons learned, temptation was to add all conventions to CONSTITUTION.md as "invariants."
+
+**Decision**: CONSTITUTION.md contains only truly inviolable rules:
+- Security invariants (secrets, path traversal)
+- Correctness invariants (tests pass)
+- Process invariants (decision records)
+
+Style preferences and best practices go in CONVENTIONS.md instead.
+
+**Rationale**:
+- Overly strict constitution creates friction and gets ignored
+- "Crying wolf" effect — developers stop reading it
+- Conventions can be bent; constitution cannot
+- Security vs style are fundamentally different categories
+
+**Consequences**:
+- CONVENTIONS.md becomes the living style guide
+- CONSTITUTION.md stays short and scary
+- New rules must pass "is this truly inviolable?" test
+
+---
+
+## [2026-01-25] Centralize Constants with Semantic Prefixes
+
+**Status**: Accepted (implemented)
+
+**Context**: YOLO-mode feature development scattered magic strings across the codebase. Same literals (`"TASKS.md"`, `"task"`, `".context"`) appeared in 10+ files. Human-guided refactoring session consolidated them.
+
+**Decision**: All repeated literals go in `internal/config/config.go` with semantic prefixes:
+- `Dir*` for directories (`DirContext`, `DirArchive`, `DirSessions`)
+- `File*` for file paths (`FileSettings`, `FileClaudeMd`)
+- `Filename*` for file names only (`FilenameTask`, `FilenameDecision`)
+- `UpdateType*` for entry types (`UpdateTypeTask`, `UpdateTypeDecision`)
+
+Maps must use constants as keys:
+```go
+var FileType = map[string]string{
+    UpdateTypeTask: FilenameTask,  // not "task": "TASKS.md"
+}
 ```
 
 **Rationale**:
-- Other AI tools (Cursor, Aider, Copilot) don't know/care about `.claude/`
-- No downside to creating hooks that sit unused
-- Claude Code users get seamless experience with zero extra steps
-- If user later switches to Claude Code, hooks are already there
-- Simpler UX - no flags to remember
+- Single source of truth for all identifiers
+- Refactoring is find-replace on constant name
+- IDE navigation works (go-to-definition)
+- Typos caught at compile time, not runtime
+- Self-documenting code (constants have godoc)
 
 **Consequences**:
-- `ctx init` creates both directories always
-- Hook scripts are embedded in binary (like templates)
-- Need to detect platform for binary path in hooks
-- `.claude/` becomes part of ctx's standard output
+- All new literals must go through config package
+- Existing code migrated to use constants
+- Slightly more verbose but much more maintainable
 
 ---
 
-## [2026-01-20] Two-Tier Context Persistence Model
+## [2026-01-21] Separate Orchestrator Directive from Agent Tasks
 
 **Status**: Accepted
 
-**Context**: Need to persist context across sessions. Token budgets limit
-what can be loaded. But nothing should be truly lost.
+**Context**: Two task systems existed: `IMPLEMENTATION_PLAN.md`
+(Ralph Loop orchestrator) and `.context/TASKS.md` (ctx's own context).
+Ralph would find IMPLEMENTATION_PLAN.md complete and exit,
+ignoring .context/TASKS.md.
 
-**Decision**: Implement two tiers of persistence:
+**Decision**: Clean separation of concerns:
+- **`.context/TASKS.md`** = Agent's mind. Tasks the agent decided need doing.
+- **`IMPLEMENTATION_PLAN.md`** = Orchestrator's directive.
+  A single meta-task: "Check your tasks."
 
-| Tier          | Purpose                 | Location                 | Token Cost             |
-|---------------|-------------------------|--------------------------|------------------------|
-| **Curated**   | Quick context reload    | `.context/*.md`          | Low (budgeted)         |
-| **Full dump** | Safety net, archaeology | `.context/sessions/*.md` | Zero (not auto-loaded) |
-
-**Rationale**:
-- Curated context is token-efficient for daily use
-- Full dumps ensure nothing is ever truly lost
-- Users can dive into sessions/ when they need deep context
-- Separation prevents context bloat
-
-**Consequences**:
-- Need both manual and automatic ways to populate both tiers
-- Session files grow over time (may need archival strategy)
-- `ctx agent` only loads curated tier by default
-
----
-
-## [2026-01-20] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
-
-**Status**: Accepted
-
-**Context**: Multiple sessions per day would overwrite each other. 
-Also, multiple compacts in the same minute could collide.
-
-**Decision**: Use `YYYY-MM-DD-HHMMSS-<topic>.md` format for session files. 
-Two file types:
-- **Curated sessions**: `HHMMSS-<topic>.md` - updated throughout session
-- **Auto-snapshots**: `HHMMSS-<event>.jsonl` - immutable once created
+The orchestrator doesn't maintain a parallel ledger — it just tells the
+agent to check its own mind.
 
 **Rationale**:
-- Human-readable (unlike unix timestamps)
-- Naturally sorts chronologically
-- Seconds precision prevents collision even with rapid compacts
-- Clear distinction between curated notes and raw snapshots
+- Agent autonomy: the agent owns its task list
+- Single source of truth for tasks
+- Orchestrator is minimal, not a micromanager
+- Fresh `ctx init` deployments can have one directive: "Check .context/TASKS.md"
+- Prevents task list drift between two files
 
 **Consequences**:
-- Slightly longer filenames
-- Must ensure consistent format in all session-saving code
-- Curated files keep getting updated; snapshots are write-once
-
----
-
-## [2026-01-20] Auto-Save Before Compact
-
-**Status**: Accepted (to be implemented)
-
-**Context**: `ctx compact` archives old tasks. Information could be 
-lost if not captured.
-
-**Decision**: `ctx compact` should auto-save a session dump before archiving:
-1. Save current state to `.context/sessions/YYYY-MM-DD-HHMM-pre-compact.md`
-2. Then perform the compaction
-
-**Rationale**:
-- Safety net before destructive-ish operation
-- User can always recover pre-compact state
-- No extra user action required
-
-**Consequences**:
-- Compact command becomes slightly slower
-- Sessions directory grows with each compact
-- May want `--no-save` flag for automation
-
----
-
-## [2026-01-20] Handle CLAUDE.md Creation/Merge in ctx init
-
-**Status**: Accepted (to be implemented)
-
-**Context**: Both `claude init` and `ctx init` want to create/modify CLAUDE.md. 
-Users of ctx will likely want ctx's context-aware version, 
-but may already have a CLAUDE.md from `claude init`.
-
-**Decision**: `ctx init` handles CLAUDE.md intelligently:
-- **No CLAUDE.md exists** → Create it with ctx's context-loading template
-- **CLAUDE.md exists** → Don't overwrite. Instead:
-  1. **Backup first** → Copy to `CLAUDE.md.<unix_timestamp>.bak` 
-     (e.g., `CLAUDE.md.1737399000.bak`)
-  2. Check if it already has ctx content (idempotent check via marker comment)
-  3. If not, output the snippet to append and offer to merge
-  4. `ctx init --merge` flag to auto-append without prompting
-
-**Rationale**:
-- Timestamped backups preserve history across multiple runs
-- Unix timestamp is fine for backups (rarely read by humans, easy to sort)
-- Respects user's existing CLAUDE.md customizations
-- Doesn't silently overwrite important config
-- Idempotency prevents duplicate content on re-runs
-
-**Consequences**:
-- Need to detect existing ctx content (marker comment like `<!-- ctx:context -->`)
-- Backup files accumulate: `CLAUDE.md.<timestamp>.bak` (may want cleanup command later)
-- Init output must clearly show what was created vs what needs manual merge
-- Should work gracefully even if user runs `ctx init` multiple times
+- `PROMPT.md` now references `.context/TASKS.md` for task selection
+- `IMPLEMENTATION_PLAN.md` becomes a thin directive layer
+- Historical milestones are archived, not active tasks
+- North Star goals live in IMPLEMENTATION_PLAN.md (meta-level, not tasks)
 
 ---
 
@@ -164,8 +126,8 @@ but may already have a CLAUDE.md from `claude init`.
 
 **Status**: Accepted (implemented)
 
-**Context**: Original implementation hardcoded absolute paths in hooks 
-(e.g., `/home/parallels/WORKSPACE/ActiveMemory/dist/ctx-linux-arm64`). 
+**Context**: Original implementation hardcoded absolute paths in hooks
+(e.g., `/home/parallels/WORKSPACE/ActiveMemory/dist/ctx-linux-arm64`).
 This breaks when:
 - Sharing configs with other developers
 - Moving projects
@@ -213,103 +175,160 @@ This breaks when:
 
 ---
 
-## [2026-01-21] Separate Orchestrator Directive from Agent Tasks
+## [2026-01-20] Handle CLAUDE.md Creation/Merge in ctx init
 
-**Status**: Accepted
+**Status**: Accepted (to be implemented)
 
-**Context**: Two task systems existed: `IMPLEMENTATION_PLAN.md` 
-(Ralph Loop orchestrator) and `.context/TASKS.md` (ctx's own context). 
-Ralph would find IMPLEMENTATION_PLAN.md complete and exit, 
-ignoring .context/TASKS.md.
+**Context**: Both `claude init` and `ctx init` want to create/modify CLAUDE.md.
+Users of ctx will likely want ctx's context-aware version,
+but may already have a CLAUDE.md from `claude init`.
 
-**Decision**: Clean separation of concerns:
-- **`.context/TASKS.md`** = Agent's mind. Tasks the agent decided need doing.
-- **`IMPLEMENTATION_PLAN.md`** = Orchestrator's directive. 
-  A single meta-task: "Check your tasks."
-
-The orchestrator doesn't maintain a parallel ledger — it just tells the 
-agent to check its own mind.
+**Decision**: `ctx init` handles CLAUDE.md intelligently:
+- **No CLAUDE.md exists** → Create it with ctx's context-loading template
+- **CLAUDE.md exists** → Don't overwrite. Instead:
+  1. **Backup first** → Copy to `CLAUDE.md.<unix_timestamp>.bak`
+     (e.g., `CLAUDE.md.1737399000.bak`)
+  2. Check if it already has ctx content (idempotent check via marker comment)
+  3. If not, output the snippet to append and offer to merge
+  4. `ctx init --merge` flag to auto-append without prompting
 
 **Rationale**:
-- Agent autonomy: the agent owns its task list
-- Single source of truth for tasks
-- Orchestrator is minimal, not a micromanager
-- Fresh `ctx init` deployments can have one directive: "Check .context/TASKS.md"
-- Prevents task list drift between two files
+- Timestamped backups preserve history across multiple runs
+- Unix timestamp is fine for backups (rarely read by humans, easy to sort)
+- Respects user's existing CLAUDE.md customizations
+- Doesn't silently overwrite important config
+- Idempotency prevents duplicate content on re-runs
 
 **Consequences**:
-- `PROMPT.md` now references `.context/TASKS.md` for task selection
-- `IMPLEMENTATION_PLAN.md` becomes a thin directive layer
-- Historical milestones are archived, not active tasks
-- North Star goals live in IMPLEMENTATION_PLAN.md (meta-level, not tasks)
+- Need to detect existing ctx content (marker comment like `<!-- ctx:context -->`)
+- Backup files accumulate: `CLAUDE.md.<timestamp>.bak` (may want cleanup command later)
+- Init output must clearly show what was created vs what needs manual merge
+- Should work gracefully even if user runs `ctx init` multiple times
 
 ---
 
-## [2026-01-25] Centralize Constants with Semantic Prefixes
+## [2026-01-20] Auto-Save Before Compact
 
-**Status**: Accepted (implemented)
+**Status**: Accepted (to be implemented)
 
-**Context**: YOLO-mode feature development scattered magic strings across the codebase. Same literals (`"TASKS.md"`, `"task"`, `".context"`) appeared in 10+ files. Human-guided refactoring session consolidated them.
+**Context**: `ctx compact` archives old tasks. Information could be
+lost if not captured.
 
-**Decision**: All repeated literals go in `internal/config/config.go` with semantic prefixes:
-- `Dir*` for directories (`DirContext`, `DirArchive`, `DirSessions`)
-- `File*` for file paths (`FileSettings`, `FileClaudeMd`)
-- `Filename*` for file names only (`FilenameTask`, `FilenameDecision`)
-- `UpdateType*` for entry types (`UpdateTypeTask`, `UpdateTypeDecision`)
+**Decision**: `ctx compact` should auto-save a session dump before archiving:
+1. Save current state to `.context/sessions/YYYY-MM-DD-HHMM-pre-compact.md`
+2. Then perform the compaction
 
-Maps must use constants as keys:
-```go
-var FileType = map[string]string{
-    UpdateTypeTask: FilenameTask,  // not "task": "TASKS.md"
-}
+**Rationale**:
+- Safety net before destructive-ish operation
+- User can always recover pre-compact state
+- No extra user action required
+
+**Consequences**:
+- Compact command becomes slightly slower
+- Sessions directory grows with each compact
+- May want `--no-save` flag for automation
+
+---
+
+## [2026-01-20] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
+
+**Status**: Accepted
+
+**Context**: Multiple sessions per day would overwrite each other.
+Also, multiple compacts in the same minute could collide.
+
+**Decision**: Use `YYYY-MM-DD-HHMMSS-<topic>.md` format for session files.
+Two file types:
+- **Curated sessions**: `HHMMSS-<topic>.md` - updated throughout session
+- **Auto-snapshots**: `HHMMSS-<event>.jsonl` - immutable once created
+
+**Rationale**:
+- Human-readable (unlike unix timestamps)
+- Naturally sorts chronologically
+- Seconds precision prevents collision even with rapid compacts
+- Clear distinction between curated notes and raw snapshots
+
+**Consequences**:
+- Slightly longer filenames
+- Must ensure consistent format in all session-saving code
+- Curated files keep getting updated; snapshots are write-once
+
+---
+
+## [2026-01-20] Two-Tier Context Persistence Model
+
+**Status**: Accepted
+
+**Context**: Need to persist context across sessions. Token budgets limit
+what can be loaded. But nothing should be truly lost.
+
+**Decision**: Implement two tiers of persistence:
+
+| Tier          | Purpose                 | Location                 | Token Cost             |
+|---------------|-------------------------|--------------------------|------------------------|
+| **Curated**   | Quick context reload    | `.context/*.md`          | Low (budgeted)         |
+| **Full dump** | Safety net, archaeology | `.context/sessions/*.md` | Zero (not auto-loaded) |
+
+**Rationale**:
+- Curated context is token-efficient for daily use
+- Full dumps ensure nothing is ever truly lost
+- Users can dive into sessions/ when they need deep context
+- Separation prevents context bloat
+
+**Consequences**:
+- Need both manual and automatic ways to populate both tiers
+- Session files grow over time (may need archival strategy)
+- `ctx agent` only loads curated tier by default
+
+---
+
+## [2026-01-20] Always Generate Claude Hooks in Init (No Flag Needed)
+
+**Status**: Accepted (to be implemented)
+
+**Context**: Setting up Claude Code hooks manually is error-prone.
+Considered `--claude` flag but realized it's unnecessary.
+
+**Decision**: `ctx init` ALWAYS creates `.claude/hooks/` alongside `.context/`:
+```bash
+ctx init    # Creates BOTH .context/ AND .claude/hooks/
 ```
 
 **Rationale**:
-- Single source of truth for all identifiers
-- Refactoring is find-replace on constant name
-- IDE navigation works (go-to-definition)
-- Typos caught at compile time, not runtime
-- Self-documenting code (constants have godoc)
+- Other AI tools (Cursor, Aider, Copilot) don't know/care about `.claude/`
+- No downside to creating hooks that sit unused
+- Claude Code users get seamless experience with zero extra steps
+- If user later switches to Claude Code, hooks are already there
+- Simpler UX - no flags to remember
 
 **Consequences**:
-- All new literals must go through config package
-- Existing code migrated to use constants
-- Slightly more verbose but much more maintainable
+- `ctx init` creates both directories always
+- Hook scripts are embedded in binary (like templates)
+- Need to detect platform for binary path in hooks
+- `.claude/` becomes part of ctx's standard output
 
 ---
 
-## [2026-01-25] Keep CONSTITUTION Minimal
+## [2026-01-20] Generic Core with Optional Claude Code Enhancements
 
 **Status**: Accepted
 
-**Context**: When codifying lessons learned, temptation was to add all conventions to CONSTITUTION.md as "invariants."
+**Context**: `ctx` should work with any AI tool, but Claude Code users could
+benefit from deeper integration (auto-load, auto-save via hooks).
 
-**Decision**: CONSTITUTION.md contains only truly inviolable rules:
-- Security invariants (secrets, path traversal)
-- Correctness invariants (tests pass)
-- Process invariants (decision records)
-
-Style preferences and best practices go in CONVENTIONS.md instead.
+**Decision**: Keep `ctx` generic as the core tool, but provide optional
+Claude Code-specific enhancements:
+- `ctx hook claude-code` generates Claude-specific configs
+- `.claude/hooks/` contains Claude Code hook scripts
+- Features work without Claude Code, but are enhanced with it
 
 **Rationale**:
-- Overly strict constitution creates friction and gets ignored
-- "Crying wolf" effect — developers stop reading it
-- Conventions can be bent; constitution cannot
-- Security vs style are fundamentally different categories
+- Maintains tool-agnostic philosophy from core-architecture.md
+- Doesn't lock users into Claude Code
+- Claude Code users get seamless experience without extra work
+- Other AI tools can be supported similarly (`ctx hook cursor`, etc.)
 
 **Consequences**:
-- CONVENTIONS.md becomes the living style guide
-- CONSTITUTION.md stays short and scary
-- New rules must pass "is this truly inviolable?" test
-
-## [2026-01-25-2208] Removed AGENTS.md from project root. Consolidated on CLAUDE.md + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path. AGENTS.md was not auto-loaded by any tool and created confusion with redundant content.
-
-**Status**: Accepted
-
-**Context**: [Add context here]
-
-**Decision**: Removed AGENTS.md from project root. Consolidated on CLAUDE.md + .context/AGENT_PLAYBOOK.md as the canonical agent instruction path. AGENTS.md was not auto-loaded by any tool and created confusion with redundant content.
-
-**Rationale**: [Add rationale here]
-
-**Consequences**: [Add consequences here]
+- Need to maintain both generic and Claude-specific documentation
+- Hook scripts are optional, not required
+- Testing must cover both with and without Claude Code
