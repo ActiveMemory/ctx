@@ -15,10 +15,11 @@ icon: lucide/message-circle
 
 Effective prompts for working with AI assistants in ctx-enabled projects.
 
-### Why This Matters
+> [!tip] Help Your AI Sidekick
+> AI assistants *may not* automatically read context files. 
+> **The right prompt triggers the right behavior**. 
 
-AI assistants don't automatically read context files. The right prompt triggers
-the right behavior. This guide documents prompts that reliably produce good results.
+This guide documents prompts that reliably produce good results.
 
 ---
 
@@ -26,29 +27,29 @@ the right behavior. This guide documents prompts that reliably produce good resu
 
 ### "Do you remember?"
 
-**What it does**: Triggers the AI to read AGENT_PLAYBOOK, CONSTITUTION, sessions/,
-and other context files before responding.
+Triggers the AI to read `AGENT_PLAYBOOK`, `CONSTITUTION`, 
+`sessions/`, and other context files before responding.
 
-**When to use**: Start of every important session.
+Use this during the start of every important session.
 
 ```
 Do you remember what we were working on?
 ```
 
-**Why it works**: The question implies prior context exists. The AI checks files
+This question **implies** prior context exists. So, the AI checks files
 rather than admitting ignorance.
 
 ### "What's the current state?"
 
-**What it does**: Prompts reading of TASKS.md, recent sessions, and status overview.
+Prompts reading of `TASKS.md`, recent sessions, and status overview.
 
-**When to use**: Resuming work after a break.
+Use this when resuming work after a break.
 
 **Variants**:
 
-- "Where did we leave off?"
-- "What's in progress?"
-- "Show me the open tasks"
+* "Where did we leave off?"
+* "What's in progress?"
+* "Show me the open tasks"
 
 ---
 
@@ -56,33 +57,33 @@ rather than admitting ignorance.
 
 ### "Why doesn't X work?"
 
-**What it does**: Triggers root cause analysis rather than surface-level fixes.
+This triggers root cause analysis rather than surface-level fixes.
 
-**When to use**: When something fails unexpectedly.
+Use this when something fails unexpectedly.
 
-**Why it works**: Framing as "why" encourages investigation before action.
-The AI will trace through code, check configurations, and identify the actual cause.
+Framing as "*why*" encourages investigation before action. The AI will trace 
+through code, check configurations, and identify the actual cause.
 
-!!! example "Real example"
+!!! example "Real Example"
     "Why can't I run /ctx-save?" led to discovering missing permissions
     in settings.local.json bootstrapping—a fix that benefited all users.
 
 ### "Is this consistent with our decisions?"
 
-**What it does**: Prompts checking DECISIONS.md before implementing.
+This prompts checking DECISIONS.md before implementing.
 
-**When to use**: Before making architectural choices.
+Use this before making architectural choices.
 
 **Variants**:
 
-- "Check if we've decided on this before"
-- "Does this align with our conventions?"
+* "Check if we've decided on this before"
+* "Does this align with our conventions?"
 
 ### "What would break if we..."
 
-**What it does**: Triggers defensive thinking and impact analysis.
+This triggers defensive thinking and impact analysis.
 
-**When to use**: Before making significant changes.
+Use this before making significant changes.
 
 ```
 What would break if we change the Settings struct?
@@ -90,49 +91,51 @@ What would break if we change the Settings struct?
 
 ### "Before you start, read X"
 
-**What it does**: Ensures specific context is loaded before work begins.
+This ensures specific context is loaded before work begins.
 
-**When to use**: When you know relevant context exists in a specific file.
+Use this when you know the relevant context exists in a specific file.
 
 ```
 Before you start, read .context/sessions/2026-01-20-auth-discussion.md
 ```
 
----
-
-## Reflection & Persistence
+## Reflection and Persistence
 
 ### "What did we learn?"
 
-**What it does**: Prompts reflection on the session and often triggers adding
-learnings to LEARNINGS.md.
+This prompts reflection on the session and often triggers adding
+learnings to `LEARNINGS.md`.
 
-**When to use**: After completing a task or debugging session.
+Use this after completing a task or debugging session.
 
-**Why it works**: Explicit reflection prompt. The AI will summarize insights
+This is an **explicit reflection prompt**. The AI will summarize insights
 and often offer to persist them.
 
 ### "Add this as a learning/decision"
 
-**What it does**: Explicit persistence request.
+This is an **explicit persistence request**.
 
-**When to use**: When you've discovered something worth remembering.
+Use this when you have discovered something worth remembering.
 
 ```
 Add this as a learning: "JSON marshal escapes angle brackets by default"
+
+# or simply.
+Add this as a learning.
+# and let the AI autonomously infer and summarize.
 ```
 
 ### "Save context before we end"
 
-**What it does**: Triggers context persistence before session close.
+This triggers context persistence before the session closes.
 
-**When to use**: End of session, or before switching topics.
+Use it at the end of the session, or before switching topics.
 
 **Variants**:
 
 - "Let's persist what we did"
 - "Update the context files"
-- `/ctx-save` (slash command in Claude Code)
+- `/ctx-save` (*slash command in Claude Code*)
 
 ---
 
@@ -140,17 +143,18 @@ Add this as a learning: "JSON marshal escapes angle brackets by default"
 
 ### "Explore the codebase for X"
 
-**What it does**: Triggers thorough codebase search rather than guessing.
+This triggers thorough codebase search rather than guessing.
 
-**When to use**: When you need to understand how something works.
+Use this when you need to understand how something works.
 
-**Why it works**: "Explore" signals that investigation is needed, not immediate action.
+This works, because "**Explore**" signals that **investigation is needed**, 
+not immediate action.
 
 ### "How does X work in this codebase?"
 
-**What it does**: Prompts reading actual code rather than explaining general concepts.
+This prompts reading actual code rather than explaining general concepts.
 
-**When to use**: Understanding existing implementation.
+Use this to understand the existing implementation.
 
 ```
 How does session saving work in this codebase?
@@ -158,67 +162,69 @@ How does session saving work in this codebase?
 
 ### "Find all places where X"
 
-**What it does**: Comprehensive search across the codebase.
+This triggers a comprehensive search across the codebase.
 
-**When to use**: Before refactoring or understanding impact.
+Use this before refactoring or understanding impact.
 
 ---
 
-## Meta & Process
+## Meta and Process
 
 ### "What should we document from this?"
 
-**What it does**: Prompts identifying learnings, decisions, and conventions
+This prompts identifying learnings, decisions, and conventions
 worth persisting.
 
-**When to use**: After complex discussions or implementations.
+Use this after complex discussions or implementations.
 
 ### "Is this the right approach?"
 
-**What it does**: Invites the AI to challenge the current direction.
+This invites the AI to challenge the current direction.
 
-**When to use**: When you want a sanity check.
+Use this when you want a sanity check.
 
-**Why it works**: Gives permission to disagree. AIs often default to agreeing;
-this prompt signals you want honest assessment.
+This works because it allows AI to disagree. 
+AIs often default to agreeing; this prompt signals you want an 
+**honest assessment**.
 
 ### "What am I missing?"
 
-**What it does**: Prompts thinking about edge cases, overlooked requirements,
+This prompts thinking about edge cases, overlooked requirements,
 or unconsidered approaches.
 
-**When to use**: Before finalizing a design or implementation.
+Use this before finalizing a design or implementation.
 
 ---
 
 ## Anti-Patterns
 
-Prompts that tend to produce poor results:
+Based on our `ctx` development experience (*i.e., "sipping our own champagne"*)
+so far, here are some prompts that tend to produce poor results:
 
-| Prompt | Problem | Better Alternative |
-|--------|---------|-------------------|
-| "Fix this" | Too vague, may patch symptoms | "Why is this failing?" |
-| "Make it work" | Encourages quick hacks | "What's the right way to solve this?" |
-| "Just do it" | Skips planning | "Plan this, then implement" |
-| "You should remember" | Confrontational | "Do you remember?" |
-| "Obviously..." | Discourages questions | State the requirement directly |
+| Prompt                | Problem                       | Better Alternative                    |
+|-----------------------|-------------------------------|---------------------------------------|
+| "Fix this"            | Too vague, may patch symptoms | "Why is this failing?"                |
+| "Make it work"        | Encourages quick hacks        | "What's the right way to solve this?" |
+| "Just do it"          | Skips planning                | "Plan this, then implement"           |
+| "You should remember" | Confrontational               | "Do you remember?"                    |
+| "Obviously..."        | Discourages questions         | State the requirement directly        |
 
 ---
 
 ## Quick Reference
 
-| Goal | Prompt |
-|------|--------|
-| Load context | "Do you remember?" |
-| Resume work | "What's the current state?" |
-| Debug | "Why doesn't X work?" |
-| Validate | "Is this consistent with our decisions?" |
-| Impact analysis | "What would break if we..." |
-| Reflect | "What did we learn?" |
-| Persist | "Add this as a learning" |
-| Explore | "How does X work in this codebase?" |
-| Sanity check | "Is this the right approach?" |
-| Completeness | "What am I missing?" |
+| Goal            | Prompt                                   |
+|-----------------|------------------------------------------|
+| Load context    | "Do you remember?"                       |
+| Resume work     | "What's the current state?"              |
+| Debug           | "Why doesn't X work?"                    |
+| Validate        | "Is this consistent with our decisions?" |
+| Impact analysis | "What would break if we..."              |
+| Reflect         | "What did we learn?"                     |
+| Persist         | "Add this as a learning"                 |
+| Explore         | "How does X work in this codebase?"      |
+| Sanity check    | "Is this the right approach?"            |
+| Completeness    | "What am I missing?"                     |
 
 ---
 

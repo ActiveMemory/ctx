@@ -336,23 +336,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Prompting Guide">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why This Matters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -456,15 +439,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reflection-persistence" class="md-nav__link">
+  <a href="#reflection-and-persistence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reflection &amp; Persistence
+        Reflection and Persistence
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Reflection &amp; Persistence">
+    <nav class="md-nav" aria-label="Reflection and Persistence">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -556,15 +539,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#meta-process" class="md-nav__link">
+  <a href="#meta-and-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Meta &amp; Process
+        Meta and Process
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Meta &amp; Process">
+    <nav class="md-nav" aria-label="Meta and Process">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -825,23 +808,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Prompting Guide">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why This Matters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -945,15 +911,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reflection-persistence" class="md-nav__link">
+  <a href="#reflection-and-persistence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reflection &amp; Persistence
+        Reflection and Persistence
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Reflection &amp; Persistence">
+    <nav class="md-nav" aria-label="Reflection and Persistence">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1045,15 +1011,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#meta-process" class="md-nav__link">
+  <a href="#meta-and-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Meta &amp; Process
+        Meta and Process
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Meta &amp; Process">
+    <nav class="md-nav" aria-label="Meta and Process">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1158,22 +1124,25 @@
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
 <h2 id="prompting-guide">Prompting Guide<a class="headerlink" href="#prompting-guide" title="Permanent link">&para;</a></h2>
 <p>Effective prompts for working with AI assistants in ctx-enabled projects.</p>
-<h3 id="why-this-matters">Why This Matters<a class="headerlink" href="#why-this-matters" title="Permanent link">&para;</a></h3>
-<p>AI assistants don't automatically read context files. The right prompt triggers
-the right behavior. This guide documents prompts that reliably produce good results.</p>
+<blockquote>
+<p>[!tip] Help Your AI Sidekick
+AI assistants <em>may not</em> automatically read context files. 
+<strong>The right prompt triggers the right behavior</strong>. </p>
+</blockquote>
+<p>This guide documents prompts that reliably produce good results.</p>
 <hr />
 <h2 id="session-start">Session Start<a class="headerlink" href="#session-start" title="Permanent link">&para;</a></h2>
 <h3 id="do-you-remember">"Do you remember?"<a class="headerlink" href="#do-you-remember" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Triggers the AI to read AGENT_PLAYBOOK, CONSTITUTION, sessions/,
-and other context files before responding.</p>
-<p><strong>When to use</strong>: Start of every important session.</p>
+<p>Triggers the AI to read <code>AGENT_PLAYBOOK</code>, <code>CONSTITUTION</code>, 
+<code>sessions/</code>, and other context files before responding.</p>
+<p>Use this during the start of every important session.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Do you remember what we were working on?
 </span></code></pre></div>
-<p><strong>Why it works</strong>: The question implies prior context exists. The AI checks files
+<p>This question <strong>implies</strong> prior context exists. So, the AI checks files
 rather than admitting ignorance.</p>
 <h3 id="whats-the-current-state">"What's the current state?"<a class="headerlink" href="#whats-the-current-state" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Prompts reading of TASKS.md, recent sessions, and status overview.</p>
-<p><strong>When to use</strong>: Resuming work after a break.</p>
+<p>Prompts reading of <code>TASKS.md</code>, recent sessions, and status overview.</p>
+<p>Use this when resuming work after a break.</p>
 <p><strong>Variants</strong>:</p>
 <ul>
 <li>"Where did we leave off?"</li>
@@ -1183,87 +1152,93 @@ rather than admitting ignorance.</p>
 <hr />
 <h2 id="during-work">During Work<a class="headerlink" href="#during-work" title="Permanent link">&para;</a></h2>
 <h3 id="why-doesnt-x-work">"Why doesn't X work?"<a class="headerlink" href="#why-doesnt-x-work" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Triggers root cause analysis rather than surface-level fixes.</p>
-<p><strong>When to use</strong>: When something fails unexpectedly.</p>
-<p><strong>Why it works</strong>: Framing as "why" encourages investigation before action.
-The AI will trace through code, check configurations, and identify the actual cause.</p>
+<p>This triggers root cause analysis rather than surface-level fixes.</p>
+<p>Use this when something fails unexpectedly.</p>
+<p>Framing as "<em>why</em>" encourages investigation before action. The AI will trace 
+through code, check configurations, and identify the actual cause.</p>
 <div class="admonition example">
-<p class="admonition-title">Real example</p>
+<p class="admonition-title">Real Example</p>
 <p>"Why can't I run /ctx-save?" led to discovering missing permissions
 in settings.local.json bootstrapping—a fix that benefited all users.</p>
 </div>
 <h3 id="is-this-consistent-with-our-decisions">"Is this consistent with our decisions?"<a class="headerlink" href="#is-this-consistent-with-our-decisions" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Prompts checking DECISIONS.md before implementing.</p>
-<p><strong>When to use</strong>: Before making architectural choices.</p>
+<p>This prompts checking DECISIONS.md before implementing.</p>
+<p>Use this before making architectural choices.</p>
 <p><strong>Variants</strong>:</p>
 <ul>
 <li>"Check if we've decided on this before"</li>
 <li>"Does this align with our conventions?"</li>
 </ul>
 <h3 id="what-would-break-if-we">"What would break if we..."<a class="headerlink" href="#what-would-break-if-we" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Triggers defensive thinking and impact analysis.</p>
-<p><strong>When to use</strong>: Before making significant changes.</p>
+<p>This triggers defensive thinking and impact analysis.</p>
+<p>Use this before making significant changes.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>What would break if we change the Settings struct?
 </span></code></pre></div>
 <h3 id="before-you-start-read-x">"Before you start, read X"<a class="headerlink" href="#before-you-start-read-x" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Ensures specific context is loaded before work begins.</p>
-<p><strong>When to use</strong>: When you know relevant context exists in a specific file.</p>
+<p>This ensures specific context is loaded before work begins.</p>
+<p>Use this when you know the relevant context exists in a specific file.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Before you start, read .context/sessions/2026-01-20-auth-discussion.md
 </span></code></pre></div>
-<hr />
-<h2 id="reflection-persistence">Reflection &amp; Persistence<a class="headerlink" href="#reflection-persistence" title="Permanent link">&para;</a></h2>
+<h2 id="reflection-and-persistence">Reflection and Persistence<a class="headerlink" href="#reflection-and-persistence" title="Permanent link">&para;</a></h2>
 <h3 id="what-did-we-learn">"What did we learn?"<a class="headerlink" href="#what-did-we-learn" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Prompts reflection on the session and often triggers adding
-learnings to LEARNINGS.md.</p>
-<p><strong>When to use</strong>: After completing a task or debugging session.</p>
-<p><strong>Why it works</strong>: Explicit reflection prompt. The AI will summarize insights
+<p>This prompts reflection on the session and often triggers adding
+learnings to <code>LEARNINGS.md</code>.</p>
+<p>Use this after completing a task or debugging session.</p>
+<p>This is an <strong>explicit reflection prompt</strong>. The AI will summarize insights
 and often offer to persist them.</p>
 <h3 id="add-this-as-a-learningdecision">"Add this as a learning/decision"<a class="headerlink" href="#add-this-as-a-learningdecision" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Explicit persistence request.</p>
-<p><strong>When to use</strong>: When you've discovered something worth remembering.</p>
+<p>This is an <strong>explicit persistence request</strong>.</p>
+<p>Use this when you have discovered something worth remembering.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Add this as a learning: &quot;JSON marshal escapes angle brackets by default&quot;
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a># or simply.
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Add this as a learning.
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a># and let the AI autonomously infer and summarize.
 </span></code></pre></div>
 <h3 id="save-context-before-we-end">"Save context before we end"<a class="headerlink" href="#save-context-before-we-end" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Triggers context persistence before session close.</p>
-<p><strong>When to use</strong>: End of session, or before switching topics.</p>
+<p>This triggers context persistence before the session closes.</p>
+<p>Use it at the end of the session, or before switching topics.</p>
 <p><strong>Variants</strong>:</p>
 <ul>
 <li>"Let's persist what we did"</li>
 <li>"Update the context files"</li>
-<li><code>/ctx-save</code> (slash command in Claude Code)</li>
+<li><code>/ctx-save</code> (<em>slash command in Claude Code</em>)</li>
 </ul>
 <hr />
 <h2 id="exploration-research">Exploration &amp; Research<a class="headerlink" href="#exploration-research" title="Permanent link">&para;</a></h2>
 <h3 id="explore-the-codebase-for-x">"Explore the codebase for X"<a class="headerlink" href="#explore-the-codebase-for-x" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Triggers thorough codebase search rather than guessing.</p>
-<p><strong>When to use</strong>: When you need to understand how something works.</p>
-<p><strong>Why it works</strong>: "Explore" signals that investigation is needed, not immediate action.</p>
+<p>This triggers thorough codebase search rather than guessing.</p>
+<p>Use this when you need to understand how something works.</p>
+<p>This works, because "<strong>Explore</strong>" signals that <strong>investigation is needed</strong>, 
+not immediate action.</p>
 <h3 id="how-does-x-work-in-this-codebase">"How does X work in this codebase?"<a class="headerlink" href="#how-does-x-work-in-this-codebase" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Prompts reading actual code rather than explaining general concepts.</p>
-<p><strong>When to use</strong>: Understanding existing implementation.</p>
+<p>This prompts reading actual code rather than explaining general concepts.</p>
+<p>Use this to understand the existing implementation.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>How does session saving work in this codebase?
 </span></code></pre></div>
 <h3 id="find-all-places-where-x">"Find all places where X"<a class="headerlink" href="#find-all-places-where-x" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Comprehensive search across the codebase.</p>
-<p><strong>When to use</strong>: Before refactoring or understanding impact.</p>
+<p>This triggers a comprehensive search across the codebase.</p>
+<p>Use this before refactoring or understanding impact.</p>
 <hr />
-<h2 id="meta-process">Meta &amp; Process<a class="headerlink" href="#meta-process" title="Permanent link">&para;</a></h2>
+<h2 id="meta-and-process">Meta and Process<a class="headerlink" href="#meta-and-process" title="Permanent link">&para;</a></h2>
 <h3 id="what-should-we-document-from-this">"What should we document from this?"<a class="headerlink" href="#what-should-we-document-from-this" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Prompts identifying learnings, decisions, and conventions
+<p>This prompts identifying learnings, decisions, and conventions
 worth persisting.</p>
-<p><strong>When to use</strong>: After complex discussions or implementations.</p>
+<p>Use this after complex discussions or implementations.</p>
 <h3 id="is-this-the-right-approach">"Is this the right approach?"<a class="headerlink" href="#is-this-the-right-approach" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Invites the AI to challenge the current direction.</p>
-<p><strong>When to use</strong>: When you want a sanity check.</p>
-<p><strong>Why it works</strong>: Gives permission to disagree. AIs often default to agreeing;
-this prompt signals you want honest assessment.</p>
+<p>This invites the AI to challenge the current direction.</p>
+<p>Use this when you want a sanity check.</p>
+<p>This works because it allows AI to disagree. 
+AIs often default to agreeing; this prompt signals you want an 
+<strong>honest assessment</strong>.</p>
 <h3 id="what-am-i-missing">"What am I missing?"<a class="headerlink" href="#what-am-i-missing" title="Permanent link">&para;</a></h3>
-<p><strong>What it does</strong>: Prompts thinking about edge cases, overlooked requirements,
+<p>This prompts thinking about edge cases, overlooked requirements,
 or unconsidered approaches.</p>
-<p><strong>When to use</strong>: Before finalizing a design or implementation.</p>
+<p>Use this before finalizing a design or implementation.</p>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
-<p>Prompts that tend to produce poor results:</p>
+<p>Based on our <code>ctx</code> development experience (<em>i.e., "sipping our own champagne"</em>)
+so far, here are some prompts that tend to produce poor results:</p>
 <table>
 <thead>
 <tr>
