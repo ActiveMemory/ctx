@@ -489,25 +489,28 @@ ctx session parse transcript.jsonl --extract
 
 ## Environment Variables
 
-| Variable   | Description                             |
-|------------|-----------------------------------------|
-| `CTX_DIR`  | Override default context directory path |
-| `NO_COLOR` | Disable colored output when set         |
+| Variable           | Description                             |
+|--------------------|-----------------------------------------|
+| `CTX_DIR`          | Override default context directory path |
+| `CTX_TOKEN_BUDGET` | Override default token budget           |
+| `NO_COLOR`         | Disable colored output when set         |
 
 ## Configuration File
-
-> **Note:** Not yet implemented. See [TASKS.md](https://github.com/ActiveMemory/ctx/blob/main/.context/TASKS.md) for status.
 
 Optional `.contextrc` (YAML format) at project root:
 
 ```yaml
 # .contextrc
-context_dir: .context      # Context directory name
-token_budget: 8000         # Default token budget
-priority_order:            # File loading priority
+context_dir: .context # Context directory name
+token_budget: 8000    # Default token budget
+priority_order:       # File loading priority
   - TASKS.md
   - DECISIONS.md
   - CONVENTIONS.md
-auto_archive: true         # Auto-archive old items
-archive_after_days: 7      # Days before archiving
+auto_archive: true    # Auto-archive old items
+archive_after_days: 7 # Days before archiving
 ```
+
+**Priority order:** CLI flags > Environment variables > `.contextrc` > Defaults
+
+All settings are optional. Missing values use defaults.

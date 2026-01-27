@@ -8,6 +8,8 @@ package load
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx load" command for outputting assembled context.
@@ -45,14 +47,18 @@ The context files are assembled in the recommended read order:
   9. AGENT_PLAYBOOK.md
 
 Use --raw to output raw file contents without headers or assembly.
-Use --budget to limit output to a specific token count.`,
+Use --budget to limit output to a specific token count (default from .contextrc or 8000).`,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// Use configured budget if flag not explicitly set
+			if !cmd.Flags().Changed("budget") {
+				budget = config.GetTokenBudget()
+			}
 			return runLoad(cmd, budget, raw)
 		},
 	}
 
 	cmd.Flags().IntVar(
-		&budget, "budget", 8000, "Token budget for assembly",
+		&budget, "budget", config.DefaultTokenBudget, "Token budget for assembly",
 	)
 	cmd.Flags().BoolVar(
 		&raw, "raw", false, "Output raw file contents without assembly",
