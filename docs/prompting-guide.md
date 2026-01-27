@@ -58,7 +58,7 @@ Use this when resuming work after a break.
 
 ### "Why doesn't X work?"
 
-This triggers root cause analysis rather than surface-level fixes.
+This triggers **root cause analysis** rather than surface-level fixes.
 
 Use this when something fails unexpectedly.
 
