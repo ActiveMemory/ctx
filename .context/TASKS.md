@@ -33,9 +33,11 @@
     2. the generated settings.local.json had unicode characters that broke the interpretation.
     make sure the file is properly-generated, and it works as expected.
     #started:2026-01-26-051500 #done:2026-01-26-052200
-  - [ ]: `/ctx-save` slash command triggers approval prompt despite using ```` ```! ````
+  - [x]: `/ctx-save` slash command triggers approval prompt despite using ```` ```! ````
     auto-execute syntax. The command should run without requiring manual approval.
-  - [ ]: `/ctx-release` should also update the versions ind docs/index.md
+    #done:2026-01-27 (ctx session:* permission added to settings.local.json)
+  - [x]: `/ctx-release` should also update the versions in docs/index.md
+    #done:2026-01-27 (hack/release.sh lines 94-102 handle this automatically)
   - [ ]: docs should have a page that has links to snapshotted doc version (on GitHub for simplicity).
     `/ctx-release` should update that page too.
 
@@ -173,3 +175,7 @@
 
 
 - [ ] Implement .contextrc config file support (YAML format) #priority:low #added:2026-01-27-065231
+
+- [ ] Change ctx add to prepend (not append) entries in DECISIONS.md and LEARNINGS.md for reverse-chronological order #priority:medium #added:2026-01-27-065902
+
+- [ ] Add required --context, --rationale, --consequences flags to ctx add decision command; command should fail if flags are missing to enforce complete decision records #priority:medium #added:2026-01-27-070542

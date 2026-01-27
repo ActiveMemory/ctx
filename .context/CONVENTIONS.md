@@ -27,3 +27,5 @@ needs updating. Add `#doc-impact` tag to tasks that affect documentation.
 
 **Drift detection:** Run `ctx drift` — it will warn if `internal/cli/` 
 is newer than `docs/cli-reference.md`.
+
+- Decision records must include filled-in Context, Rationale, and Consequences sections. Never leave placeholder text.
