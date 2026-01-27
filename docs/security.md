@@ -9,9 +9,7 @@ title: Security
 icon: lucide/shield
 ---
 
-# Security
-
-## Reporting Vulnerabilities
+# Reporting Vulnerabilities
 
 At `ctx` we take security very seriously.
 
