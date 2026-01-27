@@ -61,26 +61,29 @@ func FormatConvention(content string) string {
 
 // FormatDecision formats a decision entry as a structured Markdown section.
 //
-// The output includes a timestamped heading, status, and placeholder sections
-// for context, rationale, and consequences of the ADR format.
+// The output includes a timestamped heading, status, and complete ADR sections
+// for context, rationale, and consequences.
 //
 // Parameters:
-//   - content: Decision title/summary text
+//   - title: Decision title/summary text
+//   - context: What prompted this decision
+//   - rationale: Why this choice over alternatives
+//   - consequences: What changes as a result
 //
 // Returns:
-//   - string: Formatted decision section with placeholders for details
-func FormatDecision(content string) string {
+//   - string: Formatted decision section with all ADR fields
+func FormatDecision(title, context, rationale, consequences string) string {
 	timestamp := time.Now().Format("2006-01-02-150405")
 	return fmt.Sprintf(`## [%s] %s
 
 **Status**: Accepted
 
-**Context**: [Add context here]
+**Context**: %s
 
 **Decision**: %s
 
-**Rationale**: [Add rationale here]
+**Rationale**: %s
 
-**Consequences**: [Add consequences here]
-`, timestamp, content, content)
+**Consequences**: %s
+`, timestamp, title, context, title, rationale, consequences)
 }

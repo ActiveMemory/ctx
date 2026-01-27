@@ -105,7 +105,12 @@ func runAddSilent(args []string) error {
 	var entry string
 	switch fileType {
 	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
-		entry = add.FormatDecision(content)
+		// Watch command receives simple content from AI XML tags,
+		// use placeholders for ADR fields (CLI requires full format)
+		entry = add.FormatDecision(content,
+			"[Context from watch - please update]",
+			"[Rationale from watch - please update]",
+			"[Consequences from watch - please update]")
 	case config.UpdateTypeTask, config.UpdateTypeTasks:
 		entry = add.FormatTask(content, "")
 	case config.UpdateTypeLearning, config.UpdateTypeLearnings:

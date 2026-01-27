@@ -188,11 +188,14 @@ ctx add <type> <content> [flags]
 
 **Flags**:
 
-| Flag                 | Description                                 |
-|----------------------|---------------------------------------------|
-| `--priority <level>` | Priority for tasks: `high`, `medium`, `low` |
-| `--section <name>`   | Target section within file                  |
-| `--edit`             | Open editor for full entry                  |
+| Flag                    | Description                                            |
+|-------------------------|--------------------------------------------------------|
+| `--priority <level>`    | Priority for tasks: `high`, `medium`, `low`            |
+| `--section <name>`      | Target section within file                             |
+| `--context, -c`         | Context for decisions (required for decisions)         |
+| `--rationale, -r`       | Rationale for decisions (required for decisions)       |
+| `--consequences`        | Consequences for decisions (required for decisions)    |
+| `--file, -f`            | Read content from file instead of argument             |
 
 **Examples**:
 
@@ -201,8 +204,11 @@ ctx add <type> <content> [flags]
 ctx add task "Implement user authentication"
 ctx add task "Fix login bug" --priority high
 
-# Record a decision
-ctx add decision "Use PostgreSQL for primary database"
+# Record a decision (requires all ADR fields)
+ctx add decision "Use PostgreSQL for primary database" \
+  --context "Need a reliable database for production" \
+  --rationale "PostgreSQL offers ACID compliance and JSON support" \
+  --consequences "Team needs PostgreSQL training"
 
 # Note a learning
 ctx add learning "Vitest mocks must be hoisted"

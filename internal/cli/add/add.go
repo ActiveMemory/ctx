@@ -20,24 +20,30 @@ import (
 //   - --priority, -p: Priority level for tasks (high, medium, low)
 //   - --section, -s: Target section within the file
 //   - --file, -f: Read content from a file instead of argument
+//   - --context, -c: Context for decisions (required for decisions)
+//   - --rationale, -r: Rationale for decisions (required for decisions)
+//   - --consequences: Consequences for decisions (required for decisions)
 //
 // Returns:
 //   - *cobra.Command: Configured add command with flags registered
 func Cmd() *cobra.Command {
 	var (
-		priority string
-		section  string
-		fromFile string
+		priority     string
+		section      string
+		fromFile     string
+		context      string
+		rationale    string
+		consequences string
 	)
 
 	cmd := &cobra.Command{
 		Use:   "add <type> [content]",
 		Short: "Add a new item to a context file",
-		Long: `Add a new decision, task, learning, or convention 
+		Long: `Add a new decision, task, learning, or convention
 to the appropriate context file.
 
 Types:
-  decision    Add to DECISIONS.md
+  decision    Add to DECISIONS.md (requires --context, --rationale, --consequences)
   task        Add to TASKS.md
   learning    Add to LEARNINGS.md
   convention  Add to CONVENTIONS.md
@@ -48,14 +54,23 @@ Content can be provided as:
   - Stdin: echo "text" | ctx add learning
 
 Examples:
-  ctx add decision "Use PostgreSQL for primary database"
+  ctx add decision "Use PostgreSQL" \
+    --context "Need a reliable database for production" \
+    --rationale "PostgreSQL offers ACID compliance and JSON support" \
+    --consequences "Team needs PostgreSQL training"
   ctx add task "Implement user authentication" --priority high
   ctx add learning "Vitest mocks must be hoisted"
-  ctx add learning --file learning-template.md
-  cat notes.md | ctx add decision`,
+  ctx add learning --file learning-template.md`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAdd(cmd, args, priority, section, fromFile)
+			return runAdd(cmd, args, addFlags{
+				priority:     priority,
+				section:      section,
+				fromFile:     fromFile,
+				context:      context,
+				rationale:    rationale,
+				consequences: consequences,
+			})
 		},
 	}
 
@@ -74,6 +89,31 @@ Examples:
 		"file", "f", "",
 		"Read content from file instead of argument",
 	)
+	cmd.Flags().StringVarP(
+		&context,
+		"context", "c", "",
+		"Context for decisions: what prompted this decision (required for decisions)",
+	)
+	cmd.Flags().StringVarP(
+		&rationale,
+		"rationale", "r", "",
+		"Rationale for decisions: why this choice over alternatives (required for decisions)",
+	)
+	cmd.Flags().StringVar(
+		&consequences,
+		"consequences", "",
+		"Consequences for decisions: what changes as a result (required for decisions)",
+	)
 
 	return cmd
+}
+
+// addFlags holds all flags for the add command.
+type addFlags struct {
+	priority     string
+	section      string
+	fromFile     string
+	context      string
+	rationale    string
+	consequences string
 }

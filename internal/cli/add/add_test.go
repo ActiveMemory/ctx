@@ -76,10 +76,15 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		t.Fatalf("init failed: %v", err)
 	}
 
-	// Test adding a decision
+	// Test adding a decision with required flags
 	t.Run("add decision", func(t *testing.T) {
 		addCmd := Cmd()
-		addCmd.SetArgs([]string{"decision", "Use PostgreSQL for database"})
+		addCmd.SetArgs([]string{
+			"decision", "Use PostgreSQL for database",
+			"--context", "Need a reliable database",
+			"--rationale", "PostgreSQL is well-supported",
+			"--consequences", "Team needs training",
+		})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add decision failed: %v", err)
 		}
@@ -88,8 +93,31 @@ func TestAddDecisionAndLearning(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to read DECISIONS.md: %v", err)
 		}
-		if !strings.Contains(string(content), "Use PostgreSQL for database") {
-			t.Error("decision was not added to DECISIONS.md")
+		contentStr := string(content)
+		if !strings.Contains(contentStr, "Use PostgreSQL for database") {
+			t.Error("decision title was not added to DECISIONS.md")
+		}
+		if !strings.Contains(contentStr, "Need a reliable database") {
+			t.Error("decision context was not added to DECISIONS.md")
+		}
+		if !strings.Contains(contentStr, "PostgreSQL is well-supported") {
+			t.Error("decision rationale was not added to DECISIONS.md")
+		}
+		if !strings.Contains(contentStr, "Team needs training") {
+			t.Error("decision consequences was not added to DECISIONS.md")
+		}
+	})
+
+	// Test that decision without required flags fails
+	t.Run("add decision without flags fails", func(t *testing.T) {
+		addCmd := Cmd()
+		addCmd.SetArgs([]string{"decision", "Incomplete decision"})
+		err := addCmd.Execute()
+		if err == nil {
+			t.Fatal("expected error when adding decision without required flags")
+		}
+		if !strings.Contains(err.Error(), "--context") {
+			t.Errorf("error should mention missing --context flag: %v", err)
 		}
 	})
 
@@ -152,14 +180,24 @@ func TestPrependOrder(t *testing.T) {
 	t.Run("decisions are prepended", func(t *testing.T) {
 		// Add first decision
 		addCmd := Cmd()
-		addCmd.SetArgs([]string{"decision", "First decision"})
+		addCmd.SetArgs([]string{
+			"decision", "First decision",
+			"--context", "First context",
+			"--rationale", "First rationale",
+			"--consequences", "First consequences",
+		})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add first decision failed: %v", err)
 		}
 
 		// Add second decision
 		addCmd = Cmd()
-		addCmd.SetArgs([]string{"decision", "Second decision"})
+		addCmd.SetArgs([]string{
+			"decision", "Second decision",
+			"--context", "Second context",
+			"--rationale", "Second rationale",
+			"--consequences", "Second consequences",
+		})
 		if err := addCmd.Execute(); err != nil {
 			t.Fatalf("add second decision failed: %v", err)
 		}

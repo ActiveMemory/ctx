@@ -28,26 +28,54 @@ import (
 // Parameters:
 //   - cmd: Cobra command for output
 //   - args: Command arguments; args[0] is the entry type, args[1:] is content
-//   - priority: Priority tag for tasks (high, medium, low); empty to omit
-//   - section: Target section header for tasks; empty defaults to "## Next Up"
-//   - fromFile: Path to read content from; empty to use args or stdin
+//   - flags: All flag values from the command
 //
 // Returns:
-//   - error: Non-nil if content is missing, type is invalid, or file
-//     operations fail
-func runAdd(
-	cmd *cobra.Command, args []string, priority, section, fromFile string,
-) error {
+//   - error: Non-nil if content is missing, type is invalid, required flags
+//     are missing, or file operations fail
+func runAdd(cmd *cobra.Command, args []string, flags addFlags) error {
 	fType := strings.ToLower(args[0])
+
+	// Validate required flags for decisions
+	if fType == config.UpdateTypeDecision || fType == config.UpdateTypeDecisions {
+		var missing []string
+		if flags.context == "" {
+			missing = append(missing, "--context")
+		}
+		if flags.rationale == "" {
+			missing = append(missing, "--rationale")
+		}
+		if flags.consequences == "" {
+			missing = append(missing, "--consequences")
+		}
+		if len(missing) > 0 {
+			return fmt.Errorf(`decisions require complete ADR format
+
+Missing required flags: %s
+
+Usage:
+  ctx add decision "Decision title" \
+    --context "What prompted this decision" \
+    --rationale "Why this choice over alternatives" \
+    --consequences "What changes as a result"
+
+Example:
+  ctx add decision "Use PostgreSQL for primary database" \
+    --context "Need a reliable database for production workloads" \
+    --rationale "PostgreSQL offers ACID compliance, JSON support, and team familiarity" \
+    --consequences "Team needs PostgreSQL training; must set up replication"`,
+				strings.Join(missing, ", "))
+		}
+	}
 
 	// Determine the content source: args, --file, or stdin
 	var content string
 
-	if fromFile != "" {
+	if flags.fromFile != "" {
 		// Read from the file
-		fileContent, err := os.ReadFile(fromFile)
+		fileContent, err := os.ReadFile(flags.fromFile)
 		if err != nil {
-			return fmt.Errorf("failed to read file %s: %w", fromFile, err)
+			return fmt.Errorf("failed to read file %s: %w", flags.fromFile, err)
 		}
 		content = strings.TrimSpace(string(fileContent))
 	} else if len(args) > 1 {
@@ -110,9 +138,9 @@ Examples:
 	var entry string
 	switch fType {
 	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
-		entry = FormatDecision(content)
+		entry = FormatDecision(content, flags.context, flags.rationale, flags.consequences)
 	case config.UpdateTypeTask, config.UpdateTypeTasks:
-		entry = FormatTask(content, priority)
+		entry = FormatTask(content, flags.priority)
 	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
 		entry = FormatLearning(content)
 	case config.UpdateTypeConvention, config.UpdateTypeConventions:
@@ -120,7 +148,7 @@ Examples:
 	}
 
 	// Append to file
-	newContent := AppendEntry(existing, entry, fType, section)
+	newContent := AppendEntry(existing, entry, fType, flags.section)
 
 	if err := os.WriteFile(filePath, newContent, 0644); err != nil {
 		return fmt.Errorf("failed to write %s: %w", filePath, err)

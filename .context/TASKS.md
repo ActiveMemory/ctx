@@ -43,9 +43,10 @@
   - [x] Change ctx add to prepend (not append) entries in DECISIONS.md and
     LEARNINGS.md for reverse-chronological order #priority:medium
     #added:2026-01-27-065902 #done:2026-01-27
-  - [ ] Add required --context, --rationale, --consequences flags to ctx add
+  - [x] Add required --context, --rationale, --consequences flags to ctx add
     decision command; command should fail if flags are missing to enforce
-    complete decision records #priority:medium #added:2026-01-27-070542  
+    complete decision records #priority:medium #added:2026-01-27-070542
+    #done:2026-01-27  
   - [ ]: docs should have a page that has links to snapshotted doc version 
     (a list of links on the public docs in a separate page; links to 
     tagged docs on GitHub for simplicity).
