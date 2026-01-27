@@ -38,11 +38,11 @@
     #done:2026-01-27 (ctx session:* permission added to settings.local.json)
   - [x]: `/ctx-release` should also update the versions in docs/index.md
     #done:2026-01-27 (hack/release.sh lines 94-102 handle this automatically)
-  - [ ] Implement .contextrc config file support (YAML format)
-    #priority:low #added:2026-01-27-065231
-  - [ ] Change ctx add to prepend (not append) entries in DECISIONS.md and
+  - [x] Implement .contextrc config file support (YAML format)
+    #priority:low #added:2026-01-27-065231 #done:2026-01-27
+  - [x] Change ctx add to prepend (not append) entries in DECISIONS.md and
     LEARNINGS.md for reverse-chronological order #priority:medium
-    #added:2026-01-27-065902
+    #added:2026-01-27-065902 #done:2026-01-27
   - [ ] Add required --context, --rationale, --consequences flags to ctx add
     decision command; command should fail if flags are missing to enforce
     complete decision records #priority:medium #added:2026-01-27-070542  
