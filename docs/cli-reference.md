@@ -48,8 +48,9 @@ ctx init [flags]
 **Creates**:
 
 - `.context/` directory with all template files
-- `.claude/hooks/` with auto-save script (for Claude Code)
-- `.claude/settings.local.json` with hook configuration
+- `.claude/hooks/` with auto-save and enforcement scripts (for Claude Code)
+- `.claude/commands/` with ctx slash command definitions
+- `.claude/settings.local.json` with hook configuration and pre-approved ctx permissions
 - `CLAUDE.md` with bootstrap instructions (or merges into existing)
 
 **Example**:
