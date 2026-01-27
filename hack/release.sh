@@ -101,14 +101,27 @@ sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-darwin-arm64|ctx-${VERSION_NUM}-darw
 sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-windows-amd64|ctx-${VERSION_NUM}-windows-amd64|g" docs/index.md
 rm -f docs/index.md.bak
 
+# Update versions.md with new release
+echo "Updating docs/versions.md..."
+RELEASE_DATE=$(date +%Y-%m-%d)
+# Add new version row after the table header
+sed -i.bak "/^| Version | Release Date | Documentation |$/,/^|/{
+    /^|-/a\\
+| ${VERSION} | ${RELEASE_DATE} | [View docs](https://github.com/ActiveMemory/ctx/tree/${VERSION}/docs) |
+}" docs/versions.md
+# Update the "latest stable" reference
+sed -i.bak -E "s|see \[v[0-9]+\.[0-9]+\.[0-9]+\]|see [${VERSION}]|g" docs/versions.md
+sed -i.bak -E "s|/tree/v[0-9]+\.[0-9]+\.[0-9]+/docs\)\.$|/tree/${VERSION}/docs).|g" docs/versions.md
+rm -f docs/versions.md.bak
+
 # Rebuild site with updated docs
 echo "Rebuilding documentation site..."
 make site
 
 # Commit docs and site updates
 echo "Committing documentation updates..."
-git add docs/index.md site/
-git commit -m "docs: update download links to ${VERSION}"
+git add docs/index.md docs/versions.md site/
+git commit -m "docs: update download links and versions page for ${VERSION}"
 echo ""
 
 # Check if tag already exists

@@ -47,10 +47,11 @@
     decision command; command should fail if flags are missing to enforce
     complete decision records #priority:medium #added:2026-01-27-070542
     #done:2026-01-27  
-  - [ ]: docs should have a page that has links to snapshotted doc version 
-    (a list of links on the public docs in a separate page; links to 
+  - [x]: docs should have a page that has links to snapshotted doc version
+    (a list of links on the public docs in a separate page; links to
     tagged docs on GitHub for simplicity).
     `/ctx-release` should update that page too.
+    #done:2026-01-27 (created docs/versions.md, updated hack/release.sh)
 
 - [ ] T0.1.1: Social
   - [ ] Remind to Human: have a proper email for security vulnerability reports.
