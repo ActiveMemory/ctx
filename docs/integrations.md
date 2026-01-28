@@ -41,7 +41,7 @@ This creates:
 ### How It Works
 
 ```mermaid
-graph LR
+graph TD
     A[Session Start] --> B[Claude reads CLAUDE.md]
     B --> C[PreToolUse hook runs]
     C --> D[ctx agent loads context]
