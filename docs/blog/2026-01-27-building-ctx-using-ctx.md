@@ -36,7 +36,8 @@ That is "*reset amnesia*", and it's not just annoying: it's expensive.
 Every session starts with re-explaining context, re-reading files, 
 re-discovering decisions that were already made.
 
-> "I don't want to lose this discussion... I am a brain-dead developer YOLO'ing my way out"
+> "I don't want to lose this discussion... 
+> I am a brain-dead developer YOLO'ing my way out"
 
 That's exactly what I said to Claude when I first started working on `ctx`.
 
