@@ -5,6 +5,8 @@
 
 ---
 
+- **[2026-01-28-072838]** Changelogs document WHAT; blogs explain WHY. Same information, different engagement. Changelogs are for machines (audits, dependency trackers). Blogs are for humans (narrative, context, lessons). When synthesizing session history, output both: changelog for completeness, blog for readability.
+
 - **[2026-01-28-051426]** IDE is already the UI: Discovery, search, and 
 editing of .context/ markdown files works better in VS Code/IDE than any 
 custom UI we'd build. Full-text search, git integration, extensions - all free. 
