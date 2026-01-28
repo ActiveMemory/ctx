@@ -106,3 +106,17 @@ Additional supporting context:
 
 Depends on: ctx recall export (Phase 2)
 #priority:low #phase:future #added:2026-01-28-071638
+
+- [ ] feat: /ctx-blog slash command - generate blog post draft from recent activity
+
+Analyzes what happened since last blog post:
+- Sessions and their summaries
+- Commits and features added
+- Decisions made and rationale
+- Learnings discovered
+
+Outputs narrative markdown draft for human editing.
+Could integrate with ctx journal or work directly from sessions/git history.
+
+Related: ctx journal summarize (internal) vs ctx-blog (external/public)
+#priority:low #phase:future #added:2026-01-28-072625
