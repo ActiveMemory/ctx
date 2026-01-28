@@ -49,3 +49,9 @@
   #added:2026-01-27 #priority:medium
 
 - [ ] feat: ctx add learning requires --context, --lesson, --application flags (matching decision's ADR pattern) #priority:high #added:2026-01-28-053941
+
+- [ ] fix: update context-update XML tag format to include required fields (context, lesson, application for learnings; context, rationale, consequences for decisions) #priority:medium #added:2026-01-28-054914
+
+- [ ] chore: add tests to verify docs match implementation (caught drift in context-update format) #priority:low #added:2026-01-28-054915
+
+- [ ] refactor: ctx watch should use shared validation with ctx add (currently bypasses CLI, writes directly to files) #priority:medium #added:2026-01-28-055110
