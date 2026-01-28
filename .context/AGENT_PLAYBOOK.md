@@ -190,6 +190,32 @@ For complex sessions (architecture, debugging), include:
 | Completed task              | Mark [x] in TASKS.md  |
 | Had important discussion    | Save to sessions/     |
 
+### Prefer `ctx add` Over Direct File Edits
+
+When adding learnings, decisions, or tasks, **use `ctx add` commands** instead of
+editing files directly:
+
+```bash
+# ✓ Preferred - ensures consistent format, timestamps, structure
+ctx add learning "Title" --context "..." --lesson "..." --application "..."
+ctx add decision "Title" --context "..." --rationale "..." --consequences "..."
+ctx add task "Description"
+
+# ✗ Avoid - bypasses structure, easy to write incomplete entries
+Edit LEARNINGS.md directly with a one-liner
+```
+
+**Why this matters:**
+- CLI commands enforce required fields (context, rationale, etc.)
+- Automatic timestamps for session correlation
+- Consistent formatting across entries
+- Prevents low-quality one-liner entries that lose context over time
+
+**Exception:** Direct edits are fine for:
+- Marking tasks complete (`[ ]` → `[x]`)
+- Minor corrections to existing entries
+- CONVENTIONS.md (free-form patterns)
+
 ## Rich Entries with Templates
 
 For complex learnings or decisions that need more structure, use the `--file` flag

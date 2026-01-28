@@ -4,183 +4,42 @@
 
 ## Phase 0: Cleanup from the previous version
 
-- [ ] T0.1.0: Bugs
-  - [x] `ctx init` currently appends to the end of and existing CLAUDE.md file;
-    it would be better to find the first heading, and if it's a level one heading,
-    (likely the title of the document), insert the new section "after it" (since
-    the template has level-2 and lower headings), if not add it to the top of
-    the file—things get missing to see/recognize (for the human) and
-    (more importantly) deprioritized (for the machine) when
-    it is written all the way to the end of the file.
-  - [x] feat: the instructions say "always offer to save context", however,
-    that's too late for the LLM because the session will be terminated before
-    it can take action. you (the LLM) have no control over offering stuff
-    during context end; so, you need to be proactive: Maybe at every critical
-    decision, and after every few interactions you have to offer to save context.
-    This needs to be arranged the best way possible (maybe a hint/instruction
-    to the LLM in the template files, or maybe something else)
-    #started:2026-01-26-034500 #done:2026-01-26-035700
-  - [x] The LLM should also be proactive in saving decision when it makes
-    sense; and suggesting new tasks. #started:2026-01-26-034500 #done:2026-01-26-035700
-  - [x] Bug in hook creation:
-    ```text
-    /home/volkan/WORKSPACE/spike/.claude/settings.local.json
-    └ hooks
-    ├ PreToolUseHooks: Invalid key in record
-    └ SessionEndHooks: Invalid key in record
-    ```
-    1. the "Hooks" suffix is not in the schema;
-    2. the generated settings.local.json had unicode characters that broke the interpretation.
-    make sure the file is properly-generated, and it works as expected.
-    #started:2026-01-26-051500 #done:2026-01-26-052200
-  - [x]: `/ctx-save` slash command triggers approval prompt despite using ```` ```! ````
-    auto-execute syntax. The command should run without requiring manual approval.
-    #done:2026-01-27 (ctx session:* permission added to settings.local.json)
-  - [x]: `/ctx-release` should also update the versions in docs/index.md
-    #done:2026-01-27 (hack/release.sh lines 94-102 handle this automatically)
-  - [x] Implement .contextrc config file support (YAML format)
-    #priority:low #added:2026-01-27-065231 #done:2026-01-27
-  - [x] Change ctx add to prepend (not append) entries in DECISIONS.md and
-    LEARNINGS.md for reverse-chronological order #priority:medium
-    #added:2026-01-27-065902 #done:2026-01-27
-  - [x] Add required --context, --rationale, --consequences flags to ctx add
-    decision command; command should fail if flags are missing to enforce
-    complete decision records #priority:medium #added:2026-01-27-070542
-    #done:2026-01-27  
-  - [x]: docs should have a page that has links to snapshotted doc version
-    (a list of links on the public docs in a separate page; links to
-    tagged docs on GitHub for simplicity).
-    `/ctx-release` should update that page too.
-    #done:2026-01-27 (created docs/versions.md, updated hack/release.sh)
+(All tasks archived)
 
-- [ ] T0.1.1: Social
-  - [x] Remind to Human: have a proper email for security vulnerability reports.
-    #done:2026-01-27 (security@ctx.ist added to SECURITY.md and docs/security.md)
-  - [ ] Trace the entire git history and sessions, create an extensive document
-    of what we did and how it progressed, and then create a blog post about it.
-    this may require a larger thinking budget; don't shy away from spending
-    tokens, we have plenty.
+### Phase 1: Parser (DONE)
 
-### Phase 1: Parser
+- [x] T1.1.0: Create CLI command (`ctx recall list`, `ctx recall show`) and
+    slash command (`/ctx-recall`) for browsing AI session history.
+- [x] T1.1.1: Define data structures in `internal/recall/parser/types.go`
+- [x] T1.1.2: Implement line parser in `internal/recall/parser/claude.go`
+- [x] T1.1.3: Implement session grouper (ParseFile with streaming)
+- [x] T1.1.4: Implement directory scanner (ScanDirectory, FindSessions)
 
-[ ] T1.1.0: Create a CLI command and a slash command (for Claude) to parse 
-    "summary" session capture markdowns, and enrich them by parsing the
-    corresponding JSONL file(s).
+### Phase 2: Export & Search
 
-- [ ] T1.1.1: Define data structures in `internal/recall/parser/types.go`
-  - `SessionMessage`, `Session`, `ContentBlock` interface
-  - `TextBlock`, `ThinkingBlock`, `ToolUseBlock`, `ToolResultBlock`
-  - `TokenUsage` struct
-  - Must match `specs/recall/v0.1.0/01-session-schema.md`
+- [ ] feat: `ctx recall export` - export sessions to editable journal files
+  - `ctx recall export <session-id>` - export one session
+  - `ctx recall export --all` - export all sessions
+  - Skip existing files (user may have edited), `--force` to overwrite
+  - Output to `.context/journal/YYYY-MM-DD-slug-shortid.md`
+  #added:2026-01-28
 
-- [ ] T1.1.2: Implement line parser in `internal/recall/parser/parser.go`
-  - `ParseLine(line []byte) (*SessionMessage, error)`
-  - Handle malformed JSON (return error, don't panic)
-  - Handle missing optional fields with defaults
+- [ ] feat: `ctx recall search <query>` - CLI-based search across sessions
+  - Simple text search, no server needed
+  - IDE grep is alternative, this is convenience
+  #priority:low
 
-- [ ] T1.1.3: Implement session grouper
-  - `ParseFile(path string) (map[string]*Session, error)`
-  - Stream lines, don't load entire file into memory
-  - Sort messages by timestamp within each session
-  - Calculate: TurnCount, TotalTokensIn, TotalTokensOut, Duration
-
-- [ ] T1.1.4: Implement directory scanner
-  - `ScanDirectory(path string) ([]*Session, error)`
-  - Recurse into subdirectories
-  - Skip non-JSONL files
-  - Aggregate sessions across files
-
-### Phase 2: Renderer
-
-- [ ] T1.2.1: Set up template system in `internal/recall/renderer/`
-  - Use `//go:embed` for templates
-  - Create `templates/layout.html` with dark mode CSS
-  - Create `templates/index.html`
-  - Create `templates/session.html`
-
-- [ ] T1.2.2: Implement markdown renderer
-  - Add goldmark + chroma dependencies
-  - `RenderMarkdown(text string) template.HTML`
-  - Enable GFM extensions
-  - Syntax highlighting with monokai theme
-
-- [ ] T1.2.3: Implement session renderer
-  - `RenderSession(session *Session) (*RenderedSession, error)`
-  - Wrap thinking blocks in `<details>` (collapsed by default)
-  - Format tool calls with syntax-highlighted input/output
-
-- [ ] T1.2.4: Implement index renderer
-  - `RenderIndex(sessions []*Session, filters Filters) (*RenderedIndex, error)`
-  - Sort by date (newest first)
-  - Include preview (first 100 chars of first user message)
-  - Show aggregate stats
-
-### Phase 3: Server
-
-- [ ] T1.3.1: Set up HTTP server in `internal/recall/server/`
-  - Standard library `net/http`
-  - Graceful shutdown on SIGINT/SIGTERM
-  - Embed static assets with `//go:embed`
-
-- [ ] T1.3.2: Implement index route
-  - `GET /` — render index page
-  - `GET /?project=X` — filter by project
-  - `GET /?after=DATE&before=DATE` — filter by date
-  - `GET /?q=QUERY` — search sessions
-
-- [ ] T1.3.3: Implement session detail route
-  - `GET /session/:id` — render session detail
-  - 404 if not found
-  - Include back link to index
-
-- [ ] T1.3.4: Implement API routes
-  - `GET /api/sessions` — JSON session list
-  - `GET /api/session/:id` — JSON session detail
-
-### Phase 4: Search
-
-- [ ] T1.4.1: Implement search index in `internal/recall/search/`
-  - Inverted index: term → sessionIds
-  - `Build(sessions []*Session)`
-  - Tokenize: lowercase, split whitespace, remove punctuation
-
-- [ ] T1.4.2: Implement search query
-  - `Search(query string, limit int) []string`
-  - AND semantics (all terms must match)
-  - Sort by term frequency score
-
-### Phase 5: CLI
-
-- [ ] T1.5.1: Add recall subcommand
-  - Create `cmd/ctx/recall.go`
-  - `ctx recall serve <path>` — start server
-  - `--port` flag (default: 8080)
-  - `--open` flag to open browser
-
-- [ ] T1.5.2: Add help and validation
-  - Validate path exists and has JSONL files
-  - Print URL when server starts
-  - Print stats (sessions loaded, time taken)
+- [ ] explore: `ctx recall stats` - analytics/statistics
+  - Token usage over time, tool patterns, session durations
+  - Explore when we have a clear use case
+  #priority:deferred
 
 ## Backlog
 
-- [x] Rename vars in the config package.
-- [x] Why is agent runbook lowest in reading priority order?
-  - follow-up: is it enforced?
-- [x] Create a list of what CLI options (if any) are not implemented yet.
-- [x] Verify all Markdown files by "actually reading them"; take notes for
-  follow-up actions.
-- [x] All go code should have godoc and testing.
-- [x] GitHub CI linter is giving errors that need fixing.
-- [x] Manual code review. take notes.
-- [x] Add tests per file.
-- [x] validate everything in the docs with a skeptical eye.
-- [x] consider the case where `ctx` is not called from within AI prompt:
-  - does the command still make sense?
-  - does it create the expected output?
-- [x] Cut the first release.
-  - Versioning strategy.
-  - Always have a `latest` tag pointing to the latest release.
-  - Or, maybe just use the `latest` tag at all times?
-- [x] compare versions of recent change and the last AI-assisted version and
-      ask AI what we have learned about this.
+- [ ] Bug: `ctx tasks archive` doesn't archive nested content under completed tasks.
+  When a parent `[x]` item has indented child lines (without checkboxes), only the
+  parent line is archived, leaving orphaned content behind. The archive logic should
+  include all indented lines that belong to a completed task.
+  #added:2026-01-27 #priority:medium
+
+- [ ] feat: ctx add learning requires --context, --lesson, --application flags (matching decision's ADR pattern) #priority:high #added:2026-01-28-053941

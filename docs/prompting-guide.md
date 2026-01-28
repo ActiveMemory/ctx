@@ -229,6 +229,62 @@ so far, here are some prompts that tend to produce poor results:
 
 ---
 
+## Writing Tasks as Prompts
+
+Tasks in `TASKS.md` are **indirect prompts** to the AI. How you write them
+shapes how the AI approaches the work.
+
+### State the Deliverable, Not Just Steps
+
+Bad task (implementation-focused):
+```markdown
+- [ ] T1.1.0: Parser system
+  - [ ] Define data structures
+  - [ ] Implement line parser
+  - [ ] Implement session grouper
+```
+
+The AI may complete all subtasks but miss the actual goal. What does
+"Parser system" deliver to the user?
+
+Good task (deliverable-focused):
+```markdown
+- [ ] T1.1.0: Parser CLI command
+  **Deliverable**: `ctx recall list` command that shows parsed sessions
+  - [ ] Define data structures
+  - [ ] Implement line parser
+  - [ ] Implement session grouper
+```
+
+Now the AI knows the subtasks serve a specific user-facing deliverable.
+
+### Use Acceptance Criteria
+
+For complex tasks, add explicit "done when" criteria:
+
+```markdown
+- [ ] T2.0: Authentication system
+  **Done when**:
+  - [ ] User can register with email
+  - [ ] User can log in and get a token
+  - [ ] Protected routes reject unauthenticated requests
+```
+
+This prevents premature "task complete" when only the implementation
+details are done but the feature doesn't actually work.
+
+### Subtasks ≠ Parent Task
+
+Completing all subtasks does **not** mean the parent task is complete.
+
+The parent task describes **what** the user gets.
+Subtasks describe **how** to build it.
+
+Always re-read the parent task description before marking it complete.
+Verify the stated deliverable exists and works.
+
+---
+
 ## Contributing
 
 Found a prompt that works well?
