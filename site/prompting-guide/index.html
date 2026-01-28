@@ -611,6 +611,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#writing-tasks-as-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Tasks as Prompts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing Tasks as Prompts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-the-deliverable-not-just-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State the Deliverable, Not Just Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subtasks-parent-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subtasks ≠ Parent Task
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#contributing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1247,6 +1297,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#writing-tasks-as-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Tasks as Prompts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing Tasks as Prompts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-the-deliverable-not-just-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State the Deliverable, Not Just Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subtasks-parent-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subtasks ≠ Parent Task
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#contributing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1491,6 +1591,43 @@ so far, here are some prompts that tend to produce poor results:</p>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="writing-tasks-as-prompts">Writing Tasks as Prompts<a class="headerlink" href="#writing-tasks-as-prompts" title="Permanent link">&para;</a></h2>
+<p>Tasks in <code>TASKS.md</code> are <strong>indirect prompts</strong> to the AI. How you write them
+shapes how the AI approaches the work.</p>
+<h3 id="state-the-deliverable-not-just-steps">State the Deliverable, Not Just Steps<a class="headerlink" href="#state-the-deliverable-not-just-steps" title="Permanent link">&para;</a></h3>
+<p>Bad task (implementation-focused):
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">- [ ]</span> T1.1.0: Parser system
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
+</span></code></pre></div></p>
+<p>The AI may complete all subtasks but miss the actual goal. What does
+"Parser system" deliver to the user?</p>
+<p>Good task (deliverable-focused):
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">- [ ]</span> T1.1.0: Parser CLI command
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx recall list`</span> command that shows parsed sessions
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
+</span></code></pre></div></p>
+<p>Now the AI knows the subtasks serve a specific user-facing deliverable.</p>
+<h3 id="use-acceptance-criteria">Use Acceptance Criteria<a class="headerlink" href="#use-acceptance-criteria" title="Permanent link">&para;</a></h3>
+<p>For complex tasks, add explicit "done when" criteria:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">- [ ]</span> T2.0: Authentication system
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="gs">**Done when**</span>:
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">- [ ]</span> User can register with email
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="k">- [ ]</span> User can log in and get a token
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="k">- [ ]</span> Protected routes reject unauthenticated requests
+</span></code></pre></div>
+<p>This prevents premature "task complete" when only the implementation
+details are done but the feature doesn't actually work.</p>
+<h3 id="subtasks-parent-task">Subtasks ≠ Parent Task<a class="headerlink" href="#subtasks-parent-task" title="Permanent link">&para;</a></h3>
+<p>Completing all subtasks does <strong>not</strong> mean the parent task is complete.</p>
+<p>The parent task describes <strong>what</strong> the user gets.
+Subtasks describe <strong>how</strong> to build it.</p>
+<p>Always re-read the parent task description before marking it complete.
+Verify the stated deliverable exists and works.</p>
 <hr />
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
 <p>Found a prompt that works well?

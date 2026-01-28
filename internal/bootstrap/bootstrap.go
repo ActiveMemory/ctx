@@ -27,6 +27,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/load"
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
+	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/session"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
@@ -84,6 +85,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 	cmd.AddCommand(session.Cmd())
 	cmd.AddCommand(task.Cmd())
 	cmd.AddCommand(loop.Cmd())
+	cmd.AddCommand(recall.Cmd())
 
 	return cmd
 }

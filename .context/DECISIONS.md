@@ -1,5 +1,96 @@
 # Decisions
 
+## [2026-01-28-051426] No custom UI - IDE is the interface
+
+**Status**: Accepted
+
+**Context**: Considering whether to build a web/desktop UI for browsing 
+sessions, editing journal entries, and analytics. Export feature creates 
+editable markdown files.
+
+**Decision**: No custom UI - IDE is the interface
+
+**Rationale**: UI is a liability: maintenance burden, security surface, 
+dependencies. IDEs already excel at what we'd build: file browsing, 
+full-text search, markdown editing, git integration. Any UI we build either 
+duplicates IDE features poorly or becomes an IDE itself.
+
+**Consequences**: 
+1) No UI codebase to maintain. 
+2) Users use their preferred editor.
+3) Focus CLI efforts on good markdown output. 
+4) Analytics stays CLI-based (ctx recall stats).
+5) **Non-technical users learn VS Code**.
+
+---
+
+## [2026-01-28-045840] ctx recall is Claude-first
+
+**Status**: Accepted
+
+**Context**: Building recall feature to parse AI session history. JSONL formats 
+differ across tools (Claude Code, Aider, Cursor). Need to decide scope and 
+compatibility strategy.
+
+**Decision**: ctx recall is Claude-first
+
+**Rationale**: Claude Code is primary target audience. Most users auto-upgrade, 
+so supporting only recent versions avoids maintenance burden. Other tools can 
+add parsers but are secondary - not worth same polish.
+
+**Consequences**: 1) Parser updates follow Claude Code releases, 
+no legacy schema support. 2) Aider/Cursor parsers are community-contributed, 
+best-effort. 3) Features can assume Claude Code conventions 
+(slugs, session IDs, tool result format).
+
+---
+
+## [2026-01-28-041239] Tasks must include explicit deliverables, not just implementation steps
+
+**Status**: Accepted
+
+**Context**: AI prematurely marked parent task complete after finishing 
+subtasks (internal parser library) but missing the actual deliverable 
+(CLI command and slash command). The task description said 'create a CLI 
+command and slash command' but subtasks only covered implementation details.
+
+**Decision**: Tasks must include explicit deliverables, not just implementation 
+steps
+
+**Rationale**: Subtasks decompose HOW to build something. The parent task 
+defines WHAT the user gets. Without explicit deliverables, AI optimizes for 
+checking boxes rather than delivering value. Task descriptions are indirect 
+prompts to the agent.
+
+**Consequences**: 1. Parent tasks should state deliverable explicitly 
+(e.g., 'Deliverable: ctx recall list command'). 2. Consider acceptance criteria 
+checkboxes. 3. Update prompting guide with task-writing best practices.
+
+---
+
+## [2026-01-28-040251] Use tool-agnostic Session type with tool-specific parsers for recall system
+
+**Status**: Accepted
+
+**Context**: JSONL session formats are not standardized across AI coding 
+assistants. Claude Code, Cursor, Aider each have different formats or may not 
+export sessions at all. Need to support multiple tools eventually.
+
+**Decision**: Use tool-agnostic Session type with tool-specific parsers for 
+recall system
+
+**Rationale**: Separating the output type (Session) from the parsing logic 
+allows adding new tool support without changing downstream code. Starting with 
+Claude Code only, but the interface abstraction makes it easy to add 
+AiderParser, CursorParser, etc. later.
+
+**Consequences**: 1. Session struct is tool-agnostic (common fields 
+only). 2. SessionParser interface defines ParseFile, ParseLine, 
+CanParse. 3. ClaudeCodeParser is first implementation. 4. Parser 
+registry/factory can auto-detect format from file content.
+
+---
+
 ## [2026-01-27-065902] Use reverse-chronological order (newest first) for DECISIONS.md and LEARNINGS.md
 
 **Status**: Accepted
