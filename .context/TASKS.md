@@ -52,3 +52,18 @@
   parent line is archived, leaving orphaned content behind. The archive logic should
   include all indented lines that belong to a completed task.
   #added:2026-01-27 #priority:medium
+
+- [ ] feat: ctx journal - LLM-powered session analysis and synthesis
+
+Parent command for working with exported sessions (.context/journal/):
+
+Subcommands to explore:
+- ctx journal enrich: Add frontmatter/tags (topics, type, outcome, key files)
+- ctx journal cluster: Group related sessions, build continuation chains
+- ctx journal summarize: Generate timeline summaries, feature narratives
+- ctx journal analyze: Find patterns (recurring mistakes, revisited decisions, coupling)
+- ctx journal brief <topic>: Generate compressed context packet for a topic
+- ctx journal site: Generate static site via zensical (browse, search, timeline)
+
+Depends on: ctx recall export (Phase 2)
+#priority:low #phase:future #added:2026-01-28-071638
