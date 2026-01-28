@@ -120,3 +120,19 @@ Could integrate with ctx journal or work directly from sessions/git history.
 
 Related: ctx journal summarize (internal) vs ctx-blog (external/public)
 #priority:low #phase:future #added:2026-01-28-072625
+
+- [ ] feat: ctx enrich - retroactively expand sparse context entries
+
+Finds one-liner learnings/decisions and expands them:
+1. Locate sparse entries (missing Context/Lesson/Application)
+2. Find originating session via timestamp correlation
+3. Read surrounding context from that session
+4. Generate full structured entry for human review
+
+Could run as:
+- ctx enrich --learnings (expand sparse learnings)
+- ctx enrich --decisions (expand sparse decisions)
+- ctx enrich --all (both)
+- ctx enrich --dry-run (show what would be expanded)
+
+#priority:low #phase:future #added:2026-01-28-073058
