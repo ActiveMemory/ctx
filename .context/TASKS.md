@@ -55,3 +55,5 @@
 - [ ] chore: add tests to verify docs match implementation (caught drift in context-update format) #priority:low #added:2026-01-28-054915
 
 - [ ] refactor: ctx watch should use shared validation with ctx add (currently bypasses CLI, writes directly to files) #priority:medium #added:2026-01-28-055110
+
+- [ ] feat: /ctx-audit-docs slash command for semantic doc drift detection - reads docs and implementation, reports inconsistencies (AI-assisted, not deterministic tests) #priority:low #added:2026-01-28-055151
