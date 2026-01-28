@@ -15,6 +15,12 @@
 - [x] T1.1.3: Implement session grouper (ParseFile with streaming)
 - [x] T1.1.4: Implement directory scanner (ScanDirectory, FindSessions)
 
+## Phase 1.a: Cleanup and Release
+
+- [ ] T1.2.0: upstream CI is broken (again)
+- [ ] T1.2.1: Human code review
+- [ ] T1.2.2: cut a release (version number is already bumped)
+
 ### Phase 2: Export & Search
 
 - [ ] feat: `ctx recall export` - export sessions to editable journal files
