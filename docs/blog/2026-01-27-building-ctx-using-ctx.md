@@ -211,10 +211,10 @@ no integration tests that actually invoked the binary.
 
 So I added:
 
-- Integration tests for all commands
-- Coverage targets (60-80% per package)
-- Smoke tests in CI
-- A **constitution** rule: "**All code must pass tests before commit**"
+* Integration tests for all commands
+* Coverage targets (60-80% per package)
+* Smoke tests in CI
+* A **constitution** rule: "**All code must pass tests before commit**"
 
 ## The Constitution versus Conventions
 
@@ -224,10 +224,11 @@ As lessons accumulated, there was the temptation to add everything to
 But I resisted.
 
 The constitution should contain only truly inviolable invariants:
-- Security (*no secrets, no customer data*)
-- Quality (*tests must pass*)
-- Process (*decisions need records*)
-- `ctx` invocation (*always use `PATH`, never fallback*)
+
+* Security (*no secrets, no customer data*)
+* Quality (*tests must pass*)
+* Process (*decisions need records*)
+* `ctx` invocation (*always use `PATH`, never fallback*)
 
 Everything else—coding style, file organization, naming 
 conventions—should go in to `CONVENTIONS.md`. 
@@ -299,11 +300,11 @@ However, they are invaluable for the project's progress.
 
 Each **session file** is a timestamped Markdown with:
 
-- Summary of what has been accomplished
-- Key decisions made
-- Learnings discovered
-- Tasks for the next session
-- Technical context (*platform, versions*)
+* Summary of what has been accomplished
+* Key decisions made
+* Learnings discovered
+* Tasks for the next session
+* Technical context (*platform, versions*)
 
 These files are **not auto-loaded** (*that would bust the token budget*). 
 
@@ -390,19 +391,19 @@ Completed tasks are archived to `.context/archive/` with timestamps.
 
 The archive from January 23rd shows 13 phases of work:
 
-- Phase 1: Project Scaffolding (Go module, Cobra CLI)
-- Phase 2-4: Core Commands 
+* Phase 1: Project Scaffolding (Go module, Cobra CLI)
+* Phase 2-4: Core Commands 
   (init, status, agent, add, complete, drift, sync, compact, watch, hook)
-- Phase 5: Session Management (save, list, load, parse, --extract)
-- Phase 6: Claude Code Integration (hooks, settings, CLAUDE.md handling)
-- Phase 7: Testing & Verification
-- Phase 8: Task Archival
-- Phase 9: Slash Commands
-- Phase 9b: Ralph Loop Integration
-- Phase 10: Project Rename
-- Phase 11: Documentation
-- Phase 12: Timestamp Correlation
-- Phase 13: Rich Context Entries
+* Phase 5: Session Management (save, list, load, parse, --extract)
+* Phase 6: Claude Code Integration (hooks, settings, CLAUDE.md handling)
+* Phase 7: Testing & Verification
+* Phase 8: Task Archival
+* Phase 9: Slash Commands
+* Phase 9b: Ralph Loop Integration
+* Phase 10: Project Rename
+* Phase 11: Documentation
+* Phase 12: Timestamp Correlation
+* Phase 13: Rich Context Entries
 
 That's an impressive 173 commits across 8 days of development.
 
@@ -460,11 +461,11 @@ need them.
 
 The next phase of `ctx` is the **Recall System**:
 
-- **Parser**: Parse session capture markdowns, enrich with JSONL data
-- **Renderer**: Goldmark + Chroma for syntax highlighting, dark mode UI
-- **Server**: Local HTTP server for browsing sessions
-- **Search**: Inverted index for searching across sessions
-- **CLI**: `ctx recall serve <path>` to start the server
+* **Parser**: Parse session capture markdowns, enrich with JSONL data
+* **Renderer**: Goldmark + Chroma for syntax highlighting, dark mode UI
+* **Server**: Local HTTP server for browsing sessions
+* **Search**: Inverted index for searching across sessions
+* **CLI**: `ctx recall serve <path>` to start the server
 
 The goal is to make the archaeological record browsable—not just `grep`-able.
 

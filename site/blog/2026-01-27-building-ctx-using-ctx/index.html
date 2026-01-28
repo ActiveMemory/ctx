@@ -1248,11 +1248,13 @@ no integration tests that actually invoked the binary. </p>
 <p>As lessons accumulated, there was the temptation to add everything to 
 <code>CONSTITUTION.md</code> as "inviolable rules". </p>
 <p>But I resisted.</p>
-<p>The constitution should contain only truly inviolable invariants:
-- Security (<em>no secrets, no customer data</em>)
-- Quality (<em>tests must pass</em>)
-- Process (<em>decisions need records</em>)
-- <code>ctx</code> invocation (<em>always use <code>PATH</code>, never fallback</em>)</p>
+<p>The constitution should contain only truly inviolable invariants:</p>
+<ul>
+<li>Security (<em>no secrets, no customer data</em>)</li>
+<li>Quality (<em>tests must pass</em>)</li>
+<li>Process (<em>decisions need records</em>)</li>
+<li><code>ctx</code> invocation (<em>always use <code>PATH</code>, never fallback</em>)</li>
+</ul>
 <p>Everything else—coding style, file organization, naming 
 conventions—should go in to <code>CONVENTIONS.md</code>. </p>
 <p>Here's how <code>ctx</code> explained why the distinction was important: </p>
