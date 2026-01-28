@@ -140,6 +140,26 @@ A comparison session on January 25th revealed the patterns:
 | Monolithic `cli_test.go` (1500+ lines) | Tests disconnected from implementations         |
 | `package initcmd` in `init/` folder    | Go's "init" is reserved—subtle naming collision |
 
+Here is another analysis made by `ctx`:
+
+```text
+● Based on my analysis, here are the key differences:
+
+YOLO Mode (Pre-040ce99)
+- Feature-first: Added slash commands, tests, templates rapidly
+- Scattered magic strings: "TASKS.md", "decision", ".context" spread across files
+- Quick file creation: New files without organizational patterns
+- Working but inconsistent: Code functioned but lacked systematic structure
+
+Human-Guided Mode (Post-040ce99)
+- Consolidation focus: Centralized constants in config package
+- Consistent naming: Dir, File, Filename, UpdateType prefixes
+- Self-referential constants: FileType map uses constants as keys, not literals
+- Proper path construction: filepath.Join() instead of +"/"+
+- Colocated tests: Tests next to implementations
+- Canonical naming: Package name = folder name
+```
+
 The fix required a human-guided refactoring session.
 
 We introduced `internal/config/config.go` with semantic prefixes:
