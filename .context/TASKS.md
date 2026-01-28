@@ -64,6 +64,45 @@ Subcommands to explore:
 - ctx journal analyze: Find patterns (recurring mistakes, revisited decisions, coupling)
 - ctx journal brief <topic>: Generate compressed context packet for a topic
 - ctx journal site: Generate static site via zensical (browse, search, timeline)
+Additional supporting context:
+```text
+  Enrichment                                                                                                                                                               
+  - Add frontmatter: topics, type (feature/bugfix/exploration), outcome, key files                                                                                         
+  - Auto-tag: technologies, libraries, error types                                                                                                                         
+  - Extract: decisions made, learnings discovered, tasks completed                                                                                                         
+                                                                                                                                                                           
+  Organization                                                                                                                                                             
+  - Cluster related sessions (same feature across days)                                                                                                                    
+  - Build continuation chains ("Part 1 → Part 2 → Part 3")                                                                                                                 
+  - Create topic indexes ("All auth-related sessions")                                                                                                                     
+                                                                                                                                                                           
+  Synthesis                                                                                                                                                                
+  - Timeline summaries ("What happened this week")                                                                                                                         
+  - Feature narratives ("How we built X" from 5 sessions)                                                                                                                  
+  - Decision trails (link decisions to sessions that made them)                                                                                                            
+  - FAQ generation from common questions asked                                                                                                                             
+                                                                                                                                                                           
+  Analysis                                                                                                                                                                 
+  - Find recurring mistakes → suggest new learnings                                                                                                                        
+  - Detect revisited decisions → smell for bad choices                                                                                                                     
+  - Identify files that change together → coupling detection                                                                                                               
+  - Time patterns → what takes longer than expected                                                                                                                        
+                                                                                                                                                                           
+  Context compression                                                                                                                                                      
+  - Generate "briefing docs" by topic for future sessions                                                                                                                  
+  - "Everything you need to know about the auth system" distilled from 10 sessions                                                                                         
+                                                                                                                                                                           
+  Static site (zensical)                                                                                                                                                   
+  - Browse by date/topic/tag                                                                                                                                               
+  - Search across all sessions                                                                                                                                             
+  - Related sessions sidebar                                                                                                                                               
+  - Timeline visualization                                                                                                                                                 
+                                                                                                                                                                           
+  Meta/training                                                                                                                                                            
+  - Extract good prompt patterns                                                                                                                                           
+  - Document what clarifications were needed                                                                                                                               
+  - Build project-specific agent guidance 
+```
 
 Depends on: ctx recall export (Phase 2)
 #priority:low #phase:future #added:2026-01-28-071638
