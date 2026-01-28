@@ -17,9 +17,14 @@
 
 ## Phase 1.a: Cleanup and Release
 
-- [ ] T1.2.0: upstream CI is broken (again)
-- [ ] T1.2.1: Human code review
-- [ ] T1.2.2: cut a release (version number is already bumped)
+- [ ] T1.2.0 feat: ctx add learning requires --context, --lesson, --application flags (matching decision's ADR pattern) #priority:high #added:2026-01-28-053941
+- [ ] T1.2.1 fix: update context-update XML tag format to include required fields (context, lesson, application for learnings; context, rationale, consequences for decisions) #priority:medium #added:2026-01-28-054914
+- [ ] T1.2.2 chore: add tests to verify docs match implementation (caught drift in context-update format) #priority:low #added:2026-01-28-054915
+- [ ] T1.2.3 refactor: ctx watch should use shared validation with ctx add (currently bypasses CLI, writes directly to files) #priority:medium #added:2026-01-28-055110
+- [ ] T1.2.4 feat: /ctx-audit-docs slash command for semantic doc drift detection - reads docs and implementation, reports inconsistencies (AI-assisted, not deterministic tests) #priority:low #added:2026-01-28-055151
+- [ ] T1.2.5: upstream CI is broken (again)
+- [ ] T1.2.6: Human code review
+- [ ] T1.2.7: cut a release (version number is already bumped)
 
 ### Phase 2: Export & Search
 
@@ -47,13 +52,3 @@
   parent line is archived, leaving orphaned content behind. The archive logic should
   include all indented lines that belong to a completed task.
   #added:2026-01-27 #priority:medium
-
-- [ ] feat: ctx add learning requires --context, --lesson, --application flags (matching decision's ADR pattern) #priority:high #added:2026-01-28-053941
-
-- [ ] fix: update context-update XML tag format to include required fields (context, lesson, application for learnings; context, rationale, consequences for decisions) #priority:medium #added:2026-01-28-054914
-
-- [ ] chore: add tests to verify docs match implementation (caught drift in context-update format) #priority:low #added:2026-01-28-054915
-
-- [ ] refactor: ctx watch should use shared validation with ctx add (currently bypasses CLI, writes directly to files) #priority:medium #added:2026-01-28-055110
-
-- [ ] feat: /ctx-audit-docs slash command for semantic doc drift detection - reads docs and implementation, reports inconsistencies (AI-assisted, not deterministic tests) #priority:low #added:2026-01-28-055151
