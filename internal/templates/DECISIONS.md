@@ -1,5 +1,8 @@
 # Decisions
 
+<!-- INDEX:START -->
+<!-- INDEX:END -->
+
 <!-- Use this format for each decision:
 
 ## [YYYY-MM-DD] Decision Title

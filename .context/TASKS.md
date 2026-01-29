@@ -11,7 +11,7 @@
 
 ## Phase 1.a: Cleanup and Release
 
-- [ ] T1.2.0.1b Add index markers to DECISIONS.md and LEARNINGS.md templates
+- [x] T1.2.0.1b Add index markers to DECISIONS.md and LEARNINGS.md templates
       so new projects start with index structure #priority:low #added:2026-01-29
 - [ ] T1.2.5 feat: implement `--context-dir` global flag to override context directory path
   Documented in cli-reference.md as planned. Should allow `ctx --context-dir /path status`.
