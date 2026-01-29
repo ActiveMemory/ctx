@@ -22,7 +22,13 @@ var registeredParsers = []SessionParser{
 // ParseFile parses a session file using the appropriate parser.
 //
 // It auto-detects the file format by trying each registered parser.
-// Returns an error if no parser can handle the file.
+//
+// Parameters:
+//   - path: Path to the session file to parse
+//
+// Returns:
+//   - []*Session: All sessions found in the file
+//   - error: Non-nil if no parser can handle the file or parsing fails
 func ParseFile(path string) ([]*Session, error) {
 	for _, parser := range registeredParsers {
 		if parser.CanParse(path) {
@@ -36,6 +42,13 @@ func ParseFile(path string) ([]*Session, error) {
 //
 // It finds all parseable files, parses them, and aggregates sessions.
 // Sessions are sorted by start time (newest first).
+//
+// Parameters:
+//   - dir: Root directory to scan recursively
+//
+// Returns:
+//   - []*Session: All sessions found, sorted by start time (newest first)
+//   - error: Non-nil if directory traversal fails
 func ScanDirectory(dir string) ([]*Session, error) {
 	var allSessions []*Session
 	var parseErrors []error
@@ -81,6 +94,14 @@ func ScanDirectory(dir string) ([]*Session, error) {
 //
 // Use this when you want to report files that failed to parse while still
 // returning successfully parsed sessions.
+//
+// Parameters:
+//   - dir: Root directory to scan recursively
+//
+// Returns:
+//   - []*Session: Successfully parsed sessions, sorted by start time
+//   - []error: Errors from files that failed to parse
+//   - error: Non-nil if directory traversal fails
 func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 	var allSessions []*Session
 	var parseErrors []error
@@ -128,7 +149,12 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 //  1. ~/.claude/projects/ (Claude Code default)
 //  2. The specified directory (if provided)
 //
-// Returns all found sessions sorted by start time.
+// Parameters:
+//   - additionalDirs: Optional additional directories to scan
+//
+// Returns:
+//   - []*Session: Deduplicated sessions sorted by start time (newest first)
+//   - error: Non-nil if scanning fails (partial results may still be returned)
 func FindSessions(additionalDirs ...string) ([]*Session, error) {
 	var allSessions []*Session
 
@@ -170,7 +196,11 @@ func FindSessions(additionalDirs ...string) ([]*Session, error) {
 
 // GetParser returns a parser for the specified tool.
 //
-// Returns nil if no parser is registered for the tool.
+// Parameters:
+//   - tool: Tool identifier (e.g., "claude-code")
+//
+// Returns:
+//   - SessionParser: The parser for the tool, or nil if not found
 func GetParser(tool string) SessionParser {
 	for _, parser := range registeredParsers {
 		if parser.Tool() == tool {
@@ -181,6 +211,9 @@ func GetParser(tool string) SessionParser {
 }
 
 // RegisteredTools returns the list of supported tools.
+//
+// Returns:
+//   - []string: Tool identifiers for all registered parsers
 func RegisteredTools() []string {
 	tools := make([]string, len(registeredParsers))
 	for i, parser := range registeredParsers {

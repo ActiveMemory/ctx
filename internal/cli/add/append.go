@@ -69,8 +69,17 @@ func AppendEntry(
 }
 
 // prependAfterHeader inserts an entry after a header line.
+//
 // Used for DECISIONS.md to maintain reverse-chronological order.
 // Entries are inserted before any existing entries (identified by "## [").
+//
+// Parameters:
+//   - content: Existing file content
+//   - entry: Formatted entry to insert
+//   - header: Header line to insert after (e.g., "# Decisions")
+//
+// Returns:
+//   - []byte: Modified content with entry inserted
 func prependAfterHeader(content, entry, header string) []byte {
 	// Find the first entry marker "## [" (timestamp-prefixed sections)
 	entryIdx := strings.Index(content, "## [")
@@ -117,7 +126,15 @@ func prependAfterHeader(content, entry, header string) []byte {
 }
 
 // prependAfterSeparator inserts an entry for learnings.
+//
 // Entries are inserted before any existing entries (identified by "- **[").
+//
+// Parameters:
+//   - content: Existing file content
+//   - entry: Formatted entry to insert
+//
+// Returns:
+//   - []byte: Modified content with entry inserted
 func prependAfterSeparator(content, entry string) []byte {
 	// Find the first entry marker "- **[" (timestamp-prefixed list items)
 	entryIdx := strings.Index(content, "- **[")

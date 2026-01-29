@@ -20,7 +20,13 @@ import (
 )
 
 // extractAttribute extracts a named attribute from an XML tag string.
-// Returns empty string if attribute not found.
+//
+// Parameters:
+//   - tag: XML tag string to search (e.g., `<context-update type="task">`)
+//   - attrName: Attribute name to extract (e.g., "type")
+//
+// Returns:
+//   - string: Attribute value, or empty string if not found
 func extractAttribute(tag, attrName string) string {
 	pattern := regexp.MustCompile(attrName + `="([^"]*)"`)
 	match := pattern.FindStringSubmatch(tag)

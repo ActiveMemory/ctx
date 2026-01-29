@@ -202,7 +202,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 //   - filename: Name of the file to create (e.g., "CONSTITUTION.md")
 //
 // Returns:
-//   - error: Non-nil if the template not is found or file write fails
+//   - error: Non-nil if the template is not found or file write fails
 func fixMissingFile(cmd *cobra.Command, filename string) error {
 	content, err := templates.GetTemplate(filename)
 	if err != nil {

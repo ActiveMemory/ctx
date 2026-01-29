@@ -16,6 +16,13 @@ import (
 )
 
 // generateSummary creates a brief summary for a context file based on its name and content.
+//
+// Parameters:
+//   - name: Filename to determine summary strategy
+//   - content: Raw file content to analyze
+//
+// Returns:
+//   - string: Summary string (e.g., "3 active, 2 completed" or "empty")
 func generateSummary(name string, content []byte) string {
 	switch name {
 	case config.FilenameConstitution:
@@ -34,6 +41,13 @@ func generateSummary(name string, content []byte) string {
 	}
 }
 
+// summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
+//
+// Parameters:
+//   - content: Raw file content to analyze
+//
+// Returns:
+//   - string: Summary like "5 invariants" or "loaded" if none found
 func summarizeConstitution(content []byte) string {
 	// Count checkbox items (invariants)
 	count := bytes.Count(content, []byte("- [ ]")) + bytes.Count(content, []byte("- [x]"))
@@ -43,6 +57,13 @@ func summarizeConstitution(content []byte) string {
 	return fmt.Sprintf("%d invariants", count)
 }
 
+// summarizeTasks counts active and completed tasks in TASKS.md.
+//
+// Parameters:
+//   - content: Raw file content to analyze
+//
+// Returns:
+//   - string: Summary like "3 active, 2 completed" or "empty" if none
 func summarizeTasks(content []byte) string {
 	// Count active (unchecked) and completed (checked) tasks
 	active := bytes.Count(content, []byte("- [ ]"))
@@ -62,6 +83,13 @@ func summarizeTasks(content []byte) string {
 	return strings.Join(parts, ", ")
 }
 
+// summarizeDecisions counts decision headers (## sections) in DECISIONS.md.
+//
+// Parameters:
+//   - content: Raw file content to analyze
+//
+// Returns:
+//   - string: Summary like "3 decisions" or "empty" if none
 func summarizeDecisions(content []byte) string {
 	// Count decision headers (## [date] or ## Decision)
 	re := regexp.MustCompile(`(?m)^## `)
@@ -77,6 +105,13 @@ func summarizeDecisions(content []byte) string {
 	return fmt.Sprintf("%d decisions", count)
 }
 
+// summarizeGlossary counts term definitions (**term**) in GLOSSARY.md.
+//
+// Parameters:
+//   - content: Raw file content to analyze
+//
+// Returns:
+//   - string: Summary like "5 terms" or "empty" if none
 func summarizeGlossary(content []byte) string {
 	// Count definition entries (lines starting with **term** or - **term**)
 	re := regexp.MustCompile(`(?m)(?:^|\n)\s*(?:-\s*)?\*\*[^*]+\*\*`)

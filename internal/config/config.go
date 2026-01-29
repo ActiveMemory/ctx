@@ -139,9 +139,13 @@ var Packages = map[string]string{
 }
 
 // Pattern represents a config file pattern and its documentation topic.
+//
+// Fields:
+//   - Pattern: Glob pattern to match (e.g., ".eslintrc*")
+//   - Topic: Documentation topic (e.g., "linting conventions")
 type Pattern struct {
-	Pattern string // Glob pattern to match (e.g., ".eslintrc*")
-	Topic   string // Documentation topic (e.g., "linting conventions")
+	Pattern string
+	Topic   string
 }
 
 // Patterns lists config files that should be documented in CONVENTIONS.md.

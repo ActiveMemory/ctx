@@ -22,6 +22,18 @@ import (
 var lineNumberPattern = regexp.MustCompile(`(?m)^\s*\d+→`)
 
 // runRecallList handles the recall list command.
+//
+// Finds all sessions, applies optional filters, and displays them in a
+// formatted list with project, time, turn count, and preview.
+//
+// Parameters:
+//   - cmd: Cobra command for output stream
+//   - limit: Maximum sessions to display (0 for unlimited)
+//   - project: Filter by project name (case-insensitive substring match)
+//   - tool: Filter by tool identifier (exact match)
+//
+// Returns:
+//   - error: Non-nil if session scanning fails
 func runRecallList(cmd *cobra.Command, limit int, project, tool string) error {
 	sessions, err := parser.FindSessions()
 	if err != nil {
@@ -113,6 +125,18 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string) error {
 }
 
 // runRecallShow handles the recall show command.
+//
+// Displays detailed information about a session including metadata, token
+// usage, tool usage summary, and optionally the full conversation.
+//
+// Parameters:
+//   - cmd: Cobra command for output stream
+//   - args: Session ID or slug to show (ignored if latest is true)
+//   - latest: If true, show the most recent session
+//   - full: If true, show complete conversation instead of preview
+//
+// Returns:
+//   - error: Non-nil if session not found or scanning fails
 func runRecallShow(cmd *cobra.Command, args []string, latest, full bool) error {
 	sessions, err := parser.FindSessions()
 	if err != nil {
@@ -271,6 +295,12 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full bool) error {
 }
 
 // formatDuration formats a duration in a human-readable way.
+//
+// Parameters:
+//   - d: Duration with Minutes() method
+//
+// Returns:
+//   - string: Human-readable duration (e.g., "<1m", "5m", "1h30m")
 func formatDuration(d interface{ Minutes() float64 }) string {
 	mins := d.Minutes()
 	if mins < 1 {
@@ -288,6 +318,12 @@ func formatDuration(d interface{ Minutes() float64 }) string {
 }
 
 // formatTokens formats token counts in a human-readable way.
+//
+// Parameters:
+//   - tokens: Token count to format
+//
+// Returns:
+//   - string: Human-readable count (e.g., "500", "1.5K", "2.3M")
 func formatTokens(tokens int) string {
 	if tokens < 1000 {
 		return fmt.Sprintf("%d", tokens)
@@ -299,11 +335,26 @@ func formatTokens(tokens int) string {
 }
 
 // stripLineNumbers removes Claude Code's line number prefixes from content.
+//
+// Parameters:
+//   - content: Text potentially containing "    1→" style prefixes
+//
+// Returns:
+//   - string: Content with line number prefixes removed
 func stripLineNumbers(content string) string {
 	return lineNumberPattern.ReplaceAllString(content, "")
 }
 
 // formatToolUse formats a tool invocation with its key parameters.
+//
+// Extracts the most relevant parameter based on tool type (e.g., file path
+// for Read/Write, command for Bash, pattern for Grep).
+//
+// Parameters:
+//   - t: Tool use to format
+//
+// Returns:
+//   - string: Formatted string like "Read: /path/to/file" or just tool name
 func formatToolUse(t parser.ToolUse) string {
 	// Parse the JSON input to extract meaningful parameters
 	var input map[string]interface{}

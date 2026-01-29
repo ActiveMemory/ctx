@@ -16,6 +16,16 @@ import (
 )
 
 // FileInfo represents metadata about a context file.
+//
+// Fields:
+//   - Name: Filename (e.g., "TASKS.md")
+//   - Path: Full path to the file
+//   - Size: File size in bytes
+//   - ModTime: Last modification time
+//   - Content: Raw file content
+//   - IsEmpty: True if file has no meaningful content (only headers/whitespace)
+//   - Tokens: Estimated token count for the content
+//   - Summary: Brief description generated from the content
 type FileInfo struct {
 	Name    string
 	Path    string
@@ -28,6 +38,12 @@ type FileInfo struct {
 }
 
 // Context represents the loaded context from a .context/ directory.
+//
+// Fields:
+//   - Dir: Path to the context directory
+//   - Files: All loaded context files with their metadata
+//   - TotalTokens: Sum of estimated tokens across all files
+//   - TotalSize: Sum of file sizes in bytes
 type Context struct {
 	Dir         string
 	Files       []FileInfo
@@ -36,8 +52,16 @@ type Context struct {
 }
 
 // Load reads all context files from the specified directory.
-// If `dir` is empty, it uses the configured context directory from
-// .contextrc, CTX_DIR environment variable, or the default ".context".
+//
+// If dir is empty, it uses the configured context directory from .contextrc,
+// CTX_DIR environment variable, or the default ".context".
+//
+// Parameters:
+//   - dir: Directory path to load from, or empty string for default
+//
+// Returns:
+//   - *Context: Loaded context with files, token counts, and metadata
+//   - error: NotFoundError if directory doesn't exist, or other IO errors
 func Load(dir string) (*Context, error) {
 	if dir == "" {
 		dir = config.GetContextDir()
@@ -108,7 +132,14 @@ func Load(dir string) (*Context, error) {
 }
 
 // Exists checks if a context directory exists.
-// If `dir` is empty, it uses the configured context directory.
+//
+// If dir is empty, it uses the configured context directory.
+//
+// Parameters:
+//   - dir: Directory path to check, or empty string for default
+//
+// Returns:
+//   - bool: True if the directory exists and is a directory
 func Exists(dir string) bool {
 	if dir == "" {
 		dir = config.GetContextDir()
@@ -122,11 +153,21 @@ type NotFoundError struct {
 	Dir string
 }
 
+// Error implements the error interface for NotFoundError.
+//
+// Returns:
+//   - string: Error message including the missing directory path
 func (e *NotFoundError) Error() string {
 	return "context directory not found: " + e.Dir
 }
 
 // isEffectivelyEmpty checks if a file only contains headers and whitespace.
+//
+// Parameters:
+//   - content: File content to check
+//
+// Returns:
+//   - bool: True if file has no meaningful content (only headers, comments, whitespace)
 func isEffectivelyEmpty(content []byte) bool {
 	// Simple heuristic: if `content` is less than 100 bytes
 	// and mostly headers/whitespace
@@ -162,6 +203,13 @@ func isEffectivelyEmpty(content []byte) bool {
 	return contentLines == 0
 }
 
+// splitLines splits content into lines without using strings package.
+//
+// Parameters:
+//   - content: Byte slice to split
+//
+// Returns:
+//   - [][]byte: Slice of lines (without newline characters)
 func splitLines(content []byte) [][]byte {
 	var lines [][]byte
 	start := 0
@@ -177,6 +225,13 @@ func splitLines(content []byte) [][]byte {
 	return lines
 }
 
+// trimSpace trims leading and trailing whitespace from a byte slice.
+//
+// Parameters:
+//   - b: Byte slice to trim
+//
+// Returns:
+//   - []byte: Slice with spaces, tabs, and carriage returns removed from ends
 func trimSpace(b []byte) []byte {
 	start := 0
 	end := len(b)

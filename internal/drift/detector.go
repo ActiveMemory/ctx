@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Packages drift provides functionality for detecting stale or invalid context.
+// Package drift provides functionality for detecting stale or invalid context.
 package drift
 
 import (
@@ -17,6 +17,17 @@ import (
 )
 
 // Issue represents a detected drift issue.
+//
+// Issues are categorized by type and may reference specific files, lines,
+// or paths in the codebase.
+//
+// Fields:
+//   - File: Context file where the issue was detected (e.g., "ARCHITECTURE.md")
+//   - Line: Line number in the file, if applicable
+//   - Type: Issue category (e.g., "dead_path", "staleness", "missing_file")
+//   - Message: Human-readable description of the issue
+//   - Path: Referenced path that caused the issue, if applicable
+//   - Rule: Constitution rule that was violated, if applicable
 type Issue struct {
 	File    string `json:"file"`
 	Line    int    `json:"line,omitempty"`
@@ -27,6 +38,13 @@ type Issue struct {
 }
 
 // Report represents the complete drift detection report.
+//
+// Contains categorized issues and a list of checks that passed.
+//
+// Fields:
+//   - Warnings: Non-critical issues that should be addressed
+//   - Violations: Critical issues that indicate constitution violations
+//   - Passed: Names of checks that completed without issues
 type Report struct {
 	Warnings   []Issue  `json:"warnings"`
 	Violations []Issue  `json:"violations"`
@@ -34,6 +52,9 @@ type Report struct {
 }
 
 // Status returns the overall status of the report.
+//
+// Returns:
+//   - string: "violation" if any violations, "warning" if only warnings, "ok" otherwise
 func (r *Report) Status() string {
 	if len(r.Violations) > 0 {
 		return "violation"
@@ -45,6 +66,15 @@ func (r *Report) Status() string {
 }
 
 // Detect runs all drift detection checks on the given context.
+//
+// Performs multiple validation checks including path references, staleness
+// indicators, constitution compliance, and required file presence.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to check
+//
+// Returns:
+//   - *Report: Drift report with warnings, violations, and passed checks
 func Detect(ctx *context.Context) *Report {
 	report := &Report{
 		Warnings:   []Issue{},
@@ -67,6 +97,14 @@ func Detect(ctx *context.Context) *Report {
 	return report
 }
 
+// checkPathReferences scans ARCHITECTURE.md and CONVENTIONS.md for dead paths.
+//
+// Looks for backtick-enclosed file paths and verifies they exist on disk.
+// Skips URLs, template patterns, and glob patterns.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to scan
+//   - report: Report to append warnings to (modified in place)
 func checkPathReferences(ctx *context.Context, report *Report) {
 	// Pattern to match file paths in Markdown (backticks or code blocks)
 	pathPattern := regexp.MustCompile("`([^`]+\\.[a-zA-Z]{1,5})`")
@@ -111,6 +149,14 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 	}
 }
 
+// checkStaleness detects signs that context files need maintenance.
+//
+// Currently checks for excessive completed tasks (>10) in TASKS.md,
+// which indicates the file should be compacted.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to scan
+//   - report: Report to append warnings to (modified in place)
 func checkStaleness(ctx *context.Context, report *Report) {
 	staleness := false
 
@@ -135,6 +181,14 @@ func checkStaleness(ctx *context.Context, report *Report) {
 	}
 }
 
+// checkConstitution performs heuristic checks for constitution violations.
+//
+// Currently scans the working directory for files that may contain secrets
+// (e.g., .env, credentials, api_key) and flags them as violations.
+//
+// Parameters:
+//   - ctx: Loaded context (currently unused, reserved for future checks)
+//   - report: Report to append violations to (modified in place)
 func checkConstitution(_ *context.Context, report *Report) {
 	// Basic heuristic checks for constitution violations
 	// Check for potential secrets in common config files
@@ -185,6 +239,13 @@ func checkConstitution(_ *context.Context, report *Report) {
 	}
 }
 
+// checkRequiredFiles verifies that all required context files are present.
+//
+// Checks against config.RequiredFiles and adds a warning for each missing file.
+//
+// Parameters:
+//   - ctx: Loaded context containing existing files
+//   - report: Report to append warnings to (modified in place)
 func checkRequiredFiles(ctx *context.Context, report *Report) {
 	allPresent := true
 
@@ -209,6 +270,16 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 	}
 }
 
+// isTemplateFile checks if file content appears to be a template.
+//
+// Looks for common template markers like YOUR_, {{, REPLACE_, TODO:, CHANGEME.
+// Used to avoid flagging template files as containing secrets.
+//
+// Parameters:
+//   - content: File content to check
+//
+// Returns:
+//   - bool: True if content contains template markers
 func isTemplateFile(content []byte) bool {
 	s := string(content)
 	// Check for common template markers

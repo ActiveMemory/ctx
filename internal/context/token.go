@@ -7,8 +7,16 @@
 package context
 
 // EstimateTokens provides a rough token count estimate for content.
-// Uses a simple heuristic: ~4 characters per token for English text.
-// This is a conservative estimate for Claude/GPT-style tokenizers.
+//
+// Uses a simple heuristic of ~4 characters per token for English text.
+// This is a conservative estimate for Claude/GPT-style tokenizers that
+// tends to slightly overestimate, which is safer for budgeting.
+//
+// Parameters:
+//   - content: Byte slice to estimate tokens for
+//
+// Returns:
+//   - int: Estimated token count (0 for empty content)
 func EstimateTokens(content []byte) int {
 	if len(content) == 0 {
 		return 0
@@ -19,6 +27,14 @@ func EstimateTokens(content []byte) int {
 }
 
 // EstimateTokensString estimates tokens for a string.
+//
+// Convenience wrapper around EstimateTokens for string input.
+//
+// Parameters:
+//   - s: String to estimate tokens for
+//
+// Returns:
+//   - int: Estimated token count
 func EstimateTokensString(s string) int {
 	return EstimateTokens([]byte(s))
 }

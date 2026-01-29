@@ -862,10 +862,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#simple-format-tasks-conventions-complete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Examples
+        Simple Format (tasks, conventions, complete)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structured-format-learnings-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured Format (learnings, decisions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legacy-format-still-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy Format (still supported)
       
     </span>
   </a>
@@ -1475,10 +1497,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#simple-format-tasks-conventions-complete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Examples
+        Simple Format (tasks, conventions, complete)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structured-format-learnings-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured Format (learnings, decisions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legacy-format-still-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy Format (still supported)
       
     </span>
   </a>
@@ -1814,7 +1858,7 @@ them in comments.</p>
 <hr />
 <h2 id="context-update-commands">Context Update Commands<a class="headerlink" href="#context-update-commands" title="Permanent link">&para;</a></h2>
 <p>The <code>ctx watch</code> command parses update commands from AI output. Use this format:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;TYPE&quot;</span><span class="nt">&gt;</span>Content<span class="nt">&lt;/context-update&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;TYPE&quot;</span><span class="w"> </span><span class="err">[attributes]</span><span class="nt">&gt;</span>Content<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <h3 id="supported-types">Supported Types<a class="headerlink" href="#supported-types" title="Permanent link">&para;</a></h3>
 <table>
@@ -1822,49 +1866,63 @@ them in comments.</p>
 <tr>
 <th>Type</th>
 <th>Target File</th>
-<th>Example</th>
+<th>Required Attributes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>task</code></td>
 <td>TASKS.md</td>
-<td><code>&lt;context-update type="task"&gt;Implement caching&lt;/context-update&gt;</code></td>
+<td>None</td>
 </tr>
 <tr>
 <td><code>decision</code></td>
 <td>DECISIONS.md</td>
-<td><code>&lt;context-update type="decision"&gt;Use Redis for caching&lt;/context-update&gt;</code></td>
+<td><code>context</code>, <code>rationale</code>, <code>consequences</code></td>
 </tr>
 <tr>
 <td><code>learning</code></td>
 <td>LEARNINGS.md</td>
-<td><code>&lt;context-update type="learning"&gt;Mocks must be hoisted&lt;/context-update&gt;</code></td>
+<td><code>context</code>, <code>lesson</code>, <code>application</code></td>
 </tr>
 <tr>
 <td><code>convention</code></td>
 <td>CONVENTIONS.md</td>
-<td><code>&lt;context-update type="convention"&gt;Use kebab-case for files&lt;/context-update&gt;</code></td>
+<td>None</td>
 </tr>
 <tr>
 <td><code>complete</code></td>
 <td>TASKS.md</td>
-<td><code>&lt;context-update type="complete"&gt;user auth&lt;/context-update&gt;</code></td>
+<td>None</td>
 </tr>
 </tbody>
 </table>
-<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
-<p><strong>Add a task</strong>:</p>
+<h3 id="simple-format-tasks-conventions-complete">Simple Format (tasks, conventions, complete)<a class="headerlink" href="#simple-format-tasks-conventions-complete" title="Permanent link">&para;</a></h3>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;task&quot;</span><span class="nt">&gt;</span>Implement<span class="w"> </span>rate<span class="w"> </span>limiting<span class="nt">&lt;/context-update&gt;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;convention&quot;</span><span class="nt">&gt;</span>Use<span class="w"> </span>kebab-case<span class="w"> </span>for<span class="w"> </span>files<span class="nt">&lt;/context-update&gt;</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>rate<span class="w"> </span>limiting<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p><strong>Record a decision</strong>:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span><span class="nt">&gt;</span>Use<span class="w"> </span>PostgreSQL<span class="w"> </span>for<span class="w"> </span>primary<span class="w"> </span>database<span class="nt">&lt;/context-update&gt;</span>
+<h3 id="structured-format-learnings-decisions">Structured Format (learnings, decisions)<a class="headerlink" href="#structured-format-learnings-decisions" title="Permanent link">&para;</a></h3>
+<p>Learnings and decisions support structured attributes for better documentation:</p>
+<p><strong>Learning with full structure</strong>:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Debugging Claude Code hooks&quot;</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="na">lesson=</span><span class="s">&quot;Hooks receive JSON via stdin, not environment variables&quot;</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="na">application=</span><span class="s">&quot;Use jq to parse: COMMAND=$(echo $INPUT | jq -r .tool_input.command)&quot;</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="nt">&gt;</span>Hook<span class="w"> </span>Input<span class="w"> </span>Format<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p><strong>Note a "<em>learning</em>"</strong>:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span><span class="nt">&gt;</span>Mock<span class="w"> </span>functions<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>hoisted<span class="w"> </span>in<span class="w"> </span>Vitest<span class="nt">&lt;/context-update&gt;</span>
+<p><strong>Decision with full structure</strong>:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Need a caching layer for API responses&quot;</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="na">rationale=</span><span class="s">&quot;Redis is fast, well-supported, and team has experience&quot;</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="na">consequences=</span><span class="s">&quot;Must provision Redis infrastructure; team training on Redis patterns&quot;</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nt">&gt;</span>Use<span class="w"> </span>Redis<span class="w"> </span>for<span class="w"> </span>caching<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p><strong>Complete a task (<em>by partial match</em>)</strong>:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>rate<span class="w"> </span>limiting<span class="nt">&lt;/context-update&gt;</span>
+<p>If attributes are omitted, placeholders are inserted that should be updated manually.</p>
+<h3 id="legacy-format-still-supported">Legacy Format (still supported)<a class="headerlink" href="#legacy-format-still-supported" title="Permanent link">&para;</a></h3>
+<p>Simple format without attributes still works but creates placeholder text:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span><span class="nt">&gt;</span>Mock<span class="w"> </span>functions<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>hoisted<span class="nt">&lt;/context-update&gt;</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span><span class="nt">&gt;</span>Use<span class="w"> </span>PostgreSQL<span class="w"> </span>for<span class="w"> </span>primary<span class="w"> </span>database<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <h3 id="usage-with-ctx-watch">Usage with ctx watch<a class="headerlink" href="#usage-with-ctx-watch" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Pipe AI output through watch</span>

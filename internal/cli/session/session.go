@@ -15,6 +15,9 @@ import (
 )
 
 // sessionsDirPath returns the path to the sessions directory.
+//
+// Returns:
+//   - string: Full path to .context/sessions/
 func sessionsDirPath() string {
 	return filepath.Join(config.DirContext, config.DirSessions)
 }

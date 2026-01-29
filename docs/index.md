@@ -177,6 +177,11 @@ or previous session topics.
 ├── DRIFT.md            # Staleness signals
 ├── AGENT_PLAYBOOK.md   # How AI agents should use this
 └── sessions/           # Session snapshots
+
+.claude/                # Claude Code integration (if detected)
+├── hooks/              # Auto-save and enforcement scripts
+├── commands/           # ctx slash command definitions
+└── settings.local.json # Hook configuration
 ```
 
 See [Context Files](context-files.md) for detailed documentation of each file.
@@ -192,13 +197,19 @@ ctx add task "Implement user authentication"
 ### Record a Decision
 
 ```bash
-ctx add decision "Use PostgreSQL for primary database"
+ctx add decision "Use PostgreSQL for primary database" \
+  --context "Need a reliable database for production" \
+  --rationale "PostgreSQL offers ACID compliance and JSON support" \
+  --consequences "Team needs PostgreSQL training"
 ```
 
 ### Note a Learning
 
 ```bash
-ctx add learning "Mock functions must be hoisted in Jest"
+ctx add learning "Mock functions must be hoisted in Jest" \
+  --context "Tests failed with undefined mock errors" \
+  --lesson "Jest hoists mock calls to top of file" \
+  --application "Place jest.mock() before imports"
 ```
 
 ### Mark Task Complete
