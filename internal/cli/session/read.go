@@ -34,7 +34,7 @@ import (
 func readContextSection(
 	filename, startHeader, endHeader string,
 ) (string, error) {
-	filePath := filepath.Join(config.DirContext, filename)
+	filePath := filepath.Join(config.ContextDir(), filename)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
@@ -71,7 +71,7 @@ func readContextSection(
 //   - string: Formatted list of recent decision titles, or empty if none found
 //   - error: Non-nil if DECISIONS.md cannot be read
 func readRecentDecisions() (string, error) {
-	filePath := filepath.Join(config.DirContext, config.FilenameDecision)
+	filePath := filepath.Join(config.ContextDir(), config.FilenameDecision)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
@@ -120,7 +120,7 @@ func readRecentDecisions() (string, error) {
 //   - string: Formatted list of recent learnings, or empty if none found
 //   - error: Non-nil if LEARNINGS.md cannot be read
 func readRecentLearnings() (string, error) {
-	filePath := filepath.Join(config.DirContext, config.FilenameLearning)
+	filePath := filepath.Join(config.ContextDir(), config.FilenameLearning)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err

@@ -13,13 +13,13 @@
 
 - [x] T1.2.0.1b Add index markers to DECISIONS.md and LEARNINGS.md templates
       so new projects start with index structure #priority:low #added:2026-01-29
-- [ ] T1.2.5 feat: implement `--context-dir` global flag to override context directory path
+- [x] T1.2.5 feat: implement `--context-dir` global flag to override context directory path
   Documented in cli-reference.md as planned. Should allow `ctx --context-dir /path status`.
   #priority:low #added:2026-01-28
-- [ ] T1.2.6 feat: implement `--quiet` global flag to suppress non-essential output
+- [x] T1.2.6 feat: implement `--quiet` global flag to suppress non-essential output
   Documented in cli-reference.md as planned.
   #priority:low #added:2026-01-28
-- [ ] T1.2.7 feat: implement `--no-color` global flag to disable colored output
+- [x] T1.2.7 feat: implement `--no-color` global flag to disable colored output
   Documented in cli-reference.md as planned. Currently `NO_COLOR=1` env var works.
   #priority:low #added:2026-01-28
 - [ ] T1.2.9: upstream CI is broken (again)

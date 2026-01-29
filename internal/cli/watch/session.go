@@ -28,7 +28,7 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func watchAutoSaveSession(updates []ContextUpdate) error {
-	sessionsDir := filepath.Join(config.DirContext, config.DirSessions)
+	sessionsDir := filepath.Join(config.ContextDir(), config.DirSessions)
 	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
@@ -98,7 +98,7 @@ func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 	sb.WriteString("---\n\n")
 	sb.WriteString("## Context Snapshot\n\n")
 
-	tasksPath := filepath.Join(config.DirContext, config.FilenameTask)
+	tasksPath := filepath.Join(config.ContextDir(), config.FilenameTask)
 	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
 		sb.WriteString("### Current Tasks\n\n")
 		sb.WriteString("```markdown\n")

@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - string: Full path to .context/sessions/
 func sessionsDirPath() string {
-	return filepath.Join(config.DirContext, config.DirSessions)
+	return filepath.Join(config.ContextDir(), config.DirSessions)
 }
 
 // Cmd returns the session command with subcommands.

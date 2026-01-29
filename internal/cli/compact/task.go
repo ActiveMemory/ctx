@@ -110,7 +110,7 @@ func compactTasks(
 
 	// Archive if requested
 	if archive && len(archivableBlocks) > 0 {
-		archiveDir := filepath.Join(config.DirContext, "archive")
+		archiveDir := filepath.Join(config.ContextDir(), "archive")
 		if err := os.MkdirAll(archiveDir, 0755); err == nil {
 			archiveFile := filepath.Join(
 				archiveDir,

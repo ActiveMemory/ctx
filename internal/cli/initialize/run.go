@@ -39,7 +39,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge bool) error {
 		return err
 	}
 
-	contextDir := config.DirContext
+	contextDir := config.ContextDir()
 
 	// Check if .context/ already exists
 	if _, err := os.Stat(contextDir); err == nil {

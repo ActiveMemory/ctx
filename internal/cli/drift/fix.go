@@ -152,7 +152,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	// Create an archive directory
-	archiveDir := filepath.Join(config.DirContext, "archive")
+	archiveDir := filepath.Join(config.ContextDir(), "archive")
 	if err := os.MkdirAll(archiveDir, 0755); err != nil {
 		return fmt.Errorf("failed to create archive directory: %w", err)
 	}
@@ -209,10 +209,10 @@ func fixMissingFile(cmd *cobra.Command, filename string) error {
 		return fmt.Errorf("no template available for %s: %w", filename, err)
 	}
 
-	targetPath := filepath.Join(config.DirContext, filename)
+	targetPath := filepath.Join(config.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
-	if err := os.MkdirAll(config.DirContext, 0755); err != nil {
+	if err := os.MkdirAll(config.ContextDir(), 0755); err != nil {
 		return fmt.Errorf("failed to create .context/: %w", err)
 	}
 

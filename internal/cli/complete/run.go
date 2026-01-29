@@ -35,7 +35,7 @@ import (
 func runComplete(cmd *cobra.Command, args []string) error {
 	query := args[0]
 
-	filePath := filepath.Join(config.DirContext, config.FilenameTask)
+	filePath := filepath.Join(config.ContextDir(), config.FilenameTask)
 
 	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {

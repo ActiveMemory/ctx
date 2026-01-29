@@ -95,7 +95,7 @@ func WriteEntry(params EntryParams) error {
 		return fmt.Errorf("unknown type %q", fType)
 	}
 
-	filePath := filepath.Join(config.DirContext, fileName)
+	filePath := filepath.Join(config.ContextDir(), fileName)
 
 	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {

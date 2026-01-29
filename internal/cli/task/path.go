@@ -11,7 +11,7 @@ import (
 // Returns:
 //   - string: Full path to .context/TASKS.md
 func tasksFilePath() string {
-	return filepath.Join(config.DirContext, config.FilenameTask)
+	return filepath.Join(config.ContextDir(), config.FilenameTask)
 }
 
 // archiveDirPath returns the path to the archive directory.
@@ -19,5 +19,5 @@ func tasksFilePath() string {
 // Returns:
 //   - string: Full path to .context/archive/
 func archiveDirPath() string {
-	return filepath.Join(config.DirContext, config.DirArchive)
+	return filepath.Join(config.ContextDir(), config.DirArchive)
 }
