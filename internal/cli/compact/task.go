@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 
@@ -24,8 +23,9 @@ import (
 // compactTasks moves completed tasks to the "Completed" section in TASKS.md.
 //
 // Scans TASKS.md for checked items ("- [x]") outside the Completed section,
-// moves them into the Completed section, and optionally archives them to
-// .context/archive/.
+// including their nested content (indented lines below the task).
+// Only moves tasks where all nested sub-tasks are also complete.
+// Optionally archives them to .context/archive/.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -53,74 +53,63 @@ func compactTasks(
 	content := string(tasksFile.Content)
 	lines := strings.Split(content, "\n")
 
-	completedPattern := regexp.MustCompile(`^-\s*\[x]\s*(.+)$`)
-
-	var completedTasks []string
-	var newLines []string
-	inCompletedSection := false
-	changes := 0
-
 	green := color.New(color.FgGreen).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
 
-	for _, line := range lines {
-		// Track if we're in the Completed section
+	// Parse task blocks
+	blocks := ParseTaskBlocks(lines)
+
+	// Filter to only archivable blocks
+	var archivableBlocks []TaskBlock
+	for _, block := range blocks {
+		if block.IsArchivable {
+			archivableBlocks = append(archivableBlocks, block)
+			cmd.Printf(
+				"%s Moving completed task: %s\n", green("✓"),
+				truncateString(block.ParentTaskText(), 50),
+			)
+		} else {
+			cmd.Printf(
+				"%s Skipping (has incomplete children): %s\n", yellow("!"),
+				truncateString(block.ParentTaskText(), 50),
+			)
+		}
+	}
+
+	if len(archivableBlocks) == 0 {
+		return 0, nil
+	}
+
+	// Remove archivable blocks from lines
+	newLines := RemoveBlocksFromLines(lines, archivableBlocks)
+
+	// Add blocks to Completed section
+	for i, line := range newLines {
 		if strings.HasPrefix(line, "## Completed") {
-			inCompletedSection = true
-			newLines = append(newLines, line)
-			continue
-		}
-		if strings.HasPrefix(line, "## ") && inCompletedSection {
-			inCompletedSection = false
-		}
-
-		// If completed task outside the Completed section, collect it
-		if !inCompletedSection && completedPattern.MatchString(line) {
-			matches := completedPattern.FindStringSubmatch(line)
-			if len(matches) > 1 {
-				completedTasks = append(completedTasks, matches[1])
-				cmd.Printf(
-					"%s Moving completed task: %s\n", green("✓"),
-					truncateString(matches[1], 50),
-				)
-				changes++
-				continue // Don't add to newLines
+			// Find the next line that's either empty or another section
+			insertIdx := i + 1
+			for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
+				!strings.HasPrefix(newLines[insertIdx], "## ") {
+				insertIdx++
 			}
-		}
 
-		newLines = append(newLines, line)
-	}
-
-	// If we have completed tasks to move, add them to the Completed section
-	if len(completedTasks) > 0 {
-		// Find the Completed section and add tasks there
-		for i, line := range newLines {
-			if strings.HasPrefix(line, "## Completed") {
-				// Find the next line that's either empty or another section
-				insertIdx := i + 1
-				for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
-					!strings.HasPrefix(newLines[insertIdx], "## ") {
-					insertIdx++
-				}
-
-				// Insert completed tasks
-				var tasksToInsert []string
-				for _, task := range completedTasks {
-					tasksToInsert = append(tasksToInsert, fmt.Sprintf("- [x] %s", task))
-				}
-
-				// Insert at the right position
-				newContent := append(newLines[:insertIdx],
-					append(tasksToInsert, newLines[insertIdx:]...,
-					)...,
-				)
-				newLines = newContent
-				break
+			// Build content to insert (full blocks, not just task text)
+			var blocksToInsert []string
+			for _, block := range archivableBlocks {
+				blocksToInsert = append(blocksToInsert, block.Lines...)
 			}
+
+			// Insert at the right position
+			newContent := append(newLines[:insertIdx],
+				append(blocksToInsert, newLines[insertIdx:]...)...,
+			)
+			newLines = newContent
+			break
 		}
 	}
 
-	// Archive old content if requested
-	if archive && len(completedTasks) > 0 {
+	// Archive if requested
+	if archive && len(archivableBlocks) > 0 {
 		archiveDir := filepath.Join(config.DirContext, "archive")
 		if err := os.MkdirAll(archiveDir, 0755); err == nil {
 			archiveFile := filepath.Join(
@@ -130,15 +119,15 @@ func compactTasks(
 			archiveContent := fmt.Sprintf(
 				"# Archived Tasks - %s\n\n", time.Now().Format("2006-01-02"),
 			)
-			for _, task := range completedTasks {
-				archiveContent += fmt.Sprintf("- [x] %s\n", task)
+			for _, block := range archivableBlocks {
+				archiveContent += block.BlockContent() + "\n\n"
 			}
 			if err := os.WriteFile(
 				archiveFile, []byte(archiveContent), 0644,
 			); err == nil {
 				cmd.Printf(
 					"%s Archived %d tasks to %s\n", green("✓"),
-					len(completedTasks), archiveFile,
+					len(archivableBlocks), archiveFile,
 				)
 			}
 		}
@@ -154,5 +143,5 @@ func compactTasks(
 		}
 	}
 
-	return changes, nil
+	return len(archivableBlocks), nil
 }

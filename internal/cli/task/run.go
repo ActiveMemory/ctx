@@ -10,11 +10,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
@@ -82,8 +84,8 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 // runTaskArchive executes the archive subcommand logic.
 //
 // Moves completed tasks (marked with [x]) from TASKS.md to a timestamped
-// archive file. Pending tasks ([ ]) remain in TASKS.md. If an archive file
-// for the current date already exists, completed tasks are appended to it.
+// archive file, including all nested content (subtasks, metadata). Tasks
+// with incomplete children are skipped to avoid orphaning pending work.
 //
 // Parameters:
 //   - cmd: Cobra command (unused, for interface compliance)
@@ -95,7 +97,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	tasksPath := tasksFilePath()
-	archivePath := archiveDirPath()
+	archiveDir := archiveDirPath()
 
 	// Check if TASKS.md exists
 	if _, err := os.Stat(tasksPath); os.IsNotExist(err) {
@@ -108,12 +110,46 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 		return fmt.Errorf("failed to read TASKS.md: %w", err)
 	}
 
-	// Parse and separate completed versus pending tasks
-	remaining, archived, stats := separateTasks(string(content))
+	lines := strings.Split(string(content), "\n")
 
-	if stats.completed == 0 {
-		fmt.Println("No completed tasks to archive.")
+	// Parse task blocks using block-based parsing
+	blocks := compact.ParseTaskBlocks(lines)
+
+	// Filter to only archivable blocks (completed with no incomplete children)
+	var archivableBlocks []compact.TaskBlock
+	var skippedCount int
+	for _, block := range blocks {
+		if block.IsArchivable {
+			archivableBlocks = append(archivableBlocks, block)
+		} else {
+			skippedCount++
+			fmt.Printf(
+				"%s Skipping (has incomplete children): %s\n",
+				yellow("!"), block.ParentTaskText(),
+			)
+		}
+	}
+
+	// Count pending tasks
+	pendingCount := countPendingTasks(lines)
+
+	if len(archivableBlocks) == 0 {
+		if skippedCount > 0 {
+			fmt.Printf(
+				"No tasks to archive (%d skipped due to incomplete children).\n",
+				skippedCount,
+			)
+		} else {
+			fmt.Println("No completed tasks to archive.")
+		}
 		return nil
+	}
+
+	// Build archived content
+	var archivedContent strings.Builder
+	for _, block := range archivableBlocks {
+		archivedContent.WriteString(block.BlockContent())
+		archivedContent.WriteString("\n")
 	}
 
 	if dryRun {
@@ -121,59 +157,72 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 		fmt.Println()
 		fmt.Printf(
 			"Would archive %d completed tasks (keeping %d pending)\n",
-			stats.completed, stats.pending,
+			len(archivableBlocks), pendingCount,
 		)
 		fmt.Println()
 		fmt.Println("Archived content preview:")
 		fmt.Println("---")
-		fmt.Println(archived)
+		fmt.Print(archivedContent.String())
 		fmt.Println("---")
 		return nil
 	}
 
 	// Ensure the archive directory exists
-	if err := os.MkdirAll(archivePath, 0755); err != nil {
+	if err := os.MkdirAll(archiveDir, 0755); err != nil {
 		return fmt.Errorf("failed to create archive directory: %w", err)
 	}
 
 	// Generate archive filename
 	now := time.Now()
 	archiveFilename := fmt.Sprintf("tasks-%s.md", now.Format("2006-01-02"))
-	archiveFilePath := filepath.Join(archivePath, archiveFilename)
+	archiveFilePath := filepath.Join(archiveDir, archiveFilename)
 
 	// Check if the archive file already exists for today - append if so
-	var archiveContent string
+	var finalArchiveContent string
 	if existingContent, err := os.ReadFile(archiveFilePath); err == nil {
-		archiveContent = string(existingContent) + "\n" + archived
+		finalArchiveContent = string(existingContent) + "\n" + archivedContent.String()
 	} else {
-		archiveContent = fmt.Sprintf(
+		finalArchiveContent = fmt.Sprintf(
 			"# Task Archive — %s\n\nArchived from TASKS.md\n\n%s",
 			now.Format("2006-01-02"),
-			archived,
+			archivedContent.String(),
 		)
 	}
 
 	// Write the archive file
 	if err := os.WriteFile(
-		archiveFilePath, []byte(archiveContent), 0644,
+		archiveFilePath, []byte(finalArchiveContent), 0644,
 	); err != nil {
 		return fmt.Errorf("failed to write archive: %w", err)
 	}
 
-	// Write updated TASKS.md
-	if err := os.WriteFile(
-		tasksPath, []byte(remaining), 0644,
-	); err != nil {
+	// Remove archived blocks from lines and write back
+	newLines := compact.RemoveBlocksFromLines(lines, archivableBlocks)
+	newContent := strings.Join(newLines, "\n")
+
+	if err := os.WriteFile(tasksPath, []byte(newContent), 0644); err != nil {
 		return fmt.Errorf("failed to update TASKS.md: %w", err)
 	}
 
 	fmt.Printf(
 		"%s Archived %d completed tasks to %s\n",
 		green("✓"),
-		stats.completed,
+		len(archivableBlocks),
 		archiveFilePath,
 	)
-	fmt.Printf("  %d pending tasks remain in TASKS.md\n", stats.pending)
+	fmt.Printf("  %d pending tasks remain in TASKS.md\n", pendingCount)
 
 	return nil
+}
+
+// countPendingTasks counts top-level unchecked tasks in the lines.
+func countPendingTasks(lines []string) int {
+	count := 0
+	pattern := compact.UncheckedTaskPattern()
+	for _, line := range lines {
+		if pattern.MatchString(line) && compact.GetIndentLevel(line) == 0 {
+			count++
+		}
+	}
+	return count
 }
