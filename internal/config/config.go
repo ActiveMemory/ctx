@@ -14,6 +14,28 @@ const (
 	FileSettings           = ".claude/settings.local.json"
 )
 
+// Global flag values set by CLI
+var (
+	// contextDirOverride is set by --context-dir flag
+	contextDirOverride string
+	// Quiet suppresses non-essential output when true
+	Quiet bool
+)
+
+// SetContextDir sets the context directory override.
+func SetContextDir(dir string) {
+	contextDirOverride = dir
+}
+
+// ContextDir returns the context directory path.
+// Returns the --context-dir override if set, otherwise the default ".context".
+func ContextDir() string {
+	if contextDirOverride != "" {
+		return contextDirOverride
+	}
+	return DirContext
+}
+
 // WatchAutoSaveInterval is the number of updates between auto-saves
 // in watch mode.
 const WatchAutoSaveInterval = 5

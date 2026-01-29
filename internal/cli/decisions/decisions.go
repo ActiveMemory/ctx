@@ -68,7 +68,7 @@ Examples:
 
 // runReindex regenerates the DECISIONS.md index.
 func runReindex(cmd *cobra.Command, args []string) error {
-	filePath := filepath.Join(config.DirContext, config.FilenameDecision)
+	filePath := filepath.Join(config.ContextDir(), config.FilenameDecision)
 
 	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
