@@ -13,6 +13,14 @@
 
 **Application**: Always use ctx add learning with all three flags; agents guided via AGENT_PLAYBOOK.md
 
+## [2026-01-28-194113] Claude Code Hooks Receive JSON via Stdin
+
+**Context**: Debugging Claude Code PreToolUse hooks - they were not receiving command data when using environment variables like CLAUDE_TOOL_INPUT
+
+**Lesson**: Claude Code hooks receive input as JSON via stdin, not environment variables. Use HOOK_INPUT=$(cat) then parse with jq: COMMAND=$(echo "$HOOK_INPUT" | jq -r ".tool_input.command // empty")
+
+**Application**: All hook scripts should read stdin for input. The JSON structure includes .tool_input.command for Bash commands. Test hooks with debug logging to /tmp/ to verify they receive expected data.
+
 - **[2026-01-28-072838]** Changelogs document WHAT; blogs explain WHY. Same information, different engagement. Changelogs are for machines (audits, dependency trackers). Blogs are for humans (narrative, context, lessons). When synthesizing session history, output both: changelog for completeness, blog for readability.
 
 - **[2026-01-28-051426]** IDE is already the UI: Discovery, search, and 
