@@ -113,30 +113,36 @@ is wrong.
 
 ### Structure
 
+Tasks are organized by **Phase** — logical groupings that preserve order and
+enable replay. Tasks stay in their Phase permanently; status is tracked via
+checkboxes and inline tags.
+
 ```markdown
 # Tasks
 
-## In Progress
+## Phase 1: Initial Setup
 
-- [ ] Task description `#priority:high` `#area:core`
-  - Current status: What's happening now
-  - Blockers: Any impediments
+- [x] Set up project structure
+- [x] Configure linting and formatting
+- [ ] Add CI/CD pipeline `#in-progress`
 
-## Next Up
+## Phase 2: Core Features
 
-- [ ] Task description `#priority:medium`
-- [ ] Task description `#priority:low`
+- [ ] Implement user authentication `#priority:high`
+- [ ] Add API rate limiting `#priority:medium`
+  - Blocked by: Need to finalize auth first
 
-## Completed (Recent)
+## Backlog
 
-- [x] Task description — Completed YYYY-MM-DD
-
-## Blocked
-
-- [ ] Task description
-  - Blocked by: Reason
-  - Unblock strategy: How to resolve
+- [ ] Performance optimization `#priority:low`
+- [ ] Add metrics dashboard `#priority:deferred`
 ```
+
+**Key principles:**
+- Tasks never move between sections — mark as `[x]` or `[-]` in place
+- Use `#in-progress` inline tag to indicate current work
+- Phase headers provide structure and replay order
+- Backlog section for unscheduled work
 
 ### Tags
 
@@ -149,6 +155,17 @@ Use inline backtick-wrapped tags for metadata:
 | `#estimate`    | `1h`, `4h`, `1d`               | Time estimate (optional)  |
 | `#in-progress` | (none)                         | Currently being worked on |
 
+**Lifecycle tags** (for session correlation):
+
+| Tag        | Format               | When to add                        |
+|------------|----------------------|------------------------------------|
+| `#added`   | `YYYY-MM-DD-HHMMSS`  | Auto-added by `ctx add task`       |
+| `#started` | `YYYY-MM-DD-HHMMSS`  | When beginning work on the task    |
+| `#done`    | `YYYY-MM-DD-HHMMSS`  | When marking the task `[x]`        |
+
+These timestamps help correlate tasks with session files and track which
+session started vs completed work.
+
 ### Status Markers
 
 | Marker | Meaning                  |
@@ -159,9 +176,10 @@ Use inline backtick-wrapped tags for metadata:
 
 ### Guidelines
 
-- Never delete tasks—mark as completed or skipped
-- Keep completed tasks for 7 days, then archive
-- One task should be `#in-progress` at a time
+- Never delete tasks — mark as `[x]` completed or `[-]` skipped
+- Never move tasks between sections — use inline tags for status
+- Use `ctx tasks archive` periodically to move completed tasks to archive
+- Mark current work with `#in-progress` inline tag
 
 ---
 

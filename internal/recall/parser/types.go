@@ -73,13 +73,23 @@ type Message struct {
 }
 
 // ToolUse represents a tool invocation by the assistant.
+//
+// Fields:
+//   - ID: Unique identifier for this tool use
+//   - Name: Tool name (e.g., "Bash", "Read", "Write", "Grep")
+//   - Input: JSON string of input parameters passed to the tool
 type ToolUse struct {
 	ID    string `json:"id"`
-	Name  string `json:"name"`  // "bash", "read", "write", etc.
-	Input string `json:"input"` // JSON string of input parameters
+	Name  string `json:"name"`
+	Input string `json:"input"`
 }
 
 // ToolResult represents the result of a tool invocation.
+//
+// Fields:
+//   - ToolUseID: ID of the ToolUse this result corresponds to
+//   - Content: The tool's output content
+//   - IsError: True if the tool execution failed
 type ToolResult struct {
 	ToolUseID string `json:"tool_use_id"`
 	Content   string `json:"content"`
@@ -108,21 +118,36 @@ type SessionParser interface {
 }
 
 // IsUser returns true if this is a user message.
+//
+// Returns:
+//   - bool: True if Role is "user"
 func (m *Message) IsUser() bool {
 	return m.Role == "user"
 }
 
 // IsAssistant returns true if this is an assistant message.
+//
+// Returns:
+//   - bool: True if Role is "assistant"
 func (m *Message) IsAssistant() bool {
 	return m.Role == "assistant"
 }
 
 // HasToolUses returns true if this message contains tool invocations.
+//
+// Returns:
+//   - bool: True if ToolUses slice is non-empty
 func (m *Message) HasToolUses() bool {
 	return len(m.ToolUses) > 0
 }
 
 // Preview returns a truncated preview of the message text.
+//
+// Parameters:
+//   - maxLen: Maximum length before truncation (adds "..." if exceeded)
+//
+// Returns:
+//   - string: The text, truncated with "..." suffix if longer than maxLen
 func (m *Message) Preview(maxLen int) string {
 	if len(m.Text) <= maxLen {
 		return m.Text
@@ -131,6 +156,9 @@ func (m *Message) Preview(maxLen int) string {
 }
 
 // UserMessages returns only user messages from the session.
+//
+// Returns:
+//   - []Message: Filtered list containing only messages with Role "user"
 func (s *Session) UserMessages() []Message {
 	var msgs []Message
 	for _, m := range s.Messages {
@@ -142,6 +170,9 @@ func (s *Session) UserMessages() []Message {
 }
 
 // AssistantMessages returns only assistant messages from the session.
+//
+// Returns:
+//   - []Message: Filtered list containing only messages with Role "assistant"
 func (s *Session) AssistantMessages() []Message {
 	var msgs []Message
 	for _, m := range s.Messages {
@@ -153,6 +184,9 @@ func (s *Session) AssistantMessages() []Message {
 }
 
 // AllToolUses returns all tool uses across all messages.
+//
+// Returns:
+//   - []ToolUse: Aggregated list of all tool invocations in the session
 func (s *Session) AllToolUses() []ToolUse {
 	var tools []ToolUse
 	for _, m := range s.Messages {

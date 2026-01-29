@@ -25,16 +25,31 @@ import (
 type ClaudeCodeParser struct{}
 
 // NewClaudeCodeParser creates a new Claude Code session parser.
+//
+// Returns:
+//   - *ClaudeCodeParser: A parser instance for Claude Code JSONL files
 func NewClaudeCodeParser() *ClaudeCodeParser {
 	return &ClaudeCodeParser{}
 }
 
-// Tool returns the tool identifier.
+// Tool returns the tool identifier for this parser.
+//
+// Returns:
+//   - string: The identifier "claude-code"
 func (p *ClaudeCodeParser) Tool() string {
 	return "claude-code"
 }
 
 // CanParse returns true if the file appears to be a Claude Code session file.
+//
+// Checks if the file has a .jsonl extension and contains Claude Code message
+// format (sessionId and slug fields in the first few lines).
+//
+// Parameters:
+//   - path: File path to check
+//
+// Returns:
+//   - bool: True if this parser can handle the file
 func (p *ClaudeCodeParser) CanParse(path string) bool {
 	// Check extension
 	if !strings.HasSuffix(path, ".jsonl") {
@@ -70,6 +85,17 @@ func (p *ClaudeCodeParser) CanParse(path string) bool {
 }
 
 // ParseFile reads a Claude Code JSONL file and returns all sessions.
+//
+// Parses each line as a JSON message, groups messages by session ID, and
+// constructs Session objects with timing, token counts, and message content.
+// Sessions are sorted by start time.
+//
+// Parameters:
+//   - path: Path to the JSONL file to parse
+//
+// Returns:
+//   - []*Session: All sessions found in the file, sorted by start time
+//   - error: Non-nil if the file cannot be opened or read
 func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -133,6 +159,18 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 }
 
 // ParseLine parses a single JSONL line into a Message.
+//
+// Unmarshals the JSON, extracts the message content, and converts it to the
+// common Message type. Non-message lines (e.g., file-history-snapshot) are
+// skipped and return nil.
+//
+// Parameters:
+//   - line: Raw JSONL line bytes to parse
+//
+// Returns:
+//   - *Message: The parsed message, or nil if the line should be skipped
+//   - string: The session ID this message belongs to
+//   - error: Non-nil if JSON unmarshaling fails
 func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
 	if len(line) == 0 {
 		return nil, "", nil
@@ -153,6 +191,14 @@ func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
 }
 
 // buildSession constructs a Session from raw Claude Code messages.
+//
+// Parameters:
+//   - id: Session ID to use
+//   - rawMsgs: Raw messages belonging to this session
+//   - sourcePath: Path to the source JSONL file
+//
+// Returns:
+//   - *Session: Constructed session with messages, stats, and metadata
 func (p *ClaudeCodeParser) buildSession(id string, rawMsgs []claudeRawMessage, sourcePath string) *Session {
 	if len(rawMsgs) == 0 {
 		return nil
@@ -218,6 +264,12 @@ func (p *ClaudeCodeParser) buildSession(id string, rawMsgs []claudeRawMessage, s
 }
 
 // convertMessage converts a Claude Code raw message to the common Message type.
+//
+// Parameters:
+//   - raw: Raw message from JSONL parsing
+//
+// Returns:
+//   - Message: Normalized message with text, tool uses, and tool results extracted
 func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) Message {
 	msg := Message{
 		ID:        raw.UUID,
@@ -283,6 +335,12 @@ func (p *ClaudeCodeParser) convertMessage(raw claudeRawMessage) Message {
 }
 
 // parseContentBlocks parses the content field which can be a string or array.
+//
+// Parameters:
+//   - content: Raw JSON content that may be a string or array of blocks
+//
+// Returns:
+//   - []claudeRawBlock: Parsed content blocks (text, thinking, tool_use, tool_result)
 func (p *ClaudeCodeParser) parseContentBlocks(content json.RawMessage) []claudeRawBlock {
 	if len(content) == 0 {
 		return nil

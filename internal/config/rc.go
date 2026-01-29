@@ -15,6 +15,13 @@ import (
 )
 
 // RC represents the configuration from .contextrc file.
+//
+// Fields:
+//   - ContextDir: Name of the context directory (default ".context")
+//   - TokenBudget: Default token budget for context assembly (default 8000)
+//   - PriorityOrder: Custom file loading priority order
+//   - AutoArchive: Whether to auto-archive completed tasks (default true)
+//   - ArchiveAfterDays: Days before archiving completed tasks (default 7)
 type RC struct {
 	ContextDir       string   `yaml:"context_dir"`
 	TokenBudget      int      `yaml:"token_budget"`
@@ -36,6 +43,9 @@ var (
 )
 
 // DefaultRC returns a new RC with hardcoded default values.
+//
+// Returns:
+//   - *RC: Configuration with defaults (8000 token budget, 7-day archive, etc.)
 func DefaultRC() *RC {
 	return &RC{
 		ContextDir:       DirContext,
@@ -47,7 +57,12 @@ func DefaultRC() *RC {
 }
 
 // GetRC returns the loaded configuration, initializing it on first call.
+//
 // It loads from .contextrc if present, then applies environment overrides.
+// The result is cached for subsequent calls.
+//
+// Returns:
+//   - *RC: The loaded and cached configuration
 func GetRC() *RC {
 	rcOnce.Do(func() {
 		rc = loadRC()
@@ -80,7 +95,11 @@ func loadRC() *RC {
 }
 
 // GetContextDir returns the configured context directory.
+//
 // Priority: CLI override > env var > .contextrc > default.
+//
+// Returns:
+//   - string: The context directory path (e.g., ".context")
 func GetContextDir() string {
 	if rcOverrideDir != "" {
 		return rcOverrideDir
@@ -89,29 +108,46 @@ func GetContextDir() string {
 }
 
 // GetTokenBudget returns the configured default token budget.
-// Priority: env var > .contextrc > default.
+//
+// Priority: env var > .contextrc > default (8000).
+//
+// Returns:
+//   - int: The token budget for context assembly
 func GetTokenBudget() int {
 	return GetRC().TokenBudget
 }
 
 // GetPriorityOrder returns the configured file priority order.
-// Returns nil if not configured (callers should fall back to FileReadOrder).
+//
+// Returns:
+//   - []string: File names in priority order, or nil if not configured
+//     (callers should fall back to FileReadOrder)
 func GetPriorityOrder() []string {
 	return GetRC().PriorityOrder
 }
 
 // GetAutoArchive returns whether auto-archiving is enabled.
+//
+// Returns:
+//   - bool: True if completed tasks should be auto-archived
 func GetAutoArchive() bool {
 	return GetRC().AutoArchive
 }
 
 // GetArchiveAfterDays returns the configured days before archiving.
+//
+// Returns:
+//   - int: Number of days after which completed tasks are archived (default 7)
 func GetArchiveAfterDays() int {
 	return GetRC().ArchiveAfterDays
 }
 
 // OverrideContextDir sets a CLI-provided override for the context directory.
+//
 // This takes precedence over all other configuration sources.
+//
+// Parameters:
+//   - dir: Directory path to use as override
 func OverrideContextDir(dir string) {
 	rcOverrideDir = dir
 }
