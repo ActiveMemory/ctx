@@ -19,6 +19,17 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
+// extractAttribute extracts a named attribute from an XML tag string.
+// Returns empty string if attribute not found.
+func extractAttribute(tag, attrName string) string {
+	pattern := regexp.MustCompile(attrName + `="([^"]*)"`)
+	match := pattern.FindStringSubmatch(tag)
+	if len(match) >= 2 {
+		return match[1]
+	}
+	return ""
+}
+
 // processStream reads from a stream and applies context updates.
 //
 // Scans input line-by-line looking for <context-update> XML tags.
@@ -39,8 +50,9 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 	scanner.Buffer(buf, 1024*1024)
 
 	// Pattern to match context-update tags
+	// Captures: 1=full opening tag with attributes, 2=content between tags
 	updatePattern := regexp.MustCompile(
-		`<context-update\s+type="([^"]+)"[^>]*>([^<]+)</context-update>`,
+		`(<context-update\s+[^>]+)>([^<]+)</context-update>`,
 	)
 
 	green := color.New(color.FgGreen).SprintFunc()
@@ -58,9 +70,15 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 		matches := updatePattern.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
 			if len(match) >= 3 {
+				openingTag := match[1]
 				update := ContextUpdate{
-					Type:    strings.ToLower(match[1]),
-					Content: strings.TrimSpace(match[2]),
+					Type:         strings.ToLower(extractAttribute(openingTag, "type")),
+					Content:      strings.TrimSpace(match[2]),
+					Context:      extractAttribute(openingTag, "context"),
+					Lesson:       extractAttribute(openingTag, "lesson"),
+					Application:  extractAttribute(openingTag, "application"),
+					Rationale:    extractAttribute(openingTag, "rationale"),
+					Consequences: extractAttribute(openingTag, "consequences"),
 				}
 
 				if watchDryRun {

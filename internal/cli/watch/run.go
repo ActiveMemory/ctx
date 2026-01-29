@@ -76,19 +76,14 @@ func runWatch(cmd *cobra.Command, _ []string) error {
 // to the appropriate context file.
 //
 // Parameters:
-//   - args: Slice where args[0] is the entry type (task, decision, etc.)
-//     and args[1:] is the content
+//   - update: The parsed ContextUpdate with type, content, and optional
+//     structured fields (context, lesson, application for learnings;
+//     context, rationale, consequences for decisions)
 //
 // Returns:
-//   - error: Non-nil if args has fewer than 2 elements, type is unknown,
-//     or file operations fail
-func runAddSilent(args []string) error {
-	if len(args) < 2 {
-		return fmt.Errorf("insufficient arguments")
-	}
-
-	fileType := strings.ToLower(args[0])
-	content := strings.Join(args[1:], " ")
+//   - error: Non-nil if type is unknown or file operations fail
+func runAddSilent(update ContextUpdate) error {
+	fileType := strings.ToLower(update.Type)
 
 	fileName, ok := config.FileType[fileType]
 	if !ok {
@@ -105,21 +100,39 @@ func runAddSilent(args []string) error {
 	var entry string
 	switch fileType {
 	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
-		// Watch command receives simple content from AI XML tags,
-		// use placeholders for ADR fields (CLI requires full format)
-		entry = add.FormatDecision(content,
-			"[Context from watch - please update]",
-			"[Rationale from watch - please update]",
-			"[Consequences from watch - please update]")
+		// Use provided fields or placeholders if not specified
+		ctx := update.Context
+		if ctx == "" {
+			ctx = "[Context from watch - please update]"
+		}
+		rationale := update.Rationale
+		if rationale == "" {
+			rationale = "[Rationale from watch - please update]"
+		}
+		consequences := update.Consequences
+		if consequences == "" {
+			consequences = "[Consequences from watch - please update]"
+		}
+		entry = add.FormatDecision(update.Content, ctx, rationale, consequences)
 	case config.UpdateTypeTask, config.UpdateTypeTasks:
-		entry = add.FormatTask(content, "")
+		entry = add.FormatTask(update.Content, "")
 	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
-		entry = add.FormatLearning(content,
-			"[Context from watch - please update]",
-			"[Lesson from watch - please update]",
-			"[Application from watch - please update]")
+		// Use provided fields or placeholders if not specified
+		ctx := update.Context
+		if ctx == "" {
+			ctx = "[Context from watch - please update]"
+		}
+		lesson := update.Lesson
+		if lesson == "" {
+			lesson = "[Lesson from watch - please update]"
+		}
+		application := update.Application
+		if application == "" {
+			application = "[Application from watch - please update]"
+		}
+		entry = add.FormatLearning(update.Content, ctx, lesson, application)
 	case config.UpdateTypeConvention, config.UpdateTypeConventions:
-		entry = add.FormatConvention(content)
+		entry = add.FormatConvention(update.Content)
 	}
 
 	newContent := add.AppendEntry(existing, entry, fileType, "")

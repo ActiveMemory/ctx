@@ -21,15 +21,27 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch",
 		Short: "Watch for context-update commands in AI output",
-		Long: `Watch stdin or a log file for <context-update> 
+		Long: `Watch stdin or a log file for <context-update>
 commands and apply them.
 
 This command parses AI output looking for structured update commands:
 
-  <context-update type="task">Implement user auth</context-update>
-  <context-update type="decision">Use PostgreSQL</context-update>
-  <context-update type="learning">Mock functions must be hoisted</context-update>
-  <context-update type="complete">user auth</context-update>
+  Simple formats (tasks, conventions, complete):
+    <context-update type="task">Implement user auth</context-update>
+    <context-update type="convention">Use kebab-case for files</context-update>
+    <context-update type="complete">user auth</context-update>
+
+  Structured formats (learnings, decisions):
+    <context-update type="learning" context="Debugging hooks"
+      lesson="Hooks receive JSON via stdin"
+      application="Use jq to parse">Title here</context-update>
+
+    <context-update type="decision" context="Need caching"
+      rationale="Redis is fast and well-supported"
+      consequences="Team needs Redis training">Use Redis</context-update>
+
+If structured attributes are omitted for learnings/decisions, placeholders
+are inserted that should be updated manually.
 
 Use --log to watch a specific file instead of stdin.
 Use --dry-run to see what would be updated without making changes.

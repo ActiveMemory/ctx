@@ -250,6 +250,94 @@ More output
 	}
 }
 
+// TestProcessStreamWithAttributes tests parsing of structured attributes.
+func TestProcessStreamWithAttributes(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "watch-attr-test-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer os.RemoveAll(tmpDir)
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// Initialize context
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatalf("init failed: %v", err)
+	}
+
+	// Ensure dry-run is off
+	watchDryRun = false
+	watchAutoSave = false
+
+	input := `Some AI output
+<context-update type="learning" context="Debugging hooks" lesson="Hooks receive JSON via stdin" application="Use jq to parse input">Hook Input Format</context-update>
+More output
+`
+	reader := strings.NewReader(input)
+
+	cmd := Cmd()
+	var output bytes.Buffer
+	cmd.SetOut(&output)
+
+	err = processStream(cmd, reader)
+	if err != nil {
+		t.Fatalf("processStream failed: %v", err)
+	}
+
+	// Verify learning was written with structured fields
+	learningsPath := filepath.Join(config.DirContext, config.FilenameLearning)
+	content, err := os.ReadFile(learningsPath)
+	if err != nil {
+		t.Fatalf("failed to read learnings: %v", err)
+	}
+	contentStr := string(content)
+
+	if !strings.Contains(contentStr, "Hook Input Format") {
+		t.Error("learning title should be in file")
+	}
+	if !strings.Contains(contentStr, "Debugging hooks") {
+		t.Error("context attribute should be in file")
+	}
+	if !strings.Contains(contentStr, "Hooks receive JSON via stdin") {
+		t.Error("lesson attribute should be in file")
+	}
+	if !strings.Contains(contentStr, "Use jq to parse input") {
+		t.Error("application attribute should be in file")
+	}
+	// Should NOT contain placeholders since attributes were provided
+	if strings.Contains(contentStr, "[Context from watch") {
+		t.Error("should not have placeholder when context attribute provided")
+	}
+}
+
+// TestExtractAttribute tests the attribute extraction helper.
+func TestExtractAttribute(t *testing.T) {
+	tests := []struct {
+		tag      string
+		attr     string
+		expected string
+	}{
+		{`<context-update type="learning"`, "type", "learning"},
+		{`<context-update type="decision" context="test ctx"`, "context", "test ctx"},
+		{`<context-update type="learning" lesson="the lesson"`, "lesson", "the lesson"},
+		{`<context-update type="learning"`, "missing", ""},
+		{`<context-update type="decision" rationale="why we did it"`, "rationale", "why we did it"},
+	}
+
+	for _, tt := range tests {
+		result := extractAttribute(tt.tag, tt.attr)
+		if result != tt.expected {
+			t.Errorf("extractAttribute(%q, %q) = %q, want %q", tt.tag, tt.attr, result, tt.expected)
+		}
+	}
+}
+
 // TestRunCompleteSilentNoMatch tests complete with no matching task.
 func TestRunCompleteSilentNoMatch(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "watch-nomatch-test-*")

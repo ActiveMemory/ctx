@@ -12,8 +12,18 @@ package watch
 //
 // Fields:
 //   - Type: Update type (task, decision, learning, convention, complete)
-//   - Content: The entry text or search query for complete
+//   - Content: The entry text (title) or search query for complete
+//   - Context: Context field for learnings/decisions (what prompted this)
+//   - Lesson: Lesson field for learnings (the key insight)
+//   - Application: Application field for learnings (how to apply going forward)
+//   - Rationale: Rationale field for decisions (why this choice)
+//   - Consequences: Consequences field for decisions (what changes as a result)
 type ContextUpdate struct {
-	Type    string
-	Content string
+	Type         string
+	Content      string
+	Context      string // For learnings and decisions
+	Lesson       string // For learnings only
+	Application  string // For learnings only
+	Rationale    string // For decisions only
+	Consequences string // For decisions only
 }

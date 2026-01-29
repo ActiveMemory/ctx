@@ -361,43 +361,60 @@ The AI can emit updates like:
 The `ctx watch` command parses update commands from AI output. Use this format:
 
 ```xml
-<context-update type="TYPE">Content</context-update>
+<context-update type="TYPE" [attributes]>Content</context-update>
 ```
 
 ### Supported Types
 
-| Type         | Target File    | Example                                                                       |
-|--------------|----------------|-------------------------------------------------------------------------------|
-| `task`       | TASKS.md       | `<context-update type="task">Implement caching</context-update>`              |
-| `decision`   | DECISIONS.md   | `<context-update type="decision">Use Redis for caching</context-update>`      |
-| `learning`   | LEARNINGS.md   | `<context-update type="learning">Mocks must be hoisted</context-update>`      |
-| `convention` | CONVENTIONS.md | `<context-update type="convention">Use kebab-case for files</context-update>` |
-| `complete`   | TASKS.md       | `<context-update type="complete">user auth</context-update>`                  |
+| Type         | Target File    | Required Attributes                           |
+|--------------|----------------|-----------------------------------------------|
+| `task`       | TASKS.md       | None                                          |
+| `decision`   | DECISIONS.md   | `context`, `rationale`, `consequences`        |
+| `learning`   | LEARNINGS.md   | `context`, `lesson`, `application`            |
+| `convention` | CONVENTIONS.md | None                                          |
+| `complete`   | TASKS.md       | None                                          |
 
-### Examples
-
-**Add a task**:
+### Simple Format (tasks, conventions, complete)
 
 ```xml
 <context-update type="task">Implement rate limiting</context-update>
-```
-
-**Record a decision**:
-
-```xml
-<context-update type="decision">Use PostgreSQL for primary database</context-update>
-```
-
-**Note a "*learning*"**:
-
-```xml
-<context-update type="learning">Mock functions must be hoisted in Vitest</context-update>
-```
-
-**Complete a task (*by partial match*)**:
-
-```xml
+<context-update type="convention">Use kebab-case for files</context-update>
 <context-update type="complete">rate limiting</context-update>
+```
+
+### Structured Format (learnings, decisions)
+
+Learnings and decisions support structured attributes for better documentation:
+
+**Learning with full structure**:
+
+```xml
+<context-update type="learning"
+  context="Debugging Claude Code hooks"
+  lesson="Hooks receive JSON via stdin, not environment variables"
+  application="Use jq to parse: COMMAND=$(echo $INPUT | jq -r .tool_input.command)"
+>Hook Input Format</context-update>
+```
+
+**Decision with full structure**:
+
+```xml
+<context-update type="decision"
+  context="Need a caching layer for API responses"
+  rationale="Redis is fast, well-supported, and team has experience"
+  consequences="Must provision Redis infrastructure; team training on Redis patterns"
+>Use Redis for caching</context-update>
+```
+
+If attributes are omitted, placeholders are inserted that should be updated manually.
+
+### Legacy Format (still supported)
+
+Simple format without attributes still works but creates placeholder text:
+
+```xml
+<context-update type="learning">Mock functions must be hoisted</context-update>
+<context-update type="decision">Use PostgreSQL for primary database</context-update>
 ```
 
 ### Usage with ctx watch
