@@ -46,7 +46,8 @@
   #added:2026-01-27 #priority:medium
 - [ ] T1.2.9: upstream CI is broken (again)
 - [ ] T1.2.10: Human code review
-- [ ] T1.2.11: cut a release (version number is already bumped)
+- [ ] T1.2.11: Human to read all user-facing documentation and update as needed.
+- [ ] T1.2.12: cut a release (version number is already bumped)
 
 ### Phase 2: Export & Search
 
