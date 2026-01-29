@@ -186,6 +186,14 @@ Examples:
 		return fmt.Errorf("failed to write %s: %w", filePath, err)
 	}
 
+	// For decisions, regenerate the quick-reference index
+	if fType == config.UpdateTypeDecision || fType == config.UpdateTypeDecisions {
+		indexed := UpdateIndex(string(newContent))
+		if err := os.WriteFile(filePath, []byte(indexed), 0644); err != nil {
+			return fmt.Errorf("failed to update index in %s: %w", filePath, err)
+		}
+	}
+
 	green := color.New(color.FgGreen).SprintFunc()
 	cmd.Printf("%s Added to %s\n", green("✓"), fName)
 

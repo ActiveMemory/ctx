@@ -1,5 +1,45 @@
 # Decisions
 
+<!-- INDEX:START -->
+| Date       | Decision                                                                         |
+|------------|----------------------------------------------------------------------------------|
+| 2026-01-29 | Add quick reference index to DECISIONS.md                                        |
+| 2026-01-28 | No custom UI - IDE is the interface                                              |
+| 2026-01-28 | ctx recall is Claude-first                                                       |
+| 2026-01-28 | Tasks must include explicit deliverables, not just implementation steps          |
+| 2026-01-28 | Use tool-agnostic Session type with tool-specific parsers for recall system      |
+| 2026-01-27 | Use reverse-chronological order (newest first) for DECISIONS.md and LEARNINGS.md |
+| 2026-01-25 | Removed AGENTS.md from project root                                              |
+| 2026-01-25 | Keep CONSTITUTION Minimal                                                        |
+| 2026-01-25 | Centralize Constants with Semantic Prefixes                                      |
+| 2026-01-21 | Separate Orchestrator Directive from Agent Tasks                                 |
+| 2026-01-21 | Hooks Use ctx from PATH, Not Hardcoded Paths                                     |
+| 2026-01-20 | Use SessionEnd Hook for Auto-Save                                                |
+| 2026-01-20 | Handle CLAUDE.md Creation/Merge in ctx init                                      |
+| 2026-01-20 | Auto-Save Before Compact                                                         |
+| 2026-01-20 | Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md                              |
+| 2026-01-20 | Two-Tier Context Persistence Model                                               |
+| 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed)                            |
+| 2026-01-20 | Generic Core with Optional Claude Code Enhancements                              |
+<!-- INDEX:END -->
+
+## [2026-01-29-044515] Add quick reference index to DECISIONS.md
+
+**Status**: Accepted
+
+**Context**: AI agents need to locate decisions quickly without reading the 
+entire file when context budget is limited
+
+**Decision**: Add quick reference index to DECISIONS.md
+
+**Rationale**: Compact table at top allows scanning; agents can grep for full 
+timestamp to jump to entry
+
+**Consequences**: Index auto-updated on ctx add decision; ctx decisions 
+reindex for manual edits
+
+---
+
 ## [2026-01-28-051426] No custom UI - IDE is the interface
 
 **Status**: Accepted
@@ -114,7 +154,7 @@ token budget or whether AI uses ctx agent.
 
 ---
 
-## [2026-01-25-2208] Removed AGENTS.md from project root
+## [2026-01-25-220800] Removed AGENTS.md from project root
 
 **Status**: Accepted
 
@@ -131,7 +171,7 @@ AGENT_PLAYBOOK.md provides ctx-specific instructions.
 
 ---
 
-## [2026-01-25] Keep CONSTITUTION Minimal
+## [2026-01-25-180000] Keep CONSTITUTION Minimal
 
 **Status**: Accepted
 
@@ -158,7 +198,7 @@ Style preferences and best practices go in CONVENTIONS.md instead.
 
 ---
 
-## [2026-01-25] Centralize Constants with Semantic Prefixes
+## [2026-01-25-170000] Centralize Constants with Semantic Prefixes
 
 **Status**: Accepted (implemented)
 
@@ -194,7 +234,7 @@ var FileType = map[string]string{
 
 ---
 
-## [2026-01-21] Separate Orchestrator Directive from Agent Tasks
+## [2026-01-21-140000] Separate Orchestrator Directive from Agent Tasks
 
 **Status**: Accepted
 
@@ -226,7 +266,7 @@ agent to check its own mind.
 
 ---
 
-## [2026-01-21] Hooks Use ctx from PATH, Not Hardcoded Paths
+## [2026-01-21-120000] Hooks Use ctx from PATH, Not Hardcoded Paths
 
 **Status**: Accepted (implemented)
 
@@ -255,7 +295,7 @@ This breaks when:
 
 ---
 
-## [2026-01-20] Use SessionEnd Hook for Auto-Save
+## [2026-01-20-200000] Use SessionEnd Hook for Auto-Save
 
 **Status**: Accepted (implemented)
 
@@ -279,7 +319,7 @@ This breaks when:
 
 ---
 
-## [2026-01-20] Handle CLAUDE.md Creation/Merge in ctx init
+## [2026-01-20-180000] Handle CLAUDE.md Creation/Merge in ctx init
 
 **Status**: Accepted (to be implemented)
 
@@ -311,7 +351,7 @@ but may already have a CLAUDE.md from `claude init`.
 
 ---
 
-## [2026-01-20] Auto-Save Before Compact
+## [2026-01-20-160000] Auto-Save Before Compact
 
 **Status**: Accepted (to be implemented)
 
@@ -334,7 +374,7 @@ lost if not captured.
 
 ---
 
-## [2026-01-20] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
+## [2026-01-20-140000] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
 
 **Status**: Accepted
 
@@ -359,7 +399,7 @@ Two file types:
 
 ---
 
-## [2026-01-20] Two-Tier Context Persistence Model
+## [2026-01-20-120000] Two-Tier Context Persistence Model
 
 **Status**: Accepted
 
@@ -386,7 +426,7 @@ what can be loaded. But nothing should be truly lost.
 
 ---
 
-## [2026-01-20] Always Generate Claude Hooks in Init (No Flag Needed)
+## [2026-01-20-100000] Always Generate Claude Hooks in Init (No Flag Needed)
 
 **Status**: Accepted (to be implemented)
 
@@ -413,7 +453,7 @@ ctx init    # Creates BOTH .context/ AND .claude/hooks/
 
 ---
 
-## [2026-01-20] Generic Core with Optional Claude Code Enhancements
+## [2026-01-20-080000] Generic Core with Optional Claude Code Enhancements
 
 **Status**: Accepted
 
