@@ -53,16 +53,38 @@ func TestApplyUpdate(t *testing.T) {
 			checkFor:  "Test task from watch",
 		},
 		{
-			name:      "decision update",
-			update:    ContextUpdate{Type: config.UpdateTypeDecision, Content: "Test decision from watch"},
+			name: "decision update",
+			update: ContextUpdate{
+				Type:         config.UpdateTypeDecision,
+				Content:      "Test decision from watch",
+				Context:      "Testing watch functionality",
+				Rationale:    "Need to verify watch applies decisions",
+				Consequences: "Decision will appear in DECISIONS.md",
+			},
 			checkFile: config.FilenameDecision,
 			checkFor:  "Test decision from watch",
 		},
 		{
-			name:      "learning update",
-			update:    ContextUpdate{Type: config.UpdateTypeLearning, Content: "Test learning from watch"},
+			name: "learning update",
+			update: ContextUpdate{
+				Type:        config.UpdateTypeLearning,
+				Content:     "Test learning from watch",
+				Context:     "Testing watch functionality",
+				Lesson:      "Watch can add learnings",
+				Application: "Use structured attributes in context-update tags",
+			},
 			checkFile: config.FilenameLearning,
 			checkFor:  "Test learning from watch",
+		},
+		{
+			name:        "decision without required fields",
+			update:      ContextUpdate{Type: config.UpdateTypeDecision, Content: "Missing fields"},
+			expectError: true,
+		},
+		{
+			name:        "learning without required fields",
+			update:      ContextUpdate{Type: config.UpdateTypeLearning, Content: "Missing fields"},
+			expectError: true,
 		},
 		{
 			name:      "convention update",

@@ -17,10 +17,9 @@
 
 ## Phase 1.a: Cleanup and Release
 
-- [ ] T1.2.0.1 Add quick reference index table to DECISIONS.md template 
-      and ctx add decision #priority:medium #added:2026-01-29-035140
-      Consider if other files can benefit from this kind of indexing structure too.
-- [ ] T1.2.0.2 Add ctx decisions reindex command to regenerate index from 
+- [x] T1.2.0.1 Add quick reference index table to DECISIONS.md and LEARNINGS.md
+      with auto-update on add and `ctx decisions/learnings reindex` commands
+- [x] T1.2.0.2 Add ctx decisions reindex command to regenerate index from
       existing entries #priority:low #added:2026-01-29-035140
 - [x] T1.2.0.3 feat: ctx add learning requires --context, --lesson, --application 
       flags (matching decision's ADR pattern) #priority:high #added:2026-01-28-053941

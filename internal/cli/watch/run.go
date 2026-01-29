@@ -72,71 +72,34 @@ func runWatch(cmd *cobra.Command, _ []string) error {
 // runAddSilent appends an entry to a context file without output.
 //
 // Used by the watch command to silently apply updates detected in
-// the input stream. Formats the entry based on type and appends it
-// to the appropriate context file.
+// the input stream. Uses shared validation and write logic from the
+// add package to ensure consistent behavior with `ctx add`.
 //
 // Parameters:
-//   - update: The parsed ContextUpdate with type, content, and optional
+//   - update: The parsed ContextUpdate with type, content, and required
 //     structured fields (context, lesson, application for learnings;
 //     context, rationale, consequences for decisions)
 //
 // Returns:
-//   - error: Non-nil if type is unknown or file operations fail
+//   - error: Non-nil if validation fails, type is unknown, or file operations fail
 func runAddSilent(update ContextUpdate) error {
-	fileType := strings.ToLower(update.Type)
-
-	fileName, ok := config.FileType[fileType]
-	if !ok {
-		return fmt.Errorf("unknown type %q", fileType)
+	params := add.EntryParams{
+		Type:         update.Type,
+		Content:      update.Content,
+		Context:      update.Context,
+		Rationale:    update.Rationale,
+		Consequences: update.Consequences,
+		Lesson:       update.Lesson,
+		Application:  update.Application,
 	}
 
-	filePath := filepath.Join(config.DirContext, fileName)
-
-	existing, err := os.ReadFile(filePath)
-	if err != nil {
+	// Validate required fields (same as ctx add)
+	if err := add.ValidateEntry(params); err != nil {
 		return err
 	}
 
-	var entry string
-	switch fileType {
-	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
-		// Use provided fields or placeholders if not specified
-		ctx := update.Context
-		if ctx == "" {
-			ctx = "[Context from watch - please update]"
-		}
-		rationale := update.Rationale
-		if rationale == "" {
-			rationale = "[Rationale from watch - please update]"
-		}
-		consequences := update.Consequences
-		if consequences == "" {
-			consequences = "[Consequences from watch - please update]"
-		}
-		entry = add.FormatDecision(update.Content, ctx, rationale, consequences)
-	case config.UpdateTypeTask, config.UpdateTypeTasks:
-		entry = add.FormatTask(update.Content, "")
-	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
-		// Use provided fields or placeholders if not specified
-		ctx := update.Context
-		if ctx == "" {
-			ctx = "[Context from watch - please update]"
-		}
-		lesson := update.Lesson
-		if lesson == "" {
-			lesson = "[Lesson from watch - please update]"
-		}
-		application := update.Application
-		if application == "" {
-			application = "[Application from watch - please update]"
-		}
-		entry = add.FormatLearning(update.Content, ctx, lesson, application)
-	case config.UpdateTypeConvention, config.UpdateTypeConventions:
-		entry = add.FormatConvention(update.Content)
-	}
-
-	newContent := add.AppendEntry(existing, entry, fileType, "")
-	return os.WriteFile(filePath, newContent, 0644)
+	// Write using shared function (handles formatting, append, and index update)
+	return add.WriteEntry(params)
 }
 
 // runCompleteSilent marks a task as complete without output.

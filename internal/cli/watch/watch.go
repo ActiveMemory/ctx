@@ -31,7 +31,7 @@ This command parses AI output looking for structured update commands:
     <context-update type="convention">Use kebab-case for files</context-update>
     <context-update type="complete">user auth</context-update>
 
-  Structured formats (learnings, decisions):
+  Structured formats (learnings, decisions) - all attributes required:
     <context-update type="learning" context="Debugging hooks"
       lesson="Hooks receive JSON via stdin"
       application="Use jq to parse">Title here</context-update>
@@ -40,8 +40,9 @@ This command parses AI output looking for structured update commands:
       rationale="Redis is fast and well-supported"
       consequences="Team needs Redis training">Use Redis</context-update>
 
-If structured attributes are omitted for learnings/decisions, placeholders
-are inserted that should be updated manually.
+Learnings require: context, lesson, application attributes.
+Decisions require: context, rationale, consequences attributes.
+Updates missing required attributes will be rejected with an error.
 
 Use --log to watch a specific file instead of stdin.
 Use --dry-run to see what would be updated without making changes.
