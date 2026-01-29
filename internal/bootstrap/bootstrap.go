@@ -22,6 +22,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
+	"github.com/ActiveMemory/ctx/internal/cli/decisions"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
@@ -80,6 +81,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 	cmd.AddCommand(drift.Cmd())
 	cmd.AddCommand(sync.Cmd())
 	cmd.AddCommand(compact.Cmd())
+	cmd.AddCommand(decisions.Cmd())
 	cmd.AddCommand(watch.Cmd())
 	cmd.AddCommand(hook.Cmd())
 	cmd.AddCommand(session.Cmd())
