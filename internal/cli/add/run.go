@@ -186,9 +186,15 @@ Examples:
 		return fmt.Errorf("failed to write %s: %w", filePath, err)
 	}
 
-	// For decisions, regenerate the quick-reference index
-	if fType == config.UpdateTypeDecision || fType == config.UpdateTypeDecisions {
+	// Regenerate the quick-reference index for decisions and learnings
+	switch fType {
+	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
 		indexed := UpdateIndex(string(newContent))
+		if err := os.WriteFile(filePath, []byte(indexed), 0644); err != nil {
+			return fmt.Errorf("failed to update index in %s: %w", filePath, err)
+		}
+	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
+		indexed := UpdateLearningsIndex(string(newContent))
 		if err := os.WriteFile(filePath, []byte(indexed), 0644); err != nil {
 			return fmt.Errorf("failed to update index in %s: %w", filePath, err)
 		}

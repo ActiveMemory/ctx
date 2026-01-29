@@ -11,42 +11,45 @@ import (
 	"strings"
 )
 
-// Index markers for DECISIONS.md
+// Index markers used in context files
 const (
 	IndexStart = "<!-- INDEX:START -->"
 	IndexEnd   = "<!-- INDEX:END -->"
 )
 
-// DecisionEntry represents a parsed decision header.
-type DecisionEntry struct {
+// IndexEntry represents a parsed entry header from a context file.
+type IndexEntry struct {
 	Timestamp string // Full timestamp: YYYY-MM-DD-HHMMSS
 	Date      string // Date only: YYYY-MM-DD
-	Title     string // Decision title
+	Title     string // Entry title
 }
 
-// decisionHeaderRegex matches decision headers like "## [2026-01-28-051426] Title here"
-var decisionHeaderRegex = regexp.MustCompile(`## \[(\d{4}-\d{2}-\d{2})-(\d{6})\] (.+)`)
+// DecisionEntry is an alias for backward compatibility.
+type DecisionEntry = IndexEntry
 
-// ParseDecisionHeaders extracts all decision entries from file content.
+// entryHeaderRegex matches headers like "## [2026-01-28-051426] Title here"
+var entryHeaderRegex = regexp.MustCompile(`## \[(\d{4}-\d{2}-\d{2})-(\d{6})\] (.+)`)
+
+// ParseEntryHeaders extracts all entries from file content.
 //
 // It scans for headers matching the pattern "## [YYYY-MM-DD-HHMMSS] Title"
 // and returns them in the order they appear in the file.
 //
 // Parameters:
-//   - content: The full content of DECISIONS.md
+//   - content: The full content of a context file
 //
 // Returns:
-//   - []DecisionEntry: Slice of parsed entries (may be empty)
-func ParseDecisionHeaders(content string) []DecisionEntry {
-	var entries []DecisionEntry
+//   - []IndexEntry: Slice of parsed entries (may be empty)
+func ParseEntryHeaders(content string) []IndexEntry {
+	var entries []IndexEntry
 
-	matches := decisionHeaderRegex.FindAllStringSubmatch(content, -1)
+	matches := entryHeaderRegex.FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
 		if len(match) == 4 {
 			date := match[1]
 			time := match[2]
 			title := match[3]
-			entries = append(entries, DecisionEntry{
+			entries = append(entries, IndexEntry{
 				Timestamp: date + "-" + time,
 				Date:      date,
 				Title:     title,
@@ -57,24 +60,34 @@ func ParseDecisionHeaders(content string) []DecisionEntry {
 	return entries
 }
 
-// GenerateIndex creates a markdown table index from decision entries.
+// ParseDecisionHeaders is an alias for ParseEntryHeaders for backward compatibility.
+func ParseDecisionHeaders(content string) []DecisionEntry {
+	return ParseEntryHeaders(content)
+}
+
+// GenerateIndexTable creates a markdown table index from entries.
 //
-// The table has two columns: Date and Decision title.
+// The table has two columns: Date and the specified column header.
 // If there are no entries, returns an empty string.
 //
 // Parameters:
-//   - entries: Slice of decision entries to include
+//   - entries: Slice of entries to include
+//   - columnHeader: Header for the second column (e.g., "Decision", "Learning")
 //
 // Returns:
 //   - string: Markdown table (without markers) or empty string
-func GenerateIndex(entries []DecisionEntry) string {
+func GenerateIndexTable(entries []IndexEntry, columnHeader string) string {
 	if len(entries) == 0 {
 		return ""
 	}
 
 	var sb strings.Builder
-	sb.WriteString("| Date | Decision |\n")
-	sb.WriteString("|------|----------|\n")
+	sb.WriteString("| Date | ")
+	sb.WriteString(columnHeader)
+	sb.WriteString(" |\n")
+	sb.WriteString("|------|")
+	sb.WriteString(strings.Repeat("-", len(columnHeader)))
+	sb.WriteString("|\n")
 
 	for _, e := range entries {
 		// Escape pipe characters in title
@@ -89,20 +102,27 @@ func GenerateIndex(entries []DecisionEntry) string {
 	return sb.String()
 }
 
-// UpdateIndex regenerates the decision index in file content.
+// GenerateIndex creates a markdown table for decisions (backward compatibility).
+func GenerateIndex(entries []DecisionEntry) string {
+	return GenerateIndexTable(entries, "Decision")
+}
+
+// updateFileIndex regenerates the index in file content.
 //
 // If INDEX:START and INDEX:END markers exist, the content between them
-// is replaced. Otherwise, the index is inserted after "# Decisions".
-// If there are no decision entries, any existing index is removed.
+// is replaced. Otherwise, the index is inserted after the specified header.
+// If there are no entries, any existing index is removed.
 //
 // Parameters:
-//   - content: The full content of DECISIONS.md
+//   - content: The full content of the file
+//   - fileHeader: The main header to insert after (e.g., "# Decisions")
+//   - columnHeader: Header for the table column (e.g., "Decision")
 //
 // Returns:
 //   - string: Updated content with regenerated index
-func UpdateIndex(content string) string {
-	entries := ParseDecisionHeaders(content)
-	indexContent := GenerateIndex(entries)
+func updateFileIndex(content, fileHeader, columnHeader string) string {
+	entries := ParseEntryHeaders(content)
+	indexContent := GenerateIndexTable(entries, columnHeader)
 
 	// Check if markers already exist
 	startIdx := strings.Index(content, IndexStart)
@@ -126,13 +146,13 @@ func UpdateIndex(content string) string {
 		return before + "\n" + indexContent + after
 	}
 
-	// No existing markers - insert after "# Decisions" header
+	// No existing markers - insert after file header
 	if indexContent == "" {
 		// No entries, nothing to insert
 		return content
 	}
 
-	headerIdx := strings.Index(content, "# Decisions")
+	headerIdx := strings.Index(content, fileHeader)
 	if headerIdx == -1 {
 		// No header found, return unchanged
 		return content
@@ -159,4 +179,14 @@ func UpdateIndex(content string) string {
 	sb.WriteString(content[insertPoint:])
 
 	return sb.String()
+}
+
+// UpdateIndex regenerates the decision index in DECISIONS.md content.
+func UpdateIndex(content string) string {
+	return updateFileIndex(content, "# Decisions", "Decision")
+}
+
+// UpdateLearningsIndex regenerates the learning index in LEARNINGS.md content.
+func UpdateLearningsIndex(content string) string {
+	return updateFileIndex(content, "# Learnings", "Learning")
 }

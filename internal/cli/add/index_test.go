@@ -116,7 +116,7 @@ func TestGenerateIndex(t *testing.T) {
 				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "First decision"},
 			},
 			expected: `| Date | Decision |
-|------|----------|
+|------|--------|
 | 2026-01-28 | First decision |
 `,
 		},
@@ -127,7 +127,7 @@ func TestGenerateIndex(t *testing.T) {
 				{Timestamp: "2026-01-27-123456", Date: "2026-01-27", Title: "Second"},
 			},
 			expected: `| Date | Decision |
-|------|----------|
+|------|--------|
 | 2026-01-28 | First |
 | 2026-01-27 | Second |
 `,
@@ -138,7 +138,7 @@ func TestGenerateIndex(t *testing.T) {
 				{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "Use A | B format"},
 			},
 			expected: `| Date | Decision |
-|------|----------|
+|------|--------|
 | 2026-01-28 | Use A \| B format |
 `,
 		},
@@ -320,5 +320,119 @@ func TestUpdateIndex_Idempotent(t *testing.T) {
 	// Should be identical
 	if first != second {
 		t.Errorf("UpdateIndex is not idempotent\nFirst:\n%s\nSecond:\n%s", first, second)
+	}
+}
+
+func TestUpdateLearningsIndex(t *testing.T) {
+	tests := []struct {
+		name    string
+		content string
+		wantHas []string
+		wantNot []string
+	}{
+		{
+			name:    "empty file with header",
+			content: "# Learnings\n",
+			wantNot: []string{IndexStart, IndexEnd},
+		},
+		{
+			name: "file with one learning",
+			content: `# Learnings
+
+## [2026-01-28-191951] Required flags now enforced
+
+**Context**: Implemented ctx add learning flags
+
+**Lesson**: Structured entries are more useful
+
+**Application**: Always use all three flags
+`,
+			wantHas: []string{
+				IndexStart,
+				IndexEnd,
+				"| Date | Learning |",
+				"| 2026-01-28 | Required flags now enforced |",
+			},
+		},
+		{
+			name: "multiple learnings",
+			content: `# Learnings
+
+## [2026-01-28-191951] First learning
+
+**Context**: Test
+
+**Lesson**: Test
+
+**Application**: Test
+
+---
+
+## [2026-01-27-120000] Second learning
+
+**Context**: Test
+
+**Lesson**: Test
+
+**Application**: Test
+`,
+			wantHas: []string{
+				"| 2026-01-28 | First learning |",
+				"| 2026-01-27 | Second learning |",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := UpdateLearningsIndex(tt.content)
+			for _, want := range tt.wantHas {
+				if !strings.Contains(got, want) {
+					t.Errorf("UpdateLearningsIndex() result missing %q\nGot:\n%s", want, got)
+				}
+			}
+			for _, notWant := range tt.wantNot {
+				if strings.Contains(got, notWant) {
+					t.Errorf("UpdateLearningsIndex() result should not contain %q\nGot:\n%s", notWant, got)
+				}
+			}
+		})
+	}
+}
+
+func TestUpdateLearningsIndex_Idempotent(t *testing.T) {
+	content := `# Learnings
+
+## [2026-01-28-191951] Test learning
+
+**Context**: Test
+
+**Lesson**: Test
+
+**Application**: Test
+`
+
+	first := UpdateLearningsIndex(content)
+	second := UpdateLearningsIndex(first)
+
+	if first != second {
+		t.Errorf("UpdateLearningsIndex is not idempotent\nFirst:\n%s\nSecond:\n%s", first, second)
+	}
+}
+
+func TestGenerateIndexTable(t *testing.T) {
+	entries := []IndexEntry{
+		{Timestamp: "2026-01-28-051426", Date: "2026-01-28", Title: "Test entry"},
+	}
+
+	// Test with different column headers
+	decisionTable := GenerateIndexTable(entries, "Decision")
+	if !strings.Contains(decisionTable, "| Date | Decision |") {
+		t.Error("Decision table should have 'Decision' column header")
+	}
+
+	learningTable := GenerateIndexTable(entries, "Learning")
+	if !strings.Contains(learningTable, "| Date | Learning |") {
+		t.Error("Learning table should have 'Learning' column header")
 	}
 }

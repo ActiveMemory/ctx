@@ -26,6 +26,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/cli/learnings"
 	"github.com/ActiveMemory/ctx/internal/cli/load"
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
@@ -84,6 +85,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 	cmd.AddCommand(decisions.Cmd())
 	cmd.AddCommand(watch.Cmd())
 	cmd.AddCommand(hook.Cmd())
+	cmd.AddCommand(learnings.Cmd())
 	cmd.AddCommand(session.Cmd())
 	cmd.AddCommand(task.Cmd())
 	cmd.AddCommand(loop.Cmd())

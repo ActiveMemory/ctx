@@ -1,7 +1,41 @@
 # Learnings
 
-> Ordered reverse-chronologically (newest first) to ensure most relevant items 
-> are read first regardless of token budget.
+<!-- INDEX:START -->
+| Date       | Learning                                             |
+|------------|------------------------------------------------------|
+| 2026-01-28 | Required flags now enforced for learnings            |
+| 2026-01-28 | Claude Code Hooks Receive JSON via Stdin             |
+| 2026-01-28 | Changelogs vs Blogs serve different audiences        |
+| 2026-01-28 | IDE is already the UI                                |
+| 2026-01-28 | Subtasks complete does not mean parent task complete |
+| 2026-01-28 | AI session JSONL formats are not standardized        |
+| 2026-01-27 | Always Complete Decision Record Sections             |
+| 2026-01-27 | Slash Commands Require Matching Permissions          |
+| 2026-01-26 | Go json.Marshal Escapes Shell Characters             |
+| 2026-01-26 | Claude Code Hook Key Names                           |
+| 2026-01-25 | defer os.Chdir Fails errcheck Linter                 |
+| 2026-01-25 | golangci-lint Go Version Mismatch in CI              |
+| 2026-01-25 | CI Tests Need CTX_SKIP_PATH_CHECK                    |
+| 2026-01-25 | AGENTS.md Is Not Auto-Loaded                         |
+| 2026-01-25 | Hook Regex Can Overfit                               |
+| 2026-01-25 | Autonomous Mode Creates Technical Debt               |
+| 2026-01-23 | ctx agent vs Manual File Reading Trade-offs          |
+| 2026-01-23 | Claude Code Skills Format                            |
+| 2026-01-23 | Infer Intent on "Do You Remember?" Questions         |
+| 2026-01-23 | Always Use ctx from PATH                             |
+| 2026-01-21 | Exit Criteria Must Include Verification              |
+| 2026-01-21 | Orchestrator vs Agent Tasks Must Be Separate         |
+| 2026-01-21 | One Templates Directory, Not Two                     |
+| 2026-01-21 | Hooks Should Use PATH, Not Hardcoded Paths           |
+| 2026-01-20 | ctx and Ralph Loop Are Separate Systems              |
+| 2026-01-20 | .context/ Is NOT a Claude Code Primitive             |
+| 2026-01-20 | SessionEnd Hook Catches Ctrl+C                       |
+| 2026-01-20 | Session Filename Must Include Time                   |
+| 2026-01-20 | Two Tiers of Persistence                             |
+| 2026-01-20 | Auto-Load Works, Auto-Save Was Missing               |
+| 2026-01-20 | Always Backup Before Modifying User Files            |
+| 2026-01-19 | CGO Must Be Disabled for ARM64 Linux                 |
+<!-- INDEX:END -->
 
 ---
 
@@ -9,32 +43,76 @@
 
 **Context**: Implemented ctx add learning flags to match decision's ADR pattern
 
-**Lesson**: Structured entries with Context/Lesson/Application are more useful than one-liners
+**Lesson**: Structured entries with Context/Lesson/Application are more useful 
+than one-liners
 
-**Application**: Always use ctx add learning with all three flags; agents guided via AGENT_PLAYBOOK.md
+**Application**: Always use ctx add learning with all three flags; agents 
+guided via AGENT_PLAYBOOK.md
 
 ## [2026-01-28-194113] Claude Code Hooks Receive JSON via Stdin
 
-**Context**: Debugging Claude Code PreToolUse hooks - they were not receiving command data when using environment variables like CLAUDE_TOOL_INPUT
+**Context**: Debugging Claude Code PreToolUse hooks - they were not receiving 
+command data when using environment variables like CLAUDE_TOOL_INPUT
 
-**Lesson**: Claude Code hooks receive input as JSON via stdin, not environment variables. Use HOOK_INPUT=$(cat) then parse with jq: COMMAND=$(echo "$HOOK_INPUT" | jq -r ".tool_input.command // empty")
+**Lesson**: Claude Code hooks receive input as JSON via stdin, not environment 
+variables. Use HOOK_INPUT=$(cat) then parse with 
+jq: COMMAND=$(echo "$HOOK_INPUT" | jq -r ".tool_input.command // empty")
 
-**Application**: All hook scripts should read stdin for input. The JSON structure includes .tool_input.command for Bash commands. Test hooks with debug logging to /tmp/ to verify they receive expected data.
+**Application**: All hook scripts should read stdin for input. The JSON 
+structure includes .tool_input.command for Bash commands. Test hooks with 
+debug logging to /tmp/ to verify they receive expected data.
 
-- **[2026-01-28-072838]** Changelogs document WHAT; blogs explain WHY. Same information, different engagement. Changelogs are for machines (audits, dependency trackers). Blogs are for humans (narrative, context, lessons). When synthesizing session history, output both: changelog for completeness, blog for readability.
+## [2026-01-28-072838] Changelogs vs Blogs serve different audiences
 
-- **[2026-01-28-051426]** IDE is already the UI: Discovery, search, and 
-editing of .context/ markdown files works better in VS Code/IDE than any 
-custom UI we'd build. Full-text search, git integration, extensions - all free. 
-Don't reinvent the editor.
+**Context**: Synthesizing session history into documentation
 
-- **[2026-01-28-040915]** Subtasks complete does not mean parent task complete
+**Lesson**: Changelogs document WHAT; blogs explain WHY. Same information, 
+different engagement. Changelogs are for machines (audits, dependency trackers). 
+Blogs are for humans (narrative, context, lessons).
 
-- **[2026-01-28-040251]** AI session JSONL formats are not standardized across tools
+**Application**: When synthesizing session history, output both: changelog for 
+completeness, blog for readability.
 
 ---
 
-## [2026-01-27] Always Complete Decision Record Sections
+## [2026-01-28-051426] IDE is already the UI
+
+**Context**: Considering whether to build custom UI for .context/ files
+
+**Lesson**: Discovery, search, and editing of .context/ markdown files works 
+better in VS Code/IDE than any custom UI we'd build. Full-text search, 
+git integration, extensions - all free.
+
+**Application**: Don't reinvent the editor. Let users use their preferred IDE.
+
+---
+
+## [2026-01-28-040915] Subtasks complete does not mean parent task complete
+
+**Context**: AI marked parent task done after finishing subtasks but missing 
+actual deliverable
+
+**Lesson**: Subtask completion is implementation progress, not delivery. 
+The parent task defines what the user gets.
+
+**Application**: Parent tasks should have explicit deliverables; don't close 
+until deliverable is verified.
+
+---
+
+## [2026-01-28-040251] AI session JSONL formats are not standardized
+
+**Context**: Building recall feature to parse session history from multiple 
+AI tools
+
+**Lesson**: Claude Code, Cursor, Aider each have different JSONL formats 
+or may not export sessions at all.
+
+**Application**: Use tool-agnostic Session type with tool-specific parsers.
+
+---
+
+## [2026-01-27-180000] Always Complete Decision Record Sections
 
 **Context**: Decisions added via `ctx add decision` were left with placeholder 
 text like "[Add context here]".
@@ -50,7 +128,7 @@ flags when available.
 
 ---
 
-## [2026-01-27] Slash Commands Require Matching Permissions
+## [2026-01-27-160000] Slash Commands Require Matching Permissions
 
 **Context**: Claude Code slash commands using `!` bash syntax require matching 
 permissions in settings.local.json.
@@ -61,7 +139,7 @@ config - never remove existing permissions.
 
 ---
 
-## [2026-01-26] Go json.Marshal Escapes Shell Characters
+## [2026-01-26-180000] Go json.Marshal Escapes Shell Characters
 
 **Context**: Generated settings.local.json had `2\u003e/dev/null` instead 
 of `2>/dev/null`.
@@ -73,7 +151,7 @@ that contain shell commands.
 
 ---
 
-## [2026-01-26] Claude Code Hook Key Names
+## [2026-01-26-160000] Claude Code Hook Key Names
 
 **Context**: Hooks weren't working, getting "Invalid key in record" errors.
 
@@ -83,7 +161,7 @@ causes validation errors.
 
 ---
 
-## [2026-01-25] defer os.Chdir Fails errcheck Linter
+## [2026-01-25-200000] defer os.Chdir Fails errcheck Linter
 
 **Context**: `defer os.Chdir(originalDir)` fails golangci-lint errcheck.
 
@@ -92,7 +170,7 @@ error return value.
 
 ---
 
-## [2026-01-25] golangci-lint Go Version Mismatch in CI
+## [2026-01-25-190000] golangci-lint Go Version Mismatch in CI
 
 **Context**: CI was failing with Go version mismatches between golangci-lint 
 and the project.
@@ -103,7 +181,7 @@ source using the project's Go version.
 
 ---
 
-## [2026-01-25] CI Tests Need CTX_SKIP_PATH_CHECK
+## [2026-01-25-180000] CI Tests Need CTX_SKIP_PATH_CHECK
 
 **Context**: CI tests were failing because ctx binary isn't installed on CI runners.
 
@@ -112,7 +190,7 @@ env var, because init checks if ctx is in PATH.
 
 ---
 
-## [2026-01-25] AGENTS.md Is Not Auto-Loaded
+## [2026-01-25-170000] AGENTS.md Is Not Auto-Loaded
 
 **Context**: Had both AGENTS.md and CLAUDE.md in project root, causing confusion.
 
@@ -121,7 +199,7 @@ using ctx should rely on the CLAUDE.md → AGENT_PLAYBOOK.md chain, not AGENTS.m
 
 ---
 
-## [2026-01-25] Hook Regex Can Overfit
+## [2026-01-25-160000] Hook Regex Can Overfit
 
 **Context**: `.claude/hooks/block-non-path-ctx.sh` was blocking legitimate sed 
 commands because the regex `ctx[^ ]*` matched paths containing "ctx" as a 
@@ -137,7 +215,7 @@ directory component (e.g., `/home/user/ctx/internal/...`).
 
 ---
 
-## [2026-01-25] Autonomous Mode Creates Technical Debt
+## [2026-01-25-140000] Autonomous Mode Creates Technical Debt
 
 **Context**: Compared commits from autonomous "YOLO mode" (auto-accept, 
 agent-driven) vs human-guided refactoring sessions.
@@ -160,7 +238,7 @@ agent-driven) vs human-guided refactoring sessions.
 
 ---
 
-## [2026-01-23] ctx agent vs Manual File Reading Trade-offs
+## [2026-01-23-180000] ctx agent vs Manual File Reading Trade-offs
 
 **Context**: User asked "Do you remember?" and agent used parallel file reads 
 instead of `ctx agent`. Compared outputs to understand the delta.
@@ -183,7 +261,7 @@ Manual file reading is better for exploratory/memory questions:
 
 ---
 
-## [2026-01-23] Claude Code Skills Format
+## [2026-01-23-160000] Claude Code Skills Format
 
 **Context**: Needed to understand how to create custom slash commands.
 
@@ -194,7 +272,7 @@ passes command args.
 
 ---
 
-## [2026-01-23] Infer Intent on "Do You Remember?" Questions
+## [2026-01-23-140000] Infer Intent on "Do You Remember?" Questions
 
 **Context**: User asked "Do you remember?" at session start. Agent asked for 
 clarification instead of proactively checking context files.
@@ -214,7 +292,7 @@ obvious intent.
 
 ---
 
-## [2026-01-23] Always Use ctx from PATH
+## [2026-01-23-120000] Always Use ctx from PATH
 
 **Context**: Agent used `./dist/ctx-linux-arm64` and `go run ./cmd/ctx` 
 instead of just `ctx`, even though the binary was installed to PATH.
@@ -232,7 +310,7 @@ setup (`sudo make install` or `sudo cp ./ctx /usr/local/bin/`).
 
 ---
 
-## [2026-01-21] Exit Criteria Must Include Verification
+## [2026-01-21-180000] Exit Criteria Must Include Verification
 
 **Context**: Dogfooding experiment had another Claude rebuild `ctx` from specs. 
 All tasks were marked complete, Ralph Loop exited successfully. But the built 
@@ -255,7 +333,7 @@ Exit criteria must include:
 
 ---
 
-## [2026-01-21] Orchestrator vs Agent Tasks Must Be Separate
+## [2026-01-21-160000] Orchestrator vs Agent Tasks Must Be Separate
 
 **Context**: Ralph Loop checked `IMPLEMENTATION_PLAN.md`, found all tasks 
 done, exited — ignoring `.context/TASKS.md`.
@@ -272,7 +350,7 @@ The orchestrator shouldn't maintain a parallel ledger. It just says
 
 ---
 
-## [2026-01-21] One Templates Directory, Not Two
+## [2026-01-21-140000] One Templates Directory, Not Two
 
 **Context**: Confusion arose about `templates/` (root) vs 
 `internal/templates/` (embedded).
@@ -291,7 +369,7 @@ internal/templates/  ──[ctx init]──>  .context/
 
 ---
 
-## [2026-01-21] Hooks Should Use PATH, Not Hardcoded Paths
+## [2026-01-21-120000] Hooks Should Use PATH, Not Hardcoded Paths
 
 **Context**: Original hooks used hardcoded absolute paths like 
 `/home/user/project/dist/ctx-linux-arm64`. This caused issues when dogfooding 
@@ -312,7 +390,7 @@ or sharing configs.
 
 ---
 
-## [2026-01-20] ctx and Ralph Loop Are Separate Systems
+## [2026-01-20-200000] ctx and Ralph Loop Are Separate Systems
 
 **Context**: User asked "How do I use the ctx binary to recreate this project?"
 
@@ -329,7 +407,7 @@ or sharing configs.
 
 ---
 
-## [2026-01-20] .context/ Is NOT a Claude Code Primitive
+## [2026-01-20-180000] .context/ Is NOT a Claude Code Primitive
 
 **Context**: User asked if Claude Code natively understands `.context/`.
 
@@ -345,7 +423,7 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 
 ---
 
-## [2026-01-20] SessionEnd Hook Catches Ctrl+C
+## [2026-01-20-160000] SessionEnd Hook Catches Ctrl+C
 
 **Context**: Needed to auto-save context even when user force-quits with Ctrl+C.
 
@@ -359,7 +437,7 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 
 ---
 
-## [2026-01-20] Session Filename Must Include Time
+## [2026-01-20-140000] Session Filename Must Include Time
 
 **Context**: Using just date (`2026-01-20-topic.md`) would overwrite multiple sessions per day.
 
@@ -369,7 +447,7 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 
 ---
 
-## [2026-01-20] Two Tiers of Persistence
+## [2026-01-20-120000] Two Tiers of Persistence
 
 **Context**: User wanted to ensure nothing is lost when session ends.
 
@@ -384,7 +462,7 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 
 ---
 
-## [2026-01-20] Auto-Load Works, Auto-Save Was Missing
+## [2026-01-20-100000] Auto-Load Works, Auto-Save Was Missing
 
 **Context**: Explored how to persist context across Claude Code sessions.
 
@@ -396,7 +474,7 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 
 ---
 
-## [2026-01-20] Always Backup Before Modifying User Files
+## [2026-01-20-080000] Always Backup Before Modifying User Files
 
 **Context**: `ctx init` needs to create/modify CLAUDE.md, but user may have existing customizations.
 
@@ -410,7 +488,7 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 
 ---
 
-## [undated] CGO Must Be Disabled for ARM64 Linux
+## [2026-01-19-120000] CGO Must Be Disabled for ARM64 Linux
 
 **Context**: `go test` failed with `gcc: error: unrecognized command-line option '-m64'`
 
