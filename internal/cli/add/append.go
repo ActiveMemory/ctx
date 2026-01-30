@@ -145,11 +145,12 @@ func insertAfterHeader(content, entry, header string) []byte {
 			for insertPoint < len(content) {
 				if content[insertPoint] == '\n' {
 					insertPoint++
-				} else if insertPoint+4 < len(content) && content[insertPoint:insertPoint+4] == "<!--" {
+				} else if insertPoint+len(config.CommentOpen) <= len(content) &&
+					content[insertPoint:insertPoint+len(config.CommentOpen)] == config.CommentOpen {
 					// Skip HTML comment
-					endComment := strings.Index(content[insertPoint:], "-->")
+					endComment := strings.Index(content[insertPoint:], config.CommentClose)
 					if endComment != -1 {
-						insertPoint += endComment + 3
+						insertPoint += endComment + len(config.CommentClose)
 						// Skip trailing whitespace after comment
 						for insertPoint < len(content) && (content[insertPoint] == '\n' || content[insertPoint] == ' ') {
 							insertPoint++

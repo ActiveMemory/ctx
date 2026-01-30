@@ -1,6 +1,8 @@
 package config
 
 const (
+	CommentClose           = "-->"
+	CommentOpen            = "<!--"
 	CtxMarkerEnd           = "<!-- ctx:end -->"
 	CtxMarkerStart         = "<!-- ctx:context -->"
 	DirArchive             = "archive"
