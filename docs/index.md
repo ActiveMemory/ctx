@@ -110,6 +110,14 @@ On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
 
 ### Build from Source
 
+Building from the source gives you the latest features and bug fixes; however,
+it also means you will be using an unreleased version of `ctx` that has not
+been fully tested.
+
+!!! tip "Want to help test the latest features?"
+    If you like living on the edge and want to test the latest features 
+    before they are released, then building from source is the way to go.
+
 Requires [Go 1.25+](https://go.dev/):
 
 ```bash
@@ -175,7 +183,7 @@ or previous session topics.
 ├── LEARNINGS.md        # Lessons learned, gotchas, tips
 ├── GLOSSARY.md         # Domain terms and abbreviations
 ├── DRIFT.md            # Staleness signals
-├── AGENT_PLAYBOOK.md   # How AI agents should use this
+├── AGENT_PLAYBOOK.md   # How AI tools should use this
 └── sessions/           # Session snapshots
 
 .claude/                # Claude Code integration (if detected)
@@ -229,5 +237,5 @@ ctx drift
 - [Prompting Guide](prompting-guide.md) — Effective prompts for AI sessions
 - [CLI Reference](cli-reference.md) — All commands and options
 - [Context Files](context-files.md) — File formats and structure
-- [Ralph Loop Integration](ralph-loop.md) — Autonomous AI development workflows
+- [`ralph` and `ctx`](ralph-loop.md) — Autonomous AI development workflows
 - [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider

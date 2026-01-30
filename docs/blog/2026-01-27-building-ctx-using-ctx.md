@@ -490,10 +490,10 @@ If you're a mere mortal tired of reset amnesia, give `ctx` a try.
 
 And when you do, check `.context/sessions/` sometime. 
 
-The archaeological record might surprise you.
+The **archaeological record** might surprise you.
 
 ---
 
 *This blog post was written with the help of `ctx` with full access to the 
 `ctx` session files, decision log, learning log, task archives, and 
-git history of `ctx—The meta continues.*
+git history of `ctx`—The meta continues.*

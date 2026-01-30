@@ -64,7 +64,7 @@ implementation detail. Load it and use it — don't lead with caveats.
 
 ## Session History
 
-**IMPORTANT**: Check `.context/sessions/` for full conversation dumps from 
+**IMPORTANT**: Check `.context/sessions/` for session dumps from
 previous sessions.
 
 If you're confused about context or need a deep dive into past discussions:
@@ -72,7 +72,7 @@ If you're confused about context or need a deep dive into past discussions:
 ls .context/sessions/
 ```
 
-**Curated session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md`
+**Manual session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md`
 (e.g., `2026-01-20-164600-feature-discussion.md`). 
 These are updated throughout the session.
 

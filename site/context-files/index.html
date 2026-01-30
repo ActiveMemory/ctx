@@ -418,7 +418,7 @@
   <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ./context
+        .context/
       
     </span>
   </a>
@@ -1101,7 +1101,7 @@
   <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ./context
+        .context/
       
     </span>
   </a>
@@ -1554,7 +1554,7 @@
   <h1>Context Files</h1>
 
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<h2 id="context"><code>./context</code><a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+<h2 id="context"><code>.context/</code><a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
 <p>Each context file in <code>.context/</code> serves a specific purpose. </p>
 <p>Files are designed to be human-readable, AI-parseable, and token-efficient.</p>
 <h2 id="file-overview">File Overview<a class="headerlink" href="#file-overview" title="Permanent link">&para;</a></h2>
@@ -1609,20 +1609,20 @@
 </tr>
 <tr>
 <td>AGENT_PLAYBOOK.md</td>
-<td>Instructions for AI agents</td>
+<td>Instructions for AI tools</td>
 <td>9 (lowest)</td>
 </tr>
 </tbody>
 </table>
 <h2 id="read-order-rationale">Read Order Rationale<a class="headerlink" href="#read-order-rationale" title="Permanent link">&para;</a></h2>
-<p>The priority order follows a logical progression for AI agents:</p>
+<p>The priority order follows a logical progression for AI tools:</p>
 <ol>
 <li>
-<p><strong>CONSTITUTION</strong> — Inviolable rules first. The agent must know what it
+<p><strong>CONSTITUTION</strong> — Inviolable rules first. The AI tool must know what it
    <em>cannot</em> do before attempting anything.</p>
 </li>
 <li>
-<p><strong>TASKS</strong> — Current work items. What the agent should focus on.</p>
+<p><strong>TASKS</strong> — Current work items. What the AI tool should focus on.</p>
 </li>
 <li>
 <p><strong>CONVENTIONS</strong> — How to write code. Patterns and standards to follow
@@ -1658,7 +1658,7 @@
 <h2 id="constitutionmd">CONSTITUTION.md<a class="headerlink" href="#constitutionmd" title="Permanent link">&para;</a></h2>
 <p><strong>Purpose:</strong> Define hard invariants—rules that must <strong>NEVER</strong> be violated, 
 regardless of the task.</p>
-<p>AI agents read this first and should refuse tasks that violate these rules.</p>
+<p>AI tools read this first and should refuse tasks that violate these rules.</p>
 <h3 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h3>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh"># Constitution</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -2063,7 +2063,7 @@ be forgotten.</p>
 </span></code></pre></div>
 <hr />
 <h2 id="agent_playbookmd">AGENT_PLAYBOOK.md<a class="headerlink" href="#agent_playbookmd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose</strong>: Explicit instructions for how AI agents should read, apply, 
+<p><strong>Purpose</strong>: Explicit instructions for how AI tools should read, apply, 
 and update context.</p>
 <h3 id="key-sections">Key Sections<a class="headerlink" href="#key-sections" title="Permanent link">&para;</a></h3>
 <p><strong>Read Order</strong>: Priority order for loading context files</p>

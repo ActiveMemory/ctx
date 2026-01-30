@@ -383,19 +383,19 @@ Also, multiple compacts in the same minute could collide.
 
 **Decision**: Use `YYYY-MM-DD-HHMMSS-<topic>.md` format for session files.
 Two file types:
-- **Curated sessions**: `HHMMSS-<topic>.md` - updated throughout session
+- **Manual session files**: `HHMMSS-<topic>.md` - updated throughout session
 - **Auto-snapshots**: `HHMMSS-<event>.jsonl` - immutable once created
 
 **Rationale**:
 - Human-readable (unlike unix timestamps)
 - Naturally sorts chronologically
 - Seconds precision prevents collision even with rapid compacts
-- Clear distinction between curated notes and raw snapshots
+- Clear distinction between manual notes and raw snapshots
 
 **Consequences**:
 - Slightly longer filenames
 - Must ensure consistent format in all session-saving code
-- Curated files keep getting updated; snapshots are write-once
+- Manual files keep getting updated; snapshots are write-once
 
 ---
 

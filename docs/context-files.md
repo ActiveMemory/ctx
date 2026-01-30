@@ -11,7 +11,7 @@ icon: lucide/files
 
 ![ctx](images/ctx-banner.png)
 
-## `./context`
+## `.context/`
 
 Each context file in `.context/` serves a specific purpose. 
 
@@ -29,16 +29,16 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 | LEARNINGS.md      | Lessons learned, gotchas, tips         | 6           |
 | GLOSSARY.md       | Domain terms and abbreviations         | 7           |
 | DRIFT.md          | Staleness signals and update triggers  | 8           |
-| AGENT_PLAYBOOK.md | Instructions for AI agents             | 9 (lowest)  |
+| AGENT_PLAYBOOK.md | Instructions for AI tools              | 9 (lowest)  |
 
 ## Read Order Rationale
 
-The priority order follows a logical progression for AI agents:
+The priority order follows a logical progression for AI tools:
 
-1. **CONSTITUTION** — Inviolable rules first. The agent must know what it
+1. **CONSTITUTION** — Inviolable rules first. The AI tool must know what it
    *cannot* do before attempting anything.
 
-2. **TASKS** — Current work items. What the agent should focus on.
+2. **TASKS** — Current work items. What the AI tool should focus on.
 
 3. **CONVENTIONS** — How to write code. Patterns and standards to follow
    when implementing tasks.
@@ -69,7 +69,7 @@ The priority order follows a logical progression for AI agents:
 **Purpose:** Define hard invariants—rules that must **NEVER** be violated, 
 regardless of the task.
 
-AI agents read this first and should refuse tasks that violate these rules.
+AI tools read this first and should refuse tasks that violate these rules.
 
 ### Structure
 
@@ -462,7 +462,7 @@ Update context when:
 
 ## AGENT_PLAYBOOK.md
 
-**Purpose**: Explicit instructions for how AI agents should read, apply, 
+**Purpose**: Explicit instructions for how AI tools should read, apply, 
 and update context.
 
 ### Key Sections

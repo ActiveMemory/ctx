@@ -19,8 +19,8 @@ The [Ralph Wiggum technique](https://ghuntley.com/ralph/) is an iterative AI dev
 an agent works autonomously on tasks until completion. Context (`ctx`) and 
 Ralph complement each other perfectly:
 
-- **ctx** provides the *memory*: persistent context that survives across sessions
-- **Ralph** provides the *loop*: autonomous iteration that runs until done
+- **`ctx`** provides the *memory*: persistent context that survives across sessions
+- **`ralph`** provides the *loop*: autonomous iteration that runs until done
 
 Together, they enable fully autonomous AI development where the agent remembers 
 everything across iterations.

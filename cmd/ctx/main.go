@@ -13,6 +13,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/bootstrap"
 )
 
+// main is the entry point of the application.
 func main() {
 	cmd := bootstrap.Initialize(bootstrap.RootCmd())
 

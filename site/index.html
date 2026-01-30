@@ -1252,6 +1252,14 @@ files that version with your code and persist across sessions.</p>
 </span></code></pre></div>
 <p>On macOS, use <code>shasum -a 256 -c</code> instead of <code>sha256sum -c</code>.</p>
 <h3 id="build-from-source">Build from Source<a class="headerlink" href="#build-from-source" title="Permanent link">&para;</a></h3>
+<p>Building from the source gives you the latest features and bug fixes; however,
+it also means you will be using an unreleased version of <code>ctx</code> that has not
+been fully tested.</p>
+<div class="admonition tip">
+<p class="admonition-title">Want to help test the latest features?</p>
+<p>If you like living on the edge and want to test the latest features 
+before they are released, then building from source is the way to go.</p>
+</div>
 <p>Requires <a href="https://go.dev/">Go 1.25+</a>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ActiveMemory/ctx.git
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">cd</span><span class="w"> </span>ctx
@@ -1293,7 +1301,7 @@ or previous session topics.</p>
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>├── LEARNINGS.md        # Lessons learned, gotchas, tips
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>├── GLOSSARY.md         # Domain terms and abbreviations
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>├── DRIFT.md            # Staleness signals
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>├── AGENT_PLAYBOOK.md   # How AI agents should use this
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>├── AGENT_PLAYBOOK.md   # How AI tools should use this
 </span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>└── sessions/           # Session snapshots
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
 </span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>.claude/                # Claude Code integration (if detected)
@@ -1329,7 +1337,7 @@ or previous session topics.</p>
 <li><a href="prompting-guide/">Prompting Guide</a> — Effective prompts for AI sessions</li>
 <li><a href="cli-reference/">CLI Reference</a> — All commands and options</li>
 <li><a href="context-files/">Context Files</a> — File formats and structure</li>
-<li><a href="ralph-loop/">Ralph Loop Integration</a> — Autonomous AI development workflows</li>
+<li><a href="ralph-loop/"><code>ralph</code> and <code>ctx</code></a> — Autonomous AI development workflows</li>
 <li><a href="integrations/">Integrations</a> — Setup for Claude Code, Cursor, Aider</li>
 </ul>
 

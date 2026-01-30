@@ -41,7 +41,7 @@
 
 ## [2026-01-28-191951] Required flags now enforced for learnings
 
-**Context**: Implemented ctx add learning flags to match decision's ADR pattern
+**Context**: Implemented ctx add learning flags to match decision's ADR (Architectural Decision Record) pattern
 
 **Lesson**: Structured entries with Context/Lesson/Application are more useful 
 than one-liners

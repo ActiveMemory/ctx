@@ -230,7 +230,7 @@ What's in scope vs out of scope for this codebase.
 
 ---
 
-### CONSTITUTION.md
+### `CONSTITUTION.md`
 
 **Purpose**: Define hard invariants — rules that must NEVER be violated, 
 regardless of task.
@@ -266,7 +266,7 @@ violate invariants.
 
 ---
 
-### GLOSSARY.md
+### `GLOSSARY.md`
 
 **Purpose**: Define domain terms, abbreviations, and project vocabulary to 
 ensure consistent language.
@@ -298,7 +298,7 @@ See: [Ralph Wiggum technique](https://ghuntley.com/ralph/)
 
 ---
 
-### DRIFT.md
+### `DRIFT.md`
 
 **Purpose**: Define signals that context is stale and needs updating. 
 Used by `ctx drift` command.
@@ -345,7 +345,7 @@ Update context when:
 
 ---
 
-### AGENT_PLAYBOOK.md
+### `AGENT_PLAYBOOK.md`
 
 **Purpose**: Explicit instructions for how AI agents should read, apply, and 
 update Context.

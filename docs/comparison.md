@@ -165,7 +165,7 @@ Together, loops become cumulative instead of forgetful.
 
 ## SDK-Level Context Objects
 
-Some SDKs expose "context" objects that exist:
+Some SDKs expose "*context*" objects that exist:
 
 * inside a process
 * during a request

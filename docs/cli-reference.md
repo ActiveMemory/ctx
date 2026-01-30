@@ -19,20 +19,15 @@ This is a complete reference for all `ctx` commands.
 
 All commands support these flags:
 
-| Flag        | Description       |
-|-------------|-------------------|
-| `--help`    | Show command help |
-| `--version` | Show version      |
+| Flag                   | Description                                       |
+|------------------------|---------------------------------------------------|
+| `--help`               | Show command help                                 |
+| `--version`            | Show version                                      |
+| `--context-dir <path>` | Override context directory (default: `.context/`) |
+| `--quiet`              | Suppress non-essential output                     |
+| `--no-color`           | Disable colored output                            |
 
-**Planned flags** (not yet implemented):
-
-| Flag                   | Description                                      |
-|------------------------|--------------------------------------------------|
-| `--context-dir <path>` | Override context directory (default: `.context`) |
-| `--quiet`              | Suppress non-essential output                    |
-| `--no-color`           | Disable colored output                           |
-
-> Use `NO_COLOR=1` environment variable to disable colored output today.
+> The `NO_COLOR=1` environment variable also disables colored output.
 
 ## Commands
 
@@ -407,6 +402,68 @@ Snapshots are stored in `.context/archive/` with timestamped names
 ```bash
 ctx tasks snapshot
 ctx tasks snapshot "before-refactor"
+```
+
+---
+
+### `ctx decisions`
+
+Manage the DECISIONS.md file.
+
+```bash
+ctx decisions <subcommand>
+```
+
+#### `ctx decisions reindex`
+
+Regenerate the quick-reference index at the top of DECISIONS.md.
+
+```bash
+ctx decisions reindex
+```
+
+The index is a compact table showing date and title for each decision,
+allowing AI tools to quickly scan entries without reading the full file.
+
+Use this after manual edits to DECISIONS.md or when migrating existing
+files to use the index format.
+
+**Example**:
+
+```bash
+ctx decisions reindex
+# ✓ Index regenerated with 12 entries
+```
+
+---
+
+### `ctx learnings`
+
+Manage the LEARNINGS.md file.
+
+```bash
+ctx learnings <subcommand>
+```
+
+#### `ctx learnings reindex`
+
+Regenerate the quick-reference index at the top of LEARNINGS.md.
+
+```bash
+ctx learnings reindex
+```
+
+The index is a compact table showing date and title for each learning,
+allowing AI tools to quickly scan entries without reading the full file.
+
+Use this after manual edits to LEARNINGS.md or when migrating existing
+files to use the index format.
+
+**Example**:
+
+```bash
+ctx learnings reindex
+# ✓ Index regenerated with 8 entries
 ```
 
 ---

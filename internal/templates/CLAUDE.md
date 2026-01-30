@@ -11,7 +11,7 @@ This project uses Context (`ctx`) for context persistence across sessions.
 ## On Session Start
 
 1. **Read `.context/AGENT_PLAYBOOK.md`** first - it explains how to use this system
-2. **Check `.context/sessions/`** for full conversation dumps from previous sessions
+2. **Check `.context/sessions/`** for session dumps from previous sessions
 3. **Run `ctx status`** to see current context summary
 
 ## Quick Context Load
@@ -33,7 +33,7 @@ ctx status
 | `.context/DECISIONS.md` | Architectural decisions with rationale |
 | `.context/LEARNINGS.md` | Gotchas, tips, lessons learned |
 | `.context/CONVENTIONS.md` | Code patterns and standards |
-| `.context/sessions/` | **Full conversation dumps** - check here for deep context |
+| `.context/sessions/` | **Session dumps** - check here for deep context |
 
 ## Before Session Ends
 

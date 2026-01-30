@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Packages context provides functionality for loading and managing .context/ files.
+// Package context provides functionality for loading and managing .context/ files.
 package context
 
 import (
