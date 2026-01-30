@@ -216,6 +216,12 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 }
 
 // countPendingTasks counts top-level unchecked tasks in the lines.
+//
+// Parameters:
+//   - lines: Lines from TASKS.md to scan
+//
+// Returns:
+//   - int: Number of top-level unchecked tasks
 func countPendingTasks(lines []string) int {
 	count := 0
 	pattern := compact.UncheckedTaskPattern()

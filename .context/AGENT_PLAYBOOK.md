@@ -359,3 +359,73 @@ Never assume: If you don't see it in files, you don't know it.
 - Don't invent history - check sessions/ for actual discussions
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
+
+## Go Documentation Standard
+
+When writing Go code, follow this docstring format consistently.
+
+### Functions
+
+```go
+// FunctionName does X.
+//
+// Extended description if needed.
+//
+// Parameters:
+//   - param1: Description of first parameter
+//   - param2: Description of second parameter
+//
+// Returns:
+//   - ReturnType: Description of return value
+//   - error: When this error occurs
+func FunctionName(param1 Type1, param2 Type2) (ReturnType, error) {
+```
+
+### Structs
+
+```go
+// StructName represents X.
+//
+// Extended description if needed.
+//
+// Fields:
+//   - Field1: Description of field
+//   - Field2: Description of field
+type StructName struct {
+    Field1 Type1
+    Field2 Type2
+}
+```
+
+### Struct Fields with Taxonomy
+
+For complex structs, group related fields:
+
+```go
+// Session represents a conversation session.
+//
+// Fields:
+//
+// Identity:
+//   - ID: Unique session identifier
+//   - Slug: URL-friendly identifier
+//
+// Timing:
+//   - StartTime: When the session started
+//   - EndTime: When the session ended
+type Session struct {
+    ID        string
+    Slug      string
+
+    StartTime time.Time
+    EndTime   time.Time
+}
+```
+
+### Reference Examples
+
+Before writing new code, check these well-documented files:
+- `internal/cli/status/types.go` — struct documentation
+- `internal/claude/types.go` — structs with Fields sections
+- `internal/drift/detector.go` — functions with Parameters/Returns
+- `internal/context/loader.go` — complete function documentation

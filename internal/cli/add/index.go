@@ -18,10 +18,15 @@ const (
 )
 
 // IndexEntry represents a parsed entry header from a context file.
+//
+// Fields:
+//   - Timestamp: Full timestamp (YYYY-MM-DD-HHMMSS)
+//   - Date: Date only (YYYY-MM-DD)
+//   - Title: Entry title
 type IndexEntry struct {
-	Timestamp string // Full timestamp: YYYY-MM-DD-HHMMSS
-	Date      string // Date only: YYYY-MM-DD
-	Title     string // Entry title
+	Timestamp string
+	Date      string
+	Title     string
 }
 
 // DecisionEntry is an alias for backward compatibility.
@@ -61,6 +66,12 @@ func ParseEntryHeaders(content string) []IndexEntry {
 }
 
 // ParseDecisionHeaders is an alias for ParseEntryHeaders for backward compatibility.
+//
+// Parameters:
+//   - content: The full content of a context file
+//
+// Returns:
+//   - []DecisionEntry: Slice of parsed entries (may be empty)
 func ParseDecisionHeaders(content string) []DecisionEntry {
 	return ParseEntryHeaders(content)
 }
@@ -103,6 +114,12 @@ func GenerateIndexTable(entries []IndexEntry, columnHeader string) string {
 }
 
 // GenerateIndex creates a markdown table for decisions (backward compatibility).
+//
+// Parameters:
+//   - entries: Slice of decision entries to include
+//
+// Returns:
+//   - string: Markdown table or empty string if no entries
 func GenerateIndex(entries []DecisionEntry) string {
 	return GenerateIndexTable(entries, "Decision")
 }
@@ -182,11 +199,23 @@ func updateFileIndex(content, fileHeader, columnHeader string) string {
 }
 
 // UpdateIndex regenerates the decision index in DECISIONS.md content.
+//
+// Parameters:
+//   - content: The full content of DECISIONS.md
+//
+// Returns:
+//   - string: Updated content with regenerated index
 func UpdateIndex(content string) string {
 	return updateFileIndex(content, "# Decisions", "Decision")
 }
 
 // UpdateLearningsIndex regenerates the learning index in LEARNINGS.md content.
+//
+// Parameters:
+//   - content: The full content of LEARNINGS.md
+//
+// Returns:
+//   - string: Updated content with regenerated index
 func UpdateLearningsIndex(content string) string {
 	return updateFileIndex(content, "# Learnings", "Learning")
 }

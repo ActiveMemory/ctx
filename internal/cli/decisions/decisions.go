@@ -48,6 +48,9 @@ Examples:
 }
 
 // reindexCmd returns the reindex subcommand.
+//
+// Returns:
+//   - *cobra.Command: Command for regenerating the DECISIONS.md index
 func reindexCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "reindex",
@@ -67,6 +70,13 @@ Examples:
 }
 
 // runReindex regenerates the DECISIONS.md index.
+//
+// Parameters:
+//   - cmd: Cobra command for output messages
+//   - args: Command arguments (unused)
+//
+// Returns:
+//   - error: Non-nil if file read/write fails
 func runReindex(cmd *cobra.Command, args []string) error {
 	filePath := filepath.Join(config.ContextDir(), config.FilenameDecision)
 

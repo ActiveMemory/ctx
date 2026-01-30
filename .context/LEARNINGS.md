@@ -1,41 +1,52 @@
 # Learnings
 
 <!-- INDEX:START -->
-| Date       | Learning                                             |
-|------------|------------------------------------------------------|
-| 2026-01-28 | Required flags now enforced for learnings            |
-| 2026-01-28 | Claude Code Hooks Receive JSON via Stdin             |
-| 2026-01-28 | Changelogs vs Blogs serve different audiences        |
-| 2026-01-28 | IDE is already the UI                                |
+| Date | Learning |
+|------|--------|
+| 2026-01-29 | Documentation audits require verification against actual standards |
+| 2026-01-28 | Required flags now enforced for learnings |
+| 2026-01-28 | Claude Code Hooks Receive JSON via Stdin |
+| 2026-01-28 | Changelogs vs Blogs serve different audiences |
+| 2026-01-28 | IDE is already the UI |
 | 2026-01-28 | Subtasks complete does not mean parent task complete |
-| 2026-01-28 | AI session JSONL formats are not standardized        |
-| 2026-01-27 | Always Complete Decision Record Sections             |
-| 2026-01-27 | Slash Commands Require Matching Permissions          |
-| 2026-01-26 | Go json.Marshal Escapes Shell Characters             |
-| 2026-01-26 | Claude Code Hook Key Names                           |
-| 2026-01-25 | defer os.Chdir Fails errcheck Linter                 |
-| 2026-01-25 | golangci-lint Go Version Mismatch in CI              |
-| 2026-01-25 | CI Tests Need CTX_SKIP_PATH_CHECK                    |
-| 2026-01-25 | AGENTS.md Is Not Auto-Loaded                         |
-| 2026-01-25 | Hook Regex Can Overfit                               |
-| 2026-01-25 | Autonomous Mode Creates Technical Debt               |
-| 2026-01-23 | ctx agent vs Manual File Reading Trade-offs          |
-| 2026-01-23 | Claude Code Skills Format                            |
-| 2026-01-23 | Infer Intent on "Do You Remember?" Questions         |
-| 2026-01-23 | Always Use ctx from PATH                             |
-| 2026-01-21 | Exit Criteria Must Include Verification              |
-| 2026-01-21 | Orchestrator vs Agent Tasks Must Be Separate         |
-| 2026-01-21 | One Templates Directory, Not Two                     |
-| 2026-01-21 | Hooks Should Use PATH, Not Hardcoded Paths           |
-| 2026-01-20 | ctx and Ralph Loop Are Separate Systems              |
-| 2026-01-20 | .context/ Is NOT a Claude Code Primitive             |
-| 2026-01-20 | SessionEnd Hook Catches Ctrl+C                       |
-| 2026-01-20 | Session Filename Must Include Time                   |
-| 2026-01-20 | Two Tiers of Persistence                             |
-| 2026-01-20 | Auto-Load Works, Auto-Save Was Missing               |
-| 2026-01-20 | Always Backup Before Modifying User Files            |
-| 2026-01-19 | CGO Must Be Disabled for ARM64 Linux                 |
+| 2026-01-28 | AI session JSONL formats are not standardized |
+| 2026-01-27 | Always Complete Decision Record Sections |
+| 2026-01-27 | Slash Commands Require Matching Permissions |
+| 2026-01-26 | Go json.Marshal Escapes Shell Characters |
+| 2026-01-26 | Claude Code Hook Key Names |
+| 2026-01-25 | defer os.Chdir Fails errcheck Linter |
+| 2026-01-25 | golangci-lint Go Version Mismatch in CI |
+| 2026-01-25 | CI Tests Need CTX_SKIP_PATH_CHECK |
+| 2026-01-25 | AGENTS.md Is Not Auto-Loaded |
+| 2026-01-25 | Hook Regex Can Overfit |
+| 2026-01-25 | Autonomous Mode Creates Technical Debt |
+| 2026-01-23 | ctx agent vs Manual File Reading Trade-offs |
+| 2026-01-23 | Claude Code Skills Format |
+| 2026-01-23 | Infer Intent on "Do You Remember?" Questions |
+| 2026-01-23 | Always Use ctx from PATH |
+| 2026-01-21 | Exit Criteria Must Include Verification |
+| 2026-01-21 | Orchestrator vs Agent Tasks Must Be Separate |
+| 2026-01-21 | One Templates Directory, Not Two |
+| 2026-01-21 | Hooks Should Use PATH, Not Hardcoded Paths |
+| 2026-01-20 | ctx and Ralph Loop Are Separate Systems |
+| 2026-01-20 | .context/ Is NOT a Claude Code Primitive |
+| 2026-01-20 | SessionEnd Hook Catches Ctrl+C |
+| 2026-01-20 | Session Filename Must Include Time |
+| 2026-01-20 | Two Tiers of Persistence |
+| 2026-01-20 | Auto-Load Works, Auto-Save Was Missing |
+| 2026-01-20 | Always Backup Before Modifying User Files |
+| 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-01-29-164322] Documentation audits require verification against actual standards
+
+**Context**: Agent claimed 'no Go docstring issues found' but manual inspection revealed many functions missing Parameters/Returns sections. The agent only checked if comments existed, not if they followed the standard format.
+
+**Lesson**: When auditing documentation, compare against a known-good example first. Pattern-match for the COMPLETE standard (e.g., '// Parameters:' AND '// Returns:' sections), not just presence of any comment.
+
+**Application**: Before declaring 'no issues', manually verify at least 5 random samples match the documented standard. Use grep patterns that detect missing sections, not just missing comments.
 
 ---
 

@@ -21,9 +21,9 @@ package watch
 type ContextUpdate struct {
 	Type         string
 	Content      string
-	Context      string // For learnings and decisions
-	Lesson       string // For learnings only
-	Application  string // For learnings only
-	Rationale    string // For decisions only
-	Consequences string // For decisions only
+	Context      string
+	Lesson       string
+	Application  string
+	Rationale    string
+	Consequences string
 }
