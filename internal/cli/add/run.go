@@ -176,7 +176,7 @@ func WriteEntry(params EntryParams) error {
 // Returns:
 //   - error: Non-nil if content is missing, type is invalid, required flags
 //     are missing, or file operations fail
-func runAdd(cmd *cobra.Command, args []string, flags addFlags) error {
+func runAdd(cmd *cobra.Command, args []string, flags addConfig) error {
 	fType := strings.ToLower(args[0])
 
 	// Determine the content source: args, --file, or stdin
