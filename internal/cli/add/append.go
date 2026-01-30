@@ -6,7 +6,11 @@
 
 package add
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+)
 
 // AppendEntry inserts a formatted entry into existing file content.
 //
@@ -30,7 +34,7 @@ func AppendEntry(
 	existingStr := string(existing)
 
 	// For tasks, find the appropriate section
-	if fileType == "task" || fileType == "tasks" {
+	if fileType == config.UpdateTypeTask || fileType == config.UpdateTypeTasks {
 		targetSection := section
 		if targetSection == "" {
 			targetSection = "## Next Up"
@@ -52,12 +56,12 @@ func AppendEntry(
 	}
 
 	// For decisions, prepend after the "# Decisions" header for reverse-chronological order
-	if fileType == "decision" || fileType == "decisions" {
+	if fileType == config.UpdateTypeDecision || fileType == config.UpdateTypeDecisions {
 		return prependAfterHeader(existingStr, entry, "# Decisions")
 	}
 
 	// For learnings, prepend after the header section (after the first "---")
-	if fileType == "learning" || fileType == "learnings" {
+	if fileType == config.UpdateTypeLearning || fileType == config.UpdateTypeLearnings {
 		return prependAfterSeparator(existingStr, entry)
 	}
 
