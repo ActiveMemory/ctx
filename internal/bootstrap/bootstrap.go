@@ -114,23 +114,27 @@ func RootCmd() *cobra.Command {
 // Returns:
 //   - *cobra.Command: The same command with all subcommands registered
 func Initialize(cmd *cobra.Command) *cobra.Command {
-	cmd.AddCommand(initialize.Cmd())
-	cmd.AddCommand(status.Cmd())
-	cmd.AddCommand(load.Cmd())
-	cmd.AddCommand(add.Cmd())
-	cmd.AddCommand(complete.Cmd())
-	cmd.AddCommand(agent.Cmd())
-	cmd.AddCommand(drift.Cmd())
-	cmd.AddCommand(sync.Cmd())
-	cmd.AddCommand(compact.Cmd())
-	cmd.AddCommand(decisions.Cmd())
-	cmd.AddCommand(watch.Cmd())
-	cmd.AddCommand(hook.Cmd())
-	cmd.AddCommand(learnings.Cmd())
-	cmd.AddCommand(session.Cmd())
-	cmd.AddCommand(task.Cmd())
-	cmd.AddCommand(loop.Cmd())
-	cmd.AddCommand(recall.Cmd())
+	for _, c := range []func() *cobra.Command{
+		initialize.Cmd,
+		status.Cmd,
+		load.Cmd,
+		add.Cmd,
+		complete.Cmd,
+		agent.Cmd,
+		drift.Cmd,
+		sync.Cmd,
+		compact.Cmd,
+		decisions.Cmd,
+		watch.Cmd,
+		hook.Cmd,
+		learnings.Cmd,
+		session.Cmd,
+		task.Cmd,
+		loop.Cmd,
+		recall.Cmd,
+	} {
+		cmd.AddCommand(c())
+	}
 
 	return cmd
 }

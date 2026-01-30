@@ -53,7 +53,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 	if _, err := os.Stat(scriptPath); err == nil && !force {
 		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), scriptPath)
 	} else {
-		scriptContent, err := claude.GetAutoSaveScript()
+		scriptContent, err := claude.AutoSaveScript()
 		if err != nil {
 			return fmt.Errorf("failed to get auto-save script: %w", err)
 		}
@@ -71,7 +71,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 	if _, err := os.Stat(blockScriptPath); err == nil && !force {
 		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), blockScriptPath)
 	} else {
-		blockScriptContent, err := claude.GetBlockNonPathCtxScript()
+		blockScriptContent, err := claude.BlockNonPathCtxScript()
 		if err != nil {
 			return fmt.Errorf("failed to get block-non-path-ctx script: %w", err)
 		}
@@ -128,8 +128,8 @@ func mergeSettingsHooks(
 	}
 
 	// Get our defaults
-	defaultHooks := claude.CreateDefaultHooks(projectDir)
-	defaultPerms := claude.CreateDefaultPermissions()
+	defaultHooks := claude.DefaultHooks(projectDir)
+	defaultPerms := claude.DefaultPermissions()
 
 	// Check if hooks already exist
 	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0

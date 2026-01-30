@@ -16,8 +16,8 @@ package claude
 //   - PreToolUse: Matchers that run before each tool invocation
 //   - SessionEnd: Matchers that run when a session ends
 type HookConfig struct {
-	PreToolUse  []HookMatcher `json:"PreToolUse,omitempty"`
-	SessionEnd  []HookMatcher `json:"SessionEnd,omitempty"`
+	PreToolUse []HookMatcher `json:"PreToolUse,omitempty"`
+	SessionEnd []HookMatcher `json:"SessionEnd,omitempty"`
 }
 
 // HookMatcher associates a regex pattern with hooks to execute.
@@ -47,7 +47,8 @@ type Hook struct {
 // settings.local.json.
 //
 // Fields:
-//   - Allow: List of tool patterns that are pre-approved (e.g., "Bash(ctx status:*)")
+//   - Allow: List of tool patterns that are pre-approved
+//     (e.g., "Bash(ctx status:*)")
 type PermissionsConfig struct {
 	Allow []string `json:"allow,omitempty"`
 }
