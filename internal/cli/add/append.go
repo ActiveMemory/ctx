@@ -93,6 +93,49 @@ func prependAfterHeader(content, entry, header string) []byte {
 	}
 
 	// No existing entries - find header and insert after it
+	return insertAfterHeader(content, entry, header)
+}
+
+// prependAfterSeparator inserts an entry for learnings.
+//
+// Entries are inserted before any existing entries (identified by "- **[").
+//
+// Parameters:
+//   - content: Existing file content
+//   - entry: Formatted entry to insert
+//
+// Returns:
+//   - []byte: Modified content with entry inserted
+func prependAfterSeparator(content, entry string) []byte {
+	// Find the first entry marker "- **[" (timestamp-prefixed list items)
+	entryIdx := strings.Index(content, "- **[")
+	if entryIdx != -1 {
+		// Insert before the first entry
+		return []byte(content[:entryIdx] + entry + "\n" + content[entryIdx:])
+	}
+
+	// Also check for section-style learnings "## ["
+	if entryIdx = strings.Index(content, "## ["); entryIdx != -1 {
+		return []byte(content[:entryIdx] + entry + "\n---\n\n" + content[entryIdx:])
+	}
+
+	// No existing entries - find header and insert after it
+	return insertAfterHeader(content, entry, "# Learnings")
+}
+
+// insertAfterHeader finds a header line and inserts content after it.
+//
+// Skips blank lines and HTML comments between the header and insertion point.
+// Falls back to appending at the end if header is not found.
+//
+// Parameters:
+//   - content: Existing file content
+//   - entry: Formatted entry to insert
+//   - header: Header line to find (e.g., "# Learnings")
+//
+// Returns:
+//   - []byte: Modified content with entry inserted
+func insertAfterHeader(content, entry, header string) []byte {
 	idx := strings.Index(content, header)
 	if idx != -1 {
 		lineEnd := strings.Index(content[idx:], "\n")
@@ -123,66 +166,6 @@ func prependAfterHeader(content, entry, header string) []byte {
 	}
 
 	// Fallback: append at the end
-	if !strings.HasSuffix(content, "\n") {
-		content += "\n"
-	}
-	return []byte(content + "\n" + entry)
-}
-
-// prependAfterSeparator inserts an entry for learnings.
-//
-// Entries are inserted before any existing entries (identified by "- **[").
-//
-// Parameters:
-//   - content: Existing file content
-//   - entry: Formatted entry to insert
-//
-// Returns:
-//   - []byte: Modified content with entry inserted
-func prependAfterSeparator(content, entry string) []byte {
-	// Find the first entry marker "- **[" (timestamp-prefixed list items)
-	entryIdx := strings.Index(content, "- **[")
-	if entryIdx != -1 {
-		// Insert before the first entry
-		return []byte(content[:entryIdx] + entry + "\n" + content[entryIdx:])
-	}
-
-	// Also check for section-style learnings "## ["
-	if entryIdx = strings.Index(content, "## ["); entryIdx != -1 {
-		return []byte(content[:entryIdx] + entry + "\n---\n\n" + content[entryIdx:])
-	}
-
-	// No existing entries - find header and insert after it
-	idx := strings.Index(content, "# Learnings")
-	if idx != -1 {
-		lineEnd := strings.Index(content[idx:], "\n")
-		if lineEnd != -1 {
-			insertPoint := idx + lineEnd + 1
-			// Skip blank lines and comments
-			for insertPoint < len(content) {
-				if content[insertPoint] == '\n' {
-					insertPoint++
-				} else if insertPoint+4 < len(content) && content[insertPoint:insertPoint+4] == "<!--" {
-					// Skip HTML comment
-					endComment := strings.Index(content[insertPoint:], "-->")
-					if endComment != -1 {
-						insertPoint += endComment + 3
-						// Skip trailing whitespace after comment
-						for insertPoint < len(content) && (content[insertPoint] == '\n' || content[insertPoint] == ' ') {
-							insertPoint++
-						}
-					} else {
-						break
-					}
-				} else {
-					break
-				}
-			}
-			return []byte(content[:insertPoint] + entry)
-		}
-	}
-
-	// Final fallback: append at the end
 	if !strings.HasSuffix(content, "\n") {
 		content += "\n"
 	}
