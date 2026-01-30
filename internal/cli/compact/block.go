@@ -12,12 +12,19 @@ import (
 )
 
 // TaskBlock represents a task and its nested content.
+//
+// Fields:
+//   - Lines: All lines in the block (parent + children)
+//   - StartIndex: Index of first line in original content
+//   - EndIndex: Index of last line (exclusive)
+//   - IsCompleted: Parent task is checked
+//   - IsArchivable: Completed and no unchecked children
 type TaskBlock struct {
-	Lines       []string // All lines in the block (parent + children)
-	StartIndex  int      // Index of first line in original content
-	EndIndex    int      // Index of last line (exclusive)
-	IsCompleted bool     // Parent task is checked
-	IsArchivable bool    // Completed and no unchecked children
+	Lines        []string
+	StartIndex   int
+	EndIndex     int
+	IsCompleted  bool
+	IsArchivable bool
 }
 
 // Patterns for task detection
@@ -31,16 +38,31 @@ var (
 )
 
 // UncheckedTaskPattern returns the regex for matching unchecked tasks.
+//
+// Returns:
+//   - *regexp.Regexp: Pattern matching "- [ ] content" with optional indentation
 func UncheckedTaskPattern() *regexp.Regexp {
 	return uncheckedTaskPattern
 }
 
 // GetIndentLevel returns the number of leading whitespace characters.
+//
+// Parameters:
+//   - line: The line to measure
+//
+// Returns:
+//   - int: Number of leading whitespace characters (spaces and tabs)
 func GetIndentLevel(line string) int {
 	return getIndentLevel(line)
 }
 
 // getIndentLevel returns the number of leading whitespace characters.
+//
+// Parameters:
+//   - line: The line to measure
+//
+// Returns:
+//   - int: Number of leading whitespace characters (spaces and tabs)
 func getIndentLevel(line string) int {
 	return len(line) - len(strings.TrimLeft(line, " \t"))
 }
@@ -107,6 +129,13 @@ func ParseTaskBlocks(lines []string) []TaskBlock {
 }
 
 // parseBlockAt parses a task block starting at the given index.
+//
+// Parameters:
+//   - lines: All lines from the file
+//   - startIdx: Index of the parent task line
+//
+// Returns:
+//   - TaskBlock: Parsed block with all nested content
 func parseBlockAt(lines []string, startIdx int) TaskBlock {
 	parentLine := lines[startIdx]
 	parentIndent := getIndentLevel(parentLine)
@@ -167,11 +196,17 @@ func parseBlockAt(lines []string, startIdx int) TaskBlock {
 }
 
 // BlockContent returns the full content of a block as a single string.
+//
+// Returns:
+//   - string: All lines joined with newlines
 func (b *TaskBlock) BlockContent() string {
 	return strings.Join(b.Lines, "\n")
 }
 
 // ParentTaskText extracts just the task text from the parent line.
+//
+// Returns:
+//   - string: Task text without checkbox prefix, empty if no lines
 func (b *TaskBlock) ParentTaskText() string {
 	if len(b.Lines) == 0 {
 		return ""
@@ -184,8 +219,15 @@ func (b *TaskBlock) ParentTaskText() string {
 }
 
 // RemoveBlocksFromLines removes the specified blocks from the lines slice.
+//
 // Blocks must be sorted by StartIndex in ascending order.
-// Returns the new lines with blocks removed.
+//
+// Parameters:
+//   - lines: Original lines from the file
+//   - blocks: Task blocks to remove (must be sorted by StartIndex)
+//
+// Returns:
+//   - []string: New lines with blocks removed
 func RemoveBlocksFromLines(lines []string, blocks []TaskBlock) []string {
 	if len(blocks) == 0 {
 		return lines

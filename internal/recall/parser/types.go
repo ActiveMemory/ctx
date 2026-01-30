@@ -19,55 +19,97 @@ import (
 //
 // This is the tool-agnostic output type that all parsers produce.
 // It contains common fields that make sense across different AI tools.
+//
+// Fields:
+//
+// Identity:
+//   - ID: Unique session identifier
+//   - Slug: URL-friendly session identifier
+//
+// Source:
+//   - Tool: Source tool ("claude-code", "aider", "cursor", etc.)
+//   - SourceFile: Original file path
+//
+// Context:
+//   - CWD: Working directory when session started
+//   - Project: Project name (derived from last component of CWD)
+//   - GitBranch: Git branch name if available
+//
+// Timing:
+//   - StartTime: When the session started
+//   - EndTime: When the session ended
+//   - Duration: Total session duration
+//
+// Messages:
+//   - Messages: All messages in the session
+//   - TurnCount: Count of user messages
+//
+// Token Statistics:
+//   - TotalTokensIn: Input tokens used (if available)
+//   - TotalTokensOut: Output tokens used (if available)
+//   - TotalTokens: Total tokens used (if available)
+//
+// Derived:
+//   - HasErrors: True if any tool errors occurred
+//   - FirstUserMsg: Preview text of first user message (truncated)
+//   - Model: Primary model used in the session
 type Session struct {
-	// Identity
-	ID   string `json:"id"`
-	Slug string `json:"slug,omitempty"`
+	ID         string `json:"id"`
+	Slug       string `json:"slug,omitempty"`
 
-	// Source
-	Tool      string `json:"tool"`       // "claude-code", "aider", "cursor", etc.
-	SourceFile string `json:"source_file"` // Original file path
+	Tool       string `json:"tool"`
+	SourceFile string `json:"source_file"`
 
-	// Context
 	CWD       string `json:"cwd,omitempty"`
-	Project   string `json:"project,omitempty"` // Derived: last component of CWD
+	Project   string `json:"project,omitempty"`
 	GitBranch string `json:"git_branch,omitempty"`
 
-	// Timing
 	StartTime time.Time     `json:"start_time"`
 	EndTime   time.Time     `json:"end_time"`
 	Duration  time.Duration `json:"duration"`
 
-	// Messages
 	Messages  []Message `json:"messages"`
-	TurnCount int       `json:"turn_count"` // Count of user messages
+	TurnCount int       `json:"turn_count"`
 
-	// Token Statistics (if available)
 	TotalTokensIn  int `json:"total_tokens_in,omitempty"`
 	TotalTokensOut int `json:"total_tokens_out,omitempty"`
 	TotalTokens    int `json:"total_tokens,omitempty"`
 
-	// Derived
 	HasErrors    bool   `json:"has_errors,omitempty"`
-	FirstUserMsg string `json:"first_user_msg,omitempty"` // Preview text (truncated)
-	Model        string `json:"model,omitempty"`          // Primary model used
+	FirstUserMsg string `json:"first_user_msg,omitempty"`
+	Model        string `json:"model,omitempty"`
 }
 
 // Message represents a single message in a session.
 //
 // This is tool-agnostic - all parsers normalize to this format.
+//
+// Fields:
+//
+// Identity:
+//   - ID: Unique message identifier
+//   - Timestamp: When the message was created
+//   - Role: Message role ("user" or "assistant")
+//
+// Content:
+//   - Text: Main text content
+//   - Thinking: Reasoning content (if available)
+//   - ToolUses: Tool invocations in this message
+//   - ToolResults: Results from tool invocations
+//
+// Token Usage:
+//   - TokensIn: Input tokens for this message (if available)
+//   - TokensOut: Output tokens for this message (if available)
 type Message struct {
 	ID        string    `json:"id"`
 	Timestamp time.Time `json:"timestamp"`
-	Role      string    `json:"role"` // "user" or "assistant"
+	Role      string    `json:"role"`
 
-	// Content blocks
-	Text     string     `json:"text,omitempty"`     // Main text content
-	Thinking string     `json:"thinking,omitempty"` // Reasoning (if available)
-	ToolUses []ToolUse  `json:"tool_uses,omitempty"`
+	Text        string       `json:"text,omitempty"`
+	Thinking    string       `json:"thinking,omitempty"`
+	ToolUses    []ToolUse    `json:"tool_uses,omitempty"`
 	ToolResults []ToolResult `json:"tool_results,omitempty"`
 
-	// Token usage (if available)
 	TokensIn  int `json:"tokens_in,omitempty"`
 	TokensOut int `json:"tokens_out,omitempty"`
 }

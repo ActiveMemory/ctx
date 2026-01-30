@@ -31,7 +31,7 @@ type transcriptEntry struct {
 //     (text, thinking, tool_use, tool_result)
 type transcriptMsg struct {
 	Role    string      `json:"role"`
-	Content interface{} `json:"content"` // Can be string or []interface{}
+	Content interface{} `json:"content"`
 }
 
 // sessionInfo holds parsed information about a session file.

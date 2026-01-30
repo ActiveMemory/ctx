@@ -45,6 +45,9 @@ Examples:
 }
 
 // recallListCmd returns the recall list subcommand.
+//
+// Returns:
+//   - *cobra.Command: Command for listing parsed sessions
 func recallListCmd() *cobra.Command {
 	var (
 		limit   int
@@ -82,6 +85,9 @@ Examples:
 }
 
 // recallShowCmd returns the recall show subcommand.
+//
+// Returns:
+//   - *cobra.Command: Command for showing session details
 func recallShowCmd() *cobra.Command {
 	var (
 		latest bool

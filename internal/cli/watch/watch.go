@@ -17,6 +17,14 @@ var (
 )
 
 // Cmd returns the watch command.
+//
+// Flags:
+//   - --log: Log file to watch (default: stdin)
+//   - --dry-run: Show updates without applying
+//   - --auto-save: Save session snapshots periodically
+//
+// Returns:
+//   - *cobra.Command: Configured watch command with flags registered
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "watch",

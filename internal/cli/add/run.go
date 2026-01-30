@@ -20,21 +20,36 @@ import (
 )
 
 // EntryParams contains all parameters needed to add an entry to a context file.
+//
+// Fields:
+//   - Type: Entry type (decision, learning, task, convention)
+//   - Content: Title or main content
+//   - Section: Target section (for tasks)
+//   - Priority: Priority level (for tasks)
+//   - Context: Context field (for decisions/learnings)
+//   - Rationale: Rationale (for decisions)
+//   - Consequences: Consequences (for decisions)
+//   - Lesson: Lesson (for learnings)
+//   - Application: Application (for learnings)
 type EntryParams struct {
-	Type         string // decision, learning, task, convention
-	Content      string // Title or main content
-	Section      string // Target section (for tasks)
-	Priority     string // Priority level (for tasks)
-	Context      string // Context field (for decisions/learnings)
-	Rationale    string // Rationale (for decisions)
-	Consequences string // Consequences (for decisions)
-	Lesson       string // Lesson (for learnings)
-	Application  string // Application (for learnings)
+	Type         string
+	Content      string
+	Section      string
+	Priority     string
+	Context      string
+	Rationale    string
+	Consequences string
+	Lesson       string
+	Application  string
 }
 
 // ValidateEntry checks that required fields are present for the given entry type.
 //
-// Returns an error with details about missing fields, or nil if valid.
+// Parameters:
+//   - params: Entry parameters to validate
+//
+// Returns:
+//   - error: Non-nil with details about missing fields, nil if valid
 func ValidateEntry(params EntryParams) error {
 	fType := strings.ToLower(params.Type)
 

@@ -283,3 +283,48 @@ the codebase. Periodic consolidation prevents this from compounding.
 - Naming inconsistencies
 
 When in doubt, ask: "Would a new contributor understand where this belongs?"
+
+## Go Documentation Standard
+
+When writing Go code, follow this docstring format consistently.
+
+### Functions
+
+```go
+// FunctionName does X.
+//
+// Extended description if needed.
+//
+// Parameters:
+//   - param1: Description of first parameter
+//   - param2: Description of second parameter
+//
+// Returns:
+//   - ReturnType: Description of return value
+//   - error: When this error occurs
+func FunctionName(param1 Type1, param2 Type2) (ReturnType, error) {
+```
+
+### Structs
+
+```go
+// StructName represents X.
+//
+// Extended description if needed.
+//
+// Fields:
+//   - Field1: Description of field
+//   - Field2: Description of field
+type StructName struct {
+    Field1 Type1
+    Field2 Type2
+}
+```
+
+### Key Points
+
+- **Always include Parameters section** if function has parameters
+- **Always include Returns section** if function returns values
+- **Always include Fields section** for exported structs
+- **No inline field comments** — put all field docs in the Fields block
+- Check existing code for reference before writing new documentation

@@ -24,6 +24,11 @@ import (
 )
 
 // fixResult tracks fixes applied during drift fix.
+//
+// Fields:
+//   - fixed: Number of issues successfully fixed
+//   - skipped: Number of issues skipped (not auto-fixable)
+//   - errors: Error messages from failed fix attempts
 type fixResult struct {
 	fixed   int
 	skipped int

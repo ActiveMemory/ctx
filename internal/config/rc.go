@@ -71,6 +71,9 @@ func GetRC() *RC {
 }
 
 // loadRC loads configuration from .contextrc file and applies env overrides.
+//
+// Returns:
+//   - *RC: Configuration with file values and env overrides applied
 func loadRC() *RC {
 	cfg := DefaultRC()
 

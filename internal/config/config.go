@@ -23,12 +23,19 @@ var (
 )
 
 // SetContextDir sets the context directory override.
+//
+// Parameters:
+//   - dir: Directory path to use as override
 func SetContextDir(dir string) {
 	contextDirOverride = dir
 }
 
 // ContextDir returns the context directory path.
+//
 // Returns the --context-dir override if set, otherwise the default ".context".
+//
+// Returns:
+//   - string: The context directory path
 func ContextDir() string {
 	if contextDirOverride != "" {
 		return contextDirOverride
