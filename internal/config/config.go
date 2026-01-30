@@ -1,11 +1,19 @@
 package config
 
 const (
-	CommentClose           = "-->"
-	CommentOpen            = "<!--"
-	CtxMarkerEnd           = "<!-- ctx:end -->"
-	CtxMarkerStart         = "<!-- ctx:context -->"
-	DirArchive             = "archive"
+	CommentClose   = "-->"
+	CommentOpen    = "<!--"
+	CtxMarkerEnd   = "<!-- ctx:end -->"
+	CtxMarkerStart = "<!-- ctx:context -->"
+	DirArchive     = "archive"
+
+	// NewlineCRLF is Windows new line.
+	//
+	// We check NewlineCRLF first, then NewlineLF to handle both formats.
+	NewlineCRLF = "\r\n"
+	// NewlineLF is Unix new line.
+	NewlineLF = "\n"
+
 	DirClaude              = ".claude"
 	DirClaudeHooks         = ".claude/hooks"
 	DirContext             = ".context"

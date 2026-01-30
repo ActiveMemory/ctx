@@ -46,10 +46,11 @@ func AppendEntry(
 		idx := strings.Index(existingStr, targetSection)
 		if idx != -1 {
 			// Find the end of the section header line
-			lineEnd := strings.Index(existingStr[idx:], "\n")
+			lineEnd := findNewline(existingStr[idx:])
 			if lineEnd != -1 {
-				insertPoint := idx + lineEnd + 1
-				return []byte(existingStr[:insertPoint] + "\n" +
+				insertPoint := idx + lineEnd
+				insertPoint = skipNewline(existingStr, insertPoint)
+				return []byte(existingStr[:insertPoint] + config.NewlineLF +
 					entry + existingStr[insertPoint:])
 			}
 		}
@@ -66,10 +67,10 @@ func AppendEntry(
 	}
 
 	// Default (conventions): append at the end
-	if !strings.HasSuffix(existingStr, "\n") {
-		existingStr += "\n"
+	if !endsWithNewline(existingStr) {
+		existingStr += config.NewlineLF
 	}
-	return []byte(existingStr + "\n" + entry)
+	return []byte(existingStr + config.NewlineLF + entry)
 }
 
 // prependAfterHeader inserts an entry after a header line.
@@ -89,7 +90,7 @@ func prependAfterHeader(content, entry, header string) []byte {
 	entryIdx := strings.Index(content, "## [")
 	if entryIdx != -1 {
 		// Insert before the first entry, with separator after
-		return []byte(content[:entryIdx] + entry + "\n---\n\n" + content[entryIdx:])
+		return []byte(content[:entryIdx] + entry + config.NewlineLF + "---" + config.NewlineLF + config.NewlineLF + content[entryIdx:])
 	}
 
 	// No existing entries - find header and insert after it
@@ -111,12 +112,12 @@ func prependAfterSeparator(content, entry string) []byte {
 	entryIdx := strings.Index(content, "- **[")
 	if entryIdx != -1 {
 		// Insert before the first entry
-		return []byte(content[:entryIdx] + entry + "\n" + content[entryIdx:])
+		return []byte(content[:entryIdx] + entry + config.NewlineLF + content[entryIdx:])
 	}
 
 	// Also check for section-style learnings "## ["
 	if entryIdx = strings.Index(content, "## ["); entryIdx != -1 {
-		return []byte(content[:entryIdx] + entry + "\n---\n\n" + content[entryIdx:])
+		return []byte(content[:entryIdx] + entry + config.NewlineLF + "---" + config.NewlineLF + config.NewlineLF + content[entryIdx:])
 	}
 
 	// No existing entries - find header and insert after it
@@ -125,7 +126,7 @@ func prependAfterSeparator(content, entry string) []byte {
 
 // insertAfterHeader finds a header line and inserts content after it.
 //
-// Skips blank lines and HTML comments between the header and insertion point.
+// Skips blank lines and ctx markers between the header and insertion point.
 // Falls back to appending at the end if header is not found.
 //
 // Parameters:
@@ -138,23 +139,22 @@ func prependAfterSeparator(content, entry string) []byte {
 func insertAfterHeader(content, entry, header string) []byte {
 	idx := strings.Index(content, header)
 	if idx != -1 {
-		lineEnd := strings.Index(content[idx:], "\n")
+		lineEnd := findNewline(content[idx:])
 		if lineEnd != -1 {
-			insertPoint := idx + lineEnd + 1
-			// Skip blank lines and comments
+			insertPoint := idx + lineEnd
+			insertPoint = skipNewline(content, insertPoint)
+			// Skip blank lines and ctx markers
 			for insertPoint < len(content) {
-				if content[insertPoint] == '\n' {
-					insertPoint++
+				if n := skipNewline(content, insertPoint); n > insertPoint {
+					insertPoint = n
 				} else if insertPoint+len(config.CommentOpen) <= len(content) &&
 					content[insertPoint:insertPoint+len(config.CommentOpen)] == config.CommentOpen {
-					// Skip HTML comment
+					// Skip ctx marker
 					endComment := strings.Index(content[insertPoint:], config.CommentClose)
 					if endComment != -1 {
 						insertPoint += endComment + len(config.CommentClose)
-						// Skip trailing whitespace after comment
-						for insertPoint < len(content) && (content[insertPoint] == '\n' || content[insertPoint] == ' ') {
-							insertPoint++
-						}
+						// Skip trailing whitespace after marker
+						insertPoint = skipWhitespace(content, insertPoint)
 					} else {
 						break
 					}
@@ -167,8 +167,56 @@ func insertAfterHeader(content, entry, header string) []byte {
 	}
 
 	// Fallback: append at the end
-	if !strings.HasSuffix(content, "\n") {
-		content += "\n"
+	if !endsWithNewline(content) {
+		content += config.NewlineLF
 	}
-	return []byte(content + "\n" + entry)
+	return []byte(content + config.NewlineLF + entry)
+}
+
+// findNewline returns the index of the first newline (CRLF or LF) in s.
+// Returns -1 if no newline is found.
+func findNewline(s string) int {
+	for i := 0; i < len(s); i++ {
+		if i+1 < len(s) && s[i] == '\r' && s[i+1] == '\n' {
+			return i
+		}
+		if s[i] == '\n' {
+			return i
+		}
+	}
+	return -1
+}
+
+// skipNewline advances pos past a newline (CRLF or LF) if present.
+// Returns the new position (unchanged if no newline at pos).
+func skipNewline(s string, pos int) int {
+	if pos >= len(s) {
+		return pos
+	}
+	if pos+1 < len(s) && s[pos] == '\r' && s[pos+1] == '\n' {
+		return pos + 2
+	}
+	if s[pos] == '\n' {
+		return pos + 1
+	}
+	return pos
+}
+
+// skipWhitespace advances pos past any whitespace (space, tab, newline).
+func skipWhitespace(s string, pos int) int {
+	for pos < len(s) {
+		if n := skipNewline(s, pos); n > pos {
+			pos = n
+		} else if s[pos] == ' ' || s[pos] == '\t' {
+			pos++
+		} else {
+			break
+		}
+	}
+	return pos
+}
+
+// endsWithNewline reports whether s ends with a newline (CRLF or LF).
+func endsWithNewline(s string) bool {
+	return strings.HasSuffix(s, config.NewlineCRLF) || strings.HasSuffix(s, config.NewlineLF)
 }
