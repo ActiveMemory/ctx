@@ -57,6 +57,21 @@ Review prose docs for internal consistency.
 - Outdated references to removed features
 - Tone inconsistencies
 
+### 4. Code Pattern Drift
+
+Check that code follows established conventions in CONVENTIONS.md.
+
+**Check for:**
+- CLI output methods: `fmt.Print*` instead of `cmd.Print*` in CLI code
+- Other patterns documented in CONVENTIONS.md
+
+**Method:**
+1. Read CONVENTIONS.md to understand established patterns
+2. Grep for violations (e.g., `fmt.Print` in `internal/cli/**/*.go`)
+3. Flag files that violate conventions
+
+**Files to scan:** `internal/cli/**/*.go` for CLI patterns
+
 ## Output Format
 
 Produce a structured report:
@@ -68,6 +83,7 @@ Produce a structured report:
 - X Go docstring issues found
 - Y CLI/docs mismatches found
 - Z narrative inconsistencies flagged
+- W code pattern violations found
 
 ## Go Docstring Issues
 
@@ -92,14 +108,22 @@ Produce a structured report:
 
 ### Outdated References
 - `docs/integrations.md:45` — References removed `--minimal` flag
+
+## Code Pattern Violations
+
+### CLI Output Methods
+- `internal/cli/task/run.go:127` — Uses `fmt.Printf` instead of `cmd.Printf`
+- `internal/cli/watch/run.go:45` — Uses `fmt.Println` instead of `cmd.Println`
 ```
 
 ## Execution
 
-1. **Scan Go files** for docstring patterns
-2. **Parse docs/*.md** for CLI references
-3. **Run ctx --help** variants to get actual CLI surface
-4. **Compare and report**
+1. **Read CONVENTIONS.md** to understand established patterns
+2. **Scan Go files** for docstring patterns
+3. **Parse docs/*.md** for CLI references
+4. **Run ctx --help** variants to get actual CLI surface
+5. **Check code patterns** against conventions (e.g., CLI output methods)
+6. **Compare and report**
 
 Do NOT auto-fix anything. This audit produces a report for human review.
 

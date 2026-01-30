@@ -4,6 +4,31 @@
 
 ## Patterns
 
+### CLI Output Methods
+
+In CLI command code (`internal/cli/**/*.go`), always use Cobra's command methods
+for output instead of raw `fmt` functions:
+
+```go
+// ✓ Correct - uses cmd methods
+cmd.Printf("%s Done\n", green("✓"))
+cmd.Println("Status:")
+fmt.Fprintln(cmd.OutOrStdout(), "Output here")
+
+// ✗ Wrong - bypasses Cobra's output handling
+fmt.Printf("%s Done\n", green("✓"))
+fmt.Println("Status:")
+```
+
+**Why this matters:**
+- Cobra's `cmd.OutOrStdout()` respects output redirection in tests
+- Makes CLI commands testable without capturing os.Stdout
+- Consistent pattern across all commands
+
+**Exceptions:**
+- Helper functions that don't have access to `*cobra.Command` may use `fmt`
+- But prefer passing `io.Writer` or the command down to helpers
+
 ## Testing
 
 ## Documentation

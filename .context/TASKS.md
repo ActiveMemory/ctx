@@ -48,6 +48,8 @@
 
 ## Backlog
 
+- [ ] Write AST-based test that warns if CLI functions use fmt.Print* instead of cmd.Print* #added:2026-01-29-171351
+
 - [ ] feat: ctx journal - LLM-powered session analysis and synthesis
 
 Parent command for working with exported sessions (.context/journal/):

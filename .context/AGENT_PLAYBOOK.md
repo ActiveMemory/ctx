@@ -360,6 +360,24 @@ Never assume: If you don't see it in files, you don't know it.
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
+## Pre-Flight Checklist: CLI Code
+
+Before writing or modifying CLI code (`internal/cli/**/*.go`):
+
+1. **Read CONVENTIONS.md** — Load established patterns into context
+2. **Check similar commands** — How do existing commands in the same package handle output?
+3. **Use cmd methods for output** — `cmd.Printf`, `cmd.Println`, not `fmt.Printf`, `fmt.Println`
+4. **Follow docstring format** — See Go Documentation Standard below
+
+**Quick pattern check:**
+```bash
+# See how other commands do output
+grep -n "cmd.Printf\|cmd.Println" internal/cli/status/*.go
+
+# Spot violations in your changes
+grep -n "fmt.Printf\|fmt.Println" internal/cli/yourpackage/*.go
+```
+
 ## Go Documentation Standard
 
 When writing Go code, follow this docstring format consistently.
