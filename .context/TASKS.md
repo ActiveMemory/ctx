@@ -37,12 +37,13 @@
   - [x] /ctx-journal-enrich - slash command for frontmatter/tags #done:2026-01-31
   - [x] /ctx-journal-summarize - slash command for timeline summaries #done:2026-01-31
 - [ ] T1.2.9: upstream CI is broken (again)
-- [ ] T1.2.10: Human code review
-- [ ] T1.2.11: Human to read all user-facing documentation and update as needed.
-- [ ] T1.2.12: cut a release (version number is already bumped)
+- [x] T1.2.10: Human code review
+- [x] T1.2.11: Human to read all user-facing documentation and update as needed.
+- [x] T1.2.12: cut a release (version number is already bumped)
 - [ ] T1.2.13: Compose two blog posts: 1) what has changed after the human-guided
       refactoring, and what we can learn about this.
       2) what has happened since the last release cut.
+- [ ] T1.2.14: There is no documentation about the session site.
 
 ## Backlog
 

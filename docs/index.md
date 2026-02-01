@@ -245,3 +245,4 @@ ctx drift
 - [Context Files](context-files.md) — File formats and structure
 - [Autonomous Loops](autonomous-loop.md) — Iterative AI development workflows
 - [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider
+- [Blog](blog/index.md) — Stories and lessons from building ctx

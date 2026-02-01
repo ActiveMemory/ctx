@@ -30,10 +30,7 @@ nav = [
   { "Integrations" = "integrations.md" },
   { "Version History" = "versions.md" },
   { "Security" = "security.md" },
-  { "Blog" = [
-    { "index" = "blog/index.md" },
-    { "Building ctx Using ctx" = "blog/2026-01-27-building-ctx-using-ctx.md" }
-  ]}
+  { "Blog" = "blog/index.md" }
 ]
 
 #extra_css = ["stylesheets/extra.css"]
