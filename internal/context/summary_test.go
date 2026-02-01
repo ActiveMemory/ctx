@@ -54,13 +54,13 @@ func TestGenerateSummary(t *testing.T) {
 		{
 			name:     "decisions multiple",
 			filename: "DECISIONS.md",
-			content:  []byte("# Decisions\n\n## 2024-01-15 First\n\nContent\n\n## 2024-01-16 Second\n\nContent\n"),
+			content:  []byte("# Decisions\n\n## [2024-01-15-120000] First\n\nContent\n\n## [2024-01-16-120000] Second\n\nContent\n"),
 			expected: "2 decisions",
 		},
 		{
 			name:     "decisions single",
 			filename: "DECISIONS.md",
-			content:  []byte("# Decisions\n\n## One decision\n\nContent\n"),
+			content:  []byte("# Decisions\n\n## [2024-01-15-120000] One decision\n\nContent\n"),
 			expected: "1 decision",
 		},
 		{
@@ -190,12 +190,12 @@ func TestSummarizeDecisions(t *testing.T) {
 		},
 		{
 			name:     "one decision",
-			content:  []byte("## First\n\nContent\n"),
+			content:  []byte("## [2024-01-15-120000] First\n\nContent\n"),
 			expected: "1 decision",
 		},
 		{
 			name:     "multiple decisions",
-			content:  []byte("## First\n\n## Second\n\n## Third\n"),
+			content:  []byte("## [2024-01-15-120000] First\n\n## [2024-01-16-120000] Second\n\n## [2024-01-17-120000] Third\n"),
 			expected: "3 decisions",
 		},
 	}

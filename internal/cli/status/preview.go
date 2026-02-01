@@ -6,9 +6,13 @@
 
 package status
 
-import "strings"
+import (
+	"strings"
 
-// getContentPreview returns the first n non-empty, meaningful lines
+	"github.com/ActiveMemory/ctx/internal/config"
+)
+
+// contentPreview returns the first n non-empty, meaningful lines
 // from content.
 //
 // Skips empty lines, YAML frontmatter delimiters, and HTML comments.
@@ -20,8 +24,8 @@ import "strings"
 //
 // Returns:
 //   - []string: Up to n meaningful lines from the content
-func getContentPreview(content string, n int) []string {
-	lines := strings.Split(content, "\n")
+func contentPreview(content string, n int) []string {
+	lines := strings.Split(content, config.NewlineLF)
 	var preview []string
 
 	inFrontmatter := false
@@ -34,7 +38,7 @@ func getContentPreview(content string, n int) []string {
 		}
 
 		// Skip YAML frontmatter
-		if trimmed == "---" {
+		if trimmed == config.Separator {
 			inFrontmatter = !inFrontmatter
 			continue
 		}
@@ -43,13 +47,14 @@ func getContentPreview(content string, n int) []string {
 		}
 
 		// Skip HTML comments
-		if strings.HasPrefix(trimmed, "<!--") {
+		if strings.HasPrefix(trimmed, config.CommentOpen) {
 			continue
 		}
 
 		// Truncate long lines
-		if len(trimmed) > 60 {
-			trimmed = trimmed[:57] + "..."
+		if len(trimmed) > config.MaxPreviewLen {
+			truncateAt := config.MaxPreviewLen - len(config.Ellipsis)
+			trimmed = trimmed[:truncateAt] + config.Ellipsis
 		}
 
 		preview = append(preview, trimmed)

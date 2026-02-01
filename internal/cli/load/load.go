@@ -9,7 +9,7 @@ package load
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Cmd returns the "ctx load" command for outputting assembled context.
@@ -51,14 +51,14 @@ Use --budget to limit output to a specific token count (default from .contextrc 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Use configured budget if flag not explicitly set
 			if !cmd.Flags().Changed("budget") {
-				budget = config.GetTokenBudget()
+				budget = rc.GetTokenBudget()
 			}
 			return runLoad(cmd, budget, raw)
 		},
 	}
 
 	cmd.Flags().IntVar(
-		&budget, "budget", config.DefaultTokenBudget, "Token budget for assembly",
+		&budget, "budget", rc.DefaultTokenBudget, "Token budget for assembly",
 	)
 	cmd.Flags().BoolVar(
 		&raw, "raw", false, "Output raw file contents without assembly",

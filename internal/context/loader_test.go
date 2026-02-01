@@ -175,9 +175,9 @@ func TestIsEffectivelyEmpty(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := isEffectivelyEmpty(tt.content)
+			result := effectivelyEmpty(tt.content)
 			if result != tt.expected {
-				t.Errorf("isEffectivelyEmpty() = %v, want %v", result, tt.expected)
+				t.Errorf("effectivelyEmpty() = %v, want %v", result, tt.expected)
 			}
 		})
 	}

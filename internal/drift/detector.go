@@ -9,7 +9,6 @@ package drift
 
 import (
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -44,7 +43,7 @@ type Issue struct {
 // Fields:
 //   - Warnings: Non-critical issues that should be addressed
 //   - Violations: Critical issues that indicate constitution violations
-//   - Passed: Names of checks that completed without issues
+//   - Passed: Names of checks that are completed without issues
 type Report struct {
 	Warnings   []Issue  `json:"warnings"`
 	Violations []Issue  `json:"violations"`
@@ -54,7 +53,8 @@ type Report struct {
 // Status returns the overall status of the report.
 //
 // Returns:
-//   - string: "violation" if any violations, "warning" if only warnings, "ok" otherwise
+//   - string: "violation" if any violations, "warning" if only warnings,
+//     "ok" otherwise
 func (r *Report) Status() string {
 	if len(r.Violations) > 0 {
 		return "violation"
@@ -106,19 +106,16 @@ func Detect(ctx *context.Context) *Report {
 //   - ctx: Loaded context containing files to scan
 //   - report: Report to append warnings to (modified in place)
 func checkPathReferences(ctx *context.Context, report *Report) {
-	// Pattern to match file paths in Markdown (backticks or code blocks)
-	pathPattern := regexp.MustCompile("`([^`]+\\.[a-zA-Z]{1,5})`")
-
 	foundDeadPaths := false
 
 	for _, f := range ctx.Files {
-		if f.Name != config.FilenameArchitecture && f.Name != config.FilenameConvention {
+		if f.Name != config.FileArchitecture && f.Name != config.FileConvention {
 			continue
 		}
 
 		lines := strings.Split(string(f.Content), "\n")
 		for lineNum, line := range lines {
-			matches := pathPattern.FindAllStringSubmatch(line, -1)
+			matches := config.RegExPath.FindAllStringSubmatch(line, -1)
 			for _, m := range matches {
 				path := m[1]
 				// Skip URLs and common non-file patterns
@@ -161,7 +158,7 @@ func checkStaleness(ctx *context.Context, report *Report) {
 	staleness := false
 
 	for _, f := range ctx.Files {
-		if f.Name == config.FilenameTask {
+		if f.Name == config.FileTask {
 			// Count completed tasks
 			completedCount := strings.Count(string(f.Content), "- [x]")
 			if completedCount > 10 {
@@ -183,7 +180,7 @@ func checkStaleness(ctx *context.Context, report *Report) {
 
 // checkConstitution performs heuristic checks for constitution violations.
 //
-// Currently scans the working directory for files that may contain secrets
+// Currently, it scans the working directory for files that may contain secrets
 // (e.g., .env, credentials, api_key) and flags them as violations.
 //
 // Parameters:
@@ -215,7 +212,9 @@ func checkConstitution(_ *context.Context, report *Report) {
 		}
 		name := strings.ToLower(entry.Name())
 		for _, pattern := range secretPatterns {
-			if strings.Contains(name, pattern) && !strings.HasSuffix(name, ".example") && !strings.HasSuffix(name, ".sample") {
+			if strings.Contains(name, pattern) &&
+				!strings.HasSuffix(name, ".example") &&
+				!strings.HasSuffix(name, ".sample") {
 				// Check if it contains actual content (not just template)
 				content, err := os.ReadFile(entry.Name())
 				if err != nil {
@@ -272,7 +271,7 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 
 // isTemplateFile checks if file content appears to be a template.
 //
-// Looks for common template markers like YOUR_, {{, REPLACE_, TODO:, CHANGEME.
+// Looks for common template markers like YOUR_, {{, REPLACE_, TODO, CHANGEME.
 // Used to avoid flagging template files as containing secrets.
 //
 // Parameters:
@@ -288,8 +287,9 @@ func isTemplateFile(content []byte) bool {
 		"<your",
 		"{{",
 		"REPLACE_",
-		"TODO:",
+		"TODO",
 		"CHANGEME",
+		"FIXME",
 	}
 	for _, marker := range templateMarkers {
 		if strings.Contains(strings.ToUpper(s), marker) {

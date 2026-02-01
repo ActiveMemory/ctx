@@ -153,10 +153,9 @@ Without persistent context, agents tend to:
 * repeat mistakes
 * lose architectural intent
 
-This is why `ctx` pairs well with loop-based workflows such as the
-[Ralph Wiggum technique](https://ghuntley.com/ralph/):
+This is why `ctx` pairs well with [autonomous loop workflows](autonomous-loop.md):
 
-* `ralph` provides iteration
+* The loop provides iteration
 * `ctx` provides continuity
 
 Together, loops become cumulative instead of forgetful.

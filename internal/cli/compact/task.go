@@ -18,6 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // compactTasks moves completed tasks to the "Completed" section in TASKS.md.
@@ -40,7 +41,7 @@ func compactTasks(
 ) (int, error) {
 	var tasksFile *context.FileInfo
 	for i := range ctx.Files {
-		if ctx.Files[i].Name == config.FilenameTask {
+		if ctx.Files[i].Name == config.FileTask {
 			tasksFile = &ctx.Files[i]
 			break
 		}
@@ -110,25 +111,36 @@ func compactTasks(
 
 	// Archive if requested
 	if archive && len(archivableBlocks) > 0 {
-		archiveDir := filepath.Join(config.ContextDir(), "archive")
-		if err := os.MkdirAll(archiveDir, 0755); err == nil {
-			archiveFile := filepath.Join(
-				archiveDir,
-				fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
-			)
-			archiveContent := fmt.Sprintf(
-				"# Archived Tasks - %s\n\n", time.Now().Format("2006-01-02"),
-			)
-			for _, block := range archivableBlocks {
-				archiveContent += block.BlockContent() + "\n\n"
+		// Filter to only tasks old enough to archive
+		archiveDays := rc.GetArchiveAfterDays()
+		var blocksToArchive []TaskBlock
+		for _, block := range archivableBlocks {
+			if block.OlderThan(archiveDays) {
+				blocksToArchive = append(blocksToArchive, block)
 			}
-			if err := os.WriteFile(
-				archiveFile, []byte(archiveContent), 0644,
-			); err == nil {
-				cmd.Printf(
-					"%s Archived %d tasks to %s\n", green("✓"),
-					len(archivableBlocks), archiveFile,
+		}
+
+		if len(blocksToArchive) > 0 {
+			archiveDir := filepath.Join(rc.GetContextDir(), "archive")
+			if err := os.MkdirAll(archiveDir, 0755); err == nil {
+				archiveFile := filepath.Join(
+					archiveDir,
+					fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
 				)
+				archiveContent := fmt.Sprintf(
+					"# Archived Tasks - %s\n\n", time.Now().Format("2006-01-02"),
+				)
+				for _, block := range blocksToArchive {
+					archiveContent += block.BlockContent() + "\n\n"
+				}
+				if err := os.WriteFile(
+					archiveFile, []byte(archiveContent), 0644,
+				); err == nil {
+					cmd.Printf(
+						"%s Archived %d tasks to %s (older than %d days)\n", green("✓"),
+						len(blocksToArchive), archiveFile, archiveDays,
+					)
+				}
 			}
 		}
 	}

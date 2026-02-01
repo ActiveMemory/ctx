@@ -8,7 +8,7 @@ package add
 
 import "github.com/ActiveMemory/ctx/internal/config"
 
-// getExamplesForType returns example usage strings for a given entry type.
+// examplesForType returns example usage strings for a given entry type.
 //
 // The examples are displayed in error messages when content is missing,
 // helping users understand the correct command syntax.
@@ -19,20 +19,20 @@ import "github.com/ActiveMemory/ctx/internal/config"
 // Returns:
 //   - string: Formatted example commands; returns a generic example for
 //     unrecognized types
-func getExamplesForType(fileType string) string {
-	switch fileType {
-	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
+func examplesForType(fileType string) string {
+	switch config.UserInputToEntry(fileType) {
+	case config.EntryDecision:
 		return `  ctx add decision "Use PostgreSQL for primary database"
   ctx add decision "Adopt Go 1.22 for range-over-func support"`
-	case config.UpdateTypeTask, config.UpdateTypeTasks:
+	case config.EntryTask:
 		return `  ctx add task "Implement user authentication"
   ctx add task "Fix login bug" --priority high`
-	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
+	case config.EntryLearning:
 		return `  ctx add learning "Go embed requires files in same package" \
     --context "Tried to embed files from parent directory" \
     --lesson "go:embed only works with files in same or child directories" \
     --application "Keep embedded files in internal/templates/"`
-	case config.UpdateTypeConvention, config.UpdateTypeConventions:
+	case config.EntryConvention:
 		return `  ctx add convention "Use camelCase for function names"
   ctx add convention "All API responses use JSON"`
 	default:

@@ -17,6 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/templates"
 )
 
@@ -39,7 +40,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge bool) error {
 		return err
 	}
 
-	contextDir := config.ContextDir()
+	contextDir := rc.GetContextDir()
 
 	// Check if .context/ already exists
 	if _, err := os.Stat(contextDir); err == nil {

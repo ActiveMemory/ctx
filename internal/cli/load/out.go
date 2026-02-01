@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -56,16 +57,18 @@ func outputAssembled(
 	cmd *cobra.Command, ctx *context.Context, budget int,
 ) error {
 	var sb strings.Builder
+	nl := config.NewlineLF
+	sep := config.Separator
 
 	// Header
-	sb.WriteString("# Context\n\n")
+	sb.WriteString("# Context" + nl + nl)
 	sb.WriteString(
 		fmt.Sprintf(
-			"Token Budget: %d | Available: %d\n\n",
+			"Token Budget: %d | Available: %d"+nl+nl,
 			budget, ctx.TotalTokens,
 		),
 	)
-	sb.WriteString("---\n\n")
+	sb.WriteString(sep + nl + nl)
 
 	// Sort files by read order
 	files := sortByReadOrder(ctx.Files)
@@ -83,19 +86,19 @@ func outputAssembled(
 		if tokensUsed+fileTokens > budget {
 			// Add a truncation notice
 			sb.WriteString(
-				fmt.Sprintf("\n---\n\n*[Truncated: %s and remaining files "+
-					"excluded due to token budget]*\n", f.Name),
+				fmt.Sprintf(nl+sep+nl+nl+"*[Truncated: %s and remaining files "+
+					"excluded due to token budget]*"+nl, f.Name),
 			)
 			break
 		}
 
 		// Add the file section
-		sb.WriteString(fmt.Sprintf("## %s\n\n", fileNameToTitle(f.Name)))
+		sb.WriteString(fmt.Sprintf("## %s"+nl+nl, fileNameToTitle(f.Name)))
 		sb.Write(f.Content)
-		if !strings.HasSuffix(string(f.Content), "\n") {
-			sb.WriteString("\n")
+		if !strings.HasSuffix(string(f.Content), nl) {
+			sb.WriteString(nl)
 		}
-		sb.WriteString("\n---\n\n")
+		sb.WriteString(nl + sep + nl + nl)
 
 		tokensUsed += fileTokens
 	}

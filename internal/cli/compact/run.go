@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // runCompact executes the compact command logic.
@@ -39,6 +40,11 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 		}
 		return err
+	}
+
+	// Enable archiving if configured in .contextrc
+	if rc.GetAutoArchive() {
+		archive = true
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
@@ -70,7 +76,7 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 
 	// Process other files for empty sections
 	for _, f := range ctx.Files {
-		if f.Name == config.FilenameTask {
+		if f.Name == config.FileTask {
 			continue
 		}
 		cleaned, count := removeEmptySections(string(f.Content))

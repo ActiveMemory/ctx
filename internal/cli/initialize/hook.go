@@ -83,6 +83,26 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		cmd.Printf("  %s %s\n", green("✓"), blockScriptPath)
 	}
 
+	// Create prompt-coach.sh script
+	// (detects prompt anti-patterns and suggests improvements)
+	coachScriptPath := filepath.Join(
+		config.DirClaudeHooks, config.FilePromptCoach,
+	)
+	if _, err := os.Stat(coachScriptPath); err == nil && !force {
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), coachScriptPath)
+	} else {
+		coachScriptContent, err := claude.PromptCoachScript()
+		if err != nil {
+			return fmt.Errorf("failed to get prompt-coach script: %w", err)
+		}
+		if err := os.WriteFile(
+			coachScriptPath, coachScriptContent, 0755,
+		); err != nil {
+			return fmt.Errorf("failed to write %s: %w", coachScriptPath, err)
+		}
+		cmd.Printf("  %s %s\n", green("✓"), coachScriptPath)
+	}
+
 	// Handle settings.local.json - merge rather than overwrite
 	if err := mergeSettingsHooks(cmd, cwd, force); err != nil {
 		return err
@@ -133,12 +153,17 @@ func mergeSettingsHooks(
 
 	// Check if hooks already exist
 	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0
+	hasUserPromptSubmit := len(settings.Hooks.UserPromptSubmit) > 0
 	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
 
 	// Merge hooks - only add what's missing (or force overwrite)
 	hooksModified := false
 	if !hasPreToolUse || force {
 		settings.Hooks.PreToolUse = defaultHooks.PreToolUse
+		hooksModified = true
+	}
+	if !hasUserPromptSubmit || force {
+		settings.Hooks.UserPromptSubmit = defaultHooks.UserPromptSubmit
 		hooksModified = true
 	}
 	if !hasSessionEnd || force {
