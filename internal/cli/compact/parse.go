@@ -50,7 +50,7 @@ func parseBlockAt(lines []string, startIdx int) TaskBlock {
 	for i := startIdx + 1; i < len(lines); i++ {
 		line := lines[i]
 
-		// Empty lines: include if followed by more indented content
+		// Empty lines: Include if followed by more indented content
 		if strings.TrimSpace(line) == "" {
 			// Look ahead to see if there's more indented content
 			hasMoreContent := false
@@ -100,7 +100,7 @@ func parseBlockAt(lines []string, startIdx int) TaskBlock {
 //   - line: Task line that may contain #done:YYYY-MM-DD-HHMMSS
 //
 // Returns:
-//   - *time.Time: Parsed time, or nil if no valid timestamp found
+//   - *time.Time: Parsed time, or nil if no valid timestamp is found
 func parseDoneTimestamp(line string) *time.Time {
 	match := config.RegExTaskDoneTimestamp.FindStringSubmatch(line)
 	if match == nil || len(match) < 2 {

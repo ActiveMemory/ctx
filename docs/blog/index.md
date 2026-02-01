@@ -3,7 +3,7 @@ title: Blog
 icon: lucide/newspaper
 ---
 
-# Blog
+![ctx](../images/ctx-banner.png)
 
 Stories, insights, and lessons learned from building and using ctx.
 
@@ -25,4 +25,4 @@ persistence, architectural decisions
 
 ---
 
-*More posts coming soon.*
+*more posts are coming soon*

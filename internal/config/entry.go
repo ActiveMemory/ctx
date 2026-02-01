@@ -27,6 +27,16 @@ const (
 	EntryUnknown = "unknown"
 )
 
+// EntryPlural maps entry type constants to their plural forms.
+//
+// Used for user-facing messages (e.g., "no decisions found").
+var EntryPlural = map[string]string{
+	EntryTask:       "tasks",
+	EntryDecision:   "decisions",
+	EntryLearning:   "learnings",
+	EntryConvention: "conventions",
+}
+
 // UserInputToEntry normalizes user input to a canonical entry type.
 //
 // Accepts both singular and plural forms (e.g., "task" or "tasks") and

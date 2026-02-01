@@ -9,7 +9,7 @@ package claude
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
 // Commands returns the list of embedded command file names.
@@ -22,7 +22,7 @@ import (
 //   - []string: Filenames of available command definitions
 //   - error: Non-nil if the commands directory cannot be read
 func Commands() ([]string, error) {
-	names, err := templates.ListClaudeCommands()
+	names, err := tpl.ListClaudeCommands()
 	if err != nil {
 		return nil, fmt.Errorf("failed to list commands: %w", err)
 	}
@@ -38,7 +38,7 @@ func Commands() ([]string, error) {
 //   - []byte: Raw bytes of the command definition file
 //   - error: Non-nil if the command file does not exist or cannot be read
 func CommandByName(name string) ([]byte, error) {
-	content, err := templates.GetClaudeCommand(name)
+	content, err := tpl.ClaudeCommandByName(name)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read command %s: %w", name, err)
 	}

@@ -43,7 +43,7 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 	}
 
 	// Enable archiving if configured in .contextrc
-	if rc.GetAutoArchive() {
+	if rc.AutoArchive() {
 		archive = true
 	}
 
@@ -82,7 +82,9 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 		cleaned, count := removeEmptySections(string(f.Content))
 		if count > 0 {
 			if err := os.WriteFile(f.Path, []byte(cleaned), 0644); err == nil {
-				cmd.Printf("%s Removed %d empty sections from %s\n", green("✓"), count, f.Name)
+				cmd.Printf(
+					"%s Removed %d empty sections from %s\n", green("✓"), count, f.Name,
+				)
 				changes += count
 			}
 		}

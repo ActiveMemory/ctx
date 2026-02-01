@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/tpl"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -174,7 +174,7 @@ func createImplementationPlan(cmd *cobra.Command, force bool) error {
 	}
 
 	// Get template content
-	content, err := templates.GetTemplate(planFileName)
+	content, err := tpl.Template(planFileName)
 	if err != nil {
 		return fmt.Errorf("failed to read template: %w", err)
 	}

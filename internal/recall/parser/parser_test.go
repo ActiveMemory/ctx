@@ -334,7 +334,7 @@ func TestRegisteredTools(t *testing.T) {
 }
 
 func TestGetParser(t *testing.T) {
-	parser := GetParser("claude-code")
+	parser := Parser("claude-code")
 	if parser == nil {
 		t.Error("expected parser for 'claude-code'")
 	}
@@ -342,7 +342,7 @@ func TestGetParser(t *testing.T) {
 		t.Errorf("expected tool 'claude-code', got '%s'", parser.Tool())
 	}
 
-	unknown := GetParser("unknown-tool")
+	unknown := Parser("unknown-tool")
 	if unknown != nil {
 		t.Error("expected nil for unknown tool")
 	}
@@ -352,14 +352,14 @@ func TestFindSessions_Integration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test in short mode")
 	}
-	
+
 	sessions, err := FindSessions()
 	if err != nil {
 		t.Fatalf("FindSessions failed: %v", err)
 	}
-	
+
 	t.Logf("Found %d sessions", len(sessions))
-	
+
 	for i, s := range sessions {
 		if i >= 3 {
 			t.Logf("... and %d more", len(sessions)-3)
@@ -383,7 +383,9 @@ func TestDebugSession(t *testing.T) {
 			t.Logf("Session: %s", s.ID)
 			t.Logf("Messages: %d", len(s.Messages))
 			for i, m := range s.Messages {
-				if i > 5 { break }
+				if i > 5 {
+					break
+				}
 				t.Logf("  %d. %s: text=%d chars, tools=%d", i, m.Role, len(m.Text), len(m.ToolUses))
 				if len(m.ToolUses) > 0 {
 					t.Logf("      tool: %s, input: %.100s", m.ToolUses[0].Name, m.ToolUses[0].Input)

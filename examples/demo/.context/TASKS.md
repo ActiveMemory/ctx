@@ -1,21 +1,26 @@
 # Tasks
 
-Current work items, prioritized from top to bottom.
+Current work items, organized by phase. Tasks stay in their phase permanently.
 
-## Active Tasks
+## Phase 1: Foundation
 
-- [ ] Implement user authentication with OAuth2
-- [ ] Add rate limiting to API endpoints
-- [ ] Write integration tests for payment flow
+- [x] Initial project setup #added:2026-01-01-090000 #done:2026-01-01-120000
+- [x] Database schema design #added:2026-01-01-090000 #done:2026-01-02-150000
+- [x] Core API scaffolding #added:2026-01-01-090000 #done:2026-01-03-110000
 
-## Backlog
+## Phase 2: Authentication
 
-- [ ] Add support for WebSocket connections
-- [ ] Implement caching layer for frequently accessed data
-- [ ] Set up monitoring and alerting
+- [x] Implement user registration #added:2026-01-04-100000 #done:2026-01-05-140000
+- [ ] Implement OAuth2 login #added:2026-01-04-100000 #in-progress
+- [ ] Add session management #added:2026-01-04-100000
 
-## Completed
+## Phase 3: API Features
 
-- [x] Initial project setup
-- [x] Database schema design
-- [x] Core API scaffolding
+- [ ] Add rate limiting to API endpoints #added:2026-01-10-090000
+- [ ] Write integration tests for payment flow #added:2026-01-10-090000
+
+## Phase 4: Infrastructure
+
+- [ ] Add support for WebSocket connections #added:2026-01-15-140000
+- [ ] Implement caching layer #added:2026-01-15-140000
+- [ ] Set up monitoring and alerting #added:2026-01-15-140000

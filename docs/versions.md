@@ -9,7 +9,9 @@ title: Version History
 icon: lucide/history
 ---
 
-# Version History
+![ctx](images/ctx-banner.png)
+
+## Version History
 
 Documentation snapshots for each release. Click a version to view the 
 docs as they were at that release.
@@ -18,6 +20,7 @@ docs as they were at that release.
 
 | Version | Release Date | Documentation                                                     |
 |---------|--------------|-------------------------------------------------------------------|
+| v0.2.0  | 2026-02-01   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.2.0/docs) |
 | v0.1.2  | 2026-01-27   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.1.2/docs) |
 | v0.1.1  | 2026-01-26   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.1.1/docs) |
 | v0.1.0  | 2026-01-25   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.1.0/docs) |
@@ -26,8 +29,8 @@ docs as they were at that release.
 
 The [main documentation](index.md) always reflects the latest development version.
 
-For the most recent stable release, see 
-[v0.1.2](https://github.com/ActiveMemory/ctx/tree/v0.1.2/docs).
+For the most recent stable release, see
+[v0.2.0](https://github.com/ActiveMemory/ctx/tree/v0.2.0/docs).
 
 ## Changelog
 

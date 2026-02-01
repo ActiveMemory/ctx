@@ -55,7 +55,7 @@ Examples:
 		},
 	}
 
-	defaultOutput := filepath.Join(rc.GetContextDir(), "journal-site")
+	defaultOutput := filepath.Join(rc.ContextDir(), "journal-site")
 	cmd.Flags().StringVarP(&output, "output", "o", defaultOutput, "Output directory for site")
 	cmd.Flags().BoolVar(&build, "build", false, "Run zensical build after generating")
 	cmd.Flags().BoolVar(&serve, "serve", false, "Run zensical serve after generating")
@@ -89,7 +89,7 @@ type journalEntry struct {
 // Returns:
 //   - error: Non-nil if generation fails
 func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error {
-	journalDir := filepath.Join(rc.GetContextDir(), "journal")
+	journalDir := filepath.Join(rc.ContextDir(), "journal")
 
 	// Check if journal directory exists
 	if _, err := os.Stat(journalDir); os.IsNotExist(err) {

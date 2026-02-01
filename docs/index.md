@@ -27,9 +27,15 @@ conventions, and learnings:
 **Open source is better together**.
 
 <!-- the long line is required for zensical to render block quote -->
-> ⭐️ **If the idea behind `ctx` resonates, a star helps it reach engineers who run into context drift every day.**
-> 
-> → https://github.com/ActiveMemory/ctx
+
+!!! tip "Help `ctx` Change How AI Remembers"
+    **If the idea behind `ctx` resonates, a star helps it reach engineers 
+    who run into context drift every day.**
+
+    → https://github.com/ActiveMemory/ctx
+
+    `ctx` is free and open source software, and **contributions are always
+    welcome** and appreciated.
 
 Join the community to ask questions, share feedback, and connect with
 other users:
@@ -61,38 +67,38 @@ Download pre-built binaries from the
 === "Linux (x86_64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.2/ctx-0.1.2-linux-amd64
-    chmod +x ctx-0.1.2-linux-amd64
-    sudo mv ctx-0.1.2-linux-amd64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.2.0/ctx-0.2.0-linux-amd64
+    chmod +x ctx-0.2.0-linux-amd64
+    sudo mv ctx-0.2.0-linux-amd64 /usr/local/bin/ctx
     ```
 
 === "Linux (ARM64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.2/ctx-0.1.2-linux-arm64
-    chmod +x ctx-0.1.2-linux-arm64
-    sudo mv ctx-0.1.2-linux-arm64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.2.0/ctx-0.2.0-linux-arm64
+    chmod +x ctx-0.2.0-linux-arm64
+    sudo mv ctx-0.2.0-linux-arm64 /usr/local/bin/ctx
     ```
 
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.2/ctx-0.1.2-darwin-arm64
-    chmod +x ctx-0.1.2-darwin-arm64
-    sudo mv ctx-0.1.2-darwin-arm64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.2.0/ctx-0.2.0-darwin-arm64
+    chmod +x ctx-0.2.0-darwin-arm64
+    sudo mv ctx-0.2.0-darwin-arm64 /usr/local/bin/ctx
     ```
 
 === "macOS (Intel)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.2/ctx-0.1.2-darwin-amd64
-    chmod +x ctx-0.1.2-darwin-amd64
-    sudo mv ctx-0.1.2-darwin-amd64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.2.0/ctx-0.2.0-darwin-amd64
+    chmod +x ctx-0.2.0-darwin-amd64
+    sudo mv ctx-0.2.0-darwin-amd64 /usr/local/bin/ctx
     ```
 
 === "Windows"
 
-    Download `ctx-0.1.2-windows-amd64.exe` from the releases page and add it to your `PATH`.
+    Download `ctx-0.2.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
 
 ### Verifying Checksums
 
@@ -100,10 +106,10 @@ Each binary has a corresponding `.sha256` checksum file. To verify your download
 
 ```bash
 # Download the checksum file
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.1.2/ctx-0.1.2-linux-amd64.sha256
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.2.0/ctx-0.2.0-linux-amd64.sha256
 
 # Verify the binary
-sha256sum -c ctx-0.1.2-linux-amd64.sha256
+sha256sum -c ctx-0.2.0-linux-amd64.sha256
 ```
 
 On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.

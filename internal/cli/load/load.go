@@ -51,7 +51,7 @@ Use --budget to limit output to a specific token count (default from .contextrc 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Use configured budget if flag not explicitly set
 			if !cmd.Flags().Changed("budget") {
-				budget = rc.GetTokenBudget()
+				budget = rc.TokenBudget()
 			}
 			return runLoad(cmd, budget, raw)
 		},

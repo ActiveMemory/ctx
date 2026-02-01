@@ -62,7 +62,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 		dir = args[0]
 	} else {
 		// Default: journal site
-		dir = filepath.Join(rc.GetContextDir(), "journal-site")
+		dir = filepath.Join(rc.ContextDir(), "journal-site")
 	}
 
 	// Verify directory exists

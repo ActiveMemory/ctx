@@ -348,6 +348,49 @@ ctx compact --no-auto-save
 
 ---
 
+### `ctx completion`
+
+Generate shell autocompletion scripts.
+
+```bash
+ctx completion <shell>
+```
+
+#### Subcommands
+
+| Shell        | Command                  |
+|--------------|--------------------------|
+| `bash`       | `ctx completion bash`    |
+| `zsh`        | `ctx completion zsh`     |
+| `fish`       | `ctx completion fish`    |
+| `powershell` | `ctx completion powershell` |
+
+#### Installation
+
+=== "Bash"
+
+    ```bash
+    # Add to ~/.bashrc
+    source <(ctx completion bash)
+    ```
+
+=== "Zsh"
+
+    ```bash
+    # Add to ~/.zshrc
+    source <(ctx completion zsh)
+    ```
+
+=== "Fish"
+
+    ```bash
+    ctx completion fish | source
+    # Or save to completions directory
+    ctx completion fish > ~/.config/fish/completions/ctx.fish
+    ```
+
+---
+
 ### `ctx tasks`
 
 Manage task archival and snapshots.
@@ -485,11 +528,12 @@ ctx recall list [flags]
 
 **Flags**:
 
-| Flag              | Short | Description                              |
-|-------------------|-------|------------------------------------------|
-| `--limit`         | `-n`  | Maximum sessions to display (default: 20)|
-| `--project`       | `-p`  | Filter by project name                   |
-| `--tool`          | `-t`  | Filter by tool (e.g., `claude-code`)     |
+| Flag             | Short | Description                               |
+|------------------|-------|-------------------------------------------|
+| `--limit`        | `-n`  | Maximum sessions to display (default: 20) |
+| `--project`      | `-p`  | Filter by project name                    |
+| `--tool`         | `-t`  | Filter by tool (e.g., `claude-code`)      |
+| `--all-projects` |       | Include sessions from all projects        |
 
 Sessions are sorted by date (newest first) and display slug, project,
 start time, duration, turn count, and token usage.
@@ -513,10 +557,11 @@ ctx recall show [session-id] [flags]
 
 **Flags**:
 
-| Flag       | Description                        |
-|------------|------------------------------------|
-| `--latest` | Show the most recent session       |
-| `--full`   | Show full message content          |
+| Flag             | Description                        |
+|------------------|------------------------------------|
+| `--latest`       | Show the most recent session       |
+| `--full`         | Show full message content          |
+| `--all-projects` | Search across all projects         |
 
 The session ID can be a full UUID, partial match, or session slug name.
 
@@ -539,10 +584,11 @@ ctx recall export [session-id] [flags]
 
 **Flags**:
 
-| Flag      | Description                              |
-|-----------|------------------------------------------|
-| `--all`   | Export all sessions                      |
-| `--force` | Overwrite existing files                 |
+| Flag             | Description                              |
+|------------------|------------------------------------------|
+| `--all`          | Export all sessions                      |
+| `--force`        | Overwrite existing files                 |
+| `--all-projects` | Export from all projects                 |
 
 Exported files include session metadata, tool usage summary, and the full
 conversation. Existing files are skipped by default to preserve your edits.
@@ -578,16 +624,17 @@ ctx journal site [flags]
 
 **Flags**:
 
-| Flag       | Short | Description                              |
-|------------|-------|------------------------------------------|
+| Flag       | Short | Description                                       |
+|------------|-------|---------------------------------------------------|
 | `--output` | `-o`  | Output directory (default: .context/journal-site) |
-| `--build`  |       | Run zensical build after generating      |
-| `--serve`  |       | Run zensical serve after generating      |
+| `--build`  |       | Run zensical build after generating               |
+| `--serve`  |       | Run zensical serve after generating               |
 
-Creates a zensical-compatible site structure with an index page listing
+Creates a `zensical`-compatible site structure with an index page listing
 all sessions by date, and individual pages for each journal entry.
 
-Requires zensical to be installed for `--build` or `--serve`:
+Requires `zensical` to be installed for `--build` or `--serve`:
+
 ```bash
 pip install zensical
 ```
@@ -605,7 +652,7 @@ ctx journal site --serve            # Generate and serve locally
 
 ### `ctx serve`
 
-Serve a static site locally via zensical.
+Serve a static site locally via `zensical`.
 
 ```bash
 ctx serve [directory]
@@ -613,7 +660,8 @@ ctx serve [directory]
 
 If no directory is specified, serves the journal site (`.context/journal-site`).
 
-Requires zensical to be installed:
+Requires `zensical` to be installed:
+
 ```bash
 pip install zensical
 ```
@@ -800,13 +848,13 @@ ctx loop [flags]
 
 **Flags**:
 
-| Flag                     | Short | Description                                     | Default            |
-|--------------------------|-------|-------------------------------------------------|--------------------|
-| `--tool <tool>`          | `-t`  | AI tool: `claude`, `aider`, or `generic`        | `claude`           |
-| `--prompt <file>`        | `-p`  | Prompt file to use                              | `PROMPT.md`        |
-| `--max-iterations <n>`   | `-n`  | Maximum iterations (0 = unlimited)              | `0`                |
-| `--completion <signal>`  | `-c`  | Completion signal to detect                     | `SYSTEM_CONVERGED` |
-| `--output <file>`        | `-o`  | Output script filename                          | `loop.sh`          |
+| Flag                     | Short | Description                              | Default            |
+|--------------------------|-------|------------------------------------------|--------------------|
+| `--tool <tool>`          | `-t`  | AI tool: `claude`, `aider`, or `generic` | `claude`           |
+| `--prompt <file>`        | `-p`  | Prompt file to use                       | `PROMPT.md`        |
+| `--max-iterations <n>`   | `-n`  | Maximum iterations (0 = unlimited)       | `0`                |
+| `--completion <signal>`  | `-c`  | Completion signal to detect              | `SYSTEM_CONVERGED` |
+| `--output <file>`        | `-o`  | Output script filename                   | `loop.sh`          |
 
 **Example**:
 

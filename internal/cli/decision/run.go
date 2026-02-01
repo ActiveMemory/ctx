@@ -7,11 +7,8 @@
 package decision
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -28,33 +25,12 @@ import (
 // Returns:
 //   - error: Non-nil if file read/write fails
 func runReindex(cmd *cobra.Command, _ []string) error {
-	filePath := filepath.Join(rc.GetContextDir(), config.FileDecision)
-
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return fmt.Errorf("%s not found. Run 'ctx init' first", config.FileDecision)
-	}
-
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return fmt.Errorf("failed to read %s: %w", filePath, err)
-	}
-
-	updated := index.UpdateDecisions(string(content))
-
-	if err := os.WriteFile(filePath, []byte(updated), 0644); err != nil {
-		return fmt.Errorf("failed to write %s: %w", filePath, err)
-	}
-
-	entries := index.ParseHeaders(string(content))
-	green := color.New(color.FgGreen).SprintFunc()
-	if len(entries) == 0 {
-		cmd.Printf("%s Index cleared (no decisions found)\n", green("✓"))
-	} else {
-		cmd.Printf(
-			"%s Index regenerated with %d entries\n", green("✓"),
-			len(entries),
-		)
-	}
-
-	return nil
+	filePath := filepath.Join(rc.ContextDir(), config.FileDecision)
+	return index.ReindexFile(
+		cmd.OutOrStdout(),
+		filePath,
+		config.FileDecision,
+		index.UpdateDecisions,
+		config.EntryPlural[config.EntryDecision],
+	)
 }

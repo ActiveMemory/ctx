@@ -135,7 +135,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force 
 	}
 
 	// Ensure journal directory exists
-	journalDir := filepath.Join(rc.GetContextDir(), "journal")
+	journalDir := filepath.Join(rc.ContextDir(), "journal")
 	if err := os.MkdirAll(journalDir, 0755); err != nil {
 		return fmt.Errorf("failed to create journal directory: %w", err)
 	}

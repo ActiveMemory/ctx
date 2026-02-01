@@ -26,7 +26,7 @@ if [ ! -f "$ROOT_DIR/VERSION" ]; then
     exit 1
 fi
 
-VERSION="v$(cat "$ROOT_DIR/VERSION" | tr -d '[:space:]')"
+VERSION="v$(tr -d '[:space:]' < "$ROOT_DIR/VERSION")"
 
 echo "Creating tag: $VERSION"
 

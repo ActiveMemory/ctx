@@ -15,7 +15,7 @@ import (
 )
 
 func TestDefaultRC(t *testing.T) {
-	rc := DefaultRC()
+	rc := Default()
 
 	if rc.ContextDir != config.DirContext {
 		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, config.DirContext)
@@ -41,9 +41,9 @@ func TestGetRC_NoFile(t *testing.T) {
 	os.Chdir(tempDir)
 	defer os.Chdir(origDir)
 
-	ResetRC()
+	Reset()
 
-	rc := GetRC()
+	rc := RC()
 
 	if rc.ContextDir != config.DirContext {
 		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, config.DirContext)
@@ -70,9 +70,9 @@ archive_after_days: 14
 `
 	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
-	ResetRC()
+	Reset()
 
-	rc := GetRC()
+	rc := RC()
 
 	if rc.ContextDir != "custom-context" {
 		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, "custom-context")
@@ -103,17 +103,13 @@ token_budget: 4000
 `
 	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
-	// Set environment variables
-	os.Setenv("CTX_DIR", "env-context")
-	os.Setenv("CTX_TOKEN_BUDGET", "2000")
-	defer func() {
-		os.Unsetenv("CTX_DIR")
-		os.Unsetenv("CTX_TOKEN_BUDGET")
-	}()
+	// Set environment variables (t.Setenv auto-restores after test)
+	t.Setenv(config.EnvCtxDir, "env-context")
+	t.Setenv(config.EnvCtxTokenBudget, "2000")
 
-	ResetRC()
+	Reset()
 
-	rc := GetRC()
+	rc := RC()
 
 	// Env should override file
 	if rc.ContextDir != "env-context" {
@@ -134,19 +130,18 @@ func TestGetContextDir_CLIOverride(t *testing.T) {
 	rcContent := `context_dir: file-context`
 	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
-	// Set env override
-	os.Setenv("CTX_DIR", "env-context")
-	defer os.Unsetenv("CTX_DIR")
+	// Set env override (t.Setenv auto-restores after test)
+	t.Setenv(config.EnvCtxDir, "env-context")
 
-	ResetRC()
+	Reset()
 
 	// CLI override takes precedence over all
 	OverrideContextDir("cli-context")
-	defer ResetRC()
+	defer Reset()
 
-	dir := GetContextDir()
+	dir := ContextDir()
 	if dir != "cli-context" {
-		t.Errorf("GetContextDir() = %q, want %q (CLI override)", dir, "cli-context")
+		t.Errorf("ContextDir() = %q, want %q (CLI override)", dir, "cli-context")
 	}
 }
 
@@ -156,12 +151,12 @@ func TestGetTokenBudget(t *testing.T) {
 	os.Chdir(tempDir)
 	defer os.Chdir(origDir)
 
-	ResetRC()
+	Reset()
 
 	// Default value
-	budget := GetTokenBudget()
+	budget := TokenBudget()
 	if budget != DefaultTokenBudget {
-		t.Errorf("GetTokenBudget() = %d, want %d", budget, DefaultTokenBudget)
+		t.Errorf("TokenBudget() = %d, want %d", budget, DefaultTokenBudget)
 	}
 }
 
@@ -174,10 +169,10 @@ func TestGetRC_InvalidYAML(t *testing.T) {
 	// Create invalid .contextrc file
 	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte("invalid: [yaml: content"), 0644)
 
-	ResetRC()
+	Reset()
 
 	// Should return defaults on invalid YAML
-	rc := GetRC()
+	rc := RC()
 	if rc.TokenBudget != DefaultTokenBudget {
 		t.Errorf("TokenBudget = %d, want %d (defaults on invalid YAML)", rc.TokenBudget, DefaultTokenBudget)
 	}
@@ -193,9 +188,9 @@ func TestGetRC_PartialConfig(t *testing.T) {
 	rcContent := `token_budget: 5000`
 	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
-	ResetRC()
+	Reset()
 
-	rc := GetRC()
+	rc := RC()
 
 	// Specified value should be used
 	if rc.TokenBudget != 5000 {
@@ -213,13 +208,12 @@ func TestGetRC_InvalidEnvBudget(t *testing.T) {
 	os.Chdir(tempDir)
 	defer os.Chdir(origDir)
 
-	os.Setenv("CTX_TOKEN_BUDGET", "not-a-number")
-	defer os.Unsetenv("CTX_TOKEN_BUDGET")
+	t.Setenv(config.EnvCtxTokenBudget, "not-a-number")
 
-	ResetRC()
+	Reset()
 
 	// Invalid env should be ignored, use default
-	rc := GetRC()
+	rc := RC()
 	if rc.TokenBudget != DefaultTokenBudget {
 		t.Errorf("TokenBudget = %d, want %d (default on invalid env)", rc.TokenBudget, DefaultTokenBudget)
 	}
@@ -231,12 +225,12 @@ func TestGetRC_Singleton(t *testing.T) {
 	os.Chdir(tempDir)
 	defer os.Chdir(origDir)
 
-	ResetRC()
+	Reset()
 
-	rc1 := GetRC()
-	rc2 := GetRC()
+	rc1 := RC()
+	rc2 := RC()
 
 	if rc1 != rc2 {
-		t.Error("GetRC() should return same instance")
+		t.Error("RC() should return same instance")
 	}
 }

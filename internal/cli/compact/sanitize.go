@@ -6,7 +6,11 @@
 
 package compact
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+)
 
 // removeEmptySections removes Markdown sections that contain no content.
 //
@@ -20,7 +24,7 @@ import "strings"
 //   - string: Content with empty sections removed
 //   - int: Number of sections removed
 func removeEmptySections(content string) (string, int) {
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, config.NewlineLF)
 	var result []string
 	removed := 0
 
@@ -41,8 +45,8 @@ func removeEmptySections(content string) (string, int) {
 
 			// Check if we hit another section or end of the file
 			if i >= len(lines) ||
-				strings.HasPrefix(lines[i], "## ") ||
-				strings.HasPrefix(lines[i], "# ") {
+				strings.HasPrefix(lines[i], config.HeadingLevelTwoStart) ||
+				strings.HasPrefix(lines[i], config.HeadingLevelOneStart) {
 				// Section is empty, skip it
 				removed++
 				continue
@@ -72,5 +76,5 @@ func truncateString(s string, maxLen int) string {
 	if len(s) <= maxLen {
 		return s
 	}
-	return s[:maxLen-3] + "..."
+	return s[:maxLen-3] + config.Ellipsis
 }

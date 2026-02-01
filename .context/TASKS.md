@@ -1,3 +1,5 @@
+- [ ] Add integration tests for CLI commands (drift, sync, decision, learnings, serve, recall) - test actual file operations and command execution #added:2026-02-01-062541
+
 # Tasks — Context CLI
 
 # Tasks
