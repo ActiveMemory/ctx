@@ -62,7 +62,7 @@ func RootCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ctx",
 		Short: "Context - persistent context for AI coding assistants",
-		Long: `Context (ctx) maintains persistent context files that help
+		Long: `ctx (Context) maintains persistent context files that help
   AI coding assistants understand your project's architecture, conventions,
   decisions, and current tasks.
 

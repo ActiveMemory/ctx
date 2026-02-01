@@ -16,7 +16,8 @@ import "time"
 //   - EndIndex: Index of last line (exclusive)
 //   - IsCompleted: The parent task is checked
 //   - IsArchivable: Completed and no unchecked children
-//   - DoneTime: When the task was marked done (from #done: timestamp), nil if not present
+//   - DoneTime: When the task was marked done (from #done: timestamp),
+//     nil if not present
 type TaskBlock struct {
 	Lines        []string
 	StartIndex   int

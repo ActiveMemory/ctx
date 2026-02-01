@@ -27,7 +27,7 @@ import (
 //   - error: NotFoundError if directory doesn't exist, or other IO errors
 func Load(dir string) (*Context, error) {
 	if dir == "" {
-		dir = rc.GetContextDir()
+		dir = rc.ContextDir()
 	}
 
 	// Check if the directory exists

@@ -1,3 +1,9 @@
+//   /    Context:                     https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
 package add
 
 // skipNewline advances pos past a newline (CRLF or LF) if present.

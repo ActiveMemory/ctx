@@ -2,7 +2,9 @@
 description: "Analyze session logs to identify vague prompts and suggest improvements"
 ---
 
-Analyze recent session transcripts to identify prompts that led to unnecessary clarification back-and-forth. This helps the user improve their prompting patterns.
+Analyze recent session transcripts to identify prompts that led to unnecessary 
+clarification back-and-forth. This helps the user improve their prompting 
+patterns.
 
 ## Your Task
 
@@ -12,7 +14,8 @@ Analyze recent session transcripts to identify prompts that led to unnecessary c
 
 ## What Makes a Prompt "Vague"
 
-Look for user prompts where Claude's immediate response was to ask clarifying questions rather than take action. Signs include:
+Look for user prompts where Claude's immediate response was to ask clarifying 
+questions rather than take action. Signs include:
 
 - **Missing file context**: "fix the bug" without specifying which file or error
 - **Ambiguous scope**: "optimize it" without what to optimize or success criteria
@@ -45,9 +48,11 @@ Generate a report like this:
 
 **Your prompt**: "fix the bug"
 
-**What happened**: I had to ask which file and what error you were seeing, adding 2 messages of back-and-forth.
+**What happened**: I had to ask which file and what error you were seeing, a
+dding 2 messages of back-and-forth.
 
-**Better prompt**: "fix the authentication error in src/auth/login.ts where JWT validation fails with 401"
+**Better prompt**: "fix the authentication error in src/auth/login.ts where 
+JWT validation fails with 401"
 
 **Cost**: ~2 extra messages, ~30 seconds
 
@@ -57,9 +62,11 @@ Generate a report like this:
 
 **Your prompt**: "optimize the component"
 
-**What happened**: Multiple components exist. I asked which one and what performance issue to address.
+**What happened**: Multiple components exist. I asked which one and what 
+performance issue to address.
 
-**Better prompt**: "optimize UserList in src/components/UserList.tsx to reduce re-renders when parent state updates"
+**Better prompt**: "optimize UserList in src/components/UserList.tsx to reduce 
+re-renders when parent state updates"
 
 **Cost**: ~3 extra messages, ~1 minute
 

@@ -14,7 +14,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
 // createEntryTemplates creates .context/templates/ with entry templates for
@@ -42,7 +42,7 @@ func createEntryTemplates(
 	}
 
 	// Get list of entry templates
-	entryTemplates, err := templates.ListEntryTemplates()
+	entryTemplates, err := tpl.ListEntry()
 	if err != nil {
 		return fmt.Errorf("failed to list entry templates: %w", err)
 	}
@@ -56,7 +56,7 @@ func createEntryTemplates(
 			continue
 		}
 
-		content, err := templates.GetEntryTemplate(name)
+		content, err := tpl.Entry(name)
 		if err != nil {
 			return fmt.Errorf("failed to read entry template %s: %w", name, err)
 		}
