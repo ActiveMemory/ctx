@@ -7,6 +7,9 @@
 package cli
 
 import (
+	"go/ast"
+	"go/parser"
+	"go/token"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -209,4 +212,129 @@ func TestBinaryIntegration(t *testing.T) {
 			})
 		}
 	})
+}
+
+// TestNoDirectFmtPrint ensures CLI code uses cmd.Print* instead of fmt.Print*.
+//
+// In Cobra commands, output should go through cmd.OutOrStdout() so that:
+// - Tests can capture output
+// - --quiet flags work correctly
+// - Output can be redirected properly
+//
+// This test parses all non-test Go files in internal/cli and fails if any
+// function that receives a *cobra.Command uses fmt.Print* directly.
+func TestNoDirectFmtPrint(t *testing.T) {
+	cliDir := "."
+
+	// Forbidden fmt functions that should use cmd.Print* instead
+	forbidden := map[string]bool{
+		"Print":   true,
+		"Println": true,
+		"Printf":  true,
+	}
+
+	var violations []string
+
+	err := filepath.Walk(cliDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Skip non-Go files and test files
+		if info.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+			return nil
+		}
+
+		fset := token.NewFileSet()
+		node, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
+		if err != nil {
+			t.Errorf("failed to parse %s: %v", path, err)
+			return nil
+		}
+
+		// Track if this file imports "fmt"
+		var fmtAlias string
+		for _, imp := range node.Imports {
+			impPath := strings.Trim(imp.Path.Value, `"`)
+			if impPath == "fmt" {
+				if imp.Name != nil {
+					fmtAlias = imp.Name.Name
+				} else {
+					fmtAlias = "fmt"
+				}
+				break
+			}
+		}
+
+		// No fmt import, nothing to check
+		if fmtAlias == "" {
+			return nil
+		}
+
+		// Find functions that have a *cobra.Command parameter
+		for _, decl := range node.Decls {
+			fn, ok := decl.(*ast.FuncDecl)
+			if !ok || fn.Type.Params == nil {
+				continue
+			}
+
+			// Check if this function has a *cobra.Command parameter
+			hasCobraCmd := false
+			for _, param := range fn.Type.Params.List {
+				if starExpr, ok := param.Type.(*ast.StarExpr); ok {
+					if sel, ok := starExpr.X.(*ast.SelectorExpr); ok {
+						if ident, ok := sel.X.(*ast.Ident); ok {
+							if ident.Name == "cobra" && sel.Sel.Name == "Command" {
+								hasCobraCmd = true
+								break
+							}
+						}
+					}
+				}
+			}
+
+			if !hasCobraCmd {
+				continue
+			}
+
+			// This function has *cobra.Command - check for fmt.Print* calls
+			ast.Inspect(fn.Body, func(n ast.Node) bool {
+				call, ok := n.(*ast.CallExpr)
+				if !ok {
+					return true
+				}
+
+				sel, ok := call.Fun.(*ast.SelectorExpr)
+				if !ok {
+					return true
+				}
+
+				ident, ok := sel.X.(*ast.Ident)
+				if !ok {
+					return true
+				}
+
+				if ident.Name == fmtAlias && forbidden[sel.Sel.Name] {
+					pos := fset.Position(call.Pos())
+					violations = append(violations,
+						filepath.Join(path)+":"+
+							strings.TrimPrefix(pos.String(), pos.Filename+":")+
+							" in "+fn.Name.Name+"()")
+				}
+
+				return true
+			})
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		t.Fatalf("failed to walk directory: %v", err)
+	}
+
+	if len(violations) > 0 {
+		t.Errorf("found %d uses of fmt.Print* in functions with *cobra.Command (use cmd.Print* instead):\n  %s",
+			len(violations), strings.Join(violations, "\n  "))
+	}
 }

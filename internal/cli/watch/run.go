@@ -11,7 +11,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/fatih/color"
@@ -20,6 +19,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/task"
 )
 
 // runWatch executes the watch command logic.
@@ -33,7 +34,7 @@ import (
 //   - _: Unused positional arguments
 //
 // Returns:
-//   - error: Non-nil if context directory is missing, log file cannot
+//   - error: Non-nil if the context directory is missing, the log file cannot
 //     be opened, or stream processing fails
 func runWatch(cmd *cobra.Command, _ []string) error {
 	if !context.Exists("") {
@@ -58,7 +59,7 @@ func runWatch(cmd *cobra.Command, _ []string) error {
 		defer func(file *os.File) {
 			err := file.Close()
 			if err != nil {
-				fmt.Printf("failed to close log file: %v\n", err)
+				cmd.Printf("failed to close log file: %v\n", err)
 			}
 		}(file)
 		reader = file
@@ -81,7 +82,8 @@ func runWatch(cmd *cobra.Command, _ []string) error {
 //     context, rationale, consequences for decisions)
 //
 // Returns:
-//   - error: Non-nil if validation fails, type is unknown, or file operations fail
+//   - error: Non-nil if validation fails, type is unknown,
+//     or file operations fail
 func runAddSilent(update ContextUpdate) error {
 	params := add.EntryParams{
 		Type:         update.Type,
@@ -98,7 +100,8 @@ func runAddSilent(update ContextUpdate) error {
 		return err
 	}
 
-	// Write using shared function (handles formatting, append, and index update)
+	// Write using the shared function
+	// (handles formatting, append, and index update)
 	return add.WriteEntry(params)
 }
 
@@ -121,22 +124,24 @@ func runCompleteSilent(args []string) error {
 	}
 
 	query := args[0]
-	filePath := filepath.Join(config.ContextDir(), config.FilenameTask)
+	filePath := filepath.Join(rc.GetContextDir(), config.FileTask)
+	nl := config.NewlineLF
 
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
 
-	lines := strings.Split(string(content), "\n")
-	taskPattern := regexp.MustCompile(`^(\s*)-\s*\[\s*]\s*(.+)$`)
+	lines := strings.Split(string(content), nl)
 
 	matchedLine := -1
 	for i, line := range lines {
-		matches := taskPattern.FindStringSubmatch(line)
-		if matches != nil {
-			taskText := matches[2]
-			if strings.Contains(strings.ToLower(taskText), strings.ToLower(query)) {
+		match := config.RegExTask.FindStringSubmatch(line)
+		if match != nil && task.IsPending(match) {
+			if strings.Contains(
+				strings.ToLower(task.Content(match)),
+				strings.ToLower(query),
+			) {
 				matchedLine = i
 				break
 			}
@@ -147,8 +152,8 @@ func runCompleteSilent(args []string) error {
 		return fmt.Errorf("no task matching %q found", query)
 	}
 
-	lines[matchedLine] = taskPattern.ReplaceAllString(
-		lines[matchedLine], "$1- [x] $2",
+	lines[matchedLine] = config.RegExTask.ReplaceAllString(
+		lines[matchedLine], "$1- [x] $3",
 	)
-	return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0644)
+	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), 0644)
 }

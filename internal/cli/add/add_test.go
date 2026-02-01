@@ -312,9 +312,9 @@ func TestAppendEntry(t *testing.T) {
 	})
 
 	t.Run("learning prepends after separator", func(t *testing.T) {
-		// Use timestamp format "- **[" to match what FormatLearning produces
-		existing := []byte("# Learnings\n\n<!-- comment -->\n\n- **[2026-01-01]** Old Learning\n")
-		entry := "- **[2026-01-02]** New Learning\n"
+		// Use section format "## [" to match what FormatLearning produces
+		existing := []byte("# Learnings\n\n<!-- comment -->\n\n## [2026-01-01] Old Learning\n\nContent\n")
+		entry := "## [2026-01-02] New Learning\n\nContent\n"
 
 		result := AppendEntry(existing, entry, "learning", "")
 
@@ -361,7 +361,7 @@ func TestAppendEntry(t *testing.T) {
 
 	t.Run("learning on empty file", func(t *testing.T) {
 		existing := []byte("# Learnings\n\n<!-- Add gotchas here -->\n")
-		entry := "- **[2026-01-01]** First Learning\n"
+		entry := "## [2026-01-01] First Learning\n\nContent\n"
 
 		result := AppendEntry(existing, entry, "learning", "")
 

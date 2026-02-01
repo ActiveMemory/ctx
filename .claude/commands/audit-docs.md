@@ -2,7 +2,8 @@
 description: "Audit documentation for consistency and accuracy"
 ---
 
-Perform a documentation audit across the codebase. This is an AI-assisted review that produces a report for human judgment.
+Perform a documentation audit across the codebase. This is an AI-assisted 
+review that produces a report for human judgment.
 
 ## Audit Scope
 

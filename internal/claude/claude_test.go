@@ -11,63 +11,63 @@ import (
 	"testing"
 )
 
-func TestGetAutoSaveScript(t *testing.T) {
-	content, err := GetAutoSaveScript()
+func TestAutoSaveScript(t *testing.T) {
+	content, err := AutoSaveScript()
 	if err != nil {
-		t.Fatalf("GetAutoSaveScript() unexpected error: %v", err)
+		t.Fatalf("AutoSaveScript() unexpected error: %v", err)
 	}
 
 	if len(content) == 0 {
-		t.Error("GetAutoSaveScript() returned empty content")
+		t.Error("AutoSaveScript() returned empty content")
 	}
 
 	// Check for expected script content
 	script := string(content)
 	if !strings.Contains(script, "#!/") {
-		t.Error("GetAutoSaveScript() script missing shebang")
+		t.Error("AutoSaveScript() script missing shebang")
 	}
 }
 
-func TestGetBlockNonPathCtxScript(t *testing.T) {
-	content, err := GetBlockNonPathCtxScript()
+func TestBlockNonPathCtxScript(t *testing.T) {
+	content, err := BlockNonPathCtxScript()
 	if err != nil {
-		t.Fatalf("GetBlockNonPathCtxScript() unexpected error: %v", err)
+		t.Fatalf("BlockNonPathCtxScript() unexpected error: %v", err)
 	}
 
 	if len(content) == 0 {
-		t.Error("GetBlockNonPathCtxScript() returned empty content")
+		t.Error("BlockNonPathCtxScript() returned empty content")
 	}
 
 	// Check for expected script content
 	script := string(content)
 	if !strings.Contains(script, "#!/") {
-		t.Error("GetBlockNonPathCtxScript() script missing shebang")
+		t.Error("BlockNonPathCtxScript() script missing shebang")
 	}
 }
 
-func TestListCommands(t *testing.T) {
-	commands, err := ListCommands()
+func TestCommands(t *testing.T) {
+	commands, err := Commands()
 	if err != nil {
-		t.Fatalf("ListCommands() unexpected error: %v", err)
+		t.Fatalf("Commands() unexpected error: %v", err)
 	}
 
 	if len(commands) == 0 {
-		t.Error("ListCommands() returned empty list")
+		t.Error("Commands() returned empty list")
 	}
 
 	// Check that all entries are .md files
 	for _, cmd := range commands {
 		if !strings.HasSuffix(cmd, ".md") {
-			t.Errorf("ListCommands() returned non-.md file: %s", cmd)
+			t.Errorf("Commands() returned non-.md file: %s", cmd)
 		}
 	}
 }
 
-func TestGetCommand(t *testing.T) {
+func TestCommandByName(t *testing.T) {
 	// First get the list of commands to test with
-	commands, err := ListCommands()
+	commands, err := Commands()
 	if err != nil {
-		t.Fatalf("ListCommands() failed: %v", err)
+		t.Fatalf("Commands() failed: %v", err)
 	}
 
 	if len(commands) == 0 {
@@ -75,22 +75,22 @@ func TestGetCommand(t *testing.T) {
 	}
 
 	// Test getting the first command
-	content, err := GetCommand(commands[0])
+	content, err := CommandByName(commands[0])
 	if err != nil {
-		t.Errorf("GetCommand(%q) unexpected error: %v", commands[0], err)
+		t.Errorf("CommandByName(%q) unexpected error: %v", commands[0], err)
 	}
 	if len(content) == 0 {
-		t.Errorf("GetCommand(%q) returned empty content", commands[0])
+		t.Errorf("CommandByName(%q) returned empty content", commands[0])
 	}
 
 	// Test getting nonexistent command
-	_, err = GetCommand("nonexistent-command.md")
+	_, err = CommandByName("nonexistent-command.md")
 	if err == nil {
-		t.Error("GetCommand(nonexistent) expected error, got nil")
+		t.Error("CommandByName(nonexistent) expected error, got nil")
 	}
 }
 
-func TestCreateDefaultHooks(t *testing.T) {
+func TestDefaultHooks(t *testing.T) {
 	tests := []struct {
 		name       string
 		projectDir string
@@ -107,16 +107,16 @@ func TestCreateDefaultHooks(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			hooks := CreateDefaultHooks(tt.projectDir)
+			hooks := DefaultHooks(tt.projectDir)
 
 			// Check PreToolUse hooks
 			if len(hooks.PreToolUse) == 0 {
-				t.Error("CreateDefaultHooks() PreToolUse is empty")
+				t.Error("DefaultHooks() PreToolUse is empty")
 			}
 
 			// Check SessionEnd hooks
 			if len(hooks.SessionEnd) == 0 {
-				t.Error("CreateDefaultHooks() SessionEnd is empty")
+				t.Error("DefaultHooks() SessionEnd is empty")
 			}
 
 			// Check that project dir is used in paths when provided
@@ -131,7 +131,7 @@ func TestCreateDefaultHooks(t *testing.T) {
 					}
 				}
 				if !found {
-					t.Error("CreateDefaultHooks() project dir not found in hook commands")
+					t.Error("DefaultHooks() project dir not found in hook commands")
 				}
 			}
 		})
@@ -141,7 +141,7 @@ func TestCreateDefaultHooks(t *testing.T) {
 func TestSettingsStructure(t *testing.T) {
 	// Test that Settings struct can be instantiated correctly
 	settings := Settings{
-		Hooks: CreateDefaultHooks(""),
+		Hooks: DefaultHooks(""),
 		Permissions: PermissionsConfig{
 			Allow: []string{"Bash(ctx status:*)", "Bash(ctx agent:*)"},
 		},
@@ -156,11 +156,11 @@ func TestSettingsStructure(t *testing.T) {
 	}
 }
 
-func TestCreateDefaultPermissions(t *testing.T) {
-	perms := CreateDefaultPermissions()
+func TestDefaultPermissions(t *testing.T) {
+	perms := DefaultPermissions()
 
 	if len(perms) == 0 {
-		t.Error("CreateDefaultPermissions should return permissions")
+		t.Error("DefaultPermissions should return permissions")
 	}
 
 	// Check that essential ctx commands are included

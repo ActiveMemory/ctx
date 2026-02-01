@@ -38,7 +38,7 @@ func createClaudeCommands(cmd *cobra.Command, force bool) error {
 	}
 
 	// Get the list of embedded command files
-	commands, err := claude.ListCommands()
+	commands, err := claude.Commands()
 	if err != nil {
 		return fmt.Errorf("failed to list commands: %w", err)
 	}
@@ -50,7 +50,7 @@ func createClaudeCommands(cmd *cobra.Command, force bool) error {
 			continue
 		}
 
-		content, err := claude.GetCommand(cmdName)
+		content, err := claude.CommandByName(cmdName)
 		if err != nil {
 			return fmt.Errorf("failed to get command %s: %w", cmdName, err)
 		}

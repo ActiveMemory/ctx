@@ -9,37 +9,10 @@ package context
 import (
 	"bytes"
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
-
-// generateSummary creates a brief summary for a context file based on its name and content.
-//
-// Parameters:
-//   - name: Filename to determine summary strategy
-//   - content: Raw file content to analyze
-//
-// Returns:
-//   - string: Summary string (e.g., "3 active, 2 completed" or "empty")
-func generateSummary(name string, content []byte) string {
-	switch name {
-	case config.FilenameConstitution:
-		return summarizeConstitution(content)
-	case config.FilenameTask:
-		return summarizeTasks(content)
-	case config.FilenameDecision:
-		return summarizeDecisions(content)
-	case config.FilenameGlossary:
-		return summarizeGlossary(content)
-	default:
-		if len(content) == 0 || isEffectivelyEmpty(content) {
-			return "empty"
-		}
-		return "loaded"
-	}
-}
 
 // summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
 //
@@ -50,7 +23,12 @@ func generateSummary(name string, content []byte) string {
 //   - string: Summary like "5 invariants" or "loaded" if none found
 func summarizeConstitution(content []byte) string {
 	// Count checkbox items (invariants)
-	count := bytes.Count(content, []byte("- [ ]")) + bytes.Count(content, []byte("- [x]"))
+	count := bytes.Count(
+		content, []byte(config.PrefixTaskUndone),
+	) +
+		bytes.Count(
+			content, []byte(config.PrefixTaskDone),
+		)
 	if count == 0 {
 		return "loaded"
 	}
@@ -66,8 +44,8 @@ func summarizeConstitution(content []byte) string {
 //   - string: Summary like "3 active, 2 completed" or "empty" if none
 func summarizeTasks(content []byte) string {
 	// Count active (unchecked) and completed (checked) tasks
-	active := bytes.Count(content, []byte("- [ ]"))
-	completed := bytes.Count(content, []byte("- [x]"))
+	active := bytes.Count(content, []byte(config.PrefixTaskUndone))
+	completed := bytes.Count(content, []byte(config.PrefixTaskDone))
 
 	if active == 0 && completed == 0 {
 		return "empty"
@@ -92,8 +70,7 @@ func summarizeTasks(content []byte) string {
 //   - string: Summary like "3 decisions" or "empty" if none
 func summarizeDecisions(content []byte) string {
 	// Count decision headers (## [date] or ## Decision)
-	re := regexp.MustCompile(`(?m)^## `)
-	matches := re.FindAll(content, -1)
+	matches := config.RegExEntryHeading.FindAll(content, -1)
 	count := len(matches)
 
 	if count == 0 {
@@ -113,9 +90,7 @@ func summarizeDecisions(content []byte) string {
 // Returns:
 //   - string: Summary like "5 terms" or "empty" if none
 func summarizeGlossary(content []byte) string {
-	// Count definition entries (lines starting with **term** or - **term**)
-	re := regexp.MustCompile(`(?m)(?:^|\n)\s*(?:-\s*)?\*\*[^*]+\*\*`)
-	matches := re.FindAll(content, -1)
+	matches := config.RegExGlossary.FindAll(content, -1)
 	count := len(matches)
 
 	if count == 0 {
@@ -125,4 +100,31 @@ func summarizeGlossary(content []byte) string {
 		return "1 term"
 	}
 	return fmt.Sprintf("%d terms", count)
+}
+
+// generateSummary creates a brief summary for a context file based on its
+// name and content.
+//
+// Parameters:
+//   - name: Filename to determine summary strategy
+//   - content: Raw file content to analyze
+//
+// Returns:
+//   - string: Summary string (e.g., "3 active, 2 completed" or "empty")
+func generateSummary(name string, content []byte) string {
+	switch name {
+	case config.FileConstitution:
+		return summarizeConstitution(content)
+	case config.FileTask:
+		return summarizeTasks(content)
+	case config.FileDecision:
+		return summarizeDecisions(content)
+	case config.FileGlossary:
+		return summarizeGlossary(content)
+	default:
+		if len(content) == 0 || effectivelyEmpty(content) {
+			return "empty"
+		}
+		return "loaded"
+	}
 }

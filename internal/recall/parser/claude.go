@@ -64,7 +64,9 @@ func (p *ClaudeCodeParser) CanParse(path string) bool {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	for i := 0; i < 5 && scanner.Scan(); i++ {
+	// Check first 50 lines - slug may not appear until later in the file
+	// (early lines can be file-history-snapshot or messages without slug)
+	for i := 0; i < 50 && scanner.Scan(); i++ {
 		line := scanner.Bytes()
 		if len(line) == 0 {
 			continue

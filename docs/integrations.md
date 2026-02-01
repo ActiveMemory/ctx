@@ -126,6 +126,62 @@ ctx agent --budget 4000
 cat .context/TASKS.md
 ```
 
+### Slash Commands
+
+`ctx init` installs slash commands to `.claude/commands/`. These are shortcuts
+you can invoke in Claude Code with `/command-name`.
+
+#### Context Commands
+
+| Command | Description |
+|---------|-------------|
+| `/ctx-status` | Show context summary (tasks, decisions, learnings) |
+| `/ctx-agent` | Get AI-optimized context packet |
+| `/ctx-save` | Save current session to `.context/sessions/` |
+| `/ctx-reflect` | Review session and suggest what to persist |
+
+#### Adding Context
+
+| Command | Description |
+|---------|-------------|
+| `/ctx-add-task` | Add a task to TASKS.md |
+| `/ctx-add-learning` | Add a learning to LEARNINGS.md |
+| `/ctx-add-decision` | Add a decision with context/rationale/consequences |
+| `/ctx-archive` | Archive completed tasks |
+
+#### Session History
+
+| Command | Description |
+|---------|-------------|
+| `/ctx-recall` | Browse AI session history |
+| `/ctx-journal-enrich` | Enrich a journal entry with frontmatter/tags |
+| `/ctx-journal-summarize` | Generate summary of sessions over a time period |
+
+#### Blogging
+
+| Command | Description |
+|---------|-------------|
+| `/ctx-blog` | Generate blog post from recent activity |
+| `/ctx-blog-changelog` | Generate blog post from commit range with theme |
+
+#### Development
+
+| Command | Description |
+|---------|-------------|
+| `/ctx-loop` | Generate a Ralph Loop iteration script |
+| `/ctx-prompt-audit` | Analyze session logs for vague prompts |
+
+#### Usage Examples
+
+```text
+/ctx-status
+/ctx-add-learning "Token refresh requires explicit cache invalidation"
+/ctx-journal-enrich twinkly-stirring-kettle
+/ctx-journal-summarize last week
+```
+
+Slash commands support partial matching where applicable (e.g., session slugs).
+
 ---
 
 ## Cursor IDE

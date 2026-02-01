@@ -5,25 +5,29 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Ralph and Context
+title: Autonomous Loops
 icon: lucide/repeat
 ---
 
 ![ctx](images/ctx-banner.png)
 
-## `ralph` + `ctx`
+## Autonomous AI Development
 
-*Like peanut butter and jelly: better together.*
+*Iterate until done.*
 
-The [Ralph Wiggum technique](https://ghuntley.com/ralph/) is an iterative AI development workflow where 
-an agent works autonomously on tasks until completion. Context (`ctx`) and 
-Ralph complement each other perfectly:
+An autonomous loop is an iterative AI development workflow where an agent works
+on tasks until completion—without constant human intervention. Context (`ctx`)
+provides the memory that makes this possible:
 
-- **`ctx`** provides the *memory*: persistent context that survives across sessions
-- **`ralph`** provides the *loop*: autonomous iteration that runs until done
+- **`ctx`** provides the *memory*: persistent context that survives across iterations
+- **The loop** provides the *automation*: continuous execution until done
 
-Together, they enable fully autonomous AI development where the agent remembers 
+Together, they enable fully autonomous AI development where the agent remembers
 everything across iterations.
+
+!!! note "Origin"
+    This pattern is inspired by [Geoffrey Huntley's Ralph Wiggum technique](https://ghuntley.com/ralph/).
+    We use generic terminology here so the concepts remain clear regardless of trends.
 
 ## How It Works
 
@@ -51,14 +55,14 @@ graph TD
 
 ## Quick Start with Claude Code
 
-Claude Code has a built-in Ralph Loop plugin:
+Claude Code has built-in loop support:
 
 ```bash
 # Start autonomous loop
-/ralph-loop
+/loop
 
 # Cancel running loop
-/cancel-ralph
+/cancel-loop
 ```
 
 That's it. The loop will:
@@ -73,11 +77,11 @@ For other AI tools, create a `loop.sh`:
 
 ```bash
 #!/bin/bash
-# loop.sh — a minimal Ralph loop
+# loop.sh — an autonomous iteration loop
 
 PROMPT_FILE="${1:-PROMPT.md}"
 MAX_ITERATIONS="${2:-10}"
-OUTPUT_FILE="/tmp/ralph_output.txt"
+OUTPUT_FILE="/tmp/loop_output.txt"
 
 for i in $(seq 1 $MAX_ITERATIONS); do
   echo "=== Iteration $i ==="
@@ -109,6 +113,8 @@ Make it executable and run:
 chmod +x loop.sh
 ./loop.sh
 ```
+
+You can also generate this script with `ctx loop` (see [CLI Reference](cli-reference.md#ctx-loop)).
 
 ## The PROMPT.md File
 
@@ -201,9 +207,7 @@ Please provide credentials and confirm deployment region.
 SYSTEM_BLOCKED
 ```
 
-## Context Integration
-
-### Why ctx + Ralph Work Well Together
+## Why Context + Loops Work Well Together
 
 | Without ctx                 | With ctx                             |
 |-----------------------------|--------------------------------------|
@@ -253,7 +257,7 @@ Run `ctx watch` alongside the loop to automatically process context updates:
 ctx watch --log /tmp/loop.log --auto-save
 ```
 
-The `--auto-save` flag periodically saves session snapshots, creating a 
+The `--auto-save` flag periodically saves session snapshots, creating a
 history of the loop's progress.
 
 ## Example Project Setup
@@ -272,7 +276,7 @@ my-project/
 └── src/                  # Your code
 ```
 
-### Sample TASKS.md for Ralph
+### Sample TASKS.md for Autonomous Loops
 
 ```markdown
 # Tasks
@@ -347,6 +351,6 @@ BEFORE any work:
 
 ## Resources
 
-- [Ralph Wiggum Technique](https://ghuntley.com/ralph/) — Original blog post
+- [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/) — Original inspiration
 - [Context CLI](cli-reference.md) — Command reference
 - [Integrations](integrations.md) — Tool-specific setup

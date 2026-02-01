@@ -11,7 +11,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"regexp"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // extractInsights parses a JSONL transcript and extracts potential decisions
@@ -43,25 +44,6 @@ func extractInsights(path string) ([]string, []string, error) {
 	var decisions []string
 	var learnings []string
 
-	// Patterns for detecting decisions
-	decisionPatterns := []*regexp.Regexp{
-		regexp.MustCompile(`(?i)decided to\s+(.{20,100})`),
-		regexp.MustCompile(`(?i)decision:\s*(.{20,100})`),
-		regexp.MustCompile(`(?i)we('ll| will) use\s+(.{10,80})`),
-		regexp.MustCompile(`(?i)going with\s+(.{10,80})`),
-		regexp.MustCompile(`(?i)chose\s+(.{10,80})\s+(over|instead)`),
-	}
-
-	// Patterns for detecting learnings
-	learningPatterns := []*regexp.Regexp{
-		regexp.MustCompile(`(?i)learned that\s+(.{20,100})`),
-		regexp.MustCompile(`(?i)gotcha:\s*(.{20,100})`),
-		regexp.MustCompile(`(?i)lesson:\s*(.{20,100})`),
-		regexp.MustCompile(`(?i)TIL:?\s*(.{20,100})`),
-		regexp.MustCompile(`(?i)turns out\s+(.{20,100})`),
-		regexp.MustCompile(`(?i)important to (note|remember):\s*(.{20,100})`),
-	}
-
 	scanner := bufio.NewScanner(file)
 	buf := make([]byte, 0, 64*1024)
 	scanner.Buffer(buf, 10*1024*1024)
@@ -89,7 +71,7 @@ func extractInsights(path string) ([]string, []string, error) {
 
 		for _, text := range texts {
 			// Check for decisions
-			for _, pattern := range decisionPatterns {
+			for _, pattern := range config.RegExDecisionPatterns {
 				matches := pattern.FindAllStringSubmatch(text, -1)
 				for _, match := range matches {
 					if len(match) > 1 {
@@ -103,7 +85,7 @@ func extractInsights(path string) ([]string, []string, error) {
 			}
 
 			// Check for learnings
-			for _, pattern := range learningPatterns {
+			for _, pattern := range config.RegExLearningPatterns {
 				matches := pattern.FindAllStringSubmatch(text, -1)
 				for _, match := range matches {
 					if len(match) > 1 {

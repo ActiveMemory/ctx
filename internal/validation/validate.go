@@ -1,8 +1,9 @@
 package validation
 
 import (
-	"regexp"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // SanitizeFilename converts a topic string to a safe filename component.
@@ -17,8 +18,7 @@ import (
 //   - string: Safe filename component (lowercase, hyphenated, max 50 chars)
 func SanitizeFilename(s string) string {
 	// Replace spaces and special chars with hyphens
-	re := regexp.MustCompile(`[^a-zA-Z0-9-]+`)
-	s = re.ReplaceAllString(s, "-")
+	s = config.RegExNonFileNameChar.ReplaceAllString(s, "-")
 	// Remove leading/trailing hyphens
 	s = strings.Trim(s, "-")
 	// Convert to lowercase

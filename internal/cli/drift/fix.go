@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 
@@ -20,6 +19,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/task"
 	"github.com/ActiveMemory/ctx/internal/templates"
 )
 
@@ -69,7 +70,7 @@ func applyFixes(
 			}
 
 		case "missing_file":
-			if err := fixMissingFile(cmd, issue.File); err != nil {
+			if err := fixMissingFile(issue.File); err != nil {
 				result.errors = append(result.errors,
 					fmt.Sprintf("missing %s: %v", issue.File, err))
 			} else {
@@ -110,7 +111,7 @@ func applyFixes(
 func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	var tasksFile *context.FileInfo
 	for i := range ctx.Files {
-		if ctx.Files[i].Name == config.FilenameTask {
+		if ctx.Files[i].Name == config.FileTask {
 			tasksFile = &ctx.Files[i]
 			break
 		}
@@ -120,11 +121,11 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		return fmt.Errorf("TASKS.md not found")
 	}
 
+	nl := config.NewlineLF
 	content := string(tasksFile.Content)
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, nl)
 
 	// Find completed tasks in the Completed section
-	completedPattern := regexp.MustCompile(`^-\s*\[x]\s*(.+)$`)
 	var completedTasks []string
 	var newLines []string
 	inCompletedSection := false
@@ -141,12 +142,10 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		}
 
 		// Collect completed tasks from the Completed section for archiving
-		if inCompletedSection && completedPattern.MatchString(line) {
-			matches := completedPattern.FindStringSubmatch(line)
-			if len(matches) > 1 {
-				completedTasks = append(completedTasks, matches[1])
-				continue // Remove from file
-			}
+		match := config.RegExTask.FindStringSubmatch(line)
+		if inCompletedSection && match != nil && task.Completed(match) {
+			completedTasks = append(completedTasks, task.Content(match))
+			continue // Remove from file
 		}
 
 		newLines = append(newLines, line)
@@ -157,7 +156,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	// Create an archive directory
-	archiveDir := filepath.Join(config.ContextDir(), "archive")
+	archiveDir := filepath.Join(rc.GetContextDir(), "archive")
 	if err := os.MkdirAll(archiveDir, 0755); err != nil {
 		return fmt.Errorf("failed to create archive directory: %w", err)
 	}
@@ -168,16 +167,14 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
 	)
 
-	archiveContent := fmt.Sprintf(
-		"# Archived Tasks - %s\n\n", time.Now().Format("2006-01-02"),
-	)
-	for _, task := range completedTasks {
-		archiveContent += fmt.Sprintf("- [x] %s\n", task)
+	archiveContent := "# Archived Tasks - " + time.Now().Format("2006-01-02") + nl + nl
+	for _, t := range completedTasks {
+		archiveContent += "- [x] " + t + nl
 	}
 
 	// Append to existing archive file if it exists
 	if existing, err := os.ReadFile(archiveFile); err == nil {
-		archiveContent = string(existing) + "\n" + archiveContent
+		archiveContent = string(existing) + nl + archiveContent
 	}
 
 	if err := os.WriteFile(
@@ -187,7 +184,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	// Write updated TASKS.md
-	newContent := strings.Join(newLines, "\n")
+	newContent := strings.Join(newLines, nl)
 	if err := os.WriteFile(
 		tasksFile.Path, []byte(newContent), 0644,
 	); err != nil {
@@ -203,21 +200,20 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 // fixMissingFile creates a missing required context file from template.
 //
 // Parameters:
-//   - cmd: Cobra command for output messages
 //   - filename: Name of the file to create (e.g., "CONSTITUTION.md")
 //
 // Returns:
 //   - error: Non-nil if the template is not found or file write fails
-func fixMissingFile(cmd *cobra.Command, filename string) error {
+func fixMissingFile(filename string) error {
 	content, err := templates.GetTemplate(filename)
 	if err != nil {
 		return fmt.Errorf("no template available for %s: %w", filename, err)
 	}
 
-	targetPath := filepath.Join(config.ContextDir(), filename)
+	targetPath := filepath.Join(rc.GetContextDir(), filename)
 
 	// Ensure .context/ directory exists
-	if err := os.MkdirAll(config.ContextDir(), 0755); err != nil {
+	if err := os.MkdirAll(rc.GetContextDir(), 0755); err != nil {
 		return fmt.Errorf("failed to create .context/: %w", err)
 	}
 

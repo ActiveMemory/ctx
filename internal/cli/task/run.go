@@ -17,6 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
@@ -64,8 +65,11 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 	snapshotPath := filepath.Join(archivePath, snapshotFilename)
 
 	// Add snapshot header
+	nl := config.NewlineLF
 	snapshotContent := fmt.Sprintf(
-		"# TASKS.md Snapshot — %s\n\nCreated: %s\n\n---\n\n%s",
+		"# TASKS.md Snapshot — %s"+
+			nl+nl+
+			"Created: %s"+nl+nl+config.Separator+nl+nl+"%s",
 		name, now.Format(time.RFC3339), string(content),
 	)
 
@@ -76,7 +80,7 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to write snapshot: %w", err)
 	}
 
-	fmt.Printf("%s Snapshot saved to %s\n", green("✓"), snapshotPath)
+	cmd.Printf("%s Snapshot saved to %s"+nl, green("✓"), snapshotPath)
 
 	return nil
 }
@@ -98,6 +102,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 	tasksPath := tasksFilePath()
 	archiveDir := archiveDirPath()
+	nl := config.NewlineLF
 
 	// Check if TASKS.md exists
 	if _, err := os.Stat(tasksPath); os.IsNotExist(err) {
@@ -110,7 +115,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 		return fmt.Errorf("failed to read TASKS.md: %w", err)
 	}
 
-	lines := strings.Split(string(content), "\n")
+	lines := strings.Split(string(content), nl)
 
 	// Parse task blocks using block-based parsing
 	blocks := compact.ParseTaskBlocks(lines)
@@ -123,8 +128,8 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 			archivableBlocks = append(archivableBlocks, block)
 		} else {
 			skippedCount++
-			fmt.Printf(
-				"%s Skipping (has incomplete children): %s\n",
+			cmd.Printf(
+				"%s Skipping (has incomplete children): %s"+nl,
 				yellow("!"), block.ParentTaskText(),
 			)
 		}
@@ -135,12 +140,12 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 
 	if len(archivableBlocks) == 0 {
 		if skippedCount > 0 {
-			fmt.Printf(
-				"No tasks to archive (%d skipped due to incomplete children).\n",
+			cmd.Printf(
+				"No tasks to archive (%d skipped due to incomplete children)."+nl,
 				skippedCount,
 			)
 		} else {
-			fmt.Println("No completed tasks to archive.")
+			cmd.Println("No completed tasks to archive.")
 		}
 		return nil
 	}
@@ -149,21 +154,21 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	var archivedContent strings.Builder
 	for _, block := range archivableBlocks {
 		archivedContent.WriteString(block.BlockContent())
-		archivedContent.WriteString("\n")
+		archivedContent.WriteString(nl)
 	}
 
 	if dryRun {
-		fmt.Println(yellow("Dry run - no files modified"))
-		fmt.Println()
-		fmt.Printf(
-			"Would archive %d completed tasks (keeping %d pending)\n",
+		cmd.Println(yellow("Dry run - no files modified"))
+		cmd.Println()
+		cmd.Printf(
+			"Would archive %d completed tasks (keeping %d pending)"+nl,
 			len(archivableBlocks), pendingCount,
 		)
-		fmt.Println()
-		fmt.Println("Archived content preview:")
-		fmt.Println("---")
-		fmt.Print(archivedContent.String())
-		fmt.Println("---")
+		cmd.Println()
+		cmd.Println("Archived content preview:")
+		cmd.Println(config.Separator)
+		cmd.Print(archivedContent.String())
+		cmd.Println(config.Separator)
 		return nil
 	}
 
@@ -180,13 +185,14 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	// Check if the archive file already exists for today - append if so
 	var finalArchiveContent string
 	if existingContent, err := os.ReadFile(archiveFilePath); err == nil {
-		finalArchiveContent = string(existingContent) + "\n" + archivedContent.String()
+		finalArchiveContent = string(existingContent) +
+			nl + archivedContent.String()
 	} else {
-		finalArchiveContent = fmt.Sprintf(
-			"# Task Archive — %s\n\nArchived from TASKS.md\n\n%s",
-			now.Format("2006-01-02"),
-			archivedContent.String(),
-		)
+		finalArchiveContent = "# Task Archive — " + now.Format("2006-01-02") +
+			nl + nl +
+			"Archived from TASKS.md" +
+			nl + nl +
+			archivedContent.String()
 	}
 
 	// Write the archive file
@@ -198,37 +204,19 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 
 	// Remove archived blocks from lines and write back
 	newLines := compact.RemoveBlocksFromLines(lines, archivableBlocks)
-	newContent := strings.Join(newLines, "\n")
+	newContent := strings.Join(newLines, nl)
 
 	if err := os.WriteFile(tasksPath, []byte(newContent), 0644); err != nil {
 		return fmt.Errorf("failed to update TASKS.md: %w", err)
 	}
 
-	fmt.Printf(
-		"%s Archived %d completed tasks to %s\n",
+	cmd.Printf(
+		"%s Archived %d completed tasks to %s"+nl,
 		green("✓"),
 		len(archivableBlocks),
 		archiveFilePath,
 	)
-	fmt.Printf("  %d pending tasks remain in TASKS.md\n", pendingCount)
+	cmd.Printf("  %d pending tasks remain in TASKS.md"+nl, pendingCount)
 
 	return nil
-}
-
-// countPendingTasks counts top-level unchecked tasks in the lines.
-//
-// Parameters:
-//   - lines: Lines from TASKS.md to scan
-//
-// Returns:
-//   - int: Number of top-level unchecked tasks
-func countPendingTasks(lines []string) int {
-	count := 0
-	pattern := compact.UncheckedTaskPattern()
-	for _, line := range lines {
-		if pattern.MatchString(line) && compact.GetIndentLevel(line) == 0 {
-			count++
-		}
-	}
-	return count
 }

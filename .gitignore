@@ -42,3 +42,5 @@ dist/
 
 # Session transcripts (personal, potentially large)
 .context/sessions/
+.context/journal/
+.context/journal-site/

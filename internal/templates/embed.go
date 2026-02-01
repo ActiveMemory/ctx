@@ -108,7 +108,7 @@ func GetClaudeCommand(name string) ([]byte, error) {
 	return FS.ReadFile("claude/commands/" + name)
 }
 
-// GetClaudeHook reads a Claude Code hook script by name.
+// ClaudeHookByFileName reads a Claude Code hook script by name.
 //
 // Parameters:
 //   - name: Hook script filename (e.g., "session-end-auto-save.sh")
@@ -116,6 +116,6 @@ func GetClaudeCommand(name string) ([]byte, error) {
 // Returns:
 //   - []byte: Hook script content from claude/hooks/
 //   - error: Non-nil if file not found or read fails
-func GetClaudeHook(name string) ([]byte, error) {
+func ClaudeHookByFileName(name string) ([]byte, error) {
 	return FS.ReadFile("claude/hooks/" + name)
 }

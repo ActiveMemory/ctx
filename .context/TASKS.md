@@ -8,7 +8,6 @@
 
 ### Phase 1: Parser (DONE)
 
-
 ## Phase 1.a: Cleanup and Release
 
 - [x] T1.2.0.1b Add index markers to DECISIONS.md and LEARNINGS.md templates
@@ -22,35 +21,28 @@
 - [x] T1.2.7 feat: implement `--no-color` global flag to disable colored output
   Documented in cli-reference.md as planned. Currently `NO_COLOR=1` env var works.
   #priority:low #added:2026-01-28
-- [ ] T1.2.9: upstream CI is broken (again)
-- [ ] T1.2.10: Human code review
-- [ ] T1.2.11: Human to read all user-facing documentation and update as needed.
-- [ ] T1.2.12: cut a release (version number is already bumped)
-
-### Phase 2: Export & Search
-
-- [ ] feat: `ctx recall export` - export sessions to editable journal files
+- [x] Write AST-based test that warns if CLI functions use fmt.Print* instead of
+  cmd.Print* #added:2026-01-29-171351 #done:2026-01-31
+- [x] feat: `ctx recall export` - export sessions to editable journal files
   - `ctx recall export <session-id>` - export one session
   - `ctx recall export --all` - export all sessions
   - Skip existing files (user may have edited), `--force` to overwrite
   - Output to `.context/journal/YYYY-MM-DD-slug-shortid.md`
-  #added:2026-01-28
-
-- [ ] feat: `ctx recall search <query>` - CLI-based search across sessions
-  - Simple text search, no server needed
-  - IDE grep is alternative, this is convenience
-  #priority:low
-
-- [ ] explore: `ctx recall stats` - analytics/statistics
-  - Token usage over time, tool patterns, session durations
-  - Explore when we have a clear use case
-  #priority:deferred
+    #added:2026-01-28 #done:2026-01-31
+- [x] feat: ctx journal - LLM-powered session analysis and synthesis
+  - [x] ctx journal site - generate zensical static site #done:2026-01-31
+  - [x] ctx serve - convenience wrapper for zensical serve #done:2026-01-31
+  - [x] /ctx-journal-enrich - slash command for frontmatter/tags #done:2026-01-31
+  - [x] /ctx-journal-summarize - slash command for timeline summaries #done:2026-01-31
+- [ ] T1.2.9: upstream CI is broken (again)
+- [ ] T1.2.10: Human code review
+- [ ] T1.2.11: Human to read all user-facing documentation and update as needed.
+- [ ] T1.2.12: cut a release (version number is already bumped)
+- [ ] T1.2.13: Compose two blog posts: 1) what has changed after the human-guided
+      refactoring, and what we can learn about this.
+      2) what has happened since the last release cut.
 
 ## Backlog
-
-- [ ] Write AST-based test that warns if CLI functions use fmt.Print* instead of cmd.Print* #added:2026-01-29-171351
-
-- [ ] feat: ctx journal - LLM-powered session analysis and synthesis
 
 Parent command for working with exported sessions (.context/journal/):
 
@@ -104,19 +96,10 @@ Additional supporting context:
 Depends on: ctx recall export (Phase 2)
 #priority:low #phase:future #added:2026-01-28-071638
 
-- [ ] feat: /ctx-blog slash command - generate blog post draft from recent activity
-
-Analyzes what happened since last blog post:
-- Sessions and their summaries
-- Commits and features added
-- Decisions made and rationale
-- Learnings discovered
-
-Outputs narrative markdown draft for human editing.
-Could integrate with ctx journal or work directly from sessions/git history.
-
-Related: ctx journal summarize (internal) vs ctx-blog (external/public)
-#priority:low #phase:future #added:2026-01-28-072625
+- [x] feat: /ctx-blog slash command - generate blog post draft from recent activity
+  - [x] /ctx-blog - from recent activity (sessions, commits, decisions)
+  - [x] /ctx-blog-changelog - from commit range with theme
+  #added:2026-01-28-072625 #done:2026-01-31
 
 - [ ] feat: ctx enrich - retroactively expand sparse context entries
 
@@ -134,3 +117,23 @@ Could run as:
 
 #priority:low #phase:future #added:2026-01-28-073058
 
+- [ ] feat: make config constants configurable via .contextrc
+
+Some hardcoded constants in internal/config/config.go could be user-configurable:
+- MaxDecisionsToSummarize (default 3)
+- MaxLearningsToSummarize (default 5)
+- MaxPreviewLen (default 60)
+- WatchAutoSaveInterval (default 5)
+
+Follow the pattern established for token_budget and archive_after_days in internal/rc.
+#priority:low #phase:future #added:2026-01-31
+
+- [ ] explore: `ctx recall stats` - analytics/statistics
+  - Token usage over time, tool patterns, session durations
+  - Explore when we have a clear use case
+    #priority:deferred
+
+- [ ] feat: `ctx recall search <query>` - CLI-based search across sessions
+  - Simple text search, no server needed
+  - IDE grep is alternative, this is convenience
+    #priority:low

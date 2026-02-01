@@ -29,17 +29,19 @@ list sessions, view details, and search across your conversation history.
 Subcommands:
   list    List all parsed sessions
   show    Show details of a specific session
-  serve   Start web server for browsing (coming soon)
+  export  Export sessions to editable journal files
 
 Examples:
   ctx recall list
   ctx recall list --limit 5
   ctx recall show abc123
-  ctx recall show --latest`,
+  ctx recall show --latest
+  ctx recall export --all`,
 	}
 
 	cmd.AddCommand(recallListCmd())
 	cmd.AddCommand(recallShowCmd())
+	cmd.AddCommand(recallExportCmd())
 
 	return cmd
 }
@@ -50,15 +52,16 @@ Examples:
 //   - *cobra.Command: Command for listing parsed sessions
 func recallListCmd() *cobra.Command {
 	var (
-		limit   int
-		project string
-		tool    string
+		limit       int
+		project     string
+		tool        string
+		allProjects bool
 	)
 
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all parsed sessions",
-		Long: `List all AI sessions found in ~/.claude/projects/ and other locations.
+		Long: `List AI sessions from the current project.
 
 Sessions are sorted by date (newest first) and display:
   - Session slug (human-friendly name)
@@ -67,19 +70,24 @@ Sessions are sorted by date (newest first) and display:
   - Turn count (user messages)
   - Token usage
 
+By default, only sessions from the current project are shown.
+Use --all-projects to see sessions from all projects.
+
 Examples:
   ctx recall list
   ctx recall list --limit 5
+  ctx recall list --all-projects
   ctx recall list --project ctx
   ctx recall list --tool claude-code`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRecallList(cmd, limit, project, tool)
+			return runRecallList(cmd, limit, project, tool, allProjects)
 		},
 	}
 
 	cmd.Flags().IntVarP(&limit, "limit", "n", 20, "Maximum sessions to display")
 	cmd.Flags().StringVarP(&project, "project", "p", "", "Filter by project name")
 	cmd.Flags().StringVarP(&tool, "tool", "t", "", "Filter by tool (e.g., claude-code)")
+	cmd.Flags().BoolVar(&allProjects, "all-projects", false, "Include sessions from all projects")
 
 	return cmd
 }
@@ -90,8 +98,9 @@ Examples:
 //   - *cobra.Command: Command for showing session details
 func recallShowCmd() *cobra.Command {
 	var (
-		latest bool
-		full   bool
+		latest      bool
+		full        bool
+		allProjects bool
 	)
 
 	cmd := &cobra.Command{
@@ -105,19 +114,22 @@ The session ID can be:
   - Session slug name
 
 Use --latest to show the most recent session.
+By default, only searches sessions from the current project.
 
 Examples:
   ctx recall show abc123
   ctx recall show gleaming-wobbling-sutherland
   ctx recall show --latest
-  ctx recall show --latest --full`,
+  ctx recall show --latest --full
+  ctx recall show abc123 --all-projects`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRecallShow(cmd, args, latest, full)
+			return runRecallShow(cmd, args, latest, full, allProjects)
 		},
 	}
 
 	cmd.Flags().BoolVar(&latest, "latest", false, "Show the most recent session")
 	cmd.Flags().BoolVar(&full, "full", false, "Show full message content")
+	cmd.Flags().BoolVar(&allProjects, "all-projects", false, "Search sessions from all projects")
 
 	return cmd
 }
