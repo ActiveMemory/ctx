@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-// FormatTask formats a task entry as a markdown checkbox item.
+// FormatTask formats a task entry as a Markdown checkbox item.
 //
 // The output includes a timestamp tag for session correlation and an optional
 // priority tag. Format: "- [ ] content #priority:level #added:YYYY-MM-DD-HHMMSS"
@@ -32,7 +32,7 @@ func FormatTask(content string, priority string) string {
 	return fmt.Sprintf("- [ ] %s%s #added:%s\n", content, priorityTag, timestamp)
 }
 
-// FormatLearning formats a learning entry as a structured markdown section.
+// FormatLearning formats a learning entry as a structured Markdown section.
 //
 // The output includes a timestamped heading and complete sections for context,
 // lesson, and application.
@@ -57,7 +57,7 @@ func FormatLearning(title, context, lesson, application string) string {
 `, timestamp, title, context, lesson, application)
 }
 
-// FormatConvention formats a convention entry as a simple markdown list item.
+// FormatConvention formats a convention entry as a simple Markdown list item.
 //
 // Format: "- content"
 //

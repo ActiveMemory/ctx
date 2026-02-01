@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
 // handleClaudeMd creates or merges CLAUDE.md in the project root.
@@ -41,7 +41,7 @@ func handleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Get template content
-	templateContent, err := templates.GetTemplate("CLAUDE.md")
+	templateContent, err := tpl.Template("CLAUDE.md")
 	if err != nil {
 		return fmt.Errorf("failed to read CLAUDE.md template: %w", err)
 	}

@@ -18,7 +18,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
 // runInit executes the init command logic.
@@ -40,7 +40,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge bool) error {
 		return err
 	}
 
-	contextDir := rc.GetContextDir()
+	contextDir := rc.ContextDir()
 
 	// Check if .context/ already exists
 	if _, err := os.Stat(contextDir); err == nil {
@@ -70,7 +70,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge bool) error {
 	if minimal {
 		templatesToCreate = config.RequiredFiles
 	} else {
-		allTemplates, err := templates.ListTemplates()
+		allTemplates, err := tpl.List()
 		if err != nil {
 			return fmt.Errorf("failed to list templates: %w", err)
 		}
@@ -95,7 +95,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge bool) error {
 			continue
 		}
 
-		content, err := templates.GetTemplate(name)
+		content, err := tpl.Template(name)
 		if err != nil {
 			return fmt.Errorf("failed to read template %s: %w", name, err)
 		}

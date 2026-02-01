@@ -124,7 +124,7 @@ func runCompleteSilent(args []string) error {
 	}
 
 	query := args[0]
-	filePath := filepath.Join(rc.GetContextDir(), config.FileTask)
+	filePath := filepath.Join(rc.ContextDir(), config.FileTask)
 	nl := config.NewlineLF
 
 	content, err := os.ReadFile(filePath)

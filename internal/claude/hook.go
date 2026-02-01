@@ -6,7 +6,11 @@
 
 package claude
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+)
 
 // DefaultHooks returns the default ctx hooks configuration for
 // Claude Code.
@@ -24,9 +28,11 @@ import "fmt"
 //   - HookConfig: Configured hooks for PreToolUse, UserPromptSubmit, and
 //     SessionEnd events
 func DefaultHooks(projectDir string) HookConfig {
-	hooksDir := ".claude/hooks"
+	hooksDir := config.DirClaudeHooks
 	if projectDir != "" {
-		hooksDir = fmt.Sprintf("%s/.claude/hooks", projectDir)
+		hooksDir = fmt.Sprintf(
+			"%s/%s", projectDir, config.DirClaudeHooks,
+		)
 	}
 
 	return HookConfig{
@@ -36,8 +42,10 @@ func DefaultHooks(projectDir string) HookConfig {
 				Matcher: "Bash",
 				Hooks: []Hook{
 					{
-						Type:    "command",
-						Command: fmt.Sprintf("%s/block-non-path-ctx.sh", hooksDir),
+						Type: "command",
+						Command: fmt.Sprintf(
+							"%s/%s", hooksDir, config.FileBlockNonPathScript,
+						),
 					},
 				},
 			},
@@ -58,7 +66,7 @@ func DefaultHooks(projectDir string) HookConfig {
 				Hooks: []Hook{
 					{
 						Type:    "command",
-						Command: fmt.Sprintf("%s/prompt-coach.sh", hooksDir),
+						Command: fmt.Sprintf("%s/%s", hooksDir, config.FilePromptCoach),
 					},
 				},
 			},
@@ -68,7 +76,7 @@ func DefaultHooks(projectDir string) HookConfig {
 				Hooks: []Hook{
 					{
 						Type:    "command",
-						Command: fmt.Sprintf("%s/auto-save-session.sh", hooksDir),
+						Command: fmt.Sprintf("%s/%s", hooksDir, config.FileAutoSave),
 					},
 				},
 			},

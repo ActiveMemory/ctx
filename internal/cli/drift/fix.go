@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
-	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
 // fixResult tracks fixes applied during drift fix.
@@ -156,7 +156,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	// Create an archive directory
-	archiveDir := filepath.Join(rc.GetContextDir(), "archive")
+	archiveDir := filepath.Join(rc.ContextDir(), "archive")
 	if err := os.MkdirAll(archiveDir, 0755); err != nil {
 		return fmt.Errorf("failed to create archive directory: %w", err)
 	}
@@ -205,15 +205,15 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 // Returns:
 //   - error: Non-nil if the template is not found or file write fails
 func fixMissingFile(filename string) error {
-	content, err := templates.GetTemplate(filename)
+	content, err := tpl.Template(filename)
 	if err != nil {
 		return fmt.Errorf("no template available for %s: %w", filename, err)
 	}
 
-	targetPath := filepath.Join(rc.GetContextDir(), filename)
+	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
-	if err := os.MkdirAll(rc.GetContextDir(), 0755); err != nil {
+	if err := os.MkdirAll(rc.ContextDir(), 0755); err != nil {
 		return fmt.Errorf("failed to create .context/: %w", err)
 	}
 

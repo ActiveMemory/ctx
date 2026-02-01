@@ -9,10 +9,8 @@ package parser
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sort"
-	"strings"
 )
 
 // registeredParsers holds all available session parsers.
@@ -43,7 +41,9 @@ func ParseFile(path string) ([]*Session, error) {
 // ScanDirectory recursively scans a directory for session files.
 //
 // It finds all parseable files, parses them, and aggregates sessions.
-// Sessions are sorted by start time (newest first).
+// Sessions are sorted by start time (newest first). Parse errors for
+// individual files are silently ignored; use ScanDirectoryWithErrors
+// if you need to report them.
 //
 // Parameters:
 //   - dir: Root directory to scan recursively
@@ -52,44 +52,8 @@ func ParseFile(path string) ([]*Session, error) {
 //   - []*Session: All sessions found, sorted by start time (newest first)
 //   - error: Non-nil if directory traversal fails
 func ScanDirectory(dir string) ([]*Session, error) {
-	var allSessions []*Session
-	var parseErrors []error
-
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
-			return nil
-		}
-
-		// Try to parse with any registered parser
-		for _, parser := range registeredParsers {
-			if parser.CanParse(path) {
-				sessions, err := parser.ParseFile(path)
-				if err != nil {
-					parseErrors = append(parseErrors, fmt.Errorf("%s: %w", path, err))
-					break
-				}
-				allSessions = append(allSessions, sessions...)
-				break
-			}
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return nil, fmt.Errorf("walk directory: %w", err)
-	}
-
-	// Sort by start time (newest first)
-	sort.Slice(allSessions, func(i, j int) bool {
-		return allSessions[i].StartTime.After(allSessions[j].StartTime)
-	})
-
-	return allSessions, nil
+	sessions, _, err := ScanDirectoryWithErrors(dir)
+	return sessions, err
 }
 
 // ScanDirectoryWithErrors is like ScanDirectory but also returns parse errors.
@@ -108,7 +72,9 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 	var allSessions []*Session
 	var parseErrors []error
 
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(dir, func(
+		path string, info os.FileInfo, err error,
+	) error {
 		if err != nil {
 			return err
 		}
@@ -161,10 +127,12 @@ func FindSessions(additionalDirs ...string) ([]*Session, error) {
 	return findSessionsWithFilter(nil, additionalDirs...)
 }
 
-// FindSessionsForCWD searches for sessions matching the given working directory.
+// FindSessionsForCWD searches for sessions matching the given
+// working directory.
 //
 // Matching is done in order of preference:
-//  1. Git remote URL match - if both directories are git repos with same remote
+//  1. Git remote URL match - if both directories are git repos with
+//     the same remote
 //  2. Path relative to home - e.g., "WORKSPACE/ctx" matches across users
 //  3. Exact CWD match - fallback for non-git, non-home paths
 //
@@ -175,9 +143,11 @@ func FindSessions(additionalDirs ...string) ([]*Session, error) {
 // Returns:
 //   - []*Session: Filtered sessions sorted by start time (newest first)
 //   - error: Non-nil if scanning fails
-func FindSessionsForCWD(cwd string, additionalDirs ...string) ([]*Session, error) {
+func FindSessionsForCWD(
+	cwd string, additionalDirs ...string,
+) ([]*Session, error) {
 	// Get current project's git remote (if available)
-	currentRemote := getGitRemote(cwd)
+	currentRemote := gitRemote(cwd)
 
 	// Get path relative to home directory
 	currentRelPath := getPathRelativeToHome(cwd)
@@ -185,13 +155,13 @@ func FindSessionsForCWD(cwd string, additionalDirs ...string) ([]*Session, error
 	return findSessionsWithFilter(func(s *Session) bool {
 		// 1. Try git remote match (most robust)
 		if currentRemote != "" {
-			sessionRemote := getGitRemote(s.CWD)
+			sessionRemote := gitRemote(s.CWD)
 			if sessionRemote != "" && sessionRemote == currentRemote {
 				return true
 			}
 		}
 
-		// 2. Try path relative to home match
+		// 2. Try the path relative to the home match
 		if currentRelPath != "" {
 			sessionRelPath := getPathRelativeToHome(s.CWD)
 			if sessionRelPath != "" && sessionRelPath == currentRelPath {
@@ -199,114 +169,19 @@ func FindSessionsForCWD(cwd string, additionalDirs ...string) ([]*Session, error
 			}
 		}
 
-		// 3. Fallback to exact match
+		// 3. Fallback to an exact match
 		return s.CWD == cwd
 	}, additionalDirs...)
 }
 
-// getGitRemote returns the git remote origin URL for a directory.
-// Returns empty string if not a git repo or no remote configured.
-func getGitRemote(dir string) string {
-	if dir == "" {
-		return ""
-	}
-
-	// Check if directory exists
-	if _, err := os.Stat(dir); err != nil {
-		return ""
-	}
-
-	// Try to get git remote
-	cmd := exec.Command("git", "-C", dir, "remote", "get-url", "origin")
-	output, err := cmd.Output()
-	if err != nil {
-		return ""
-	}
-
-	return strings.TrimSpace(string(output))
-}
-
-// getPathRelativeToHome returns the path relative to the user's home directory.
-// Returns empty string if path is not under a home directory.
-func getPathRelativeToHome(path string) string {
-	if path == "" {
-		return ""
-	}
-
-	// Handle common home directory patterns
-	// /home/username/... -> strip /home/username
-	// /Users/username/... -> strip /Users/username (macOS)
-	parts := strings.Split(path, string(filepath.Separator))
-
-	for i, part := range parts {
-		if part == "home" || part == "Users" {
-			// Next part is username, rest is relative path
-			if i+2 < len(parts) {
-				return filepath.Join(parts[i+2:]...)
-			}
-			return ""
-		}
-	}
-
-	return ""
-}
-
-// findSessionsWithFilter is the internal implementation with optional filtering.
-func findSessionsWithFilter(filter func(*Session) bool, additionalDirs ...string) ([]*Session, error) {
-	var allSessions []*Session
-
-	// Check Claude Code default location
-	home, err := os.UserHomeDir()
-	if err == nil {
-		claudeDir := filepath.Join(home, ".claude", "projects")
-		if info, err := os.Stat(claudeDir); err == nil && info.IsDir() {
-			sessions, _ := ScanDirectory(claudeDir)
-			allSessions = append(allSessions, sessions...)
-		}
-	}
-
-	// Check additional directories
-	for _, dir := range additionalDirs {
-		if info, err := os.Stat(dir); err == nil && info.IsDir() {
-			sessions, _ := ScanDirectory(dir)
-			allSessions = append(allSessions, sessions...)
-		}
-	}
-
-	// Apply filter if provided
-	var filtered []*Session
-	for _, s := range allSessions {
-		if filter == nil || filter(s) {
-			filtered = append(filtered, s)
-		}
-	}
-
-	// Deduplicate by session ID
-	seen := make(map[string]bool)
-	var unique []*Session
-	for _, s := range filtered {
-		if !seen[s.ID] {
-			seen[s.ID] = true
-			unique = append(unique, s)
-		}
-	}
-
-	// Sort by start time (newest first)
-	sort.Slice(unique, func(i, j int) bool {
-		return unique[i].StartTime.After(unique[j].StartTime)
-	})
-
-	return unique, nil
-}
-
-// GetParser returns a parser for the specified tool.
+// Parser returns a parser for the specified tool.
 //
 // Parameters:
 //   - tool: Tool identifier (e.g., "claude-code")
 //
 // Returns:
 //   - SessionParser: The parser for the tool, or nil if not found
-func GetParser(tool string) SessionParser {
+func Parser(tool string) SessionParser {
 	for _, parser := range registeredParsers {
 		if parser.Tool() == tool {
 			return parser

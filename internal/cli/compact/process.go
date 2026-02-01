@@ -34,7 +34,7 @@ func preCompactAutoSave(cmd *cobra.Command) error {
 	green := color.New(color.FgGreen).SprintFunc()
 
 	// Ensure sessions directory exists
-	sessionsDir := filepath.Join(rc.GetContextDir(), "sessions")
+	sessionsDir := filepath.Join(rc.ContextDir(), "sessions")
 	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
@@ -84,12 +84,13 @@ func buildPreCompactSession(timestamp time.Time) string {
 		"This snapshot was automatically created before running `ctx compact`." + nl,
 	)
 	sb.WriteString(
-		"It preserves the state of context files before any cleanup operations." + nl + nl,
+		"It preserves the state of context files before any cleanup operations." +
+			nl + nl,
 	)
 	sb.WriteString(sep + nl + nl)
 
 	// Read and include current TASKS.md content
-	tasksPath := filepath.Join(rc.GetContextDir(), config.FileTask)
+	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
 	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
 		sb.WriteString("## Tasks (Before Compact)" + nl + nl)
 		sb.WriteString("```markdown" + nl)

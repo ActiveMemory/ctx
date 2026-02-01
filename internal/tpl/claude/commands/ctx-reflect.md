@@ -2,7 +2,8 @@
 description: "Reflect on session and suggest what to persist"
 ---
 
-Pause and reflect on this session. Review what has been accomplished and identify context worth persisting.
+Pause and reflect on this session. Review what has been accomplished and 
+identify context worth persisting.
 
 ## Reflection Checklist
 
@@ -36,7 +37,8 @@ After reflecting, provide:
 3. **Offer**: Ask if the user wants you to persist any of these
 
 Example:
-> "This session fixed the auth bug and we discovered the token refresh gotcha. I'd suggest:
+> "This session fixed the auth bug and we discovered the token refresh gotcha. 
+> I'd suggest:
 > - Learning: Token refresh requires explicit cache invalidation
 > - Task: Mark 'Fix auth bug' as done
 > Want me to persist these?"

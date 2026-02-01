@@ -7,8 +7,10 @@
 // Package task provides task item parsing and matching.
 //
 // This package handles the domain logic for task items, independent of
-// their markdown representation.
+// their Markdown representation.
 package task
+
+import "github.com/ActiveMemory/ctx/internal/config"
 
 // Match indices for accessing capture groups.
 //
@@ -21,10 +23,10 @@ package task
 //	    content := match[task.MatchContent]
 //	}
 const (
-	MatchFull    = 0 // Full match
-	MatchIndent  = 1 // Leading whitespace
-	MatchState   = 2 // "x" or " " or ""
-	MatchContent = 3 // Task text
+	MatchFull    = iota // Full match
+	MatchIndent         // Leading whitespace
+	MatchState          // "x" or " " or ""
+	MatchContent        // Task text
 )
 
 // Completed reports whether a match represents a completed task.
@@ -38,7 +40,7 @@ func Completed(match []string) bool {
 	if len(match) <= MatchState {
 		return false
 	}
-	return match[MatchState] == "x"
+	return match[MatchState] == config.MarkTaskComplete
 }
 
 // IsPending reports whether a match represents a pending task.
@@ -52,7 +54,7 @@ func IsPending(match []string) bool {
 	if len(match) <= MatchState {
 		return false
 	}
-	return match[MatchState] != "x"
+	return match[MatchState] != config.MarkTaskComplete
 }
 
 // Indent returns the leading whitespace from a match.
@@ -75,7 +77,7 @@ func Indent(match []string) string {
 //   - match: Result from ItemPattern.FindStringSubmatch
 //
 // Returns:
-//   - string: Task content (empty if match is invalid)
+//   - string: Task content (empty if the match is invalid)
 func Content(match []string) string {
 	if len(match) <= MatchContent {
 		return ""
