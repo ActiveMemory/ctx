@@ -47,7 +47,7 @@ func outputStatusJSON(
 			ModTime: f.ModTime.Format(time.RFC3339),
 		}
 		if verbose && !f.IsEmpty {
-			fs.Preview = getContentPreview(string(f.Content), 5)
+			fs.Preview = contentPreview(string(f.Content), 5)
 		}
 		output.Files = append(output.Files, fs)
 	}
@@ -113,7 +113,7 @@ func outputStatusText(
 
 			// Show content preview for non-empty files
 			if !f.IsEmpty {
-				preview := getContentPreview(string(f.Content), 3)
+				preview := contentPreview(string(f.Content), 3)
 				for _, line := range preview {
 					cmd.Printf("      %s\n", dim(line))
 				}

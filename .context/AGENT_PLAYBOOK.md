@@ -366,8 +366,22 @@ Before writing or modifying CLI code (`internal/cli/**/*.go`):
 
 1. **Read CONVENTIONS.md** — Load established patterns into context
 2. **Check similar commands** — How do existing commands in the same package handle output?
-3. **Use cmd methods for output** — `cmd.Printf`, `cmd.Println`, not `fmt.Printf`, `fmt.Println`
+3. **Use cmd methods for I/O** — Never use `fmt` for output in CLI code
 4. **Follow docstring format** — See Go Documentation Standard below
+
+**cmd methods to use:**
+
+| Instead of        | Use                | Purpose                              |
+|-------------------|--------------------|--------------------------------------|
+| `fmt.Printf`      | `cmd.Printf`       | Formatted stdout                     |
+| `fmt.Println`     | `cmd.Println`      | Line to stdout                       |
+| `fmt.Print`       | `cmd.Print`        | Raw stdout                           |
+| `fmt.Fprintf(os.Stderr, ...)` | `cmd.PrintErrf` | Formatted stderr          |
+| `fmt.Fprintln(os.Stderr, ...)` | `cmd.PrintErrln` | Line to stderr           |
+| `fmt.Sprintf`     | `fmt.Sprintf`      | String formatting (OK to keep)       |
+| `fmt.Errorf`      | `fmt.Errorf`       | Error creation (OK to keep)          |
+
+**Why**: cmd methods write to testable buffers; fmt writes to real stdout/stderr.
 
 **Quick pattern check:**
 ```bash

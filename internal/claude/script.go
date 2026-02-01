@@ -45,3 +45,21 @@ func BlockNonPathCtxScript() ([]byte, error) {
 	}
 	return content, nil
 }
+
+// PromptCoachScript returns the prompt coaching hook script.
+//
+// The script detects prompt anti-patterns (e.g., "idiomatic Go") and suggests
+// better alternatives (e.g., "follow project conventions"). It limits
+// suggestions to 3 per pattern per session to avoid annoying the user.
+// It is installed to .claude/hooks/ during ctx init --claude.
+//
+// Returns:
+//   - []byte: Raw bytes of the prompt-coach.sh script
+//   - error: Non-nil if the embedded file cannot be read
+func PromptCoachScript() ([]byte, error) {
+	content, err := templates.ClaudeHookByFileName("prompt-coach.sh")
+	if err != nil {
+		return nil, fmt.Errorf("failed to read prompt-coach.sh: %w", err)
+	}
+	return content, nil
+}

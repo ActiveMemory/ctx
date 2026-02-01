@@ -11,6 +11,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // buildSessionContent creates the Markdown content for a session file.
@@ -31,12 +33,14 @@ func buildSessionContent(
 	topic, sessionType string, timestamp time.Time,
 ) (string, error) {
 	var sb strings.Builder
+	nl := config.NewlineLF
+	sep := config.Separator
 
 	// Header with timestamp fields for session correlation
-	sb.WriteString(fmt.Sprintf("# Session: %s\n\n", topic))
-	sb.WriteString(fmt.Sprintf("**Date**: %s\n", timestamp.Format("2006-01-02")))
-	sb.WriteString(fmt.Sprintf("**Time**: %s\n", timestamp.Format("15:04:05")))
-	sb.WriteString(fmt.Sprintf("**Type**: %s\n", sessionType))
+	sb.WriteString(fmt.Sprintf("# Session: %s"+nl+nl, topic))
+	sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, timestamp.Format("2006-01-02")))
+	sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, timestamp.Format("15:04:05")))
+	sb.WriteString(fmt.Sprintf("**Type**: %s"+nl, sessionType))
 
 	// Session correlation timestamps
 	// (YYYY-MM-DD-HHMM format matches ctx add timestamps)
@@ -49,61 +53,61 @@ func buildSessionContent(
 		}
 	}
 	sb.WriteString(
-		fmt.Sprintf("**start_time**: %s\n", startTime.Format("2006-01-02-1504")),
+		fmt.Sprintf("**start_time**: %s"+nl, startTime.Format("2006-01-02-1504")),
 	)
 	sb.WriteString(
-		fmt.Sprintf("**end_time**: %s\n", timestamp.Format("2006-01-02-1504")),
+		fmt.Sprintf("**end_time**: %s"+nl, timestamp.Format("2006-01-02-1504")),
 	)
-	sb.WriteString("\n---\n\n")
+	sb.WriteString(nl + sep + nl + nl)
 
 	// Summary section (placeholder for the user to fill in)
-	sb.WriteString("## Summary\n\n")
-	sb.WriteString("[Describe what was accomplished in this session]\n\n")
-	sb.WriteString("---\n\n")
+	sb.WriteString("## Summary" + nl + nl)
+	sb.WriteString("[Describe what was accomplished in this session]" + nl + nl)
+	sb.WriteString(sep + nl + nl)
 
 	// Current Tasks
-	sb.WriteString("## Current Tasks\n\n")
+	sb.WriteString("## Current Tasks" + nl + nl)
 	tasks, err := readContextSection(
 		"TASKS.md", "## In Progress", "## Next Up",
 	)
 	if err == nil && tasks != "" {
-		sb.WriteString("### In Progress\n\n")
+		sb.WriteString("### In Progress" + nl + nl)
 		sb.WriteString(tasks)
-		sb.WriteString("\n")
+		sb.WriteString(nl)
 	}
 	nextTasks, err := readContextSection(
 		"TASKS.md", "## Next Up", "## Completed",
 	)
 	if err == nil && nextTasks != "" {
-		sb.WriteString("### Next Up\n\n")
+		sb.WriteString("### Next Up" + nl + nl)
 		sb.WriteString(nextTasks)
-		sb.WriteString("\n")
+		sb.WriteString(nl)
 	}
-	sb.WriteString("---\n\n")
+	sb.WriteString(sep + nl + nl)
 
 	// Recent Decisions
-	sb.WriteString("## Recent Decisions\n\n")
+	sb.WriteString("## Recent Decisions" + nl + nl)
 	decisions, err := readRecentDecisions()
 	if err == nil && decisions != "" {
 		sb.WriteString(decisions)
 	} else {
-		sb.WriteString("[No recent decisions found]\n")
+		sb.WriteString("[No recent decisions found]" + nl)
 	}
-	sb.WriteString("\n---\n\n")
+	sb.WriteString(nl + sep + nl + nl)
 
 	// Recent Learnings
-	sb.WriteString("## Recent Learnings\n\n")
+	sb.WriteString("## Recent Learnings" + nl + nl)
 	learnings, err := readRecentLearnings()
 	if err == nil && learnings != "" {
 		sb.WriteString(learnings)
 	} else {
-		sb.WriteString("[No recent learnings found]\n")
+		sb.WriteString("[No recent learnings found]" + nl)
 	}
-	sb.WriteString("\n---\n\n")
+	sb.WriteString(nl + sep + nl + nl)
 
 	// Tasks for Next Session
-	sb.WriteString("## Tasks for Next Session\n\n")
-	sb.WriteString("[List tasks to continue in the next session]\n\n")
+	sb.WriteString("## Tasks for Next Session" + nl + nl)
+	sb.WriteString("[List tasks to continue in the next session]" + nl + nl)
 
 	return sb.String(), nil
 }

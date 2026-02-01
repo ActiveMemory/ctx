@@ -9,6 +9,7 @@ package compact
 import (
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestGetIndentLevel(t *testing.T) {
@@ -26,9 +27,9 @@ func TestGetIndentLevel(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.line, func(t *testing.T) {
-			got := getIndentLevel(tt.line)
+			got := indentLevel(tt.line)
 			if got != tt.expected {
-				t.Errorf("getIndentLevel(%q) = %d, want %d", tt.line, got, tt.expected)
+				t.Errorf("indentLevel(%q) = %d, want %d", tt.line, got, tt.expected)
 			}
 		})
 	}
@@ -425,5 +426,106 @@ func TestParseTaskBlocks_IncompleteDeepChild(t *testing.T) {
 	block := blocks[0]
 	if block.IsArchivable {
 		t.Error("task with incomplete deep child should NOT be archivable")
+	}
+}
+
+func TestParseDoneTimestamp(t *testing.T) {
+	tests := []struct {
+		name     string
+		line     string
+		wantNil  bool
+		wantYear int
+	}{
+		{
+			name:    "no timestamp",
+			line:    "- [x] Simple completed task",
+			wantNil: true,
+		},
+		{
+			name:     "with done timestamp",
+			line:     "- [x] Task with timestamp #added:2026-01-15-100000 #done:2026-01-20-143000",
+			wantNil:  false,
+			wantYear: 2026,
+		},
+		{
+			name:     "only done timestamp",
+			line:     "- [x] Task #done:2025-12-25-120000",
+			wantNil:  false,
+			wantYear: 2025,
+		},
+		{
+			name:    "invalid timestamp format",
+			line:    "- [x] Task #done:2026-01-20",
+			wantNil: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := parseDoneTimestamp(tt.line)
+			if tt.wantNil {
+				if result != nil {
+					t.Errorf("expected nil, got %v", result)
+				}
+			} else {
+				if result == nil {
+					t.Error("expected non-nil time")
+				} else if result.Year() != tt.wantYear {
+					t.Errorf("year = %d, want %d", result.Year(), tt.wantYear)
+				}
+			}
+		})
+	}
+}
+
+func TestTaskBlockIsOlderThan(t *testing.T) {
+	now := time.Now()
+
+	tests := []struct {
+		name     string
+		doneTime *time.Time
+		days     int
+		want     bool
+	}{
+		{
+			name:     "nil done time",
+			doneTime: nil,
+			days:     7,
+			want:     false,
+		},
+		{
+			name:     "completed today",
+			doneTime: func() *time.Time { t := now; return &t }(),
+			days:     7,
+			want:     false,
+		},
+		{
+			name:     "completed 10 days ago",
+			doneTime: func() *time.Time { t := now.AddDate(0, 0, -10); return &t }(),
+			days:     7,
+			want:     true,
+		},
+		{
+			name:     "completed exactly 7 days ago",
+			doneTime: func() *time.Time { t := now.AddDate(0, 0, -7).Add(-time.Hour); return &t }(),
+			days:     7,
+			want:     true,
+		},
+		{
+			name:     "completed 5 days ago with 7 day threshold",
+			doneTime: func() *time.Time { t := now.AddDate(0, 0, -5); return &t }(),
+			days:     7,
+			want:     false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			block := TaskBlock{DoneTime: tt.doneTime}
+			got := block.OlderThan(tt.days)
+			if got != tt.want {
+				t.Errorf("OlderThan(%d) = %v, want %v", tt.days, got, tt.want)
+			}
+		})
 	}
 }

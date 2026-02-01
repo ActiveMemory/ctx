@@ -7,20 +7,8 @@
 package session
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/config"
 )
-
-// sessionsDirPath returns the path to the sessions directory.
-//
-// Returns:
-//   - string: Full path to .context/sessions/
-func sessionsDirPath() string {
-	return filepath.Join(config.ContextDir(), config.DirSessions)
-}
 
 // Cmd returns the session command with subcommands.
 //

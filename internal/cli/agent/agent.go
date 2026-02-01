@@ -9,7 +9,7 @@ package agent
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Cmd returns the "ctx agent" command for generating AI-ready context packets.
@@ -53,13 +53,13 @@ Examples:
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Use configured budget if flag not explicitly set
 			if !cmd.Flags().Changed("budget") {
-				budget = config.GetTokenBudget()
+				budget = rc.GetTokenBudget()
 			}
 			return runAgent(cmd, budget, format)
 		},
 	}
 
-	cmd.Flags().IntVar(&budget, "budget", config.DefaultTokenBudget, "Token budget for context packet")
+	cmd.Flags().IntVar(&budget, "budget", rc.DefaultTokenBudget, "Token budget for context packet")
 	cmd.Flags().StringVar(&format, "format", "md", "Output format: md or json")
 
 	return cmd

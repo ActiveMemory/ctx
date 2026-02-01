@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-01-30 | Say 'project conventions' not 'idiomatic X' |
 | 2026-01-29 | Documentation audits require verification against actual standards |
 | 2026-01-28 | Required flags now enforced for learnings |
 | 2026-01-28 | Claude Code Hooks Receive JSON via Stdin |
@@ -37,6 +38,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-01-30-120009] Say 'project conventions' not 'idiomatic X'
+
+**Context**: When asking Claude to follow documentation style, saying 'idiomatic Go' triggered training priors (stdlib conventions) instead of project-specific standards.
+
+**Lesson**: Use 'follow project conventions' or 'check AGENT_PLAYBOOK' rather than 'idiomatic [language]' to ensure Claude looks at project files first.
+
+**Application**: In prompts requesting style alignment, reference project files explicitly rather than language-wide conventions.
 
 ---
 

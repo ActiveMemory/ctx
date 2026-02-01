@@ -10,11 +10,28 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
+
+// readContextFile reads a context file and returns its content as a string.
+//
+// Parameters:
+//   - fileName: Name of the file in .context/ (e.g., "DECISIONS.md")
+//
+// Returns:
+//   - string: File content
+//   - error: Non-nil if the file cannot be read
+func readContextFile(fileName string) (string, error) {
+	filePath := filepath.Join(rc.GetContextDir(), fileName)
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
+}
 
 // readContextSection reads a section from a context file between two headers.
 //
@@ -25,7 +42,8 @@ import (
 // Parameters:
 //   - filename: Name of the file in .context/ (e.g., "TASKS.md")
 //   - startHeader: Header marking the section start (e.g., "## In Progress")
-//   - endHeader: Header marking the section end, or empty string for end of file
+//   - endHeader: Header marking the section end, or empty string for
+//     the end of the file
 //
 // Returns:
 //   - string: Trimmed content between the headers
@@ -34,7 +52,7 @@ import (
 func readContextSection(
 	filename, startHeader, endHeader string,
 ) (string, error) {
-	filePath := filepath.Join(config.ContextDir(), filename)
+	filePath := filepath.Join(rc.GetContextDir(), filename)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
@@ -71,24 +89,19 @@ func readContextSection(
 //   - string: Formatted list of recent decision titles, or empty if none found
 //   - error: Non-nil if DECISIONS.md cannot be read
 func readRecentDecisions() (string, error) {
-	filePath := filepath.Join(config.ContextDir(), config.FilenameDecision)
-	content, err := os.ReadFile(filePath)
+	contentStr, err := readContextFile(config.FileDecision)
 	if err != nil {
 		return "", err
 	}
 
-	contentStr := string(content)
-
 	// Find decision headers (## [YYYY-MM-DD] Title)
-	re := regexp.MustCompile(`(?m)^## \[\d{4}-\d{2}-\d{2}].*$`)
-	matches := re.FindAllStringIndex(contentStr, -1)
-
+	matches := config.RegExDecision.FindAllStringIndex(contentStr, -1)
 	if len(matches) == 0 {
 		return "", nil
 	}
 
 	// Get the last 3 decisions (most recent)
-	limit := 3
+	limit := config.MaxDecisionsToSummarize
 	if len(matches) < limit {
 		limit = len(matches)
 	}
@@ -102,13 +115,13 @@ func readRecentDecisions() (string, error) {
 		}
 		decision := strings.TrimSpace(contentStr[start:end])
 		// Only include the header for brevity
-		headerEnd := strings.Index(decision, "\n")
+		headerEnd := strings.Index(decision, config.NewlineLF)
 		if headerEnd != -1 {
 			decisions = append(decisions, "- "+decision[:headerEnd])
 		}
 	}
 
-	return strings.Join(decisions, "\n"), nil
+	return strings.Join(decisions, config.NewlineLF), nil
 }
 
 // readRecentLearnings extracts the most recent learnings from LEARNINGS.md.
@@ -120,27 +133,22 @@ func readRecentDecisions() (string, error) {
 //   - string: Formatted list of recent learnings, or empty if none found
 //   - error: Non-nil if LEARNINGS.md cannot be read
 func readRecentLearnings() (string, error) {
-	filePath := filepath.Join(config.ContextDir(), config.FilenameLearning)
-	content, err := os.ReadFile(filePath)
+	contentStr, err := readContextFile(config.FileLearning)
 	if err != nil {
 		return "", err
 	}
 
-	contentStr := string(content)
-
 	// Find learning entries (- **[YYYY-MM-DD]** text)
-	re := regexp.MustCompile(`(?m)^- \*\*\[\d{4}-\d{2}-\d{2}]\*\*.*$`)
-	matches := re.FindAllString(contentStr, -1)
-
+	matches := config.RegExLearning.FindAllString(contentStr, -1)
 	if len(matches) == 0 {
 		return "", nil
 	}
 
 	// Get the last 5 learnings (most recent)
-	limit := 5
+	limit := config.MaxLearningsToSummarize
 	if len(matches) < limit {
 		limit = len(matches)
 	}
 
-	return strings.Join(matches[len(matches)-limit:], "\n"), nil
+	return strings.Join(matches[len(matches)-limit:], config.NewlineLF), nil
 }

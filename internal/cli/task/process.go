@@ -8,8 +8,10 @@ package task
 
 import (
 	"bufio"
-	"regexp"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/task"
 )
 
 // separateTasks parses TASKS.md and separates completed from pending tasks.
@@ -33,16 +35,12 @@ func separateTasks(content string) (string, string, taskStats) {
 	var remaining strings.Builder
 	var archived strings.Builder
 	var stats taskStats
+	nl := config.NewlineLF
 
 	// Track the current phase header
 	var currentPhase string
 	var phaseHasArchivedTasks bool
 	var phaseArchiveBuffer strings.Builder
-
-	completedPattern := regexp.MustCompile(`^\s*-\s*\[x\]`)
-	pendingPattern := regexp.MustCompile(`^\s*-\s*\[\s*\]`)
-	phasePattern := regexp.MustCompile(`^###\s+Phase`)
-	subTaskPattern := regexp.MustCompile(`^\s{2,}-\s*\[`)
 
 	scanner := bufio.NewScanner(strings.NewReader(content))
 	var inCompletedTask bool
@@ -51,59 +49,57 @@ func separateTasks(content string) (string, string, taskStats) {
 		line := scanner.Text()
 
 		// Check for phase headers
-		if phasePattern.MatchString(line) {
+		if config.RegExPhase.MatchString(line) {
 			// Flush previous phase's archived tasks
 			if phaseHasArchivedTasks {
-				archived.WriteString(currentPhase + "\n")
+				archived.WriteString(currentPhase + nl)
 				archived.WriteString(phaseArchiveBuffer.String())
-				archived.WriteString("\n")
+				archived.WriteString(nl)
 			}
 
 			currentPhase = line
 			phaseHasArchivedTasks = false
 			phaseArchiveBuffer.Reset()
-			remaining.WriteString(line + "\n")
+			remaining.WriteString(line + nl)
 			inCompletedTask = false
 			continue
 		}
 
-		// Check for completed tasks
-		if completedPattern.MatchString(line) {
-			stats.completed++
-			phaseHasArchivedTasks = true
-			phaseArchiveBuffer.WriteString(line + "\n")
-			inCompletedTask = true
-			continue
-		}
+		// Check if the line is a task item
+		match := config.RegExTask.FindStringSubmatch(line)
+		if match != nil {
+			if task.IsSubTask(match) {
+				// Handle subtasks - follow their parent
+				if inCompletedTask {
+					phaseArchiveBuffer.WriteString(line + nl)
+				} else {
+					remaining.WriteString(line + nl)
+				}
+				continue
+			}
 
-		// Check for pending tasks
-		if pendingPattern.MatchString(line) {
-			stats.pending++
-			remaining.WriteString(line + "\n")
-			inCompletedTask = false
-			continue
-		}
-
-		// Handle subtasks (indented task items)
-		if subTaskPattern.MatchString(line) {
-			if inCompletedTask {
-				// Subtask of a completed task - archive it
-				phaseArchiveBuffer.WriteString(line + "\n")
+			// Top-level task
+			if task.Completed(match) {
+				stats.completed++
+				phaseHasArchivedTasks = true
+				phaseArchiveBuffer.WriteString(line + nl)
+				inCompletedTask = true
 			} else {
-				// Subtask of a pending task - keep it
-				remaining.WriteString(line + "\n")
+				stats.pending++
+				remaining.WriteString(line + nl)
+				inCompletedTask = false
 			}
 			continue
 		}
 
 		// Non-task lines go to the remaining
-		remaining.WriteString(line + "\n")
+		remaining.WriteString(line + nl)
 		inCompletedTask = false
 	}
 
 	// Flush final phase's archived tasks
 	if phaseHasArchivedTasks {
-		archived.WriteString(currentPhase + "\n")
+		archived.WriteString(currentPhase + nl)
 		archived.WriteString(phaseArchiveBuffer.String())
 	}
 

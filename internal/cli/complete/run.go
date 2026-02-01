@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -18,6 +17,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/task"
 )
 
 // runComplete executes the complete command logic.
@@ -35,7 +36,7 @@ import (
 func runComplete(cmd *cobra.Command, args []string) error {
 	query := args[0]
 
-	filePath := filepath.Join(config.ContextDir(), config.FilenameTask)
+	filePath := filepath.Join(rc.GetContextDir(), config.FileTask)
 
 	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -49,8 +50,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	}
 
 	// Parse tasks and find matching one
-	lines := strings.Split(string(content), "\n")
-	taskPattern := regexp.MustCompile(`^(\s*)-\s*\[\s*]\s*(.+)$`)
+	lines := strings.Split(string(content), config.NewlineLF)
 
 	var taskNumber int
 	isNumber := false
@@ -64,10 +64,10 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	matchedTask := ""
 
 	for i, line := range lines {
-		matches := taskPattern.FindStringSubmatch(line)
-		if matches != nil {
+		match := config.RegExTask.FindStringSubmatch(line)
+		if match != nil && task.IsPending(match) {
 			currentTaskNum++
-			taskText := matches[2]
+			taskText := task.Content(match)
 
 			// Match by number
 			if isNumber && currentTaskNum == taskNumber {
@@ -105,8 +105,8 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	}
 
 	// Mark the task as complete
-	lines[matchedLine] = taskPattern.ReplaceAllString(
-		lines[matchedLine], "$1- [x] $2",
+	lines[matchedLine] = config.RegExTask.ReplaceAllString(
+		lines[matchedLine], "$1- [x] $3",
 	)
 
 	// Write back

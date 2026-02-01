@@ -7,7 +7,6 @@
 package add
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -17,6 +16,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // EntryParams contains all parameters needed to add an entry to a context file.
@@ -43,7 +44,8 @@ type EntryParams struct {
 	Application  string
 }
 
-// ValidateEntry checks that required fields are present for the given entry type.
+// ValidateEntry checks that required fields are present for the given
+// entry type.
 //
 // Parameters:
 //   - params: Entry parameters to validate
@@ -51,41 +53,43 @@ type EntryParams struct {
 // Returns:
 //   - error: Non-nil with details about missing fields, nil if valid
 func ValidateEntry(params EntryParams) error {
-	fType := strings.ToLower(params.Type)
-
 	if params.Content == "" {
 		return fmt.Errorf("no content provided")
 	}
 
-	switch fType {
-	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
+	switch config.UserInputToEntry(params.Type) {
+	case config.EntryDecision:
 		var missing []string
 		if params.Context == "" {
-			missing = append(missing, "context")
+			missing = append(missing, config.FieldContext)
 		}
 		if params.Rationale == "" {
-			missing = append(missing, "rationale")
+			missing = append(missing, config.FieldRationale)
 		}
 		if params.Consequences == "" {
-			missing = append(missing, "consequences")
+			missing = append(missing, config.FieldConsequence)
 		}
 		if len(missing) > 0 {
-			return fmt.Errorf("decision missing required fields: %s", strings.Join(missing, ", "))
+			return fmt.Errorf(
+				"decision missing required fields: %s", strings.Join(missing, ", "),
+			)
 		}
 
-	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
+	case config.EntryLearning:
 		var missing []string
 		if params.Context == "" {
-			missing = append(missing, "context")
+			missing = append(missing, config.FieldContext)
 		}
 		if params.Lesson == "" {
-			missing = append(missing, "lesson")
+			missing = append(missing, config.FieldLesson)
 		}
 		if params.Application == "" {
-			missing = append(missing, "application")
+			missing = append(missing, config.FieldApplication)
 		}
 		if len(missing) > 0 {
-			return fmt.Errorf("learning missing required fields: %s", strings.Join(missing, ", "))
+			return fmt.Errorf(
+				"learning missing required fields: %s", strings.Join(missing, ", "),
+			)
 		}
 	}
 
@@ -101,7 +105,7 @@ func ValidateEntry(params EntryParams) error {
 //   - params: EntryParams containing type, content, and optional fields
 //
 // Returns:
-//   - error: Non-nil if type is unknown, file doesn't exist, or write fails
+//   - error: Non-nil if type is unknown, the file doesn't exist, or write fails
 func WriteEntry(params EntryParams) error {
 	fType := strings.ToLower(params.Type)
 
@@ -110,11 +114,13 @@ func WriteEntry(params EntryParams) error {
 		return fmt.Errorf("unknown type %q", fType)
 	}
 
-	filePath := filepath.Join(config.ContextDir(), fileName)
+	filePath := filepath.Join(rc.GetContextDir(), fileName)
 
-	// Check if file exists
+	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return fmt.Errorf("context file %s not found. Run 'ctx init' first", filePath)
+		return fmt.Errorf(
+			"context file %s not found. Run 'ctx init' first", filePath,
+		)
 	}
 
 	// Read existing content
@@ -125,14 +131,18 @@ func WriteEntry(params EntryParams) error {
 
 	// Format the entry
 	var entry string
-	switch fType {
-	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
-		entry = FormatDecision(params.Content, params.Context, params.Rationale, params.Consequences)
-	case config.UpdateTypeTask, config.UpdateTypeTasks:
+	switch config.UserInputToEntry(fType) {
+	case config.EntryDecision:
+		entry = FormatDecision(
+			params.Content, params.Context, params.Rationale, params.Consequences,
+		)
+	case config.EntryTask:
 		entry = FormatTask(params.Content, params.Priority)
-	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
-		entry = FormatLearning(params.Content, params.Context, params.Lesson, params.Application)
-	case config.UpdateTypeConvention, config.UpdateTypeConventions:
+	case config.EntryLearning:
+		entry = FormatLearning(
+			params.Content, params.Context, params.Lesson, params.Application,
+		)
+	case config.EntryConvention:
 		entry = FormatConvention(params.Content)
 	default:
 		return fmt.Errorf("unknown type %q", fType)
@@ -145,18 +155,20 @@ func WriteEntry(params EntryParams) error {
 		return fmt.Errorf("failed to write %s: %w", filePath, err)
 	}
 
-	// Update index for decisions and learnings
-	switch fType {
-	case config.UpdateTypeDecision, config.UpdateTypeDecisions:
-		indexed := UpdateIndex(string(newContent))
+	// Update index for decisions and learnings (tasks/conventions don't have indexes)
+	switch config.UserInputToEntry(fType) {
+	case config.EntryDecision:
+		indexed := index.UpdateDecisions(string(newContent))
 		if err := os.WriteFile(filePath, []byte(indexed), 0644); err != nil {
 			return fmt.Errorf("failed to update index in %s: %w", filePath, err)
 		}
-	case config.UpdateTypeLearning, config.UpdateTypeLearnings:
-		indexed := UpdateLearningsIndex(string(newContent))
+	case config.EntryLearning:
+		indexed := index.UpdateLearnings(string(newContent))
 		if err := os.WriteFile(filePath, []byte(indexed), 0644); err != nil {
 			return fmt.Errorf("failed to update index in %s: %w", filePath, err)
 		}
+	case config.EntryTask, config.EntryConvention:
+		// No index to update for these types
 	}
 
 	return nil
@@ -180,46 +192,10 @@ func runAdd(cmd *cobra.Command, args []string, flags addConfig) error {
 	fType := strings.ToLower(args[0])
 
 	// Determine the content source: args, --file, or stdin
-	var content string
+	content, err := extractContent(args, flags)
 
-	if flags.fromFile != "" {
-		// Read from the file
-		fileContent, err := os.ReadFile(flags.fromFile)
-		if err != nil {
-			return fmt.Errorf("failed to read file %s: %w", flags.fromFile, err)
-		}
-		content = strings.TrimSpace(string(fileContent))
-	} else if len(args) > 1 {
-		// Content from arguments
-		content = strings.Join(args[1:], " ")
-	} else {
-		// Try reading from stdin (check if it's a pipe)
-		stat, _ := os.Stdin.Stat()
-		if (stat.Mode() & os.ModeCharDevice) == 0 {
-			// stdin is a pipe, read from it
-			scanner := bufio.NewScanner(os.Stdin)
-			var lines []string
-			for scanner.Scan() {
-				lines = append(lines, scanner.Text())
-			}
-			if err := scanner.Err(); err != nil {
-				return fmt.Errorf("failed to read from stdin: %w", err)
-			}
-			content = strings.TrimSpace(strings.Join(lines, "\n"))
-		}
-	}
-
-	if content == "" {
-		examples := getExamplesForType(fType)
-		return fmt.Errorf(`no content provided
-
-Usage:
-  ctx add %s "your content here"
-  ctx add %s --file /path/to/content.md
-  echo "content" | ctx add %s
-
-Examples:
-%s`, fType, fType, fType, examples)
+	if err != nil || content == "" {
+		return errNoContentProvided(fType)
 	}
 
 	// Build entry params
@@ -236,7 +212,8 @@ Examples:
 	}
 
 	// Validate required fields with CLI-friendly error messages
-	if fType == config.UpdateTypeDecision || fType == config.UpdateTypeDecisions {
+	switch config.UserInputToEntry(fType) {
+	case config.EntryDecision:
 		var missing []string
 		if flags.context == "" {
 			missing = append(missing, "--context")
@@ -248,26 +225,9 @@ Examples:
 			missing = append(missing, "--consequences")
 		}
 		if len(missing) > 0 {
-			return fmt.Errorf(`decisions require complete ADR format
-
-Missing required flags: %s
-
-Usage:
-  ctx add decision "Decision title" \
-    --context "What prompted this decision" \
-    --rationale "Why this choice over alternatives" \
-    --consequences "What changes as a result"
-
-Example:
-  ctx add decision "Use PostgreSQL for primary database" \
-    --context "Need a reliable database for production workloads" \
-    --rationale "PostgreSQL offers ACID compliance, JSON support, and team familiarity" \
-    --consequences "Team needs PostgreSQL training; must set up replication"`,
-				strings.Join(missing, ", "))
+			return errMissingDecision(missing)
 		}
-	}
-
-	if fType == config.UpdateTypeLearning || fType == config.UpdateTypeLearnings {
+	case config.EntryLearning:
 		var missing []string
 		if flags.context == "" {
 			missing = append(missing, "--context")
@@ -279,22 +239,7 @@ Example:
 			missing = append(missing, "--application")
 		}
 		if len(missing) > 0 {
-			return fmt.Errorf(`learnings require complete format
-
-Missing required flags: %s
-
-Usage:
-  ctx add learning "Learning title" \
-    --context "What prompted this learning" \
-    --lesson "The key insight" \
-    --application "How to apply this going forward"
-
-Example:
-  ctx add learning "Go embed requires files in same package" \
-    --context "Tried to embed files from parent directory, got compile error" \
-    --lesson "go:embed only works with files in same or child directories" \
-    --application "Keep embedded files in internal/templates/, not project root"`,
-				strings.Join(missing, ", "))
+			return errMissingLearning(missing)
 		}
 	}
 
@@ -307,7 +252,7 @@ Example:
 		)
 	}
 
-	// Write the entry using shared function
+	// Write the entry using the shared function
 	if err := WriteEntry(params); err != nil {
 		return err
 	}

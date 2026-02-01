@@ -9,22 +9,22 @@ package status
 import (
 	"sort"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // sortFilesByPriority sorts files in-place by the recommended read order.
 //
-// Uses config.FilePriority to determine ordering (CONSTITUTION first,
+// Uses rc.FilePriority to determine ordering (CONSTITUTION first,
 // then TASKS, CONVENTIONS, etc.).
 //
 // Parameters:
 //   - files: Slice of files to sort (modified in place)
 func sortFilesByPriority(files []context.FileInfo) {
 	sort.Slice(files, func(i, j int) bool {
-		return config.FilePriority(
+		return rc.FilePriority(
 			files[i].Name,
-		) < config.FilePriority(files[j].Name)
+		) < rc.FilePriority(files[j].Name)
 	})
 }
 

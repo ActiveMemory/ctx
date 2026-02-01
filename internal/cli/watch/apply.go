@@ -26,15 +26,15 @@ import (
 //   - error: Non-nil if type is unknown or the handler fails
 func applyUpdate(update ContextUpdate) error {
 	switch update.Type {
-	case config.UpdateTypeTask:
+	case config.EntryTask:
 		return runAddSilent(update)
-	case config.UpdateTypeDecision:
+	case config.EntryDecision:
 		return runAddSilent(update)
-	case config.UpdateTypeLearning:
+	case config.EntryLearning:
 		return runAddSilent(update)
-	case config.UpdateTypeConvention:
+	case config.EntryConvention:
 		return runAddSilent(update)
-	case config.UpdateTypeComplete:
+	case config.EntryComplete:
 		return runCompleteSilent([]string{update.Content})
 	default:
 		return fmt.Errorf("unknown update type: %s", update.Type)

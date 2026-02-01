@@ -10,7 +10,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"regexp"
 	"strings"
 
 	"github.com/fatih/color"
@@ -28,7 +27,7 @@ import (
 // Returns:
 //   - string: Attribute value, or empty string if not found
 func extractAttribute(tag, attrName string) string {
-	pattern := regexp.MustCompile(attrName + `="([^"]*)"`)
+	pattern := config.RegExFromAttrName(attrName)
 	match := pattern.FindStringSubmatch(tag)
 	if len(match) >= 2 {
 		return match[1]
@@ -55,12 +54,6 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 	buf := make([]byte, 0, 64*1024)
 	scanner.Buffer(buf, 1024*1024)
 
-	// Pattern to match context-update tags
-	// Captures: 1=full opening tag with attributes, 2=content between tags
-	updatePattern := regexp.MustCompile(
-		`(<context-update\s+[^>]+)>([^<]+)</context-update>`,
-	)
-
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	cyan := color.New(color.FgCyan).SprintFunc()
@@ -73,7 +66,7 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 		line := scanner.Text()
 
 		// Check for context-update commands
-		matches := updatePattern.FindAllStringSubmatch(line, -1)
+		matches := config.RegExContextUpdate.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
 			if len(match) >= 3 {
 				openingTag := match[1]

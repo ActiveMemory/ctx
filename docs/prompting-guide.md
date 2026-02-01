@@ -209,6 +209,7 @@ so far, here are some prompts that tend to produce poor results:
 | "Just do it"          | Skips planning                | "Plan this, then implement"           |
 | "You should remember" | Confrontational               | "Do you remember?"                    |
 | "Obviously..."        | Discourages questions         | State the requirement directly        |
+| "Idiomatic X"         | Triggers language priors      | "Follow project conventions"          |
 
 ---
 

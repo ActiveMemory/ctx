@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // watchAutoSaveSession saves a session snapshot during watch mode.
@@ -28,7 +29,7 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func watchAutoSaveSession(updates []ContextUpdate) error {
-	sessionsDir := filepath.Join(config.ContextDir(), config.DirSessions)
+	sessionsDir := filepath.Join(rc.GetContextDir(), config.DirSessions)
 	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
@@ -59,14 +60,15 @@ func watchAutoSaveSession(updates []ContextUpdate) error {
 //   - string: Formatted Markdown session content
 func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 	var sb strings.Builder
+	nl := config.NewlineLF
 
-	sb.WriteString("# Watch Mode Session\n\n")
-	sb.WriteString(fmt.Sprintf("**Date**: %s\n", timestamp.Format("2006-01-02")))
-	sb.WriteString(fmt.Sprintf("**Time**: %s\n", timestamp.Format("15:04:05")))
-	sb.WriteString("**Type**: watch-auto-save\n\n")
-	sb.WriteString("---\n\n")
+	sb.WriteString("# Watch Mode Session" + nl + nl)
+	sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, timestamp.Format("2006-01-02")))
+	sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, timestamp.Format("15:04:05")))
+	sb.WriteString("**Type**: watch-auto-save" + nl + nl)
+	sb.WriteString(config.Separator + nl + nl)
 
-	sb.WriteString("## Applied Updates\n\n")
+	sb.WriteString("## Applied Updates" + nl + nl)
 
 	// Group updates by type
 	updatesByType := make(map[string][]string)
@@ -76,34 +78,34 @@ func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 
 	// Write updates by type
 	typeOrder := []string{
-		config.UpdateTypeTask,
-		config.UpdateTypeDecision,
-		config.UpdateTypeLearning,
-		config.UpdateTypeConvention,
-		config.UpdateTypeComplete,
+		config.EntryTask,
+		config.EntryDecision,
+		config.EntryLearning,
+		config.EntryConvention,
+		config.EntryComplete,
 	}
 	for _, t := range typeOrder {
 		contents, ok := updatesByType[t]
 		if !ok || len(contents) == 0 {
 			continue
 		}
-		sb.WriteString(fmt.Sprintf("### %ss\n\n", strings.ToUpper(t[:1])+t[1:]))
+		sb.WriteString(fmt.Sprintf("### %ss"+nl+nl, strings.ToUpper(t[:1])+t[1:]))
 		for _, c := range contents {
-			sb.WriteString(fmt.Sprintf("- %s\n", c))
+			sb.WriteString(fmt.Sprintf("- %s"+nl, c))
 		}
-		sb.WriteString("\n")
+		sb.WriteString(nl)
 	}
 
 	// Add the current context snapshot
-	sb.WriteString("---\n\n")
-	sb.WriteString("## Context Snapshot\n\n")
+	sb.WriteString(config.Separator + nl + nl)
+	sb.WriteString("## Context Snapshot" + nl + nl)
 
-	tasksPath := filepath.Join(config.ContextDir(), config.FilenameTask)
+	tasksPath := filepath.Join(rc.GetContextDir(), config.FileTask)
 	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
-		sb.WriteString("### Current Tasks\n\n")
-		sb.WriteString("```markdown\n")
+		sb.WriteString("### Current Tasks" + nl + nl)
+		sb.WriteString("```markdown" + nl)
 		sb.WriteString(string(tasksContent))
-		sb.WriteString("\n```\n\n")
+		sb.WriteString(nl + "```" + nl + nl)
 	}
 
 	return sb.String()
