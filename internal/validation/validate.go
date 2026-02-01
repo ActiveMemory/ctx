@@ -9,7 +9,7 @@ import (
 // SanitizeFilename converts a topic string to a safe filename component.
 //
 // Replaces spaces and special characters with hyphens, converts to lowercase,
-// and limits length to 50 characters. Returns "session" if input is empty.
+// and limits length to 50 characters. Returns "session" if the input is empty.
 //
 // Parameters:
 //   - s: Topic string to sanitize

@@ -25,7 +25,7 @@ import (
 //
 // Scans TASKS.md for checked items ("- [x]") outside the Completed section,
 // including their nested content (indented lines below the task).
-// Only moves tasks where all nested sub-tasks are also complete.
+// This only moves tasks where all nested subtasks are also complete.
 // Optionally archives them to .context/archive/.
 //
 // Parameters:
@@ -84,13 +84,13 @@ func compactTasks(
 	// Remove archivable blocks from lines
 	newLines := RemoveBlocksFromLines(lines, archivableBlocks)
 
-	// Add blocks to Completed section
+	// Add blocks to the Completed section
 	for i, line := range newLines {
 		if strings.HasPrefix(line, "## Completed") {
 			// Find the next line that's either empty or another section
 			insertIdx := i + 1
 			for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
-				!strings.HasPrefix(newLines[insertIdx], "## ") {
+				!strings.HasPrefix(newLines[insertIdx], config.HeadingLevelTwoStart) {
 				insertIdx++
 			}
 
@@ -112,7 +112,7 @@ func compactTasks(
 	// Archive if requested
 	if archive && len(archivableBlocks) > 0 {
 		// Filter to only tasks old enough to archive
-		archiveDays := rc.GetArchiveAfterDays()
+		archiveDays := rc.ArchiveAfterDays()
 		var blocksToArchive []TaskBlock
 		for _, block := range archivableBlocks {
 			if block.OlderThan(archiveDays) {
@@ -121,7 +121,7 @@ func compactTasks(
 		}
 
 		if len(blocksToArchive) > 0 {
-			archiveDir := filepath.Join(rc.GetContextDir(), "archive")
+			archiveDir := filepath.Join(rc.ContextDir(), "archive")
 			if err := os.MkdirAll(archiveDir, 0755); err == nil {
 				archiveFile := filepath.Join(
 					archiveDir,
@@ -146,7 +146,7 @@ func compactTasks(
 	}
 
 	// Write back
-	newContent := strings.Join(newLines, "\n")
+	newContent := strings.Join(newLines, config.NewlineLF)
 	if newContent != content {
 		if err := os.WriteFile(
 			tasksFile.Path, []byte(newContent), 0644,

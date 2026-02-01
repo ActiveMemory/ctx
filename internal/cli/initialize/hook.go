@@ -149,7 +149,7 @@ func mergeSettingsHooks(
 
 	// Get our defaults
 	defaultHooks := claude.DefaultHooks(projectDir)
-	defaultPerms := claude.DefaultPermissions()
+	defaultPerms := config.DefaultClaudePermissions
 
 	// Check if hooks already exist
 	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0

@@ -17,4 +17,8 @@ const (
 	Separator = "---"
 	// Ellipsis is a Markdown ellipsis.
 	Ellipsis = "..."
+	// HeadingLevelOneStart is the Markdown heading for the first section.
+	HeadingLevelOneStart = "# "
+	// HeadingLevelTwoStart is the Markdown heading for subsequent sections.
+	HeadingLevelTwoStart = "## "
 )

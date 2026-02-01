@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package templates
+package tpl
 
 import (
 	"strings"
@@ -87,32 +87,32 @@ func TestGetTemplate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			content, err := GetTemplate(tt.template)
+			content, err := Template(tt.template)
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("GetTemplate(%q) expected error, got nil", tt.template)
+					t.Errorf("Template(%q) expected error, got nil", tt.template)
 				}
 				return
 			}
 			if err != nil {
-				t.Errorf("GetTemplate(%q) unexpected error: %v", tt.template, err)
+				t.Errorf("Template(%q) unexpected error: %v", tt.template, err)
 				return
 			}
 			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("GetTemplate(%q) content does not contain %q", tt.template, tt.wantContain)
+				t.Errorf("Template(%q) content does not contain %q", tt.template, tt.wantContain)
 			}
 		})
 	}
 }
 
 func TestListTemplates(t *testing.T) {
-	templates, err := ListTemplates()
+	templates, err := List()
 	if err != nil {
-		t.Fatalf("ListTemplates() unexpected error: %v", err)
+		t.Fatalf("List() unexpected error: %v", err)
 	}
 
 	if len(templates) == 0 {
-		t.Error("ListTemplates() returned empty list")
+		t.Error("List() returned empty list")
 	}
 
 	// Check for required templates
@@ -130,19 +130,19 @@ func TestListTemplates(t *testing.T) {
 
 	for _, req := range required {
 		if !templateSet[req] {
-			t.Errorf("ListTemplates() missing required template: %s", req)
+			t.Errorf("List() missing required template: %s", req)
 		}
 	}
 }
 
 func TestListEntryTemplates(t *testing.T) {
-	templates, err := ListEntryTemplates()
+	templates, err := ListEntry()
 	if err != nil {
-		t.Fatalf("ListEntryTemplates() unexpected error: %v", err)
+		t.Fatalf("ListEntry() unexpected error: %v", err)
 	}
 
 	if len(templates) == 0 {
-		t.Error("ListEntryTemplates() returned empty list")
+		t.Error("ListEntry() returned empty list")
 	}
 
 	// Check for expected entry templates
@@ -158,7 +158,7 @@ func TestListEntryTemplates(t *testing.T) {
 
 	for _, exp := range expected {
 		if !templateSet[exp] {
-			t.Errorf("ListEntryTemplates() missing expected template: %s", exp)
+			t.Errorf("ListEntry() missing expected template: %s", exp)
 		}
 	}
 }
@@ -191,19 +191,19 @@ func TestGetEntryTemplate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			content, err := GetEntryTemplate(tt.template)
+			content, err := Entry(tt.template)
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("GetEntryTemplate(%q) expected error, got nil", tt.template)
+					t.Errorf("Entry(%q) expected error, got nil", tt.template)
 				}
 				return
 			}
 			if err != nil {
-				t.Errorf("GetEntryTemplate(%q) unexpected error: %v", tt.template, err)
+				t.Errorf("Entry(%q) unexpected error: %v", tt.template, err)
 				return
 			}
 			if !strings.Contains(string(content), tt.wantContain) {
-				t.Errorf("GetEntryTemplate(%q) content does not contain %q", tt.template, tt.wantContain)
+				t.Errorf("Entry(%q) content does not contain %q", tt.template, tt.wantContain)
 			}
 		})
 	}
@@ -239,9 +239,9 @@ func TestListClaudeCommands(t *testing.T) {
 }
 
 func TestGetClaudeCommand(t *testing.T) {
-	content, err := GetClaudeCommand("ctx-recall.md")
+	content, err := ClaudeCommandByName("ctx-recall.md")
 	if err != nil {
-		t.Fatalf("GetClaudeCommand(ctx-recall.md) error: %v", err)
+		t.Fatalf("ClaudeCommandByName(ctx-recall.md) error: %v", err)
 	}
 	if !strings.Contains(string(content), "recall") {
 		t.Error("ctx-recall.md does not contain 'recall'")

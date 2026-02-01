@@ -25,7 +25,7 @@ import (
 //   - string: File content
 //   - error: Non-nil if the file cannot be read
 func readContextFile(fileName string) (string, error) {
-	filePath := filepath.Join(rc.GetContextDir(), fileName)
+	filePath := filepath.Join(rc.ContextDir(), fileName)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
@@ -52,7 +52,7 @@ func readContextFile(fileName string) (string, error) {
 func readContextSection(
 	filename, startHeader, endHeader string,
 ) (string, error) {
-	filePath := filepath.Join(rc.GetContextDir(), filename)
+	filePath := filepath.Join(rc.ContextDir(), filename)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err

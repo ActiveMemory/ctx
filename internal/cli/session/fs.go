@@ -18,5 +18,5 @@ import (
 // Returns:
 //   - string: Full path to .context/sessions/
 func sessionsDirPath() string {
-	return filepath.Join(rc.GetContextDir(), config.DirSessions)
+	return filepath.Join(rc.ContextDir(), config.DirSessions)
 }

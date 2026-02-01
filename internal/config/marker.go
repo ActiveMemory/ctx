@@ -37,3 +37,8 @@ const (
 	// PrefixTaskDone is the prefix for a checked (completed) task item.
 	PrefixTaskDone = "- [x]"
 )
+
+const (
+	// MarkTaskComplete is the unchecked task marker.
+	MarkTaskComplete = "x"
+)

@@ -4,32 +4,33 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package templates provides embedded template files for initializing .context/ directories.
-package templates
+// Package tpl provides embedded template files for initializing
+// .context/ directories.
+package tpl
 
 import "embed"
 
 //go:embed *.md entry-templates/*.md claude/commands/*.md claude/hooks/*.sh
 var FS embed.FS
 
-// GetTemplate reads a template file by name from the embedded filesystem.
+// Template reads a template file by name from the embedded filesystem.
 //
 // Parameters:
 //   - name: Template filename (e.g., "TASKS.md")
 //
 // Returns:
 //   - []byte: Template content
-//   - error: Non-nil if file not found or read fails
-func GetTemplate(name string) ([]byte, error) {
+//   - error: Non-nil if the file is not found or read fails
+func Template(name string) ([]byte, error) {
 	return FS.ReadFile(name)
 }
 
-// ListTemplates returns all available template file names.
+// List returns all available template file names.
 //
 // Returns:
 //   - []string: List of template filenames in the root templates directory
 //   - error: Non-nil if directory read fails
-func ListTemplates() ([]string, error) {
+func List() ([]string, error) {
 	entries, err := FS.ReadDir(".")
 	if err != nil {
 		return nil, err
@@ -44,12 +45,12 @@ func ListTemplates() ([]string, error) {
 	return names, nil
 }
 
-// ListEntryTemplates returns available entry template file names.
+// ListEntry returns available entry template file names.
 //
 // Returns:
 //   - []string: List of template filenames in entry-templates/
 //   - error: Non-nil if directory read fails
-func ListEntryTemplates() ([]string, error) {
+func ListEntry() ([]string, error) {
 	entries, err := FS.ReadDir("entry-templates")
 	if err != nil {
 		return nil, err
@@ -64,15 +65,15 @@ func ListEntryTemplates() ([]string, error) {
 	return names, nil
 }
 
-// GetEntryTemplate reads an entry template by name.
+// Entry reads an entry template by name.
 //
 // Parameters:
 //   - name: Template filename (e.g., "decision.md")
 //
 // Returns:
 //   - []byte: Template content from entry-templates/
-//   - error: Non-nil if file not found or read fails
-func GetEntryTemplate(name string) ([]byte, error) {
+//   - error: Non-nil if the file is not found or read fails
+func Entry(name string) ([]byte, error) {
 	return FS.ReadFile("entry-templates/" + name)
 }
 
@@ -96,15 +97,15 @@ func ListClaudeCommands() ([]string, error) {
 	return names, nil
 }
 
-// GetClaudeCommand reads a Claude Code slash command template by name.
+// ClaudeCommandByName reads a Claude Code slash command template by name.
 //
 // Parameters:
 //   - name: Command filename (e.g., "ctx-status.md")
 //
 // Returns:
 //   - []byte: Command template content from claude/commands/
-//   - error: Non-nil if file not found or read fails
-func GetClaudeCommand(name string) ([]byte, error) {
+//   - error: Non-nil if the file not found or read fails
+func ClaudeCommandByName(name string) ([]byte, error) {
 	return FS.ReadFile("claude/commands/" + name)
 }
 
@@ -115,7 +116,7 @@ func GetClaudeCommand(name string) ([]byte, error) {
 //
 // Returns:
 //   - []byte: Hook script content from claude/hooks/
-//   - error: Non-nil if file not found or read fails
+//   - error: Non-nil if the file is not found or read fails
 func ClaudeHookByFileName(name string) ([]byte, error) {
 	return FS.ReadFile("claude/hooks/" + name)
 }

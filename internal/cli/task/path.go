@@ -12,7 +12,7 @@ import (
 // Returns:
 //   - string: Full path to .context/TASKS.md
 func tasksFilePath() string {
-	return filepath.Join(rc.GetContextDir(), config.FileTask)
+	return filepath.Join(rc.ContextDir(), config.FileTask)
 }
 
 // archiveDirPath returns the path to the archive directory.
@@ -20,5 +20,5 @@ func tasksFilePath() string {
 // Returns:
 //   - string: Full path to .context/archive/
 func archiveDirPath() string {
-	return filepath.Join(rc.GetContextDir(), config.DirArchive)
+	return filepath.Join(rc.ContextDir(), config.DirArchive)
 }

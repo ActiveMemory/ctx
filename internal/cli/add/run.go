@@ -114,7 +114,7 @@ func WriteEntry(params EntryParams) error {
 		return fmt.Errorf("unknown type %q", fType)
 	}
 
-	filePath := filepath.Join(rc.GetContextDir(), fileName)
+	filePath := filepath.Join(rc.ContextDir(), fileName)
 
 	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -155,7 +155,8 @@ func WriteEntry(params EntryParams) error {
 		return fmt.Errorf("failed to write %s: %w", filePath, err)
 	}
 
-	// Update index for decisions and learnings (tasks/conventions don't have indexes)
+	// Update index for decisions and learnings
+	// (tasks/conventions don't have indexes)
 	switch config.UserInputToEntry(fType) {
 	case config.EntryDecision:
 		indexed := index.UpdateDecisions(string(newContent))

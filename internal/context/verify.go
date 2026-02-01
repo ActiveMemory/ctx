@@ -23,7 +23,7 @@ import (
 //   - bool: True if the directory exists and is a directory
 func Exists(dir string) bool {
 	if dir == "" {
-		dir = rc.GetContextDir()
+		dir = rc.ContextDir()
 	}
 	info, err := os.Stat(dir)
 	return err == nil && info.IsDir()

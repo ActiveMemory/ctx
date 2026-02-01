@@ -9,7 +9,8 @@ package claude
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/templates"
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
 // AutoSaveScript returns the auto-save session script content.
@@ -21,9 +22,9 @@ import (
 //   - []byte: Raw bytes of the auto-save-session.sh script
 //   - error: Non-nil if the embedded file cannot be read
 func AutoSaveScript() ([]byte, error) {
-	content, err := templates.ClaudeHookByFileName("auto-save-session.sh")
+	content, err := tpl.ClaudeHookByFileName(config.FileAutoSave)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read auto-save-session.sh: %w", err)
+		return nil, fmt.Errorf("failed to read %s: %w", config.FileAutoSave, err)
 	}
 	return content, nil
 }
@@ -39,16 +40,18 @@ func AutoSaveScript() ([]byte, error) {
 //   - []byte: Raw bytes of the block-non-path-ctx.sh script
 //   - error: Non-nil if the embedded file cannot be read
 func BlockNonPathCtxScript() ([]byte, error) {
-	content, err := templates.ClaudeHookByFileName("block-non-path-ctx.sh")
+	content, err := tpl.ClaudeHookByFileName(config.FileBlockNonPathScript)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read block-non-path-ctx.sh: %w", err)
+		return nil, fmt.Errorf(
+			"failed to read %s: %w", config.FileBlockNonPathScript, err,
+		)
 	}
 	return content, nil
 }
 
 // PromptCoachScript returns the prompt coaching hook script.
 //
-// The script detects prompt anti-patterns (e.g., "idiomatic Go") and suggests
+// The script detects prompt antipatterns (e.g., "idiomatic Go") and suggests
 // better alternatives (e.g., "follow project conventions"). It limits
 // suggestions to 3 per pattern per session to avoid annoying the user.
 // It is installed to .claude/hooks/ during ctx init --claude.
@@ -57,9 +60,11 @@ func BlockNonPathCtxScript() ([]byte, error) {
 //   - []byte: Raw bytes of the prompt-coach.sh script
 //   - error: Non-nil if the embedded file cannot be read
 func PromptCoachScript() ([]byte, error) {
-	content, err := templates.ClaudeHookByFileName("prompt-coach.sh")
+	content, err := tpl.ClaudeHookByFileName(config.FilePromptCoach)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read prompt-coach.sh: %w", err)
+		return nil, fmt.Errorf(
+			"failed to read %s: %w", config.FilePromptCoach, err,
+		)
 	}
 	return content, nil
 }

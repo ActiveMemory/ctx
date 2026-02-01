@@ -51,15 +51,18 @@ Examples:
   ctx agent --format json      # JSON output for programmatic use
   ctx agent --budget 2000 --format json`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// Use configured budget if flag not explicitly set
+			// Use the configured budget if the flag is not explicitly set
 			if !cmd.Flags().Changed("budget") {
-				budget = rc.GetTokenBudget()
+				budget = rc.TokenBudget()
 			}
 			return runAgent(cmd, budget, format)
 		},
 	}
 
-	cmd.Flags().IntVar(&budget, "budget", rc.DefaultTokenBudget, "Token budget for context packet")
+	cmd.Flags().IntVar(
+		&budget,
+		"budget", rc.DefaultTokenBudget, "Token budget for context packet",
+	)
 	cmd.Flags().StringVar(&format, "format", "md", "Output format: md or json")
 
 	return cmd

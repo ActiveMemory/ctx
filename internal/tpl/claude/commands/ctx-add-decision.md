@@ -3,7 +3,8 @@ description: "Add a decision to DECISIONS.md (requires context, rationale, conse
 argument-hint: "\"decision title\""
 ---
 
-When the user runs /ctx-add-decision, you need to gather the complete ADR (Architecture Decision Record) format.
+When the user runs /ctx-add-decision, you need to gather the complete ADR 
+(Architecture Decision Record) format.
 
 If $ARGUMENTS contains only a title (no flags), ask the user for:
 1. **Context**: What prompted this decision?

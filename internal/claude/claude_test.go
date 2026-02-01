@@ -45,6 +45,28 @@ func TestBlockNonPathCtxScript(t *testing.T) {
 	}
 }
 
+func TestPromptCoachScript(t *testing.T) {
+	content, err := PromptCoachScript()
+	if err != nil {
+		t.Fatalf("PromptCoachScript() unexpected error: %v", err)
+	}
+
+	if len(content) == 0 {
+		t.Error("PromptCoachScript() returned empty content")
+	}
+
+	// Check for expected script content
+	script := string(content)
+	if !strings.Contains(script, "#!/") {
+		t.Error("PromptCoachScript() script missing shebang")
+	}
+
+	// Check that it contains pattern detection logic
+	if !strings.Contains(script, "idiomatic") {
+		t.Error("PromptCoachScript() should contain anti-pattern detection")
+	}
+}
+
 func TestCommands(t *testing.T) {
 	commands, err := Commands()
 	if err != nil {
@@ -156,29 +178,3 @@ func TestSettingsStructure(t *testing.T) {
 	}
 }
 
-func TestDefaultPermissions(t *testing.T) {
-	perms := DefaultPermissions()
-
-	if len(perms) == 0 {
-		t.Error("DefaultPermissions should return permissions")
-	}
-
-	// Check that essential ctx commands are included
-	expected := []string{
-		"Bash(ctx status:*)",
-		"Bash(ctx agent:*)",
-		"Bash(ctx add:*)",
-		"Bash(ctx session:*)",
-	}
-
-	permSet := make(map[string]bool)
-	for _, p := range perms {
-		permSet[p] = true
-	}
-
-	for _, e := range expected {
-		if !permSet[e] {
-			t.Errorf("Missing expected permission: %s", e)
-		}
-	}
-}
