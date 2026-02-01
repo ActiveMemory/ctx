@@ -8,7 +8,12 @@
 package index
 
 import (
+	"fmt"
+	"io"
+	"os"
 	"strings"
+
+	"github.com/fatih/color"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -191,4 +196,64 @@ func UpdateDecisions(content string) string {
 //   - string: Updated content with regenerated index
 func UpdateLearnings(content string) string {
 	return Update(content, config.HeadingLearnings, config.ColumnLearning)
+}
+
+// ReindexFile reads a context file, regenerates its index, and writes it back.
+//
+// This is a convenience function that handles the common reindex workflow:
+// check the file exists, read content, apply update function, write back,
+// report.
+//
+// Note: This function uses io.Writer instead of *cobra.Command to keep the
+// index package decoupled from CLI concerns. Callers pass cmd.OutOrStdout()
+// which writes to the same destination as cmd.Printf.
+//
+// Parameters:
+//   - w: Writer for status output (typically cmd.OutOrStdout())
+//   - filePath: Full path to the context file
+//   - fileName: Display name for error messages (e.g., "DECISIONS.md")
+//   - updateFunc: Function to regenerate the index (e.g., UpdateDecisions)
+//   - entryType: Plural noun for the status message (e.g., "decisions")
+//
+// Returns:
+//   - error: Non-nil if file operations fail
+func ReindexFile(
+	w io.Writer, filePath, fileName string,
+	updateFunc func(string) string,
+	entryType string,
+) error {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return fmt.Errorf("%s not found. Run 'ctx init' first", fileName)
+	}
+
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to read %s: %w", filePath, err)
+	}
+
+	updated := updateFunc(string(content))
+
+	if err := os.WriteFile(filePath, []byte(updated), 0644); err != nil {
+		return fmt.Errorf("failed to write %s: %w", filePath, err)
+	}
+
+	entries := ParseHeaders(string(content))
+	green := color.New(color.FgGreen).SprintFunc()
+	if len(entries) == 0 {
+		_, err := fmt.Fprintf(
+			w, "%s Index cleared (no %s found)\n", green("✓"), entryType)
+		if err != nil {
+			return err
+		}
+	} else {
+		_, err := fmt.Fprintf(
+			w,
+			"%s Index regenerated with %d entries\n", green("✓"), len(entries),
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

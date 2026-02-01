@@ -6,6 +6,46 @@
 
 package config
 
+// Runtime configuration constants.
+const (
+	// FileContextRC is the optional runtime configuration file.
+	FileContextRC = ".contextrc"
+)
+
+// Environment configuration.
+const (
+	// EnvCtxDir is the environment variable for overriding the context directory.
+	EnvCtxDir = "CTX_DIR"
+	// EnvCtxTokenBudget is the environment variable for overriding the token budget.
+	EnvCtxTokenBudget = "CTX_TOKEN_BUDGET"
+)
+
+// Parser configuration.
+const (
+	// ParserPeekLines is the number of lines to scan when detecting file format.
+	ParserPeekLines = 50
+)
+
+// Claude API content block types.
+const (
+	// ClaudeBlockText is a text content block.
+	ClaudeBlockText = "text"
+	// ClaudeBlockThinking is an extended thinking content block.
+	ClaudeBlockThinking = "thinking"
+	// ClaudeBlockToolUse is a tool invocation block.
+	ClaudeBlockToolUse = "tool_use"
+	// ClaudeBlockToolResult is a tool execution result block.
+	ClaudeBlockToolResult = "tool_result"
+)
+
+// Claude API message roles.
+const (
+	// RoleUser is a user message.
+	RoleUser = "user"
+	// RoleAssistant is an assistant message.
+	RoleAssistant = "assistant"
+)
+
 // Claude Code integration file names.
 const (
 	// FileAutoSave is the hook script for auto-saving sessions.
@@ -114,4 +154,17 @@ var Packages = map[string]string{
 	"Cargo.toml":       "Rust dependencies",
 	"requirements.txt": "Python dependencies",
 	"Gemfile":          "Ruby dependencies",
+}
+
+// DefaultClaudePermissions lists the default permissions for ctx commands.
+//
+// These permissions allow Claude Code to run ctx CLI commands without
+// prompting for approval. All ctx subcommands are pre-approved.
+var DefaultClaudePermissions = []string{
+	"Bash(ctx status:*)",
+	"Bash(ctx agent:*)",
+	"Bash(ctx add:*)",
+	"Bash(ctx session:*)",
+	"Bash(ctx tasks:*)",
+	"Bash(ctx loop:*)",
 }

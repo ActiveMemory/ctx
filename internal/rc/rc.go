@@ -8,49 +8,18 @@
 package rc
 
 import (
-	"os"
-	"strconv"
 	"sync"
-
-	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// RC represents the configuration from .contextrc file.
-//
-// Fields:
-//   - ContextDir: Name of the context directory (default ".context")
-//   - TokenBudget: Default token budget for context assembly (default 8000)
-//   - PriorityOrder: Custom file loading priority order
-//   - AutoArchive: Whether to auto-archive completed tasks (default true)
-//   - ArchiveAfterDays: Days before archiving completed tasks (default 7)
-type RC struct {
-	ContextDir       string   `yaml:"context_dir"`
-	TokenBudget      int      `yaml:"token_budget"`
-	PriorityOrder    []string `yaml:"priority_order"`
-	AutoArchive      bool     `yaml:"auto_archive"`
-	ArchiveAfterDays int      `yaml:"archive_after_days"`
-}
-
-// DefaultTokenBudget is the default token budget when not configured.
-const DefaultTokenBudget = 8000
-
-// DefaultArchiveAfterDays is the default days before archiving.
-const DefaultArchiveAfterDays = 7
-
-var (
-	rc            *RC
-	rcOnce        sync.Once
-	rcOverrideDir string
-)
-
-// DefaultRC returns a new RC with hardcoded default values.
+// Default returns a new CtxRC with hardcoded default values.
 //
 // Returns:
-//   - *RC: Configuration with defaults (8000 token budget, 7-day archive, etc.)
-func DefaultRC() *RC {
-	return &RC{
+//   - *CtxRC: Configuration with defaults
+//     (8000 token budget, 7-day archive, etc.)
+func Default() *CtxRC {
+	return &CtxRC{
 		ContextDir:       config.DirContext,
 		TokenBudget:      DefaultTokenBudget,
 		PriorityOrder:    nil, // nil means use config.FileReadOrder
@@ -59,93 +28,68 @@ func DefaultRC() *RC {
 	}
 }
 
-// GetRC returns the loaded configuration, initializing it on first call.
+// RC returns the loaded configuration, initializing it on the first call.
 //
 // It loads from .contextrc if present, then applies environment overrides.
 // The result is cached for subsequent calls.
 //
 // Returns:
-//   - *RC: The loaded and cached configuration
-func GetRC() *RC {
+//   - *CtxRC: The loaded and cached configuration
+func RC() *CtxRC {
 	rcOnce.Do(func() {
 		rc = loadRC()
 	})
 	return rc
 }
 
-// loadRC loads configuration from .contextrc file and applies env overrides.
-//
-// Returns:
-//   - *RC: Configuration with file values and env overrides applied
-func loadRC() *RC {
-	cfg := DefaultRC()
-
-	// Try to load .contextrc from current directory
-	data, err := os.ReadFile(".contextrc")
-	if err == nil {
-		// Parse YAML, ignoring errors (use defaults for invalid config)
-		_ = yaml.Unmarshal(data, cfg)
-	}
-
-	// Apply environment variable overrides
-	if envDir := os.Getenv("CTX_DIR"); envDir != "" {
-		cfg.ContextDir = envDir
-	}
-	if envBudget := os.Getenv("CTX_TOKEN_BUDGET"); envBudget != "" {
-		if budget, err := strconv.Atoi(envBudget); err == nil && budget > 0 {
-			cfg.TokenBudget = budget
-		}
-	}
-
-	return cfg
-}
-
-// GetContextDir returns the configured context directory.
+// ContextDir returns the configured context directory.
 //
 // Priority: CLI override > env var > .contextrc > default.
 //
 // Returns:
 //   - string: The context directory path (e.g., ".context")
-func GetContextDir() string {
+func ContextDir() string {
+	rcMu.RLock()
+	defer rcMu.RUnlock()
 	if rcOverrideDir != "" {
 		return rcOverrideDir
 	}
-	return GetRC().ContextDir
+	return RC().ContextDir
 }
 
-// GetTokenBudget returns the configured default token budget.
+// TokenBudget returns the configured default token budget.
 //
 // Priority: env var > .contextrc > default (8000).
 //
 // Returns:
 //   - int: The token budget for context assembly
-func GetTokenBudget() int {
-	return GetRC().TokenBudget
+func TokenBudget() int {
+	return RC().TokenBudget
 }
 
-// GetPriorityOrder returns the configured file priority order.
+// PriorityOrder returns the configured file priority order.
 //
 // Returns:
 //   - []string: File names in priority order, or nil if not configured
 //     (callers should fall back to config.FileReadOrder)
-func GetPriorityOrder() []string {
-	return GetRC().PriorityOrder
+func PriorityOrder() []string {
+	return RC().PriorityOrder
 }
 
-// GetAutoArchive returns whether auto-archiving is enabled.
+// AutoArchive returns whether auto-archiving is enabled.
 //
 // Returns:
 //   - bool: True if completed tasks should be auto-archived
-func GetAutoArchive() bool {
-	return GetRC().AutoArchive
+func AutoArchive() bool {
+	return RC().AutoArchive
 }
 
-// GetArchiveAfterDays returns the configured days before archiving.
+// ArchiveAfterDays returns the configured days before archiving.
 //
 // Returns:
 //   - int: Number of days after which completed tasks are archived (default 7)
-func GetArchiveAfterDays() int {
-	return GetRC().ArchiveAfterDays
+func ArchiveAfterDays() int {
+	return RC().ArchiveAfterDays
 }
 
 // OverrideContextDir sets a CLI-provided override for the context directory.
@@ -153,14 +97,18 @@ func GetArchiveAfterDays() int {
 // This takes precedence over all other configuration sources.
 //
 // Parameters:
-//   - dir: Directory path to use as override
+//   - dir: Directory path to use as an override
 func OverrideContextDir(dir string) {
+	rcMu.Lock()
+	defer rcMu.Unlock()
 	rcOverrideDir = dir
 }
 
-// ResetRC clears the cached configuration, forcing reload on next access.
+// Reset clears the cached configuration, forcing reload on the next access.
 // This is primarily useful for testing.
-func ResetRC() {
+func Reset() {
+	rcMu.Lock()
+	defer rcMu.Unlock()
 	rcOnce = sync.Once{}
 	rc = nil
 	rcOverrideDir = ""
@@ -181,7 +129,7 @@ func ResetRC() {
 //   - int: Priority value (1-9 for known files, 100 for unknown)
 func FilePriority(name string) int {
 	// Check for .contextrc override first
-	if order := GetPriorityOrder(); order != nil {
+	if order := PriorityOrder(); order != nil {
 		for i, fName := range order {
 			if fName == name {
 				return i + 1
@@ -191,7 +139,7 @@ func FilePriority(name string) int {
 		return 100
 	}
 
-	// Use default priority from config.FileReadOrder
+	// Use the default priority from config.FileReadOrder
 	for i, fName := range config.FileReadOrder {
 		if fName == name {
 			return i + 1
