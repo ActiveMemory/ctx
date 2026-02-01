@@ -485,11 +485,11 @@ ctx recall list [flags]
 
 **Flags**:
 
-| Flag              | Short | Description                              |
-|-------------------|-------|------------------------------------------|
-| `--limit`         | `-n`  | Maximum sessions to display (default: 20)|
-| `--project`       | `-p`  | Filter by project name                   |
-| `--tool`          | `-t`  | Filter by tool (e.g., `claude-code`)     |
+| Flag        | Short | Description                               |
+|-------------|-------|-------------------------------------------|
+| `--limit`   | `-n`  | Maximum sessions to display (default: 20) |
+| `--project` | `-p`  | Filter by project name                    |
+| `--tool`    | `-t`  | Filter by tool (e.g., `claude-code`)      |
 
 Sessions are sorted by date (newest first) and display slug, project,
 start time, duration, turn count, and token usage.
@@ -578,16 +578,17 @@ ctx journal site [flags]
 
 **Flags**:
 
-| Flag       | Short | Description                              |
-|------------|-------|------------------------------------------|
+| Flag       | Short | Description                                       |
+|------------|-------|---------------------------------------------------|
 | `--output` | `-o`  | Output directory (default: .context/journal-site) |
-| `--build`  |       | Run zensical build after generating      |
-| `--serve`  |       | Run zensical serve after generating      |
+| `--build`  |       | Run zensical build after generating               |
+| `--serve`  |       | Run zensical serve after generating               |
 
-Creates a zensical-compatible site structure with an index page listing
+Creates a `zensical`-compatible site structure with an index page listing
 all sessions by date, and individual pages for each journal entry.
 
-Requires zensical to be installed for `--build` or `--serve`:
+Requires `zensical` to be installed for `--build` or `--serve`:
+
 ```bash
 pip install zensical
 ```
@@ -605,7 +606,7 @@ ctx journal site --serve            # Generate and serve locally
 
 ### `ctx serve`
 
-Serve a static site locally via zensical.
+Serve a static site locally via `zensical`.
 
 ```bash
 ctx serve [directory]
@@ -613,7 +614,8 @@ ctx serve [directory]
 
 If no directory is specified, serves the journal site (`.context/journal-site`).
 
-Requires zensical to be installed:
+Requires `zensical` to be installed:
+
 ```bash
 pip install zensical
 ```
@@ -800,13 +802,13 @@ ctx loop [flags]
 
 **Flags**:
 
-| Flag                     | Short | Description                                     | Default            |
-|--------------------------|-------|-------------------------------------------------|--------------------|
-| `--tool <tool>`          | `-t`  | AI tool: `claude`, `aider`, or `generic`        | `claude`           |
-| `--prompt <file>`        | `-p`  | Prompt file to use                              | `PROMPT.md`        |
-| `--max-iterations <n>`   | `-n`  | Maximum iterations (0 = unlimited)              | `0`                |
-| `--completion <signal>`  | `-c`  | Completion signal to detect                     | `SYSTEM_CONVERGED` |
-| `--output <file>`        | `-o`  | Output script filename                          | `loop.sh`          |
+| Flag                     | Short | Description                              | Default            |
+|--------------------------|-------|------------------------------------------|--------------------|
+| `--tool <tool>`          | `-t`  | AI tool: `claude`, `aider`, or `generic` | `claude`           |
+| `--prompt <file>`        | `-p`  | Prompt file to use                       | `PROMPT.md`        |
+| `--max-iterations <n>`   | `-n`  | Maximum iterations (0 = unlimited)       | `0`                |
+| `--completion <signal>`  | `-c`  | Completion signal to detect              | `SYSTEM_CONVERGED` |
+| `--output <file>`        | `-o`  | Output script filename                   | `loop.sh`          |
 
 **Example**:
 

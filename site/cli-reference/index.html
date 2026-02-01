@@ -2259,11 +2259,11 @@ contains raw conversation data.</p>
 </tr>
 </tbody>
 </table>
-<p>Creates a zensical-compatible site structure with an index page listing
+<p>Creates a <code>zensical</code>-compatible site structure with an index page listing
 all sessions by date, and individual pages for each journal entry.</p>
-<p>Requires zensical to be installed for <code>--build</code> or <code>--serve</code>:
+<p>Requires <code>zensical</code> to be installed for <code>--build</code> or <code>--serve</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
-</span></code></pre></div></p>
+</span></code></pre></div>
 <p><strong>Example</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w">                    </span><span class="c1"># Generate in .context/journal-site/</span>
 </span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--output<span class="w"> </span>~/public<span class="w">  </span><span class="c1"># Custom output directory</span>
@@ -2272,13 +2272,13 @@ all sessions by date, and individual pages for each journal entry.</p>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-serve"><code>ctx serve</code><a class="headerlink" href="#ctx-serve" title="Permanent link">&para;</a></h3>
-<p>Serve a static site locally via zensical.</p>
+<p>Serve a static site locally via <code>zensical</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>ctx<span class="w"> </span>serve<span class="w"> </span><span class="o">[</span>directory<span class="o">]</span>
 </span></code></pre></div>
 <p>If no directory is specified, serves the journal site (<code>.context/journal-site</code>).</p>
-<p>Requires zensical to be installed:
+<p>Requires <code>zensical</code> to be installed:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
-</span></code></pre></div></p>
+</span></code></pre></div>
 <p><strong>Example</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ctx<span class="w"> </span>serve<span class="w">                           </span><span class="c1"># Serve journal site</span>
 </span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">     </span><span class="c1"># Serve specific directory</span>

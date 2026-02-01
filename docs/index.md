@@ -27,9 +27,15 @@ conventions, and learnings:
 **Open source is better together**.
 
 <!-- the long line is required for zensical to render block quote -->
-> ⭐️ **If the idea behind `ctx` resonates, a star helps it reach engineers who run into context drift every day.**
-> 
-> → https://github.com/ActiveMemory/ctx
+
+!!! tip "Help `ctx` Change How AI Remembers"
+    **If the idea behind `ctx` resonates, a star helps it reach engineers 
+    who run into context drift every day.**
+
+    → https://github.com/ActiveMemory/ctx
+
+    `ctx` is free and open source software, and **contributions are always
+    welcome** and appreciated.
 
 Join the community to ask questions, share feedback, and connect with
 other users:

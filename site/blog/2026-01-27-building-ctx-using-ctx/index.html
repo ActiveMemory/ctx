@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development" class="md-skip">
+        <a href="#building-ctx-using-ctx" class="md-skip">
           Skip to content
         </a>
       
@@ -631,6 +631,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#a-meta-experiment-in-ai-assisted-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Meta-Experiment in AI-Assisted Development
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-amnesia" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -837,6 +848,17 @@
       On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-meta-experiment-in-ai-assisted-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Meta-Experiment in AI-Assisted Development
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#ai-amnesia" class="md-nav__link">
@@ -1069,12 +1091,15 @@
   
 
 
+<h1 id="building-ctx-using-ctx">Building ctx Using ctx<a class="headerlink" href="#building-ctx-using-ctx" title="Permanent link">&para;</a></h1>
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<h2 id="a-meta-experiment-in-ai-assisted-development">A Meta-Experiment in AI-Assisted Development<a class="headerlink" href="#a-meta-experiment-in-ai-assisted-development" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-01-27</em></p>
-<h1 id="building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development">Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development<a class="headerlink" href="#building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>What happens when you build a tool designed to give AI memory, using that very 
-same tool to remember what you are building? </p>
-</blockquote>
+<div class="admonition question">
+<p class="admonition-title">Can a tool design itself?</p>
+<p>What happens when you build a tool designed to give AI memory, 
+using that very same tool to remember what you are building? </p>
+</div>
 <p>This is the story of <code>ctx</code>, how it evolved from a hasty "<em>YOLO mode</em>" experiment 
 to a disciplined system for <strong>persistent AI context</strong>, and what I have 
 learned along the way.</p>
@@ -1089,7 +1114,7 @@ that normally <em>evaporates</em> between sessions.</p>
 <p>Every developer who works with AI code generators knows the frustration: 
 you have a deep, productive session where the AI understands your codebase, 
 your conventions, your decisions. And then you close the terminal. </p>
-<p>Tomorrow it's a blank slate. The AI has forgotten everything.</p>
+<p>Tomorrow; it's a blank slate. The AI has forgotten everything.</p>
 <p>That is "<em>reset amnesia</em>", and it's not just annoying: it's expensive. </p>
 <p>Every session starts with re-explaining context, re-reading files, 
 re-discovering decisions that were already made.</p>
@@ -1106,24 +1131,30 @@ context across sessions. </p>
 Markdown files for decisions, learnings, tasks, and conventions. 
 The AI reads these at session start and writes to them before the session ends.</p>
 <p><strong>The first commit</strong> was just scaffolding. But within hours, the 
-<strong>Ralph Loop</strong>—an iterative AI development workflow—had produced a working CLI:</p>
+<a href="https://ctx.ist/autonomous-loop/" title="Autonomous Loop"><strong>Ralph Loop</strong></a>—an iterative AI development workflow—had produced 
+a working CLI:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>feat(cli): implement amem init command
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>feat(cli): implement amem status command
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>feat(cli): implement amem add command
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>feat(cli): implement amem agent command
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>...
 </span></code></pre></div>
-<p>Fourteen core commands shipped in rapid succession. </p>
-<p>I was YOLO'ing like there was no tomorrow:
-auto-accept every change, let the AI run free, ship features fast.</p>
+<p>Not one, not two, but a whopping <strong>fourteen</strong> core commands shipped in rapid 
+succession!</p>
+<p>I was YOLO'ing like there was no tomorrow:</p>
+<ul>
+<li>auto-accept every change, </li>
+<li>let the AI run free, </li>
+<li>ship features fast.</li>
+</ul>
 <h2 id="the-meta-experiment-using-amem-to-build-amem">The Meta-Experiment: Using <code>amem</code> to Build <code>amem</code><a class="headerlink" href="#the-meta-experiment-using-amem-to-build-amem" title="Permanent link">&para;</a></h2>
 <p>Here's where it gets interesting: On January 20<sup>th</sup>, I asked: </p>
 <blockquote>
 <p><strong>"Can I use <code>amem</code> to help you remember this context when I restart?"</strong></p>
 </blockquote>
 <p>The answer was yes—but with a gap: </p>
-<p>Auto-load worked (<em>via Claude Code's <code>PreToolUse</code> hook</em>), but auto-save was 
-missing. If the user quit with Ctrl+C, everything since the last manual save 
+<p>Autoload worked (<em>via Claude Code's <code>PreToolUse</code> hook</em>), but auto-save was 
+missing. If the user quit, with Ctrl+C, everything since the last manual save 
 was lost.</p>
 <p>That session became the first real test of the system. </p>
 <p>Here is the first session file we recorded:</p>
@@ -1138,10 +1169,15 @@ was lost.</p>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="gu">### 2. Two Tiers of Context Persistence</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Tier      | What                        | Why                           | Where                  |
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|-----------|-----------------------------|-------------------------------|------------------------|
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Curated   | Learnings, decisions, tasks | Quick reload, token-efficient | .context/*.md          |
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Full dump | Entire conversation         | Safety net, nothing lost      | .context/sessions/*.md |
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Tier      | What                        | Why                           |
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|-----------|-----------------------------|-------------------------------|
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Curated   | Learnings, decisions, tasks | Quick reload, token-efficient |
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Full dump | Entire conversation         | Safety net, nothing lost      |
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Where                  |
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|------------------------|
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| .context/*.md          |
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| .context/sessions/*.md |
 </span></code></pre></div>
 <p>This session file—written by the AI to preserve its own context—became the 
 template for how <code>ctx</code> handles session persistence.</p>
@@ -1206,7 +1242,8 @@ type system catching any misses.</p>
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>- Colocated tests: Tests next to implementations
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>- Canonical naming: Package name = folder name
 </span></code></pre></div>
-<p>The fix required a human-guided refactoring session.</p>
+<p>The fix required a <strong>human-guided refactoring session</strong>. I continued to do
+that before every major release, from that point on.</p>
 <p>We introduced <code>internal/config/config.go</code> with semantic prefixes:</p>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">(</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nx">DirContext</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;.context&quot;</span>
@@ -1218,8 +1255,7 @@ type system catching any misses.</p>
 </span></code></pre></div>
 <p>What I begrudgingly learned was: 
 <strong>YOLO mode is effective for velocity but accumulates debt</strong>. </p>
-<p>So I took a mental note to schedule <strong>periodic consolidation sessions</strong> 
-from that point onward.</p>
+<p>So I took a mental note to schedule <strong>periodic consolidation sessions</strong>.</p>
 <h2 id="the-dogfooding-test-that-failed">The Dogfooding Test That Failed<a class="headerlink" href="#the-dogfooding-test-that-failed" title="Permanent link">&para;</a></h2>
 <p>On January 21<sup>st</sup>, I ran an experiment: have another Claude instance rebuild 
 <code>ctx</code> from scratch using only the specs and <code>PROMPT.md</code>. </p>
@@ -1247,7 +1283,7 @@ no integration tests that actually invoked the binary. </p>
 </ul>
 <h2 id="the-constitution-versus-conventions">The Constitution versus Conventions<a class="headerlink" href="#the-constitution-versus-conventions" title="Permanent link">&para;</a></h2>
 <p>As lessons accumulated, there was the temptation to add everything to 
-<code>CONSTITUTION.md</code> as "inviolable rules". </p>
+<code>CONSTITUTION.md</code> as "<em>inviolable rules</em>". </p>
 <p>But I resisted.</p>
 <p>The constitution should contain only truly inviolable invariants:</p>
 <ul>
@@ -1309,7 +1345,7 @@ contains 40+ files from this project's development.</p>
 <li>Tasks for the next session</li>
 <li>Technical context (<em>platform, versions</em>)</li>
 </ul>
-<p>These files are <strong>not auto-loaded</strong> (<em>that would bust the token budget</em>). </p>
+<p>These files are <strong>not autoloaded</strong> (<em>that would bust the token budget</em>). </p>
 <p>They are what I see as the "<em>archaeological record</em>" of <code>ctx</code>:
 When the AI needs deeper information about why something was done, it
 digs into the sessions.</p>
@@ -1335,7 +1371,8 @@ Even <code>Ctrl+C</code>is caught.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="gs">**Context**</span>: Original implementation hardcoded absolute paths in hooks.
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>This breaks when sharing configs with other developers.
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="gs">**Decision**</span>: Hooks use <span class="sb">`ctx`</span> from PATH. <span class="sb">`ctx init`</span> checks PATH before proceeding.
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="gs">**Decision**</span>: Hooks use <span class="sb">`ctx`</span> from PATH. <span class="sb">`ctx init`</span> checks PATH before 
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>proceeding.
 </span></code></pre></div>
 <p><strong>Generic core with Claude enhancements (2026-01-20)</strong></p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="gs">**Context**</span>: ctx should work with any AI tool, but Claude Code users could
@@ -1348,16 +1385,19 @@ Even <code>Ctrl+C</code>is caught.</p>
 <p>The <code>.context/LEARNINGS.md</code> file captures gotchas that would otherwise be 
 forgotten. Each has Context, Lesson, and Application sections:</p>
 <p><strong>CGO on ARM64</strong></p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="gs">**Context**</span>: <span class="sb">`go test`</span> failed with <span class="sb">`gcc: error: unrecognized command-line option &#39;-m64&#39;`</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="gs">**Lesson**</span>: On ARM64 Linux, CGO causes cross-compilation issues. Always use <span class="sb">`CGO_ENABLED=0`</span>.
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="gs">**Context**</span>: <span class="sb">`go test`</span> failed with 
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="sb">`gcc: error: unrecognized command-line option &#39;-m64&#39;`</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="gs">**Lesson**</span>: On ARM64 Linux, CGO causes cross-compilation issues. 
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Always use <span class="sb">`CGO_ENABLED=0`</span>.
 </span></code></pre></div>
 <p><strong>Claude Code skills format</strong></p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="gs">**Lesson**</span>: Claude Code skills are Markdown files in .claude/commands/ with <span class="sb">`YAML`</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>frontmatter (<span class="ge">*description, argument-hint, allowed-tools*</span>). Body is the prompt.
 </span></code></pre></div>
 <p><strong>"Do you remember?" handling</strong></p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gs">**Lesson**</span>: In a <span class="sb">`ctx`</span>-enabled project, &quot;<span class="ge">*do you remember?*</span>&quot; has an obvious meaning:
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>check the <span class="sb">`.context/`</span> files. Don&#39;t ask for clarification—just do it.
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gs">**Lesson**</span>: In a <span class="sb">`ctx`</span>-enabled project, &quot;<span class="ge">*do you remember?*</span>&quot; 
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>has an obvious meaning:
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>check the <span class="sb">`.context/`</span> files. Don&#39;t ask for clarification—just do it.
 </span></code></pre></div>
 <h2 id="task-archives-the-completed-work">Task Archives: The Completed Work<a class="headerlink" href="#task-archives-the-completed-work" title="Permanent link">&para;</a></h2>
 <p>Completed tasks are archived to <code>.context/archive/</code> with timestamps. </p>
@@ -1430,7 +1470,17 @@ need them.</p>
 <a href="https://github.com/ActiveMemory/ctx">github.com/ActiveMemory/ctx</a>,</li>
 <li>and the documentation lives at <a href="https://ctx.ist">ctx.ist</a>.</li>
 </ul>
-<p>If you're a mere mortal tired of reset amnesia, give <code>ctx</code> a try. </p>
+<div class="admonition note">
+<p class="admonition-title">Session Records are a Gold Mine</p>
+</div>
+<p>By the time of this writing, I have <strong>more than 70 megabytes</strong> of
+<strong>text-only</strong> session capture, spread across &gt;100 markdown and JSONL
+files.</p>
+<div class="language-text highlight"><pre><span></span><code>I am analyzing, synthesizing, encriching them with AI, running RAG
+(*Retrieval-Augmented Generation*) models on them, and the outcome
+surprises me every day.
+</code></pre></div>
+<p>If you are a mere mortal tired of reset amnesia, give <code>ctx</code> a try. </p>
 <p>And when you do, check <code>.context/sessions/</code> sometime. </p>
 <p>The <strong>archaeological record</strong> might surprise you.</p>
 <hr />

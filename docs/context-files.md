@@ -64,7 +64,7 @@ The priority order follows a logical progression for AI tools:
 
 ---
 
-## CONSTITUTION.md
+## `CONSTITUTION.md`
 
 **Purpose:** Define hard invariants—rules that must **NEVER** be violated, 
 regardless of the task.
@@ -107,7 +107,7 @@ is wrong.
 
 ---
 
-## TASKS.md
+## `TASKS.md`
 
 **Purpose:** Track current work, planned work, and blockers.
 
@@ -183,7 +183,7 @@ session started vs completed work.
 
 ---
 
-## DECISIONS.md
+## `DECISIONS.md`
 
 **Purpose:** Record architectural decisions with rationale so they don't
 get re-debated.
@@ -242,7 +242,7 @@ third-party libraries need type assertions.
 
 ---
 
-## LEARNINGS.md
+## `LEARNINGS.md`
 
 **Purpose:** Capture lessons learned, gotchas, and tips that shouldn't
 be forgotten.
@@ -296,7 +296,7 @@ Organize learnings by topic:
 
 ---
 
-## CONVENTIONS.md
+## `CONVENTIONS.md`
 
 **Purpose**: Document project patterns, naming conventions, and standards.
 
@@ -333,7 +333,7 @@ Organize learnings by topic:
 
 ---
 
-## ARCHITECTURE.md
+## `ARCHITECTURE.md`
 
 **Purpose**: Provide system overview and component relationships.
 
@@ -376,7 +376,7 @@ What's in scope vs out of scope for this codebase.
 
 ---
 
-## GLOSSARY.md
+## `GLOSSARY.md`
 
 **Purpose**: Define domain terms, abbreviations, and project vocabulary.
 
@@ -411,7 +411,7 @@ What's in scope vs out of scope for this codebase.
 
 ---
 
-## DRIFT.md
+## `DRIFT.md`
 
 **Purpose**: Define signals that the context is stale and needs updating.
 
@@ -460,7 +460,7 @@ Update context when:
 
 ---
 
-## AGENT_PLAYBOOK.md
+## `AGENT_PLAYBOOK.md`
 
 **Purpose**: Explicit instructions for how AI tools should read, apply, 
 and update context.

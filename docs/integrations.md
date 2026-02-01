@@ -133,42 +133,48 @@ you can invoke in Claude Code with `/command-name`.
 
 #### Context Commands
 
-| Command | Description |
-|---------|-------------|
-| `/ctx-status` | Show context summary (tasks, decisions, learnings) |
-| `/ctx-agent` | Get AI-optimized context packet |
-| `/ctx-save` | Save current session to `.context/sessions/` |
-| `/ctx-reflect` | Review session and suggest what to persist |
+| Command        | Description                                        |
+|----------------|----------------------------------------------------|
+| `/ctx-status`  | Show context summary (tasks, decisions, learnings) |
+| `/ctx-agent`   | Get AI-optimized context packet                    |
+| `/ctx-save`    | Save current session to `.context/sessions/`       |
+| `/ctx-reflect` | Review session and suggest what to persist         |
 
 #### Adding Context
 
-| Command | Description |
-|---------|-------------|
-| `/ctx-add-task` | Add a task to TASKS.md |
-| `/ctx-add-learning` | Add a learning to LEARNINGS.md |
+| Command             | Description                                        |
+|---------------------|----------------------------------------------------|
+| `/ctx-add-task`     | Add a task to TASKS.md                             |
+| `/ctx-add-learning` | Add a learning to LEARNINGS.md                     |
 | `/ctx-add-decision` | Add a decision with context/rationale/consequences |
-| `/ctx-archive` | Archive completed tasks |
+| `/ctx-archive`      | Archive completed tasks                            |
 
 #### Session History
 
-| Command | Description |
-|---------|-------------|
-| `/ctx-recall` | Browse AI session history |
-| `/ctx-journal-enrich` | Enrich a journal entry with frontmatter/tags |
+| Command                  | Description                                     |
+|--------------------------|-------------------------------------------------|
+| `/ctx-recall`            | Browse AI session history                       |
+| `/ctx-journal-enrich`    | Enrich a journal entry with frontmatter/tags    |
 | `/ctx-journal-summarize` | Generate summary of sessions over a time period |
 
 #### Blogging
 
-| Command | Description |
-|---------|-------------|
-| `/ctx-blog` | Generate blog post from recent activity |
+!!! tip "Blogging is a Better Way of Creating Release Notes"
+    The blogging workflow can also double as generating release notes:
+
+    AI reads your git commit history and creates a "*narrative*",
+    which is essentially what a *release note* is for.
+
+| Command               | Description                                     |
+|-----------------------|-------------------------------------------------|
+| `/ctx-blog`           | Generate blog post from recent activity         |
 | `/ctx-blog-changelog` | Generate blog post from commit range with theme |
 
 #### Development
 
-| Command | Description |
-|---------|-------------|
-| `/ctx-loop` | Generate a Ralph Loop iteration script |
+| Command             | Description                            |
+|---------------------|----------------------------------------|
+| `/ctx-loop`         | Generate a Ralph Loop iteration script |
 | `/ctx-prompt-audit` | Analyze session logs for vague prompts |
 
 #### Usage Examples
