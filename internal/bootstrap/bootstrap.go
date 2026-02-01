@@ -23,20 +23,22 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
-	"github.com/ActiveMemory/ctx/internal/cli/decisions"
+	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/cli/journal"
 	"github.com/ActiveMemory/ctx/internal/cli/learnings"
 	"github.com/ActiveMemory/ctx/internal/cli/load"
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
+	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/session"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
 	"github.com/ActiveMemory/ctx/internal/cli/task"
 	"github.com/ActiveMemory/ctx/internal/cli/watch"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // version is set at build time via ldflags
@@ -49,7 +51,6 @@ const version = "dev"
 //
 // Global flags:
 //   - --context-dir: Override the context directory path (default: .context)
-//   - --quiet: Suppress non-essential output
 //   - --no-color: Disable colored output
 //
 // Returns:
@@ -71,7 +72,7 @@ func RootCmd() *cobra.Command {
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			// Apply global flag values
 			if contextDir != "" {
-				config.SetContextDir(contextDir)
+				rc.OverrideContextDir(contextDir)
 			}
 			if noColor {
 				color.NoColor = true
@@ -85,12 +86,6 @@ func RootCmd() *cobra.Command {
 		"context-dir",
 		"",
 		"Override context directory path (default: .context)",
-	)
-	cmd.PersistentFlags().BoolVar(
-		&config.Quiet,
-		"quiet",
-		false,
-		"Suppress non-essential output",
 	)
 	cmd.PersistentFlags().BoolVar(
 		&noColor,
@@ -124,7 +119,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		drift.Cmd,
 		sync.Cmd,
 		compact.Cmd,
-		decisions.Cmd,
+		decision.Cmd,
 		watch.Cmd,
 		hook.Cmd,
 		learnings.Cmd,
@@ -132,6 +127,8 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		task.Cmd,
 		loop.Cmd,
 		recall.Cmd,
+		journal.Cmd,
+		serve.Cmd,
 	} {
 		cmd.AddCommand(c())
 	}

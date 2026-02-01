@@ -9,17 +9,15 @@ package recall
 import (
 	"encoding/json"
 	"fmt"
-	"regexp"
+	"os"
 	"strings"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
-
-// lineNumberPattern matches Claude Code's line number prefixes like "     1→"
-var lineNumberPattern = regexp.MustCompile(`(?m)^\s*\d+→`)
 
 // runRecallList handles the recall list command.
 //
@@ -31,19 +29,36 @@ var lineNumberPattern = regexp.MustCompile(`(?m)^\s*\d+→`)
 //   - limit: Maximum sessions to display (0 for unlimited)
 //   - project: Filter by project name (case-insensitive substring match)
 //   - tool: Filter by tool identifier (exact match)
+//   - allProjects: If true, include sessions from all projects
 //
 // Returns:
 //   - error: Non-nil if session scanning fails
-func runRecallList(cmd *cobra.Command, limit int, project, tool string) error {
-	sessions, err := parser.FindSessions()
+func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProjects bool) error {
+	var sessions []*parser.Session
+	var err error
+
+	if allProjects {
+		sessions, err = parser.FindSessions()
+	} else {
+		cwd, cwdErr := os.Getwd()
+		if cwdErr != nil {
+			return fmt.Errorf("failed to get working directory: %w", cwdErr)
+		}
+		sessions, err = parser.FindSessionsForCWD(cwd)
+	}
 	if err != nil {
 		return fmt.Errorf("failed to find sessions: %w", err)
 	}
 
 	if len(sessions) == 0 {
-		fmt.Fprintln(cmd.OutOrStdout(), "No sessions found.")
-		fmt.Fprintln(cmd.OutOrStdout(), "")
-		fmt.Fprintln(cmd.OutOrStdout(), "Sessions are stored in ~/.claude/projects/")
+		if allProjects {
+			cmd.Println("No sessions found.")
+			cmd.Println("")
+			cmd.Println("Sessions are stored in ~/.claude/projects/")
+		} else {
+			cmd.Println("No sessions found for this project.")
+			cmd.Println("Use --all-projects to see sessions from all projects.")
+		}
 		return nil
 	}
 
@@ -134,17 +149,32 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string) error {
 //   - args: Session ID or slug to show (ignored if latest is true)
 //   - latest: If true, show the most recent session
 //   - full: If true, show complete conversation instead of preview
+//   - allProjects: If true, search sessions from all projects
 //
 // Returns:
 //   - error: Non-nil if session not found or scanning fails
-func runRecallShow(cmd *cobra.Command, args []string, latest, full bool) error {
-	sessions, err := parser.FindSessions()
+func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects bool) error {
+	var sessions []*parser.Session
+	var err error
+
+	if allProjects {
+		sessions, err = parser.FindSessions()
+	} else {
+		cwd, cwdErr := os.Getwd()
+		if cwdErr != nil {
+			return fmt.Errorf("failed to get working directory: %w", cwdErr)
+		}
+		sessions, err = parser.FindSessionsForCWD(cwd)
+	}
 	if err != nil {
 		return fmt.Errorf("failed to find sessions: %w", err)
 	}
 
 	if len(sessions) == 0 {
-		return fmt.Errorf("no sessions found")
+		if allProjects {
+			return fmt.Errorf("no sessions found")
+		}
+		return fmt.Errorf("no sessions found for this project; use --all-projects to search all")
 	}
 
 	var session *parser.Session
@@ -233,6 +263,10 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full bool) error {
 			if msg.IsAssistant() {
 				role = "Assistant"
 				roleColor = color.New(color.FgGreen, color.Bold)
+			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
+				// User messages with only tool results are system responses
+				role = "Tool Output"
+				roleColor = color.New(color.FgYellow)
 			}
 
 			roleColor.Fprintf(cmd.OutOrStdout(), "### %d. %s ", i+1, role)
@@ -342,7 +376,7 @@ func formatTokens(tokens int) string {
 // Returns:
 //   - string: Content with line number prefixes removed
 func stripLineNumbers(content string) string {
-	return lineNumberPattern.ReplaceAllString(content, "")
+	return config.RegExLineNumber.ReplaceAllString(content, "")
 }
 
 // formatToolUse formats a tool invocation with its key parameters.
