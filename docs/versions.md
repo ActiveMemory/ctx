@@ -9,7 +9,9 @@ title: Version History
 icon: lucide/history
 ---
 
-# Version History
+![ctx](images/ctx-banner.png)
+
+## Version History
 
 Documentation snapshots for each release. Click a version to view the 
 docs as they were at that release.

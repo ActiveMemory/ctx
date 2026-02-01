@@ -4,12 +4,17 @@ date: 2026-01-27
 author: Jose Alekhinne
 ---
 
+# Building ctx Using ctx
+
+![ctx](../images/ctx-banner.png)
+
+## A Meta-Experiment in AI-Assisted Development
+
 *Jose Alekhinne / 2026-01-27*
 
-# Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development
-
-> What happens when you build a tool designed to give AI memory, using that very 
-same tool to remember what you are building? 
+!!! question "Can a tool design itself?"
+    What happens when you build a tool designed to give AI memory, 
+    using that very same tool to remember what you are building? 
 
 This is the story of `ctx`, how it evolved from a hasty "*YOLO mode*" experiment 
 to a disciplined system for **persistent AI context**, and what I have 
@@ -29,7 +34,7 @@ Every developer who works with AI code generators knows the frustration:
 you have a deep, productive session where the AI understands your codebase, 
 your conventions, your decisions. And then you close the terminal. 
 
-Tomorrow it's a blank slate. The AI has forgotten everything.
+Tomorrow; it's a blank slate. The AI has forgotten everything.
 
 That is "*reset amnesia*", and it's not just annoying: it's expensive. 
 
@@ -52,7 +57,10 @@ Markdown files for decisions, learnings, tasks, and conventions.
 The AI reads these at session start and writes to them before the session ends.
 
 **The first commit** was just scaffolding. But within hours, the 
-**Ralph Loop**—an iterative AI development workflow—had produced a working CLI:
+[**Ralph Loop**][ralph]—an iterative AI development workflow—had produced 
+a working CLI:
+
+[ralph]: https://ctx.ist/autonomous-loop/ "Autonomous Loop"
 
 ```
 feat(cli): implement amem init command
@@ -62,10 +70,14 @@ feat(cli): implement amem agent command
 ...
 ```
 
-Fourteen core commands shipped in rapid succession. 
+Not one, not two, but a whopping **fourteen** core commands shipped in rapid 
+succession!
 
 I was YOLO'ing like there was no tomorrow:
-auto-accept every change, let the AI run free, ship features fast.
+
+* auto-accept every change, 
+* let the AI run free, 
+* ship features fast.
 
 ## The Meta-Experiment: Using `amem` to Build `amem`
 
@@ -75,8 +87,8 @@ Here's where it gets interesting: On January 20th, I asked:
 
 The answer was yes—but with a gap: 
 
-Auto-load worked (*via Claude Code's `PreToolUse` hook*), but auto-save was 
-missing. If the user quit with Ctrl+C, everything since the last manual save 
+Autoload worked (*via Claude Code's `PreToolUse` hook*), but auto-save was 
+missing. If the user quit, with Ctrl+C, everything since the last manual save 
 was lost.
 
 That session became the first real test of the system. 
@@ -95,10 +107,15 @@ development workflow. They're complementary but separate.
 
 ### 2. Two Tiers of Context Persistence
 
-| Tier      | What                        | Why                           | Where                  |
-|-----------|-----------------------------|-------------------------------|------------------------|
-| Curated   | Learnings, decisions, tasks | Quick reload, token-efficient | .context/*.md          |
-| Full dump | Entire conversation         | Safety net, nothing lost      | .context/sessions/*.md |
+| Tier      | What                        | Why                           |
+|-----------|-----------------------------|-------------------------------|
+| Curated   | Learnings, decisions, tasks | Quick reload, token-efficient |
+| Full dump | Entire conversation         | Safety net, nothing lost      |
+
+| Where                  |
+|------------------------|
+| .context/*.md          |
+| .context/sessions/*.md |
 ```
 
 This session file—written by the AI to preserve its own context—became the 
@@ -161,7 +178,8 @@ Human-Guided Mode (Post-040ce99)
 - Canonical naming: Package name = folder name
 ```
 
-The fix required a human-guided refactoring session.
+The fix required a **human-guided refactoring session**. I continued to do
+that before every major release, from that point on.
 
 We introduced `internal/config/config.go` with semantic prefixes:
 
@@ -178,8 +196,7 @@ const (
 What I begrudgingly learned was: 
 **YOLO mode is effective for velocity but accumulates debt**. 
 
-So I took a mental note to schedule **periodic consolidation sessions** 
-from that point onward.
+So I took a mental note to schedule **periodic consolidation sessions**.
 
 ## The Dogfooding Test That Failed
 
@@ -220,7 +237,7 @@ So I added:
 ## The Constitution versus Conventions
 
 As lessons accumulated, there was the temptation to add everything to 
-`CONSTITUTION.md` as "inviolable rules". 
+`CONSTITUTION.md` as "*inviolable rules*". 
 
 But I resisted.
 
@@ -307,7 +324,7 @@ Each **session file** is a timestamped Markdown with:
 * Tasks for the next session
 * Technical context (*platform, versions*)
 
-These files are **not auto-loaded** (*that would bust the token budget*). 
+These files are **not autoloaded** (*that would bust the token budget*). 
 
 They are what I see as the "*archaeological record*" of `ctx`:
 When the AI needs deeper information about why something was done, it
@@ -347,7 +364,8 @@ and LEARNINGS.md.
 **Context**: Original implementation hardcoded absolute paths in hooks.
 This breaks when sharing configs with other developers.
 
-**Decision**: Hooks use `ctx` from PATH. `ctx init` checks PATH before proceeding.
+**Decision**: Hooks use `ctx` from PATH. `ctx init` checks PATH before 
+proceeding.
 ```
 
 **Generic core with Claude enhancements (2026-01-20)**
@@ -368,8 +386,10 @@ forgotten. Each has Context, Lesson, and Application sections:
 **CGO on ARM64**
 
 ```markdown
-**Context**: `go test` failed with `gcc: error: unrecognized command-line option '-m64'`
-**Lesson**: On ARM64 Linux, CGO causes cross-compilation issues. Always use `CGO_ENABLED=0`.
+**Context**: `go test` failed with 
+`gcc: error: unrecognized command-line option '-m64'`
+**Lesson**: On ARM64 Linux, CGO causes cross-compilation issues. 
+Always use `CGO_ENABLED=0`.
 ```
 
 **Claude Code skills format**
@@ -382,7 +402,8 @@ frontmatter (*description, argument-hint, allowed-tools*). Body is the prompt.
 **"Do you remember?" handling**
 
 ```markdown
-**Lesson**: In a `ctx`-enabled project, "*do you remember?*" has an obvious meaning:
+**Lesson**: In a `ctx`-enabled project, "*do you remember?*" 
+has an obvious meaning:
 check the `.context/` files. Don't ask for clarification—just do it.
 ```
 
@@ -487,7 +508,16 @@ If you are reading this, chances are that you already have heard about `ctx`.
 [github.com/ActiveMemory/ctx](https://github.com/ActiveMemory/ctx),
 * and the documentation lives at [ctx.ist](https://ctx.ist).
 
-If you're a mere mortal tired of reset amnesia, give `ctx` a try. 
+!!! note "Session Records are a Gold Mine"
+By the time of this writing, I have **more than 70 megabytes** of
+**text-only** session capture, spread across >100 markdown and JSONL
+files.
+
+    I am analyzing, synthesizing, encriching them with AI, running RAG
+    (*Retrieval-Augmented Generation*) models on them, and the outcome
+    surprises me every day.
+
+If you are a mere mortal tired of reset amnesia, give `ctx` a try. 
 
 And when you do, check `.context/sessions/` sometime. 
 

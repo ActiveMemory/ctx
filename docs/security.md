@@ -9,6 +9,8 @@ title: Security
 icon: lucide/shield
 ---
 
+![ctx](images/ctx-banner.png)
+
 ## Reporting Vulnerabilities
 
 At `ctx` we take security very seriously.
