@@ -69,7 +69,7 @@ Examples:
   ctx add task "Implement user authentication" --priority high`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runAdd(cmd, args, addFlags{
+			return runAdd(cmd, args, addConfig{
 				priority:     priority,
 				section:      section,
 				fromFile:     fromFile,
@@ -124,26 +124,4 @@ Examples:
 	)
 
 	return cmd
-}
-
-// addFlags holds all flags for the add command.
-//
-// Fields:
-//   - priority: Priority level for tasks (high, medium, low)
-//   - section: Target section in TASKS.md
-//   - fromFile: Read content from file instead of argument
-//   - context: Context field for decisions/learnings
-//   - rationale: Rationale field for decisions
-//   - consequences: Consequences field for decisions
-//   - lesson: Lesson field for learnings
-//   - application: Application field for learnings
-type addFlags struct {
-	priority     string
-	section      string
-	fromFile     string
-	context      string
-	rationale    string
-	consequences string
-	lesson       string
-	application  string
 }

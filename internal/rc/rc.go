@@ -4,7 +4,8 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package config
+// Package rc provides runtime configuration loading from .contextrc files.
+package rc
 
 import (
 	"os"
@@ -12,6 +13,8 @@ import (
 	"sync"
 
 	"gopkg.in/yaml.v3"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // RC represents the configuration from .contextrc file.
@@ -37,8 +40,8 @@ const DefaultTokenBudget = 8000
 const DefaultArchiveAfterDays = 7
 
 var (
-	rc           *RC
-	rcOnce       sync.Once
+	rc            *RC
+	rcOnce        sync.Once
 	rcOverrideDir string
 )
 
@@ -48,9 +51,9 @@ var (
 //   - *RC: Configuration with defaults (8000 token budget, 7-day archive, etc.)
 func DefaultRC() *RC {
 	return &RC{
-		ContextDir:       DirContext,
+		ContextDir:       config.DirContext,
 		TokenBudget:      DefaultTokenBudget,
-		PriorityOrder:    nil, // nil means use FileReadOrder
+		PriorityOrder:    nil, // nil means use config.FileReadOrder
 		AutoArchive:      true,
 		ArchiveAfterDays: DefaultArchiveAfterDays,
 	}
@@ -124,7 +127,7 @@ func GetTokenBudget() int {
 //
 // Returns:
 //   - []string: File names in priority order, or nil if not configured
-//     (callers should fall back to FileReadOrder)
+//     (callers should fall back to config.FileReadOrder)
 func GetPriorityOrder() []string {
 	return GetRC().PriorityOrder
 }
@@ -161,4 +164,38 @@ func ResetRC() {
 	rcOnce = sync.Once{}
 	rc = nil
 	rcOverrideDir = ""
+}
+
+// FilePriority returns the priority of a context file.
+//
+// If a priority_order is configured in .contextrc, that order is used.
+// Otherwise, the default config.FileReadOrder is used.
+//
+// Lower numbers indicate higher priority (1 = highest).
+// Unknown files return 100.
+//
+// Parameters:
+//   - name: Filename to look up (e.g., "TASKS.md")
+//
+// Returns:
+//   - int: Priority value (1-9 for known files, 100 for unknown)
+func FilePriority(name string) int {
+	// Check for .contextrc override first
+	if order := GetPriorityOrder(); order != nil {
+		for i, fName := range order {
+			if fName == name {
+				return i + 1
+			}
+		}
+		// File not in custom order gets the lowest priority
+		return 100
+	}
+
+	// Use default priority from config.FileReadOrder
+	for i, fName := range config.FileReadOrder {
+		if fName == name {
+			return i + 1
+		}
+	}
+	return 100
 }

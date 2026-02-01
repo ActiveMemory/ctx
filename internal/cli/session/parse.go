@@ -13,6 +13,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // parseIndex attempts to parse a string as a positive integer index.
@@ -59,9 +61,10 @@ func parseJsonlTranscript(path string) (string, error) {
 	}(file)
 
 	var sb strings.Builder
-	sb.WriteString("# Conversation Transcript\n\n")
-	sb.WriteString(fmt.Sprintf("**Source**: %s\n\n", filepath.Base(path)))
-	sb.WriteString("---\n\n")
+	nl := config.NewlineLF
+	sb.WriteString("# Conversation Transcript" + nl + nl)
+	sb.WriteString(fmt.Sprintf("**Source**: %s"+nl+nl, filepath.Base(path)))
+	sb.WriteString(config.Separator + nl + nl)
 
 	scanner := bufio.NewScanner(file)
 	// Increase buffer size for large lines
@@ -90,7 +93,7 @@ func parseJsonlTranscript(path string) (string, error) {
 		formatted := formatTranscriptEntry(entry)
 		if formatted != "" {
 			sb.WriteString(formatted)
-			sb.WriteString("\n---\n\n")
+			sb.WriteString(nl + config.Separator + nl + nl)
 		}
 	}
 
@@ -98,7 +101,7 @@ func parseJsonlTranscript(path string) (string, error) {
 		return "", fmt.Errorf("error reading file: %w", err)
 	}
 
-	sb.WriteString(fmt.Sprintf("*Total messages: %d*\n", messageCount))
+	sb.WriteString(fmt.Sprintf("*Total messages: %d*"+nl, messageCount))
 
 	return sb.String(), nil
 }
@@ -160,7 +163,7 @@ func parseSessionFile(path string) (sessionInfo, error) {
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
 			if line != "" && !strings.HasPrefix(line, "#") &&
-				!strings.HasPrefix(line, "---") &&
+				!strings.HasPrefix(line, config.Separator) &&
 				!strings.HasPrefix(line, "[") {
 				info.Summary = line
 				break

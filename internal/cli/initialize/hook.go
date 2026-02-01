@@ -53,7 +53,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 	if _, err := os.Stat(scriptPath); err == nil && !force {
 		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), scriptPath)
 	} else {
-		scriptContent, err := claude.GetAutoSaveScript()
+		scriptContent, err := claude.AutoSaveScript()
 		if err != nil {
 			return fmt.Errorf("failed to get auto-save script: %w", err)
 		}
@@ -71,7 +71,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 	if _, err := os.Stat(blockScriptPath); err == nil && !force {
 		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), blockScriptPath)
 	} else {
-		blockScriptContent, err := claude.GetBlockNonPathCtxScript()
+		blockScriptContent, err := claude.BlockNonPathCtxScript()
 		if err != nil {
 			return fmt.Errorf("failed to get block-non-path-ctx script: %w", err)
 		}
@@ -81,6 +81,26 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 			return fmt.Errorf("failed to write %s: %w", blockScriptPath, err)
 		}
 		cmd.Printf("  %s %s\n", green("✓"), blockScriptPath)
+	}
+
+	// Create prompt-coach.sh script
+	// (detects prompt anti-patterns and suggests improvements)
+	coachScriptPath := filepath.Join(
+		config.DirClaudeHooks, config.FilePromptCoach,
+	)
+	if _, err := os.Stat(coachScriptPath); err == nil && !force {
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), coachScriptPath)
+	} else {
+		coachScriptContent, err := claude.PromptCoachScript()
+		if err != nil {
+			return fmt.Errorf("failed to get prompt-coach script: %w", err)
+		}
+		if err := os.WriteFile(
+			coachScriptPath, coachScriptContent, 0755,
+		); err != nil {
+			return fmt.Errorf("failed to write %s: %w", coachScriptPath, err)
+		}
+		cmd.Printf("  %s %s\n", green("✓"), coachScriptPath)
 	}
 
 	// Handle settings.local.json - merge rather than overwrite
@@ -128,17 +148,22 @@ func mergeSettingsHooks(
 	}
 
 	// Get our defaults
-	defaultHooks := claude.CreateDefaultHooks(projectDir)
-	defaultPerms := claude.CreateDefaultPermissions()
+	defaultHooks := claude.DefaultHooks(projectDir)
+	defaultPerms := claude.DefaultPermissions()
 
 	// Check if hooks already exist
 	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0
+	hasUserPromptSubmit := len(settings.Hooks.UserPromptSubmit) > 0
 	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
 
 	// Merge hooks - only add what's missing (or force overwrite)
 	hooksModified := false
 	if !hasPreToolUse || force {
 		settings.Hooks.PreToolUse = defaultHooks.PreToolUse
+		hooksModified = true
+	}
+	if !hasUserPromptSubmit || force {
+		settings.Hooks.UserPromptSubmit = defaultHooks.UserPromptSubmit
 		hooksModified = true
 	}
 	if !hasSessionEnd || force {

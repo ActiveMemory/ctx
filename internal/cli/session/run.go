@@ -13,9 +13,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // runSessionLoad loads and displays a saved session file.
@@ -73,7 +74,7 @@ func runSessionLoad(cmd *cobra.Command, args []string) error {
 //   - extract: If true, extract decisions/learnings instead of full transcript
 //
 // Returns:
-//   - error: Non-nil if the file not found, parse fails, or write fails
+//   - error: Non-nil if the file is not found, parse fails, or write fails
 func runSessionParse(
 	cmd *cobra.Command, args []string, output string, extract bool,
 ) error {
@@ -203,8 +204,8 @@ func runSessionSave(
 // runSessionList lists saved sessions with summaries.
 //
 // Reads all session files from .context/sessions/, parses their metadata,
-// and displays them sorted by date (newest first). Output includes topic,
-// date, type, summary, and filename for each session.
+// and displays them sorted by date (the newest first). Output includes
+// the topic, date, type, summary, and filename for each session.
 //
 // Parameters:
 //   - cmd: Cobra command for output

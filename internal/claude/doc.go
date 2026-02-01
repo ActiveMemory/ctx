@@ -17,7 +17,7 @@
 //
 // Example usage:
 //
-//	script, err := claude.GetAutoSaveScript()
+//	script, err := claude.AutoSaveScript()
 //	if err != nil {
 //	    return err
 //	}

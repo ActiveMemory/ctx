@@ -51,8 +51,9 @@ Send details to **security@ctx.ist**
 - **Local only**: ctx runs entirely locally with no external network calls
 - **No code execution**: ctx reads and writes Markdown files only; it does 
   not execute arbitrary code
-- **Git-tracked**: All context files are meant to be committed, so they should
-  never contain sensitive data
+- **Git-tracked**: Core context files are meant to be committed, so they should
+  never contain sensitive data. Exception: `sessions/` and `journal/` contain
+  raw conversation data and should be gitignored
 
 ## Best Practices
 

@@ -237,5 +237,5 @@ ctx drift
 - [Prompting Guide](prompting-guide.md) — Effective prompts for AI sessions
 - [CLI Reference](cli-reference.md) — All commands and options
 - [Context Files](context-files.md) — File formats and structure
-- [`ralph` and `ctx`](ralph-loop.md) — Autonomous AI development workflows
+- [Autonomous Loops](autonomous-loop.md) — Iterative AI development workflows
 - [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider

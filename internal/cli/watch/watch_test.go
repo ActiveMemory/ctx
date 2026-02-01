@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // TestApplyUpdate tests the applyUpdate function routing.
@@ -48,48 +49,48 @@ func TestApplyUpdate(t *testing.T) {
 	}{
 		{
 			name:      "task update",
-			update:    ContextUpdate{Type: config.UpdateTypeTask, Content: "Test task from watch"},
-			checkFile: config.FilenameTask,
+			update:    ContextUpdate{Type: config.EntryTask, Content: "Test task from watch"},
+			checkFile: config.FileTask,
 			checkFor:  "Test task from watch",
 		},
 		{
 			name: "decision update",
 			update: ContextUpdate{
-				Type:         config.UpdateTypeDecision,
+				Type:         config.EntryDecision,
 				Content:      "Test decision from watch",
 				Context:      "Testing watch functionality",
 				Rationale:    "Need to verify watch applies decisions",
 				Consequences: "Decision will appear in DECISIONS.md",
 			},
-			checkFile: config.FilenameDecision,
+			checkFile: config.FileDecision,
 			checkFor:  "Test decision from watch",
 		},
 		{
 			name: "learning update",
 			update: ContextUpdate{
-				Type:        config.UpdateTypeLearning,
+				Type:        config.EntryLearning,
 				Content:     "Test learning from watch",
 				Context:     "Testing watch functionality",
 				Lesson:      "Watch can add learnings",
 				Application: "Use structured attributes in context-update tags",
 			},
-			checkFile: config.FilenameLearning,
+			checkFile: config.FileLearning,
 			checkFor:  "Test learning from watch",
 		},
 		{
 			name:        "decision without required fields",
-			update:      ContextUpdate{Type: config.UpdateTypeDecision, Content: "Missing fields"},
+			update:      ContextUpdate{Type: config.EntryDecision, Content: "Missing fields"},
 			expectError: true,
 		},
 		{
 			name:        "learning without required fields",
-			update:      ContextUpdate{Type: config.UpdateTypeLearning, Content: "Missing fields"},
+			update:      ContextUpdate{Type: config.EntryLearning, Content: "Missing fields"},
 			expectError: true,
 		},
 		{
 			name:      "convention update",
-			update:    ContextUpdate{Type: config.UpdateTypeConvention, Content: "Test convention from watch"},
-			checkFile: config.FilenameConvention,
+			update:    ContextUpdate{Type: config.EntryConvention, Content: "Test convention from watch"},
+			checkFile: config.FileConvention,
 			checkFor:  "Test convention from watch",
 		},
 		{
@@ -115,7 +116,7 @@ func TestApplyUpdate(t *testing.T) {
 			}
 
 			// Verify content was added
-			filePath := filepath.Join(config.ContextDir(), tt.checkFile)
+			filePath := filepath.Join(rc.GetContextDir(), tt.checkFile)
 			content, err := os.ReadFile(filePath)
 			if err != nil {
 				t.Fatalf("failed to read %s: %v", tt.checkFile, err)
@@ -149,7 +150,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Add a task to complete
-	tasksPath := filepath.Join(config.ContextDir(), config.FilenameTask)
+	tasksPath := filepath.Join(rc.GetContextDir(), config.FileTask)
 	tasksContent := `# Tasks
 
 ## Next Up
@@ -162,7 +163,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Complete the task
-	update := ContextUpdate{Type: config.UpdateTypeComplete, Content: "authentication"}
+	update := ContextUpdate{Type: config.EntryComplete, Content: "authentication"}
 	if err := applyUpdate(update); err != nil {
 		t.Fatalf("applyUpdate failed: %v", err)
 	}
@@ -184,10 +185,10 @@ func TestApplyCompleteUpdate(t *testing.T) {
 func TestBuildWatchSession(t *testing.T) {
 	timestamp := time.Date(2026, 1, 15, 14, 30, 0, 0, time.UTC)
 	updates := []ContextUpdate{
-		{Type: config.UpdateTypeTask, Content: "Task 1"},
-		{Type: config.UpdateTypeTask, Content: "Task 2"},
-		{Type: config.UpdateTypeDecision, Content: "Decision 1"},
-		{Type: config.UpdateTypeLearning, Content: "Learning 1"},
+		{Type: config.EntryTask, Content: "Task 1"},
+		{Type: config.EntryTask, Content: "Task 2"},
+		{Type: config.EntryDecision, Content: "Decision 1"},
+		{Type: config.EntryLearning, Content: "Learning 1"},
 	}
 
 	result := buildWatchSession(timestamp, updates)
@@ -262,7 +263,7 @@ More output
 	}
 
 	// Verify task was written
-	tasksPath := filepath.Join(config.ContextDir(), config.FilenameTask)
+	tasksPath := filepath.Join(rc.GetContextDir(), config.FileTask)
 	content, err := os.ReadFile(tasksPath)
 	if err != nil {
 		t.Fatalf("failed to read tasks: %v", err)
@@ -313,7 +314,7 @@ More output
 	}
 
 	// Verify learning was written with structured fields
-	learningsPath := filepath.Join(config.ContextDir(), config.FilenameLearning)
+	learningsPath := filepath.Join(rc.GetContextDir(), config.FileLearning)
 	content, err := os.ReadFile(learningsPath)
 	if err != nil {
 		t.Fatalf("failed to read learnings: %v", err)

@@ -24,7 +24,6 @@ All commands support these flags:
 | `--help`               | Show command help                                 |
 | `--version`            | Show version                                      |
 | `--context-dir <path>` | Override context directory (default: `.context/`) |
-| `--quiet`              | Suppress non-essential output                     |
 | `--no-color`           | Disable colored output                            |
 
 > The `NO_COLOR=1` environment variable also disables colored output.
@@ -530,6 +529,103 @@ ctx recall show --latest
 ctx recall show --latest --full
 ```
 
+#### `ctx recall export`
+
+Export sessions to editable journal files in `.context/journal/`.
+
+```bash
+ctx recall export [session-id] [flags]
+```
+
+**Flags**:
+
+| Flag      | Description                              |
+|-----------|------------------------------------------|
+| `--all`   | Export all sessions                      |
+| `--force` | Overwrite existing files                 |
+
+Exported files include session metadata, tool usage summary, and the full
+conversation. Existing files are skipped by default to preserve your edits.
+
+The `journal/` directory should be gitignored (like `sessions/`) since it
+contains raw conversation data.
+
+**Example**:
+
+```bash
+ctx recall export abc123          # Export one session
+ctx recall export --all           # Export all sessions
+ctx recall export --all --force   # Overwrite existing exports
+```
+
+---
+
+### `ctx journal`
+
+Analyze and synthesize exported session files.
+
+```bash
+ctx journal <subcommand>
+```
+
+#### `ctx journal site`
+
+Generate a static site from journal entries in `.context/journal/`.
+
+```bash
+ctx journal site [flags]
+```
+
+**Flags**:
+
+| Flag       | Short | Description                              |
+|------------|-------|------------------------------------------|
+| `--output` | `-o`  | Output directory (default: .context/journal-site) |
+| `--build`  |       | Run zensical build after generating      |
+| `--serve`  |       | Run zensical serve after generating      |
+
+Creates a zensical-compatible site structure with an index page listing
+all sessions by date, and individual pages for each journal entry.
+
+Requires zensical to be installed for `--build` or `--serve`:
+```bash
+pip install zensical
+```
+
+**Example**:
+
+```bash
+ctx journal site                    # Generate in .context/journal-site/
+ctx journal site --output ~/public  # Custom output directory
+ctx journal site --build            # Generate and build HTML
+ctx journal site --serve            # Generate and serve locally
+```
+
+---
+
+### `ctx serve`
+
+Serve a static site locally via zensical.
+
+```bash
+ctx serve [directory]
+```
+
+If no directory is specified, serves the journal site (`.context/journal-site`).
+
+Requires zensical to be installed:
+```bash
+pip install zensical
+```
+
+**Example**:
+
+```bash
+ctx serve                           # Serve journal site
+ctx serve .context/journal-site     # Serve specific directory
+ctx serve ./docs                    # Serve docs folder
+```
+
 ---
 
 ### `ctx watch`
@@ -692,9 +788,9 @@ ctx session parse transcript.jsonl -o conversation.md
 
 ### `ctx loop`
 
-Generate a shell script for running a Ralph loop.
+Generate a shell script for running an autonomous loop.
 
-A Ralph loop continuously runs an AI assistant with the same prompt until
+An autonomous loop continuously runs an AI assistant with the same prompt until
 a completion signal is detected, enabling iterative development where the
 AI builds on its previous work.
 
@@ -737,7 +833,7 @@ chmod +x loop.sh
 ./loop.sh
 ```
 
-See [Ralph Loop Integration](ralph-loop.md) for detailed workflow documentation.
+See [Autonomous Loops](autonomous-loop.md) for detailed workflow documentation.
 
 ---
 

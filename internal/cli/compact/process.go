@@ -17,6 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // preCompactAutoSave saves a session snapshot before compacting.
@@ -33,7 +34,7 @@ func preCompactAutoSave(cmd *cobra.Command) error {
 	green := color.New(color.FgGreen).SprintFunc()
 
 	// Ensure sessions directory exists
-	sessionsDir := filepath.Join(config.ContextDir(), "sessions")
+	sessionsDir := filepath.Join(rc.GetContextDir(), "sessions")
 	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
@@ -69,29 +70,31 @@ func preCompactAutoSave(cmd *cobra.Command) error {
 //   - string: Formatted Markdown content for the session file
 func buildPreCompactSession(timestamp time.Time) string {
 	var sb strings.Builder
+	nl := config.NewlineLF
+	sep := config.Separator
 
-	sb.WriteString("# Pre-Compact Snapshot\n\n")
-	sb.WriteString(fmt.Sprintf("**Date**: %s\n", timestamp.Format("2006-01-02")))
-	sb.WriteString(fmt.Sprintf("**Time**: %s\n", timestamp.Format("15:04:05")))
-	sb.WriteString("**Type**: pre-compact\n\n")
-	sb.WriteString("---\n\n")
+	sb.WriteString("# Pre-Compact Snapshot" + nl + nl)
+	sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, timestamp.Format("2006-01-02")))
+	sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, timestamp.Format("15:04:05")))
+	sb.WriteString("**Type**: pre-compact" + nl + nl)
+	sb.WriteString(sep + nl + nl)
 
-	sb.WriteString("## Purpose\n\n")
+	sb.WriteString("## Purpose" + nl + nl)
 	sb.WriteString(
-		"This snapshot was automatically created before running `ctx compact`.\n",
+		"This snapshot was automatically created before running `ctx compact`." + nl,
 	)
 	sb.WriteString(
-		"It preserves the state of context files before any cleanup operations.\n\n",
+		"It preserves the state of context files before any cleanup operations." + nl + nl,
 	)
-	sb.WriteString("---\n\n")
+	sb.WriteString(sep + nl + nl)
 
 	// Read and include current TASKS.md content
-	tasksPath := filepath.Join(config.ContextDir(), config.FilenameTask)
+	tasksPath := filepath.Join(rc.GetContextDir(), config.FileTask)
 	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
-		sb.WriteString("## Tasks (Before Compact)\n\n")
-		sb.WriteString("```markdown\n")
+		sb.WriteString("## Tasks (Before Compact)" + nl + nl)
+		sb.WriteString("```markdown" + nl)
 		sb.WriteString(string(tasksContent))
-		sb.WriteString("\n```\n\n")
+		sb.WriteString(nl + "```" + nl + nl)
 	}
 
 	return sb.String()

@@ -36,7 +36,7 @@ func checkPackageFiles(ctx *context.Context) []Action {
 			// File exists, check if we have DEPENDENCIES.md or similar
 			hasDepsDoc := false
 			for _, f := range ctx.Files {
-				if f.Name == config.FilenameDependency ||
+				if f.Name == config.FileDependency ||
 					strings.Contains(strings.ToLower(string(f.Content)),
 						"dependencies",
 					) {
@@ -82,7 +82,7 @@ func checkConfigFiles(ctx *context.Context) []Action {
 			// Check if CONVENTIONS.md mentions this
 			var convContent string
 			for _, f := range ctx.Files {
-				if f.Name == config.FilenameConvention {
+				if f.Name == config.FileConvention {
 					convContent = strings.ToLower(string(f.Content))
 					break
 				}
@@ -124,7 +124,7 @@ func checkNewDirectories(ctx *context.Context) []Action {
 	// Get ARCHITECTURE.md content
 	var archContent string
 	for _, f := range ctx.Files {
-		if f.Name == config.FilenameArchitecture {
+		if f.Name == config.FileArchitecture {
 			archContent = strings.ToLower(string(f.Content))
 			break
 		}

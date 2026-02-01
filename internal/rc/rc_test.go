@@ -4,19 +4,21 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package config
+package rc
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 func TestDefaultRC(t *testing.T) {
 	rc := DefaultRC()
 
-	if rc.ContextDir != DirContext {
-		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, DirContext)
+	if rc.ContextDir != config.DirContext {
+		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, config.DirContext)
 	}
 	if rc.TokenBudget != DefaultTokenBudget {
 		t.Errorf("TokenBudget = %d, want %d", rc.TokenBudget, DefaultTokenBudget)
@@ -43,8 +45,8 @@ func TestGetRC_NoFile(t *testing.T) {
 
 	rc := GetRC()
 
-	if rc.ContextDir != DirContext {
-		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, DirContext)
+	if rc.ContextDir != config.DirContext {
+		t.Errorf("ContextDir = %q, want %q", rc.ContextDir, config.DirContext)
 	}
 	if rc.TokenBudget != DefaultTokenBudget {
 		t.Errorf("TokenBudget = %d, want %d", rc.TokenBudget, DefaultTokenBudget)
@@ -200,8 +202,8 @@ func TestGetRC_PartialConfig(t *testing.T) {
 		t.Errorf("TokenBudget = %d, want %d", rc.TokenBudget, 5000)
 	}
 	// Unspecified values should use defaults
-	if rc.ContextDir != DirContext {
-		t.Errorf("ContextDir = %q, want %q (default)", rc.ContextDir, DirContext)
+	if rc.ContextDir != config.DirContext {
+		t.Errorf("ContextDir = %q, want %q (default)", rc.ContextDir, config.DirContext)
 	}
 }
 
