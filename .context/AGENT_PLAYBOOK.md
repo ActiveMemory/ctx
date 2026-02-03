@@ -371,15 +371,15 @@ Before writing or modifying CLI code (`internal/cli/**/*.go`):
 
 **cmd methods to use:**
 
-| Instead of        | Use                | Purpose                              |
-|-------------------|--------------------|--------------------------------------|
-| `fmt.Printf`      | `cmd.Printf`       | Formatted stdout                     |
-| `fmt.Println`     | `cmd.Println`      | Line to stdout                       |
-| `fmt.Print`       | `cmd.Print`        | Raw stdout                           |
-| `fmt.Fprintf(os.Stderr, ...)` | `cmd.PrintErrf` | Formatted stderr          |
-| `fmt.Fprintln(os.Stderr, ...)` | `cmd.PrintErrln` | Line to stderr           |
-| `fmt.Sprintf`     | `fmt.Sprintf`      | String formatting (OK to keep)       |
-| `fmt.Errorf`      | `fmt.Errorf`       | Error creation (OK to keep)          |
+| Instead of                     | Use              | Purpose                        |
+|--------------------------------|------------------|--------------------------------|
+| `fmt.Printf`                   | `cmd.Printf`     | Formatted stdout               |
+| `fmt.Println`                  | `cmd.Println`    | Line to stdout                 |
+| `fmt.Print`                    | `cmd.Print`      | Raw stdout                     |
+| `fmt.Fprintf(os.Stderr, ...)`  | `cmd.PrintErrf`  | Formatted stderr               |
+| `fmt.Fprintln(os.Stderr, ...)` | `cmd.PrintErrln` | Line to stderr                 |
+| `fmt.Sprintf`                  | `fmt.Sprintf`    | String formatting (OK to keep) |
+| `fmt.Errorf`                   | `fmt.Errorf`     | Error creation (OK to keep)    |
 
 **Why**: cmd methods write to testable buffers; fmt writes to real stdout/stderr.
 

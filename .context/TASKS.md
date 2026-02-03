@@ -1,49 +1,82 @@
-- [ ] Add integration tests for CLI commands (drift, sync, decision, learnings, serve, recall) - test actual file operations and command execution #added:2026-02-01-062541
-
 # Tasks — Context CLI
-
-# Tasks
-
-## Phase 0: Cleanup from the previous version
-
-(All tasks archived)
-
-### Phase 1: Parser (DONE)
 
 ## Phase 1.a: Cleanup and Release
 
-- [x] T1.2.0.1b Add index markers to DECISIONS.md and LEARNINGS.md templates
-      so new projects start with index structure #priority:low #added:2026-01-29
-- [x] T1.2.5 feat: implement `--context-dir` global flag to override context directory path
-  Documented in cli-reference.md as planned. Should allow `ctx --context-dir /path status`.
-  #priority:low #added:2026-01-28
-- [x] T1.2.6 feat: implement `--quiet` global flag to suppress non-essential output
-  Documented in cli-reference.md as planned.
-  #priority:low #added:2026-01-28
-- [x] T1.2.7 feat: implement `--no-color` global flag to disable colored output
-  Documented in cli-reference.md as planned. Currently `NO_COLOR=1` env var works.
-  #priority:low #added:2026-01-28
-- [x] Write AST-based test that warns if CLI functions use fmt.Print* instead of
-  cmd.Print* #added:2026-01-29-171351 #done:2026-01-31
-- [x] feat: `ctx recall export` - export sessions to editable journal files
-  - `ctx recall export <session-id>` - export one session
-  - `ctx recall export --all` - export all sessions
-  - Skip existing files (user may have edited), `--force` to overwrite
-  - Output to `.context/journal/YYYY-MM-DD-slug-shortid.md`
-    #added:2026-01-28 #done:2026-01-31
-- [x] feat: ctx journal - LLM-powered session analysis and synthesis
-  - [x] ctx journal site - generate zensical static site #done:2026-01-31
-  - [x] ctx serve - convenience wrapper for zensical serve #done:2026-01-31
-  - [x] /ctx-journal-enrich - slash command for frontmatter/tags #done:2026-01-31
-  - [x] /ctx-journal-summarize - slash command for timeline summaries #done:2026-01-31
 - [ ] T1.2.9: upstream CI is broken (again)
-- [x] T1.2.10: Human code review
-- [x] T1.2.11: Human to read all user-facing documentation and update as needed.
-- [x] T1.2.12: cut a release (version number is already bumped)
-- [ ] T1.2.13: Compose two blog posts: 1) what has changed after the human-guided
+- [x] T1.2.13: Compose two blog posts: 1) what has changed after the human-guided
       refactoring, and what we can learn about this.
       2) what has happened since the last release cut.
 - [ ] T1.2.14: There is no documentation about the session site.
+- [ ] T1.2.15: Add integration tests for CLI commands (drift, sync, decision,
+      learnings, serve, recall) - test actual file operations and command execution
+      #added:2026-02-01-062541
+
+## Phase 1.b: Init Improvements
+
+- [ ] T1.3.1: Add `ctx init --ralph` flag — creates Ralph Loop infrastructure
+      (PROMPT.md, IMPLEMENTATION_PLAN.md with strict one-task-exit discipline).
+      Default `ctx init` remains conversational (no "never ask questions" directive).
+      #added:2026-02-03
+
+## Phase 2: Cross-Session Monitoring (`ctx monitor`)
+
+Enable one agent/process to inform another about context health and audits.
+
+### Phase 2.0: Infrastructure
+
+- [x] T2.0.1: Create specs/monitor-architecture.md — overall design
+- [x] T2.0.2: Create specs/active-sessions.md — tombstone + heartbeat lifecycle spec
+- [x] T2.0.3: Create specs/context-health.md — health metrics, repetition detection
+- [x] T2.0.4: Create specs/auditors.md — programmatic vs semantic auditor system
+- [x] T2.0.5: Create specs/signals.md — atomic writes, TTL, hysteresis, session-scoped dirs
+
+### Phase 2.1: Active Session Tracking
+
+- [ ] T2.1.1: Create SessionStart hook — writes tombstone to .context/active-sessions/
+- [ ] T2.1.2: Create SessionEnd hook — removes tombstone from .context/active-sessions/
+- [ ] T2.1.3: Implement internal/monitor/session/tracker.go — GetActiveSessions()
+- [ ] T2.1.4: Add orphan detection — sessions with stale/missing transcripts
+
+### Phase 2.2: Context Health Analysis
+
+- [ ] T2.2.1: Implement internal/monitor/health/analyzer.go — parse JSONL, compute metrics
+- [ ] T2.2.2: Token estimation — estimate context % from message content lengths
+- [ ] T2.2.3: Repetition detection — hash recent content, detect loops
+- [ ] T2.2.4: Turn count and activity tracking
+
+### Phase 2.3: Signal System
+
+- [ ] T2.3.1: Implement internal/monitor/signal/writer.go — WriteSignal(), ClearSignal()
+- [ ] T2.3.2: Create UserPromptSubmit hook — reads .context/signals/, injects into context
+- [ ] T2.3.3: Signal cleanup — auto-remove after delivery
+
+### Phase 2.4: Monitor Command
+
+- [ ] T2.4.1: Create cmd/ctx/monitor.go — Cobra subcommand skeleton
+- [ ] T2.4.2: Implement watch loop — poll active sessions, run health checks
+- [ ] T2.4.3: Add --interval flag (default 30s)
+- [ ] T2.4.4: Add --once flag (run once and exit)
+
+### Phase 2.5: Pluggable Auditors
+
+- [ ] T2.5.1: Define Auditor interface in internal/monitor/auditor/
+      - SessionAuditor: CheckSession(session, health) []Alert
+      - ProjectAuditor: CheckProject(sessions, projectDir) []Alert
+- [ ] T2.5.2: Implement ContextHealthAuditor — warn on high usage, repetition (with hysteresis)
+- [ ] T2.5.3: Implement AuditReminderAuditor — soft nudge for semantic audits
+      - Track last audit times in .context/audit-state.json
+      - Remind after configurable thresholds (tasks: 3d, decisions: 7d, specs: 14d)
+- [ ] T2.5.4: Add --auditors flag to select which auditors run
+- [ ] T2.5.5: Alert identity and dedupe — stable keys, cooldown tracking, state persistence
+
+### Phase 2.6: Semantic Audit Slash Commands
+
+These are LLM-powered audits triggered by user, not continuous monitoring.
+
+- [ ] T2.6.1: Create /ctx-audit-tasks skill — check if incomplete tasks are actually done
+- [ ] T2.6.2: Create /ctx-audit-decisions skill — check if code aligns with recorded decisions
+- [ ] T2.6.3: Create /ctx-audit-specs skill — check if implementation matches specs/
+- [ ] T2.6.4: Update .context/audit-state.json when audits run (for reminder tracking)
 
 ## Backlog
 
@@ -99,10 +132,6 @@ Additional supporting context:
 Depends on: ctx recall export (Phase 2)
 #priority:low #phase:future #added:2026-01-28-071638
 
-- [x] feat: /ctx-blog slash command - generate blog post draft from recent activity
-  - [x] /ctx-blog - from recent activity (sessions, commits, decisions)
-  - [x] /ctx-blog-changelog - from commit range with theme
-  #added:2026-01-28-072625 #done:2026-01-31
 
 - [ ] feat: ctx enrich - retroactively expand sparse context entries
 

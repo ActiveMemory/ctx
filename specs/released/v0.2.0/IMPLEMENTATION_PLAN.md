@@ -20,17 +20,17 @@ retrievable knowledge.
 
 | Tier | Name                            | Value                                        | Effort   |
 |------|---------------------------------|----------------------------------------------|----------|
-| 1    | [Browsable](specs/browsable.md) | Human visibility into session history        | 1-2 days |
-| 2    | [Import](specs/import.md)       | Backfill ctx from historical sessions        | 3-5 days |
-| 3    | [Thinking](specs/thinking.md)   | Extract reasoning patterns and anti-patterns | 2-3 days |
-| 4    | [RAG](specs/rag.md)             | Query history at session start               | 3-5 days |
+| 1    | [Browsable](browsable.md) | Human visibility into session history        | 1-2 days |
+| 2    | [Import](import.md)       | Backfill ctx from historical sessions        | 3-5 days |
+| 3    | [Thinking](thinking.md)   | Extract reasoning patterns and anti-patterns | 2-3 days |
+| 4    | [RAG](rag.md)             | Query history at session start               | 3-5 days |
 
 ---
 
 ## Input Format
 
 Session files are JSONL (one JSON object per line). See 
-[session-schema.md](specs/session-schema.md) for full specification.
+[session-schema.md](session-schema.md) for full specification.
 
 ```json
 {
@@ -91,7 +91,7 @@ Session Files → Parser → Rendered HTML → HTTP Server
 - Metadata sidebar (tokens, branch, cwd)
 - Full-text search
 
-**Details**: [browsable.md](specs/browsable.md)
+**Details**: [browsable.md](browsable.md)
 
 ---
 
@@ -122,7 +122,7 @@ Session Files → Parser → Rendered HTML → HTTP Server
 └── tasks/2026-01-21-edge-case-tests.md
 ```
 
-**Details**: [import.md](specs/import.md)
+**Details**: [import.md](import.md)
 
 ---
 
@@ -149,7 +149,7 @@ Session Files → Parser → Rendered HTML → HTTP Server
 
 Identify reasoning approaches that consistently fail → warn against repeating.
 
-**Details**: [thinking.md](specs/thinking.md)
+**Details**: [thinking.md](thinking.md)
 
 ---
 
@@ -181,7 +181,7 @@ hooks:
     command: ctx recall --auto --budget 4000
 ```
 
-**Details**: [rag.md](specs/rag.md)
+**Details**: [rag.md](rag.md)
 
 ---
 
