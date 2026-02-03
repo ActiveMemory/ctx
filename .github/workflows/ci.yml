@@ -47,5 +47,3 @@ jobs:
         with:
           version: v1.64.8
           args: --timeout=5m
-          # Build golangci-lint from source using Go 1.25
-          install-mode: goinstall
