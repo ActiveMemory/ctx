@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 )
 
 // registeredParsers holds all available session parsers.
@@ -80,6 +81,16 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 		}
 
 		if info.IsDir() {
+			// Skip subagents directories - they contain sidechain sessions
+			// that share the parent sessionId and would cause duplicates
+			if info.Name() == "subagents" {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+
+		// Skip files in paths containing /subagents/ (defensive check)
+		if strings.Contains(path, string(filepath.Separator)+"subagents"+string(filepath.Separator)) {
 			return nil
 		}
 

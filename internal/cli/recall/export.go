@@ -20,6 +20,10 @@ import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
+// maxMessagesPerPart is the maximum number of messages per exported file.
+// Sessions with more messages are split into multiple parts for browser performance.
+const maxMessagesPerPart = 200
+
 // recallExportCmd returns the recall export subcommand.
 //
 // Returns:
@@ -147,27 +151,58 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force 
 
 	var exported, skipped int
 	for _, s := range toExport {
-		filename := formatJournalFilename(s)
-		path := filepath.Join(journalDir, filename)
-
-		// Check if file exists
-		if _, err := os.Stat(path); err == nil && !force {
-			skipped++
-			dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", filename)
-			continue
+		// Count non-empty messages to determine if splitting is needed
+		var nonEmptyMsgs []parser.Message
+		for _, msg := range s.Messages {
+			if !isEmptyMessage(msg) {
+				nonEmptyMsgs = append(nonEmptyMsgs, msg)
+			}
 		}
 
-		// Generate content
-		content := formatJournalEntry(s)
-
-		// Write file
-		if err := os.WriteFile(path, []byte(content), 0644); err != nil {
-			cmd.PrintErrf("  %s failed to write %s: %v\n", yellow("!"), filename, err)
-			continue
+		// Calculate number of parts needed
+		totalMsgs := len(nonEmptyMsgs)
+		numParts := (totalMsgs + maxMessagesPerPart - 1) / maxMessagesPerPart
+		if numParts < 1 {
+			numParts = 1
 		}
 
-		exported++
-		cmd.Printf("  %s %s\n", green("✓"), filename)
+		baseFilename := formatJournalFilename(s)
+		baseName := strings.TrimSuffix(baseFilename, ".md")
+
+		// Export each part
+		for part := 1; part <= numParts; part++ {
+			filename := baseFilename
+			if numParts > 1 && part > 1 {
+				filename = fmt.Sprintf("%s-p%d.md", baseName, part)
+			}
+			path := filepath.Join(journalDir, filename)
+
+			// Check if file exists
+			if _, err := os.Stat(path); err == nil && !force {
+				skipped++
+				dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", filename)
+				continue
+			}
+
+			// Calculate message range for this part
+			startIdx := (part - 1) * maxMessagesPerPart
+			endIdx := startIdx + maxMessagesPerPart
+			if endIdx > totalMsgs {
+				endIdx = totalMsgs
+			}
+
+			// Generate content for this part
+			content := formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName)
+
+			// Write file
+			if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+				cmd.PrintErrf("  %s failed to write %s: %v\n", yellow("!"), filename, err)
+				continue
+			}
+
+			exported++
+			cmd.Printf("  %s %s\n", green("✓"), filename)
+		}
 	}
 
 	cmd.Println()
@@ -205,81 +240,105 @@ func isEmptyMessage(msg parser.Message) bool {
 	return msg.Text == "" && len(msg.ToolUses) == 0 && len(msg.ToolResults) == 0
 }
 
-// formatJournalEntry generates the Markdown content for a journal entry.
+// formatJournalEntryPart generates Markdown content for a part of a journal entry.
 //
-// Includes metadata, tool usage summary, and full conversation.
+// Includes metadata, tool usage summary (on part 1 only), navigation links,
+// and the conversation subset for this part.
 //
 // Parameters:
 //   - s: Session to format
+//   - messages: Subset of messages for this part
+//   - startMsgIdx: Starting message index (for numbering)
+//   - part: Current part number (1-indexed)
+//   - totalParts: Total number of parts
+//   - baseName: Base filename without extension (for navigation links)
 //
 // Returns:
-//   - string: Complete Markdown content
-func formatJournalEntry(s *parser.Session) string {
+//   - string: Markdown content for this part
+func formatJournalEntryPart(
+	s *parser.Session,
+	messages []parser.Message,
+	startMsgIdx, part, totalParts int,
+	baseName string,
+) string {
 	var sb strings.Builder
 	nl := config.NewlineLF
 	sep := config.Separator
 
 	// Header
-	sb.WriteString(fmt.Sprintf("# %s"+nl+nl, s.Slug))
-
-	// Metadata (use local time)
-	localStart := s.StartTime.Local()
-	sb.WriteString(fmt.Sprintf("**ID**: %s"+nl, s.ID))
-	sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, localStart.Format("2006-01-02")))
-	sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, localStart.Format("15:04:05")))
-	sb.WriteString(fmt.Sprintf("**Duration**: %s"+nl, formatDuration(s.Duration)))
-	sb.WriteString(fmt.Sprintf("**Tool**: %s"+nl, s.Tool))
-	sb.WriteString(fmt.Sprintf("**Project**: %s"+nl, s.Project))
-	if s.GitBranch != "" {
-		sb.WriteString(fmt.Sprintf("**Branch**: %s"+nl, s.GitBranch))
+	if s.Slug != "" {
+		sb.WriteString(fmt.Sprintf("# %s"+nl+nl, s.Slug))
+	} else {
+		sb.WriteString(fmt.Sprintf("# %s"+nl+nl, baseName))
 	}
-	if s.Model != "" {
-		sb.WriteString(fmt.Sprintf("**Model**: %s"+nl, s.Model))
-	}
-	sb.WriteString(nl)
 
-	// Token stats
-	sb.WriteString(fmt.Sprintf("**Turns**: %d"+nl, s.TurnCount))
-	sb.WriteString(fmt.Sprintf("**Tokens**: %s (in: %s, out: %s)"+nl,
-		formatTokens(s.TotalTokens),
-		formatTokens(s.TotalTokensIn),
-		formatTokens(s.TotalTokensOut)))
-	sb.WriteString(nl + sep + nl + nl)
-
-	// Summary section (placeholder for user to fill in)
-	sb.WriteString("## Summary" + nl + nl)
-	sb.WriteString("[Add your summary of this session]" + nl + nl)
-	sb.WriteString(sep + nl + nl)
-
-	// Tool usage summary
-	tools := s.AllToolUses()
-	if len(tools) > 0 {
-		sb.WriteString("## Tool Usage" + nl + nl)
-		toolCounts := make(map[string]int)
-		for _, t := range tools {
-			toolCounts[t.Name]++
-		}
-		for name, count := range toolCounts {
-			sb.WriteString(fmt.Sprintf("- %s: %d"+nl, name, count))
-		}
+	// Navigation header for multi-part sessions
+	if totalParts > 1 {
+		sb.WriteString(formatPartNavigation(part, totalParts, baseName, nl))
 		sb.WriteString(nl + sep + nl + nl)
 	}
 
-	// Conversation (skip empty messages, use local time)
-	sb.WriteString("## Conversation" + nl + nl)
-	msgNum := 0
-	for _, msg := range s.Messages {
-		// Skip empty messages
-		if isEmptyMessage(msg) {
-			continue
+	// Metadata (use local time) - only on part 1
+	if part == 1 {
+		localStart := s.StartTime.Local()
+		sb.WriteString(fmt.Sprintf("**ID**: %s"+nl, s.ID))
+		sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, localStart.Format("2006-01-02")))
+		sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, localStart.Format("15:04:05")))
+		sb.WriteString(fmt.Sprintf("**Duration**: %s"+nl, formatDuration(s.Duration)))
+		sb.WriteString(fmt.Sprintf("**Tool**: %s"+nl, s.Tool))
+		sb.WriteString(fmt.Sprintf("**Project**: %s"+nl, s.Project))
+		if s.GitBranch != "" {
+			sb.WriteString(fmt.Sprintf("**Branch**: %s"+nl, s.GitBranch))
 		}
+		if s.Model != "" {
+			sb.WriteString(fmt.Sprintf("**Model**: %s"+nl, s.Model))
+		}
+		sb.WriteString(nl)
 
-		msgNum++
+		// Token stats
+		sb.WriteString(fmt.Sprintf("**Turns**: %d"+nl, s.TurnCount))
+		sb.WriteString(fmt.Sprintf("**Tokens**: %s (in: %s, out: %s)"+nl,
+			formatTokens(s.TotalTokens),
+			formatTokens(s.TotalTokensIn),
+			formatTokens(s.TotalTokensOut)))
+		if totalParts > 1 {
+			sb.WriteString(fmt.Sprintf("**Parts**: %d"+nl, totalParts))
+		}
+		sb.WriteString(nl + sep + nl + nl)
+
+		// Summary section (placeholder for user to fill in)
+		sb.WriteString("## Summary" + nl + nl)
+		sb.WriteString("[Add your summary of this session]" + nl + nl)
+		sb.WriteString(sep + nl + nl)
+
+		// Tool usage summary
+		tools := s.AllToolUses()
+		if len(tools) > 0 {
+			sb.WriteString("## Tool Usage" + nl + nl)
+			toolCounts := make(map[string]int)
+			for _, t := range tools {
+				toolCounts[t.Name]++
+			}
+			for name, count := range toolCounts {
+				sb.WriteString(fmt.Sprintf("- %s: %d"+nl, name, count))
+			}
+			sb.WriteString(nl + sep + nl + nl)
+		}
+	}
+
+	// Conversation section
+	if part == 1 {
+		sb.WriteString("## Conversation" + nl + nl)
+	} else {
+		sb.WriteString(fmt.Sprintf("## Conversation (continued from part %d)"+nl+nl, part-1))
+	}
+
+	for i, msg := range messages {
+		msgNum := startMsgIdx + i + 1
 		role := "User"
 		if msg.IsAssistant() {
 			role = "Assistant"
 		} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-			// User messages with only tool results are system responses, not user input
 			role = "Tool Output"
 		}
 
@@ -296,14 +355,24 @@ func formatJournalEntry(s *parser.Session) string {
 			sb.WriteString(fmt.Sprintf("🔧 **%s**"+nl, formatToolUse(t)))
 		}
 
-		// Tool results (these contain command output, file contents, etc.)
+		// Tool results
 		for _, tr := range msg.ToolResults {
 			if tr.IsError {
 				sb.WriteString("❌ Error" + nl)
 			}
 			if tr.Content != "" {
 				content := stripLineNumbers(tr.Content)
-				sb.WriteString(fmt.Sprintf("```"+nl+"%s"+nl+"```"+nl, content))
+				fence := fenceForContent(content)
+				lines := strings.Count(content, "\n")
+
+				if lines > 10 {
+					summary := fmt.Sprintf("%d lines", lines)
+					sb.WriteString(fmt.Sprintf("<details>"+nl+"<summary>%s</summary>"+nl+nl, summary))
+					sb.WriteString(fmt.Sprintf("%s"+nl+"%s"+nl+"%s"+nl, fence, content, fence))
+					sb.WriteString("</details>" + nl)
+				} else {
+					sb.WriteString(fmt.Sprintf("%s"+nl+"%s"+nl+"%s"+nl, fence, content, fence))
+				}
 			}
 		}
 
@@ -312,5 +381,64 @@ func formatJournalEntry(s *parser.Session) string {
 		}
 	}
 
+	// Navigation footer for multi-part sessions
+	if totalParts > 1 {
+		sb.WriteString(nl + sep + nl + nl)
+		sb.WriteString(formatPartNavigation(part, totalParts, baseName, nl))
+	}
+
 	return sb.String()
+}
+
+// formatPartNavigation generates navigation links for multi-part sessions.
+func formatPartNavigation(part, totalParts int, baseName, nl string) string {
+	var sb strings.Builder
+
+	sb.WriteString(fmt.Sprintf("**Part %d of %d**", part, totalParts))
+
+	if part > 1 || part < totalParts {
+		sb.WriteString(" | ")
+	}
+
+	// Previous link
+	if part > 1 {
+		prevFile := baseName + ".md"
+		if part > 2 {
+			prevFile = fmt.Sprintf("%s-p%d.md", baseName, part-1)
+		}
+		sb.WriteString(fmt.Sprintf("[← Previous](%s)", prevFile))
+	}
+
+	// Separator between prev and next
+	if part > 1 && part < totalParts {
+		sb.WriteString(" | ")
+	}
+
+	// Next link
+	if part < totalParts {
+		nextFile := fmt.Sprintf("%s-p%d.md", baseName, part+1)
+		sb.WriteString(fmt.Sprintf("[Next →](%s)", nextFile))
+	}
+
+	sb.WriteString(nl)
+	return sb.String()
+}
+
+// fenceForContent returns the appropriate code fence for content.
+//
+// Uses longer fences when content contains backticks to avoid
+// nested markdown rendering issues. Starts with ``` and adds
+// more backticks as needed.
+//
+// Parameters:
+//   - content: The content to be fenced
+//
+// Returns:
+//   - string: A fence string (e.g., "```", "````", "`````")
+func fenceForContent(content string) string {
+	fence := "```"
+	for strings.Contains(content, fence) {
+		fence += "`"
+	}
+	return fence
 }

@@ -70,8 +70,8 @@ func (p *ClaudeCodeParser) CanParse(path string) bool {
 	}(file)
 
 	scanner := bufio.NewScanner(file)
-	// Check the first N lines - slug may not appear until later in the file
-	// (early lines can be file-history-snapshot or messages without the slug)
+	// Check the first N lines for Claude Code message structure
+	// (early lines can be file-history-snapshot which should be skipped)
 	for i := 0; i < config.ParserPeekLines && scanner.Scan(); i++ {
 		line := scanner.Bytes()
 		if len(line) == 0 {
@@ -83,8 +83,9 @@ func (p *ClaudeCodeParser) CanParse(path string) bool {
 			continue
 		}
 
-		// Claude Code messages have sessionId and slug fields
-		if raw.SessionID != "" && raw.Slug != "" {
+		// Claude Code messages have sessionId and type (user/assistant)
+		// Note: slug field was removed in newer Claude Code versions
+		if raw.SessionID != "" && (raw.Type == config.RoleUser || raw.Type == config.RoleAssistant) {
 			return true
 		}
 	}

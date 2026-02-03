@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -20,6 +21,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
+
+// multiPartPattern matches session part files like "...-p2.md", "...-p3.md", etc.
+var multiPartPattern = regexp.MustCompile(`-p\d+\.md$`)
 
 // journalSiteCmd returns the journal site subcommand.
 //
@@ -277,11 +281,14 @@ func generateIndex(entries []journalEntry) string {
 	var sb strings.Builder
 	nl := config.NewlineLF
 
-	// Separate regular sessions from suggestions
+	// Separate regular sessions from suggestions and multi-part continuations
 	var regular, suggestions []journalEntry
 	for _, e := range entries {
 		if e.IsSuggestion {
 			suggestions = append(suggestions, e)
+		} else if isMultiPartContinuation(e.Filename) {
+			// Skip part 2+ of split sessions - they're navigable from part 1
+			continue
 		} else {
 			regular = append(regular, e)
 		}
@@ -363,6 +370,11 @@ func formatSize(bytes int64) string {
 	return fmt.Sprintf("%.1fMB", mb)
 }
 
+// isMultiPartContinuation returns true if filename is a continuation part (p2, p3, etc.)
+func isMultiPartContinuation(filename string) bool {
+	return multiPartPattern.MatchString(filename)
+}
+
 // generateZensicalToml creates the zensical.toml configuration.
 //
 // Parameters:
@@ -383,8 +395,21 @@ site_description = "AI session history and notes"
 	sb.WriteString("nav = [" + nl)
 	sb.WriteString(`  { "Home" = "index.md" },` + nl)
 
-	// Group recent entries (last 20)
-	recent := entries
+	// Filter out suggestion sessions and multi-part continuations from navigation
+	var regular []journalEntry
+	for _, e := range entries {
+		if e.IsSuggestion {
+			continue
+		}
+		// Skip part 2+ of split sessions (e.g., "...-p2.md", "...-p3.md")
+		if isMultiPartContinuation(e.Filename) {
+			continue
+		}
+		regular = append(regular, e)
+	}
+
+	// Group recent entries (last 20, excluding suggestions)
+	recent := regular
 	if len(recent) > 20 {
 		recent = recent[:20]
 	}

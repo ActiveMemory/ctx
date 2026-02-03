@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-03 | Claude Code subagent sessions share parent sessionId |
+| 2026-02-03 | Claude Code JSONL format changed: slug field removed in v2.1.29+ |
 | 2026-01-30 | Say 'project conventions' not 'idiomatic X' |
 | 2026-01-29 | Documentation audits require verification against actual standards |
 | 2026-01-28 | Required flags now enforced for learnings |
@@ -38,6 +40,26 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-03-064236] Claude Code subagent sessions share parent sessionId
+
+**Context**: After fixing the slug issue, sessions still showed wrong content (SUGGESTION MODE instead of actual conversation). Investigation revealed subagent files in /subagents/ directories use the same sessionId as the parent.
+
+**Lesson**: Subagent files (e.g., prompt_suggestion, compact) share the parent sessionId. When scanning directories, subagent sessions can appear 'newer' (later timestamp) and win during deduplication, causing main session content to be lost.
+
+**Application**: Skip /subagents/ directories when scanning for sessions. Use filepath.SkipDir for efficiency. Subagent sessions have isSidechain:true and an agentId field.
+
+---
+
+## [2026-02-03-063337] Claude Code JSONL format changed: slug field removed in v2.1.29+
+
+**Context**: ctx recall export --all --force was skipping February 2026 sessions. Investigation revealed sessions like c9f12373 had 0 slug fields but 19 sessionId fields.
+
+**Lesson**: Claude Code removed the 'slug' field from message records in newer versions. The parser's CanParse function required both sessionId AND slug, causing it to reject valid session files.
+
+**Application**: When parsing Claude Code sessions, check for sessionId and valid type (user/assistant) instead of requiring slug. The slug may be available in sessions-index.json if needed.
 
 ---
 

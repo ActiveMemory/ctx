@@ -2,6 +2,17 @@
 
 ## Phase 1.a: Cleanup and Release
 
+- [ ] Large session exports crash Firefox - Session 15bcbe62 (1710 interactions, 36K lines)
+      causes browser warnings even with collapsible `<details>` sections. Investigate:
+      1. Split into multiple pages after N interactions (e.g., 200)
+      2. Add prev/next navigation links between parts
+      3. Consider lazy loading or pagination approaches
+      Test case: http://localhost:8000/2026-01-30--15bcbe62/
+      #priority:high #added:2026-02-03-070659
+- [x] `ctx recall export --all --force` missing sessions bug - Fixed two issues:
+      1. CanParse required slug field which newer Claude Code (v2.1.29+) no longer includes
+      2. Subagent sessions in /subagents/ dirs share parent sessionId, causing wrong content
+      #fixed:2026-02-03
 - [ ] T1.2.9: upstream CI is broken (again)
 - [x] T1.2.13: Compose two blog posts: 1) what has changed after the human-guided
       refactoring, and what we can learn about this.
@@ -63,6 +74,10 @@ Enable one agent/process to inform another about context health and audits.
       - SessionAuditor: CheckSession(session, health) []Alert
       - ProjectAuditor: CheckProject(sessions, projectDir) []Alert
 - [ ] T2.5.2: Implement ContextHealthAuditor — warn on high usage, repetition (with hysteresis)
+      - At ~70% context: soft nudge "Context getting full, consider wrapping up soon"
+      - At ~85% context: clear guidance "Exit this session and start fresh. Run /exit or
+        Ctrl+C, then `claude` to continue. ctx remembers across sessions."
+      - Detect repetition loops and suggest session restart
 - [ ] T2.5.3: Implement AuditReminderAuditor — soft nudge for semantic audits
       - Track last audit times in .context/audit-state.json
       - Remind after configurable thresholds (tasks: 3d, decisions: 7d, specs: 14d)
@@ -167,5 +182,7 @@ Follow the pattern established for token_budget and archive_after_days in intern
 
 - [ ] feat: `ctx recall search <query>` - CLI-based search across sessions
   - Simple text search, no server needed
+  - Support phrase/literal matching with quotes: `ctx recall search "version history"`
+  - Zensical's web search only does term matching, CLI should be more powerful
   - IDE grep is alternative, this is convenience
     #priority:low
