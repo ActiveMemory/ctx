@@ -167,7 +167,7 @@ func TestGetRC_InvalidYAML(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create invalid .contextrc file
-	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte("invalid: [yaml: content"), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte("invalid: [yaml: content"), 0644)
 
 	Reset()
 

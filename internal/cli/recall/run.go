@@ -104,21 +104,21 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProje
 		// Details
 		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "    Project: %s", s.Project)
 		if s.GitBranch != "" {
-			dim.Fprintf(cmd.OutOrStdout(), " (%s)", s.GitBranch)
+			_, _ = dim.Fprintf(cmd.OutOrStdout(), " (%s)", s.GitBranch)
 		}
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
-		fmt.Fprintf(cmd.OutOrStdout(), "    Time: %s", s.StartTime.Format("2006-01-02 15:04"))
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "    Time: %s", s.StartTime.Format("2006-01-02 15:04"))
 		if s.Duration.Minutes() >= 1 {
-			dim.Fprintf(cmd.OutOrStdout(), " (%s)", formatDuration(s.Duration))
+			_, _ = dim.Fprintf(cmd.OutOrStdout(), " (%s)", formatDuration(s.Duration))
 		}
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
-		fmt.Fprintf(cmd.OutOrStdout(), "    Turns: %d", s.TurnCount)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "    Turns: %d", s.TurnCount)
 		if s.TotalTokens > 0 {
-			dim.Fprintf(cmd.OutOrStdout(), ", Tokens: %s", formatTokens(s.TotalTokens))
+			_, _ = dim.Fprintf(cmd.OutOrStdout(), ", Tokens: %s", formatTokens(s.TotalTokens))
 		}
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
 		// Preview
 		if s.FirstUserMsg != "" {
@@ -196,12 +196,12 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 			return fmt.Errorf("session not found: %s", args[0])
 		}
 		if len(matches) > 1 {
-			fmt.Fprintf(cmd.ErrOrStderr(), "Multiple sessions match '%s':\n", args[0])
+			_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "Multiple sessions match '%s':\n", args[0])
 			for _, m := range matches {
-				fmt.Fprintf(cmd.ErrOrStderr(), "  %s (%s) - %s\n",
+				_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "  %s (%s) - %s\n",
 					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04"))
 			}
-			fmt.Fprintf(cmd.ErrOrStderr(), "\nUse a more specific ID (e.g., ctx recall show %s)\n", matches[0].ID[:12])
+			_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "\nUse a more specific ID (e.g., ctx recall show %s)\n", matches[0].ID[:12])
 			return fmt.Errorf("ambiguous query")
 		}
 		session = matches[0]
@@ -254,7 +254,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 
 	// Messages
 	if full {
-		header.Fprintf(cmd.OutOrStdout(), "## Conversation\n")
+		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Conversation\n")
 		fmt.Fprintln(cmd.OutOrStdout())
 
 		for i, msg := range session.Messages {
@@ -303,7 +303,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 		}
 	} else {
 		// Show first few user messages as preview
-		header.Fprintf(cmd.OutOrStdout(), "## Conversation Preview\n")
+		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Conversation Preview\n")
 		fmt.Fprintln(cmd.OutOrStdout())
 
 		count := 0
