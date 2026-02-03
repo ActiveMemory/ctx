@@ -75,7 +75,7 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProje
 	}
 
 	if len(filtered) == 0 {
-		fmt.Fprintln(cmd.OutOrStdout(), "No sessions match the filters.")
+		_, _ = fmt.Fprintln(cmd.OutOrStdout(), "No sessions match the filters.")
 		return nil
 	}
 
@@ -88,21 +88,21 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProje
 	header := color.New(color.Bold)
 	dim := color.New(color.FgHiBlack)
 
-	fmt.Fprintf(cmd.OutOrStdout(), "Found %d sessions", len(sessions))
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Found %d sessions", len(sessions))
 	if project != "" || tool != "" {
-		fmt.Fprintf(cmd.OutOrStdout(), " (%d shown)", len(filtered))
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), " (%d shown)", len(filtered))
 	}
-	fmt.Fprintln(cmd.OutOrStdout())
-	fmt.Fprintln(cmd.OutOrStdout())
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
 	// Print sessions
 	for i, s := range filtered {
 		// Session number and slug
-		header.Fprintf(cmd.OutOrStdout(), "%2d. %s", i+1, s.Slug)
-		dim.Fprintf(cmd.OutOrStdout(), " (%s...)\n", s.ID[:8])
+		_, _ = header.Fprintf(cmd.OutOrStdout(), "%2d. %s", i+1, s.Slug)
+		_, _ = dim.Fprintf(cmd.OutOrStdout(), " (%s...)\n", s.ID[:8])
 
 		// Details
-		fmt.Fprintf(cmd.OutOrStdout(), "    Project: %s", s.Project)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "    Project: %s", s.Project)
 		if s.GitBranch != "" {
 			dim.Fprintf(cmd.OutOrStdout(), " (%s)", s.GitBranch)
 		}
@@ -211,7 +211,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 	header := color.New(color.Bold)
 	dim := color.New(color.FgHiBlack)
 
-	header.Fprintf(cmd.OutOrStdout(), "# %s\n", session.Slug)
+	_, _ = header.Fprintf(cmd.OutOrStdout(), "# %s\n", session.Slug)
 	fmt.Fprintln(cmd.OutOrStdout())
 
 	fmt.Fprintf(cmd.OutOrStdout(), "**ID**: %s\n", session.ID)
@@ -244,7 +244,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 			toolCounts[t.Name]++
 		}
 
-		header.Fprintf(cmd.OutOrStdout(), "## Tool Usage\n")
+		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Tool Usage\n")
 		fmt.Fprintln(cmd.OutOrStdout())
 		for name, count := range toolCounts {
 			fmt.Fprintf(cmd.OutOrStdout(), "- %s: %d\n", name, count)
@@ -269,7 +269,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 				roleColor = color.New(color.FgYellow)
 			}
 
-			roleColor.Fprintf(cmd.OutOrStdout(), "### %d. %s ", i+1, role)
+			_, _ = roleColor.Fprintf(cmd.OutOrStdout(), "### %d. %s ", i+1, role)
 			dim.Fprintf(cmd.OutOrStdout(), "(%s)\n", msg.Timestamp.Format("15:04:05"))
 			fmt.Fprintln(cmd.OutOrStdout())
 
@@ -288,7 +288,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 			// Show tool results
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					color.New(color.FgRed).Fprintln(cmd.OutOrStdout(), "❌ Error:")
+					_, _ = color.New(color.FgRed).Fprintln(cmd.OutOrStdout(), "❌ Error:")
 				}
 				if tr.Content != "" {
 					// Strip line number prefixes and show content

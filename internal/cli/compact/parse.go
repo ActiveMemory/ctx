@@ -103,7 +103,7 @@ func parseBlockAt(lines []string, startIdx int) TaskBlock {
 //   - *time.Time: Parsed time, or nil if no valid timestamp is found
 func parseDoneTimestamp(line string) *time.Time {
 	match := config.RegExTaskDoneTimestamp.FindStringSubmatch(line)
-	if match == nil || len(match) < 2 {
+	if len(match) < 2 {
 		return nil
 	}
 

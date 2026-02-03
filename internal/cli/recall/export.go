@@ -180,7 +180,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force 
 			// Check if file exists
 			if _, err := os.Stat(path); err == nil && !force {
 				skipped++
-				dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", filename)
+				_, _ = dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", filename)
 				continue
 			}
 
@@ -210,7 +210,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force 
 		cmd.Printf("Exported %d session(s) to %s\n", exported, journalDir)
 	}
 	if skipped > 0 {
-		dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s). Use --force to overwrite.\n", skipped)
+		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s). Use --force to overwrite.\n", skipped)
 	}
 
 	return nil

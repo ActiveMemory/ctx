@@ -2,7 +2,7 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint clean all release build-all dogfood help test-coverage smoke site site-serve site-setup
+.PHONY: build test vet fmt lint clean all release build-all dogfood help test-coverage smoke site site-serve site-setup audit
 
 # Default binary name and output
 BINARY := ctx
@@ -81,6 +81,19 @@ fmt:
 ## lint: Run golangci-lint (requires golangci-lint installed)
 lint:
 	golangci-lint run
+
+## audit: Run all CI checks locally (fmt, vet, lint, test)
+audit:
+	@echo "==> Checking formatting..."
+	@test -z "$$(gofmt -l .)" || (echo "Files need formatting:"; gofmt -l .; exit 1)
+	@echo "==> Running go vet..."
+	@CGO_ENABLED=0 go vet ./...
+	@echo "==> Running golangci-lint..."
+	@golangci-lint run --timeout=5m
+	@echo "==> Running tests..."
+	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
+	@echo ""
+	@echo "All checks passed!"
 
 ## clean: Remove build artifacts
 clean:

@@ -38,8 +38,8 @@ func TestGetRC_NoFile(t *testing.T) {
 	// Change to temp directory with no .contextrc
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	Reset()
 
@@ -56,8 +56,8 @@ func TestGetRC_NoFile(t *testing.T) {
 func TestGetRC_WithFile(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create .contextrc file
 	rcContent := `context_dir: custom-context
@@ -68,7 +68,7 @@ priority_order:
 auto_archive: false
 archive_after_days: 14
 `
-	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
 	Reset()
 
@@ -94,14 +94,14 @@ archive_after_days: 14
 func TestGetRC_EnvOverrides(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create .contextrc file
 	rcContent := `context_dir: file-context
 token_budget: 4000
 `
-	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
 	// Set environment variables (t.Setenv auto-restores after test)
 	t.Setenv(config.EnvCtxDir, "env-context")
@@ -123,12 +123,12 @@ token_budget: 4000
 func TestGetContextDir_CLIOverride(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create .contextrc file
 	rcContent := `context_dir: file-context`
-	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
 	// Set env override (t.Setenv auto-restores after test)
 	t.Setenv(config.EnvCtxDir, "env-context")
@@ -148,8 +148,8 @@ func TestGetContextDir_CLIOverride(t *testing.T) {
 func TestGetTokenBudget(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	Reset()
 
@@ -163,8 +163,8 @@ func TestGetTokenBudget(t *testing.T) {
 func TestGetRC_InvalidYAML(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create invalid .contextrc file
 	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte("invalid: [yaml: content"), 0644)
@@ -181,12 +181,12 @@ func TestGetRC_InvalidYAML(t *testing.T) {
 func TestGetRC_PartialConfig(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create .contextrc with only some fields
 	rcContent := `token_budget: 5000`
-	os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
 
 	Reset()
 
@@ -205,8 +205,8 @@ func TestGetRC_PartialConfig(t *testing.T) {
 func TestGetRC_InvalidEnvBudget(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	t.Setenv(config.EnvCtxTokenBudget, "not-a-number")
 
@@ -222,8 +222,8 @@ func TestGetRC_InvalidEnvBudget(t *testing.T) {
 func TestGetRC_Singleton(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(origDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	Reset()
 
