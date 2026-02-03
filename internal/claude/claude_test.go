@@ -177,4 +177,3 @@ func TestSettingsStructure(t *testing.T) {
 		t.Error("Settings.Permissions.Allow should not be empty")
 	}
 }
-

@@ -14,9 +14,9 @@ import (
 
 func TestCompleted(t *testing.T) {
 	tests := []struct {
-		name  string
-		line  string
-		want  bool
+		name string
+		line string
+		want bool
 	}{
 		{
 			name: "completed task",

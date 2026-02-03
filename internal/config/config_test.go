@@ -537,9 +537,9 @@ func TestDefaultClaudePermissions(t *testing.T) {
 func TestConstants(t *testing.T) {
 	// Verify important constants are set correctly
 	tests := []struct {
-		name  string
-		got   string
-		want  string
+		name string
+		got  string
+		want string
 	}{
 		{"DirContext", DirContext, ".context"},
 		{"DirClaude", DirClaude, ".claude"},

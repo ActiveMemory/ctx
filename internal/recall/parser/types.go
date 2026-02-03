@@ -54,8 +54,8 @@ import (
 //   - FirstUserMsg: Preview text of first user message (truncated)
 //   - Model: Primary model used in the session
 type Session struct {
-	ID         string `json:"id"`
-	Slug       string `json:"slug,omitempty"`
+	ID   string `json:"id"`
+	Slug string `json:"slug,omitempty"`
 
 	Tool       string `json:"tool"`
 	SourceFile string `json:"source_file"`

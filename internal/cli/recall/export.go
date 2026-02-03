@@ -434,7 +434,7 @@ func formatPartNavigation(part, totalParts int, baseName, nl string) string {
 //   - content: The content to be fenced
 //
 // Returns:
-//   - string: A fence string (e.g., "```", "````", "`````")
+//   - string: A fence string (e.g., "```", "````", "```“")
 func fenceForContent(content string) string {
 	fence := "```"
 	for strings.Contains(content, fence) {

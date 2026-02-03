@@ -126,14 +126,14 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProje
 			if len(preview) > 60 {
 				preview = preview[:60] + "..."
 			}
-			dim.Fprintf(cmd.OutOrStdout(), "    \"%s\"\n", preview)
+			_, _ = dim.Fprintf(cmd.OutOrStdout(), "    \"%s\"\n", preview)
 		}
 
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 	}
 
 	if len(sessions) > len(filtered) {
-		dim.Fprintf(cmd.OutOrStdout(), "Use --limit to see more sessions\n")
+		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Use --limit to see more sessions\n")
 	}
 
 	return nil
@@ -212,29 +212,29 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 	dim := color.New(color.FgHiBlack)
 
 	_, _ = header.Fprintf(cmd.OutOrStdout(), "# %s\n", session.Slug)
-	fmt.Fprintln(cmd.OutOrStdout())
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
-	fmt.Fprintf(cmd.OutOrStdout(), "**ID**: %s\n", session.ID)
-	fmt.Fprintf(cmd.OutOrStdout(), "**Tool**: %s\n", session.Tool)
-	fmt.Fprintf(cmd.OutOrStdout(), "**Project**: %s\n", session.Project)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**ID**: %s\n", session.ID)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Tool**: %s\n", session.Tool)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Project**: %s\n", session.Project)
 	if session.GitBranch != "" {
-		fmt.Fprintf(cmd.OutOrStdout(), "**Branch**: %s\n", session.GitBranch)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Branch**: %s\n", session.GitBranch)
 	}
 	if session.Model != "" {
-		fmt.Fprintf(cmd.OutOrStdout(), "**Model**: %s\n", session.Model)
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Model**: %s\n", session.Model)
 	}
-	fmt.Fprintln(cmd.OutOrStdout())
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
-	fmt.Fprintf(cmd.OutOrStdout(), "**Started**: %s\n", session.StartTime.Format("2006-01-02 15:04:05"))
-	fmt.Fprintf(cmd.OutOrStdout(), "**Duration**: %s\n", formatDuration(session.Duration))
-	fmt.Fprintf(cmd.OutOrStdout(), "**Turns**: %d\n", session.TurnCount)
-	fmt.Fprintf(cmd.OutOrStdout(), "**Messages**: %d\n", len(session.Messages))
-	fmt.Fprintln(cmd.OutOrStdout())
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Started**: %s\n", session.StartTime.Format("2006-01-02 15:04:05"))
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Duration**: %s\n", formatDuration(session.Duration))
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Turns**: %d\n", session.TurnCount)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Messages**: %d\n", len(session.Messages))
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
-	fmt.Fprintf(cmd.OutOrStdout(), "**Tokens In**: %s\n", formatTokens(session.TotalTokensIn))
-	fmt.Fprintf(cmd.OutOrStdout(), "**Tokens Out**: %s\n", formatTokens(session.TotalTokensOut))
-	fmt.Fprintf(cmd.OutOrStdout(), "**Total**: %s\n", formatTokens(session.TotalTokens))
-	fmt.Fprintln(cmd.OutOrStdout())
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Tokens In**: %s\n", formatTokens(session.TotalTokensIn))
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Tokens Out**: %s\n", formatTokens(session.TotalTokensOut))
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Total**: %s\n", formatTokens(session.TotalTokens))
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
 	// Tool usage summary
 	tools := session.AllToolUses()
@@ -245,17 +245,17 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 		}
 
 		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Tool Usage\n")
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 		for name, count := range toolCounts {
-			fmt.Fprintf(cmd.OutOrStdout(), "- %s: %d\n", name, count)
+			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "- %s: %d\n", name, count)
 		}
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 	}
 
 	// Messages
 	if full {
 		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Conversation\n")
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
 		for i, msg := range session.Messages {
 			role := "User"
@@ -270,19 +270,19 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 			}
 
 			_, _ = roleColor.Fprintf(cmd.OutOrStdout(), "### %d. %s ", i+1, role)
-			dim.Fprintf(cmd.OutOrStdout(), "(%s)\n", msg.Timestamp.Format("15:04:05"))
-			fmt.Fprintln(cmd.OutOrStdout())
+			_, _ = dim.Fprintf(cmd.OutOrStdout(), "(%s)\n", msg.Timestamp.Format("15:04:05"))
+			_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
 			// Show full text content - no truncation
 			if msg.Text != "" {
-				fmt.Fprintln(cmd.OutOrStdout(), msg.Text)
-				fmt.Fprintln(cmd.OutOrStdout())
+				_, _ = fmt.Fprintln(cmd.OutOrStdout(), msg.Text)
+				_, _ = fmt.Fprintln(cmd.OutOrStdout())
 			}
 
 			// Show tool uses with details
 			for _, t := range msg.ToolUses {
 				toolInfo := formatToolUse(t)
-				fmt.Fprintf(cmd.OutOrStdout(), "🔧 **%s**\n", toolInfo)
+				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "🔧 **%s**\n", toolInfo)
 			}
 
 			// Show tool results
@@ -293,36 +293,36 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 				if tr.Content != "" {
 					// Strip line number prefixes and show content
 					content := stripLineNumbers(tr.Content)
-					fmt.Fprintf(cmd.OutOrStdout(), "```\n%s\n```\n", content)
+					_, _ = fmt.Fprintf(cmd.OutOrStdout(), "```\n%s\n```\n", content)
 				}
 			}
 
 			if len(msg.ToolUses) > 0 || len(msg.ToolResults) > 0 {
-				fmt.Fprintln(cmd.OutOrStdout())
+				_, _ = fmt.Fprintln(cmd.OutOrStdout())
 			}
 		}
 	} else {
 		// Show first few user messages as preview
 		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Conversation Preview\n")
-		fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
 		count := 0
 		for _, msg := range session.Messages {
 			if msg.IsUser() && msg.Text != "" {
 				count++
 				if count > 5 {
-					dim.Fprintf(cmd.OutOrStdout(), "... and %d more turns\n", session.TurnCount-5)
+					_, _ = dim.Fprintf(cmd.OutOrStdout(), "... and %d more turns\n", session.TurnCount-5)
 					break
 				}
 				text := msg.Text
 				if len(text) > 100 {
 					text = text[:100] + "..."
 				}
-				fmt.Fprintf(cmd.OutOrStdout(), "%d. %s\n", count, text)
+				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%d. %s\n", count, text)
 			}
 		}
-		fmt.Fprintln(cmd.OutOrStdout())
-		dim.Fprintf(cmd.OutOrStdout(), "Use --full to see all messages\n")
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
+		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Use --full to see all messages\n")
 	}
 
 	return nil
