@@ -763,10 +763,10 @@ examples...</p>
 <h2 id="the-finite-resource-nobody-talks-about">The Finite Resource Nobody Talks About<a class="headerlink" href="#the-finite-resource-nobody-talks-about" title="Permanent link">&para;</a></h2>
 <p>Here's something that took me too long to internalize: <strong>context is not free</strong>.</p>
 <p>Every token you send to an AI model consumes a finite resource I call the
-<em>attention budget</em>. The model doesn't just read tokens—it forms relationships
+<em>attention budget</em>. The model doesn't just read tokens: It forms relationships
 between them. For <code>n</code> tokens, that's roughly <code>n^2</code> relationships.
 Double the context, and the computation quadruples.</p>
-<p>But the more important constraint isn't cost. It's <strong>attention density</strong>.</p>
+<p>But the more important constraint isn't cost: It's <strong>attention density</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">Attention Density</p>
 <p><strong>Attention density</strong> is how much focus each token receives relative to all
@@ -784,24 +784,29 @@ clearly. In a warehouse, it becomes a dim glow that barely reaches the corners.<
 <h2 id="the-middle-gets-lost">The Middle Gets Lost<a class="headerlink" href="#the-middle-gets-lost" title="Permanent link">&para;</a></h2>
 <p>This one surprised me.</p>
 <p>Research shows that transformer-based models tend to attend more strongly to
-the <strong>beginning</strong> and <strong>end</strong> of a context window than to its middle—a phenomenon
-often called <em>lost in the middle</em>. Positional anchors matter, and the middle
-has fewer of them.</p>
-<p>In practice, this means that information placed "somewhere in the middle"
+the <strong>beginning</strong> and <strong>end</strong> of a context window than to its middle (<em>a 
+phenomenon often called "lost in the middle"</em>). </p>
+<p><strong>Positional anchors matter, and the middle has fewer of them</strong>.</p>
+<p>In practice, this means that information placed "<em>somewhere in the middle</em>"
 is statistically less salient, even if it's important.</p>
 <p>When I first learned this, <code>ctx</code>'s read order immediately clicked:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. CONSTITUTION.md — Hard rules, NEVER violate
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. TASKS.md — What to work on next
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. CONVENTIONS.md — How to write code
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. ARCHITECTURE.md — Where things go
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5. DECISIONS.md — Why things are the way they are
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>6. LEARNINGS.md — Gotchas to avoid
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>7. GLOSSARY.md — Correct terminology
-</span></code></pre></div>
+<ol>
+<li><code>CONSTITUTION.md</code>: Hard rules, NEVER violate</li>
+<li><code>TASKS.md</code>: What to work on next</li>
+<li><code>CONVENTIONS.md</code>: How to write code</li>
+<li><code>ARCHITECTURE.md</code>: Where things go</li>
+<li><code>DECISIONS.md</code>: Why things are the way they are</li>
+<li><code>LEARNINGS.md</code>: Gotchas to avoid</li>
+<li><code>GLOSSARY.md</code>: Correct terminology</li>
+</ol>
 <p><strong>CONSTITUTION comes first for a reason.</strong></p>
-<p>It contains invariants—rules that must never be violated. Security constraints.
-Quality gates. Process requirements. Put those in the middle, and they risk
-being diluted by noise.</p>
+<p>It contains invariants; rules that must never be violated:</p>
+<ul>
+<li>Security constraints.</li>
+<li>Quality gates. </li>
+<li>Process requirements... </li>
+</ul>
+<p>Put those in the middle, and they risk being <strong>diluted</strong> by noise.</p>
 <p>This is <code>ctx</code>'s first primitive: <strong>hierarchical importance</strong>.
 Not all context is equal.</p>
 <h2 id="ctx-primitives"><code>ctx</code> Primitives<a class="headerlink" href="#ctx-primitives" title="Permanent link">&para;</a></h2>
@@ -855,44 +860,44 @@ purposes</strong>:</p>
 <p>Load only what's relevant to the task at hand. Preserve attention density.</p>
 <h3 id="primitive-2-explicit-budgets">Primitive 2: Explicit Budgets<a class="headerlink" href="#primitive-2-explicit-budgets" title="Permanent link">&para;</a></h3>
 <p>The <code>--budget</code> flag forces a choice:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
 </span></code></pre></div>
-<p>Example allocation:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Constitution: ~200 tokens (never truncated)
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Tasks: ~500 tokens (current phase)
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Conventions: ~800 tokens (key patterns)
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Recent decisions: ~400 tokens (last 3)
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>…budget exhausted, stop loading
+<p>Here is a sample allocation:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Constitution: ~200 tokens (never truncated)
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Tasks: ~500 tokens (current phase)
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Conventions: ~800 tokens (key patterns)
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Recent decisions: ~400 tokens (last 3)
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>…budget exhausted, stop loading
 </span></code></pre></div>
-<p>The constraint is the feature. It enforces ruthless prioritization.</p>
+<p>The constraint is the feature: It enforces ruthless prioritization.</p>
 <h3 id="primitive-3-indexes-over-full-content">Primitive 3: Indexes Over Full Content<a class="headerlink" href="#primitive-3-indexes-over-full-content" title="Permanent link">&para;</a></h3>
-<p>DECISIONS.md and LEARNINGS.md both include index sections:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&lt;!-- INDEX:START --&gt;
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| Date       | Decision                            |
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>|------------|-------------------------------------|
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| 2026-01-15 | Use PostgreSQL for primary database |
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>| 2026-01-20 | Adopt Cobra for CLI framework       |
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>&lt;!-- INDEX:END --&gt;
+<p><code>DECISIONS.md</code> and <code>LEARNINGS.md</code> both include index sections:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&lt;!-- INDEX:START --&gt;
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>| Date       | Decision                            |
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>|------------|-------------------------------------|
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>| 2026-01-15 | Use PostgreSQL for primary database |
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| 2026-01-20 | Adopt Cobra for CLI framework       |
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>&lt;!-- INDEX:END --&gt;
 </span></code></pre></div>
-<p>An AI can scan ~50 tokens of index and decide which 200-token entries
-are worth loading.</p>
+<p>An AI agent can scan ~50 tokens of index and decide which 
+200-token entries are worth loading.</p>
 <p>This is <strong>just-in-time context</strong>.</p>
 <p>References are cheaper than full text.</p>
 <h3 id="primitive-4-filesystem-as-navigation">Primitive 4: Filesystem as Navigation<a class="headerlink" href="#primitive-4-filesystem-as-navigation" title="Permanent link">&para;</a></h3>
 <p><code>ctx</code> uses the filesystem itself as a context structure:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>.context/
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── CONSTITUTION.md
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>├── TASKS.md
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>├── sessions/
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│   ├── 2026-01-15-*.md
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│   └── 2026-01-20-*.md
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>└── archive/
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    └── tasks-2026-01.md
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>.context/
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── CONSTITUTION.md
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── TASKS.md
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├── sessions/
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│   ├── 2026-01-15-*.md
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   └── 2026-01-20-*.md
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>└── archive/
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    └── tasks-2026-01.md
 </span></code></pre></div>
-<p>The AI doesn't need every session loaded.</p>
-<p>It needs to know <strong>where to look</strong>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ls<span class="w"> </span>.context/sessions/
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cat<span class="w"> </span>.context/sessions/2026-01-20-auth-discussion.md
+<p>The AI doesn't need every session loaded;
+it needs to know <strong>where to look</strong>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ls<span class="w"> </span>.context/sessions/
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cat<span class="w"> </span>.context/sessions/2026-01-20-auth-discussion.md
 </span></code></pre></div>
 <p>File names, timestamps, and directories encode relevance.</p>
 <p><strong>Navigation is cheaper than loading</strong>.</p>
@@ -909,9 +914,9 @@ made—now help me fix this typo."</p>
 density</strong>.</p>
 </div>
 <p><code>ctx</code> takes the opposite approach:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>status<span class="w">                      </span><span class="c1"># Quick overview (~100 tokens)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w">         </span><span class="c1"># Typical session</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cat<span class="w"> </span>.context/sessions/...<span class="w">       </span><span class="c1"># Deep dive when needed</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>status<span class="w">                      </span><span class="c1"># Quick overview (~100 tokens)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w">         </span><span class="c1"># Typical session</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>cat<span class="w"> </span>.context/sessions/...<span class="w">       </span><span class="c1"># Deep dive when needed</span>
 </span></code></pre></div>
 <table>
 <thead>
@@ -947,8 +952,10 @@ density</strong>.</p>
 <p>Summaries first. Details on demand.</p>
 <h2 id="quality-over-quantity">Quality Over Quantity<a class="headerlink" href="#quality-over-quantity" title="Permanent link">&para;</a></h2>
 <p>Here's the counterintuitive part: <strong>more context can make AI worse</strong>.</p>
-<p>Extra tokens add noise, not clarity. Hallucinated connections increase.
-Signal per token drops.</p>
+<p>Extra tokens add noise, not clarity:
+* 
+* Hallucinated connections increase.
+* Signal per token drops.</p>
 <p>The goal isn't maximum context. It's <strong>maximum signal per token</strong>.</p>
 <p>This principle drives several <code>ctx</code> features:</p>
 <table>
@@ -995,10 +1002,10 @@ but how to <strong>design for it</strong>.</p>
 <p>"If this session ended right now, would the next one know what happened?"</p>
 </blockquote>
 <p>Capture learnings as they occur:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;JWT tokens require explicit cache invalidation&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Debugging auth failures&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Token refresh doesn&#39;t clear old tokens&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Always invalidate cache on refresh&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;JWT tokens require explicit cache invalidation&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Debugging auth failures&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Token refresh doesn&#39;t clear old tokens&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Always invalidate cache on refresh&quot;</span>
 </span></code></pre></div>
 <p><strong>Structure beats prose</strong>: Bullet points survive compression.</p>
 <p>Headings remain scannable. Tables pack density.</p>
@@ -1019,8 +1026,8 @@ But you can <strong>spend it wisely</strong>:</p>
 <li>Indexes over full content</li>
 <li>Filesystem as structure</li>
 </ol>
-<p>This is why <code>ctx</code> exists—not to cram more context into AI sessions,
-but to curate the <em>right</em> context for each moment.</p>
+<p>This is why <code>ctx</code> exists: <strong>not</strong> to cram more context into AI sessions,
+<strong>but</strong> to curate the <em>right</em> context for each moment.</p>
 <h2 id="the-mental-model">The Mental Model<a class="headerlink" href="#the-mental-model" title="Permanent link">&para;</a></h2>
 <p>I now approach every AI interaction with one question:</p>
 <blockquote>
@@ -1029,6 +1036,7 @@ but to curate the <em>right</em> context for each moment.</p>
 <p>Not "<em>how do I explain everything</em>," but "<em>what's the minimum that matters</em>."</p>
 <p>That shift (<em>from abundance to curation</em>) is the difference between
 frustrating sessions and <strong>productive</strong> ones.</p>
+<hr />
 <p><strong>Spend your tokens wisely</strong>.</p>
 <p>Your AI will thank you.</p>
 

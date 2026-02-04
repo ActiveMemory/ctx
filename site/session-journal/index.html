@@ -444,6 +444,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#enriching-journal-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enriching Journal Entries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enriching Journal Entries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-enrich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Enrich?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-frontmatter-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Frontmatter Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-ctx-journal-enrich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using /ctx-journal-enrich
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before-and-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before and After
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enrichment-and-site-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enrichment and Site Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Enrichment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -887,6 +970,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#enriching-journal-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enriching Journal Entries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enriching Journal Entries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-enrich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Enrich?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-frontmatter-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Frontmatter Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-ctx-journal-enrich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using /ctx-journal-enrich
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before-and-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before and After
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enrichment-and-site-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enrichment and Site Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Enrichment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1071,24 +1237,264 @@ preserving your edits.</p>
 </span></code></pre></div>
 <h2 id="suggestion-sessions">Suggestion Sessions<a class="headerlink" href="#suggestion-sessions" title="Permanent link">&para;</a></h2>
 <p>Claude Code generates "suggestion" sessions for auto-complete prompts. These are separated in the index under a "Suggestions" section to keep your main session list focused.</p>
+<h2 id="enriching-journal-entries">Enriching Journal Entries<a class="headerlink" href="#enriching-journal-entries" title="Permanent link">&para;</a></h2>
+<p>Raw exported sessions contain basic metadata (date, time, project) but lack the
+structured information needed for effective search, filtering, and analysis.
+<strong>Journal enrichment</strong> adds semantic metadata that transforms a flat archive into
+a searchable knowledge base.</p>
+<h3 id="why-enrich">Why Enrich?<a class="headerlink" href="#why-enrich" title="Permanent link">&para;</a></h3>
+<p>Without enrichment, you have timestamps and raw conversations. With enrichment:</p>
+<ul>
+<li><strong>Find sessions by topic</strong>: "Show me all auth-related sessions"</li>
+<li><strong>Filter by outcome</strong>: "What did I abandon vs complete?"</li>
+<li><strong>Track technology usage</strong>: "When did I last work with PostgreSQL?"</li>
+<li><strong>Identify key files</strong>: Jump directly to the files discussed</li>
+<li><strong>Get summaries</strong>: Understand what happened without reading transcripts</li>
+</ul>
+<h3 id="the-frontmatter-schema">The Frontmatter Schema<a class="headerlink" href="#the-frontmatter-schema" title="Permanent link">&para;</a></h3>
+<p>Enriched entries begin with YAML frontmatter:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nn">---</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Implement</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">layer&quot;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-01-27</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">outcome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">completed</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nt">topics</span><span class="p">:</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">caching</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">performance</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nt">technologies</span><span class="p">:</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">go</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nt">libraries</span><span class="p">:</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">go-redis/redis</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nt">key_files</span><span class="p">:</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal/cache/redis.go</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal/cache/memory.go</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="nn">---</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>Yes</td>
+<td>Descriptive title (not the session slug)</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>Yes</td>
+<td>Session date (YYYY-MM-DD)</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Yes</td>
+<td>Session type (see below)</td>
+</tr>
+<tr>
+<td><code>outcome</code></td>
+<td>Yes</td>
+<td>How the session ended (see below)</td>
+</tr>
+<tr>
+<td><code>topics</code></td>
+<td>No</td>
+<td>Subject areas discussed</td>
+</tr>
+<tr>
+<td><code>technologies</code></td>
+<td>No</td>
+<td>Languages, databases, frameworks</td>
+</tr>
+<tr>
+<td><code>libraries</code></td>
+<td>No</td>
+<td>Specific packages or libraries used</td>
+</tr>
+<tr>
+<td><code>key_files</code></td>
+<td>No</td>
+<td>Important files created or modified</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Type values:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feature</code></td>
+<td>Building new functionality</td>
+</tr>
+<tr>
+<td><code>bugfix</code></td>
+<td>Fixing broken behavior</td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>Restructuring without behavior change</td>
+</tr>
+<tr>
+<td><code>exploration</code></td>
+<td>Research, learning, experimentation</td>
+</tr>
+<tr>
+<td><code>debugging</code></td>
+<td>Investigating issues</td>
+</tr>
+<tr>
+<td><code>documentation</code></td>
+<td>Writing docs, comments, README</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Outcome values:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>completed</code></td>
+<td>Goal achieved</td>
+</tr>
+<tr>
+<td><code>partial</code></td>
+<td>Some progress, work continues</td>
+</tr>
+<tr>
+<td><code>abandoned</code></td>
+<td>Stopped pursuing this approach</td>
+</tr>
+<tr>
+<td><code>blocked</code></td>
+<td>Waiting on external dependency</td>
+</tr>
+</tbody>
+</table>
+<h3 id="using-ctx-journal-enrich">Using <code>/ctx-journal-enrich</code><a class="headerlink" href="#using-ctx-journal-enrich" title="Permanent link">&para;</a></h3>
+<p>The <code>/ctx-journal-enrich</code> skill automates enrichment by analyzing conversation
+content and proposing metadata.</p>
+<p><strong>Invoke by session identifier:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/ctx-journal-enrich twinkly-stirring-kettle
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/ctx-journal-enrich twinkly
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/ctx-journal-enrich 2026-01-24
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>/ctx-journal-enrich 76fe2ab9
+</span></code></pre></div>
+<p>The skill will:</p>
+<ol>
+<li>Find the matching journal file</li>
+<li>Read and analyze the conversation</li>
+<li>Propose frontmatter (type, topics, outcome, technologies)</li>
+<li>Generate a 2-3 sentence summary</li>
+<li>Extract decisions, learnings, and tasks mentioned</li>
+<li>Show a diff and ask for confirmation before writing</li>
+</ol>
+<h3 id="before-and-after">Before and After<a class="headerlink" href="#before-and-after" title="Permanent link">&para;</a></h3>
+<p><strong>Before enrichment:</strong></p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gh"># twinkly-stirring-kettle</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="gs">**ID**</span>: abc123-def456
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="gs">**Date**</span>: 2026-01-24
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="gs">**Time**</span>: 14:30:00
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>...
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="gu">## Summary</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>[Add your summary of this session]
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="gu">## Conversation</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>...
+</span></code></pre></div>
+<p><strong>After enrichment:</strong></p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>---
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>title: &quot;Add Redis caching to API endpoints&quot;
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>date: 2026-01-24
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>type: feature
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>outcome: completed
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>topics:
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>caching
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>api-performance
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>technologies:
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>go
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>redis
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>key_files:
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>internal/api/middleware/cache.go
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="gu">  - internal/cache/redis.go</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="gu">---</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="gh"># twinkly-stirring-kettle</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="gs">**ID**</span>: abc123-def456
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="gs">**Date**</span>: 2026-01-24
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="gs">**Time**</span>: 14:30:00
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>...
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="gu">## Summary</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>Implemented Redis-based caching middleware for frequently-accessed API endpoints.
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>Added cache invalidation on writes and configurable TTL per route. Reduced
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>average response time from 200ms to 15ms for cached routes.
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
+</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="gu">## Decisions</span>
+</span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>
+</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="k">-</span><span class="w"> </span>Used Redis over in-memory cache for horizontal scaling
+</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="k">-</span><span class="w"> </span>Chose per-route TTL configuration over global setting
+</span><span id="__span-8-34"><a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>
+</span><span id="__span-8-35"><a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="gu">## Learnings</span>
+</span><span id="__span-8-36"><a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>
+</span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="k">-</span><span class="w"> </span>Redis WATCH command prevents race conditions during cache invalidation
+</span><span id="__span-8-38"><a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>
+</span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="gu">## Conversation</span>
+</span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>...
+</span></code></pre></div>
+<h3 id="enrichment-and-site-generation">Enrichment and Site Generation<a class="headerlink" href="#enrichment-and-site-generation" title="Permanent link">&para;</a></h3>
+<p>The journal site generator uses enriched metadata for better organization:</p>
+<ul>
+<li><strong>Titles</strong> appear in navigation instead of slugs</li>
+<li><strong>Summaries</strong> provide context in the index</li>
+<li><strong>Topics</strong> enable filtering (when using search)</li>
+<li><strong>Types</strong> allow grouping by work category</li>
+</ul>
+<p>Future improvements will add topic-based navigation and outcome filtering to
+the generated site.</p>
+<h3 id="batch-enrichment">Batch Enrichment<a class="headerlink" href="#batch-enrichment" title="Permanent link">&para;</a></h3>
+<p>To enrich multiple sessions, process them one at a time:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List unenriched sessions (those without frontmatter)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;^---</span>$<span class="s2">&quot;</span><span class="w"> </span>.context/journal/*.md<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+</span></code></pre></div>
+<p>Then run <code>/ctx-journal-enrich</code> on each. Enrichment is intentionally interactive
+to ensure accuracy.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <p><strong>Daily workflow:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># At end of day, export and browse</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># At end of day, export and browse</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div></p>
 <p><strong>After a productive session:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Export just that session and add notes</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;session-id&gt;
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Edit .context/journal/&lt;session&gt;.md</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Regenerate: ctx journal site</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Export just that session and add notes</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;session-id&gt;
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Edit .context/journal/&lt;session&gt;.md</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Regenerate: ctx journal site</span>
 </span></code></pre></div></p>
 <p><strong>Searching across all sessions:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Use grep on the journal directory</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;authentication&quot;</span><span class="w"> </span>.context/journal/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Use grep on the journal directory</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;authentication&quot;</span><span class="w"> </span>.context/journal/
 </span></code></pre></div></p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <p>The journal site uses <a href="https://pypi.org/project/zensical/">zensical</a> for static site generation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

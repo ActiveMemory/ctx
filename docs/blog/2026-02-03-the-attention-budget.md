@@ -27,11 +27,11 @@ Understanding that single fact shaped every design decision behind `ctx`.
 Here's something that took me too long to internalize: **context is not free**.
 
 Every token you send to an AI model consumes a finite resource I call the
-*attention budget*. The model doesn't just read tokens—it forms relationships
+*attention budget*. The model doesn't just read tokens: It forms relationships
 between them. For `n` tokens, that's roughly `n^2` relationships.
 Double the context, and the computation quadruples.
 
-But the more important constraint isn't cost. It's **attention density**.
+But the more important constraint isn't cost: It's **attention density**.
 
 !!! info "Attention Density"
     **Attention density** is how much focus each token receives relative to all
@@ -57,30 +57,33 @@ The budget isn't just about cost. It's about **preserving signal**.
 This one surprised me.
 
 Research shows that transformer-based models tend to attend more strongly to
-the **beginning** and **end** of a context window than to its middle—a phenomenon
-often called *lost in the middle*. Positional anchors matter, and the middle
-has fewer of them.
+the **beginning** and **end** of a context window than to its middle (*a 
+phenomenon often called "lost in the middle"*). 
 
-In practice, this means that information placed "somewhere in the middle"
+**Positional anchors matter, and the middle has fewer of them**.
+
+In practice, this means that information placed "*somewhere in the middle*"
 is statistically less salient, even if it's important.
 
 When I first learned this, `ctx`'s read order immediately clicked:
 
-```
-1. CONSTITUTION.md — Hard rules, NEVER violate
-2. TASKS.md — What to work on next
-3. CONVENTIONS.md — How to write code
-4. ARCHITECTURE.md — Where things go
-5. DECISIONS.md — Why things are the way they are
-6. LEARNINGS.md — Gotchas to avoid
-7. GLOSSARY.md — Correct terminology
-```
+1. `CONSTITUTION.md`: Hard rules, NEVER violate
+2. `TASKS.md`: What to work on next
+3. `CONVENTIONS.md`: How to write code
+4. `ARCHITECTURE.md`: Where things go
+5. `DECISIONS.md`: Why things are the way they are
+6. `LEARNINGS.md`: Gotchas to avoid
+7. `GLOSSARY.md`: Correct terminology
 
 **CONSTITUTION comes first for a reason.**
 
-It contains invariants—rules that must never be violated. Security constraints.
-Quality gates. Process requirements. Put those in the middle, and they risk
-being diluted by noise.
+It contains invariants; rules that must never be violated:
+
+* Security constraints.
+* Quality gates. 
+* Process requirements... 
+
+Put those in the middle, and they risk being **diluted** by noise.
 
 This is `ctx`'s first primitive: **hierarchical importance**.
 Not all context is equal.
@@ -116,7 +119,7 @@ The `--budget` flag forces a choice:
 ctx agent --budget 4000
 ```
 
-Example allocation:
+Here is a sample allocation:
 
 ```
 Constitution: ~200 tokens (never truncated)
@@ -126,11 +129,11 @@ Recent decisions: ~400 tokens (last 3)
 …budget exhausted, stop loading
 ```
 
-The constraint is the feature. It enforces ruthless prioritization.
+The constraint is the feature: It enforces ruthless prioritization.
 
 ### Primitive 3: Indexes Over Full Content
 
-DECISIONS.md and LEARNINGS.md both include index sections:
+`DECISIONS.md` and `LEARNINGS.md` both include index sections:
 
 ```markdown
 <!-- INDEX:START -->
@@ -141,8 +144,8 @@ DECISIONS.md and LEARNINGS.md both include index sections:
 <!-- INDEX:END -->
 ```
 
-An AI can scan ~50 tokens of index and decide which 200-token entries
-are worth loading.
+An AI agent can scan ~50 tokens of index and decide which 
+200-token entries are worth loading.
 
 This is **just-in-time context**.
 
@@ -163,9 +166,8 @@ References are cheaper than full text.
     └── tasks-2026-01.md
 ```
 
-The AI doesn't need every session loaded.
-
-It needs to know **where to look**.
+The AI doesn't need every session loaded;
+it needs to know **where to look**.
 
 ```bash
 ls .context/sessions/
@@ -210,8 +212,10 @@ Summaries first. Details on demand.
 
 Here's the counterintuitive part: **more context can make AI worse**.
 
-Extra tokens add noise, not clarity. Hallucinated connections increase.
-Signal per token drops.
+Extra tokens add noise, not clarity:
+* 
+* Hallucinated connections increase.
+* Signal per token drops.
 
 The goal isn't maximum context. It's **maximum signal per token**.
 
@@ -279,8 +283,8 @@ But you can **spend it wisely**:
 4. Indexes over full content
 5. Filesystem as structure
 
-This is why `ctx` exists—not to cram more context into AI sessions,
-but to curate the *right* context for each moment.
+This is why `ctx` exists: **not** to cram more context into AI sessions,
+**but** to curate the *right* context for each moment.
 
 ## The Mental Model
 
@@ -292,6 +296,8 @@ Not "*how do I explain everything*," but "*what's the minimum that matters*."
 
 That shift (*from abundance to curation*) is the difference between
 frustrating sessions and **productive** ones.
+
+----
 
 **Spend your tokens wisely**.
 
