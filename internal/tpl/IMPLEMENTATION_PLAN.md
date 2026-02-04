@@ -1,27 +1,26 @@
 # Implementation Plan
 
-This file is the orchestrator's directive. The agent's actual tasks live in `.context/TASKS.md`.
+<!-- ctx:plan -->
+<!-- DO NOT REMOVE: This marker indicates ctx-managed content -->
 
-## Current Directive
+This file provides high-level direction. Detailed tasks live in `.context/TASKS.md`.
 
-- [ ] Check `.context/TASKS.md` and work on the first unchecked item
+## Current Focus
 
-## Completion Criteria
+<!-- Describe what you're working on now -->
 
-When `.context/TASKS.md` has no unchecked items remaining, the directive is complete.
+## North Star
 
-## North Star (Endgame)
+What does "done" look like for this project?
 
-Before declaring DONE, consider these goals:
-
-1. **Define your north star** — What does "done" look like for this project?
-2. **Validate end-to-end** — Does the system work as intended?
-3. **Document for others** — Can someone else pick this up?
-
----
+1. **Goal** — Define your end state
+2. **Validation** — How will you know it works?
+3. **Handoff** — Can someone else pick this up?
 
 ## Notes
 
-- Tasks belong in `.context/TASKS.md` (the agent's mind)
+- Tasks belong in `.context/TASKS.md`
 - This file provides meta-direction, not task details
-- Update North Star goals as the project evolves
+- Update as the project evolves
+
+<!-- ctx:plan:end -->

@@ -24,17 +24,18 @@ import (
 // runInit executes the init command logic.
 //
 // Creates a .context/ directory with template files. Handles existing
-// directories, minimal mode, and CLAUDE.md merge operations.
+// directories, minimal mode, and CLAUDE.md/PROMPT.md merge operations.
 //
 // Parameters:
 //   - cmd: Cobra command for output and input streams
 //   - force: If true, overwrite existing files without prompting
 //   - minimal: If true, only create essential files
-//   - merge: If true, auto-merge ctx content into existing CLAUDE.md
+//   - merge: If true, auto-merge ctx content into existing files
+//   - ralph: If true, use autonomous loop templates (no questions, signals)
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
-func runInit(cmd *cobra.Command, force, minimal, merge bool) error {
+func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	// Check if ctx is in PATH (required for hooks to work)
 	if err := checkCtxInPath(cmd); err != nil {
 		return err
@@ -115,8 +116,17 @@ func runInit(cmd *cobra.Command, force, minimal, merge bool) error {
 		cmd.Printf("  %s Entry templates: %v\n", color.YellowString("⚠"), err)
 	}
 
-	// Create IMPLEMENTATION_PLAN.md in the project root (orchestrator directive)
-	if err := createImplementationPlan(cmd, force); err != nil {
+	// Create project root files
+	cmd.Println("\nCreating project root files...")
+
+	// Create PROMPT.md (uses ralph template if --ralph flag set)
+	if err := handlePromptMd(cmd, force, merge, ralph); err != nil {
+		// Non-fatal: warn but continue
+		cmd.Printf("  %s PROMPT.md: %v\n", color.YellowString("⚠"), err)
+	}
+
+	// Create IMPLEMENTATION_PLAN.md
+	if err := handleImplementationPlan(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
 		cmd.Printf(
 			"  %s IMPLEMENTATION_PLAN.md: %v\n", color.YellowString("⚠"), err,

@@ -10,7 +10,7 @@ package tpl
 
 import "embed"
 
-//go:embed *.md entry-templates/*.md claude/commands/*.md claude/hooks/*.sh
+//go:embed *.md entry-templates/*.md claude/commands/*.md claude/hooks/*.sh ralph/*.md
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -119,4 +119,20 @@ func ClaudeCommandByName(name string) ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func ClaudeHookByFileName(name string) ([]byte, error) {
 	return FS.ReadFile("claude/hooks/" + name)
+}
+
+// RalphTemplate reads a Ralph-mode template file by name.
+//
+// Ralph mode templates are designed for autonomous loop operation,
+// with instructions for one-task-per-iteration, completion signals,
+// and no clarifying questions.
+//
+// Parameters:
+//   - name: Template filename (e.g., "PROMPT.md")
+//
+// Returns:
+//   - []byte: Template content from ralph/
+//   - error: Non-nil if the file is not found or read fails
+func RalphTemplate(name string) ([]byte, error) {
+	return FS.ReadFile("ralph/" + name)
 }

@@ -22,6 +22,22 @@ const (
 	CtxMarkerEnd = "<!-- ctx:end -->"
 )
 
+// Prompt block markers for PROMPT.md.
+const (
+	// PromptMarkerStart marks the beginning of the prompt block.
+	PromptMarkerStart = "<!-- ctx:prompt -->"
+	// PromptMarkerEnd marks the end of the prompt block.
+	PromptMarkerEnd = "<!-- ctx:prompt:end -->"
+)
+
+// Plan block markers for IMPLEMENTATION_PLAN.md.
+const (
+	// PlanMarkerStart marks the beginning of the plan block.
+	PlanMarkerStart = "<!-- ctx:plan -->"
+	// PlanMarkerEnd marks the end of the plan block.
+	PlanMarkerEnd = "<!-- ctx:plan:end -->"
+)
+
 // Index markers for auto-generated table of contents sections.
 const (
 	// IndexStart marks the beginning of an auto-generated index.

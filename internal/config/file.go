@@ -57,6 +57,10 @@ const (
 	FilePromptCoach = "prompt-coach.sh"
 	// FileClaudeMd is the Claude Code configuration file in the project root.
 	FileClaudeMd = "CLAUDE.md"
+	// FilePromptMd is the session prompt file in the project root.
+	FilePromptMd = "PROMPT.md"
+	// FileImplementationPlan is the implementation plan file in the project root.
+	FileImplementationPlan = "IMPLEMENTATION_PLAN.md"
 	// FileSettings is the Claude Code local settings file.
 	FileSettings = ".claude/settings.local.json"
 )

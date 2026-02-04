@@ -20,7 +20,9 @@ import (
 //   - --force, -f: Overwrite existing context files without prompting
 //   - --minimal, -m: Only create essential files
 //     (TASKS, DECISIONS, CONSTITUTION)
-//   - --merge: Auto-merge ctx content into existing CLAUDE.md
+//   - --merge: Auto-merge ctx content into existing CLAUDE.md and PROMPT.md
+//   - --ralph: Use autonomous loop templates (no clarifying questions,
+//     one-task-per-iteration, completion signals)
 //
 // Returns:
 //   - *cobra.Command: Configured init command with flags registered
@@ -29,6 +31,7 @@ func Cmd() *cobra.Command {
 		force   bool
 		minimal bool
 		merge   bool
+		ralph   bool
 	)
 
 	cmd := &cobra.Command{
@@ -48,16 +51,29 @@ The following files are created:
   - DRIFT.md         — Staleness signals and update triggers
   - AGENT_PLAYBOOK.md — How AI agents should use this system
 
-Use --minimal to only create essential files 
+Additionally, in the project root:
+  - PROMPT.md              — Session prompt for AI agents
+  - IMPLEMENTATION_PLAN.md — High-level project direction
+  - CLAUDE.md              — Claude Code configuration
+
+Use --minimal to only create essential files
 (TASKS.md, DECISIONS.md, CONSTITUTION.md).
 
+Use --ralph for autonomous loop mode where the agent works without
+asking clarifying questions, uses completion signals, and follows
+one-task-per-iteration discipline.
+
+By default (without --ralph), the agent is encouraged to ask questions
+when requirements are unclear — better for collaborative sessions.
+
 Examples:
-  ctx init           # Full initialization with all templates
+  ctx init           # Collaborative mode (agent asks questions)
+  ctx init --ralph   # Autonomous mode (agent works independently)
   ctx init --minimal # Only essential files (TASKS, DECISIONS, CONSTITUTION)
   ctx init --force   # Overwrite existing files without prompting
-  ctx init --merge   # Auto-merge ctx content into existing CLAUDE.md`,
+  ctx init --merge   # Auto-merge ctx content into existing files`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runInit(cmd, force, minimal, merge)
+			return runInit(cmd, force, minimal, merge, ralph)
 		},
 	}
 
@@ -72,7 +88,11 @@ Examples:
 	)
 	cmd.Flags().BoolVar(
 		&merge, "merge", false,
-		"Auto-merge ctx content into existing CLAUDE.md without prompting",
+		"Auto-merge ctx content into existing CLAUDE.md and PROMPT.md",
+	)
+	cmd.Flags().BoolVar(
+		&ralph, "ralph", false,
+		"Agent works autonomously without asking questions",
 	)
 
 	return cmd

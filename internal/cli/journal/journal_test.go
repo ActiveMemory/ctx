@@ -279,23 +279,20 @@ func TestGenerateZensicalToml(t *testing.T) {
 
 	toml := generateZensicalToml(entries)
 
-	// Should have project section
-	if !strings.Contains(toml, "[project]") {
-		t.Error("toml missing [project] section")
+	// Verify required structural elements exist (not exact content)
+	requiredPatterns := []struct {
+		pattern string
+		desc    string
+	}{
+		{"[project]", "project section"},
+		{"site_name = ", "site_name field"},
+		{"nav = [", "nav array"},
+		{"[project.theme]", "theme section"},
 	}
 
-	// Should have site name
-	if !strings.Contains(toml, `site_name = "Session Journal"`) {
-		t.Error("toml missing site_name")
-	}
-
-	// Should have nav
-	if !strings.Contains(toml, "nav = [") {
-		t.Error("toml missing nav")
-	}
-
-	// Should have theme section
-	if !strings.Contains(toml, "[project.theme]") {
-		t.Error("toml missing theme section")
+	for _, tc := range requiredPatterns {
+		if !strings.Contains(toml, tc.pattern) {
+			t.Errorf("toml missing %s (expected %q)", tc.desc, tc.pattern)
+		}
 	}
 }

@@ -260,7 +260,25 @@ ctx watch --log /tmp/loop.log --auto-save
 The `--auto-save` flag periodically saves session snapshots, creating a
 history of the loop's progress.
 
-## Example Project Setup
+## Project Setup
+
+Initialize a project for autonomous loop operation:
+
+```bash
+# Initialize with autonomous agent behavior
+ctx init --ralph
+```
+
+The `--ralph` flag creates a `PROMPT.md` where the agent:
+
+- Works autonomously without asking clarifying questions
+- Follows one-task-per-iteration discipline
+- Uses `SYSTEM_CONVERGED` / `SYSTEM_BLOCKED` signals
+
+Without `--ralph`, the agent is encouraged to ask questions when requirements
+are unclear — better for collaborative human-agent sessions.
+
+## Example Project Structure
 
 ```
 my-project/
@@ -272,6 +290,7 @@ my-project/
 │   ├── CONVENTIONS.md
 │   └── sessions/         # Loop iteration history
 ├── PROMPT.md             # Instructions for the AI
+├── IMPLEMENTATION_PLAN.md # High-level project direction
 ├── loop.sh               # Loop script (if not using Claude Code)
 └── src/                  # Your code
 ```
