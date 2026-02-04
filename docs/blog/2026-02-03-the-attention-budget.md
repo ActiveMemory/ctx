@@ -190,7 +190,7 @@ The naive approach to context is dumping everything upfront:
 This is an **anti-pattern**.
 
 !!! warning "Anti-pattern: Context Hoarding"
-    Dumping everything "*just in case*" and silently destroying **attention 
+    Dumping everything "*just in case*" will silently destroy the **attention 
     density**.
 
 `ctx` takes the opposite approach:
