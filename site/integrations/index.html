@@ -602,22 +602,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#slash-commands" class="md-nav__link">
+  <a href="#agent-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Slash Commands
+        Agent Skills
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Slash Commands">
+    <nav class="md-nav" aria-label="Agent Skills">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#context-commands" class="md-nav__link">
+  <a href="#context-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context Commands
+        Context Skills
       
     </span>
   </a>
@@ -625,10 +625,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#adding-context" class="md-nav__link">
+  <a href="#context-persistence-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding Context
+        Context Persistence Skills
       
     </span>
   </a>
@@ -636,10 +636,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#session-history" class="md-nav__link">
+  <a href="#session-history-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Session History
+        Session History Skills
       
     </span>
   </a>
@@ -647,10 +647,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#blogging" class="md-nav__link">
+  <a href="#blogging-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Blogging
+        Blogging Skills
       
     </span>
   </a>
@@ -658,10 +658,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#development" class="md-nav__link">
+  <a href="#development-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Development
+        Development Skills
       
     </span>
   </a>
@@ -1243,22 +1243,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#slash-commands" class="md-nav__link">
+  <a href="#agent-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Slash Commands
+        Agent Skills
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Slash Commands">
+    <nav class="md-nav" aria-label="Agent Skills">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#context-commands" class="md-nav__link">
+  <a href="#context-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context Commands
+        Context Skills
       
     </span>
   </a>
@@ -1266,10 +1266,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#adding-context" class="md-nav__link">
+  <a href="#context-persistence-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding Context
+        Context Persistence Skills
       
     </span>
   </a>
@@ -1277,10 +1277,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#session-history" class="md-nav__link">
+  <a href="#session-history-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Session History
+        Session History Skills
       
     </span>
   </a>
@@ -1288,10 +1288,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#blogging" class="md-nav__link">
+  <a href="#blogging-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Blogging
+        Blogging Skills
       
     </span>
   </a>
@@ -1299,10 +1299,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#development" class="md-nav__link">
+  <a href="#development-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Development
+        Development Skills
       
     </span>
   </a>
@@ -1820,14 +1820,15 @@ session persistence.</p>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or paste into conversation</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cat<span class="w"> </span>.context/TASKS.md
 </span></code></pre></div>
-<h3 id="slash-commands">Slash Commands<a class="headerlink" href="#slash-commands" title="Permanent link">&para;</a></h3>
-<p><code>ctx init</code> installs slash commands to <code>.claude/commands/</code>. These are shortcuts
-you can invoke in Claude Code with <code>/command-name</code>.</p>
-<h4 id="context-commands">Context Commands<a class="headerlink" href="#context-commands" title="Permanent link">&para;</a></h4>
+<h3 id="agent-skills">Agent Skills<a class="headerlink" href="#agent-skills" title="Permanent link">&para;</a></h3>
+<p><code>ctx init</code> installs Agent Skills to <code>.claude/skills/</code> following the
+<a href="https://agentskills.io">agentskills.io specification</a>. These are invoked
+in Claude Code with <code>/skill-name</code>.</p>
+<h4 id="context-skills">Context Skills<a class="headerlink" href="#context-skills" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
-<th>Command</th>
+<th>Skill</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -1850,7 +1851,7 @@ you can invoke in Claude Code with <code>/command-name</code>.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="adding-context">Adding Context<a class="headerlink" href="#adding-context" title="Permanent link">&para;</a></h4>
+<h4 id="context-persistence-skills">Context Persistence Skills<a class="headerlink" href="#context-persistence-skills" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1877,7 +1878,7 @@ you can invoke in Claude Code with <code>/command-name</code>.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="session-history">Session History<a class="headerlink" href="#session-history" title="Permanent link">&para;</a></h4>
+<h4 id="session-history-skills">Session History Skills<a class="headerlink" href="#session-history-skills" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1900,7 +1901,7 @@ you can invoke in Claude Code with <code>/command-name</code>.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="blogging">Blogging<a class="headerlink" href="#blogging" title="Permanent link">&para;</a></h4>
+<h4 id="blogging-skills">Blogging Skills<a class="headerlink" href="#blogging-skills" title="Permanent link">&para;</a></h4>
 <div class="admonition tip">
 <p class="admonition-title">Blogging is a Better Way of Creating Release Notes</p>
 <p>The blogging workflow can also double as generating release notes:</p>
@@ -1925,7 +1926,7 @@ which is essentially what a <em>release note</em> is for.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h4>
+<h4 id="development-skills">Development Skills<a class="headerlink" href="#development-skills" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1950,7 +1951,7 @@ which is essentially what a <em>release note</em> is for.</p>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/ctx-journal-enrich twinkly-stirring-kettle
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>/ctx-journal-summarize last week
 </span></code></pre></div>
-<p>Slash commands support partial matching where applicable (e.g., session slugs).</p>
+<p>Skills support partial matching where applicable (e.g., session slugs).</p>
 <hr />
 <h2 id="cursor-ide">Cursor IDE<a class="headerlink" href="#cursor-ide" title="Permanent link">&para;</a></h2>
 <p>Cursor can use context files through its system prompt or by reading 

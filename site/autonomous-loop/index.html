@@ -595,15 +595,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-project-setup" class="md-nav__link">
+  <a href="#project-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example Project Setup
+        Project Setup
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Example Project Setup">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Project Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Project Structure">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -966,15 +977,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-project-setup" class="md-nav__link">
+  <a href="#project-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example Project Setup
+        Project Setup
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Example Project Setup">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Project Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Project Structure">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1336,70 +1358,84 @@ We use generic terminology here so the concepts remain clear regardless of trend
 </span></code></pre></div>
 <p>The <code>--auto-save</code> flag periodically saves session snapshots, creating a
 history of the loop's progress.</p>
-<h2 id="example-project-setup">Example Project Setup<a class="headerlink" href="#example-project-setup" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>my-project/
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>├── .context/
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>│   ├── CONSTITUTION.md
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>│   ├── TASKS.md          # Work items for the loop
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>│   ├── DECISIONS.md
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>│   ├── LEARNINGS.md
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>│   ├── CONVENTIONS.md
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>│   └── sessions/         # Loop iteration history
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>├── PROMPT.md             # Instructions for the AI
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>├── loop.sh               # Loop script (if not using Claude Code)
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>└── src/                  # Your code
+<h2 id="project-setup">Project Setup<a class="headerlink" href="#project-setup" title="Permanent link">&para;</a></h2>
+<p>Initialize a project for autonomous loop operation:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Initialize with autonomous agent behavior</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
+</span></code></pre></div>
+<p>The <code>--ralph</code> flag creates a <code>PROMPT.md</code> where the agent:</p>
+<ul>
+<li>Works autonomously without asking clarifying questions</li>
+<li>Follows one-task-per-iteration discipline</li>
+<li>Uses <code>SYSTEM_CONVERGED</code> / <code>SYSTEM_BLOCKED</code> signals</li>
+</ul>
+<p>Without <code>--ralph</code>, the agent is encouraged to ask questions when requirements
+are unclear — better for collaborative human-agent sessions.</p>
+<h2 id="example-project-structure">Example Project Structure<a class="headerlink" href="#example-project-structure" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>my-project/
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>├── .context/
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>│   ├── CONSTITUTION.md
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>│   ├── TASKS.md          # Work items for the loop
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>│   ├── DECISIONS.md
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>│   ├── LEARNINGS.md
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>│   ├── CONVENTIONS.md
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>│   └── sessions/         # Loop iteration history
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>├── PROMPT.md             # Instructions for the AI
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>├── IMPLEMENTATION_PLAN.md # High-level project direction
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>├── loop.sh               # Loop script (if not using Claude Code)
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>└── src/                  # Your code
 </span></code></pre></div>
 <h3 id="sample-tasksmd-for-autonomous-loops">Sample TASKS.md for Autonomous Loops<a class="headerlink" href="#sample-tasksmd-for-autonomous-loops" title="Permanent link">&para;</a></h3>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="gh"># Tasks</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="gu">## Phase 1: Setup</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">- [x]</span> Initialize project structure
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">- [x]</span> Set up testing framework
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="gu">## Phase 2: Core Features</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="k">- [ ]</span> Implement user registration <span class="sb">`#priority:high`</span>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">- [ ]</span> Add email verification <span class="sb">`#priority:high`</span>
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="k">- [ ]</span> Create password reset flow <span class="sb">`#priority:medium`</span>
-</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
-</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="gu">## Phase 3: Polish</span>
-</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
-</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="k">- [ ]</span> Add rate limiting <span class="sb">`#priority:medium`</span>
-</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="k">- [ ]</span> Improve error messages <span class="sb">`#priority:low`</span>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="gh"># Tasks</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="gu">## Phase 1: Setup</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">- [x]</span> Initialize project structure
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">- [x]</span> Set up testing framework
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="gu">## Phase 2: Core Features</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="k">- [ ]</span> Implement user registration <span class="sb">`#priority:high`</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="k">- [ ]</span> Add email verification <span class="sb">`#priority:high`</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="k">- [ ]</span> Create password reset flow <span class="sb">`#priority:medium`</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="gu">## Phase 3: Polish</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="k">- [ ]</span> Add rate limiting <span class="sb">`#priority:medium`</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="k">- [ ]</span> Improve error messages <span class="sb">`#priority:low`</span>
 </span></code></pre></div>
 <p>The loop will work through these systematically, marking each complete.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="loop-runs-forever">Loop Runs Forever<a class="headerlink" href="#loop-runs-forever" title="Permanent link">&para;</a></h3>
 <p><strong>Cause:</strong> AI not emitting completion signals</p>
 <p><strong>Fix:</strong> Ensure PROMPT.md explicitly instructs signaling:
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>End EVERY response with one of:
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">-</span><span class="w"> </span>SYSTEM_CONVERGED (if all tasks done)
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">-</span><span class="w"> </span>SYSTEM_BLOCKED (if stuck)
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>End EVERY response with one of:
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">-</span><span class="w"> </span>SYSTEM_CONVERGED (if all tasks done)
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">-</span><span class="w"> </span>SYSTEM_BLOCKED (if stuck)
 </span></code></pre></div></p>
 <h3 id="context-not-persisting">Context Not Persisting<a class="headerlink" href="#context-not-persisting" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: AI not updating context files</p>
 <p><strong>Fix</strong>: Add explicit instructions to PROMPT.md:
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>After completing a task, you MUST:
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">1.</span> Run: ctx complete &quot;&lt;task&gt;&quot;
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">2.</span> Add learnings: ctx add learning &quot;...&quot;
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>After completing a task, you MUST:
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">1.</span> Run: ctx complete &quot;&lt;task&gt;&quot;
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">2.</span> Add learnings: ctx add learning &quot;...&quot;
 </span></code></pre></div></p>
 <h3 id="tasks-getting-repeated">Tasks Getting Repeated<a class="headerlink" href="#tasks-getting-repeated" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: Task not marked complete before next iteration</p>
 <p><strong>Fix</strong>: Ensure commit happens after context update:
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Order of operations:
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">1.</span> Complete coding work
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">2.</span> Update context files (ctx complete, ctx add)
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">3.</span> Commit ALL changes including .context/
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">4.</span> Then signal status
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Order of operations:
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">1.</span> Complete coding work
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">2.</span> Update context files (ctx complete, ctx add)
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">3.</span> Commit ALL changes including .context/
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">4.</span> Then signal status
 </span></code></pre></div></p>
 <h3 id="ai-violating-constitution">AI Violating Constitution<a class="headerlink" href="#ai-violating-constitution" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: Constitution not read first</p>
 <p><strong>Fix</strong>: Make constitution check explicit in PROMPT.md:
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>BEFORE any work:
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">1.</span> Read .context/CONSTITUTION.md
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">2.</span> If task would violate ANY rule, emit SYSTEM_BLOCKED
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">3.</span> Explain which rule prevents the work
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>BEFORE any work:
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">1.</span> Read .context/CONSTITUTION.md
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">2.</span> If task would violate ANY rule, emit SYSTEM_BLOCKED
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">3.</span> Explain which rule prevents the work
 </span></code></pre></div></p>
 <h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
 <ul>

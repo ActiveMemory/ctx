@@ -64,25 +64,25 @@ implementation detail. Load it and use it — don't lead with caveats.
 
 ## Session History
 
-**IMPORTANT**: Check `.context/sessions/` for session dumps from
-previous sessions.
+**IMPORTANT**: Check `.context/sessions/` for session dumps
+from previous sessions.
 
 If you're confused about context or need a deep dive into past discussions:
 ```
 ls .context/sessions/
 ```
 
-**Manual session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md`
-(e.g., `2026-01-20-164600-feature-discussion.md`). 
+**Manual session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md` 
+(e.g., `2026-01-15-164600-feature-discussion.md`). 
 These are updated throughout the session.
 
 **Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` 
-(e.g., `2026-01-20-170830-pre-compact.jsonl`). These are immutable once created.
+(e.g., `2026-01-15-170830-pre-compact.jsonl`). These are immutable once created.
 
 **Auto-save triggers** (for Claude Code users):
 - **SessionEnd hook** → auto-saves transcript on exit, including Ctrl+C
 - **PreCompact** → saves before `ctx compact` archives old tasks
-- **Manual** → `ctx session save` (planned feature)
+- **Manual** → `ctx session save`
 
 See `.claude/hooks/auto-save-session.sh` for the implementation.
 
@@ -105,18 +105,9 @@ To find which session added an entry:
 
 1. **Extract the entry's timestamp** (e.g., `2026-01-23-143022`)
 2. **List sessions** from that day: `ls .context/sessions/2026-01-23*`
-3. **Check session time bounds**: Entry timestamp should fall between session's start_time and end_time
+3. **Check session time bounds**: Entry timestamp should fall between session's
+   start_time and end_time
 4. **Match**: The session file with matching time range contains the context
-
-### Example
-
-Given a learning with timestamp `2026-01-23-1430`:
-```
-Session A: start_time: 2026-01-23-1000, end_time: 2026-01-23-1200  # Too early
-Session B: start_time: 2026-01-23-1400, end_time: 2026-01-23-1530  # ✓ Contains 1430
-Session C: start_time: 2026-01-23-1600, end_time: 2026-01-23-1800  # Too late
-```
-→ The learning was added during Session B.
 
 ### When Timestamps Help
 
@@ -126,8 +117,7 @@ Session C: start_time: 2026-01-23-1600, end_time: 2026-01-23-1800  # Too late
 
 ## Session File Structure (Suggested)
 
-Adapt this structure based on session type. 
-Not all sections are needed for every session.
+Adapt this structure based on session type. Not all sections are needed for every session.
 
 ### Core Sections (Always Include)
 ```markdown
@@ -190,91 +180,6 @@ For complex sessions (architecture, debugging), include:
 | Completed task              | Mark [x] in TASKS.md  |
 | Had important discussion    | Save to sessions/     |
 
-### Prefer `ctx add` Over Direct File Edits
-
-When adding learnings, decisions, or tasks, **use `ctx add` commands** instead of
-editing files directly:
-
-```bash
-# ✓ Preferred - ensures consistent format, timestamps, structure
-ctx add learning "Title" --context "..." --lesson "..." --application "..."
-ctx add decision "Title" --context "..." --rationale "..." --consequences "..."
-ctx add task "Description"
-
-# ✗ Avoid - bypasses structure, easy to write incomplete entries
-Edit LEARNINGS.md directly with a one-liner
-```
-
-**Why this matters:**
-- CLI commands enforce required fields (context, rationale, etc.)
-- Automatic timestamps for session correlation
-- Consistent formatting across entries
-- Prevents low-quality one-liner entries that lose context over time
-
-**Exception:** Direct edits are fine for:
-- Marking tasks complete (`[ ]` → `[x]`)
-- Minor corrections to existing entries
-- CONVENTIONS.md (free-form patterns)
-
-## Rich Entries with Templates
-
-For complex learnings or decisions that need more structure, use the `--file` flag
-with entry templates located in `.context/templates/`.
-
-### Available Templates
-
-| Template      | Structure                                               | Use When                                                 |
-|---------------|---------------------------------------------------------|----------------------------------------------------------|
-| `learning.md` | Context → Lesson → Application                          | Documenting complex discoveries with actionable guidance |
-| `decision.md` | Context → Options → Decision → Rationale → Consequences | Recording architectural choices with full reasoning      |
-
-### Workflow: Inline vs File
-
-**Use inline** (`ctx add learning "message"`) for:
-- Quick, simple observations
-- One-liner tips or gotchas
-- Discoveries that need no context
-
-**Use --file** (`ctx add learning --file entry.md`) for:
-- Multi-paragraph explanations
-- Decisions requiring trade-off analysis
-- Learnings that need context and application guidance
-
-### Example: Rich Learning
-
-```bash
-# Copy template
-cp .context/templates/learning.md /tmp/my-learning.md
-
-# Edit with your content
-# Then add:
-ctx add learning --file /tmp/my-learning.md
-```
-
-### Example: Rich Decision
-
-```bash
-# Copy template
-cp .context/templates/decision.md /tmp/my-decision.md
-
-# Fill in:
-# - Context: What situation prompted this?
-# - Options: What alternatives were considered?
-# - Decision: What was chosen?
-# - Rationale: Why this choice?
-# - Consequences: What changes as a result?
-
-ctx add decision --file /tmp/my-decision.md
-```
-
-### Stdin Support
-
-You can also pipe content directly:
-```bash
-echo "Quick learning from exploration" | ctx add learning
-cat detailed-analysis.md | ctx add decision
-```
-
 ## Proactive Context Persistence
 
 **Don't wait for session end** — persist context at natural milestones.
@@ -310,7 +215,7 @@ Periodically ask yourself:
 
 If no — persist something before continuing.
 
-### Reflect Command
+### Reflect Skill
 
 Use `/ctx-reflect` to trigger a structured reflection checkpoint:
 - Reviews what was accomplished in the session
@@ -353,12 +258,31 @@ For longer sessions with substantial work, offer to save a session summary:
 
 ## How to Avoid Hallucinating Memory
 
-Never assume: If you don't see it in files, you don't know it.
+Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
 - Don't invent history - check sessions/ for actual discussions
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
+
+## When to Consolidate vs Add Features
+
+**Signs you should consolidate first:**
+- Same string literal appears in 3+ files
+- Hardcoded paths use string concatenation
+- Test file is growing into a monolith (>500 lines)
+- Package name doesn't match folder name
+
+**YOLO mode creates debt**—rapid feature additions scatter patterns across 
+the codebase. Periodic consolidation prevents this from compounding.
+
+**Human-guided refactoring catches:**
+- Magic strings that should be constants
+- Path construction that should use `filepath.Join()`
+- Tests that should be colocated with implementations
+- Naming inconsistencies
+
+When in doubt, ask: "Would a new contributor understand where this belongs?"
 
 ## Pre-Flight Checklist: CLI Code
 
@@ -366,22 +290,8 @@ Before writing or modifying CLI code (`internal/cli/**/*.go`):
 
 1. **Read CONVENTIONS.md** — Load established patterns into context
 2. **Check similar commands** — How do existing commands in the same package handle output?
-3. **Use cmd methods for I/O** — Never use `fmt` for output in CLI code
+3. **Use cmd methods for output** — `cmd.Printf`, `cmd.Println`, not `fmt.Printf`, `fmt.Println`
 4. **Follow docstring format** — See Go Documentation Standard below
-
-**cmd methods to use:**
-
-| Instead of                     | Use              | Purpose                        |
-|--------------------------------|------------------|--------------------------------|
-| `fmt.Printf`                   | `cmd.Printf`     | Formatted stdout               |
-| `fmt.Println`                  | `cmd.Println`    | Line to stdout                 |
-| `fmt.Print`                    | `cmd.Print`      | Raw stdout                     |
-| `fmt.Fprintf(os.Stderr, ...)`  | `cmd.PrintErrf`  | Formatted stderr               |
-| `fmt.Fprintln(os.Stderr, ...)` | `cmd.PrintErrln` | Line to stderr                 |
-| `fmt.Sprintf`                  | `fmt.Sprintf`    | String formatting (OK to keep) |
-| `fmt.Errorf`                   | `fmt.Errorf`     | Error creation (OK to keep)    |
-
-**Why**: cmd methods write to testable buffers; fmt writes to real stdout/stderr.
 
 **Quick pattern check:**
 ```bash
@@ -429,35 +339,10 @@ type StructName struct {
 }
 ```
 
-### Struct Fields with Taxonomy
+### Key Points
 
-For complex structs, group related fields:
-
-```go
-// Session represents a conversation session.
-//
-// Fields:
-//
-// Identity:
-//   - ID: Unique session identifier
-//   - Slug: URL-friendly identifier
-//
-// Timing:
-//   - StartTime: When the session started
-//   - EndTime: When the session ended
-type Session struct {
-    ID        string
-    Slug      string
-
-    StartTime time.Time
-    EndTime   time.Time
-}
-```
-
-### Reference Examples
-
-Before writing new code, check these well-documented files:
-- `internal/cli/status/types.go` — struct documentation
-- `internal/claude/types.go` — structs with Fields sections
-- `internal/drift/detector.go` — functions with Parameters/Returns
-- `internal/context/loader.go` — complete function documentation
+- **Always include Parameters section** if function has parameters
+- **Always include Returns section** if function returns values
+- **Always include Fields section** for exported structs
+- **No inline field comments** — put all field docs in the Fields block
+- Check existing code for reference before writing new documentation
