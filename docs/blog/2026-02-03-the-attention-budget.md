@@ -244,7 +244,7 @@ Long sessions stretch attention thin. Important details fade.
 The real question isn't how to prevent degradation, 
 but how to **design for it**.
 
-`ctx`'s answer is persistence:
+`ctx`'s answer is **persistence**:
 
 **Persist early. Persist often.**
 
