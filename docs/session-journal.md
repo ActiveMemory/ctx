@@ -146,6 +146,190 @@ session-abc123-p3.md   (Part 3 of 3)
 
 Claude Code generates "suggestion" sessions for auto-complete prompts. These are separated in the index under a "Suggestions" section to keep your main session list focused.
 
+## Enriching Journal Entries
+
+Raw exported sessions contain basic metadata (date, time, project) but lack the
+structured information needed for effective search, filtering, and analysis.
+**Journal enrichment** adds semantic metadata that transforms a flat archive into
+a searchable knowledge base.
+
+### Why Enrich?
+
+Without enrichment, you have timestamps and raw conversations. With enrichment:
+
+- **Find sessions by topic**: "Show me all auth-related sessions"
+- **Filter by outcome**: "What did I abandon vs complete?"
+- **Track technology usage**: "When did I last work with PostgreSQL?"
+- **Identify key files**: Jump directly to the files discussed
+- **Get summaries**: Understand what happened without reading transcripts
+
+### The Frontmatter Schema
+
+Enriched entries begin with YAML frontmatter:
+
+```yaml
+---
+title: "Implement caching layer"
+date: 2026-01-27
+type: feature
+outcome: completed
+topics:
+  - caching
+  - performance
+technologies:
+  - go
+  - redis
+libraries:
+  - go-redis/redis
+key_files:
+  - internal/cache/redis.go
+  - internal/cache/memory.go
+---
+```
+
+| Field          | Required | Description                                         |
+|----------------|----------|-----------------------------------------------------|
+| `title`        | Yes      | Descriptive title (not the session slug)            |
+| `date`         | Yes      | Session date (YYYY-MM-DD)                           |
+| `type`         | Yes      | Session type (see below)                            |
+| `outcome`      | Yes      | How the session ended (see below)                   |
+| `topics`       | No       | Subject areas discussed                             |
+| `technologies` | No       | Languages, databases, frameworks                    |
+| `libraries`    | No       | Specific packages or libraries used                 |
+| `key_files`    | No       | Important files created or modified                 |
+
+**Type values:**
+
+| Type            | When to use                              |
+|-----------------|------------------------------------------|
+| `feature`       | Building new functionality               |
+| `bugfix`        | Fixing broken behavior                   |
+| `refactor`      | Restructuring without behavior change    |
+| `exploration`   | Research, learning, experimentation      |
+| `debugging`     | Investigating issues                     |
+| `documentation` | Writing docs, comments, README           |
+
+**Outcome values:**
+
+| Outcome     | Meaning                                     |
+|-------------|---------------------------------------------|
+| `completed` | Goal achieved                               |
+| `partial`   | Some progress, work continues               |
+| `abandoned` | Stopped pursuing this approach              |
+| `blocked`   | Waiting on external dependency              |
+
+### Using `/ctx-journal-enrich`
+
+The `/ctx-journal-enrich` skill automates enrichment by analyzing conversation
+content and proposing metadata.
+
+**Invoke by session identifier:**
+
+```
+/ctx-journal-enrich twinkly-stirring-kettle
+/ctx-journal-enrich twinkly
+/ctx-journal-enrich 2026-01-24
+/ctx-journal-enrich 76fe2ab9
+```
+
+The skill will:
+
+1. Find the matching journal file
+2. Read and analyze the conversation
+3. Propose frontmatter (type, topics, outcome, technologies)
+4. Generate a 2-3 sentence summary
+5. Extract decisions, learnings, and tasks mentioned
+6. Show a diff and ask for confirmation before writing
+
+### Before and After
+
+**Before enrichment:**
+
+```markdown
+# twinkly-stirring-kettle
+
+**ID**: abc123-def456
+**Date**: 2026-01-24
+**Time**: 14:30:00
+...
+
+## Summary
+
+[Add your summary of this session]
+
+## Conversation
+...
+```
+
+**After enrichment:**
+
+```markdown
+---
+title: "Add Redis caching to API endpoints"
+date: 2026-01-24
+type: feature
+outcome: completed
+topics:
+  - caching
+  - api-performance
+technologies:
+  - go
+  - redis
+key_files:
+  - internal/api/middleware/cache.go
+  - internal/cache/redis.go
+---
+
+# twinkly-stirring-kettle
+
+**ID**: abc123-def456
+**Date**: 2026-01-24
+**Time**: 14:30:00
+...
+
+## Summary
+
+Implemented Redis-based caching middleware for frequently-accessed API endpoints.
+Added cache invalidation on writes and configurable TTL per route. Reduced
+average response time from 200ms to 15ms for cached routes.
+
+## Decisions
+
+- Used Redis over in-memory cache for horizontal scaling
+- Chose per-route TTL configuration over global setting
+
+## Learnings
+
+- Redis WATCH command prevents race conditions during cache invalidation
+
+## Conversation
+...
+```
+
+### Enrichment and Site Generation
+
+The journal site generator uses enriched metadata for better organization:
+
+- **Titles** appear in navigation instead of slugs
+- **Summaries** provide context in the index
+- **Topics** enable filtering (when using search)
+- **Types** allow grouping by work category
+
+Future improvements will add topic-based navigation and outcome filtering to
+the generated site.
+
+### Batch Enrichment
+
+To enrich multiple sessions, process them one at a time:
+
+```bash
+# List unenriched sessions (those without frontmatter)
+grep -L "^---$" .context/journal/*.md | head -10
+```
+
+Then run `/ctx-journal-enrich` on each. Enrichment is intentionally interactive
+to ensure accuracy.
+
 ## Tips
 
 **Daily workflow:**
