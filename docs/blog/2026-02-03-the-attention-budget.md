@@ -27,8 +27,10 @@ Understanding that single fact shaped every design decision behind `ctx`.
 Here's something that took me too long to internalize: **context is not free**.
 
 Every token you send to an AI model consumes a finite resource I call the
-*attention budget*. The model doesn't just read tokens: It forms relationships
-between them. For `n` tokens, that's roughly `n^2` relationships.
+*attention budget*. 
+
+The model doesn't just read tokens; it forms relationships
+between them: For `n` tokens, that's roughly `n^2` relationships.
 Double the context, and the computation quadruples.
 
 But the more important constraint isn't cost: It's **attention density**.

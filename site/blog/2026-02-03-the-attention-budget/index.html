@@ -763,8 +763,9 @@ examples...</p>
 <h2 id="the-finite-resource-nobody-talks-about">The Finite Resource Nobody Talks About<a class="headerlink" href="#the-finite-resource-nobody-talks-about" title="Permanent link">&para;</a></h2>
 <p>Here's something that took me too long to internalize: <strong>context is not free</strong>.</p>
 <p>Every token you send to an AI model consumes a finite resource I call the
-<em>attention budget</em>. The model doesn't just read tokens: It forms relationships
-between them. For <code>n</code> tokens, that's roughly <code>n^2</code> relationships.
+<em>attention budget</em>. </p>
+<p>The model doesn't just read tokens; it forms relationships
+between them: For <code>n</code> tokens, that's roughly <code>n^2</code> relationships.
 Double the context, and the computation quadruples.</p>
 <p>But the more important constraint isn't cost: It's <strong>attention density</strong>.</p>
 <div class="admonition info">
