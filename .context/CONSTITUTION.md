@@ -11,21 +11,15 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 
 - [ ] All code must pass tests before commit
 - [ ] No TODO comments in main branch (move to TASKS.md)
+- [ ] Path construction uses stdlib — no string concatenation (security: prevents path traversal)
 
 ## Process Invariants
 
 - [ ] All architectural changes require a decision record
 
-## ctx Invocation Invariants
-
-- [ ] **ALWAYS use `ctx` from PATH** — never `./ctx`, `./dist/ctx`, or `go run ./cmd/ctx`
-- [ ] **Never add fallback commands** — if `ctx` fails, report the error; do not attempt alternatives
-- [ ] **If unsure ctx is installed** — check with `which ctx`, don't guess with fallbacks
-
 ## TASKS.md Structure Invariants
 
-TASKS.md must remain a replayable checklist. Uncheck all items and re-run
-the loop = verify/redo all tasks in order.
+TASKS.md must remain a replayable checklist. Uncheck all items and re-run = verify/redo all tasks in order.
 
 - [ ] **Never move tasks** — tasks stay in their Phase section permanently
 - [ ] **Never remove Phase headers** — Phase labels provide structure and order
