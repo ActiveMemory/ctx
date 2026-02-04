@@ -379,6 +379,48 @@ func stripLineNumbers(content string) string {
 	return config.RegExLineNumber.ReplaceAllString(content, "")
 }
 
+// extractSystemReminders separates system-reminder content from tool output.
+//
+// Claude Code injects <system-reminder> tags into tool results. This function
+// extracts them so they can be rendered as markdown outside code fences.
+//
+// Parameters:
+//   - content: Tool result content potentially containing system-reminder tags
+//
+// Returns:
+//   - string: Content with system-reminder tags removed
+//   - []string: Extracted reminder texts (may be empty)
+func extractSystemReminders(content string) (string, []string) {
+	matches := config.RegExSystemReminder.FindAllStringSubmatch(content, -1)
+	var reminders []string
+	for _, m := range matches {
+		if len(m) > 1 && m[1] != "" {
+			reminders = append(reminders, m[1])
+		}
+	}
+	cleaned := config.RegExSystemReminder.ReplaceAllString(content, "")
+	return cleaned, reminders
+}
+
+// normalizeCodeFences ensures code fences are on their own lines with proper spacing.
+//
+// Users often type "text: ```code" without proper line breaks. Markdown requires
+// code fences to be on their own lines with blank lines separating them from
+// surrounding content.
+//
+// Parameters:
+//   - content: Text that may contain inline code fences
+//
+// Returns:
+//   - string: Content with code fences properly separated by blank lines
+func normalizeCodeFences(content string) string {
+	// Add newlines before code fences that follow text on the same line
+	result := config.RegExCodeFenceInline.ReplaceAllString(content, "$1\n\n$2")
+	// Add newlines after code fences that are followed by text on the same line
+	result = config.RegExCodeFenceClose.ReplaceAllString(result, "$1\n\n$2")
+	return result
+}
+
 // formatToolUse formats a tool invocation with its key parameters.
 //
 // Extracts the most relevant parameter based on tool type (e.g., file path

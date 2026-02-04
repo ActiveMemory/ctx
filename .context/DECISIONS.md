@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date       | Decision                                                                         |
 |------------|----------------------------------------------------------------------------------|
+| 2026-02-03 | Transform system-reminder tags to markdown instead of stripping                  |
 | 2026-01-29 | Add quick reference index to DECISIONS.md                                        |
 | 2026-01-28 | No custom UI - IDE is the interface                                              |
 | 2026-01-28 | ctx recall is Claude-first                                                       |
@@ -22,6 +23,24 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed)                            |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements                              |
 <!-- INDEX:END -->
+
+## [2026-02-03-154800] Transform system-reminder tags to markdown instead of stripping
+
+**Status**: Accepted (implemented)
+
+**Context**: Claude Code injects `<system-reminder>` blocks into tool result content stored in JSONL. These break markdown rendering when wrapped in code fences during journal export. Options: (1) strip them entirely, (2) transform to markdown.
+
+**Decision**: Transform `<system-reminder>content</system-reminder>` to `**System Reminder**: content` and render outside the code fence.
+
+**Rationale**: System reminders reveal Claude Code's internal behavior - useful for debugging, tooling development, and understanding how Anthropic instruments the tool. Stripping would hide this "dirty laundry." Transforming preserves the information while fixing rendering.
+
+**Consequences**:
+1. Journal exports show system reminders as visible markdown callouts
+2. Users see what instructions Claude Code receives during tool execution
+3. Adds `extractSystemReminders()` function to recall package
+4. Adds `RegExSystemReminder` regex to config package
+
+---
 
 ## [2026-01-29-044515] Add quick reference index to DECISIONS.md
 

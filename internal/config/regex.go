@@ -21,6 +21,26 @@ var RegExEntryHeader = regexp.MustCompile(
 // RegExLineNumber matches Claude Code's line number prefixes like "     1→".
 var RegExLineNumber = regexp.MustCompile(`(?m)^\s*\d+→`)
 
+// RegExSystemReminder matches <system-reminder>...</system-reminder> blocks.
+// These are injected by Claude Code into tool results.
+// Groups:
+//   - 1: content between tags
+var RegExSystemReminder = regexp.MustCompile(`(?s)<system-reminder>\s*(.*?)\s*</system-reminder>`)
+
+// RegExCodeFenceInline matches code fences that appear inline after text.
+// E.g., "some text: ```code" where fence should be on its own line.
+// Groups:
+//   - 1: preceding non-whitespace character
+//   - 2: the code fence (3+ backticks)
+var RegExCodeFenceInline = regexp.MustCompile("(\\S) *(```+)")
+
+// RegExCodeFenceClose matches code fences immediately followed by text.
+// E.g., "```text" where text should be on its own line after the fence.
+// Groups:
+//   - 1: the code fence (3+ backticks)
+//   - 2: following non-whitespace character
+var RegExCodeFenceClose = regexp.MustCompile("(```+) *(\\S)")
+
 // RegExPhase matches phase headers at any heading level (e.g., "## Phase 1", "### Phase").
 var RegExPhase = regexp.MustCompile(`^#{1,6}\s+Phase`)
 

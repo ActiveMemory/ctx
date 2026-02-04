@@ -347,7 +347,12 @@ func formatJournalEntryPart(
 			msgNum, role, localTime.Format("15:04:05")))
 
 		if msg.Text != "" {
-			sb.WriteString(msg.Text + nl + nl)
+			text := msg.Text
+			// Normalize code fences in user messages (users often type "text: ```code")
+			if !msg.IsAssistant() {
+				text = normalizeCodeFences(text)
+			}
+			sb.WriteString(text + nl + nl)
 		}
 
 		// Tool uses
@@ -362,6 +367,7 @@ func formatJournalEntryPart(
 			}
 			if tr.Content != "" {
 				content := stripLineNumbers(tr.Content)
+				content, reminders := extractSystemReminders(content)
 				fence := fenceForContent(content)
 				lines := strings.Count(content, "\n")
 
@@ -372,6 +378,11 @@ func formatJournalEntryPart(
 					sb.WriteString("</details>" + nl)
 				} else {
 					sb.WriteString(fmt.Sprintf("%s"+nl+"%s"+nl+"%s"+nl, fence, content, fence))
+				}
+
+				// Render system reminders as markdown outside the code fence
+				for _, reminder := range reminders {
+					sb.WriteString(fmt.Sprintf(nl+"**System Reminder**: %s"+nl, reminder))
 				}
 			}
 		}

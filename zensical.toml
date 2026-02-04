@@ -13,7 +13,7 @@ site_url = "https://ctx.ist/"
 repo_url = "https://github.com/ActiveMemory/ctx"
 repo_name = "ActiveMemory/ctx"
 copyright = """
-Copyright &copy; 2026&ndash;present Context conributors.<br>
+Copyright &copy; 2026&ndash;present Context contributors.<br>
 Context's code is distributed under
 <a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
 The documentation on this website is distributed under
@@ -22,6 +22,7 @@ The documentation on this website is distributed under
 
 nav = [
   { "Getting Started" = "index.md" },
+  { "Session Journal" = "session-journal.md" },
   { "Prompting Guide" = "prompting-guide.md" },
   { "ctx and Similar Tools" = "comparison.md"},
   { "CLI Reference" = "cli-reference.md" },

@@ -162,6 +162,8 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 
 	cmd.Println("\nNext steps:")
 	cmd.Printf("  cd %s && zensical serve\n", output)
+	cmd.Printf("  or \n")
+	cmd.Printf("  ctx journal site --serve\n")
 
 	return nil
 }
@@ -387,8 +389,18 @@ func generateZensicalToml(entries []journalEntry) string {
 	nl := config.NewlineLF
 
 	sb.WriteString(`[project]
-site_name = "Session Journal"
+site_name = "ctx: Session Journal"
 site_description = "AI session history and notes"
+site_author = "Jose Alekhinne <alekhinejose@gmail.com>"
+site_url = "https://ctx.ist/"
+repo_url = "https://github.com/ActiveMemory/ctx"
+repo_name = "ActiveMemory/ctx"
+copyright = """
+Copyright &copy; 2026&ndash;present <a href="https://github.com/ActiveMemory/ctx/">Context contributors</a>.<br>
+Context's code is distributed under
+<a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
+"""
+
 ` + nl)
 
 	// Build navigation
@@ -427,7 +439,9 @@ site_description = "AI session history and notes"
 	sb.WriteString("  ]}" + nl)
 	sb.WriteString("]" + nl + nl)
 
-	sb.WriteString(`[project.theme]
+	sb.WriteString(`
+
+[project.theme]
 language = "en"
 features = [
     "content.code.copy",
@@ -445,6 +459,22 @@ toggle.name = "Switch to dark mode"
 scheme = "slate"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/ActiveMemory/ctx"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/discord"
+link = "https://discord.gg/kampus"
+
+[project.extra]
+generator = false
 `)
 
 	return sb.String()

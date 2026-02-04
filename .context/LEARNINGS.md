@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-03 | User input often has inline code fences that break markdown rendering |
+| 2026-02-03 | Claude Code injects system-reminder tags into tool results, breaking markdown export |
 | 2026-02-03 | Claude Code subagent sessions share parent sessionId |
 | 2026-02-03 | Claude Code JSONL format changed: slug field removed in v2.1.29+ |
 | 2026-01-30 | Say 'project conventions' not 'idiomatic X' |
@@ -40,6 +42,26 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-03-160000] User input often has inline code fences that break markdown rendering
+
+**Context**: Journal export showed broken code blocks where user typed `text: ```code` on a single line without proper newlines before/after the code fence.
+
+**Lesson**: Users naturally type inline code fences like `This is the error: ```Error: foo```. Markdown requires code fences to be on their own lines with blank lines separating them. You can't force users to format correctly, but you can normalize on export.
+
+**Application**: Use regex to detect fences preceded/followed by non-whitespace on same line. Insert `\n\n` to ensure proper spacing. Apply only to user messages (assistant output is already well-formatted).
+
+---
+
+## [2026-02-03-154500] Claude Code injects system-reminder tags into tool results, breaking markdown export
+
+**Context**: Journal site had rendering errors starting from "Tool Output" sections. A closing triple-backtick appeared orphaned. Investigation traced it to `<system-reminder>` tags in the JSONL source - 32 occurrences in one session file.
+
+**Lesson**: Claude Code injects `<system-reminder>...</system-reminder>` blocks into tool result content before storing in JSONL. When exported to markdown and wrapped in code fences, these XML-like tags break rendering - some markdown parsers treat them as HTML, causing the closing fence to appear as orphaned literal text instead of terminating the code block.
+
+**Application**: Extract system reminders from tool result content before wrapping in code fences. Render them as markdown (`**System Reminder**: ...`) outside the fence. This preserves the information (useful for debugging Claude Code behavior) while fixing the rendering issue.
 
 ---
 
