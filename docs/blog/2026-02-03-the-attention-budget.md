@@ -40,7 +40,7 @@ But the more important constraint isn't cost: It's **attention density**.
     other tokens in the context window.
 
 As context grows, attention density drops: Each token gets a smaller slice
-of the model's focus. Nothing is ignored—but everything becomes blurrier.
+of the model's focus. Nothing is ignored; but everything becomes blurrier.
 
 Think of it like a **flashlight**: In a small room, it illuminates everything
 clearly. In a warehouse, it becomes a dim glow that barely reaches the corners.
