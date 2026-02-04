@@ -215,7 +215,7 @@ Periodically ask yourself:
 
 If no — persist something before continuing.
 
-### Reflect Command
+### Reflect Skill
 
 Use `/ctx-reflect` to trigger a structured reflection checkpoint:
 - Reviews what was accomplished in the session
@@ -346,3 +346,100 @@ type StructName struct {
 - **Always include Fields section** for exported structs
 - **No inline field comments** — put all field docs in the Fields block
 - Check existing code for reference before writing new documentation
+
+---
+
+## Context Anti-Patterns
+
+Avoid these common context management mistakes:
+
+### Stale Context
+
+**Problem**: Context files become outdated and misleading.
+
+**Symptoms**:
+- ARCHITECTURE.md describes components that no longer exist
+- DECISIONS.md references deprecated approaches
+- CONVENTIONS.md patterns contradict actual code
+
+**Solution**: Update context as part of completing work, not as a separate task.
+Run `ctx drift` periodically to detect staleness.
+
+### Context Sprawl
+
+**Problem**: Information scattered across multiple locations.
+
+**Symptoms**:
+- Same decision documented in DECISIONS.md and a session file
+- Conventions split between CONVENTIONS.md and code comments
+- Tasks duplicated across TASKS.md and external trackers
+
+**Solution**: Single source of truth for each type of information.
+Use the defined file structure; resist creating new document types.
+
+### Implicit Context
+
+**Problem**: Relying on knowledge not captured in artifacts.
+
+**Symptoms**:
+- "Everyone knows we don't do X" but it's not in CONSTITUTION.md
+- Patterns followed but not in CONVENTIONS.md
+- Decisions made but not recorded
+
+**Solution**: If you reference something repeatedly, add it to the appropriate file.
+If this session ended now, would the next session know what you know?
+
+### Context Hoarding
+
+**Problem**: One person maintains context without team input.
+
+**Symptoms**:
+- Context files only updated by one contributor
+- Others don't know what's in context files
+- Decisions made without checking existing decisions
+
+**Solution**: Review context in pull requests. Make updates collaborative.
+Context is shared memory, not personal notes.
+
+### Over-Specification
+
+**Problem**: Context becomes so detailed it's impossible to maintain.
+
+**Symptoms**:
+- CONVENTIONS.md has 50+ rules
+- Every minor choice gets a DECISIONS.md entry
+- LEARNINGS.md full of obvious things
+
+**Solution**: Keep artifacts focused on decisions that affect behavior and alignment.
+Not everything needs to be documented — just things that would be forgotten or repeated.
+
+### Context Avoidance
+
+**Problem**: Not using context because "it's faster to just code."
+
+**Symptoms**:
+- TASKS.md never checked before starting work
+- Same mistakes repeated across sessions
+- Decisions re-debated because prior decisions weren't found
+
+**Solution**: Reading context is faster than re-discovering it.
+5 minutes reading saves 50 minutes of wasted work.
+
+---
+
+## Context Validation Checklist
+
+Before starting significant work, validate context is current:
+
+### Quick Check (Every Session)
+- [ ] TASKS.md reflects current priorities
+- [ ] No obvious staleness in files you'll reference
+- [ ] Recent sessions reviewed for relevant context
+
+### Deep Check (Weekly or Before Major Work)
+- [ ] CONSTITUTION.md rules still apply
+- [ ] ARCHITECTURE.md matches actual structure
+- [ ] CONVENTIONS.md patterns match code
+- [ ] DECISIONS.md has no superseded entries unmarked
+- [ ] LEARNINGS.md gotchas still relevant
+- [ ] Run `ctx drift` and address warnings

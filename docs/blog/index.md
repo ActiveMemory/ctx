@@ -11,6 +11,20 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [The Attention Budget: Why Your AI Forgets What You Just Told It](2026-02-03-the-attention-budget.md)
+
+*Jose Alekhinne / February 3, 2026*
+
+Every token you send to an AI consumes a finite resource—the attention budget.
+Understanding this constraint shaped every design decision in ctx: hierarchical
+file structure, explicit budgets, progressive disclosure, and filesystem-as-index.
+This post explains the theory and how ctx operationalizes it.
+
+**Topics**: attention mechanics, context engineering, progressive disclosure,
+ctx primitives, token budgets
+
+---
+
 ### [ctx v0.2.0: The Archaeology Release](2026-02-01-ctx-v0.2.0-the-archaeology-release.md)
 
 *Jose Alekhinne / February 1, 2026*

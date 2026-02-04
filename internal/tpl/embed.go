@@ -10,7 +10,7 @@ package tpl
 
 import "embed"
 
-//go:embed *.md entry-templates/*.md claude/commands/*.md claude/hooks/*.sh ralph/*.md
+//go:embed *.md entry-templates/*.md claude/skills/*/SKILL.md claude/hooks/*.sh ralph/*.md
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -77,36 +77,39 @@ func Entry(name string) ([]byte, error) {
 	return FS.ReadFile("entry-templates/" + name)
 }
 
-// ListClaudeCommands returns available Claude Code slash command file names.
+// ListSkills returns available skill directory names.
+//
+// Each skill is a directory containing a SKILL.md file following the
+// Agent Skills specification (https://agentskills.io/specification).
 //
 // Returns:
-//   - []string: List of command filenames in claude/commands/
+//   - []string: List of skill directory names in claude/skills/
 //   - error: Non-nil if directory read fails
-func ListClaudeCommands() ([]string, error) {
-	entries, err := FS.ReadDir("claude/commands")
+func ListSkills() ([]string, error) {
+	entries, err := FS.ReadDir("claude/skills")
 	if err != nil {
 		return nil, err
 	}
 
 	names := make([]string, 0, len(entries))
 	for _, entry := range entries {
-		if !entry.IsDir() {
+		if entry.IsDir() {
 			names = append(names, entry.Name())
 		}
 	}
 	return names, nil
 }
 
-// ClaudeCommandByName reads a Claude Code slash command template by name.
+// SkillContent reads a skill's SKILL.md file by skill name.
 //
 // Parameters:
-//   - name: Command filename (e.g., "ctx-status.md")
+//   - name: Skill directory name (e.g., "ctx-save")
 //
 // Returns:
-//   - []byte: Command template content from claude/commands/
+//   - []byte: SKILL.md content from claude/skills/<name>/
 //   - error: Non-nil if the file not found or read fails
-func ClaudeCommandByName(name string) ([]byte, error) {
-	return FS.ReadFile("claude/commands/" + name)
+func SkillContent(name string) ([]byte, error) {
+	return FS.ReadFile("claude/skills/" + name + "/SKILL.md")
 }
 
 // ClaudeHookByFileName reads a Claude Code hook script by name.

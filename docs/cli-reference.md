@@ -51,7 +51,7 @@ ctx init [flags]
 
 - `.context/` directory with all template files
 - `.claude/hooks/` with auto-save and enforcement scripts (for Claude Code)
-- `.claude/commands/` with ctx slash command definitions
+- `.claude/skills/` with ctx Agent Skills (following agentskills.io spec)
 - `.claude/settings.local.json` with hook configuration and pre-approved ctx permissions
 - `PROMPT.md` with session prompt (autonomous mode with `--ralph`)
 - `IMPLEMENTATION_PLAN.md` with high-level project direction

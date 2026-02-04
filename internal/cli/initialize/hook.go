@@ -108,8 +108,8 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		return err
 	}
 
-	// Create .claude/commands/ directory and ctx skill files
-	if err := createClaudeCommands(cmd, force); err != nil {
+	// Create .claude/skills/ directories with Agent Skills
+	if err := createClaudeSkills(cmd, force); err != nil {
 		return err
 	}
 

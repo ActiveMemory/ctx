@@ -209,41 +209,45 @@ func TestGetEntryTemplate(t *testing.T) {
 	}
 }
 
-func TestListClaudeCommands(t *testing.T) {
-	commands, err := ListClaudeCommands()
+func TestListSkills(t *testing.T) {
+	skills, err := ListSkills()
 	if err != nil {
-		t.Fatalf("ListClaudeCommands() unexpected error: %v", err)
+		t.Fatalf("ListSkills() unexpected error: %v", err)
 	}
 
-	if len(commands) == 0 {
-		t.Error("ListClaudeCommands() returned empty list")
+	if len(skills) == 0 {
+		t.Error("ListSkills() returned empty list")
 	}
 
-	// Check for expected commands
+	// Check for expected skills (directory names, not files)
 	expected := []string{
-		"ctx-status.md",
-		"ctx-save.md",
-		"ctx-recall.md",
+		"ctx-status",
+		"ctx-save",
+		"ctx-recall",
 	}
 
-	cmdSet := make(map[string]bool)
-	for _, name := range commands {
-		cmdSet[name] = true
+	skillSet := make(map[string]bool)
+	for _, name := range skills {
+		skillSet[name] = true
 	}
 
 	for _, exp := range expected {
-		if !cmdSet[exp] {
-			t.Errorf("ListClaudeCommands() missing expected command: %s", exp)
+		if !skillSet[exp] {
+			t.Errorf("ListSkills() missing expected skill: %s", exp)
 		}
 	}
 }
 
-func TestGetClaudeCommand(t *testing.T) {
-	content, err := ClaudeCommandByName("ctx-recall.md")
+func TestSkillContent(t *testing.T) {
+	content, err := SkillContent("ctx-recall")
 	if err != nil {
-		t.Fatalf("ClaudeCommandByName(ctx-recall.md) error: %v", err)
+		t.Fatalf("SkillContent(ctx-recall) error: %v", err)
 	}
 	if !strings.Contains(string(content), "recall") {
-		t.Error("ctx-recall.md does not contain 'recall'")
+		t.Error("ctx-recall SKILL.md does not contain 'recall'")
+	}
+	// Verify it's a valid SKILL.md with frontmatter
+	if !strings.HasPrefix(string(content), "---") {
+		t.Error("ctx-recall SKILL.md missing frontmatter")
 	}
 }
