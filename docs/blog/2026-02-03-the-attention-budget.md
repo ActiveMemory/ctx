@@ -79,7 +79,7 @@ When I first learned this, `ctx`'s read order immediately clicked:
 
 **CONSTITUTION comes first for a reason.**
 
-It contains invariants; rules that must never be violated:
+It contains **invariants**; rules that must never be violated:
 
 * Security constraints.
 * Quality gates. 
