@@ -136,7 +136,7 @@ Use it at the end of the session or before switching topics.
 
 - "Let's persist what we did"
 - "Update the context files"
-- `/ctx-save` (*slash command in Claude Code*)
+- `/ctx-save` (*Agent Skill in Claude Code*)
 
 ---
 

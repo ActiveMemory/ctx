@@ -1,0 +1,298 @@
+---
+title: "The Attention Budget: Why Your AI Forgets What You Just Told It"
+date: 2026-02-03
+author: Jose Alekhinne
+---
+
+# The Attention Budget
+
+![ctx](../images/ctx-banner.png)
+
+## Why Your AI Forgets What You Just Told It
+
+*Jose Alekhinne / 2026-02-03*
+
+!!! question "Ever wondered why AI gets worse the longer you talk?"
+    You paste a 2000-line file, explain the bug in detail, provide three
+    examples...
+
+    ...and the AI still suggests a fix that ignores half of what you said.
+
+This isn't a bug. It is **physics**.
+
+Understanding that single fact shaped every design decision behind `ctx`.
+
+## The Finite Resource Nobody Talks About
+
+Here's something that took me too long to internalize: **context is not free**.
+
+Every token you send to an AI model consumes a finite resource I call the
+*attention budget*. The model doesn't just read tokens—it forms relationships
+between them. For `n` tokens, that's roughly `n^2` relationships.
+Double the context, and the computation quadruples.
+
+But the more important constraint isn't cost. It's **attention density**.
+
+!!! info "Attention Density"
+    **Attention density** is how much focus each token receives relative to all
+    other tokens in the context window.
+
+As context grows, attention density drops: Each token gets a smaller slice
+of the model's focus. Nothing is ignored—but everything becomes blurrier.
+
+Think of it like a **flashlight**: In a small room, it illuminates everything
+clearly. In a warehouse, it becomes a dim glow that barely reaches the corners.
+
+This is why `ctx agent` has an explicit `--budget` flag:
+
+```bash
+ctx agent --budget 4000 # Force prioritization
+ctx agent --budget 8000 # More context, lower attention density
+```
+
+The budget isn't just about cost. It's about **preserving signal**.
+
+## The Middle Gets Lost
+
+This one surprised me.
+
+Research shows that transformer-based models tend to attend more strongly to
+the **beginning** and **end** of a context window than to its middle—a phenomenon
+often called *lost in the middle*. Positional anchors matter, and the middle
+has fewer of them.
+
+In practice, this means that information placed "somewhere in the middle"
+is statistically less salient, even if it's important.
+
+When I first learned this, `ctx`'s read order immediately clicked:
+
+```
+1. CONSTITUTION.md — Hard rules, NEVER violate
+2. TASKS.md — What to work on next
+3. CONVENTIONS.md — How to write code
+4. ARCHITECTURE.md — Where things go
+5. DECISIONS.md — Why things are the way they are
+6. LEARNINGS.md — Gotchas to avoid
+7. GLOSSARY.md — Correct terminology
+```
+
+**CONSTITUTION comes first for a reason.**
+
+It contains invariants—rules that must never be violated. Security constraints.
+Quality gates. Process requirements. Put those in the middle, and they risk
+being diluted by noise.
+
+This is `ctx`'s first primitive: **hierarchical importance**.
+Not all context is equal.
+
+## `ctx` Primitives
+
+`ctx` is built on four primitives that directly address the **attention
+budget** problem.
+
+### Primitive 1: Separation of Concerns
+
+Instead of a single mega-document, `ctx` uses **separate files for separate
+purposes**:
+
+| File            | Purpose               | Load When                 |
+|-----------------|-----------------------|---------------------------|
+| CONSTITUTION.md | Inviolable rules      | Always                    |
+| TASKS.md        | Current work          | Session start             |
+| CONVENTIONS.md  | How to write code     | Before coding             |
+| DECISIONS.md    | Architectural choices | When questioning approach |
+| LEARNINGS.md    | Gotchas               | When stuck                |
+| sessions/       | Deep history          | On demand                 |
+
+This isn't just "*organization*": It is **progressive disclosure**.
+
+Load only what's relevant to the task at hand. Preserve attention density.
+
+### Primitive 2: Explicit Budgets
+
+The `--budget` flag forces a choice:
+
+```bash
+ctx agent --budget 4000
+```
+
+Example allocation:
+
+```
+Constitution: ~200 tokens (never truncated)
+Tasks: ~500 tokens (current phase)
+Conventions: ~800 tokens (key patterns)
+Recent decisions: ~400 tokens (last 3)
+…budget exhausted, stop loading
+```
+
+The constraint is the feature. It enforces ruthless prioritization.
+
+### Primitive 3: Indexes Over Full Content
+
+DECISIONS.md and LEARNINGS.md both include index sections:
+
+```markdown
+<!-- INDEX:START -->
+| Date       | Decision                            |
+|------------|-------------------------------------|
+| 2026-01-15 | Use PostgreSQL for primary database |
+| 2026-01-20 | Adopt Cobra for CLI framework       |
+<!-- INDEX:END -->
+```
+
+An AI can scan ~50 tokens of index and decide which 200-token entries
+are worth loading.
+
+This is **just-in-time context**.
+
+References are cheaper than full text.
+
+### Primitive 4: Filesystem as Navigation
+
+`ctx` uses the filesystem itself as a context structure:
+
+```
+.context/
+├── CONSTITUTION.md
+├── TASKS.md
+├── sessions/
+│   ├── 2026-01-15-*.md
+│   └── 2026-01-20-*.md
+└── archive/
+    └── tasks-2026-01.md
+```
+
+The AI doesn't need every session loaded.
+
+It needs to know **where to look**.
+
+```bash
+ls .context/sessions/
+cat .context/sessions/2026-01-20-auth-discussion.md
+```
+
+File names, timestamps, and directories encode relevance.
+
+**Navigation is cheaper than loading**.
+
+## Progressive Disclosure in Practice
+
+The naive approach to context is dumping everything upfront:
+
+> "Here's my entire codebase, all my documentation, every decision I've ever
+> made—now help me fix this typo."
+
+This is an **anti-pattern**.
+
+!!! warning "Anti-pattern: Context Hoarding"
+    Dumping everything "*just in case*" and silently destroying **attention 
+    density**.
+
+`ctx` takes the opposite approach:
+
+```bash
+ctx status                      # Quick overview (~100 tokens)
+ctx agent --budget 4000         # Typical session
+cat .context/sessions/...       # Deep dive when needed
+```
+
+| Command                   | Tokens | Use Case      |
+|---------------------------|--------|---------------|
+| `ctx status`              | ~100   | Human glance  |
+| `ctx agent --budget 4000` | 4000   | Normal work   |
+| `ctx agent --budget 8000` | 8000   | Complex tasks |
+| Full session read         | 2000+  | Investigation |
+
+Summaries first. Details on demand.
+
+## Quality Over Quantity
+
+Here's the counterintuitive part: **more context can make AI worse**.
+
+Extra tokens add noise, not clarity. Hallucinated connections increase.
+Signal per token drops.
+
+The goal isn't maximum context. It's **maximum signal per token**.
+
+This principle drives several `ctx` features:
+
+| Design Choice    | Rationale                 |
+|------------------|---------------------------|
+| Separate files   | Load only what's relevant |
+| Explicit budgets | Enforce prioritization    |
+| Index sections   | Cheap scanning            |
+| Task archiving   | Keep active context clean |
+| `ctx compact`    | Periodic noise reduction  |
+
+Completed work isn't deleted: It is moved somewhere cold.
+
+## Designing for Degradation
+
+Here is the uncomfortable truth:
+
+**Context will degrade.**
+
+Long sessions stretch attention thin. Important details fade.
+
+The real question isn't how to prevent degradation, 
+but how to **design for it**.
+
+`ctx`'s answer is persistence:
+
+**Persist early. Persist often.**
+
+The `AGENT_PLAYBOOK` asks:
+
+> "If this session ended right now, would the next one know what happened?"
+
+Capture learnings as they occur:
+
+```bash
+ctx add learning "JWT tokens require explicit cache invalidation" \
+  --context "Debugging auth failures" \
+  --lesson "Token refresh doesn't clear old tokens" \
+  --application "Always invalidate cache on refresh"
+```
+
+**Structure beats prose**: Bullet points survive compression.
+
+Headings remain scannable. Tables pack density.
+
+And above all: **single source of truth**.
+
+Reference decisions; don't duplicate them.
+
+## The `ctx` Philosophy
+
+!!! info "Context as Infrastructure"
+    `ctx` is not a prompt: It is **infrastructure**.
+
+    `ctx` creates versioned files that persist across time and sessions.
+
+The attention budget is fixed. You can't expand it.
+But you can **spend it wisely**:
+
+1. Hierarchical importance
+2. Progressive disclosure
+3. Explicit budgets
+4. Indexes over full content
+5. Filesystem as structure
+
+This is why `ctx` exists—not to cram more context into AI sessions,
+but to curate the *right* context for each moment.
+
+## The Mental Model
+
+I now approach every AI interaction with one question:
+
+> "Given a fixed attention budget, what's the highest-signal thing I can load?"
+
+Not "*how do I explain everything*," but "*what's the minimum that matters*."
+
+That shift (*from abundance to curation*) is the difference between
+frustrating sessions and **productive** ones.
+
+**Spend your tokens wisely**.
+
+Your AI will thank you.

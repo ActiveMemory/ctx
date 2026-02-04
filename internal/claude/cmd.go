@@ -12,35 +12,36 @@ import (
 	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
-// Commands returns the list of embedded command file names.
+// Skills returns the list of embedded skill directory names.
 //
-// These are Claude Code slash command definitions (e.g., "ctx-status.md",
-// "ctx-reflect.md") from internal/templates/claude/commands/. They can be
-// installed to .claude/commands/ via "ctx init".
+// These are Agent Skills (https://agentskills.io) following the specification
+// with SKILL.md files containing frontmatter (name, description) and
+// autonomy-focused instructions. They can be installed to .claude/skills/
+// via "ctx init".
 //
 // Returns:
-//   - []string: Filenames of available command definitions
-//   - error: Non-nil if the commands directory cannot be read
-func Commands() ([]string, error) {
-	names, err := tpl.ListClaudeCommands()
+//   - []string: Names of available skill directories (e.g., "ctx-status", "ctx-save")
+//   - error: Non-nil if the skills directory cannot be read
+func Skills() ([]string, error) {
+	names, err := tpl.ListSkills()
 	if err != nil {
-		return nil, fmt.Errorf("failed to list commands: %w", err)
+		return nil, fmt.Errorf("failed to list skills: %w", err)
 	}
 	return names, nil
 }
 
-// CommandByName returns the content of a command file by name.
+// SkillContent returns the content of a skill's SKILL.md file by name.
 //
 // Parameters:
-//   - name: Filename as returned by [Commands] (e.g., "ctx-status.md")
+//   - name: Skill directory name as returned by [Skills] (e.g., "ctx-status")
 //
 // Returns:
-//   - []byte: Raw bytes of the command definition file
-//   - error: Non-nil if the command file does not exist or cannot be read
-func CommandByName(name string) ([]byte, error) {
-	content, err := tpl.ClaudeCommandByName(name)
+//   - []byte: Raw bytes of the SKILL.md file
+//   - error: Non-nil if the skill does not exist or cannot be read
+func SkillContent(name string) ([]byte, error) {
+	content, err := tpl.SkillContent(name)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read command %s: %w", name, err)
+		return nil, fmt.Errorf("failed to read skill %s: %w", name, err)
 	}
 	return content, nil
 }

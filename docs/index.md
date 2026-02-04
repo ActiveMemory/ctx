@@ -194,7 +194,7 @@ or previous session topics.
 
 .claude/                # Claude Code integration (if detected)
 ├── hooks/              # Auto-save and enforcement scripts
-├── commands/           # ctx slash command definitions
+├── skills/             # ctx Agent Skills (agentskills.io spec)
 └── settings.local.json # Hook configuration
 ```
 

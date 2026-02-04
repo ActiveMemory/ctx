@@ -126,21 +126,22 @@ ctx agent --budget 4000
 cat .context/TASKS.md
 ```
 
-### Slash Commands
+### Agent Skills
 
-`ctx init` installs slash commands to `.claude/commands/`. These are shortcuts
-you can invoke in Claude Code with `/command-name`.
+`ctx init` installs Agent Skills to `.claude/skills/` following the
+[agentskills.io specification](https://agentskills.io). These are invoked
+in Claude Code with `/skill-name`.
 
-#### Context Commands
+#### Context Skills
 
-| Command        | Description                                        |
+| Skill          | Description                                        |
 |----------------|----------------------------------------------------|
 | `/ctx-status`  | Show context summary (tasks, decisions, learnings) |
 | `/ctx-agent`   | Get AI-optimized context packet                    |
 | `/ctx-save`    | Save current session to `.context/sessions/`       |
 | `/ctx-reflect` | Review session and suggest what to persist         |
 
-#### Adding Context
+#### Context Persistence Skills
 
 | Command             | Description                                        |
 |---------------------|----------------------------------------------------|
@@ -149,7 +150,7 @@ you can invoke in Claude Code with `/command-name`.
 | `/ctx-add-decision` | Add a decision with context/rationale/consequences |
 | `/ctx-archive`      | Archive completed tasks                            |
 
-#### Session History
+#### Session History Skills
 
 | Command                  | Description                                     |
 |--------------------------|-------------------------------------------------|
@@ -157,7 +158,7 @@ you can invoke in Claude Code with `/command-name`.
 | `/ctx-journal-enrich`    | Enrich a journal entry with frontmatter/tags    |
 | `/ctx-journal-summarize` | Generate summary of sessions over a time period |
 
-#### Blogging
+#### Blogging Skills
 
 !!! tip "Blogging is a Better Way of Creating Release Notes"
     The blogging workflow can also double as generating release notes:
@@ -170,7 +171,7 @@ you can invoke in Claude Code with `/command-name`.
 | `/ctx-blog`           | Generate blog post from recent activity         |
 | `/ctx-blog-changelog` | Generate blog post from commit range with theme |
 
-#### Development
+#### Development Skills
 
 | Command             | Description                            |
 |---------------------|----------------------------------------|
@@ -186,7 +187,7 @@ you can invoke in Claude Code with `/command-name`.
 /ctx-journal-summarize last week
 ```
 
-Slash commands support partial matching where applicable (e.g., session slugs).
+Skills support partial matching where applicable (e.g., session slugs).
 
 ---
 

@@ -17,48 +17,56 @@ import (
 	"github.com/ActiveMemory/ctx/internal/claude"
 )
 
-// createClaudeCommands creates .claude/commands/ with ctx skill files.
+// createClaudeSkills creates .claude/skills/ with Agent Skills directories.
 //
-// Copies embedded command files to the .claude/commands/ directory for
-// use as Claude Code slash commands.
+// Creates skill directories following the Agent Skills specification
+// (https://agentskills.io), with each skill as a directory containing
+// a SKILL.md file with frontmatter and autonomy-focused instructions.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
-//   - force: If true, overwrite existing command files
+//   - force: If true, overwrite existing skill files
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
-func createClaudeCommands(cmd *cobra.Command, force bool) error {
+func createClaudeSkills(cmd *cobra.Command, force bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
-	commandsDir := ".claude/commands"
-	if err := os.MkdirAll(commandsDir, 0755); err != nil {
-		return fmt.Errorf("failed to create %s: %w", commandsDir, err)
+	skillsDir := ".claude/skills"
+	if err := os.MkdirAll(skillsDir, 0755); err != nil {
+		return fmt.Errorf("failed to create %s: %w", skillsDir, err)
 	}
 
-	// Get the list of embedded command files
-	commands, err := claude.Commands()
+	// Get the list of embedded skills
+	skills, err := claude.Skills()
 	if err != nil {
-		return fmt.Errorf("failed to list commands: %w", err)
+		return fmt.Errorf("failed to list skills: %w", err)
 	}
 
-	for _, cmdName := range commands {
-		cmdPath := filepath.Join(commandsDir, cmdName)
-		if _, err := os.Stat(cmdPath); err == nil && !force {
-			cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), cmdPath)
+	for _, skillName := range skills {
+		// Create skill directory
+		skillDir := filepath.Join(skillsDir, skillName)
+		if err := os.MkdirAll(skillDir, 0755); err != nil {
+			return fmt.Errorf("failed to create %s: %w", skillDir, err)
+		}
+
+		// Create SKILL.md file
+		skillPath := filepath.Join(skillDir, "SKILL.md")
+		if _, err := os.Stat(skillPath); err == nil && !force {
+			cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), skillPath)
 			continue
 		}
 
-		content, err := claude.CommandByName(cmdName)
+		content, err := claude.SkillContent(skillName)
 		if err != nil {
-			return fmt.Errorf("failed to get command %s: %w", cmdName, err)
+			return fmt.Errorf("failed to get skill %s: %w", skillName, err)
 		}
 
-		if err := os.WriteFile(cmdPath, content, 0644); err != nil {
-			return fmt.Errorf("failed to write %s: %w", cmdPath, err)
+		if err := os.WriteFile(skillPath, content, 0644); err != nil {
+			return fmt.Errorf("failed to write %s: %w", skillPath, err)
 		}
-		cmd.Printf("  %s %s\n", green("✓"), cmdPath)
+		cmd.Printf("  %s %s\n", green("✓"), skillPath)
 	}
 
 	return nil

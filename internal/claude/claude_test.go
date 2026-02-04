@@ -67,48 +67,54 @@ func TestPromptCoachScript(t *testing.T) {
 	}
 }
 
-func TestCommands(t *testing.T) {
-	commands, err := Commands()
+func TestSkills(t *testing.T) {
+	skills, err := Skills()
 	if err != nil {
-		t.Fatalf("Commands() unexpected error: %v", err)
+		t.Fatalf("Skills() unexpected error: %v", err)
 	}
 
-	if len(commands) == 0 {
-		t.Error("Commands() returned empty list")
+	if len(skills) == 0 {
+		t.Error("Skills() returned empty list")
 	}
 
-	// Check that all entries are .md files
-	for _, cmd := range commands {
-		if !strings.HasSuffix(cmd, ".md") {
-			t.Errorf("Commands() returned non-.md file: %s", cmd)
+	// Check that all entries are skill directory names (no extension)
+	for _, skill := range skills {
+		if strings.Contains(skill, ".") {
+			t.Errorf("Skills() returned name with extension: %s", skill)
 		}
 	}
 }
 
-func TestCommandByName(t *testing.T) {
-	// First get the list of commands to test with
-	commands, err := Commands()
+func TestSkillContent(t *testing.T) {
+	// First get the list of skills to test with
+	skills, err := Skills()
 	if err != nil {
-		t.Fatalf("Commands() failed: %v", err)
+		t.Fatalf("Skills() failed: %v", err)
 	}
 
-	if len(commands) == 0 {
-		t.Skip("no commands available to test")
+	if len(skills) == 0 {
+		t.Skip("no skills available to test")
 	}
 
-	// Test getting the first command
-	content, err := CommandByName(commands[0])
+	// Test getting the first skill
+	content, err := SkillContent(skills[0])
 	if err != nil {
-		t.Errorf("CommandByName(%q) unexpected error: %v", commands[0], err)
+		t.Errorf("SkillContent(%q) unexpected error: %v", skills[0], err)
 	}
 	if len(content) == 0 {
-		t.Errorf("CommandByName(%q) returned empty content", commands[0])
+		t.Errorf("SkillContent(%q) returned empty content", skills[0])
 	}
 
-	// Test getting nonexistent command
-	_, err = CommandByName("nonexistent-command.md")
+	// Verify it's a valid SKILL.md with frontmatter
+	contentStr := string(content)
+	if !strings.HasPrefix(contentStr, "---") {
+		t.Errorf("SkillContent(%q) missing frontmatter", skills[0])
+	}
+
+	// Test getting nonexistent skill
+	_, err = SkillContent("nonexistent-skill")
 	if err == nil {
-		t.Error("CommandByName(nonexistent) expected error, got nil")
+		t.Error("SkillContent(nonexistent) expected error, got nil")
 	}
 }
 

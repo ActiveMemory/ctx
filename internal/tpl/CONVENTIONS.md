@@ -1,5 +1,18 @@
 # Conventions
 
+<!--
+UPDATE WHEN:
+- New pattern is established and should be followed consistently
+- Existing pattern is deprecated or superseded
+- Team adopts new tooling that changes workflows
+- Code review reveals recurring issues that need a convention
+
+DO NOT UPDATE FOR:
+- One-off exceptions (document in code comments)
+- Experimental patterns not yet proven
+- Personal preferences without team consensus
+-->
+
 ## Naming
 
 - **Constants use semantic prefixes**: Group related constants with prefixes
