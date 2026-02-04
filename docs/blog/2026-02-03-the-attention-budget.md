@@ -215,7 +215,7 @@ Summaries first. Details on demand.
 Here's the counterintuitive part: **more context can make AI worse**.
 
 Extra tokens add noise, not clarity:
-* 
+
 * Hallucinated connections increase.
 * Signal per token drops.
 
