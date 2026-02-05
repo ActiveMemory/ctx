@@ -109,6 +109,15 @@ Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 All commits must be signed off (`git commit -s`) to certify the
 [DCO](CONTRIBUTING_DCO.md).
 
+## Community
+
+**Open source is better together**.
+
+Join the community to ask questions, share feedback, and connect with
+other users:
+
+[Join `#ctx` on `irc.libera.chat`](https://web.libera.chat/#ctx)
+
 ## License
 
 [Apache 2.0](LICENSE)
