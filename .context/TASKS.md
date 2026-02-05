@@ -1,6 +1,3 @@
-- [ ] Build minimal ctx monitor dashboard (see specs/monitor-architecture.md). MVP: a terminal script that runs in a separate window, finds the active session JSONL, estimates token usage, shows context health (green/yellow/red), and refreshes periodically. Later: pluggable auditors (drift, repetition detection), signal injection via hooks. #priority:medium #added:2026-02-04-223356
-
-- [ ] Search for a consolidation/code-hygiene skill that can enforce project-specific conventions. Today's codebase scan found concrete drift: 5 Is* predicate violations, magic strings in 7+ files, 80+ hardcoded file permissions. A skill that periodically checks for ctx's known drift patterns (godoc style, predicate naming, file organization, magic strings in config) would be the enforcement arm of CONVENTIONS.md. Look for skills focused on codebase consistency, convention enforcement, or technical debt scanning — not generic code review checklists. #priority:medium #added:2026-02-04-222224
 
 # Tasks
 
@@ -17,6 +14,24 @@ STRUCTURE RULES (see CONSTITUTION.md):
 **Context**: Enriched journal files now have YAML frontmatter (topics, type, outcome,
 technologies, key_files). The site generator should leverage this metadata for
 better discovery and navigation.
+
+- [ ] Build minimal ctx monitor dashboard (see specs/monitor-architecture.md). 
+  - [ ] MVP: a terminal script that runs in a separate window, finds the active 
+    session JSONL, estimates token usage, shows context health (green/yellow/red), 
+    and refreshes periodically. Later: pluggable auditors 
+    (drift, repetition detection), signal injection via hooks. #priority:medium #added:2026-02-04-223356
+
+- [x] Search for a consolidation/code-hygiene skill that can enforce
+  project-specific conventions. Today's codebase scan found concrete
+  drift: 5 Is* predicate violations, magic strings in 7+ files, 80+ hardcoded
+  file permissions. A skill that periodically checks for ctx's known drift
+  patterns (godoc style, predicate naming, file organization, magic strings
+  in config) would be the enforcement arm of CONVENTIONS.md. Look for skills
+  focused on codebase consistency, convention enforcement, or technical debt
+  scanning — not generic code review checklists. #priority:medium #added:2026-02-04-222224
+  **Done**: Found generic skill (70% redundant per E/A/R), adapted to
+  `/consolidate` with 9 project-specific checks. Added line width +
+  duplication conventions. Blog post drafted. #completed:2026-02-05
 
 **Features (priority order):**
 

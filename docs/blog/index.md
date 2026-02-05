@@ -11,6 +11,21 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [You Can't Import Expertise](2026-02-05-you-cant-import-expertise.md)
+
+*Jose Alekhinne / February 5, 2026*
+
+I found a well-crafted consolidation skill: four files, ten patterns, eight
+analysis dimensions. Applied my own E/A/R framework — 70% was noise. The
+template was thorough, correct, and almost entirely useless for my project.
+This post is about why good skills can't be copy-pasted, and how to grow
+them from your project's own drift history instead.
+
+**Topics**: skill adaptation, E/A/R framework, convention drift, consolidation,
+project-specific expertise
+
+---
+
 ### [Skills That Fight the Platform](2026-02-04-skills-that-fight-the-platform.md)
 
 *Jose Alekhinne / February 4, 2026*

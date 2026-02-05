@@ -42,6 +42,21 @@
   - `session/run.go`, `session/types.go`, `session/parse.go`
   - Not: `runners/session.go`, `types/session.go`, `parsers/session.go`
 
+## Line Width
+
+- **Target ~80 characters**: Highly encouraged, not a hard limit
+  - Some lines will naturally exceed it (long strings, struct tags, URLs) — that's fine
+  - Drift accumulates silently, especially in test code
+  - Break at natural points: function arguments, struct fields, chained calls
+
+## Duplication
+
+- **Non-test code**: Apply the rule of three — extract when a block appears 3+ times
+  - Watch for copy-paste during task-focused sessions where the agent prioritizes completion over shape
+- **Test code**: Some duplication is acceptable for readability
+  - When the same setup/assertion block appears 3+ times, extract a test helper
+  - Use `t.Helper()` so failure messages point to the caller, not the helper
+
 ## Testing
 
 - **Colocate tests**: Test files live next to source files
