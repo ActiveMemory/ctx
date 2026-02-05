@@ -28,9 +28,9 @@ Then I stopped, and applied `ctx`'s own evaluation framework:
 
 This post is about **why**.
 
-> **Templates describe categories of problems.
+> **Templates describe categories of problems.**
 > 
-> Expertise encodes which problems actually happen, and how often.**
+> **Expertise encodes which problems actually happen, and how often.**
 
 ## The Skill Looked Great on Paper
 
