@@ -155,7 +155,7 @@ What I found was specific:
 | Lines exceeding 80 characters       | Especially test files  | Every session              |
 | Duplicate code blocks               | Test and non-test code | When agent is task-focused |
 
-The generic skill had no check for any of these. It couldn't — these
+The generic skill had no check for any of these. It couldn't; because these
 patterns are specific to this project's conventions, its Go codebase, and
 its development rhythm.
 
