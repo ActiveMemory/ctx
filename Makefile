@@ -2,7 +2,9 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint clean all release build-all dogfood help test-coverage smoke site site-serve site-setup audit journal
+.PHONY: build test vet fmt lint clean all release build-all dogfood help \
+test-coverage smoke site site-serve site-setup audit \
+journal journal-serve watch-session
 
 # Default binary name and output
 BINARY := ctx
@@ -149,6 +151,14 @@ journal:
 	@ctx journal site --build
 	@echo ""
 	@echo "Journal site updated!"
+
+## journal-serve: Serve the journal site.
+journal-serve:
+	@ctx journal site --serve
+
+## watch-session: Watch current session for token usage
+watch-session:
+	./hack/context-watch.sh
 
 ## help: Show this help
 help:
