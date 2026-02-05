@@ -217,7 +217,7 @@ cat .context/sessions/...       # Deep dive when needed
 | `ctx status`              | ~100   | Human glance  |
 | `ctx agent --budget 4000` | 4000   | Normal work   |
 | `ctx agent --budget 8000` | 8000   | Complex tasks |
-| Full session read         | 2000+  | Investigation |
+| Full session read         | 10000+ | Investigation |
 
 Summaries first. Details on demand.
 
