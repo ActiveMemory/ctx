@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Skills That Fight the Platform](2026-02-04-skills-that-fight-the-platform.md)
+
+*Jose Alekhinne / February 4, 2026*
+
+AI coding agents ship with carefully designed system prompts. When custom
+skills conflict with those defaults, the AI has to reconcile contradictory
+instructions — and the result is unpredictable. This post catalogues five
+conflict patterns discovered while building ctx: judgment suppression,
+redundant guidance, guilt-tripping, phantom dependencies, and universal
+triggers.
+
+**Topics**: prompt engineering, skill design, system prompts, anti-patterns,
+AI safety primitives
+
+---
+
 ### [The Attention Budget: Why Your AI Forgets What You Just Told It](2026-02-03-the-attention-budget.md)
 
 *Jose Alekhinne / February 3, 2026*
