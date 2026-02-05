@@ -281,7 +281,7 @@ The consolidation skill went from:
 | "Check for duplication"  | "Check for `Is*` predicate prefixes in exported methods" |
 
 The adapted version is smaller, faster to parse, and catches the things
-that actually drift in this project.
+that **actually** drift in this project.
 
 **That's the difference between a template and a tool.**
 
