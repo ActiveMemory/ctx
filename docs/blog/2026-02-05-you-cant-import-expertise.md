@@ -293,8 +293,10 @@ that **actually** drift in this project.
     You can import structures, matrices, and workflows.
 
     But the checks that matter only grow where the scars are:
-    the conventions that were violated, the patterns that drifted,
-    the specific ways *this* codebase accumulates debt.
+
+    * the conventions that were violated, 
+    * the patterns that drifted,
+    * and the specific ways **this** codebase accumulates debt.
 
 ---
 
