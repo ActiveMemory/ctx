@@ -13,6 +13,19 @@
 - **Maps reference constants**: Use constants as keys, not literals
   - `map[string]X{ConstKey: value}` not `map[string]X{"literal": value}`
 
+## Predicates
+
+- **No Is/Has/Can prefixes**: `Completed()` not `IsCompleted()`, `Empty()` not `IsEmpty()`
+- Applies to exported methods that return bool
+- Private helpers may use prefixes when it reads more naturally
+
+## File Organization
+
+- **Public API in main file, private helpers in separate logical files**
+  - `loader.go` (exports `Load()`) + `process.go` (unexported helpers)
+  - NOT: one file with unexported functions stacked at the bottom
+- Reasoning: agent loads only the public API file unless it needs implementation detail
+
 ## Patterns
 
 - **Centralize magic strings**: All repeated literals belong in a `config` or `constants` package
@@ -36,6 +49,22 @@
   - Not a separate `tests/` folder
 - **Test the unit, not the file**: One test file can test multiple related functions
 - **Integration tests are separate**: `cli_test.go` for end-to-end binary tests
+
+## Code Change Heuristics
+
+- **Present interpretations, don't pick silently**: If a request has multiple
+  valid readings, lay them out rather than guessing
+- **Push back when warranted**: If a simpler approach exists, say so
+- **"Would a senior engineer call this overcomplicated?"**: If yes, simplify
+- **Match existing style**: Even if you'd write it differently in a greenfield
+- **Every changed line traces to the request**: If it doesn't, revert it
+
+## Decision Heuristics
+
+- **"Would I start this today?"**: If not, continuing is the sunk cost — evaluate only future value
+- **"Reversible or one-way door?"**: Reversible decisions don't need deep analysis
+- **"Does the analysis cost more than the decision?"**: Stop deliberating when the options are within an order of magnitude
+- **"Order of magnitude, not precision"**: 10x better matters; 10% better usually doesn't
 
 ## Refactoring
 

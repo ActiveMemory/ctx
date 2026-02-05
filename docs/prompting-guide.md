@@ -230,6 +230,65 @@ so far, here are some prompts that tend to produce poor results:
 
 ---
 
+## Explore → Plan → Implement
+
+For non-trivial work, name the phase you want:
+
+```
+Explore src/auth and summarize the current flow.
+Then propose a plan. After I approve, implement with tests.
+```
+
+This prevents the AI from jumping straight to code. The three phases
+map to different modes of thinking:
+
+- **Explore**: read, search, understand — no changes
+- **Plan**: propose approach, trade-offs, scope — no changes
+- **Implement**: write code, run tests, verify — changes
+
+Small fixes skip straight to implement. Complex or uncertain work
+benefits from all three.
+
+---
+
+## Prompts by Task Type
+
+Different tasks need different prompt structures. The pattern:
+**symptom + location + verification**.
+
+### Bugfix
+```
+Users report search returns empty results for queries with hyphens.
+Reproduce in src/search/. Write a failing test for "foo-bar",
+fix the root cause, run: go test ./internal/search/...
+```
+
+### Refactor
+```
+Inspect src/auth/ and list duplication hotspots.
+Propose a refactor plan scoped to one module.
+After approval, remove duplication without changing behavior.
+Add a test if coverage is missing. Run: make audit
+```
+
+### Research
+```
+Explore the request flow around src/api/.
+Summarize likely bottlenecks with evidence.
+Propose 2-3 hypotheses. Do not implement yet.
+```
+
+### Docs
+```
+Update docs/cli-reference.md to reflect the new --format flag.
+Confirm the flag exists in the code and the example works.
+```
+
+Notice each prompt includes **what to verify and how**. Without that,
+you get "should work now" instead of evidence.
+
+---
+
 ## Writing Tasks as Prompts
 
 Tasks in `TASKS.md` are **indirect prompts** to the AI. How you write them

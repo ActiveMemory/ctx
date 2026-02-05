@@ -44,16 +44,40 @@ Send details to **security@ctx.ist**
 | Initial assessment | Within 7 days                          |
 | Resolution target  | Within 30 days (depending on severity) |
 
+## Trust Model
+
+`ctx` operates within a single trust boundary: **the local filesystem**.
+
+The person who authors `.context/` files is the same person who runs the
+agent that reads them. There is no remote input, no shared state, and no
+server component.
+
+This means:
+
+* **`ctx` does not sanitize context files for prompt injection.** This is a
+  deliberate design choice, not an oversight. The files are authored by the
+  developer who owns the machine: Sanitizing their own instructions back
+  to them would be counterproductive.
+* **If you place adversarial instructions in your own `.context/` files,
+  your agent will follow them.** This is expected behavior. You control the
+  context; the agent trusts it.
+
+!!! warning "Shared Repositories"
+    In shared repositories, `.context/` files should be reviewed in code
+    review (*the same way you would review CI/CD config or Makefiles*). A
+    malicious contributor could add harmful instructions to
+    `CONSTITUTION.md` or `TASKS.md`.
+
 ## Security Design
 
 `ctx` is designed with security in mind:
 
-- **No secrets in context**: The constitution explicitly forbids storing
+* **No secrets in context**: The constitution explicitly forbids storing
   secrets, tokens, API keys, or credentials in `.context/` files
-- **Local only**: ctx runs entirely locally with no external network calls
-- **No code execution**: ctx reads and writes Markdown files only; it does 
+* **Local only**: `ctx` runs entirely locally with no external network calls
+* **No code execution**: ctx reads and writes Markdown files only; it does
   not execute arbitrary code
-- **Git-tracked**: Core context files are meant to be committed, so they should
+* **Git-tracked**: Core context files are meant to be committed, so they should
   never contain sensitive data. Exception: `sessions/` and `journal/` contain
   raw conversation data and should be gitignored
 

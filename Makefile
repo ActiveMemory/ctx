@@ -2,7 +2,7 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint clean all release build-all dogfood help test-coverage smoke site site-serve site-setup audit
+.PHONY: build test vet fmt lint clean all release build-all dogfood help test-coverage smoke site site-serve site-setup audit journal
 
 # Default binary name and output
 BINARY := ctx
@@ -140,6 +140,15 @@ site:
 ## site-serve: Serve documentation site locally
 site-serve:
 	.venv/bin/zensical serve
+
+## journal: Export sessions and regenerate journal site
+journal:
+	@echo "==> Exporting sessions to journal..."
+	@ctx recall export --all
+	@echo "==> Generating journal site..."
+	@ctx journal site --build
+	@echo ""
+	@echo "Journal site updated!"
 
 ## help: Show this help
 help:

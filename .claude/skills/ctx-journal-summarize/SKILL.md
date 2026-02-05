@@ -29,6 +29,11 @@ Or topic/feature-based:
 **Timeline summary** (default): What happened in a period
 **Feature narrative**: "How we built X" from multiple sessions
 **Decision trail**: Link decisions to the sessions that made them
+**Approach synthesis**: "What have I tried for X?" — across sessions:
+  - What approaches were tried?
+  - What worked / what failed?
+  - Recurring patterns?
+  - Current state?
 
 ## Process
 

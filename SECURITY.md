@@ -34,16 +34,39 @@ Send details to **security@ctx.ist**
 - **Initial assessment**: Within 7 days
 - **Resolution target**: Within 30 days (*depending on severity*)
 
+## Trust Model
+
+`ctx` operates within a single trust boundary: **the local filesystem**.
+
+The person who authors `.context/` files is the same person who runs the
+agent that reads them. There is no remote input, no shared state, and no
+server component.
+
+This means:
+
+* **ctx does not sanitize context files for prompt injection.** This is a
+  deliberate design choice, not an oversight. The files are authored by the
+  developer who owns the machine: Sanitizing their own instructions back
+  to them would be counterproductive.
+* **If you place adversarial instructions in your own `.context/` files,
+  your agent will follow them.** This is expected behavior. You control the
+  context; the agent trusts it.
+* **Shared repositories should review `.context/` files in code review**,
+  the same way you would review any committed configuration. A malicious
+  contributor could add harmful instructions to `CONSTITUTION.md` or
+  `TASKS.md`: Treat these files with the same scrutiny as CI/CD config
+  or Makefiles.
+
 ## Security Considerations
 
 `ctx` is designed with security in mind:
 
-- **No secrets in context**: The constitution explicitly forbids storing 
+* **No secrets in context**: The constitution explicitly forbids storing
   secrets, tokens, API keys, or credentials in `.context/` files
-- **Local only**: `ctx` runs entirely locally with no external network calls
-- **No code execution**: `ctx` reads and writes markdown files only; it does 
+* **Local only**: `ctx` runs entirely locally with no external network calls
+* **No code execution**: `ctx` reads and writes Markdown files only; it does
   not execute arbitrary code
-- **Git-tracked**: All context files are meant to be committed, so they should 
+* **Git-tracked**: All context files are meant to be committed, so they should
   never contain sensitive data
 
 ### Best Practices

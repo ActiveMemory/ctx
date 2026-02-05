@@ -23,6 +23,27 @@ Run the relevant verification command before claiming a result.
 | Regression tested | Red-green cycle: test fails without fix, passes with it |
 | All checks pass   | `make audit` output showing all steps pass |
 
+## Transform Vague Tasks into Verifiable Goals
+
+Before starting, rewrite the task as a testable outcome:
+
+| Task as given         | Verifiable goal                                        |
+|-----------------------|--------------------------------------------------------|
+| "Add validation"      | Write tests for invalid inputs, then make them pass    |
+| "Fix the bug"         | Write a test that reproduces it, then make it pass     |
+| "Refactor X"          | Ensure tests pass before and after                     |
+| "Improve performance" | Measure before, change, measure after, compare         |
+
+For multi-step work, pair each step with its check:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently.
+Weak criteria ("make it work") require constant clarification.
+
 ## Examples
 
 ```

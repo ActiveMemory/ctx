@@ -640,6 +640,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#explore-plan-implement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explore → Plan → Implement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompts-by-task-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompts by Task Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prompts by Task Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bugfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugfix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refactor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#writing-tasks-as-prompts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1249,6 +1321,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#explore-plan-implement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explore → Plan → Implement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompts-by-task-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompts by Task Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prompts by Task Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bugfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugfix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refactor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#writing-tasks-as-prompts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1549,33 +1693,74 @@ so far, here are some prompts that tend to produce poor results:</p>
 </tbody>
 </table>
 <hr />
+<h2 id="explore-plan-implement">Explore → Plan → Implement<a class="headerlink" href="#explore-plan-implement" title="Permanent link">&para;</a></h2>
+<p>For non-trivial work, name the phase you want:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Explore src/auth and summarize the current flow.
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Then propose a plan. After I approve, implement with tests.
+</span></code></pre></div>
+<p>This prevents the AI from jumping straight to code. The three phases
+map to different modes of thinking:</p>
+<ul>
+<li><strong>Explore</strong>: read, search, understand — no changes</li>
+<li><strong>Plan</strong>: propose approach, trade-offs, scope — no changes</li>
+<li><strong>Implement</strong>: write code, run tests, verify — changes</li>
+</ul>
+<p>Small fixes skip straight to implement. Complex or uncertain work
+benefits from all three.</p>
+<hr />
+<h2 id="prompts-by-task-type">Prompts by Task Type<a class="headerlink" href="#prompts-by-task-type" title="Permanent link">&para;</a></h2>
+<p>Different tasks need different prompt structures. The pattern:
+<strong>symptom + location + verification</strong>.</p>
+<h3 id="bugfix">Bugfix<a class="headerlink" href="#bugfix" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Users report search returns empty results for queries with hyphens.
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Reproduce in src/search/. Write a failing test for &quot;foo-bar&quot;,
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>fix the root cause, run: go test ./internal/search/...
+</span></code></pre></div>
+<h3 id="refactor">Refactor<a class="headerlink" href="#refactor" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Inspect src/auth/ and list duplication hotspots.
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Propose a refactor plan scoped to one module.
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>After approval, remove duplication without changing behavior.
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Add a test if coverage is missing. Run: make audit
+</span></code></pre></div>
+<h3 id="research">Research<a class="headerlink" href="#research" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Explore the request flow around src/api/.
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Summarize likely bottlenecks with evidence.
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Propose 2-3 hypotheses. Do not implement yet.
+</span></code></pre></div>
+<h3 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Update docs/cli-reference.md to reflect the new --format flag.
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Confirm the flag exists in the code and the example works.
+</span></code></pre></div>
+<p>Notice each prompt includes <strong>what to verify and how</strong>. Without that,
+you get "should work now" instead of evidence.</p>
+<hr />
 <h2 id="writing-tasks-as-prompts">Writing Tasks as Prompts<a class="headerlink" href="#writing-tasks-as-prompts" title="Permanent link">&para;</a></h2>
 <p>Tasks in <code>TASKS.md</code> are <strong>indirect prompts</strong> to the AI. How you write them
 shapes how the AI approaches the work.</p>
 <h3 id="state-the-deliverable-not-just-steps">State the Deliverable, Not Just Steps<a class="headerlink" href="#state-the-deliverable-not-just-steps" title="Permanent link">&para;</a></h3>
 <p>Bad task (implementation-focused):
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">- [ ]</span> T1.1.0: Parser system
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">- [ ]</span> T1.1.0: Parser system
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
 </span></code></pre></div></p>
 <p>The AI may complete all subtasks but miss the actual goal. What does
 "Parser system" deliver to the user?</p>
 <p>Good task (deliverable-focused):
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">- [ ]</span> T1.1.0: Parser CLI command
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx recall list`</span> command that shows parsed sessions
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">- [ ]</span> T1.1.0: Parser CLI command
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx recall list`</span> command that shows parsed sessions
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
 </span></code></pre></div></p>
 <p>Now the AI knows the subtasks serve a specific user-facing deliverable.</p>
 <h3 id="use-acceptance-criteria">Use Acceptance Criteria<a class="headerlink" href="#use-acceptance-criteria" title="Permanent link">&para;</a></h3>
 <p>For complex tasks, add explicit "done when" criteria:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">- [ ]</span> T2.0: Authentication system
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="gs">**Done when**</span>:
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">- [ ]</span> User can register with email
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="k">- [ ]</span> User can log in and get a token
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="k">- [ ]</span> Protected routes reject unauthenticated requests
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">- [ ]</span> T2.0: Authentication system
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  <span class="gs">**Done when**</span>:
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="k">- [ ]</span> User can register with email
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="k">- [ ]</span> User can log in and get a token
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="k">- [ ]</span> Protected routes reject unauthenticated requests
 </span></code></pre></div>
 <p>This prevents premature "task complete" when only the implementation
 details are done but the feature doesn't actually work.</p>
