@@ -15,6 +15,13 @@ STRUCTURE RULES (see CONSTITUTION.md):
 technologies, key_files). The site generator should leverage this metadata for
 better discovery and navigation.
 
+- [ ] Check for the latest backup of .context (there is a script in ~/WORKSPACE)
+  and if it is >2days old, remind the user to run the backup script.
+  we can use a hook for this. Alternative could be detecting this,
+  exiting early, and using a cron job; but the disadvantage is, if nothing has
+  changed, the cron job will still make a redundant backup: If nobody is using
+  the project, then there is no need to run the backup anyway.
+
 - [ ] Build minimal ctx monitor dashboard (see specs/monitor-architecture.md). 
   - [ ] MVP: a terminal script that runs in a separate window, finds the active 
     session JSONL, estimates token usage, shows context health (green/yellow/red), 

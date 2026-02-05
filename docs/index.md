@@ -40,8 +40,8 @@ conventions, and learnings:
 Join the community to ask questions, share feedback, and connect with
 other users:
 
-- [:fontawesome-brands-discord: **Discord**](https://discord.gg/kampus):
-  Chat, get help, share your workflows
+- [:fontawesome-brands-stack-exchange: **IRC**](https://web.libera.chat/#ctx): 
+   join `#ctx` on `irc.libera.chat`
 - [:fontawesome-brands-github: **GitHub**](https://github.com/ActiveMemory/ctx):
   Star the repo, report issues, contribute
 
