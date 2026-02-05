@@ -67,25 +67,31 @@ phenomenon often called "lost in the middle"*).
 In practice, this means that information placed "*somewhere in the middle*"
 is statistically less salient, even if it's important.
 
-When I first learned this, `ctx`'s read order immediately clicked:
+`ctx` orders context files by **logical progression**—what the agent needs to
+know before it can understand the next thing:
 
-1. `CONSTITUTION.md`: Hard rules, NEVER violate
-2. `TASKS.md`: What to work on next
-3. `CONVENTIONS.md`: How to write code
-4. `ARCHITECTURE.md`: Where things go
-5. `DECISIONS.md`: Why things are the way they are
-6. `LEARNINGS.md`: Gotchas to avoid
-7. `GLOSSARY.md`: Correct terminology
+1. `CONSTITUTION.md`: Constraints before action
+2. `TASKS.md`: Focus before patterns
+3. `CONVENTIONS.md`: How to write before where to write
+4. `ARCHITECTURE.md`: Structure before history
+5. `DECISIONS.md`: Past choices before gotchas
+6. `LEARNINGS.md`: Lessons before terminology
+7. `GLOSSARY.md`: Reference material
+8. `DRIFT.md`: Staleness indicators
+9. `AGENT_PLAYBOOK.md`: Meta instructions last
 
-**CONSTITUTION comes first for a reason.**
+This ordering is about logical dependencies, not attention engineering.
+But it happens to be **attention-friendly** too:
 
-It contains **invariants**; rules that must never be violated:
+The files that matter most—**CONSTITUTION**, **TASKS**, **CONVENTIONS**—land
+at the **beginning** of the context window, where attention is strongest.
 
-* Security constraints.
-* Quality gates. 
-* Process requirements... 
+Reference material like **GLOSSARY** and **DRIFT** sit in the middle, where
+lower salience is acceptable.
 
-Put those in the middle, and they risk being **diluted** by noise.
+And **AGENT_PLAYBOOK**—the operating manual for the context system itself—sits
+at the **end**, also outside the "lost in the middle" zone. The agent reads
+*what* to work with before learning *how* the system works.
 
 This is `ctx`'s first primitive: **hierarchical importance**.
 Not all context is equal.
@@ -100,14 +106,19 @@ budget** problem.
 Instead of a single mega-document, `ctx` uses **separate files for separate
 purposes**:
 
-| File            | Purpose               | Load When                 |
-|-----------------|-----------------------|---------------------------|
-| CONSTITUTION.md | Inviolable rules      | Always                    |
-| TASKS.md        | Current work          | Session start             |
-| CONVENTIONS.md  | How to write code     | Before coding             |
-| DECISIONS.md    | Architectural choices | When questioning approach |
-| LEARNINGS.md    | Gotchas               | When stuck                |
-| sessions/       | Deep history          | On demand                 |
+| File              | Purpose               | Load When                 |
+|-------------------|-----------------------|---------------------------|
+| CONSTITUTION.md   | Inviolable rules      | Always                    |
+| TASKS.md          | Current work          | Session start             |
+| CONVENTIONS.md    | How to write code     | Before coding             |
+| ARCHITECTURE.md   | System structure      | Before making changes     |
+| DECISIONS.md      | Architectural choices | When questioning approach |
+| LEARNINGS.md      | Gotchas               | When stuck                |
+| GLOSSARY.md       | Domain terminology    | When clarifying terms     |
+| DRIFT.md          | Staleness indicators  | During maintenance        |
+| AGENT_PLAYBOOK.md | Operating manual      | Session start             |
+| sessions/         | Deep history          | On demand                 |
+| journal/          | Session journal       | On demand                 |
 
 This isn't just "*organization*": It is **progressive disclosure**.
 
@@ -187,9 +198,9 @@ The naive approach to context is dumping everything upfront:
 > "Here's my entire codebase, all my documentation, every decision I've ever
 > made—now help me fix this typo."
 
-This is an **anti-pattern**.
+This is an **antipattern**.
 
-!!! warning "Anti-pattern: Context Hoarding"
+!!! warning "Antipattern: Context Hoarding"
     Dumping everything "*just in case*" will silently destroy the **attention 
     density**.
 

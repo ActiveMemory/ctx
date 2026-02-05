@@ -790,24 +790,28 @@ phenomenon often called "lost in the middle"</em>). </p>
 <p><strong>Positional anchors matter, and the middle has fewer of them</strong>.</p>
 <p>In practice, this means that information placed "<em>somewhere in the middle</em>"
 is statistically less salient, even if it's important.</p>
-<p>When I first learned this, <code>ctx</code>'s read order immediately clicked:</p>
+<p><code>ctx</code> orders context files by <strong>logical progression</strong>—what the agent needs to
+know before it can understand the next thing:</p>
 <ol>
-<li><code>CONSTITUTION.md</code>: Hard rules, NEVER violate</li>
-<li><code>TASKS.md</code>: What to work on next</li>
-<li><code>CONVENTIONS.md</code>: How to write code</li>
-<li><code>ARCHITECTURE.md</code>: Where things go</li>
-<li><code>DECISIONS.md</code>: Why things are the way they are</li>
-<li><code>LEARNINGS.md</code>: Gotchas to avoid</li>
-<li><code>GLOSSARY.md</code>: Correct terminology</li>
+<li><code>CONSTITUTION.md</code>: Constraints before action</li>
+<li><code>TASKS.md</code>: Focus before patterns</li>
+<li><code>CONVENTIONS.md</code>: How to write before where to write</li>
+<li><code>ARCHITECTURE.md</code>: Structure before history</li>
+<li><code>DECISIONS.md</code>: Past choices before gotchas</li>
+<li><code>LEARNINGS.md</code>: Lessons before terminology</li>
+<li><code>GLOSSARY.md</code>: Reference material</li>
+<li><code>DRIFT.md</code>: Staleness indicators</li>
+<li><code>AGENT_PLAYBOOK.md</code>: Meta instructions last</li>
 </ol>
-<p><strong>CONSTITUTION comes first for a reason.</strong></p>
-<p>It contains <strong>invariants</strong>; rules that must never be violated:</p>
-<ul>
-<li>Security constraints.</li>
-<li>Quality gates. </li>
-<li>Process requirements... </li>
-</ul>
-<p>Put those in the middle, and they risk being <strong>diluted</strong> by noise.</p>
+<p>This ordering is about logical dependencies, not attention engineering.
+But it happens to be <strong>attention-friendly</strong> too:</p>
+<p>The files that matter most—<strong>CONSTITUTION</strong>, <strong>TASKS</strong>, <strong>CONVENTIONS</strong>—land
+at the <strong>beginning</strong> of the context window, where attention is strongest.</p>
+<p>Reference material like <strong>GLOSSARY</strong> and <strong>DRIFT</strong> sit in the middle, where
+lower salience is acceptable.</p>
+<p>And <strong>AGENT_PLAYBOOK</strong>—the operating manual for the context system itself—sits
+at the <strong>end</strong>, also outside the "lost in the middle" zone. The agent reads
+<em>what</em> to work with before learning <em>how</em> the system works.</p>
 <p>This is <code>ctx</code>'s first primitive: <strong>hierarchical importance</strong>.
 Not all context is equal.</p>
 <h2 id="ctx-primitives"><code>ctx</code> Primitives<a class="headerlink" href="#ctx-primitives" title="Permanent link">&para;</a></h2>
@@ -841,6 +845,11 @@ purposes</strong>:</p>
 <td>Before coding</td>
 </tr>
 <tr>
+<td>ARCHITECTURE.md</td>
+<td>System structure</td>
+<td>Before making changes</td>
+</tr>
+<tr>
 <td>DECISIONS.md</td>
 <td>Architectural choices</td>
 <td>When questioning approach</td>
@@ -851,8 +860,28 @@ purposes</strong>:</p>
 <td>When stuck</td>
 </tr>
 <tr>
+<td>GLOSSARY.md</td>
+<td>Domain terminology</td>
+<td>When clarifying terms</td>
+</tr>
+<tr>
+<td>DRIFT.md</td>
+<td>Staleness indicators</td>
+<td>During maintenance</td>
+</tr>
+<tr>
+<td>AGENT_PLAYBOOK.md</td>
+<td>Operating manual</td>
+<td>Session start</td>
+</tr>
+<tr>
 <td>sessions/</td>
 <td>Deep history</td>
+<td>On demand</td>
+</tr>
+<tr>
+<td>journal/</td>
+<td>Session journal</td>
 <td>On demand</td>
 </tr>
 </tbody>
@@ -908,9 +937,9 @@ it needs to know <strong>where to look</strong>.</p>
 <p>"Here's my entire codebase, all my documentation, every decision I've ever
 made—now help me fix this typo."</p>
 </blockquote>
-<p>This is an <strong>anti-pattern</strong>.</p>
+<p>This is an <strong>antipattern</strong>.</p>
 <div class="admonition warning">
-<p class="admonition-title">Anti-pattern: Context Hoarding</p>
+<p class="admonition-title">Antipattern: Context Hoarding</p>
 <p>Dumping everything "<em>just in case</em>" will silently destroy the <strong>attention 
 density</strong>.</p>
 </div>
