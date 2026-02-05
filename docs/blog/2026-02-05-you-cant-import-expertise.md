@@ -234,7 +234,7 @@ Templates are seductive because they feel like progress:
 
 A template that covers eight analysis dimensions with Rust examples
 adds zero value to a Go project with five known drift patterns. Worse,
-it adds **negative** value: the AI spends attention *defending generic
+it adds **negative** value: the AI spends **attention** *defending generic
 advice* instead of noticing project-specific drift.
 
 This is the [attention budget][attention-post] problem again. Every token
