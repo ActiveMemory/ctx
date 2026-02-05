@@ -85,22 +85,22 @@ convention drift in a >15K-line Go CLI.
 
 ## What Does a `B+` in Code Organization *Actually* Mean?!
 
-The scoring system (`0-10` per dimension, letter grades) added ceremony
+The scoring system (*`0-10` per dimension, letter grades*) added ceremony
 without actionable insight. 
 
 What is a `B+`? What do I do differently for an `A-`?
 
 **The skill told the AI what it already knew, in more words.**
 
-### What Was Activation (~10%)
+### What Was Activation (*~10%*)
 
-The consolidation checklist (semantics preserved? tests pass? docs updated?)
+The consolidation checklist (*semantics preserved? tests pass? docs updated?*)
 was useful as a **gate**. But, it's the kind of thing you could inline in three
 lines.
 
 The phased roadmap structure was reasonable scaffolding for sequencing work.
 
-### What Was Expert (~20%)
+### What Was Expert (*~20%*)
 
 Three concepts survived:
 
