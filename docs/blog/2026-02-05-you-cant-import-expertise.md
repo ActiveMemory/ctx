@@ -106,7 +106,7 @@ Three concepts survived:
 
 1. **The Consolidation Decision Matrix**: A concrete framework mapping
    similarity level and instance count to action. "*Exact duplicate, 2+
-   instances: consolidate immediately.*" "*< 3 instances: leave it —
+   instances: consolidate immediately.*" "*<3 instances: leave it:
    duplication is cheaper than wrong abstraction.*" This is the kind of
    nuance that prevents premature generalization.
 
