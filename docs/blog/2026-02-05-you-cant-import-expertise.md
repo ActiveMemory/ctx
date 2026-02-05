@@ -83,7 +83,7 @@ Onboarding Document, Architecture Documentation. They are useful if you are
 writing a consulting deliverable, but not when you are trying to catch
 convention drift in a >15K-line Go CLI.
 
-## What does a `B+` in Code Organization Mean?!
+## What Does a `B+` in Code Organization *Actually* Mean?!
 
 The scoring system (`0-10` per dimension, letter grades) added ceremony
 without actionable insight. 
