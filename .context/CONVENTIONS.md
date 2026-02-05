@@ -37,6 +37,16 @@
 - **Test the unit, not the file**: One test file can test multiple related functions
 - **Integration tests are separate**: `cli_test.go` for end-to-end binary tests
 
+## Refactoring
+
+- **Measure the end state, not the effort**: When refactoring, ask what the
+  codebase looks like *after*, not how much work the change is
+- **Three questions before restructuring**:
+  1. What's the smallest codebase that solves this?
+  2. Does the proposed change result in less total code?
+  3. What can we delete now that this change makes obsolete?
+- **Deletion is a feature**: Writing 50 lines that delete 200 is a net win
+
 ## Documentation
 
 - **Godoc format**: Use canonical sections
