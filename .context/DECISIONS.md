@@ -1,6 +1,9 @@
 # Decisions
 
 <!-- INDEX:START -->
+| Date | Decision |
+|------|--------|
+| 2026-02-04 | E/A/R classification as the standard for skill evaluation |
 <!-- INDEX:END -->
 
 <!-- DECISION FORMATS
@@ -15,6 +18,20 @@ For lightweight decisions, a single statement suffices:
 ## Full Format
 
 For significant decisions:
+
+## [2026-02-04-230933] E/A/R classification as the standard for skill evaluation
+
+**Status**: Accepted
+
+**Context**: Reviewed ~30 external skill/prompt files; needed a systematic way to evaluate what to keep vs delete
+
+**Decision**: E/A/R classification as the standard for skill evaluation
+
+**Rationale**: Expert/Activation/Redundant taxonomy from judge.txt captures the key insight: Good Skill = Expert Knowledge - What Claude Already Knows. Gives a concrete target (>70% Expert, <10% Redundant)
+
+**Consequences**: skill-creator SKILL.md updated with E/A/R as core principle. All future skills evaluated against this framework
+
+---
 
 ## [YYYY-MM-DD] Decision Title
 

@@ -3,9 +3,31 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-04 | JSONL session files are append-only |
+| 2026-02-04 | Most external skill files are redundant with Claude's system prompt |
 | 2026-02-04 | Skills that restate or contradict Claude Code's built-in system prompt create tension, not clarity. The system prompt already covers: avoid over-engineering, don't add unnecessary features, prefer simplicity. Skills should complement the system prompt, not compete with it. Before writing a skill, check if the guidance already exists in the platform. |
 | 2026-02-04 | Skill files that suppress AI judgment are jailbreak patterns, not productivity tools. Red flags: <EXTREMELY-IMPORTANT> urgency tags, 'you cannot rationalize' overrides, tables that label hesitation as wrong, absurdly low thresholds (1%). The fix for 'AI forgets skills' is better skill descriptions, not overriding reasoning. Discard these entirely — nothing is salvageable. |
 <!-- INDEX:END -->
+
+## [2026-02-04-230943] JSONL session files are append-only
+
+**Context**: Built context-watch.sh monitor; it showed 90% after compaction while /context showed 16%
+
+**Lesson**: Claude Code JSONL files never shrink after compaction. Any monitoring tool based on file size will overreport post-compaction. The /context command shows actual tokens sent to the model.
+
+**Application**: Per ctx workflow, sessions should end before compaction fires — so JSONL size is a valid time-to-wrap-up signal. Don't try to make context-watch.sh compaction-aware.
+
+---
+
+## [2026-02-04-230941] Most external skill files are redundant with Claude's system prompt
+
+**Context**: Reviewed ~30 external skill/prompt files during systematic skill audit
+
+**Lesson**: Only ~20% had salvageable content — and even those yielded just a few heuristics each. The signal is in the knowledge delta, not the word count.
+
+**Application**: When evaluating new skills, apply E/A/R classification ruthlessly. Default to delete. Only keep content an expert would say took years to learn.
+
+---
 
 ## [2026-02-04-193920] Skills that restate or contradict Claude Code's built-in system prompt create tension, not clarity. The system prompt already covers: avoid over-engineering, don't add unnecessary features, prefer simplicity. Skills should complement the system prompt, not compete with it. Before writing a skill, check if the guidance already exists in the platform.
 
