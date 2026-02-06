@@ -55,6 +55,8 @@ const (
 	FileBlockNonPathScript = "block-non-path-ctx.sh"
 	// FilePromptCoach is the hook script for prompt quality feedback.
 	FilePromptCoach = "prompt-coach.sh"
+	// FileCheckContextSize is the hook script for context size checkpoints.
+	FileCheckContextSize = "check-context-size.sh"
 	// FileClaudeMd is the Claude Code configuration file in the project root.
 	FileClaudeMd = "CLAUDE.md"
 	// FilePromptMd is the session prompt file in the project root.

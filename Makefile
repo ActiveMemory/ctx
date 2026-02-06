@@ -4,7 +4,7 @@
 
 .PHONY: build test vet fmt lint clean all release build-all dogfood help \
 test-coverage smoke site site-serve site-setup audit \
-journal journal-serve watch-session backup
+journal journal-serve watch-session backup backup-global backup-all
 
 # Default binary name and output
 BINARY := ctx
@@ -156,9 +156,16 @@ journal:
 journal-serve:
 	@ctx journal site --serve
 
-## backup: Backup .context/ and .claude/ to SMB share
+## backup: Backup project context (.context/ and .claude/) to SMB share
 backup:
 	./hack/backup-context.sh
+
+## backup-global: Backup global Claude Code data (~/.claude/) to SMB share
+backup-global:
+	./hack/backup-global.sh
+
+## backup-all: Backup both project context and global Claude data
+backup-all: backup backup-global
 
 ## watch-session: Watch current session for token usage
 watch-session:

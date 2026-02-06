@@ -62,11 +62,15 @@ func DefaultHooks(projectDir string) HookConfig {
 		},
 		UserPromptSubmit: []HookMatcher{
 			{
-				// Prompt coaching: detect anti-patterns and suggest improvements
+				// Prompt coaching and context monitoring
 				Hooks: []Hook{
 					{
 						Type:    "command",
 						Command: fmt.Sprintf("%s/%s", hooksDir, config.FilePromptCoach),
+					},
+					{
+						Type:    "command",
+						Command: fmt.Sprintf("%s/%s", hooksDir, config.FileCheckContextSize),
 					},
 				},
 			},

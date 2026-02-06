@@ -103,6 +103,26 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		cmd.Printf("  %s %s\n", green("✓"), coachScriptPath)
 	}
 
+	// Create check-context-size.sh script
+	// (adaptive context size checkpoint reminders)
+	contextCheckPath := filepath.Join(
+		config.DirClaudeHooks, config.FileCheckContextSize,
+	)
+	if _, err := os.Stat(contextCheckPath); err == nil && !force {
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), contextCheckPath)
+	} else {
+		contextCheckContent, err := claude.CheckContextSizeScript()
+		if err != nil {
+			return fmt.Errorf("failed to get check-context-size script: %w", err)
+		}
+		if err := os.WriteFile(
+			contextCheckPath, contextCheckContent, 0755,
+		); err != nil {
+			return fmt.Errorf("failed to write %s: %w", contextCheckPath, err)
+		}
+		cmd.Printf("  %s %s\n", green("✓"), contextCheckPath)
+	}
+
 	// Handle settings.local.json - merge rather than overwrite
 	if err := mergeSettingsHooks(cmd, cwd, force); err != nil {
 		return err

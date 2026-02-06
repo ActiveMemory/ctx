@@ -68,3 +68,23 @@ func PromptCoachScript() ([]byte, error) {
 	}
 	return content, nil
 }
+
+// CheckContextSizeScript returns the context size checkpoint hook script.
+//
+// The script counts prompts per session and outputs adaptive reminders to
+// stderr, prompting Claude to assess remaining context capacity. Frequency
+// increases as the session grows (silent for first 15 prompts, then every
+// 5th, then every 3rd).
+//
+// Returns:
+//   - []byte: Raw bytes of the check-context-size.sh script
+//   - error: Non-nil if the embedded file cannot be read
+func CheckContextSizeScript() ([]byte, error) {
+	content, err := tpl.ClaudeHookByFileName(config.FileCheckContextSize)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to read %s: %w", config.FileCheckContextSize, err,
+		)
+	}
+	return content, nil
+}
