@@ -116,6 +116,12 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Printf("  %s Entry templates: %v\n", color.YellowString("⚠"), err)
 	}
 
+	// Create tool scripts in .context/tools/
+	if err := createTools(cmd, contextDir, force); err != nil {
+		// Non-fatal: warn but continue
+		cmd.Printf("  %s Tools: %v\n", color.YellowString("⚠"), err)
+	}
+
 	// Create project root files
 	cmd.Println("\nCreating project root files...")
 

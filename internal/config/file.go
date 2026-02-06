@@ -65,6 +65,8 @@ const (
 	FileImplementationPlan = "IMPLEMENTATION_PLAN.md"
 	// FileSettings is the Claude Code local settings file.
 	FileSettings = ".claude/settings.local.json"
+	// FileContextWatch is the context monitoring tool script.
+	FileContextWatch = "context-watch.sh"
 )
 
 // Context file name constants for .context/ directory.

@@ -1,3 +1,5 @@
+- [x] Deploy context-watch.sh to .context/tools/ via ctx init. Add tools/*.sh to embed.go glob, create deployment logic in initialize, and document the tool. #priority:medium #added:2026-02-05-215511
+
 
 # Tasks
 
@@ -26,11 +28,15 @@ better discovery and navigation.
   vars (CTX_BACKUP_SMB_URL). All hook paths migrated to $CLAUDE_PROJECT_DIR.
   `make backup` target added. #done:2026-02-05
 
-- [ ] Build minimal ctx monitor dashboard (see specs/monitor-architecture.md). 
-  - [ ] MVP: a terminal script that runs in a separate window, finds the active 
-    session JSONL, estimates token usage, shows context health (green/yellow/red), 
-    and refreshes periodically. Later: pluggable auditors 
+- [x] Build minimal ctx monitor dashboard (see specs/monitor-architecture.md).
+  - [x] MVP: a terminal script that runs in a separate window, finds the active
+    session JSONL, estimates token usage, shows context health (green/yellow/red),
+    and refreshes periodically. Later: pluggable auditors
     (drift, repetition detection), signal injection via hooks. #priority:medium #added:2026-02-04-223356
+  **Rescoped**: Full dashboard deferred. Instead: check-context-size.sh hook
+  with adaptive frequency + ctx-context-monitor skill for in-session awareness.
+  context-watch.sh kept as-is for manual terminal monitoring. Repetition
+  detection shelved (low ROI, user notices loops faster). #done:2026-02-05
 
 - [x] Search for a consolidation/code-hygiene skill that can enforce
   project-specific conventions. Today's codebase scan found concrete

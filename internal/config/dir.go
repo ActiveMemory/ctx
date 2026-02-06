@@ -18,4 +18,6 @@ const (
 	DirContext = ".context"
 	// DirSessions is the subdirectory for session snapshots within .context/.
 	DirSessions = "sessions"
+	// DirTools is the subdirectory for tool scripts within .context/.
+	DirTools = "tools"
 )

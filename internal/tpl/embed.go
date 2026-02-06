@@ -10,7 +10,7 @@ package tpl
 
 import "embed"
 
-//go:embed *.md entry-templates/*.md claude/skills/*/SKILL.md claude/hooks/*.sh ralph/*.md
+//go:embed *.md entry-templates/*.md claude/skills/*/SKILL.md claude/hooks/*.sh ralph/*.md tools/*.sh
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -138,4 +138,36 @@ func ClaudeHookByFileName(name string) ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func RalphTemplate(name string) ([]byte, error) {
 	return FS.ReadFile("ralph/" + name)
+}
+
+// ListTools returns available tool script filenames.
+//
+// Returns:
+//   - []string: List of tool filenames in tools/
+//   - error: Non-nil if directory read fails
+func ListTools() ([]string, error) {
+	entries, err := FS.ReadDir("tools")
+	if err != nil {
+		return nil, err
+	}
+
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			names = append(names, entry.Name())
+		}
+	}
+	return names, nil
+}
+
+// Tool reads a tool script by filename.
+//
+// Parameters:
+//   - name: Tool filename (e.g., "context-watch.sh")
+//
+// Returns:
+//   - []byte: Tool script content from tools/
+//   - error: Non-nil if the file is not found or read fails
+func Tool(name string) ([]byte, error) {
+	return FS.ReadFile("tools/" + name)
 }
