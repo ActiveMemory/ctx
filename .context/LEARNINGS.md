@@ -3,11 +3,22 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-05 | Use $CLAUDE_PROJECT_DIR in hook paths |
 | 2026-02-04 | JSONL session files are append-only |
 | 2026-02-04 | Most external skill files are redundant with Claude's system prompt |
 | 2026-02-04 | Skills that restate or contradict Claude Code's built-in system prompt create tension, not clarity. The system prompt already covers: avoid over-engineering, don't add unnecessary features, prefer simplicity. Skills should complement the system prompt, not compete with it. Before writing a skill, check if the guidance already exists in the platform. |
 | 2026-02-04 | Skill files that suppress AI judgment are jailbreak patterns, not productivity tools. Red flags: <EXTREMELY-IMPORTANT> urgency tags, 'you cannot rationalize' overrides, tables that label hesitation as wrong, absurdly low thresholds (1%). The fix for 'AI forgets skills' is better skill descriptions, not overriding reasoning. Discard these entirely — nothing is salvageable. |
 <!-- INDEX:END -->
+
+## [2026-02-05-174304] Use $CLAUDE_PROJECT_DIR in hook paths
+
+**Context**: Migrating hooks after username rename (parallels→jose) broke all absolute paths in settings.local.json
+
+**Lesson**: Claude Code provides $CLAUDE_PROJECT_DIR env var for hook commands — resolves to project root at runtime, survives renames
+
+**Application**: Always use "$CLAUDE_PROJECT_DIR"/.claude/hooks/... in settings.local.json, never hardcode /home/user/...
+
+---
 
 ## [2026-02-04-230943] JSONL session files are append-only
 
