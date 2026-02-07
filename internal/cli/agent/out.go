@@ -38,6 +38,9 @@ func outputAgentJSON(
 		Tasks:        extractActiveTasks(ctx),
 		Conventions:  extractConventions(ctx),
 		Decisions:    extractRecentDecisions(ctx, 3),
+		Instruction: "Before starting work, confirm to the user: " +
+			"\"I have read the required context files and " +
+			"I'm following project conventions.\"",
 	}
 
 	enc := json.NewEncoder(cmd.OutOrStdout())
@@ -117,6 +120,12 @@ func outputAgentMarkdown(
 		}
 		sb.WriteString("\n")
 	}
+
+	sb.WriteString(
+		"Before starting work, confirm to the user: " +
+			"\"I have read the required context files and I'm " +
+			"following project conventions.\"\n",
+	)
 
 	cmd.Print(sb.String())
 	return nil

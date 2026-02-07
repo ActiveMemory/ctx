@@ -152,6 +152,12 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Printf("  %s CLAUDE.md: %v\n", color.YellowString("⚠"), err)
 	}
 
+	// Deploy Makefile.ctx and amend user Makefile
+	if err := handleMakefileCtx(cmd); err != nil {
+		// Non-fatal: warn but continue
+		cmd.Printf("  %s Makefile: %v\n", color.YellowString("⚠"), err)
+	}
+
 	cmd.Println("\nNext steps:")
 	cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
 	cmd.Println("  2. Run 'ctx status' to see context summary")

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-07 | Agent ignores repeated hook output (repetition fatigue) |
 | 2026-02-06 | PROMPT.md deleted — was stale project briefing, not a Ralph loop prompt |
 | 2026-02-05 | Use $CLAUDE_PROJECT_DIR in hook paths |
 | 2026-02-04 | JSONL session files are append-only |
@@ -48,6 +49,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-07-014920] Agent ignores repeated hook output (repetition fatigue)
+
+**Context**: PreToolUse hook ran ctx agent on every tool use, injecting the same context packet repeatedly. Agent tuned it out and didn't follow conventions.
+
+**Lesson**: Repeated injection causes the agent to ignore the output. A cooldown tombstone (--session $PPID --cooldown 10m) emits once per window. A readback instruction (confirm to user you read context) creates a behavioral gate harder to skip than silent injection.
+
+**Application**: Use --session $PPID in hook commands to enable cooldown. Pair context injection with a readback instruction so the agent must acknowledge before starting work.
 
 ---
 

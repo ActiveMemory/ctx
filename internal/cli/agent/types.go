@@ -20,6 +20,7 @@ package agent
 //   - Tasks: Active (unchecked) tasks from TASKS.md
 //   - Conventions: Key conventions from CONVENTIONS.md
 //   - Decisions: Recent decision titles from DECISIONS.md
+//   - Instruction: Behavioral instruction for the agent
 type Packet struct {
 	Generated    string   `json:"generated"`
 	Budget       int      `json:"budget"`
@@ -29,4 +30,5 @@ type Packet struct {
 	Tasks        []string `json:"tasks"`
 	Conventions  []string `json:"conventions"`
 	Decisions    []string `json:"decisions"`
+	Instruction  string   `json:"instruction"`
 }

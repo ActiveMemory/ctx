@@ -23,7 +23,7 @@ PROJECT_DIR=$(echo "$HOOK_INPUT" | jq -r '.cwd // "."')
 
 # Only proceed if we have a transcript path
 if [ -z "$TRANSCRIPT_PATH" ] || [ ! -f "$TRANSCRIPT_PATH" ]; then
-    exit 0
+  exit 0
 fi
 
 # Create sessions directory if it doesn't exist
@@ -40,17 +40,17 @@ cp "$TRANSCRIPT_PATH" "$FILENAME"
 # Extract session start time from transcript (first entry timestamp) if possible
 START_TIME=""
 if [ -f "$TRANSCRIPT_PATH" ]; then
-    # Try to get timestamp from first line of transcript
-    FIRST_TS=$(head -1 "$TRANSCRIPT_PATH" | jq -r '.timestamp // empty' 2>/dev/null)
-    if [ -n "$FIRST_TS" ]; then
-        # Convert to YYYY-MM-DD-HHMM format
-        START_TIME=$(date -d "$FIRST_TS" +%Y-%m-%d-%H%M 2>/dev/null || echo "")
-    fi
+  # Try to get timestamp from first line of transcript
+  FIRST_TS=$(head -1 "$TRANSCRIPT_PATH" | jq -r '.timestamp // empty' 2>/dev/null)
+  if [ -n "$FIRST_TS" ]; then
+    # Convert to YYYY-MM-DD-HHMM format
+    START_TIME=$(date -d "$FIRST_TS" +%Y-%m-%d-%H%M 2>/dev/null || echo "")
+  fi
 fi
 
 # Fall back to current time if we couldn't extract start time
 if [ -z "$START_TIME" ]; then
-    START_TIME=$(date +%Y-%m-%d-%H%M)
+  START_TIME=$(date +%Y-%m-%d-%H%M)
 fi
 
 END_TIME=$(date +%Y-%m-%d-%H%M)

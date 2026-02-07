@@ -2,6 +2,12 @@
 title: "You Can't Import Expertise"
 date: 2026-02-05
 author: Jose Alekhinne
+topics:
+  - skill adaptation
+  - E/A/R framework
+  - convention drift
+  - consolidation
+  - project-specific expertise
 ---
 
 # You Can't Import Expertise
