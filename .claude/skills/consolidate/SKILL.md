@@ -26,10 +26,12 @@ Convention: no `Is`/`Has`/`Can` prefixes on exported bool-returning methods.
 rg '^\s*func\s+\([^)]+\)\s+(Is|Has|Can)[A-Z]\w*\(' --type go -l
 ```
 
-Known violations (track regression): `IsPending`, `IsSubTask`, `IsUser`,
-`IsAssistant`, `HasToolUses`, `CanParse`.
+Accepted exceptions (do NOT flag these):
+- `IsUser()`, `IsAssistant()` on `Message` — dropping `Is` makes these
+  look like getters (`msg.User()` → "get user?"). The prefix earns its keep.
 
 **Fix**: Rename to drop the prefix. `IsPending()` → `Pending()`.
+Flag any NEW `Is`/`Has`/`Can` methods not listed as exceptions above.
 
 ### 2. Magic Strings
 

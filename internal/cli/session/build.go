@@ -68,7 +68,7 @@ func buildSessionContent(
 	// Current Tasks
 	sb.WriteString("## Current Tasks" + nl + nl)
 	tasks, err := readContextSection(
-		"TASKS.md", "## In Progress", "## Next Up",
+		config.FileTask, "## In Progress", "## Next Up",
 	)
 	if err == nil && tasks != "" {
 		sb.WriteString("### In Progress" + nl + nl)
@@ -76,7 +76,7 @@ func buildSessionContent(
 		sb.WriteString(nl)
 	}
 	nextTasks, err := readContextSection(
-		"TASKS.md", "## Next Up", "## Completed",
+		config.FileTask, "## Next Up", "## Completed",
 	)
 	if err == nil && nextTasks != "" {
 		sb.WriteString("### Next Up" + nl + nl)

@@ -42,7 +42,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 	}
 
 	// Create .claude/hooks/ directory
-	if err := os.MkdirAll(config.DirClaudeHooks, 0755); err != nil {
+	if err := os.MkdirAll(config.DirClaudeHooks, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", config.DirClaudeHooks, err)
 	}
 
@@ -57,7 +57,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		if err != nil {
 			return fmt.Errorf("failed to get auto-save script: %w", err)
 		}
-		if err := os.WriteFile(scriptPath, scriptContent, 0755); err != nil {
+		if err := os.WriteFile(scriptPath, scriptContent, config.PermExec); err != nil {
 			return fmt.Errorf("failed to write %s: %w", scriptPath, err)
 		}
 		cmd.Printf("  %s %s\n", green("✓"), scriptPath)
@@ -76,7 +76,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 			return fmt.Errorf("failed to get block-non-path-ctx script: %w", err)
 		}
 		if err := os.WriteFile(
-			blockScriptPath, blockScriptContent, 0755,
+			blockScriptPath, blockScriptContent, config.PermExec,
 		); err != nil {
 			return fmt.Errorf("failed to write %s: %w", blockScriptPath, err)
 		}
@@ -96,7 +96,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 			return fmt.Errorf("failed to get prompt-coach script: %w", err)
 		}
 		if err := os.WriteFile(
-			coachScriptPath, coachScriptContent, 0755,
+			coachScriptPath, coachScriptContent, config.PermExec,
 		); err != nil {
 			return fmt.Errorf("failed to write %s: %w", coachScriptPath, err)
 		}
@@ -116,7 +116,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 			return fmt.Errorf("failed to get check-context-size script: %w", err)
 		}
 		if err := os.WriteFile(
-			contextCheckPath, contextCheckContent, 0755,
+			contextCheckPath, contextCheckContent, config.PermExec,
 		); err != nil {
 			return fmt.Errorf("failed to write %s: %w", contextCheckPath, err)
 		}
@@ -202,7 +202,7 @@ func mergeSettingsHooks(
 	}
 
 	// Create .claude/ directory if needed
-	if err := os.MkdirAll(config.DirClaude, 0755); err != nil {
+	if err := os.MkdirAll(config.DirClaude, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", config.DirClaude, err)
 	}
 
@@ -215,7 +215,7 @@ func mergeSettingsHooks(
 		return fmt.Errorf("failed to marshal settings: %w", err)
 	}
 
-	if err := os.WriteFile(config.FileSettings, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(config.FileSettings, buf.Bytes(), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write %s: %w", config.FileSettings, err)
 	}
 

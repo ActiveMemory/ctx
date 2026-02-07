@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func TestClaudeCodeParser_CanParse(t *testing.T) {
+func TestClaudeCodeParser_Matches(t *testing.T) {
 	parser := NewClaudeCodeParser()
 
 	// Create temp directory
@@ -25,7 +25,7 @@ func TestClaudeCodeParser_CanParse(t *testing.T) {
 	if err := os.WriteFile(txtFile, []byte("hello"), 0644); err != nil {
 		t.Fatal(err)
 	}
-	if parser.CanParse(txtFile) {
+	if parser.Matches(txtFile) {
 		t.Error("should not parse .txt files")
 	}
 
@@ -34,7 +34,7 @@ func TestClaudeCodeParser_CanParse(t *testing.T) {
 	if err := os.WriteFile(badJSONL, []byte(`{"foo": "bar"}`), 0644); err != nil {
 		t.Fatal(err)
 	}
-	if parser.CanParse(badJSONL) {
+	if parser.Matches(badJSONL) {
 		t.Error("should not parse non-Claude Code JSONL")
 	}
 
@@ -44,7 +44,7 @@ func TestClaudeCodeParser_CanParse(t *testing.T) {
 	if err := os.WriteFile(goodJSONL, []byte(content), 0644); err != nil {
 		t.Fatal(err)
 	}
-	if !parser.CanParse(goodJSONL) {
+	if !parser.Matches(goodJSONL) {
 		t.Error("should parse valid Claude Code JSONL")
 	}
 }

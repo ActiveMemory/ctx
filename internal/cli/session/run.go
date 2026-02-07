@@ -16,6 +16,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
@@ -138,7 +139,7 @@ func runSessionParse(
 
 	// Output
 	if output != "" {
-		if err := os.WriteFile(output, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(output, []byte(content), config.PermFile); err != nil {
 			return fmt.Errorf("failed to write output: %w", err)
 		}
 		cmd.Printf("%s Parsed transcript saved to %s\n", green("✓"), output)
@@ -177,7 +178,7 @@ func runSessionSave(
 	topic = validation.SanitizeFilename(topic)
 
 	// Ensure sessions directory exists
-	if err := os.MkdirAll(sessionsDirPath(), 0755); err != nil {
+	if err := os.MkdirAll(sessionsDirPath(), config.PermExec); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
 
@@ -193,7 +194,7 @@ func runSessionSave(
 	}
 
 	// Write the file
-	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(content), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}
 

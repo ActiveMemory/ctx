@@ -111,7 +111,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 
 	// Write back
 	newContent := strings.Join(lines, "\n")
-	if err := os.WriteFile(filePath, []byte(newContent), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(newContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write TASKS.md: %w", err)
 	}
 

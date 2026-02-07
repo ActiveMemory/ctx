@@ -32,7 +32,7 @@ var registeredParsers = []SessionParser{
 //   - error: Non-nil if no parser can handle the file or parsing fails
 func ParseFile(path string) ([]*Session, error) {
 	for _, parser := range registeredParsers {
-		if parser.CanParse(path) {
+		if parser.Matches(path) {
 			return parser.ParseFile(path)
 		}
 	}
@@ -96,7 +96,7 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 
 		// Try to parse with any registered parser
 		for _, parser := range registeredParsers {
-			if parser.CanParse(path) {
+			if parser.Matches(path) {
 				sessions, err := parser.ParseFile(path)
 				if err != nil {
 					parseErrors = append(parseErrors, fmt.Errorf("%s: %w", path, err))

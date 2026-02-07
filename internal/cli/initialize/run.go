@@ -62,7 +62,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	}
 
 	// Create .context/ directory
-	if err := os.MkdirAll(contextDir, 0755); err != nil {
+	if err := os.MkdirAll(contextDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", contextDir, err)
 	}
 
@@ -77,7 +77,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		}
 		// Filter out files that go in the project root, not .context/
 		for _, t := range allTemplates {
-			if t != "IMPLEMENTATION_PLAN.md" && t != "CLAUDE.md" {
+			if t != config.FileImplementationPlan && t != config.FileClaudeMd {
 				templatesToCreate = append(templatesToCreate, t)
 			}
 		}
@@ -101,7 +101,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 			return fmt.Errorf("failed to read template %s: %w", name, err)
 		}
 
-		if err := os.WriteFile(targetPath, content, 0644); err != nil {
+		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
 

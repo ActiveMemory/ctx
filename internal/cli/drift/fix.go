@@ -157,7 +157,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 
 	// Create an archive directory
 	archiveDir := filepath.Join(rc.ContextDir(), "archive")
-	if err := os.MkdirAll(archiveDir, 0755); err != nil {
+	if err := os.MkdirAll(archiveDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create archive directory: %w", err)
 	}
 
@@ -178,7 +178,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	if err := os.WriteFile(
-		archiveFile, []byte(archiveContent), 0644,
+		archiveFile, []byte(archiveContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to write archive: %w", err)
 	}
@@ -186,7 +186,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	// Write updated TASKS.md
 	newContent := strings.Join(newLines, nl)
 	if err := os.WriteFile(
-		tasksFile.Path, []byte(newContent), 0644,
+		tasksFile.Path, []byte(newContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to update TASKS.md: %w", err)
 	}
@@ -213,11 +213,11 @@ func fixMissingFile(filename string) error {
 	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
-	if err := os.MkdirAll(rc.ContextDir(), 0755); err != nil {
+	if err := os.MkdirAll(rc.ContextDir(), config.PermExec); err != nil {
 		return fmt.Errorf("failed to create .context/: %w", err)
 	}
 
-	if err := os.WriteFile(targetPath, content, 0644); err != nil {
+	if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
 		return fmt.Errorf("failed to write %s: %w", targetPath, err)
 	}
 

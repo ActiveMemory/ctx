@@ -30,7 +30,7 @@ import (
 //   - error: Non-nil if directory creation or file write fails
 func watchAutoSaveSession(updates []ContextUpdate) error {
 	sessionsDir := filepath.Join(rc.ContextDir(), config.DirSessions)
-	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
+	if err := os.MkdirAll(sessionsDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
 
@@ -40,7 +40,7 @@ func watchAutoSaveSession(updates []ContextUpdate) error {
 
 	content := buildWatchSession(now, updates)
 
-	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(content), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}
 

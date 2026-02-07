@@ -15,6 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // createClaudeSkills creates .claude/skills/ with Agent Skills directories.
@@ -34,7 +35,7 @@ func createClaudeSkills(cmd *cobra.Command, force bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	skillsDir := ".claude/skills"
-	if err := os.MkdirAll(skillsDir, 0755); err != nil {
+	if err := os.MkdirAll(skillsDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", skillsDir, err)
 	}
 
@@ -47,7 +48,7 @@ func createClaudeSkills(cmd *cobra.Command, force bool) error {
 	for _, skillName := range skills {
 		// Create skill directory
 		skillDir := filepath.Join(skillsDir, skillName)
-		if err := os.MkdirAll(skillDir, 0755); err != nil {
+		if err := os.MkdirAll(skillDir, config.PermExec); err != nil {
 			return fmt.Errorf("failed to create %s: %w", skillDir, err)
 		}
 
@@ -63,7 +64,7 @@ func createClaudeSkills(cmd *cobra.Command, force bool) error {
 			return fmt.Errorf("failed to get skill %s: %w", skillName, err)
 		}
 
-		if err := os.WriteFile(skillPath, content, 0644); err != nil {
+		if err := os.WriteFile(skillPath, content, config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", skillPath, err)
 		}
 		cmd.Printf("  %s %s\n", green("✓"), skillPath)

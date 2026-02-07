@@ -41,7 +41,7 @@ func handleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Get template content
-	templateContent, err := tpl.Template("CLAUDE.md")
+	templateContent, err := tpl.Template(config.FileClaudeMd)
 	if err != nil {
 		return fmt.Errorf("failed to read CLAUDE.md template: %w", err)
 	}
@@ -53,7 +53,7 @@ func handleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	if !fileExists {
 		// File doesn't exist - create it
 		if err := os.WriteFile(
-			config.FileClaudeMd, templateContent, 0644,
+			config.FileClaudeMd, templateContent, config.PermFile,
 		); err != nil {
 			return fmt.Errorf("failed to write %s: %w", config.FileClaudeMd, err)
 		}
@@ -103,7 +103,7 @@ func handleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	// Back up existing file
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", config.FileClaudeMd, timestamp)
-	if err := os.WriteFile(backupName, existingContent, 0644); err != nil {
+	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
 	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
@@ -123,7 +123,7 @@ func handleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	}
 
 	if err := os.WriteFile(
-		config.FileClaudeMd, []byte(mergedContent), 0644); err != nil {
+		config.FileClaudeMd, []byte(mergedContent), config.PermFile); err != nil {
 		return fmt.Errorf(
 			"failed to write merged %s: %w", config.FileClaudeMd, err)
 	}

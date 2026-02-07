@@ -41,7 +41,7 @@ func (p *ClaudeCodeParser) Tool() string {
 	return "claude-code"
 }
 
-// CanParse returns true if the file appears to be a Claude Code session file.
+// Matches returns true if the file appears to be a Claude Code session file.
 //
 // Checks if the file has a .jsonl extension and contains Claude Code message
 // format (sessionId and slug fields in the first few lines).
@@ -51,7 +51,7 @@ func (p *ClaudeCodeParser) Tool() string {
 //
 // Returns:
 //   - bool: True if this parser can handle the file
-func (p *ClaudeCodeParser) CanParse(path string) bool {
+func (p *ClaudeCodeParser) Matches(path string) bool {
 	// Check extension
 	if !strings.HasSuffix(path, ".jsonl") {
 		return false

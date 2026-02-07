@@ -49,7 +49,7 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 	}
 
 	// Ensure the archive directory exists
-	if err := os.MkdirAll(archivePath, 0755); err != nil {
+	if err := os.MkdirAll(archivePath, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create archive directory: %w", err)
 	}
 
@@ -75,7 +75,7 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 
 	// Write snapshot
 	if err := os.WriteFile(
-		snapshotPath, []byte(snapshotContent), 0644,
+		snapshotPath, []byte(snapshotContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to write snapshot: %w", err)
 	}
@@ -173,7 +173,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Ensure the archive directory exists
-	if err := os.MkdirAll(archiveDir, 0755); err != nil {
+	if err := os.MkdirAll(archiveDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create archive directory: %w", err)
 	}
 
@@ -197,7 +197,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 
 	// Write the archive file
 	if err := os.WriteFile(
-		archiveFilePath, []byte(finalArchiveContent), 0644,
+		archiveFilePath, []byte(finalArchiveContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to write archive: %w", err)
 	}
@@ -206,7 +206,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	newLines := compact.RemoveBlocksFromLines(lines, archivableBlocks)
 	newContent := strings.Join(newLines, nl)
 
-	if err := os.WriteFile(tasksPath, []byte(newContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(newContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to update TASKS.md: %w", err)
 	}
 

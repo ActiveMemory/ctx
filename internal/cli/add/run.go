@@ -151,7 +151,7 @@ func WriteEntry(params EntryParams) error {
 	// Append to file
 	newContent := AppendEntry(existing, entry, fType, params.Section)
 
-	if err := os.WriteFile(filePath, newContent, 0644); err != nil {
+	if err := os.WriteFile(filePath, newContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to write %s: %w", filePath, err)
 	}
 
@@ -160,12 +160,12 @@ func WriteEntry(params EntryParams) error {
 	switch config.UserInputToEntry(fType) {
 	case config.EntryDecision:
 		indexed := index.UpdateDecisions(string(newContent))
-		if err := os.WriteFile(filePath, []byte(indexed), 0644); err != nil {
+		if err := os.WriteFile(filePath, []byte(indexed), config.PermFile); err != nil {
 			return fmt.Errorf("failed to update index in %s: %w", filePath, err)
 		}
 	case config.EntryLearning:
 		indexed := index.UpdateLearnings(string(newContent))
-		if err := os.WriteFile(filePath, []byte(indexed), 0644); err != nil {
+		if err := os.WriteFile(filePath, []byte(indexed), config.PermFile); err != nil {
 			return fmt.Errorf("failed to update index in %s: %w", filePath, err)
 		}
 	case config.EntryTask, config.EntryConvention:

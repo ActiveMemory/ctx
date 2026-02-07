@@ -132,13 +132,13 @@ func updateCtxSection(
 	// Back up before updating
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", config.FileClaudeMd, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
 	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
 
 	if err := os.WriteFile(
-		config.FileClaudeMd, []byte(newContent), 0644,
+		config.FileClaudeMd, []byte(newContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to update %s: %w", config.FileClaudeMd, err)
 	}

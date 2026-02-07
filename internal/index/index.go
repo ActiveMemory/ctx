@@ -233,7 +233,7 @@ func ReindexFile(
 
 	updated := updateFunc(string(content))
 
-	if err := os.WriteFile(filePath, []byte(updated), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(updated), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write %s: %w", filePath, err)
 	}
 

@@ -12,6 +12,8 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // runLoop executes the loop command logic.
@@ -49,7 +51,7 @@ func runLoop(
 	script := generateLoopScript(promptFile, tool, maxIterations, completionMsg)
 
 	// Write to the file
-	if err := os.WriteFile(outputFile, []byte(script), 0755); err != nil {
+	if err := os.WriteFile(outputFile, []byte(script), config.PermExec); err != nil {
 		return fmt.Errorf("failed to write %s: %w", outputFile, err)
 	}
 
