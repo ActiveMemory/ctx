@@ -1,3 +1,5 @@
+- [ ] Add topic-based navigation to blog when post count reaches 15+ #priority:low #added:2026-02-07-015054
+
 - [ ] Add ctx help command — use-case-oriented cheat sheet for lazy CLI users. Should cover: (1) core CLI commands grouped by workflow (getting started, tracking decisions, browsing history, AI context), (2) available slash-command skills with one-line descriptions, (3) common workflow recipes showing how commands and skills combine (e.g., export sessions → enrich with /ctx-journal-enrich → generate site; or /ctx-blog from recent activity → edit → publish). One screen, no scrolling. Not a skill — a real CLI command. #added:2026-02-06-184257
 
 - [ ] Investigate ctx init overwriting user-generated content in .context/ files. Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template. Need guard to prevent reinit from destroying user data (decisions, learnings, tasks). Consider: skip existing files, merge strategy, or --force-only overwrite. #added:2026-02-06-182205

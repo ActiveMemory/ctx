@@ -10,7 +10,7 @@ package tpl
 
 import "embed"
 
-//go:embed *.md entry-templates/*.md claude/skills/*/SKILL.md claude/hooks/*.sh ralph/*.md tools/*.sh
+//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md claude/hooks/*.sh ralph/*.md tools/*.sh
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -110,6 +110,15 @@ func ListSkills() ([]string, error) {
 //   - error: Non-nil if the file not found or read fails
 func SkillContent(name string) ([]byte, error) {
 	return FS.ReadFile("claude/skills/" + name + "/SKILL.md")
+}
+
+// MakefileCtx reads the ctx-owned Makefile include template.
+//
+// Returns:
+//   - []byte: Makefile.ctx content
+//   - error: Non-nil if the file is not found or read fails
+func MakefileCtx() ([]byte, error) {
+	return FS.ReadFile("Makefile.ctx")
 }
 
 // ClaudeHookByFileName reads a Claude Code hook script by name.

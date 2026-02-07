@@ -75,6 +75,8 @@ const (
 	FileSettings = ".claude/settings.local.json"
 	// FileContextWatch is the context monitoring tool script.
 	FileContextWatch = "context-watch.sh"
+	// FileMakefileCtx is the ctx-owned Makefile include for project root.
+	FileMakefileCtx = "Makefile.ctx"
 )
 
 // Context file name constants for .context/ directory.

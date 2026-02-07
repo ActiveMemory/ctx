@@ -26,10 +26,10 @@ COUNTER_FILE="/tmp/ctx-context-check-${SESSION_ID}"
 
 # Initialize or increment counter
 if [ -f "$COUNTER_FILE" ]; then
-    COUNT=$(cat "$COUNTER_FILE")
-    COUNT=$((COUNT + 1))
+  COUNT=$(cat "$COUNTER_FILE")
+  COUNT=$((COUNT + 1))
 else
-    COUNT=1
+  COUNT=1
 fi
 
 echo "$COUNT" > "$COUNTER_FILE"
@@ -37,20 +37,20 @@ echo "$COUNT" > "$COUNTER_FILE"
 # Adaptive frequency: check more often as session grows
 SHOULD_CHECK=false
 if [ "$COUNT" -gt 30 ]; then
-    # Every 3rd prompt after 30
-    if [ $((COUNT % 3)) -eq 0 ]; then SHOULD_CHECK=true; fi
+  # Every 3rd prompt after 30
+  if [ $((COUNT % 3)) -eq 0 ]; then SHOULD_CHECK=true; fi
 elif [ "$COUNT" -gt 15 ]; then
-    # Every 5th prompt after 15
-    if [ $((COUNT % 5)) -eq 0 ]; then SHOULD_CHECK=true; fi
+  # Every 5th prompt after 15
+  if [ $((COUNT % 5)) -eq 0 ]; then SHOULD_CHECK=true; fi
 fi
 
 if [ "$SHOULD_CHECK" = true ]; then
-    echo "" >&2
-    echo "┌─ Context Checkpoint (prompt #${COUNT}) ────────────────" >&2
-    echo "│ Assess remaining context capacity." >&2
-    echo "│ If usage exceeds ~80%, inform the user." >&2
-    echo "└──────────────────────────────────────────────────" >&2
-    echo "" >&2
+  echo "" >&2
+  echo "┌─ Context Checkpoint (prompt #${COUNT}) ────────────────" >&2
+  echo "│ Assess remaining context capacity." >&2
+  echo "│ If usage exceeds ~80%, inform the user." >&2
+  echo "└──────────────────────────────────────────────────" >&2
+  echo "" >&2
 fi
 
 exit 0

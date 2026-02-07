@@ -71,25 +71,6 @@ Source journal entries have these structural markers:
 summarize tool outputs > 50 lines; keep first/last 5 lines with
 `... (N lines omitted)`. Flag this to user before proceeding.
 
-## Helper Scripts
-
-Scripts in `scripts/` automate specific normalization steps:
-
-| Script                        | Purpose                                  |
-|-------------------------------|------------------------------------------|
-| `normalize.py`                | Convert metadata blocks to HTML tables   |
-| `detect_nesting.py`           | Categorize files by fence nesting depth  |
-| `auto_verify_flat.py`         | Auto-mark files with flat (safe) fences  |
-| `fix_consolidation_fences.py` | Fix `(xN)` annotations on closing fences |
-| `commonmark_check.py`         | Validate fences against CommonMark rules |
-| `auto_verify_commonmark.py`   | Auto-mark files passing CommonMark check |
-
-Run them from the skill directory:
-```bash
-python3 .claude/skills/ctx-journal-normalize/scripts/normalize.py
-python3 .claude/skills/ctx-journal-normalize/scripts/detect_nesting.py
-```
-
 ## Process
 
 1. **Backup first**: `cp -r .context/journal/ .context/journal.bak/`
@@ -99,24 +80,20 @@ python3 .claude/skills/ctx-journal-normalize/scripts/detect_nesting.py
    - If user specifies a file/pattern, use that
    - Otherwise, scan `.context/journal/*.md`
    - **Skip files with** `<!-- normalized: YYYY-MM-DD -->` marker
-3. Run helper scripts for automated steps:
-   - `normalize.py` for metadata table conversion
-   - `detect_nesting.py` to triage fence complexity
-   - `auto_verify_flat.py` for files with simple fences
-4. Process remaining files turn-by-turn (not whole file at once;
-   large files blow context):
+3. Process turn-by-turn (not whole file at once; large files blow
+   context):
    - Fix fence nesting, metadata, lists per output rules
    - Add `<!-- normalized: YYYY-MM-DD -->` after frontmatter
-5. Write back the fixed files
-6. Regenerate site: `ctx journal site --build`
-7. Report what changed and remind user of backup location
+4. Write back the fixed files
+5. Regenerate site: `ctx journal site --build`
+6. Report what changed and remind user of backup location
 
 ## Idempotency
 
 Two markers, two passes:
 
-- `<!-- normalized: YYYY-MM-DD -->`: metadata tables done (by
-  `normalize.py`). Skip metadata conversion on re-run.
+- `<!-- normalized: YYYY-MM-DD -->`: metadata tables done.
+  Skip metadata conversion on re-run.
 - `<!-- fences-verified: YYYY-MM-DD -->`: fence reconstruction done.
   `stripFences` in `ctx journal site` only skips files with this
   marker.

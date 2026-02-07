@@ -19,26 +19,26 @@ HOOK_INPUT=$(cat)
 COMMAND=$(echo "$HOOK_INPUT" | jq -r '.tool_input.command // empty')
 
 if [ -z "$COMMAND" ]; then
-    exit 0
+  exit 0
 fi
 
 BLOCKED_REASON=""
 
 # sudo — Claude cannot enter a password, this will always hang or fail
 if echo "$COMMAND" | grep -qE '(^|\s|;|&&|\|\|)sudo\s'; then
-    BLOCKED_REASON="Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed."
+  BLOCKED_REASON="Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed."
 fi
 
 # cp/install to ~/.local/bin — known workaround that breaks PATH ctx rules
 if echo "$COMMAND" | grep -qE '(cp|install)\s.*~/\.local/bin'; then
-    BLOCKED_REASON="Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH."
+  BLOCKED_REASON="Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH."
 fi
 
 if [ -n "$BLOCKED_REASON" ]; then
-    cat << EOF
+  cat << EOF
 {"decision": "block", "reason": "$BLOCKED_REASON"}
 EOF
-    exit 0
+  exit 0
 fi
 
 exit 0

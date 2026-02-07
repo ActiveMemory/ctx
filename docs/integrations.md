@@ -51,8 +51,8 @@ graph TD
 ```
 
 1. **Session start**: Claude reads `CLAUDE.md`, which tells it to check `.context/`
-2. **During session**: `PreToolUse` hook runs `ctx agent --budget 4000` 
-   before each tool use
+2. **First tool use**: `PreToolUse` hook runs `ctx agent` and emits the context
+   packet (subsequent invocations within the cooldown window are silent)
 3. **Session end**: `SessionEnd` hook saves context snapshot to `.context/sessions/`
 4. **Next session**: Claude sees previous sessions and continues with context
 
@@ -69,7 +69,7 @@ graph TD
         "hooks": [
           {
             "type": "command",
-            "command": "ctx agent --budget 4000 2>/dev/null || true"
+            "command": "ctx agent --budget 4000 --session $PPID 2>/dev/null || true"
           }
         ]
       }
@@ -88,13 +88,18 @@ graph TD
 }
 ```
 
-### Customizing Token Budget
+### Customizing Token Budget and Cooldown
 
-Edit the PreToolUse command to change the token budget:
+Edit the PreToolUse command to change the token budget or cooldown:
 
 ```text
-"command": "ctx agent --budget 8000 2>/dev/null || true"
+"command": "ctx agent --budget 8000 --session $PPID 2>/dev/null || true"
+"command": "ctx agent --budget 4000 --cooldown 5m --session $PPID 2>/dev/null || true"
 ```
+
+The `--session $PPID` flag isolates the cooldown per session — `$PPID` resolves
+to the Claude Code process PID, so concurrent sessions don't interfere.
+The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 
 ### Verifying Setup
 

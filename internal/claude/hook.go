@@ -7,10 +7,17 @@
 package claude
 
 import (
-	"fmt"
+	"path"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
+
+func NewHook(hookType HookType, cmd string) Hook {
+	return Hook{
+		Type:    hookType,
+		Command: cmd,
+	}
+}
 
 // DefaultHooks returns the default ctx hooks configuration for
 // Claude Code.
@@ -30,60 +37,12 @@ import (
 func DefaultHooks(projectDir string) HookConfig {
 	hooksDir := config.DirClaudeHooks
 	if projectDir != "" {
-		hooksDir = fmt.Sprintf(
-			"%s/%s", projectDir, config.DirClaudeHooks,
-		)
+		hooksDir = path.Join(projectDir, config.DirClaudeHooks)
 	}
 
 	return HookConfig{
-		PreToolUse: []HookMatcher{
-			{
-				// Block non-PATH ctx invocations (./ctx, ./dist/ctx, go run ./cmd/ctx)
-				Matcher: "Bash",
-				Hooks: []Hook{
-					{
-						Type: "command",
-						Command: fmt.Sprintf(
-							"%s/%s", hooksDir, config.FileBlockNonPathScript,
-						),
-					},
-				},
-			},
-			{
-				// Autoload context on every tool use
-				Matcher: ".*",
-				Hooks: []Hook{
-					{
-						Type:    "command",
-						Command: "ctx agent --budget 4000 2>/dev/null || true",
-					},
-				},
-			},
-		},
-		UserPromptSubmit: []HookMatcher{
-			{
-				// Prompt coaching and context monitoring
-				Hooks: []Hook{
-					{
-						Type:    "command",
-						Command: fmt.Sprintf("%s/%s", hooksDir, config.FilePromptCoach),
-					},
-					{
-						Type:    "command",
-						Command: fmt.Sprintf("%s/%s", hooksDir, config.FileCheckContextSize),
-					},
-				},
-			},
-		},
-		SessionEnd: []HookMatcher{
-			{
-				Hooks: []Hook{
-					{
-						Type:    "command",
-						Command: fmt.Sprintf("%s/%s", hooksDir, config.FileAutoSave),
-					},
-				},
-			},
-		},
+		PreToolUse:       preToolUserHookMatcher(hooksDir),
+		UserPromptSubmit: userPromptSubmitHookMatcher(hooksDir),
+		SessionEnd:       sessionEndHookMatcher(hooksDir),
 	}
 }

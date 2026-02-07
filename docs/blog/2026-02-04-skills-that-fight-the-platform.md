@@ -2,6 +2,12 @@
 title: "Skills That Fight the Platform"
 date: 2026-02-04
 author: Jose Alekhinne
+topics:
+  - context engineering
+  - skill design
+  - system prompts
+  - antipatterns
+  - AI safety primitives
 ---
 
 # Skills That Fight the Platform

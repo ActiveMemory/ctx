@@ -134,6 +134,15 @@ ctx agent [flags]
 - Key conventions
 - Recent decisions
 
+**Flags**:
+
+| Flag         | Default | Description                                       |
+|--------------|---------|---------------------------------------------------|
+| `--budget`   | 8000    | Token budget for context packet                   |
+| `--format`   | md      | Output format: `md` or `json`                     |
+| `--cooldown` | 10m     | Suppress repeated output within this duration     |
+| `--session`  | (none)  | Session ID for cooldown isolation (e.g., `$PPID`) |
+
 **Example**:
 
 ```bash
@@ -145,6 +154,9 @@ ctx agent --budget 4000
 
 # JSON format
 ctx agent --format json
+
+# With cooldown (outputs once, then silent for 10m)
+ctx agent --budget 4000 --session $PPID
 ```
 
 **Use case**: Copy-paste into AI chat, pipe to system prompt, or use in hooks.
@@ -364,11 +376,11 @@ ctx completion <shell>
 
 #### Subcommands
 
-| Shell        | Command                  |
-|--------------|--------------------------|
-| `bash`       | `ctx completion bash`    |
-| `zsh`        | `ctx completion zsh`     |
-| `fish`       | `ctx completion fish`    |
+| Shell        | Command                     |
+|--------------|-----------------------------|
+| `bash`       | `ctx completion bash`       |
+| `zsh`        | `ctx completion zsh`        |
+| `fish`       | `ctx completion fish`       |
 | `powershell` | `ctx completion powershell` |
 
 #### Installation
@@ -590,16 +602,16 @@ ctx recall export [session-id] [flags]
 
 **Flags**:
 
-| Flag              | Description                                          |
-|-------------------|------------------------------------------------------|
-| `--all`           | Export all sessions                                  |
-| `--all-projects`  | Export from all projects                             |
+| Flag              | Description                                               |
+|-------------------|-----------------------------------------------------------|
+| `--all`           | Export all sessions                                       |
+| `--all-projects`  | Export from all projects                                  |
 | `--force`         | Overwrite existing files completely (discard frontmatter) |
-| `--skip-existing` | Skip files that already exist                        |
+| `--skip-existing` | Skip files that already exist                             |
 
 Exported files include session metadata, tool usage summary, and the full
-conversation. When re-exporting, YAML frontmatter from enrichment (topics,
-type, outcome, etc.) is preserved by default — only the conversation content
+conversation. When re-exporting, YAML frontmatter from enrichment (*topics,
+type, outcome, etc.*) is preserved by default; only the conversation content
 is regenerated.
 
 The `journal/` directory should be gitignored (like `sessions/`) since it
@@ -608,10 +620,10 @@ contains raw conversation data.
 **Example**:
 
 ```bash
-ctx recall export abc123              # Export one session
-ctx recall export --all               # Export/update all sessions
+ctx recall export abc123                # Export one session
+ctx recall export --all                 # Export/update all sessions
 ctx recall export --all --skip-existing # Skip files that already exist
-ctx recall export --all --force       # Overwrite completely (lose frontmatter)
+ctx recall export --all --force         # Overwrite completely (lose frontmatter)
 ```
 
 ---

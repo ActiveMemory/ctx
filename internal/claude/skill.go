@@ -20,7 +20,8 @@ import (
 // via "ctx init".
 //
 // Returns:
-//   - []string: Names of available skill directories (e.g., "ctx-status", "ctx-save")
+//   - []string: Names of available skill directories
+//     (e.g., "ctx-status", "ctx-save")
 //   - error: Non-nil if the skills directory cannot be read
 func Skills() ([]string, error) {
 	names, err := tpl.ListSkills()

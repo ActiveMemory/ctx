@@ -28,7 +28,7 @@ SESSION_FILE="/tmp/ctx-prompt-coach-$$-$(date +%Y%m%d).state"
 
 # Initialize session file if it doesn't exist
 if [ ! -f "$SESSION_FILE" ]; then
-    cat > "$SESSION_FILE" << 'EOF'
+  cat > "$SESSION_FILE" << 'EOF'
 idiomatic=0
 bestpractices=0
 fixbug=0
@@ -46,45 +46,45 @@ PROMPT=$(echo "$HOOK_INPUT" | jq -r '.prompt // empty')
 
 # If no prompt, allow
 if [ -z "$PROMPT" ]; then
-    exit 0
+  exit 0
 fi
 
 # Helper: get count for a pattern
 get_count() {
-    grep "^$1=" "$SESSION_FILE" 2>/dev/null | cut -d= -f2 || echo "0"
+  grep "^$1=" "$SESSION_FILE" 2>/dev/null | cut -d= -f2 || echo "0"
 }
 
 # Helper: increment count for a pattern
 increment_count() {
-    local pattern="$1"
-    local count=$(get_count "$pattern")
-    local new_count=$((count + 1))
-    if grep -q "^$pattern=" "$SESSION_FILE" 2>/dev/null; then
-        sed -i "s/^$pattern=.*/$pattern=$new_count/" "$SESSION_FILE"
-    else
-        echo "$pattern=$new_count" >> "$SESSION_FILE"
-    fi
+  local pattern="$1"
+  local count=$(get_count "$pattern")
+  local new_count=$((count + 1))
+  if grep -q "^$pattern=" "$SESSION_FILE" 2>/dev/null; then
+    sed -i "s/^$pattern=.*/$pattern=$new_count/" "$SESSION_FILE"
+  else
+    echo "$pattern=$new_count" >> "$SESSION_FILE"
+  fi
 }
 
 # Helper: output a coaching tip (only if under limit)
 suggest() {
-    local pattern="$1"
-    local tip="$2"
-    local example="$3"
-    local count=$(get_count "$pattern")
+  local pattern="$1"
+  local tip="$2"
+  local example="$3"
+  local count=$(get_count "$pattern")
 
-    if [ "$count" -lt "$MAX_SUGGESTIONS" ]; then
-        echo "" >&2
-        echo "┌─ Prompt Tip ─────────────────────────────────────" >&2
-        echo "│ $tip" >&2
-        if [ -n "$example" ]; then
-            echo "│" >&2
-            echo "│ Example: $example" >&2
-        fi
-        echo "└──────────────────────────────────────────────────" >&2
-        echo "" >&2
-        increment_count "$pattern"
+  if [ "$count" -lt "$MAX_SUGGESTIONS" ]; then
+    echo "" >&2
+    echo "┌─ Prompt Tip ─────────────────────────────────────" >&2
+    echo "│ $tip" >&2
+    if [ -n "$example" ]; then
+      echo "│" >&2
+      echo "│ Example: $example" >&2
     fi
+    echo "└──────────────────────────────────────────────────" >&2
+    echo "" >&2
+    increment_count "$pattern"
+  fi
 }
 
 # Calculate prompt length (for detecting short vague prompts)
@@ -92,53 +92,53 @@ PROMPT_LEN=${#PROMPT}
 
 # Check for "idiomatic X" pattern (case-insensitive)
 if echo "$PROMPT" | grep -qiE 'idiomatic (go|python|rust|javascript|typescript|java|c\+\+|ruby)'; then
-    suggest "idiomatic" \
-        "Instead of 'idiomatic X', try 'follow project conventions'" \
-        "'follow CONVENTIONS.md patterns for error handling'"
+  suggest "idiomatic" \
+    "Instead of 'idiomatic X', try 'follow project conventions'" \
+    "'follow CONVENTIONS.md patterns for error handling'"
 fi
 
 # Check for "best practices" pattern (case-insensitive)
 if echo "$PROMPT" | grep -qiE '\bbest practices?\b'; then
-    suggest "bestpractices" \
-        "Instead of 'best practices', try 'follow CONVENTIONS.md'" \
-        "'follow the error handling pattern from CONVENTIONS.md'"
+  suggest "bestpractices" \
+    "Instead of 'best practices', try 'follow CONVENTIONS.md'" \
+    "'follow the error handling pattern from CONVENTIONS.md'"
 fi
 
 # Check for vague "fix the bug" / "fix this bug" patterns
 # Only trigger if the prompt is short and lacks specifics
 if [ "$PROMPT_LEN" -lt 50 ] && echo "$PROMPT" | grep -qiE '\bfix (the|this|that|a) (bug|issue|error|problem)\b'; then
-    # Check if prompt lacks context (no file path, no error message, no line number)
-    if ! echo "$PROMPT" | grep -qE '(\.[a-z]{2,4}|line [0-9]|:[0-9]+|error:|Error:|failed|Failed)'; then
-        suggest "fixbug" \
-            "Add context: which file? what error? what's broken?" \
-            "'fix the JWT validation error in src/auth/login.ts returning 401'"
-    fi
+  # Check if prompt lacks context (no file path, no error message, no line number)
+  if ! echo "$PROMPT" | grep -qE '(\.[a-z]{2,4}|line [0-9]|:[0-9]+|error:|Error:|failed|Failed)'; then
+    suggest "fixbug" \
+      "Add context: which file? what error? what's broken?" \
+      "'fix the JWT validation error in src/auth/login.ts returning 401'"
+  fi
 fi
 
 # Check for vague "optimize" patterns
 if [ "$PROMPT_LEN" -lt 40 ] && echo "$PROMPT" | grep -qiE '\b(optimize|optimise) (it|this|that)\b'; then
-    suggest "optimize" \
-        "Specify what to optimize and what metric matters" \
-        "'optimize UserList to reduce re-renders when parent state updates'"
+  suggest "optimize" \
+    "Specify what to optimize and what metric matters" \
+    "'optimize UserList to reduce re-renders when parent state updates'"
 fi
 
 # Check for vague "make it better" patterns
 if echo "$PROMPT" | grep -qiE '\bmake (it|this|that) (better|nicer|cleaner|good)\b'; then
-    if [ "$PROMPT_LEN" -lt 50 ]; then
-        suggest "makebetter" \
-            "Define 'better' - readability? performance? maintainability?" \
-            "'refactor to be more readable by extracting validation logic'"
-    fi
+  if [ "$PROMPT_LEN" -lt 50 ]; then
+    suggest "makebetter" \
+      "Define 'better' - readability? performance? maintainability?" \
+      "'refactor to be more readable by extracting validation logic'"
+  fi
 fi
 
 # Check for vague "update the component/function/file" patterns
 if [ "$PROMPT_LEN" -lt 50 ] && echo "$PROMPT" | grep -qiE '\bupdate (the|this|that|a) (component|function|file|module|class)\b'; then
-    # Check if prompt lacks specifics
-    if ! echo "$PROMPT" | grep -qE '(\.[a-z]{2,4}|src/|lib/|internal/)'; then
-        suggest "update" \
-            "Specify which component and what changes" \
-            "'update Button in src/components/Button.tsx to use new color tokens'"
-    fi
+  # Check if prompt lacks specifics
+  if ! echo "$PROMPT" | grep -qE '(\.[a-z]{2,4}|src/|lib/|internal/)'; then
+    suggest "update" \
+      "Specify which component and what changes" \
+      "'update Button in src/components/Button.tsx to use new color tokens'"
+  fi
 fi
 
 # Always allow the prompt to proceed

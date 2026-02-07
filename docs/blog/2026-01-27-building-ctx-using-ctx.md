@@ -2,6 +2,12 @@
 title: "Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development"
 date: 2026-01-27
 author: Jose Alekhinne
+topics:
+  - dogfooding
+  - AI-assisted development
+  - Ralph Loop
+  - session persistence
+  - architectural decisions
 ---
 
 # Building ctx Using ctx

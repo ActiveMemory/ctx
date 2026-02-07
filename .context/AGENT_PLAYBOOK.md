@@ -38,6 +38,12 @@ go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
 
 Check with `which ctx` if unsure whether it's installed.
 
+## Context Readback
+
+Before starting any work, read the required context files and confirm to the
+user: "I have read the required context files and I'm following project
+conventions." Do not begin implementation until you have done so.
+
 ## Read Order
 
 1. CONSTITUTION.md — Hard rules, NEVER violate

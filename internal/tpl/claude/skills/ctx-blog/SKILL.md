@@ -5,11 +5,26 @@ description: "Generate blog post draft. Use when documenting project progress, s
 
 Generate a blog post draft from recent project activity.
 
+## Before Writing
+
+Two questions — if any answer is "no", reconsider:
+
+1. **"Is there a narrative arc?"** → A blog post needs a story (problem →
+   approach → outcome), not just a list of changes
+2. **"Would someone outside the project learn something?"** → If the
+   insight is only useful internally, use LEARNINGS.md instead
+
 ## When to Use
 
 - When documenting significant project progress
 - When sharing learnings publicly
 - When the user wants to write about the development experience
+
+## When NOT to Use
+
+- For internal-only notes (use session saves or LEARNINGS.md)
+- When the work is still in progress with no clear insight yet
+- For changelogs (use `/ctx-blog-changelog` instead)
 
 ## Input
 
@@ -41,16 +56,26 @@ ls -la .context/journal/*.md 2>/dev/null | tail -10
 
 ## Blog Post Structure
 
-```markdown
+### Frontmatter
+
+```yaml
 ---
 title: "Descriptive Title: What This Post Is About"
 date: YYYY-MM-DD
 author: [Ask user]
+topics:
+  - topic-one
+  - topic-two
+  - topic-three
 ---
+```
 
-*Author / Date*
+### Body
 
+```markdown
 # Title
+
+![ctx](../images/ctx-banner.png)
 
 > Opening hook or question
 
@@ -76,6 +101,11 @@ author: [Ask user]
 - **Tables for comparisons**: Before/after, patterns found
 - **Honest about failures**: Include what went wrong and why
 - **Concrete examples**: Reference specific files, commits, decisions
+- **No em-dashes**: Use `:`, `;`, or restructure the sentence instead
+- **Straight quotes only**: Use "dumb quotes" (`"`, `'`), never
+  typographic/curly quotes
+- **80-character line width**: Wrap prose at ~80 characters; exceptions
+  for tables, code blocks, and URLs
 
 ## Process
 
@@ -85,3 +115,25 @@ author: [Ask user]
 4. Write full draft
 5. Ask for revisions
 6. Save to `docs/blog/YYYY-MM-DD-slug.md`
+7. **Update `docs/blog/index.md`** — add entry at the top following the
+   existing pattern:
+
+```markdown
+### [Post Title](YYYY-MM-DD-slug.md)
+
+*Author / Date*
+
+2-3 sentence blurb.
+
+**Topics**: topic-one, topic-two, topic-three
+
+---
+```
+
+## Example Invocations
+
+```
+/ctx-blog about the cooldown feature we just built
+/ctx-blog last week's refactoring work
+/ctx-blog lessons learned from hook design
+```

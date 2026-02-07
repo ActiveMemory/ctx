@@ -151,6 +151,12 @@ journal:
 	@ctx journal site --build
 	@echo ""
 	@echo "Journal site updated!"
+	@echo ""
+	@echo "Next steps (in Claude Code):"
+	@echo "  1. /ctx-journal-normalize  — fix markdown rendering (skips already normalized)"
+	@echo "  2. /ctx-journal-enrich     — add metadata per entry (skips if frontmatter exists)"
+	@echo ""
+	@echo "Then re-run: make journal"
 
 ## journal-serve: Serve the journal site.
 journal-serve:

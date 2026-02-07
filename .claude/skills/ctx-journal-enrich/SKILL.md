@@ -5,11 +5,24 @@ description: "Enrich journal entry with metadata. Use when journal entries lack 
 
 Enrich a session journal entry with structured metadata.
 
+## Before Enriching
+
+1. **Run `/ctx-journal-normalize` first** if the entry has rendering
+   issues; clean markdown produces better metadata extraction
+2. **Check if already enriched**: entries with YAML frontmatter
+   (`---` at top) are likely already done; confirm before overwriting
+
 ## When to Use
 
 - When journal entries lack metadata for future reference
 - After exporting sessions that need categorization
 - When building a searchable session archive
+
+## When NOT to Use
+
+- On entries that already have complete frontmatter (unless updating)
+- Before normalizing entries with broken formatting
+- On suggestion sessions (short auto-complete prompts; not worth enriching)
 
 ## Input
 
@@ -25,19 +38,33 @@ ls .context/journal/*.md | grep -i "<pattern>"
 ```
 
 If multiple matches, show them and ask which one.
-If no argument given, show recent entries and ask.
+If no argument given, show recent unenriched entries and ask:
+```bash
+# List entries without frontmatter
+grep -rL "^---$" .context/journal/*.md | head -10
+```
+
+## Usage Examples
+
+```text
+/ctx-journal-enrich twinkly-stirring-kettle
+/ctx-journal-enrich twinkly
+/ctx-journal-enrich 2026-01-24
+/ctx-journal-enrich 76fe2ab9
+```
 
 ## Enrichment Tasks
 
 Read the journal entry and extract:
 
 ### 1. Frontmatter (YAML at top of file)
+
 ```yaml
 ---
 title: "Session title"
 date: 2026-01-27
-type: feature|bugfix|refactor|exploration|debugging|documentation
-outcome: completed|partial|abandoned|blocked
+type: feature
+outcome: completed
 topics:
   - authentication
   - caching
@@ -53,20 +80,43 @@ key_files:
 ---
 ```
 
+**Type values:**
+
+| Type            | When to use                           |
+|-----------------|---------------------------------------|
+| `feature`       | Building new functionality            |
+| `bugfix`        | Fixing broken behavior                |
+| `refactor`      | Restructuring without behavior change |
+| `exploration`   | Research, learning, experimentation   |
+| `debugging`     | Investigating issues                  |
+| `documentation` | Writing docs, comments, README        |
+
+**Outcome values:**
+
+| Outcome     | Meaning                            |
+|-------------|------------------------------------|
+| `completed` | Goal achieved                      |
+| `partial`   | Some progress, work continues      |
+| `abandoned` | Stopped pursuing this approach     |
+| `blocked`   | Waiting on external dependency     |
+
 ### 2. Summary
-If `## Summary` says "[Add your summary...]", replace with 2-3 sentences.
+
+If `## Summary` says "[Add your summary...]", replace with 2-3 sentences
+describing what was accomplished.
 
 ### 3. Extracted Items
+
 Scan the conversation and extract:
 
-**Decisions made** - Link to DECISIONS.md if persisted:
+**Decisions made**: link to DECISIONS.md if persisted:
 ```markdown
 ## Decisions
 - Used Redis for caching ([D12](../DECISIONS.md#d12))
 - Chose JWT over sessions (not yet persisted)
 ```
 
-**Learnings discovered** - Link to LEARNINGS.md if persisted:
+**Learnings discovered**: link to LEARNINGS.md if persisted:
 ```markdown
 ## Learnings
 - Token refresh requires cache invalidation ([L8](../LEARNINGS.md#l8))
@@ -87,3 +137,4 @@ Scan the conversation and extract:
 3. Propose enrichment (type, topics, outcome)
 4. Ask user for confirmation/adjustments
 5. Show diff and write if approved
+6. Remind user to rebuild: `ctx journal site --build` or `make journal`

@@ -2,6 +2,12 @@
 title: "Refactoring with Intent: Human-Guided Sessions in AI Development"
 date: 2026-02-01
 author: Jose Alekhinne
+topics:
+  - refactoring
+  - code quality
+  - documentation standards
+  - module decomposition
+  - YOLO versus intentional development
 ---
 
 # Refactoring with Intent

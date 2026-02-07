@@ -22,6 +22,15 @@ type HookConfig struct {
 	SessionEnd       []HookMatcher `json:"SessionEnd,omitempty"`
 }
 
+type HookType string
+
+var HookTypeCommand HookType = "command"
+
+type Matcher string
+
+var MatcherBash Matcher = "Bash"
+var MatcherAll Matcher = ".*"
+
 // HookMatcher associates a regex pattern with hooks to execute.
 //
 // For PreToolUse hooks, the Matcher pattern matches against the tool name
@@ -31,8 +40,8 @@ type HookConfig struct {
 //   - Matcher: Regex pattern to match; empty string matches all
 //   - Hooks: Commands to execute when the pattern matches
 type HookMatcher struct {
-	Matcher string `json:"matcher,omitempty"`
-	Hooks   []Hook `json:"hooks"`
+	Matcher Matcher `json:"matcher,omitempty"`
+	Hooks   []Hook  `json:"hooks"`
 }
 
 // Hook represents a single hook command to execute.
@@ -41,8 +50,8 @@ type HookMatcher struct {
 //   - Type: Hook type, typically "command"
 //   - Command: Shell command or script path to execute
 type Hook struct {
-	Type    string `json:"type"`
-	Command string `json:"command"`
+	Type    HookType `json:"type"`
+	Command string   `json:"command"`
 }
 
 // PermissionsConfig represents the permissions section of Claude Code's

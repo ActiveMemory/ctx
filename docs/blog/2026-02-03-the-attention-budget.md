@@ -2,6 +2,12 @@
 title: "The Attention Budget: Why Your AI Forgets What You Just Told It"
 date: 2026-02-03
 author: Jose Alekhinne
+topics:
+  - attention mechanics
+  - context engineering
+  - progressive disclosure
+  - ctx primitives
+  - token budgets
 ---
 
 # The Attention Budget
