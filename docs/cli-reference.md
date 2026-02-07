@@ -30,6 +30,30 @@ All commands support these flags:
 
 ## Commands
 
+| Command | Description |
+|---------|-------------|
+| [`ctx init`](#ctx-init) | Initialize `.context/` directory with templates and hooks |
+| [`ctx status`](#ctx-status) | Show context summary (files, tokens, drift) |
+| [`ctx agent`](#ctx-agent) | Print token-budgeted context packet for AI consumption |
+| [`ctx load`](#ctx-load) | Output assembled context in read order |
+| [`ctx add`](#ctx-add) | Add a task, decision, learning, or convention |
+| [`ctx complete`](#ctx-complete) | Mark a task as done |
+| [`ctx drift`](#ctx-drift) | Detect stale paths, secrets, missing files |
+| [`ctx sync`](#ctx-sync) | Reconcile context with codebase state |
+| [`ctx compact`](#ctx-compact) | Archive completed tasks, clean up files |
+| [`ctx tasks`](#ctx-tasks) | Task archival and snapshots |
+| [`ctx decisions`](#ctx-decisions) | Reindex DECISIONS.md |
+| [`ctx learnings`](#ctx-learnings) | Reindex LEARNINGS.md |
+| [`ctx recall`](#ctx-recall) | Browse and export AI session history |
+| [`ctx journal`](#ctx-journal) | Generate static site from journal entries |
+| [`ctx serve`](#ctx-serve) | Serve static site locally |
+| [`ctx session`](#ctx-session) | Save, list, load, and parse session snapshots |
+| [`ctx watch`](#ctx-watch) | Auto-apply context updates from AI output |
+| [`ctx hook`](#ctx-hook) | Generate AI tool integration configs |
+| [`ctx loop`](#ctx-loop) | Generate autonomous loop script |
+
+---
+
 ### `ctx init`
 
 Initialize a new `.context/` directory with template files.
