@@ -193,7 +193,6 @@ The journal system includes:
 | `ctx journal site`       | Generate static site from journal entries          |
 | `ctx serve`              | Convenience wrapper for the static site server     |
 | `/ctx-journal-enrich`    | Slash command to add frontmatter and tags          |
-| `/ctx-journal-summarize` | Generate period summaries                          |
 | `/ctx-blog`              | Generate blog posts from recent activity           |
 | `/ctx-blog-changelog`    | Generate changelog-style blog posts                |
 

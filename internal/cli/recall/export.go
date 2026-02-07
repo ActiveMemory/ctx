@@ -30,9 +30,10 @@ const maxMessagesPerPart = 200
 //   - *cobra.Command: Command for exporting sessions to journal files
 func recallExportCmd() *cobra.Command {
 	var (
-		all         bool
-		allProjects bool
-		force       bool
+		all          bool
+		allProjects  bool
+		force        bool
+		skipExisting bool
 	)
 
 	cmd := &cobra.Command{
@@ -47,40 +48,30 @@ or clean up the transcript.
 By default, only sessions from the current project are exported. Use
 --all-projects to include sessions from all projects.
 
-Existing files are skipped to preserve your edits. Use --force to overwrite.
+By default, existing files are updated: YAML frontmatter from enrichment is
+preserved, conversation content is regenerated. Use --skip-existing to leave
+existing files untouched, or --force to overwrite completely.
 
 Examples:
   ctx recall export abc123              # Export one session
-  ctx recall export --all               # Export all sessions from this project
-  ctx recall export --all --all-projects  # Export from all projects
-  ctx recall export --all --force       # Overwrite existing exports`,
+  ctx recall export --all               # Export/update all sessions
+  ctx recall export --all --skip-existing # Skip files that already exist
+  ctx recall export --all --force       # Overwrite existing exports completely`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRecallExport(cmd, args, all, allProjects, force)
+			return runRecallExport(cmd, args, all, allProjects, force, skipExisting)
 		},
 	}
 
 	cmd.Flags().BoolVar(&all, "all", false, "Export all sessions from current project")
 	cmd.Flags().BoolVar(&allProjects, "all-projects", false, "Include sessions from all projects")
-	cmd.Flags().BoolVar(&force, "force", false, "Overwrite existing files")
+	cmd.Flags().BoolVar(&force, "force", false, "Overwrite existing files completely (discard frontmatter)")
+	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, "Skip files that already exist")
 
 	return cmd
 }
 
 // runRecallExport handles the recall export command.
-//
-// Exports one or more sessions to .context/journal/ as Markdown files.
-// Skips existing files unless force is true.
-//
-// Parameters:
-//   - cmd: Cobra command for output stream
-//   - args: Session ID to export (ignored if all is true)
-//   - all: If true, export all sessions
-//   - allProjects: If true, include sessions from all projects
-//   - force: If true, overwrite existing files
-//
-// Returns:
-//   - error: Non-nil if export fails
-func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force bool) error {
+func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force, skipExisting bool) error {
 	if len(args) > 0 && all {
 		return fmt.Errorf("cannot use --all with a session ID; use one or the other")
 	}
@@ -149,7 +140,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force 
 	yellow := color.New(color.FgYellow).SprintFunc()
 	dim := color.New(color.FgHiBlack)
 
-	var exported, skipped int
+	var exported, updated, skipped int
 	for _, s := range toExport {
 		// Count non-empty messages to determine if splitting is needed
 		var nonEmptyMsgs []parser.Message
@@ -178,7 +169,10 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force 
 			path := filepath.Join(journalDir, filename)
 
 			// Check if file exists
-			if _, err := os.Stat(path); err == nil && !force {
+			_, statErr := os.Stat(path)
+			fileExists := statErr == nil
+
+			if fileExists && skipExisting {
 				skipped++
 				_, _ = dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", filename)
 				continue
@@ -194,26 +188,62 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force 
 			// Generate content for this part
 			content := formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName)
 
+			// If file exists and not --force, preserve YAML frontmatter
+			if fileExists && !force {
+				existing, readErr := os.ReadFile(path)
+				if readErr == nil {
+					if fm := extractFrontmatter(string(existing)); fm != "" {
+						content = fm + "\n" + content
+					}
+				}
+				updated++
+			} else if fileExists {
+				exported++
+			} else {
+				exported++
+			}
+
 			// Write file
 			if err := os.WriteFile(path, []byte(content), 0644); err != nil {
 				cmd.PrintErrf("  %s failed to write %s: %v\n", yellow("!"), filename, err)
 				continue
 			}
 
-			exported++
-			cmd.Printf("  %s %s\n", green("✓"), filename)
+			if fileExists && !force {
+				cmd.Printf("  %s %s (updated, frontmatter preserved)\n", green("✓"), filename)
+			} else {
+				cmd.Printf("  %s %s\n", green("✓"), filename)
+			}
 		}
 	}
 
 	cmd.Println()
 	if exported > 0 {
-		cmd.Printf("Exported %d session(s) to %s\n", exported, journalDir)
+		cmd.Printf("Exported %d new session(s) to %s\n", exported, journalDir)
+	}
+	if updated > 0 {
+		cmd.Printf("Updated %d existing session(s) (YAML frontmatter preserved)\n", updated)
 	}
 	if skipped > 0 {
-		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s). Use --force to overwrite.\n", skipped)
+		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s).\n", skipped)
 	}
 
 	return nil
+}
+
+// extractFrontmatter returns the YAML frontmatter block from content,
+// including the --- delimiters and trailing newline. Returns empty string
+// if no frontmatter found.
+func extractFrontmatter(content string) string {
+	if !strings.HasPrefix(content, "---\n") {
+		return ""
+	}
+	end := strings.Index(content[4:], "\n---\n")
+	if end < 0 {
+		return ""
+	}
+	// Include the full \n---\n (5 chars)
+	return content[:4+end+5]
 }
 
 // formatJournalFilename generates the filename for a journal entry.

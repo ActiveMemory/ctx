@@ -527,6 +527,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#context-monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Monitor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context Monitor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1053,6 +1103,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#context-monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Monitor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context Monitor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1185,8 +1285,11 @@ journal site with:</p>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export a specific session by ID</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Re-export (NOTE: overwrites existing files; back up first!)</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Re-export (updates conversation, preserves YAML frontmatter)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Full overwrite (discards frontmatter enrichments)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force
 </span></code></pre></div>
 <p>Exported sessions go to <code>.context/journal/</code> as editable Markdown files.</p>
 <h3 id="2-generate-the-site">2. Generate the Site<a class="headerlink" href="#2-generate-the-site" title="Permanent link">&para;</a></h3>
@@ -1221,13 +1324,13 @@ journal site with:</p>
 <p>After editing, regenerate the site:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Edits are preserved unless you use <code>--force</code></p>
-<p>Running <code>ctx recall export --all</code> <strong>skips existing files</strong> by default,
-preserving your edits.</p>
-<p>However, <code>ctx recall export --all --force</code>
-<strong>overwrites everything</strong>, and your edits will be <strong>lost</strong>.</p>
-<p>Back up your <code>.context/journal/</code> directory before using <code>--force</code>.</p>
+<div class="admonition info">
+<p class="admonition-title">Re-exporting preserves your enrichments</p>
+<p>Running <code>ctx recall export --all</code> <strong>updates existing files</strong> by default:
+YAML frontmatter (topics, type, outcome, etc.) is preserved, and only
+the conversation content is regenerated.</p>
+<p>Use <code>--skip-existing</code> to leave existing files completely untouched, or
+<code>--force</code> to overwrite everything (frontmatter will be lost).</p>
 </div>
 <h2 id="large-sessions">Large Sessions<a class="headerlink" href="#large-sessions" title="Permanent link">&para;</a></h2>
 <p>Sessions with many messages (200+) are automatically split into multiple parts for better browser performance. Navigation links connect the parts:</p>
@@ -1477,24 +1580,92 @@ the generated site.</p>
 </span></code></pre></div>
 <p>Then run <code>/ctx-journal-enrich</code> on each. Enrichment is intentionally interactive
 to ensure accuracy.</p>
+<h2 id="context-monitor">Context Monitor<a class="headerlink" href="#context-monitor" title="Permanent link">&para;</a></h2>
+<p>The <strong>Context Monitor</strong> (<code>context-watch.sh</code>) is a terminal-based tool that shows
+real-time token usage for your active Claude Code session. Run it in a separate
+terminal window to keep an eye on context consumption.</p>
+<h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h3>
+<p>After running <code>ctx init</code>, the monitor script is available at:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>.context/tools/context-watch.sh
+</span></code></pre></div>
+<h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Default: refresh every 10 seconds</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>.context/tools/context-watch.sh
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Custom refresh interval (5 seconds)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>.context/tools/context-watch.sh<span class="w"> </span><span class="m">5</span>
+</span></code></pre></div>
+<p>The monitor displays:</p>
+<ul>
+<li><strong>Progress bar</strong> with estimated token usage vs effective limit</li>
+<li><strong>Color-coded status</strong>: green (healthy), yellow (monitor), red (save and end)</li>
+<li><strong>Session info</strong>: file size, message count, last update time</li>
+<li><strong>Remaining tokens</strong>: how much usable context is left</li>
+</ul>
+<!-- TODO: screenshot of context-watch.sh in a terminal showing green/healthy state -->
+
+<!-- TODO: screenshot of context-watch.sh showing yellow/monitor state -->
+
+<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<p>The monitor finds the most recently modified session JSONL in
+<code>~/.claude/projects/</code>, estimates token count using a character-based heuristic
+(~30 chars per token for JSON content), and adds an overhead estimate for system
+prompts, tools, and skills that aren't in the JSONL.</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model limit</td>
+<td>200,000</td>
+<td>Claude's context window</td>
+</tr>
+<tr>
+<td>Autocompact buffer</td>
+<td>33,000</td>
+<td>Reserved by Claude Code, not usable</td>
+</tr>
+<tr>
+<td>System overhead</td>
+<td>20,000</td>
+<td>System prompt + tools + skills + memory</td>
+</tr>
+<tr>
+<td>Effective limit</td>
+<td>167,000</td>
+<td>What you can actually use for conversation</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Pair with the context checkpoint hook</p>
+<p>The monitor is for <strong>manual observation</strong>. For <strong>automated alerts</strong> within
+your session, <code>ctx init</code> also installs a <code>check-context-size.sh</code> hook that
+triggers the <code>/ctx-context-monitor</code> skill at adaptive intervals.</p>
+</div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <p><strong>Daily workflow:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># At end of day, export and browse</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># At end of day, export and browse</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div></p>
 <p><strong>After a productive session:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Export just that session and add notes</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;session-id&gt;
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Edit .context/journal/&lt;session&gt;.md</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Regenerate: ctx journal site</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Export just that session and add notes</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;session-id&gt;
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Edit .context/journal/&lt;session&gt;.md</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Regenerate: ctx journal site</span>
 </span></code></pre></div></p>
 <p><strong>Searching across all sessions:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Use grep on the journal directory</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;authentication&quot;</span><span class="w"> </span>.context/journal/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Use grep on the journal directory</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;authentication&quot;</span><span class="w"> </span>.context/journal/
 </span></code></pre></div></p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <p>The journal site uses <a href="https://pypi.org/project/zensical/">zensical</a> for static site generation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

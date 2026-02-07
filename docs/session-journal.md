@@ -75,7 +75,10 @@ ctx recall export --all --all-projects
 # Export a specific session by ID
 ctx recall export abc123
 
-# Re-export (NOTE: overwrites existing files; back up first!)
+# Re-export (updates conversation, preserves YAML frontmatter)
+ctx recall export --all
+
+# Full overwrite (discards frontmatter enrichments)
 ctx recall export --all --force
 ```
 
@@ -122,15 +125,14 @@ After editing, regenerate the site:
 ctx journal site --serve
 ```
 
-!!! warning "Edits are preserved unless you use `--force`"
+!!! info "Re-exporting preserves your enrichments"
 
-    Running `ctx recall export --all` **skips existing files** by default,
-    preserving your edits.
+    Running `ctx recall export --all` **updates existing files** by default:
+    YAML frontmatter (topics, type, outcome, etc.) is preserved, and only
+    the conversation content is regenerated.
 
-    However, `ctx recall export --all --force`
-    **overwrites everything**, and your edits will be **lost**.
-
-    Back up your `.context/journal/` directory before using `--force`.
+    Use `--skip-existing` to leave existing files completely untouched, or
+    `--force` to overwrite everything (frontmatter will be lost).
 
 ## Large Sessions
 
@@ -329,6 +331,61 @@ grep -L "^---$" .context/journal/*.md | head -10
 
 Then run `/ctx-journal-enrich` on each. Enrichment is intentionally interactive
 to ensure accuracy.
+
+## Context Monitor
+
+The **Context Monitor** (`context-watch.sh`) is a terminal-based tool that shows
+real-time token usage for your active Claude Code session. Run it in a separate
+terminal window to keep an eye on context consumption.
+
+### Setup
+
+After running `ctx init`, the monitor script is available at:
+
+```bash
+.context/tools/context-watch.sh
+```
+
+### Usage
+
+```bash
+# Default: refresh every 10 seconds
+.context/tools/context-watch.sh
+
+# Custom refresh interval (5 seconds)
+.context/tools/context-watch.sh 5
+```
+
+The monitor displays:
+
+- **Progress bar** with estimated token usage vs effective limit
+- **Color-coded status**: green (healthy), yellow (monitor), red (save and end)
+- **Session info**: file size, message count, last update time
+- **Remaining tokens**: how much usable context is left
+
+<!-- TODO: screenshot of context-watch.sh in a terminal showing green/healthy state -->
+
+<!-- TODO: screenshot of context-watch.sh showing yellow/monitor state -->
+
+### How It Works
+
+The monitor finds the most recently modified session JSONL in
+`~/.claude/projects/`, estimates token count using a character-based heuristic
+(~30 chars per token for JSON content), and adds an overhead estimate for system
+prompts, tools, and skills that aren't in the JSONL.
+
+| Constant           | Value   | Meaning                                       |
+|--------------------|---------|-----------------------------------------------|
+| Model limit        | 200,000 | Claude's context window                       |
+| Autocompact buffer | 33,000  | Reserved by Claude Code, not usable           |
+| System overhead    | 20,000  | System prompt + tools + skills + memory       |
+| Effective limit    | 167,000 | What you can actually use for conversation     |
+
+!!! tip "Pair with the context checkpoint hook"
+
+    The monitor is for **manual observation**. For **automated alerts** within
+    your session, `ctx init` also installs a `check-context-size.sh` hook that
+    triggers the `/ctx-context-monitor` skill at adaptive intervals.
 
 ## Tips
 
