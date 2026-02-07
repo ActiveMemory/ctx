@@ -1,5 +1,6 @@
-- [x] Deploy context-watch.sh to .context/tools/ via ctx init. Add tools/*.sh to embed.go glob, create deployment logic in initialize, and document the tool. #priority:medium #added:2026-02-05-215511
+- [ ] Add ctx help command — use-case-oriented cheat sheet for lazy CLI users. Should cover: (1) core CLI commands grouped by workflow (getting started, tracking decisions, browsing history, AI context), (2) available slash-command skills with one-line descriptions, (3) common workflow recipes showing how commands and skills combine (e.g., export sessions → enrich with /ctx-journal-enrich → generate site; or /ctx-blog from recent activity → edit → publish). One screen, no scrolling. Not a skill — a real CLI command. #added:2026-02-06-184257
 
+- [ ] Investigate ctx init overwriting user-generated content in .context/ files. Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template. Need guard to prevent reinit from destroying user data (decisions, learnings, tasks). Consider: skip existing files, merge strategy, or --force-only overwrite. #added:2026-02-06-182205
 
 # Tasks
 
@@ -37,6 +38,9 @@ better discovery and navigation.
   with adaptive frequency + ctx-context-monitor skill for in-session awareness.
   context-watch.sh kept as-is for manual terminal monitoring. Repetition
   detection shelved (low ROI, user notices loops faster). #done:2026-02-05
+  - [x] Deploy context-watch.sh to .context/tools/ via ctx init. Embedded in
+    binary, deployed with 0755 permissions by createTools() in initialize.
+    #done:2026-02-06
 
 - [x] Search for a consolidation/code-hygiene skill that can enforce
   project-specific conventions. Today's codebase scan found concrete
@@ -70,8 +74,16 @@ better discovery and navigation.
       - Groups sessions by type (feature, bugfix, refactor, exploration, debugging, documentation)
       #added:2026-02-03
 
+- [ ] T1.4: Investigate inconsistent tool output collapsing
+      - Some files have collapsed tool outputs (`<details>`), others don't
+      - Example with uncollapsed long outputs: `2026-02-03-sunny-stirring-pillow-7900d2dc`
+      - Collapsing threshold is >10 lines per normalize skill spec
+      - Unclear where the existing collapsing happens — may be in export, normalize, or site pipeline
+      - Investigate why some pass through uncollapsed, fix the gap
+      #added:2026-02-06
+
 **Deferred:**
-- Timeline narrative (nice-to-have, low priority)
+- [-] Timeline narrative — dropped, duplicates `/ctx-blog` skill (see DECISIONS.md)
 - Outcome filtering (uncertain value, revisit after seeing data)
 - Stats dashboard (skipped - gamification, low ROI)
 - Technology index (skipped - not useful for this project)
@@ -89,6 +101,12 @@ indexing — grep across 100+ journal files won't scale.
       - Update only the raw conversation content
       - Solves: `--force` loses enrichments, no-force can't update
       #added:2026-02-03
+
+### Maintenance
+
+- [ ] Run `/consolidate` to address codebase drift. Considerable drift has
+      accumulated (predicate naming, magic strings, hardcoded permissions,
+      godoc style). #priority:medium #added:2026-02-06
 
 ## Blocked
 

@@ -141,6 +141,14 @@ Verify installation:
 ctx --version
 ```
 
+### Version Control (Strongly Recommended)
+
+`ctx` does not require git, but using version control with your `.context/`
+directory is strongly recommended. AI sessions occasionally modify or
+overwrite context files inadvertently. With git, the AI can check history
+and restore lost content — without it, the data is gone. Several `ctx`
+features (journal changelog, blog generation) also use git history directly.
+
 ## Quick Start
 
 ### 1. Initialize Context

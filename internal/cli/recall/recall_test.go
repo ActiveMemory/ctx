@@ -117,11 +117,49 @@ func TestRecallExportCmd_Flags(t *testing.T) {
 	}
 
 	// Check flags
-	flags := []string{"all", "all-projects", "force"}
+	flags := []string{"all", "all-projects", "force", "skip-existing"}
 	for _, f := range flags {
 		if exportCmd.Flags().Lookup(f) == nil {
 			t.Errorf("export subcommand missing --%s flag", f)
 		}
+	}
+}
+
+func TestExtractFrontmatter(t *testing.T) {
+	tests := []struct {
+		name    string
+		content string
+		want    string
+	}{
+		{
+			name:    "with frontmatter",
+			content: "---\ntitle: Test\ntopics:\n  - go\n---\n\n# Heading\n",
+			want:    "---\ntitle: Test\ntopics:\n  - go\n---\n",
+		},
+		{
+			name:    "no frontmatter",
+			content: "# Just a heading\n\nSome content.\n",
+			want:    "",
+		},
+		{
+			name:    "unclosed frontmatter",
+			content: "---\ntitle: Test\nno closing delimiter\n",
+			want:    "",
+		},
+		{
+			name:    "empty frontmatter",
+			content: "---\n---\n\n# Heading\n",
+			want:    "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := extractFrontmatter(tt.content)
+			if got != tt.want {
+				t.Errorf("extractFrontmatter() = %q, want %q", got, tt.want)
+			}
+		})
 	}
 }
 

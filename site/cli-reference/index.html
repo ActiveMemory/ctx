@@ -2311,23 +2311,30 @@ start time, duration, turn count, and token usage.</p>
 <td>Export all sessions</td>
 </tr>
 <tr>
-<td><code>--force</code></td>
-<td>Overwrite existing files</td>
-</tr>
-<tr>
 <td><code>--all-projects</code></td>
 <td>Export from all projects</td>
+</tr>
+<tr>
+<td><code>--force</code></td>
+<td>Overwrite existing files completely (discard frontmatter)</td>
+</tr>
+<tr>
+<td><code>--skip-existing</code></td>
+<td>Skip files that already exist</td>
 </tr>
 </tbody>
 </table>
 <p>Exported files include session metadata, tool usage summary, and the full
-conversation. Existing files are skipped by default to preserve your edits.</p>
+conversation. When re-exporting, YAML frontmatter from enrichment (topics,
+type, outcome, etc.) is preserved by default — only the conversation content
+is regenerated.</p>
 <p>The <code>journal/</code> directory should be gitignored (like <code>sessions/</code>) since it
 contains raw conversation data.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">          </span><span class="c1"># Export one session</span>
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">           </span><span class="c1"># Export all sessions</span>
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force<span class="w">   </span><span class="c1"># Overwrite existing exports</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">              </span><span class="c1"># Export one session</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">               </span><span class="c1"># Export/update all sessions</span>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--skip-existing<span class="w"> </span><span class="c1"># Skip files that already exist</span>
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force<span class="w">       </span><span class="c1"># Overwrite completely (lose frontmatter)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-journal"><code>ctx journal</code><a class="headerlink" href="#ctx-journal" title="Permanent link">&para;</a></h3>

@@ -156,7 +156,6 @@ in Claude Code with `/skill-name`.
 |--------------------------|-------------------------------------------------|
 | `/ctx-recall`            | Browse AI session history                       |
 | `/ctx-journal-enrich`    | Enrich a journal entry with frontmatter/tags    |
-| `/ctx-journal-summarize` | Generate summary of sessions over a time period |
 
 #### Blogging Skills
 
@@ -184,7 +183,6 @@ in Claude Code with `/skill-name`.
 /ctx-status
 /ctx-add-learning "Token refresh requires explicit cache invalidation"
 /ctx-journal-enrich twinkly-stirring-kettle
-/ctx-journal-summarize last week
 ```
 
 Skills support partial matching where applicable (e.g., session slugs).
