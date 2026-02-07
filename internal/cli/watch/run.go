@@ -155,5 +155,5 @@ func runCompleteSilent(args []string) error {
 	lines[matchedLine] = config.RegExTask.ReplaceAllString(
 		lines[matchedLine], "$1- [x] $3",
 	)
-	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), 0644)
+	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), config.PermFile)
 }

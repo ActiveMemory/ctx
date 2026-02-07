@@ -35,7 +35,7 @@ func preCompactAutoSave(cmd *cobra.Command) error {
 
 	// Ensure sessions directory exists
 	sessionsDir := filepath.Join(rc.ContextDir(), "sessions")
-	if err := os.MkdirAll(sessionsDir, 0755); err != nil {
+	if err := os.MkdirAll(sessionsDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
 
@@ -48,7 +48,7 @@ func preCompactAutoSave(cmd *cobra.Command) error {
 	content := buildPreCompactSession(now)
 
 	// Write the file
-	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(content), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write session file: %w", err)
 	}
 

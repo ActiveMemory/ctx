@@ -151,9 +151,9 @@ type SessionParser interface {
 	// Returns nil if the line should be skipped (e.g., non-message lines).
 	ParseLine(line []byte) (*Message, string, error) // message, sessionID, error
 
-	// CanParse returns true if this parser can handle the given file.
+	// Matches returns true if this parser can handle the given file.
 	// Implementations may check file extension, peek at content, etc.
-	CanParse(path string) bool
+	Matches(path string) bool
 
 	// Tool returns the tool identifier (e.g., "claude-code", "aider").
 	Tool() string
@@ -175,11 +175,11 @@ func (m *Message) IsAssistant() bool {
 	return m.Role == "assistant"
 }
 
-// HasToolUses returns true if this message contains tool invocations.
+// UsesTools returns true if this message contains tool invocations.
 //
 // Returns:
 //   - bool: True if ToolUses slice is non-empty
-func (m *Message) HasToolUses() bool {
+func (m *Message) UsesTools() bool {
 	return len(m.ToolUses) > 0
 }
 

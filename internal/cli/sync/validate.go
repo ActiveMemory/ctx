@@ -48,12 +48,12 @@ func checkPackageFiles(ctx *context.Context) []Action {
 			if !hasDepsDoc {
 				actions = append(actions, Action{
 					Type: "DEPS",
-					File: "ARCHITECTURE.md",
+					File: config.FileArchitecture,
 					Description: fmt.Sprintf(
 						"Found %s (%s) but no dependency documentation", file, desc,
 					),
 					Suggestion: "Consider documenting key dependencies " +
-						"in ARCHITECTURE.md or create DEPENDENCIES.md",
+						"in " + config.FileArchitecture + " or create " + config.FileDependency,
 				})
 			}
 		}
@@ -93,11 +93,11 @@ func checkConfigFiles(ctx *context.Context) []Action {
 			if convContent == "" || !strings.Contains(convContent, keyword) {
 				actions = append(actions, Action{
 					Type: "CONFIG",
-					File: "CONVENTIONS.md",
+					File: config.FileConvention,
 					Description: fmt.Sprintf(
 						"Found %s but %s not documented", matches[0], cfg.Topic,
 					),
-					Suggestion: fmt.Sprintf("Document %s in CONVENTIONS.md", cfg.Topic),
+					Suggestion: fmt.Sprintf("Document %s in %s", cfg.Topic, config.FileConvention),
 				})
 			}
 		}
@@ -167,12 +167,12 @@ func checkNewDirectories(ctx *context.Context) []Action {
 		if isImportant && !strings.Contains(archContent, name) {
 			actions = append(actions, Action{
 				Type: "NEW_DIR",
-				File: "ARCHITECTURE.md",
+				File: config.FileArchitecture,
 				Description: fmt.Sprintf(
 					"Directory '%s/' exists but not documented", name,
 				),
 				Suggestion: fmt.Sprintf(
-					"Add '%s/' to ARCHITECTURE.md with description", name,
+					"Add '%s/' to %s with description", name, config.FileArchitecture,
 				),
 			})
 		}

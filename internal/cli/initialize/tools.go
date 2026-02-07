@@ -35,7 +35,7 @@ func createTools(cmd *cobra.Command, contextDir string, force bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	toolsDir := filepath.Join(contextDir, config.DirTools)
-	if err := os.MkdirAll(toolsDir, 0755); err != nil {
+	if err := os.MkdirAll(toolsDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", toolsDir, err)
 	}
 
@@ -57,7 +57,7 @@ func createTools(cmd *cobra.Command, contextDir string, force bool) error {
 			return fmt.Errorf("failed to read tool %s: %w", name, err)
 		}
 
-		if err := os.WriteFile(targetPath, content, 0755); err != nil {
+		if err := os.WriteFile(targetPath, content, config.PermExec); err != nil {
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
 

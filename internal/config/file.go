@@ -6,6 +6,14 @@
 
 package config
 
+// File permission constants.
+const (
+	// PermFile is the standard permission for regular files (owner rw, others r).
+	PermFile = 0644
+	// PermExec is the standard permission for directories and executable files.
+	PermExec = 0755
+)
+
 // Runtime configuration constants.
 const (
 	// FileContextRC is the optional runtime configuration file.

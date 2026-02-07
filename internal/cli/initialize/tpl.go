@@ -14,6 +14,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
@@ -37,7 +38,7 @@ func createEntryTemplates(
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	templatesDir := filepath.Join(contextDir, "templates")
-	if err := os.MkdirAll(templatesDir, 0755); err != nil {
+	if err := os.MkdirAll(templatesDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", templatesDir, err)
 	}
 
@@ -61,7 +62,7 @@ func createEntryTemplates(
 			return fmt.Errorf("failed to read entry template %s: %w", name, err)
 		}
 
-		if err := os.WriteFile(targetPath, content, 0644); err != nil {
+		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
 

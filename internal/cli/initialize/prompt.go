@@ -49,12 +49,12 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	var templateContent []byte
 	var err error
 	if ralph {
-		templateContent, err = tpl.RalphTemplate("PROMPT.md")
+		templateContent, err = tpl.RalphTemplate(config.FilePromptMd)
 		if err != nil {
 			return fmt.Errorf("failed to read ralph PROMPT.md template: %w", err)
 		}
 	} else {
-		templateContent, err = tpl.Template("PROMPT.md")
+		templateContent, err = tpl.Template(config.FilePromptMd)
 		if err != nil {
 			return fmt.Errorf("failed to read PROMPT.md template: %w", err)
 		}
@@ -67,7 +67,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if !fileExists {
 		// File doesn't exist - create it
 		if err := os.WriteFile(
-			config.FilePromptMd, templateContent, 0644,
+			config.FilePromptMd, templateContent, config.PermFile,
 		); err != nil {
 			return fmt.Errorf("failed to write %s: %w", config.FilePromptMd, err)
 		}
@@ -121,7 +121,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	// Back up existing file
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", config.FilePromptMd, timestamp)
-	if err := os.WriteFile(backupName, existingContent, 0644); err != nil {
+	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
 	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
@@ -141,7 +141,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	}
 
 	if err := os.WriteFile(
-		config.FilePromptMd, []byte(mergedContent), 0644); err != nil {
+		config.FilePromptMd, []byte(mergedContent), config.PermFile); err != nil {
 		return fmt.Errorf(
 			"failed to write merged %s: %w", config.FilePromptMd, err)
 	}
@@ -195,13 +195,13 @@ func updatePromptSection(
 	// Back up before updating
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", config.FilePromptMd, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
 	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
 
 	if err := os.WriteFile(
-		config.FilePromptMd, []byte(newContent), 0644,
+		config.FilePromptMd, []byte(newContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to update %s: %w", config.FilePromptMd, err)
 	}

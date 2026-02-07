@@ -153,13 +153,13 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 
 	// Create output directory structure
 	docsDir := filepath.Join(output, "docs")
-	if err := os.MkdirAll(docsDir, 0755); err != nil {
+	if err := os.MkdirAll(docsDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
 
 	// Write README
 	readmePath := filepath.Join(output, "README.md")
-	if err := os.WriteFile(readmePath, []byte(generateSiteReadme(journalDir)), 0644); err != nil {
+	if err := os.WriteFile(readmePath, []byte(generateSiteReadme(journalDir)), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write README.md: %w", err)
 	}
 
@@ -177,14 +177,14 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 		// Normalize source file for readability
 		normalized := softWrapContent(mergeConsecutiveTurns(consolidateToolRuns(cleanToolOutputJSON(stripSystemReminders(string(content))))))
 		if normalized != string(content) {
-			if err := os.WriteFile(src, []byte(normalized), 0644); err != nil {
+			if err := os.WriteFile(src, []byte(normalized), config.PermFile); err != nil {
 				cmd.PrintErrf("  ! failed to normalize %s: %v\n", entry.Filename, err)
 			}
 		}
 
 		// Generate site copy with markdown fixes
 		siteContent := normalizeContent(injectSourceLink(normalized, src))
-		if err := os.WriteFile(dst, []byte(siteContent), 0644); err != nil {
+		if err := os.WriteFile(dst, []byte(siteContent), config.PermFile); err != nil {
 			cmd.PrintErrf("  ! failed to write %s: %v\n", entry.Filename, err)
 			continue
 		}
@@ -193,7 +193,7 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 	// Generate index.md
 	indexContent := generateIndex(entries)
 	indexPath := filepath.Join(docsDir, "index.md")
-	if err := os.WriteFile(indexPath, []byte(indexContent), 0644); err != nil {
+	if err := os.WriteFile(indexPath, []byte(indexContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write index.md: %w", err)
 	}
 
@@ -210,13 +210,13 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 
 	if len(topics) > 0 {
 		topicsDir := filepath.Join(docsDir, "topics")
-		if err := os.MkdirAll(topicsDir, 0755); err != nil {
+		if err := os.MkdirAll(topicsDir, config.PermExec); err != nil {
 			return fmt.Errorf("failed to create topics directory: %w", err)
 		}
 
 		// Write topics index
 		topicsIndexContent := generateTopicsIndex(topics)
-		if err := os.WriteFile(filepath.Join(topicsDir, "index.md"), []byte(topicsIndexContent), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(topicsDir, "index.md"), []byte(topicsIndexContent), config.PermFile); err != nil {
 			return fmt.Errorf("failed to write topics/index.md: %w", err)
 		}
 
@@ -226,7 +226,7 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 				continue
 			}
 			pageContent := generateTopicPage(t)
-			if err := os.WriteFile(filepath.Join(topicsDir, t.Name+".md"), []byte(pageContent), 0644); err != nil {
+			if err := os.WriteFile(filepath.Join(topicsDir, t.Name+".md"), []byte(pageContent), config.PermFile); err != nil {
 				cmd.PrintErrf("  ! failed to write topics/%s.md: %v\n", t.Name, err)
 			}
 		}
@@ -245,12 +245,12 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 
 	if len(keyFiles) > 0 {
 		filesDir := filepath.Join(docsDir, "files")
-		if err := os.MkdirAll(filesDir, 0755); err != nil {
+		if err := os.MkdirAll(filesDir, config.PermExec); err != nil {
 			return fmt.Errorf("failed to create files directory: %w", err)
 		}
 
 		filesIndexContent := generateKeyFilesIndex(keyFiles)
-		if err := os.WriteFile(filepath.Join(filesDir, "index.md"), []byte(filesIndexContent), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(filesDir, "index.md"), []byte(filesIndexContent), config.PermFile); err != nil {
 			return fmt.Errorf("failed to write files/index.md: %w", err)
 		}
 
@@ -260,7 +260,7 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 			}
 			pageContent := generateKeyFilePage(kf)
 			slug := keyFileSlug(kf.Path)
-			if err := os.WriteFile(filepath.Join(filesDir, slug+".md"), []byte(pageContent), 0644); err != nil {
+			if err := os.WriteFile(filepath.Join(filesDir, slug+".md"), []byte(pageContent), config.PermFile); err != nil {
 				cmd.PrintErrf("  ! failed to write files/%s.md: %v\n", slug, err)
 			}
 		}
@@ -279,18 +279,18 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 
 	if len(sessionTypes) > 0 {
 		typesDir := filepath.Join(docsDir, "types")
-		if err := os.MkdirAll(typesDir, 0755); err != nil {
+		if err := os.MkdirAll(typesDir, config.PermExec); err != nil {
 			return fmt.Errorf("failed to create types directory: %w", err)
 		}
 
 		typesIndexContent := generateTypesIndex(sessionTypes)
-		if err := os.WriteFile(filepath.Join(typesDir, "index.md"), []byte(typesIndexContent), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(typesDir, "index.md"), []byte(typesIndexContent), config.PermFile); err != nil {
 			return fmt.Errorf("failed to write types/index.md: %w", err)
 		}
 
 		for _, st := range sessionTypes {
 			pageContent := generateTypePage(st)
-			if err := os.WriteFile(filepath.Join(typesDir, st.Name+".md"), []byte(pageContent), 0644); err != nil {
+			if err := os.WriteFile(filepath.Join(typesDir, st.Name+".md"), []byte(pageContent), config.PermFile); err != nil {
 				cmd.PrintErrf("  ! failed to write types/%s.md: %v\n", st.Name, err)
 			}
 		}
@@ -299,7 +299,7 @@ func runJournalSite(cmd *cobra.Command, output string, build, serve bool) error 
 	// Generate zensical.toml
 	tomlContent := generateZensicalToml(entries, topics, keyFiles, sessionTypes)
 	tomlPath := filepath.Join(output, "zensical.toml")
-	if err := os.WriteFile(tomlPath, []byte(tomlContent), 0644); err != nil {
+	if err := os.WriteFile(tomlPath, []byte(tomlContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write zensical.toml: %w", err)
 	}
 
@@ -555,7 +555,7 @@ func injectSourceLink(content, sourcePath string) string {
 	if err != nil {
 		absPath = sourcePath
 	}
-	relPath := ".context/journal/" + filepath.Base(absPath)
+	relPath := filepath.Join(".context", "journal", filepath.Base(absPath))
 	link := fmt.Sprintf(`*[View source](file://%s) · <code>%s</code>*`+
 		` <button onclick="navigator.clipboard.writeText('%s')" title="Copy path"`+
 		` style="cursor:pointer;border:none;background:none;font-size:0.8em;vertical-align:middle">`+

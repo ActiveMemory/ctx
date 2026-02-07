@@ -8,6 +8,8 @@ package loop
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx loop" command for generating Ralph loop scripts.
@@ -58,7 +60,7 @@ Examples:
 	}
 
 	cmd.Flags().StringVarP(&promptFile,
-		"prompt", "p", "PROMPT.md", "Prompt file to use",
+		"prompt", "p", config.FilePromptMd, "Prompt file to use",
 	)
 	cmd.Flags().StringVarP(
 		&tool, "tool", "t", "claude", "AI tool: claude, aider, or generic",

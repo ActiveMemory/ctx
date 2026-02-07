@@ -122,7 +122,7 @@ func compactTasks(
 
 		if len(blocksToArchive) > 0 {
 			archiveDir := filepath.Join(rc.ContextDir(), "archive")
-			if err := os.MkdirAll(archiveDir, 0755); err == nil {
+			if err := os.MkdirAll(archiveDir, config.PermExec); err == nil {
 				archiveFile := filepath.Join(
 					archiveDir,
 					fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
@@ -134,7 +134,7 @@ func compactTasks(
 					archiveContent += block.BlockContent() + "\n\n"
 				}
 				if err := os.WriteFile(
-					archiveFile, []byte(archiveContent), 0644,
+					archiveFile, []byte(archiveContent), config.PermFile,
 				); err == nil {
 					cmd.Printf(
 						"%s Archived %d tasks to %s (older than %d days)\n", green("✓"),
@@ -149,7 +149,7 @@ func compactTasks(
 	newContent := strings.Join(newLines, config.NewlineLF)
 	if newContent != content {
 		if err := os.WriteFile(
-			tasksFile.Path, []byte(newContent), 0644,
+			tasksFile.Path, []byte(newContent), config.PermFile,
 		); err != nil {
 			return 0, err
 		}

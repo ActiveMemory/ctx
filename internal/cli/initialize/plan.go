@@ -42,7 +42,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Get template content
-	templateContent, err := tpl.Template("IMPLEMENTATION_PLAN.md")
+	templateContent, err := tpl.Template(config.FileImplementationPlan)
 	if err != nil {
 		return fmt.Errorf(
 			"failed to read IMPLEMENTATION_PLAN.md template: %w", err)
@@ -55,7 +55,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	if !fileExists {
 		// File doesn't exist - create it
 		if err := os.WriteFile(
-			config.FileImplementationPlan, templateContent, 0644,
+			config.FileImplementationPlan, templateContent, config.PermFile,
 		); err != nil {
 			return fmt.Errorf(
 				"failed to write %s: %w", config.FileImplementationPlan, err)
@@ -109,7 +109,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf(
 		"%s.%d.bak", config.FileImplementationPlan, timestamp)
-	if err := os.WriteFile(backupName, existingContent, 0644); err != nil {
+	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
 	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
@@ -129,7 +129,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	}
 
 	if err := os.WriteFile(
-		config.FileImplementationPlan, []byte(mergedContent), 0644); err != nil {
+		config.FileImplementationPlan, []byte(mergedContent), config.PermFile); err != nil {
 		return fmt.Errorf(
 			"failed to write merged %s: %w", config.FileImplementationPlan, err)
 	}
@@ -184,13 +184,13 @@ func updatePlanSection(
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf(
 		"%s.%d.bak", config.FileImplementationPlan, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
 	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
 
 	if err := os.WriteFile(
-		config.FileImplementationPlan, []byte(newContent), 0644,
+		config.FileImplementationPlan, []byte(newContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf(
 			"failed to update %s: %w", config.FileImplementationPlan, err)
