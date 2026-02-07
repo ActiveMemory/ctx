@@ -1,94 +1,118 @@
 # Learnings
 
 <!-- INDEX:START -->
-| Date | Learning |
-|------|--------|
-| 2026-02-07 | Agent ignores repeated hook output (repetition fatigue) |
-| 2026-02-06 | PROMPT.md deleted — was stale project briefing, not a Ralph loop prompt |
-| 2026-02-05 | Use $CLAUDE_PROJECT_DIR in hook paths |
-| 2026-02-04 | JSONL session files are append-only |
-| 2026-02-04 | Most external skill files are redundant with Claude's system prompt |
+| Date       | Learning                                                                                           |
+|------------|----------------------------------------------------------------------------------------------------|
+| 2026-02-07 | Agent ignores repeated hook output (repetition fatigue)                                            |
+| 2026-02-06 | PROMPT.md deleted — was stale project briefing, not a Ralph loop prompt                            |
+| 2026-02-05 | Use $CLAUDE_PROJECT_DIR in hook paths                                                              |
+| 2026-02-04 | JSONL session files are append-only                                                                |
+| 2026-02-04 | Most external skill files are redundant with Claude's system prompt                                |
 | 2026-02-04 | Skills that restate or contradict Claude Code's built-in system prompt create tension, not clarity |
-| 2026-02-04 | Skill files that suppress AI judgment are jailbreak patterns, not productivity tools |
-| 2026-02-03 | User input often has inline code fences that break markdown rendering |
-| 2026-02-03 | Claude Code injects system-reminder tags into tool results, breaking markdown export |
-| 2026-02-03 | Claude Code subagent sessions share parent sessionId |
-| 2026-02-03 | Claude Code JSONL format changed: slug field removed in v2.1.29+ |
-| 2026-01-30 | Say 'project conventions' not 'idiomatic X' |
-| 2026-01-29 | Documentation audits require verification against actual standards |
-| 2026-01-28 | Required flags now enforced for learnings |
-| 2026-01-28 | Claude Code Hooks Receive JSON via Stdin |
-| 2026-01-28 | Changelogs vs Blogs serve different audiences |
-| 2026-01-28 | IDE is already the UI |
-| 2026-01-28 | Subtasks complete does not mean parent task complete |
-| 2026-01-28 | AI session JSONL formats are not standardized |
-| 2026-01-27 | Always Complete Decision Record Sections |
-| 2026-01-27 | Slash Commands Require Matching Permissions |
-| 2026-01-26 | Go json.Marshal Escapes Shell Characters |
-| 2026-01-26 | Claude Code Hook Key Names |
-| 2026-01-25 | defer os.Chdir Fails errcheck Linter |
-| 2026-01-25 | golangci-lint Go Version Mismatch in CI |
-| 2026-01-25 | CI Tests Need CTX_SKIP_PATH_CHECK |
-| 2026-01-25 | AGENTS.md Is Not Auto-Loaded |
-| 2026-01-25 | Hook Regex Can Overfit |
-| 2026-01-25 | Autonomous Mode Creates Technical Debt |
-| 2026-01-23 | ctx agent vs Manual File Reading Trade-offs |
-| 2026-01-23 | Claude Code Skills Format |
-| 2026-01-23 | Infer Intent on "Do You Remember?" Questions |
-| 2026-01-23 | Always Use ctx from PATH |
-| 2026-01-21 | Exit Criteria Must Include Verification |
-| 2026-01-21 | Orchestrator vs Agent Tasks Must Be Separate |
-| 2026-01-21 | One Templates Directory, Not Two |
-| 2026-01-21 | Hooks Should Use PATH, Not Hardcoded Paths |
-| 2026-01-20 | ctx and Ralph Loop Are Separate Systems |
-| 2026-01-20 | .context/ Is NOT a Claude Code Primitive |
-| 2026-01-20 | SessionEnd Hook Catches Ctrl+C |
-| 2026-01-20 | Session Filename Must Include Time |
-| 2026-01-20 | Two Tiers of Persistence |
-| 2026-01-20 | Auto-Load Works, Auto-Save Was Missing |
-| 2026-01-20 | Always Backup Before Modifying User Files |
-| 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
+| 2026-02-04 | Skill files that suppress AI judgment are jailbreak patterns, not productivity tools               |
+| 2026-02-03 | User input often has inline code fences that break markdown rendering                              |
+| 2026-02-03 | Claude Code injects system-reminder tags into tool results, breaking markdown export               |
+| 2026-02-03 | Claude Code subagent sessions share parent sessionId                                               |
+| 2026-02-03 | Claude Code JSONL format changed: slug field removed in v2.1.29+                                   |
+| 2026-01-30 | Say 'project conventions' not 'idiomatic X'                                                        |
+| 2026-01-29 | Documentation audits require verification against actual standards                                 |
+| 2026-01-28 | Required flags now enforced for learnings                                                          |
+| 2026-01-28 | Claude Code Hooks Receive JSON via Stdin                                                           |
+| 2026-01-28 | Changelogs vs Blogs serve different audiences                                                      |
+| 2026-01-28 | IDE is already the UI                                                                              |
+| 2026-01-28 | Subtasks complete does not mean parent task complete                                               |
+| 2026-01-28 | AI session JSONL formats are not standardized                                                      |
+| 2026-01-27 | Always Complete Decision Record Sections                                                           |
+| 2026-01-27 | Slash Commands Require Matching Permissions                                                        |
+| 2026-01-26 | Go json.Marshal Escapes Shell Characters                                                           |
+| 2026-01-26 | Claude Code Hook Key Names                                                                         |
+| 2026-01-25 | defer os.Chdir Fails errcheck Linter                                                               |
+| 2026-01-25 | golangci-lint Go Version Mismatch in CI                                                            |
+| 2026-01-25 | CI Tests Need CTX_SKIP_PATH_CHECK                                                                  |
+| 2026-01-25 | AGENTS.md Is Not Auto-Loaded                                                                       |
+| 2026-01-25 | Hook Regex Can Overfit                                                                             |
+| 2026-01-25 | Autonomous Mode Creates Technical Debt                                                             |
+| 2026-01-23 | ctx agent vs Manual File Reading Trade-offs                                                        |
+| 2026-01-23 | Claude Code Skills Format                                                                          |
+| 2026-01-23 | Infer Intent on "Do You Remember?" Questions                                                       |
+| 2026-01-23 | Always Use ctx from PATH                                                                           |
+| 2026-01-21 | Exit Criteria Must Include Verification                                                            |
+| 2026-01-21 | Orchestrator vs Agent Tasks Must Be Separate                                                       |
+| 2026-01-21 | One Templates Directory, Not Two                                                                   |
+| 2026-01-21 | Hooks Should Use PATH, Not Hardcoded Paths                                                         |
+| 2026-01-20 | ctx and Ralph Loop Are Separate Systems                                                            |
+| 2026-01-20 | .context/ Is NOT a Claude Code Primitive                                                           |
+| 2026-01-20 | SessionEnd Hook Catches Ctrl+C                                                                     |
+| 2026-01-20 | Session Filename Must Include Time                                                                 |
+| 2026-01-20 | Two Tiers of Persistence                                                                           |
+| 2026-01-20 | Auto-Load Works, Auto-Save Was Missing                                                             |
+| 2026-01-20 | Always Backup Before Modifying User Files                                                          |
+| 2026-01-19 | CGO Must Be Disabled for ARM64 Linux                                                               |
 <!-- INDEX:END -->
 
 ---
 
 ## [2026-02-07-014920] Agent ignores repeated hook output (repetition fatigue)
 
-**Context**: PreToolUse hook ran ctx agent on every tool use, injecting the same context packet repeatedly. Agent tuned it out and didn't follow conventions.
+**Context**: PreToolUse hook ran ctx agent on every tool use, injecting the same
+context packet repeatedly. Agent tuned it out and didn't follow conventions.
 
-**Lesson**: Repeated injection causes the agent to ignore the output. A cooldown tombstone (--session $PPID --cooldown 10m) emits once per window. A readback instruction (confirm to user you read context) creates a behavioral gate harder to skip than silent injection.
+**Lesson**: Repeated injection causes the agent to ignore the output. A cooldown 
+tombstone (--session $PPID --cooldown 10m) emits once per window. A readback 
+instruction (confirm to user you read context) creates a behavioral gate harder 
+to skip than silent injection.
 
-**Application**: Use --session $PPID in hook commands to enable cooldown. Pair context injection with a readback instruction so the agent must acknowledge before starting work.
+**Application**: Use --session $PPID in hook commands to enable cooldown. Pair 
+context injection with a readback instruction so the agent must acknowledge 
+before starting work.
 
 ---
 
 ## [2026-02-06-200000] PROMPT.md deleted — was stale project briefing, not a Ralph loop prompt
 
-**Context**: During consolidation, reviewed PROMPT.md and found it had drifted into a stale project briefing — duplicating CLAUDE.md (session start/end rituals, build commands, context file table) and containing outdated Phase 2 monitor architecture diagrams for work that was already completed differently.
+**Context**: During consolidation, reviewed PROMPT.md and found it had drifted 
+into a stale project briefing — duplicating CLAUDE.md (session start/end rituals, 
+build commands, context file table) and containing outdated Phase 2 monitor 
+architecture diagrams for work that was already completed differently.
 
-**Lesson**: PROMPT.md's actual purpose is as a Ralph loop iteration prompt: a focused "what to do next and how to know when done" document consumed by `ctx loop` between iterations. CLAUDE.md serves a different role: always-loaded project operating manual for Claude Code. When PROMPT.md drifts into duplicating CLAUDE.md, it becomes stale weight that misleads future sessions.
+**Lesson**: PROMPT.md's actual purpose is as a Ralph loop iteration prompt: a 
+focused "what to do next and how to know when done" document consumed by 
+`ctx loop` between iterations. CLAUDE.md serves a different role: always-loaded 
+project operating manual for Claude Code. When PROMPT.md drifts into duplicating 
+CLAUDE.md, it becomes stale weight that misleads future sessions.
 
-**Application**: Re-introduce PROMPT.md only when actively using Ralph loops. Keep it to: iteration goal + completion signal + current phase focus. Project context (build commands, file tables, session rituals) belongs in CLAUDE.md and .context/ files, not PROMPT.md.
+**Application**: Re-introduce PROMPT.md only when actively using Ralph loops. 
+Keep it to: iteration goal + completion signal + current phase focus. Project 
+context (build commands, file tables, session rituals) belongs in CLAUDE.md and 
+.context/ files, not PROMPT.md.
 
 ---
 
 ## [2026-02-05-174304] Use $CLAUDE_PROJECT_DIR in hook paths
 
-**Context**: Migrating hooks after username rename (parallels→jose) broke all absolute paths in settings.local.json
+**Context**: Migrating hooks after username rename (parallels→jose) broke all 
+absolute paths in settings.local.json
 
-**Lesson**: Claude Code provides $CLAUDE_PROJECT_DIR env var for hook commands — resolves to project root at runtime, survives renames
+**Lesson**: Claude Code provides $CLAUDE_PROJECT_DIR env var for hook commands — 
+resolves to project root at runtime, survives renames
 
-**Application**: Always use "$CLAUDE_PROJECT_DIR"/.claude/hooks/... in settings.local.json, never hardcode /home/user/...
+**Application**: Always use "$CLAUDE_PROJECT_DIR"/.claude/hooks/... in 
+settings.local.json, never hardcode /home/user/...
 
 ---
 
 ## [2026-02-04-230943] JSONL session files are append-only
 
-**Context**: Built context-watch.sh monitor; it showed 90% after compaction while /context showed 16%
+**Context**: Built context-watch.sh monitor; it showed 90% after compaction 
+while /context showed 16%
 
-**Lesson**: Claude Code JSONL files never shrink after compaction. Any monitoring tool based on file size will overreport post-compaction. The /context command shows actual tokens sent to the model.
+**Lesson**: Claude Code JSONL files never shrink after compaction. Any monitoring 
+tool based on file size will overreport post-compaction. The /context command 
+shows actual tokens sent to the model.
 
-**Application**: Per ctx workflow, sessions should end before compaction fires — so JSONL size is a valid time-to-wrap-up signal. Don't try to make context-watch.sh compaction-aware.
+**Application**: Per ctx workflow, sessions should end before compaction fires — 
+so JSONL size is a valid time-to-wrap-up signal. Don't try to make 
+context-watch.sh compaction-aware.
 
 ---
 
@@ -96,19 +120,27 @@
 
 **Context**: Reviewed ~30 external skill/prompt files during systematic skill audit
 
-**Lesson**: Only ~20% had salvageable content — and even those yielded just a few heuristics each. The signal is in the knowledge delta, not the word count.
+**Lesson**: Only ~20% had salvageable content — and even those yielded just a few 
+heuristics each. The signal is in the knowledge delta, not the word count.
 
-**Application**: When evaluating new skills, apply E/A/R classification ruthlessly. Default to delete. Only keep content an expert would say took years to learn.
+**Application**: When evaluating new skills, apply E/A/R classification ruthlessly. 
+Default to delete. Only keep content an expert would say took years to learn.
 
 ---
 
 ## [2026-02-04-193920] Skills that restate or contradict Claude Code's built-in system prompt create tension, not clarity
 
-**Context**: Reviewing entropy.txt skill that duplicated system prompt guidance about code minimalism
+**Context**: Reviewing entropy.txt skill that duplicated system prompt guidance 
+about code minimalism
 
-**Lesson**: Skills that conflict with system prompts cause unpredictable behavior — the AI has to reconcile contradictory instructions. The system prompt already covers: avoid over-engineering, don't add unnecessary features, prefer simplicity. Skills should complement the system prompt, not compete with it.
+**Lesson**: Skills that conflict with system prompts cause unpredictable behavior — 
+the AI has to reconcile contradictory instructions. The system prompt already 
+covers: avoid over-engineering, don't add unnecessary features, prefer 
+simplicity. Skills should complement the system prompt, not compete with it.
 
-**Application**: When evaluating or writing skills, first check Claude Code's system prompt defaults. Only create skills for guidance the platform does NOT already provide.
+**Application**: When evaluating or writing skills, first check Claude Code's 
+system prompt defaults. Only create skills for guidance the platform does NOT 
+already provide.
 
 ---
 
@@ -116,75 +148,120 @@
 
 **Context**: Reviewing power.txt skill that forced skill invocation on every message
 
-**Lesson**: Red flags: <EXTREMELY-IMPORTANT> urgency tags, 'you cannot rationalize' overrides, tables that label hesitation as wrong, absurdly low thresholds (1%). The fix for 'AI forgets skills' is better skill descriptions, not overriding reasoning. Discard these entirely — nothing is salvageable.
+**Lesson**: Red flags: <EXTREMELY-IMPORTANT> urgency tags, 'you cannot rationalize' 
+overrides, tables that label hesitation as wrong, absurdly low thresholds (1%). 
+The fix for 'AI forgets skills' is better skill descriptions, not overriding 
+reasoning. Discard these entirely — nothing is salvageable.
 
-**Application**: When evaluating skills, check for judgment-suppression patterns before assessing content.
+**Application**: When evaluating skills, check for judgment-suppression 
+patterns before assessing content.
 
 ---
 
 ## [2026-02-03-160000] User input often has inline code fences that break markdown rendering
 
-**Context**: Journal export showed broken code blocks where user typed `text: ```code` on a single line without proper newlines before/after the code fence.
+**Context**: Journal export showed broken code blocks where user typed 
+`text: ```code` on a single line without proper newlines before/after the 
+code fence.
 
-**Lesson**: Users naturally type inline code fences like `This is the error: ```Error: foo```. Markdown requires code fences to be on their own lines with blank lines separating them. You can't force users to format correctly, but you can normalize on export.
+**Lesson**: Users naturally type inline code fences like `This is the error: 
+```Error: foo```. Markdown requires code fences to be on their own lines with 
+blank lines separating them. You can't force users to format correctly, 
+but you can normalize on export.
 
-**Application**: Use regex to detect fences preceded/followed by non-whitespace on same line. Insert `\n\n` to ensure proper spacing. Apply only to user messages (assistant output is already well-formatted).
+**Application**: Use regex to detect fences preceded/followed by non-whitespace 
+on same line. Insert `\n\n` to ensure proper spacing. Apply only to user 
+messages (assistant output is already well-formatted).
 
 ---
 
 ## [2026-02-03-154500] Claude Code injects system-reminder tags into tool results, breaking markdown export
 
-**Context**: Journal site had rendering errors starting from "Tool Output" sections. A closing triple-backtick appeared orphaned. Investigation traced it to `<system-reminder>` tags in the JSONL source - 32 occurrences in one session file.
+**Context**: Journal site had rendering errors starting from "Tool Output" 
+sections. A closing triple-backtick appeared orphaned. Investigation traced 
+it to `<system-reminder>` tags in the JSONL source - 32 occurrences in one 
+session file.
 
-**Lesson**: Claude Code injects `<system-reminder>...</system-reminder>` blocks into tool result content before storing in JSONL. When exported to markdown and wrapped in code fences, these XML-like tags break rendering - some markdown parsers treat them as HTML, causing the closing fence to appear as orphaned literal text instead of terminating the code block.
+**Lesson**: Claude Code injects `<system-reminder>...</system-reminder>` blocks 
+into tool result content before storing in JSONL. When exported to markdown 
+and wrapped in code fences, these XML-like tags break rendering - some 
+markdown parsers treat them as HTML, causing the closing fence to appear as 
+orphaned literal text instead of terminating the code block.
 
-**Application**: Extract system reminders from tool result content before wrapping in code fences. Render them as markdown (`**System Reminder**: ...`) outside the fence. This preserves the information (useful for debugging Claude Code behavior) while fixing the rendering issue.
+**Application**: Extract system reminders from tool result content before 
+wrapping in code fences. Render them as markdown (`**System Reminder**: ...`) 
+outside the fence. This preserves the information (useful for debugging Claude 
+Code behavior) while fixing the rendering issue.
 
 ---
 
 ## [2026-02-03-064236] Claude Code subagent sessions share parent sessionId
 
-**Context**: After fixing the slug issue, sessions still showed wrong content (SUGGESTION MODE instead of actual conversation). Investigation revealed subagent files in /subagents/ directories use the same sessionId as the parent.
+**Context**: After fixing the slug issue, sessions still showed wrong content 
+(SUGGESTION MODE instead of actual conversation). Investigation revealed 
+subagent files in /subagents/ directories use the same sessionId as the parent.
 
-**Lesson**: Subagent files (e.g., prompt_suggestion, compact) share the parent sessionId. When scanning directories, subagent sessions can appear 'newer' (later timestamp) and win during deduplication, causing main session content to be lost.
+**Lesson**: Subagent files (e.g., prompt_suggestion, compact) share the parent 
+sessionId. When scanning directories, subagent sessions can appear 'newer' 
+(later timestamp) and win during deduplication, causing main session content 
+to be lost.
 
-**Application**: Skip /subagents/ directories when scanning for sessions. Use filepath.SkipDir for efficiency. Subagent sessions have isSidechain:true and an agentId field.
+**Application**: Skip /subagents/ directories when scanning for sessions. 
+Use filepath.SkipDir for efficiency. Subagent sessions have isSidechain:true 
+and an agentId field.
 
 ---
 
 ## [2026-02-03-063337] Claude Code JSONL format changed: slug field removed in v2.1.29+
 
-**Context**: ctx recall export --all --force was skipping February 2026 sessions. Investigation revealed sessions like c9f12373 had 0 slug fields but 19 sessionId fields.
+**Context**: ctx recall export --all --force was skipping February 2026 sessions. 
+Investigation revealed sessions like c9f12373 had 0 slug fields but 19 
+sessionId fields.
 
-**Lesson**: Claude Code removed the 'slug' field from message records in newer versions. The parser's CanParse function required both sessionId AND slug, causing it to reject valid session files.
+**Lesson**: Claude Code removed the 'slug' field from message records in newer 
+versions. The parser's CanParse function required both sessionId AND slug, 
+causing it to reject valid session files.
 
-**Application**: When parsing Claude Code sessions, check for sessionId and valid type (user/assistant) instead of requiring slug. The slug may be available in sessions-index.json if needed.
+**Application**: When parsing Claude Code sessions, check for sessionId and 
+valid type (user/assistant) instead of requiring slug. The slug may be 
+available in sessions-index.json if needed.
 
 ---
 
 ## [2026-01-30-120009] Say 'project conventions' not 'idiomatic X'
 
-**Context**: When asking Claude to follow documentation style, saying 'idiomatic Go' triggered training priors (stdlib conventions) instead of project-specific standards.
+**Context**: When asking Claude to follow documentation style, saying 
+'idiomatic Go' triggered training priors (stdlib conventions) instead of 
+project-specific standards.
 
-**Lesson**: Use 'follow project conventions' or 'check AGENT_PLAYBOOK' rather than 'idiomatic [language]' to ensure Claude looks at project files first.
+**Lesson**: Use 'follow project conventions' or 'check AGENT_PLAYBOOK' rather 
+than 'idiomatic [language]' to ensure Claude looks at project files first.
 
-**Application**: In prompts requesting style alignment, reference project files explicitly rather than language-wide conventions.
+**Application**: In prompts requesting style alignment, reference project 
+files explicitly rather than language-wide conventions.
 
 ---
 
 ## [2026-01-29-164322] Documentation audits require verification against actual standards
 
-**Context**: Agent claimed 'no Go docstring issues found' but manual inspection revealed many functions missing Parameters/Returns sections. The agent only checked if comments existed, not if they followed the standard format.
+**Context**: Agent claimed 'no Go docstring issues found' but manual inspection 
+revealed many functions missing Parameters/Returns sections. The agent only 
+checked if comments existed, not if they followed the standard format.
 
-**Lesson**: When auditing documentation, compare against a known-good example first. Pattern-match for the COMPLETE standard (e.g., '// Parameters:' AND '// Returns:' sections), not just presence of any comment.
+**Lesson**: When auditing documentation, compare against a known-good example 
+first. Pattern-match for the COMPLETE standard (e.g., '// Parameters:' 
+AND '// Returns:' sections), not just presence of any comment.
 
-**Application**: Before declaring 'no issues', manually verify at least 5 random samples match the documented standard. Use grep patterns that detect missing sections, not just missing comments.
+**Application**: Before declaring 'no issues', manually verify at least 5 
+random samples match the documented standard. Use grep patterns that detect 
+missing sections, not just missing comments.
 
 ---
 
 ## [2026-01-28-191951] Required flags now enforced for learnings
 
-**Context**: Implemented ctx add learning flags to match decision's ADR (Architectural Decision Record) pattern
+**Context**: Implemented ctx add learning flags to match decision's ADR 
+(Architectural Decision Record) pattern
 
 **Lesson**: Structured entries with Context/Lesson/Application are more useful
 than one-liners

@@ -1,28 +1,28 @@
 # Decisions
 
 <!-- INDEX:START -->
-| Date | Decision |
-|------|--------|
-| 2026-02-06 | Drop ctx-journal-summarize skill (duplicates ctx-blog) |
-| 2026-02-04 | E/A/R classification as the standard for skill evaluation |
-| 2026-01-29 | Add quick reference index to DECISIONS.md |
-| 2026-01-28 | No custom UI - IDE is the interface |
-| 2026-01-28 | ctx recall is Claude-first |
-| 2026-01-28 | Tasks must include explicit deliverables, not just implementation steps |
-| 2026-01-28 | Use tool-agnostic Session type with tool-specific parsers for recall system |
+| Date       | Decision                                                                         |
+|------------|----------------------------------------------------------------------------------|
+| 2026-02-06 | Drop ctx-journal-summarize skill (duplicates ctx-blog)                           |
+| 2026-02-04 | E/A/R classification as the standard for skill evaluation                        |
+| 2026-01-29 | Add quick reference index to DECISIONS.md                                        |
+| 2026-01-28 | No custom UI - IDE is the interface                                              |
+| 2026-01-28 | ctx recall is Claude-first                                                       |
+| 2026-01-28 | Tasks must include explicit deliverables, not just implementation steps          |
+| 2026-01-28 | Use tool-agnostic Session type with tool-specific parsers for recall system      |
 | 2026-01-27 | Use reverse-chronological order (newest first) for DECISIONS.md and LEARNINGS.md |
-| 2026-01-25 | Removed AGENTS.md from project root |
-| 2026-01-25 | Keep CONSTITUTION Minimal |
-| 2026-01-25 | Centralize Constants with Semantic Prefixes |
-| 2026-01-21 | Separate Orchestrator Directive from Agent Tasks |
-| 2026-01-21 | Hooks Use ctx from PATH, Not Hardcoded Paths |
-| 2026-01-20 | Use SessionEnd Hook for Auto-Save |
-| 2026-01-20 | Handle CLAUDE.md Creation/Merge in ctx init |
-| 2026-01-20 | Auto-Save Before Compact |
-| 2026-01-20 | Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md |
-| 2026-01-20 | Two-Tier Context Persistence Model |
-| 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
-| 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
+| 2026-01-25 | Removed AGENTS.md from project root                                              |
+| 2026-01-25 | Keep CONSTITUTION Minimal                                                        |
+| 2026-01-25 | Centralize Constants with Semantic Prefixes                                      |
+| 2026-01-21 | Separate Orchestrator Directive from Agent Tasks                                 |
+| 2026-01-21 | Hooks Use ctx from PATH, Not Hardcoded Paths                                     |
+| 2026-01-20 | Use SessionEnd Hook for Auto-Save                                                |
+| 2026-01-20 | Handle CLAUDE.md Creation/Merge in ctx init                                      |
+| 2026-01-20 | Auto-Save Before Compact                                                         |
+| 2026-01-20 | Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md                              |
+| 2026-01-20 | Two-Tier Context Persistence Model                                               |
+| 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed)                            |
+| 2026-01-20 | Generic Core with Optional Claude Code Enhancements                              |
 <!-- INDEX:END -->
 
 ## [2026-02-06-181708] Drop ctx-journal-summarize skill (duplicates ctx-blog)

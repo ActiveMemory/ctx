@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 """Journal normalizer: metadata tables + idempotency marker.
 
 Deterministic pass only. Fence reconstruction is left to the AI skill.

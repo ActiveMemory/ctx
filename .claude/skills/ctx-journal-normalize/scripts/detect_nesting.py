@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+
+#   /    Context:                     https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
 """Detect files with nested code fences (fences inside open fences).
 
 Files with only flat (non-nested) fence pairs can be auto-verified.

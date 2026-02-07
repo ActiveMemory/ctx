@@ -11,13 +11,13 @@
 
 ## Context Files
 
-| File | Purpose |
-|------|---------|
-| `.context/CONSTITUTION.md` | Hard rules — NEVER violate |
-| `.context/TASKS.md` | Current work items |
-| `.context/DECISIONS.md` | Architectural decisions with rationale |
-| `.context/LEARNINGS.md` | Gotchas and lessons learned |
-| `.context/CONVENTIONS.md` | Code patterns and standards |
+| File                         | Purpose                                  |
+|------------------------------|------------------------------------------|
+| `.context/CONSTITUTION.md`   | Hard rules — NEVER violate               |
+| `.context/TASKS.md`          | Current work items                       |
+| `.context/DECISIONS.md`      | Architectural decisions with rationale   |
+| `.context/LEARNINGS.md`      | Gotchas and lessons learned              |
+| `.context/CONVENTIONS.md`    | Code patterns and standards              |
 | `.context/AGENT_PLAYBOOK.md` | How to persist context, session patterns |
 
 ## Working Style
@@ -31,12 +31,12 @@
 
 After completing meaningful work, capture what matters:
 
-| Trigger | Action |
-|---------|--------|
-| Completed a task | Mark done in TASKS.md, add learnings if any |
-| Made a decision | `ctx add decision "..."` |
-| Discovered a gotcha | `ctx add learning "..."` |
-| Significant code changes | Consider what's worth capturing |
+| Trigger                  | Action                                      |
+|--------------------------|---------------------------------------------|
+| Completed a task         | Mark done in TASKS.md, add learnings if any |
+| Made a decision          | `ctx add decision "..."`                    |
+| Discovered a gotcha      | `ctx add learning "..."`                    |
+| Significant code changes | Consider what's worth capturing             |
 
 Don't wait for the session to end — it may never come cleanly.
 

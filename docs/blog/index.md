@@ -17,7 +17,7 @@ Stories, insights, and lessons learned from building and using ctx.
 
 I had 20 skills. Most were well-intentioned stubs: a description, a command,
 and a wish for the best. Then I rewrote all of them in a single session.
-Seven lessons emerged: quality gates prevent premature execution, negative
+**Seven lessons emerged**: quality gates prevent premature execution, negative
 triggers are load-bearing, examples set boundaries better than rules, and
 skills are contracts, not instructions. The practical companion to the
 previous two skill design posts.

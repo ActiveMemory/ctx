@@ -111,7 +111,7 @@ top of each skill. Not process steps; pre-flight checks.
 The difference is dramatic: instead of shallow, reflexive execution, you get
 considered output.
 
-!!! tip "Standard Operation Procedure (SOP)"
+!!! tip "Readback"
     For the astute readers, the aviation parallel is intentional:
 
     Pilots do not skip the pre-flight checklist because they have flown before.
