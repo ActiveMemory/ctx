@@ -11,21 +11,18 @@ import "strings"
 // normalizeTargetSection ensures a section heading has a proper Markdown
 // format.
 //
-// If the section is empty, defaults to "## Next Up". If provided without
-// a heading prefix, prepends "## " to make it a level-2 heading.
+// Prepends "## " if the section string does not already start with "##".
+// Callers must not pass an empty string; the empty case is handled by
+// insertTask before this function is reached.
 //
 // Parameters:
-//   - section: Raw section name from user input
+//   - section: Raw section name from user input (non-empty)
 //
 // Returns:
 //   - string: Normalized section heading (e.g., "## Phase 1")
 func normalizeTargetSection(section string) string {
-	targetSection := section
-	if targetSection == "" {
-		return "## Next Up"
+	if !strings.HasPrefix(section, "##") {
+		return "## " + section
 	}
-	if !strings.HasPrefix(targetSection, "##") {
-		return "## " + targetSection
-	}
-	return targetSection
+	return section
 }

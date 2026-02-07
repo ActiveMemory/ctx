@@ -67,6 +67,11 @@ conventions for consistency.
 - **Changed defaults**: do examples in docs use old defaults?
 - **Skill templates changed**: do live versions in
   `.claude/skills/` match `internal/tpl/claude/skills/`?
+- **Architecture drift**: when packages are added, removed, or
+  renamed, or when dependency relationships change, update
+  `.context/ARCHITECTURE.md` (component map, dependency graph,
+  and file layout sections). `ctx drift` scans ARCHITECTURE.md
+  for dead backtick-path references.
 
 ## Self-Maintenance
 

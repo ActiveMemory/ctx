@@ -48,7 +48,6 @@ The following files are created:
   - CONVENTIONS.md   — Project patterns and standards
   - ARCHITECTURE.md  — System overview
   - GLOSSARY.md      — Domain terms and abbreviations
-  - DRIFT.md         — Staleness signals and update triggers
   - AGENT_PLAYBOOK.md — How AI agents should use this system
 
 Additionally, in the project root:

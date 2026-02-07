@@ -371,6 +371,89 @@ func TestAppendEntry(t *testing.T) {
 	})
 }
 
+// TestInsertTaskDefaultPlacement tests task insertion without --section.
+func TestInsertTaskDefaultPlacement(t *testing.T) {
+	t.Run("inserts before first unchecked task", func(t *testing.T) {
+		existing := []byte("# Tasks\n\n### Phase 1\n\n- [x] Done task\n- [ ] Pending task\n")
+		entry := "- [ ] New task\n"
+
+		result := AppendEntry(existing, entry, "task", "")
+		resultStr := string(result)
+
+		newIdx := strings.Index(resultStr, "New task")
+		pendingIdx := strings.Index(resultStr, "Pending task")
+		doneIdx := strings.Index(resultStr, "Done task")
+
+		if newIdx == -1 || pendingIdx == -1 {
+			t.Fatalf("tasks not found in result:\n%s", resultStr)
+		}
+		if newIdx >= pendingIdx {
+			t.Errorf("new task should appear before existing pending task, but new at %d, pending at %d", newIdx, pendingIdx)
+		}
+		if newIdx <= doneIdx {
+			t.Errorf("new task should appear after completed task, but new at %d, done at %d", newIdx, doneIdx)
+		}
+	})
+
+	t.Run("appends at end when all tasks checked", func(t *testing.T) {
+		existing := []byte("# Tasks\n\n- [x] Done one\n- [x] Done two\n")
+		entry := "- [ ] New task\n"
+
+		result := AppendEntry(existing, entry, "task", "")
+		resultStr := string(result)
+
+		newIdx := strings.Index(resultStr, "New task")
+		lastDoneIdx := strings.LastIndex(resultStr, "Done two")
+
+		if newIdx == -1 {
+			t.Fatalf("new task not found in result:\n%s", resultStr)
+		}
+		if newIdx <= lastDoneIdx {
+			t.Errorf("new task should appear after completed tasks, but new at %d, last done at %d", newIdx, lastDoneIdx)
+		}
+	})
+
+	t.Run("explicit section overrides auto-placement", func(t *testing.T) {
+		existing := []byte("# Tasks\n\n### Phase 1\n\n- [ ] Phase 1 task\n\n### Maintenance\n\n- [ ] Maint task\n")
+		entry := "- [ ] New maint task\n"
+
+		result := AppendEntry(existing, entry, "task", "Maintenance")
+		resultStr := string(result)
+
+		newIdx := strings.Index(resultStr, "New maint task")
+		maintHeaderIdx := strings.Index(resultStr, "### Maintenance")
+		maintTaskIdx := strings.Index(resultStr, "Maint task")
+
+		if newIdx == -1 {
+			t.Fatalf("new task not found in result:\n%s", resultStr)
+		}
+		if newIdx <= maintHeaderIdx {
+			t.Errorf("new task should appear after Maintenance header, but new at %d, header at %d", newIdx, maintHeaderIdx)
+		}
+		if newIdx >= maintTaskIdx {
+			t.Errorf("new task should appear before existing maint task, but new at %d, existing at %d", newIdx, maintTaskIdx)
+		}
+	})
+
+	t.Run("phased file without Next Up section", func(t *testing.T) {
+		existing := []byte("# Tasks\n\n### Phase 1\n\n- [x] Old done\n\n### Phase 2\n\n- [ ] Phase 2 pending\n")
+		entry := "- [ ] New task\n"
+
+		result := AppendEntry(existing, entry, "task", "")
+		resultStr := string(result)
+
+		newIdx := strings.Index(resultStr, "New task")
+		phase2Idx := strings.Index(resultStr, "Phase 2 pending")
+
+		if newIdx == -1 || phase2Idx == -1 {
+			t.Fatalf("tasks not found in result:\n%s", resultStr)
+		}
+		if newIdx >= phase2Idx {
+			t.Errorf("new task should appear before Phase 2 pending task, but new at %d, phase2 at %d", newIdx, phase2Idx)
+		}
+	})
+}
+
 // TestAddFromFile tests adding content from a file.
 func TestAddFromFile(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-add-file-test-*")

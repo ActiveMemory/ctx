@@ -67,12 +67,6 @@ func TestGetTemplate(t *testing.T) {
 			wantErr:     false,
 		},
 		{
-			name:        "DRIFT.md exists",
-			template:    "DRIFT.md",
-			wantContain: "Drift",
-			wantErr:     false,
-		},
-		{
 			name:        "CLAUDE.md exists",
 			template:    "CLAUDE.md",
 			wantContain: "Context",

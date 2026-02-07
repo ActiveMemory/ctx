@@ -81,43 +81,73 @@ func appendAtEnd(content, entry string) []byte {
 	return []byte(content + config.NewlineLF + entry)
 }
 
-// insertTask inserts a task entry after a section header in TASKS.md.
+// insertTask inserts a task entry into TASKS.md.
 //
-// Finds the target section (e.g., "## Next Up") and inserts the task
-// immediately after the header line. Falls back to appending at the end
-// if the section is not found.
+// When section is explicitly provided, inserts after that section header.
+// When section is empty (default), finds the first unchecked task and
+// inserts before it so the new task lands among existing pending work.
+// Falls back to appending at the end if neither is found.
 //
 // Parameters:
-//   - existingStr: Existing file content
 //   - entry: Formatted task entry to insert
-//   - headerSection: Target section name (e.g., "next", "backlog")
+//   - existingStr: Existing file content
+//   - section: Explicit section name, or empty for auto-placement
 //
 // Returns:
 //   - []byte: Modified content with task inserted
-func insertTask(existingStr, entry, headerSection string) []byte {
-	targetSectionHeader := normalizeTargetSection(headerSection)
-
-	// Find the section and insert after it
-	containsSectionHeader, idx := contains(existingStr, targetSectionHeader)
-	if !containsSectionHeader {
-		// Section not found: Append at the end.
-		if !endsWithNewline(existingStr) {
-			existingStr += config.NewlineLF
-		}
-		return []byte(existingStr + config.NewlineLF + entry)
+func insertTask(entry, existingStr, section string) []byte {
+	// Explicit section: honor it.
+	if section != "" {
+		return insertTaskAfterSection(entry, existingStr, section)
 	}
 
-	// Found section header. Find the end of the section header line
-	hasNewLine, lineEnd := containsNewLine(existingStr[idx:])
+	// Default: insert before the first unchecked task.
+	pendingIdx := strings.Index(existingStr, config.PrefixTaskUndone)
+	if pendingIdx != -1 {
+		return []byte(existingStr[:pendingIdx] + entry +
+			config.NewlineLF + existingStr[pendingIdx:])
+	}
+
+	// No unchecked tasks: append at the end.
+	if !endsWithNewline(existingStr) {
+		existingStr += config.NewlineLF
+	}
+	return []byte(existingStr + config.NewlineLF + entry)
+}
+
+// insertTaskAfterSection inserts a task after a named section header.
+//
+// Normalizes the section name to a markdown heading, finds it in the
+// content, and inserts the entry immediately after. Falls back to
+// appending at the end if the header is not found.
+//
+// Parameters:
+//   - entry: Formatted task entry to insert
+//   - content: Existing file content
+//   - section: Section name (e.g., "Phase 1", "Maintenance")
+//
+// Returns:
+//   - []byte: Modified content with task inserted
+func insertTaskAfterSection(entry, content, section string) []byte {
+	header := normalizeTargetSection(section)
+
+	found, idx := contains(content, header)
+	if !found {
+		if !endsWithNewline(content) {
+			content += config.NewlineLF
+		}
+		return []byte(content + config.NewlineLF + entry)
+	}
+
+	hasNewLine, lineEnd := containsNewLine(content[idx:])
 	if hasNewLine {
 		insertPoint := idx + lineEnd
-		insertPoint = skipNewline(existingStr, insertPoint)
-		return []byte(existingStr[:insertPoint] + config.NewlineLF +
-			entry + existingStr[insertPoint:])
+		insertPoint = skipNewline(content, insertPoint)
+		return []byte(content[:insertPoint] + config.NewlineLF +
+			entry + content[insertPoint:])
 	}
 
-	// If no newline; append to the end followed by a newline.
-	return []byte(existingStr + config.NewlineLF + entry)
+	return []byte(content + config.NewlineLF + entry)
 }
 
 // insertDecision inserts a decision entry before existing entries.

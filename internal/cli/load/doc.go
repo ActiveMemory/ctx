@@ -21,8 +21,7 @@
 //  5. DECISIONS.md - Architectural decisions with rationale
 //  6. LEARNINGS.md - Gotchas, tips, lessons learned
 //  7. GLOSSARY.md - Domain terminology
-//  8. DRIFT.md - Drift detection results
-//  9. AGENT_PLAYBOOK.md - AI-specific instructions
+//  8. AGENT_PLAYBOOK.md - AI-specific instructions
 //
 // # Token Budget
 //

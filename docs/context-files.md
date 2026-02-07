@@ -28,8 +28,7 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 | DECISIONS.md      | Architectural decisions with rationale | 5           |
 | LEARNINGS.md      | Lessons learned, gotchas, tips         | 6           |
 | GLOSSARY.md       | Domain terms and abbreviations         | 7           |
-| DRIFT.md          | Staleness signals and update triggers  | 8           |
-| AGENT_PLAYBOOK.md | Instructions for AI tools              | 9 (lowest)  |
+| AGENT_PLAYBOOK.md | Instructions for AI tools              | 8 (lowest)  |
 
 ## Read Order Rationale
 
@@ -55,10 +54,7 @@ The priority order follows a logical progression for AI tools:
 7. **GLOSSARY** — Reference material. Domain terms and abbreviations for
    lookup as needed.
 
-8. **DRIFT** — Staleness indicators. Lower priority since it's primarily
-   for maintenance workflows, not active development.
-
-9. **AGENT_PLAYBOOK** — Meta instructions last. How to use this context
+8. **AGENT_PLAYBOOK** — Meta instructions last. How to use this context
    system itself. Loaded last because the agent should understand the
    *content* (rules, tasks, patterns) before the *operating manual*.
 
@@ -408,55 +404,6 @@ What's in scope vs out of scope for this codebase.
 * Define project-specific meanings
 * Clarify potentially ambiguous terms
 * Include abbreviations used in code or docs
-
----
-
-## `DRIFT.md`
-
-**Purpose**: Define signals that the context is stale and needs updating.
-
-Used by `ctx drift` command to detect staleness.
-
-### Structure
-
-```markdown
-# Drift Detection
-
-## Automatic Checks
-
-These are checked by `ctx drift`:
-
-### Path References
-
-- [ ] All paths in ARCHITECTURE.md exist in filesystem
-- [ ] All paths in CONVENTIONS.md exist
-- [ ] All file references in DECISIONS.md are valid
-
-### Task References
-
-- [ ] All issues referenced in TASKS.md exist
-- [ ] No tasks older than 30 days without update
-
-### Constitution Violations
-
-- [ ] No secrets patterns detected in committed files
-
-## Manual Review Triggers
-
-Update context when:
-
-- [ ] New team member joins (review CONVENTIONS.md)
-- [ ] Major dependency upgraded (review ARCHITECTURE.md)
-- [ ] Sprint/milestone completed (archive old tasks)
-
-## Staleness Indicators
-
-| File            | Stale If       | Action                 |
-|-----------------|----------------|------------------------|
-| ARCHITECTURE.md | >30 days old   | Review component list  |
-| TASKS.md        | >50% completed | Archive and refresh    |
-| LEARNINGS.md    | >20 items      | Consolidate or archive |
-```
 
 ---
 

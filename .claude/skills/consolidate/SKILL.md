@@ -158,7 +158,25 @@ Use `t.Helper()` so failure messages point to the caller.
 **Fix (non-test)**: Extract shared logic into a package-level unexported
 function, or into a shared internal package if it spans packages.
 
-### 9. Dead Exports
+### 9. Architecture Diagram Drift
+
+After structural changes (new packages, moved files, changed
+dependencies), verify `.context/ARCHITECTURE.md` diagrams match
+actual code:
+
+```bash
+# Compare packages listed in ARCHITECTURE.md to actual packages
+ls internal/
+# Compare dependency graph claims to actual imports
+grep -r '"github.com/ActiveMemory/ctx/internal/' internal/ | \
+  sed 's|.*ctx/internal/|internal/|' | sort -u
+```
+
+**Fix**: Update the component map table, dependency graph, and file
+layout sections in `.context/ARCHITECTURE.md`. Run `ctx drift` to
+verify no dead path references remain.
+
+### 10. Dead Exports
 
 Check for exported functions/types with no callers outside their package.
 
@@ -221,7 +239,7 @@ After running checks, report:
 ## Quality Checklist
 
 Before reporting the consolidation results:
-- [ ] All 9 checks were run (not skipped)
+- [ ] All 10 checks were run (not skipped)
 - [ ] Accepted exceptions were respected (e.g., `IsUser()`)
 - [ ] Findings are prioritized (highest impact first)
 - [ ] Each finding has a concrete fix suggestion with file path

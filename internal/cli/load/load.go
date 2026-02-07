@@ -43,8 +43,7 @@ The context files are assembled in the recommended read order:
   5. DECISIONS.md
   6. LEARNINGS.md
   7. GLOSSARY.md
-  8. DRIFT.md
-  9. AGENT_PLAYBOOK.md
+  8. AGENT_PLAYBOOK.md
 
 Use --raw to output raw file contents without headers or assembly.
 Use --budget to limit output to a specific token count (default from .contextrc or 8000).`,

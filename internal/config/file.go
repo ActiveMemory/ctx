@@ -95,8 +95,6 @@ const (
 	FileLearning = "LEARNINGS.md"
 	// FileGlossary contains domain terms and definitions.
 	FileGlossary = "GLOSSARY.md"
-	// FileDrift contains staleness indicators and drift detection results.
-	FileDrift = "DRIFT.md"
 	// FileAgentPlaybook contains the meta-instructions for using the
 	// context system.
 	FileAgentPlaybook = "AGENT_PLAYBOOK.md"
@@ -145,10 +143,7 @@ var RequiredFiles = []string{
 //  7. GLOSSARY — Reference material. Domain terms and abbreviations for
 //     lookup as needed.
 //
-//  8. DRIFT — Staleness indicators. Lower priority since it's primarily
-//     for maintenance workflows.
-//
-//  9. AGENT_PLAYBOOK — Meta instructions. How to use this context system.
+//  8. AGENT_PLAYBOOK — Meta instructions. How to use this context system.
 //     Loaded last because it's about the system itself, not the work.
 //     The agent should understand the content before the operating manual.
 var FileReadOrder = []string{
@@ -159,7 +154,6 @@ var FileReadOrder = []string{
 	FileDecision,
 	FileLearning,
 	FileGlossary,
-	FileDrift,
 	FileAgentPlaybook,
 }
 

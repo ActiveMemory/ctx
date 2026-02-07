@@ -83,8 +83,7 @@ know before it can understand the next thing:
 5. `DECISIONS.md`: Past choices before gotchas
 6. `LEARNINGS.md`: Lessons before terminology
 7. `GLOSSARY.md`: Reference material
-8. `DRIFT.md`: Staleness indicators
-9. `AGENT_PLAYBOOK.md`: Meta instructions last
+8. `AGENT_PLAYBOOK.md`: Meta instructions last
 
 This ordering is about logical dependencies, not attention engineering.
 But it happens to be **attention-friendly** too:
@@ -92,8 +91,8 @@ But it happens to be **attention-friendly** too:
 The files that matter most—**CONSTITUTION**, **TASKS**, **CONVENTIONS**—land
 at the **beginning** of the context window, where attention is strongest.
 
-Reference material like **GLOSSARY** and **DRIFT** sit in the middle, where
-lower salience is acceptable.
+Reference material like **GLOSSARY** sits in the middle, where lower salience
+is acceptable.
 
 And **AGENT_PLAYBOOK**—the operating manual for the context system itself—sits
 at the **end**, also outside the "lost in the middle" zone. The agent reads
@@ -121,7 +120,6 @@ purposes**:
 | DECISIONS.md      | Architectural choices | When questioning approach |
 | LEARNINGS.md      | Gotchas               | When stuck                |
 | GLOSSARY.md       | Domain terminology    | When clarifying terms     |
-| DRIFT.md          | Staleness indicators  | During maintenance        |
 | AGENT_PLAYBOOK.md | Operating manual      | Session start             |
 | sessions/         | Deep history          | On demand                 |
 | journal/          | Session journal       | On demand                 |

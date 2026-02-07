@@ -196,7 +196,6 @@ or previous session topics.
 ├── DECISIONS.md        # Architectural decisions with rationale
 ├── LEARNINGS.md        # Lessons learned, gotchas, tips
 ├── GLOSSARY.md         # Domain terms and abbreviations
-├── DRIFT.md            # Staleness signals
 ├── AGENT_PLAYBOOK.md   # How AI tools should use this
 └── sessions/           # Session snapshots
 
