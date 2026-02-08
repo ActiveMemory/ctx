@@ -53,8 +53,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
 if [ ! -f "$ROOT_DIR/VERSION" ]; then
-    echo "ERROR: VERSION file not found"
-    exit 1
+  echo "ERROR: VERSION file not found"
+  exit 1
 fi
 
 VERSION="v$(tr -d '[:space:]' < "$ROOT_DIR/VERSION")"
@@ -71,23 +71,23 @@ echo ""
 
 # Check for release notes first
 if [ ! -f "${RELEASE_NOTES}" ]; then
-    echo "ERROR: ${RELEASE_NOTES} not found."
-    echo ""
-    echo "Generate release notes first using Claude Code:"
-    echo "  /release-notes"
-    echo ""
-    exit 1
+  echo "ERROR: ${RELEASE_NOTES} not found."
+  echo ""
+  echo "Generate release notes first using Claude Code:"
+  echo "  /release-notes"
+  echo ""
+  exit 1
 fi
 echo "Found ${RELEASE_NOTES}"
 echo ""
 
 # Check for clean working tree (before we make changes)
 if [ -n "$(git status --porcelain)" ]; then
-    echo "ERROR: Working tree is not clean."
-    echo "Please commit or stash your changes before releasing."
-    echo ""
-    git status --short
-    exit 1
+  echo "ERROR: Working tree is not clean."
+  echo "Please commit or stash your changes before releasing."
+  echo ""
+  git status --short
+  exit 1
 fi
 
 # Update version references in documentation
@@ -126,11 +126,11 @@ echo ""
 
 # Check if tag already exists
 if git rev-parse "${TAG_NAME}" >/dev/null 2>&1; then
-    echo "ERROR: Tag ${TAG_NAME} already exists."
-    echo "If you need to recreate it, delete it first:"
-    echo "  git tag -d ${TAG_NAME}"
-    echo "  git push origin :refs/tags/${TAG_NAME}"
-    exit 1
+  echo "ERROR: Tag ${TAG_NAME} already exists."
+  echo "If you need to recreate it, delete it first:"
+  echo "  git tag -d ${TAG_NAME}"
+  echo "  git push origin :refs/tags/${TAG_NAME}"
+  exit 1
 fi
 
 # Run tests

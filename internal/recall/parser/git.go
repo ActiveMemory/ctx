@@ -13,21 +13,31 @@ import (
 )
 
 // gitRemote returns the git remote origin URL for a directory.
-// Returns an empty string if not a git repo or no remote configured.
+//
+// Runs `git remote get-url origin` in the given directory.
+// Returns an empty string if the directory does not exist, is not a git
+// repository, or has no remote named "origin".
+//
+// Errors are intentionally swallowed — this is a best-effort enrichment
+// helper. Callers treat "" as "unknown" and proceed without a remote URL.
+//
+// Parameters:
+//   - dir: Directory path to query for git remote
+//
+// Returns:
+//   - string: Remote URL, or empty string on any error
 func gitRemote(dir string) string {
 	if dir == "" {
 		return ""
 	}
 
-	// Check if the directory exists
-	if _, err := os.Stat(dir); err != nil {
+	if _, statErr := os.Stat(dir); statErr != nil {
 		return ""
 	}
 
-	// Try to get git remote
 	cmd := exec.Command("git", "-C", dir, "remote", "get-url", "origin")
-	output, err := cmd.Output()
-	if err != nil {
+	output, cmdErr := cmd.Output()
+	if cmdErr != nil {
 		return ""
 	}
 

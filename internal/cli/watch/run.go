@@ -137,7 +137,7 @@ func runCompleteSilent(args []string) error {
 	matchedLine := -1
 	for i, line := range lines {
 		match := config.RegExTask.FindStringSubmatch(line)
-		if match != nil && task.IsPending(match) {
+		if match != nil && task.Pending(match) {
 			if strings.Contains(
 				strings.ToLower(task.Content(match)),
 				strings.ToLower(query),

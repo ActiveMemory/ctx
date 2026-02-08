@@ -37,6 +37,7 @@ context for AI coding assistants:
 | `ARCHITECTURE.md`    | System overview and component layout              |
 | `DECISIONS.md`       | Technical decisions with rationale                |
 | `LEARNINGS.md`       | Gotchas, tips, lessons learned                    |
+| `GLOSSARY.md`        | Domain terms and abbreviations                    |
 
 ## Key Concepts
 

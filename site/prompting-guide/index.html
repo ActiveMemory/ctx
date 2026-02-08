@@ -462,6 +462,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#scope-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Correction
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -606,6 +628,34 @@
     <span class="md-ellipsis">
       
         "What am I missing?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-commands-as-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Commands as Prompts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Commands as Prompts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-skills-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Skills (Claude Code)
       
     </span>
   </a>
@@ -1143,6 +1193,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#scope-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Correction
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1287,6 +1359,34 @@
     <span class="md-ellipsis">
       
         "What am I missing?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-commands-as-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Commands as Prompts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Commands as Prompts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-skills-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Skills (Claude Code)
       
     </span>
   </a>
@@ -1493,13 +1593,24 @@
 <hr />
 <h2 id="session-start">Session Start<a class="headerlink" href="#session-start" title="Permanent link">&para;</a></h2>
 <h3 id="do-you-remember">"Do you remember?"<a class="headerlink" href="#do-you-remember" title="Permanent link">&para;</a></h3>
-<p>Triggers the AI to read <code>AGENT_PLAYBOOK</code>, <code>CONSTITUTION</code>, 
-<code>sessions/</code>, and other context files before responding.</p>
-<p>Use this during the start of every important session.</p>
+<p>Triggers the AI to silently read <code>TASKS.md</code>, <code>DECISIONS.md</code>,
+<code>LEARNINGS.md</code>, and <code>sessions/</code> before responding with a
+<strong>structured readback</strong>:</p>
+<ol>
+<li><strong>Last session</strong>: most recent session topic and date</li>
+<li><strong>Active work</strong>: pending or in-progress tasks</li>
+<li><strong>Recent context</strong>: 1-2 recent decisions or learnings</li>
+<li><strong>Next step</strong>: offer to continue or ask what to focus on</li>
+</ol>
+<p>Use this at the start of every important session.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Do you remember what we were working on?
 </span></code></pre></div>
-<p>This question <strong>implies</strong> prior context exists. So, the AI checks files
-rather than admitting ignorance.</p>
+<p>This question <strong>implies</strong> prior context exists. The AI checks files
+rather than admitting ignorance. The expected response cites specific
+context (session names, task counts, decisions), not vague summaries.</p>
+<p>If the AI instead narrates its discovery process ("Let me check if
+there are files..."), it has not loaded <code>CLAUDE.md</code> or
+<code>AGENT_PLAYBOOK.md</code> properly.</p>
 <h3 id="whats-the-current-state">"What's the current state?"<a class="headerlink" href="#whats-the-current-state" title="Permanent link">&para;</a></h3>
 <p>Prompts reading of <code>TASKS.md</code>, recent sessions, and status overview.</p>
 <p>Use this when resuming work after a break.</p>
@@ -1539,6 +1650,29 @@ in settings.local.json bootstrapping—a fix that benefited all users.</p>
 <p>Use this when you know the relevant context exists in a specific file.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Before you start, read .context/sessions/2026-01-20-auth-discussion.md
 </span></code></pre></div>
+<h3 id="scope-control">Scope Control<a class="headerlink" href="#scope-control" title="Permanent link">&para;</a></h3>
+<p>Constrain the AI to prevent sprawl. These are some of the most
+useful prompts in day-to-day work.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Only change files in internal/cli/add/. Nothing else.
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>No new files. Modify the existing implementation.
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Keep the public API unchanged. Internal refactor only.
+</span></code></pre></div>
+<p>Use these when the AI tends to "helpfully" modify adjacent code,
+add documentation you didn't ask for, or create new abstractions.</p>
+<h3 id="course-correction">Course Correction<a class="headerlink" href="#course-correction" title="Permanent link">&para;</a></h3>
+<p>Steer the AI when it goes off-track. Don't wait for it to finish
+a wrong approach.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Stop. That&#39;s not what I meant. Let me clarify.
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Let&#39;s step back. Explain what you&#39;re about to do before changing anything.
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Undo that last change and try a different approach.
+</span></code></pre></div>
+<p>These work because they <strong>interrupt momentum</strong>. Without explicit
+course correction, the AI tends to commit harder to a wrong path
+rather than reconsidering.</p>
 <h2 id="reflection-and-persistence">Reflection and Persistence<a class="headerlink" href="#reflection-and-persistence" title="Permanent link">&para;</a></h2>
 <h3 id="what-did-we-learn">"What did we learn?"<a class="headerlink" href="#what-did-we-learn" title="Permanent link">&para;</a></h3>
 <p>This prompts <strong>reflection</strong> on the session and often triggers adding
@@ -1549,11 +1683,11 @@ and often offer to persist them.</p>
 <h3 id="add-this-as-a-learningdecision">"Add this as a learning/decision"<a class="headerlink" href="#add-this-as-a-learningdecision" title="Permanent link">&para;</a></h3>
 <p>This is an <strong>explicit persistence request</strong>.</p>
 <p>Use this when you have discovered something worth remembering.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Add this as a learning: &quot;JSON marshal escapes angle brackets by default&quot;
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a># or simply.
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Add this as a learning.
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a># and let the AI autonomously infer and summarize.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Add this as a learning: &quot;JSON marshal escapes angle brackets by default&quot;
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a># or simply.
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Add this as a learning.
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a># and let the AI autonomously infer and summarize.
 </span></code></pre></div>
 <h3 id="save-context-before-we-end">"Save context before we end"<a class="headerlink" href="#save-context-before-we-end" title="Permanent link">&para;</a></h3>
 <p>This triggers <strong>context persistence</strong> before the session closes.</p>
@@ -1574,7 +1708,7 @@ not immediate action.</p>
 <h3 id="how-does-x-work-in-this-codebase">"How does X work in this codebase?"<a class="headerlink" href="#how-does-x-work-in-this-codebase" title="Permanent link">&para;</a></h3>
 <p>This prompts reading actual code rather than explaining general concepts.</p>
 <p>Use this to understand the existing implementation.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>How does session saving work in this codebase?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>How does session saving work in this codebase?
 </span></code></pre></div>
 <h3 id="find-all-places-where-x">"Find all places where X"<a class="headerlink" href="#find-all-places-where-x" title="Permanent link">&para;</a></h3>
 <p>This triggers a <strong>comprehensive search</strong> across the codebase.</p>
@@ -1595,6 +1729,83 @@ AIs often default to agreeing; this prompt signals you want an
 <p>This prompts thinking about edge cases, overlooked requirements,
 or unconsidered approaches.</p>
 <p>Use this before finalizing a design or implementation.</p>
+<hr />
+<h2 id="cli-commands-as-prompts">CLI Commands as Prompts<a class="headerlink" href="#cli-commands-as-prompts" title="Permanent link">&para;</a></h2>
+<p>Asking the AI to run <code>ctx</code> commands is itself a prompt. These
+load context or trigger specific behaviors:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Run <code>ctx status</code>"</td>
+<td>Shows context summary, file presence, staleness</td>
+</tr>
+<tr>
+<td>"Run <code>ctx agent</code>"</td>
+<td>Loads token-budgeted context packet</td>
+</tr>
+<tr>
+<td>"Run <code>ctx drift</code>"</td>
+<td>Detects dead paths, stale files, missing context</td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-skills-claude-code">Agent Skills (Claude Code)<a class="headerlink" href="#agent-skills-claude-code" title="Permanent link">&para;</a></h3>
+<p>Skills are formalized prompts. Use them by name:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/ctx-save</code></td>
+<td>Persist session context at a milestone</td>
+</tr>
+<tr>
+<td><code>/ctx-reflect</code></td>
+<td>Structured reflection checkpoint</td>
+</tr>
+<tr>
+<td><code>/ctx-recall</code></td>
+<td>Browse session history for past discussions</td>
+</tr>
+<tr>
+<td><code>/ctx-status</code></td>
+<td>Quick context summary</td>
+</tr>
+<tr>
+<td><code>/ctx-agent</code></td>
+<td>Load full context packet</td>
+</tr>
+<tr>
+<td><code>/consolidate</code></td>
+<td>Detect and fix code-level drift</td>
+</tr>
+<tr>
+<td><code>/update-docs</code></td>
+<td>Sync docs and conventions after code changes</td>
+</tr>
+<tr>
+<td><code>/verify</code></td>
+<td>Verify before claiming work is complete</td>
+</tr>
+<tr>
+<td><code>/qa</code></td>
+<td>Run QA checks before committing</td>
+</tr>
+</tbody>
+</table>
+<p>Skills combine a prompt, tool permissions, and domain knowledge
+into a single invocation. See <a href="../integrations/">Integrations</a> for
+setup details.</p>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <p>Based on our <code>ctx</code> development experience (<em>i.e., "sipping our own champagne"</em>)
@@ -1637,6 +1848,16 @@ so far, here are some prompts that tend to produce poor results:</p>
 <td>"Idiomatic X"</td>
 <td>Triggers language priors</td>
 <td>"Follow project conventions"</td>
+</tr>
+<tr>
+<td>"Implement everything"</td>
+<td>No phasing, sprawl risk</td>
+<td>Break into tasks, implement one at a time</td>
+</tr>
+<tr>
+<td>"You should know this"</td>
+<td>Assumes context is loaded</td>
+<td>"Before you start, read X"</td>
 </tr>
 </tbody>
 </table>
@@ -1690,13 +1911,29 @@ so far, here are some prompts that tend to produce poor results:</p>
 <td>Completeness</td>
 <td>"What am I missing?"</td>
 </tr>
+<tr>
+<td>Constrain scope</td>
+<td>"Only change files in X. Nothing else."</td>
+</tr>
+<tr>
+<td>Course correct</td>
+<td>"Stop. That's not what I meant."</td>
+</tr>
+<tr>
+<td>Check health</td>
+<td>"Run <code>ctx drift</code>"</td>
+</tr>
+<tr>
+<td>Save context</td>
+<td><code>/ctx-save</code></td>
+</tr>
 </tbody>
 </table>
 <hr />
 <h2 id="explore-plan-implement">Explore → Plan → Implement<a class="headerlink" href="#explore-plan-implement" title="Permanent link">&para;</a></h2>
 <p>For non-trivial work, name the phase you want:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Explore src/auth and summarize the current flow.
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Then propose a plan. After I approve, implement with tests.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Explore src/auth and summarize the current flow.
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Then propose a plan. After I approve, implement with tests.
 </span></code></pre></div>
 <p>This prevents the AI from jumping straight to code. The three phases
 map to different modes of thinking:</p>
@@ -1712,24 +1949,24 @@ benefits from all three.</p>
 <p>Different tasks need different prompt structures. The pattern:
 <strong>symptom + location + verification</strong>.</p>
 <h3 id="bugfix">Bugfix<a class="headerlink" href="#bugfix" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Users report search returns empty results for queries with hyphens.
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Reproduce in src/search/. Write a failing test for &quot;foo-bar&quot;,
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>fix the root cause, run: go test ./internal/search/...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Users report search returns empty results for queries with hyphens.
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Reproduce in src/search/. Write a failing test for &quot;foo-bar&quot;,
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>fix the root cause, run: go test ./internal/search/...
 </span></code></pre></div>
 <h3 id="refactor">Refactor<a class="headerlink" href="#refactor" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Inspect src/auth/ and list duplication hotspots.
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Propose a refactor plan scoped to one module.
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>After approval, remove duplication without changing behavior.
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Add a test if coverage is missing. Run: make audit
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Inspect src/auth/ and list duplication hotspots.
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Propose a refactor plan scoped to one module.
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>After approval, remove duplication without changing behavior.
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Add a test if coverage is missing. Run: make audit
 </span></code></pre></div>
 <h3 id="research">Research<a class="headerlink" href="#research" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Explore the request flow around src/api/.
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Summarize likely bottlenecks with evidence.
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Propose 2-3 hypotheses. Do not implement yet.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Explore the request flow around src/api/.
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Summarize likely bottlenecks with evidence.
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Propose 2-3 hypotheses. Do not implement yet.
 </span></code></pre></div>
 <h3 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Update docs/cli-reference.md to reflect the new --format flag.
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Confirm the flag exists in the code and the example works.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Update docs/cli-reference.md to reflect the new --format flag.
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Confirm the flag exists in the code and the example works.
 </span></code></pre></div>
 <p>Notice each prompt includes <strong>what to verify and how</strong>. Without that,
 you get "should work now" instead of evidence.</p>
@@ -1739,28 +1976,28 @@ you get "should work now" instead of evidence.</p>
 shapes how the AI approaches the work.</p>
 <h3 id="state-the-deliverable-not-just-steps">State the Deliverable, Not Just Steps<a class="headerlink" href="#state-the-deliverable-not-just-steps" title="Permanent link">&para;</a></h3>
 <p>Bad task (implementation-focused):
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">- [ ]</span> T1.1.0: Parser system
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">- [ ]</span> T1.1.0: Parser system
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
 </span></code></pre></div></p>
 <p>The AI may complete all subtasks but miss the actual goal. What does
 "Parser system" deliver to the user?</p>
 <p>Good task (deliverable-focused):
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">- [ ]</span> T1.1.0: Parser CLI command
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx recall list`</span> command that shows parsed sessions
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">- [ ]</span> T1.1.0: Parser CLI command
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx recall list`</span> command that shows parsed sessions
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="k">- [ ]</span> Implement session grouper
 </span></code></pre></div></p>
 <p>Now the AI knows the subtasks serve a specific user-facing deliverable.</p>
 <h3 id="use-acceptance-criteria">Use Acceptance Criteria<a class="headerlink" href="#use-acceptance-criteria" title="Permanent link">&para;</a></h3>
 <p>For complex tasks, add explicit "done when" criteria:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">- [ ]</span> T2.0: Authentication system
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  <span class="gs">**Done when**</span>:
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="k">- [ ]</span> User can register with email
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="k">- [ ]</span> User can log in and get a token
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="k">- [ ]</span> Protected routes reject unauthenticated requests
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">- [ ]</span> T2.0: Authentication system
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  <span class="gs">**Done when**</span>:
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="k">- [ ]</span> User can register with email
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="k">- [ ]</span> User can log in and get a token
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="k">- [ ]</span> Protected routes reject unauthenticated requests
 </span></code></pre></div>
 <p>This prevents premature "task complete" when only the implementation
 details are done but the feature doesn't actually work.</p>

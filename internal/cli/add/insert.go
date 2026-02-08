@@ -85,7 +85,7 @@ func appendAtEnd(content, entry string) []byte {
 //
 // When section is explicitly provided, inserts after that section header.
 // When section is empty (default), finds the first unchecked task and
-// inserts before it so the new task lands among existing pending work.
+// inserts before it, so the new task lands among existing pending work.
 // Falls back to appending at the end if neither is found.
 //
 // Parameters:
@@ -117,7 +117,7 @@ func insertTask(entry, existingStr, section string) []byte {
 
 // insertTaskAfterSection inserts a task after a named section header.
 //
-// Normalizes the section name to a markdown heading, finds it in the
+// Normalizes the section name to a Markdown heading, finds it in the
 // content, and inserts the entry immediately after. Falls back to
 // appending at the end if the header is not found.
 //

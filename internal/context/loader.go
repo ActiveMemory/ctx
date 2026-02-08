@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -31,12 +32,12 @@ func Load(dir string) (*Context, error) {
 	}
 
 	// Check if the directory exists
-	info, err := os.Stat(dir)
-	if err != nil {
-		if os.IsNotExist(err) {
+	info, statErr := os.Stat(dir)
+	if statErr != nil {
+		if os.IsNotExist(statErr) {
 			return nil, &NotFoundError{Dir: dir}
 		}
-		return nil, err
+		return nil, statErr
 	}
 	if !info.IsDir() {
 		return nil, &NotFoundError{Dir: dir}
@@ -48,9 +49,9 @@ func Load(dir string) (*Context, error) {
 	}
 
 	// Read all .md files in the directory
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		return nil, err
+	entries, readErr := os.ReadDir(dir)
+	if readErr != nil {
+		return nil, readErr
 	}
 
 	for _, entry := range entries {
@@ -59,18 +60,18 @@ func Load(dir string) (*Context, error) {
 		}
 
 		name := entry.Name()
-		if filepath.Ext(name) != ".md" {
+		if filepath.Ext(name) != config.ExtMarkdown {
 			continue
 		}
 
 		filePath := filepath.Join(dir, name)
-		content, err := os.ReadFile(filePath)
-		if err != nil {
+		content, readFileErr := os.ReadFile(filePath)
+		if readFileErr != nil {
 			continue
 		}
 
-		fileInfo, err := entry.Info()
-		if err != nil {
+		fileInfo, infoErr := entry.Info()
+		if infoErr != nil {
 			continue
 		}
 

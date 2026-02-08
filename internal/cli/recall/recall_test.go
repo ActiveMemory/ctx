@@ -222,9 +222,9 @@ func TestIsEmptyMessage(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := isEmptyMessage(tt.msg)
+			got := emptyMessage(tt.msg)
 			if got != tt.want {
-				t.Errorf("isEmptyMessage() = %v, want %v", got, tt.want)
+				t.Errorf("emptyMessage() = %v, want %v", got, tt.want)
 			}
 		})
 	}

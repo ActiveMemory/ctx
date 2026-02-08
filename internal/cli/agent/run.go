@@ -13,6 +13,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -57,7 +58,7 @@ func runAgent(
 	}
 
 	var outputErr error
-	if format == "json" {
+	if format == config.FormatJSON {
 		outputErr = outputAgentJSON(cmd, ctx, budget)
 	} else {
 		outputErr = outputAgentMarkdown(cmd, ctx, budget)

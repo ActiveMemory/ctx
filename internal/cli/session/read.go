@@ -7,7 +7,6 @@
 package session
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,7 +62,7 @@ func readContextSection(
 	// Find start
 	startIdx := strings.Index(contentStr, startHeader)
 	if startIdx == -1 {
-		return "", fmt.Errorf("section not found: %s", startHeader)
+		return "", errSectionNotFound(startHeader)
 	}
 	startIdx += len(startHeader)
 

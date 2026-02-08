@@ -88,7 +88,7 @@ func extractUncheckedTasks(content string) []string {
 	matches := config.RegExTaskMultiline.FindAllStringSubmatch(content, -1)
 	items := make([]string, 0, len(matches))
 	for _, m := range matches {
-		if task.IsPending(m) {
+		if task.Pending(m) {
 			items = append(items, "- [ ] "+strings.TrimSpace(task.Content(m)))
 		}
 	}

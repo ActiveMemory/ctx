@@ -24,7 +24,7 @@ func TestAddCommand(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -32,14 +32,14 @@ func TestAddCommand(t *testing.T) {
 	// First init
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Test adding a task
 	addCmd := Cmd()
 	addCmd.SetArgs([]string{"task", "Test task for integration"})
-	if err := addCmd.Execute(); err != nil {
+	if err = addCmd.Execute(); err != nil {
 		t.Fatalf("add task command failed: %v", err)
 	}
 
@@ -463,7 +463,7 @@ func TestAddFromFile(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -471,13 +471,13 @@ func TestAddFromFile(t *testing.T) {
 	// First init
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Create a file with content (title)
 	contentFile := filepath.Join(tmpDir, "learning-content.md")
-	if err := os.WriteFile(contentFile, []byte("Content from file test"), 0644); err != nil {
+	if err = os.WriteFile(contentFile, []byte("Content from file test"), 0644); err != nil {
 		t.Fatalf("failed to create content file: %v", err)
 	}
 
@@ -489,7 +489,7 @@ func TestAddFromFile(t *testing.T) {
 		"--lesson", "File input works",
 		"--application", "Use --file for long content",
 	})
-	if err := addCmd.Execute(); err != nil {
+	if err = addCmd.Execute(); err != nil {
 		t.Fatalf("add from file failed: %v", err)
 	}
 

@@ -137,7 +137,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -145,7 +145,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	// Initialize context
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
@@ -164,7 +164,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 
 	// Complete the task
 	update := ContextUpdate{Type: config.EntryComplete, Content: "authentication"}
-	if err := applyUpdate(update); err != nil {
+	if err = applyUpdate(update); err != nil {
 		t.Fatalf("applyUpdate failed: %v", err)
 	}
 
@@ -231,7 +231,7 @@ func TestProcessStream(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -239,7 +239,7 @@ func TestProcessStream(t *testing.T) {
 	// Initialize context
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
@@ -282,7 +282,7 @@ func TestProcessStreamWithAttributes(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -290,7 +290,7 @@ func TestProcessStreamWithAttributes(t *testing.T) {
 	// Initialize context
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
@@ -370,7 +370,7 @@ func TestRunCompleteSilentNoMatch(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -378,7 +378,7 @@ func TestRunCompleteSilentNoMatch(t *testing.T) {
 	// Initialize context
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 

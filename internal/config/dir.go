@@ -16,8 +16,24 @@ const (
 	DirClaudeHooks = ".claude/hooks"
 	// DirContext is the default context directory name.
 	DirContext = ".context"
+	// DirJournal is the subdirectory for journal entries within .context/.
+	DirJournal = "journal"
 	// DirSessions is the subdirectory for session snapshots within .context/.
 	DirSessions = "sessions"
 	// DirTools is the subdirectory for tool scripts within .context/.
 	DirTools = "tools"
+	// DirJournalSite is the journal static site output directory within .context/.
+	DirJournalSite = "journal-site"
+)
+
+// Journal site output directories.
+const (
+	// JournalDirDocs is the docs subdirectory in the generated site.
+	JournalDirDocs = "docs"
+	// JournalDirTopics is the topics subdirectory in the generated site.
+	JournalDirTopics = "topics"
+	// JournalDirFiles is the key files subdirectory in the generated site.
+	JournalDirFiles = "files"
+	// JournalDirTypes is the session types subdirectory in the generated site.
+	JournalDirTypes = "types"
 )

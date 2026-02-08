@@ -53,9 +53,9 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 
 	// Auto-save session before compact
 	if !noAutoSave {
-		if err := preCompactAutoSave(cmd); err != nil {
-			cmd.Printf(
-				"%s Auto-save failed: %v (continuing anyway)\n", yellow("⚠"), err,
+		if saveErr := preCompactAutoSave(cmd); saveErr != nil {
+			cmd.Println(
+				fmt.Sprintf("%s Auto-save failed: %v (continuing anyway)", yellow("⚠"), saveErr),
 			)
 		}
 	}
@@ -69,7 +69,7 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 	// Process TASKS.md
 	tasksChanges, err := compactTasks(cmd, ctx, archive)
 	if err != nil {
-		cmd.Printf("%s Error processing TASKS.md: %v\n", yellow("⚠"), err)
+		cmd.Println(fmt.Sprintf("%s Error processing TASKS.md: %v", yellow("⚠"), err))
 	} else {
 		changes += tasksChanges
 	}
@@ -82,8 +82,8 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 		cleaned, count := removeEmptySections(string(f.Content))
 		if count > 0 {
 			if err := os.WriteFile(f.Path, []byte(cleaned), config.PermFile); err == nil {
-				cmd.Printf(
-					"%s Removed %d empty sections from %s\n", green("✓"), count, f.Name,
+				cmd.Println(
+					fmt.Sprintf("%s Removed %d empty sections from %s", green("✓"), count, f.Name),
 				)
 				changes += count
 			}
@@ -91,9 +91,10 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 	}
 
 	if changes == 0 {
-		cmd.Printf("%s Nothing to compact — context is already clean\n", green("✓"))
+		cmd.Println(fmt.Sprintf("%s Nothing to compact — context is already clean", green("✓")))
 	} else {
-		cmd.Printf("\n%s Compacted %d items\n", green("✓"), changes)
+		cmd.Println()
+		cmd.Println(fmt.Sprintf("%s Compacted %d items", green("✓"), changes))
 	}
 
 	return nil

@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "load",
-		Short: "Output assembled context markdown",
+		Short: "Output assembled context Markdown",
 		Long: `Load and display the assembled context 
 as it would be provided to an AI.
 

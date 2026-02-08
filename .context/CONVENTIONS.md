@@ -13,6 +13,14 @@
 - **Maps reference constants**: Use constants as keys, not literals
   - `map[string]X{ConstKey: value}` not `map[string]X{"literal": value}`
 
+## Casing
+
+- **Proper nouns keep their casing** in comments, strings, and docs
+  - `Markdown` not `markdown` (it's a language name)
+  - `YAML`, `JSON`, `TOML` — always uppercase
+  - `GitHub`, `JavaScript`, `PostgreSQL` — match official casing
+  - Exception: code fence language identifiers are lowercase (`` ```markdown ``)
+
 ## Predicates
 
 - **No Is/Has/Can prefixes**: `Completed()` not `IsCompleted()`, `Empty()` not `IsEmpty()`
@@ -25,6 +33,11 @@
   - `loader.go` (exports `Load()`) + `process.go` (unexported helpers)
   - NOT: one file with unexported functions stacked at the bottom
 - Reasoning: agent loads only the public API file unless it needs implementation detail
+- **Name files after what they contain, not their role**
+  - `format.go`, `sort.go`, `parse.go` — named by responsibility
+  - NOT: `util.go`, `utils.go`, `helper.go`, `common.go` — junk drawer names
+  - If a file can't be named without a generic label, its contents don't belong together
+  - Existing junk drawers should be split as their contents grow
 
 ## Patterns
 
@@ -38,6 +51,9 @@
   - Never: `dir + "/" + file`
 - **Constants reference constants**: Self-referential definitions
   - `FileType[UpdateTypeTask] = FilenameTask` not `FileType["task"] = "TASKS.md"`
+- **No error variable shadowing**: Use descriptive names when multiple errors exist in a function
+  - `readErr`, `writeErr`, `indexErr` — not repeated `err` / `err :=`
+  - Shadowed `err` silently disconnects from the outer variable, causing subtle bugs
 - **Colocate related code**: Group by feature, not by type
   - `session/run.go`, `session/types.go`, `session/parse.go`
   - Not: `runners/session.go`, `types/session.go`, `parsers/session.go`
@@ -107,5 +123,8 @@
   //   - Type: Description of return value
   func FunctionName(param1, param2 string) error
   ```
-- **Package doc in doc.go**: Each package gets a `doc.go` with package-level documentation
+- **Package doc in doc.go**: Each package gets a `doc.go` with package-level
+  documentation describing behavior, not structure. Do NOT include
+  `# File Organization` sections listing files — they drift when files are
+  added, renamed, or removed, and the filesystem is self-documenting
 - **Copyright headers**: All source files get the project copyright header

@@ -9,6 +9,8 @@ package add
 import (
 	"fmt"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // FormatTask formats a task entry as a Markdown checkbox item.
@@ -27,9 +29,9 @@ func FormatTask(content string, priority string) string {
 	timestamp := time.Now().Format("2006-01-02-150405")
 	var priorityTag string
 	if priority != "" {
-		priorityTag = fmt.Sprintf(" #priority:%s", priority)
+		priorityTag = fmt.Sprintf(config.TplTaskPriority, priority)
 	}
-	return fmt.Sprintf("- [ ] %s%s #added:%s\n", content, priorityTag, timestamp)
+	return fmt.Sprintf(config.TplTask, content, priorityTag, timestamp)
 }
 
 // FormatLearning formats a learning entry as a structured Markdown section.
@@ -47,14 +49,9 @@ func FormatTask(content string, priority string) string {
 //   - string: Formatted learning section with all fields
 func FormatLearning(title, context, lesson, application string) string {
 	timestamp := time.Now().Format("2006-01-02-150405")
-	return fmt.Sprintf(`## [%s] %s
-
-**Context**: %s
-
-**Lesson**: %s
-
-**Application**: %s
-`, timestamp, title, context, lesson, application)
+	return fmt.Sprintf(
+		config.TplLearning, timestamp, title, context, lesson, application,
+	)
 }
 
 // FormatConvention formats a convention entry as a simple Markdown list item.
@@ -67,7 +64,7 @@ func FormatLearning(title, context, lesson, application string) string {
 // Returns:
 //   - string: Formatted convention line with trailing newline
 func FormatConvention(content string) string {
-	return fmt.Sprintf("- %s\n", content)
+	return fmt.Sprintf(config.TplConvention, content)
 }
 
 // FormatDecision formats a decision entry as a structured Markdown section.
@@ -85,16 +82,8 @@ func FormatConvention(content string) string {
 //   - string: Formatted decision section with all ADR fields
 func FormatDecision(title, context, rationale, consequences string) string {
 	timestamp := time.Now().Format("2006-01-02-150405")
-	return fmt.Sprintf(`## [%s] %s
-
-**Status**: Accepted
-
-**Context**: %s
-
-**Decision**: %s
-
-**Rationale**: %s
-
-**Consequences**: %s
-`, timestamp, title, context, title, rationale, consequences)
+	return fmt.Sprintf(
+		config.TplDecision,
+		timestamp, title, context, title, rationale, consequences,
+	)
 }

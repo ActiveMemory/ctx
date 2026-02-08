@@ -209,47 +209,92 @@ See [Context Files](context-files.md) for detailed documentation of each file.
 
 ## Common Workflows
 
-### Add a Task
+### Track Context
 
 ```bash
+# Add a task
 ctx add task "Implement user authentication"
-```
 
-### Record a Decision
-
-```bash
+# Record a decision (full ADR fields required)
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
   --consequences "Team needs PostgreSQL training"
-```
 
-### Note a Learning
-
-```bash
+# Note a learning
 ctx add learning "Mock functions must be hoisted in Jest" \
   --context "Tests failed with undefined mock errors" \
   --lesson "Jest hoists mock calls to top of file" \
   --application "Place jest.mock() before imports"
-```
 
-### Mark Task Complete
-
-```bash
+# Mark task complete
 ctx complete "user auth"
 ```
 
-### Check for Stale Context
+### Check Context Health
 
 ```bash
+# Detect stale paths, missing files, potential secrets
 ctx drift
+
+# See full context summary
+ctx status
 ```
+
+### Browse Session History
+
+Export AI session transcripts to a browsable journal site:
+
+```bash
+# Export all sessions to .context/journal/
+ctx recall export --all
+
+# Generate and serve the journal site
+ctx journal site --serve
+```
+
+Then open [http://localhost:8000](http://localhost:8000).
+
+To update the journal after new sessions, run the same two commands
+again; `recall export` preserves existing YAML frontmatter and only
+updates conversation content.
+
+See [Session Journal](session-journal.md) for the full pipeline
+including enrichment and normalization.
+
+### Save and Restore Sessions
+
+```bash
+# Save a snapshot of current context
+ctx session save "before-refactor"
+
+# List saved sessions
+ctx session list
+
+# Load a previous session
+ctx session load "before-refactor"
+```
+
+### Run an Autonomous Loop
+
+Generate a script that iterates an AI agent until a completion
+signal is detected:
+
+```bash
+ctx loop
+chmod +x loop.sh
+./loop.sh
+```
+
+See [Autonomous Loops](autonomous-loop.md) for configuration
+and advanced usage.
 
 ## Next Steps
 
-- [Prompting Guide](prompting-guide.md) — Effective prompts for AI sessions
-- [CLI Reference](cli-reference.md) — All commands and options
-- [Context Files](context-files.md) — File formats and structure
-- [Autonomous Loops](autonomous-loop.md) — Iterative AI development workflows
-- [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider
-- [Blog](blog/index.md) — Stories and lessons from building ctx
+* [Prompting Guide](prompting-guide.md) — Effective prompts for AI sessions
+* [CLI Reference](cli-reference.md) — All commands and options
+* [Context Files](context-files.md) — File formats and structure
+* [Session Journal](session-journal.md) — Browse and search session history
+* [Autonomous Loops](autonomous-loop.md) — Iterative AI development workflows
+* [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider
+* [Blog](blog/index.md) — Stories and lessons from building ctx

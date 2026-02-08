@@ -38,19 +38,19 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 	archivePath := archiveDirPath()
 
 	// Check if TASKS.md exists
-	if _, err := os.Stat(tasksPath); os.IsNotExist(err) {
+	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
 		return fmt.Errorf("no TASKS.md found")
 	}
 
 	// Read TASKS.md
-	content, err := os.ReadFile(tasksPath)
-	if err != nil {
-		return fmt.Errorf("failed to read TASKS.md: %w", err)
+	content, readErr := os.ReadFile(tasksPath)
+	if readErr != nil {
+		return fmt.Errorf("failed to read TASKS.md: %w", readErr)
 	}
 
 	// Ensure the archive directory exists
-	if err := os.MkdirAll(archivePath, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create archive directory: %w", err)
+	if mkdirErr := os.MkdirAll(archivePath, config.PermExec); mkdirErr != nil {
+		return fmt.Errorf("failed to create archive directory: %w", mkdirErr)
 	}
 
 	// Generate snapshot filename
@@ -74,13 +74,13 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 	)
 
 	// Write snapshot
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		snapshotPath, []byte(snapshotContent), config.PermFile,
-	); err != nil {
-		return fmt.Errorf("failed to write snapshot: %w", err)
+	); writeErr != nil {
+		return fmt.Errorf("failed to write snapshot: %w", writeErr)
 	}
 
-	cmd.Printf("%s Snapshot saved to %s"+nl, green("✓"), snapshotPath)
+	cmd.Println(fmt.Sprintf("%s Snapshot saved to %s", green("✓"), snapshotPath))
 
 	return nil
 }
@@ -105,14 +105,14 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	nl := config.NewlineLF
 
 	// Check if TASKS.md exists
-	if _, err := os.Stat(tasksPath); os.IsNotExist(err) {
+	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
 		return fmt.Errorf("no TASKS.md found")
 	}
 
 	// Read TASKS.md
-	content, err := os.ReadFile(tasksPath)
-	if err != nil {
-		return fmt.Errorf("failed to read TASKS.md: %w", err)
+	content, readErr := os.ReadFile(tasksPath)
+	if readErr != nil {
+		return fmt.Errorf("failed to read TASKS.md: %w", readErr)
 	}
 
 	lines := strings.Split(string(content), nl)
@@ -128,10 +128,10 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 			archivableBlocks = append(archivableBlocks, block)
 		} else {
 			skippedCount++
-			cmd.Printf(
-				"%s Skipping (has incomplete children): %s"+nl,
+			cmd.Println(fmt.Sprintf(
+				"%s Skipping (has incomplete children): %s",
 				yellow("!"), block.ParentTaskText(),
-			)
+			))
 		}
 	}
 
@@ -140,10 +140,10 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 
 	if len(archivableBlocks) == 0 {
 		if skippedCount > 0 {
-			cmd.Printf(
-				"No tasks to archive (%d skipped due to incomplete children)."+nl,
+			cmd.Println(fmt.Sprintf(
+				"No tasks to archive (%d skipped due to incomplete children).",
 				skippedCount,
-			)
+			))
 		} else {
 			cmd.Println("No completed tasks to archive.")
 		}
@@ -160,10 +160,10 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	if dryRun {
 		cmd.Println(yellow("Dry run - no files modified"))
 		cmd.Println()
-		cmd.Printf(
-			"Would archive %d completed tasks (keeping %d pending)"+nl,
+		cmd.Println(fmt.Sprintf(
+			"Would archive %d completed tasks (keeping %d pending)",
 			len(archivableBlocks), pendingCount,
-		)
+		))
 		cmd.Println()
 		cmd.Println("Archived content preview:")
 		cmd.Println(config.Separator)
@@ -173,8 +173,8 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Ensure the archive directory exists
-	if err := os.MkdirAll(archiveDir, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create archive directory: %w", err)
+	if mkdirErr := os.MkdirAll(archiveDir, config.PermExec); mkdirErr != nil {
+		return fmt.Errorf("failed to create archive directory: %w", mkdirErr)
 	}
 
 	// Generate archive filename
@@ -184,7 +184,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 
 	// Check if the archive file already exists for today - append if so
 	var finalArchiveContent string
-	if existingContent, err := os.ReadFile(archiveFilePath); err == nil {
+	if existingContent, readExistErr := os.ReadFile(archiveFilePath); readExistErr == nil {
 		finalArchiveContent = string(existingContent) +
 			nl + archivedContent.String()
 	} else {
@@ -196,27 +196,29 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Write the archive file
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		archiveFilePath, []byte(finalArchiveContent), config.PermFile,
-	); err != nil {
-		return fmt.Errorf("failed to write archive: %w", err)
+	); writeErr != nil {
+		return fmt.Errorf("failed to write archive: %w", writeErr)
 	}
 
 	// Remove archived blocks from lines and write back
 	newLines := compact.RemoveBlocksFromLines(lines, archivableBlocks)
 	newContent := strings.Join(newLines, nl)
 
-	if err := os.WriteFile(tasksPath, []byte(newContent), config.PermFile); err != nil {
-		return fmt.Errorf("failed to update TASKS.md: %w", err)
+	if updateErr := os.WriteFile(
+		tasksPath, []byte(newContent), config.PermFile,
+	); updateErr != nil {
+		return fmt.Errorf("failed to update TASKS.md: %w", updateErr)
 	}
 
-	cmd.Printf(
-		"%s Archived %d completed tasks to %s"+nl,
+	cmd.Println(fmt.Sprintf(
+		"%s Archived %d completed tasks to %s",
 		green("✓"),
 		len(archivableBlocks),
 		archiveFilePath,
-	)
-	cmd.Printf("  %d pending tasks remain in TASKS.md"+nl, pendingCount)
+	))
+	cmd.Println(fmt.Sprintf("  %d pending tasks remain in TASKS.md", pendingCount))
 
 	return nil
 }

@@ -475,10 +475,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#add-a-task" class="md-nav__link">
+  <a href="#track-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Add a Task
+        Track Context
       
     </span>
   </a>
@@ -486,10 +486,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#record-a-decision" class="md-nav__link">
+  <a href="#check-context-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Record a Decision
+        Check Context Health
       
     </span>
   </a>
@@ -497,10 +497,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#note-a-learning" class="md-nav__link">
+  <a href="#browse-session-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note a Learning
+        Browse Session History
       
     </span>
   </a>
@@ -508,10 +508,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mark-task-complete" class="md-nav__link">
+  <a href="#save-and-restore-sessions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mark Task Complete
+        Save and Restore Sessions
       
     </span>
   </a>
@@ -519,10 +519,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-for-stale-context" class="md-nav__link">
+  <a href="#run-an-autonomous-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check for Stale Context
+        Run an Autonomous Loop
       
     </span>
   </a>
@@ -1047,10 +1047,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#add-a-task" class="md-nav__link">
+  <a href="#track-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Add a Task
+        Track Context
       
     </span>
   </a>
@@ -1058,10 +1058,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#record-a-decision" class="md-nav__link">
+  <a href="#check-context-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Record a Decision
+        Check Context Health
       
     </span>
   </a>
@@ -1069,10 +1069,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#note-a-learning" class="md-nav__link">
+  <a href="#browse-session-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note a Learning
+        Browse Session History
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mark-task-complete" class="md-nav__link">
+  <a href="#save-and-restore-sessions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mark Task Complete
+        Save and Restore Sessions
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-for-stale-context" class="md-nav__link">
+  <a href="#run-an-autonomous-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check for Stale Context
+        Run an Autonomous Loop
       
     </span>
   </a>
@@ -1285,43 +1285,81 @@ or previous session topics.</p>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>├── DECISIONS.md        # Architectural decisions with rationale
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>├── LEARNINGS.md        # Lessons learned, gotchas, tips
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>├── GLOSSARY.md         # Domain terms and abbreviations
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>├── DRIFT.md            # Staleness signals
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>├── AGENT_PLAYBOOK.md   # How AI tools should use this
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>└── sessions/           # Session snapshots
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>.claude/                # Claude Code integration (if detected)
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>├── hooks/              # Auto-save and enforcement scripts
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>├── skills/             # ctx Agent Skills (agentskills.io spec)
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>└── settings.local.json # Hook configuration
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>├── AGENT_PLAYBOOK.md   # How AI tools should use this
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>└── sessions/           # Session snapshots
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>.claude/                # Claude Code integration (if detected)
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>├── hooks/              # Auto-save and enforcement scripts
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>├── skills/             # ctx Agent Skills (agentskills.io spec)
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>└── settings.local.json # Hook configuration
 </span></code></pre></div>
 <p>See <a href="context-files/">Context Files</a> for detailed documentation of each file.</p>
 <h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
-<h3 id="add-a-task">Add a Task<a class="headerlink" href="#add-a-task" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
+<h3 id="track-context">Track Context<a class="headerlink" href="#track-context" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Add a task</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Record a decision (full ADR fields required)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL for primary database&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for production&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;PostgreSQL offers ACID compliance and JSON support&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>--consequences<span class="w"> </span><span class="s2">&quot;Team needs PostgreSQL training&quot;</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Note a learning</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Mock functions must be hoisted in Jest&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Tests failed with undefined mock errors&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Jest hoists mock calls to top of file&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Place jest.mock() before imports&quot;</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Mark task complete</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
 </span></code></pre></div>
-<h3 id="record-a-decision">Record a Decision<a class="headerlink" href="#record-a-decision" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL for primary database&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for production&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;PostgreSQL offers ACID compliance and JSON support&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--consequences<span class="w"> </span><span class="s2">&quot;Team needs PostgreSQL training&quot;</span>
+<h3 id="check-context-health">Check Context Health<a class="headerlink" href="#check-context-health" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Detect stale paths, missing files, potential secrets</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>drift
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># See full context summary</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
-<h3 id="note-a-learning">Note a Learning<a class="headerlink" href="#note-a-learning" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Mock functions must be hoisted in Jest&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Tests failed with undefined mock errors&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Jest hoists mock calls to top of file&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Place jest.mock() before imports&quot;</span>
+<h3 id="browse-session-history">Browse Session History<a class="headerlink" href="#browse-session-history" title="Permanent link">&para;</a></h3>
+<p>Export AI session transcripts to a browsable journal site:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Export all sessions to .context/journal/</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Generate and serve the journal site</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
-<h3 id="mark-task-complete">Mark Task Complete<a class="headerlink" href="#mark-task-complete" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;user auth&quot;</span>
+<p>Then open <a href="http://localhost:8000">http://localhost:8000</a>.</p>
+<p>To update the journal after new sessions, run the same two commands
+again; <code>recall export</code> preserves existing YAML frontmatter and only
+updates conversation content.</p>
+<p>See <a href="session-journal/">Session Journal</a> for the full pipeline
+including enrichment and normalization.</p>
+<h3 id="save-and-restore-sessions">Save and Restore Sessions<a class="headerlink" href="#save-and-restore-sessions" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Save a snapshot of current context</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>session<span class="w"> </span>save<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># List saved sessions</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ctx<span class="w"> </span>session<span class="w"> </span>list
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Load a previous session</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>ctx<span class="w"> </span>session<span class="w"> </span>load<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
 </span></code></pre></div>
-<h3 id="check-for-stale-context">Check for Stale Context<a class="headerlink" href="#check-for-stale-context" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>drift
+<h3 id="run-an-autonomous-loop">Run an Autonomous Loop<a class="headerlink" href="#run-an-autonomous-loop" title="Permanent link">&para;</a></h3>
+<p>Generate a script that iterates an AI agent until a completion
+signal is detected:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>loop
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>./loop.sh
 </span></code></pre></div>
+<p>See <a href="autonomous-loop/">Autonomous Loops</a> for configuration
+and advanced usage.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="prompting-guide/">Prompting Guide</a> — Effective prompts for AI sessions</li>
 <li><a href="cli-reference/">CLI Reference</a> — All commands and options</li>
 <li><a href="context-files/">Context Files</a> — File formats and structure</li>
+<li><a href="session-journal/">Session Journal</a> — Browse and search session history</li>
 <li><a href="autonomous-loop/">Autonomous Loops</a> — Iterative AI development workflows</li>
 <li><a href="integrations/">Integrations</a> — Setup for Claude Code, Cursor, Aider</li>
 <li><a href="blog/">Blog</a> — Stories and lessons from building ctx</li>

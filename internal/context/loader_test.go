@@ -78,9 +78,9 @@ func TestLoad(t *testing.T) {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
 	defer func(path string) {
-		err := os.RemoveAll(path)
-		if err != nil {
-			fmt.Printf("failed to remove temp dir %q: %v", path, err)
+		rmErr := os.RemoveAll(path)
+		if rmErr != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, rmErr)
 		}
 	}(tmpDir)
 

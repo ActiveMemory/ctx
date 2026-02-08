@@ -37,77 +37,87 @@ func buildSessionContent(
 	sep := config.Separator
 
 	// Header with timestamp fields for session correlation
-	sb.WriteString(fmt.Sprintf("# Session: %s"+nl+nl, topic))
-	sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, timestamp.Format("2006-01-02")))
-	sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, timestamp.Format("15:04:05")))
-	sb.WriteString(fmt.Sprintf("**Type**: %s"+nl, sessionType))
+	sb.WriteString(fmt.Sprintf(config.TplSessionHeading+nl+nl, topic))
+	sb.WriteString(
+		fmt.Sprintf(config.MetadataDate+" %s"+nl, timestamp.Format("2006-01-02")),
+	)
+	sb.WriteString(
+		fmt.Sprintf(config.MetadataTime+" %s"+nl, timestamp.Format("15:04:05")),
+	)
+	sb.WriteString(fmt.Sprintf(config.MetadataType+" %s"+nl, sessionType))
 
 	// Session correlation timestamps
 	// (YYYY-MM-DD-HHMM format matches ctx add timestamps)
 	// start_time: When session began
 	// (use CTX_SESSION_START env var if available, else save time)
 	startTime := timestamp
-	if envStart := os.Getenv("CTX_SESSION_START"); envStart != "" {
-		if parsed, err := time.Parse("2006-01-02-1504", envStart); err == nil {
+	if envStart := os.Getenv(config.EnvCtxSessionStart); envStart != "" {
+		if parsed, parseErr := time.Parse(
+			"2006-01-02-1504", envStart,
+		); parseErr == nil {
 			startTime = parsed
 		}
 	}
 	sb.WriteString(
-		fmt.Sprintf("**start_time**: %s"+nl, startTime.Format("2006-01-02-1504")),
+		fmt.Sprintf(
+			config.MetadataStartTime+" %s"+nl, startTime.Format("2006-01-02-1504"),
+		),
 	)
 	sb.WriteString(
-		fmt.Sprintf("**end_time**: %s"+nl, timestamp.Format("2006-01-02-1504")),
+		fmt.Sprintf(
+			config.MetadataEndTime+" %s"+nl, timestamp.Format("2006-01-02-1504"),
+		),
 	)
 	sb.WriteString(nl + sep + nl + nl)
 
 	// Summary section (placeholder for the user to fill in)
-	sb.WriteString("## Summary" + nl + nl)
-	sb.WriteString("[Describe what was accomplished in this session]" + nl + nl)
+	sb.WriteString(config.RecallHeadingSummary + nl + nl)
+	sb.WriteString(config.TplSessionPlaceholderSummary + nl + nl)
 	sb.WriteString(sep + nl + nl)
 
 	// Current Tasks
-	sb.WriteString("## Current Tasks" + nl + nl)
-	tasks, err := readContextSection(
-		config.FileTask, "## In Progress", "## Next Up",
+	sb.WriteString(config.SessionHeadingCurrentTasks + nl + nl)
+	tasks, readErr := readContextSection(
+		config.FileTask, config.HeadingInProgress, config.HeadingNextUp,
 	)
-	if err == nil && tasks != "" {
-		sb.WriteString("### In Progress" + nl + nl)
+	if readErr == nil && tasks != "" {
+		sb.WriteString(config.SessionHeadingInProgress + nl + nl)
 		sb.WriteString(tasks)
 		sb.WriteString(nl)
 	}
-	nextTasks, err := readContextSection(
-		config.FileTask, "## Next Up", "## Completed",
+	nextTasks, readErr := readContextSection(
+		config.FileTask, config.HeadingNextUp, config.HeadingCompleted,
 	)
-	if err == nil && nextTasks != "" {
-		sb.WriteString("### Next Up" + nl + nl)
+	if readErr == nil && nextTasks != "" {
+		sb.WriteString(config.SessionHeadingNextUp + nl + nl)
 		sb.WriteString(nextTasks)
 		sb.WriteString(nl)
 	}
 	sb.WriteString(sep + nl + nl)
 
 	// Recent Decisions
-	sb.WriteString("## Recent Decisions" + nl + nl)
-	decisions, err := readRecentDecisions()
-	if err == nil && decisions != "" {
+	sb.WriteString(config.SessionHeadingRecentDecisions + nl + nl)
+	decisions, readErr := readRecentDecisions()
+	if readErr == nil && decisions != "" {
 		sb.WriteString(decisions)
 	} else {
-		sb.WriteString("[No recent decisions found]" + nl)
+		sb.WriteString(config.TplSessionPlaceholderNoDecisions + nl)
 	}
 	sb.WriteString(nl + sep + nl + nl)
 
 	// Recent Learnings
-	sb.WriteString("## Recent Learnings" + nl + nl)
-	learnings, err := readRecentLearnings()
-	if err == nil && learnings != "" {
+	sb.WriteString(config.SessionHeadingRecentLearnings + nl + nl)
+	learnings, readErr := readRecentLearnings()
+	if readErr == nil && learnings != "" {
 		sb.WriteString(learnings)
 	} else {
-		sb.WriteString("[No recent learnings found]" + nl)
+		sb.WriteString(config.TplSessionPlaceholderNoLearnings + nl)
 	}
 	sb.WriteString(nl + sep + nl + nl)
 
 	// Tasks for Next Session
-	sb.WriteString("## Tasks for Next Session" + nl + nl)
-	sb.WriteString("[List tasks to continue in the next session]" + nl + nl)
+	sb.WriteString(config.SessionHeadingNextSessionTasks + nl + nl)
+	sb.WriteString(config.TplSessionPlaceholderNextTasks + nl + nl)
 
 	return sb.String(), nil
 }

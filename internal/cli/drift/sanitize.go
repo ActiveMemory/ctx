@@ -6,6 +6,8 @@
 
 package drift
 
+import "github.com/ActiveMemory/ctx/internal/drift"
+
 // formatCheckName converts internal check identifiers to human-readable names.
 //
 // Parameters:
@@ -15,17 +17,17 @@ package drift
 // Returns:
 //   - string: Human-readable description of the check, or the original name
 //     if unknown
-func formatCheckName(name string) string {
+func formatCheckName(name drift.CheckName) string {
 	switch name {
-	case "path_references":
+	case drift.CheckPathReferences:
 		return "Path references are valid"
-	case "staleness_check":
+	case drift.CheckStaleness:
 		return "No staleness indicators"
-	case "constitution_check":
+	case drift.CheckConstitution:
 		return "Constitution rules respected"
-	case "required_files":
+	case drift.CheckRequiredFiles:
 		return "All required files present"
 	default:
-		return name
+		return string(name)
 	}
 }

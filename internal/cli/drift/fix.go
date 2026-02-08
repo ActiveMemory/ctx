@@ -24,18 +24,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
-// fixResult tracks fixes applied during drift fix.
-//
-// Fields:
-//   - fixed: Number of issues successfully fixed
-//   - skipped: Number of issues skipped (not auto-fixable)
-//   - errors: Error messages from failed fix attempts
-type fixResult struct {
-	fixed   int
-	skipped int
-	errors  []string
-}
-
 // applyFixes attempts to auto-fix issues in the drift report.
 //
 // Currently, supports fixing:
@@ -59,37 +47,42 @@ func applyFixes(
 	// Process warnings (staleness, missing_file, dead_path)
 	for _, issue := range report.Warnings {
 		switch issue.Type {
-		case "staleness":
-			if err := fixStaleness(cmd, ctx); err != nil {
+		case drift.IssueStaleness:
+			if fixErr := fixStaleness(cmd, ctx); fixErr != nil {
 				result.errors = append(result.errors,
-					fmt.Sprintf("staleness: %v", err))
+					fmt.Sprintf("staleness: %v", fixErr))
 			} else {
-				cmd.Printf("%s Fixed staleness in %s (archived completed tasks)\n",
-					green("✓"), issue.File)
+				cmd.Println(
+					fmt.Sprintf(
+						"%s Fixed staleness in %s (archived completed tasks)",
+						green("✓"), issue.File),
+				)
 				result.fixed++
 			}
 
-		case "missing_file":
-			if err := fixMissingFile(issue.File); err != nil {
+		case drift.IssueMissing:
+			if fixErr := fixMissingFile(issue.File); fixErr != nil {
 				result.errors = append(result.errors,
-					fmt.Sprintf("missing %s: %v", issue.File, err))
+					fmt.Sprintf("missing %s: %v", issue.File, fixErr))
 			} else {
-				cmd.Printf("%s Created missing file: %s\n", green("✓"), issue.File)
+				cmd.Println(
+					fmt.Sprintf("%s Created missing file: %s", green("✓"), issue.File),
+				)
 				result.fixed++
 			}
 
-		case "dead_path":
-			cmd.Printf("%s Cannot auto-fix dead path in %s:%d (%s)\n",
-				yellow("○"), issue.File, issue.Line, issue.Path)
+		case drift.IssueDeadPath:
+			cmd.Println(fmt.Sprintf("%s Cannot auto-fix dead path in %s:%d (%s)",
+				yellow("○"), issue.File, issue.Line, issue.Path))
 			result.skipped++
 		}
 	}
 
 	// Process violations (potential_secret) - never auto-fix
 	for _, issue := range report.Violations {
-		if issue.Type == "potential_secret" {
-			cmd.Printf("%s Cannot auto-fix potential secret: %s\n",
-				yellow("○"), issue.File)
+		if issue.Type == drift.IssueSecret {
+			cmd.Println(fmt.Sprintf("%s Cannot auto-fix potential secret: %s",
+				yellow("○"), issue.File))
 			result.skipped++
 		}
 	}
@@ -118,7 +111,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	if tasksFile == nil {
-		return fmt.Errorf("TASKS.md not found")
+		return errTasksNotFound()
 	}
 
 	nl := config.NewlineLF
@@ -132,12 +125,14 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 
 	for _, line := range lines {
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, "## Completed") {
+		if strings.HasPrefix(line, config.HeadingCompleted) {
 			inCompletedSection = true
 			newLines = append(newLines, line)
 			continue
 		}
-		if strings.HasPrefix(line, "## ") && inCompletedSection {
+		if strings.HasPrefix(
+			line, config.HeadingLevelTwoStart,
+		) && inCompletedSection {
 			inCompletedSection = false
 		}
 
@@ -145,20 +140,20 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		match := config.RegExTask.FindStringSubmatch(line)
 		if inCompletedSection && match != nil && task.Completed(match) {
 			completedTasks = append(completedTasks, task.Content(match))
-			continue // Remove from file
+			continue // Remove from the file
 		}
 
 		newLines = append(newLines, line)
 	}
 
 	if len(completedTasks) == 0 {
-		return fmt.Errorf("no completed tasks to archive")
+		return errNoCompletedTasks()
 	}
 
 	// Create an archive directory
-	archiveDir := filepath.Join(rc.ContextDir(), "archive")
-	if err := os.MkdirAll(archiveDir, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create archive directory: %w", err)
+	archiveDir := filepath.Join(rc.ContextDir(), config.DirArchive)
+	if mkErr := os.MkdirAll(archiveDir, config.PermExec); mkErr != nil {
+		return errMkdir(archiveDir, mkErr)
 	}
 
 	// Write to the archive file
@@ -167,32 +162,34 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
 	)
 
-	archiveContent := "# Archived Tasks - " + time.Now().Format("2006-01-02") + nl + nl
+	archiveContent := config.HeadingArchivedTasks + " - " +
+		time.Now().Format("2006-01-02") +
+		nl + nl
 	for _, t := range completedTasks {
-		archiveContent += "- [x] " + t + nl
+		archiveContent += config.PrefixTaskDone + " " + t + nl
 	}
 
-	// Append to existing archive file if it exists
-	if existing, err := os.ReadFile(archiveFile); err == nil {
+	// Append to the existing archive file if it exists
+	if existing, readErr := os.ReadFile(archiveFile); readErr == nil {
 		archiveContent = string(existing) + nl + archiveContent
 	}
 
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		archiveFile, []byte(archiveContent), config.PermFile,
-	); err != nil {
-		return fmt.Errorf("failed to write archive: %w", err)
+	); writeErr != nil {
+		return errFileWrite(archiveFile, writeErr)
 	}
 
 	// Write updated TASKS.md
 	newContent := strings.Join(newLines, nl)
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		tasksFile.Path, []byte(newContent), config.PermFile,
-	); err != nil {
-		return fmt.Errorf("failed to update TASKS.md: %w", err)
+	); writeErr != nil {
+		return errFileWrite(tasksFile.Path, writeErr)
 	}
 
-	cmd.Printf("  Archived %d completed tasks to %s\n",
-		len(completedTasks), archiveFile)
+	cmd.Println(fmt.Sprintf("  Archived %d completed tasks to %s",
+		len(completedTasks), archiveFile))
 
 	return nil
 }
@@ -207,18 +204,20 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 func fixMissingFile(filename string) error {
 	content, err := tpl.Template(filename)
 	if err != nil {
-		return fmt.Errorf("no template available for %s: %w", filename, err)
+		return errNoTemplate(filename, err)
 	}
 
 	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
-	if err := os.MkdirAll(rc.ContextDir(), config.PermExec); err != nil {
-		return fmt.Errorf("failed to create .context/: %w", err)
+	if mkErr := os.MkdirAll(rc.ContextDir(), config.PermExec); mkErr != nil {
+		return errMkdir(rc.ContextDir(), mkErr)
 	}
 
-	if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
-		return fmt.Errorf("failed to write %s: %w", targetPath, err)
+	if writeErr := os.WriteFile(
+		targetPath, content, config.PermFile,
+	); writeErr != nil {
+		return errFileWrite(targetPath, writeErr)
 	}
 
 	return nil

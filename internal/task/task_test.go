@@ -106,20 +106,20 @@ func TestIsPending(t *testing.T) {
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
-			got := IsPending(match)
+			got := Pending(match)
 			if got != tt.want {
-				t.Errorf("IsPending() = %v, want %v", got, tt.want)
+				t.Errorf("Pending() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
 func TestIsPending_InvalidMatch(t *testing.T) {
-	if IsPending(nil) {
-		t.Error("IsPending(nil) should return false")
+	if Pending(nil) {
+		t.Error("Pending(nil) should return false")
 	}
-	if IsPending([]string{"full", "indent"}) {
-		t.Error("IsPending() with short slice should return false")
+	if Pending([]string{"full", "indent"}) {
+		t.Error("Pending() with short slice should return false")
 	}
 }
 
@@ -264,9 +264,9 @@ func TestIsSubTask(t *testing.T) {
 			if match == nil {
 				t.Fatalf("line did not match task pattern: %q", tt.line)
 			}
-			got := IsSubTask(match)
+			got := SubTask(match)
 			if got != tt.want {
-				t.Errorf("IsSubTask() = %v, want %v", got, tt.want)
+				t.Errorf("SubTask() = %v, want %v", got, tt.want)
 			}
 		})
 	}

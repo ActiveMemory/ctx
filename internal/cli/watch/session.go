@@ -19,7 +19,7 @@ import (
 
 // watchAutoSaveSession saves a session snapshot during watch mode.
 //
-// Creates a timestamped markdown file in the sessions directory
+// Creates a timestamped Markdown file in the sessions directory
 // containing all updates applied during the watch session. Called
 // periodically when --auto-save is enabled.
 //
@@ -64,7 +64,7 @@ func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 
 	sb.WriteString("# Watch Mode Session" + nl + nl)
 	sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, timestamp.Format("2006-01-02")))
-	sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, timestamp.Format("15:04:05")))
+	sb.WriteString(fmt.Sprintf(config.MetadataTime+" %s"+nl, timestamp.Format("15:04:05")))
 	sb.WriteString("**Type**: watch-auto-save" + nl + nl)
 	sb.WriteString(config.Separator + nl + nl)
 

@@ -186,6 +186,30 @@ Check for exported functions/types with no callers outside their package.
 
 Use `go vet` and `golangci-lint run --enable=unused` for a more thorough check.
 
+### 11. Package Documentation Drift
+
+Convention: packages with a `doc.go` must stay accurate in two ways:
+
+**a) File Organization listing** — must list every `.go` file in the
+package (excluding `_test.go`). Missing or extra entries mean files
+were added/removed without updating the doc.
+
+```bash
+make lint-docs
+```
+
+**b) Package description** — the opening paragraph describes what the
+package does. When behavior changes (new subcommands, new
+responsibilities, renamed concepts), the description drifts.
+
+Review each `doc.go` manually: does the description still match what
+the package actually does today? Check exported symbols, command
+`Use`/`Short`/`Long` strings, and the file organization listing for
+clues that the scope expanded or shifted.
+
+**Fix (a)**: Add missing files, remove stale entries.
+**Fix (b)**: Rewrite the description to match current behavior.
+
 ## Consolidation Decision Matrix
 
 Use this to prioritize what to fix:
@@ -239,7 +263,7 @@ After running checks, report:
 ## Quality Checklist
 
 Before reporting the consolidation results:
-- [ ] All 10 checks were run (not skipped)
+- [ ] All 11 checks were run (not skipped)
 - [ ] Accepted exceptions were respected (e.g., `IsUser()`)
 - [ ] Findings are prioritized (highest impact first)
 - [ ] Each finding has a concrete fix suggestion with file path

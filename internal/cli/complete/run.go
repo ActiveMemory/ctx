@@ -39,7 +39,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	filePath := filepath.Join(rc.ContextDir(), config.FileTask)
 
 	// Check if the file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
 		return fmt.Errorf("TASKS.md not found. Run 'ctx init' first")
 	}
 
@@ -54,7 +54,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 
 	var taskNumber int
 	isNumber := false
-	if num, err := strconv.Atoi(query); err == nil {
+	if num, parseErr := strconv.Atoi(query); parseErr == nil {
 		taskNumber = num
 		isNumber = true
 	}
@@ -65,7 +65,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 
 	for i, line := range lines {
 		match := config.RegExTask.FindStringSubmatch(line)
-		if match != nil && task.IsPending(match) {
+		if match != nil && task.Pending(match) {
 			currentTaskNum++
 			taskText := task.Content(match)
 
@@ -110,13 +110,13 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	)
 
 	// Write back
-	newContent := strings.Join(lines, "\n")
-	if err := os.WriteFile(filePath, []byte(newContent), config.PermFile); err != nil {
-		return fmt.Errorf("failed to write TASKS.md: %w", err)
+	newContent := strings.Join(lines, config.NewlineLF)
+	if writeErr := os.WriteFile(filePath, []byte(newContent), config.PermFile); writeErr != nil {
+		return fmt.Errorf("failed to write TASKS.md: %w", writeErr)
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
-	cmd.Printf("%s Completed: %s\n", green("✓"), matchedTask)
+	cmd.Println(fmt.Sprintf("%s Completed: %s", green("✓"), matchedTask))
 
 	return nil
 }

@@ -17,9 +17,9 @@ import "github.com/ActiveMemory/ctx/internal/config"
 //   - bool: True if the file has no meaningful content (only headers,
 //     comments, whitespace)
 func effectivelyEmpty(content []byte) bool {
-	// Simple heuristic: if `content` is less than 100 bytes
-	// and mostly headers/whitespace
-	if len(content) < 20 {
+	// Simple heuristic: if content is shorter than the minimum
+	// meaningful length, treat as empty
+	if len(content) < config.MinContentLen {
 		return true
 	}
 

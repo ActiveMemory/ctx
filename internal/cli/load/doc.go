@@ -35,12 +35,4 @@
 // The --raw flag outputs file contents directly without assembly headers or
 // priority-based ordering. This is useful for debugging or when exact file
 // contents are needed.
-//
-// # File Organization
-//
-//   - load.go: Command definition and flag handling
-//   - run.go: Main load execution logic
-//   - convert.go: Format conversion utilities
-//   - sort.go: Priority-based file sorting
-//   - out.go: Output formatting
 package load

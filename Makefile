@@ -2,7 +2,7 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint clean all release build-all dogfood help \
+.PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
 test-coverage smoke site site-serve site-setup audit \
 journal journal-serve watch-session backup backup-global backup-all
 
@@ -15,7 +15,7 @@ all: build
 
 ## build: Build for current platform
 build:
-	CGO_ENABLED=0 go build -o $(OUTPUT) ./cmd/ctx
+	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## test: Run tests with coverage summary
 test:
@@ -84,7 +84,15 @@ fmt:
 lint:
 	golangci-lint run
 
-## audit: Run all CI checks locally (fmt, vet, lint, test)
+## lint-drift: Check for code-level drift (magic strings, literal \n, Printf)
+lint-drift:
+	@./hack/lint-drift.sh
+
+## lint-docs: Check doc.go file listings match actual files
+lint-docs:
+	@./hack/lint-docs.sh
+
+## audit: Run all CI checks locally (fmt, vet, lint, drift, docs, test)
 audit:
 	@echo "==> Checking formatting..."
 	@test -z "$$(gofmt -l .)" || (echo "Files need formatting:"; gofmt -l .; exit 1)
@@ -92,6 +100,10 @@ audit:
 	@CGO_ENABLED=0 go vet ./...
 	@echo "==> Running golangci-lint..."
 	@golangci-lint run --timeout=5m
+	@echo "==> Checking code drift..."
+	@./hack/lint-drift.sh
+	@echo "==> Checking doc.go listings..."
+	@./hack/lint-docs.sh
 	@echo "==> Running tests..."
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""

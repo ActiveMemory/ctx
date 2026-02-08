@@ -57,7 +57,7 @@ for target in "${TARGETS[@]}"; do
   echo "Building ${GOOS}/${GOARCH}..."
 
   CGO_ENABLED=0 GOOS="${GOOS}" GOARCH="${GOARCH}" go build \
-    -ldflags="-s -w -X main.Version=${VERSION}" \
+    -ldflags="-s -w -X github.com/ActiveMemory/ctx/internal/bootstrap.version=${VERSION}" \
     -o "${OUTPUT_DIR}/${output_name}" \
     "${MODULE_PATH}"
 done

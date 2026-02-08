@@ -13,9 +13,9 @@ import (
 	"time"
 )
 
-// DefaultCooldown is the default cooldown duration between context packet
+// defaultCooldown is the default cooldown duration between context packet
 // emissions within the same session.
-const DefaultCooldown = 10 * time.Minute
+const defaultCooldown = 10 * time.Minute
 
 // tombstonePrefix is the filename prefix for cooldown tombstone files.
 const tombstonePrefix = "ctx-agent-"
@@ -60,5 +60,7 @@ func touchTombstone(session string) {
 // Returns:
 //   - string: absolute path in the system temp directory
 func tombstonePath(session string) string {
-	return filepath.Join(os.TempDir(), fmt.Sprintf("%s%s", tombstonePrefix, session))
+	return filepath.Join(
+		os.TempDir(), fmt.Sprintf("%s%s", tombstonePrefix, session),
+	)
 }

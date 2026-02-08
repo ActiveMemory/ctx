@@ -30,9 +30,12 @@ type transcriptEntry struct {
 //   - Content: Message content, either a string or array of content blocks
 //     (text, thinking, tool_use, tool_result)
 type transcriptMsg struct {
-	Role    string      `json:"role"`
-	Content interface{} `json:"content"`
+	Role    string  `json:"role"`
+	Content any    `json:"content"`
 }
+
+// contentBlock represents a parsed content block from a Claude API message.
+type contentBlock = map[string]any
 
 // sessionInfo holds parsed information about a session file.
 //

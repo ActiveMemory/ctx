@@ -26,6 +26,24 @@ After completing meaningful work, follow this cycle:
 
 **Don't wait for session end** — it may never come cleanly. Persist as you go.
 
+## Invoking ctx
+
+Always use `ctx` from PATH:
+```bash
+ctx status        # ✓ correct
+ctx agent         # ✓ correct
+./dist/ctx        # ✗ avoid hardcoded paths
+go run ./cmd/ctx  # ✗ avoid unless developing ctx itself
+```
+
+Check with `which ctx` if unsure whether it's installed.
+
+## Context Readback
+
+Before starting any work, read the required context files and confirm to the
+user: "I have read the required context files and I'm following project
+conventions." Do not begin implementation until you have done so.
+
 ## Read Order
 
 1. CONSTITUTION.md — Hard rules, NEVER violate
@@ -34,25 +52,74 @@ After completing meaningful work, follow this cycle:
 4. ARCHITECTURE.md — Where things go
 5. DECISIONS.md — Why things are the way they are
 6. LEARNINGS.md — Gotchas to avoid
+7. GLOSSARY.md — Correct terminology
 
 ## How Your Memory Works
 
 When asked "Do you remember?" or similar:
 
-1. **Check the context files** (sessions/, TASKS.md, LEARNINGS.md, etc.)
-2. **Respond with what you found** — "From the sessions, I see we discussed X..."
-3. **Be honest about mechanism only if asked** — the user wants results, not disclaimers
+1. **Read silently first**: TASKS.md, DECISIONS.md, LEARNINGS.md, and
+   list `sessions/` for recent files. Do this BEFORE composing a response.
+2. **Respond with a structured readback**:
+   - **Last session**: most recent session topic and date
+   - **Active work**: pending or in-progress tasks
+   - **Recent context**: 1-2 recent decisions or learnings
+   - **Next step**: offer to continue or ask what to focus on
+3. **Be honest about mechanism only if asked** — the user wants results,
+   not disclaimers
 
 **Wrong**: "I don't have memory, but I can check files. Want me to?"
-**Right**: *checks files* → "Yes, I see from the last session we were working on..."
+**Right**: *reads files silently* → "Last session (Jan 15, database timeouts):
+we investigated connection pool exhaustion. OAuth2 login is in progress
+with 3 remaining tasks in Phase 2. Want to continue with that?"
 
-The context IS your memory. Load it and use it — don't lead with caveats.
+The context IS your memory. It's stored externally in files, but that's an
+implementation detail. Load it and use it — don't lead with caveats.
 
 ## Session History
 
-Check `.context/sessions/` for session dumps from previous sessions.
+**IMPORTANT**: Check `.context/sessions/` for session dumps
+from previous sessions.
 
-Session files are named `YYYY-MM-DD-HHMMSS-<topic>.md`.
+If you're confused about context or need a deep dive into past discussions:
+```
+ls .context/sessions/
+```
+
+**Manual session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md`
+(e.g., `2026-01-15-143000-database-timeout-investigation.md`).
+These are updated throughout the session.
+
+**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl`
+(e.g., `2026-01-15-170830-pre-compact.jsonl`). These are immutable once created.
+
+**Auto-save triggers** (for Claude Code users):
+- **SessionEnd hook** → auto-saves transcript on exit, including Ctrl+C
+- **PreCompact** → saves before `ctx compact` archives old tasks
+- **Manual** → `ctx session save`
+
+## Timestamp-Based Session Correlation
+
+Context entries (tasks, learnings, decisions) include timestamps that allow
+you to determine which session created them.
+
+### Timestamp Format
+
+All timestamps use `YYYY-MM-DD-HHMMSS` format (6-digit time for seconds precision):
+- **Tasks**: `- [ ] Do something #added:2026-01-23-143022`
+- **Learnings**: `## [2026-01-23-143022] Discovered that...`
+- **Decisions**: `## [2026-01-23-143022] Use PostgreSQL`
+- **Sessions**: `**start_time**: 2026-01-23-140000` / `**end_time**: 2026-01-23-153045`
+
+### Correlating Entries to Sessions
+
+To find which session added an entry:
+
+1. **Extract the entry's timestamp** (e.g., `2026-01-15-143000`)
+2. **List sessions** from that day: `ls .context/sessions/2026-01-15*`
+3. **Check session time bounds**: Entry timestamp should fall between session's
+   start_time and end_time
+4. **Match**: The session file with matching time range contains the context
 
 ## When to Update Memory
 
@@ -64,29 +131,13 @@ Session files are named `YYYY-MM-DD-HHMMSS-<topic>.md`.
 | Completed task              | Mark [x] in TASKS.md  |
 | Had important discussion    | Save to sessions/     |
 
-### Prefer `ctx add` Over Direct File Edits
-
-When adding learnings, decisions, or tasks, **use `ctx add` commands**:
-
-```bash
-# ✓ Preferred - ensures consistent format, timestamps, structure
-ctx add learning "Title" --context "..." --lesson "..." --application "..."
-ctx add decision "Title" --context "..." --rationale "..." --consequences "..."
-ctx add task "Description"
-
-# ✗ Avoid - bypasses structure, easy to write incomplete entries
-Edit LEARNINGS.md directly with a one-liner
-```
-
-**Exception:** Direct edits are fine for:
-- Marking tasks complete (`[ ]` → `[x]`)
-- Minor corrections to existing entries
-
 ## Proactive Context Persistence
 
 **Don't wait for session end** — persist context at natural milestones.
 
 ### Milestone Triggers
+
+Offer to persist context when you:
 
 | Milestone                          | Action                                          |
 |------------------------------------|-------------------------------------------------|
@@ -94,6 +145,8 @@ Edit LEARNINGS.md directly with a one-liner
 | Make an architectural decision     | `ctx add decision "..."`                        |
 | Discover a gotcha or bug           | `ctx add learning "..."`                        |
 | Finish a significant code change   | Offer to summarize what was done                |
+| Encounter unexpected behavior      | Document it before moving on                    |
+| Resolve a tricky debugging session | Capture the root cause and fix                  |
 
 ### Self-Check Prompt
 
@@ -103,11 +156,71 @@ Periodically ask yourself:
 
 If no — persist something before continuing.
 
+### Task Lifecycle Timestamps
+
+Track task progress with timestamps for session correlation:
+
+```markdown
+- [ ] Implement feature X #added:2026-01-25-220332
+- [ ] Fix bug Y #added:2026-01-25-220332 #started:2026-01-25-221500
+- [x] Refactor Z #added:2026-01-25-200000 #started:2026-01-25-210000 #done:2026-01-25-223045
+```
+
+| Tag        | When to Add                              | Format               |
+|------------|------------------------------------------|----------------------|
+| `#added`   | Auto-added by `ctx add task`             | `YYYY-MM-DD-HHMMSS`  |
+| `#started` | When you begin working on the task       | `YYYY-MM-DD-HHMMSS`  |
+| `#done`    | When you mark the task `[x]` complete    | `YYYY-MM-DD-HHMMSS`  |
+
 ## How to Avoid Hallucinating Memory
 
-Never assume: If you don't see it in files, you don't know it.
+Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
 - Don't invent history - check sessions/ for actual discussions
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
+
+---
+
+## Context Anti-Patterns
+
+### Stale Context
+
+**Problem**: Context files become outdated and misleading.
+
+**Solution**: Update context as part of completing work, not as a separate task.
+Run `ctx drift` periodically to detect staleness.
+
+### Context Sprawl
+
+**Problem**: Information scattered across multiple locations.
+
+**Solution**: Single source of truth for each type of information.
+Use the defined file structure; resist creating new document types.
+
+### Implicit Context
+
+**Problem**: Relying on knowledge not captured in artifacts.
+
+**Solution**: If you reference something repeatedly, add it to the appropriate file.
+If this session ended now, would the next session know what you know?
+
+---
+
+## Context Validation Checklist
+
+Before starting significant work, validate context is current:
+
+### Quick Check (Every Session)
+- [ ] TASKS.md reflects current priorities
+- [ ] No obvious staleness in files you'll reference
+- [ ] Recent sessions reviewed for relevant context
+
+### Deep Check (Weekly or Before Major Work)
+- [ ] CONSTITUTION.md rules still apply
+- [ ] ARCHITECTURE.md matches actual structure
+- [ ] CONVENTIONS.md patterns match code
+- [ ] DECISIONS.md has no superseded entries unmarked
+- [ ] LEARNINGS.md gotchas still relevant
+- [ ] Run `ctx drift` and address warnings

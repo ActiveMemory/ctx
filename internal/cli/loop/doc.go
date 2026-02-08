@@ -34,10 +34,4 @@
 // finished its work. The AI should output this signal when it determines
 // that the task is complete. The loop script watches for this signal and
 // exits when detected.
-//
-// # File Organization
-//
-//   - loop.go: Command definition and flag handling
-//   - run.go: Main loop script generation logic
-//   - script.go: Shell script templates for each tool
 package loop

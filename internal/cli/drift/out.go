@@ -40,24 +40,29 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 
 	// Violations
 	if len(report.Violations) > 0 {
-		cmd.Printf("%s VIOLATIONS (%d)\n\n", red("❌"), len(report.Violations))
+		cmd.Println(fmt.Sprintf(
+			"%s VIOLATIONS (%d)", red("❌"), len(report.Violations)),
+		)
+		cmd.Println()
 		for _, v := range report.Violations {
+			line := fmt.Sprintf("  - %s: %s", v.File, v.Message)
 			if v.Line > 0 {
-				cmd.Printf("  - %s:%d %s", v.File, v.Line, v.Message)
-			} else {
-				cmd.Printf("  - %s: %s", v.File, v.Message)
+				line = fmt.Sprintf("  - %s:%d %s", v.File, v.Line, v.Message)
 			}
 			if v.Rule != "" {
-				cmd.Printf(" (rule: %s)", v.Rule)
+				line += fmt.Sprintf(" (rule: %s)", v.Rule)
 			}
-			cmd.Println()
+			cmd.Println(line)
 		}
 		cmd.Println()
 	}
 
 	// Warnings
 	if len(report.Warnings) > 0 {
-		cmd.Printf("%s WARNINGS (%d)\n\n", yellow("⚠️ "), len(report.Warnings))
+		cmd.Println(
+			fmt.Sprintf("%s WARNINGS (%d)", yellow("⚠️ "), len(report.Warnings)),
+		)
+		cmd.Println()
 
 		// Group by type
 		var pathRefs []drift.Issue
@@ -66,9 +71,9 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 
 		for _, w := range report.Warnings {
 			switch w.Type {
-			case "dead_path":
+			case drift.IssueDeadPath:
 				pathRefs = append(pathRefs, w)
-			case "staleness":
+			case drift.IssueStaleness:
 				staleness = append(staleness, w)
 			default:
 				other = append(other, w)
@@ -78,9 +83,9 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 		if len(pathRefs) > 0 {
 			cmd.Println("  Path References:")
 			for _, w := range pathRefs {
-				cmd.Printf(
-					"  - %s:%d references '%s' (not found)\n", w.File, w.Line, w.Path,
-				)
+				cmd.Println(fmt.Sprintf(
+					"  - %s:%d references '%s' (not found)", w.File, w.Line, w.Path,
+				))
 			}
 			cmd.Println()
 		}
@@ -88,7 +93,7 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 		if len(staleness) > 0 {
 			cmd.Println("  Staleness:")
 			for _, w := range staleness {
-				cmd.Printf("  - %s %s\n", w.File, w.Message)
+				cmd.Println(fmt.Sprintf("  - %s %s", w.File, w.Message))
 			}
 			cmd.Println()
 		}
@@ -96,7 +101,7 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 		if len(other) > 0 {
 			cmd.Println("  Other:")
 			for _, w := range other {
-				cmd.Printf("  - %s: %s\n", w.File, w.Message)
+				cmd.Println(fmt.Sprintf("  - %s: %s", w.File, w.Message))
 			}
 			cmd.Println()
 		}
@@ -104,9 +109,9 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 
 	// Passed
 	if len(report.Passed) > 0 {
-		cmd.Printf("%s PASSED (%d)\n", green("✅"), len(report.Passed))
+		cmd.Println(fmt.Sprintf("%s PASSED (%d)", green("✅"), len(report.Passed)))
 		for _, p := range report.Passed {
-			cmd.Printf("  - %s\n", formatCheckName(p))
+			cmd.Println(fmt.Sprintf("  - %s", formatCheckName(p)))
 		}
 		cmd.Println()
 	}
@@ -114,18 +119,21 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	// Summary
 	status := report.Status()
 	switch status {
-	case "violation":
-		cmd.Printf(
-			"\nStatus: %s — Constitution violations detected\n", red("VIOLATION"),
+	case drift.StatusViolation:
+		cmd.Println()
+		cmd.Println(fmt.Sprintf(
+			"Status: %s — Constitution violations detected", red("VIOLATION")),
 		)
-		return fmt.Errorf("drift detection found violations")
-	case "warning":
-		cmd.Printf(
-			"\nStatus: %s — Issues detected that should be addressed\n",
-			yellow("WARNING"),
+		return errViolationsFound()
+	case drift.StatusWarning:
+		cmd.Println()
+		cmd.Println(fmt.Sprintf(
+			"Status: %s — Issues detected that should be addressed",
+			yellow("WARNING")),
 		)
 	default:
-		cmd.Printf("\nStatus: %s — No drift detected\n", green("OK"))
+		cmd.Println()
+		cmd.Println(fmt.Sprintf("Status: %s — No drift detected", green("OK")))
 	}
 
 	return nil

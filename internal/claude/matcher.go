@@ -36,7 +36,7 @@ func preToolUserHookMatcher(hooksDir string) []HookMatcher {
 		Matcher: MatcherAll,
 		Hooks: []Hook{NewHook(
 			HookTypeCommand,
-			"ctx agent --budget 4000 --session $PPID 2>/dev/null || true",
+			config.CmdAutoloadContext,
 		)},
 	}}
 }

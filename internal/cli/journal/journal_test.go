@@ -156,8 +156,8 @@ Content here.
 
 	entry := parseJournalEntry(path, filename)
 
-	if !entry.IsSuggestion {
-		t.Error("IsSuggestion should be true for suggestion mode sessions")
+	if !entry.Suggestive {
+		t.Error("Suggestive should be true for suggestion mode sessions")
 	}
 }
 
@@ -189,12 +189,12 @@ func TestGenerateIndex(t *testing.T) {
 			Size:     2048,
 		},
 		{
-			Filename:     "2026-01-19-suggestion-ghi11111.md",
-			Title:        "Suggestion",
-			Date:         "2026-01-19",
-			Time:         "09:00:00",
-			IsSuggestion: true,
-			Size:         512,
+			Filename:   "2026-01-19-suggestion-ghi11111.md",
+			Title:      "Suggestion",
+			Date:       "2026-01-19",
+			Time:       "09:00:00",
+			Suggestive: true,
+			Size:       512,
 		},
 	}
 

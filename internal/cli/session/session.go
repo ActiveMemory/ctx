@@ -32,7 +32,7 @@ Subcommands:
   save    Save current context state to a session file
   list    List saved sessions with summaries
   load    Load and display a previous session
-  parse   Convert .jsonl transcript to readable markdown`,
+  parse   Convert .jsonl transcript to readable Markdown`,
 	}
 
 	cmd.AddCommand(sessionSaveCmd())
@@ -149,9 +149,9 @@ func sessionParseCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "parse <file.jsonl>",
-		Short: "Convert .jsonl transcript to readable markdown",
-		Long: `Parse a Claude Code .jsonl transcript file 
-and convert it to readable markdown.
+		Short: "Convert .jsonl transcript to readable Markdown",
+		Long: `Parse a Claude Code .jsonl transcript file
+and convert it to readable Markdown.
 
 The .jsonl files are auto-saved by the SessionEndHooks hook and contain the full
 conversation transcript including tool calls and results.

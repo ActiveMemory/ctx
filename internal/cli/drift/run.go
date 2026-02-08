@@ -35,7 +35,7 @@ func runDrift(cmd *cobra.Command, jsonOutput, fix bool) error {
 	if err != nil {
 		var notFoundError *context.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
+			return errNoContext()
 		}
 		return err
 	}
@@ -54,17 +54,17 @@ func runDrift(cmd *cobra.Command, jsonOutput, fix bool) error {
 
 		cmd.Println()
 		if result.fixed > 0 {
-			cmd.Printf("%s Fixed %d issue(s)\n", green("✓"), result.fixed)
+			cmd.Println(fmt.Sprintf("%s Fixed %d issue(s)", green("✓"), result.fixed))
 		}
 		if result.skipped > 0 {
-			cmd.Printf("%s Skipped %d issue(s) (cannot auto-fix)\n",
-				yellow("○"), result.skipped)
+			cmd.Println(fmt.Sprintf("%s Skipped %d issue(s) (cannot auto-fix)",
+				yellow("○"), result.skipped))
 		}
 		for _, errMsg := range result.errors {
-			cmd.Printf("%s Error: %s\n", yellow("⚠"), errMsg)
+			cmd.Println(fmt.Sprintf("%s Error: %s", yellow("⚠"), errMsg))
 		}
 
-		// Re-run detection to show updated status
+		// Re-run detection to show the updated status
 		if result.fixed > 0 {
 			cmd.Println()
 			cmd.Println("Re-checking after fixes...")

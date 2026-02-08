@@ -61,10 +61,10 @@ func outputAssembled(
 	sep := config.Separator
 
 	// Header
-	sb.WriteString("# Context" + nl + nl)
+	sb.WriteString(config.LoadHeadingContext + nl + nl)
 	sb.WriteString(
 		fmt.Sprintf(
-			"Token Budget: %d | Available: %d"+nl+nl,
+			config.TplLoadBudget+nl+nl,
 			budget, ctx.TotalTokens,
 		),
 	)
@@ -86,14 +86,15 @@ func outputAssembled(
 		if tokensUsed+fileTokens > budget {
 			// Add a truncation notice
 			sb.WriteString(
-				fmt.Sprintf(nl+sep+nl+nl+"*[Truncated: %s and remaining files "+
-					"excluded due to token budget]*"+nl, f.Name),
+				fmt.Sprintf(nl+sep+nl+nl+config.TplLoadTruncated+nl, f.Name),
 			)
 			break
 		}
 
 		// Add the file section
-		sb.WriteString(fmt.Sprintf("## %s"+nl+nl, fileNameToTitle(f.Name)))
+		sb.WriteString(fmt.Sprintf(
+			config.TplLoadSectionHeading+nl+nl, fileNameToTitle(f.Name)),
+		)
 		sb.Write(f.Content)
 		if !strings.HasSuffix(string(f.Content), nl) {
 			sb.WriteString(nl)

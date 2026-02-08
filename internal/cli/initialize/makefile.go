@@ -46,7 +46,7 @@ func handleMakefileCtx(cmd *cobra.Command) error {
 		return fmt.Errorf("failed to read Makefile.ctx template: %w", err)
 	}
 
-	if err := os.WriteFile(
+	if err = os.WriteFile(
 		config.FileMakefileCtx, content, config.PermFile,
 	); err != nil {
 		return fmt.Errorf(

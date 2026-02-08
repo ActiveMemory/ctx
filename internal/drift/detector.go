@@ -15,54 +15,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
-// Issue represents a detected drift issue.
-//
-// Issues are categorized by type and may reference specific files, lines,
-// or paths in the codebase.
-//
-// Fields:
-//   - File: Context file where the issue was detected (e.g., "ARCHITECTURE.md")
-//   - Line: Line number in the file, if applicable
-//   - Type: Issue category (e.g., "dead_path", "staleness", "missing_file")
-//   - Message: Human-readable description of the issue
-//   - Path: Referenced path that caused the issue, if applicable
-//   - Rule: Constitution rule that was violated, if applicable
-type Issue struct {
-	File    string `json:"file"`
-	Line    int    `json:"line,omitempty"`
-	Type    string `json:"type"`
-	Message string `json:"message"`
-	Path    string `json:"path,omitempty"`
-	Rule    string `json:"rule,omitempty"`
-}
-
-// Report represents the complete drift detection report.
-//
-// Contains categorized issues and a list of checks that passed.
-//
-// Fields:
-//   - Warnings: Non-critical issues that should be addressed
-//   - Violations: Critical issues that indicate constitution violations
-//   - Passed: Names of checks that are completed without issues
-type Report struct {
-	Warnings   []Issue  `json:"warnings"`
-	Violations []Issue  `json:"violations"`
-	Passed     []string `json:"passed"`
-}
-
 // Status returns the overall status of the report.
 //
 // Returns:
-//   - string: "violation" if any violations, "warning" if only warnings,
-//     "ok" otherwise
-func (r *Report) Status() string {
+//   - StatusType: StatusViolation if any violations, StatusWarning if only
+//     warnings, StatusOk otherwise
+func (r *Report) Status() StatusType {
 	if len(r.Violations) > 0 {
-		return "violation"
+		return StatusViolation
 	}
 	if len(r.Warnings) > 0 {
-		return "warning"
+		return StatusWarning
 	}
-	return "ok"
+	return StatusOk
 }
 
 // Detect runs all drift detection checks on the given context.
@@ -79,7 +44,7 @@ func Detect(ctx *context.Context) *Report {
 	report := &Report{
 		Warnings:   []Issue{},
 		Violations: []Issue{},
-		Passed:     []string{},
+		Passed:     []CheckName{},
 	}
 
 	// Check path references in context files
@@ -113,7 +78,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 			continue
 		}
 
-		lines := strings.Split(string(f.Content), "\n")
+		lines := strings.Split(string(f.Content), config.NewlineLF)
 		for lineNum, line := range lines {
 			matches := config.RegExPath.FindAllStringSubmatch(line, -1)
 			for _, m := range matches {
@@ -131,7 +96,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 					report.Warnings = append(report.Warnings, Issue{
 						File:    f.Name,
 						Line:    lineNum + 1,
-						Type:    "dead_path",
+						Type:    IssueDeadPath,
 						Message: "references path that does not exist",
 						Path:    path,
 					})
@@ -142,7 +107,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 	}
 
 	if !foundDeadPaths {
-		report.Passed = append(report.Passed, "path_references")
+		report.Passed = append(report.Passed, CheckPathReferences)
 	}
 }
 
@@ -164,7 +129,7 @@ func checkStaleness(ctx *context.Context, report *Report) {
 			if completedCount > 10 {
 				report.Warnings = append(report.Warnings, Issue{
 					File:    f.Name,
-					Type:    "staleness",
+					Type:    IssueStaleness,
 					Message: "has many completed items (consider archiving)",
 					Path:    "",
 				})
@@ -174,7 +139,7 @@ func checkStaleness(ctx *context.Context, report *Report) {
 	}
 
 	if !staleness {
-		report.Passed = append(report.Passed, "staleness_check")
+		report.Passed = append(report.Passed, CheckStaleness)
 	}
 }
 
@@ -200,8 +165,8 @@ func checkConstitution(_ *context.Context, report *Report) {
 	}
 
 	// Look for common secret file patterns in the working directory
-	entries, err := os.ReadDir(".")
-	if err != nil {
+	entries, readErr := os.ReadDir(".")
+	if readErr != nil {
 		return
 	}
 
@@ -216,14 +181,14 @@ func checkConstitution(_ *context.Context, report *Report) {
 				!strings.HasSuffix(name, ".example") &&
 				!strings.HasSuffix(name, ".sample") {
 				// Check if it contains actual content (not just template)
-				content, err := os.ReadFile(entry.Name())
-				if err != nil {
+				content, readFileErr := os.ReadFile(entry.Name())
+				if readFileErr != nil {
 					continue
 				}
 				if len(content) > 0 && !isTemplateFile(content) {
 					report.Violations = append(report.Violations, Issue{
 						File:    entry.Name(),
-						Type:    "potential_secret",
+						Type:    IssueSecret,
 						Message: "may contain secrets (constitution violation)",
 						Rule:    "no_secrets",
 					})
@@ -234,13 +199,13 @@ func checkConstitution(_ *context.Context, report *Report) {
 	}
 
 	if !foundViolation {
-		report.Passed = append(report.Passed, "constitution_check")
+		report.Passed = append(report.Passed, CheckConstitution)
 	}
 }
 
 // checkRequiredFiles verifies that all required context files are present.
 //
-// Checks against config.RequiredFiles and adds a warning for each missing file.
+// Checks against config.FilesRequired and adds a warning for each missing file.
 //
 // Parameters:
 //   - ctx: Loaded context containing existing files
@@ -253,11 +218,11 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 		existingFiles[f.Name] = true
 	}
 
-	for _, name := range config.RequiredFiles {
+	for _, name := range config.FilesRequired {
 		if !existingFiles[name] {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
-				Type:    "missing_file",
+				Type:    IssueMissing,
 				Message: "required context file is missing",
 			})
 			allPresent = false
@@ -265,7 +230,7 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 	}
 
 	if allPresent {
-		report.Passed = append(report.Passed, "required_files")
+		report.Passed = append(report.Passed, CheckRequiredFiles)
 	}
 }
 

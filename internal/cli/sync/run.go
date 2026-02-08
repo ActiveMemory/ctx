@@ -42,7 +42,7 @@ func runSync(cmd *cobra.Command, dryRun bool) error {
 
 	if len(actions) == 0 {
 		green := color.New(color.FgGreen).SprintFunc()
-		cmd.Printf("%s Context is in sync with codebase\n", green("✓"))
+		cmd.Println(fmt.Sprintf("%s Context is in sync with codebase", green("✓")))
 		return nil
 	}
 
@@ -59,23 +59,23 @@ func runSync(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	for i, action := range actions {
-		cmd.Printf("%d. [%s] %s\n", i+1, action.Type, action.Description)
+		cmd.Println(fmt.Sprintf("%d. [%s] %s", i+1, action.Type, action.Description))
 		if action.Suggestion != "" {
-			cmd.Printf("   Suggestion: %s\n", action.Suggestion)
+			cmd.Println(fmt.Sprintf("   Suggestion: %s", action.Suggestion))
 		}
 		cmd.Println()
 	}
 
 	if dryRun {
-		cmd.Printf(
-			"Found %d items to sync. Run without --dry-run to apply suggestions.\n",
+		cmd.Println(fmt.Sprintf(
+			"Found %d items to sync. Run without --dry-run to apply suggestions.",
 			len(actions),
-		)
+		))
 	} else {
-		cmd.Printf(
-			"Found %d items. Review and update context files manually.\n",
+		cmd.Println(fmt.Sprintf(
+			"Found %d items. Review and update context files manually.",
 			len(actions),
-		)
+		))
 	}
 
 	return nil

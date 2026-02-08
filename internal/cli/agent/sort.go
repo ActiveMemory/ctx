@@ -7,7 +7,7 @@
 package agent
 
 import (
-	"fmt"
+	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
@@ -29,7 +29,7 @@ func getReadOrder(ctx *context.Context) []string {
 	for _, name := range config.FileReadOrder {
 		for _, f := range ctx.Files {
 			if f.Name == name && !f.IsEmpty {
-				order = append(order, fmt.Sprintf("%s/%s", ctx.Dir, f.Name))
+				order = append(order, filepath.Join(ctx.Dir, f.Name))
 				break
 			}
 		}

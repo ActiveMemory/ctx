@@ -1,0 +1,74 @@
+//	/    Context:                     https://ctx.ist
+//
+// ,'`./    do you remember?
+//
+//	`.,'\
+//	  \    Copyright 2026-present Context contributors.
+//	                SPDX-License-Identifier: Apache-2.0
+
+package bootstrap
+
+import (
+	"github.com/fatih/color"
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/rc"
+)
+
+// version is set at build time via ldflags:
+//
+//	-X github.com/ActiveMemory/ctx/internal/bootstrap.version=0.2.0
+var version = "dev"
+
+// RootCmd creates and returns the root cobra command for the ctx CLI.
+//
+// The root command provides the entry point for all ctx subcommands and
+// displays help information when invoked without arguments.
+//
+// Global flags:
+//   - --context-dir: Override the context directory path (default: .context)
+//   - --no-color: Disable colored output
+//
+// Returns:
+//   - *cobra.Command: The configured root command with usage and version info
+func RootCmd() *cobra.Command {
+	var contextDir string
+	var noColor bool
+
+	cmd := &cobra.Command{
+		Use:   "ctx",
+		Short: "Context - persistent context for AI coding assistants",
+		Long: `ctx (Context) maintains persistent context files that help
+  AI coding assistants understand your project's architecture, conventions,
+  decisions, and current tasks.
+
+  Use 'ctx init' to create a .context/ directory in your project,
+  then use 'ctx status', 'ctx load', and 'ctx agent' to work with context.`,
+		Version: version,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			// Apply global flag values
+			if contextDir != "" {
+				rc.OverrideContextDir(contextDir)
+			}
+			if noColor {
+				color.NoColor = true
+			}
+		},
+	}
+
+	// Global flags available to all subcommands
+	cmd.PersistentFlags().StringVar(
+		&contextDir,
+		"context-dir",
+		"",
+		"Override context directory path (default: .context)",
+	)
+	cmd.PersistentFlags().BoolVar(
+		&noColor,
+		"no-color",
+		false,
+		"Disable colored output",
+	)
+
+	return cmd
+}

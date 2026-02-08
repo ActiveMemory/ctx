@@ -7,8 +7,6 @@
 package claude
 
 import (
-	"fmt"
-
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/tpl"
 )
@@ -24,7 +22,7 @@ import (
 func AutoSaveScript() ([]byte, error) {
 	content, err := tpl.ClaudeHookByFileName(config.FileAutoSave)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read %s: %w", config.FileAutoSave, err)
+		return nil, errFileRead(config.FileAutoSave, err)
 	}
 	return content, nil
 }
@@ -42,9 +40,7 @@ func AutoSaveScript() ([]byte, error) {
 func BlockNonPathCtxScript() ([]byte, error) {
 	content, err := tpl.ClaudeHookByFileName(config.FileBlockNonPathScript)
 	if err != nil {
-		return nil, fmt.Errorf(
-			"failed to read %s: %w", config.FileBlockNonPathScript, err,
-		)
+		return nil, errFileRead(config.FileBlockNonPathScript, err)
 	}
 	return content, nil
 }
@@ -62,9 +58,7 @@ func BlockNonPathCtxScript() ([]byte, error) {
 func PromptCoachScript() ([]byte, error) {
 	content, err := tpl.ClaudeHookByFileName(config.FilePromptCoach)
 	if err != nil {
-		return nil, fmt.Errorf(
-			"failed to read %s: %w", config.FilePromptCoach, err,
-		)
+		return nil, errFileRead(config.FilePromptCoach, err)
 	}
 	return content, nil
 }
@@ -82,9 +76,7 @@ func PromptCoachScript() ([]byte, error) {
 func CheckContextSizeScript() ([]byte, error) {
 	content, err := tpl.ClaudeHookByFileName(config.FileCheckContextSize)
 	if err != nil {
-		return nil, fmt.Errorf(
-			"failed to read %s: %w", config.FileCheckContextSize, err,
-		)
+		return nil, errFileRead(config.FileCheckContextSize, err)
 	}
 	return content, nil
 }

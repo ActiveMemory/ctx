@@ -28,17 +28,28 @@ This guide documents prompts that reliably produce good results.
 
 ### "Do you remember?"
 
-Triggers the AI to read `AGENT_PLAYBOOK`, `CONSTITUTION`, 
-`sessions/`, and other context files before responding.
+Triggers the AI to silently read `TASKS.md`, `DECISIONS.md`,
+`LEARNINGS.md`, and `sessions/` before responding with a
+**structured readback**:
 
-Use this during the start of every important session.
+1. **Last session**: most recent session topic and date
+2. **Active work**: pending or in-progress tasks
+3. **Recent context**: 1-2 recent decisions or learnings
+4. **Next step**: offer to continue or ask what to focus on
+
+Use this at the start of every important session.
 
 ```
 Do you remember what we were working on?
 ```
 
-This question **implies** prior context exists. So, the AI checks files
-rather than admitting ignorance.
+This question **implies** prior context exists. The AI checks files
+rather than admitting ignorance. The expected response cites specific
+context (session names, task counts, decisions), not vague summaries.
+
+If the AI instead narrates its discovery process ("Let me check if
+there are files..."), it has not loaded `CLAUDE.md` or
+`AGENT_PLAYBOOK.md` properly.
 
 ### "What's the current state?"
 
@@ -99,6 +110,47 @@ Use this when you know the relevant context exists in a specific file.
 ```
 Before you start, read .context/sessions/2026-01-20-auth-discussion.md
 ```
+
+### Scope Control
+
+Constrain the AI to prevent sprawl. These are some of the most
+useful prompts in day-to-day work.
+
+```
+Only change files in internal/cli/add/. Nothing else.
+```
+
+```
+No new files. Modify the existing implementation.
+```
+
+```
+Keep the public API unchanged. Internal refactor only.
+```
+
+Use these when the AI tends to "helpfully" modify adjacent code,
+add documentation you didn't ask for, or create new abstractions.
+
+### Course Correction
+
+Steer the AI when it goes off-track. Don't wait for it to finish
+a wrong approach.
+
+```
+Stop. That's not what I meant. Let me clarify.
+```
+
+```
+Let's step back. Explain what you're about to do before changing anything.
+```
+
+```
+Undo that last change and try a different approach.
+```
+
+These work because they **interrupt momentum**. Without explicit
+course correction, the AI tends to commit harder to a wrong path
+rather than reconsidering.
 
 ## Reflection and Persistence
 
@@ -197,19 +249,54 @@ Use this before finalizing a design or implementation.
 
 ---
 
+## CLI Commands as Prompts
+
+Asking the AI to run `ctx` commands is itself a prompt. These
+load context or trigger specific behaviors:
+
+| Command            | What it does                                     |
+|--------------------|--------------------------------------------------|
+| "Run `ctx status`" | Shows context summary, file presence, staleness  |
+| "Run `ctx agent`"  | Loads token-budgeted context packet              |
+| "Run `ctx drift`"  | Detects dead paths, stale files, missing context |
+
+### Agent Skills (Claude Code)
+
+Skills are formalized prompts. Use them by name:
+
+| Skill            | When to use                                    |
+|------------------|------------------------------------------------|
+| `/ctx-save`      | Persist session context at a milestone         |
+| `/ctx-reflect`   | Structured reflection checkpoint               |
+| `/ctx-recall`    | Browse session history for past discussions    |
+| `/ctx-status`    | Quick context summary                          |
+| `/ctx-agent`     | Load full context packet                       |
+| `/consolidate`   | Detect and fix code-level drift                |
+| `/update-docs`   | Sync docs and conventions after code changes   |
+| `/verify`        | Verify before claiming work is complete        |
+| `/qa`            | Run QA checks before committing                |
+
+Skills combine a prompt, tool permissions, and domain knowledge
+into a single invocation. See [Integrations](integrations.md) for
+setup details.
+
+---
+
 ## Anti-Patterns
 
 Based on our `ctx` development experience (*i.e., "sipping our own champagne"*)
 so far, here are some prompts that tend to produce poor results:
 
-| Prompt                | Problem                       | Better Alternative                    |
-|-----------------------|-------------------------------|---------------------------------------|
-| "Fix this"            | Too vague, may patch symptoms | "Why is this failing?"                |
-| "Make it work"        | Encourages quick hacks        | "What's the right way to solve this?" |
-| "Just do it"          | Skips planning                | "Plan this, then implement"           |
-| "You should remember" | Confrontational               | "Do you remember?"                    |
-| "Obviously..."        | Discourages questions         | State the requirement directly        |
-| "Idiomatic X"         | Triggers language priors      | "Follow project conventions"          |
+| Prompt                 | Problem                       | Better Alternative                        |
+|------------------------|-------------------------------|-------------------------------------------|
+| "Fix this"             | Too vague, may patch symptoms | "Why is this failing?"                    |
+| "Make it work"         | Encourages quick hacks        | "What's the right way to solve this?"     |
+| "Just do it"           | Skips planning                | "Plan this, then implement"               |
+| "You should remember"  | Confrontational               | "Do you remember?"                        |
+| "Obviously..."         | Discourages questions         | State the requirement directly            |
+| "Idiomatic X"          | Triggers language priors      | "Follow project conventions"              |
+| "Implement everything" | No phasing, sprawl risk       | Break into tasks, implement one at a time |
+| "You should know this" | Assumes context is loaded     | "Before you start, read X"                |
 
 ---
 
@@ -227,6 +314,10 @@ so far, here are some prompts that tend to produce poor results:
 | Explore         | "How does X work in this codebase?"      |
 | Sanity check    | "Is this the right approach?"            |
 | Completeness    | "What am I missing?"                     |
+| Constrain scope | "Only change files in X. Nothing else."  |
+| Course correct  | "Stop. That's not what I meant."         |
+| Check health    | "Run `ctx drift`"                        |
+| Save context    | `/ctx-save`                              |
 
 ---
 

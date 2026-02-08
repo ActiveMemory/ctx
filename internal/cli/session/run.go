@@ -1,6 +1,6 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -37,26 +37,25 @@ func runSessionLoad(cmd *cobra.Command, args []string) error {
 	query := args[0]
 
 	// Check if the sessions directory exists
-	if _, err := os.Stat(sessionsDirPath()); os.IsNotExist(err) {
-		return fmt.Errorf(
-			"no sessions directory found. Run 'ctx session save' first",
-		)
+	if _, statErr := os.Stat(sessionsDirPath()); os.IsNotExist(statErr) {
+		return errNoSessionsDir()
 	}
 
 	// Find the matching session file
-	filePath, err := findSessionFile(query)
-	if err != nil {
-		return err
+	filePath, findErr := findSessionFile(query)
+	if findErr != nil {
+		return findErr
 	}
 
 	// Read and display
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return fmt.Errorf("failed to read session file: %w", err)
+	content, readErr := os.ReadFile(filePath)
+	if readErr != nil {
+		return errReadSession(readErr)
 	}
 
 	cyan := color.New(color.FgCyan).SprintFunc()
-	cmd.Printf("%s Loading: %s\n\n", cyan("●"), filepath.Base(filePath))
+	cmd.Println(fmt.Sprintf("%s Loading: %s", cyan("●"), filepath.Base(filePath)))
+	cmd.Println()
 	cmd.Println(string(content))
 
 	return nil
@@ -82,67 +81,71 @@ func runSessionParse(
 	inputPath := args[0]
 
 	// Check if the file exists
-	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
-		return fmt.Errorf("file not found: %s", inputPath)
+	if _, statErr := os.Stat(inputPath); os.IsNotExist(statErr) {
+		return errFileNotFound(inputPath)
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
 
 	if extract {
 		// Extract decisions and learnings
-		decisions, learnings, err := extractInsights(inputPath)
-		if err != nil {
-			return fmt.Errorf("failed to extract insights: %w", err)
+		decisions, learnings, extractErr := extractInsights(inputPath)
+		if extractErr != nil {
+			return errExtractInsights(extractErr)
 		}
 
 		// Display extracted insights
-		cmd.Println("# Extracted Insights")
+		cmd.Println(config.SessionHeadingExtractedInsights)
 		cmd.Println()
-		cmd.Printf("**Source**: %s\n\n", filepath.Base(inputPath))
+		cmd.Println(fmt.Sprintf(config.MetadataSource+" %s", filepath.Base(inputPath)))
+		cmd.Println()
 
-		cmd.Println("## Potential Decisions")
+		cmd.Println(config.SessionHeadingPotentialDecisions)
 		cmd.Println()
 		if len(decisions) == 0 {
 			cmd.Println("No decisions detected.")
 			cmd.Println()
 		} else {
 			for _, d := range decisions {
-				cmd.Printf("- %s\n", d)
+				cmd.Println(fmt.Sprintf("- %s", d))
 			}
 			cmd.Println()
 		}
 
-		cmd.Println("## Potential Learnings")
+		cmd.Println(config.SessionHeadingPotentialLearnings)
 		cmd.Println()
 		if len(learnings) == 0 {
 			cmd.Println("No learnings detected.")
 			cmd.Println()
 		} else {
 			for _, l := range learnings {
-				cmd.Printf("- %s\n", l)
+				cmd.Println(fmt.Sprintf("- %s", l))
 			}
 			cmd.Println()
 		}
 
-		cmd.Printf(
-			"\n*Found %d potential decisions and %d potential learnings*\n",
+		cmd.Println()
+		cmd.Println(fmt.Sprintf(
+			config.TplSessionInsightsSummary,
 			len(decisions), len(learnings),
-		)
+		))
 		return nil
 	}
 
 	// Parse the jsonl file
-	content, err := parseJsonlTranscript(inputPath)
-	if err != nil {
-		return fmt.Errorf("failed to parse transcript: %w", err)
+	content, parseErr := parseJsonlTranscript(inputPath)
+	if parseErr != nil {
+		return errParseTranscript(parseErr)
 	}
 
 	// Output
 	if output != "" {
-		if err := os.WriteFile(output, []byte(content), config.PermFile); err != nil {
-			return fmt.Errorf("failed to write output: %w", err)
+		if writeErr := os.WriteFile(
+			output, []byte(content), config.PermFile,
+		); writeErr != nil {
+			return errWriteOutput(writeErr)
 		}
-		cmd.Printf("%s Parsed transcript saved to %s\n", green("✓"), output)
+		cmd.Println(fmt.Sprintf("%s Parsed transcript saved to %s", green("✓"), output))
 	} else {
 		cmd.Println(content)
 	}
@@ -169,7 +172,7 @@ func runSessionSave(
 	green := color.New(color.FgGreen).SprintFunc()
 
 	// Get topic from args or use default
-	topic := "manual-save"
+	topic := config.DefaultSessionTopic
 	if len(args) > 0 {
 		topic = args[0]
 	}
@@ -178,27 +181,33 @@ func runSessionSave(
 	topic = validation.SanitizeFilename(topic)
 
 	// Ensure sessions directory exists
-	if err := os.MkdirAll(sessionsDirPath(), config.PermExec); err != nil {
-		return fmt.Errorf("failed to create sessions directory: %w", err)
+	if mkdirErr := os.MkdirAll(
+		sessionsDirPath(), config.PermExec,
+	); mkdirErr != nil {
+		return errCreateSessionsDir(mkdirErr)
 	}
 
 	// Generate filename
 	now := time.Now()
-	filename := fmt.Sprintf("%s-%s.md", now.Format("2006-01-02-150405"), topic)
+	filename := fmt.Sprintf(
+		config.TplSessionFilename, now.Format("2006-01-02-150405"), topic,
+	)
 	filePath := filepath.Join(sessionsDirPath(), filename)
 
 	// Build session content
-	content, err := buildSessionContent(topic, sessionType, now)
-	if err != nil {
-		return fmt.Errorf("failed to build session content: %w", err)
+	content, buildErr := buildSessionContent(topic, sessionType, now)
+	if buildErr != nil {
+		return errBuildContent(buildErr)
 	}
 
 	// Write the file
-	if err := os.WriteFile(filePath, []byte(content), config.PermFile); err != nil {
-		return fmt.Errorf("failed to write session file: %w", err)
+	if writeErr := os.WriteFile(
+		filePath, []byte(content), config.PermFile,
+	); writeErr != nil {
+		return errWriteSession(writeErr)
 	}
 
-	cmd.Printf("%s Session saved to %s\n", green("✓"), filePath)
+	cmd.Println(fmt.Sprintf("%s Session saved to %s", green("✓"), filePath))
 	return nil
 }
 
@@ -220,15 +229,15 @@ func runSessionList(cmd *cobra.Command, limit int) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Check if the `sessions` directory exists
-	if _, err := os.Stat(sessionsDirPath()); os.IsNotExist(err) {
+	if _, statErr := os.Stat(sessionsDirPath()); os.IsNotExist(statErr) {
 		cmd.Println("No sessions found. Use 'ctx session save' to create one.")
 		return nil
 	}
 
 	// Read directory
-	entries, err := os.ReadDir(sessionsDirPath())
-	if err != nil {
-		return fmt.Errorf("failed to read sessions directory: %w", err)
+	entries, readErr := os.ReadDir(sessionsDirPath())
+	if readErr != nil {
+		return errReadSessionsDir(readErr)
 	}
 
 	// Filter and collect session files
@@ -239,16 +248,18 @@ func runSessionList(cmd *cobra.Command, limit int) error {
 		}
 		name := entry.Name()
 		// Only show .md files (not .jsonl transcripts)
-		if !strings.HasSuffix(name, ".md") {
+		if !strings.HasSuffix(name, config.ExtMarkdown) {
 			continue
 		}
 		// Skip summary files that accompany jsonl files
-		if strings.HasSuffix(name, "-summary.md") {
+		if strings.HasSuffix(name, config.SuffixSummary) {
 			continue
 		}
 
-		info, err := parseSessionFile(filepath.Join(sessionsDirPath(), name))
-		if err != nil {
+		info, parseErr := parseSessionFile(
+			filepath.Join(sessionsDirPath(), name),
+		)
+		if parseErr != nil {
 			// Skip files that can't be parsed
 			continue
 		}
@@ -273,19 +284,21 @@ func runSessionList(cmd *cobra.Command, limit int) error {
 	}
 
 	// Display
-	cmd.Printf("Sessions in %s:\n\n", sessionsDirPath())
+	cmd.Println(fmt.Sprintf("Sessions in %s:", sessionsDirPath()))
+	cmd.Println()
 	for _, s := range sessions {
-		cmd.Printf("%s %s\n", cyan("●"), s.Topic)
-		cmd.Printf("  %s %s | %s %s\n",
+		cmd.Println(fmt.Sprintf("%s %s", cyan("●"), s.Topic))
+		cmd.Println(fmt.Sprintf("  %s %s | %s %s",
 			gray("Date:"), s.Date,
-			gray("Type:"), s.Type)
+			gray("Type:"), s.Type))
 		if s.Summary != "" {
-			cmd.Printf("  %s %s\n", gray("Summary:"), truncate(s.Summary, 60))
+			cmd.Println(fmt.Sprintf("  %s %s",
+				gray("Summary:"), truncate(s.Summary, config.MaxPreviewLen)))
 		}
-		cmd.Printf("  %s %s\n", yellow("File:"), s.Filename)
+		cmd.Println(fmt.Sprintf("  %s %s", yellow("File:"), s.Filename))
 		cmd.Println()
 	}
 
-	cmd.Printf("Total: %d session(s)\n", len(sessions))
+	cmd.Println(fmt.Sprintf("Total: %d session(s)", len(sessions)))
 	return nil
 }

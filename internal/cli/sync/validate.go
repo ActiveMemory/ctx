@@ -53,7 +53,8 @@ func checkPackageFiles(ctx *context.Context) []Action {
 						"Found %s (%s) but no dependency documentation", file, desc,
 					),
 					Suggestion: "Consider documenting key dependencies " +
-						"in " + config.FileArchitecture + " or create " + config.FileDependency,
+						"in " + config.FileArchitecture + " or create " +
+						config.FileDependency,
 				})
 			}
 		}
@@ -97,7 +98,10 @@ func checkConfigFiles(ctx *context.Context) []Action {
 					Description: fmt.Sprintf(
 						"Found %s but %s not documented", matches[0], cfg.Topic,
 					),
-					Suggestion: fmt.Sprintf("Document %s in %s", cfg.Topic, config.FileConvention),
+					Suggestion: fmt.Sprintf("Document %s in %s",
+						cfg.Topic,
+						config.FileConvention,
+					),
 				})
 			}
 		}

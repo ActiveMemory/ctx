@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // formatTranscriptEntry formats a single transcript entry as Markdown.
@@ -25,15 +27,22 @@ import (
 //   - string: Markdown-formatted representation of the entry
 func formatTranscriptEntry(entry transcriptEntry) string {
 	var sb strings.Builder
+	nl := config.NewlineLF
 
 	// Header with role and timestamp
 	role := strings.ToUpper(entry.Message.Role[:1]) + entry.Message.Role[1:]
-	sb.WriteString(fmt.Sprintf("## %s\n\n", role))
+	sb.WriteString(fmt.Sprintf(config.TplSessionRoleHeading+nl+nl, role))
 
 	if entry.Timestamp != "" {
 		// Parse and format timestamp
-		if t, err := time.Parse(time.RFC3339, entry.Timestamp); err == nil {
-			sb.WriteString(fmt.Sprintf("*%s*\n\n", t.Format("2006-01-02 15:04:05")))
+		if t, parseErr := time.Parse(
+			time.RFC3339, entry.Timestamp,
+		); parseErr == nil {
+			sb.WriteString(
+				fmt.Sprintf(
+					config.TplSessionTimestamp+nl+nl, t.Format("2006-01-02 15:04:05"),
+				),
+			)
 		}
 	}
 
@@ -41,51 +50,24 @@ func formatTranscriptEntry(entry transcriptEntry) string {
 	switch content := entry.Message.Content.(type) {
 	case string:
 		sb.WriteString(content)
-		sb.WriteString("\n")
-	case []interface{}:
+		sb.WriteString(nl)
+	case []any:
 		for _, block := range content {
-			blockMap, ok := block.(map[string]interface{})
-			if !ok {
+			blockMap, isMap := block.(contentBlock)
+			if !isMap {
 				continue
 			}
 
-			blockType, _ := blockMap["type"].(string)
+			blockType, _ := blockMap[config.ClaudeFieldType].(string)
 			switch blockType {
-			case "text":
-				if text, ok := blockMap["text"].(string); ok {
-					sb.WriteString(text)
-					sb.WriteString("\n")
-				}
-			case "thinking":
-				if thinking, ok := blockMap["thinking"].(string); ok {
-					sb.WriteString("<details>\n<summary>💭 Thinking</summary>\n\n")
-					sb.WriteString(thinking)
-					sb.WriteString("\n</details>\n\n")
-				}
-			case "tool_use":
-				name, _ := blockMap["name"].(string)
-				sb.WriteString(fmt.Sprintf("**🔧 Tool: %s**\n", name))
-				if input, ok := blockMap["input"].(map[string]interface{}); ok {
-					// Show key parameters
-					for k, v := range input {
-						vStr := fmt.Sprintf("%v", v)
-						if len(vStr) > 100 {
-							vStr = vStr[:100] + "..."
-						}
-						sb.WriteString(fmt.Sprintf("- %s: `%s`\n", k, vStr))
-					}
-				}
-				sb.WriteString("\n")
-			case "tool_result":
-				sb.WriteString("**📋 Tool Result**\n")
-				if result, ok := blockMap["content"].(string); ok {
-					if len(result) > 500 {
-						result = result[:500] + "...(truncated)"
-					}
-					sb.WriteString("```\n")
-					sb.WriteString(result)
-					sb.WriteString("\n```\n\n")
-				}
+			case config.ClaudeBlockText:
+				formatTextBlock(&sb, blockMap)
+			case config.ClaudeBlockThinking:
+				formatThinkingBlock(&sb, blockMap)
+			case config.ClaudeBlockToolUse:
+				formatToolUseBlock(&sb, blockMap)
+			case config.ClaudeBlockToolResult:
+				formatToolResultBlock(&sb, blockMap)
 			}
 		}
 	}

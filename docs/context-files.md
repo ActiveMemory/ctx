@@ -34,27 +34,20 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 
 The priority order follows a logical progression for AI tools:
 
-1. **CONSTITUTION** — Inviolable rules first. The AI tool must know what it
+1. `CONSTITUTION.md`: Inviolable rules first. The AI tool must know what it
    *cannot* do before attempting anything.
-
-2. **TASKS** — Current work items. What the AI tool should focus on.
-
-3. **CONVENTIONS** — How to write code. Patterns and standards to follow
+2. `TASKS.md`: Current work items. What the AI tool should focus on.
+3. `CONVENTIONS.md`: How to write code. Patterns and standards to follow
    when implementing tasks.
-
-4. **ARCHITECTURE** — System structure. Understanding of components and
+4. `ARCHITECTURE.md`: System structure. Understanding of components and
    boundaries before making changes.
-
-5. **DECISIONS** — Historical context. Why things are the way they are,
+5. `DECISIONS.md`: Historical context. Why things are the way they are,
    to avoid re-debating settled decisions.
-
-6. **LEARNINGS** — Gotchas and tips. Lessons from past work that inform
-   current implementation.
-
-7. **GLOSSARY** — Reference material. Domain terms and abbreviations for
+6. `LEARNINGS.md`: Gotchas and tips. Lessons from past work that inform
+   the current implementation.
+7. `GLOSSARY.md`: Reference material. Domain terms and abbreviations for
    lookup as needed.
-
-8. **AGENT_PLAYBOOK** — Meta instructions last. How to use this context
+8. `AGENT_PLAYBOOK.md`: Meta instructions last. How to use this context
    system itself. Loaded last because the agent should understand the
    *content* (rules, tasks, patterns) before the *operating manual*.
 
@@ -135,10 +128,11 @@ checkboxes and inline tags.
 ```
 
 **Key principles:**
-- Tasks never move between sections — mark as `[x]` or `[-]` in place
-- Use `#in-progress` inline tag to indicate current work
-- Phase headers provide structure and replay order
-- Backlog section for unscheduled work
+
+* Tasks never move between sections — mark as `[x]` or `[-]` in place
+* Use `#in-progress` inline tag to indicate current work
+* Phase headers provide structure and replay order
+* Backlog section for unscheduled work
 
 ### Tags
 
@@ -172,10 +166,10 @@ session started vs completed work.
 
 ### Guidelines
 
-- Never delete tasks — mark as `[x]` completed or `[-]` skipped
-- Never move tasks between sections — use inline tags for status
-- Use `ctx tasks archive` periodically to move completed tasks to archive
-- Mark current work with `#in-progress` inline tag
+* Never delete tasks — mark as `[x]` completed or `[-]` skipped
+* Never move tasks between sections — use inline tags for status
+* Use `ctx tasks archive` periodically to move completed tasks to archive
+* Mark current work with `#in-progress` inline tag
 
 ---
 
@@ -283,12 +277,12 @@ only when mock needs runtime values.
 
 Organize learnings by topic:
 
-- Testing
-- Build & Deploy
-- Performance
-- Security
-- Third-Party Libraries
-- Git & Workflow
+* Testing
+* Build & Deploy
+* Performance
+* Security
+* Third-Party Libraries
+* Git & Workflow
 
 ---
 
@@ -303,10 +297,10 @@ Organize learnings by topic:
 
 ## Naming
 
-- **Files**: kebab-case for all source files
-- **Components**: PascalCase for React components
-- **Functions**: camelCase, verb-first (getUser, parseConfig)
-- **Constants**: SCREAMING_SNAKE_CASE
+* **Files**: kebab-case for all source files
+* **Components**: PascalCase for React components
+* **Functions**: camelCase, verb-first (getUser, parseConfig)
+* **Constants**: SCREAMING_SNAKE_CASE
 
 ## Patterns
 
@@ -453,8 +447,8 @@ All context files follow these conventions:
 
 Keep context files concise:
 
-- Use abbreviations in tags, not prose
-- Omit obvious words ("The", "This")
-- Prefer bullet points over paragraphs
-- Keep examples minimal but illustrative
-- Archive old completed items periodically
+* Use abbreviations in tags, not prose
+* Omit obvious words ("The", "This")
+* Prefer bullet points over paragraphs
+* Keep examples minimal but illustrative
+* Archive old completed items periodically

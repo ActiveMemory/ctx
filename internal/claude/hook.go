@@ -12,6 +12,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
+// NewHook creates a Hook with the given type and command.
+//
+// Parameters:
+//   - hookType: The hook type (e.g., HookTypeCommand)
+//   - cmd: Shell command or script path to execute
+//
+// Returns:
+//   - Hook: Configured hook instance
 func NewHook(hookType HookType, cmd string) Hook {
 	return Hook{
 		Type:    hookType,

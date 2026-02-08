@@ -68,7 +68,7 @@ func separateTasks(content string) (string, string, taskStats) {
 		// Check if the line is a task item
 		match := config.RegExTask.FindStringSubmatch(line)
 		if match != nil {
-			if task.IsSubTask(match) {
+			if task.SubTask(match) {
 				// Handle subtasks - follow their parent
 				if inCompletedTask {
 					phaseArchiveBuffer.WriteString(line + nl)

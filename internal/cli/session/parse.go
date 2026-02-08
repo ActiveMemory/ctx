@@ -27,12 +27,12 @@ import (
 //   - error: Non-nil if parsing fails or index is not positive
 func parseIndex(s string) (int, error) {
 	var idx int
-	_, err := fmt.Sscanf(s, "%d", &idx)
-	if err != nil {
-		return 0, err
+	_, scanErr := fmt.Sscanf(s, "%d", &idx)
+	if scanErr != nil {
+		return 0, scanErr
 	}
 	if idx < 1 {
-		return 0, fmt.Errorf("index must be positive")
+		return 0, errIndexNotPositive()
 	}
 	return idx, nil
 }
@@ -48,22 +48,23 @@ func parseIndex(s string) (int, error) {
 // Returns:
 //   - string: Markdown-formatted transcript
 //   - error: Non-nil if the file cannot be opened or read
-func parseJsonlTranscript(path string) (string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return "", err
+func parseJsonlTranscript(path string) (result string, retErr error) {
+	file, openErr := os.Open(path)
+	if openErr != nil {
+		return "", openErr
 	}
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			_ = fmt.Errorf("failed to close file: %w", err)
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && retErr == nil {
+			retErr = closeErr
 		}
-	}(file)
+	}()
 
-	var sb strings.Builder
 	nl := config.NewlineLF
-	sb.WriteString("# Conversation Transcript" + nl + nl)
-	sb.WriteString(fmt.Sprintf("**Source**: %s"+nl+nl, filepath.Base(path)))
+	var sb strings.Builder
+	sb.WriteString(config.SessionHeadingTranscript + nl + nl)
+	sb.WriteString(
+		fmt.Sprintf(config.MetadataSource+" %s"+nl+nl, filepath.Base(path)),
+	)
 	sb.WriteString(config.Separator + nl + nl)
 
 	scanner := bufio.NewScanner(file)
@@ -79,13 +80,15 @@ func parseJsonlTranscript(path string) (string, error) {
 		}
 
 		var entry transcriptEntry
-		if err := json.Unmarshal([]byte(line), &entry); err != nil {
-			// Skip unparseable lines
+		if unmarshalErr := json.Unmarshal(
+			[]byte(line), &entry,
+		); unmarshalErr != nil {
 			continue
 		}
 
 		// Skip non-message entries
-		if entry.Type != "user" && entry.Type != "assistant" {
+		if entry.Type != config.RoleUser &&
+			entry.Type != config.RoleAssistant {
 			continue
 		}
 
@@ -97,11 +100,13 @@ func parseJsonlTranscript(path string) (string, error) {
 		}
 	}
 
-	if err := scanner.Err(); err != nil {
-		return "", fmt.Errorf("error reading file: %w", err)
+	if scanErr := scanner.Err(); scanErr != nil {
+		return "", errReadingFile(scanErr)
 	}
 
-	sb.WriteString(fmt.Sprintf("*Total messages: %d*"+nl, messageCount))
+	sb.WriteString(
+		fmt.Sprintf(config.TplSessionTotalMessages+nl, messageCount),
+	)
 
 	return sb.String(), nil
 }
@@ -116,55 +121,65 @@ func parseJsonlTranscript(path string) (string, error) {
 //
 // Returns:
 //   - sessionInfo: Parsed session metadata
-//   - error: Non-nil if file cannot be read
+//   - error: Non-nil if the file cannot be read
 func parseSessionFile(path string) (sessionInfo, error) {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return sessionInfo{}, err
+	content, readErr := os.ReadFile(path)
+	if readErr != nil {
+		return sessionInfo{}, readErr
 	}
 
+	nl := config.NewlineLF
 	contentStr := string(content)
 	info := sessionInfo{}
 
 	// Extract topic from first line (# Session: topic)
-	if strings.HasPrefix(contentStr, "# Session:") {
-		lineEnd := strings.Index(contentStr, "\n")
+	if strings.HasPrefix(contentStr, config.SessionHeadingPrefix) {
+		lineEnd := strings.Index(contentStr, nl)
 		if lineEnd != -1 {
-			info.Topic = strings.TrimSpace(contentStr[11:lineEnd])
+			info.Topic = strings.TrimSpace(
+				contentStr[len(config.SessionHeadingPrefix):lineEnd],
+			)
 		}
-	} else if strings.HasPrefix(contentStr, "# ") {
+	} else if strings.HasPrefix(contentStr, config.HeadingLevelOneStart) {
 		// Alternative format: # Topic
-		lineEnd := strings.Index(contentStr, "\n")
+		lineEnd := strings.Index(contentStr, nl)
 		if lineEnd != -1 {
-			info.Topic = strings.TrimSpace(contentStr[2:lineEnd])
+			info.Topic = strings.TrimSpace(
+				contentStr[len(config.HeadingLevelOneStart):lineEnd],
+			)
 		}
 	}
 
 	// Extract date
-	if idx := strings.Index(contentStr, "**Date**:"); idx != -1 {
-		lineEnd := strings.Index(contentStr[idx:], "\n")
+	if idx := strings.Index(contentStr, config.MetadataDate); idx != -1 {
+		lineEnd := strings.Index(contentStr[idx:], nl)
 		if lineEnd != -1 {
-			info.Date = strings.TrimSpace(contentStr[idx+9 : idx+lineEnd])
+			info.Date = strings.TrimSpace(
+				contentStr[idx+len(config.MetadataDate) : idx+lineEnd],
+			)
 		}
 	}
 
 	// Extract type
-	if idx := strings.Index(contentStr, "**Type**:"); idx != -1 {
-		lineEnd := strings.Index(contentStr[idx:], "\n")
+	if idx := strings.Index(contentStr, config.MetadataType); idx != -1 {
+		lineEnd := strings.Index(contentStr[idx:], nl)
 		if lineEnd != -1 {
-			info.Type = strings.TrimSpace(contentStr[idx+9 : idx+lineEnd])
+			info.Type = strings.TrimSpace(
+				contentStr[idx+len(config.MetadataType) : idx+lineEnd],
+			)
 		}
 	}
 
 	// Extract summary (first non-empty line after ## Summary)
-	if idx := strings.Index(contentStr, "## Summary"); idx != -1 {
-		afterSummary := contentStr[idx+10:]
-		lines := strings.Split(afterSummary, "\n")
+	if idx := strings.Index(contentStr, config.RecallHeadingSummary); idx != -1 {
+		afterSummary := contentStr[idx+len(config.RecallHeadingSummary):]
+		lines := strings.Split(afterSummary, nl)
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
-			if line != "" && !strings.HasPrefix(line, "#") &&
+			if line != "" &&
+				!strings.HasPrefix(line, config.PrefixHeading) &&
 				!strings.HasPrefix(line, config.Separator) &&
-				!strings.HasPrefix(line, "[") {
+				!strings.HasPrefix(line, config.PrefixBracket) {
 				info.Summary = line
 				break
 			}

@@ -119,7 +119,7 @@ func TestClaudeCodeParser_ParseFile(t *testing.T) {
 
 	// Check message content
 	msg1 := session.Messages[0]
-	if !msg1.IsUser() {
+	if !msg1.BelongsToUser() {
 		t.Error("first message should be user")
 	}
 	if msg1.Text != "What is 2+2?" {
@@ -127,7 +127,7 @@ func TestClaudeCodeParser_ParseFile(t *testing.T) {
 	}
 
 	msg2 := session.Messages[1]
-	if !msg2.IsAssistant() {
+	if !msg2.BelongsToAssistant() {
 		t.Error("second message should be assistant")
 	}
 	if msg2.Thinking != "Let me calculate..." {

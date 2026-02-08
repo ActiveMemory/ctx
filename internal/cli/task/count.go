@@ -22,7 +22,7 @@ func countPendingTasks(lines []string) int {
 	count := 0
 	for _, line := range lines {
 		match := config.RegExTask.FindStringSubmatch(line)
-		if match != nil && task.IsPending(match) && !task.IsSubTask(match) {
+		if match != nil && task.Pending(match) && !task.SubTask(match) {
 			count++
 		}
 	}

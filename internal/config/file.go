@@ -14,6 +14,47 @@ const (
 	PermExec = 0755
 )
 
+// File extension constants.
+const (
+	// ExtMarkdown is the Markdown file extension.
+	ExtMarkdown = ".md"
+	// ExtJSONL is the JSON Lines file extension.
+	ExtJSONL = ".jsonl"
+)
+
+// Common filenames.
+const (
+	// FilenameReadme is the standard README filename.
+	FilenameReadme = "README.md"
+	// FilenameIndex is the standard index filename for generated sites.
+	FilenameIndex = "index.md"
+)
+
+// Journal site configuration.
+const (
+	// FileZensicalToml is the zensical site configuration filename.
+	FileZensicalToml = "zensical.toml"
+	// BinZensical is the zensical binary name.
+	BinZensical = "zensical"
+)
+
+// Generated file suffixes.
+const (
+	// SuffixPreCompact is the suffix for pre-compact session snapshots.
+	SuffixPreCompact = "-pre-compact.md"
+	// SuffixSummary is the suffix for summary files that accompany transcripts.
+	SuffixSummary = "-summary.md"
+)
+
+// Session defaults.
+const (
+	// DefaultSessionTopic is the fallback topic when none is provided.
+	DefaultSessionTopic = "manual-save"
+	// DefaultSessionFilename is the fallback filename component when
+	// sanitization produces an empty string.
+	DefaultSessionFilename = "session"
+)
+
 // Runtime configuration constants.
 const (
 	// FileContextRC is the optional runtime configuration file.
@@ -26,6 +67,8 @@ const (
 	EnvCtxDir = "CTX_DIR"
 	// EnvCtxTokenBudget is the environment variable for overriding the token budget.
 	EnvCtxTokenBudget = "CTX_TOKEN_BUDGET"
+	// EnvCtxSessionStart is the environment variable for session start correlation.
+	EnvCtxSessionStart = "CTX_SESSION_START"
 )
 
 // Parser configuration.
@@ -44,6 +87,22 @@ const (
 	ClaudeBlockToolUse = "tool_use"
 	// ClaudeBlockToolResult is a tool execution result block.
 	ClaudeBlockToolResult = "tool_result"
+)
+
+// Claude API content block field keys.
+const (
+	// ClaudeFieldType is the block type discriminator key.
+	ClaudeFieldType = "type"
+	// ClaudeFieldText is the text content key.
+	ClaudeFieldText = "text"
+	// ClaudeFieldThinking is the thinking content key.
+	ClaudeFieldThinking = "thinking"
+	// ClaudeFieldName is the tool name key.
+	ClaudeFieldName = "name"
+	// ClaudeFieldInput is the tool input parameters key.
+	ClaudeFieldInput = "input"
+	// ClaudeFieldContent is the tool result content key.
+	ClaudeFieldContent = "content"
 )
 
 // Claude API message roles.
@@ -77,6 +136,10 @@ const (
 	FileContextWatch = "context-watch.sh"
 	// FileMakefileCtx is the ctx-owned Makefile include for project root.
 	FileMakefileCtx = "Makefile.ctx"
+	// CmdAutoloadContext is the inline command for the PreToolUse hook
+	// that autoloads the context packet on every tool use. The cooldown
+	// inside ctx agent prevents repetitive output.
+	CmdAutoloadContext = "ctx agent --budget 4000 --session $PPID 2>/dev/null || true"
 )
 
 // Context file name constants for .context/ directory.
@@ -110,11 +173,11 @@ var FileType = map[string]string{
 	EntryConvention: FileConvention,
 }
 
-// RequiredFiles lists the essential context files that must be present.
+// FilesRequired lists the essential context files that must be present.
 //
 // These are the files created with `ctx init --minimal` and checked by
 // drift detection for missing files.
-var RequiredFiles = []string{
+var FilesRequired = []string{
 	FileConstitution,
 	FileTask,
 	FileDecision,

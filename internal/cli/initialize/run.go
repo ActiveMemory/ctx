@@ -69,7 +69,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	// Get the list of templates to create
 	var templatesToCreate []string
 	if minimal {
-		templatesToCreate = config.RequiredFiles
+		templatesToCreate = config.FilesRequired
 	} else {
 		allTemplates, err := tpl.List()
 		if err != nil {

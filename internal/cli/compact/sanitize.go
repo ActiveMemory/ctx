@@ -33,7 +33,7 @@ func removeEmptySections(content string) (string, int) {
 		line := lines[i]
 
 		// Check if this is a section header
-		if strings.HasPrefix(line, "## ") {
+		if strings.HasPrefix(line, config.HeadingLevelTwoStart) {
 			// Look ahead to see if the section is empty
 			sectionStart := i
 			i++
@@ -61,7 +61,7 @@ func removeEmptySections(content string) (string, int) {
 		i++
 	}
 
-	return strings.Join(result, "\n"), removed
+	return strings.Join(result, config.NewlineLF), removed
 }
 
 // truncateString shortens a string to maxLen, adding "..." if truncated.

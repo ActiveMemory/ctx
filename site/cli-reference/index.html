@@ -1660,6 +1660,93 @@
 <p>The <code>NO_COLOR=1</code> environment variable also disables colored output.</p>
 </blockquote>
 <h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#ctx-init"><code>ctx init</code></a></td>
+<td>Initialize <code>.context/</code> directory with templates and hooks</td>
+</tr>
+<tr>
+<td><a href="#ctx-status"><code>ctx status</code></a></td>
+<td>Show context summary (files, tokens, drift)</td>
+</tr>
+<tr>
+<td><a href="#ctx-agent"><code>ctx agent</code></a></td>
+<td>Print token-budgeted context packet for AI consumption</td>
+</tr>
+<tr>
+<td><a href="#ctx-load"><code>ctx load</code></a></td>
+<td>Output assembled context in read order</td>
+</tr>
+<tr>
+<td><a href="#ctx-add"><code>ctx add</code></a></td>
+<td>Add a task, decision, learning, or convention</td>
+</tr>
+<tr>
+<td><a href="#ctx-complete"><code>ctx complete</code></a></td>
+<td>Mark a task as done</td>
+</tr>
+<tr>
+<td><a href="#ctx-drift"><code>ctx drift</code></a></td>
+<td>Detect stale paths, secrets, missing files</td>
+</tr>
+<tr>
+<td><a href="#ctx-sync"><code>ctx sync</code></a></td>
+<td>Reconcile context with codebase state</td>
+</tr>
+<tr>
+<td><a href="#ctx-compact"><code>ctx compact</code></a></td>
+<td>Archive completed tasks, clean up files</td>
+</tr>
+<tr>
+<td><a href="#ctx-tasks"><code>ctx tasks</code></a></td>
+<td>Task archival and snapshots</td>
+</tr>
+<tr>
+<td><a href="#ctx-decisions"><code>ctx decisions</code></a></td>
+<td>Reindex DECISIONS.md</td>
+</tr>
+<tr>
+<td><a href="#ctx-learnings"><code>ctx learnings</code></a></td>
+<td>Reindex LEARNINGS.md</td>
+</tr>
+<tr>
+<td><a href="#ctx-recall"><code>ctx recall</code></a></td>
+<td>Browse and export AI session history</td>
+</tr>
+<tr>
+<td><a href="#ctx-journal"><code>ctx journal</code></a></td>
+<td>Generate static site from journal entries</td>
+</tr>
+<tr>
+<td><a href="#ctx-serve"><code>ctx serve</code></a></td>
+<td>Serve static site locally</td>
+</tr>
+<tr>
+<td><a href="#ctx-session"><code>ctx session</code></a></td>
+<td>Save, list, load, and parse session snapshots</td>
+</tr>
+<tr>
+<td><a href="#ctx-watch"><code>ctx watch</code></a></td>
+<td>Auto-apply context updates from AI output</td>
+</tr>
+<tr>
+<td><a href="#ctx-hook"><code>ctx hook</code></a></td>
+<td>Generate AI tool integration configs</td>
+</tr>
+<tr>
+<td><a href="#ctx-loop"><code>ctx loop</code></a></td>
+<td>Generate autonomous loop script</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="ctx-init"><code>ctx init</code><a class="headerlink" href="#ctx-init" title="Permanent link">&para;</a></h3>
 <p>Initialize a new <code>.context/</code> directory with template files.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>

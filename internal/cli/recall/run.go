@@ -10,14 +10,177 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
+
+// runRecallExport handles the recall export command.
+func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force, skipExisting bool) error {
+	if len(args) > 0 && all {
+		return fmt.Errorf("cannot use --all with a session ID; use one or the other")
+	}
+	if len(args) == 0 && !all {
+		return fmt.Errorf("please provide a session ID or use --all")
+	}
+
+	// Find sessions - filter by current project unless --all-projects is set
+	var sessions []*parser.Session
+	var err error
+	if allProjects {
+		sessions, err = parser.FindSessions()
+	} else {
+		cwd, cwdErr := os.Getwd()
+		if cwdErr != nil {
+			return fmt.Errorf("failed to get working directory: %w", cwdErr)
+		}
+		sessions, err = parser.FindSessionsForCWD(cwd)
+	}
+	if err != nil {
+		return fmt.Errorf("failed to find sessions: %w", err)
+	}
+
+	if len(sessions) == 0 {
+		if allProjects {
+			cmd.Println("No sessions found.")
+		} else {
+			cmd.Println("No sessions found for this project. Use --all-projects to see all.")
+		}
+		return nil
+	}
+
+	// Determine which sessions to export
+	var toExport []*parser.Session
+	if all {
+		toExport = sessions
+	} else {
+		query := strings.ToLower(args[0])
+		for _, s := range sessions {
+			if strings.HasPrefix(strings.ToLower(s.ID), query) ||
+				strings.Contains(strings.ToLower(s.Slug), query) {
+				toExport = append(toExport, s)
+			}
+		}
+		if len(toExport) == 0 {
+			return fmt.Errorf("session not found: %s", args[0])
+		}
+		if len(toExport) > 1 && !all {
+			cmd.PrintErrf("Multiple sessions match '%s':\n", args[0])
+			for _, m := range toExport {
+				cmd.PrintErrf("  %s (%s) - %s\n",
+					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04"))
+			}
+			return fmt.Errorf("ambiguous query, use a more specific ID")
+		}
+	}
+
+	// Ensure journal directory exists
+	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
+	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+		return fmt.Errorf("failed to create journal directory: %w", err)
+	}
+
+	// Export each session
+	green := color.New(color.FgGreen).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+	dim := color.New(color.FgHiBlack)
+
+	var exported, updated, skipped int
+	for _, s := range toExport {
+		// Count non-empty messages to determine if splitting is needed
+		var nonEmptyMsgs []parser.Message
+		for _, msg := range s.Messages {
+			if !emptyMessage(msg) {
+				nonEmptyMsgs = append(nonEmptyMsgs, msg)
+			}
+		}
+
+		// Calculate number of parts needed
+		totalMsgs := len(nonEmptyMsgs)
+		numParts := (totalMsgs + maxMessagesPerPart - 1) / maxMessagesPerPart
+		if numParts < 1 {
+			numParts = 1
+		}
+
+		baseFilename := formatJournalFilename(s)
+		baseName := strings.TrimSuffix(baseFilename, ".md")
+
+		// Export each part
+		for part := 1; part <= numParts; part++ {
+			filename := baseFilename
+			if numParts > 1 && part > 1 {
+				filename = fmt.Sprintf("%s-p%d.md", baseName, part)
+			}
+			path := filepath.Join(journalDir, filename)
+
+			// Check if file exists
+			_, statErr := os.Stat(path)
+			fileExists := statErr == nil
+
+			if fileExists && skipExisting {
+				skipped++
+				_, _ = dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", filename)
+				continue
+			}
+
+			// Calculate message range for this part
+			startIdx := (part - 1) * maxMessagesPerPart
+			endIdx := startIdx + maxMessagesPerPart
+			if endIdx > totalMsgs {
+				endIdx = totalMsgs
+			}
+
+			// Generate content for this part
+			content := formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName)
+
+			// If file exists and not --force, preserve YAML frontmatter
+			if fileExists && !force {
+				existing, readErr := os.ReadFile(path)
+				if readErr == nil {
+					if fm := extractFrontmatter(string(existing)); fm != "" {
+						content = fm + "\n" + content
+					}
+				}
+				updated++
+			} else if fileExists {
+				exported++
+			} else {
+				exported++
+			}
+
+			// Write file
+			if err := os.WriteFile(path, []byte(content), config.PermFile); err != nil {
+				cmd.PrintErrf("  %s failed to write %s: %v\n", yellow("!"), filename, err)
+				continue
+			}
+
+			if fileExists && !force {
+				cmd.Printf("  %s %s (updated, frontmatter preserved)\n", green("✓"), filename)
+			} else {
+				cmd.Printf("  %s %s\n", green("✓"), filename)
+			}
+		}
+	}
+
+	cmd.Println()
+	if exported > 0 {
+		cmd.Printf("Exported %d new session(s) to %s\n", exported, journalDir)
+	}
+	if updated > 0 {
+		cmd.Printf("Updated %d existing session(s) (YAML frontmatter preserved)\n", updated)
+	}
+	if skipped > 0 {
+		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s).\n", skipped)
+	}
+
+	return nil
+}
 
 // runRecallList handles the recall list command.
 //
@@ -216,7 +379,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**ID**: %s\n", session.ID)
 	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Tool**: %s\n", session.Tool)
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Project**: %s\n", session.Project)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), config.MetadataProject+" %s\n", session.Project)
 	if session.GitBranch != "" {
 		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Branch**: %s\n", session.GitBranch)
 	}
@@ -260,7 +423,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 		for i, msg := range session.Messages {
 			role := "User"
 			roleColor := color.New(color.FgCyan, color.Bold)
-			if msg.IsAssistant() {
+			if msg.BelongsToAssistant() {
 				role = "Assistant"
 				roleColor = color.New(color.FgGreen, color.Bold)
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
@@ -308,7 +471,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 
 		count := 0
 		for _, msg := range session.Messages {
-			if msg.IsUser() && msg.Text != "" {
+			if msg.BelongsToUser() && msg.Text != "" {
 				count++
 				if count > 5 {
 					_, _ = dim.Fprintf(cmd.OutOrStdout(), "... and %d more turns\n", session.TurnCount-5)
@@ -382,7 +545,7 @@ func stripLineNumbers(content string) string {
 // extractSystemReminders separates system-reminder content from tool output.
 //
 // Claude Code injects <system-reminder> tags into tool results. This function
-// extracts them so they can be rendered as markdown outside code fences.
+// extracts them so they can be rendered as Markdown outside code fences.
 //
 // Parameters:
 //   - content: Tool result content potentially containing system-reminder tags
@@ -433,7 +596,7 @@ func normalizeCodeFences(content string) string {
 //   - string: Formatted string like "Read: /path/to/file" or just tool name
 func formatToolUse(t parser.ToolUse) string {
 	// Parse the JSON input to extract meaningful parameters
-	var input map[string]interface{}
+	var input map[string]any
 	if err := json.Unmarshal([]byte(t.Input), &input); err != nil {
 		return t.Name
 	}

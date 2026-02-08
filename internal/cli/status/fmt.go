@@ -66,7 +66,7 @@ func formatNumber(n int) string {
 	return fmt.Sprintf("%d,%03d", n/1000, n%1000)
 }
 
-// formatBytes returns a human-readable byte size string.
+// formatBytes returns a human-readable byte-size string.
 //
 // Uses binary units (1024-based): B, KB, MB, GB, etc.
 //

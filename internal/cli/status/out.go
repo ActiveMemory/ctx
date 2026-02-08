@@ -8,11 +8,13 @@ package status
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/context"
 )
 
 // outputStatusJSON writes context status as JSON to the command output.
@@ -82,9 +84,11 @@ func outputStatusText(
 	cmd.Println(cyan("===================="))
 	cmd.Println()
 
-	cmd.Printf("Context Directory: %s\n", ctx.Dir)
-	cmd.Printf("Total Files: %d\n", len(ctx.Files))
-	cmd.Printf("Token Estimate: %s tokens\n", formatNumber(ctx.TotalTokens))
+	cmd.Println(fmt.Sprintf("Context Directory: %s", ctx.Dir))
+	cmd.Println(fmt.Sprintf("Total Files: %d", len(ctx.Files)))
+	cmd.Println(fmt.Sprintf(
+		"Token Estimate: %s tokens", formatNumber(ctx.TotalTokens)),
+	)
 	cmd.Println()
 
 	cmd.Println("Files:")
@@ -107,19 +111,19 @@ func outputStatusText(
 
 		if verbose {
 			// Verbose: show tokens and size
-			cmd.Printf("  %s %s (%s) [%s tokens, %s]\n",
+			cmd.Println(fmt.Sprintf("  %s %s (%s) [%s tokens, %s]",
 				indicator, f.Name, status,
-				formatNumber(f.Tokens), formatBytes(f.Size))
+				formatNumber(f.Tokens), formatBytes(f.Size)))
 
 			// Show content preview for non-empty files
 			if !f.IsEmpty {
 				preview := contentPreview(string(f.Content), 3)
 				for _, line := range preview {
-					cmd.Printf("      %s\n", dim(line))
+					cmd.Println(fmt.Sprintf("      %s", dim(line)))
 				}
 			}
 		} else {
-			cmd.Printf("  %s %s (%s)\n", indicator, f.Name, status)
+			cmd.Println(fmt.Sprintf("  %s %s (%s)", indicator, f.Name, status))
 		}
 	}
 
@@ -129,7 +133,7 @@ func outputStatusText(
 	recentFiles := getRecentFiles(ctx.Files, 3)
 	for _, f := range recentFiles {
 		ago := formatTimeAgo(f.ModTime)
-		cmd.Printf("  - %s modified %s\n", f.Name, ago)
+		cmd.Println(fmt.Sprintf("  - %s modified %s", f.Name, ago))
 	}
 
 	return nil

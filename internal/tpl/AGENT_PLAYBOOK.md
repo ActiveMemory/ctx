@@ -58,12 +58,20 @@ conventions." Do not begin implementation until you have done so.
 
 When asked "Do you remember?" or similar:
 
-1. **Check the context files** (sessions/, TASKS.md, LEARNINGS.md, etc.)
-2. **Respond with what you found** — "From the sessions, I see we discussed X..."
-3. **Be honest about mechanism only if asked** — the user wants results, not disclaimers
+1. **Read silently first**: TASKS.md, DECISIONS.md, LEARNINGS.md, and
+   list `sessions/` for recent files. Do this BEFORE composing a response.
+2. **Respond with a structured readback**:
+   - **Last session**: most recent session topic and date
+   - **Active work**: pending or in-progress tasks
+   - **Recent context**: 1-2 recent decisions or learnings
+   - **Next step**: offer to continue or ask what to focus on
+3. **Be honest about mechanism only if asked** — the user wants results,
+   not disclaimers
 
 **Wrong**: "I don't have memory, but I can check files. Want me to?"
-**Right**: *checks files* → "Yes, I see from the last session we were working on..."
+**Right**: *reads files silently* → "Last session (Feb 7, architecture docs):
+we populated ARCHITECTURE.md and fixed task insertion. You have 5 pending
+tasks in Phase 2. Want to continue with those?"
 
 The context IS your memory. It's stored externally in files, but that's an
 implementation detail. Load it and use it — don't lead with caveats.

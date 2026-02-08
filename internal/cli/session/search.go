@@ -1,16 +1,17 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package session
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // findSessionFile finds a session file matching the query.
@@ -29,9 +30,9 @@ import (
 //     or index out of range
 func findSessionFile(query string) (string, error) {
 	// Read directory
-	entries, err := os.ReadDir(sessionsDirPath())
-	if err != nil {
-		return "", fmt.Errorf("failed to read sessions directory: %w", err)
+	entries, readErr := os.ReadDir(sessionsDirPath())
+	if readErr != nil {
+		return "", errReadSessionsDir(readErr)
 	}
 
 	// Collect .md files (excluding -summary.md)
@@ -41,17 +42,17 @@ func findSessionFile(query string) (string, error) {
 			continue
 		}
 		name := entry.Name()
-		if !strings.HasSuffix(name, ".md") {
+		if !strings.HasSuffix(name, config.ExtMarkdown) {
 			continue
 		}
-		if strings.HasSuffix(name, "-summary.md") {
+		if strings.HasSuffix(name, config.SuffixSummary) {
 			continue
 		}
 		sessions = append(sessions, name)
 	}
 
 	if len(sessions) == 0 {
-		return "", fmt.Errorf("no sessions found")
+		return "", errNoSessions()
 	}
 
 	// Reverse sort (newest first) for numeric indexing
@@ -60,9 +61,9 @@ func findSessionFile(query string) (string, error) {
 	}
 
 	// Check if the query is a number (index)
-	if idx, err := parseIndex(query); err == nil {
+	if idx, parseErr := parseIndex(query); parseErr == nil {
 		if idx < 1 || idx > len(sessions) {
-			return "", fmt.Errorf("index %d out of range (1-%d)", idx, len(sessions))
+			return "", errIndexOutOfRange(idx, len(sessions))
 		}
 		return filepath.Join(sessionsDirPath(), sessions[idx-1]), nil
 	}
@@ -84,10 +85,10 @@ func findSessionFile(query string) (string, error) {
 	}
 
 	if len(matches) == 0 {
-		return "", fmt.Errorf("no session found matching %q", query)
+		return "", errNoSessionMatch(query)
 	}
 	if len(matches) > 1 {
-		return "", fmt.Errorf("multiple sessions match %q: %v", query, matches)
+		return "", errMultipleMatches(query, matches)
 	}
 
 	return filepath.Join(sessionsDirPath(), matches[0]), nil

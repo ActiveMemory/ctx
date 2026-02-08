@@ -426,7 +426,7 @@ The AI can emit updates like:
 
 The `ctx watch` command parses update commands from AI output. Use this format:
 
-```xml
+```text
 <context-update type="TYPE" [attributes]>Content</context-update>
 ```
 
@@ -472,16 +472,9 @@ Learnings and decisions support structured attributes for better documentation:
 >Use Redis for caching</context-update>
 ```
 
-If attributes are omitted, placeholders are inserted that should be updated manually.
-
-### Legacy Format (still supported)
-
-Simple format without attributes still works but creates placeholder text:
-
-```xml
-<context-update type="learning">Mock functions must be hoisted</context-update>
-<context-update type="decision">Use PostgreSQL for primary database</context-update>
-```
+Learnings require: `context`, `lesson`, `application` attributes.
+Decisions require: `context`, `rationale`, `consequences` attributes.
+Updates missing required attributes are rejected with an error.
 
 ### Usage with ctx watch
 

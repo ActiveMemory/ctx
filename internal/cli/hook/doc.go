@@ -10,9 +10,4 @@
 // The hook command outputs configuration snippets and instructions for
 // integrating Context with various AI coding tools including Claude Code,
 // Cursor, Aider, GitHub Copilot, and Windsurf.
-//
-// # File Organization
-//
-//   - hook.go: Command definition
-//   - run.go: Tool-specific integration output logic
 package hook

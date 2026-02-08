@@ -38,25 +38,3 @@ Examples:
 
 	return cmd
 }
-
-// reindexCmd returns the reindex subcommand.
-//
-// Returns:
-//   - *cobra.Command: Command for regenerating the DECISIONS.md index
-func reindexCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "reindex",
-		Short: "Regenerate the quick-reference index",
-		Long: `Regenerate the quick-reference index at the top of DECISIONS.md.
-
-The index is a compact table showing date and title for each decision,
-allowing AI agents to quickly scan entries without reading the full file.
-
-This command is useful after manual edits to DECISIONS.md or when
-migrating existing files to use the index format.
-
-Examples:
-  ctx decisions reindex`,
-		RunE: runReindex,
-	}
-}

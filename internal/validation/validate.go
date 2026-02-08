@@ -28,7 +28,7 @@ func SanitizeFilename(s string) string {
 		s = s[:50]
 	}
 	if s == "" {
-		s = "session"
+		s = config.DefaultSessionFilename
 	}
 	return s
 }

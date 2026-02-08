@@ -52,7 +52,7 @@ func compactTasks(
 	}
 
 	content := string(tasksFile.Content)
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, config.NewlineLF)
 
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
@@ -65,15 +65,15 @@ func compactTasks(
 	for _, block := range blocks {
 		if block.IsArchivable {
 			archivableBlocks = append(archivableBlocks, block)
-			cmd.Printf(
-				"%s Moving completed task: %s\n", green("✓"),
+			cmd.Println(fmt.Sprintf(
+				"%s Moving completed task: %s", green("✓"),
 				truncateString(block.ParentTaskText(), 50),
-			)
+			))
 		} else {
-			cmd.Printf(
-				"%s Skipping (has incomplete children): %s\n", yellow("!"),
+			cmd.Println(fmt.Sprintf(
+				"%s Skipping (has incomplete children): %s", yellow("!"),
 				truncateString(block.ParentTaskText(), 50),
-			)
+			))
 		}
 	}
 
@@ -86,7 +86,7 @@ func compactTasks(
 
 	// Add blocks to the Completed section
 	for i, line := range newLines {
-		if strings.HasPrefix(line, "## Completed") {
+		if strings.HasPrefix(line, config.HeadingCompleted) {
 			// Find the next line that's either empty or another section
 			insertIdx := i + 1
 			for insertIdx < len(newLines) && newLines[insertIdx] != "" &&
@@ -121,25 +121,26 @@ func compactTasks(
 		}
 
 		if len(blocksToArchive) > 0 {
-			archiveDir := filepath.Join(rc.ContextDir(), "archive")
-			if err := os.MkdirAll(archiveDir, config.PermExec); err == nil {
+			archiveDir := filepath.Join(rc.ContextDir(), config.DirArchive)
+			if mkErr := os.MkdirAll(archiveDir, config.PermExec); mkErr == nil {
 				archiveFile := filepath.Join(
 					archiveDir,
 					fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
 				)
+				nl := config.NewlineLF
 				archiveContent := fmt.Sprintf(
-					"# Archived Tasks - %s\n\n", time.Now().Format("2006-01-02"),
+					"# Archived Tasks - %s"+nl+nl, time.Now().Format("2006-01-02"),
 				)
 				for _, block := range blocksToArchive {
-					archiveContent += block.BlockContent() + "\n\n"
+					archiveContent += block.BlockContent() + nl + nl
 				}
-				if err := os.WriteFile(
+				if writeErr := os.WriteFile(
 					archiveFile, []byte(archiveContent), config.PermFile,
-				); err == nil {
-					cmd.Printf(
-						"%s Archived %d tasks to %s (older than %d days)\n", green("✓"),
+				); writeErr == nil {
+					cmd.Println(fmt.Sprintf(
+						"%s Archived %d tasks to %s (older than %d days)", green("✓"),
 						len(blocksToArchive), archiveFile, archiveDays,
-					)
+					))
 				}
 			}
 		}

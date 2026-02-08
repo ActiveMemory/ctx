@@ -56,7 +56,7 @@ func (p *ClaudeCodeParser) buildSession(
 		msg := p.convertMessage(raw)
 		session.Messages = append(session.Messages, msg)
 
-		if msg.IsUser() {
+		if msg.BelongsToUser() {
 			session.TurnCount++
 			if session.FirstUserMsg == "" && msg.Text != "" {
 				// Truncate preview

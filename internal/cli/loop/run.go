@@ -51,23 +51,25 @@ func runLoop(
 	script := generateLoopScript(promptFile, tool, maxIterations, completionMsg)
 
 	// Write to the file
-	if err := os.WriteFile(outputFile, []byte(script), config.PermExec); err != nil {
+	if err := os.WriteFile(
+		outputFile, []byte(script), config.PermExec,
+	); err != nil {
 		return fmt.Errorf("failed to write %s: %w", outputFile, err)
 	}
 
-	cmd.Printf("%s Generated %s\n", green("✓"), outputFile)
+	cmd.Println(fmt.Sprintf("%s Generated %s", green("✓"), outputFile))
 	cmd.Println()
-	cmd.Println("To start the loop:")
-	cmd.Printf("  ./%s\n", outputFile)
+	cmd.Println(config.LoopHeadingStart)
+	cmd.Println(fmt.Sprintf("  ./%s", outputFile))
 	cmd.Println()
-	cmd.Printf("Tool: %s\n", tool)
-	cmd.Printf("Prompt: %s\n", promptFile)
+	cmd.Println(fmt.Sprintf("Tool: %s", tool))
+	cmd.Println(fmt.Sprintf("Prompt: %s", promptFile))
 	if maxIterations > 0 {
-		cmd.Printf("Max iterations: %d\n", maxIterations)
+		cmd.Println(fmt.Sprintf("Max iterations: %d", maxIterations))
 	} else {
 		cmd.Println("Max iterations: unlimited")
 	}
-	cmd.Printf("Completion signal: %s\n", completionMsg)
+	cmd.Println(fmt.Sprintf("Completion signal: %s", completionMsg))
 
 	return nil
 }

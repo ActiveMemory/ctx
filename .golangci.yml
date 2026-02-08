@@ -1,0 +1,31 @@
+version: "2"
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - ineffassign
+    - goconst
+    - gosec
+    - unconvert
+    - gocritic
+
+  settings:
+    govet:
+      enable:
+        - shadow
+
+run:
+  timeout: 5m
+
+output:
+  formats:
+    colored-line-number: {}
+
+issues:
+  exclude-dirs:
+    - vendor
+    - dist
+    - site

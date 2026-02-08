@@ -26,7 +26,7 @@ func TestInitCommand(t *testing.T) {
 
 	// Save and restore working directory
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -35,7 +35,7 @@ func TestInitCommand(t *testing.T) {
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
 
-	if err := cmd.Execute(); err != nil {
+	if err = cmd.Execute(); err != nil {
 		t.Fatalf("init command failed: %v", err)
 	}
 
@@ -137,7 +137,7 @@ func TestInitMergeInsertsAfterH1(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -151,14 +151,14 @@ This is the project description.
 
 Run make build.
 `
-	if err := os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
+	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
 	// Run init with --merge flag
 	initCmd := Cmd()
 	initCmd.SetArgs([]string{"--merge"})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
@@ -202,7 +202,7 @@ func TestInitMergeInsertsAtTopWhenNoH1(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -216,14 +216,14 @@ Run make build.
 
 Run make test.
 `
-	if err := os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
+	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
 	// Run init with --merge flag
 	initCmd := Cmd()
 	initCmd.SetArgs([]string{"--merge"})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
@@ -263,7 +263,7 @@ func TestInitCreatesPermissions(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -271,7 +271,7 @@ func TestInitCreatesPermissions(t *testing.T) {
 	// Run init
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
-	if err := cmd.Execute(); err != nil {
+	if err = cmd.Execute(); err != nil {
 		t.Fatalf("init command failed: %v", err)
 	}
 
@@ -317,13 +317,13 @@ func TestInitMergesPermissions(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create .claude directory and settings with existing permissions
-	if err := os.MkdirAll(".claude", 0755); err != nil {
+	if err = os.MkdirAll(".claude", 0755); err != nil {
 		t.Fatalf("failed to create .claude: %v", err)
 	}
 
@@ -337,14 +337,14 @@ func TestInitMergesPermissions(t *testing.T) {
 		},
 	}
 	existingJSON, _ := json.MarshalIndent(existingSettings, "", "  ")
-	if err := os.WriteFile(".claude/settings.local.json", existingJSON, 0644); err != nil {
+	if err = os.WriteFile(".claude/settings.local.json", existingJSON, 0644); err != nil {
 		t.Fatalf("failed to write settings: %v", err)
 	}
 
 	// Run init
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
-	if err := cmd.Execute(); err != nil {
+	if err = cmd.Execute(); err != nil {
 		t.Fatalf("init command failed: %v", err)
 	}
 
@@ -402,7 +402,7 @@ func TestInitWithExistingClaudeMdWithCtxMarker(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -420,14 +420,14 @@ Old ctx content here
 
 Some custom content here.
 `
-	if err := os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
+	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
 	// Run init
 	initCmd := Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 

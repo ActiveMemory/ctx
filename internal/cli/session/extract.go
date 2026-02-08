@@ -28,16 +28,16 @@ import (
 // Returns:
 //   - []string: Extracted decision insights
 //   - []string: Extracted learning insights
-//   - error: Non-nil if file cannot be opened or read
+//   - error: Non-nil if the file cannot be opened or read
 func extractInsights(path string) ([]string, []string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, nil, err
+	file, openErr := os.Open(path)
+	if openErr != nil {
+		return nil, nil, openErr
 	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			_ = fmt.Errorf("error closing file: %v", err)
+			fmt.Printf("failed to close file: %v", err)
 		}
 	}(file)
 
@@ -57,12 +57,14 @@ func extractInsights(path string) ([]string, []string, error) {
 		}
 
 		var entry transcriptEntry
-		if err := json.Unmarshal([]byte(line), &entry); err != nil {
+		if unmarshalErr := json.Unmarshal(
+			[]byte(line), &entry,
+		); unmarshalErr != nil {
 			continue
 		}
 
 		// Only look at assistant messages
-		if entry.Type != "assistant" {
+		if entry.Type != config.RoleAssistant {
 			continue
 		}
 
@@ -100,8 +102,8 @@ func extractInsights(path string) ([]string, []string, error) {
 		}
 	}
 
-	if err := scanner.Err(); err != nil {
-		return nil, nil, err
+	if scanErr := scanner.Err(); scanErr != nil {
+		return nil, nil, scanErr
 	}
 
 	return decisions, learnings, nil
@@ -122,16 +124,20 @@ func extractTextContent(entry transcriptEntry) []string {
 	switch content := entry.Message.Content.(type) {
 	case string:
 		texts = append(texts, content)
-	case []interface{}:
+	case []any:
 		for _, block := range content {
-			blockMap, ok := block.(map[string]interface{})
-			if !ok {
+			blockMap, isMap := block.(contentBlock)
+			if !isMap {
 				continue
 			}
-			if text, ok := blockMap["text"].(string); ok {
+
+			text, textOk := blockMap[config.ClaudeFieldText].(string)
+			thinking, thinkOk := blockMap[config.ClaudeFieldThinking].(string)
+
+			if textOk {
 				texts = append(texts, text)
 			}
-			if thinking, ok := blockMap["thinking"].(string); ok {
+			if thinkOk {
 				texts = append(texts, thinking)
 			}
 		}

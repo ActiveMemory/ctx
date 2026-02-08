@@ -14,6 +14,27 @@ This project uses Context (`ctx`) for context persistence across sessions.
 2. **Check `.context/sessions/`** for session dumps from previous sessions
 3. **Run `ctx status`** to see current context summary
 
+## When Asked "Do You Remember?"
+
+When the user asks "Do you remember?", "What were we working on?", or any
+memory-related question:
+
+**Do this FIRST (silently):**
+- Read `.context/TASKS.md`
+- Read `.context/DECISIONS.md` and `.context/LEARNINGS.md`
+- List `.context/sessions/` for recent session files
+
+**Then respond with a structured readback:**
+
+1. **Last session**: cite the most recent session topic and date
+2. **Active work**: list pending or in-progress tasks
+3. **Recent context**: mention 1-2 recent decisions or learnings
+4. **Next step**: offer to continue or ask what to focus on
+
+**Never** lead with "I don't have memory", "Let me check if there are files",
+or narrate your discovery process. The `.context/` files are your memory.
+Read them silently, then present what you found as recall, not as a search.
+
 ## Quick Context Load
 
 ```bash

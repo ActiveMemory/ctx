@@ -8,6 +8,18 @@ package drift
 
 import "github.com/ActiveMemory/ctx/internal/drift"
 
+// fixResult tracks fixes applied during drift fix.
+//
+// Fields:
+//   - fixed: Number of issues successfully fixed
+//   - skipped: Number of issues skipped (not auto-fixable)
+//   - errors: Error messages from failed fix attempts
+type fixResult struct {
+	fixed   int
+	skipped int
+	errors  []string
+}
+
 // JsonOutput represents the JSON structure for machine-readable drift output.
 //
 // Fields:
@@ -18,8 +30,8 @@ import "github.com/ActiveMemory/ctx/internal/drift"
 //   - Passed: Names of checks that passed successfully
 type JsonOutput struct {
 	Timestamp  string        `json:"timestamp"`
-	Status     string        `json:"status"`
+	Status     drift.StatusType `json:"status"`
 	Warnings   []drift.Issue `json:"warnings"`
 	Violations []drift.Issue `json:"violations"`
-	Passed     []string      `json:"passed"`
+	Passed     []drift.CheckName `json:"passed"`
 }

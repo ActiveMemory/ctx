@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -49,12 +50,12 @@ or piped to a system prompt. It includes:
   - Recent decisions
 
 Use --budget to limit token output (default from .contextrc or 8000).
-Use --format to choose between markdown (md) or JSON output.
+Use --format to choose between Markdown (md) or JSON output.
 Use --cooldown to suppress repeated output within a time window (default 10m).
 Use --session to isolate the cooldown per session (e.g., $PPID).
 
 Examples:
-  ctx agent                              # Default budget, markdown output
+  ctx agent                              # Default budget, Markdown output
   ctx agent --budget 4000                # Smaller context packet
   ctx agent --format json                # JSON output for programmatic use
   ctx agent --cooldown 15m --session 123 # With cooldown, session-scoped`,
@@ -71,10 +72,10 @@ Examples:
 		"budget", rc.DefaultTokenBudget, "Token budget for context packet",
 	)
 	cmd.Flags().StringVar(
-		&format, "format", "md", "Output format: md or json",
+		&format, "format", config.FormatMarkdown, "Output format: md or json",
 	)
 	cmd.Flags().DurationVar(
-		&cooldown, "cooldown", DefaultCooldown,
+		&cooldown, "cooldown", defaultCooldown,
 		"Suppress repeated output within this duration (0 to disable)",
 	)
 	cmd.Flags().StringVar(

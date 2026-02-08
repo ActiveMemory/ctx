@@ -7,14 +7,7 @@
 package serve
 
 import (
-	"fmt"
-	"os"
-	"os/exec"
-	"path/filepath"
-
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Cmd returns the serve command.
@@ -39,59 +32,10 @@ Examples:
   ctx serve .context/journal-site     # Serve specific directory
   ctx serve ./docs                    # Serve docs folder`,
 		Args: cobra.MaximumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runServe(cmd, args)
+		RunE: func(_ *cobra.Command, args []string) error {
+			return runServe(args)
 		},
 	}
 
 	return cmd
-}
-
-// runServe handles the serve command.
-//
-// Parameters:
-//   - cmd: Cobra command for output stream
-//   - args: Optional directory to serve
-//
-// Returns:
-//   - error: Non-nil if zensical is not found or fails
-func runServe(cmd *cobra.Command, args []string) error {
-	var dir string
-
-	if len(args) > 0 {
-		dir = args[0]
-	} else {
-		// Default: journal site
-		dir = filepath.Join(rc.ContextDir(), "journal-site")
-	}
-
-	// Verify directory exists
-	info, err := os.Stat(dir)
-	if err != nil {
-		return fmt.Errorf("directory not found: %s", dir)
-	}
-	if !info.IsDir() {
-		return fmt.Errorf("not a directory: %s", dir)
-	}
-
-	// Check zensical.toml exists
-	tomlPath := filepath.Join(dir, "zensical.toml")
-	if _, err := os.Stat(tomlPath); os.IsNotExist(err) {
-		return fmt.Errorf("no zensical.toml found in %s", dir)
-	}
-
-	// Check if zensical is available
-	_, err = exec.LookPath("zensical")
-	if err != nil {
-		return fmt.Errorf("zensical not found. Install with: pip install zensical")
-	}
-
-	// Run zensical serve
-	zensical := exec.Command("zensical", "serve")
-	zensical.Dir = dir
-	zensical.Stdout = os.Stdout
-	zensical.Stderr = os.Stderr
-	zensical.Stdin = os.Stdin
-
-	return zensical.Run()
 }

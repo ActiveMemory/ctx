@@ -44,12 +44,12 @@ func ParseTaskBlocks(lines []string) []TaskBlock {
 		line := lines[i]
 
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, "## Completed") {
+		if strings.HasPrefix(line, config.HeadingCompleted) {
 			inCompletedSection = true
 			i++
 			continue
 		}
-		if strings.HasPrefix(line, "## ") && inCompletedSection {
+		if strings.HasPrefix(line, config.HeadingLevelTwoStart) && inCompletedSection {
 			inCompletedSection = false
 		}
 

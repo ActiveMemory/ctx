@@ -6,7 +6,11 @@
 
 package add
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+)
 
 // normalizeTargetSection ensures a section heading has a proper Markdown
 // format.
@@ -20,9 +24,20 @@ import "strings"
 //
 // Returns:
 //   - string: Normalized section heading (e.g., "## Phase 1")
+// checkRequired returns the names of any fields whose values are empty.
+func checkRequired(fields [][2]string) []string {
+	var missing []string
+	for _, f := range fields {
+		if f[1] == "" {
+			missing = append(missing, f[0])
+		}
+	}
+	return missing
+}
+
 func normalizeTargetSection(section string) string {
-	if !strings.HasPrefix(section, "##") {
-		return "## " + section
+	if !strings.HasPrefix(section, config.HeadingLevelTwoStart) {
+		return config.HeadingLevelTwoStart + section
 	}
 	return section
 }

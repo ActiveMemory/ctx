@@ -25,7 +25,7 @@ func TestCompleteCommand(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
@@ -33,21 +33,21 @@ func TestCompleteCommand(t *testing.T) {
 	// First init
 	initCmd := initialize.Cmd()
 	initCmd.SetArgs([]string{})
-	if err := initCmd.Execute(); err != nil {
+	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
 	// Add a task
 	addCmd := add.Cmd()
 	addCmd.SetArgs([]string{"task", "Task to complete"})
-	if err := addCmd.Execute(); err != nil {
+	if err = addCmd.Execute(); err != nil {
 		t.Fatalf("add task command failed: %v", err)
 	}
 
 	// Complete the task
 	completeCmd := Cmd()
 	completeCmd.SetArgs([]string{"Task to complete"})
-	if err := completeCmd.Execute(); err != nil {
+	if err = completeCmd.Execute(); err != nil {
 		t.Fatalf("complete command failed: %v", err)
 	}
 

@@ -136,7 +136,8 @@ ctx journal site --serve
 
 ## Large Sessions
 
-Sessions with many messages (200+) are automatically split into multiple parts for better browser performance. Navigation links connect the parts:
+Sessions with many messages (200+) are automatically split into multiple parts 
+for better browser performance. Navigation links connect the parts:
 
 ```
 session-abc123.md      (Part 1 of 3)
@@ -146,7 +147,9 @@ session-abc123-p3.md   (Part 3 of 3)
 
 ## Suggestion Sessions
 
-Claude Code generates "suggestion" sessions for auto-complete prompts. These are separated in the index under a "Suggestions" section to keep your main session list focused.
+Claude Code generates "suggestion" sessions for auto-complete prompts. These 
+are separated in the index under a "Suggestions" section to keep your main 
+session list focused.
 
 ## Enriching Journal Entries
 
@@ -159,11 +162,11 @@ a searchable knowledge base.
 
 Without enrichment, you have timestamps and raw conversations. With enrichment:
 
-- **Find sessions by topic**: "Show me all auth-related sessions"
-- **Filter by outcome**: "What did I abandon vs complete?"
-- **Track technology usage**: "When did I last work with PostgreSQL?"
-- **Identify key files**: Jump directly to the files discussed
-- **Get summaries**: Understand what happened without reading transcripts
+* **Find sessions by topic**: "Show me all auth-related sessions"
+* **Filter by outcome**: "What did I abandon vs complete?"
+* **Track technology usage**: "When did I last work with PostgreSQL?"
+* **Identify key files**: Jump directly to the files discussed
+* **Get summaries**: Understand what happened without reading transcripts
 
 ### The Frontmatter Schema
 
@@ -291,18 +294,18 @@ key_files:
 
 ## Summary
 
-Implemented Redis-based caching middleware for frequently-accessed API endpoints.
+Implemented Redis-based caching middleware for frequently accessed API endpoints.
 Added cache invalidation on writes and configurable TTL per route. Reduced
-average response time from 200ms to 15ms for cached routes.
+ the average response time from 200ms to 15ms for cached routes.
 
 ## Decisions
 
-- Used Redis over in-memory cache for horizontal scaling
-- Chose per-route TTL configuration over global setting
+* Used Redis over in-memory cache for horizontal scaling
+* Chose per-route TTL configuration over global setting
 
 ## Learnings
 
-- Redis WATCH command prevents race conditions during cache invalidation
+* Redis WATCH command prevents race conditions during cache invalidation
 
 ## Conversation
 ...
@@ -312,10 +315,10 @@ average response time from 200ms to 15ms for cached routes.
 
 The journal site generator uses enriched metadata for better organization:
 
-- **Titles** appear in navigation instead of slugs
-- **Summaries** provide context in the index
-- **Topics** enable filtering (when using search)
-- **Types** allow grouping by work category
+* **Titles** appear in navigation instead of slugs
+* **Summaries** provide context in the index
+* **Topics** enable filtering (when using search)
+* **Types** allow grouping by work category
 
 Future improvements will add topic-based navigation and outcome filtering to
 the generated site.
@@ -358,28 +361,28 @@ After running `ctx init`, the monitor script is available at:
 
 The monitor displays:
 
-- **Progress bar** with estimated token usage vs effective limit
-- **Color-coded status**: green (healthy), yellow (monitor), red (save and end)
-- **Session info**: file size, message count, last update time
-- **Remaining tokens**: how much usable context is left
+* **Progress bar** with estimated token usage versus effective limit
+* **Color-coded status**: green (healthy), yellow (monitor), red (save and end)
+* **Session info**: file size, message count, last update time
+* **Remaining tokens**: how much usable context is left
 
-<!-- TODO: screenshot of context-watch.sh in a terminal showing green/healthy state -->
+![`ctx watch`: Healthy](images/watch-green.png)
 
-<!-- TODO: screenshot of context-watch.sh showing yellow/monitor state -->
+![`ctx watch`: Unhealthy](images/watch-red.png)
 
 ### How It Works
 
-The monitor finds the most recently modified session JSONL in
+The monitor finds the most recently modified session `JSONL` in
 `~/.claude/projects/`, estimates token count using a character-based heuristic
 (~30 chars per token for JSON content), and adds an overhead estimate for system
 prompts, tools, and skills that aren't in the JSONL.
 
-| Constant           | Value   | Meaning                                       |
-|--------------------|---------|-----------------------------------------------|
-| Model limit        | 200,000 | Claude's context window                       |
-| Autocompact buffer | 33,000  | Reserved by Claude Code, not usable           |
-| System overhead    | 20,000  | System prompt + tools + skills + memory       |
-| Effective limit    | 167,000 | What you can actually use for conversation     |
+| Constant           | Value   | Meaning                                    |
+|--------------------|---------|--------------------------------------------|
+| Model limit        | 200,000 | Claude's context window                    |
+| Autocompact buffer | 33,000  | Reserved by Claude Code, not usable        |
+| System overhead    | 20,000  | System prompt + tools + skills + memory    |
+| Effective limit    | 167,000 | What you can actually use for conversation |
 
 !!! tip "Pair with the context checkpoint hook"
 
@@ -396,12 +399,12 @@ re-run, and stages skip already-processed entries.
 export → normalize → enrich → rebuild
 ```
 
-| Stage         | Command / Skill            | What it does                           | Skips if                          |
-|---------------|----------------------------|----------------------------------------|-----------------------------------|
-| **Export**     | `ctx recall export --all`  | Converts session JSONL to Markdown     | `--skip-existing` flag            |
-| **Normalize**  | `/ctx-journal-normalize`   | Fixes fence nesting and metadata tables| `<!-- normalized -->` marker      |
-| **Enrich**     | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics    | Frontmatter already present       |
-| **Rebuild**    | `ctx journal site --build` | Generates static HTML site             | —                                 |
+| Stage         | Command / Skill            | What it does                            | Skips if                     |
+|---------------|----------------------------|-----------------------------------------|------------------------------|
+| **Export**    | `ctx recall export --all`  | Converts session JSONL to Markdown      | `--skip-existing` flag       |
+| **Normalize** | `/ctx-journal-normalize`   | Fixes fence nesting and metadata tables | `<!-- normalized -->` marker |
+| **Enrich**    | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present  |
+| **Rebuild**   | `ctx journal site --build` | Generates static HTML site              | —                            |
 
 ### Using `make journal`
 
@@ -471,6 +474,6 @@ pip install zensical
 
 ## See Also
 
-- [ctx recall](../cli-reference.md#ctx-recall) - Session discovery and listing
-- [ctx journal](../cli-reference.md#ctx-journal) - Site generation commands
-- [Context Files](../context-files.md) - The `.context/` directory structure
+* [ctx recall](../cli-reference.md#ctx-recall): Session discovery and listing
+* [ctx journal](../cli-reference.md#ctx-journal): Site generation commands
+* [Context Files](../context-files.md): The `.context/` directory structure

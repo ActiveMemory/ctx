@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - int: Number of leading whitespace characters (spaces and tabs)
 func indentLevel(line string) int {
-	return len(line) - len(strings.TrimLeft(line, " \t"))
+	return len(line) - len(strings.TrimLeft(line, config.Whitespace))
 }
 
 // parseBlockAt parses a task block starting at the given index.
@@ -86,7 +86,7 @@ func parseBlockAt(lines []string, startIdx int) TaskBlock {
 
 		// Check if this is an unchecked task
 		nestedMatch := config.RegExTask.FindStringSubmatch(line)
-		if nestedMatch != nil && task.IsPending(nestedMatch) {
+		if nestedMatch != nil && task.Pending(nestedMatch) {
 			block.IsArchivable = false
 		}
 	}

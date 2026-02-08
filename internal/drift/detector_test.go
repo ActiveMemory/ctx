@@ -19,34 +19,34 @@ func TestReportStatus(t *testing.T) {
 	tests := []struct {
 		name     string
 		report   Report
-		expected string
+		expected StatusType
 	}{
 		{
 			name:     "no issues",
 			report:   Report{},
-			expected: "ok",
+			expected: StatusOk,
 		},
 		{
 			name: "only warnings",
 			report: Report{
-				Warnings: []Issue{{File: "test.md", Type: "staleness"}},
+				Warnings: []Issue{{File: "test.md", Type: IssueStaleness}},
 			},
-			expected: "warning",
+			expected: StatusWarning,
 		},
 		{
 			name: "only violations",
 			report: Report{
-				Violations: []Issue{{File: "test.md", Type: "potential_secret"}},
+				Violations: []Issue{{File: "test.md", Type: IssueSecret}},
 			},
-			expected: "violation",
+			expected: StatusViolation,
 		},
 		{
 			name: "warnings and violations",
 			report: Report{
-				Warnings:   []Issue{{File: "test.md", Type: "staleness"}},
-				Violations: []Issue{{File: "test.md", Type: "potential_secret"}},
+				Warnings:   []Issue{{File: "test.md", Type: IssueStaleness}},
+				Violations: []Issue{{File: "test.md", Type: IssueSecret}},
 			},
-			expected: "violation",
+			expected: StatusViolation,
 		},
 	}
 
@@ -67,9 +67,9 @@ func TestDetect(t *testing.T) {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
 	defer func(path string) {
-		err := os.RemoveAll(path)
-		if err != nil {
-			fmt.Printf("failed to remove temp dir %q: %v", path, err)
+		rmErr := os.RemoveAll(path)
+		if rmErr != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, rmErr)
 		}
 	}(tmpDir)
 
@@ -78,13 +78,13 @@ func TestDetect(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get current dir: %v", err)
 	}
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func(dir string) {
-		err := os.Chdir(dir)
-		if err != nil {
-			fmt.Printf("failed to chdir: %v", err)
+		chdirErr := os.Chdir(dir)
+		if chdirErr != nil {
+			fmt.Printf("failed to chdir: %v", chdirErr)
 		}
 	}(origDir)
 
@@ -142,9 +142,9 @@ func TestCheckPathReferences(t *testing.T) {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
 	defer func(path string) {
-		err := os.RemoveAll(path)
-		if err != nil {
-			fmt.Printf("failed to remove temp dir %q: %v", path, err)
+		rmErr := os.RemoveAll(path)
+		if rmErr != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, rmErr)
 		}
 	}(tmpDir)
 
@@ -153,13 +153,13 @@ func TestCheckPathReferences(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get current dir: %v", err)
 	}
-	if err := os.Chdir(tmpDir); err != nil {
+	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func(dir string) {
-		err := os.Chdir(dir)
-		if err != nil {
-			fmt.Printf("failed to chdir: %v", err)
+		chdirErr := os.Chdir(dir)
+		if chdirErr != nil {
+			fmt.Printf("failed to chdir: %v", chdirErr)
 		}
 	}(origDir)
 
@@ -177,7 +177,7 @@ func TestCheckPathReferences(t *testing.T) {
 	report := &Report{
 		Warnings:   []Issue{},
 		Violations: []Issue{},
-		Passed:     []string{},
+		Passed:     []CheckName{},
 	}
 
 	checkPathReferences(ctx, report)
@@ -228,7 +228,7 @@ func TestCheckStaleness(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []string{},
+				Passed:     []CheckName{},
 			}
 
 			checkStaleness(ctx, report)
@@ -278,7 +278,7 @@ func TestCheckRequiredFiles(t *testing.T) {
 			report := &Report{
 				Warnings:   []Issue{},
 				Violations: []Issue{},
-				Passed:     []string{},
+				Passed:     []CheckName{},
 			}
 
 			checkRequiredFiles(ctx, report)

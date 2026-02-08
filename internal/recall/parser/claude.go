@@ -13,7 +13,6 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -53,21 +52,16 @@ func (p *ClaudeCodeParser) Tool() string {
 //   - bool: True if this parser can handle the file
 func (p *ClaudeCodeParser) Matches(path string) bool {
 	// Check extension
-	if !strings.HasSuffix(path, ".jsonl") {
+	if !strings.HasSuffix(path, config.ExtJSONL) {
 		return false
 	}
 
 	// Peek at the first few lines to detect the Claude Code format
-	file, err := os.Open(path)
-	if err != nil {
+	file, openErr := os.Open(path)
+	if openErr != nil {
 		return false
 	}
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			fmt.Println("Error closing file:", err.Error())
-		}
-	}(file)
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	// Check the first N lines for Claude Code message structure
@@ -79,7 +73,7 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 		}
 
 		var raw claudeRawMessage
-		if err := json.Unmarshal(line, &raw); err != nil {
+		if unmarshalErr := json.Unmarshal(line, &raw); unmarshalErr != nil {
 			continue
 		}
 
@@ -106,16 +100,11 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 //   - []*Session: All sessions found in the file, sorted by start time
 //   - error: Non-nil if the file cannot be opened or read
 func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, fmt.Errorf("open file: %w", err)
+	file, openErr := os.Open(path)
+	if openErr != nil {
+		return nil, fmt.Errorf("open file: %w", openErr)
 	}
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			fmt.Println("Error closing file:", err.Error())
-		}
-	}(file)
+	defer file.Close()
 
 	// Group messages by session ID
 	sessionMsgs := make(map[string][]claudeRawMessage)
@@ -134,7 +123,7 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 		}
 
 		var raw claudeRawMessage
-		if err := json.Unmarshal(line, &raw); err != nil {
+		if unmarshalErr := json.Unmarshal(line, &raw); unmarshalErr != nil {
 			// Skip malformed lines, don't fail entire file
 			continue
 		}
@@ -151,8 +140,8 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 		sessionMsgs[raw.SessionID] = append(sessionMsgs[raw.SessionID], raw)
 	}
 
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("scan file: %w", err)
+	if scanErr := scanner.Err(); scanErr != nil {
+		return nil, fmt.Errorf("scan file: %w", scanErr)
 	}
 
 	// Convert to sessions
@@ -191,8 +180,8 @@ func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
 	}
 
 	var raw claudeRawMessage
-	if err := json.Unmarshal(line, &raw); err != nil {
-		return nil, "", fmt.Errorf("unmarshal: %w", err)
+	if unmarshalErr := json.Unmarshal(line, &raw); unmarshalErr != nil {
+		return nil, "", fmt.Errorf("unmarshal: %w", unmarshalErr)
 	}
 
 	// Skip non-message lines
@@ -204,54 +193,5 @@ func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
 	return &msg, raw.SessionID, nil
 }
 
-// Claude Code-specific raw types for parsing JSONL
-
-type claudeRawMessage struct {
-	UUID        string           `json:"uuid"`
-	ParentUUID  *string          `json:"parentUuid"`
-	SessionID   string           `json:"sessionId"`
-	RequestID   string           `json:"requestId,omitempty"`
-	Timestamp   time.Time        `json:"timestamp"`
-	Type        string           `json:"type"` // "user", "assistant", or other
-	UserType    string           `json:"userType,omitempty"`
-	IsSidechain bool             `json:"isSidechain,omitempty"`
-	CWD         string           `json:"cwd"`
-	GitBranch   string           `json:"gitBranch,omitempty"`
-	Version     string           `json:"version"`
-	Slug        string           `json:"slug"`
-	Message     claudeRawContent `json:"message"`
-}
-
-type claudeRawContent struct {
-	ID           string          `json:"id"`
-	Type         string          `json:"type"`
-	Model        string          `json:"model,omitempty"`
-	Role         string          `json:"role"`
-	Content      json.RawMessage `json:"content"` // Can be string or []claudeRawBlock
-	StopReason   *string         `json:"stop_reason,omitempty"`
-	StopSequence *string         `json:"stop_sequence,omitempty"`
-	Usage        *claudeRawUsage `json:"usage,omitempty"`
-}
-
-type claudeRawBlock struct {
-	Type      string          `json:"type"`
-	Text      string          `json:"text,omitempty"`
-	Thinking  string          `json:"thinking,omitempty"`
-	Signature string          `json:"signature,omitempty"`
-	ID        string          `json:"id,omitempty"`
-	Name      string          `json:"name,omitempty"`
-	Input     json.RawMessage `json:"input,omitempty"`
-	ToolUseID string          `json:"tool_use_id,omitempty"`
-	Content   json.RawMessage `json:"content,omitempty"`
-	IsError   bool            `json:"is_error,omitempty"`
-}
-
-type claudeRawUsage struct {
-	InputTokens              int `json:"input_tokens"`
-	OutputTokens             int `json:"output_tokens"`
-	CacheCreationInputTokens int `json:"cache_creation_input_tokens,omitempty"`
-	CacheReadInputTokens     int `json:"cache_read_input_tokens,omitempty"`
-}
-
-// Ensure ClaudeCodeParser implements SessionParser
+// Ensure ClaudeCodeParser implements SessionParser.
 var _ SessionParser = (*ClaudeCodeParser)(nil)

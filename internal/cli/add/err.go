@@ -11,6 +11,16 @@ import (
 	"strings"
 )
 
+// errNoContent returns a simple error when no content source is available.
+// Callers that know the entry type should use errNoContentProvided(fType)
+// instead for a richer message.
+//
+// Returns:
+//   - error: "no content provided"
+func errNoContent() error {
+	return fmt.Errorf("no content provided")
+}
+
 // errMissingDecision returns an error with usage help for incomplete decisions.
 //
 // Parameters:
@@ -81,4 +91,92 @@ Usage:
 
 Examples:
 %s`, fType, fType, fType, examples)
+}
+
+// errFileRead wraps a file read failure with the file path.
+//
+// Parameters:
+//   - path: File path that failed to read
+//   - err: Underlying error from the read operation
+//
+// Returns:
+//   - error: Wrapped error with format "failed to read <path>: <cause>"
+func errFileRead(path string, err error) error {
+	return fmt.Errorf("failed to read %s: %w", path, err)
+}
+
+// errFileWrite wraps a file write failure with the file path.
+//
+// Parameters:
+//   - path: File path that failed to write
+//   - err: Underlying error from the write operation
+//
+// Returns:
+//   - error: Wrapped error with format "failed to write <path>: <cause>"
+func errFileWrite(path string, err error) error {
+	return fmt.Errorf("failed to write %s: %w", path, err)
+}
+
+// errStdinRead wraps a failure to read from standard input.
+//
+// Parameters:
+//   - err: Underlying error from the stdin read
+//
+// Returns:
+//   - error: Wrapped error with format "failed to read from stdin: <cause>"
+func errStdinRead(err error) error {
+	return fmt.Errorf("failed to read from stdin: %w", err)
+}
+
+// errIndexUpdate wraps a failure to update the index in a context file.
+//
+// Parameters:
+//   - path: File path where the index update failed
+//   - err: Underlying error from the write operation
+//
+// Returns:
+//   - error: Wrapped error with format "failed to update index in <path>: <cause>"
+func errIndexUpdate(path string, err error) error {
+	return fmt.Errorf("failed to update index in %s: %w", path, err)
+}
+
+// errUnknownType returns an error for an unrecognized entry type.
+//
+// Parameters:
+//   - fType: The unrecognized type string
+//
+// Returns:
+//   - error: Formatted error listing valid types
+func errUnknownType(fType string) error {
+	return fmt.Errorf(
+		"unknown type %q. Valid types: decision, task, learning, convention",
+		fType,
+	)
+}
+
+// errFileNotFound returns an error when a context file does not exist.
+//
+// Parameters:
+//   - path: File path that was not found
+//
+// Returns:
+//   - error: Formatted error suggesting "ctx init"
+func errFileNotFound(path string) error {
+	return fmt.Errorf(
+		"context file %s not found. Run 'ctx init' first", path,
+	)
+}
+
+// errMissingFields returns a validation error for missing required fields.
+//
+// Parameters:
+//   - entryType: The entry type (e.g., "decision", "learning")
+//   - missing: List of missing field names
+//
+// Returns:
+//   - error: Formatted error listing the missing fields
+func errMissingFields(entryType string, missing []string) error {
+	return fmt.Errorf(
+		"%s missing required fields: %s", entryType, strings.Join(missing, ", "),
+	)
 }

@@ -14,6 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -66,65 +67,65 @@ func outputAgentMarkdown(
 	var sb strings.Builder
 
 	timestamp := time.Now().UTC().Format(time.RFC3339)
-	sb.WriteString("# Context Packet\n")
+	sb.WriteString("# Context Packet" + config.NewlineLF)
 	sb.WriteString(
 		fmt.Sprintf(
-			"Generated: %s | Budget: %d tokens | Used: %d\n\n",
+			"Generated: %s | Budget: %d tokens | Used: %d",
 			timestamp, budget, ctx.TotalTokens,
-		),
+		) + config.NewlineLF + config.NewlineLF,
 	)
 
 	// Read order
-	sb.WriteString("## Read These Files (in order)\n")
+	sb.WriteString("## Read These Files (in order)" + config.NewlineLF)
 	for i, path := range getReadOrder(ctx) {
-		sb.WriteString(fmt.Sprintf("%d. %s\n", i+1, path))
+		sb.WriteString(fmt.Sprintf("%d. %s", i+1, path) + config.NewlineLF)
 	}
-	sb.WriteString("\n")
+	sb.WriteString(config.NewlineLF)
 
 	// Constitution
 	rules := extractConstitutionRules(ctx)
 	if len(rules) > 0 {
-		sb.WriteString("## Constitution (NEVER VIOLATE)\n")
+		sb.WriteString("## Constitution (NEVER VIOLATE)" + config.NewlineLF)
 		for _, rule := range rules {
-			sb.WriteString(fmt.Sprintf("- %s\n", rule))
+			sb.WriteString(fmt.Sprintf("- %s", rule) + config.NewlineLF)
 		}
-		sb.WriteString("\n")
+		sb.WriteString(config.NewlineLF)
 	}
 
 	// Current tasks
 	tasks := extractActiveTasks(ctx)
 	if len(tasks) > 0 {
-		sb.WriteString("## Current Tasks\n")
+		sb.WriteString("## Current Tasks" + config.NewlineLF)
 		for _, task := range tasks {
-			sb.WriteString(fmt.Sprintf("%s\n", task))
+			sb.WriteString(task + config.NewlineLF)
 		}
-		sb.WriteString("\n")
+		sb.WriteString(config.NewlineLF)
 	}
 
 	// Conventions
 	conventions := extractConventions(ctx)
 	if len(conventions) > 0 {
-		sb.WriteString("## Key Conventions\n")
+		sb.WriteString("## Key Conventions" + config.NewlineLF)
 		for _, conv := range conventions {
-			sb.WriteString(fmt.Sprintf("- %s\n", conv))
+			sb.WriteString(fmt.Sprintf("- %s", conv) + config.NewlineLF)
 		}
-		sb.WriteString("\n")
+		sb.WriteString(config.NewlineLF)
 	}
 
 	// Recent decisions
 	decisions := extractRecentDecisions(ctx, 3)
 	if len(decisions) > 0 {
-		sb.WriteString("## Recent Decisions\n")
+		sb.WriteString("## Recent Decisions" + config.NewlineLF)
 		for _, dec := range decisions {
-			sb.WriteString(fmt.Sprintf("- %s\n", dec))
+			sb.WriteString(fmt.Sprintf("- %s", dec) + config.NewlineLF)
 		}
-		sb.WriteString("\n")
+		sb.WriteString(config.NewlineLF)
 	}
 
 	sb.WriteString(
 		"Before starting work, confirm to the user: " +
 			"\"I have read the required context files and I'm " +
-			"following project conventions.\"\n",
+			"following project conventions.\"" + config.NewlineLF,
 	)
 
 	cmd.Print(sb.String())

@@ -34,14 +34,14 @@ func preCompactAutoSave(cmd *cobra.Command) error {
 	green := color.New(color.FgGreen).SprintFunc()
 
 	// Ensure sessions directory exists
-	sessionsDir := filepath.Join(rc.ContextDir(), "sessions")
+	sessionsDir := filepath.Join(rc.ContextDir(), config.DirSessions)
 	if err := os.MkdirAll(sessionsDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create sessions directory: %w", err)
 	}
 
 	// Generate filename
 	now := time.Now()
-	filename := fmt.Sprintf("%s-pre-compact.md", now.Format("2006-01-02-150405"))
+	filename := now.Format("2006-01-02-150405") + config.SuffixPreCompact
 	filePath := filepath.Join(sessionsDir, filename)
 
 	// Build minimal session content
@@ -75,7 +75,7 @@ func buildPreCompactSession(timestamp time.Time) string {
 
 	sb.WriteString("# Pre-Compact Snapshot" + nl + nl)
 	sb.WriteString(fmt.Sprintf("**Date**: %s"+nl, timestamp.Format("2006-01-02")))
-	sb.WriteString(fmt.Sprintf("**Time**: %s"+nl, timestamp.Format("15:04:05")))
+	sb.WriteString(fmt.Sprintf(config.MetadataTime+" %s"+nl, timestamp.Format("15:04:05")))
 	sb.WriteString("**Type**: pre-compact" + nl + nl)
 	sb.WriteString(sep + nl + nl)
 

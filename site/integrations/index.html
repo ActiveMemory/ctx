@@ -996,17 +996,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#legacy-format-still-supported" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Legacy Format (still supported)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#usage-with-ctx-watch" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1637,17 +1626,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#legacy-format-still-supported" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Legacy Format (still supported)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#usage-with-ctx-watch" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2107,7 +2085,7 @@ them in comments.</p>
 <hr />
 <h2 id="context-update-commands">Context Update Commands<a class="headerlink" href="#context-update-commands" title="Permanent link">&para;</a></h2>
 <p>The <code>ctx watch</code> command parses update commands from AI output. Use this format:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;TYPE&quot;</span><span class="w"> </span><span class="err">[attributes]</span><span class="nt">&gt;</span>Content<span class="nt">&lt;/context-update&gt;</span>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>&lt;context-update type=&quot;TYPE&quot; [attributes]&gt;Content&lt;/context-update&gt;
 </span></code></pre></div>
 <h3 id="supported-types">Supported Types<a class="headerlink" href="#supported-types" title="Permanent link">&para;</a></h3>
 <table>
@@ -2167,21 +2145,18 @@ them in comments.</p>
 </span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="na">consequences=</span><span class="s">&quot;Must provision Redis infrastructure; team training on Redis patterns&quot;</span>
 </span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="nt">&gt;</span>Use<span class="w"> </span>Redis<span class="w"> </span>for<span class="w"> </span>caching<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p>If attributes are omitted, placeholders are inserted that should be updated manually.</p>
-<h3 id="legacy-format-still-supported">Legacy Format (still supported)<a class="headerlink" href="#legacy-format-still-supported" title="Permanent link">&para;</a></h3>
-<p>Simple format without attributes still works but creates placeholder text:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span><span class="nt">&gt;</span>Mock<span class="w"> </span>functions<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>hoisted<span class="nt">&lt;/context-update&gt;</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;decision&quot;</span><span class="nt">&gt;</span>Use<span class="w"> </span>PostgreSQL<span class="w"> </span>for<span class="w"> </span>primary<span class="w"> </span>database<span class="nt">&lt;/context-update&gt;</span>
-</span></code></pre></div>
+<p>Learnings require: <code>context</code>, <code>lesson</code>, <code>application</code> attributes.
+Decisions require: <code>context</code>, <code>rationale</code>, <code>consequences</code> attributes.
+Updates missing required attributes are rejected with an error.</p>
 <h3 id="usage-with-ctx-watch">Usage with ctx watch<a class="headerlink" href="#usage-with-ctx-watch" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Pipe AI output through watch</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>your-ai-tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>watch
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Or watch a log file</span>
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/ai-output.log
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Preview without applying</span>
-</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Pipe AI output through watch</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>your-ai-tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>watch
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Or watch a log file</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/ai-output.log
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Preview without applying</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--dry-run
 </span></code></pre></div>
 
 

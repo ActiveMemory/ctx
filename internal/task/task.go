@@ -43,14 +43,14 @@ func Completed(match []string) bool {
 	return match[MatchState] == config.MarkTaskComplete
 }
 
-// IsPending reports whether a match represents a pending task.
+// Pending reports whether a match represents a pending task.
 //
 // Parameters:
 //   - match: Result from ItemPattern.FindStringSubmatch
 //
 // Returns:
 //   - bool: True if the checkbox is unchecked ([ ])
-func IsPending(match []string) bool {
+func Pending(match []string) bool {
 	if len(match) <= MatchState {
 		return false
 	}
@@ -85,13 +85,13 @@ func Content(match []string) string {
 	return match[MatchContent]
 }
 
-// IsSubTask reports whether a match represents a subtask (indented).
+// SubTask reports whether a match represents a subtask (indented).
 //
 // Parameters:
 //   - match: Result from ItemPattern.FindStringSubmatch
 //
 // Returns:
 //   - bool: True if indent is 2+ spaces
-func IsSubTask(match []string) bool {
+func SubTask(match []string) bool {
 	return len(Indent(match)) >= 2
 }

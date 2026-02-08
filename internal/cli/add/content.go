@@ -8,7 +8,6 @@ package add
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
 
@@ -34,7 +33,7 @@ func extractContent(args []string, flags addConfig) (string, error) {
 		// Read from the file
 		fileContent, err := os.ReadFile(flags.fromFile)
 		if err != nil {
-			return "", fmt.Errorf("failed to read file %s: %w", flags.fromFile, err)
+			return "", errFileRead(flags.fromFile, err)
 		}
 		return strings.TrimSpace(string(fileContent)), nil
 	}
@@ -54,9 +53,9 @@ func extractContent(args []string, flags addConfig) (string, error) {
 			lines = append(lines, scanner.Text())
 		}
 		if err := scanner.Err(); err != nil {
-			return "", fmt.Errorf("failed to read from stdin: %w", err)
+			return "", errStdinRead(err)
 		}
 		return strings.TrimSpace(strings.Join(lines, config.NewlineLF)), nil
 	}
-	return "", fmt.Errorf("no content provided")
+	return "", errNoContent()
 }

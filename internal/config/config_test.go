@@ -449,14 +449,14 @@ func TestFileTypeMap(t *testing.T) {
 }
 
 func TestRequiredFiles(t *testing.T) {
-	// Verify RequiredFiles contains essential files
+	// Verify FilesRequired contains essential files
 	required := map[string]bool{
 		FileConstitution: false,
 		FileTask:         false,
 		FileDecision:     false,
 	}
 
-	for _, f := range RequiredFiles {
+	for _, f := range FilesRequired {
 		if _, ok := required[f]; ok {
 			required[f] = true
 		}
@@ -464,7 +464,7 @@ func TestRequiredFiles(t *testing.T) {
 
 	for f, found := range required {
 		if !found {
-			t.Errorf("RequiredFiles missing %q", f)
+			t.Errorf("FilesRequired missing %q", f)
 		}
 	}
 }

@@ -24,10 +24,10 @@ ARCHIVE_NAME="ctx-backup-${TIMESTAMP}.tar.gz"
 
 # Validate required env vars
 if [ -z "${CTX_BACKUP_SMB_URL:-}" ]; then
-    echo "ERROR: CTX_BACKUP_SMB_URL is not set." >&2
-    echo "  Set it in ~/.bashrc, e.g.:" >&2
-    echo "    export CTX_BACKUP_SMB_URL=\"smb://myhost/myshare\"" >&2
-    exit 1
+  echo "ERROR: CTX_BACKUP_SMB_URL is not set." >&2
+  echo "  Set it in ~/.bashrc, e.g.:" >&2
+  echo "    export CTX_BACKUP_SMB_URL=\"smb://myhost/myshare\"" >&2
+  exit 1
 fi
 
 SMB_URL="${CTX_BACKUP_SMB_URL}"
@@ -41,25 +41,25 @@ DEST="${GVFS_MOUNT}/${SMB_SUBDIR}"
 
 echo "==> Creating archive: ${ARCHIVE_NAME}"
 tar czf "/tmp/${ARCHIVE_NAME}" \
-    --exclude='.context/journal-site' \
-    -C "${PROJECT_DIR}" \
-    .context/ \
-    .claude/ \
-    -C "$HOME" \
-    .bashrc
+  --exclude='.context/journal-site' \
+  -C "${PROJECT_DIR}" \
+  .context/ \
+  .claude/ \
+  -C "$HOME" \
+  .bashrc
 
 echo "    $(du -h "/tmp/${ARCHIVE_NAME}" | cut -f1) compressed"
 
 # Mount SMB share if not already mounted
 if [ ! -d "${GVFS_MOUNT}" ]; then
-    echo "==> Mounting ${SMB_URL} ..."
-    gio mount "${SMB_URL}"
-    sleep 1
+  echo "==> Mounting ${SMB_URL} ..."
+  gio mount "${SMB_URL}"
+  sleep 1
 fi
 
 if [ ! -d "${DEST}" ]; then
-    echo "==> Creating ${SMB_SUBDIR}/ on share..."
-    mkdir -p "${DEST}"
+  echo "==> Creating ${SMB_SUBDIR}/ on share..."
+  mkdir -p "${DEST}"
 fi
 
 echo "==> Copying to ${DEST}/${ARCHIVE_NAME}"
@@ -72,6 +72,6 @@ touch ~/.local/state/ctx-last-backup
 # Show what's on the share
 echo ""
 echo "Backups on share:"
-ls -lh "${DEST}"/ctx-backup-*.tar.gz 2>/dev/null | awk '{print "  " $NF, $5}'
+find "${DEST}" -maxdepth 1 -name 'ctx-backup-*.tar.gz' -printf '  %f %s\n' 2>/dev/null | sort
 echo ""
 echo "Done. Local copy: /tmp/${ARCHIVE_NAME}"

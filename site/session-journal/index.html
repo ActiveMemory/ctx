@@ -1411,13 +1411,16 @@ the conversation content is regenerated.</p>
 <code>--force</code> to overwrite everything (frontmatter will be lost).</p>
 </div>
 <h2 id="large-sessions">Large Sessions<a class="headerlink" href="#large-sessions" title="Permanent link">&para;</a></h2>
-<p>Sessions with many messages (200+) are automatically split into multiple parts for better browser performance. Navigation links connect the parts:</p>
+<p>Sessions with many messages (200+) are automatically split into multiple parts 
+for better browser performance. Navigation links connect the parts:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>session-abc123.md      (Part 1 of 3)
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>session-abc123-p2.md   (Part 2 of 3)
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>session-abc123-p3.md   (Part 3 of 3)
 </span></code></pre></div>
 <h2 id="suggestion-sessions">Suggestion Sessions<a class="headerlink" href="#suggestion-sessions" title="Permanent link">&para;</a></h2>
-<p>Claude Code generates "suggestion" sessions for auto-complete prompts. These are separated in the index under a "Suggestions" section to keep your main session list focused.</p>
+<p>Claude Code generates "suggestion" sessions for auto-complete prompts. These 
+are separated in the index under a "Suggestions" section to keep your main 
+session list focused.</p>
 <h2 id="enriching-journal-entries">Enriching Journal Entries<a class="headerlink" href="#enriching-journal-entries" title="Permanent link">&para;</a></h2>
 <p>Raw exported sessions contain basic metadata (date, time, project) but lack the
 structured information needed for effective search, filtering, and analysis.
@@ -1625,18 +1628,18 @@ content and proposing metadata.</p>
 </span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
 </span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="gu">## Summary</span>
 </span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
-</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>Implemented Redis-based caching middleware for frequently-accessed API endpoints.
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>Implemented Redis-based caching middleware for frequently accessed API endpoints.
 </span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>Added cache invalidation on writes and configurable TTL per route. Reduced
-</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>average response time from 200ms to 15ms for cached routes.
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a> the average response time from 200ms to 15ms for cached routes.
 </span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
 </span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="gu">## Decisions</span>
 </span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>
-</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="k">-</span><span class="w"> </span>Used Redis over in-memory cache for horizontal scaling
-</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="k">-</span><span class="w"> </span>Chose per-route TTL configuration over global setting
+</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="k">*</span><span class="w"> </span>Used Redis over in-memory cache for horizontal scaling
+</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="k">*</span><span class="w"> </span>Chose per-route TTL configuration over global setting
 </span><span id="__span-8-34"><a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>
 </span><span id="__span-8-35"><a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="gu">## Learnings</span>
 </span><span id="__span-8-36"><a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>
-</span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="k">-</span><span class="w"> </span>Redis WATCH command prevents race conditions during cache invalidation
+</span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="k">*</span><span class="w"> </span>Redis WATCH command prevents race conditions during cache invalidation
 </span><span id="__span-8-38"><a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>
 </span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="gu">## Conversation</span>
 </span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>...
@@ -1675,17 +1678,15 @@ terminal window to keep an eye on context consumption.</p>
 </span></code></pre></div>
 <p>The monitor displays:</p>
 <ul>
-<li><strong>Progress bar</strong> with estimated token usage vs effective limit</li>
+<li><strong>Progress bar</strong> with estimated token usage versus effective limit</li>
 <li><strong>Color-coded status</strong>: green (healthy), yellow (monitor), red (save and end)</li>
 <li><strong>Session info</strong>: file size, message count, last update time</li>
 <li><strong>Remaining tokens</strong>: how much usable context is left</li>
 </ul>
-<!-- TODO: screenshot of context-watch.sh in a terminal showing green/healthy state -->
-
-<!-- TODO: screenshot of context-watch.sh showing yellow/monitor state -->
-
+<p><img alt="ctx watch: Healthy" src="../images/watch-green.png" /></p>
+<p><img alt="ctx watch: Unhealthy" src="../images/watch-red.png" /></p>
 <h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
-<p>The monitor finds the most recently modified session JSONL in
+<p>The monitor finds the most recently modified session <code>JSONL</code> in
 <code>~/.claude/projects/</code>, estimates token count using a character-based heuristic
 (~30 chars per token for JSON content), and adds an overhead estimate for system
 prompts, tools, and skills that aren't in the JSONL.</p>
@@ -1811,9 +1812,9 @@ content, and clean markdown produces better metadata extraction.</p>
 </span></code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../cli-reference/#ctx-recall">ctx recall</a> - Session discovery and listing</li>
-<li><a href="../../cli-reference/#ctx-journal">ctx journal</a> - Site generation commands</li>
-<li><a href="../../context-files/">Context Files</a> - The <code>.context/</code> directory structure</li>
+<li><a href="../../cli-reference/#ctx-recall">ctx recall</a>: Session discovery and listing</li>
+<li><a href="../../cli-reference/#ctx-journal">ctx journal</a>: Site generation commands</li>
+<li><a href="../../context-files/">Context Files</a>: The <code>.context/</code> directory structure</li>
 </ul>
 
 

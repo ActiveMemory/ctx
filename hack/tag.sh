@@ -22,8 +22,8 @@ ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Read version from VERSION file
 if [ ! -f "$ROOT_DIR/VERSION" ]; then
-    echo "ERROR: VERSION file not found"
-    exit 1
+  echo "ERROR: VERSION file not found"
+  exit 1
 fi
 
 VERSION="v$(tr -d '[:space:]' < "$ROOT_DIR/VERSION")"
@@ -32,18 +32,18 @@ echo "Creating tag: $VERSION"
 
 # Check if tag already exists locally
 if git rev-parse "$VERSION" >/dev/null 2>&1; then
-    echo "ERROR: Tag $VERSION already exists locally."
-    echo "To recreate it:"
-    echo "  git tag -d $VERSION"
-    exit 1
+  echo "ERROR: Tag $VERSION already exists locally."
+  echo "To recreate it:"
+  echo "  git tag -d $VERSION"
+  exit 1
 fi
 
 # Check if tag exists on remote
 if git ls-remote --tags origin | grep -q "refs/tags/$VERSION$"; then
-    echo "ERROR: Tag $VERSION already exists on origin."
-    echo "To recreate it:"
-    echo "  git push origin :refs/tags/$VERSION"
-    exit 1
+  echo "ERROR: Tag $VERSION already exists on origin."
+  echo "To recreate it:"
+  echo "  git push origin :refs/tags/$VERSION"
+  exit 1
 fi
 
 # Create signed tag

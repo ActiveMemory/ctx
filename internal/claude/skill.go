@@ -7,8 +7,6 @@
 package claude
 
 import (
-	"fmt"
-
 	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
@@ -26,7 +24,7 @@ import (
 func Skills() ([]string, error) {
 	names, err := tpl.ListSkills()
 	if err != nil {
-		return nil, fmt.Errorf("failed to list skills: %w", err)
+		return nil, errSkillList(err)
 	}
 	return names, nil
 }
@@ -42,7 +40,7 @@ func Skills() ([]string, error) {
 func SkillContent(name string) ([]byte, error) {
 	content, err := tpl.SkillContent(name)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read skill %s: %w", name, err)
+		return nil, errSkillRead(name, err)
 	}
 	return content, nil
 }

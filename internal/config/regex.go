@@ -127,6 +127,36 @@ var RegExTaskMultiline = regexp.MustCompile(`(?m)` + regExTaskPattern)
 //   - 1: timestamp (YYYY-MM-DD-HHMMSS)
 var RegExTaskDoneTimestamp = regexp.MustCompile(`#done:(\d{4}-\d{2}-\d{2}-\d{6})`)
 
+// Journal site pipeline patterns.
+
+// RegExMultiPart matches session part files like "...-p2.md", "...-p3.md", etc.
+var RegExMultiPart = regexp.MustCompile(`-p\d+\.md$`)
+
+// RegExGlobStar matches glob-like wildcards: *.ext, */, *) etc.
+var RegExGlobStar = regexp.MustCompile(`\*(\.\w+|[/)])`)
+
+// RegExToolBold matches tool-use lines like "🔧 **Glob: .context/sessions/*.md**".
+var RegExToolBold = regexp.MustCompile(`🔧\s*\*\*(.+?)\*\*`)
+
+// RegExTurnHeader matches conversation turn headers.
+//
+// Groups:
+//   - 1: turn number
+//   - 2: role (e.g. "Assistant", "Tool Output")
+//   - 3: timestamp (HH:MM:SS)
+var RegExTurnHeader = regexp.MustCompile(`^### (\d+)\. (.+?) \((\d{2}:\d{2}:\d{2})\)$`)
+
+// RegExFenceLine matches lines that are code fence markers (3+ backticks or
+// tildes, optionally followed by a language tag).
+var RegExFenceLine = regexp.MustCompile("^\\s*(`{3,}|~{3,})(.*)$")
+
+// RegExNormalizedMarker matches the metadata normalization marker (normalize.py).
+var RegExNormalizedMarker = regexp.MustCompile(`<!-- normalized: \d{4}-\d{2}-\d{2} -->`)
+
+// RegExFencesVerified matches the marker left after AI fence reconstruction.
+// Only files with this marker skip fence stripping in the site pipeline.
+var RegExFencesVerified = regexp.MustCompile(`<!-- fences-verified: \d{4}-\d{2}-\d{2} -->`)
+
 // RegExFromAttrName creates a regex to extract an XML attribute value by name.
 //
 // Parameters:

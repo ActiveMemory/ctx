@@ -1,17 +1,21 @@
 //   /    Context:                     https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package session
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+)
 
 // cleanInsight cleans and truncates an extracted insight.
 //
 // Removes leading/trailing whitespace and punctuation, and truncates long
-// insights to 150 characters at a word boundary when possible.
+// insights to InsightMaxLen characters at a word boundary when possible.
 //
 // Parameters:
 //   - s: Raw insight string to clean
@@ -23,29 +27,31 @@ func cleanInsight(s string) string {
 	// Remove trailing punctuation fragments
 	s = strings.TrimRight(s, ".,;:!?")
 	// Truncate if too long
-	if len(s) > 150 {
+	if len(s) > config.InsightMaxLen {
 		// Try to cut at word boundary
-		idx := strings.LastIndex(s[:150], " ")
-		if idx > 100 {
-			s = s[:idx] + "..."
+		idx := strings.LastIndex(s[:config.InsightMaxLen], " ")
+		if idx > config.InsightWordBoundaryMin {
+			s = s[:idx] + config.Ellipsis
 		} else {
-			s = s[:147] + "..."
+			s = s[:config.InsightMaxLen-len(config.Ellipsis)] + config.Ellipsis
 		}
 	}
 	return s
 }
 
-// truncate shortens a string to maxLen characters, adding "..." if truncated.
+// truncate shortens a string to maxLen characters, adding an ellipsis
+// if truncated.
 //
 // Parameters:
 //   - s: String to truncate
 //   - maxLen: Maximum length including the ellipsis
 //
 // Returns:
-//   - string: Original string if within maxLen, otherwise truncated with "..."
+//   - string: Original string if within maxLen, otherwise truncated
+//     with ellipsis
 func truncate(s string, maxLen int) string {
 	if len(s) <= maxLen {
 		return s
 	}
-	return s[:maxLen-3] + "..."
+	return s[:maxLen-len(config.Ellipsis)] + config.Ellipsis
 }

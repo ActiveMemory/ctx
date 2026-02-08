@@ -17,8 +17,8 @@ Many tools help AI *think*.
 
 `ctx` helps AI *remember*.
 
-**Not** by storing thoughts,
-**but** by preserving intent.
+* **Not** by storing thoughts,
+* **but** by preserving intent.
 
 ## How `ctx` Differs from Similar Tools
 
@@ -80,7 +80,7 @@ Prompt tools:
 * makes the context part of the repository itself
 
 Prompt tooling and `ctx` are complementary; not competing. 
-Yet, they operate at different layers.
+Yet they operate in different layers.
 
 ---
 

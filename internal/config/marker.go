@@ -58,3 +58,11 @@ const (
 	// MarkTaskComplete is the unchecked task marker.
 	MarkTaskComplete = "x"
 )
+
+// System reminder tags injected by Claude Code into tool results.
+const (
+	// TagSystemReminderOpen is the opening tag for system reminders.
+	TagSystemReminderOpen = "<system-reminder>"
+	// TagSystemReminderClose is the closing tag for system reminders.
+	TagSystemReminderClose = "</system-reminder>"
+)
