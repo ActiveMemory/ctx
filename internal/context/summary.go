@@ -14,6 +14,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
+const summaryEmpty = "empty"
+
 // summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
 //
 // Parameters:
@@ -48,7 +50,7 @@ func summarizeTasks(content []byte) string {
 	completed := bytes.Count(content, []byte(config.PrefixTaskDone))
 
 	if active == 0 && completed == 0 {
-		return "empty"
+		return summaryEmpty
 	}
 
 	var parts []string
@@ -74,7 +76,7 @@ func summarizeDecisions(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return "empty"
+		return summaryEmpty
 	}
 	if count == 1 {
 		return "1 decision"
@@ -94,7 +96,7 @@ func summarizeGlossary(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return "empty"
+		return summaryEmpty
 	}
 	if count == 1 {
 		return "1 term"
@@ -123,7 +125,7 @@ func generateSummary(name string, content []byte) string {
 		return summarizeGlossary(content)
 	default:
 		if len(content) == 0 || effectivelyEmpty(content) {
-			return "empty"
+			return summaryEmpty
 		}
 		return "loaded"
 	}

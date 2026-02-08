@@ -259,7 +259,7 @@ func TestSessionParse(t *testing.T) {
 {"type":"assistant","message":{"role":"assistant","content":"Hi there!"},"timestamp":"2025-01-21T10:00:05Z"}
 `
 	jsonlPath := filepath.Join(tmpDir, "test-transcript.jsonl")
-	if err := os.WriteFile(jsonlPath, []byte(jsonlContent), 0644); err != nil {
+	if err := os.WriteFile(jsonlPath, []byte(jsonlContent), 0600); err != nil {
 		t.Fatalf("failed to create jsonl file: %v", err)
 	}
 
@@ -289,7 +289,7 @@ func TestSessionParseWithExtract(t *testing.T) {
 	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"We decided to use PostgreSQL for the database. I learned that connection pooling is important."},"timestamp":"2025-01-21T10:00:00Z"}
 `
 	jsonlPath := filepath.Join(tmpDir, "test-transcript.jsonl")
-	if err := os.WriteFile(jsonlPath, []byte(jsonlContent), 0644); err != nil {
+	if err := os.WriteFile(jsonlPath, []byte(jsonlContent), 0600); err != nil {
 		t.Fatalf("failed to create jsonl file: %v", err)
 	}
 
@@ -319,7 +319,7 @@ func TestSessionParseWithOutput(t *testing.T) {
 	jsonlContent := `{"type":"user","message":{"role":"user","content":"Hello"},"timestamp":"2025-01-21T10:00:00Z"}
 `
 	jsonlPath := filepath.Join(tmpDir, "test-transcript.jsonl")
-	if err := os.WriteFile(jsonlPath, []byte(jsonlContent), 0644); err != nil {
+	if err := os.WriteFile(jsonlPath, []byte(jsonlContent), 0600); err != nil {
 		t.Fatalf("failed to create jsonl file: %v", err)
 	}
 

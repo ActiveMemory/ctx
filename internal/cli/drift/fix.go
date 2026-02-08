@@ -170,7 +170,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	// Append to the existing archive file if it exists
-	if existing, readErr := os.ReadFile(archiveFile); readErr == nil {
+	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
 		archiveContent = string(existing) + nl + archiveContent
 	}
 

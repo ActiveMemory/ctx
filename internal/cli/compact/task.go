@@ -101,10 +101,9 @@ func compactTasks(
 			}
 
 			// Insert at the right position
-			newContent := append(newLines[:insertIdx],
+			newLines = append(newLines[:insertIdx],
 				append(blocksToInsert, newLines[insertIdx:]...)...,
 			)
-			newLines = newContent
 			break
 		}
 	}

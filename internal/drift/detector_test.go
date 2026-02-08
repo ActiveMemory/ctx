@@ -90,8 +90,8 @@ func TestDetect(t *testing.T) {
 
 	// Create a .context directory with test files
 	ctxDir := filepath.Join(tmpDir, ".context")
-	if err := os.Mkdir(ctxDir, 0755); err != nil {
-		t.Fatalf("failed to create .context dir: %v", err)
+	if mkErr := os.Mkdir(ctxDir, 0750); mkErr != nil {
+		t.Fatalf("failed to create .context dir: %v", mkErr)
 	}
 
 	// Create required files
@@ -104,15 +104,15 @@ func TestDetect(t *testing.T) {
 
 	for name, content := range files {
 		path := filepath.Join(ctxDir, name)
-		if err := os.WriteFile(path, []byte(content), 0644); err != nil {
-			t.Fatalf("failed to write %s: %v", name, err)
+		if writeErr := os.WriteFile(path, []byte(content), 0600); writeErr != nil {
+			t.Fatalf("failed to write %s: %v", name, writeErr)
 		}
 	}
 
 	// Create the main.go file so the path reference check passes
 	mainGo := filepath.Join(tmpDir, "main.go")
-	if err := os.WriteFile(mainGo, []byte("package main"), 0644); err != nil {
-		t.Fatalf("failed to write main.go: %v", err)
+	if writeErr := os.WriteFile(mainGo, []byte("package main"), 0600); writeErr != nil {
+		t.Fatalf("failed to write main.go: %v", writeErr)
 	}
 
 	// Load the context

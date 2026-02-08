@@ -44,7 +44,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	}
 
 	// Read existing content
-	content, err := os.ReadFile(filePath)
+	content, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
 		return fmt.Errorf("failed to read TASKS.md: %w", err)
 	}

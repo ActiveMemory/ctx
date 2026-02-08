@@ -117,7 +117,7 @@ func TestApplyUpdate(t *testing.T) {
 
 			// Verify content was added
 			filePath := filepath.Join(rc.ContextDir(), tt.checkFile)
-			content, err := os.ReadFile(filePath)
+			content, err := os.ReadFile(filepath.Clean(filePath))
 			if err != nil {
 				t.Fatalf("failed to read %s: %v", tt.checkFile, err)
 			}
@@ -158,8 +158,8 @@ func TestApplyCompleteUpdate(t *testing.T) {
 - [ ] Implement authentication
 - [ ] Write tests
 `
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
-		t.Fatalf("failed to write tasks: %v", err)
+	if writeErr := os.WriteFile(tasksPath, []byte(tasksContent), 0600); writeErr != nil {
+		t.Fatalf("failed to write tasks: %v", writeErr)
 	}
 
 	// Complete the task
@@ -169,7 +169,7 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 
 	// Verify task was marked complete
-	content, err := os.ReadFile(tasksPath)
+	content, err := os.ReadFile(filepath.Clean(tasksPath))
 	if err != nil {
 		t.Fatalf("failed to read tasks: %v", err)
 	}
@@ -264,7 +264,7 @@ More output
 
 	// Verify task was written
 	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
-	content, err := os.ReadFile(tasksPath)
+	content, err := os.ReadFile(filepath.Clean(tasksPath))
 	if err != nil {
 		t.Fatalf("failed to read tasks: %v", err)
 	}
@@ -315,7 +315,7 @@ More output
 
 	// Verify learning was written with structured fields
 	learningsPath := filepath.Join(rc.ContextDir(), config.FileLearning)
-	content, err := os.ReadFile(learningsPath)
+	content, err := os.ReadFile(filepath.Clean(learningsPath))
 	if err != nil {
 		t.Fatalf("failed to read learnings: %v", err)
 	}

@@ -73,7 +73,7 @@ func parseJournalEntry(path, filename string) journalEntry {
 	}
 
 	// Read the file to extract metadata
-	content, err := os.ReadFile(path)
+	content, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
 		entry.Title = strings.TrimSuffix(filename, config.ExtMarkdown)
 		return entry

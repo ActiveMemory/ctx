@@ -109,7 +109,7 @@ func TestParseJournalEntry(t *testing.T) {
 Some content here.
 `
 	path := filepath.Join(tmpDir, filename)
-	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
 		t.Fatalf("failed to write temp file: %v", err)
 	}
 
@@ -150,7 +150,7 @@ func TestParseJournalEntry_SuggestionMode(t *testing.T) {
 Content here.
 `
 	path := filepath.Join(tmpDir, filename)
-	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
 		t.Fatalf("failed to write temp file: %v", err)
 	}
 
@@ -299,10 +299,7 @@ func TestNormalizeContent(t *testing.T) {
 				if strings.Contains(got, "```") {
 					t.Error("fence markers should be stripped")
 				}
-				// Content survives
-				if !strings.Contains(got, "*.md") || !strings.Contains(got, `\*.md`) {
-					// After fence strip, *.md is now outside fences → gets escaped
-				}
+				// Content survives (after fence strip, *.md may be escaped)
 			},
 		},
 		{
@@ -601,7 +598,7 @@ key_files:
 Some content here.
 `
 	path := filepath.Join(tmpDir, filename)
-	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
 		t.Fatalf("failed to write temp file: %v", err)
 	}
 

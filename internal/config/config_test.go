@@ -117,10 +117,8 @@ func TestRegExFromAttrName(t *testing.T) {
 				if match[1] != tt.wantValue {
 					t.Errorf("got value %q, want %q", match[1], tt.wantValue)
 				}
-			} else {
-				if match != nil {
-					t.Errorf("expected no match for %q in %q, got %v", tt.attrName, tt.input, match)
-				}
+			} else if match != nil {
+				t.Errorf("expected no match for %q in %q, got %v", tt.attrName, tt.input, match)
 			}
 		})
 	}
@@ -181,10 +179,8 @@ func TestRegExEntryHeader(t *testing.T) {
 				if match[3] != tt.wantTitle {
 					t.Errorf("title = %q, want %q", match[3], tt.wantTitle)
 				}
-			} else {
-				if match != nil {
-					t.Errorf("expected no match for %q", tt.input)
-				}
+			} else if match != nil {
+				t.Errorf("expected no match for %q", tt.input)
 			}
 		})
 	}
@@ -269,10 +265,8 @@ func TestRegExTask(t *testing.T) {
 				if match[3] != tt.wantContent {
 					t.Errorf("content = %q, want %q", match[3], tt.wantContent)
 				}
-			} else {
-				if match != nil {
-					t.Errorf("expected no match for %q", tt.input)
-				}
+			} else if match != nil {
+				t.Errorf("expected no match for %q", tt.input)
 			}
 		})
 	}
@@ -371,10 +365,8 @@ func TestRegExTaskDoneTimestamp(t *testing.T) {
 				if match[1] != tt.wantTime {
 					t.Errorf("timestamp = %q, want %q", match[1], tt.wantTime)
 				}
-			} else {
-				if match != nil {
-					t.Errorf("expected no match for %q", tt.input)
-				}
+			} else if match != nil {
+				t.Errorf("expected no match for %q", tt.input)
 			}
 		})
 	}
@@ -423,10 +415,8 @@ func TestRegExPath(t *testing.T) {
 				if match[1] != tt.wantPath {
 					t.Errorf("path = %q, want %q", match[1], tt.wantPath)
 				}
-			} else {
-				if match != nil {
-					t.Errorf("expected no match for %q, got %v", tt.input, match)
-				}
+			} else if match != nil {
+				t.Errorf("expected no match for %q, got %v", tt.input, match)
 			}
 		})
 	}

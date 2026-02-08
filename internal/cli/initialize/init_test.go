@@ -151,7 +151,7 @@ This is the project description.
 
 Run make build.
 `
-	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
+	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
@@ -216,7 +216,7 @@ Run make build.
 
 Run make test.
 `
-	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
+	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
@@ -277,7 +277,7 @@ func TestInitCreatesPermissions(t *testing.T) {
 
 	// Read settings.local.json
 	settingsPath := filepath.Join(tmpDir, ".claude", "settings.local.json")
-	content, err := os.ReadFile(settingsPath)
+	content, err := os.ReadFile(filepath.Clean(settingsPath))
 	if err != nil {
 		t.Fatalf("failed to read settings.local.json: %v", err)
 	}
@@ -323,7 +323,7 @@ func TestInitMergesPermissions(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create .claude directory and settings with existing permissions
-	if err = os.MkdirAll(".claude", 0755); err != nil {
+	if err = os.MkdirAll(".claude", 0750); err != nil {
 		t.Fatalf("failed to create .claude: %v", err)
 	}
 
@@ -337,7 +337,7 @@ func TestInitMergesPermissions(t *testing.T) {
 		},
 	}
 	existingJSON, _ := json.MarshalIndent(existingSettings, "", "  ")
-	if err = os.WriteFile(".claude/settings.local.json", existingJSON, 0644); err != nil {
+	if err = os.WriteFile(".claude/settings.local.json", existingJSON, 0600); err != nil {
 		t.Fatalf("failed to write settings: %v", err)
 	}
 
@@ -420,7 +420,7 @@ Old ctx content here
 
 Some custom content here.
 `
-	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0644); err != nil {
+	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 

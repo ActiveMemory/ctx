@@ -226,7 +226,7 @@ func ReindexFile(
 		return fmt.Errorf("%s not found. Run 'ctx init' first", fileName)
 	}
 
-	content, err := os.ReadFile(filePath)
+	content, err := os.ReadFile(filePath) //nolint:gosec // G304: filePath is constructed from known config paths
 	if err != nil {
 		return fmt.Errorf("failed to read %s: %w", filePath, err)
 	}

@@ -68,7 +68,7 @@ priority_order:
 auto_archive: false
 archive_after_days: 14
 `
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -101,7 +101,7 @@ func TestGetRC_EnvOverrides(t *testing.T) {
 	rcContent := `context_dir: file-context
 token_budget: 4000
 `
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
 
 	// Set environment variables (t.Setenv auto-restores after test)
 	t.Setenv(config.EnvCtxDir, "env-context")
@@ -128,7 +128,7 @@ func TestGetContextDir_CLIOverride(t *testing.T) {
 
 	// Create .contextrc file
 	rcContent := `context_dir: file-context`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
 
 	// Set env override (t.Setenv auto-restores after test)
 	t.Setenv(config.EnvCtxDir, "env-context")
@@ -167,7 +167,7 @@ func TestGetRC_InvalidYAML(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create invalid .contextrc file
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte("invalid: [yaml: content"), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte("invalid: [yaml: content"), 0600)
 
 	Reset()
 
@@ -186,7 +186,7 @@ func TestGetRC_PartialConfig(t *testing.T) {
 
 	// Create .contextrc with only some fields
 	rcContent := `token_budget: 5000`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0644)
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
 
 	Reset()
 

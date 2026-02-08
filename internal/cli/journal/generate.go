@@ -39,12 +39,13 @@ func generateIndex(entries []journalEntry) string {
 	// Separate regular sessions from suggestions and multi-part continuations
 	var regular, suggestions []journalEntry
 	for _, e := range entries {
-		if e.Suggestive {
+		switch {
+		case e.Suggestive:
 			suggestions = append(suggestions, e)
-		} else if continuesMultipart(e.Filename) {
+		case continuesMultipart(e.Filename):
 			// Skip part 2+ of split sessions - they're navigable from part 1
 			continue
-		} else {
+		default:
 			regular = append(regular, e)
 		}
 	}

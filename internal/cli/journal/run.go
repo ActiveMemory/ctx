@@ -34,7 +34,7 @@ func runZensical(dir, command string) error {
 		return errZensicalNotFound()
 	}
 
-	cmd := exec.Command(config.BinZensical, command)
+	cmd := exec.Command(config.BinZensical, command) //nolint:gosec // G204: binary is a constant, command is from caller
 	cmd.Dir = dir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -99,7 +99,7 @@ func runJournalSite(
 		dst := filepath.Join(docsDir, entry.Filename)
 
 		var content []byte
-		content, err = os.ReadFile(src)
+		content, err = os.ReadFile(filepath.Clean(src))
 		if err != nil {
 			warnFileErr(cmd, entry.Filename, err)
 			continue

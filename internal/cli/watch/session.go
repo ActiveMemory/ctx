@@ -101,7 +101,7 @@ func buildWatchSession(timestamp time.Time, updates []ContextUpdate) string {
 	sb.WriteString("## Context Snapshot" + nl + nl)
 
 	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
-	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
+	if tasksContent, err := os.ReadFile(filepath.Clean(tasksPath)); err == nil {
 		sb.WriteString("### Current Tasks" + nl + nl)
 		sb.WriteString("```markdown" + nl)
 		sb.WriteString(string(tasksContent))

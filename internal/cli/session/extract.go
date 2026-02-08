@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -30,7 +31,7 @@ import (
 //   - []string: Extracted learning insights
 //   - error: Non-nil if the file cannot be opened or read
 func extractInsights(path string) ([]string, []string, error) {
-	file, openErr := os.Open(path)
+	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return nil, nil, openErr
 	}

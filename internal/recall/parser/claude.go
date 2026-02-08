@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -57,11 +58,11 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 	}
 
 	// Peek at the first few lines to detect the Claude Code format
-	file, openErr := os.Open(path)
+	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return false
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	scanner := bufio.NewScanner(file)
 	// Check the first N lines for Claude Code message structure
@@ -100,11 +101,11 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 //   - []*Session: All sessions found in the file, sorted by start time
 //   - error: Non-nil if the file cannot be opened or read
 func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
-	file, openErr := os.Open(path)
+	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return nil, fmt.Errorf("open file: %w", openErr)
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	// Group messages by session ID
 	sessionMsgs := make(map[string][]claudeRawMessage)

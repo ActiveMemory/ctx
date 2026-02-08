@@ -29,7 +29,7 @@ func TestExists(t *testing.T) {
 
 	// Create a .context directory
 	ctxDir := filepath.Join(tmpDir, ".context")
-	if err := os.Mkdir(ctxDir, 0755); err != nil {
+	if err := os.Mkdir(ctxDir, 0750); err != nil {
 		t.Fatalf("failed to create .context dir: %v", err)
 	}
 
@@ -57,7 +57,7 @@ func TestExists(t *testing.T) {
 
 	// Create a file for the "file not directory" test
 	filePath := filepath.Join(tmpDir, "file.txt")
-	if err := os.WriteFile(filePath, []byte("test"), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte("test"), 0600); err != nil {
 		t.Fatalf("failed to create test file: %v", err)
 	}
 
@@ -86,8 +86,8 @@ func TestLoad(t *testing.T) {
 
 	// Create a .context directory
 	ctxDir := filepath.Join(tmpDir, ".context")
-	if err := os.Mkdir(ctxDir, 0755); err != nil {
-		t.Fatalf("failed to create .context dir: %v", err)
+	if mkErr := os.Mkdir(ctxDir, 0750); mkErr != nil {
+		t.Fatalf("failed to create .context dir: %v", mkErr)
 	}
 
 	// Create some test files
@@ -99,8 +99,8 @@ func TestLoad(t *testing.T) {
 
 	for name, content := range files {
 		path := filepath.Join(ctxDir, name)
-		if err := os.WriteFile(path, []byte(content), 0644); err != nil {
-			t.Fatalf("failed to write %s: %v", name, err)
+		if writeErr := os.WriteFile(path, []byte(content), 0600); writeErr != nil {
+			t.Fatalf("failed to write %s: %v", name, writeErr)
 		}
 	}
 

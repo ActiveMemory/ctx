@@ -53,7 +53,7 @@ func TestCompleteCommand(t *testing.T) {
 
 	// Verify the task was completed
 	tasksPath := filepath.Join(tmpDir, ".context", "TASKS.md")
-	content, err := os.ReadFile(tasksPath)
+	content, err := os.ReadFile(filepath.Clean(tasksPath))
 	if err != nil {
 		t.Fatalf("failed to read TASKS.md: %v", err)
 	}

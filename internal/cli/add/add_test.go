@@ -45,7 +45,7 @@ func TestAddCommand(t *testing.T) {
 
 	// Verify the task was added
 	tasksPath := filepath.Join(tmpDir, ".context", "TASKS.md")
-	content, err := os.ReadFile(tasksPath)
+	content, err := os.ReadFile(filepath.Clean(tasksPath))
 	if err != nil {
 		t.Fatalf("failed to read TASKS.md: %v", err)
 	}
@@ -477,7 +477,7 @@ func TestAddFromFile(t *testing.T) {
 
 	// Create a file with content (title)
 	contentFile := filepath.Join(tmpDir, "learning-content.md")
-	if err = os.WriteFile(contentFile, []byte("Content from file test"), 0644); err != nil {
+	if err = os.WriteFile(contentFile, []byte("Content from file test"), 0600); err != nil {
 		t.Fatalf("failed to create content file: %v", err)
 	}
 

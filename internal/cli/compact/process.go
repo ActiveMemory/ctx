@@ -91,7 +91,7 @@ func buildPreCompactSession(timestamp time.Time) string {
 
 	// Read and include current TASKS.md content
 	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
-	if tasksContent, err := os.ReadFile(tasksPath); err == nil {
+	if tasksContent, err := os.ReadFile(filepath.Clean(tasksPath)); err == nil {
 		sb.WriteString("## Tasks (Before Compact)" + nl + nl)
 		sb.WriteString("```markdown" + nl)
 		sb.WriteString(string(tasksContent))
