@@ -52,6 +52,8 @@ better discovery and navigation.
 
 **Features (priority order):**
 
+- [ ] Fix block-non-path-ctx.sh hook: too aggressive matching blocks git -C path commands that don't invoke ctx #added:2026-02-07-211544
+
 - [ ] T1.1: Topics system
       - Single `/topics/index.md` page
       - Popular topics (2+ sessions) get dedicated pages (`/topics/{topic}.md`)
