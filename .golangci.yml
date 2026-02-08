@@ -17,15 +17,16 @@ linters:
       enable:
         - shadow
 
+  exclusions:
+    paths:
+      - vendor
+      - dist
+      - site
+
 run:
   timeout: 5m
 
 output:
   formats:
-    colored-line-number: {}
-
-issues:
-  exclude-dirs:
-    - vendor
-    - dist
-    - site
+    text:
+      colors: true
