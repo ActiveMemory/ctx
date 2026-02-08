@@ -127,7 +127,7 @@ func runCompleteSilent(args []string) error {
 	filePath := filepath.Join(rc.ContextDir(), config.FileTask)
 	nl := config.NewlineLF
 
-	content, err := os.ReadFile(filePath)
+	content, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
 		return err
 	}

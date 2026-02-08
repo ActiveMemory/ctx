@@ -26,7 +26,7 @@ func TestLoopCommand(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// Create a PROMPT.md file
-	if err := os.WriteFile("PROMPT.md", []byte("# Test Prompt\n"), 0644); err != nil {
+	if err := os.WriteFile("PROMPT.md", []byte("# Test Prompt\n"), 0600); err != nil {
 		t.Fatalf("failed to create PROMPT.md: %v", err)
 	}
 

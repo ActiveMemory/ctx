@@ -98,7 +98,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 			return fmt.Errorf("failed to read input: %w", err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
-		if response != "y" && response != "yes" {
+		if response != "y" && response != "yes" { //nolint:goconst // trivial user input check
 			cmd.Printf(
 				"  %s %s (skipped)\n", yellow("○"), config.FileImplementationPlan)
 			return nil

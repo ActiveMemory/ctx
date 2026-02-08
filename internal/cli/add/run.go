@@ -81,7 +81,7 @@ func WriteEntry(params EntryParams) error {
 	}
 
 	// Read existing content
-	existing, readErr := os.ReadFile(filePath)
+	existing, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
 		return errFileRead(filePath, readErr)
 	}

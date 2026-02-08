@@ -229,7 +229,7 @@ Context's code is distributed under
 
 	// TplRecallTokens formats the token stats line.
 	// Args: total, in, out.
-	TplRecallTokens = "**Tokens**: %s (in: %s, out: %s)"
+	TplRecallTokens = "**Tokens**: %s (in: %s, out: %s)" //nolint:gosec // G101: display template, not a credential
 
 	// TplRecallPartOf formats the part indicator.
 	// Args: part, totalParts.

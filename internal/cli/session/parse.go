@@ -49,7 +49,7 @@ func parseIndex(s string) (int, error) {
 //   - string: Markdown-formatted transcript
 //   - error: Non-nil if the file cannot be opened or read
 func parseJsonlTranscript(path string) (result string, retErr error) {
-	file, openErr := os.Open(path)
+	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return "", openErr
 	}
@@ -123,7 +123,7 @@ func parseJsonlTranscript(path string) (result string, retErr error) {
 //   - sessionInfo: Parsed session metadata
 //   - error: Non-nil if the file cannot be read
 func parseSessionFile(path string) (sessionInfo, error) {
-	content, readErr := os.ReadFile(path)
+	content, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
 		return sessionInfo{}, readErr
 	}

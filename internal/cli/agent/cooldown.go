@@ -49,7 +49,7 @@ func touchTombstone(session string) {
 	if session == "" {
 		return
 	}
-	_ = os.WriteFile(tombstonePath(session), nil, 0o644)
+	_ = os.WriteFile(tombstonePath(session), nil, 0o600)
 }
 
 // tombstonePath returns the filesystem path for a session's tombstone.

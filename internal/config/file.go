@@ -66,7 +66,7 @@ const (
 	// EnvCtxDir is the environment variable for overriding the context directory.
 	EnvCtxDir = "CTX_DIR"
 	// EnvCtxTokenBudget is the environment variable for overriding the token budget.
-	EnvCtxTokenBudget = "CTX_TOKEN_BUDGET"
+	EnvCtxTokenBudget = "CTX_TOKEN_BUDGET" //nolint:gosec // G101: env var name, not a credential
 	// EnvCtxSessionStart is the environment variable for session start correlation.
 	EnvCtxSessionStart = "CTX_SESSION_START"
 )

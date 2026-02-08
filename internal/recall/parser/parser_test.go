@@ -22,7 +22,7 @@ func TestClaudeCodeParser_Matches(t *testing.T) {
 
 	// Test: non-JSONL file
 	txtFile := filepath.Join(dir, "test.txt")
-	if err := os.WriteFile(txtFile, []byte("hello"), 0644); err != nil {
+	if err := os.WriteFile(txtFile, []byte("hello"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if parser.Matches(txtFile) {
@@ -31,7 +31,7 @@ func TestClaudeCodeParser_Matches(t *testing.T) {
 
 	// Test: JSONL file without Claude Code format
 	badJSONL := filepath.Join(dir, "bad.jsonl")
-	if err := os.WriteFile(badJSONL, []byte(`{"foo": "bar"}`), 0644); err != nil {
+	if err := os.WriteFile(badJSONL, []byte(`{"foo": "bar"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if parser.Matches(badJSONL) {
@@ -41,7 +41,7 @@ func TestClaudeCodeParser_Matches(t *testing.T) {
 	// Test: Valid Claude Code JSONL
 	goodJSONL := filepath.Join(dir, "good.jsonl")
 	content := `{"uuid":"abc","sessionId":"session-1","slug":"test-session","type":"user","timestamp":"2026-01-20T10:00:00Z","cwd":"/home/test","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"hello"}]}}`
-	if err := os.WriteFile(goodJSONL, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(goodJSONL, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if !parser.Matches(goodJSONL) {
@@ -59,7 +59,7 @@ func TestClaudeCodeParser_ParseFile(t *testing.T) {
 {"uuid":"msg2","parentUuid":"msg1","sessionId":"sess-1","slug":"test-session","type":"assistant","timestamp":"2026-01-20T10:00:30Z","cwd":"/home/test/project","gitBranch":"main","version":"2.1.0","message":{"model":"claude-opus-4-5","role":"assistant","content":[{"type":"thinking","thinking":"Let me calculate..."},{"type":"text","text":"2+2 equals 4."}],"usage":{"input_tokens":100,"output_tokens":50}}}
 {"uuid":"msg3","parentUuid":"msg2","sessionId":"sess-1","slug":"test-session","type":"user","timestamp":"2026-01-20T10:01:00Z","cwd":"/home/test/project","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"Thanks!"}]}}`
 
-	if err := os.WriteFile(jsonlFile, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(jsonlFile, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -153,7 +153,7 @@ func TestClaudeCodeParser_ParseFile_WithToolUse(t *testing.T) {
 {"uuid":"msg2","sessionId":"sess-2","slug":"tool-session","type":"assistant","timestamp":"2026-01-20T10:00:10Z","cwd":"/home/test","version":"2.1.0","message":{"role":"assistant","content":[{"type":"tool_use","id":"tool1","name":"bash","input":{"command":"ls -la"}}]}}
 {"uuid":"msg3","sessionId":"sess-2","slug":"tool-session","type":"user","timestamp":"2026-01-20T10:00:11Z","cwd":"/home/test","version":"2.1.0","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"tool1","content":"file1.txt\nfile2.txt"}]}}`
 
-	if err := os.WriteFile(jsonlFile, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(jsonlFile, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -197,7 +197,7 @@ func TestClaudeCodeParser_ParseFile_MultipleSessions(t *testing.T) {
 {"uuid":"b1","sessionId":"sess-B","slug":"session-b","type":"user","timestamp":"2026-01-20T10:00:00Z","cwd":"/home/test","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"Hello B"}]}}
 {"uuid":"a2","sessionId":"sess-A","slug":"session-a","type":"assistant","timestamp":"2026-01-20T09:00:30Z","cwd":"/home/test","version":"2.1.0","message":{"role":"assistant","content":[{"type":"text","text":"Hi A!"}]}}`
 
-	if err := os.WriteFile(jsonlFile, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(jsonlFile, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -230,7 +230,7 @@ func TestClaudeCodeParser_ParseFile_SkipsMalformed(t *testing.T) {
 {"incomplete": true
 {"uuid":"msg2","sessionId":"sess-1","slug":"test","type":"assistant","timestamp":"2026-01-20T10:00:30Z","cwd":"/test","version":"2.1.0","message":{"role":"assistant","content":[{"type":"text","text":"also valid"}]}}`
 
-	if err := os.WriteFile(jsonlFile, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(jsonlFile, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -252,26 +252,26 @@ func TestScanDirectory(t *testing.T) {
 
 	// Create subdirectory structure
 	subdir := filepath.Join(dir, "subdir")
-	if err := os.MkdirAll(subdir, 0755); err != nil {
+	if err := os.MkdirAll(subdir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create session files
 	file1 := filepath.Join(dir, "session1.jsonl")
 	content1 := `{"uuid":"m1","sessionId":"s1","slug":"first","type":"user","timestamp":"2026-01-20T08:00:00Z","cwd":"/test","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"first"}]}}`
-	if err := os.WriteFile(file1, []byte(content1), 0644); err != nil {
+	if err := os.WriteFile(file1, []byte(content1), 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	file2 := filepath.Join(subdir, "session2.jsonl")
 	content2 := `{"uuid":"m2","sessionId":"s2","slug":"second","type":"user","timestamp":"2026-01-20T10:00:00Z","cwd":"/test","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"second"}]}}`
-	if err := os.WriteFile(file2, []byte(content2), 0644); err != nil {
+	if err := os.WriteFile(file2, []byte(content2), 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	// Non-session file (should be ignored)
 	nonSession := filepath.Join(dir, "readme.txt")
-	if err := os.WriteFile(nonSession, []byte("ignore me"), 0644); err != nil {
+	if err := os.WriteFile(nonSession, []byte("ignore me"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -298,7 +298,7 @@ func TestParseFile_AutoDetect(t *testing.T) {
 
 	jsonlFile := filepath.Join(dir, "auto.jsonl")
 	content := `{"uuid":"m1","sessionId":"s1","slug":"auto","type":"user","timestamp":"2026-01-20T10:00:00Z","cwd":"/test","version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"auto detect"}]}}`
-	if err := os.WriteFile(jsonlFile, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(jsonlFile, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
 

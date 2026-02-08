@@ -35,7 +35,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Build the binary
 	binaryPath := filepath.Join(tmpDir, "ctx-test-binary")
-	buildCmd := exec.Command("go", "build", "-o", binaryPath, "./cmd/ctx")
+	buildCmd := exec.Command("go", "build", "-o", binaryPath, "./cmd/ctx") //nolint:gosec // G204: test builds local binary
 	buildCmd.Env = append(os.Environ(), "CGO_ENABLED=0")
 
 	// Get the project root (go up from internal/cli)
@@ -51,13 +51,13 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Create a test directory
 	testDir := filepath.Join(tmpDir, "test-project")
-	if err := os.Mkdir(testDir, 0755); err != nil {
+	if err := os.Mkdir(testDir, 0750); err != nil {
 		t.Fatalf("failed to create test dir: %v", err)
 	}
 
 	// Subtest: ctx init creates expected files
 	t.Run("init creates expected files", func(t *testing.T) {
-		initCmd := exec.Command(binaryPath, "init")
+		initCmd := exec.Command(binaryPath, "init") //nolint:gosec // G204: test runs locally-built binary
 		initCmd.Dir = testDir
 		if output, err := initCmd.CombinedOutput(); err != nil {
 			t.Fatalf("ctx init failed: %v\n%s", err, output)
@@ -88,7 +88,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx status returns valid status (not just help text)
 	t.Run("status returns valid status", func(t *testing.T) {
-		statusCmd := exec.Command(binaryPath, "status")
+		statusCmd := exec.Command(binaryPath, "status") //nolint:gosec // G204: test runs locally-built binary
 		statusCmd.Dir = testDir
 		output, err := statusCmd.CombinedOutput()
 		if err != nil {
@@ -108,7 +108,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx add learning modifies LEARNINGS.md
 	t.Run("add learning modifies LEARNINGS.md", func(t *testing.T) {
-		addCmd := exec.Command(binaryPath, "add", "learning", "Test learning from integration test",
+		addCmd := exec.Command(binaryPath, "add", "learning", "Test learning from integration test", //nolint:gosec // G204: test runs locally-built binary
 			"--context", "Testing integration",
 			"--lesson", "Integration tests catch bugs",
 			"--application", "Always run integration tests")
@@ -119,7 +119,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 		// Verify learning was added
 		learningsPath := filepath.Join(testDir, ".context", "LEARNINGS.md")
-		content, err := os.ReadFile(learningsPath)
+		content, err := os.ReadFile(filepath.Clean(learningsPath))
 		if err != nil {
 			t.Fatalf("failed to read LEARNINGS.md: %v", err)
 		}
@@ -130,7 +130,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx session save creates session file
 	t.Run("session save creates session file", func(t *testing.T) {
-		saveCmd := exec.Command(binaryPath, "session", "save")
+		saveCmd := exec.Command(binaryPath, "session", "save") //nolint:gosec // G204: test runs locally-built binary
 		saveCmd.Dir = testDir
 		if output, err := saveCmd.CombinedOutput(); err != nil {
 			t.Fatalf("ctx session save failed: %v\n%s", err, output)
@@ -149,7 +149,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx agent returns context packet
 	t.Run("agent returns context packet", func(t *testing.T) {
-		agentCmd := exec.Command(binaryPath, "agent")
+		agentCmd := exec.Command(binaryPath, "agent") //nolint:gosec // G204: test runs locally-built binary
 		agentCmd.Dir = testDir
 		output, err := agentCmd.CombinedOutput()
 		if err != nil {
@@ -169,7 +169,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 	// Subtest: ctx drift runs without error
 	t.Run("drift runs without error", func(t *testing.T) {
-		driftCmd := exec.Command(binaryPath, "drift")
+		driftCmd := exec.Command(binaryPath, "drift") //nolint:gosec // G204: test runs locally-built binary
 		driftCmd.Dir = testDir
 		if output, err := driftCmd.CombinedOutput(); err != nil {
 			t.Fatalf("ctx drift failed: %v\n%s", err, output)
@@ -193,7 +193,7 @@ func TestBinaryIntegration(t *testing.T) {
 
 		for _, tc := range subcommands {
 			t.Run(strings.Join(tc.args, "_"), func(t *testing.T) {
-				cmd := exec.Command(binaryPath, tc.args...)
+				cmd := exec.Command(binaryPath, tc.args...) //nolint:gosec // G204: test runs locally-built binary
 				cmd.Dir = testDir
 				output, err := cmd.CombinedOutput()
 				if err != nil {
@@ -317,7 +317,7 @@ func TestNoDirectFmtPrint(t *testing.T) {
 				if ident.Name == fmtAlias && forbidden[sel.Sel.Name] {
 					pos := fset.Position(call.Pos())
 					violations = append(violations,
-						filepath.Join(path)+":"+
+						path+":"+
 							strings.TrimPrefix(pos.String(), pos.Filename+":")+
 							" in "+fn.Name.Name+"()")
 				}

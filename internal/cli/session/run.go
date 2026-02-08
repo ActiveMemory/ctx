@@ -48,7 +48,7 @@ func runSessionLoad(cmd *cobra.Command, args []string) error {
 	}
 
 	// Read and display
-	content, readErr := os.ReadFile(filePath)
+	content, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
 		return errReadSession(readErr)
 	}

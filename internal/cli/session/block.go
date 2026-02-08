@@ -47,14 +47,14 @@ func formatThinkingBlock(sb *strings.Builder, blockMap contentBlock) {
 func formatToolUseBlock(sb *strings.Builder, blockMap contentBlock) {
 	nl := config.NewlineLF
 	name, _ := blockMap[config.ClaudeFieldName].(string)
-	sb.WriteString(fmt.Sprintf(config.TplSessionToolName+nl, name))
+	fmt.Fprintf(sb, config.TplSessionToolName+nl, name)
 	if input, hasInput := blockMap[config.ClaudeFieldInput].(contentBlock); hasInput {
 		for k, v := range input {
 			vStr := fmt.Sprintf("%v", v)
 			if len(vStr) > config.SessionMaxParamLen {
 				vStr = vStr[:config.SessionMaxParamLen] + config.Ellipsis
 			}
-			sb.WriteString(fmt.Sprintf(config.TplSessionToolParam+nl, k, vStr))
+			fmt.Fprintf(sb, config.TplSessionToolParam+nl, k, vStr)
 		}
 	}
 	sb.WriteString(nl)

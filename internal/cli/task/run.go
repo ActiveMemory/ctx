@@ -43,7 +43,7 @@ func runTasksSnapshot(cmd *cobra.Command, args []string) error {
 	}
 
 	// Read TASKS.md
-	content, readErr := os.ReadFile(tasksPath)
+	content, readErr := os.ReadFile(filepath.Clean(tasksPath))
 	if readErr != nil {
 		return fmt.Errorf("failed to read TASKS.md: %w", readErr)
 	}
@@ -110,7 +110,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Read TASKS.md
-	content, readErr := os.ReadFile(tasksPath)
+	content, readErr := os.ReadFile(filepath.Clean(tasksPath))
 	if readErr != nil {
 		return fmt.Errorf("failed to read TASKS.md: %w", readErr)
 	}
@@ -184,7 +184,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 
 	// Check if the archive file already exists for today - append if so
 	var finalArchiveContent string
-	if existingContent, readExistErr := os.ReadFile(archiveFilePath); readExistErr == nil {
+	if existingContent, readExistErr := os.ReadFile(filepath.Clean(archiveFilePath)); readExistErr == nil {
 		finalArchiveContent = string(existingContent) +
 			nl + archivedContent.String()
 	} else {

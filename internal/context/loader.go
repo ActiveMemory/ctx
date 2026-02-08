@@ -64,7 +64,7 @@ func Load(dir string) (*Context, error) {
 			continue
 		}
 
-		filePath := filepath.Join(dir, name)
+		filePath := filepath.Clean(filepath.Join(dir, name))
 		content, readFileErr := os.ReadFile(filePath)
 		if readFileErr != nil {
 			continue

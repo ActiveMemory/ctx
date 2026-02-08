@@ -22,6 +22,10 @@ linters:
       - vendor
       - dist
       - site
+    rules:
+      # Test files use literal strings for clarity
+      - linters: [goconst]
+        path: "_test\\.go"
 
 run:
   timeout: 5m

@@ -54,7 +54,7 @@ func runServe(args []string) error {
 	}
 
 	// Run zensical serve
-	zensical := exec.Command(config.BinZensical, "serve")
+	zensical := exec.Command(config.BinZensical, "serve") //nolint:gosec // G204: args are constants
 	zensical.Dir = dir
 	zensical.Stdout = os.Stdout
 	zensical.Stderr = os.Stderr

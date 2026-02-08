@@ -141,15 +141,13 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 
 			// If file exists and not --force, preserve YAML frontmatter
 			if fileExists && !force {
-				existing, readErr := os.ReadFile(path)
+				existing, readErr := os.ReadFile(filepath.Clean(path))
 				if readErr == nil {
 					if fm := extractFrontmatter(string(existing)); fm != "" {
 						content = fm + "\n" + content
 					}
 				}
 				updated++
-			} else if fileExists {
-				exported++
 			} else {
 				exported++
 			}
@@ -342,11 +340,12 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 
 	var session *parser.Session
 
-	if latest {
+	switch {
+	case latest:
 		session = sessions[0]
-	} else if len(args) == 0 {
+	case len(args) == 0:
 		return fmt.Errorf("please provide a session ID or use --latest")
-	} else {
+	default:
 		query := strings.ToLower(args[0])
 		var matches []*parser.Session
 		for _, s := range sessions {
