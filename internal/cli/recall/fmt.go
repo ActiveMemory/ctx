@@ -24,7 +24,7 @@ import (
 //   - content: The content to be fenced
 //
 // Returns:
-//   - string: A fence string (e.g., "```", "````", "```“")
+//   - string: A fence string (e.g., "```", "````", "`````")
 func fenceForContent(content string) string {
 	fence := config.CodeFence
 	for strings.Contains(content, fence) {
@@ -68,10 +68,10 @@ func formatJournalFilename(s *parser.Session) string {
 // Returns:
 //   - string: Markdown content for this part
 func formatJournalEntryPart(
-		s *parser.Session,
-		messages []parser.Message,
-		startMsgIdx, part, totalParts int,
-		baseName string,
+	s *parser.Session,
+	messages []parser.Message,
+	startMsgIdx, part, totalParts int,
+	baseName string,
 ) string {
 	var sb strings.Builder
 	nl := config.NewlineLF
@@ -86,7 +86,7 @@ func formatJournalEntryPart(
 
 	// Navigation header for multipart sessions
 	if totalParts > 1 {
-		sb.WriteString(formatPartNavigation(part, totalParts, baseName, nl))
+		sb.WriteString(formatPartNavigation(part, totalParts, baseName))
 		sb.WriteString(nl + sep + nl + nl)
 	}
 
@@ -224,7 +224,7 @@ func formatJournalEntryPart(
 	// Navigation footer for multipart sessions
 	if totalParts > 1 {
 		sb.WriteString(nl + sep + nl + nl)
-		sb.WriteString(formatPartNavigation(part, totalParts, baseName, nl))
+		sb.WriteString(formatPartNavigation(part, totalParts, baseName))
 	}
 
 	return sb.String()
@@ -237,13 +237,13 @@ func formatJournalEntryPart(
 //   - part: Current part number (1-indexed)
 //   - totalParts: Total number of parts
 //   - baseName: Base filename without extension
-//   - nl: Newline string
 //
 // Returns:
 //   - string: Formatted navigation line
 //     (e.g., "**Part 2 of 3** | [← Previous](...) | [Next →](...)")
-func formatPartNavigation(part, totalParts int, baseName, nl string) string {
+func formatPartNavigation(part, totalParts int, baseName string) string {
 	var sb strings.Builder
+	nl := config.NewlineLF
 
 	sb.WriteString(fmt.Sprintf(config.TplRecallPartOf, part, totalParts))
 
