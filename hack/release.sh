@@ -121,7 +121,7 @@ make site
 # Commit docs and site updates
 echo "Committing documentation updates..."
 git add docs/index.md docs/versions.md site/
-git commit -m "docs: update download links and versions page for ${VERSION}"
+git diff --cached --quiet || git commit -m "docs: update download links and versions page for ${VERSION}"
 echo ""
 
 # Check if tag already exists
