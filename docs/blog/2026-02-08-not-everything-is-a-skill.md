@@ -185,7 +185,7 @@ codebase, at this moment, with **specific** goals in mind.
 
 ```markdown
 I want you to create an agent team to audit this codebase. Save each report as
-a separate markdown file under `./ideas/` (or another directory if you prefer).
+a separate Markdown file under `./ideas/` (or another directory if you prefer).
 
 Use read-only agents (subagent_type: Explore) for all analyses. No code changes.
 
