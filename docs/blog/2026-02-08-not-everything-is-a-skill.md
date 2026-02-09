@@ -340,7 +340,7 @@ the right things and to make the rest easy to find when you need it.
 !!! quote "If you remember one thing from this post..."
     **The best automation decision is sometimes not to automate.**
 
-    A recipe in a markdown file costs nothing until you use it.
+    A recipe in a Markdown file costs nothing until you use it.
     A skill costs attention on every prompt, whether it fires or not.
 
     **Automate the daily. Document the periodic. Forget the rest.**
