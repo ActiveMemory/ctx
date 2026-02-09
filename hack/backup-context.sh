@@ -6,7 +6,7 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-# Backup .context/ and .claude/ to SMB share with timestamped archives.
+# Backup .context/, .claude/, and ideas/ to SMB share with timestamped archives.
 # Usage: ./hack/backup-context.sh [project_dir]
 #
 # Creates a timestamped tarball and copies it to the remote share.
@@ -45,6 +45,7 @@ tar czf "/tmp/${ARCHIVE_NAME}" \
   -C "${PROJECT_DIR}" \
   .context/ \
   .claude/ \
+  ideas/ \
   -C "$HOME" \
   .bashrc
 

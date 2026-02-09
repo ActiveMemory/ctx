@@ -35,12 +35,12 @@ BLOCKED_REASON=""
 
 # Pattern 1: ./ctx or ./dist/ctx or ./dist/ctx-*
 if echo "$COMMAND" | grep -qE '(\./ctx|\./dist/ctx)'; then
-    BLOCKED_REASON="Use 'ctx' from PATH, not './ctx' or './dist/ctx'. Install with: sudo make install"
+    BLOCKED_REASON="Use 'ctx' from PATH, not './ctx' or './dist/ctx'. Ask the user to run: make build && sudo make install"
 fi
 
 # Pattern 2: go run ./cmd/ctx
 if echo "$COMMAND" | grep -qE 'go run \./cmd/ctx'; then
-    BLOCKED_REASON="Use 'ctx' from PATH, not 'go run ./cmd/ctx'. Install with: sudo make install"
+    BLOCKED_REASON="Use 'ctx' from PATH, not 'go run ./cmd/ctx'. Ask the user to run: make build && sudo make install"
 fi
 
 # Pattern 3: Absolute paths to ctx binary (but not just 'ctx' or paths in /usr/local/bin, /usr/bin)
@@ -49,7 +49,7 @@ fi
 if echo "$COMMAND" | grep -qE '(/home/|/tmp/|/var/)[^ ]*/ctx( |$)'; then
     # Exception: allow /tmp/ctx-test for integration tests
     if ! echo "$COMMAND" | grep -qE '/tmp/ctx-test'; then
-        BLOCKED_REASON="Use 'ctx' from PATH, not absolute paths. Install with: sudo make install"
+        BLOCKED_REASON="Use 'ctx' from PATH, not absolute paths. Ask the user to run: make build && sudo make install"
     fi
 fi
 
