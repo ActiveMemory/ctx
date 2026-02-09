@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Not Everything Is a Skill](2026-02-08-not-everything-is-a-skill.md)
+
+*Jose Alekhinne / February 8, 2026*
+
+I ran an 8-agent codebase audit and got actionable results. The natural
+instinct was to wrap the prompt as a `/ctx-audit` skill. Then I applied
+my own criteria from the skill trilogy: **it failed all three tests**.
+This post is about the difference between skills and recipes, why the
+attention budget applies to your skill library too, and why the best
+automation decision is sometimes not to automate.
+
+**Topics**: skill design, context engineering, automation discipline,
+recipes, agent teams
+
+---
+
 ### [The Anatomy of a Skill That Works](2026-02-07-the-anatomy-of-a-skill-that-works.md)
 
 *Jose Alekhinne / February 7, 2026*

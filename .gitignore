@@ -45,3 +45,6 @@ dist/
 .context/journal/
 .context/journal.bak/
 .context/journal-site/
+
+# Some ideas are best kept hidden.
+ideas
