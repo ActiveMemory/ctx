@@ -12,6 +12,8 @@ topics:
 
 # Not Everything Is a Skill
 
+![ctx](../images/ctx-banner.png)
+
 ## What a Codebase Audit Taught Me About Restraint
 
 *Jose Alekhinne / 2026-02-08*
