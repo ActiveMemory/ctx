@@ -40,6 +40,9 @@ dist/
 .claude/settings.local.json
 .claude/ralph-loop.local.md
 
+# Hook diagnostic logs (machine-specific, not committed)
+.context/logs/
+
 # Session transcripts (personal, potentially large)
 .context/sessions/
 .context/journal/

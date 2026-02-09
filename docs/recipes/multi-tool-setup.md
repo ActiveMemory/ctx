@@ -311,8 +311,10 @@ ctx hook aider
   open files as higher-priority context.
 * Run `ctx drift` periodically to catch stale references before they confuse
   the agent.
-* Once set up, the agent becomes proactive. You should not need to tell it to
-  persist context: **it will ask you**.
+* The agent playbook instructs the agent to persist context at natural
+  milestones (*completed tasks, decisions, gotchas*). In practice, this
+  works best when you reinforce the habit: a quick "*anything worth
+  saving?*" after a debugging session goes a long way.
 
 ## See Also
 

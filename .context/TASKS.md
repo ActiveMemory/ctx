@@ -335,6 +335,7 @@ indexing — grep across 100+ journal files won't scale.
 - [ ] Investigate ctx init overwriting user-generated content in .context/ files. Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template. Need guard to prevent reinit from destroying user data (decisions, learnings, tasks). Consider: skip existing files, merge strategy, or --force-only overwrite. #added:2026-02-06-182205
 - [ ] Add ctx help command; use-case-oriented cheat sheet for lazy CLI users. Should cover: (1) core CLI commands grouped by workflow (getting started, tracking decisions, browsing history, AI context), (2) available slash-command skills with one-line descriptions, (3) common workflow recipes showing how commands and skills combine. One screen, no scrolling. Not a skill; a real CLI command. #added:2026-02-06-184257
 - [ ] Add topic-based navigation to blog when post count reaches 15+ #priority:low #added:2026-02-07-015054
+- [ ] Review hook diagnostic logs after a long session. Check `.context/logs/check-persistence.log` and `.context/logs/check-context-size.log` to verify hooks fire correctly. Tune nudge frequency if needed. #priority:medium #added:2026-02-09
 - [ ] Run `/consolidate` to address codebase drift. Considerable drift has
       accumulated (predicate naming, magic strings, hardcoded permissions,
       godoc style). #priority:medium #added:2026-02-06

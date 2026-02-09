@@ -23,6 +23,16 @@ HOOK_INPUT=$(cat)
 SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // "unknown"')
 
 COUNTER_FILE="/tmp/ctx-context-check-${SESSION_ID}"
+LOG_DIR=".context/logs"
+LOG_FILE="${LOG_DIR}/check-context-size.log"
+
+# Ensure log directory exists
+mkdir -p "$LOG_DIR"
+
+# Log helper: timestamp + message
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] [session:${SESSION_ID:0:8}] $*" >> "$LOG_FILE"
+}
 
 # Initialize or increment counter
 if [ -f "$COUNTER_FILE" ]; then
@@ -51,6 +61,9 @@ if [ "$SHOULD_CHECK" = true ]; then
     echo "│ If usage exceeds ~80%, inform the user." >&2
     echo "└──────────────────────────────────────────────────" >&2
     echo "" >&2
+    log "prompt#${COUNT} CHECKPOINT"
+else
+    log "prompt#${COUNT} silent"
 fi
 
 exit 0

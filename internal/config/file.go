@@ -124,6 +124,8 @@ const (
 	FilePromptCoach = "prompt-coach.sh"
 	// FileCheckContextSize is the hook script for context size checkpoints.
 	FileCheckContextSize = "check-context-size.sh"
+	// FileCheckPersistence is the hook script for persistence nudges.
+	FileCheckPersistence = "check-persistence.sh"
 	// FileClaudeMd is the Claude Code configuration file in the project root.
 	FileClaudeMd = "CLAUDE.md"
 	// FilePromptMd is the session prompt file in the project root.

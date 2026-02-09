@@ -123,6 +123,26 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		cmd.Printf("  %s %s\n", green("✓"), contextCheckPath)
 	}
 
+	// Create check-persistence.sh script
+	// (nudges agent to persist context when no updates in many prompts)
+	persistCheckPath := filepath.Join(
+		config.DirClaudeHooks, config.FileCheckPersistence,
+	)
+	if _, err := os.Stat(persistCheckPath); err == nil && !force {
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), persistCheckPath)
+	} else {
+		persistCheckContent, err := claude.CheckPersistenceScript()
+		if err != nil {
+			return fmt.Errorf("failed to get check-persistence script: %w", err)
+		}
+		if err := os.WriteFile(
+			persistCheckPath, persistCheckContent, config.PermExec,
+		); err != nil {
+			return fmt.Errorf("failed to write %s: %w", persistCheckPath, err)
+		}
+		cmd.Printf("  %s %s\n", green("✓"), persistCheckPath)
+	}
+
 	// Handle settings.local.json - merge rather than overwrite
 	if err := mergeSettingsHooks(cmd, cwd, force); err != nil {
 		return err

@@ -53,13 +53,16 @@ func preToolUserHookMatcher(hooksDir string) []HookMatcher {
 //   - []HookMatcher: matchers for UserPromptSubmit lifecycle event
 func userPromptSubmitHookMatcher(hooksDir string) []HookMatcher {
 	return []HookMatcher{{
-		// Prompt coaching and context monitoring
+		// Prompt coaching, context monitoring, and persistence nudges
 		Hooks: []Hook{
 			NewHook(
 				HookTypeCommand, path.Join(hooksDir, config.FilePromptCoach),
 			),
 			NewHook(
 				HookTypeCommand, path.Join(hooksDir, config.FileCheckContextSize),
+			),
+			NewHook(
+				HookTypeCommand, path.Join(hooksDir, config.FileCheckPersistence),
 			),
 		},
 	}}

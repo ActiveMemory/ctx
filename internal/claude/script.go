@@ -80,3 +80,21 @@ func CheckContextSizeScript() ([]byte, error) {
 	}
 	return content, nil
 }
+
+// CheckPersistenceScript returns the persistence nudge hook script.
+//
+// The script counts prompts since the last .context/ file modification
+// and nudges the agent to persist learnings, decisions, or task updates.
+// Silent for the first 10 prompts; nudges once around prompt 20, then
+// every 15th prompt if no context files have been modified.
+//
+// Returns:
+//   - []byte: Raw bytes of the check-persistence.sh script
+//   - error: Non-nil if the embedded file cannot be read
+func CheckPersistenceScript() ([]byte, error) {
+	content, err := tpl.ClaudeHookByFileName(config.FileCheckPersistence)
+	if err != nil {
+		return nil, errFileRead(config.FileCheckPersistence, err)
+	}
+	return content, nil
+}
