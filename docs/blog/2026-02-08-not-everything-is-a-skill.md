@@ -30,7 +30,7 @@ topics:
 ## The Audit
 
 I wanted to understand how I use `ctx`: 
-* 
+
 * where the friction is, 
 * what works, what drifts, 
 * what I keep doing manually that could be automated. 
