@@ -60,10 +60,15 @@ Analysis of 69 sessions found 8 recurring workflow patterns. 7 have automation g
       **Done**: Added as step 4 in `/ctx-commit` — conditionally suggests
       `/update-docs` when source files are committed. #done:2026-02-08
 
-- [ ] Update user-facing documentation for all of the above skills and use cases.
+- [x] Update user-facing documentation for all of the above skills and use cases.
 
-- [ ] create "use-case-based" user-facing documentation (the problem, how
+- [x] create "use-case-based" user-facing documentation (the problem, how
       ctx solves it, typical workflow, best practices, gotchas, etc.)
+
+- [ ] Recipes section needs human review. For example, certain workflows can
+      be autonomously done by asking AI "can you record our learnings?" but
+      from the documenation it's not clear. Spend as much time as necessary
+      on every single recipe.
 
 **Documentation Drift** (from `ideas/REPORT-2-documentation-drift.md`):
 Overall drift severity LOW. 14 existing doc.go files are accurate. Key gaps below.
