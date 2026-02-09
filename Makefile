@@ -3,7 +3,7 @@
 # Common targets for Go developers
 
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
-test-coverage smoke site site-serve site-setup audit \
+test-coverage smoke site site-serve site-setup audit check \
 journal journal-serve watch-session backup backup-global backup-all
 
 # Default binary name and output
@@ -108,6 +108,9 @@ audit:
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""
 	@echo "All checks passed!"
+
+## check: Build + audit (single entry point for build, fmt, vet, lint, test)
+check: build audit
 
 ## clean: Remove build artifacts
 clean:

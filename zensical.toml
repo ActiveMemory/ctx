@@ -29,6 +29,7 @@ nav = [
   { "Context Files" = "context-files.md" },
   { "Autonomous Loops" = "autonomous-loop.md" },
   { "Integrations" = "integrations.md" },
+  { "Recipes" = "recipes/index.md" },
   { "Version History" = "versions.md" },
   { "Security" = "security.md" },
   { "Blog" = "blog/index.md" }
