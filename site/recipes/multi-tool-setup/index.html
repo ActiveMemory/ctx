@@ -1048,8 +1048,10 @@ readable Markdown:</p>
   open files as higher-priority context.</li>
 <li>Run <code>ctx drift</code> periodically to catch stale references before they confuse
   the agent.</li>
-<li>Once set up, the agent becomes proactive. You should not need to tell it to
-  persist context: <strong>it will ask you</strong>.</li>
+<li>The agent playbook instructs the agent to persist context at natural
+  milestones (<em>completed tasks, decisions, gotchas</em>). In practice, this
+  works best when you reinforce the habit: a quick "<em>anything worth
+  saving?</em>" after a debugging session goes a long way.</li>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
