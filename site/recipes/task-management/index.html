@@ -706,6 +706,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#letting-the-agent-drive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Letting the Agent Drive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Letting the Agent Drive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#natural-language-instead-of-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Natural Language Instead of Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-agent-creates-tasks-proactively" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Agent Creates Tasks Proactively
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asking-the-agent-what-to-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asking the Agent What to Capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-agent-completes-tasks-and-moves-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Agent Completes Tasks and Moves On
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end-of-session-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End-of-Session Capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-conversational-session-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Conversational Session Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#putting-it-together" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -839,6 +922,13 @@ specific enough that someone unfamiliar with the session could act on them.</p>
 that the description is actionable, not a duplicate, and specific enough for
 someone else to pick up. If you say "fix the bug," it will ask you to clarify
 which bug and where.</p>
+<blockquote>
+<p><strong>Agent note:</strong> In practice, many tasks are created proactively by the agent
+rather than by explicit CLI commands. After completing a feature, your agent
+will often identify follow-up work -- tests, docs, edge cases, error handling
+-- and offer to add them as tasks. You do not need to dictate <code>ctx add task</code>
+commands; the agent picks up on work context and suggests tasks naturally.</p>
+</blockquote>
 <h3 id="step-2-organize-with-phase-sections">Step 2: Organize with Phase Sections<a class="headerlink" href="#step-2-organize-with-phase-sections" title="Permanent link">&para;</a></h3>
 <p>Tasks live in phase sections inside TASKS.md. Phases provide logical groupings
 that preserve order and enable replay. A task never moves between sections --
@@ -871,6 +961,9 @@ TASKS.md.</p>
 prioritized recommendations. The skill reads TASKS.md, checks recent sessions,
 and ranks candidates using explicit priority, blocking status, in-progress
 state, momentum from recent work, and phase order.</p>
+<p>You can also just ask naturally -- "what should we work on?" or "what's the
+highest priority right now?" -- and the agent will consult TASKS.md and recent
+session context to recommend what to tackle.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ctx-next
 </span></code></pre></div>
 <p>The output looks like this:</p>
@@ -896,6 +989,13 @@ priority over starting new work.</p>
 <p>The task's checkbox changes from <code>[ ]</code> to <code>[x]</code> and a <code>#done</code> timestamp is
 added. Tasks are never deleted -- they stay in their phase section so the
 history is preserved.</p>
+<blockquote>
+<p><strong>Agent note:</strong> You rarely need to run <code>ctx complete</code> yourself during an
+interactive session. When you say something like "the rate limiter is done"
+or "we finished that," the agent marks the task complete and moves on to
+suggesting what is next. The CLI commands are most useful for manual
+housekeeping or scripted workflows.</p>
+</blockquote>
 <h3 id="step-5-snapshot-before-risky-changes">Step 5: Snapshot Before Risky Changes<a class="headerlink" href="#step-5-snapshot-before-risky-changes" title="Permanent link">&para;</a></h3>
 <p>Before a major refactor or any change that might break things, snapshot your
 current task state. This creates a copy of TASKS.md in <code>.context/archive/</code>
@@ -927,28 +1027,195 @@ in TASKS.md.</p>
 <p>The <code>/ctx-archive</code> skill adds two safety checks before archiving: it verifies
 that completed tasks are genuinely cluttering the view and that nothing was
 marked <code>[x]</code> prematurely.</p>
-<h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add a task</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement rate limiting for API endpoints&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high
+<h2 id="letting-the-agent-drive">Letting the Agent Drive<a class="headerlink" href="#letting-the-agent-drive" title="Permanent link">&para;</a></h2>
+<p>The steps above show the CLI commands for task management. In practice, most
+task management happens conversationally. An agent that has loaded the context
+files does not need you to type <code>ctx add task</code> -- it tracks work naturally and
+acts on it.</p>
+<h3 id="natural-language-instead-of-commands">Natural Language Instead of Commands<a class="headerlink" href="#natural-language-instead-of-commands" title="Permanent link">&para;</a></h3>
+<p>These conversational prompts replace explicit CLI commands during interactive
+sessions:</p>
+<table>
+<thead>
+<tr>
+<th>Instead of typing...</th>
+<th>Just say...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx add task "Write tests for X"</code></td>
+<td>"We should add tests for this -- track that?"</td>
+</tr>
+<tr>
+<td><code>/ctx-next</code></td>
+<td>"What should we work on?"</td>
+</tr>
+<tr>
+<td><code>ctx complete "rate limiting"</code></td>
+<td>"The rate limiter is done, what's next?"</td>
+</tr>
+<tr>
+<td><code>ctx tasks archive</code></td>
+<td>"TASKS.md is getting long, can you clean it up?"</td>
+</tr>
+<tr>
+<td><code>ctx add task ... &amp;&amp; ctx add task ...</code></td>
+<td>"Add follow-ups for what we just built"</td>
+</tr>
+</tbody>
+</table>
+<p>The agent translates these into the right <code>ctx</code> operations behind the scenes.</p>
+<h3 id="the-agent-creates-tasks-proactively">The Agent Creates Tasks Proactively<a class="headerlink" href="#the-agent-creates-tasks-proactively" title="Permanent link">&para;</a></h3>
+<p>After completing a piece of work, the agent does not wait for you to dictate
+follow-up items. It identifies them from the work context and offers:</p>
+<blockquote>
+<p><strong>Agent</strong>: "I've finished implementing the rate limiter middleware. I noticed
+three follow-up items:</p>
+<ol>
+<li>Write integration tests for the rate limiter (the unit tests pass but
+   there's no end-to-end coverage)</li>
+<li>Add rate limit headers to API responses (X-RateLimit-Remaining, etc.)</li>
+<li>Document the rate limit configuration in the ops runbook</li>
+</ol>
+<p>Want me to add these as tasks?"</p>
+</blockquote>
+<p>This is not hypothetical -- it is how an agent behaves once it has read the
+Agent Playbook. The playbook's "Work, Reflect, Persist" cycle means the agent
+asks itself after every milestone: <em>Did I just complete a task? Did new work
+emerge?</em> When the answer is yes, it acts.</p>
+<h3 id="asking-the-agent-what-to-capture">Asking the Agent What to Capture<a class="headerlink" href="#asking-the-agent-what-to-capture" title="Permanent link">&para;</a></h3>
+<p>You don't always know what's worth persisting. Instead of reviewing the
+session yourself and typing specific commands, ask the agent to do the
+thinking:</p>
+<table>
+<thead>
+<tr>
+<th>You say</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"What tasks came out of this session?"</td>
+<td>Agent reviews the work, identifies follow-ups, and offers to add them</td>
+</tr>
+<tr>
+<td>"Are there any tasks, learnings, or decisions worth adding?"</td>
+<td>Agent scans the full session for all three types and proposes a batch</td>
+</tr>
+<tr>
+<td>"What should we remember from today?"</td>
+<td>Agent surfaces everything persist-worthy — not just tasks</td>
+</tr>
+<tr>
+<td>"Anything we should track before we move on?"</td>
+<td>Agent checks for loose ends specific to the work just completed</td>
+</tr>
+</tbody>
+</table>
+<p>This is especially powerful after long or exploratory sessions where
+multiple threads were touched. The agent has the full conversation in
+context and can spot follow-ups you might miss:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>You:   &quot;Are there any tasks, learnings, or decisions worth adding
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>        from this session?&quot;
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Add to a specific phase</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Write integration tests for rate limiter&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Phase 2&quot;</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># See what to work on</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># (from AI assistant) /ctx-next</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Mark done by text</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;rate limiting&quot;</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Mark done by number</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">5</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Snapshot before a risky refactor</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-middleware-rewrite&quot;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Agent: &quot;Yes — here&#39;s what I&#39;d suggest:
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  Tasks:
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  - Add retry logic to the webhook delivery (we discussed it when
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    the timeout test failed but never tracked it)
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  - Update the API docs to reflect the new rate limit headers
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  Learnings:
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  - net/http&#39;s default client has no timeout — we burned 15 minutes
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    on that before adding an explicit 30s timeout
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>  Decisions:
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  - We chose token-bucket over sliding-window for rate limiting
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    because it handles bursts better and the library is simpler
 </span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Archive completed tasks when the list gets long</span>
-</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview first</span>
-</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">               </span><span class="c1"># then archive</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  Want me to add all of these?&quot;
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>You:   &quot;All of them.&quot;
+</span></code></pre></div>
+<p>The agent fills in the structured fields (context, rationale, lesson,
+application) from what it observed during the session. You get the same
+high-quality entries as if you had typed the verbose CLI commands, but
+without needing to remember what happened or how to format it.</p>
+<h3 id="the-agent-completes-tasks-and-moves-on">The Agent Completes Tasks and Moves On<a class="headerlink" href="#the-agent-completes-tasks-and-moves-on" title="Permanent link">&para;</a></h3>
+<p>When you confirm that work is finished -- or when the agent can see that it is
+-- it marks the task done and suggests the next step without prompting:</p>
+<blockquote>
+<p><strong>You</strong>: "The cooldown logic is working now."</p>
+<p><strong>Agent</strong>: "Marked 'Implement ctx agent cooldown' as done. Your highest-
+priority remaining task is 'Add --section flag to ctx add task' -- it's the
+last item in Phase 1 and a quick win. Want to start on that?"</p>
+</blockquote>
+<p>The agent chains completion into next-task selection. One sentence from you
+triggers two operations.</p>
+<h3 id="end-of-session-capture">End-of-Session Capture<a class="headerlink" href="#end-of-session-capture" title="Permanent link">&para;</a></h3>
+<p>At the end of a session, the agent reviews what happened and catches loose
+ends:</p>
+<blockquote>
+<p><strong>You</strong>: "I think we're good for today."</p>
+<p><strong>Agent</strong>: "Before we wrap up -- during the middleware work you mentioned
+wanting to add metrics for rate limit hits. That never made it into TASKS.md.
+Want me to add it as a task so it's there next session?"</p>
+</blockquote>
+<p>This is the proactive persistence model at work. The agent monitors the
+conversation for mentioned-but-not-tracked work and surfaces it before context
+is lost.</p>
+<h3 id="a-conversational-session-example">A Conversational Session Example<a class="headerlink" href="#a-conversational-session-example" title="Permanent link">&para;</a></h3>
+<p>Here is what task management looks like in a real session when the agent is
+driving:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>You:   What&#39;s left to do?
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Agent: You have 5 pending tasks across 2 phases. The highest priority is
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>       &quot;Implement ctx agent cooldown&quot; -- it&#39;s marked in-progress from
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>       yesterday and half-built. Want to pick that up?
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>You:   Yeah, let&#39;s finish it.
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>       [... 20 minutes of implementation work ...]
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>You:   That&#39;s working. Tests pass.
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>Agent: Nice. I&#39;ll mark &quot;Implement ctx agent cooldown&quot; as done.
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>       I noticed two things from the implementation:
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>       1. The tombstone file cleanup should happen on a timer, not just
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>          at startup -- want me to add that as a task?
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>       2. We learned that file locks don&#39;t work reliably on NFS. I&#39;ll
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>          add that to LEARNINGS.md.
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>You:   Yes to both. What&#39;s next?
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>Agent: Added the cleanup task as high priority. Next up is &quot;Add --section
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>       flag to ctx add task&quot; -- last item in Phase 1. It should be
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>       straightforward since the flag parsing pattern already exists
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>       in the codebase. Ready?
+</span></code></pre></div>
+<p>Notice what did not happen: the user never typed a <code>ctx</code> command. The agent
+handled task completion, follow-up creation, learning capture, and next-task
+selection -- all from natural conversation.</p>
+<h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Add a task</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement rate limiting for API endpoints&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Add to a specific phase</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Write integration tests for rate limiter&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Phase 2&quot;</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># See what to work on</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># (from AI assistant) /ctx-next</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Mark done by text</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;rate limiting&quot;</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Mark done by number</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">5</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Snapshot before a risky refactor</span>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-middleware-rewrite&quot;</span>
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Archive completed tasks when the list gets long</span>
+</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview first</span>
+</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">               </span><span class="c1"># then archive</span>
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
@@ -965,6 +1232,22 @@ marked <code>[x]</code> prematurely.</p>
   to archive. A clean TASKS.md helps both you and your AI assistant focus.</li>
 <li><strong>Never delete tasks.</strong> Mark them <code>[x]</code> (completed) or <code>[-]</code> (skipped with a
   reason). Deletion breaks the audit trail and violates the constitution.</li>
+<li><strong>Trust the agent's task instincts.</strong> When the agent suggests follow-up items
+  after completing work, it is drawing on the full context of what just happened.
+  These suggestions are usually accurate and save you from having to think of
+  everything yourself.</li>
+<li><strong>Conversational prompts beat CLI commands in interactive sessions.</strong> Saying
+  "what should we work on?" is faster and more natural than running <code>/ctx-next</code>.
+  Save the explicit CLI commands for scripting, CI pipelines, and unattended
+  runs where no human is in the loop.</li>
+<li><strong>Let the agent chain operations.</strong> A single statement like "that's done,
+  what's next?" triggers task completion, follow-up identification, and
+  next-task selection in one flow. You do not need to break these into separate
+  steps.</li>
+<li><strong>Review proactive task suggestions before moving on.</strong> The agent will offer
+  to add tasks it identified during work. Take a moment to confirm or adjust
+  them -- this is where the best follow-up items come from, because the agent
+  spotted them in context.</li>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

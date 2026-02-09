@@ -635,10 +635,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-initialize-for-autonomous-mode" class="md-nav__link">
+  <a href="#step-1-initialize-for-unattended-operation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Initialize for Autonomous Mode
+        Step 1: Initialize for Unattended Operation
       
     </span>
   </a>
@@ -728,6 +728,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-autonomous-loops-work-proactive-context-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Autonomous Loops Work: Proactive Context Persistence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Autonomous Loops Work: Proactive Context Persistence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-agent-playbooks-self-check-drives-autonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Agent Playbook's Self-Check Drives Autonomy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-agent-does-proactively-between-iterations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Agent Does Proactively Between Iterations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-what-proactive-persistence-looks-like" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: What Proactive Persistence Looks Like
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-snapshots-at-milestones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Snapshots at Milestones
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-persistence-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Persistence Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -780,11 +852,15 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
 <p>You have a project with a clear list of tasks and you want an AI agent to
-work through them overnight without you sitting at the keyboard. Each
-iteration needs to remember what the previous one did, mark tasks
-complete, and know when to stop.</p>
-<p>Without persistent memory, every iteration starts fresh. With <code>ctx</code>,
-each iteration picks up exactly where the last one left off.</p>
+work through them autonomously: overnight, <strong>unattended</strong>, without you sitting
+at the keyboard. </p>
+<p>Each iteration needs to <strong>remember</strong> what the previous one did, mark tasks 
+as completed, and know <strong>when</strong> to stop.</p>
+<p>Without persistent memory, every iteration starts fresh and the loop
+collapses. With <code>ctx</code>, each iteration picks up exactly where the last one
+left off: <strong>but only if the agent proactively persists its context</strong>. </p>
+<p>This is the key insight: unattended operation works because the agent treats
+context persistence as part of the work itself, not as an afterthought.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -798,7 +874,7 @@ each iteration picks up exactly where the last one left off.</p>
 <tr>
 <td><code>ctx init --ralph</code></td>
 <td>Command</td>
-<td>Initialize project for autonomous operation</td>
+<td>Initialize project for unattended operation (no human in the loop)</td>
 </tr>
 <tr>
 <td><code>ctx loop</code></td>
@@ -833,21 +909,21 @@ each iteration picks up exactly where the last one left off.</p>
 </tbody>
 </table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
-<h3 id="step-1-initialize-for-autonomous-mode">Step 1: Initialize for Autonomous Mode<a class="headerlink" href="#step-1-initialize-for-autonomous-mode" title="Permanent link">&para;</a></h3>
-<p>Start by creating a <code>.context/</code> directory configured for unattended
-operation. The <code>--ralph</code> flag sets up <code>PROMPT.md</code> so the agent works
-independently rather than asking clarifying questions.</p>
+<h3 id="step-1-initialize-for-unattended-operation">Step 1: Initialize for Unattended Operation<a class="headerlink" href="#step-1-initialize-for-unattended-operation" title="Permanent link">&para;</a></h3>
+<p>Start by creating a <code>.context/</code> directory configured so the agent can
+work without human input. The <code>--ralph</code> flag sets up <code>PROMPT.md</code> so the
+agent makes its own decisions rather than asking clarifying questions.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
 </span></code></pre></div>
 <p>This creates <code>.context/</code> with all template files, <code>PROMPT.md</code> configured
 for autonomous iteration, <code>IMPLEMENTATION_PLAN.md</code>, and <code>.claude/</code> hooks
 and skills for Claude Code. Without <code>--ralph</code>, the agent pauses to ask
-questions when requirements are unclear. For overnight runs, you want it
-to make reasonable choices and document them in DECISIONS.md instead.</p>
+questions when requirements are unclear. For unattended runs, you want it
+to make reasonable choices and document them in <code>DECISIONS.md</code> instead.</p>
 <h3 id="step-2-populate-tasksmd-with-phased-work">Step 2: Populate TASKS.md with Phased Work<a class="headerlink" href="#step-2-populate-tasksmd-with-phased-work" title="Permanent link">&para;</a></h3>
 <p>Open <code>.context/TASKS.md</code> and organize your work into phases. The agent
-works through these systematically, top to bottom, highest priority
-first.</p>
+works through these systematically, top to bottom, from the highest priority
+task first.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># Tasks</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gu">## Phase 1: Foundation</span>
@@ -868,22 +944,23 @@ first.</p>
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">- [ ]</span> Improve error messages <span class="sb">`#priority:low`</span>
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">- [ ]</span> Write integration tests <span class="sb">`#priority:medium`</span>
 </span></code></pre></div>
-<p>Phased organization matters because it gives the agent natural
-boundaries. Phase 1 tasks should be completable without Phase 2 code
+<p>Phased organization matters because it gives the agent <strong>natural
+boundaries</strong>. Phase 1 tasks should be completable without Phase 2 code
 existing yet.</p>
 <h3 id="step-3-configure-promptmd">Step 3: Configure PROMPT.md<a class="headerlink" href="#step-3-configure-promptmd" title="Permanent link">&para;</a></h3>
-<p>The <code>--ralph</code> flag generates a <code>PROMPT.md</code> that instructs the agent to:</p>
+<p>The <code>--ralph</code> flag generates a <code>PROMPT.md</code> that instructs the agent to
+operate autonomously:</p>
 <ol>
-<li>Read <code>.context/CONSTITUTION.md</code> first (hard rules, never violated)</li>
+<li>Read <code>.context/CONSTITUTION.md</code> first (<em>hard rules, never violated</em>)</li>
 <li>Load context from <code>.context/</code> files</li>
 <li>Pick ONE task per iteration</li>
-<li>Complete the task and update context files</li>
-<li>Commit changes</li>
+<li>Complete the task and <strong>proactively update context files</strong></li>
+<li>Commit changes (including <code>.context/</code>)</li>
 <li>Signal status with a completion signal</li>
 </ol>
 <p>You can customize <code>PROMPT.md</code> for your project. The critical parts are
-the one-task-per-iteration discipline and the completion signals at the
-end:</p>
+the one-task-per-iteration discipline, proactive context persistence,
+and the completion signals at the end:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gu">## Signal Status</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>End your response with exactly ONE of:
@@ -906,6 +983,20 @@ end:</p>
 <p>The generated script reads <code>PROMPT.md</code>, pipes it to the AI tool, checks
 for completion signals, and loops until done or the cap is reached. You
 can also use the <code>/ctx-loop</code> skill from inside Claude Code.</p>
+<div class="admonition tip">
+<p class="admonition-title">Shell Loop is Best Practice</p>
+<p>The shell while loop is the recommended approach for autonomous runs.
+Each iteration spawns a <strong>fresh AI process</strong>, so the only state that
+carries between iterations is what lives in <code>.context/</code> and git. This
+is "pure ralph": memory is explicit, not accidental.</p>
+<p>Claude Code's built-in <code>/loop</code> command runs iterations within the
+same session, which means context window state leaks between
+iterations — the agent "remembers" things from earlier iterations
+that were never persisted. This is convenient for short explorations
+(2-5 iterations) but less reliable for long unattended runs.
+See <a href="../../autonomous-loop/#quick-start-shell-while-loop-recommended">Autonomous Loops: Shell Loop vs Built-in Loop</a>
+for details.</p>
+</div>
 <h3 id="step-5-run-with-watch-mode">Step 5: Run with Watch Mode<a class="headerlink" href="#step-5-run-with-watch-mode" title="Permanent link">&para;</a></h3>
 <p>Open two terminals. In the first, run the loop. In the second, run
 <code>ctx watch</code> to automatically process context updates from the AI output.</p>
@@ -976,8 +1067,8 @@ useful for complex tasks that involve multiple files.</p>
 <p>Each step is verified (build, test, syntax check) before moving to the
 next. Failures are fixed in place, not deferred.</p>
 <h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
-<p>The full sequence for an overnight run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Set up the project</span>
+<p>The full sequence for an overnight unattended run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Set up the project for unattended operation</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 2. Edit TASKS.md with your phased work items</span>
@@ -996,6 +1087,106 @@ next. Failures are fixed in place, not deferred.</p>
 </span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>ctx<span class="w"> </span>status
 </span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>ctx<span class="w"> </span>load
 </span></code></pre></div>
+<h2 id="why-autonomous-loops-work-proactive-context-persistence">Why Autonomous Loops Work: Proactive Context Persistence<a class="headerlink" href="#why-autonomous-loops-work-proactive-context-persistence" title="Permanent link">&para;</a></h2>
+<p>The autonomous loop pattern works <strong>because the agent is proactive about
+persisting context</strong>. Without proactive behavior, the loop degrades into
+disconnected iterations that repeat work, forget decisions, and lose track
+of progress. The agent cannot rely on a human to prompt it — it must treat
+context persistence as part of every task, not as a separate step.</p>
+<h3 id="the-agent-playbooks-self-check-drives-autonomy">The Agent Playbook's Self-Check Drives Autonomy<a class="headerlink" href="#the-agent-playbooks-self-check-drives-autonomy" title="Permanent link">&para;</a></h3>
+<p>The Agent Playbook defines a self-check prompt that the agent applies
+continuously:</p>
+<blockquote>
+<p>"If this session ended right now, would the next session know what
+happened?"</p>
+</blockquote>
+<p>In interactive sessions, a human might remind the agent to save context.
+When the agent runs unattended, <strong>no one is there to remind it</strong>. The self-check
+becomes the agent's internal trigger: after every meaningful action, the
+agent evaluates whether the context files reflect reality and acts
+immediately if they don't.</p>
+<h3 id="what-the-agent-does-proactively-between-iterations">What the Agent Does Proactively Between Iterations<a class="headerlink" href="#what-the-agent-does-proactively-between-iterations" title="Permanent link">&para;</a></h3>
+<p>At each milestone within an iteration, the agent persists without waiting
+for instructions:</p>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>What the Agent Does Proactively</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Completes a task</td>
+<td>Marks it <code>[x]</code> in TASKS.md with <code>#done</code> timestamp</td>
+</tr>
+<tr>
+<td>Discovers a gotcha</td>
+<td>Adds it to LEARNINGS.md immediately</td>
+</tr>
+<tr>
+<td>Makes a design choice</td>
+<td>Records it in DECISIONS.md with rationale</td>
+</tr>
+<tr>
+<td>Identifies follow-up work</td>
+<td>Creates new tasks in TASKS.md with <code>#added</code> timestamp</td>
+</tr>
+<tr>
+<td>Finishes a phase</td>
+<td>Saves a session snapshot to <code>.context/sessions/</code></td>
+</tr>
+<tr>
+<td>Hits an unexpected failure</td>
+<td>Documents the root cause before moving on</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-what-proactive-persistence-looks-like">Example: What Proactive Persistence Looks Like<a class="headerlink" href="#example-what-proactive-persistence-looks-like" title="Permanent link">&para;</a></h3>
+<p>Here is what the agent does during a single iteration, beyond just writing
+code:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Iteration 4:
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  1. Read TASKS.md → pick &quot;Add email verification&quot; (#priority:high)
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  2. Add #started:2026-01-25-030012 to the task
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  3. Implement the feature (code, tests, etc.)
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  4. Tests pass → mark task [x], add #done:2026-01-25-031544
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  5. Add learning: &quot;SMTP config must be set before verification
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>     handler registers — order matters in init()&quot;
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  6. Add decision: &quot;Use token-based verification links (not codes)
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>     because links work better in automated test environments&quot;
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  7. Notice rate limiting is needed → create new task:
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>     &quot;- [ ] Add rate limiting to verification endpoint #added:2026-01-25-031602 #priority:medium&quot;
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  8. Commit all changes INCLUDING .context/ files
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  9. No signal emitted → loop continues to iteration 5
+</span></code></pre></div>
+<p>Steps 2, 4, 5, 6, and 7 are <strong>proactive context persistence</strong>. The agent
+was not asked to do any of them. It does them because the playbook's
+Work-Reflect-Persist cycle is internalized: after completing meaningful
+work, reflect on what happened, then persist before moving on.</p>
+<h3 id="session-snapshots-at-milestones">Session Snapshots at Milestones<a class="headerlink" href="#session-snapshots-at-milestones" title="Permanent link">&para;</a></h3>
+<p>For long autonomous runs, the agent saves session snapshots at natural
+boundaries — typically at phase transitions or after completing a cluster
+of related tasks. These snapshots give you a narrative of what happened
+overnight, not just a list of commits:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>.context/sessions/
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  2026-01-25-020000-phase1-foundation.md
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  2026-01-25-040000-phase2-core-features.md
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  2026-01-25-060000-phase3-hardening.md
+</span></code></pre></div>
+<p>Each snapshot summarizes what was accomplished, what decisions were made,
+and what the agent plans to do next. If the loop crashes at 4 AM, the
+snapshot from 4 AM tells the next session (or you) exactly where to resume.</p>
+<h3 id="the-persistence-contract">The Persistence Contract<a class="headerlink" href="#the-persistence-contract" title="Permanent link">&para;</a></h3>
+<p>The autonomous loop has an implicit contract:</p>
+<ol>
+<li><strong>Every iteration reads context</strong> — TASKS.md, DECISIONS.md, LEARNINGS.md</li>
+<li><strong>Every iteration writes context</strong> — task updates, new learnings, decisions</li>
+<li><strong>Every commit includes <code>.context/</code></strong> — so the next iteration sees changes</li>
+<li><strong>Context is always current</strong> — if the loop stopped right now, nothing is lost</li>
+</ol>
+<p>Break any part of this contract and the loop degrades: iterations repeat
+work, contradict earlier decisions, or lose track of what's done. The
+agent's proactive discipline is what holds the loop together.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
@@ -1040,7 +1231,7 @@ next. Failures are fixed in place, not deferred.</p>
 <li><a href="../../cli-reference/#ctx-watch">CLI Reference: ctx watch</a>: Watch
   mode details</li>
 <li><a href="../../cli-reference/#ctx-init">CLI Reference: ctx init</a>: Init flags
-  including <code>--ralph</code></li>
+  including <code>--ralph</code> for unattended operation</li>
 <li><a href="../session-lifecycle/">The Complete Session</a>: Interactive workflow
   (the human-attended counterpart)</li>
 <li><a href="../task-management/">Tracking Work Across Sessions</a>: How to

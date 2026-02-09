@@ -9,11 +9,15 @@ icon: lucide/wrench
 
 You have installed ctx and want to set it up with your AI coding assistant so
 that context persists across sessions. Different tools have different
-integration depths: Claude Code supports native hooks that load and save
-context automatically; Cursor can inject context via its system prompt; Aider
-reads context files through its `--read` flag. This recipe walks through
-the complete setup for each tool, from initialization through verification,
-so you end up with a working memory layer regardless of which AI tool you use.
+integration depths. For example: 
+
+* Claude Code supports native hooks that load and save context automatically
+* Cursor injects context via its system prompt
+* Aider reads context files through its `--read` flag
+
+This recipe walks through the complete setup for each tool, from initialization
+through verification, so you end up with a working memory layer regardless of
+which AI tool you use.
 
 ## Commands and Skills Used
 
@@ -38,7 +42,7 @@ Agent Skills automatically.
 ```bash
 cd your-project
 ctx init
-```
+````
 
 This produces the following structure:
 
@@ -88,16 +92,22 @@ ctx hook copilot
 ctx hook windsurf
 ```
 
-Each command prints the configuration you need. Here is what to do with it
-for the three most common tools:
+Each command prints the configuration you need. What you do with it depends on
+the tool.
 
-**Claude Code** -- no extra step needed. `ctx init` already wrote
-`.claude/settings.local.json` with `PreToolUse` and `SessionEnd` hooks. The
-`PreToolUse` hook runs `ctx agent --budget 4000 --session $PPID` on every
-tool call (with a 10-minute cooldown so it only fires once per window). The
-`SessionEnd` hook saves a snapshot to `.context/sessions/`.
+!!! tip "Claude is a First-Class Citizen"
+    You don't need any extra steps to integrate with Claude Code.
 
-**Cursor** -- add the system prompt snippet to `.cursor/settings.json`:
+    `ctx init` already wrote `.claude/settings.local.json` with
+    `PreToolUse` and `SessionEnd` hooks.
+
+    The `PreToolUse` hook runs  
+    `ctx agent --budget 4000 --session $PPID` on every tool call  
+    (*with a 10-minute cooldown so it only fires once per window*).
+
+    The `SessionEnd` hook saves a snapshot to `.context/sessions/`.
+
+**Cursor**: Add the system prompt snippet to `.cursor/settings.json`:
 
 ```json
 {
@@ -105,15 +115,15 @@ tool call (with a 10-minute cooldown so it only fires once per window). The
 }
 ```
 
-Context files appear in Cursor's file tree. You can also paste a context
-packet directly into chat:
+Context files appear in Cursor's file tree. You can also paste a context packet
+directly into chat:
 
 ```bash
 ctx agent --budget 4000 | xclip    # Linux
 ctx agent --budget 4000 | pbcopy   # macOS
 ```
 
-**Aider** -- create `.aider.conf.yml` so context files are loaded on every
+**Aider**: Create `.aider.conf.yml` so context files are loaded on every
 session:
 
 ```yaml
@@ -139,7 +149,7 @@ aider --read .context/TASKS.md --read .context/CONVENTIONS.md
 ### Step 3: Set Up Shell Completion
 
 Shell completion lets you tab-complete ctx subcommands and flags, which is
-especially useful when you are learning the CLI.
+especially useful while learning the CLI.
 
 ```bash
 # Bash (add to ~/.bashrc)
@@ -162,8 +172,25 @@ Start a fresh session in your AI tool and ask:
 > **"Do you remember?"**
 
 A correctly configured tool responds with specific context: current tasks from
-`TASKS.md`, recent decisions, previous session topics. It should not say
+`TASKS.md`, recent decisions, and previous session topics. It should not say
 "I don't have memory" or "Let me search for files."
+
+This question checks the *passive* side of memory. A properly set-up agent is
+also **proactive**: it treats context maintenance as part of its job.
+
+* After a debugging session, it offers to save a **learning**
+* After a trade-off discussion, it asks whether to record the decision
+* After completing a task, it suggests follow-up items
+
+The "*do you remember?*" check verifies both halves: recall **and**
+responsibility.
+
+For example, after resolving a tricky bug, a proactive agent might say:
+
+> That Redis timeout issue was subtle. Want me to save this as a learning so
+> we don't hit it again?
+
+If you see behavior like this, the setup is working end to end.
 
 In Claude Code, you can also invoke the `/ctx-status` skill:
 
@@ -172,7 +199,7 @@ In Claude Code, you can also invoke the `/ctx-status` skill:
 ```
 
 This prints a summary of all context files, token counts, and recent activity,
-confirming that the hooks are loading context.
+confirming that hooks are loading context.
 
 If context is not loading, check the basics:
 
@@ -186,9 +213,8 @@ If context is not loading, check the basics:
 
 ### Step 5: Enable Watch Mode for Non-Native Tools
 
-Tools like Aider, Copilot, and Windsurf do not have native hook support for
-saving context automatically. For these, run `ctx watch` alongside your AI
-tool to capture context updates in real time.
+Tools like Aider, Copilot, and Windsurf do not support native hooks for saving
+context automatically. For these, run `ctx watch` alongside your AI tool.
 
 Pipe the AI tool's output through `ctx watch`:
 
@@ -196,7 +222,7 @@ Pipe the AI tool's output through `ctx watch`:
 # Terminal 1: Run Aider with output logged
 aider 2>&1 | tee /tmp/aider.log
 
-# Terminal 2: Watch the log for context-update commands
+# Terminal 2: Watch the log for context updates
 ctx watch --log /tmp/aider.log
 ```
 
@@ -207,8 +233,8 @@ your-ai-tool 2>&1 | tee /tmp/ai.log &
 ctx watch --log /tmp/ai.log
 ```
 
-When the AI emits structured update commands in its output, `ctx watch`
-parses and applies them automatically:
+When the AI emits structured update commands, `ctx watch` parses and applies
+them automatically:
 
 ```xml
 <context-update type="learning"
@@ -218,7 +244,7 @@ parses and applies them automatically:
 >Redis Transaction Behavior</context-update>
 ```
 
-To preview what watch would do without modifying files:
+To preview changes without modifying files:
 
 ```bash
 ctx watch --dry-run --log /tmp/ai.log
@@ -227,20 +253,20 @@ ctx watch --dry-run --log /tmp/ai.log
 ### Step 6: Parse Session Transcripts (Optional)
 
 If you have JSONL transcripts from Claude Code sessions, convert them to
-readable markdown for archival or review:
+readable Markdown:
 
 ```bash
 ctx session parse ~/.claude/projects/.../session.jsonl -o conversation.md
 ```
 
-To also extract decisions and learnings from the transcript:
+To also extract **decisions** and **learnings**:
 
 ```bash
 ctx session parse transcript.jsonl --extract
 ```
 
-This scans the conversation for decision- and learning-like patterns and
-appends them to `DECISIONS.md` and `LEARNINGS.md`.
+This scans the conversation and appends relevant entries to `DECISIONS.md` and
+`LEARNINGS.md`.
 
 ## Putting It Together
 
@@ -272,27 +298,24 @@ ctx hook aider
 
 ## Tips
 
-- Start with `ctx init` (not `--minimal`) for your first project. The full
-  template set gives the AI more to work with and you can always delete files
-  you do not need.
-- For Claude Code, adjust the token budget in `.claude/settings.local.json`
-  if your context is large. Raise `--budget 8000` for bigger projects or
-  lower `--budget 2000` for fast, focused sessions.
-- The `--session $PPID` flag on the `ctx agent` hook isolates the cooldown
-  per Claude Code process, so running multiple sessions in parallel does not
-  cause them to suppress each other's context loading.
-- Commit your `.context/` directory to version control. AI sessions
-  occasionally overwrite context files; with git, you can always restore
-  them. Several ctx features (journal changelog, blog generation) also
-  depend on git history.
-- For Cursor and Copilot, keep `.context/CONVENTIONS.md` open in a split
-  pane. These tools use open files as implicit context, so visibility
-  matters.
-- Run `ctx drift` periodically to catch stale path references or outdated
-  context before they confuse the AI.
+* Start with `ctx init` (not `--minimal`) for your first project. The full
+  template set gives the agent more to work with, and you can always delete
+  files later.
+* For Claude Code, adjust the token budget in `.claude/settings.local.json`
+  as your project grows.
+* The `--session $PPID` flag isolates cooldowns per Claude Code process, so
+  parallel sessions do not suppress each other.
+* Commit your `.context/` directory to version control. Several ctx features
+  (journals, changelogs, blog generation) rely on git history.
+* For Cursor and Copilot, keep `CONVENTIONS.md` visible. These tools treat
+  open files as higher-priority context.
+* Run `ctx drift` periodically to catch stale references before they confuse
+  the agent.
+* Once set up, the agent becomes proactive. You should not need to tell it to
+  persist context: **it will ask you**.
 
 ## See Also
 
-- [The Complete Session](session-lifecycle.md) -- full session lifecycle recipe
-- [CLI Reference](../cli-reference.md) -- all commands and flags
-- [Integrations](../integrations.md) -- detailed per-tool integration docs
+* [The Complete Session](session-lifecycle.md): full session lifecycle recipe
+* [CLI Reference](../cli-reference.md): all commands and flags
+* [Integrations](../integrations.md): detailed per-tool integration docs

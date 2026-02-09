@@ -31,6 +31,7 @@ fix it, and keep your `.context/` directory lean and accurate.
 | `ctx sync`          | Command | Reconcile context with codebase structure      |
 | `ctx compact`       | Command | Archive completed tasks, deduplicate learnings |
 | `ctx status`        | Command | Quick health overview                          |
+| `/ctx-drift`        | Skill   | In-session drift detection and guided fix      |
 | `/ctx-status`       | Skill   | In-session context summary                     |
 | `/ctx-prompt-audit` | Skill   | Audit prompt quality and token efficiency      |
 
@@ -203,6 +204,80 @@ The audit produces specific recommendations. Apply them manually, then run
 ctx status --verbose
 ```
 
+## Agent-Driven Maintenance
+
+The steps above describe a manual workflow, but AI agents that read `.context/`
+files are already in a position to notice problems before you run any command.
+A well-configured agent doesn't wait to be asked -- it flags issues as it
+encounters them during normal work.
+
+### Agents Notice Drift in Real Time
+
+When an agent reads ARCHITECTURE.md to understand a module and then opens the
+actual source tree, it can see the mismatch immediately. A proactive agent will
+surface this:
+
+```
+Agent: I notice ARCHITECTURE.md still references `internal/handlers/`
+       which we deleted in the last refactor. Want me to run drift
+       detection so we can clean up any other stale references?
+```
+
+This happens naturally. The agent is already reading context files to do its
+job; noticing staleness is a side effect of paying attention. No scheduled
+maintenance run required.
+
+### Suggesting Archival and Cleanup
+
+Agents can also spot clutter. When TASKS.md is loaded at session start and
+most of the content is completed checkboxes, a proactive agent will offer
+to tidy up:
+
+```
+Agent: TASKS.md has 25 completed tasks obscuring the 4 pending ones.
+       Want me to archive the finished work so we can focus on what's
+       active?
+```
+
+The same applies to LEARNINGS.md with near-duplicate entries, or DECISIONS.md
+with decisions marked "Accepted" that were superseded weeks ago.
+
+### The Conversational Approach
+
+You don't need to remember command names to trigger maintenance. Natural
+language works:
+
+- "Is our context clean?"
+- "Anything stale?"
+- "Tidy up the context files"
+- "How healthy are our context files?"
+
+Or use the `/ctx-drift` skill directly — it runs `ctx drift`, explains each
+finding in plain language, and offers to auto-fix what it can. An agent that
+has read the Agent Playbook knows how to translate natural-language requests
+into the right sequence of `ctx drift`, `ctx sync`, and `ctx compact` calls.
+
+### Maintenance at Session Start
+
+The best time to catch drift is the start of a session, before stale context
+influences any decisions. A proactive agent will check context health as part
+of its startup routine and mention anything worth addressing:
+
+```
+Agent: Good morning. I've loaded the context files. A few things
+       before we start:
+
+       - ARCHITECTURE.md references `pkg/auth/` which is now empty
+       - DECISIONS.md hasn't been updated in 40 days
+       - There are 18 completed tasks ready for archival
+
+       Want me to run a quick maintenance pass, or should we jump
+       straight into today's work?
+```
+
+This turns maintenance from a chore you schedule into a conversation that
+happens when it matters.
+
 ## Putting It Together
 
 Here is a complete maintenance session combining all five steps:
@@ -263,6 +338,14 @@ want to discard old items.
 **Sync is non-destructive by default.** It suggests changes but never rewrites
 files without your confirmation. The `--dry-run` flag exists for extra caution
 after large refactors.
+
+**Agents are your first line of defense against drift.** An AI agent working
+in your codebase is constantly cross-referencing context files with actual
+source code. It will notice a renamed package, a deleted directory, or an
+outdated convention before `ctx drift` ever runs. Treat agent observations
+as early warnings -- when an agent says "this reference looks stale," it
+almost certainly is. Addressing these flags in real time keeps context
+accurate and avoids the accumulation that makes scheduled maintenance painful.
 
 ## See Also
 

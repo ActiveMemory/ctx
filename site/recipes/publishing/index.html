@@ -706,6 +706,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-conversational-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Conversational Approach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#putting-it-together" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -937,27 +948,46 @@ starting commit and a theme, then analyzes everything that changed:</p>
 <p>The skill diffs the commit range, identifies the most-changed files,
 and constructs a narrative organized by theme rather than chronology,
 including a key commits table and before/after comparisons.</p>
+<h2 id="the-conversational-approach">The Conversational Approach<a class="headerlink" href="#the-conversational-approach" title="Permanent link">&para;</a></h2>
+<p>You do not need to remember any of the commands above. When the Agent
+Playbook is active, your AI agent tracks what you are working on and
+proactively suggests content at natural moments:</p>
+<blockquote>
+<p>"We just shipped the caching layer and closed 3 tasks. Want me to
+draft a blog post about it?"</p>
+<p>"Your journal has 6 new entries since last rebuild. Want me to
+normalize, enrich, and regenerate the site?"</p>
+</blockquote>
+<p>You can also drive it with natural language instead of skills:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&quot;write about what we did this week&quot;
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>&quot;turn today&#39;s session into a blog post&quot;
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>&quot;make a changelog post covering everything since the last release&quot;
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>&quot;enrich the last few journal entries&quot;
+</span></code></pre></div>
+<p>The agent has full visibility into your <code>.context/</code> state — tasks
+completed, decisions recorded, learnings captured — so its suggestions
+are grounded in what actually happened, not guesswork.</p>
 <h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
 <p>The full pipeline from raw transcripts to published content:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Export all sessions</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 2. In Claude Code: normalize rendering</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/ctx-journal-normalize
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 3. In Claude Code: enrich entries with metadata</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>/ctx-journal-enrich<span class="w"> </span>twinkly-stirring-kettle
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>/ctx-journal-enrich<span class="w"> </span>gleaming-wobbling-sutherland
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># 4. Build and serve the journal site</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>make<span class="w"> </span>journal
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>make<span class="w"> </span>journal-serve
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># 5. In Claude Code: draft a blog post</span>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># 6. In Claude Code: write a changelog post</span>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Export all sessions</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># 2. In Claude Code: normalize rendering</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/ctx-journal-normalize
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 3. In Claude Code: enrich entries with metadata</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>/ctx-journal-enrich<span class="w"> </span>twinkly-stirring-kettle
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>/ctx-journal-enrich<span class="w"> </span>gleaming-wobbling-sutherland
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># 4. Build and serve the journal site</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>make<span class="w"> </span>journal
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>make<span class="w"> </span>journal-serve
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># 5. In Claude Code: draft a blog post</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># 6. In Claude Code: write a changelog post</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
 </span></code></pre></div>
 <p>The journal pipeline is idempotent at every stage. You can re-run
 <code>ctx recall export --all</code> without losing enrichment. You can re-run
@@ -994,6 +1024,13 @@ can rebuild the site as many times as you want.</p>
   story. The changelog skill takes a commit range and a theme. They
   complement each other: one for "what I learned" posts, the other
   for "what changed" posts.</p>
+</li>
+<li>
+<p><strong>Let the agent remind you.</strong> You do not need to remember to run
+  <code>/ctx-blog</code> or <code>/ctx-journal-enrich</code>. A proactive agent will suggest
+  content generation after productive milestones — shipping a feature,
+  closing a batch of tasks, or finishing a long debugging session. The
+  best content gets written while the context is fresh.</p>
 </li>
 <li>
 <p><strong>Edit the drafts.</strong> Both blog skills produce drafts, not final

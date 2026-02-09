@@ -524,21 +524,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start-with-claude-code" class="md-nav__link">
+  <a href="#quick-start-shell-while-loop-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start with Claude Code
+        Quick Start: Shell While Loop (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start: Shell While Loop (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-a-shell-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Shell Loop?
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#manual-loop-setup" class="md-nav__link">
+  <a href="#alternative-claude-codes-built-in-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Manual Loop Setup
+        Alternative: Claude Code's Built-in Loop
       
     </span>
   </a>
@@ -906,21 +923,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start-with-claude-code" class="md-nav__link">
+  <a href="#quick-start-shell-while-loop-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start with Claude Code
+        Quick Start: Shell While Loop (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start: Shell While Loop (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-a-shell-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Shell Loop?
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#manual-loop-setup" class="md-nav__link">
+  <a href="#alternative-claude-codes-built-in-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Manual Loop Setup
+        Alternative: Claude Code's Built-in Loop
       
     </span>
   </a>
@@ -1182,57 +1216,79 @@ We use generic terminology here so the concepts remain clear regardless of trend
 <li>Loop checks for completion signals</li>
 <li>Repeat until converged or blocked</li>
 </ol>
-<h2 id="quick-start-with-claude-code">Quick Start with Claude Code<a class="headerlink" href="#quick-start-with-claude-code" title="Permanent link">&para;</a></h2>
-<p>Claude Code has built-in loop support:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Start autonomous loop</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/loop
+<h2 id="quick-start-shell-while-loop-recommended">Quick Start: Shell While Loop (Recommended)<a class="headerlink" href="#quick-start-shell-while-loop-recommended" title="Permanent link">&para;</a></h2>
+<p>The best way to run an autonomous loop is a plain shell script that invokes
+your AI tool in a fresh process on each iteration. This is "pure ralph":
+the <strong>only</strong> state that carries between iterations is what lives in
+<code>.context/</code> and the git history. No context window bleed, no accumulated
+tokens, no hidden state.</p>
+<p>Create a <code>loop.sh</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># loop.sh — an autonomous iteration loop</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Cancel running loop</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/cancel-loop
-</span></code></pre></div>
-<p>That's it. The loop will:</p>
-<ol>
-<li>Read your <code>PROMPT.md</code> for instructions</li>
-<li>Pick tasks from <code>.context/TASKS.md</code></li>
-<li>Work until <code>SYSTEM_CONVERGED</code> or <code>SYSTEM_BLOCKED</code></li>
-</ol>
-<h2 id="manual-loop-setup">Manual Loop Setup<a class="headerlink" href="#manual-loop-setup" title="Permanent link">&para;</a></h2>
-<p>For other AI tools, create a <code>loop.sh</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># loop.sh — an autonomous iteration loop</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">PROMPT_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">PROMPT</span><span class="p">.md</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">MAX_ITERATIONS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">10</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">OUTPUT_FILE</span><span class="o">=</span><span class="s2">&quot;/tmp/loop_output.txt&quot;</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nv">$MAX_ITERATIONS</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Iteration </span><span class="nv">$i</span><span class="s2"> ===&quot;</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="c1"># Invoke AI with prompt</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROMPT_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>claude<span class="w"> </span>--print<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="c1"># Display output</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="c1"># Check for completion signals</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;SYSTEM_CONVERGED&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Loop complete: All tasks done&quot;</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="k">break</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="k">fi</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;SYSTEM_BLOCKED&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Loop blocked: Needs human input&quot;</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="k">break</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="k">fi</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">2</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="k">done</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">PROMPT_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">PROMPT</span><span class="p">.md</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">MAX_ITERATIONS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">10</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">OUTPUT_FILE</span><span class="o">=</span><span class="s2">&quot;/tmp/loop_output.txt&quot;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nv">$MAX_ITERATIONS</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Iteration </span><span class="nv">$i</span><span class="s2"> ===&quot;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="c1"># Invoke AI with prompt</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PROMPT_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>claude<span class="w"> </span>--print<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="c1"># Display output</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="c1"># Check for completion signals</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;SYSTEM_CONVERGED&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Loop complete: All tasks done&quot;</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="k">break</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="k">fi</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;SYSTEM_BLOCKED&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FILE</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Loop blocked: Needs human input&quot;</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="k">break</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="k">fi</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">2</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="k">done</span>
 </span></code></pre></div>
 <p>Make it executable and run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>./loop.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>./loop.sh
 </span></code></pre></div>
 <p>You can also generate this script with <code>ctx loop</code> (see <a href="../cli-reference/#ctx-loop">CLI Reference</a>).</p>
+<h3 id="why-a-shell-loop">Why a Shell Loop?<a class="headerlink" href="#why-a-shell-loop" title="Permanent link">&para;</a></h3>
+<p>Each iteration starts a <strong>fresh AI process</strong> with zero context window history.
+The agent knows only what it reads from <code>.context/</code> files — exactly the
+information you chose to persist. This is the core Ralph principle: memory is
+explicit, not accidental.</p>
+<h2 id="alternative-claude-codes-built-in-loop">Alternative: Claude Code's Built-in Loop<a class="headerlink" href="#alternative-claude-codes-built-in-loop" title="Permanent link">&para;</a></h2>
+<p>Claude Code has built-in loop support:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Start autonomous loop</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/loop
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Cancel running loop</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/cancel-loop
+</span></code></pre></div>
+<p>This is convenient for quick iterations, but be aware of important caveats:</p>
+<div class="admonition warning">
+<p class="admonition-title">Not Pure Ralph</p>
+<p>Claude Code's <code>/loop</code> runs all iterations <strong>within the same session</strong>.
+This means:</p>
+<ul>
+<li><strong>State leaks between iterations.</strong> The context window accumulates
+  output from every previous iteration. The agent "remembers" things
+  it saw earlier — even if they were never persisted to <code>.context/</code>.</li>
+<li><strong>Token budget degrades.</strong> Each iteration adds to the context window,
+  leaving less room for actual work in later iterations.</li>
+<li><strong>Not ergonomic for long runs.</strong> Users report that the built-in loop
+  is less predictable for 10+ iteration runs compared to a shell loop.</li>
+</ul>
+<p>For short explorations (2-5 iterations) or interactive use, <code>/loop</code>
+works fine. For overnight unattended runs or anything where iteration
+independence matters, use the shell while loop instead.</p>
+</div>
 <h2 id="the-promptmd-file">The PROMPT.md File<a class="headerlink" href="#the-promptmd-file" title="Permanent link">&para;</a></h2>
 <p>The prompt file instructs the AI on how to work autonomously. Here's a template:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gh"># Autonomous Development Prompt</span>

@@ -1025,14 +1025,34 @@
   <h1>Recipes</h1>
 
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<p>Workflow recipes that show how ctx commands and skills work
-together. Each recipe solves a specific problem by combining
-multiple tools into a step-by-step workflow.</p>
+<p>Workflow recipes showing how ctx commands and skills work together.
+Each recipe solves a specific problem by combining multiple tools
+into a step-by-step workflow.</p>
 <div class="admonition tip">
 <p class="admonition-title">Commands vs. Skills</p>
 <p><strong>Commands</strong> (<code>ctx status</code>, <code>ctx add task</code>) run in your
-terminal. <strong>Skills</strong> (<code>/ctx-save</code>, <code>/ctx-next</code>) run inside
-your AI coding assistant. Recipes combine both.</p>
+terminal.</p>
+<p><strong>Skills</strong> (<code>/ctx-save</code>, <code>/ctx-next</code>) run inside
+your AI coding assistant. </p>
+<p>Recipes combine both.</p>
+<p>Think of commands as <strong>structure</strong> and skills as <strong>behavior</strong>.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Proactive Agents</p>
+<p>These recipes show explicit commands and skills, but agents
+trained on the ctx playbook are <strong>proactive</strong>:</p>
+<p>They offer to: </p>
+<ul>
+<li>save learnings after debugging,</li>
+<li>record decisions after trade-offs, </li>
+<li>create follow-up tasks after completing work, </li>
+<li>and suggest what to work on next. </li>
+</ul>
+<p>You often <strong>don’t</strong> need to invoke commands directly: A simple
+"<em>what have we learned?</em>" or "<em>let's wrap up</em>" triggers the same
+workflows. </p>
+<p>Each recipe includes a <strong>Conversational Approach</strong> section
+showing these natural-language patterns.</p>
 </div>
 <hr />
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
@@ -1044,6 +1064,8 @@ watch mode for non-native tools, and verification.</p>
 <code>ctx watch</code>, <code>ctx session parse</code></p>
 <hr />
 <h2 id="daily-workflow">Daily Workflow<a class="headerlink" href="#daily-workflow" title="Permanent link">&para;</a></h2>
+<p>These recipes cover the workflows you’ll use every day when
+working with ctx.</p>
 <h3 id="the-complete-session"><a href="session-lifecycle/">The Complete Session</a><a class="headerlink" href="#the-complete-session" title="Permanent link">&para;</a></h3>
 <p>Walk through a full ctx session from start to finish: loading
 context, picking what to work on, committing with context
@@ -1074,7 +1096,7 @@ survive across sessions and team members.</p>
 reconciling with the codebase, compacting bloated files, and
 auditing prompt quality.</p>
 <p><strong>Uses</strong>: <code>ctx drift</code>, <code>ctx sync</code>, <code>ctx compact</code>, <code>ctx status</code>,
-<code>/ctx-status</code>, <code>/ctx-prompt-audit</code></p>
+<code>/ctx-drift</code>, <code>/ctx-status</code>, <code>/ctx-prompt-audit</code></p>
 <hr />
 <h2 id="history-and-discovery">History and Discovery<a class="headerlink" href="#history-and-discovery" title="Permanent link">&para;</a></h2>
 <h3 id="browsing-and-enriching-past-sessions"><a href="session-archaeology/">Browsing and Enriching Past Sessions</a><a class="headerlink" href="#browsing-and-enriching-past-sessions" title="Permanent link">&para;</a></h3>
@@ -1087,9 +1109,11 @@ across months of work.</p>
 <hr />
 <h2 id="advanced">Advanced<a class="headerlink" href="#advanced" title="Permanent link">&para;</a></h2>
 <h3 id="running-an-unattended-ai-agent"><a href="autonomous-loops/">Running an Unattended AI Agent</a><a class="headerlink" href="#running-an-unattended-ai-agent" title="Permanent link">&para;</a></h3>
-<p>Set up and run an autonomous loop where an AI agent works
-through tasks overnight without intervention, using ctx for
-persistent memory between iterations.</p>
+<p>Set up a loop where an AI agent works through tasks overnight
+without you at the keyboard, using ctx for persistent memory
+between iterations.</p>
+<p>This recipe shows how ctx supports long-running agent loops
+without losing context or intent.</p>
 <p><strong>Uses</strong>: <code>ctx init --ralph</code>, <code>ctx loop</code>, <code>ctx watch</code>, <code>ctx load</code>,
 <code>/ctx-loop</code>, <code>/ctx-implement</code>, <code>/ctx-context-monitor</code></p>
 <hr />

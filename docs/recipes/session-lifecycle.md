@@ -54,8 +54,16 @@ Do you remember what we were working on?
 This triggers the `/ctx-remember` skill. Behind the scenes, the assistant 
 runs `ctx agent --budget 4000`, reads the files listed in the context packet 
 (TASKS.md, DECISIONS.md, LEARNINGS.md, CONVENTIONS.md), checks 
-`ctx session list --limit 3` for recent sessions, and then presents a 
+`ctx session list --limit 3` for recent sessions, and then presents a
 structured readback:
+
+!!! note "What is a readback?"
+    A **readback** is a structured summary where the agent plays back what
+    it knows — last session, active tasks, recent decisions — so you can
+    confirm it loaded the right context. The term comes from aviation, where
+    pilots repeat instructions back to air traffic control to confirm they
+    heard correctly. Same idea: the agent tells you what it thinks is going
+    on, and you correct anything that's off before work begins.
 
 - **Last session**: topic, date, what was accomplished
 - **Active work**: pending and in-progress tasks
@@ -171,8 +179,14 @@ learned something, it records it with `ctx add learning` including context,
 lesson, and application fields. This is the bridge between committing code and 
 remembering *why* the code looks the way it does.
 
-If source code changed in areas that affect documentation, the skill also 
+If source code changed in areas that affect documentation, the skill also
 offers to check for doc drift.
+
+> **Agent behavior**: You do not always need to invoke `/ctx-commit` explicitly.
+> After a commit, the agent may proactively offer to capture context -- "We just
+> made a trade-off there. Want me to record it as a decision?" This is normal.
+> The Agent Playbook encourages persisting at milestones, and a commit is a
+> natural milestone.
 
 ---
 
@@ -201,9 +215,17 @@ command to run:
 
 The key: the skill asks before persisting anything. You choose what to keep.
 
-Not every commit needs reflection. A typo fix does not. But when you have 
-been debugging for an hour and finally understand the root cause, that is 
+Not every commit needs reflection. A typo fix does not. But when you have
+been debugging for an hour and finally understand the root cause, that is
 worth a reflection checkpoint.
+
+> **Agent behavior**: Agents often reflect without explicit invocation. After
+> completing a significant piece of work, the agent may naturally surface items
+> worth persisting -- "We discovered that `$PPID` resolves differently inside
+> hooks. Should I save that as a learning?" This is the agent following the
+> Work-Reflect-Persist cycle from the Agent Playbook. You do not need to say
+> `/ctx-reflect` for this to happen; the agent treats milestones as reflection
+> triggers on its own.
 
 ---
 
@@ -231,6 +253,94 @@ To verify the save worked:
 ctx session list --limit 3
 ```
 
+> **Agent behavior**: You do not need to say `/ctx-save` verbatim. Phrases like
+> "let's wrap up", "save our progress", or "I'm done for today" trigger the
+> full save flow -- the agent will reflect on what happened, persist outstanding
+> learnings and decisions, and save the session snapshot in one pass.
+
+---
+
+## Conversational Session Flow
+
+The steps above describe the mechanics. In practice, a session with a
+ctx-aware agent feels more like a conversation than a command sequence. The
+agent knows the lifecycle and moves through it naturally, often without
+explicit invocation. Here is a realistic example:
+
+---
+
+**You**: Do you remember what we were working on?
+
+**Agent** *(loads context silently, presents structured readback)*:
+> Last session (Feb 7, caching-layer): we implemented the in-memory cache with
+> TTL expiration and wrote tests for the eviction policy. You have 3 pending
+> tasks -- the biggest one is adding Redis as a backend. Recent decision:
+> we chose LRU over LFU because the access pattern is mostly recency-based.
+> Want to continue with the Redis backend, or tackle something else?
+
+**You**: Let's work on the Redis caching backend.
+
+**Agent** *(picks up the task, begins implementation)*:
+> Got it. I see the task in TASKS.md -- "Add Redis backend for cache layer."
+> I will start with the connection pool setup. Only touching
+> `internal/cache/redis/` for now.
+
+*(The agent works -- writes code, runs tests, iterates.)*
+
+**Agent** *(after implementing the connection pool and choosing a retry strategy)*:
+> The connection pool is working. I went with exponential backoff with jitter
+> for retries instead of fixed intervals -- it handles thundering herd better
+> under reconnection storms. That is a design choice worth recording. Want me
+> to save it as a decision?
+
+**You**: Yes, go ahead.
+
+**Agent**:
+> Done -- added to DECISIONS.md: "Exponential backoff with jitter for Redis
+> reconnection, to avoid thundering herd on pool recovery."
+
+*(More work happens -- the agent implements the cache read/write paths.)*
+
+**You**: What else did we learn during this session?
+
+**Agent**:
+> A few things worth capturing:
+> - **Learning**: Redis `SET` with `NX` and `PX` flags handles atomic
+>   set-if-not-exists with TTL in a single call -- no need for a separate
+>   `EXPIRE` command. We initially did it in two calls and hit a race condition.
+> - **Learning**: The `go-redis` library's `PoolSize` default is 10 per CPU.
+>   For our workload, explicit sizing at 20 was more predictable.
+> - **Task update**: The connection pool subtask is done; the read/write path
+>   is implemented but needs integration tests.
+>
+> Want me to persist these?
+
+**You**: Yes. And let's wrap up.
+
+**Agent** *(reflects, persists, saves -- all in one flow)*:
+> Persisted:
+> - 2 learnings added to LEARNINGS.md
+> - Marked "connection pool setup" done in TASKS.md
+> - Added "write integration tests for Redis cache" as a new task
+>
+> Saving session snapshot as `redis-cache-backend`...
+>
+> Session saved to `.context/sessions/2026-02-09-163045-redis-cache-backend.md`
+> with summary, decisions, and next-session tasks. You are good to close.
+
+---
+
+Notice what happened: the user never typed `/ctx-reflect`, `/ctx-save`, or
+`ctx add learning`. The agent moved through Load, Orient, Pick, Work, Commit,
+Reflect, and Save driven by natural conversation. "Let's wrap up" was enough
+to trigger the full reflect-and-save flow. The agent surfaced persist-worthy
+items at milestones -- after a design choice, after discovering a gotcha --
+without waiting to be asked.
+
+This is the intended experience. The commands and skills still exist for when
+you want precise control, but the agent is a proactive partner in the
+lifecycle, not a passive executor of slash commands.
+
 ---
 
 ## Putting It Together
@@ -244,6 +354,23 @@ Quick-reference checklist for a complete session:
 - [ ] **Commit**: `/ctx-commit` -- commit and capture decisions/learnings
 - [ ] **Reflect**: `/ctx-reflect` -- identify what to persist (at milestones)
 - [ ] **Save**: `/ctx-save <topic>` -- snapshot for the next session
+
+**Conversational equivalents** -- you can drive the same lifecycle with plain language:
+
+| Step    | Slash command      | Natural language                                          |
+|---------|--------------------|-----------------------------------------------------------|
+| Load    | `/ctx-remember`    | "Do you remember?" / "What were we working on?"          |
+| Orient  | `/ctx-status`      | "How's our context looking?"                             |
+| Pick    | `/ctx-next`        | "What should we work on?" / "Let's do the caching task"  |
+| Work    | --                 | "Only change files in internal/cache/"                   |
+| Commit  | `/ctx-commit`      | "Commit this" / "Ship it"                                |
+| Reflect | `/ctx-reflect`     | "What did we learn?" / *(agent offers at milestones)*    |
+| Save    | `/ctx-save <topic>`| "Let's wrap up" / "Save our progress" / "I'm done"      |
+
+The agent understands both columns. In practice, most sessions use a mix --
+explicit commands when you want precision, natural language when you want flow.
+The agent will also initiate steps on its own (particularly Reflect and Save)
+when it recognizes a milestone.
 
 Short sessions (quick bugfix) might only use: Load, Work, Commit, Save.
 
@@ -269,10 +396,20 @@ exact date or index number.
 changes, but always `/ctx-save` before ending a session where you did meaningful 
 work. The snapshot is what the next session loads.
 
-**Let the hook handle context loading.** The PreToolUse hook runs `ctx agent` 
-automatically with a cooldown, so context loads on first tool use without you 
-asking. The `/ctx-remember` prompt at session start is for *your* benefit -- 
+**Let the hook handle context loading.** The PreToolUse hook runs `ctx agent`
+automatically with a cooldown, so context loads on first tool use without you
+asking. The `/ctx-remember` prompt at session start is for *your* benefit --
 to get a readback you can verify -- not because the assistant needs it.
+
+**The agent is a proactive partner, not a passive tool.** A ctx-aware agent
+follows the Agent Playbook, which means it actively watches for milestones --
+completed tasks, design decisions, discovered gotchas -- and offers to persist
+them without being asked. If you finish a tricky debugging session, the agent
+may say "That root cause is worth saving as a learning -- want me to record
+it?" before you think to ask. This is by design. The agent's goal is to make
+sure nothing important is lost, even if the session ends abruptly. Let it do
+its job: when it surfaces something worth saving, say yes or no and keep
+moving.
 
 ## See Also
 

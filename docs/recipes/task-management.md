@@ -51,6 +51,12 @@ that the description is actionable, not a duplicate, and specific enough for
 someone else to pick up. If you say "fix the bug," it will ask you to clarify
 which bug and where.
 
+> **Agent note:** In practice, many tasks are created proactively by the agent
+> rather than by explicit CLI commands. After completing a feature, your agent
+> will often identify follow-up work -- tests, docs, edge cases, error handling
+> -- and offer to add them as tasks. You do not need to dictate `ctx add task`
+> commands; the agent picks up on work context and suggests tasks naturally.
+
 ### Step 2: Organize with Phase Sections
 
 Tasks live in phase sections inside TASKS.md. Phases provide logical groupings
@@ -93,6 +99,10 @@ prioritized recommendations. The skill reads TASKS.md, checks recent sessions,
 and ranks candidates using explicit priority, blocking status, in-progress
 state, momentum from recent work, and phase order.
 
+You can also just ask naturally -- "what should we work on?" or "what's the
+highest priority right now?" -- and the agent will consult TASKS.md and recent
+session context to recommend what to tackle.
+
 ```text
 /ctx-next
 ```
@@ -128,6 +138,12 @@ ctx complete "agent cooldown"
 The task's checkbox changes from `[ ]` to `[x]` and a `#done` timestamp is
 added. Tasks are never deleted -- they stay in their phase section so the
 history is preserved.
+
+> **Agent note:** You rarely need to run `ctx complete` yourself during an
+> interactive session. When you say something like "the rate limiter is done"
+> or "we finished that," the agent marks the task complete and moves on to
+> suggesting what is next. The CLI commands are most useful for manual
+> housekeeping or scripted workflows.
 
 ### Step 5: Snapshot Before Risky Changes
 
@@ -176,6 +192,156 @@ The `/ctx-archive` skill adds two safety checks before archiving: it verifies
 that completed tasks are genuinely cluttering the view and that nothing was
 marked `[x]` prematurely.
 
+## Letting the Agent Drive
+
+The steps above show the CLI commands for task management. In practice, most
+task management happens conversationally. An agent that has loaded the context
+files does not need you to type `ctx add task` -- it tracks work naturally and
+acts on it.
+
+### Natural Language Instead of Commands
+
+These conversational prompts replace explicit CLI commands during interactive
+sessions:
+
+| Instead of typing...                      | Just say...                                           |
+|-------------------------------------------|-------------------------------------------------------|
+| `ctx add task "Write tests for X"`        | "We should add tests for this -- track that?"         |
+| `/ctx-next`                               | "What should we work on?"                             |
+| `ctx complete "rate limiting"`            | "The rate limiter is done, what's next?"              |
+| `ctx tasks archive`                       | "TASKS.md is getting long, can you clean it up?"      |
+| `ctx add task ... && ctx add task ...`    | "Add follow-ups for what we just built"               |
+
+The agent translates these into the right `ctx` operations behind the scenes.
+
+### The Agent Creates Tasks Proactively
+
+After completing a piece of work, the agent does not wait for you to dictate
+follow-up items. It identifies them from the work context and offers:
+
+> **Agent**: "I've finished implementing the rate limiter middleware. I noticed
+> three follow-up items:
+>
+> 1. Write integration tests for the rate limiter (the unit tests pass but
+>    there's no end-to-end coverage)
+> 2. Add rate limit headers to API responses (X-RateLimit-Remaining, etc.)
+> 3. Document the rate limit configuration in the ops runbook
+>
+> Want me to add these as tasks?"
+
+This is not hypothetical -- it is how an agent behaves once it has read the
+Agent Playbook. The playbook's "Work, Reflect, Persist" cycle means the agent
+asks itself after every milestone: *Did I just complete a task? Did new work
+emerge?* When the answer is yes, it acts.
+
+### Asking the Agent What to Capture
+
+You don't always know what's worth persisting. Instead of reviewing the
+session yourself and typing specific commands, ask the agent to do the
+thinking:
+
+| You say | What happens |
+|---|---|
+| "What tasks came out of this session?" | Agent reviews the work, identifies follow-ups, and offers to add them |
+| "Are there any tasks, learnings, or decisions worth adding?" | Agent scans the full session for all three types and proposes a batch |
+| "What should we remember from today?" | Agent surfaces everything persist-worthy — not just tasks |
+| "Anything we should track before we move on?" | Agent checks for loose ends specific to the work just completed |
+
+This is especially powerful after long or exploratory sessions where
+multiple threads were touched. The agent has the full conversation in
+context and can spot follow-ups you might miss:
+
+```text
+You:   "Are there any tasks, learnings, or decisions worth adding
+        from this session?"
+
+Agent: "Yes — here's what I'd suggest:
+
+  Tasks:
+  - Add retry logic to the webhook delivery (we discussed it when
+    the timeout test failed but never tracked it)
+  - Update the API docs to reflect the new rate limit headers
+
+  Learnings:
+  - net/http's default client has no timeout — we burned 15 minutes
+    on that before adding an explicit 30s timeout
+
+  Decisions:
+  - We chose token-bucket over sliding-window for rate limiting
+    because it handles bursts better and the library is simpler
+
+  Want me to add all of these?"
+
+You:   "All of them."
+```
+
+The agent fills in the structured fields (context, rationale, lesson,
+application) from what it observed during the session. You get the same
+high-quality entries as if you had typed the verbose CLI commands, but
+without needing to remember what happened or how to format it.
+
+### The Agent Completes Tasks and Moves On
+
+When you confirm that work is finished -- or when the agent can see that it is
+-- it marks the task done and suggests the next step without prompting:
+
+> **You**: "The cooldown logic is working now."
+>
+> **Agent**: "Marked 'Implement ctx agent cooldown' as done. Your highest-
+> priority remaining task is 'Add --section flag to ctx add task' -- it's the
+> last item in Phase 1 and a quick win. Want to start on that?"
+
+The agent chains completion into next-task selection. One sentence from you
+triggers two operations.
+
+### End-of-Session Capture
+
+At the end of a session, the agent reviews what happened and catches loose
+ends:
+
+> **You**: "I think we're good for today."
+>
+> **Agent**: "Before we wrap up -- during the middleware work you mentioned
+> wanting to add metrics for rate limit hits. That never made it into TASKS.md.
+> Want me to add it as a task so it's there next session?"
+
+This is the proactive persistence model at work. The agent monitors the
+conversation for mentioned-but-not-tracked work and surfaces it before context
+is lost.
+
+### A Conversational Session Example
+
+Here is what task management looks like in a real session when the agent is
+driving:
+
+```text
+You:   What's left to do?
+Agent: You have 5 pending tasks across 2 phases. The highest priority is
+       "Implement ctx agent cooldown" -- it's marked in-progress from
+       yesterday and half-built. Want to pick that up?
+
+You:   Yeah, let's finish it.
+       [... 20 minutes of implementation work ...]
+
+You:   That's working. Tests pass.
+Agent: Nice. I'll mark "Implement ctx agent cooldown" as done.
+       I noticed two things from the implementation:
+       1. The tombstone file cleanup should happen on a timer, not just
+          at startup -- want me to add that as a task?
+       2. We learned that file locks don't work reliably on NFS. I'll
+          add that to LEARNINGS.md.
+
+You:   Yes to both. What's next?
+Agent: Added the cleanup task as high priority. Next up is "Add --section
+       flag to ctx add task" -- last item in Phase 1. It should be
+       straightforward since the flag parsing pattern already exists
+       in the codebase. Ready?
+```
+
+Notice what did not happen: the user never typed a `ctx` command. The agent
+handled task completion, follow-up creation, learning capture, and next-task
+selection -- all from natural conversation.
+
 ## Putting It Together
 
 ```bash
@@ -217,6 +383,22 @@ ctx tasks archive               # then archive
   to archive. A clean TASKS.md helps both you and your AI assistant focus.
 - **Never delete tasks.** Mark them `[x]` (completed) or `[-]` (skipped with a
   reason). Deletion breaks the audit trail and violates the constitution.
+- **Trust the agent's task instincts.** When the agent suggests follow-up items
+  after completing work, it is drawing on the full context of what just happened.
+  These suggestions are usually accurate and save you from having to think of
+  everything yourself.
+- **Conversational prompts beat CLI commands in interactive sessions.** Saying
+  "what should we work on?" is faster and more natural than running `/ctx-next`.
+  Save the explicit CLI commands for scripting, CI pipelines, and unattended
+  runs where no human is in the loop.
+- **Let the agent chain operations.** A single statement like "that's done,
+  what's next?" triggers task completion, follow-up identification, and
+  next-task selection in one flow. You do not need to break these into separate
+  steps.
+- **Review proactive task suggestions before moving on.** The agent will offer
+  to add tasks it identified during work. Take a moment to confirm or adjust
+  them -- this is where the best follow-up items come from, because the agent
+  spotted them in context.
 
 ## See Also
 

@@ -706,6 +706,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#agent-assisted-archaeology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent-Assisted Archaeology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#putting-it-together" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -992,19 +1003,57 @@ navigation when frontmatter exists.</p>
 <p>You can also serve an existing site without regenerating using <code>ctx serve</code>.
 The site generator requires <a href="https://pypi.org/project/zensical/">zensical</a>
 (<code>pip install zensical</code>).</p>
+<h2 id="agent-assisted-archaeology">Agent-Assisted Archaeology<a class="headerlink" href="#agent-assisted-archaeology" title="Permanent link">&para;</a></h2>
+<p>The commands and skills above are the building blocks, but in practice you
+rarely type them directly. An agent that has consumed the
+<a href="../../../.context/AGENT_PLAYBOOK/">Agent Playbook</a> treats session history as
+part of its memory and will surface it conversationally.</p>
+<p><strong>Natural-language prompts that just work:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>&quot;What did we work on last week?&quot;
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>&quot;Find the session where we debugged Redis.&quot;
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>&quot;Show me yesterday&#39;s sessions.&quot;
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>&quot;What decisions did we make about the caching layer?&quot;
+</span></code></pre></div>
+<p>The agent maps these to <code>ctx recall list</code>, <code>ctx recall show</code>, and grep over
+journal files without you needing to remember slugs, dates, or flags.</p>
+<p><strong>Proactive suggestions from the agent:</strong></p>
+<p>After a productive session or milestone, a ctx-aware agent will offer to
+capture context rather than waiting to be asked:</p>
+<blockquote>
+<p><em>"We had a productive session today -- three files refactored, two tests
+added. Want me to export and enrich it for the journal?"</em></p>
+</blockquote>
+<p>Or when it notices a backlog:</p>
+<blockquote>
+<p><em>"You have 12 un-enriched sessions from this week. Want me to process the
+most recent ones?"</em></p>
+</blockquote>
+<p><strong>A short conversational example:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>You:   &quot;What happened last Tuesday?&quot;
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Agent: &quot;Last Tuesday you worked on two sessions:
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>        - &#39;bright-dancing-hopper&#39; (2h 10m) -- refactored the middleware
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>          pipeline and added Redis caching.
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>        - &#39;quiet-flowing-dijkstra&#39; (18m) -- quick fix for a nil pointer
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>          in the config loader.
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        Want me to enrich either of these?&quot;
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>You:   &quot;Enrich the long one.&quot;
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>Agent: [runs /ctx-journal-enrich bright-dancing-hopper, proposes frontmatter]
+</span></code></pre></div>
+<p>The key shift is that session archaeology becomes a conversation, not a
+command sequence.</p>
 <h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
 <p>The complete pipeline from raw sessions to browsable site:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Terminal: export and generate</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Terminal: export and generate</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># AI assistant: normalize and enrich
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>/ctx-journal-normalize
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>/ctx-journal-enrich twinkly-stirring-kettle
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>/ctx-journal-enrich gleaming-wobbling-sutherland
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># AI assistant: normalize and enrich
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>/ctx-journal-normalize
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>/ctx-journal-enrich twinkly-stirring-kettle
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>/ctx-journal-enrich gleaming-wobbling-sutherland
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Terminal: rebuild with enrichments</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Terminal: rebuild with enrichments</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <p>If your project includes <code>Makefile.ctx</code> (deployed by <code>ctx init</code>), use
 <code>make journal</code> to combine the export and rebuild stages, then normalize
@@ -1022,6 +1071,11 @@ generator handles this transparently.</p>
 "suggestion" sessions for auto-complete. These appear under a separate
 "Suggestions" section in the site index so they don't clutter your main
 session list.</p>
+<p><strong>Your agent is the best session browser.</strong> You don't need to remember
+session slugs, dates, or command flags. Ask your agent "what did we do
+yesterday?" or "find the session about Redis" and it will map the question
+to the right recall commands. This works especially well after the agent has
+loaded the Agent Playbook, since it already treats <code>.context/</code> as its memory.</p>
 <p><strong>Enrich your best sessions first.</strong> You don't need to enrich every session.
 Focus on productive sessions where you made decisions, learned something, or
 completed significant work. Exploration and debugging sessions can stay
