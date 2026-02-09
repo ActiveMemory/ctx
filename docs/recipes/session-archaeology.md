@@ -231,6 +231,55 @@ You can also serve an existing site without regenerating using `ctx serve`.
 The site generator requires [zensical](https://pypi.org/project/zensical/)
 (`pip install zensical`).
 
+## Agent-Assisted Archaeology
+
+The commands and skills above are the building blocks, but in practice you
+rarely type them directly. An agent that has consumed the
+[Agent Playbook](../../.context/AGENT_PLAYBOOK.md) treats session history as
+part of its memory and will surface it conversationally.
+
+**Natural-language prompts that just work:**
+
+```
+"What did we work on last week?"
+"Find the session where we debugged Redis."
+"Show me yesterday's sessions."
+"What decisions did we make about the caching layer?"
+```
+
+The agent maps these to `ctx recall list`, `ctx recall show`, and grep over
+journal files without you needing to remember slugs, dates, or flags.
+
+**Proactive suggestions from the agent:**
+
+After a productive session or milestone, a ctx-aware agent will offer to
+capture context rather than waiting to be asked:
+
+> *"We had a productive session today -- three files refactored, two tests
+> added. Want me to export and enrich it for the journal?"*
+
+Or when it notices a backlog:
+
+> *"You have 12 un-enriched sessions from this week. Want me to process the
+> most recent ones?"*
+
+**A short conversational example:**
+
+```
+You:   "What happened last Tuesday?"
+Agent: "Last Tuesday you worked on two sessions:
+        - 'bright-dancing-hopper' (2h 10m) -- refactored the middleware
+          pipeline and added Redis caching.
+        - 'quiet-flowing-dijkstra' (18m) -- quick fix for a nil pointer
+          in the config loader.
+        Want me to enrich either of these?"
+You:   "Enrich the long one."
+Agent: [runs /ctx-journal-enrich bright-dancing-hopper, proposes frontmatter]
+```
+
+The key shift is that session archaeology becomes a conversation, not a
+command sequence.
+
 ## Putting It Together
 
 The complete pipeline from raw sessions to browsable site:
@@ -273,6 +322,12 @@ generator handles this transparently.
 "suggestion" sessions for auto-complete. These appear under a separate
 "Suggestions" section in the site index so they don't clutter your main
 session list.
+
+**Your agent is the best session browser.** You don't need to remember
+session slugs, dates, or command flags. Ask your agent "what did we do
+yesterday?" or "find the session about Redis" and it will map the question
+to the right recall commands. This works especially well after the agent has
+loaded the Agent Playbook, since it already treats `.context/` as its memory.
 
 **Enrich your best sessions first.** You don't need to enrich every session.
 Focus on productive sessions where you made decisions, learned something, or

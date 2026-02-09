@@ -176,6 +176,31 @@ The skill diffs the commit range, identifies the most-changed files,
 and constructs a narrative organized by theme rather than chronology,
 including a key commits table and before/after comparisons.
 
+## The Conversational Approach
+
+You do not need to remember any of the commands above. When the Agent
+Playbook is active, your AI agent tracks what you are working on and
+proactively suggests content at natural moments:
+
+> "We just shipped the caching layer and closed 3 tasks. Want me to
+> draft a blog post about it?"
+
+> "Your journal has 6 new entries since last rebuild. Want me to
+> normalize, enrich, and regenerate the site?"
+
+You can also drive it with natural language instead of skills:
+
+```text
+"write about what we did this week"
+"turn today's session into a blog post"
+"make a changelog post covering everything since the last release"
+"enrich the last few journal entries"
+```
+
+The agent has full visibility into your `.context/` state — tasks
+completed, decisions recorded, learnings captured — so its suggestions
+are grounded in what actually happened, not guesswork.
+
 ## Putting It Together
 
 The full pipeline from raw transcripts to published content:
@@ -233,6 +258,12 @@ can rebuild the site as many times as you want.
   story. The changelog skill takes a commit range and a theme. They
   complement each other: one for "what I learned" posts, the other
   for "what changed" posts.
+
+- **Let the agent remind you.** You do not need to remember to run
+  `/ctx-blog` or `/ctx-journal-enrich`. A proactive agent will suggest
+  content generation after productive milestones — shipping a feature,
+  closing a batch of tasks, or finishing a long debugging session. The
+  best content gets written while the context is fresh.
 
 - **Edit the drafts.** Both blog skills produce drafts, not final
   posts. Review the narrative, add your personal perspective, and

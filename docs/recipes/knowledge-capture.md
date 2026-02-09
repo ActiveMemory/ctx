@@ -51,59 +51,103 @@ The decision point: if you chose between alternatives, it is a decision.
 If you discovered something surprising, it is a learning. If you are
 codifying a repeated pattern, it is a convention.
 
-### Step 2: Record Decisions with Structured Fields
+### Step 2: Record Decisions
 
-Decisions require three structured fields: `--context`, `--rationale`,
-and `--consequences`.
+Decisions have three structured fields: context, rationale, and
+consequences. The easiest way to record one is to tell your agent:
 
-```bash
-ctx add decision "Use file-based cooldown tokens instead of env vars" \
-  --context "Hook subprocesses cannot persist env vars to parent shell" \
-  --rationale "File tokens survive across processes. Simpler than IPC. Cleanup is automatic via TTL." \
-  --consequences "Tombstone files accumulate in /tmp. Cannot share state across machines."
+```text
+You: "Save that as a decision — we picked file-based cooldown
+      tokens over env vars."
+
+Agent: "Recorded in DECISIONS.md:
+  - Decision: Use file-based cooldown tokens instead of env vars
+  - Context: Hook subprocesses cannot persist env vars to parent shell
+  - Rationale: File tokens survive across processes. Simpler than
+    IPC. Cleanup is automatic via TTL.
+  - Consequences: Tombstone files accumulate in /tmp. Cannot share
+    state across machines."
 ```
 
-Include rejected alternatives in the rationale when multiple options were
-considered:
+The agent was present for the trade-off discussion. It fills in the
+structured fields from what it observed — context it has but you would
+struggle to reconstruct in a terminal one-liner. When multiple options
+were considered, the agent includes rejected alternatives in the
+rationale automatically.
 
-```bash
-ctx add decision "Use Cobra for CLI framework" \
-  --context "Go CLI project needs subcommand support and shell completion" \
-  --rationale "Mature routing and built-in completion. Chose over urfave/cli (weaker subcommands) and kong (smaller community)." \
-  --consequences "More boilerplate per command. Completion scripts generated automatically."
+The `/ctx-add-decision` skill also guides you through the fields
+interactively. For quick decisions, it supports a Y-statement: "In the
+context of [situation], facing [constraint], we decided for [choice]
+and against [alternatives], to achieve [benefit], accepting that
+[trade-off]."
+
+??? note "CLI command for scripting and automation"
+    When no agent is in the loop (CI pipelines, shell scripts, hooks),
+    use the CLI directly with structured flags:
+
+    ```bash
+    ctx add decision "Use file-based cooldown tokens instead of env vars" \
+      --context "Hook subprocesses cannot persist env vars to parent shell" \
+      --rationale "File tokens survive across processes. Simpler than IPC. Cleanup is automatic via TTL." \
+      --consequences "Tombstone files accumulate in /tmp. Cannot share state across machines."
+    ```
+
+### Step 3: Record Learnings
+
+Learnings have three structured fields: context, lesson, and
+application. Again, your agent is the best tool for this — it was there
+when you discovered the gotcha and can express it more completely than
+a backslash-escaped terminal command:
+
+```text
+You: "That subprocess thing was painful — save it as a learning."
+
+Agent: "Added to LEARNINGS.md:
+  - Learning: Claude Code hooks run in a subprocess
+  - Context: Set env var in PreToolUse hook, but it was not visible
+    in the main session
+  - Lesson: Hook scripts execute in a child process. Env changes do
+    not propagate to parent.
+  - Application: Use tombstone files for hook-to-session
+    communication. Never rely on hook env vars."
 ```
 
-The `/ctx-add-decision` skill guides you through the fields interactively.
-For quick decisions, it supports a Y-statement: "In the context of
-[situation], facing [constraint], we decided for [choice] and against
-[alternatives], to achieve [benefit], accepting that [trade-off]."
+You said one sentence. The agent produced a structured entry with all
+three fields filled from session context. That is the point — the agent
+has the full conversation and can be far more expressive than what you
+would type at a prompt.
 
-### Step 3: Record Learnings with Structured Fields
+The `/ctx-add-learning` skill applies three quality filters: (1) Could
+someone Google this in 5 minutes? (2) Is it specific to this codebase?
+(3) Did it take real effort to discover? All three must pass. Learnings
+capture principles and heuristics, not code snippets.
 
-Learnings require three structured fields: `--context`, `--lesson`, and
-`--application`.
+??? note "CLI command for scripting and automation"
+    When no agent is in the loop:
 
-```bash
-ctx add learning "Claude Code hooks run in a subprocess" \
-  --context "Set env var in PreToolUse hook, but it was not visible in the main session" \
-  --lesson "Hook scripts execute in a child process. Env changes do not propagate to parent." \
-  --application "Use tombstone files for hook-to-session communication. Never rely on hook env vars."
-```
-
-The `/ctx-add-learning` skill applies three filters: (1) Could someone
-Google this in 5 minutes? (2) Is it specific to this codebase? (3) Did it
-take real effort to discover? All three must pass. Learnings capture
-principles and heuristics, not code snippets.
+    ```bash
+    ctx add learning "Claude Code hooks run in a subprocess" \
+      --context "Set env var in PreToolUse hook, but it was not visible in the main session" \
+      --lesson "Hook scripts execute in a child process. Env changes do not propagate to parent." \
+      --application "Use tombstone files for hook-to-session communication. Never rely on hook env vars."
+    ```
 
 ### Step 4: Record Conventions
 
-Conventions do not require structured fields. Use `--section` to place them
-in the right category:
+Conventions are simpler — just a name, a rule, and optionally a section.
+These are short enough that either approach works:
+
+```text
+You: "We've been using kebab-case for every CLI flag. Codify that."
+
+Agent: "Added to CONVENTIONS.md under Naming:
+  'Use kebab-case for all CLI flag names.'"
+```
+
+Or from the terminal:
 
 ```bash
 ctx add convention "Use kebab-case for all CLI flag names" --section "Naming"
-ctx add convention "Integration tests use t.TempDir() for .context/ isolation" --section "Testing"
-ctx add convention "One command per file in cmd/ directory" --section "Structure"
 ```
 
 Conventions work best for rules that come up repeatedly. Codify a pattern
@@ -150,7 +194,73 @@ commands for each suggested persist:
 
 The skill always asks before persisting.
 
+Note that `/ctx-reflect` is not the only way to trigger reflection. Agents
+trained on the ctx playbook naturally surface persist-worthy items at
+breakpoints -- even without invoking the skill explicitly. A conversational
+prompt like "anything worth saving?" or "let's wrap up" can trigger the
+same review. The skill provides a structured checklist, but the underlying
+behavior is available through natural conversation.
+
+### Step 7: The Conversational Approach
+
+The commands shown in Steps 2-4 are precise, but you rarely need to type
+them yourself. When working with an AI agent that has loaded the ctx
+playbook, natural language triggers the same operations.
+
+**You ask, the agent acts:**
+
+| You say | What the agent does |
+|---|---|
+| "What have we learned this session?" | Reviews recent work, identifies learnings, offers to persist |
+| "Save that as a decision" | Captures the trade-off you just discussed with structured fields |
+| "Any gotchas worth remembering?" | Scans recent work for non-obvious lessons |
+| "Record that convention" | Adds the pattern you just agreed on to CONVENTIONS.md |
+| "Let's wrap up" | Runs through the reflect checklist conversationally |
+
+Example exchange:
+
+```text
+You: "What did we learn from that debugging session?"
+
+Agent: "We discovered three things worth persisting:
+  1. Hook subprocesses can't propagate env vars to the parent -- we
+     spent 20 minutes on this before switching to tombstone files.
+  2. Tombstone files need a TTL or they accumulate in /tmp.
+  3. The cooldown logic must check file mtime, not just existence.
+  Want me to save these as learnings?"
+
+You: "Yes, all of them."
+
+Agent: "Done. Added all three to LEARNINGS.md with structured fields."
+```
+
+**The agent can also be proactive -- without being asked.** The playbook
+encourages agents to persist context at natural milestones. You may see:
+
+- After fixing a tricky bug: *"I noticed this was a non-obvious issue.
+  Want me to save it as a learning?"*
+- After choosing between approaches: *"We just made a trade-off between
+  file-based tokens and IPC -- should I record this as a decision?"*
+- At session milestones: the agent checks what is worth persisting and
+  offers a brief summary.
+
+**When agents run unattended (no human in the loop), they just do it:**
+
+- *"I've added the subprocess env var gotcha to LEARNINGS.md so we
+  don't hit it again."*
+- *"Recorded the decision to use file-based tokens over env vars in
+  DECISIONS.md."*
+- *"Marked the cooldown task done and added a follow-up for TTL
+  cleanup."*
+
+This is by design. The playbook's self-check prompt -- "If this session
+ended right now, would the next session know what happened?" -- drives
+agents to persist early and often rather than waiting for explicit
+instructions.
+
 ## Putting It Together
+
+### Command-line approach (scripting and automation)
 
 ```bash
 # Decision: record the trade-off
@@ -176,6 +286,43 @@ ctx learnings reindex
 # /ctx-reflect
 ```
 
+### Conversational approach (interactive sessions)
+
+```text
+You: "We just picked Postgres over SQLite for the concurrency
+      reasons. Save that?"
+
+Agent: "Recorded. Added to DECISIONS.md:
+  - Decision: Use PostgreSQL over SQLite
+  - Context: Need concurrent multi-user access
+  - Rationale: SQLite locks on writes; Postgres handles concurrency
+  - Consequences: Requires a database server; team needs Postgres
+    training"
+
+You: "Also that migration thing -- the deploy blew up when the
+      migration ran twice."
+
+Agent: "Got it. Added to LEARNINGS.md:
+  - Learning: SQL migrations must be idempotent
+  - Lesson: CREATE TABLE without IF NOT EXISTS fails on retry
+  - Application: Always use IF NOT EXISTS guards in migrations"
+
+You: "Good. Anything else worth saving before we wrap up?"
+
+Agent: "We've been using structured error returns in every API
+  handler this session. Want me to codify that as a convention?"
+
+You: "Do it."
+
+Agent: "Done. Added 'API handlers return structured errors' to
+  CONVENTIONS.md under the API section."
+```
+
+Both approaches produce the same structured entries in the same context
+files. The conversational approach is the natural fit for interactive
+sessions; the CLI commands are better suited for scripts, hooks, and
+automation pipelines.
+
 ## Tips
 
 - **Record decisions at the moment of choice.** The alternatives you
@@ -194,6 +341,16 @@ ctx learnings reindex
 - **Prefer the structured fields.** The verbosity forces clarity. A
   decision without rationale is just a fact; a learning without application
   is just a story.
+- **Talk to your agent, don't type commands.** In interactive sessions,
+  the conversational approach is the recommended way to capture knowledge.
+  Say "save that as a learning" or "any decisions worth recording?" and let
+  the agent handle the structured fields. Reserve the CLI commands for
+  scripting, automation, and CI/CD pipelines where there is no agent in
+  the loop.
+- **Trust the agent's proactive instincts.** Agents trained on the ctx
+  playbook will offer to persist context at milestones. Let them. A brief
+  "want me to save this?" is cheaper than re-discovering the same lesson
+  three sessions later.
 
 ## See Also
 

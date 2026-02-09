@@ -8,32 +8,38 @@ icon: lucide/repeat
 ## Problem
 
 You have a project with a clear list of tasks and you want an AI agent to
-work through them overnight without you sitting at the keyboard. Each
-iteration needs to remember what the previous one did, mark tasks
-complete, and know when to stop.
+work through them autonomously: overnight, **unattended**, without you sitting
+at the keyboard. 
 
-Without persistent memory, every iteration starts fresh. With `ctx`,
-each iteration picks up exactly where the last one left off.
+Each iteration needs to **remember** what the previous one did, mark tasks 
+as completed, and know **when** to stop.
+
+Without persistent memory, every iteration starts fresh and the loop
+collapses. With `ctx`, each iteration picks up exactly where the last one
+left off: **but only if the agent proactively persists its context**. 
+
+This is the key insight: unattended operation works because the agent treats
+context persistence as part of the work itself, not as an afterthought.
 
 ## Commands and Skills Used
 
-| Tool                    | Type    | Purpose                                                |
-|-------------------------|---------|--------------------------------------------------------|
-| `ctx init --ralph`      | Command | Initialize project for autonomous operation            |
-| `ctx loop`              | Command | Generate the loop shell script                         |
-| `ctx watch --auto-save` | Command | Monitor AI output and persist context updates          |
-| `ctx load`              | Command | Display assembled context (for debugging)              |
-| `/ctx-loop`             | Skill   | Generate loop script from inside Claude Code           |
-| `/ctx-implement`        | Skill   | Execute a plan step-by-step with verification          |
-| `/ctx-context-monitor`  | Skill   | Automated context capacity alerts during long sessions |
+| Tool                    | Type    | Purpose                                                            |
+|-------------------------|---------|--------------------------------------------------------------------|
+| `ctx init --ralph`      | Command | Initialize project for unattended operation (no human in the loop) |
+| `ctx loop`              | Command | Generate the loop shell script                                     |
+| `ctx watch --auto-save` | Command | Monitor AI output and persist context updates                      |
+| `ctx load`              | Command | Display assembled context (for debugging)                          |
+| `/ctx-loop`             | Skill   | Generate loop script from inside Claude Code                       |
+| `/ctx-implement`        | Skill   | Execute a plan step-by-step with verification                      |
+| `/ctx-context-monitor`  | Skill   | Automated context capacity alerts during long sessions             |
 
 ## The Workflow
 
-### Step 1: Initialize for Autonomous Mode
+### Step 1: Initialize for Unattended Operation
 
-Start by creating a `.context/` directory configured for unattended
-operation. The `--ralph` flag sets up `PROMPT.md` so the agent works
-independently rather than asking clarifying questions.
+Start by creating a `.context/` directory configured so the agent can
+work without human input. The `--ralph` flag sets up `PROMPT.md` so the
+agent makes its own decisions rather than asking clarifying questions.
 
 ```bash
 ctx init --ralph
@@ -42,14 +48,14 @@ ctx init --ralph
 This creates `.context/` with all template files, `PROMPT.md` configured
 for autonomous iteration, `IMPLEMENTATION_PLAN.md`, and `.claude/` hooks
 and skills for Claude Code. Without `--ralph`, the agent pauses to ask
-questions when requirements are unclear. For overnight runs, you want it
-to make reasonable choices and document them in DECISIONS.md instead.
+questions when requirements are unclear. For unattended runs, you want it
+to make reasonable choices and document them in `DECISIONS.md` instead.
 
 ### Step 2: Populate TASKS.md with Phased Work
 
 Open `.context/TASKS.md` and organize your work into phases. The agent
-works through these systematically, top to bottom, highest priority
-first.
+works through these systematically, top to bottom, from the highest priority
+task first.
 
 ```markdown
 # Tasks
@@ -73,24 +79,25 @@ first.
 - [ ] Write integration tests `#priority:medium`
 ```
 
-Phased organization matters because it gives the agent natural
-boundaries. Phase 1 tasks should be completable without Phase 2 code
+Phased organization matters because it gives the agent **natural
+boundaries**. Phase 1 tasks should be completable without Phase 2 code
 existing yet.
 
 ### Step 3: Configure PROMPT.md
 
-The `--ralph` flag generates a `PROMPT.md` that instructs the agent to:
+The `--ralph` flag generates a `PROMPT.md` that instructs the agent to
+operate autonomously:
 
-1. Read `.context/CONSTITUTION.md` first (hard rules, never violated)
+1. Read `.context/CONSTITUTION.md` first (*hard rules, never violated*)
 2. Load context from `.context/` files
 3. Pick ONE task per iteration
-4. Complete the task and update context files
-5. Commit changes
+4. Complete the task and **proactively update context files**
+5. Commit changes (including `.context/`)
 6. Signal status with a completion signal
 
 You can customize `PROMPT.md` for your project. The critical parts are
-the one-task-per-iteration discipline and the completion signals at the
-end:
+the one-task-per-iteration discipline, proactive context persistence,
+and the completion signals at the end:
 
 ```markdown
 ## Signal Status
@@ -120,6 +127,20 @@ ctx loop --tool claude --prompt TASKS.md --output my-loop.sh
 The generated script reads `PROMPT.md`, pipes it to the AI tool, checks
 for completion signals, and loops until done or the cap is reached. You
 can also use the `/ctx-loop` skill from inside Claude Code.
+
+!!! tip "Shell Loop is Best Practice"
+    The shell while loop is the recommended approach for autonomous runs.
+    Each iteration spawns a **fresh AI process**, so the only state that
+    carries between iterations is what lives in `.context/` and git. This
+    is "pure ralph": memory is explicit, not accidental.
+
+    Claude Code's built-in `/loop` command runs iterations within the
+    same session, which means context window state leaks between
+    iterations — the agent "remembers" things from earlier iterations
+    that were never persisted. This is convenient for short explorations
+    (2-5 iterations) but less reliable for long unattended runs.
+    See [Autonomous Loops: Shell Loop vs Built-in Loop](../autonomous-loop.md#quick-start-shell-while-loop-recommended)
+    for details.
 
 ### Step 5: Run with Watch Mode
 
@@ -190,10 +211,10 @@ next. Failures are fixed in place, not deferred.
 
 ## Putting It Together
 
-The full sequence for an overnight run:
+The full sequence for an overnight unattended run:
 
 ```bash
-# 1. Set up the project
+# 1. Set up the project for unattended operation
 ctx init --ralph
 
 # 2. Edit TASKS.md with your phased work items
@@ -212,6 +233,99 @@ ctx watch --log /tmp/loop.log --auto-save &
 ctx status
 ctx load
 ```
+
+## Why Autonomous Loops Work: Proactive Context Persistence
+
+The autonomous loop pattern works **because the agent is proactive about
+persisting context**. Without proactive behavior, the loop degrades into
+disconnected iterations that repeat work, forget decisions, and lose track
+of progress. The agent cannot rely on a human to prompt it — it must treat
+context persistence as part of every task, not as a separate step.
+
+### The Agent Playbook's Self-Check Drives Autonomy
+
+The Agent Playbook defines a self-check prompt that the agent applies
+continuously:
+
+> "If this session ended right now, would the next session know what
+> happened?"
+
+In interactive sessions, a human might remind the agent to save context.
+When the agent runs unattended, **no one is there to remind it**. The self-check
+becomes the agent's internal trigger: after every meaningful action, the
+agent evaluates whether the context files reflect reality and acts
+immediately if they don't.
+
+### What the Agent Does Proactively Between Iterations
+
+At each milestone within an iteration, the agent persists without waiting
+for instructions:
+
+| Milestone | What the Agent Does Proactively |
+|---|---|
+| Completes a task | Marks it `[x]` in TASKS.md with `#done` timestamp |
+| Discovers a gotcha | Adds it to LEARNINGS.md immediately |
+| Makes a design choice | Records it in DECISIONS.md with rationale |
+| Identifies follow-up work | Creates new tasks in TASKS.md with `#added` timestamp |
+| Finishes a phase | Saves a session snapshot to `.context/sessions/` |
+| Hits an unexpected failure | Documents the root cause before moving on |
+
+### Example: What Proactive Persistence Looks Like
+
+Here is what the agent does during a single iteration, beyond just writing
+code:
+
+```text
+Iteration 4:
+  1. Read TASKS.md → pick "Add email verification" (#priority:high)
+  2. Add #started:2026-01-25-030012 to the task
+  3. Implement the feature (code, tests, etc.)
+  4. Tests pass → mark task [x], add #done:2026-01-25-031544
+  5. Add learning: "SMTP config must be set before verification
+     handler registers — order matters in init()"
+  6. Add decision: "Use token-based verification links (not codes)
+     because links work better in automated test environments"
+  7. Notice rate limiting is needed → create new task:
+     "- [ ] Add rate limiting to verification endpoint #added:2026-01-25-031602 #priority:medium"
+  8. Commit all changes INCLUDING .context/ files
+  9. No signal emitted → loop continues to iteration 5
+```
+
+Steps 2, 4, 5, 6, and 7 are **proactive context persistence**. The agent
+was not asked to do any of them. It does them because the playbook's
+Work-Reflect-Persist cycle is internalized: after completing meaningful
+work, reflect on what happened, then persist before moving on.
+
+### Session Snapshots at Milestones
+
+For long autonomous runs, the agent saves session snapshots at natural
+boundaries — typically at phase transitions or after completing a cluster
+of related tasks. These snapshots give you a narrative of what happened
+overnight, not just a list of commits:
+
+```text
+.context/sessions/
+  2026-01-25-020000-phase1-foundation.md
+  2026-01-25-040000-phase2-core-features.md
+  2026-01-25-060000-phase3-hardening.md
+```
+
+Each snapshot summarizes what was accomplished, what decisions were made,
+and what the agent plans to do next. If the loop crashes at 4 AM, the
+snapshot from 4 AM tells the next session (or you) exactly where to resume.
+
+### The Persistence Contract
+
+The autonomous loop has an implicit contract:
+
+1. **Every iteration reads context** — TASKS.md, DECISIONS.md, LEARNINGS.md
+2. **Every iteration writes context** — task updates, new learnings, decisions
+3. **Every commit includes `.context/`** — so the next iteration sees changes
+4. **Context is always current** — if the loop stopped right now, nothing is lost
+
+Break any part of this contract and the loop degrades: iterations repeat
+work, contradict earlier decisions, or lose track of what's done. The
+agent's proactive discipline is what holds the loop together.
 
 ## Tips
 
@@ -250,7 +364,7 @@ ctx load
 - [CLI Reference: ctx watch](../cli-reference.md#ctx-watch): Watch
   mode details
 - [CLI Reference: ctx init](../cli-reference.md#ctx-init): Init flags
-  including `--ralph`
+  including `--ralph` for unattended operation
 - [The Complete Session](session-lifecycle.md): Interactive workflow
   (the human-attended counterpart)
 - [Tracking Work Across Sessions](task-management.md): How to

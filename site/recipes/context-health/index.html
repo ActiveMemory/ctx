@@ -695,6 +695,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#agent-driven-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent-Driven Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agent-Driven Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents-notice-drift-in-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents Notice Drift in Real Time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suggesting-archival-and-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggesting Archival and Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-conversational-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Conversational Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maintenance-at-session-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintenance at Session Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#putting-it-together" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -798,6 +859,11 @@ fix it, and keep your <code>.context/</code> directory lean and accurate.</p>
 <td><code>ctx status</code></td>
 <td>Command</td>
 <td>Quick health overview</td>
+</tr>
+<tr>
+<td><code>/ctx-drift</code></td>
+<td>Skill</td>
+<td>In-session drift detection and guided fix</td>
 </tr>
 <tr>
 <td><code>/ctx-status</code></td>
@@ -951,28 +1017,83 @@ modifying files:</p>
 <code>ctx status</code> to confirm the overall health:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
 </span></code></pre></div>
+<h2 id="agent-driven-maintenance">Agent-Driven Maintenance<a class="headerlink" href="#agent-driven-maintenance" title="Permanent link">&para;</a></h2>
+<p>The steps above describe a manual workflow, but AI agents that read <code>.context/</code>
+files are already in a position to notice problems before you run any command.
+A well-configured agent doesn't wait to be asked -- it flags issues as it
+encounters them during normal work.</p>
+<h3 id="agents-notice-drift-in-real-time">Agents Notice Drift in Real Time<a class="headerlink" href="#agents-notice-drift-in-real-time" title="Permanent link">&para;</a></h3>
+<p>When an agent reads ARCHITECTURE.md to understand a module and then opens the
+actual source tree, it can see the mismatch immediately. A proactive agent will
+surface this:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Agent: I notice ARCHITECTURE.md still references `internal/handlers/`
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>       which we deleted in the last refactor. Want me to run drift
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>       detection so we can clean up any other stale references?
+</span></code></pre></div>
+<p>This happens naturally. The agent is already reading context files to do its
+job; noticing staleness is a side effect of paying attention. No scheduled
+maintenance run required.</p>
+<h3 id="suggesting-archival-and-cleanup">Suggesting Archival and Cleanup<a class="headerlink" href="#suggesting-archival-and-cleanup" title="Permanent link">&para;</a></h3>
+<p>Agents can also spot clutter. When TASKS.md is loaded at session start and
+most of the content is completed checkboxes, a proactive agent will offer
+to tidy up:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Agent: TASKS.md has 25 completed tasks obscuring the 4 pending ones.
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>       Want me to archive the finished work so we can focus on what&#39;s
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>       active?
+</span></code></pre></div>
+<p>The same applies to LEARNINGS.md with near-duplicate entries, or DECISIONS.md
+with decisions marked "Accepted" that were superseded weeks ago.</p>
+<h3 id="the-conversational-approach">The Conversational Approach<a class="headerlink" href="#the-conversational-approach" title="Permanent link">&para;</a></h3>
+<p>You don't need to remember command names to trigger maintenance. Natural
+language works:</p>
+<ul>
+<li>"Is our context clean?"</li>
+<li>"Anything stale?"</li>
+<li>"Tidy up the context files"</li>
+<li>"How healthy are our context files?"</li>
+</ul>
+<p>Or use the <code>/ctx-drift</code> skill directly — it runs <code>ctx drift</code>, explains each
+finding in plain language, and offers to auto-fix what it can. An agent that
+has read the Agent Playbook knows how to translate natural-language requests
+into the right sequence of <code>ctx drift</code>, <code>ctx sync</code>, and <code>ctx compact</code> calls.</p>
+<h3 id="maintenance-at-session-start">Maintenance at Session Start<a class="headerlink" href="#maintenance-at-session-start" title="Permanent link">&para;</a></h3>
+<p>The best time to catch drift is the start of a session, before stale context
+influences any decisions. A proactive agent will check context health as part
+of its startup routine and mention anything worth addressing:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Agent: Good morning. I&#39;ve loaded the context files. A few things
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>       before we start:
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>       - ARCHITECTURE.md references `pkg/auth/` which is now empty
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>       - DECISIONS.md hasn&#39;t been updated in 40 days
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>       - There are 18 completed tasks ready for archival
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>       Want me to run a quick maintenance pass, or should we jump
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>       straight into today&#39;s work?
+</span></code></pre></div>
+<p>This turns maintenance from a chore you schedule into a conversation that
+happens when it matters.</p>
 <h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
 <p>Here is a complete maintenance session combining all five steps:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Detect problems</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>drift
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. Auto-fix the easy ones</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># 3. Preview sync changes after a refactor</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># 4. Apply sync</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ctx<span class="w"> </span>sync
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># 5. Archive old completed tasks</span>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
-</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
-</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># 6. Verify</span>
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>ctx<span class="w"> </span>status
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 1. Detect problems</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ctx<span class="w"> </span>drift
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># 2. Auto-fix the easy ones</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># 3. Preview sync changes after a refactor</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># 4. Apply sync</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>ctx<span class="w"> </span>sync
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># 5. Archive old completed tasks</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="c1"># 6. Verify</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <p>Then inside your AI assistant:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/ctx-prompt-audit
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>/ctx-prompt-audit
 </span></code></pre></div>
 <p>Review the recommendations, make any final edits, and run <code>ctx drift</code> one
 more time to confirm a clean bill of health.</p>
@@ -1017,6 +1138,13 @@ want to discard old items.</p>
 <p><strong>Sync is non-destructive by default.</strong> It suggests changes but never rewrites
 files without your confirmation. The <code>--dry-run</code> flag exists for extra caution
 after large refactors.</p>
+<p><strong>Agents are your first line of defense against drift.</strong> An AI agent working
+in your codebase is constantly cross-referencing context files with actual
+source code. It will notice a renamed package, a deleted directory, or an
+outdated convention before <code>ctx drift</code> ever runs. Treat agent observations
+as early warnings -- when an agent says "this reference looks stale," it
+almost certainly is. Addressing these flags in real time keeps context
+accurate and avoids the accumulation that makes scheduled maintenance painful.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../task-management/">Tracking Work Across Sessions</a> -- task lifecycle and archival</li>

@@ -5,14 +5,38 @@ icon: lucide/chef-hat
 
 ![ctx](../images/ctx-banner.png)
 
-Workflow recipes that show how ctx commands and skills work
-together. Each recipe solves a specific problem by combining
-multiple tools into a step-by-step workflow.
+Workflow recipes showing how ctx commands and skills work together.
+Each recipe solves a specific problem by combining multiple tools
+into a step-by-step workflow.
 
 !!! tip "Commands vs. Skills"
     **Commands** (`ctx status`, `ctx add task`) run in your
-    terminal. **Skills** (`/ctx-save`, `/ctx-next`) run inside
-    your AI coding assistant. Recipes combine both.
+    terminal.
+
+    **Skills** (`/ctx-save`, `/ctx-next`) run inside
+    your AI coding assistant. 
+
+    Recipes combine both.
+
+    Think of commands as **structure** and skills as **behavior**.
+
+!!! info "Proactive Agents"
+    These recipes show explicit commands and skills, but agents
+    trained on the ctx playbook are **proactive**:
+
+    They offer to: 
+
+    * save learnings after debugging,
+    * record decisions after trade-offs, 
+    * create follow-up tasks after completing work, 
+    * and suggest what to work on next. 
+
+    You often **don’t** need to invoke commands directly: A simple
+    "*what have we learned?*" or "*let's wrap up*" triggers the same
+    workflows. 
+    
+    Each recipe includes a **Conversational Approach** section
+    showing these natural-language patterns.
 
 ---
 
@@ -30,6 +54,9 @@ watch mode for non-native tools, and verification.
 ---
 
 ## Daily Workflow
+
+These recipes cover the workflows you’ll use every day when
+working with ctx.
 
 ### [The Complete Session](session-lifecycle.md)
 
@@ -76,7 +103,7 @@ reconciling with the codebase, compacting bloated files, and
 auditing prompt quality.
 
 **Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
-`/ctx-status`, `/ctx-prompt-audit`
+`/ctx-drift`, `/ctx-status`, `/ctx-prompt-audit`
 
 ---
 
@@ -98,9 +125,12 @@ across months of work.
 
 ### [Running an Unattended AI Agent](autonomous-loops.md)
 
-Set up and run an autonomous loop where an AI agent works
-through tasks overnight without intervention, using ctx for
-persistent memory between iterations.
+Set up a loop where an AI agent works through tasks overnight
+without you at the keyboard, using ctx for persistent memory
+between iterations.
+
+This recipe shows how ctx supports long-running agent loops
+without losing context or intent.
 
 **Uses**: `ctx init --ralph`, `ctx loop`, `ctx watch`, `ctx load`,
 `/ctx-loop`, `/ctx-implement`, `/ctx-context-monitor`

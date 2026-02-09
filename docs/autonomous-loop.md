@@ -53,27 +53,15 @@ graph TD
 6. Loop checks for completion signals
 7. Repeat until converged or blocked
 
-## Quick Start with Claude Code
+## Quick Start: Shell While Loop (Recommended)
 
-Claude Code has built-in loop support:
+The best way to run an autonomous loop is a plain shell script that invokes
+your AI tool in a fresh process on each iteration. This is "pure ralph":
+the **only** state that carries between iterations is what lives in
+`.context/` and the git history. No context window bleed, no accumulated
+tokens, no hidden state.
 
-```bash
-# Start autonomous loop
-/loop
-
-# Cancel running loop
-/cancel-loop
-```
-
-That's it. The loop will:
-
-1. Read your `PROMPT.md` for instructions
-2. Pick tasks from `.context/TASKS.md`
-3. Work until `SYSTEM_CONVERGED` or `SYSTEM_BLOCKED`
-
-## Manual Loop Setup
-
-For other AI tools, create a `loop.sh`:
+Create a `loop.sh`:
 
 ```bash
 #!/bin/bash
@@ -115,6 +103,43 @@ chmod +x loop.sh
 ```
 
 You can also generate this script with `ctx loop` (see [CLI Reference](cli-reference.md#ctx-loop)).
+
+### Why a Shell Loop?
+
+Each iteration starts a **fresh AI process** with zero context window history.
+The agent knows only what it reads from `.context/` files — exactly the
+information you chose to persist. This is the core Ralph principle: memory is
+explicit, not accidental.
+
+## Alternative: Claude Code's Built-in Loop
+
+Claude Code has built-in loop support:
+
+```bash
+# Start autonomous loop
+/loop
+
+# Cancel running loop
+/cancel-loop
+```
+
+This is convenient for quick iterations, but be aware of important caveats:
+
+!!! warning "Not Pure Ralph"
+    Claude Code's `/loop` runs all iterations **within the same session**.
+    This means:
+
+    - **State leaks between iterations.** The context window accumulates
+      output from every previous iteration. The agent "remembers" things
+      it saw earlier — even if they were never persisted to `.context/`.
+    - **Token budget degrades.** Each iteration adds to the context window,
+      leaving less room for actual work in later iterations.
+    - **Not ergonomic for long runs.** Users report that the built-in loop
+      is less predictable for 10+ iteration runs compared to a shell loop.
+
+    For short explorations (2-5 iterations) or interactive use, `/loop`
+    works fine. For overnight unattended runs or anything where iteration
+    independence matters, use the shell while loop instead.
 
 ## The PROMPT.md File
 

@@ -143,6 +143,7 @@ in Claude Code with `/skill-name`.
 |----------------|----------------------------------------------------|
 | `/ctx-status`  | Show context summary (tasks, decisions, learnings) |
 | `/ctx-agent`   | Get AI-optimized context packet                    |
+| `/ctx-drift`   | Detect and fix context drift                       |
 | `/ctx-save`    | Save current session to `.context/sessions/`       |
 | `/ctx-reflect` | Review session and suggest what to persist         |
 
