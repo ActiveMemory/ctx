@@ -180,8 +180,8 @@ the only one.**
 
 Here is the exact prompt I used, for those who are curious.
 
-This is not a template. It worked because it was written against this
-codebase, at this moment, with specific goals in mind.
+**This is not a template**: It worked because it was written against this
+codebase, at this moment, with **specific** goals in mind.
 
 ```markdown
 I want you to create an agent team to audit this codebase. Save each report as
