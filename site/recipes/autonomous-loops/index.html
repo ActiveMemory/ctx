@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#problem" class="md-skip">
+        <a href="#the-problem" class="md-skip">
           Skip to content
         </a>
       
@@ -601,10 +601,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
       
     </span>
   </a>
@@ -811,6 +811,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#next-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -850,7 +861,7 @@
   <h1>Running an Unattended AI Agent</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>You have a project with a clear list of tasks and you want an AI agent to
 work through them autonomously: overnight, <strong>unattended</strong>, without you sitting
 at the keyboard. </p>
@@ -991,10 +1002,12 @@ carries between iterations is what lives in <code>.context/</code> and git. This
 is "pure ralph": memory is explicit, not accidental.</p>
 <p>Claude Code's built-in <code>/loop</code> command runs iterations within the
 same session, which means context window state leaks between
-iterations — the agent "remembers" things from earlier iterations
+iterations. </p>
+<p>The agent "<strong>remembers</strong>" things from earlier iterations
 that were never persisted. This is convenient for short explorations
-(2-5 iterations) but less reliable for long unattended runs.
-See <a href="../../autonomous-loop/#quick-start-shell-while-loop-recommended">Autonomous Loops: Shell Loop vs Built-in Loop</a>
+(<em>2-5 iterations</em>) but less reliable for long unattended runs.
+See <a href="../../autonomous-loop/#quick-start-shell-while-loop-recommended">Autonomous Loops: Shell Loop vs Built-in 
+Loop</a>
 for details.</p>
 </div>
 <h3 id="step-5-run-with-watch-mode">Step 5: Run with Watch Mode<a class="headerlink" href="#step-5-run-with-watch-mode" title="Permanent link">&para;</a></h3>
@@ -1222,6 +1235,8 @@ agent's proactive discipline is what holds the loop together.</p>
   before hitting limits.</p>
 </li>
 </ul>
+<h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
+<p><strong><a href="../publishing/">Turning Activity into Content</a></strong> -- Generate blog posts and changelogs from your project activity.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../autonomous-loop/">Autonomous Loops</a>: Full documentation of

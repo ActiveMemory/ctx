@@ -1038,19 +1038,20 @@ your AI coding assistant. </p>
 <p>Think of commands as <strong>structure</strong> and skills as <strong>behavior</strong>.</p>
 </div>
 <div class="admonition info">
-<p class="admonition-title">Proactive Agents</p>
+<p class="admonition-title">Guide Your Agent</p>
 <p>These recipes show explicit commands and skills, but agents
-trained on the ctx playbook are <strong>proactive</strong>:</p>
-<p>They offer to: </p>
-<ul>
-<li>save learnings after debugging,</li>
-<li>record decisions after trade-offs, </li>
-<li>create follow-up tasks after completing work, </li>
-<li>and suggest what to work on next. </li>
-</ul>
-<p>You often <strong>don’t</strong> need to invoke commands directly: A simple
-"<em>what have we learned?</em>" or "<em>let's wrap up</em>" triggers the same
-workflows. </p>
+trained on the ctx playbook are <strong>proactive</strong>: they offer to
+save learnings after debugging, record decisions after
+trade-offs, create follow-up tasks after completing work, and
+suggest what to work on next.</p>
+<p><strong>Your questions train the agent.</strong> Asking "<em>what have we
+learned?</em>" or "<em>is our context clean?</em>" does two things: it
+triggers the workflow right now, <strong>and</strong> it reinforces the
+pattern. The more you guide, the more the agent habituates the
+behavior and begins offering on its own.</p>
+<p>Don't wait passively for proactive behavior — especially in
+early sessions. <strong>Ask, guide, reinforce.</strong> Over time, you ask
+less and the agent offers more.</p>
 <p>Each recipe includes a <strong>Conversational Approach</strong> section
 showing these natural-language patterns.</p>
 </div>
@@ -1088,15 +1089,17 @@ survive across sessions and team members.</p>
 <p><strong>Uses</strong>: <code>ctx add decision</code>, <code>ctx add learning</code>,
 <code>ctx add convention</code>, <code>ctx decisions reindex</code>,
 <code>ctx learnings reindex</code>, <code>/ctx-add-decision</code>,
-<code>/ctx-add-learning</code>, <code>/ctx-reflect</code></p>
+<code>/ctx-add-learning</code>, <code>/ctx-add-convention</code>, <code>/ctx-reflect</code></p>
 <hr />
 <h2 id="maintenance">Maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h2>
 <h3 id="detecting-and-fixing-drift"><a href="context-health/">Detecting and Fixing Drift</a><a class="headerlink" href="#detecting-and-fixing-drift" title="Permanent link">&para;</a></h3>
-<p>Keep context files accurate by detecting stale paths,
-reconciling with the codebase, compacting bloated files, and
-auditing prompt quality.</p>
+<p>Keep context files accurate by detecting structural drift
+(stale paths, missing files) and semantic drift (outdated
+conventions, superseded decisions). Includes alignment audits
+to verify documentation claims match agent instructions.</p>
 <p><strong>Uses</strong>: <code>ctx drift</code>, <code>ctx sync</code>, <code>ctx compact</code>, <code>ctx status</code>,
-<code>/ctx-drift</code>, <code>/ctx-status</code>, <code>/ctx-prompt-audit</code></p>
+<code>/ctx-drift</code>, <code>/ctx-alignment-audit</code>, <code>/ctx-status</code>,
+<code>/ctx-prompt-audit</code></p>
 <hr />
 <h2 id="history-and-discovery">History and Discovery<a class="headerlink" href="#history-and-discovery" title="Permanent link">&para;</a></h2>
 <h3 id="browsing-and-enriching-past-sessions"><a href="session-archaeology/">Browsing and Enriching Past Sessions</a><a class="headerlink" href="#browsing-and-enriching-past-sessions" title="Permanent link">&para;</a></h3>
@@ -1105,7 +1108,7 @@ Normalize rendering, enrich entries with metadata, and search
 across months of work.</p>
 <p><strong>Uses</strong>: <code>ctx recall list/show/export</code>, <code>ctx journal site</code>,
 <code>ctx serve</code>, <code>/ctx-recall</code>, <code>/ctx-journal-normalize</code>,
-<code>/ctx-journal-enrich</code></p>
+<code>/ctx-journal-enrich</code>, <code>/ctx-journal-enrich-all</code></p>
 <hr />
 <h2 id="advanced">Advanced<a class="headerlink" href="#advanced" title="Permanent link">&para;</a></h2>
 <h3 id="running-an-unattended-ai-agent"><a href="autonomous-loops/">Running an Unattended AI Agent</a><a class="headerlink" href="#running-an-unattended-ai-agent" title="Permanent link">&para;</a></h3>

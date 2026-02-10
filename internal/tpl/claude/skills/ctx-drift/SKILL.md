@@ -4,10 +4,11 @@ description: "Detect and fix context drift. Use to find stale paths, broken refe
 allowed-tools: Bash(ctx:*), Bash(diff:*), Bash(mktemp:*), Bash(rm:cleanup temp), Read
 ---
 
-Detect context drift: stale path references, missing files,
-constitution violations, bloated task lists, and outdated
-skills. Explain findings in plain language and offer to fix
-what can be automated.
+Detect context drift at two layers: **structural** (stale paths,
+missing files, constitution violations) via `ctx drift`, and
+**semantic** (outdated conventions, superseded decisions,
+irrelevant learnings) via agent analysis. The semantic layer is
+where the real value is — the CLI cannot do it.
 
 ## When to Use
 
@@ -36,22 +37,62 @@ what can be automated.
 
 ## Execution
 
-Run drift detection:
+Drift detection has two layers: **structural** (programmatic) and
+**semantic** (agent-driven). Always do both.
+
+### Layer 1: Structural Checks
+
+Run the CLI tool for fast, programmatic checks:
 
 ```bash
 ctx drift
 ```
 
-After running, do **not** dump raw output. Instead:
+This catches dead paths, missing files, staleness indicators,
+and constitution violations. These are necessary but insufficient
+— they only detect structural problems.
 
-1. **Summarize findings** by severity (warnings, violations,
-   staleness) in plain language
+### Layer 2: Semantic Analysis
+
+After the structural check, read the context files yourself and
+compare them to what you know about the codebase. This is where
+you add real value — the CLI tool cannot do this.
+
+Check for:
+
+- **Outdated conventions**: Does CONVENTIONS.md describe patterns
+  the code no longer follows? Read a few source files in the
+  relevant area to verify.
+- **Superseded decisions**: Does DECISIONS.md contain entries that
+  were implicitly overridden by later work? Look for decisions
+  whose rationale no longer applies.
+- **Stale architecture descriptions**: Does ARCHITECTURE.md
+  describe module purposes that have changed? A path can still
+  exist while its description is wrong.
+- **Irrelevant learnings**: Does LEARNINGS.md contain entries
+  about bugs that were since fixed or patterns that no longer
+  apply?
+- **Contradictions**: Do any context files contradict each other
+  or contradict the actual code?
+
+### Reporting
+
+After both layers, do **not** dump raw output. Instead:
+
+1. **Summarize findings** by severity (structural warnings,
+   semantic issues) in plain language
 2. **Explain each finding**: what file, what line, why it
    matters
-3. **Offer to auto-fix** if fixable issues were found:
+3. **Distinguish structural from semantic**: structural issues
+   can be auto-fixed; semantic issues need the user's judgment
+4. **Offer to auto-fix** structural issues:
    "I can run `ctx drift --fix` to clean up the dead path
    references. Want me to?"
-4. **Suggest follow-up commands** when appropriate:
+5. **Propose specific edits** for semantic issues:
+   "CONVENTIONS.md still says 'use fmt.Printf for output' but
+   we switched to cmd.Printf three weeks ago. Want me to
+   update it?"
+6. **Suggest follow-up commands** when appropriate:
    - Many stale paths after a refactor → suggest `ctx sync`
    - Heavy task clutter → suggest `ctx compact --archive`
    - Old files untouched for weeks → suggest reviewing content

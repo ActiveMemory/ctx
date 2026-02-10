@@ -143,7 +143,8 @@ in Claude Code with `/skill-name`.
 |----------------|----------------------------------------------------|
 | `/ctx-status`  | Show context summary (tasks, decisions, learnings) |
 | `/ctx-agent`   | Get AI-optimized context packet                    |
-| `/ctx-drift`   | Detect and fix context drift                       |
+| `/ctx-drift`           | Detect and fix context drift (structural + semantic) |
+| `/ctx-alignment-audit` | Audit doc claims against playbook instructions       |
 | `/ctx-save`    | Save current session to `.context/sessions/`       |
 | `/ctx-reflect` | Review session and suggest what to persist         |
 
@@ -151,10 +152,11 @@ in Claude Code with `/skill-name`.
 
 | Command             | Description                                        |
 |---------------------|----------------------------------------------------|
-| `/ctx-add-task`     | Add a task to TASKS.md                             |
-| `/ctx-add-learning` | Add a learning to LEARNINGS.md                     |
-| `/ctx-add-decision` | Add a decision with context/rationale/consequences |
-| `/ctx-archive`      | Archive completed tasks                            |
+| `/ctx-add-task`       | Add a task to TASKS.md                             |
+| `/ctx-add-learning`   | Add a learning to LEARNINGS.md                     |
+| `/ctx-add-decision`   | Add a decision with context/rationale/consequences |
+| `/ctx-add-convention` | Add a coding convention to CONVENTIONS.md          |
+| `/ctx-archive`        | Archive completed tasks                            |
 
 #### Session History Skills
 
@@ -162,6 +164,7 @@ in Claude Code with `/skill-name`.
 |--------------------------|-------------------------------------------------|
 | `/ctx-recall`            | Browse AI session history                       |
 | `/ctx-journal-enrich`    | Enrich a journal entry with frontmatter/tags    |
+| `/ctx-journal-enrich-all`| Batch-enrich all unenriched journal entries     |
 
 #### Blogging Skills
 

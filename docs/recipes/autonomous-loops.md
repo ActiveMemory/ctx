@@ -5,7 +5,7 @@ icon: lucide/repeat
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 You have a project with a clear list of tasks and you want an AI agent to
 work through them autonomously: overnight, **unattended**, without you sitting
@@ -136,10 +136,13 @@ can also use the `/ctx-loop` skill from inside Claude Code.
 
     Claude Code's built-in `/loop` command runs iterations within the
     same session, which means context window state leaks between
-    iterations — the agent "remembers" things from earlier iterations
+    iterations. 
+
+    The agent "**remembers**" things from earlier iterations
     that were never persisted. This is convenient for short explorations
-    (2-5 iterations) but less reliable for long unattended runs.
-    See [Autonomous Loops: Shell Loop vs Built-in Loop](../autonomous-loop.md#quick-start-shell-while-loop-recommended)
+    (*2-5 iterations*) but less reliable for long unattended runs.
+    See [Autonomous Loops: Shell Loop vs Built-in 
+    Loop](../autonomous-loop.md#quick-start-shell-while-loop-recommended)
     for details.
 
 ### Step 5: Run with Watch Mode
@@ -261,14 +264,14 @@ immediately if they don't.
 At each milestone within an iteration, the agent persists without waiting
 for instructions:
 
-| Milestone | What the Agent Does Proactively |
-|---|---|
-| Completes a task | Marks it `[x]` in TASKS.md with `#done` timestamp |
-| Discovers a gotcha | Adds it to LEARNINGS.md immediately |
-| Makes a design choice | Records it in DECISIONS.md with rationale |
-| Identifies follow-up work | Creates new tasks in TASKS.md with `#added` timestamp |
-| Finishes a phase | Saves a session snapshot to `.context/sessions/` |
-| Hits an unexpected failure | Documents the root cause before moving on |
+| Milestone                  | What the Agent Does Proactively                       |
+|----------------------------|-------------------------------------------------------|
+| Completes a task           | Marks it `[x]` in TASKS.md with `#done` timestamp     |
+| Discovers a gotcha         | Adds it to LEARNINGS.md immediately                   |
+| Makes a design choice      | Records it in DECISIONS.md with rationale             |
+| Identifies follow-up work  | Creates new tasks in TASKS.md with `#added` timestamp |
+| Finishes a phase           | Saves a session snapshot to `.context/sessions/`      |
+| Hits an unexpected failure | Documents the root cause before moving on             |
 
 ### Example: What Proactive Persistence Looks Like
 
@@ -354,6 +357,10 @@ agent's proactive discipline is what holds the loop together.
   the context checkpoint hook fires automatically and alerts you when
   context capacity is running low, so the agent can save its work
   before hitting limits.
+
+## Next Up
+
+**[Turning Activity into Content](publishing.md)** -- Generate blog posts and changelogs from your project activity.
 
 ## See Also
 

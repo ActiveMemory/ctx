@@ -59,10 +59,31 @@ files that version with your code and persist across sessions.
 
 ## Installation
 
-### Binary Downloads (Recommended)
+### Build from Source (*Recommended*)
 
-Download pre-built binaries from the 
-[releases page](https://github.com/ActiveMemory/ctx/releases).
+Requires [Go 1.25+](https://go.dev/):
+
+```bash
+git clone https://github.com/ActiveMemory/ctx.git
+cd ctx
+make build
+sudo make install
+# or:
+# sudo mv ctx /usr/local/bin/
+```
+
+Building from source gives you the latest features and bug fixes. 
+
+Since `ctx` is predominantly a developer tool, this is the 
+**recommended approach**: 
+
+You get the freshest code and can inspect what you are installing.
+
+### Binary Downloads
+
+Pre-built binaries are available from the
+[releases page](https://github.com/ActiveMemory/ctx/releases) if you prefer
+not to build from source.
 
 === "Linux (x86_64)"
 
@@ -100,7 +121,7 @@ Download pre-built binaries from the
 
     Download `ctx-0.3.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
 
-### Verifying Checksums
+#### Verifying Checksums
 
 Each binary has a corresponding `.sha256` checksum file. To verify your download:
 
@@ -113,27 +134,6 @@ sha256sum -c ctx-0.3.0-linux-amd64.sha256
 ```
 
 On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
-
-### Build from Source
-
-Building from the source gives you the latest features and bug fixes; however,
-it also means you will be using an unreleased version of `ctx` that has not
-been fully tested.
-
-!!! tip "Want to help test the latest features?"
-    If you like living on the edge and want to test the latest features 
-    before they are released, then building from source is the way to go.
-
-Requires [Go 1.25+](https://go.dev/):
-
-```bash
-git clone https://github.com/ActiveMemory/ctx.git
-cd ctx
-make build
-sudo make install
-# or:
-# sudo mv ctx /usr/local/bin/
-```
 
 Verify installation:
 

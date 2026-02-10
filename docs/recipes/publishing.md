@@ -5,7 +5,7 @@ icon: lucide/pen-line
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 Your `.context/` directory is full of decisions, learnings, and session
 history. Your git log tells the story of a project evolving. But none of
@@ -268,6 +268,10 @@ can rebuild the site as many times as you want.
 - **Edit the drafts.** Both blog skills produce drafts, not final
   posts. Review the narrative, add your personal perspective, and
   remove anything that does not serve the reader.
+
+## Next Up
+
+Back to the beginning: **[Setting Up ctx Across AI Tools](multi-tool-setup.md)** -- or explore the [full recipe list](index.md).
 
 ## See Also
 

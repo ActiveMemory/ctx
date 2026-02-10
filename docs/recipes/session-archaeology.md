@@ -11,45 +11,61 @@ icon: lucide/scroll-text
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 After weeks of AI-assisted development you have dozens of sessions scattered
-across JSONL files in `~/.claude/projects/`. Finding that session where you
-debugged the Redis connection pool -- or remembering what you decided about
-the caching strategy three Tuesdays ago -- means grepping raw JSON. There is
-no table of contents, no search, no summaries.
+across JSONL files in `~/.claude/projects/`. Finding the session where you
+debugged the Redis connection pool, or remembering what you decided about the
+caching strategy three Tuesdays ago, often means grepping raw JSON.
 
-This recipe shows how to turn that raw session history into a browsable,
-searchable, and enriched journal site you can navigate in your browser.
+There is no table of contents, no search, and no summaries.
+
+This recipe shows how to turn that raw session history into a **browsable**,
+**searchable**, and **enriched **journal site** you can navigate 
+**in your browser**.
 
 ## Commands and Skills Used
 
-| Tool                     | Type    | Purpose                                      |
-|--------------------------|---------|----------------------------------------------|
-| `ctx recall list`        | Command | List parsed sessions with metadata           |
-| `ctx recall show`        | Command | Inspect a specific session in detail         |
-| `ctx recall export`      | Command | Export sessions to editable journal Markdown |
-| `ctx journal site`       | Command | Generate a static site from journal entries  |
-| `ctx serve`              | Command | Serve the journal site locally               |
-| `/ctx-recall`            | Skill   | Browse sessions inside your AI assistant     |
-| `/ctx-journal-normalize` | Skill   | Fix rendering issues in exported Markdown    |
-| `/ctx-journal-enrich`    | Skill   | Add frontmatter metadata and summaries       |
+| Tool                      | Type    | Purpose                                      |
+|---------------------------|---------|----------------------------------------------|
+| `ctx recall list`         | Command | List parsed sessions with metadata           |
+| `ctx recall show`         | Command | Inspect a specific session in detail         |
+| `ctx recall export`       | Command | Export sessions to editable journal Markdown |
+| `ctx journal site`        | Command | Generate a static site from journal entries  |
+| `ctx serve`               | Command | Serve the journal site locally               |
+| `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant     |
+| `/ctx-journal-normalize`  | Skill   | Fix rendering issues in exported Markdown    |
+| `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry   |
+| `/ctx-journal-enrich-all` | Skill   | Batch-enrich all unenriched entries          |
 
 ## The Workflow
 
-The session journal follows a four-stage pipeline. Each stage is idempotent
--- safe to re-run -- and each skips entries that have already been processed.
+The session journal follows a four-stage pipeline.
 
-```
-export --> normalize --> enrich --> rebuild
+Each stage is idempotent and safe to re-run.
+Each stage skips entries that have already been processed.
+
+```text
+export -> normalize -> enrich -> rebuild
 ```
 
-| Stage         | Tool                       | What it does                                | Skips if                     |
-|---------------|----------------------------|---------------------------------------------|------------------------------|
-| **Export**    | `ctx recall export --all`  | Converts session JSONL to Markdown          | `--skip-existing` flag       |
-| **Normalize** | `/ctx-journal-normalize`   | Fixes nested fences and metadata formatting | `<!-- normalized -->` marker |
-| **Enrich**    | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topic tags     | Frontmatter already present  |
-| **Rebuild**   | `ctx journal site --build` | Generates browsable static HTML             | --                           |
+| Stage     | Tool                       | What it does                                | Skips if                     | Where        |
+|-----------|----------------------------|---------------------------------------------|------------------------------|--------------|
+| Export    | `ctx recall export --all`  | Converts session JSONL to Markdown          | `--skip-existing` flag       | CLI or agent |
+| Normalize | `/ctx-journal-normalize`   | Fixes nested fences and metadata formatting | `<!-- normalized -->` marker | Agent only   |
+| Enrich    | `/ctx-journal-enrich-all`  | Adds frontmatter, summaries, topic tags     | Frontmatter already present  | Agent only   |
+| Rebuild   | `ctx journal site --build` | Generates browsable static HTML             | N/A                          | CLI only     |
+
+!!! tip "Where to run Each Stage"
+    Export (*Steps 1 to 3*) works equally well from the terminal or inside your
+    AI assistant via `/ctx-recall`. The CLI is fine here: the agent adds no
+    special intelligence, it just runs the same command.
+    
+    Normalize and enrich (Steps 4 to 5) require the agent: they need it to read,
+    analyze, and edit Markdown.
+    
+    Rebuild and serve (Step 6) is a terminal operation that starts a
+    long-running server.
 
 ### Step 1: List Your Sessions
 
@@ -61,7 +77,7 @@ ctx recall list
 
 Sample output:
 
-```
+```text
 Sessions (newest first)
 =======================
 
@@ -73,6 +89,14 @@ Sessions (newest first)
   ...
 ```
 
+!!! tip "Slugs Look Cryptic?"
+    These auto-generated slugs (`gleaming-wobbling-sutherland`) are hard to
+    recognize later.
+    
+    If you save sessions with `/ctx-save` before ending, you also get
+    human-readable filenames like `2026-02-07-redis-caching.md` in
+    `.context/sessions/`, which are easier to find and reference.
+
 Filter by project or tool if you work across multiple codebases:
 
 ```bash
@@ -83,8 +107,8 @@ ctx recall list --all-projects
 
 ### Step 2: Inspect a Specific Session
 
-Before exporting everything, you can inspect a single session to see its
-metadata and conversation summary:
+Before exporting everything, inspect a single session to see its metadata and
+conversation summary:
 
 ```bash
 ctx recall show --latest
@@ -104,10 +128,10 @@ Add `--full` to see the complete message content instead of the summary view:
 ctx recall show --latest --full
 ```
 
-This is useful for quickly checking what happened in a session before deciding
-whether to export and enrich it.
+This is useful for checking what happened before deciding whether to export and
+enrich it.
 
-### Step 3: Export Sessions to Journal
+### Step 3: Export Sessions to the Journal
 
 Export converts raw session data into editable Markdown files in
 `.context/journal/`:
@@ -123,57 +147,74 @@ ctx recall export gleaming-wobbling-sutherland
 ctx recall export --all --all-projects
 ```
 
-Each exported file contains session metadata (date, time, duration, model,
-project, git branch), a tool usage summary, and the full conversation
-transcript.
+Each exported file contains session metadata (*date, time, duration, model,
+project, git branch*), a tool usage summary, and the full conversation transcript.
 
-**Re-exporting is safe.** By default, re-running `ctx recall export --all`
+Re-exporting is safe. By default, re-running `ctx recall export --all`
 regenerates conversation content while preserving any YAML frontmatter you
-or the enrichment skill have added. Use `--skip-existing` to leave exported
-files completely untouched, or `--force` for a full overwrite (frontmatter
-will be lost).
+or the enrichment skill have added.
+
+You can also use `--skip-existing` to leave exported files completely untouched.
+
+!!! warning "--force Overwrites Journal Files"
+    If you want to overwrite existing files, use `--force`.
+
+    This triggers a **full overwrite** and frontmatter will be lost.
+    
+    **Back up your journal before using this flag**.
 
 ### Step 4: Normalize Rendering
 
 Raw exported sessions often have rendering problems: nested code fences that
 break Markdown parsers, malformed metadata tables, or broken list formatting.
-The normalize skill fixes these issues in the source files before site
-generation.
+
+The `/ctx-journal-normalize` skill fixes these issues in the source files
+before site generation.
 
 Inside your AI assistant:
 
-```
+```text
 /ctx-journal-normalize
 ```
 
-The skill backs up `.context/journal/` before modifying anything and marks
-each processed file with a `<!-- normalized: YYYY-MM-DD -->` comment so
-subsequent runs skip already-normalized entries.
+The skill backs up `.context/journal/` before modifying anything and marks each
+processed file with a `<!-- normalized: YYYY-MM-DD -->` comment so subsequent
+runs skip already-normalized entries.
 
-**Run normalize before enrich.** The enrichment skill reads conversation
-content to extract metadata, and clean Markdown produces better results.
+Run normalize before enrich. The enrichment skill reads conversation content to
+extract metadata, and clean Markdown produces better results.
 
 ### Step 5: Enrich with Metadata
 
-Raw exports have timestamps and transcripts but lack the semantic metadata
-that makes sessions searchable: topics, technology tags, outcome status,
-and summaries. The enrich skill adds this structured frontmatter.
+Raw exports have timestamps and transcripts but lack the semantic metadata that
+makes sessions searchable: topics, technology tags, outcome status, and
+summaries. The `/ctx-journal-enrich*` skills add this structured frontmatter.
 
-Inside your AI assistant:
+Batch enrichment (recommended):
 
+```text
+/ctx-journal-enrich-all
 ```
-/ctx-journal-enrich twinkly-stirring-kettle
-```
 
-You can match by slug, partial slug, date, or partial UUID:
+The skill finds all unenriched entries, filters out noise (*suggestion sessions,
+very short sessions, multipart continuations*), and processes each one by
+extracting **titles**, **topics**, **technologies**, and 
+**summaries** from the conversation.
 
-```
+It shows you a grouped summary before applying changes so you can scan quickly
+rather than reviewing one by one.
+
+For large backlogs (*20+ entries*), the skill can spawn subagents to process
+entries in parallel.
+
+Single-entry enrichment:
+
+```text
 /ctx-journal-enrich twinkly
 /ctx-journal-enrich 2026-02-06
-/ctx-journal-enrich 76fe2ab9
 ```
 
-The skill analyzes the conversation and proposes frontmatter:
+Each enriched entry gets YAML frontmatter like this:
 
 ```yaml
 ---
@@ -195,20 +236,12 @@ key_files:
 ---
 ```
 
-It also generates a summary and extracts decisions, learnings, and tasks
-mentioned during the session. You review a diff and confirm before it writes.
-
-Enrichment is intentionally interactive to ensure accuracy. To find sessions
-that still need enrichment:
-
-```bash
-grep -L "^---$" .context/journal/*.md | head -10
-```
+The skill also generates a summary and can extract **decisions**, 
+**learnings**, and **tasks** mentioned during the session.
 
 ### Step 6: Generate and Serve the Site
 
-With exported, normalized, and enriched journal files, generate the static
-site:
+With exported, normalized, and enriched journal files, generate the static site:
 
 ```bash
 # Generate site structure only
@@ -221,68 +254,58 @@ ctx journal site --build
 ctx journal site --serve
 ```
 
-Then open [http://localhost:8000](http://localhost:8000) to browse.
+Then open `http://localhost:8000` to browse.
 
 The site includes a date-sorted index, individual session pages with full
 conversations, search (press `/`), dark mode, and enriched titles in the
 navigation when frontmatter exists.
 
 You can also serve an existing site without regenerating using `ctx serve`.
-The site generator requires [zensical](https://pypi.org/project/zensical/)
-(`pip install zensical`).
 
-## Agent-Assisted Archaeology
+The site generator requires `zensical` (`pip install zensical`).
 
-The commands and skills above are the building blocks, but in practice you
-rarely type them directly. An agent that has consumed the
-[Agent Playbook](../../.context/AGENT_PLAYBOOK.md) treats session history as
-part of its memory and will surface it conversationally.
+## Where the Agent Adds Value
 
-**Natural-language prompts that just work:**
+Export, list, and show are mechanical. The agent runs the same CLI commands you
+would, so you can stay in your terminal for those.
 
-```
-"What did we work on last week?"
-"Find the session where we debugged Redis."
-"Show me yesterday's sessions."
-"What decisions did we make about the caching layer?"
-```
+The agent earns its keep in **normalize** and **enrich**. 
 
-The agent maps these to `ctx recall list`, `ctx recall show`, and grep over
-journal files without you needing to remember slugs, dates, or flags.
+These require reading conversation content, understanding what happened, 
+and producing structured metadata. **That is agent work, not CLI work**.
 
-**Proactive suggestions from the agent:**
+You can also ask your agent to browse sessions conversationally instead of
+remembering flags:
 
-After a productive session or milestone, a ctx-aware agent will offer to
-capture context rather than waiting to be asked:
-
-> *"We had a productive session today -- three files refactored, two tests
-> added. Want me to export and enrich it for the journal?"*
-
-Or when it notices a backlog:
-
-> *"You have 12 un-enriched sessions from this week. Want me to process the
-> most recent ones?"*
-
-**A short conversational example:**
-
-```
-You:   "What happened last Tuesday?"
-Agent: "Last Tuesday you worked on two sessions:
-        - 'bright-dancing-hopper' (2h 10m) -- refactored the middleware
-          pipeline and added Redis caching.
-        - 'quiet-flowing-dijkstra' (18m) -- quick fix for a nil pointer
-          in the config loader.
-        Want me to enrich either of these?"
-You:   "Enrich the long one."
-Agent: [runs /ctx-journal-enrich bright-dancing-hopper, proposes frontmatter]
+```text
+What did we work on last week?
+Show me the session about Redis.
+Export everything to the journal.
 ```
 
-The key shift is that session archaeology becomes a conversation, not a
-command sequence.
+This is convenient but not required: `ctx recall list` gives you the same
+inventory.
 
-## Putting It Together
+Where the agent genuinely helps is chaining the pipeline:
 
-The complete pipeline from raw sessions to browsable site:
+```text
+You:   What happened last Tuesday?
+Agent: Last Tuesday you worked on two sessions:
+       - bright-dancing-hopper (2h 10m): refactored the middleware
+         pipeline and added Redis caching
+       - quiet-flowing-dijkstra (18m): quick fix for a nil pointer
+         in the config loader
+       Want me to export and enrich them?
+You:   Yes, do it.
+Agent: Exports both, normalizes, enriches, then proposes frontmatter.
+```
+
+The value is staying in one context while the agent runs export -> normalize ->
+enrich without you manually switching tools.
+
+## Putting It All Together
+
+A typical pipeline from raw sessions to a browsable site:
 
 ```bash
 # Terminal: export and generate
@@ -290,11 +313,10 @@ ctx recall export --all
 ctx journal site --serve
 ```
 
-```
+```text
 # AI assistant: normalize and enrich
 /ctx-journal-normalize
-/ctx-journal-enrich twinkly-stirring-kettle
-/ctx-journal-enrich gleaming-wobbling-sutherland
+/ctx-journal-enrich-all
 ```
 
 ```bash
@@ -303,48 +325,45 @@ ctx journal site --serve
 ```
 
 If your project includes `Makefile.ctx` (deployed by `ctx init`), use
-`make journal` to combine the export and rebuild stages, then normalize
-and enrich inside Claude Code, then `make journal` again to pick up
-the enrichments.
+`make journal` to combine export and rebuild stages. Then normalize and enrich
+inside Claude Code, then `make journal` again to pick up enrichments.
 
 ## Tips
 
-**Start with `/ctx-recall` inside your AI assistant.** If you just want to
-quickly check what happened in a recent session without leaving your editor,
-the `/ctx-recall` skill lets you browse interactively without exporting.
-
-**Large sessions are split automatically.** Sessions with 200+ messages get
+* Start with `/ctx-recall` inside your AI assistant. If you want to quickly check
+what happened in a recent session without leaving your editor, `/ctx-recall`
+lets you browse interactively without exporting.
+* Large sessions may be split automatically. Sessions with 200+ messages can be
 split into multiple parts (`session-abc123.md`, `session-abc123-p2.md`,
-`session-abc123-p3.md`) with navigation links between them. The site
-generator handles this transparently.
+`session-abc123-p3.md`) with navigation links between them. The site generator
+can handle this.
+* Suggestion sessions can be separated. Claude Code can generate short
+suggestion sessions for autocomplete. These may appear under a separate section
+in the site index, so they do not clutter your main session list.
+* Your agent is a good session browser. You do not need to remember slugs, dates,
+or flags. Ask "*what did we do yesterday?*" or "*find the session about Redis*" 
+and it can map the question to recall commands.
 
-**Suggestion sessions are separated.** Claude Code generates short
-"suggestion" sessions for auto-complete. These appear under a separate
-"Suggestions" section in the site index so they don't clutter your main
-session list.
+!!! warning "Journal files are sensitive"
+    Journal files **MUST** be `.gitignore`d.
+    
+    Session transcripts can contain sensitive data such as file contents,
+    commands, error messages with stack traces, and potentially API keys.
+    
+    Add `.context/journal/` and `.context/journal-site/` to your `.gitignore`.
 
-**Your agent is the best session browser.** You don't need to remember
-session slugs, dates, or command flags. Ask your agent "what did we do
-yesterday?" or "find the session about Redis" and it will map the question
-to the right recall commands. This works especially well after the agent has
-loaded the Agent Playbook, since it already treats `.context/` as its memory.
+## Next Up
 
-**Enrich your best sessions first.** You don't need to enrich every session.
-Focus on productive sessions where you made decisions, learned something, or
-completed significant work. Exploration and debugging sessions can stay
-unenriched -- they're still searchable by content.
-
-**Journal files should be gitignored.** Session transcripts contain sensitive
-data: file contents, commands, error messages with stack traces, and
-potentially API keys. Add `.context/journal/` and `.context/journal-site/`
-to your `.gitignore`.
+**[Running an Unattended AI Agent](autonomous-loops.md)**:
+Set up an AI agent that works through tasks overnight without you at the
+keyboard.
 
 ## See Also
 
-- [The Complete Session](session-lifecycle.md) -- where session saving fits in the daily workflow
-- [Turning Activity into Content](publishing.md) -- generating blog posts from session history
-- [Session Journal](../session-journal.md) -- full documentation of the journal system
-- [CLI Reference: ctx recall](../cli-reference.md#ctx-recall) -- all recall subcommands and flags
-- [CLI Reference: ctx journal](../cli-reference.md#ctx-journal) -- site generation options
-- [CLI Reference: ctx serve](../cli-reference.md#ctx-serve) -- local serving options
-- [Context Files](../context-files.md) -- the `.context/` directory structure
+* [The Complete Session](session-lifecycle.md): where session saving fits in the daily workflow
+* [Turning Activity into Content](publishing.md): generating blog posts from session history
+* [Session Journal](../session-journal.md): full documentation of the journal system
+* [CLI Reference: ctx recall](../cli-reference.md#ctx-recall): all recall subcommands and flags
+* [CLI Reference: ctx journal](../cli-reference.md#ctx-journal): site generation options
+* [CLI Reference: ctx serve](../cli-reference.md#ctx-serve): local serving options
+* [Context Files](../context-files.md): the `.context/` directory structure

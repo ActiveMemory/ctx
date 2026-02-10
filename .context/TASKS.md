@@ -339,6 +339,14 @@ indexing — grep across 100+ journal files won't scale.
 - [ ] Run `/consolidate` to address codebase drift. Considerable drift has
       accumulated (predicate naming, magic strings, hardcoded permissions,
       godoc style). #priority:medium #added:2026-02-06
+- [ ] `/ctx-journal-enrich-all` should handle export-if-needed: check for
+      unexported sessions before enriching and export them automatically,
+      so the user can say "process the journal" and the skill handles the
+      full pipeline (export → normalize → enrich). #priority:medium #added:2026-02-09
+- [ ] Add `--date` or `--since`/`--until` flags to `ctx recall list` for
+      date range filtering. Currently the agent eyeballs dates from the
+      full list output, which works but is inefficient for large session
+      histories. #priority:low #added:2026-02-09
 
 ## Blocked
 

@@ -5,9 +5,9 @@ icon: lucide/wrench
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
-You have installed ctx and want to set it up with your AI coding assistant so
+You have installed `ctx` and want to set it up with your AI coding assistant so
 that context persists across sessions. Different tools have different
 integration depths. For example: 
 
@@ -42,7 +42,7 @@ Agent Skills automatically.
 ```bash
 cd your-project
 ctx init
-````
+```
 
 This produces the following structure:
 
@@ -64,8 +64,8 @@ This produces the following structure:
   settings.local.json # Hook configuration
 ```
 
-If you only need the core files (useful for lightweight setups with Cursor or
-Copilot), use the `--minimal` flag:
+If you only need the core files (*useful for lightweight setups with Cursor or
+Copilot*), use the `--minimal` flag:
 
 ```bash
 ctx init --minimal
@@ -75,8 +75,8 @@ This creates only `TASKS.md`, `DECISIONS.md`, and `CONSTITUTION.md`.
 
 ### Step 2: Generate Tool-Specific Hooks
 
-If you are using a tool other than Claude Code (which is configured
-automatically by `ctx init`), generate its integration configuration:
+If you are using a tool other than Claude Code (*which is configured
+automatically by `ctx init`*), generate its integration configuration:
 
 ```bash
 # For Cursor
@@ -92,8 +92,8 @@ ctx hook copilot
 ctx hook windsurf
 ```
 
-Each command prints the configuration you need. What you do with it depends on
-the tool.
+Each command prints the configuration you need. How you apply it depends on the
+tool.
 
 !!! tip "Claude is a First-Class Citizen"
     You don't need any extra steps to integrate with Claude Code.
@@ -172,8 +172,8 @@ Start a fresh session in your AI tool and ask:
 > **"Do you remember?"**
 
 A correctly configured tool responds with specific context: current tasks from
-`TASKS.md`, recent decisions, and previous session topics. It should not say
-"I don't have memory" or "Let me search for files."
+`TASKS.md`, recent decisions, and previous session topics. It should **not** say
+"*I don't have memory*" or "*Let me search for files.*"
 
 This question checks the *passive* side of memory. A properly set-up agent is
 also **proactive**: it treats context maintenance as part of its job.
@@ -311,10 +311,15 @@ ctx hook aider
   open files as higher-priority context.
 * Run `ctx drift` periodically to catch stale references before they confuse
   the agent.
-* The agent playbook instructs the agent to persist context at natural
-  milestones (*completed tasks, decisions, gotchas*). In practice, this
-  works best when you reinforce the habit: a quick "*anything worth
-  saving?*" after a debugging session goes a long way.
+* The agent playbook instructs the agent to persist context at **natural
+  milestones** (*completed tasks, decisions, gotchas*). In practice, this
+  works best when you reinforce the habit: a quick "*anything worth saving?*"
+  after a debugging session goes a long way.
+
+## Next Up
+
+**[The Complete Session](session-lifecycle.md)**: Walk through a full `ctx`
+session from start to finish.
 
 ## See Also
 

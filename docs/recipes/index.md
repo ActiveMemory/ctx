@@ -20,21 +20,23 @@ into a step-by-step workflow.
 
     Think of commands as **structure** and skills as **behavior**.
 
-!!! info "Proactive Agents"
+!!! info "Guide Your Agent"
     These recipes show explicit commands and skills, but agents
-    trained on the ctx playbook are **proactive**:
+    trained on the ctx playbook are **proactive**: they offer to
+    save learnings after debugging, record decisions after
+    trade-offs, create follow-up tasks after completing work, and
+    suggest what to work on next.
 
-    They offer to: 
+    **Your questions train the agent.** Asking "*what have we
+    learned?*" or "*is our context clean?*" does two things: it
+    triggers the workflow right now, **and** it reinforces the
+    pattern. The more you guide, the more the agent habituates the
+    behavior and begins offering on its own.
 
-    * save learnings after debugging,
-    * record decisions after trade-offs, 
-    * create follow-up tasks after completing work, 
-    * and suggest what to work on next. 
+    Don't wait passively for proactive behavior — especially in
+    early sessions. **Ask, guide, reinforce.** Over time, you ask
+    less and the agent offers more.
 
-    You often **don’t** need to invoke commands directly: A simple
-    "*what have we learned?*" or "*let's wrap up*" triggers the same
-    workflows. 
-    
     Each recipe includes a **Conversational Approach** section
     showing these natural-language patterns.
 
@@ -90,7 +92,7 @@ survive across sessions and team members.
 **Uses**: `ctx add decision`, `ctx add learning`,
 `ctx add convention`, `ctx decisions reindex`,
 `ctx learnings reindex`, `/ctx-add-decision`,
-`/ctx-add-learning`, `/ctx-reflect`
+`/ctx-add-learning`, `/ctx-add-convention`, `/ctx-reflect`
 
 ---
 
@@ -98,12 +100,14 @@ survive across sessions and team members.
 
 ### [Detecting and Fixing Drift](context-health.md)
 
-Keep context files accurate by detecting stale paths,
-reconciling with the codebase, compacting bloated files, and
-auditing prompt quality.
+Keep context files accurate by detecting structural drift
+(stale paths, missing files) and semantic drift (outdated
+conventions, superseded decisions). Includes alignment audits
+to verify documentation claims match agent instructions.
 
 **Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
-`/ctx-drift`, `/ctx-status`, `/ctx-prompt-audit`
+`/ctx-drift`, `/ctx-alignment-audit`, `/ctx-status`,
+`/ctx-prompt-audit`
 
 ---
 
@@ -117,7 +121,7 @@ across months of work.
 
 **Uses**: `ctx recall list/show/export`, `ctx journal site`,
 `ctx serve`, `/ctx-recall`, `/ctx-journal-normalize`,
-`/ctx-journal-enrich`
+`/ctx-journal-enrich`, `/ctx-journal-enrich-all`
 
 ---
 

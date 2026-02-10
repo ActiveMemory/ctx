@@ -76,6 +76,125 @@ tasks in Phase 2. Want to continue with those?"
 The context IS your memory. It's stored externally in files, but that's an
 implementation detail. Load it and use it — don't lead with caveats.
 
+## Session Lifecycle
+
+A session follows this arc:
+
+**Load → Orient → Pick → Work → Commit → Reflect → Save**
+
+Not every session uses every step — a quick bugfix skips reflection, a
+research session skips committing — but the full flow is:
+
+| Step        | What Happens                                       | Skill / Command  |
+|-------------|----------------------------------------------------|------------------|
+| **Load**    | Recall context, present structured readback        | `/ctx-remember`  |
+| **Orient**  | Check context health, surface issues                | `/ctx-status`    |
+| **Pick**    | Choose what to work on                             | `/ctx-next`      |
+| **Work**    | Write code, fix bugs, research                     | `/ctx-implement` |
+| **Commit**  | Commit with context capture                        | `/ctx-commit`    |
+| **Reflect** | Surface persist-worthy items from this session     | `/ctx-reflect`   |
+| **Save**    | Snapshot the session for future recall              | `/ctx-save`      |
+
+### Context Health at Session Start
+
+During **Load** and **Orient**, run `ctx status` and read the output.
+It shows task counts, token usage, and modification times. Use this
+to notice problems worth mentioning:
+
+- **High completion ratio in TASKS.md** (many completed items):
+  *"TASKS.md has 18 completed items. Want me to archive them?"*
+- **Stale context files** (not modified recently — `ctx status`
+  shows "modified X ago"): *"DECISIONS.md hasn't been updated in
+  40 days. Worth reviewing?"*
+- **Bloated token count** (over 30k): *"Context is getting heavy.
+  Want me to run `ctx compact` to trim it?"*
+- **Drift between files and code**: spot-check a few paths from
+  ARCHITECTURE.md or CONVENTIONS.md against the actual file tree.
+  If a referenced path is missing or empty, mention it before stale
+  context influences any work.
+
+Surface these during the readback or Orient step. One sentence is
+enough — don't turn startup into a maintenance session.
+
+### Conversational Triggers
+
+Users rarely invoke skills explicitly. You can drive the same lifecycle
+with plain language:
+
+| Step    | Slash command       | Natural language                                        |
+|---------|---------------------|---------------------------------------------------------|
+| Load    | `/ctx-remember`     | "Do you remember?" / "What were we working on?"         |
+| Orient  | `/ctx-status`       | "How's our context looking?"                            |
+| Pick    | `/ctx-next`         | "What should we work on?" / "Let's do the caching task" |
+| Work    | --                  | "Only change files in internal/cache/"                  |
+| Commit  | `/ctx-commit`       | "Commit this" / "Ship it"                               |
+| Done    | `ctx complete`      | "The rate limiter is done" / "We finished that"          |
+| Reflect | `/ctx-reflect`      | "What did we learn?" / *(agent offers at milestones)*   |
+| Save    | `/ctx-save <topic>` | "Let's wrap up" / "Save our progress" / "I'm done"      |
+
+Users also trigger persist actions directly with natural language:
+
+| User Says                                         | Action                                  |
+|---------------------------------------------------|-----------------------------------------|
+| "Save that as a decision"                          | `/ctx-add-decision` with structured fields inferred from conversation |
+| "That's worth remembering" / "Any gotchas?"        | `/ctx-add-learning` with context, lesson, application from session   |
+| "Record that convention" / "Codify that pattern"   | `/ctx-add-convention` with section inferred from topic               |
+| "Add a task for that" / "We should track that"     | `/ctx-add-task` with description from context                        |
+
+### Chained Flows
+
+Some cues should chain multiple steps in one pass:
+
+- **"Let's wrap up"**: Reflect on the session → persist outstanding
+  learnings and decisions → save a session snapshot. Present all
+  results together; don't make the user invoke each step separately.
+- **"Yes, and let's wrap up"** (after a persist offer): Record what
+  the user confirmed → then trigger the full wrap-up flow.
+
+### Proactive Behavior During Work
+
+While working, proactively identify moments worth persisting — don't
+wait to be asked:
+
+- After choosing between design alternatives, flag it: *"That's a
+  design choice worth recording. Want me to save it as a decision?"*
+- After hitting a subtle bug, surface it: *"That was non-obvious.
+  Want me to add it as a learning?"*
+- After completing a task, note it: *"That closes the X task. I'll
+  mark it done."* Also recognize natural-language completion signals
+  like "the rate limiter is done" or "we finished that" — match them
+  to tasks in TASKS.md and mark them done with `ctx complete`.
+- After finishing a feature or fix, identify follow-up work (tests,
+  docs, edge cases, cleanup) and offer to add them: *"That leaves
+  a few loose ends — integration tests and updating the CLI docs.
+  Want me to add those as tasks?"*
+
+The goal is to **identify** persist-worthy moments in real time, not
+just respond to them after the fact.
+
+### Agent-Initiated Reflect and Save
+
+At significant milestones, proactively initiate **Reflect** or **Save**
+without waiting to be asked:
+
+- **After completing a multi-step task or feature**: suggest a
+  reflection — *"We just finished the caching layer. Want me to do
+  a quick reflection to capture what we learned?"*
+- **After a long debugging session**: offer to reflect before moving
+  on — *"That took a while to track down. Worth capturing the root
+  cause as a learning before we continue?"*
+- **When the session feels like it's winding down** (user is doing
+  small tweaks, asking fewer questions, long session): offer to
+  save — *"We've covered a lot. Want me to save a session snapshot?"*
+
+- **After shipping a feature or closing a batch of tasks**: suggest
+  content — *"We just shipped the caching layer and closed 3 tasks.
+  Want me to draft a blog post about it?"* or *"Your journal has
+  new entries since last rebuild. Want me to regenerate the site?"*
+
+Offer once and respect "no." But default to surfacing the opportunity
+rather than letting it pass silently.
+
 ## Session History
 
 **IMPORTANT**: Check `.context/sessions/` for session dumps

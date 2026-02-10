@@ -11,43 +11,169 @@ icon: lucide/stethoscope
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
-Context files drift. You rename a package, delete a module, or finish a sprint
--- and suddenly ARCHITECTURE.md references paths that no longer exist, TASKS.md
-is 80% completed checkboxes, and CONVENTIONS.md describes patterns you stopped
-using two months ago.
+Context files drift: you rename a package, delete a module, or finish a sprint,
+and suddenly `ARCHITECTURE.md` references paths that no longer exist,
+`TASKS.md` is 80 percent completed checkboxes, and `CONVENTIONS.md` describes
+patterns you stopped using two months ago.
 
-Stale context is worse than no context: an AI tool that trusts outdated
-references will hallucinate confidently. This recipe shows how to detect drift,
-fix it, and keep your `.context/` directory lean and accurate.
+**Stale context is worse than no context**: an AI tool that trusts outdated
+references will **hallucinate confidently**.
+
+This recipe shows how to detect drift, fix it, and keep your `.context/`
+directory lean and accurate.
 
 ## Commands and Skills Used
 
-| Tool                | Type    | Purpose                                        |
-|---------------------|---------|------------------------------------------------|
-| `ctx drift`         | Command | Detect stale paths, missing files, violations  |
-| `ctx drift --fix`   | Command | Auto-fix simple issues                         |
-| `ctx sync`          | Command | Reconcile context with codebase structure      |
-| `ctx compact`       | Command | Archive completed tasks, deduplicate learnings |
-| `ctx status`        | Command | Quick health overview                          |
-| `/ctx-drift`        | Skill   | In-session drift detection and guided fix      |
-| `/ctx-status`       | Skill   | In-session context summary                     |
-| `/ctx-prompt-audit` | Skill   | Audit prompt quality and token efficiency      |
+| Tool                   | Type    | Purpose                                        |
+|------------------------|---------|------------------------------------------------|
+| `ctx drift`            | Command | Detect stale paths, missing files, violations  |
+| `ctx drift --fix`      | Command | Auto-fix simple issues                         |
+| `ctx sync`             | Command | Reconcile context with codebase structure      |
+| `ctx compact`          | Command | Archive completed tasks, deduplicate learnings |
+| `ctx status`           | Command | Quick health overview                          |
+| `/ctx-drift`           | Skill   | Structural plus semantic drift detection       |
+| `/ctx-alignment-audit` | Skill   | Audit doc claims against agent instructions    |
+| `/ctx-status`          | Skill   | In-session context summary                     |
+| `/ctx-prompt-audit`    | Skill   | Audit prompt quality and token efficiency      |
 
 ## The Workflow
 
-The maintenance cycle follows a consistent progression: detect problems, fix
-what can be automated, reconcile with the real codebase, then slim down
-accumulated clutter.
+The best way to maintain context health is **conversational**: ask your agent,
+guide it, and let it detect problems, explain them, and fix them with your
+approval. CLI commands exist for CI pipelines, scripting, and fine-grained
+control. 
 
+For day-to-day maintenance, **talk to your agent**.
+
+!!! tip "Your Questions Reinforce the Pattern"
+    Asking "is our context clean?" does two things:
+
+    * it triggers a drift check right now
+    * it reinforces the habit
+
+    This is reinforcement, not enforcement.
+
+    Do not wait for the agent to be proactive on its own. Guide it, especially
+    in early sessions. Over time, you will ask less and the agent will start
+    offering more.
+
+### Step 1: Ask Your Agent
+
+The simplest way to check context health:
+
+```text
+Is our context clean?
+Anything stale?
+How healthy are our context files?
+````
+
+Or invoke the skill directly:
+
+```text
+/ctx-drift
 ```
-drift detection --> auto-fix --> sync with codebase --> compact --> audit
+
+The agent performs two layers of analysis:
+
+Layer 1, structural checks (via `ctx drift`): dead paths, missing files,
+completed task counts, constitution violations. Fast and programmatic.
+
+Layer 2, semantic analysis (agent-driven): does `CONVENTIONS.md` describe
+patterns the code no longer follows? Does `DECISIONS.md` contain entries whose
+rationale no longer applies? Are there learnings about bugs that are now fixed?
+This is where the agent adds value the CLI cannot: it reads both context files
+and source code and compares them.
+
+The agent reports both layers together, explains each finding in plain language,
+and offers to fix what it can.
+
+### Step 2: Maintenance at Session Start
+
+You do not need to ask explicitly. A proactive agent can check context health
+as part of its startup routine and mention anything worth addressing:
+
+```text
+Agent: Good morning. I've loaded the context files. A few things
+       before we start:
+
+       - ARCHITECTURE.md references `pkg/auth/` which is now empty
+       - DECISIONS.md hasn't been updated in 40 days
+       - There are 18 completed tasks ready for archival
+
+       Want me to run a quick maintenance pass, or should we jump
+       straight into today's work?
 ```
 
-### Step 1: Run Drift Detection
+If the agent does not offer this on its own, a gentle nudge is enough:
 
-Start with `ctx drift` to scan every context file for problems.
+```text
+Anything stale before we start?
+How's the context looking?
+```
+
+This turns maintenance from a scheduled chore into a conversation that happens
+**when** it matters.
+
+### Step 3: Real-Time Detection During Work
+
+Agents notice drift while working, not just during explicit checks. When an
+agent reads `ARCHITECTURE.md` to understand a module and then opens the actual
+source tree, it can see mismatches immediately:
+
+```text
+Agent: I notice ARCHITECTURE.md still references `internal/handlers/`
+       which we deleted in the last refactor. Want me to run drift
+       detection so we can clean up any other stale references?
+```
+
+The agent is already reading context files to do its job. Noticing staleness is
+a natural byproduct of that.
+
+### Step 4: Archival and Cleanup
+
+Agents spot clutter too. When `TASKS.md` is loaded and most of the content is
+completed checkboxes, the agent can offer to tidy up:
+
+```text
+Agent: TASKS.md has 25 completed tasks obscuring the 4 pending ones.
+       Want me to archive the finished work so we can focus on what's
+       active?
+```
+
+The same applies to `LEARNINGS.md` with near-duplicate entries, or `DECISIONS.md`
+with entries that were superseded.
+
+### Step 5: Alignment Audits
+
+A related problem is **alignment drift**: documentation that makes claims about
+agent behavior not backed by actual playbook or skill instructions. 
+
+Over time, docs accumulate aspirational statements that no instruction teaches 
+the agent to do.
+
+Use `/ctx-alignment-audit` to trace behavioral claims in documentation against
+the playbook and skill files. The skill identifies gaps, proposes fixes, and
+checks instruction file health (token budgets, bloat signals).
+
+To avoid confusion with `/ctx-prompt-audit`:
+
+* `/ctx-alignment-audit` checks whether documentation claims are supported by
+  actual instructions (*playbook, skills, `CLAUDE.md`*).
+* `/ctx-prompt-audit` checks whether your context files are clear, compact, and
+  token-efficient for the model.
+
+---
+
+## CLI Reference
+
+The conversational approach above uses CLI commands under the hood. When you
+need direct control, use the commands directly.
+
+### `ctx drift`
+
+Scan context files for structural problems:
 
 ```bash
 ctx drift
@@ -55,7 +181,7 @@ ctx drift
 
 Sample output:
 
-```
+```text
 Drift Report
 ============
 
@@ -74,283 +200,146 @@ Staleness:
 Exit code: 1 (warnings found)
 ```
 
-The report has three severity levels:
+| Level     | Meaning                                             | Action         |
+|-----------|-----------------------------------------------------|----------------|
+| Warning   | Stale path references, missing files                | Fix or remove  |
+| Violation | Constitution rule heuristic failures, heavy clutter | Fix soon       |
+| Staleness | Files not updated recently                          | Review content |
 
-| Level         | Meaning                                             | Action         |
-|---------------|-----------------------------------------------------|----------------|
-| **Warning**   | Stale path references, missing files                | Fix or remove  |
-| **Violation** | Constitution rule heuristic failures, heavy clutter | Fix soon       |
-| **Staleness** | Files not updated recently                          | Review content |
+Exit codes: `0` equals clean, `1` equals warnings, `3` equals violations.
 
-For CI integration or scripting, use `--json`:
+For CI integration:
 
 ```bash
 ctx drift --json | jq '.warnings | length'
 ```
 
-Exit codes tell you the severity at a glance: `0` means all checks passed,
-`1` means warnings were found, and `3` means violations were detected.
+### `ctx drift --fix`
 
-### Step 2: Auto-Fix Simple Issues
-
-Many drift warnings have mechanical fixes. Passing `--fix` handles the
-straightforward ones:
+Auto-fix mechanical issues:
 
 ```bash
 ctx drift --fix
 ```
 
-Auto-fixable issues include:
+This handles removing dead path references, updating unambiguous renames, clearing
+empty sections. Issues requiring judgment are flagged but left for you.
 
-- Removing references to paths that no longer exist
-- Updating directory paths after renames (when the new path is unambiguous)
-- Clearing empty sections left behind after manual edits
+Run `ctx drift` again afterward to confirm what remains.
 
-Issues that require judgment -- like deciding whether a referenced module was
-deleted intentionally or moved -- are flagged but left for you to resolve.
+### `ctx sync`
 
-After the auto-fix, run `ctx drift` again to confirm the remaining issues
-need manual attention.
-
-### Step 3: Sync with the Codebase
-
-After a refactor (renamed packages, moved files, restructured directories),
-the context files may describe an architecture that no longer matches reality.
-`ctx sync` compares your context with the actual codebase structure.
-
-Always preview first:
+After a refactor, reconcile context with the actual codebase structure:
 
 ```bash
-ctx sync --dry-run
+ctx sync --dry-run   # preview first
+ctx sync             # apply
 ```
 
-Sample output:
+`ctx sync` scans for **structural changes**, compares with `ARCHITECTURE.md`, 
+checks for new dependencies worth documenting, and identifies context referring 
+to code that no longer exists.
 
-```
-Sync Preview
-============
+### `ctx compact`
 
-ARCHITECTURE.md:
-  + internal/cache/       (new directory, not documented)
-  ~ internal/api/         (structure changed)
-  - internal/handlers/    (referenced but missing)
-
-Suggestions:
-  * Document internal/cache/ in ARCHITECTURE.md
-  * Update internal/api/ component description
-  * Remove internal/handlers/ references
-
-No changes applied (dry-run mode).
-```
-
-If the preview looks correct, apply:
-
-```bash
-ctx sync
-```
-
-The sync scans for structural changes, compares them with ARCHITECTURE.md,
-checks whether package files (go.mod, package.json, etc.) have new dependencies
-worth documenting, and identifies context that refers to code that no longer
-exists.
-
-### Step 4: Compact Bloated Files
-
-Over time, TASKS.md accumulates completed checkboxes and LEARNINGS.md
-collects near-duplicate entries. `ctx compact` cleans this up.
+Archive completed tasks and deduplicate learnings:
 
 ```bash
 ctx compact --archive
 ```
 
-What compact does:
-
-- **Tasks**: Moves completed tasks older than 7 days to
+* Tasks: moves completed tasks older than 7 days to
   `.context/archive/tasks-YYYY-MM-DD.md`
-- **Learnings**: Deduplicates entries with similar content
-- **All files**: Removes empty sections left behind
+* Learnings: deduplicates entries with similar content
+* All files: removes empty sections left behind
 
-The `--archive` flag creates the `.context/archive/` directory and preserves
-old content there rather than deleting it. You can review archived tasks
-later or search them with grep.
+The `--archive` flag preserves old content. Skip the auto-save with
+`--no-auto-save`.
 
-If you want to skip the automatic session save that compact performs before
-modifying files:
+### `ctx status`
 
-```bash
-ctx compact --archive --no-auto-save
-```
-
-### Step 5: Audit Prompt Quality
-
-The final step is qualitative. Inside your AI coding assistant, run:
-
-```
-/ctx-prompt-audit
-```
-
-This skill analyzes your context files for:
-
-- Token efficiency (are you spending tokens on low-value content?)
-- Clarity (can an AI tool parse the structure unambiguously?)
-- Completeness (are there gaps between what TASKS.md says and what the
-  codebase shows?)
-- Staleness (decisions marked "Accepted" that should be "Superseded")
-
-The audit produces specific recommendations. Apply them manually, then run
-`ctx status` to confirm the overall health:
+Quick health overview:
 
 ```bash
 ctx status --verbose
 ```
 
-## Agent-Driven Maintenance
+Shows file counts, token estimates, modification times, and drift warnings in a
+single glance.
 
-The steps above describe a manual workflow, but AI agents that read `.context/`
-files are already in a position to notice problems before you run any command.
-A well-configured agent doesn't wait to be asked -- it flags issues as it
-encounters them during normal work.
+### `/ctx-alignment-audit` and `/ctx-prompt-audit`
 
-### Agents Notice Drift in Real Time
+These are both audits, but they answer different questions:
 
-When an agent reads ARCHITECTURE.md to understand a module and then opens the
-actual source tree, it can see the mismatch immediately. A proactive agent will
-surface this:
+* `/ctx-alignment-audit`: are our behavioral claims backed by actual
+  instructions?
+* `/ctx-prompt-audit`: are our context files readable, compact, and efficient?
 
-```
-Agent: I notice ARCHITECTURE.md still references `internal/handlers/`
-       which we deleted in the last refactor. Want me to run drift
-       detection so we can clean up any other stale references?
-```
+Run them inside your AI assistant:
 
-This happens naturally. The agent is already reading context files to do its
-job; noticing staleness is a side effect of paying attention. No scheduled
-maintenance run required.
-
-### Suggesting Archival and Cleanup
-
-Agents can also spot clutter. When TASKS.md is loaded at session start and
-most of the content is completed checkboxes, a proactive agent will offer
-to tidy up:
-
-```
-Agent: TASKS.md has 25 completed tasks obscuring the 4 pending ones.
-       Want me to archive the finished work so we can focus on what's
-       active?
-```
-
-The same applies to LEARNINGS.md with near-duplicate entries, or DECISIONS.md
-with decisions marked "Accepted" that were superseded weeks ago.
-
-### The Conversational Approach
-
-You don't need to remember command names to trigger maintenance. Natural
-language works:
-
-- "Is our context clean?"
-- "Anything stale?"
-- "Tidy up the context files"
-- "How healthy are our context files?"
-
-Or use the `/ctx-drift` skill directly — it runs `ctx drift`, explains each
-finding in plain language, and offers to auto-fix what it can. An agent that
-has read the Agent Playbook knows how to translate natural-language requests
-into the right sequence of `ctx drift`, `ctx sync`, and `ctx compact` calls.
-
-### Maintenance at Session Start
-
-The best time to catch drift is the start of a session, before stale context
-influences any decisions. A proactive agent will check context health as part
-of its startup routine and mention anything worth addressing:
-
-```
-Agent: Good morning. I've loaded the context files. A few things
-       before we start:
-
-       - ARCHITECTURE.md references `pkg/auth/` which is now empty
-       - DECISIONS.md hasn't been updated in 40 days
-       - There are 18 completed tasks ready for archival
-
-       Want me to run a quick maintenance pass, or should we jump
-       straight into today's work?
-```
-
-This turns maintenance from a chore you schedule into a conversation that
-happens when it matters.
-
-## Putting It Together
-
-Here is a complete maintenance session combining all five steps:
-
-```bash
-# 1. Detect problems
-ctx drift
-
-# 2. Auto-fix the easy ones
-ctx drift --fix
-
-# 3. Preview sync changes after a refactor
-ctx sync --dry-run
-
-# 4. Apply sync
-ctx sync
-
-# 5. Archive old completed tasks
-ctx compact --archive
-
-# 6. Verify
-ctx status
-```
-
-Then inside your AI assistant:
-
-```
+```text
+/ctx-alignment-audit
 /ctx-prompt-audit
 ```
 
-Review the recommendations, make any final edits, and run `ctx drift` one
-more time to confirm a clean bill of health.
+## Putting It All Together
+
+Conversational approach (recommended):
+
+```text
+Is our context clean?   -> agent runs structural plus semantic checks
+Fix what you can        -> agent auto-fixes and proposes edits
+Archive the done tasks  -> agent runs ctx compact --archive
+How's token usage?      -> agent checks ctx status
+```
+
+CLI approach (for CI, scripts, or direct control):
+
+```bash
+ctx drift                      # 1. Detect problems
+ctx drift --fix                # 2. Auto-fix the easy ones
+ctx sync --dry-run && ctx sync # 3. Reconcile after refactors
+ctx compact --archive          # 4. Archive old completed tasks
+ctx status                     # 5. Verify
+```
 
 ## Tips
 
-**When to run each command:**
+Your agent is your first line of defense. It cross-references context files with
+source code during normal work. It will often notice a renamed package, a
+deleted directory, or an outdated convention before `ctx drift` runs. 
 
-| Command             | When                                                   |
-|---------------------|--------------------------------------------------------|
-| `ctx drift`         | Regularly -- weekly, or before starting a new feature  |
-| `ctx sync`          | After refactors, renames, or major structural changes  |
-| `ctx compact`       | When TASKS.md feels cluttered or token budget is tight |
-| `/ctx-prompt-audit` | Monthly, or when AI responses seem confused            |
+When an agent says "*this reference looks stale,*" it is **usually right**.
 
-**Use `ctx status` as a quick check.** It shows file counts, token estimates,
-and drift warnings in a single glance. Good for a fast "is everything okay?"
-before diving into a session.
+Semantic drift is more damaging than structural drift. `ctx drift` catches dead
+paths. But `CONVENTIONS.md` describing a pattern your code stopped following
+three weeks ago is worse. When you ask "*is our context clean?*", the agent can 
+do both checks.
 
-**Drift detection in CI.** Add `ctx drift --json` to your CI pipeline and
-fail on exit code 3 (violations). This catches constitution-level problems
-before they reach main.
+Use `ctx status` as a quick check. It shows file counts, token estimates, and
+drift warnings in a single glance. Good for a fast "is everything ok?" before
+diving into work.
 
-**Don't over-compact.** Completed tasks have historical value. The `--archive`
+Drift detection in CI: add `ctx drift --json` to your CI pipeline and fail on
+exit code 3 (violations). This catches constitution-level problems before they
+reach upstream.
+
+Do not over-compact. Completed tasks have historical value. The `--archive`
 flag preserves them in `.context/archive/` so you can search past work without
-cluttering active context. Only use compact without `--archive` if you truly
-want to discard old items.
+cluttering active context.
 
-**Sync is non-destructive by default.** It suggests changes but never rewrites
-files without your confirmation. The `--dry-run` flag exists for extra caution
-after large refactors.
+Sync is cautious by default. Use `--dry-run` after large refactors, then apply.
 
-**Agents are your first line of defense against drift.** An AI agent working
-in your codebase is constantly cross-referencing context files with actual
-source code. It will notice a renamed package, a deleted directory, or an
-outdated convention before `ctx drift` ever runs. Treat agent observations
-as early warnings -- when an agent says "this reference looks stale," it
-almost certainly is. Addressing these flags in real time keeps context
-accurate and avoids the accumulation that makes scheduled maintenance painful.
+## Next Up
+
+**[Browsing and Enriching Past Sessions](session-archaeology.md)**:
+Export session history to a browsable journal and enrich entries with metadata.
 
 ## See Also
 
-- [Tracking Work Across Sessions](task-management.md) -- task lifecycle and archival
-- [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md) -- keeping knowledge files current
-- [The Complete Session](session-lifecycle.md) -- where maintenance fits in the daily workflow
-- [CLI Reference](../cli-reference.md) -- full flag documentation for all commands
-- [Context Files](../context-files.md) -- structure and purpose of each `.context/` file
+* [Tracking Work Across Sessions](task-management.md): task lifecycle and archival
+* [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md): 
+  keeping knowledge files current
+* [The Complete Session](session-lifecycle.md): where maintenance fits in the daily workflow
+* [CLI Reference](../cli-reference.md): full flag documentation for all commands
+* [Context Files](../context-files.md): structure and purpose of each `.context/` file
