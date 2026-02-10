@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Defense in Depth: Securing AI Agents](2026-02-09-defense-in-depth-securing-ai-agents.md)
+
+*Jose Alekhinne / February 9, 2026*
+
+I was writing the autonomous loops recipe and realized the security
+advice was "use CONSTITUTION.md for guardrails." Then I read that
+sentence back and realized: that is wishful thinking. This post
+traces five defense layers for unattended AI agents, each with a
+bypass, and shows why the strength is in the combination, not any
+single layer.
+
+**Topics**: agent security, defense in depth, prompt injection,
+autonomous loops, container isolation
+
+---
+
 ### [Not Everything Is a Skill](2026-02-08-not-everything-is-a-skill.md)
 
 *Jose Alekhinne / February 8, 2026*

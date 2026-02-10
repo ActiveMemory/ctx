@@ -5,21 +5,21 @@ icon: lucide/repeat
 
 ![ctx](../images/ctx-banner.png)
 
-## The Problem
+## Problem
 
-You have a project with a clear list of tasks and you want an AI agent to
-work through them autonomously: overnight, **unattended**, without you sitting
-at the keyboard. 
+You have a project with a clear list of tasks, and you want an AI agent to work
+through them autonomously: overnight, unattended, without you sitting at the
+keyboard.
 
-Each iteration needs to **remember** what the previous one did, mark tasks 
-as completed, and know **when** to stop.
+Each iteration needs to remember what the previous one did, mark tasks as
+completed, and know when to stop.
 
-Without persistent memory, every iteration starts fresh and the loop
-collapses. With `ctx`, each iteration picks up exactly where the last one
-left off: **but only if the agent proactively persists its context**. 
+Without persistent memory, every iteration starts fresh and the loop collapses.
+With `ctx`, each iteration can pick up where the last one left off, but only if
+the agent persists its context as part of the work.
 
 This is the key insight: unattended operation works because the agent treats
-context persistence as part of the work itself, not as an afterthought.
+context persistence as a first-class deliverable, not an afterthought.
 
 ## Commands and Skills Used
 
@@ -37,25 +37,25 @@ context persistence as part of the work itself, not as an afterthought.
 
 ### Step 1: Initialize for Unattended Operation
 
-Start by creating a `.context/` directory configured so the agent can
-work without human input. The `--ralph` flag sets up `PROMPT.md` so the
-agent makes its own decisions rather than asking clarifying questions.
+Start by creating a `.context/` directory configured so the agent can work
+without human input. The `--ralph` flag sets up `PROMPT.md` so the agent makes
+reasonable choices instead of asking clarifying questions.
 
 ```bash
 ctx init --ralph
-```
+````
 
-This creates `.context/` with all template files, `PROMPT.md` configured
-for autonomous iteration, `IMPLEMENTATION_PLAN.md`, and `.claude/` hooks
-and skills for Claude Code. Without `--ralph`, the agent pauses to ask
-questions when requirements are unclear. For unattended runs, you want it
-to make reasonable choices and document them in `DECISIONS.md` instead.
+This creates `.context/` with the template files, a `PROMPT.md` configured for
+autonomous iteration, and Claude Code hooks and skills under `.claude/`.
+
+Without `--ralph`, the agent will often pause when requirements are unclear.
+For unattended runs, you want it to choose a default and document the trade-off
+in `DECISIONS.md` instead.
 
 ### Step 2: Populate TASKS.md with Phased Work
 
-Open `.context/TASKS.md` and organize your work into phases. The agent
-works through these systematically, top to bottom, from the highest priority
-task first.
+Open `.context/TASKS.md` and organize your work into phases. The agent works
+through these systematically, top to bottom, using priority tags to break ties.
 
 ```markdown
 # Tasks
@@ -79,37 +79,138 @@ task first.
 - [ ] Write integration tests `#priority:medium`
 ```
 
-Phased organization matters because it gives the agent **natural
-boundaries**. Phase 1 tasks should be completable without Phase 2 code
-existing yet.
+Phased organization matters because it gives the agent natural boundaries.
+Phase 1 tasks should be completable without Phase 2 code existing yet.
 
 ### Step 3: Configure PROMPT.md
 
-The `--ralph` flag generates a `PROMPT.md` that instructs the agent to
-operate autonomously:
+The `--ralph` flag generates a `PROMPT.md` that instructs the agent to operate
+autonomously:
 
-1. Read `.context/CONSTITUTION.md` first (*hard rules, never violated*)
+1. Read `.context/CONSTITUTION.md` first (hard rules, never violated)
 2. Load context from `.context/` files
-3. Pick ONE task per iteration
-4. Complete the task and **proactively update context files**
+3. Pick one task per iteration
+4. Complete the task and update context files
 5. Commit changes (including `.context/`)
 6. Signal status with a completion signal
 
-You can customize `PROMPT.md` for your project. The critical parts are
-the one-task-per-iteration discipline, proactive context persistence,
-and the completion signals at the end:
+You can customize `PROMPT.md` for your project. The critical parts are the
+one-task-per-iteration discipline, proactive context persistence, and completion
+signals at the end:
 
 ```markdown
 ## Signal Status
 
 End your response with exactly ONE of:
 
-- `SYSTEM_CONVERGED` — All tasks in TASKS.md are complete
+- `SYSTEM_CONVERGED` — All tasks in TASKS.md are complete (this is the
+  signal the loop script detects by default)
 - `SYSTEM_BLOCKED` — Cannot proceed, need human input (explain why)
 - (no signal) — More work remains, continue to next iteration
+
+Note: the loop script only checks for `SYSTEM_CONVERGED` by default.
+`SYSTEM_BLOCKED` is a convention for the human reviewing the log.
 ```
 
-### Step 4: Generate the Loop Script
+### Step 4: Configure Permissions
+
+An unattended agent needs permission to use tools without prompting. By default,
+Claude Code asks for confirmation on file writes, bash commands, and other
+operations, which stops the loop and waits for a human who is not there.
+
+There are two approaches.
+
+#### Option A: Explicit Allowlist (*Recommended*)
+
+Grant only the permissions the agent needs. In `.claude/settings.local.json`:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(make:*)",
+      "Bash(go:*)",
+      "Bash(git:*)",
+      "Bash(ctx:*)",
+      "Read",
+      "Write",
+      "Edit"
+    ]
+  }
+}
+```
+
+Adjust the `Bash` patterns for your project's toolchain. The agent can run
+`make`, `go`, `git`, and `ctx` commands but cannot run arbitrary shell commands.
+
+This is recommended even in sandboxed environments because it limits blast
+radius.
+
+#### Option B: Skip All Permission Checks
+
+Claude Code supports a `--dangerously-skip-permissions` flag that disables all
+permission prompts:
+
+```bash
+claude --dangerously-skip-permissions -p "$(cat .context/PROMPT.md)"
+```
+
+!!! danger "This flag means what it says"
+    With `--dangerously-skip-permissions`, the agent can execute any shell
+    command, write to any file, and make network requests without
+    confirmation.
+
+    Only use this on a sandboxed machine: ideally a virtual machine with
+    no access to host credentials, no SSH keys, and no access to
+    production systems.
+
+    If you would not give an untrusted intern `sudo` on this machine, do
+    not use this flag.
+
+#### Enforce Isolation at the OS Level
+
+!!! danger "Do not skip this section"
+    This is not optional hardening. An unattended agent with unrestricted
+    OS access is an unattended shell with unrestricted OS access. The
+    allowlist above is a strong first layer, but do not rely on a single
+    runtime boundary.
+
+The only controls an agent cannot override are the ones enforced by the
+operating system, the container runtime, or the hypervisor.
+
+For unattended runs, enforce isolation at the infrastructure level:
+
+| Layer             | What to enforce                                                                                                                                                                                                                                               |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| User account      | Run the agent as a dedicated unprivileged user with no `sudo` access and no membership in privileged groups (`docker`, `wheel`, `adm`).                                                                                                                       |
+| Filesystem        | Restrict the project directory via POSIX permissions or ACLs. The agent should have no access to other users' files or system directories.                                                                                                                    |
+| Container         | Run inside a Docker/Podman sandbox. Mount only the project directory. Drop capabilities (`--cap-drop=ALL`). Disable network if not needed (`--network=none`). Never mount the Docker socket and do not run privileged containers. Prefer rootless containers. |
+| Virtual machine   | Prefer a dedicated VM with no shared folders, no host passthrough, and no keys to other machines.                                                                                                                                                             |
+| Network           | If the agent does not need the internet, disable outbound access entirely. If it does, restrict to specific domains via firewall rules.                                                                                                                       |
+| Resource limits   | Apply CPU, memory, and disk limits (cgroups/container limits). A runaway loop should not fill disk or consume all RAM.                                                                                                                                        |
+| Self-modification | Make instruction files read-only. `CLAUDE.md`, `.claude/settings.local.json`, `.claude/hooks/`, and `.context/CONSTITUTION.md` should not be writable by the agent user.                                                                                      |
+
+A minimal Docker setup for overnight runs:
+
+```bash
+docker run --rm \
+  --network=none \
+  --cap-drop=ALL \
+  --memory=4g \
+  --cpus=2 \
+  -v /path/to/project:/workspace \
+  -w /workspace \
+  your-dev-image \
+  ./loop.sh 2>&1 | tee /tmp/loop.log
+```
+
+!!! tip "Defense in depth"
+    Use multiple layers together: OS-level isolation (*the boundary the
+    agent cannot cross*), a permission allowlist (*what Claude Code will do
+    within that boundary*), and `CONSTITUTION.md` (*a soft nudge for the
+    common case*).
+
+### Step 5: Generate the Loop Script
 
 Use `ctx loop` to generate a `loop.sh` tailored to your AI tool:
 
@@ -120,35 +221,33 @@ ctx loop --tool claude --max-iterations 10
 # Generate for Aider
 ctx loop --tool aider --max-iterations 10
 
-# Custom prompt and output file
-ctx loop --tool claude --prompt TASKS.md --output my-loop.sh
+# Custom prompt file and output filename (default prompt is PROMPT.md in project root)
+ctx loop --tool claude --prompt my-prompt.md --output my-loop.sh
 ```
 
-The generated script reads `PROMPT.md`, pipes it to the AI tool, checks
-for completion signals, and loops until done or the cap is reached. You
-can also use the `/ctx-loop` skill from inside Claude Code.
+The generated script reads `PROMPT.md`, runs the tool, checks for completion
+signals, and loops until done or the cap is reached.
 
-!!! tip "Shell Loop is Best Practice"
-    The shell while loop is the recommended approach for autonomous runs.
-    Each iteration spawns a **fresh AI process**, so the only state that
-    carries between iterations is what lives in `.context/` and git. This
-    is "pure ralph": memory is explicit, not accidental.
+You can also use the `/ctx-loop` skill from inside Claude Code.
 
-    Claude Code's built-in `/loop` command runs iterations within the
-    same session, which means context window state leaks between
-    iterations. 
+!!! tip "A shell loop is best practice"
+    The shell loop approach spawns a fresh AI process each iteration, so
+    the only state that carries between iterations is what lives in
+    `.context/` and git.
 
-    The agent "**remembers**" things from earlier iterations
-    that were never persisted. This is convenient for short explorations
-    (*2-5 iterations*) but less reliable for long unattended runs.
-    See [Autonomous Loops: Shell Loop vs Built-in 
+    Claude Code's built-in `/loop` runs iterations within the same
+    session, which can allow context window state to leak between
+    iterations. This can be convenient for short runs, but it is less
+    reliable for unattended loops. 
+
+    See [Shell Loop vs Built-in
     Loop](../autonomous-loop.md#quick-start-shell-while-loop-recommended)
     for details.
 
-### Step 5: Run with Watch Mode
+### Step 6: Run with Watch Mode
 
-Open two terminals. In the first, run the loop. In the second, run
-`ctx watch` to automatically process context updates from the AI output.
+Open two terminals. In the first, run the loop. In the second, run `ctx watch`
+to process context updates from the AI output.
 
 ```bash
 # Terminal 1: Run the loop
@@ -159,42 +258,49 @@ ctx watch --log /tmp/loop.log --auto-save
 ```
 
 The `--auto-save` flag periodically saves session snapshots to
-`.context/sessions/`. The watch command parses XML context-update
-commands from the AI output and applies them:
+`.context/sessions/`. The watch command parses XML context-update commands from
+the AI output and applies them:
 
 ```xml
 <context-update type="complete">user registration</context-update>
 <context-update type="learning">Email verification needs SMTP configured</context-update>
 ```
 
-### Step 6: Completion Signals End the Loop
+### Step 7: Completion Signals End the Loop
 
-The loop terminates when the agent emits one of these signals:
+The generated script checks for **one** completion signal per run. By
+default this is `SYSTEM_CONVERGED`. You can change it with the
+`--completion` flag:
 
-| Signal               | Meaning                        | What Happens                       |
-|----------------------|--------------------------------|------------------------------------|
-| `SYSTEM_CONVERGED`   | All tasks in TASKS.md are done | Loop exits successfully            |
-| `SYSTEM_BLOCKED`     | Agent cannot proceed           | Loop exits, you review the blocker |
-| `BOOTSTRAP_COMPLETE` | Initial scaffolding done       | Loop exits after setup phase       |
+```bash
+ctx loop --tool claude --completion BOOTSTRAP_COMPLETE --max-iterations 5
+```
+
+The following signals are conventions used in `PROMPT.md`:
+
+| Signal               | Convention                     | How the script handles it                          |
+|----------------------|--------------------------------|----------------------------------------------------|
+| `SYSTEM_CONVERGED`   | All tasks in TASKS.md are done | Detected by default (`--completion` default value) |
+| `SYSTEM_BLOCKED`     | Agent cannot proceed           | Only detected if you set `--completion` to this    |
+| `BOOTSTRAP_COMPLETE` | Initial scaffolding done       | Only detected if you set `--completion` to this    |
+
+The script uses `grep -q` on the agent's output, so any string works as a
+signal. If you need to detect multiple signals in one run, edit the
+generated `loop.sh` to add additional `grep` checks.
 
 When you return in the morning, check the log and the context files:
 
 ```bash
-# See what happened
 tail -100 /tmp/loop.log
-
-# Check task progress
 ctx status
-
-# Load full context to see decisions and learnings
 ctx load
 ```
 
-### Step 7: Use /ctx-implement for Plan Execution
+### Step 8: Use `/ctx-implement` for Plan Execution
 
-Within each iteration, the agent can use `/ctx-implement` to execute
-multi-step plans with verification between each step. This is especially
-useful for complex tasks that involve multiple files.
+Within each iteration, the agent can use `/ctx-implement` to execute multi-step
+plans with verification between steps. This is useful for complex tasks that
+touch multiple files.
 
 The skill breaks a plan into atomic, verifiable steps:
 
@@ -204,70 +310,63 @@ Step 2/6: Add database migration ............. OK
 Step 3/6: Implement registration handler ..... OK
 Step 4/6: Write unit tests ................... OK
 Step 5/6: Run test suite ..................... FAIL
-  → Fixed: missing test dependency
-  → Re-verify ............................ OK
+  -> Fixed: missing test dependency
+  -> Re-verify ................................ OK
 Step 6/6: Update TASKS.md .................... OK
 ```
 
-Each step is verified (build, test, syntax check) before moving to the
-next. Failures are fixed in place, not deferred.
+Each step is verified (build, test, syntax check) before moving to the next.
 
-## Putting It Together
+## Putting It All Together
 
-The full sequence for an overnight unattended run:
+A typical overnight run:
 
 ```bash
-# 1. Set up the project for unattended operation
 ctx init --ralph
+# Edit TASKS.md and PROMPT.md
 
-# 2. Edit TASKS.md with your phased work items
-# 3. Review and customize PROMPT.md
-
-# 4. Generate the loop
 ctx loop --tool claude --max-iterations 20
 
-# 5. Start watch mode in background
-ctx watch --log /tmp/loop.log --auto-save &
+./loop.sh 2>&1 | tee /tmp/loop.log &
+ctx watch --log /tmp/loop.log --auto-save
 
-# 6. Run the loop
-./loop.sh 2>&1 | tee /tmp/loop.log
-
-# 7. Next morning: review results
+# Next morning:
 ctx status
 ctx load
 ```
 
 ## Why Autonomous Loops Work: Proactive Context Persistence
 
-The autonomous loop pattern works **because the agent is proactive about
-persisting context**. Without proactive behavior, the loop degrades into
-disconnected iterations that repeat work, forget decisions, and lose track
-of progress. The agent cannot rely on a human to prompt it — it must treat
-context persistence as part of every task, not as a separate step.
+The autonomous loop pattern works because the agent persists context as part of
+the job.
 
-### The Agent Playbook's Self-Check Drives Autonomy
+Without proactive persistence, the loop degrades into disconnected iterations
+that repeat work, contradict decisions, and lose track of progress. The agent
+cannot rely on a human to prompt it. It must treat context updates as part of
+every task, not as a separate step.
 
-The Agent Playbook defines a self-check prompt that the agent applies
-continuously:
+### The Agent Playbook Self-Check Drives Autonomy
 
-> "If this session ended right now, would the next session know what
-> happened?"
+The Agent Playbook defines a self-check prompt the agent applies continuously:
 
-In interactive sessions, a human might remind the agent to save context.
-When the agent runs unattended, **no one is there to remind it**. The self-check
-becomes the agent's internal trigger: after every meaningful action, the
-agent evaluates whether the context files reflect reality and acts
-immediately if they don't.
+> "If this session ended right now, would the next session know what happened?"
+
+In interactive sessions, a human might remind the agent to save context. When
+the agent runs unattended, nobody is there to remind it.
+
+The self-check becomes the trigger: after meaningful work, the agent evaluates
+whether the context files reflect reality and updates them immediately if they
+do not.
 
 ### What the Agent Does Proactively Between Iterations
 
-At each milestone within an iteration, the agent persists without waiting
-for instructions:
+At milestones within an iteration, the agent persists without waiting for
+instructions:
 
-| Milestone                  | What the Agent Does Proactively                       |
+| Milestone                  | What the agent does proactively                       |
 |----------------------------|-------------------------------------------------------|
 | Completes a task           | Marks it `[x]` in TASKS.md with `#done` timestamp     |
-| Discovers a gotcha         | Adds it to LEARNINGS.md immediately                   |
+| Discovers a gotcha         | Adds it to LEARNINGS.md                               |
 | Makes a design choice      | Records it in DECISIONS.md with rationale             |
 | Identifies follow-up work  | Creates new tasks in TASKS.md with `#added` timestamp |
 | Finishes a phase           | Saves a session snapshot to `.context/sessions/`      |
@@ -275,36 +374,29 @@ for instructions:
 
 ### Example: What Proactive Persistence Looks Like
 
-Here is what the agent does during a single iteration, beyond just writing
-code:
+Here is what the agent does during a single iteration beyond writing code:
 
 ```text
 Iteration 4:
-  1. Read TASKS.md → pick "Add email verification" (#priority:high)
+  1. Read TASKS.md -> pick "Add email verification" (#priority:high)
   2. Add #started:2026-01-25-030012 to the task
-  3. Implement the feature (code, tests, etc.)
-  4. Tests pass → mark task [x], add #done:2026-01-25-031544
-  5. Add learning: "SMTP config must be set before verification
-     handler registers — order matters in init()"
-  6. Add decision: "Use token-based verification links (not codes)
-     because links work better in automated test environments"
-  7. Notice rate limiting is needed → create new task:
-     "- [ ] Add rate limiting to verification endpoint #added:2026-01-25-031602 #priority:medium"
-  8. Commit all changes INCLUDING .context/ files
-  9. No signal emitted → loop continues to iteration 5
+  3. Implement the feature (code, tests, docs if needed)
+  4. Tests pass -> mark task [x], add #done:2026-01-25-031544
+  5. Add learning: "SMTP config must be set before verification handler registers. Order matters in init()."
+  6. Add decision: "Use token-based verification links (not codes) because links work better in automated tests."
+  7. Create follow-up task: "Add rate limiting to verification endpoint" #added:...
+  8. Commit all changes including `.context/`
+  9. No signal emitted -> loop continues to iteration 5
 ```
 
-Steps 2, 4, 5, 6, and 7 are **proactive context persistence**. The agent
-was not asked to do any of them. It does them because the playbook's
-Work-Reflect-Persist cycle is internalized: after completing meaningful
-work, reflect on what happened, then persist before moving on.
+Steps 2, 4, 5, 6, and 7 are proactive context persistence. The agent was not
+asked to do any of them.
 
 ### Session Snapshots at Milestones
 
 For long autonomous runs, the agent saves session snapshots at natural
-boundaries — typically at phase transitions or after completing a cluster
-of related tasks. These snapshots give you a narrative of what happened
-overnight, not just a list of commits:
+boundaries, often at phase transitions or after completing a cluster of related
+tasks:
 
 ```text
 .context/sessions/
@@ -313,66 +405,48 @@ overnight, not just a list of commits:
   2026-01-25-060000-phase3-hardening.md
 ```
 
-Each snapshot summarizes what was accomplished, what decisions were made,
-and what the agent plans to do next. If the loop crashes at 4 AM, the
-snapshot from 4 AM tells the next session (or you) exactly where to resume.
+If the loop crashes at 4 AM, the most recent snapshot tells you exactly where
+to resume.
 
 ### The Persistence Contract
 
 The autonomous loop has an implicit contract:
 
-1. **Every iteration reads context** — TASKS.md, DECISIONS.md, LEARNINGS.md
-2. **Every iteration writes context** — task updates, new learnings, decisions
-3. **Every commit includes `.context/`** — so the next iteration sees changes
-4. **Context is always current** — if the loop stopped right now, nothing is lost
+1. Every iteration reads context: `TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`
+2. Every iteration writes context: task updates, new learnings, decisions
+3. Every commit includes `.context/` so the next iteration sees changes
+4. Context stays current: if the loop stopped right now, nothing important is lost
 
-Break any part of this contract and the loop degrades: iterations repeat
-work, contradict earlier decisions, or lose track of what's done. The
-agent's proactive discipline is what holds the loop together.
+Break any part of this contract and the loop degrades.
 
 ## Tips
 
-- **Start with a small iteration cap.** Use `--max-iterations 5` for
-  your first run to verify the loop behaves correctly before leaving
-  it unattended.
+!!! warning "Markdown is not enforcement"
+    Your real guardrails are permissions and isolation, not markdown.
+    `CONSTITUTION.md` can nudge the agent, but it is probabilistic. The
+    permission allowlist and OS isolation are deterministic. For
+    unattended runs, trust the sandbox and the allowlist, not the prose.
 
-- **Keep tasks atomic.** Each task should be completable in a single
-  iteration. "Build the entire authentication system" is too broad;
-  break it into registration, login, password reset, etc.
-
-- **Use CONSTITUTION.md for guardrails.** Add rules like "never delete
-  production data" or "always run tests before committing" to prevent
-  the agent from making dangerous mistakes at 3 AM.
-
-- **Check for signal discipline.** If the loop runs forever, the agent
-  is not emitting `SYSTEM_CONVERGED` or `SYSTEM_BLOCKED`. Add explicit
-  instructions to PROMPT.md reminding it to signal after every task.
-
-- **Commit after context updates.** The order matters: complete the
-  coding work, update context files (`ctx complete`, `ctx add`),
-  commit everything including `.context/`, then signal. If context
-  updates are not committed, the next iteration loses them.
-
-- **Use `/ctx-context-monitor` for long sessions.** In Claude Code,
-  the context checkpoint hook fires automatically and alerts you when
-  context capacity is running low, so the agent can save its work
-  before hitting limits.
+* Start with a small iteration cap. Use `--max-iterations 5` on your first run.
+* Keep tasks atomic. Each task should be completable in a single iteration.
+* Check signal discipline. If the loop runs forever, the agent is not emitting
+  `SYSTEM_CONVERGED` or `SYSTEM_BLOCKED`. Make the signal requirement explicit
+  in `PROMPT.md`.
+* Commit after context updates. Finish code, update `.context/`, commit including
+  `.context/`, then signal.
+* Use `/ctx-context-monitor` for long runs. It can warn when context capacity is
+  running low so the agent saves before hitting limits.
 
 ## Next Up
 
-**[Turning Activity into Content](publishing.md)** -- Generate blog posts and changelogs from your project activity.
+**[Turning Activity into Content](publishing.md)**:
+Generate blog posts and changelogs from your project activity.
 
 ## See Also
 
-- [Autonomous Loops](../autonomous-loop.md): Full documentation of
-  the loop pattern, PROMPT.md templates, and troubleshooting
-- [CLI Reference: ctx loop](../cli-reference.md#ctx-loop): Command
-  flags and options
-- [CLI Reference: ctx watch](../cli-reference.md#ctx-watch): Watch
-  mode details
-- [CLI Reference: ctx init](../cli-reference.md#ctx-init): Init flags
-  including `--ralph` for unattended operation
-- [The Complete Session](session-lifecycle.md): Interactive workflow
-  (the human-attended counterpart)
-- [Tracking Work Across Sessions](task-management.md): How to
-  structure TASKS.md effectively
+* [Autonomous Loops](../autonomous-loop.md): loop pattern, PROMPT.md templates, troubleshooting
+* [CLI Reference: ctx loop](../cli-reference.md#ctx-loop): flags and options
+* [CLI Reference: ctx watch](../cli-reference.md#ctx-watch): watch mode details
+* [CLI Reference: ctx init](../cli-reference.md#ctx-init): init flags including `--ralph`
+* [The Complete Session](session-lifecycle.md): interactive workflow
+* [Tracking Work Across Sessions](task-management.md): structuring TASKS.md

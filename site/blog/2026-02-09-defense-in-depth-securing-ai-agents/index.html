@@ -12,7 +12,7 @@
         <meta name="author" content="Jose Alekhinne">
       
       
-        <link rel="canonical" href="https://ctx.ist/blog/2026-02-01-refactoring-with-intent/">
+        <link rel="canonical" href="https://ctx.ist/blog/2026-02-09-defense-in-depth-securing-ai-agents/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Refactoring with Intent: Human-Guided Sessions in AI Development - ctx: do you remember?</title>
+        <title>Defense in Depth: Securing AI Agents - ctx: do you remember?</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#refactoring-with-intent" class="md-skip">
+        <a href="#defense-in-depth-securing-ai-agents" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Refactoring with Intent: Human-Guided Sessions in AI Development
+              Defense in Depth: Securing AI Agents
             
           </span>
         </div>
@@ -632,10 +632,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#human-guided-sessions-in-ai-development" class="md-nav__link">
+  <a href="#when-markdown-is-not-a-security-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Human-Guided Sessions in AI Development
+        When Markdown Is Not a Security Boundary
       
     </span>
   </a>
@@ -643,10 +643,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-velocity-trap" class="md-nav__link">
+  <a href="#the-realization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Velocity Trap
+        The Realization
       
     </span>
   </a>
@@ -654,44 +654,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-shift-from-velocity-to-intent" class="md-nav__link">
+  <a href="#five-layers-each-with-a-hole" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Shift: From Velocity to Intent
+        Five Layers, Each With a Hole
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-decomposition-embedgo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Decomposition: embed.go
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-documentation-debt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Documentation Debt
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The Documentation Debt">
+    <nav class="md-nav" aria-label="Five Layers, Each With a Hole">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#terminology-fixes" class="md-nav__link">
+  <a href="#layer-1-soft-instructions-probabilistic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Terminology Fixes
+        Layer 1: Soft Instructions (Probabilistic)
       
     </span>
   </a>
@@ -699,10 +677,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#go-docstrings" class="md-nav__link">
+  <a href="#layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Go Docstrings
+        Layer 2: Application Controls (Deterministic at Runtime, Mutable Across Iterations)
       
     </span>
   </a>
@@ -710,10 +688,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cli-output-convention" class="md-nav__link">
+  <a href="#layer-3-os-level-isolation-unbypassable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI Output Convention
+        Layer 3: OS-Level Isolation (Unbypassable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-network-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4: Network Controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-infrastructure-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5: Infrastructure Isolation
       
     </span>
   </a>
@@ -726,10 +726,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-journal-system" class="md-nav__link">
+  <a href="#the-pattern" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Journal System
+        The Pattern
       
     </span>
   </a>
@@ -737,10 +737,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-constants-consolidation" class="md-nav__link">
+  <a href="#common-mistakes-i-see" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Constants Consolidation
+        Common Mistakes I See
       
     </span>
   </a>
@@ -748,71 +748,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#i-relearned-my-lessons" class="md-nav__link">
+  <a href="#the-connection-to-context-engineering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        I (Re)learned My Lessons
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="I (Re)learned My Lessons">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-velocity-and-quality-arent-opposites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Velocity and Quality Aren't Opposites
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-documentation-is-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Documentation IS Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-decomposition-deletion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Decomposition &gt; Deletion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-meta-tools-pay-dividends" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Meta-Tools Pay Dividends
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-release-v020" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Release: v0.2.0
+        The Connection to Context Engineering
       
     </span>
   </a>
@@ -820,10 +759,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-meta-continues" class="md-nav__link">
+  <a href="#the-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Meta Continues
+        The Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-ctx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed in ctx
       
     </span>
   </a>
@@ -856,352 +806,338 @@
   
 
 
-<h1 id="refactoring-with-intent">Refactoring with Intent<a class="headerlink" href="#refactoring-with-intent" title="Permanent link">&para;</a></h1>
+<h1 id="defense-in-depth-securing-ai-agents">Defense in Depth: Securing AI Agents<a class="headerlink" href="#defense-in-depth-securing-ai-agents" title="Permanent link">&para;</a></h1>
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="human-guided-sessions-in-ai-development">Human-Guided Sessions in AI Development<a class="headerlink" href="#human-guided-sessions-in-ai-development" title="Permanent link">&para;</a></h2>
-<p><em>Jose Alekhinne / 2026-02-01</em></p>
+<h2 id="when-markdown-is-not-a-security-boundary">When Markdown Is Not a Security Boundary<a class="headerlink" href="#when-markdown-is-not-a-security-boundary" title="Permanent link">&para;</a></h2>
+<p><em>Jose Alekhinne / 2026-02-09</em></p>
 <div class="admonition question">
-<p class="admonition-title">What happens when you slow down?</p>
-<p>YOLO mode shipped 14 commands in a week. But technical debt doesn't
-send invoices—it just waits.</p>
+<p class="admonition-title">What happens when your AI agent runs overnight and nobody is watching?</p>
+<p>It follows instructions. That is the problem.</p>
+<p>Not because it is malicious. Because it is <strong>controllable</strong>.
+It follows instructions from context, and context can be poisoned.</p>
 </div>
-<p>This is the story of what happened when I stopped auto-accepting everything
-and started <strong>guiding the AI with intent</strong>. The result: 27 commits across
-4 days, a major version release, and lessons that apply far beyond <code>ctx</code>.</p>
-<div class="admonition info">
-<p class="admonition-title">The Refactoring Window</p>
-<p><strong>January 28 - February 1, 2026</strong></p>
-<p>From commit <code>bb1cd20</code> to the v0.2.0 release merge.<br />
-<em>(this window matters more than the individual commits:
-it's where intent replaced velocity.)</em></p>
-</div>
-<h2 id="the-velocity-trap">The Velocity Trap<a class="headerlink" href="#the-velocity-trap" title="Permanent link">&para;</a></h2>
-<p>In the <a href="../2026-01-27-building-ctx-using-ctx/" title="Building ctx Using ctx">previous post</a>, I documented the YOLO mode that birthed
-<code>ctx</code>: auto-accept everything, let the AI run free, ship features fast.
-It worked: <strong>until it didn't</strong>.</p>
-<p>The codebase had accumulated patterns I didn't notice during the sprint:</p>
+<p>I was writing the <a href="../../recipes/autonomous-loops/">autonomous loops recipe</a> for <code>ctx</code>:
+the guide for running an AI agent in a loop overnight, unattended,
+working through tasks while you sleep. The original draft had a tip
+at the bottom:</p>
+<blockquote>
+<p><em>Use <code>CONSTITUTION.md</code> for guardrails. Tell the agent "never delete
+tests" and it usually won't.</em></p>
+</blockquote>
+<p>Then I read that sentence back and realized: <strong>that is wishful
+thinking.</strong></p>
+<h2 id="the-realization">The Realization<a class="headerlink" href="#the-realization" title="Permanent link">&para;</a></h2>
+<p><code>CONSTITUTION.md</code> is a Markdown file. The agent reads it at session
+start alongside everything else in <code>.context/</code>. It is <em>one</em> source
+of instructions in a context window that also contains system prompts,
+project files, conversation history, tool outputs, and whatever the
+agent fetched from the internet.</p>
+<p>An attacker who can inject content into <em>any</em> of those sources can
+redirect the agent's behavior. And "attacker" does not always mean
+a person with malicious intent. It can be:</p>
 <table>
 <thead>
 <tr>
-<th>YOLO Pattern</th>
-<th>Where Found</th>
-<th>Why It Hurts</th>
+<th>Vector</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>"TASKS.md"</code> as literal</td>
-<td>10+ files</td>
-<td>One typo = silent failure</td>
+<td>A dependency</td>
+<td>A malicious npm package with instructions in its README or error output</td>
 </tr>
 <tr>
-<td><code>dir + "/" + file</code></td>
-<td>Path construction</td>
-<td>Breaks on Windows</td>
+<td>A URL</td>
+<td>Documentation page with embedded adversarial instructions</td>
 </tr>
 <tr>
-<td>Monolithic <code>embed.go</code></td>
-<td>150+ lines, 5 concerns</td>
-<td>Untestable, hard to extend</td>
+<td>A project file</td>
+<td>A contributor who adds instructions to <code>CLAUDE.md</code> or <code>.cursorrules</code></td>
 </tr>
 <tr>
-<td>Inconsistent docstrings</td>
-<td>Everywhere</td>
-<td>AI can't learn project conventions</td>
+<td>The agent itself</td>
+<td>In an autonomous loop, the agent modifies its own config between iterations</td>
+</tr>
+<tr>
+<td>A command output</td>
+<td>An error message containing instructions the agent interprets and follows</td>
 </tr>
 </tbody>
 </table>
-<p>I didn't see these during YOLO mode because, honestly, <strong>I wasn't looking</strong>.</p>
-<p><strong>Auto-accept means auto-ignore</strong>.</p>
-<p>In YOLO mode, every file you open looks fine until you try to change it.  </p>
-<p>In contrast, refactoring mode is <strong>when</strong> you start paying attention to that 
-<strong>hidden friction</strong>.</p>
-<h2 id="the-shift-from-velocity-to-intent">The Shift: From <strong>Velocity</strong> to <strong>Intent</strong><a class="headerlink" href="#the-shift-from-velocity-to-intent" title="Permanent link">&para;</a></h2>
-<p>On January 28<sup>th</sup>, I changed the workflow:</p>
-<ol>
-<li><strong>Read every diff before accepting</strong></li>
-<li><strong>Ask "why this way?" before committing</strong></li>
-<li><strong>Document patterns, not just features</strong></li>
-</ol>
-<p>The first commit of this era was telling:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>feat: add structured attributes to context-update XML format
+<p><strong>That last vector is the one that kept me up at night</strong> (<em>literally!</em>):</p>
+<p>In an autonomous loop, the agent modifies files as part of its job. If it
+modifies its <em>own</em> configuration files, the next iteration loads the
+modified config. No human reviews it. No diff is shown. The agent
+that starts iteration <code>N+1</code> is running with rules written by
+iteration <code>N</code>.</p>
+<p><strong>The agent can rewrite its own guardrails.</strong></p>
+<h2 id="five-layers-each-with-a-hole">Five Layers, Each With a Hole<a class="headerlink" href="#five-layers-each-with-a-hole" title="Permanent link">&para;</a></h2>
+<p>What followed was a week of peeling back assumptions. Every defense
+I examined had a bypass, and the bypass was always the same shape:
+the defense was enforced at a level the agent could reach.</p>
+<h3 id="layer-1-soft-instructions-probabilistic">Layer 1: Soft Instructions (Probabilistic)<a class="headerlink" href="#layer-1-soft-instructions-probabilistic" title="Permanent link">&para;</a></h3>
+<p><code>CONSTITUTION.md</code>, the Agent Playbook, system prompts. These tell
+the agent what to do. The agent <em>usually</em> follows them.</p>
+<p><strong>The hole</strong>: Prompt injection. A sufficiently crafted payload
+overrides soft instructions. Long context windows dilute attention
+on rules stated early. Edge cases where instructions are ambiguous
+get resolved in unpredictable ways.</p>
+<p><strong>Verdict</strong>: Necessary. Not sufficient. Good for the common case.
+Never trust it as a security boundary.</p>
+<h3 id="layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations">Layer 2: Application Controls (Deterministic at Runtime, Mutable Across Iterations)<a class="headerlink" href="#layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations" title="Permanent link">&para;</a></h3>
+<p>Permission allowlists in <code>.claude/settings.local.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;allow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="s2">&quot;Bash(make:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="s2">&quot;Bash(go:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="s2">&quot;Bash(git:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="s2">&quot;Read&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="s2">&quot;Write&quot;</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="s2">&quot;Edit&quot;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Not a new feature—a <em>refinement</em>:</p>
-<p>The XML format for context updates needed <code>type</code> and <code>timestamp</code> attributes. </p>
-<p>YOLO mode would have shipped something that worked. Intentional mode asked:<br />
-<strong>"What does well-structured look like?"</strong></p>
-<h2 id="the-decomposition-embedgo">The Decomposition: <code>embed.go</code><a class="headerlink" href="#the-decomposition-embedgo" title="Permanent link">&para;</a></h2>
-<p>The most satisfying refactor was splitting <code>internal/claude/embed.go</code>.</p>
-<p><strong>Before</strong>: One 153-line file doing five things:</p>
-<ul>
-<li>Command registration</li>
-<li>Hook generation</li>
-<li>Permission handling</li>
-<li>Script templates</li>
-<li>Type definitions</li>
-</ul>
-<p><strong>After</strong>: Five focused modules:</p>
+<p>If <code>rm</code>, <code>curl</code>, <code>sudo</code>, or <code>docker</code> are not in the allowlist, the
+agent cannot invoke them. This is deterministic. The application
+enforces it regardless of what any prompt says.</p>
+<p><strong>The hole</strong>: The agent can modify the allowlist itself. It has
+<code>Write</code> permission. The allowlist lives in a file. The agent writes
+to the file. The next iteration loads the modified allowlist.</p>
+<p>The application enforces the rules, but the application reads the
+rules from files the agent can write.</p>
+<p><strong>Verdict</strong>: Strong first layer. Must be combined with
+self-modification prevention.</p>
+<h3 id="layer-3-os-level-isolation-unbypassable">Layer 3: OS-Level Isolation (Unbypassable)<a class="headerlink" href="#layer-3-os-level-isolation-unbypassable" title="Permanent link">&para;</a></h3>
+<p>This is where the defenses stop having holes in the same shape.</p>
+<p>The operating system enforces access controls that no
+application-level trick can override. An unprivileged user cannot
+read files owned by root. A process without <code>CAP_NET_RAW</code> cannot
+open raw sockets. These are kernel boundaries.</p>
 <table>
 <thead>
 <tr>
-<th>File</th>
-<th>Lines</th>
-<th>Responsibility</th>
+<th>Control</th>
+<th>What it stops</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>cmd.go</code></td>
-<td>46</td>
-<td>Command registration</td>
+<td>Dedicated unprivileged user</td>
+<td>Privilege escalation, <code>sudo</code>, group-based access</td>
 </tr>
 <tr>
-<td><code>hook.go</code></td>
-<td>64</td>
-<td>Hook configuration</td>
+<td>Filesystem permissions</td>
+<td>Lateral movement to other projects, system config</td>
 </tr>
 <tr>
-<td><code>perm.go</code></td>
-<td>25</td>
-<td>Permission handling</td>
-</tr>
-<tr>
-<td><code>script.go</code></td>
-<td>47</td>
-<td>Script templates</td>
-</tr>
-<tr>
-<td><code>types.go</code></td>
-<td>7</td>
-<td>Type definitions</td>
+<td>Immutable config files</td>
+<td>Self-modification of guardrails between iterations</td>
 </tr>
 </tbody>
 </table>
-<p>The refactor also renamed functions to follow Go conventions:</p>
-<div class="language-go highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Before: unnecessary prefixes</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nx">GetAutoSaveScript</span><span class="p">()</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nx">GetBlockNonPathCtxScript</span><span class="p">()</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nx">ListCommands</span><span class="p">()</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nx">CreateDefaultHooks</span><span class="p">()</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">// After: idiomatic Go</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nx">AutoSaveScript</span><span class="p">()</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nx">BlockNonPathCtxScript</span><span class="p">()</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nx">Commands</span><span class="p">()</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nx">DefaultHooks</span><span class="p">()</span>
+<p>Make the agent's instruction files read-only: <code>CLAUDE.md</code>,
+<code>.claude/settings.local.json</code>, <code>.claude/hooks/</code>,
+<code>.context/CONSTITUTION.md</code>. Own them as a different user, or mark
+them immutable with <code>chattr +i</code> on Linux.</p>
+<p><strong>The hole</strong>: Actions within the agent's legitimate scope. If the
+agent has write access to source code (which it needs), it can
+introduce vulnerabilities in the code itself. You cannot prevent
+this without removing the agent's ability to do its job.</p>
+<p><strong>Verdict</strong>: Essential. This is the layer that makes Layers 1 and 2
+trustworthy.</p>
+<p>OS-level isolation does not make the agent safe; it makes the other
+layers meaningful.</p>
+<h3 id="layer-4-network-controls">Layer 4: Network Controls<a class="headerlink" href="#layer-4-network-controls" title="Permanent link">&para;</a></h3>
+<p>An agent that cannot reach the internet cannot exfiltrate data.
+It also cannot ingest new instructions mid-loop from external
+documents, error pages, or hostile content.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Container with no network</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="o">=</span>none<span class="w"> </span>...
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Or firewall rules allowing only package registries</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-d<span class="w"> </span>registry.npmjs.org<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-d<span class="w"> </span>proxy.golang.org<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-j<span class="w"> </span>DROP
 </span></code></pre></div>
-<p>This wasn't about character count. It was about <strong>teaching the AI</strong>
-what good Go looks like in <strong>this</strong> project.</p>
-<div class="admonition note">
-<p class="admonition-title">Project Conventions</p>
-<p>What I wanted from AI was to <strong>understand</strong> and <strong>follow</strong> the project's 
-conventions, and <strong>trust</strong> the author.</p>
-</div>
-<p>The next time it generates code, it has better examples to learn from.</p>
-<h2 id="the-documentation-debt">The Documentation Debt<a class="headerlink" href="#the-documentation-debt" title="Permanent link">&para;</a></h2>
-<p>YOLO mode created features. It didn't create documentation standards.</p>
-<p>The January 29<sup>th</sup> sessions focused on standardization.</p>
-<h3 id="terminology-fixes">Terminology Fixes<a class="headerlink" href="#terminology-fixes" title="Permanent link">&para;</a></h3>
-<ul>
-<li>"context-update" → "entry" (what users actually call them)</li>
-<li>Consistent naming across CLI, docs, and code comments</li>
-</ul>
-<h3 id="go-docstrings">Go Docstrings<a class="headerlink" href="#go-docstrings" title="Permanent link">&para;</a></h3>
-<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Before: inconsistent or missing</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Parse</span><span class="p">(</span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="nx">Entry</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">// After: standardized sections</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// Parse extracts an entry from a markdown string.</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">//</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// Parameters:</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">//   - s: The markdown string to parse</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">//</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">// Returns:</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">//   - Entry with populated fields, or zero value if parsing fails</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="kd">func</span><span class="w"> </span><span class="nx">Parse</span><span class="p">(</span><span class="nx">s</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="nx">Entry</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">}</span>
+<p>If the agent genuinely does not need the network, disable it
+entirely. If it needs to fetch dependencies, allow specific
+registries and block everything else.</p>
+<p><strong>The hole</strong>: None, if the agent does not need the network. The
+tradeoff is that many real workloads need dependency resolution,
+so a full airgap requires pre-populated caches.</p>
+<h3 id="layer-5-infrastructure-isolation">Layer 5: Infrastructure Isolation<a class="headerlink" href="#layer-5-infrastructure-isolation" title="Permanent link">&para;</a></h3>
+<p>The strongest boundary is a separate machine.
+The moment you stop arguing about prompts and start arguing about
+kernels, you are finally doing security.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--network<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--cap-drop<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--memory<span class="o">=</span>4g<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--cpus<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-v<span class="w"> </span>/path/to/project:/workspace<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-w<span class="w"> </span>/workspace<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>your-dev-image<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>./loop.sh
 </span></code></pre></div>
-<p>This is intentionally more structured than typical GoDoc:
-It serves as documentation <strong>and</strong> as training data for future 
-AI-generated code.</p>
-<h3 id="cli-output-convention">CLI Output Convention<a class="headerlink" href="#cli-output-convention" title="Permanent link">&para;</a></h3>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>All CLI output follows: [emoji] [Title]: [message]
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Examples:
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  ✓ Decision added: Use symbolic types for entry categories
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  ⚠ Warning: No tasks found
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  ✗ Error: File not found
-</span></code></pre></div>
-<p>A consistent output shape makes both human scanning and AI reasoning
-more reliable.</p>
-<p>These aren't exciting commits. But they are <strong>force multipliers</strong>:</p>
-<p>Every future AI session now has better examples to follow.</p>
-<h2 id="the-journal-system">The Journal System<a class="headerlink" href="#the-journal-system" title="Permanent link">&para;</a></h2>
-<p><strong>If you only read one section, read this one</strong>:</p>
-<p>This is where <strong>v0.2.0</strong> becomes more than a refactor.</p>
-<p>The biggest feature of this change window wasn't a refactor—it was
-the <strong>journal system</strong>.</p>
-<div class="admonition note">
-<p class="admonition-title">45 files changed, 1680 insertions</p>
-<p>This commit added the infrastructure for synthesizing AI session
-history into human-readable content.</p>
-</div>
-<p>The journal system includes:</p>
+<p>Critical: <strong>never mount the Docker socket</strong>
+(<code>/var/run/docker.sock</code>). An agent with socket access can spawn
+sibling containers with full host access, effectively escaping
+the sandbox. This is not theoretical: the Docker socket grants
+root-equivalent access to the host.</p>
+<p><strong>Use rootless Docker or Podman to eliminate this escalation path
+entirely</strong>.</p>
+<p>Virtual machines are even stronger. The guest kernel has no
+visibility into the host OS. No shared folders, no filesystem
+passthrough, no SSH keys to other machines.</p>
+<h2 id="the-pattern">The Pattern<a class="headerlink" href="#the-pattern" title="Permanent link">&para;</a></h2>
+<p>Each layer is straightforward: The strength is in the <em>combination</em>:</p>
 <table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Purpose</th>
+<th>Layer</th>
+<th>Implementation</th>
+<th>What it stops</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>ctx recall export</code></td>
-<td>Export sessions to markdown in <code>.context/journal/</code></td>
+<td>Soft instructions</td>
+<td><code>CONSTITUTION.md</code></td>
+<td>Common mistakes (probabilistic)</td>
 </tr>
 <tr>
-<td><code>ctx journal site</code></td>
-<td>Generate static site from journal entries</td>
+<td>Application allowlist</td>
+<td><code>.claude/settings.local.json</code></td>
+<td>Unauthorized commands (deterministic within runtime)</td>
 </tr>
 <tr>
-<td><code>ctx serve</code></td>
-<td>Convenience wrapper for the static site server</td>
+<td>Immutable config</td>
+<td><code>chattr +i</code> on config files</td>
+<td>Self-modification between iterations</td>
 </tr>
 <tr>
-<td><code>/ctx-journal-enrich</code></td>
-<td>Slash command to add frontmatter and tags</td>
+<td>Unprivileged user</td>
+<td>Dedicated user, no sudo</td>
+<td>Privilege escalation</td>
 </tr>
 <tr>
-<td><code>/ctx-blog</code></td>
-<td>Generate blog posts from recent activity</td>
+<td>Container</td>
+<td><code>--cap-drop=ALL --network=none</code></td>
+<td>Host escape, data exfiltration</td>
 </tr>
 <tr>
-<td><code>/ctx-blog-changelog</code></td>
-<td>Generate changelog-style blog posts</td>
+<td>Resource limits</td>
+<td><code>--memory=4g --cpus=2</code></td>
+<td>Resource exhaustion</td>
 </tr>
 </tbody>
 </table>
-<p>...and the meta continues: <strong>this blog post was generated using <code>/ctx-blog</code></strong>.</p>
-<p>The session history from January 28–31 was </p>
+<p>No layer is redundant. Each one catches what the others miss:</p>
 <ul>
-<li><strong>exported</strong>, </li>
-<li><strong>enriched</strong>,</li>
-<li>and <strong>synthesized</strong> </li>
+<li>The soft instructions handle the 99% case: "<em>don't delete tests.</em>"</li>
+<li>The allowlist prevents the agent from running commands it should
+  not.</li>
+<li>The immutable config prevents the agent from modifying the
+  allowlist.</li>
+<li>The unprivileged user prevents the agent from removing
+  the immutable flag.</li>
+<li>The container prevents the agent from reaching
+  anything outside its workspace.</li>
+<li>The resource limits prevent the agent from consuming all system resources.</li>
 </ul>
-<p>into the narrative you are reading.</p>
-<h2 id="the-constants-consolidation">The Constants Consolidation<a class="headerlink" href="#the-constants-consolidation" title="Permanent link">&para;</a></h2>
-<p>The final refactoring session addressed the remaining <em>magic strings</em>:</p>
-<div class="language-go highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="c1">// Comment markers</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">CommentOpen</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&lt;!--&quot;</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nx">CommentClose</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;--&gt;&quot;</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="c1">// Index markers</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nx">MarkerIndexStart</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&lt;!-- INDEX:START --&gt;&quot;</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nx">MarkerIndexEnd</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&lt;!-- INDEX:END --&gt;&quot;</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="c1">// Newlines</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nx">NewlineLF</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;\n&quot;</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nx">NewlineCRLF</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;\r\n&quot;</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">)</span>
-</span></code></pre></div>
-<p>The work also introduced <strong>thread safety</strong> in the <strong>recall parser</strong> and
-centralized shared validation logic; removing duplication that had
-quietly spread during YOLO mode.</p>
-<h2 id="i-relearned-my-lessons">I (Re)learned My Lessons<a class="headerlink" href="#i-relearned-my-lessons" title="Permanent link">&para;</a></h2>
-<p>Similar to what I've learned in 
-<a href="../2026-01-27-building-ctx-using-ctx/" title="Building ctx Using ctx">the former human-assisted refactoring post</a>, this
-journey also made me realize that "<em>AI-only code generation</em>"
-isn't sustainable in the long term.</p>
-<h3 id="1-velocity-and-quality-arent-opposites">1. Velocity and Quality Aren't Opposites<a class="headerlink" href="#1-velocity-and-quality-arent-opposites" title="Permanent link">&para;</a></h3>
-<p>YOLO mode has its place: for <em>prototyping</em>, <em>exploration</em>, and <em>discovery</em>.</p>
-<p><strong>BUT</strong> (<em>and it's a huge "but"</em>), it needs to be followed by 
-<strong>consolidation sessions</strong>.</p>
-<p>The ratio that worked for me: <strong>3:1</strong>.</p>
-<ul>
-<li>Three YOLO sessions create enough surface area to reveal patterns;</li>
-<li>the fourth session turns those patterns into structure.</li>
+<p><strong>Remove any one layer and there is an attack path through the
+remaining ones.</strong></p>
+<h2 id="common-mistakes-i-see">Common Mistakes I See<a class="headerlink" href="#common-mistakes-i-see" title="Permanent link">&para;</a></h2>
+<p>These are real patterns, not hypotheticals:</p>
+<p><strong>"I'll just use <code>--dangerously-skip-permissions</code>."</strong> This disables
+Layer 2 entirely. Without Layers 3 through 5, you have no
+protection at all. The flag means what it says. Only use it inside
+a properly isolated container or VM.</p>
+<p><strong>"The agent is sandboxed in Docker."</strong> A Docker container with the
+Docker socket mounted, running as root, with <code>--privileged</code>, and
+full network access is not sandboxed. It is a root shell with extra
+steps.</p>
+<p><strong>"I reviewed the CLAUDE.md, it's fine."</strong> You reviewed it before
+the loop started. The agent modified it during iteration 3. Iteration
+4 loaded the modified version. Unless the file is immutable, your
+review is stale.</p>
+<p><strong>"The agent only has access to this one project."</strong> Does the
+project directory contain <code>.env</code> files? SSH keys? API tokens?
+A <code>.git/config</code> with push access to a remote? Filesystem isolation
+means isolating what is <em>in</em> the directory too.</p>
+<h2 id="the-connection-to-context-engineering">The Connection to Context Engineering<a class="headerlink" href="#the-connection-to-context-engineering" title="Permanent link">&para;</a></h2>
+<p>This is the same lesson I keep rediscovering, wearing different
+clothes.</p>
+<p>In <a href="../2026-02-03-the-attention-budget/">The Attention Budget</a>, I wrote about how every
+token competes for the AI's focus. Security instructions in
+<code>CONSTITUTION.md</code> are subject to the same budget pressure: if the
+context window is full of code, error messages, and tool outputs,
+the security rules stated at the top get diluted.</p>
+<p>In <a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>, I wrote about how
+custom instructions can conflict with the AI's built-in behavior.
+Security rules have the same problem: telling an agent "never run
+curl" in Markdown while giving it unrestricted shell access creates
+a contradiction. The agent resolves contradictions unpredictably.</p>
+<p>In <a href="../2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a>, I wrote about how
+generic templates fail because they do not encode project-specific
+knowledge. Generic security advice fails the same way. "Don't
+exfiltrate data" is a category. Blocking outbound network access is
+a control.</p>
+<p><strong>The pattern across all of these</strong>: Soft instructions are useful
+for the common case. Hard boundaries are required for security.
+Know which is which.</p>
+<h2 id="the-checklist">The Checklist<a class="headerlink" href="#the-checklist" title="Permanent link">&para;</a></h2>
+<p>Before running an unattended AI agent:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Agent runs as a dedicated unprivileged user (no sudo, no
+  docker group)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Agent's config files are immutable or owned by a different
+  user</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Permission allowlist restricts tools to the project's
+  toolchain</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Container drops all capabilities (<code>--cap-drop=ALL</code>)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Docker socket is NOT mounted</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Network is disabled or restricted to specific domains</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Resource limits are set (memory, CPU, disk)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No SSH keys, API tokens, or credentials are accessible</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Project directory does not contain <code>.env</code> or secrets files</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Iteration cap is set (<code>--max-iterations</code>)</li>
 </ul>
-<h3 id="2-documentation-is-code">2. Documentation <strong>IS</strong> Code<a class="headerlink" href="#2-documentation-is-code" title="Permanent link">&para;</a></h3>
-<p>When I standardized docstrings, I wasn't just writing docs.
-I was <strong>training future AI sessions</strong>.</p>
-<p>Every example of good code becomes a template for generated code.</p>
-<h3 id="3-decomposition-deletion">3. Decomposition &gt; Deletion<a class="headerlink" href="#3-decomposition-deletion" title="Permanent link">&para;</a></h3>
-<p>When <code>embed.go</code> became unwieldy, the temptation was to remove functionality.</p>
-<p>The right answer was decomposition:</p>
-<ul>
-<li>Same functionality</li>
-<li>Better organization</li>
-<li>Easier to test</li>
-<li>Easier to extend</li>
-</ul>
-<p>The result: more lines overall, but dramatically better structure.</p>
-<h3 id="4-meta-tools-pay-dividends">4. Meta-Tools Pay Dividends<a class="headerlink" href="#4-meta-tools-pay-dividends" title="Permanent link">&para;</a></h3>
-<p>The <strong>journal system</strong> took almost a full day to implement.</p>
-<p>Yet it paid for itself immediately:</p>
-<ul>
-<li>This blog post was generated from session history</li>
-<li>Future posts will be easier</li>
-<li>The archaeological record is now <strong>browsable</strong>, not just <code>grep</code>-able</li>
-</ul>
-<h2 id="the-release-v020">The Release: v0.2.0<a class="headerlink" href="#the-release-v020" title="Permanent link">&para;</a></h2>
-<p>The refactoring window culminated in the v0.2.0 release.</p>
-<p>What's in v0.2.0:</p>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Changes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Features</strong></td>
-<td>Journal system, quick reference indexes, global flags</td>
-</tr>
-<tr>
-<td><strong>Refactors</strong></td>
-<td>Module decomposition, constants consolidation, CRLF handling</td>
-</tr>
-<tr>
-<td><strong>Docs</strong></td>
-<td>Standardized terminology, Go docstrings, CLI conventions</td>
-</tr>
-<tr>
-<td><strong>Quality</strong></td>
-<td>Thread safety, shared validation, linter fixes</td>
-</tr>
-</tbody>
-</table>
-<p>The version bump was symbolic.</p>
-<p>The real change was how the codebase felt.</p>
-<p>Opening files no longer triggered the familiar
-<em>"ugh, I need to clean this up"</em> reaction.</p>
-<h2 id="the-meta-continues">The Meta Continues<a class="headerlink" href="#the-meta-continues" title="Permanent link">&para;</a></h2>
-<p>This post was written using the tools built during this refactoring window:</p>
-<ol>
-<li>Session history exported via <code>ctx recall export</code></li>
-<li>Journal entries enriched via <code>/ctx-journal-enrich</code></li>
-<li>Blog draft generated via <code>/ctx-blog</code></li>
-<li>Final editing done (<em>by yours truly</em>), with full project context loaded</li>
-</ol>
-<div class="admonition info">
-<p class="admonition-title">The Context Is Massive</p>
-<p>The <code>ctx</code> session files now contain 50+ development snapshots: each one
-capturing <strong>decisions</strong>, <strong>learnings</strong>, and <strong>intent</strong>.</p>
-</div>
-<div class="admonition quote">
-<p class="admonition-title">The Moral of the Story</p>
-<ul>
-<li><strong>YOLO mode</strong> builds <strong>the prototype</strong>.</li>
-<li><strong>Intentional mode</strong> builds <strong>the product</strong>.</li>
-</ul>
-</div>
-<p>Schedule both, or you'll only get one, <strong>if</strong> you're lucky.</p>
+<p>This checklist lives in the <a href="../../agent-security/">Agent Security</a>
+reference alongside the full threat model and detailed guidance
+for each layer.</p>
+<h2 id="what-changed-in-ctx">What Changed in ctx<a class="headerlink" href="#what-changed-in-ctx" title="Permanent link">&para;</a></h2>
+<p>The autonomous loops recipe now has a full
+<a href="../../recipes/autonomous-loops/#step-4-configure-permissions">permissions and isolation section</a> instead of a
+one-line tip about <code>CONSTITUTION.md</code>. It covers both the explicit
+allowlist approach and the <code>--dangerously-skip-permissions</code> flag,
+with honest guidance about when each is appropriate.</p>
+<p>It also has an OS-level isolation table that is not optional:
+unprivileged users, filesystem permissions, containers, VMs,
+network controls, resource limits, and self-modification prevention.</p>
+<p>The <a href="../../agent-security/">Agent Security</a> page consolidates the threat
+model and defense layers into a standalone reference.</p>
+<p>These are not theoretical improvements. They are the minimum
+responsible guidance for a tool that helps people run AI agents
+overnight.</p>
 <hr />
-<p><em>This blog post was generated with the help of <code>ctx</code>, using session
-history, decision logs, learning logs, and git history from the
-refactoring window. The meta continues.</em></p>
+<div class="admonition quote">
+<p class="admonition-title">If you remember one thing from this post...</p>
+</div>
+<p><strong>Markdown is not a security boundary.</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>`CONSTITUTION.md` is a nudge. An allowlist is a gate.
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>An unprivileged user in a network-isolated container is a wall.
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Use all three. Trust only the wall.
+</span></code></pre></div>
+<hr />
+<p><em>This post was written during the session that added permissions,
+isolation, and self-modification prevention to the autonomous loops
+recipe. The security guidance started as a single tip and grew into
+two documents. The meta continues.</em></p>
 
 
 

@@ -31,6 +31,7 @@ nav = [
   { "Autonomous Loops" = "autonomous-loop.md" },
   { "Integrations" = "integrations.md" },
   { "Version History" = "versions.md" },
+  { "Agent Security" = "agent-security.md" },
   { "Security" = "security.md" },
   { "Blog" = "blog/index.md" }
 ]
