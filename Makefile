@@ -4,7 +4,7 @@
 
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
 test-coverage smoke site site-serve site-setup audit check \
-journal journal-serve watch-session backup backup-global backup-all
+journal journal-serve watch-session backup backup-global backup-all gpg-fix gpg-test
 
 # Default binary name and output
 BINARY := ctx
@@ -187,6 +187,14 @@ backup-global:
 
 ## backup-all: Backup both project context and global Claude data
 backup-all: backup backup-global
+
+## gpg-fix: Fix GPG signing configuration
+gpg-fix:
+	./hack/gpg-fix.sh
+
+## gpg-test: Test GPG signing configuration
+gpg-test:
+	./hack/gpg-fix.sh --test
 
 ## watch-session: Watch current session for token usage
 watch-session:

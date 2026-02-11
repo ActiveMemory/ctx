@@ -731,6 +731,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#a-practical-litmus-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Practical Litmus Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-ctx-lesson" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -784,15 +795,16 @@
 <p><em>Jose Alekhinne / 2026-02-12</em></p>
 <div class="admonition question">
 <p class="admonition-title">Have you ever felt like you should understand more of the stack beneath you?</p>
-<p>You can talk about transformers at a whiteboard. You can explain attention
-to a colleague. You can use agentic AI to ship real software.</p>
+<p>You can talk about transformers at a whiteboard. </p>
+<p>You can explain attention to a colleague. </p>
+<p>You can use agentic AI to ship real software.</p>
 <p>But somewhere in the back of your mind, there is a voice:
-<em>"Maybe I should go deeper. Maybe I need to master machine learning."</em></p>
+"<em>Maybe I should go deeper. Maybe I need to master machine learning.</em>"</p>
 </div>
-<p>I had that voice for months. Then I spent a week debugging an agent failure
-that had nothing to do with ML theory and everything to do with <strong>knowing
-which abstraction was leaking</strong>.</p>
-<p>This post is about when depth compounds and when it doesn't.</p>
+<p>I had that voice for <strong>months</strong>. Then I spent a week debugging an agent failure
+that had nothing to do with ML theory and <strong>everything</strong> to do with knowing
+<strong>which abstraction was leaking</strong>.</p>
+<p>This post is about when <strong>depth compounds</strong> and when it does not.</p>
 <h2 id="the-hierarchy-nobody-questions">The Hierarchy Nobody Questions<a class="headerlink" href="#the-hierarchy-nobody-questions" title="Permanent link">&para;</a></h2>
 <p>There is an implicit stack most people carry around when thinking about AI:</p>
 <table>
@@ -832,8 +844,9 @@ which abstraction was leaking</strong>.</p>
 <p>At some point down that stack, you hit a comfortable plateau: the layer
 where you can hold a conversation but not debug a failure.</p>
 <p>The instinctive response is to go deeper.</p>
-<p><strong>But that instinct hides a more important question</strong>: Does depth still
-compound when the abstractions above you are moving hyper-exponentially?</p>
+<p>But that instinct hides a more important question.</p>
+<p>Does depth still compound when the abstractions above you are moving
+<em>hyper-exponentially</em>?</p>
 <h2 id="the-uncomfortable-observation">The Uncomfortable Observation<a class="headerlink" href="#the-uncomfortable-observation" title="Permanent link">&para;</a></h2>
 <p>If you squint hard enough, a large chunk of modern ML intuition collapses
 into older fields:</p>
@@ -867,89 +880,108 @@ into older fields:</p>
 </tr>
 </tbody>
 </table>
-<p>Nothing here is <em>uniquely</em> "AI."</p>
-<p>Most of this math predates the term <strong>deep learning</strong>. </p>
-<p>In some cases, <strong>by decades</strong>.</p>
+<p>Nothing here is <em>uniquely</em> "<em>AI</em>".</p>
+<p>Most of this math predates the term deep learning.</p>
+<p>In some cases, by decades.</p>
 <p>So what changed?</p>
 <h2 id="same-tools-different-regime">Same Tools, Different Regime<a class="headerlink" href="#same-tools-different-regime" title="Permanent link">&para;</a></h2>
-<p>The mistake is assuming this is a <strong>new theory problem</strong>. It isn't.</p>
-<p>It is a <strong>new operating regime</strong>.</p>
+<p>The mistake is assuming this is a new theory problem.</p>
+<p>It is not.</p>
+<p><strong>It is a new operating regime</strong>.</p>
 <p>Classical numerical methods were developed under assumptions like:</p>
 <ul>
-<li>manageable dimensionality</li>
-<li>reasonably well-conditioned objectives</li>
-<li>losses that actually represent the goal</li>
+<li>Manageable dimensionality</li>
+<li>Reasonably well-conditioned objectives</li>
+<li>Losses that actually represent the goal</li>
 </ul>
-<p>Modern ML violates all three. <em>On purpose.</em></p>
+<p><strong>Modern ML violates all three</strong>: <em>On purpose</em>.</p>
 <p>Today's models operate with millions to trillions of parameters, wildly
 underdetermined systems, and objective functions we know are wrong but
-optimize anyway. At this scale, familiar concepts warp:</p>
+optimize anyway. </p>
+<p>At this scale, familiar concepts <strong>warp</strong>:</p>
 <ul>
-<li>"<em>Local minima</em>" mostly dissolve into saddle points</li>
-<li>Noise stops being noise and starts becoming structure</li>
-<li>Overfitting can coexist with generalization</li>
-<li>Bigger models outperform "better" ones</li>
+<li>What we call "<em>local minima</em>" are overwhelmingly saddle points in
+  high-dimensional spaces</li>
+<li><strong>Noise</strong> stops being noise and starts becoming <strong>structure</strong></li>
+<li>Overfitting can <strong>coexist</strong> with generalization</li>
+<li>Bigger models outperform "<em>better</em>" ones</li>
 </ul>
-<p>The math didn't change. <strong>The phase did.</strong></p>
-<p>This is *<em>less numerical analysis and more statistical physics</em>. </p>
-<p>Same equations: Turbulent systems.</p>
+<p>The math did not change.</p>
+<p>The phase did.</p>
+<p>This is less numerical analysis and more *<em>statistical physics</em>: Same
+equations, but behavior dominated by phase transitions and emergent
+structure.</p>
 <h2 id="why-scaling-laws-feel-alien">Why Scaling Laws Feel Alien<a class="headerlink" href="#why-scaling-laws-feel-alien" title="Permanent link">&para;</a></h2>
-<p>In classical statistics, asymptotics describe what happens <em>eventually</em>.</p>
-<p>In modern ML, scaling laws describe <strong>where you can operate today</strong>.</p>
-<p>They don't say: <em>"Given enough time, things converge."</em></p>
-<p>They say: <em>"Cross this threshold and behavior qualitatively changes."</em></p>
-<p>This is why <strong>dumb architectures</strong> plus <strong>scale</strong> beat clever ones. </p>
-<p>Why small theoretical gains disappear under data. </p>
-<p>Why "<strong>just make it bigger</strong>", ironically, keeps working longer than it should.</p>
-<p>That is not a triumph of ML theory. </p>
-<p>It is a property of high-dimensional systems under loose objectives.</p>
+<p>In classical statistics, asymptotics describe what happens <strong>eventually</strong>.</p>
+<p>In modern ML, scaling laws describe <strong>where</strong> you can operate today.</p>
+<p>They <strong>do not</strong> say "<em>given enough time, things converge</em>".</p>
+<p>They say "<em>cross this threshold and behavior qualitatively changes</em>".</p>
+<p>This is why <strong>dumb architectures plus scale beat clever ones</strong>.</p>
+<p>Why small theoretical gains disappear under data.</p>
+<p>Why "<em>just make it bigger</em>", ironically, keeps working longer than it
+should.</p>
+<p>That is not a triumph of ML theory.</p>
+<p>It is a property of <strong>high-dimensional systems under loose objectives</strong>.</p>
 <h2 id="where-depth-actually-pays-off">Where Depth Actually Pays Off<a class="headerlink" href="#where-depth-actually-pays-off" title="Permanent link">&para;</a></h2>
 <p>This reframes the original question.</p>
-<p>You don't need depth because this is "AI." You need depth where
-<strong>failure modes propagate upward</strong>.</p>
+<p>You do not need depth because this is "AI".</p>
+<p>You need depth where failure modes propagate upward.</p>
 <p>I learned this building <code>ctx</code>. The agent failures I have spent the most
-time debugging were never about the model's architecture. </p>
+time debugging were never about the model's architecture.</p>
 <p>They were about:</p>
 <ul>
-<li><strong>Misplaced trust</strong>: The model was confident. The output was wrong.
-  Knowing <em>when</em> confidence and correctness diverge is not something you
-  learn from a textbook. You learn it from watching patterns across
-  hundreds of sessions.</li>
-<li><strong>Distribution shift</strong>: The model performed well on common patterns
-  and fell apart on edge cases specific to this project. Recognizing
-  that shift before it compounds requires understanding <em>why</em>
-  generalization has limits, not just <em>that</em> it does.</li>
-<li><strong>Error accumulation</strong>: In a single prompt, model quirks are tolerable.
-  In <a href="../2026-02-09-defense-in-depth-securing-ai-agents/">autonomous loops</a> running overnight, they compound.
-  A small bias in how the model interprets instructions becomes a large
-  drift by iteration 20.</li>
-<li><strong>Scale hiding errors</strong>: The model's raw capability masked problems
-  that only surfaced under specific conditions. More parameters didn't
-  fix the issue. It just made the failure mode rarer and harder to
-  reproduce.</li>
+<li>
+<p><strong>Misplaced trust</strong>:
+  The model was confident. The output was wrong. Knowing when confidence
+  and correctness diverge is not something you learn from a textbook. You
+  learn it from watching patterns across hundreds of sessions.</p>
+</li>
+<li>
+<p><strong>Distribution shift</strong>:
+  The model performed well on common patterns and fell apart on edge
+  cases specific to this project. Recognizing that shift before it
+  compounds requires understanding why generalization has limits, not
+  just that it does.</p>
+</li>
+<li>
+<p><strong>Error accumulation</strong>: 
+  In a single prompt, model quirks are tolerable. In autonomous loops
+  running overnight, they compound. A small bias in how the model
+  interprets instructions becomes a large drift by iteration 20.</p>
+</li>
+<li>
+<p><strong>Scale hiding errors</strong>: 
+  The model's raw capability masked problems that only surfaced under
+  specific conditions. More parameters did not fix the issue. They just
+  made the failure mode rarer and harder to reproduce.</p>
+</li>
 </ul>
-<p>This is the kind of <strong>depth that compounds</strong>. </p>
+<p>This is the kind of depth that <strong>compounds</strong>.</p>
 <p>Not deriving backprop.</p>
-<p>Understanding <strong>when the math lies to you</strong>.</p>
+<p>Understanding when correct math produces misleading intuition.</p>
 <h2 id="the-connection-to-context-engineering">The Connection to Context Engineering<a class="headerlink" href="#the-connection-to-context-engineering" title="Permanent link">&para;</a></h2>
 <p>This is the same pattern I keep finding at different altitudes.</p>
-<p>In <a href="../2026-02-03-the-attention-budget/">The Attention Budget</a>, I wrote about how dumping
-everything into the context window degrades the model's focus. The fix
-was not a better model. It was <strong>better curation</strong>: load less, load the
-right things, preserve signal per token.</p>
-<p>In <a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>, I wrote about how
-custom instructions can conflict with the model's built-in behavior.
-The fix was not deeper ML knowledge. It was <strong>understanding</strong> that the
-model already has judgment and you should <strong>extend</strong> it, not override it.</p>
-<p>In <a href="../2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a>, I wrote about how generic
-templates fail because they don't encode project-specific knowledge. A
-consolidation skill with eight Rust-based analysis dimensions was 70%
-noise for a Go project. The fix was not a better template. It was
-<strong>growing expertise from this project's own history</strong>.</p>
-<p>In every case, the answer was not "go deeper into ML." The answer was
-<strong>know which abstraction is leaking and fix it at the right layer</strong>.</p>
+<p>In "<a href="../2026-02-03-the-attention-budget/">The Attention Budget</a>", 
+I wrote about how dumping everything into the context window degrades the 
+model's focus. The fix was not a better model.
+It was better curation: load less, load the right things, 
+<strong>preserve signal per token</strong>.</p>
+<p>In "<a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>", I wrote about how custom
+instructions can conflict with the model's built-in behavior. The fix
+was not deeper ML knowledge. It was an understanding that the model already
+has judgment and that you should extend it, not override it.</p>
+<p>In "<a href="../2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a>", I wrote about how generic 
+templates fail because they do not encode project-specific knowledge. 
+A consolidation skill with eight Rust-based analysis dimensions was mostly 
+noise for a Go project. The fix was not a better template. It was growing 
+expertise from this project's own history.</p>
+<p>In every case, the answer was not "go deeper into ML".</p>
+<p>The answer was <strong>knowing which abstraction was leaking</strong> 
+and fixing it <strong>at the right layer</strong>.</p>
 <h2 id="agentic-systems-are-not-an-ml-problem">Agentic Systems Are Not an ML Problem<a class="headerlink" href="#agentic-systems-are-not-an-ml-problem" title="Permanent link">&para;</a></h2>
-<p>Agentic AI is a <strong>systems problem under uncertainty</strong>:</p>
+<p>The mistake is assuming agent failures originate where the model was
+trained, rather than where it is deployed.</p>
+<p>Agentic AI is a systems problem under uncertainty:</p>
 <ul>
 <li>Feedback loops between the agent and its environment</li>
 <li>Error accumulation across iterations</li>
@@ -957,15 +989,15 @@ noise for a Go project. The fix was not a better template. It was
 <li>Misplaced trust in outputs that look correct</li>
 </ul>
 <p>In short-lived interactions, model quirks are tolerable. In long-running
-autonomous loops, they compound. That is where shallow understanding
-becomes expensive.</p>
-<p>But the understanding you need is not about optimizer internals. It is
-about:</p>
+autonomous loops, <strong>they compound</strong>. </p>
+<p>That is where shallow understanding becomes expensive.</p>
+<p>But the understanding you need is not about optimizer internals.</p>
+<p>It is about:</p>
 <table>
 <thead>
 <tr>
 <th>What Matters</th>
-<th>What Doesn't (for Most Practitioners)</th>
+<th>What Does Not (for Most Practitioners)</th>
 </tr>
 </thead>
 <tbody>
@@ -987,50 +1019,61 @@ about:</p>
 </tr>
 </tbody>
 </table>
-<p>The depth that matters is <strong>diagnostic</strong>, not <strong>theoretical</strong>.</p>
+<p>The depth that matters is diagnostic, not theoretical.</p>
 <h2 id="the-real-answer">The Real Answer<a class="headerlink" href="#the-real-answer" title="Permanent link">&para;</a></h2>
-<p>Not "all the way down."</p>
-<p><strong>Go deep enough to</strong>:</p>
+<p><strong>Not turtles all the way down</strong>.</p>
+<p>Go deep enough to:</p>
 <ul>
 <li>Diagnose failures instead of cargo-culting fixes</li>
 <li>Reason about uncertainty instead of trusting confidence</li>
 <li>Design guardrails that align with model behavior, not hope</li>
 </ul>
-<p><strong>Stop before</strong>:</p>
+<p>Stop before:</p>
 <ul>
 <li>Hand-deriving gradients for the sake of it</li>
 <li>Obsessing over optimizer internals you will never touch</li>
 <li>Chasing theoretical purity divorced from the scale you actually
   operate at</li>
 </ul>
-<p>This is not about mastering ML.</p>
-<p>It is about <strong>knowing which abstractions you can safely trust and which
-ones leak</strong>.</p>
+<p>This is <strong>not</strong> about mastering ML.</p>
+<p>It is about knowing <strong>which abstractions you can safely trust</strong> and which
+ones <strong>leak</strong>.</p>
+<h2 id="a-practical-litmus-test">A Practical Litmus Test<a class="headerlink" href="#a-practical-litmus-test" title="Permanent link">&para;</a></h2>
+<p>If a failure occurs and your instinct is to:</p>
+<ul>
+<li>add more prompt text: abstraction leak above</li>
+<li>add retries or heuristics: error accumulation</li>
+<li>change the model: scale masking</li>
+<li>reach for ML theory: you are probably going too deep</li>
+</ul>
+<p>The right depth is the shallowest layer where the failure becomes
+predictable.</p>
 <h2 id="the-ctx-lesson">The <code>ctx</code> Lesson<a class="headerlink" href="#the-ctx-lesson" title="Permanent link">&para;</a></h2>
 <p>Every design decision in <code>ctx</code> is downstream of this principle.</p>
-<p>The <a href="../2026-02-03-the-attention-budget/">attention budget</a> exists because the model's
-internal attention mechanism has real limits. You don't need to
-understand the math of softmax to build around it. But you do need to
-understand that <strong>more context is not always better</strong> and that attention
-density degrades with scale.</p>
-<p>The <a href="../2026-02-07-the-anatomy-of-a-skill-that-works/">skill system</a> exists because the model's built-in
-behavior is already good. You don't need to understand RLHF to build
-effective skills. But you do need to understand that <strong>the model already
-has judgment</strong> and your skills should teach it things it doesn't know,
-not override how it thinks.</p>
-<p><a href="../2026-02-09-defense-in-depth-securing-ai-agents/">Defense in depth</a> exists because soft instructions are
-probabilistic. You don't need to understand the transformer architecture
-to know that a Markdown file is not a security boundary. But you do need
-to understand that <strong>the model follows instructions from context, and
-context can be poisoned</strong>.</p>
+<p>The <strong>attention budget</strong> exists because the model's internal attention
+mechanism has real limits: You do not need to understand the math of
+softmax to build around it. <strong>But</strong> you do need to understand that more
+context is not always better and that attention density degrades with
+scale.</p>
+<p>The <strong>skill system</strong> exists because the model's built-in behavior is already
+good: You <strong>do not</strong> need to understand RLHF to build effective skills. <strong>But</strong>
+you do need to understand that <strong>the model already has judgment</strong> and your
+skills should teach it things it does not know, not override how it
+thinks.</p>
+<p><strong>Defense in depth</strong> exists because <strong>soft instructions are probabilistic</strong>:
+You <strong>do not</strong> need to understand the transformer architecture to know that a
+Markdown file is not a security boundary. <strong>But</strong> you do need to understand
+that the model follows instructions from context, and context can be
+poisoned.</p>
 <p>In each case, the useful depth was one or two layers below the
-abstraction I was working at. Not at the bottom of the stack.</p>
-<p><strong>The boundary between "useful understanding" and "academic exercise"
-is where your failure modes live.</strong></p>
+abstraction I was working at.</p>
+<p>Not at the bottom of the stack.</p>
+<p>The boundary between useful understanding and academic exercise is where
+your failure modes live.</p>
 <h2 id="closing-thought">Closing Thought<a class="headerlink" href="#closing-thought" title="Permanent link">&para;</a></h2>
-<p>Most modern AI systems don't fail because the math is wrong.</p>
-<p>They fail because we <strong>apply correct math in the wrong regime</strong>, then
-build autonomous systems on top of it.</p>
+<p>Most modern AI systems do not fail because the math is wrong.</p>
+<p>They fail because we apply correct math in the wrong regime, then build
+autonomous systems on top of it.</p>
 <p>Understanding that boundary, not crossing it blindly, is where depth
 still compounds.</p>
 <p>And that is a far more useful form of expertise than memorizing another
@@ -1038,17 +1081,16 @@ loss function.</p>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">If you remember one thing from this post...</p>
-<p><strong>Go deep enough to diagnose your failures. Stop before you are
-solving problems that don't propagate to your layer.</strong></p>
+<p>Go deep enough to diagnose your failures. Stop before you are solving
+problems that do not propagate to your layer.</p>
 <p>The abstractions below you are not sacred. But neither are they
 irrelevant.</p>
-<p>The useful depth is wherever your failure modes live:
-usually one or two layers down, not at the bottom.</p>
+<p>The useful depth is wherever your failure modes live. Usually one or
+two layers down, not at the bottom.</p>
 </div>
 <hr />
-<p><em>This post started as a note about whether I should take an ML course.
-The answer turned out to be "no, but understand why not." The meta
-continues.</em></p>
+<p><em>This post started as a note about whether I should take an ML course. The
+answer turned out to be "no, but understand why not". The meta continues.</em></p>
 
 
 
