@@ -93,6 +93,12 @@ want a single pass/fail answer.
 | Only docs/config       | Nothing                      |
 | Template files changed | `go build` (embed must work) |
 
+## On Failure
+
+When a check fails, **reason through the error before fixing**:
+read the output, trace the cause, then fix. Do not blindly
+retry or apply the first fix that comes to mind.
+
 ## Common Failures
 
 | Failure                                  | Fix                                         |

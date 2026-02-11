@@ -66,10 +66,8 @@ func extractCheckboxItems(content string) []string {
 // Returns:
 //   - []string: List of constitution rules; nil if the file is not found
 func extractConstitutionRules(ctx *context.Context) []string {
-	for _, f := range ctx.Files {
-		if f.Name == config.FileConstitution {
-			return extractCheckboxItems(string(f.Content))
-		}
+	if f := ctx.File(config.FileConstitution); f != nil {
+		return extractCheckboxItems(string(f.Content))
 	}
 	return nil
 }
@@ -104,10 +102,8 @@ func extractUncheckedTasks(content string) []string {
 //   - []string: List of active tasks with "- [ ]" prefix; nil if
 //     the file is not found
 func extractActiveTasks(ctx *context.Context) []string {
-	for _, f := range ctx.Files {
-		if f.Name == config.FileTask {
-			return extractUncheckedTasks(string(f.Content))
-		}
+	if f := ctx.File(config.FileTask); f != nil {
+		return extractUncheckedTasks(string(f.Content))
 	}
 	return nil
 }
@@ -120,10 +116,8 @@ func extractActiveTasks(ctx *context.Context) []string {
 // Returns:
 //   - []string: Up to 5 convention items; nil if the file is not found
 func extractConventions(ctx *context.Context) []string {
-	for _, f := range ctx.Files {
-		if f.Name == config.FileConvention {
-			return extractBulletItems(string(f.Content), 5)
-		}
+	if f := ctx.File(config.FileConvention); f != nil {
+		return extractBulletItems(string(f.Content), 5)
 	}
 	return nil
 }
@@ -167,10 +161,8 @@ func extractDecisionTitles(content string, limit int) []string {
 func extractRecentDecisions(
 	ctx *context.Context, limit int,
 ) []string {
-	for _, f := range ctx.Files {
-		if f.Name == config.FileDecision {
-			return extractDecisionTitles(string(f.Content), limit)
-		}
+	if f := ctx.File(config.FileDecision); f != nil {
+		return extractDecisionTitles(string(f.Content), limit)
 	}
 	return nil
 }

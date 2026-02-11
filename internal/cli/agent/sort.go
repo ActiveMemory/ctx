@@ -27,11 +27,8 @@ import (
 func getReadOrder(ctx *context.Context) []string {
 	var order []string
 	for _, name := range config.FileReadOrder {
-		for _, f := range ctx.Files {
-			if f.Name == name && !f.IsEmpty {
-				order = append(order, filepath.Join(ctx.Dir, f.Name))
-				break
-			}
+		if f := ctx.File(name); f != nil && !f.IsEmpty {
+			order = append(order, filepath.Join(ctx.Dir, f.Name))
 		}
 	}
 	return order

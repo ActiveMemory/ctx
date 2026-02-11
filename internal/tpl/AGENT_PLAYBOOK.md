@@ -44,6 +44,20 @@ Before starting any work, read the required context files and confirm to the
 user: "I have read the required context files and I'm following project
 conventions." Do not begin implementation until you have done so.
 
+## Reason Before Acting
+
+Before implementing any non-trivial change, think through it step-by-step:
+
+1. **Decompose**: break the problem into smaller parts
+2. **Identify impact**: what files, tests, and behaviors does this touch?
+3. **Anticipate failure**: what could go wrong? What are the edge cases?
+4. **Sequence**: what order minimizes risk and maximizes checkpoints?
+
+This applies to debugging too — reason through the cause before reaching
+for a fix. "Let me think step-by-step" before acting is the single highest-
+leverage habit for accuracy. Rushing to code before reasoning is the most
+common source of wasted work.
+
 ## Read Order
 
 1. CONSTITUTION.md — Hard rules, NEVER violate

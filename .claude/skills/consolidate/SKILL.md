@@ -42,6 +42,10 @@ checking **source code** against project conventions.
 
 ## Checks
 
+Before running checks mechanically, reason through which areas
+are most likely to have drifted based on recent changes. This
+focuses attention where it matters most.
+
 Run each check in order. Report findings per check, then summarize.
 
 ### 1. Predicate Naming

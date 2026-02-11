@@ -122,19 +122,17 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 func checkStaleness(ctx *context.Context, report *Report) {
 	staleness := false
 
-	for _, f := range ctx.Files {
-		if f.Name == config.FileTask {
-			// Count completed tasks
-			completedCount := strings.Count(string(f.Content), "- [x]")
-			if completedCount > 10 {
-				report.Warnings = append(report.Warnings, Issue{
-					File:    f.Name,
-					Type:    IssueStaleness,
-					Message: "has many completed items (consider archiving)",
-					Path:    "",
-				})
-				staleness = true
-			}
+	if f := ctx.File(config.FileTask); f != nil {
+		// Count completed tasks
+		completedCount := strings.Count(string(f.Content), "- [x]")
+		if completedCount > 10 {
+			report.Warnings = append(report.Warnings, Issue{
+				File:    f.Name,
+				Type:    IssueStaleness,
+				Message: "has many completed items (consider archiving)",
+				Path:    "",
+			})
+			staleness = true
 		}
 	}
 

@@ -1,54 +1,65 @@
 # Learnings
 
 <!-- INDEX:START -->
-| Date       | Learning                                                                                           |
-|------------|----------------------------------------------------------------------------------------------------|
-| 2026-02-07 | Agent ignores repeated hook output (repetition fatigue)                                            |
-| 2026-02-06 | PROMPT.md deleted — was stale project briefing, not a Ralph loop prompt                            |
-| 2026-02-05 | Use $CLAUDE_PROJECT_DIR in hook paths                                                              |
-| 2026-02-04 | JSONL session files are append-only                                                                |
-| 2026-02-04 | Most external skill files are redundant with Claude's system prompt                                |
+| Date | Learning |
+|------|--------|
+| 2026-02-11 | Chain-of-thought prompting improves agent reasoning accuracy |
+| 2026-02-07 | Agent ignores repeated hook output (repetition fatigue) |
+| 2026-02-06 | PROMPT.md deleted — was stale project briefing, not a Ralph loop prompt |
+| 2026-02-05 | Use $CLAUDE_PROJECT_DIR in hook paths |
+| 2026-02-04 | JSONL session files are append-only |
+| 2026-02-04 | Most external skill files are redundant with Claude's system prompt |
 | 2026-02-04 | Skills that restate or contradict Claude Code's built-in system prompt create tension, not clarity |
-| 2026-02-04 | Skill files that suppress AI judgment are jailbreak patterns, not productivity tools               |
-| 2026-02-03 | User input often has inline code fences that break markdown rendering                              |
-| 2026-02-03 | Claude Code injects system-reminder tags into tool results, breaking markdown export               |
-| 2026-02-03 | Claude Code subagent sessions share parent sessionId                                               |
-| 2026-02-03 | Claude Code JSONL format changed: slug field removed in v2.1.29+                                   |
-| 2026-01-30 | Say 'project conventions' not 'idiomatic X'                                                        |
-| 2026-01-29 | Documentation audits require verification against actual standards                                 |
-| 2026-01-28 | Required flags now enforced for learnings                                                          |
-| 2026-01-28 | Claude Code Hooks Receive JSON via Stdin                                                           |
-| 2026-01-28 | Changelogs vs Blogs serve different audiences                                                      |
-| 2026-01-28 | IDE is already the UI                                                                              |
-| 2026-01-28 | Subtasks complete does not mean parent task complete                                               |
-| 2026-01-28 | AI session JSONL formats are not standardized                                                      |
-| 2026-01-27 | Always Complete Decision Record Sections                                                           |
-| 2026-01-27 | Slash Commands Require Matching Permissions                                                        |
-| 2026-01-26 | Go json.Marshal Escapes Shell Characters                                                           |
-| 2026-01-26 | Claude Code Hook Key Names                                                                         |
-| 2026-01-25 | defer os.Chdir Fails errcheck Linter                                                               |
-| 2026-01-25 | golangci-lint Go Version Mismatch in CI                                                            |
-| 2026-01-25 | CI Tests Need CTX_SKIP_PATH_CHECK                                                                  |
-| 2026-01-25 | AGENTS.md Is Not Auto-Loaded                                                                       |
-| 2026-01-25 | Hook Regex Can Overfit                                                                             |
-| 2026-01-25 | Autonomous Mode Creates Technical Debt                                                             |
-| 2026-01-23 | ctx agent vs Manual File Reading Trade-offs                                                        |
-| 2026-01-23 | Claude Code Skills Format                                                                          |
-| 2026-01-23 | Infer Intent on "Do You Remember?" Questions                                                       |
-| 2026-01-23 | Always Use ctx from PATH                                                                           |
-| 2026-01-21 | Exit Criteria Must Include Verification                                                            |
-| 2026-01-21 | Orchestrator vs Agent Tasks Must Be Separate                                                       |
-| 2026-01-21 | One Templates Directory, Not Two                                                                   |
-| 2026-01-21 | Hooks Should Use PATH, Not Hardcoded Paths                                                         |
-| 2026-01-20 | ctx and Ralph Loop Are Separate Systems                                                            |
-| 2026-01-20 | .context/ Is NOT a Claude Code Primitive                                                           |
-| 2026-01-20 | SessionEnd Hook Catches Ctrl+C                                                                     |
-| 2026-01-20 | Session Filename Must Include Time                                                                 |
-| 2026-01-20 | Two Tiers of Persistence                                                                           |
-| 2026-01-20 | Auto-Load Works, Auto-Save Was Missing                                                             |
-| 2026-01-20 | Always Backup Before Modifying User Files                                                          |
-| 2026-01-19 | CGO Must Be Disabled for ARM64 Linux                                                               |
+| 2026-02-04 | Skill files that suppress AI judgment are jailbreak patterns, not productivity tools |
+| 2026-02-03 | User input often has inline code fences that break markdown rendering |
+| 2026-02-03 | Claude Code injects system-reminder tags into tool results, breaking markdown export |
+| 2026-02-03 | Claude Code subagent sessions share parent sessionId |
+| 2026-02-03 | Claude Code JSONL format changed: slug field removed in v2.1.29+ |
+| 2026-01-30 | Say 'project conventions' not 'idiomatic X' |
+| 2026-01-29 | Documentation audits require verification against actual standards |
+| 2026-01-28 | Required flags now enforced for learnings |
+| 2026-01-28 | Claude Code Hooks Receive JSON via Stdin |
+| 2026-01-28 | Changelogs vs Blogs serve different audiences |
+| 2026-01-28 | IDE is already the UI |
+| 2026-01-28 | Subtasks complete does not mean parent task complete |
+| 2026-01-28 | AI session JSONL formats are not standardized |
+| 2026-01-27 | Always Complete Decision Record Sections |
+| 2026-01-27 | Slash Commands Require Matching Permissions |
+| 2026-01-26 | Go json.Marshal Escapes Shell Characters |
+| 2026-01-26 | Claude Code Hook Key Names |
+| 2026-01-25 | defer os.Chdir Fails errcheck Linter |
+| 2026-01-25 | golangci-lint Go Version Mismatch in CI |
+| 2026-01-25 | CI Tests Need CTX_SKIP_PATH_CHECK |
+| 2026-01-25 | AGENTS.md Is Not Auto-Loaded |
+| 2026-01-25 | Hook Regex Can Overfit |
+| 2026-01-25 | Autonomous Mode Creates Technical Debt |
+| 2026-01-23 | ctx agent vs Manual File Reading Trade-offs |
+| 2026-01-23 | Claude Code Skills Format |
+| 2026-01-23 | Infer Intent on "Do You Remember?" Questions |
+| 2026-01-23 | Always Use ctx from PATH |
+| 2026-01-21 | Exit Criteria Must Include Verification |
+| 2026-01-21 | Orchestrator vs Agent Tasks Must Be Separate |
+| 2026-01-21 | One Templates Directory, Not Two |
+| 2026-01-21 | Hooks Should Use PATH, Not Hardcoded Paths |
+| 2026-01-20 | ctx and Ralph Loop Are Separate Systems |
+| 2026-01-20 | .context/ Is NOT a Claude Code Primitive |
+| 2026-01-20 | SessionEnd Hook Catches Ctrl+C |
+| 2026-01-20 | Session Filename Must Include Time |
+| 2026-01-20 | Two Tiers of Persistence |
+| 2026-01-20 | Auto-Load Works, Auto-Save Was Missing |
+| 2026-01-20 | Always Backup Before Modifying User Files |
+| 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-11-124635] Chain-of-thought prompting improves agent reasoning accuracy
+
+**Context**: Research shows accuracy on reasoning tasks jumps from 17.7% to 78.7% by adding think step-by-step to prompts. Applied this across agent guidelines.
+
+**Lesson**: Explicit think step-by-step instructions in agent prompts dramatically improve reasoning accuracy at negligible token cost. This applies to skill files, playbooks, and autonomous loop prompts — anywhere the agent makes decisions before acting.
+
+**Application**: Added Reason Before Acting section to AGENT_PLAYBOOK.md and reasoning nudges to 7 skills (ctx-implement, brainstorm, ctx-reflect, ctx-loop, qa, verify, consolidate). For autonomous loops, include reasoning instructions in PROMPT.md.
 
 ---
 

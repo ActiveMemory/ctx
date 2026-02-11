@@ -102,13 +102,7 @@ func applyFixes(
 // Returns:
 //   - error: Non-nil if file operations fail
 func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
-	var tasksFile *context.FileInfo
-	for i := range ctx.Files {
-		if ctx.Files[i].Name == config.FileTask {
-			tasksFile = &ctx.Files[i]
-			break
-		}
-	}
+	tasksFile := ctx.File(config.FileTask)
 
 	if tasksFile == nil {
 		return errTasksNotFound()

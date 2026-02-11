@@ -204,6 +204,8 @@ If any criterion is unmet, continue refinement.
 
 ## Principles
 
+- **Think step-by-step** before proposing anything — reason
+  through the problem space before jumping to solutions
 - One question at a time
 - Assumptions must be explicit
 - Explore alternatives before committing

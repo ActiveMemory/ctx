@@ -45,6 +45,16 @@ type Context struct {
 	TotalSize   int64
 }
 
+// File returns the FileInfo with the given name, or nil if not found.
+func (c *Context) File(name string) *FileInfo {
+	for i := range c.Files {
+		if c.Files[i].Name == name {
+			return &c.Files[i]
+		}
+	}
+	return nil
+}
+
 // NotFoundError is returned when the context directory doesn't exist.
 type NotFoundError struct {
 	Dir string

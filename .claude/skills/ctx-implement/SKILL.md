@@ -67,7 +67,9 @@ Present the step list to the user for confirmation:
 For each step:
 
 1. **Announce** what you're doing (one line)
-2. **Implement** the change
+2. **Think through** the change before writing code — what does
+   it touch, what could break, what's the simplest correct path?
+3. **Implement** the change
 3. **Verify** with the appropriate check:
    - Go code changed → `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`
    - Tests affected → `CGO_ENABLED=0 go test ./...`
@@ -113,7 +115,8 @@ After all steps complete:
 When a step fails verification:
 
 1. **Don't panic** — read the error output carefully
-2. **Diagnose** the root cause (not just the symptom)
+2. **Reason through** the failure step-by-step before attempting
+   a fix; understand the cause, not just the symptom
 3. **Fix** the issue in the current step
 4. **Re-verify** the fix
 5. **Only then** move to the next step

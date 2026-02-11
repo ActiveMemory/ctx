@@ -93,6 +93,10 @@ chmod +x loop.sh   # already done by ctx loop
   suggest a reasonable default (e.g., 10) if the user omits it
 - The script captures AI tool errors with `|| true` so one
   failed iteration does not kill the loop
+- Autonomous agents benefit from explicit reasoning prompts in
+  PROMPT.md — adding "think step-by-step before each change"
+  to the iteration prompt significantly improves accuracy and
+  reduces cascading mistakes in unattended runs
 
 ## Quality Checklist
 

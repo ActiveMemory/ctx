@@ -35,13 +35,16 @@ func checkPackageFiles(ctx *context.Context) []Action {
 		if _, err := os.Stat(file); err == nil {
 			// File exists, check if we have DEPENDENCIES.md or similar
 			hasDepsDoc := false
-			for _, f := range ctx.Files {
-				if f.Name == config.FileDependency ||
-					strings.Contains(strings.ToLower(string(f.Content)),
+			if f := ctx.File(config.FileDependency); f != nil {
+				hasDepsDoc = true
+			} else {
+				for _, f := range ctx.Files {
+					if strings.Contains(strings.ToLower(string(f.Content)),
 						"dependencies",
 					) {
-					hasDepsDoc = true
-					break
+						hasDepsDoc = true
+						break
+					}
 				}
 			}
 
@@ -82,11 +85,8 @@ func checkConfigFiles(ctx *context.Context) []Action {
 		if len(matches) > 0 {
 			// Check if CONVENTIONS.md mentions this
 			var convContent string
-			for _, f := range ctx.Files {
-				if f.Name == config.FileConvention {
-					convContent = strings.ToLower(string(f.Content))
-					break
-				}
+			if f := ctx.File(config.FileConvention); f != nil {
+				convContent = strings.ToLower(string(f.Content))
 			}
 
 			keyword := strings.ToLower(strings.TrimPrefix(cfg.Pattern, "."))
@@ -127,11 +127,8 @@ func checkNewDirectories(ctx *context.Context) []Action {
 
 	// Get ARCHITECTURE.md content
 	var archContent string
-	for _, f := range ctx.Files {
-		if f.Name == config.FileArchitecture {
-			archContent = strings.ToLower(string(f.Content))
-			break
-		}
+	if f := ctx.File(config.FileArchitecture); f != nil {
+		archContent = strings.ToLower(string(f.Content))
 	}
 
 	// Scan top-level directories

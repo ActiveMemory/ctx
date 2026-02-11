@@ -29,9 +29,11 @@ Run the relevant verification command before claiming a result.
 ## Workflow
 
 1. **Identify** what command proves the claim
-2. **Run** the command (fresh, not a previous run)
-3. **Read** the full output; check exit code, count failures
-4. **Report** actual results with evidence
+2. **Think through** what a passing result looks like — and what
+   a false positive would look like — before running
+3. **Run** the command (fresh, not a previous run)
+4. **Read** the full output; check exit code, count failures
+5. **Report** actual results with evidence
 
 Never reuse output from a previous run. Always run fresh.
 
