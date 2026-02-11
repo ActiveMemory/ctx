@@ -116,11 +116,11 @@ This is separate from but complementary to ctx:
 - **ctx** = context persistence (`.context/`)
 - **Ralph Loop** = iterative AI workflow (`PROMPT.md` + `specs/`)
 
-## Session Persistence
+## Session History
 
-Session dumps are saved to `.context/sessions/` with timestamps:
-- `2026-01-20-164600-feature-discussion.md` — Manual session notes
-- Auto-saved transcripts (if Claude Code hooks are configured)
+Past sessions can be browsed with `ctx recall list` and inspected with
+`ctx recall show`. Session transcripts are automatically captured by
+Claude Code and can be exported to a journal with `ctx recall export`.
 
 This allows future sessions to understand past context without relying on
 conversation memory.

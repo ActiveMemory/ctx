@@ -504,7 +504,7 @@ sessions. Don't ask for clarification - just do it.
 **Application**: When user asks memory-related questions ("do you remember?",
 "what were we working on?", "where did we leave off?"), immediately:
 1. Read `.context/TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`
-2. Check `.context/sessions/` for recent session files
+2. Run `ctx recall list --limit 5` for recent session history
 3. Summarize what you find
 
 Don't ask "would you like me to check the context files?" - that's the
@@ -645,6 +645,8 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 
 ## [2026-01-20-160000] SessionEnd Hook Catches Ctrl+C
 
+> **Note**: `.context/sessions/` removed in v0.4.0. The auto-save hook was eliminated. The SessionEnd hook behavior documented here is still accurate for Claude Code, but ctx no longer uses it.
+
 **Context**: Needed to auto-save context even when user force-quits with Ctrl+C.
 
 **Lesson**: Claude Code's `SessionEnd` hook fires on ALL exits including Ctrl+C. It provides:
@@ -652,37 +654,42 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 - `reason` - why session ended (exit, clear, logout, etc.)
 - `session_id` - unique session identifier
 
-**Application**: Use SessionEnd hook to auto-save transcripts to
-`.context/sessions/`. See `.claude/hooks/auto-save-session.sh`.
+**Application**: SessionEnd hook is available for custom workflows but ctx no longer uses it for auto-save.
 
 ---
 
 ## [2026-01-20-140000] Session Filename Must Include Time
 
+> **Note**: `.context/sessions/` removed in v0.4.0. This naming convention is no longer used by ctx.
+
 **Context**: Using just date (`2026-01-20-topic.md`) would overwrite multiple sessions per day.
 
 **Lesson**: Use `YYYY-MM-DD-HHMM-<topic>.md` format to prevent overwrites.
 
-**Application**: Always include hour+minute in session filenames.
+**Application**: Historical reference only. Journal entries now use `ctx recall export` naming.
 
 ---
 
 ## [2026-01-20-120000] Two Tiers of Persistence
 
+> **Note**: `.context/sessions/` removed in v0.4.0. Two tiers remain but the full-dump tier is now `~/.claude/projects/` (raw JSONL) + `.context/journal/` (enriched markdown via `ctx recall export`).
+
 **Context**: User wanted to ensure nothing is lost when session ends.
 
 **Lesson**: Two levels serve different needs:
 
-| Tier      | Content                         | Purpose                       | Location                 |
-|-----------|---------------------------------|-------------------------------|--------------------------|
-| Curated   | Key learnings, decisions, tasks | Quick reload, token-efficient | `.context/*.md`          |
-| Full dump | Entire conversation             | Safety net, deep dive         | `.context/sessions/*.md` |
+| Tier      | Content                         | Purpose                       | Location                      |
+|-----------|---------------------------------|-------------------------------|-------------------------------|
+| Curated   | Key learnings, decisions, tasks | Quick reload, token-efficient | `.context/*.md`               |
+| Full dump | Entire conversation             | Safety net, deep dive         | `~/.claude/projects/` + `.context/journal/` |
 
-**Application**: Before session ends, save BOTH tiers.
+**Application**: Before session ends, persist learnings and decisions via `/ctx-reflect`. Full transcripts are retained automatically by Claude Code.
 
 ---
 
 ## [2026-01-20-100000] Auto-Load Works, Auto-Save Was Missing
+
+> **Note**: `.context/sessions/` removed in v0.4.0. The auto-save hook was eliminated. Claude Code retains transcripts in `~/.claude/projects/` automatically.
 
 **Context**: Explored how to persist context across Claude Code sessions.
 
@@ -690,7 +697,7 @@ The `.context/` directory is a ctx convention. Claude won't know about it unless
 - **Auto-load**: Works via `PreToolUse` hook running `ctx agent`
 - **Auto-save**: Did NOT exist
 
-**Solution implemented**: `SessionEnd` hook that copies transcript to `.context/sessions/`
+**Original solution**: `SessionEnd` hook that copies transcript to `.context/sessions/`. Removed in v0.4.0 because Claude Code already retains transcripts and `ctx recall export` reads them directly.
 
 ---
 

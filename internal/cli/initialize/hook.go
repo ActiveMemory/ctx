@@ -22,7 +22,7 @@ import (
 
 // createClaudeHooks creates .claude/hooks/ directory and settings.local.json.
 //
-// Creates hook scripts (auto-save-session.sh, block-non-path-ctx.sh) and
+// Creates hook scripts (block-non-path-ctx.sh, prompt-coach.sh, etc.) and
 // merges hooks into existing settings rather than overwriting.
 //
 // Parameters:
@@ -44,23 +44,6 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 	// Create .claude/hooks/ directory
 	if err := os.MkdirAll(config.DirClaudeHooks, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", config.DirClaudeHooks, err)
-	}
-
-	// Create the auto-save-session.sh script
-	scriptPath := filepath.Join(
-		config.DirClaudeHooks, config.FileAutoSave,
-	)
-	if _, err := os.Stat(scriptPath); err == nil && !force {
-		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), scriptPath)
-	} else {
-		scriptContent, err := claude.AutoSaveScript()
-		if err != nil {
-			return fmt.Errorf("failed to get auto-save script: %w", err)
-		}
-		if err := os.WriteFile(scriptPath, scriptContent, config.PermExec); err != nil {
-			return fmt.Errorf("failed to write %s: %w", scriptPath, err)
-		}
-		cmd.Printf("  %s %s\n", green("✓"), scriptPath)
 	}
 
 	// Create block-non-path-ctx.sh script
@@ -194,7 +177,6 @@ func mergeSettingsHooks(
 	// Check if hooks already exist
 	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0
 	hasUserPromptSubmit := len(settings.Hooks.UserPromptSubmit) > 0
-	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
 
 	// Merge hooks - only add what's missing (or force overwrite)
 	hooksModified := false
@@ -204,10 +186,6 @@ func mergeSettingsHooks(
 	}
 	if !hasUserPromptSubmit || force {
 		settings.Hooks.UserPromptSubmit = defaultHooks.UserPromptSubmit
-		hooksModified = true
-	}
-	if !hasSessionEnd || force {
-		settings.Hooks.SessionEnd = defaultHooks.SessionEnd
 		hooksModified = true
 	}
 

@@ -509,7 +509,6 @@ func TestDefaultClaudePermissions(t *testing.T) {
 		"Bash(ctx status:*)",
 		"Bash(ctx agent:*)",
 		"Bash(ctx add:*)",
-		"Bash(ctx session:*)",
 	}
 
 	permSet := make(map[string]bool)

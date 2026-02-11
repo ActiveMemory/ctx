@@ -216,7 +216,6 @@ func TestListSkills(t *testing.T) {
 	// Check for expected skills (directory names, not files)
 	expected := []string{
 		"ctx-status",
-		"ctx-save",
 		"ctx-recall",
 	}
 

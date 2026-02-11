@@ -18,8 +18,6 @@ const (
 	DirContext = ".context"
 	// DirJournal is the subdirectory for journal entries within .context/.
 	DirJournal = "journal"
-	// DirSessions is the subdirectory for session snapshots within .context/.
-	DirSessions = "sessions"
 	// DirTools is the subdirectory for tool scripts within .context/.
 	DirTools = "tools"
 	// DirJournalSite is the journal static site output directory within .context/.

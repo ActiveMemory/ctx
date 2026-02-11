@@ -29,8 +29,8 @@ This guide documents prompts that reliably produce good results.
 ### "Do you remember?"
 
 Triggers the AI to silently read `TASKS.md`, `DECISIONS.md`,
-`LEARNINGS.md`, and `sessions/` before responding with a
-**structured readback**:
+`LEARNINGS.md`, and check recent history via `ctx recall` before
+responding with a **structured readback**:
 
 1. **Last session**: most recent session topic and date
 2. **Active work**: pending or in-progress tasks
@@ -108,7 +108,7 @@ This ensures specific context is loaded before work begins.
 Use this when you know the relevant context exists in a specific file.
 
 ```
-Before you start, read .context/sessions/2026-01-20-auth-discussion.md
+Before you start, check ctx recall for the auth discussion session
 ```
 
 ### Scope Control
@@ -188,7 +188,7 @@ Use it at the end of the session or before switching topics.
 
 - "Let's persist what we did"
 - "Update the context files"
-- `/ctx-save` (*Agent Skill in Claude Code*)
+- `/ctx-reflect` (*Agent Skill in Claude Code*)
 
 ---
 
@@ -266,7 +266,6 @@ Skills are formalized prompts. Use them by name:
 
 | Skill            | When to use                                    |
 |------------------|------------------------------------------------|
-| `/ctx-save`      | Persist session context at a milestone         |
 | `/ctx-reflect`   | Structured reflection checkpoint               |
 | `/ctx-recall`    | Browse session history for past discussions    |
 | `/ctx-status`    | Quick context summary                          |
@@ -317,7 +316,7 @@ so far, here are some prompts that tend to produce poor results:
 | Constrain scope | "Only change files in X. Nothing else."  |
 | Course correct  | "Stop. That's not what I meant."         |
 | Check health    | "Run `ctx drift`"                        |
-| Save context    | `/ctx-save`                              |
+| Save context    | `/ctx-reflect`                           |
 
 ---
 

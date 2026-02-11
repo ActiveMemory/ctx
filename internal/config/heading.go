@@ -78,36 +78,6 @@ const (
 	LoadHeadingContext = "# Context"
 )
 
-// Session transcript headings.
-const (
-	// SessionHeadingTranscript is the transcript section title.
-	SessionHeadingTranscript = "# Conversation Transcript"
-	// SessionHeadingPrefix is the prefix for session title headers.
-	SessionHeadingPrefix = "# Session:"
-	// SessionHeadingExtractedInsights is the insights extraction title.
-	SessionHeadingExtractedInsights = "# Extracted Insights"
-	// SessionHeadingPotentialDecisions is the extracted decisions heading.
-	SessionHeadingPotentialDecisions = "## Potential Decisions"
-	// SessionHeadingPotentialLearnings is the extracted learnings heading.
-	SessionHeadingPotentialLearnings = "## Potential Learnings"
-)
-
-// Session snapshot headings used in saved session files.
-const (
-	// SessionHeadingCurrentTasks is the current tasks section heading.
-	SessionHeadingCurrentTasks = "## Current Tasks"
-	// SessionHeadingInProgress is the in-progress subsection heading.
-	SessionHeadingInProgress = "### In Progress"
-	// SessionHeadingNextUp is the next-up subsection heading.
-	SessionHeadingNextUp = "### Next Up"
-	// SessionHeadingRecentDecisions is the recent decisions section heading.
-	SessionHeadingRecentDecisions = "## Recent Decisions"
-	// SessionHeadingRecentLearnings is the recent learnings section heading.
-	SessionHeadingRecentLearnings = "## Recent Learnings"
-	// SessionHeadingNextSessionTasks is the next-session tasks section heading.
-	SessionHeadingNextSessionTasks = "## Tasks for Next Session"
-)
-
 // Loop command headings
 const (
 	// LoopHeadingStart is the heading shown after loop script generation.

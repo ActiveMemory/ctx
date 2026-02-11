@@ -18,15 +18,11 @@ import (
 //
 // Flags:
 //   - --archive: Create .context/archive/ for old completed tasks
-//   - --no-auto-save: Skip auto-saving session before compact
 //
 // Returns:
 //   - *cobra.Command: Configured compact command with flags registered
 func Cmd() *cobra.Command {
-	var (
-		archive    bool
-		noAutoSave bool
-	)
+	var archive bool
 
 	cmd := &cobra.Command{
 		Use:   "compact",
@@ -44,9 +40,9 @@ Use --archive to create .context/archive/ for old content.
 Examples:
   ctx compact                  # Clean up context, move completed tasks
   ctx compact --archive        # Also archive old tasks to .context/archive/
-  ctx compact --no-auto-save   # Skip pre-compact session snapshot`,
+`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runCompact(cmd, archive, noAutoSave)
+			return runCompact(cmd, archive)
 		},
 	}
 
@@ -55,12 +51,6 @@ Examples:
 		"archive",
 		false,
 		"Create .context/archive/ for old content",
-	)
-	cmd.Flags().BoolVar(
-		&noAutoSave,
-		"no-auto-save",
-		false,
-		"Skip auto-saving session before compact",
 	)
 
 	return cmd

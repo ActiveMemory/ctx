@@ -31,17 +31,15 @@ func NewHook(hookType HookType, cmd string) Hook {
 // Claude Code.
 //
 // The returned hooks configure PreToolUse to block non-PATH ctx
-// invocations and autoload context on every tool use, UserPromptSubmit
-// for prompt coaching, and SessionEnd to run auto-save-session.sh for
-// persisting session transcripts.
+// invocations and autoload context on every tool use, and
+// UserPromptSubmit for prompt coaching.
 //
 // Parameters:
 //   - projectDir: Project root directory for absolute hook paths; if empty,
 //     paths are relative (e.g., ".claude/hooks/")
 //
 // Returns:
-//   - HookConfig: Configured hooks for PreToolUse, UserPromptSubmit, and
-//     SessionEnd events
+//   - HookConfig: Configured hooks for PreToolUse and UserPromptSubmit events
 func DefaultHooks(projectDir string) HookConfig {
 	hooksDir := config.DirClaudeHooks
 	if projectDir != "" {
@@ -51,6 +49,5 @@ func DefaultHooks(projectDir string) HookConfig {
 	return HookConfig{
 		PreToolUse:       preToolUserHookMatcher(hooksDir),
 		UserPromptSubmit: userPromptSubmitHookMatcher(hooksDir),
-		SessionEnd:       sessionEndHookMatcher(hooksDir),
 	}
 }

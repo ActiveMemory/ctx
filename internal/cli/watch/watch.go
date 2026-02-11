@@ -11,9 +11,8 @@ import (
 )
 
 var (
-	watchLog      string
-	watchDryRun   bool
-	watchAutoSave bool
+	watchLog    string
+	watchDryRun bool
 )
 
 // Cmd returns the watch command.
@@ -21,7 +20,6 @@ var (
 // Flags:
 //   - --log: Log file to watch (default: stdin)
 //   - --dry-run: Show updates without applying
-//   - --auto-save: Save session snapshots periodically
 //
 // Returns:
 //   - *cobra.Command: Configured watch command with flags registered
@@ -54,7 +52,6 @@ Updates missing required attributes will be rejected with an error.
 
 Use --log to watch a specific file instead of stdin.
 Use --dry-run to see what would be updated without making changes.
-Use --auto-save to periodically save session snapshots (every 5 updates).
 
 Press Ctrl+C to stop watching.`,
 		RunE: runWatch,
@@ -65,9 +62,6 @@ Press Ctrl+C to stop watching.`,
 	)
 	cmd.Flags().BoolVar(
 		&watchDryRun, "dry-run", false, "Show updates without applying",
-	)
-	cmd.Flags().BoolVar(
-		&watchAutoSave, "auto-save", false, "Save session snapshots periodically",
 	)
 
 	return cmd

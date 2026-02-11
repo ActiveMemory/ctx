@@ -105,7 +105,6 @@ After reflecting, provide:
 | Decision         | `ctx add decision "..."`                                              |
 | Task completed   | Edit `.context/TASKS.md` directly                                     |
 | New task         | `ctx add task "..."`                                                  |
-| Session snapshot | Write to `.context/sessions/YYYY-MM-DD-<topic>.md`                    |
 
 ## Quality Checklist
 

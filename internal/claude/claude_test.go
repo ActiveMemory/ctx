@@ -11,23 +11,6 @@ import (
 	"testing"
 )
 
-func TestAutoSaveScript(t *testing.T) {
-	content, err := AutoSaveScript()
-	if err != nil {
-		t.Fatalf("AutoSaveScript() unexpected error: %v", err)
-	}
-
-	if len(content) == 0 {
-		t.Error("AutoSaveScript() returned empty content")
-	}
-
-	// Check for expected script content
-	script := string(content)
-	if !strings.Contains(script, "#!/") {
-		t.Error("AutoSaveScript() script missing shebang")
-	}
-}
-
 func TestBlockNonPathCtxScript(t *testing.T) {
 	content, err := BlockNonPathCtxScript()
 	if err != nil {
@@ -140,11 +123,6 @@ func TestDefaultHooks(t *testing.T) {
 			// Check PreToolUse hooks
 			if len(hooks.PreToolUse) == 0 {
 				t.Error("DefaultHooks() PreToolUse is empty")
-			}
-
-			// Check SessionEnd hooks
-			if len(hooks.SessionEnd) == 0 {
-				t.Error("DefaultHooks() SessionEnd is empty")
 			}
 
 			// Check that project dir is used in paths when provided

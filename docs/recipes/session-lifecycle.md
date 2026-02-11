@@ -15,7 +15,7 @@ individual commands and skills feel disconnected.
 How do they fit together into a coherent workflow?
 
 This recipe walks through a complete session, from opening your editor to
-saving a snapshot before you close it, so you can see how each piece connects.
+persisting context before you close it, so you can see how each piece connects.
 
 ## Commands and Skills Used
 
@@ -23,16 +23,15 @@ saving a snapshot before you close it, so you can see how each piece connects.
 |------------------------|-------------|--------------------------------------------------|
 | `ctx status`           | CLI command | Quick health check on context files              |
 | `ctx agent`            | CLI command | Load token-budgeted context packet               |
-| `ctx session save`     | CLI command | Save a session snapshot                          |
-| `ctx session list`     | CLI command | List previous session snapshots                  |
-| `ctx session load`     | CLI command | Load a previous session by index, date, or topic |
+| `ctx recall list`      | CLI command | List previous sessions                           |
+| `ctx recall show`      | CLI command | Inspect a specific session in detail             |
 | `/ctx-remember`        | Skill       | Recall project context with structured readback  |
 | `/ctx-agent`           | Skill       | Load full context packet inside the assistant    |
 | `/ctx-status`          | Skill       | Show context summary with commentary             |
 | `/ctx-next`            | Skill       | Suggest what to work on with rationale           |
 | `/ctx-commit`          | Skill       | Commit code and prompt for context capture       |
 | `/ctx-reflect`         | Skill       | Structured reflection checkpoint                 |
-| `/ctx-save`            | Skill       | Save and enrich a session snapshot               |
+| `/ctx-recall`          | Skill       | Browse session history inside your AI assistant  |
 | `/ctx-context-monitor` | Skill       | Automatic context capacity monitoring            |
 
 ## The Workflow
@@ -42,7 +41,7 @@ The session lifecycle has seven steps. You will not always use every step
 might skip committing*) but the full arc looks like this:
 
 **Load context** > **Orient** > **Pick a Task** > **Work** > **Commit** >
-**Reflect** > **Save a Snapshot**
+**Reflect**
 
 ---
 
@@ -59,7 +58,7 @@ Do you remember what we were working on?
 This triggers the `/ctx-remember` skill. Behind the scenes, the assistant
 runs `ctx agent --budget 4000`, reads the files listed in the context packet
 (`TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`, `CONVENTIONS.md`), checks
-`ctx session list --limit 3` for recent sessions, and then presents a
+`ctx recall list --limit 3` for recent sessions, and then presents a
 structured **readback**:
 
 !!! note "What is a Readback?"
@@ -230,7 +229,7 @@ or before switching tasks*) pause to reflect:
 ```
 
 The skill works through a checklist: learnings discovered, decisions made, tasks
-completed or created, and whether the session is worth a full snapshot. It then
+completed or created, and whether there are items worth persisting. It then
 presents a summary with specific items to persist, each with the exact command
 to run:
 
@@ -267,40 +266,27 @@ root cause, that is worth a reflection checkpoint.
 
 ---
 
-### Step 7: Save a Snapshot
+### Step 7: Persist Before Ending
 
-Before ending the session, save a snapshot that a future session can load:
+Before ending the session, make sure any outstanding learnings and decisions
+are captured:
 
 ```
-/ctx-save auth-refactor
+/ctx-reflect
 ```
 
-This runs `ctx session save` with the topic you provide, then enriches the saved
-file by replacing placeholder sections with real content:
+The agent will review what happened during the session and offer to persist
+any outstanding learnings, decisions, or task updates.
 
-* **Summary**: what was built or fixed, key decisions, problems encountered
-* **Tasks for Next Session**: concrete items to pick up next time, in checkbox format
-* **Files Modified**: list of changed files with brief descriptions
-
-The snapshot is written to `.context/sessions/YYYY-MM-DD-HHMMSS-<topic>.md`.
-
-Future sessions can find it with `ctx session list` and load it with
-`ctx session load`.
-
-To verify the save worked:
-
-```bash
-ctx session list --limit 3
-```
+Session transcripts are automatically captured by Claude Code and can be
+browsed later with `ctx recall list` and `ctx recall show`.
 
 !!! tip "Be Conversational"
-    You do not need to say `/ctx-save` verbatim.
-
     Phrases like "*let's wrap up*", "*save our progress*", or
-    "*I'm done for today*" will trigger the **full save flow**.
+    "*I'm done for today*" will trigger a **reflection and persist flow**.
 
-    The agent will reflect on what happened, persist outstanding learnings and
-    decisions, and save the session snapshot in one pass.
+    The agent will reflect on what happened and persist outstanding learnings
+    and decisions in one pass.
 
 ---
 
@@ -374,7 +360,7 @@ explicit invocation. Here is a realistic example:
 
 **You**: Yes. And let's wrap up.
 
-**Agent** *(reflects, persists, saves... all in one flow)*:
+**Agent** *(reflects and persists... all in one flow)*:
 
 > Persisted:
 >
@@ -382,19 +368,16 @@ explicit invocation. Here is a realistic example:
 > * Marked "connection pool setup" done in TASKS.md
 > * Added "write integration tests for Redis cache" as a new task
 >
-> Saving session snapshot as `redis-cache-backend`...
->
-> Session saved to `.context/sessions/2026-02-09-163045-redis-cache-backend.md`
-> with summary, decisions, and next-session tasks. You are good to close.
+> Context is up to date. You are good to close.
 
 !!! tip "Notice What Happened"
-    In the above workflow, the user never typed `/ctx-reflect`, `/ctx-save`, or
+    In the above workflow, the user never typed `/ctx-reflect` or
     `ctx add learning`.
 
     The agent moved through **Load**, **Orient**, **Pick**, **Work**,
-    **Commit**, **Reflect**, and **Save** driven by **natural conversation**.
+    **Commit**, and **Reflect** driven by **natural conversation**.
 
-    "*Let's wrap up*" was enough to trigger the full reflect-and-save flow.
+    "*Let's wrap up*" was enough to trigger the full reflect-and-persist flow.
 
     The agent surfaced persist-worthy items at milestones: after a design
     choice, after discovering a gotcha—without waiting to be asked.
@@ -417,7 +400,6 @@ Quick-reference checklist for a complete session:
 * [ ] **Work**: implement, test, iterate (scope with "only change X")
 * [ ] **Commit**: `/ctx-commit`: commit and capture decisions/learnings
 * [ ] **Reflect**: `/ctx-reflect`: identify what to persist (at milestones)
-* [ ] **Save**: `/ctx-save <topic>`: snapshot for the next session
 
 Conversational equivalents: you can drive the same lifecycle with plain language:
 
@@ -429,7 +411,6 @@ Conversational equivalents: you can drive the same lifecycle with plain language
 | Work    | --                  | "Only change files in internal/cache/"                  |
 | Commit  | `/ctx-commit`       | "Commit this" / "Ship it"                               |
 | Reflect | `/ctx-reflect`      | "What did we learn?" / *(agent offers at milestones)*   |
-| Save    | `/ctx-save <topic>` | "Let's wrap up" / "Save our progress" / "I'm done"      |
 
 The agent understands both columns.
 
@@ -438,34 +419,29 @@ In practice, most sessions use a mix:
 * explicit commands when you want precision
 * natural language when you want flow and agentic autonomy
 
-The agent will also initiate steps on its own (*particularly "Reflect" and
-"Save"*) when it recognizes a milestone.
+The agent will also initiate steps on its own (*particularly "Reflect"*)
+when it recognizes a milestone.
 
-Short sessions (*quick bugfix*) might only use: **Load**, **Work**, **Commit**, 
-**Save**.
+Short sessions (*quick bugfix*) might only use: **Load**, **Work**, **Commit**.
 
-Long sessions should **Reflect** after each major milestone and **Save** at 
-least once before ending.
+Long sessions should **Reflect** after each major milestone and persist
+learnings and decisions before ending.
 
 ---
 
 ## Tips
 
-**Save early if context is running low.** The `/ctx-context-monitor` skill will
+**Persist early if context is running low.** The `/ctx-context-monitor` skill will
 warn you when capacity is high, but do not wait for the warning. If you have
-been working for a while and have unsaved learnings, save proactively.
+been working for a while and have unpersisted learnings, persist proactively.
 
-**Use descriptive topic names.** `ctx session save "auth-refactor"` is findable
-later. `ctx session save` defaults to "manual save", which is harder to locate
-among many sessions.
+**Browse previous sessions by topic.** If you need context from a prior session,
+`ctx recall show auth` will match by keyword. You do not need to remember the
+exact date or slug.
 
-**Load previous sessions by topic.** If you need context from a prior session,
-`ctx session load auth` will match by keyword. You do not need to remember the
-exact date or index number.
-
-**Reflection is optional, saving is not.** You can skip `/ctx-reflect` for small
-changes, but always `/ctx-save` before ending a session where you did meaningful
-work. The snapshot is what the next session loads.
+**Reflection is optional but valuable.** You can skip `/ctx-reflect` for small
+changes, but always persist learnings and decisions before ending a session
+where you did meaningful work. These are what the next session loads.
 
 **Let the hook handle context loading.** The `PreToolUse` hook runs `ctx agent`
 automatically with a cooldown, so context loads on first tool use without you

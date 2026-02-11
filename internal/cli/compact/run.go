@@ -21,18 +21,16 @@ import (
 
 // runCompact executes the compact command logic.
 //
-// Loads context, optionally saves a pre-compact snapshot, processes
-// TASKS.md for completed tasks, and removes empty sections from all
-// context files.
+// Loads context, processes TASKS.md for completed tasks, and removes
+// empty sections from all context files.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
 //   - archive: If true, archive old completed tasks to .context/archive/
-//   - noAutoSave: If true, skip pre-compact session snapshot
 //
 // Returns:
 //   - error: Non-nil if context loading fails or .context/ is not found
-func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
+func runCompact(cmd *cobra.Command, archive bool) error {
 	ctx, err := context.Load("")
 	if err != nil {
 		var notFoundError *context.NotFoundError
@@ -50,15 +48,6 @@ func runCompact(cmd *cobra.Command, archive, noAutoSave bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	cyan := color.New(color.FgCyan).SprintFunc()
-
-	// Auto-save session before compact
-	if !noAutoSave {
-		if saveErr := preCompactAutoSave(cmd); saveErr != nil {
-			cmd.Println(
-				fmt.Sprintf("%s Auto-save failed: %v (continuing anyway)", yellow("⚠"), saveErr),
-			)
-		}
-	}
 
 	cmd.Println(cyan("Compact Analysis"))
 	cmd.Println(cyan("================"))

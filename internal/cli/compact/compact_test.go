@@ -106,9 +106,9 @@ func TestCompactCommand(t *testing.T) {
 		t.Fatalf("init failed: %v", err)
 	}
 
-	// Run compact with --no-auto-save to skip pre-compact session
+	// Run compact
 	compactCmd := Cmd()
-	compactCmd.SetArgs([]string{"--no-auto-save"})
+	compactCmd.SetArgs([]string{})
 	if err := compactCmd.Execute(); err != nil {
 		t.Fatalf("compact failed: %v", err)
 	}
@@ -148,9 +148,9 @@ func TestCompactWithTasks(t *testing.T) {
 		t.Fatalf("complete task failed: %v", err)
 	}
 
-	// Run compact without auto-save
+	// Run compact
 	compactCmd := Cmd()
-	compactCmd.SetArgs([]string{"--no-auto-save"})
+	compactCmd.SetArgs([]string{})
 	if err := compactCmd.Execute(); err != nil {
 		t.Fatalf("compact failed: %v", err)
 	}

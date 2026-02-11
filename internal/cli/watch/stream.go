@@ -39,8 +39,7 @@ func extractAttribute(tag, attrName string) string {
 //
 // Scans input line-by-line looking for <context-update> XML tags.
 // When found, parses the type and content, then either displays
-// what would happen (--dry-run) or applies the update. Triggers
-// auto-save after every WatchAutoSaveInterval updates when enabled.
+// what would happen (--dry-run) or applies the update.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -56,11 +55,8 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
-	cyan := color.New(color.FgCyan).SprintFunc()
 
-	// Track applied updates for auto-save
 	updateCount := 0
-	var appliedUpdates []ContextUpdate
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -97,35 +93,9 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 							"%s Applied: [%s] %s\n", green("✓"), update.Type, update.Content,
 						)
 						updateCount++
-						appliedUpdates = append(appliedUpdates, update)
-
-						// Auto-save every N updates
-						if watchAutoSave && updateCount%config.WatchAutoSaveInterval == 0 {
-							if err := watchAutoSaveSession(appliedUpdates); err != nil {
-								cmd.Printf("%s Auto-save failed: %v\n", yellow("⚠"), err)
-							} else {
-								cmd.Printf(
-									"%s Auto-saved session after %d updates\n", cyan("📸"),
-									updateCount,
-								)
-							}
-						}
 					}
 				}
 			}
-		}
-	}
-
-	// Final auto-save if there are remaining updates
-	if watchAutoSave && len(appliedUpdates) > 0 &&
-		updateCount%config.WatchAutoSaveInterval != 0 {
-		if err := watchAutoSaveSession(appliedUpdates); err != nil {
-			cmd.Printf("%s Final auto-save failed: %v\n", yellow("⚠"), err)
-		} else {
-			cmd.Printf(
-				"%s Final auto-save completed (%d total updates)\n",
-				cyan("📸"), updateCount,
-			)
 		}
 	}
 

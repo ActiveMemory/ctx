@@ -38,18 +38,8 @@ const (
 	BinZensical = "zensical"
 )
 
-// Generated file suffixes.
-const (
-	// SuffixPreCompact is the suffix for pre-compact session snapshots.
-	SuffixPreCompact = "-pre-compact.md"
-	// SuffixSummary is the suffix for summary files that accompany transcripts.
-	SuffixSummary = "-summary.md"
-)
-
 // Session defaults.
 const (
-	// DefaultSessionTopic is the fallback topic when none is provided.
-	DefaultSessionTopic = "manual-save"
 	// DefaultSessionFilename is the fallback filename component when
 	// sanitization produces an empty string.
 	DefaultSessionFilename = "session"
@@ -67,8 +57,6 @@ const (
 	EnvCtxDir = "CTX_DIR"
 	// EnvCtxTokenBudget is the environment variable for overriding the token budget.
 	EnvCtxTokenBudget = "CTX_TOKEN_BUDGET" //nolint:gosec // G101: env var name, not a credential
-	// EnvCtxSessionStart is the environment variable for session start correlation.
-	EnvCtxSessionStart = "CTX_SESSION_START"
 )
 
 // Parser configuration.
@@ -115,8 +103,6 @@ const (
 
 // Claude Code integration file names.
 const (
-	// FileAutoSave is the hook script for auto-saving sessions.
-	FileAutoSave = "auto-save-session.sh"
 	// FileBlockNonPathScript is the hook script that blocks non-PATH ctx
 	// invocations.
 	FileBlockNonPathScript = "block-non-path-ctx.sh"
@@ -241,7 +227,6 @@ var DefaultClaudePermissions = []string{
 	"Bash(ctx status:*)",
 	"Bash(ctx agent:*)",
 	"Bash(ctx add:*)",
-	"Bash(ctx session:*)",
 	"Bash(ctx tasks:*)",
 	"Bash(ctx loop:*)",
 }

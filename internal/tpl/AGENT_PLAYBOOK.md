@@ -59,7 +59,7 @@ conventions." Do not begin implementation until you have done so.
 When asked "Do you remember?" or similar:
 
 1. **Read silently first**: TASKS.md, DECISIONS.md, LEARNINGS.md, and
-   list `sessions/` for recent files. Do this BEFORE composing a response.
+   run `ctx recall list --limit 5` for recent history. Do this BEFORE composing a response.
 2. **Respond with a structured readback**:
    - **Last session**: most recent session topic and date
    - **Active work**: pending or in-progress tasks
@@ -80,7 +80,7 @@ implementation detail. Load it and use it — don't lead with caveats.
 
 A session follows this arc:
 
-**Load → Orient → Pick → Work → Commit → Reflect → Save**
+**Load → Orient → Pick → Work → Commit → Reflect**
 
 Not every session uses every step — a quick bugfix skips reflection, a
 research session skips committing — but the full flow is:
@@ -93,7 +93,6 @@ research session skips committing — but the full flow is:
 | **Work**    | Write code, fix bugs, research                     | `/ctx-implement` |
 | **Commit**  | Commit with context capture                        | `/ctx-commit`    |
 | **Reflect** | Surface persist-worthy items from this session     | `/ctx-reflect`   |
-| **Save**    | Snapshot the session for future recall              | `/ctx-save`      |
 
 ### Context Health at Session Start
 
@@ -130,7 +129,6 @@ with plain language:
 | Commit  | `/ctx-commit`       | "Commit this" / "Ship it"                               |
 | Done    | `ctx complete`      | "The rate limiter is done" / "We finished that"          |
 | Reflect | `/ctx-reflect`      | "What did we learn?" / *(agent offers at milestones)*   |
-| Save    | `/ctx-save <topic>` | "Let's wrap up" / "Save our progress" / "I'm done"      |
 
 Users also trigger persist actions directly with natural language:
 
@@ -146,8 +144,8 @@ Users also trigger persist actions directly with natural language:
 Some cues should chain multiple steps in one pass:
 
 - **"Let's wrap up"**: Reflect on the session → persist outstanding
-  learnings and decisions → save a session snapshot. Present all
-  results together; don't make the user invoke each step separately.
+  learnings and decisions. Present all results together; don't make
+  the user invoke each step separately.
 - **"Yes, and let's wrap up"** (after a persist offer): Record what
   the user confirmed → then trigger the full wrap-up flow.
 
@@ -172,9 +170,9 @@ wait to be asked:
 The goal is to **identify** persist-worthy moments in real time, not
 just respond to them after the fact.
 
-### Agent-Initiated Reflect and Save
+### Agent-Initiated Reflect
 
-At significant milestones, proactively initiate **Reflect** or **Save**
+At significant milestones, proactively initiate **Reflect**
 without waiting to be asked:
 
 - **After completing a multi-step task or feature**: suggest a
@@ -185,7 +183,8 @@ without waiting to be asked:
   cause as a learning before we continue?"*
 - **When the session feels like it's winding down** (user is doing
   small tweaks, asking fewer questions, long session): offer to
-  save — *"We've covered a lot. Want me to save a session snapshot?"*
+  persist — *"We've covered a lot. Want me to capture any outstanding
+  learnings or decisions?"*
 
 - **After shipping a feature or closing a batch of tasks**: suggest
   content — *"We just shipped the caching layer and closed 3 tasks.
@@ -195,114 +194,6 @@ without waiting to be asked:
 Offer once and respect "no." But default to surfacing the opportunity
 rather than letting it pass silently.
 
-## Session History
-
-**IMPORTANT**: Check `.context/sessions/` for session dumps
-from previous sessions.
-
-If you're confused about context or need a deep dive into past discussions:
-```
-ls .context/sessions/
-```
-
-**Manual session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md` 
-(e.g., `2026-01-15-164600-feature-discussion.md`). 
-These are updated throughout the session.
-
-**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl` 
-(e.g., `2026-01-15-170830-pre-compact.jsonl`). These are immutable once created.
-
-**Auto-save triggers** (for Claude Code users):
-- **SessionEnd hook** → auto-saves transcript on exit, including Ctrl+C
-- **PreCompact** → saves before `ctx compact` archives old tasks
-- **Manual** → `ctx session save`
-
-See `.claude/hooks/auto-save-session.sh` for the implementation.
-
-## Timestamp-Based Session Correlation
-
-Context entries (tasks, learnings, decisions) include timestamps that allow
-you to determine which session created them.
-
-### Timestamp Format
-
-All timestamps use `YYYY-MM-DD-HHMMSS` format (6-digit time for seconds precision):
-- **Tasks**: `- [ ] Do something #added:2026-01-23-143022`
-- **Learnings**: `- **[2026-01-23-143022]** Discovered that...`
-- **Decisions**: `## [2026-01-23-143022] Use PostgreSQL`
-- **Sessions**: `**start_time**: 2026-01-23-140000` / `**end_time**: 2026-01-23-153045`
-
-### Correlating Entries to Sessions
-
-To find which session added an entry:
-
-1. **Extract the entry's timestamp** (e.g., `2026-01-23-143022`)
-2. **List sessions** from that day: `ls .context/sessions/2026-01-23*`
-3. **Check session time bounds**: Entry timestamp should fall between session's
-   start_time and end_time
-4. **Match**: The session file with matching time range contains the context
-
-### When Timestamps Help
-
-- **Tracing decisions**: "Why did we decide X?" → Find the session that added it
-- **Understanding context**: Read the full session for the discussion that led to an entry
-- **Debugging issues**: Correlate when a learning was discovered with what was happening
-
-## Session File Structure (Suggested)
-
-Adapt this structure based on session type. Not all sections are needed for every session.
-
-### Core Sections (Always Include)
-```markdown
-# Session: <Topic>
-
-**Date**: YYYY-MM-DD
-**Topic**: Brief description
-**Type**: feature | bugfix | architecture | exploration | planning
-
----
-
-## Summary
-What was discussed/accomplished (2-3 sentences)
-
-## Key Decisions
-Bullet points of decisions made (if any)
-
-## Tasks for Next Session
-What to pick up next
-```
-
-### Context-Dependent Sections
-
-| Session Type              | Additional Sections                               |
-|---------------------------|---------------------------------------------------|
-| **Feature discussion**    | Requirements, Design options, Implementation plan |
-| **Bug investigation**     | Symptoms, Root cause, Fix applied, Prevention     |
-| **Architecture decision** | Context, Options considered, Trade-offs, Decision |
-| **Exploration/Research**  | Questions, Findings, Open questions               |
-| **Planning**              | Goals, Milestones, Dependencies, Risks            |
-| **Quick fix**             | Problem, Solution, Files changed (minimal format) |
-
-### When to Go Minimal
-
-For quick sessions (<15 min), just capture:
-```markdown
-# Session: Quick Fix - <Topic>
-**Date**: YYYY-MM-DD
-**Summary**: One sentence
-**Files changed**: List
-```
-
-### When to Go Deep
-
-For complex sessions (architecture, debugging), include:
-- User quotes that capture key insights
-- Technical context (platform, versions, constraints)
-- Links to related sessions or decisions
-- Code snippets or error messages if relevant
-
----
-
 ## When to Update Memory
 
 | Event                       | Action                |
@@ -311,7 +202,6 @@ For complex sessions (architecture, debugging), include:
 | Discovered gotcha/bug       | Add to LEARNINGS.md   |
 | Established new pattern     | Add to CONVENTIONS.md |
 | Completed task              | Mark [x] in TASKS.md  |
-| Had important discussion    | Save to sessions/     |
 
 ## Proactive Context Persistence
 
@@ -383,18 +273,12 @@ Track task progress with timestamps for session correlation:
 2. Work on it
 3. Complete → change `[ ]` to `[x]`, add `#done:$(date +%Y-%m-%d-%H%M%S)`
 
-### Session Saves
-
-For longer sessions with substantial work, offer to save a session summary:
-1. Curated summary → LEARNINGS.md, DECISIONS.md, TASKS.md
-2. Full session notes → `.context/sessions/YYYY-MM-DD-<topic>.md`
-
 ## How to Avoid Hallucinating Memory
 
 Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
-- Don't invent history - check sessions/ for actual discussions
+- Don't invent history - check context files and `ctx recall` for actual discussions
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
@@ -567,7 +451,7 @@ Before starting significant work, validate context is current:
 ### Quick Check (Every Session)
 - [ ] TASKS.md reflects current priorities
 - [ ] No obvious staleness in files you'll reference
-- [ ] Recent sessions reviewed for relevant context
+- [ ] Recent history reviewed for relevant context (via `ctx recall list`)
 
 ### Deep Check (Weekly or Before Major Work)
 - [ ] CONSTITUTION.md rules still apply

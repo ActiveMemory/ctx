@@ -297,7 +297,6 @@ func TestInitCreatesPermissions(t *testing.T) {
 		"Bash(ctx status:*)",
 		"Bash(ctx agent:*)",
 		"Bash(ctx add:*)",
-		"Bash(ctx session:*)",
 	}
 
 	for _, p := range requiredPerms {
@@ -376,10 +375,6 @@ func TestInitMergesPermissions(t *testing.T) {
 	if !permSet["Bash(ctx agent:*)"] {
 		t.Error("missing new permission 'Bash(ctx agent:*)'")
 	}
-	if !permSet["Bash(ctx session:*)"] {
-		t.Error("missing new permission 'Bash(ctx session:*)'")
-	}
-
 	// Check no duplicates (ctx status should appear once)
 	count := 0
 	for _, p := range settings.Permissions.Allow {

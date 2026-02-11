@@ -841,10 +841,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#session-snapshots-at-milestones" class="md-nav__link">
+  <a href="#context-persistence-at-milestones" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Session Snapshots at Milestones
+        Context Persistence at Milestones
       
     </span>
   </a>
@@ -961,7 +961,7 @@ context persistence as a first-class deliverable, not an afterthought.</p>
 <td>Generate the loop shell script</td>
 </tr>
 <tr>
-<td><code>ctx watch --auto-save</code></td>
+<td><code>ctx watch</code></td>
 <td>Command</td>
 <td>Monitor AI output and persist context updates</td>
 </tr>
@@ -1198,11 +1198,10 @@ to process context updates from the AI output.</p>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Terminal 2: Watch for context updates</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log<span class="w"> </span>--auto-save
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log
 </span></code></pre></div>
-<p>The <code>--auto-save</code> flag periodically saves session snapshots to
-<code>.context/sessions/</code>. The watch command parses XML context-update commands from
-the AI output and applies them:</p>
+<p>The watch command parses XML context-update commands from the AI output and
+applies them:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>registration<span class="nt">&lt;/context-update&gt;</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span><span class="nt">&gt;</span>Email<span class="w"> </span>verification<span class="w"> </span>needs<span class="w"> </span>SMTP<span class="w"> </span>configured<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
@@ -1270,7 +1269,7 @@ touch multiple files.</p>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">20</span>
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log<span class="w"> </span><span class="p">&amp;</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log<span class="w"> </span>--auto-save
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
 </span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Next morning:</span>
 </span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>ctx<span class="w"> </span>status
@@ -1321,10 +1320,6 @@ instructions:</p>
 <td>Creates new tasks in TASKS.md with <code>#added</code> timestamp</td>
 </tr>
 <tr>
-<td>Finishes a phase</td>
-<td>Saves a session snapshot to <code>.context/sessions/</code></td>
-</tr>
-<tr>
 <td>Hits an unexpected failure</td>
 <td>Documents the root cause before moving on</td>
 </tr>
@@ -1345,17 +1340,12 @@ instructions:</p>
 </span></code></pre></div>
 <p>Steps 2, 4, 5, 6, and 7 are proactive context persistence. The agent was not
 asked to do any of them.</p>
-<h3 id="session-snapshots-at-milestones">Session Snapshots at Milestones<a class="headerlink" href="#session-snapshots-at-milestones" title="Permanent link">&para;</a></h3>
-<p>For long autonomous runs, the agent saves session snapshots at natural
-boundaries, often at phase transitions or after completing a cluster of related
-tasks:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>.context/sessions/
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  2026-01-25-020000-phase1-foundation.md
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  2026-01-25-040000-phase2-core-features.md
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  2026-01-25-060000-phase3-hardening.md
-</span></code></pre></div>
-<p>If the loop crashes at 4 AM, the most recent snapshot tells you exactly where
-to resume.</p>
+<h3 id="context-persistence-at-milestones">Context Persistence at Milestones<a class="headerlink" href="#context-persistence-at-milestones" title="Permanent link">&para;</a></h3>
+<p>For long autonomous runs, the agent persists context at natural boundaries,
+often at phase transitions or after completing a cluster of related tasks.
+It updates TASKS.md, DECISIONS.md, and LEARNINGS.md as it goes.</p>
+<p>If the loop crashes at 4 AM, the context files tell you exactly where to
+resume. You can also use <code>ctx recall list</code> to review the session transcripts.</p>
 <h3 id="the-persistence-contract">The Persistence Contract<a class="headerlink" href="#the-persistence-contract" title="Permanent link">&para;</a></h3>
 <p>The autonomous loop has an implicit contract:</p>
 <ol>

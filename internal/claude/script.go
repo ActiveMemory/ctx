@@ -11,22 +11,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/tpl"
 )
 
-// AutoSaveScript returns the auto-save session script content.
-//
-// The script automatically saves Claude Code session transcripts when a
-// session ends. It is installed to .claude/hooks/ during ctx init --claude.
-//
-// Returns:
-//   - []byte: Raw bytes of the auto-save-session.sh script
-//   - error: Non-nil if the embedded file cannot be read
-func AutoSaveScript() ([]byte, error) {
-	content, err := tpl.ClaudeHookByFileName(config.FileAutoSave)
-	if err != nil {
-		return nil, errFileRead(config.FileAutoSave, err)
-	}
-	return content, nil
-}
-
 // BlockNonPathCtxScript returns the script that blocks non-PATH ctx
 // invocations.
 //

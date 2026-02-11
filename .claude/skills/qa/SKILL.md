@@ -77,7 +77,7 @@ make smoke
 
 Builds the binary and exercises `ctx init`, `ctx status`,
 `ctx agent`, `ctx drift`, `ctx add task`, and
-`ctx session save` in a temp directory.
+`ctx recall list` in a temp directory.
 
 ## Shortcut
 

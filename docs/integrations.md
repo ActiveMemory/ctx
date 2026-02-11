@@ -18,8 +18,7 @@ for popular AI coding assistants.
 
 ## Claude Code (Full Integration)
 
-Claude Code has the deepest integration with automatic context loading and 
-session persistence.
+Claude Code has the deepest integration with automatic context loading.
 
 ### Automatic Setup
 
@@ -34,7 +33,7 @@ This creates:
 | File/Directory                | Purpose                |
 |-------------------------------|------------------------|
 | `.context/`                   | All context files      |
-| `.claude/hooks/`              | Auto-save scripts      |
+| `.claude/hooks/`              | Lifecycle scripts      |
 | `.claude/settings.local.json` | Hook configuration     |
 | `CLAUDE.md`                   | Bootstrap instructions |
 
@@ -47,14 +46,12 @@ graph TD
     C --> D[ctx agent loads context]
     D --> E[Work happens]
     E --> F[Session End]
-    F --> G[SessionEnd hook saves snapshot]
 ```
 
 1. **Session start**: Claude reads `CLAUDE.md`, which tells it to check `.context/`
 2. **First tool use**: `PreToolUse` hook runs `ctx agent` and emits the context
    packet (subsequent invocations within the cooldown window are silent)
-3. **Session end**: `SessionEnd` hook saves context snapshot to `.context/sessions/`
-4. **Next session**: Claude sees previous sessions and continues with context
+3. **Next session**: Claude reads context files and continues with context
 
 ### Generated Configuration
 
@@ -70,16 +67,6 @@ graph TD
           {
             "type": "command",
             "command": "ctx agent --budget 4000 --session $PPID 2>/dev/null || true"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/auto-save-session.sh"
           }
         ]
       }
@@ -108,16 +95,14 @@ The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 3. Claude should cite specific context:
    * Current tasks from `.context/TASKS.md`
    * Recent decisions or learnings
-   * Previous session topics from `.context/sessions/`
+   * Recent session history from `ctx recall`
 
 ### Troubleshooting
 
 | Issue                | Solution                                                   |
 |----------------------|------------------------------------------------------------|
 | Context not loading  | Check `ctx` is in PATH: `which ctx`                        |
-| No sessions saved    | Verify `.claude/settings.local.json` has `SessionEnd` hook |
 | Hook errors          | Check script permissions: `chmod +x .claude/hooks/*.sh`    |
-| Missing sessions dir | Create it: `mkdir -p .context/sessions`                    |
 
 ### Manual Context Load
 
@@ -145,7 +130,6 @@ in Claude Code with `/skill-name`.
 | `/ctx-agent`   | Get AI-optimized context packet                    |
 | `/ctx-drift`           | Detect and fix context drift (structural + semantic) |
 | `/ctx-alignment-audit` | Audit doc claims against playbook instructions       |
-| `/ctx-save`    | Save current session to `.context/sessions/`       |
 | `/ctx-reflect` | Review session and suggest what to persist         |
 
 #### Context Persistence Skills

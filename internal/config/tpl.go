@@ -170,59 +170,6 @@ Context's code is distributed under
 
 `
 
-	// TplSessionInsightsSummary formats the insights extraction summary.
-	// Args: decision count, learning count.
-	TplSessionInsightsSummary = "*Found %d potential decisions and %d potential learnings*"
-
-	// TplSessionFilename formats a session save filename.
-	// Args: timestamp, topic.
-	TplSessionFilename = "%s-%s.md"
-
-	// TplSessionTotalMessages formats the total message count footer.
-	// Args: count.
-	TplSessionTotalMessages = "*Total messages: %d*"
-
-	// TplSessionRoleHeading formats a role heading in session transcripts.
-	// Args: role.
-	TplSessionRoleHeading = "## %s"
-
-	// TplSessionTimestamp formats an italic timestamp line.
-	// Args: formatted time.
-	TplSessionTimestamp = "*%s*"
-
-	// TplSessionThinkingOpen is the collapsible thinking block opening.
-	TplSessionThinkingOpen = "<details>\n<summary>\U0001f4ad Thinking</summary>"
-
-	// TplSessionToolName formats a tool invocation heading.
-	// Args: tool name.
-	TplSessionToolName = "**\U0001f527 Tool: %s**"
-
-	// TplSessionToolParam formats a tool parameter line.
-	// Args: key, value.
-	TplSessionToolParam = "- %s: `%s`"
-
-	// TplSessionToolResult is the tool result heading.
-	TplSessionToolResult = "**\U0001f4cb Tool Result**"
-
-	// TplSessionTruncated is the truncation marker for long content.
-	TplSessionTruncated = "...(truncated)"
-
-	// TplSessionHeading formats the session snapshot title.
-	// Args: topic.
-	TplSessionHeading = "# Session: %s"
-
-	// TplSessionPlaceholderSummary is the placeholder in the summary section.
-	TplSessionPlaceholderSummary = "[Describe what was accomplished in this session]"
-
-	// TplSessionPlaceholderNoDecisions is shown when no decisions are found.
-	TplSessionPlaceholderNoDecisions = "[No recent decisions found]"
-
-	// TplSessionPlaceholderNoLearnings is shown when no learnings are found.
-	TplSessionPlaceholderNoLearnings = "[No recent learnings found]"
-
-	// TplSessionPlaceholderNextTasks is the placeholder for next-session tasks.
-	TplSessionPlaceholderNextTasks = "[List tasks to continue in the next session]"
-
 	// TplRecallFilename formats a journal entry filename.
 	// Args: date, slug, shortID.
 	TplRecallFilename = "%s-%s-%s.md"

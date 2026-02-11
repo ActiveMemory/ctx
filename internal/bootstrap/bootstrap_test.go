@@ -64,7 +64,6 @@ func TestInitialize(t *testing.T) {
 		"watch",
 		"hook",
 		"learnings",
-		"session",
 		"tasks",
 		"loop",
 		"recall",

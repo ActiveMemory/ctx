@@ -36,11 +36,11 @@ Here's what that looks like in practice:
 ❯ "Do you remember?"
 
 ● Yes. The PreToolUse hook runs ctx agent, and CLAUDE.md tells me to
-  check .context/sessions/. I'll have context.
+  read the context files. I have context.
 
-❯ "Summarize all sessions we have had so far?"
+❯ "What have we been working on recently?"
 
-● Yes. I can ls .context/sessions/ and read each file:
+● Yes. I can run ctx recall list and review recent activity:
     - 2025-01-20: The meta-experiment that started it all
     - 2025-01-21: The ctx rename + Claude hooks session
 ```

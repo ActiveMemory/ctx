@@ -43,7 +43,7 @@ Do all of this **silently** — do not narrate the steps:
    section (TASKS.md, DECISIONS.md, LEARNINGS.md, etc.)
 3. **List recent sessions**:
    ```bash
-   ctx session list --limit 3
+   ctx recall list --limit 3
    ```
 4. **Present the structured readback** (see format below)
 

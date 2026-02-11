@@ -348,6 +348,29 @@ indexing — grep across 100+ journal files won't scale.
       full list output, which works but is inefficient for large session
       histories. #priority:low #added:2026-02-09
 
+**GitHub Issues**:
+
+- [ ] GH-6: Fix `ctx journal site --build` silent failure on macOS system
+      Python 3.9. The stub package v0.0.2 installs but has no CLI binary.
+      Update error message to suggest `pipx install zensical` and note
+      Python >= 3.10 requirement. #priority:high #source:github-issue-6
+      #added:2026-02-11
+
+- [ ] GH-8: Replace `pip install zensical` → `pipx install zensical` across
+      docs and Go error messages. 5 doc files + 4 Go source locations need
+      updating. Keep Makefile's `.venv/bin/pip install` as-is (venv context).
+      See issue for full file:line inventory. #priority:high #source:github-issue-8
+      #added:2026-02-11
+
+- [x] GH-7: Session/journal architecture simplification. Three overlapping
+      storage layers (`.claude/projects/`, `.context/sessions/`, `.context/journal/`)
+      with redundancy. `.context/sessions/` is a dead end -- nothing reads from it.
+      **Done**: Eliminated `.context/sessions/` entirely. Deleted `internal/cli/session/`
+      (15 files), removed auto-save hook, removed `--auto-save` from watch, removed
+      pre-compact auto-save, removed `/ctx-save` skill, updated ~45 docs. Two stores
+      remain: raw transcripts (`~/.claude/projects/`) and enriched journal
+      (`.context/journal/`). See DECISIONS.md. #done:2026-02-11
+
 ## Blocked
 
 ## Reference
