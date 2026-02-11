@@ -7,10 +7,10 @@
 // Package recall provides CLI commands for browsing and searching AI session history.
 //
 // The recall system parses JSONL session files from various AI coding assistants
-// (currently Claude Code) and provides commands to list, view, and search sessions.
+// (currently Claude Code) and provides commands to list, view, and export sessions.
 //
 // Commands:
 //   - ctx recall list: List all parsed sessions
 //   - ctx recall show <id>: Show session details
-//   - ctx recall serve: Start web server for browsing (Phase 3)
+//   - ctx recall export: Export sessions to editable journal files
 package recall

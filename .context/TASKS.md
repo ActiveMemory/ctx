@@ -73,9 +73,9 @@ Analysis of 69 sessions found 8 recurring workflow patterns. 7 have automation g
 **Documentation Drift** (from `ideas/REPORT-2-documentation-drift.md`):
 Overall drift severity LOW. 14 existing doc.go files are accurate. Key gaps below.
 
-- [ ] Fix `internal/cli/recall/doc.go`: replace stale `serve` subcommand
+- [x] Fix `internal/cli/recall/doc.go`: replace stale `serve` subcommand
       with `export`, remove "(Phase 3)" annotation. Godoc shows a command
-      that doesn't exist. #priority:high #source:report-2
+      that doesn't exist. #priority:high #source:report-2 #done:2026-02-11
 
 - [ ] Fix `internal/claude/doc.go`: change stale `tpl/commands/*.md` to
       `claude/skills/*/SKILL.md`, add `prompt-coach.sh` and
@@ -98,9 +98,9 @@ Overall drift severity LOW. 14 existing doc.go files are accurate. Key gaps belo
 **Maintainability** (from `ideas/REPORT-3-maintainability.md`):
 Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.
 
-- [ ] Add `Context.File(name string)` method to eliminate 10+ linear scan
+- [x] Add `Context.File(name string)` method to eliminate 10+ linear scan
       boilerplate instances across 5 packages. Low effort, high
-      impact. #priority:high #source:report-3
+      impact. #priority:high #source:report-3 #done:2026-02-11
 
 - [ ] Extract `findSessions(allProjects bool)` helper in `recall/run.go`:
       identical 20-line block duplicated in 3 functions. #priority:high #source:report-3
