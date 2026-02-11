@@ -1732,8 +1732,7 @@
 <p>Context works with any AI tool that can read files. This guide covers setup 
 for popular AI coding assistants.</p>
 <h2 id="claude-code-full-integration">Claude Code (Full Integration)<a class="headerlink" href="#claude-code-full-integration" title="Permanent link">&para;</a></h2>
-<p>Claude Code has the deepest integration with automatic context loading and 
-session persistence.</p>
+<p>Claude Code has the deepest integration with automatic context loading.</p>
 <h3 id="automatic-setup">Automatic Setup<a class="headerlink" href="#automatic-setup" title="Permanent link">&para;</a></h3>
 <p>Running <code>ctx init</code> automatically configures Claude Code:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init
@@ -1753,7 +1752,7 @@ session persistence.</p>
 </tr>
 <tr>
 <td><code>.claude/hooks/</code></td>
-<td>Auto-save scripts</td>
+<td>Lifecycle scripts</td>
 </tr>
 <tr>
 <td><code>.claude/settings.local.json</code></td>
@@ -1771,14 +1770,12 @@ session persistence.</p>
     B --&gt; C[PreToolUse hook runs]
     C --&gt; D[ctx agent loads context]
     D --&gt; E[Work happens]
-    E --&gt; F[Session End]
-    F --&gt; G[SessionEnd hook saves snapshot]</code></pre>
+    E --&gt; F[Session End]</code></pre>
 <ol>
 <li><strong>Session start</strong>: Claude reads <code>CLAUDE.md</code>, which tells it to check <code>.context/</code></li>
 <li><strong>First tool use</strong>: <code>PreToolUse</code> hook runs <code>ctx agent</code> and emits the context
    packet (subsequent invocations within the cooldown window are silent)</li>
-<li><strong>Session end</strong>: <code>SessionEnd</code> hook saves context snapshot to <code>.context/sessions/</code></li>
-<li><strong>Next session</strong>: Claude sees previous sessions and continues with context</li>
+<li><strong>Next session</strong>: Claude reads context files and continues with context</li>
 </ol>
 <h3 id="generated-configuration">Generated Configuration<a class="headerlink" href="#generated-configuration" title="Permanent link">&para;</a></h3>
 <p><code>.claude/settings.local.json</code>:</p>
@@ -1794,19 +1791,9 @@ session persistence.</p>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">          </span><span class="p">}</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="p">]</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="p">}</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="p">],</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nt">&quot;SessionEnd&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="p">{</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">          </span><span class="p">{</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.claude/hooks/auto-save-session.sh&quot;</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">          </span><span class="p">}</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="p">]</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="p">}</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span><span class="p">]</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">}</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="customizing-token-budget-and-cooldown">Customizing Token Budget and Cooldown<a class="headerlink" href="#customizing-token-budget-and-cooldown" title="Permanent link">&para;</a></h3>
 <p>Edit the PreToolUse command to change the token budget or cooldown:</p>
@@ -1823,7 +1810,7 @@ The default cooldown is 10 minutes; use <code>--cooldown 0</code> to disable it.
 <li>Claude should cite specific context:</li>
 <li>Current tasks from <code>.context/TASKS.md</code></li>
 <li>Recent decisions or learnings</li>
-<li>Previous session topics from <code>.context/sessions/</code></li>
+<li>Recent session history from <code>ctx recall</code></li>
 </ol>
 <h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
 <table>
@@ -1839,16 +1826,8 @@ The default cooldown is 10 minutes; use <code>--cooldown 0</code> to disable it.
 <td>Check <code>ctx</code> is in PATH: <code>which ctx</code></td>
 </tr>
 <tr>
-<td>No sessions saved</td>
-<td>Verify <code>.claude/settings.local.json</code> has <code>SessionEnd</code> hook</td>
-</tr>
-<tr>
 <td>Hook errors</td>
 <td>Check script permissions: <code>chmod +x .claude/hooks/*.sh</code></td>
-</tr>
-<tr>
-<td>Missing sessions dir</td>
-<td>Create it: <code>mkdir -p .context/sessions</code></td>
 </tr>
 </tbody>
 </table>
@@ -1888,10 +1867,6 @@ in Claude Code with <code>/skill-name</code>.</p>
 <tr>
 <td><code>/ctx-alignment-audit</code></td>
 <td>Audit doc claims against playbook instructions</td>
-</tr>
-<tr>
-<td><code>/ctx-save</code></td>
-<td>Save current session to <code>.context/sessions/</code></td>
 </tr>
 <tr>
 <td><code>/ctx-reflect</code></td>

@@ -11,6 +11,21 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [How Deep Is Too Deep?](2026-02-12-how-deep-is-too-deep.md)
+
+*Jose Alekhinne / February 12, 2026*
+
+I kept feeling like I should go deeper into ML theory. Then I spent a week
+debugging an agent failure that had nothing to do with model architecture and
+everything to do with knowing which abstraction was leaking. This post is
+about when depth compounds and when it doesn't: why the useful understanding
+lives one or two layers below where you work, not at the bottom of the stack.
+
+**Topics**: AI foundations, abstraction boundaries, agentic systems,
+context engineering, failure modes
+
+---
+
 ### [Defense in Depth: Securing AI Agents](2026-02-09-defense-in-depth-securing-ai-agents.md)
 
 *Jose Alekhinne / February 9, 2026*

@@ -17,18 +17,6 @@ const MaxLearningsToSummarize = 5
 // MaxPreviewLen is the maximum length for preview lines before truncation.
 const MaxPreviewLen = 60
 
-// WatchAutoSaveInterval is the number of updates between auto-saves
-// in watch mode.
-const WatchAutoSaveInterval = 5
-
-// Session transcript formatting constants.
-const (
-	// SessionMaxParamLen is the max display length for tool parameter values.
-	SessionMaxParamLen = 100
-	// SessionMaxResultLen is the max display length for tool result content.
-	SessionMaxResultLen = 500
-)
-
 // Content detection constants.
 const (
 	// MinContentLen is the minimum byte length for a file to be considered

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date       | Decision                                                                         |
 |------------|----------------------------------------------------------------------------------|
+| 2026-02-11 | Remove .context/sessions/ storage layer and ctx session command                  |
 | 2026-02-06 | Drop ctx-journal-summarize skill (duplicates ctx-blog)                           |
 | 2026-02-04 | E/A/R classification as the standard for skill evaluation                        |
 | 2026-01-29 | Add quick reference index to DECISIONS.md                                        |
@@ -24,6 +25,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed)                            |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements                              |
 <!-- INDEX:END -->
+
+## [2026-02-11] Remove .context/sessions/ storage layer and ctx session command
+
+**Status**: Accepted
+
+**Context**: The session/recall/journal system had three overlapping storage layers: `~/.claude/projects/` (raw JSONL transcripts, owned by Claude Code), `.context/sessions/` (JSONL copies + context snapshots), and `.context/journal/` (enriched markdown from `ctx recall export`). The recall pipeline reads directly from `~/.claude/projects/`, making `.context/sessions/` a dead-end write sink that nothing reads from. The auto-save hook copied transcripts to a directory nobody consumed. The `ctx session save` command created context snapshots that git already provides through version history. This was ~15 Go source files, a shell hook, ~20 config constants, and 30+ doc references supporting infrastructure with no consumers.
+
+**Decision**: Remove `.context/sessions/` entirely. Two stores remain: raw transcripts (global, tool-owned in `~/.claude/projects/`) and enriched journal (project-local in `.context/journal/`).
+
+**Rationale**: Dead-end write sinks waste code surface, maintenance effort, and user attention. The recall pipeline already proved that reading directly from `~/.claude/projects/` is sufficient. Context snapshots are redundant with git history. Removing the middle layer simplifies the architecture from three stores to two, eliminates an entire CLI command tree (`ctx session`), and removes a shell hook that fired on every session end.
+
+**Consequences**: Deleted `internal/cli/session/` (15 files), removed auto-save hook, removed `--auto-save` from watch, removed pre-compact auto-save from compact, removed `/ctx-save` skill, updated ~45 documentation files. Four earlier decisions superseded (SessionEnd hook, Auto-Save Before Compact, Session Filename Format, Two-Tier Persistence Model). Users who want session history use `ctx recall list/export` instead.
+
+---
 
 ## [2026-02-06-181708] Drop ctx-journal-summarize skill (duplicates ctx-blog)
 
@@ -327,7 +342,7 @@ This breaks when:
 
 ## [2026-01-20-200000] Use SessionEnd Hook for Auto-Save
 
-**Status**: Accepted (implemented)
+**Status**: Superseded (removed in v0.4.0 — `.context/sessions/` eliminated; recall pipeline reads from `~/.claude/projects/` directly)
 
 **Context**: Need to save context even when user exits abruptly (Ctrl+C).
 
@@ -383,7 +398,7 @@ but may already have a CLAUDE.md from `claude init`.
 
 ## [2026-01-20-160000] Auto-Save Before Compact
 
-**Status**: Accepted (to be implemented)
+**Status**: Superseded (removed in v0.4.0 — `.context/sessions/` eliminated; compact no longer writes session snapshots)
 
 **Context**: `ctx compact` archives old tasks. Information could be
 lost if not captured.
@@ -406,7 +421,7 @@ lost if not captured.
 
 ## [2026-01-20-140000] Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md
 
-**Status**: Accepted
+**Status**: Superseded (removed in v0.4.0 — `.context/sessions/` eliminated; journal entries use `ctx recall export` naming)
 
 **Context**: Multiple sessions per day would overwrite each other.
 Also, multiple compacts in the same minute could collide.
@@ -431,7 +446,7 @@ Two file types:
 
 ## [2026-01-20-120000] Two-Tier Context Persistence Model
 
-**Status**: Accepted
+**Status**: Superseded (v0.4.0 — two tiers remain but `.context/sessions/` eliminated; full-dump tier is now `~/.claude/projects/` JSONL + `.context/journal/` enriched markdown)
 
 **Context**: Need to persist context across sessions. Token budgets limit
 what can be loaded. But nothing should be truly lost.

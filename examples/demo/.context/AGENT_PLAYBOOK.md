@@ -59,7 +59,7 @@ conventions." Do not begin implementation until you have done so.
 When asked "Do you remember?" or similar:
 
 1. **Read silently first**: TASKS.md, DECISIONS.md, LEARNINGS.md, and
-   list `sessions/` for recent files. Do this BEFORE composing a response.
+   run `ctx recall list --limit 5` for recent history. Do this BEFORE composing a response.
 2. **Respond with a structured readback**:
    - **Last session**: most recent session topic and date
    - **Active work**: pending or in-progress tasks
@@ -76,51 +76,6 @@ with 3 remaining tasks in Phase 2. Want to continue with that?"
 The context IS your memory. It's stored externally in files, but that's an
 implementation detail. Load it and use it — don't lead with caveats.
 
-## Session History
-
-**IMPORTANT**: Check `.context/sessions/` for session dumps
-from previous sessions.
-
-If you're confused about context or need a deep dive into past discussions:
-```
-ls .context/sessions/
-```
-
-**Manual session files** are named `YYYY-MM-DD-HHMMSS-<topic>.md`
-(e.g., `2026-01-15-143000-database-timeout-investigation.md`).
-These are updated throughout the session.
-
-**Auto-snapshot files** are named `YYYY-MM-DD-HHMMSS-<event>.jsonl`
-(e.g., `2026-01-15-170830-pre-compact.jsonl`). These are immutable once created.
-
-**Auto-save triggers** (for Claude Code users):
-- **SessionEnd hook** → auto-saves transcript on exit, including Ctrl+C
-- **PreCompact** → saves before `ctx compact` archives old tasks
-- **Manual** → `ctx session save`
-
-## Timestamp-Based Session Correlation
-
-Context entries (tasks, learnings, decisions) include timestamps that allow
-you to determine which session created them.
-
-### Timestamp Format
-
-All timestamps use `YYYY-MM-DD-HHMMSS` format (6-digit time for seconds precision):
-- **Tasks**: `- [ ] Do something #added:2026-01-23-143022`
-- **Learnings**: `## [2026-01-23-143022] Discovered that...`
-- **Decisions**: `## [2026-01-23-143022] Use PostgreSQL`
-- **Sessions**: `**start_time**: 2026-01-23-140000` / `**end_time**: 2026-01-23-153045`
-
-### Correlating Entries to Sessions
-
-To find which session added an entry:
-
-1. **Extract the entry's timestamp** (e.g., `2026-01-15-143000`)
-2. **List sessions** from that day: `ls .context/sessions/2026-01-15*`
-3. **Check session time bounds**: Entry timestamp should fall between session's
-   start_time and end_time
-4. **Match**: The session file with matching time range contains the context
-
 ## When to Update Memory
 
 | Event                       | Action                |
@@ -129,7 +84,6 @@ To find which session added an entry:
 | Discovered gotcha/bug       | Add to LEARNINGS.md   |
 | Established new pattern     | Add to CONVENTIONS.md |
 | Completed task              | Mark [x] in TASKS.md  |
-| Had important discussion    | Save to sessions/     |
 
 ## Proactive Context Persistence
 
@@ -177,7 +131,7 @@ Track task progress with timestamps for session correlation:
 Never assume. If you don't see it in files, you don't know it.
 
 - Don't claim "we discussed X" without file evidence
-- Don't invent history - check sessions/ for actual discussions
+- Don't invent history - check context files and `ctx recall` for actual discussions
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
@@ -215,7 +169,7 @@ Before starting significant work, validate context is current:
 ### Quick Check (Every Session)
 - [ ] TASKS.md reflects current priorities
 - [ ] No obvious staleness in files you'll reference
-- [ ] Recent sessions reviewed for relevant context
+- [ ] Recent history reviewed for relevant context (via `ctx recall list`)
 
 ### Deep Check (Weekly or Before Major Work)
 - [ ] CONSTITUTION.md rules still apply

@@ -8,8 +8,8 @@ unnecessary clarification back-and-forth.
 
 ## Before Auditing
 
-1. **Check for session data**: look in `.context/sessions/` and
-   `.context/journal/` for transcripts to analyze
+1. **Check for session data**: look in `.context/journal/` for
+   transcripts to analyze
 2. **Need at least 3 sessions**: fewer than that gives too small a
    sample; tell the user to try again later
 3. **Confirm scope**: if the user specifies sessions or a date
@@ -40,21 +40,19 @@ unnecessary clarification back-and-forth.
 
 ## Data Sources
 
-Check both locations for session transcripts:
+Session transcripts are stored in the journal:
 
 | Source                  | Format                             |
 |-------------------------|------------------------------------|
-| `.context/sessions/`    | Manual session dumps (markdown)    |
 | `.context/journal/`     | Exported session journals (richer) |
 
 Journal entries contain full turn-by-turn conversation and are
-the better source when available. Session dumps are shorter
-summaries but still useful for pattern detection.
+the best source for pattern detection.
 
 ## Process
 
-1. **Gather transcripts**: read 3-5 recent sessions from journal
-   or session dumps
+1. **Gather transcripts**: read 3-5 recent sessions from the
+   journal
 2. **Extract user prompts**: isolate the human turns
 3. **Identify vague prompts**: flag those that caused clarifying
    questions (see criteria below)

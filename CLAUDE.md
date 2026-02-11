@@ -8,8 +8,7 @@ This project uses Context (ctx) for context persistence across sessions.
 ## On Session Start
 
 1. **Read `.context/AGENT_PLAYBOOK.md`** first - it explains how to use this system
-2. **Check `.context/sessions/`** for session dumps from previous sessions
-3. **Run `ctx status`** to see current context summary
+2. **Run `ctx status`** to see current context summary
 
 ## When Asked "Do You Remember?"
 
@@ -19,7 +18,7 @@ memory-related question:
 **Do this FIRST (silently):**
 - Read `.context/TASKS.md`
 - Read `.context/DECISIONS.md` and `.context/LEARNINGS.md`
-- List `.context/sessions/` for recent session files
+- Run `ctx recall list --limit 5` for recent session history
 
 **Then respond with a structured readback:**
 
@@ -51,7 +50,6 @@ ctx status
 | `.context/DECISIONS.md`    | Architectural decisions with rationale                    |
 | `.context/LEARNINGS.md`    | Gotchas, tips, lessons learned                            |
 | `.context/CONVENTIONS.md`  | Code patterns and standards                               |
-| `.context/sessions/`       | **Session dumps** - check here for deep context |
 
 ## Before Session Ends
 
@@ -59,7 +57,6 @@ ctx status
 
 1. Add learnings: `ctx add learning "..."`
 2. Add decisions: `ctx add decision "..."`
-3. Save full session: Write to `.context/sessions/YYYY-MM-DD-<topic>.md`
 
 ## Build Commands
 

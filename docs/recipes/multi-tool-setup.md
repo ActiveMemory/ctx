@@ -29,7 +29,7 @@ which AI tool you use.
 | `ctx load`          | Output assembled context in read order (for manual pasting)  |
 | `ctx watch`         | Auto-apply context updates from AI output (non-native tools) |
 | `ctx completion`    | Generate shell autocompletion for bash, zsh, or fish         |
-| `ctx session parse` | Convert JSONL transcripts to readable markdown               |
+| `ctx recall export` | Export sessions to editable journal Markdown                  |
 
 ## The Workflow
 
@@ -56,10 +56,9 @@ This produces the following structure:
   LEARNINGS.md        # Lessons learned, gotchas, tips
   GLOSSARY.md         # Domain terms and abbreviations
   AGENT_PLAYBOOK.md   # How AI tools should use this system
-  sessions/           # Session snapshots
 
 .claude/              # Claude Code integration (auto-generated)
-  hooks/              # Auto-save and enforcement scripts
+  hooks/              # Enforcement scripts
   skills/             # ctx Agent Skills (agentskills.io spec)
   settings.local.json # Hook configuration
 ```
@@ -99,13 +98,11 @@ tool.
     You don't need any extra steps to integrate with Claude Code.
 
     `ctx init` already wrote `.claude/settings.local.json` with
-    `PreToolUse` and `SessionEnd` hooks.
+    a `PreToolUse` hook.
 
-    The `PreToolUse` hook runs  
-    `ctx agent --budget 4000 --session $PPID` on every tool call  
+    The `PreToolUse` hook runs
+    `ctx agent --budget 4000 --session $PPID` on every tool call
     (*with a 10-minute cooldown so it only fires once per window*).
-
-    The `SessionEnd` hook saves a snapshot to `.context/sessions/`.
 
 **Cursor**: Add the system prompt snippet to `.cursor/settings.json`:
 
@@ -163,7 +160,7 @@ ctx completion fish > ~/.config/fish/completions/ctx.fish
 ```
 
 After sourcing, typing `ctx a<TAB>` completes to `ctx agent`, and
-`ctx session <TAB>` shows `save`, `list`, `load`, and `parse`.
+`ctx recall <TAB>` shows `list`, `show`, and `export`.
 
 ### Step 4: Verify the Setup Works
 
@@ -206,9 +203,7 @@ If context is not loading, check the basics:
 | Symptom                         | Fix                                                           |
 |---------------------------------|---------------------------------------------------------------|
 | `ctx: command not found`        | Ensure ctx is in your PATH: `which ctx`                       |
-| No sessions saved (Claude Code) | Verify `.claude/settings.local.json` has `SessionEnd` hook    |
 | Hook permission errors          | Run `chmod +x .claude/hooks/*.sh`                             |
-| Missing sessions directory      | Run `mkdir -p .context/sessions`                              |
 | Context not refreshing          | Cooldown may be active; wait 10 minutes or set `--cooldown 0` |
 
 ### Step 5: Enable Watch Mode for Non-Native Tools
@@ -250,23 +245,17 @@ To preview changes without modifying files:
 ctx watch --dry-run --log /tmp/ai.log
 ```
 
-### Step 6: Parse Session Transcripts (Optional)
+### Step 6: Export Session Transcripts (Optional)
 
-If you have JSONL transcripts from Claude Code sessions, convert them to
-readable Markdown:
-
-```bash
-ctx session parse ~/.claude/projects/.../session.jsonl -o conversation.md
-```
-
-To also extract **decisions** and **learnings**:
+If you want to browse past session transcripts, export them to the journal:
 
 ```bash
-ctx session parse transcript.jsonl --extract
+ctx recall export --all
 ```
 
-This scans the conversation and appends relevant entries to `DECISIONS.md` and
-`LEARNINGS.md`.
+This converts raw session data into editable Markdown files in
+`.context/journal/`. You can then enrich them with metadata using
+`/ctx-journal-enrich-all` inside your AI assistant.
 
 ## Putting It Together
 
@@ -293,7 +282,7 @@ ctx hook aider
 
 # -- Verify any tool --
 # Ask your AI: "Do you remember?"
-# Expect: specific tasks, decisions, session history
+# Expect: specific tasks, decisions, recent context
 ```
 
 ## Tips

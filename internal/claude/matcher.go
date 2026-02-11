@@ -67,21 +67,3 @@ func userPromptSubmitHookMatcher(hooksDir string) []HookMatcher {
 		},
 	}}
 }
-
-// sessionEndHookMatcher builds the SessionEnd hook matchers.
-//
-// It returns a single matcher that runs auto-save-session.sh to persist
-// the session transcript on exit.
-//
-// Parameters:
-//   - hooksDir: directory containing hook scripts
-//
-// Returns:
-//   - []HookMatcher: matchers for SessionEnd lifecycle event
-func sessionEndHookMatcher(hooksDir string) []HookMatcher {
-	return []HookMatcher{{
-		Hooks: []Hook{NewHook(
-			HookTypeCommand, path.Join(hooksDir, config.FileAutoSave),
-		)},
-	}}
-}

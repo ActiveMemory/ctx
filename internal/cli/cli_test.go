@@ -128,25 +128,6 @@ func TestBinaryIntegration(t *testing.T) {
 		}
 	})
 
-	// Subtest: ctx session save creates session file
-	t.Run("session save creates session file", func(t *testing.T) {
-		saveCmd := exec.Command(binaryPath, "session", "save") //nolint:gosec // G204: test runs locally-built binary
-		saveCmd.Dir = testDir
-		if output, err := saveCmd.CombinedOutput(); err != nil {
-			t.Fatalf("ctx session save failed: %v\n%s", err, output)
-		}
-
-		// Check that sessions directory exists and has at least one file
-		sessionsDir := filepath.Join(testDir, ".context", "sessions")
-		entries, err := os.ReadDir(sessionsDir)
-		if err != nil {
-			t.Fatalf("failed to read sessions directory: %v", err)
-		}
-		if len(entries) == 0 {
-			t.Error("no session file was created")
-		}
-	})
-
 	// Subtest: ctx agent returns context packet
 	t.Run("agent returns context packet", func(t *testing.T) {
 		agentCmd := exec.Command(binaryPath, "agent") //nolint:gosec // G204: test runs locally-built binary

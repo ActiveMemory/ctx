@@ -66,8 +66,8 @@ smoke: build
 	$(CURDIR)/$(BINARY) drift > /dev/null && \
 	echo "  Testing: ctx add task 'smoke test task'" && \
 	$(CURDIR)/$(BINARY) add task "smoke test task" > /dev/null && \
-	echo "  Testing: ctx session save" && \
-	$(CURDIR)/$(BINARY) session save > /dev/null && \
+	echo "  Testing: ctx recall list" && \
+	$(CURDIR)/$(BINARY) recall list > /dev/null && \
 	rm -rf $$TMPDIR && \
 	echo "" && \
 	echo "Smoke tests passed!"

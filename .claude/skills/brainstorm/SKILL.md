@@ -153,9 +153,6 @@ Once validated, persist outputs:
 ```bash
 # Record key decisions
 ctx add decision "..." --context "..." --rationale "..."
-
-# Save design to sessions
-# Write to .context/sessions/YYYY-MM-DD-<topic>.md
 ```
 
 ### Implementation Handoff

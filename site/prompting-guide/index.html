@@ -1652,8 +1652,8 @@
 <h2 id="session-start">Session Start<a class="headerlink" href="#session-start" title="Permanent link">&para;</a></h2>
 <h3 id="do-you-remember">"Do you remember?"<a class="headerlink" href="#do-you-remember" title="Permanent link">&para;</a></h3>
 <p>Triggers the AI to silently read <code>TASKS.md</code>, <code>DECISIONS.md</code>,
-<code>LEARNINGS.md</code>, and <code>sessions/</code> before responding with a
-<strong>structured readback</strong>:</p>
+<code>LEARNINGS.md</code>, and check recent history via <code>ctx recall</code> before
+responding with a <strong>structured readback</strong>:</p>
 <ol>
 <li><strong>Last session</strong>: most recent session topic and date</li>
 <li><strong>Active work</strong>: pending or in-progress tasks</li>
@@ -1706,7 +1706,7 @@ in settings.local.json bootstrapping—a fix that benefited all users.</p>
 <h3 id="before-you-start-read-x">"Before you start, read X"<a class="headerlink" href="#before-you-start-read-x" title="Permanent link">&para;</a></h3>
 <p>This ensures specific context is loaded before work begins.</p>
 <p>Use this when you know the relevant context exists in a specific file.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Before you start, read .context/sessions/2026-01-20-auth-discussion.md
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Before you start, check ctx recall for the auth discussion session
 </span></code></pre></div>
 <h3 id="scope-control">Scope Control<a class="headerlink" href="#scope-control" title="Permanent link">&para;</a></h3>
 <p>Constrain the AI to prevent sprawl. These are some of the most
@@ -1754,7 +1754,7 @@ and often offer to persist them.</p>
 <ul>
 <li>"Let's persist what we did"</li>
 <li>"Update the context files"</li>
-<li><code>/ctx-save</code> (<em>Agent Skill in Claude Code</em>)</li>
+<li><code>/ctx-reflect</code> (<em>Agent Skill in Claude Code</em>)</li>
 </ul>
 <hr />
 <h2 id="exploration-and-research">Exploration and Research<a class="headerlink" href="#exploration-and-research" title="Permanent link">&para;</a></h2>
@@ -1823,10 +1823,6 @@ load context or trigger specific behaviors:</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><code>/ctx-save</code></td>
-<td>Persist session context at a milestone</td>
-</tr>
 <tr>
 <td><code>/ctx-reflect</code></td>
 <td>Structured reflection checkpoint</td>
@@ -1983,7 +1979,7 @@ so far, here are some prompts that tend to produce poor results:</p>
 </tr>
 <tr>
 <td>Save context</td>
-<td><code>/ctx-save</code></td>
+<td><code>/ctx-reflect</code></td>
 </tr>
 </tbody>
 </table>

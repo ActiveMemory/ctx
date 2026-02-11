@@ -960,9 +960,8 @@ long-running server.</p>
 <p class="admonition-title">Slugs Look Cryptic?</p>
 <p>These auto-generated slugs (<code>gleaming-wobbling-sutherland</code>) are hard to
 recognize later.</p>
-<p>If you save sessions with <code>/ctx-save</code> before ending, you also get
-human-readable filenames like <code>2026-02-07-redis-caching.md</code> in
-<code>.context/sessions/</code>, which are easier to find and reference.</p>
+<p>Use <code>/ctx-journal-enrich</code> to add human-readable titles, topic tags, and
+summaries to exported journal entries, making them easier to find.</p>
 </div>
 <p>Filter by project or tool if you work across multiple codebases:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--project<span class="w"> </span>ctx<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>

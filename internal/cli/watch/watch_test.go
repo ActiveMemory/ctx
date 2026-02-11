@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -181,47 +180,6 @@ func TestApplyCompleteUpdate(t *testing.T) {
 	}
 }
 
-// TestBuildWatchSession tests session snapshot generation.
-func TestBuildWatchSession(t *testing.T) {
-	timestamp := time.Date(2026, 1, 15, 14, 30, 0, 0, time.UTC)
-	updates := []ContextUpdate{
-		{Type: config.EntryTask, Content: "Task 1"},
-		{Type: config.EntryTask, Content: "Task 2"},
-		{Type: config.EntryDecision, Content: "Decision 1"},
-		{Type: config.EntryLearning, Content: "Learning 1"},
-	}
-
-	result := buildWatchSession(timestamp, updates)
-
-	// Check metadata
-	if !strings.Contains(result, "**Date**: 2026-01-15") {
-		t.Error("missing date in session")
-	}
-	if !strings.Contains(result, "**Time**: 14:30:00") {
-		t.Error("missing time in session")
-	}
-	if !strings.Contains(result, "watch-auto-save") {
-		t.Error("missing session type")
-	}
-
-	// Check updates by type
-	if !strings.Contains(result, "### Tasks") {
-		t.Error("missing Tasks section")
-	}
-	if !strings.Contains(result, "- Task 1") {
-		t.Error("missing Task 1")
-	}
-	if !strings.Contains(result, "- Task 2") {
-		t.Error("missing Task 2")
-	}
-	if !strings.Contains(result, "### Decisions") {
-		t.Error("missing Decisions section")
-	}
-	if !strings.Contains(result, "### Learnings") {
-		t.Error("missing Learnings section")
-	}
-}
-
 // TestProcessStream tests stream processing applies updates.
 func TestProcessStream(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "watch-stream-test-*")
@@ -245,7 +203,6 @@ func TestProcessStream(t *testing.T) {
 
 	// Ensure dry-run is off
 	watchDryRun = false
-	watchAutoSave = false
 
 	input := `Some AI output text
 <context-update type="task">Stream test task</context-update>
@@ -296,7 +253,6 @@ func TestProcessStreamWithAttributes(t *testing.T) {
 
 	// Ensure dry-run is off
 	watchDryRun = false
-	watchAutoSave = false
 
 	input := `Some AI output
 <context-update type="learning" context="Debugging hooks" lesson="Hooks receive JSON via stdin" application="Use jq to parse input">Hook Input Format</context-update>

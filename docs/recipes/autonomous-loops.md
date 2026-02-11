@@ -27,7 +27,7 @@ context persistence as a first-class deliverable, not an afterthought.
 |-------------------------|---------|--------------------------------------------------------------------|
 | `ctx init --ralph`      | Command | Initialize project for unattended operation (no human in the loop) |
 | `ctx loop`              | Command | Generate the loop shell script                                     |
-| `ctx watch --auto-save` | Command | Monitor AI output and persist context updates                      |
+| `ctx watch`             | Command | Monitor AI output and persist context updates                      |
 | `ctx load`              | Command | Display assembled context (for debugging)                          |
 | `/ctx-loop`             | Skill   | Generate loop script from inside Claude Code                       |
 | `/ctx-implement`        | Skill   | Execute a plan step-by-step with verification                      |
@@ -254,12 +254,11 @@ to process context updates from the AI output.
 ./loop.sh 2>&1 | tee /tmp/loop.log
 
 # Terminal 2: Watch for context updates
-ctx watch --log /tmp/loop.log --auto-save
+ctx watch --log /tmp/loop.log
 ```
 
-The `--auto-save` flag periodically saves session snapshots to
-`.context/sessions/`. The watch command parses XML context-update commands from
-the AI output and applies them:
+The watch command parses XML context-update commands from the AI output and
+applies them:
 
 ```xml
 <context-update type="complete">user registration</context-update>
@@ -328,7 +327,7 @@ ctx init --ralph
 ctx loop --tool claude --max-iterations 20
 
 ./loop.sh 2>&1 | tee /tmp/loop.log &
-ctx watch --log /tmp/loop.log --auto-save
+ctx watch --log /tmp/loop.log
 
 # Next morning:
 ctx status
@@ -369,7 +368,6 @@ instructions:
 | Discovers a gotcha         | Adds it to LEARNINGS.md                               |
 | Makes a design choice      | Records it in DECISIONS.md with rationale             |
 | Identifies follow-up work  | Creates new tasks in TASKS.md with `#added` timestamp |
-| Finishes a phase           | Saves a session snapshot to `.context/sessions/`      |
 | Hits an unexpected failure | Documents the root cause before moving on             |
 
 ### Example: What Proactive Persistence Looks Like
@@ -392,21 +390,14 @@ Iteration 4:
 Steps 2, 4, 5, 6, and 7 are proactive context persistence. The agent was not
 asked to do any of them.
 
-### Session Snapshots at Milestones
+### Context Persistence at Milestones
 
-For long autonomous runs, the agent saves session snapshots at natural
-boundaries, often at phase transitions or after completing a cluster of related
-tasks:
+For long autonomous runs, the agent persists context at natural boundaries,
+often at phase transitions or after completing a cluster of related tasks.
+It updates TASKS.md, DECISIONS.md, and LEARNINGS.md as it goes.
 
-```text
-.context/sessions/
-  2026-01-25-020000-phase1-foundation.md
-  2026-01-25-040000-phase2-core-features.md
-  2026-01-25-060000-phase3-hardening.md
-```
-
-If the loop crashes at 4 AM, the most recent snapshot tells you exactly where
-to resume.
+If the loop crashes at 4 AM, the context files tell you exactly where to
+resume. You can also use `ctx recall list` to review the session transcripts.
 
 ### The Persistence Contract
 

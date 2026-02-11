@@ -43,7 +43,7 @@ dist/
 # Hook diagnostic logs (machine-specific, not committed)
 .context/logs/
 
-# Session transcripts (personal, potentially large)
+# Session transcripts and journal entries (personal, potentially large)
 .context/sessions/
 .context/journal/
 .context/journal.bak/

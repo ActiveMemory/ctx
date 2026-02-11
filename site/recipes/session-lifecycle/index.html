@@ -730,10 +730,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-7-save-a-snapshot" class="md-nav__link">
+  <a href="#step-7-persist-before-ending" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 7: Save a Snapshot
+        Step 7: Persist Before Ending
       
     </span>
   </a>
@@ -835,7 +835,7 @@
 individual commands and skills feel disconnected.</p>
 <p>How do they fit together into a coherent workflow?</p>
 <p>This recipe walks through a complete session, from opening your editor to
-saving a snapshot before you close it, so you can see how each piece connects.</p>
+persisting context before you close it, so you can see how each piece connects.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -857,19 +857,14 @@ saving a snapshot before you close it, so you can see how each piece connects.</
 <td>Load token-budgeted context packet</td>
 </tr>
 <tr>
-<td><code>ctx session save</code></td>
+<td><code>ctx recall list</code></td>
 <td>CLI command</td>
-<td>Save a session snapshot</td>
+<td>List previous sessions</td>
 </tr>
 <tr>
-<td><code>ctx session list</code></td>
+<td><code>ctx recall show</code></td>
 <td>CLI command</td>
-<td>List previous session snapshots</td>
-</tr>
-<tr>
-<td><code>ctx session load</code></td>
-<td>CLI command</td>
-<td>Load a previous session by index, date, or topic</td>
+<td>Inspect a specific session in detail</td>
 </tr>
 <tr>
 <td><code>/ctx-remember</code></td>
@@ -902,9 +897,9 @@ saving a snapshot before you close it, so you can see how each piece connects.</
 <td>Structured reflection checkpoint</td>
 </tr>
 <tr>
-<td><code>/ctx-save</code></td>
+<td><code>/ctx-recall</code></td>
 <td>Skill</td>
-<td>Save and enrich a session snapshot</td>
+<td>Browse session history inside your AI assistant</td>
 </tr>
 <tr>
 <td><code>/ctx-context-monitor</code></td>
@@ -918,7 +913,7 @@ saving a snapshot before you close it, so you can see how each piece connects.</
 (<em>for example, a quick bugfix might skip reflection, and a research session
 might skip committing</em>) but the full arc looks like this:</p>
 <p><strong>Load context</strong> &gt; <strong>Orient</strong> &gt; <strong>Pick a Task</strong> &gt; <strong>Work</strong> &gt; <strong>Commit</strong> &gt;
-<strong>Reflect</strong> &gt; <strong>Save a Snapshot</strong></p>
+<strong>Reflect</strong></p>
 <hr />
 <h3 id="step-1-load-context">Step 1: Load Context<a class="headerlink" href="#step-1-load-context" title="Permanent link">&para;</a></h3>
 <p>Start every session by loading what you know. The fastest way is a single prompt:</p>
@@ -927,7 +922,7 @@ might skip committing</em>) but the full arc looks like this:</p>
 <p>This triggers the <code>/ctx-remember</code> skill. Behind the scenes, the assistant
 runs <code>ctx agent --budget 4000</code>, reads the files listed in the context packet
 (<code>TASKS.md</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, <code>CONVENTIONS.md</code>), checks
-<code>ctx session list --limit 3</code> for recent sessions, and then presents a
+<code>ctx recall list --limit 3</code> for recent sessions, and then presents a
 structured <strong>readback</strong>:</p>
 <div class="admonition note">
 <p class="admonition-title">What is a Readback?</p>
@@ -1049,7 +1044,7 @@ or before switching tasks</em>) pause to reflect:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/ctx-reflect
 </span></code></pre></div>
 <p>The skill works through a checklist: learnings discovered, decisions made, tasks
-completed or created, and whether the session is worth a full snapshot. It then
+completed or created, and whether there are items worth persisting. It then
 presents a summary with specific items to persist, each with the exact command
 to run:</p>
 <blockquote>
@@ -1080,30 +1075,21 @@ save that as a learning?</em>"</p>
 milestones as reflection triggers on its own.</p>
 </div>
 <hr />
-<h3 id="step-7-save-a-snapshot">Step 7: Save a Snapshot<a class="headerlink" href="#step-7-save-a-snapshot" title="Permanent link">&para;</a></h3>
-<p>Before ending the session, save a snapshot that a future session can load:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-save auth-refactor
+<h3 id="step-7-persist-before-ending">Step 7: Persist Before Ending<a class="headerlink" href="#step-7-persist-before-ending" title="Permanent link">&para;</a></h3>
+<p>Before ending the session, make sure any outstanding learnings and decisions
+are captured:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-reflect
 </span></code></pre></div>
-<p>This runs <code>ctx session save</code> with the topic you provide, then enriches the saved
-file by replacing placeholder sections with real content:</p>
-<ul>
-<li><strong>Summary</strong>: what was built or fixed, key decisions, problems encountered</li>
-<li><strong>Tasks for Next Session</strong>: concrete items to pick up next time, in checkbox format</li>
-<li><strong>Files Modified</strong>: list of changed files with brief descriptions</li>
-</ul>
-<p>The snapshot is written to <code>.context/sessions/YYYY-MM-DD-HHMMSS-&lt;topic&gt;.md</code>.</p>
-<p>Future sessions can find it with <code>ctx session list</code> and load it with
-<code>ctx session load</code>.</p>
-<p>To verify the save worked:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>session<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">3</span>
-</span></code></pre></div>
+<p>The agent will review what happened during the session and offer to persist
+any outstanding learnings, decisions, or task updates.</p>
+<p>Session transcripts are automatically captured by Claude Code and can be
+browsed later with <code>ctx recall list</code> and <code>ctx recall show</code>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Be Conversational</p>
-<p>You do not need to say <code>/ctx-save</code> verbatim.</p>
 <p>Phrases like "<em>let's wrap up</em>", "<em>save our progress</em>", or
-"<em>I'm done for today</em>" will trigger the <strong>full save flow</strong>.</p>
-<p>The agent will reflect on what happened, persist outstanding learnings and
-decisions, and save the session snapshot in one pass.</p>
+"<em>I'm done for today</em>" will trigger a <strong>reflection and persist flow</strong>.</p>
+<p>The agent will reflect on what happened and persist outstanding learnings
+and decisions in one pass.</p>
 </div>
 <hr />
 <h2 id="conversational-session-flow">Conversational Session Flow<a class="headerlink" href="#conversational-session-flow" title="Permanent link">&para;</a></h2>
@@ -1160,7 +1146,7 @@ reconnection, to avoid thundering herd on pool recovery."</p>
 <p>Want me to persist these?</p>
 </blockquote>
 <p><strong>You</strong>: Yes. And let's wrap up.</p>
-<p><strong>Agent</strong> <em>(reflects, persists, saves... all in one flow)</em>:</p>
+<p><strong>Agent</strong> <em>(reflects and persists... all in one flow)</em>:</p>
 <blockquote>
 <p>Persisted:</p>
 <ul>
@@ -1168,17 +1154,15 @@ reconnection, to avoid thundering herd on pool recovery."</p>
 <li>Marked "connection pool setup" done in TASKS.md</li>
 <li>Added "write integration tests for Redis cache" as a new task</li>
 </ul>
-<p>Saving session snapshot as <code>redis-cache-backend</code>...</p>
-<p>Session saved to <code>.context/sessions/2026-02-09-163045-redis-cache-backend.md</code>
-with summary, decisions, and next-session tasks. You are good to close.</p>
+<p>Context is up to date. You are good to close.</p>
 </blockquote>
 <div class="admonition tip">
 <p class="admonition-title">Notice What Happened</p>
-<p>In the above workflow, the user never typed <code>/ctx-reflect</code>, <code>/ctx-save</code>, or
+<p>In the above workflow, the user never typed <code>/ctx-reflect</code> or
 <code>ctx add learning</code>.</p>
 <p>The agent moved through <strong>Load</strong>, <strong>Orient</strong>, <strong>Pick</strong>, <strong>Work</strong>,
-<strong>Commit</strong>, <strong>Reflect</strong>, and <strong>Save</strong> driven by <strong>natural conversation</strong>.</p>
-<p>"<em>Let's wrap up</em>" was enough to trigger the full reflect-and-save flow.</p>
+<strong>Commit</strong>, and <strong>Reflect</strong> driven by <strong>natural conversation</strong>.</p>
+<p>"<em>Let's wrap up</em>" was enough to trigger the full reflect-and-persist flow.</p>
 <p>The agent surfaced persist-worthy items at milestones: after a design
 choice, after discovering a gotcha—without waiting to be asked.</p>
 </div>
@@ -1196,7 +1180,6 @@ of slash commands.</p>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Work</strong>: implement, test, iterate (scope with "only change X")</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Commit</strong>: <code>/ctx-commit</code>: commit and capture decisions/learnings</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Reflect</strong>: <code>/ctx-reflect</code>: identify what to persist (at milestones)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Save</strong>: <code>/ctx-save &lt;topic&gt;</code>: snapshot for the next session</li>
 </ul>
 <p>Conversational equivalents: you can drive the same lifecycle with plain language:</p>
 <table>
@@ -1238,11 +1221,6 @@ of slash commands.</p>
 <td><code>/ctx-reflect</code></td>
 <td>"What did we learn?" / <em>(agent offers at milestones)</em></td>
 </tr>
-<tr>
-<td>Save</td>
-<td><code>/ctx-save &lt;topic&gt;</code></td>
-<td>"Let's wrap up" / "Save our progress" / "I'm done"</td>
-</tr>
 </tbody>
 </table>
 <p>The agent understands both columns.</p>
@@ -1251,26 +1229,22 @@ of slash commands.</p>
 <li>explicit commands when you want precision</li>
 <li>natural language when you want flow and agentic autonomy</li>
 </ul>
-<p>The agent will also initiate steps on its own (<em>particularly "Reflect" and
-"Save"</em>) when it recognizes a milestone.</p>
-<p>Short sessions (<em>quick bugfix</em>) might only use: <strong>Load</strong>, <strong>Work</strong>, <strong>Commit</strong>, 
-<strong>Save</strong>.</p>
-<p>Long sessions should <strong>Reflect</strong> after each major milestone and <strong>Save</strong> at 
-least once before ending.</p>
+<p>The agent will also initiate steps on its own (<em>particularly "Reflect"</em>)
+when it recognizes a milestone.</p>
+<p>Short sessions (<em>quick bugfix</em>) might only use: <strong>Load</strong>, <strong>Work</strong>, <strong>Commit</strong>.</p>
+<p>Long sessions should <strong>Reflect</strong> after each major milestone and persist
+learnings and decisions before ending.</p>
 <hr />
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
-<p><strong>Save early if context is running low.</strong> The <code>/ctx-context-monitor</code> skill will
+<p><strong>Persist early if context is running low.</strong> The <code>/ctx-context-monitor</code> skill will
 warn you when capacity is high, but do not wait for the warning. If you have
-been working for a while and have unsaved learnings, save proactively.</p>
-<p><strong>Use descriptive topic names.</strong> <code>ctx session save "auth-refactor"</code> is findable
-later. <code>ctx session save</code> defaults to "manual save", which is harder to locate
-among many sessions.</p>
-<p><strong>Load previous sessions by topic.</strong> If you need context from a prior session,
-<code>ctx session load auth</code> will match by keyword. You do not need to remember the
-exact date or index number.</p>
-<p><strong>Reflection is optional, saving is not.</strong> You can skip <code>/ctx-reflect</code> for small
-changes, but always <code>/ctx-save</code> before ending a session where you did meaningful
-work. The snapshot is what the next session loads.</p>
+been working for a while and have unpersisted learnings, persist proactively.</p>
+<p><strong>Browse previous sessions by topic.</strong> If you need context from a prior session,
+<code>ctx recall show auth</code> will match by keyword. You do not need to remember the
+exact date or slug.</p>
+<p><strong>Reflection is optional but valuable.</strong> You can skip <code>/ctx-reflect</code> for small
+changes, but always persist learnings and decisions before ending a session
+where you did meaningful work. These are what the next session loads.</p>
 <p><strong>Let the hook handle context loading.</strong> The <code>PreToolUse</code> hook runs <code>ctx agent</code>
 automatically with a cooldown, so context loads on first tool use without you
 asking. The <code>/ctx-remember</code> prompt at session start is for your benefit (to get

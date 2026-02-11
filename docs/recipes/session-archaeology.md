@@ -92,10 +92,9 @@ Sessions (newest first)
 !!! tip "Slugs Look Cryptic?"
     These auto-generated slugs (`gleaming-wobbling-sutherland`) are hard to
     recognize later.
-    
-    If you save sessions with `/ctx-save` before ending, you also get
-    human-readable filenames like `2026-02-07-redis-caching.md` in
-    `.context/sessions/`, which are easier to find and reference.
+
+    Use `/ctx-journal-enrich` to add human-readable titles, topic tags, and
+    summaries to exported journal entries, making them easier to find.
 
 Filter by project or tool if you work across multiple codebases:
 

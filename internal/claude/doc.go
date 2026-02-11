@@ -11,15 +11,15 @@
 // assets are installed to project directories via "ctx init --claude".
 //
 // Embedded assets:
-//   - auto-save-session.sh: Saves session transcripts on session end
 //   - block-non-path-ctx.sh: Prevents non-PATH ctx invocations
+//   - prompt-coach.sh: Detects prompt antipatterns and suggests improvements
 //   - tpl/commands/*.md: Slash command definitions for Claude Code
 //
 // Example usage:
 //
-//	script, err := claude.AutoSaveScript()
+//	script, err := claude.BlockNonPathCtxScript()
 //	if err != nil {
 //	    return err
 //	}
-//	os.WriteFile(".claude/hooks/auto-save-session.sh", script, 0755)
+//	os.WriteFile(".claude/hooks/block-non-path-ctx.sh", script, 0755)
 package claude
