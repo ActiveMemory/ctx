@@ -514,10 +514,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#save-and-restore-sessions" class="md-nav__link">
+  <a href="#browse-session-history_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Save and Restore Sessions
+        Browse Session History
       
     </span>
   </a>
@@ -1150,10 +1150,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#save-and-restore-sessions" class="md-nav__link">
+  <a href="#browse-session-history_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Save and Restore Sessions
+        Browse Session History
       
     </span>
   </a>
@@ -1402,15 +1402,12 @@ again; <code>recall export</code> preserves existing YAML frontmatter and only
 updates conversation content.</p>
 <p>See <a href="session-journal/">Session Journal</a> for the full pipeline
 including enrichment and normalization.</p>
-<h3 id="save-and-restore-sessions">Save and Restore Sessions<a class="headerlink" href="#save-and-restore-sessions" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Save a snapshot of current context</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>session<span class="w"> </span>save<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
+<h3 id="browse-session-history_1">Browse Session History<a class="headerlink" href="#browse-session-history_1" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List recent sessions</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># List saved sessions</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ctx<span class="w"> </span>session<span class="w"> </span>list
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Load a previous session</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>ctx<span class="w"> </span>session<span class="w"> </span>load<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Export sessions to browsable journal</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
 </span></code></pre></div>
 <h3 id="run-an-autonomous-loop">Run an Autonomous Loop<a class="headerlink" href="#run-an-autonomous-loop" title="Permanent link">&para;</a></h3>
 <p>Generate a script that iterates an AI agent until a completion
