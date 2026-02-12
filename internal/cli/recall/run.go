@@ -21,6 +21,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
+// findSessions returns sessions for the current project, or all projects if
+// allProjects is true.
+func findSessions(allProjects bool) ([]*parser.Session, error) {
+	if allProjects {
+		return parser.FindSessions()
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get working directory: %w", err)
+	}
+	return parser.FindSessionsForCWD(cwd)
+}
+
 // runRecallExport handles the recall export command.
 func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force, skipExisting bool) error {
 	if len(args) > 0 && all {
@@ -30,18 +43,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 		return fmt.Errorf("please provide a session ID or use --all")
 	}
 
-	// Find sessions - filter by current project unless --all-projects is set
-	var sessions []*parser.Session
-	var err error
-	if allProjects {
-		sessions, err = parser.FindSessions()
-	} else {
-		cwd, cwdErr := os.Getwd()
-		if cwdErr != nil {
-			return fmt.Errorf("failed to get working directory: %w", cwdErr)
-		}
-		sessions, err = parser.FindSessionsForCWD(cwd)
-	}
+	sessions, err := findSessions(allProjects)
 	if err != nil {
 		return fmt.Errorf("failed to find sessions: %w", err)
 	}
@@ -195,18 +197,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 // Returns:
 //   - error: Non-nil if session scanning fails
 func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProjects bool) error {
-	var sessions []*parser.Session
-	var err error
-
-	if allProjects {
-		sessions, err = parser.FindSessions()
-	} else {
-		cwd, cwdErr := os.Getwd()
-		if cwdErr != nil {
-			return fmt.Errorf("failed to get working directory: %w", cwdErr)
-		}
-		sessions, err = parser.FindSessionsForCWD(cwd)
-	}
+	sessions, err := findSessions(allProjects)
 	if err != nil {
 		return fmt.Errorf("failed to find sessions: %w", err)
 	}
@@ -315,18 +306,7 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProje
 // Returns:
 //   - error: Non-nil if session not found or scanning fails
 func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects bool) error {
-	var sessions []*parser.Session
-	var err error
-
-	if allProjects {
-		sessions, err = parser.FindSessions()
-	} else {
-		cwd, cwdErr := os.Getwd()
-		if cwdErr != nil {
-			return fmt.Errorf("failed to get working directory: %w", cwdErr)
-		}
-		sessions, err = parser.FindSessionsForCWD(cwd)
-	}
+	sessions, err := findSessions(allProjects)
 	if err != nil {
 		return fmt.Errorf("failed to find sessions: %w", err)
 	}

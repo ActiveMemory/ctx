@@ -46,84 +46,20 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		return fmt.Errorf("failed to create %s: %w", config.DirClaudeHooks, err)
 	}
 
-	// Create block-non-path-ctx.sh script
-	// (enforces CONSTITUTION.md ctx invocation rules)
-	blockScriptPath := filepath.Join(
-		config.DirClaudeHooks, config.FileBlockNonPathScript,
-	)
-	if _, err := os.Stat(blockScriptPath); err == nil && !force {
-		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), blockScriptPath)
-	} else {
-		blockScriptContent, err := claude.BlockNonPathCtxScript()
-		if err != nil {
-			return fmt.Errorf("failed to get block-non-path-ctx script: %w", err)
-		}
-		if err := os.WriteFile(
-			blockScriptPath, blockScriptContent, config.PermExec,
-		); err != nil {
-			return fmt.Errorf("failed to write %s: %w", blockScriptPath, err)
-		}
-		cmd.Printf("  %s %s\n", green("✓"), blockScriptPath)
+	// Deploy hook scripts
+	hookScripts := []struct {
+		filename string
+		loadFunc func() ([]byte, error)
+	}{
+		{config.FileBlockNonPathScript, claude.BlockNonPathCtxScript},
+		{config.FilePromptCoach, claude.PromptCoachScript},
+		{config.FileCheckContextSize, claude.CheckContextSizeScript},
+		{config.FileCheckPersistence, claude.CheckPersistenceScript},
 	}
-
-	// Create prompt-coach.sh script
-	// (detects prompt anti-patterns and suggests improvements)
-	coachScriptPath := filepath.Join(
-		config.DirClaudeHooks, config.FilePromptCoach,
-	)
-	if _, err := os.Stat(coachScriptPath); err == nil && !force {
-		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), coachScriptPath)
-	} else {
-		coachScriptContent, err := claude.PromptCoachScript()
-		if err != nil {
-			return fmt.Errorf("failed to get prompt-coach script: %w", err)
+	for _, hs := range hookScripts {
+		if err := deployHookScript(cmd, hs.filename, hs.loadFunc, force, green, yellow); err != nil {
+			return err
 		}
-		if err := os.WriteFile(
-			coachScriptPath, coachScriptContent, config.PermExec,
-		); err != nil {
-			return fmt.Errorf("failed to write %s: %w", coachScriptPath, err)
-		}
-		cmd.Printf("  %s %s\n", green("✓"), coachScriptPath)
-	}
-
-	// Create check-context-size.sh script
-	// (adaptive context size checkpoint reminders)
-	contextCheckPath := filepath.Join(
-		config.DirClaudeHooks, config.FileCheckContextSize,
-	)
-	if _, err := os.Stat(contextCheckPath); err == nil && !force {
-		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), contextCheckPath)
-	} else {
-		contextCheckContent, err := claude.CheckContextSizeScript()
-		if err != nil {
-			return fmt.Errorf("failed to get check-context-size script: %w", err)
-		}
-		if err := os.WriteFile(
-			contextCheckPath, contextCheckContent, config.PermExec,
-		); err != nil {
-			return fmt.Errorf("failed to write %s: %w", contextCheckPath, err)
-		}
-		cmd.Printf("  %s %s\n", green("✓"), contextCheckPath)
-	}
-
-	// Create check-persistence.sh script
-	// (nudges agent to persist context when no updates in many prompts)
-	persistCheckPath := filepath.Join(
-		config.DirClaudeHooks, config.FileCheckPersistence,
-	)
-	if _, err := os.Stat(persistCheckPath); err == nil && !force {
-		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), persistCheckPath)
-	} else {
-		persistCheckContent, err := claude.CheckPersistenceScript()
-		if err != nil {
-			return fmt.Errorf("failed to get check-persistence script: %w", err)
-		}
-		if err := os.WriteFile(
-			persistCheckPath, persistCheckContent, config.PermExec,
-		); err != nil {
-			return fmt.Errorf("failed to write %s: %w", persistCheckPath, err)
-		}
-		cmd.Printf("  %s %s\n", green("✓"), persistCheckPath)
 	}
 
 	// Handle settings.local.json - merge rather than overwrite
@@ -229,6 +165,31 @@ func mergeSettingsHooks(
 		cmd.Printf("  %s %s\n", green("✓"), config.FileSettings)
 	}
 
+	return nil
+}
+
+// deployHookScript writes a hook script to .claude/hooks/ if it doesn't
+// already exist (or force is true).
+func deployHookScript(
+	cmd *cobra.Command,
+	filename string,
+	loadFunc func() ([]byte, error),
+	force bool,
+	green, yellow func(a ...interface{}) string,
+) error {
+	path := filepath.Join(config.DirClaudeHooks, filename)
+	if _, err := os.Stat(path); err == nil && !force {
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), path)
+		return nil
+	}
+	content, err := loadFunc()
+	if err != nil {
+		return fmt.Errorf("failed to load hook script %s: %w", filename, err)
+	}
+	if err := os.WriteFile(path, content, config.PermExec); err != nil {
+		return fmt.Errorf("failed to write %s: %w", path, err)
+	}
+	cmd.Printf("  %s %s\n", green("✓"), path)
 	return nil
 }
 

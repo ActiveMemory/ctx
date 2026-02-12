@@ -106,12 +106,14 @@ Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.
       boilerplate instances across 5 packages. Low effort, high
       impact. #priority:high #source:report-3 #done:2026-02-11
 
-- [ ] Extract `findSessions(allProjects bool)` helper in `recall/run.go`:
+- [x] Extract `findSessions(allProjects bool)` helper in `recall/run.go`:
       identical 20-line block duplicated in 3 functions. #priority:high #source:report-3
+      #done:2026-02-11
 
-- [ ] Extract `deployHookScript()` helper in `initialize/hook.go`:
+- [x] Extract `deployHookScript()` helper in `initialize/hook.go`:
       4 nearly identical copy-paste blocks for hook script creation.
       Reduces 103 lines to ~30. #priority:medium #source:report-3
+      #done:2026-02-11
 
 - [ ] Move utility functions from `recall/run.go` to `recall/fmt.go`:
       formatDuration, formatTokens, stripLineNumbers, extractSystemReminders,
