@@ -7,7 +7,7 @@
 #                 SPDX-License-Identifier: Apache-2.0
 
 # Check if .context backup is stale (>2 days old) or SMB share is unmounted.
-# Outputs non-blocking warnings to stderr, once per day.
+# Outputs warnings via systemMessage JSON (visible to user), once per day.
 #
 # Depends on: hack/backup-context.sh touching ~/.local/state/ctx-last-backup
 #             on successful backup (set -euo pipefail guarantees marker is only
@@ -63,10 +63,10 @@ fi
 
 # Output warnings if any
 if [ -n "$WARNINGS" ]; then
-  echo "" >&2
-  echo "┌─ Backup Warning ────────────────────────────────" >&2
-  echo -e "$WARNINGS""└──────────────────────────────────────────────────" >&2
-  echo "" >&2
+  # Format the warning text for systemMessage (strip box-drawing, flatten)
+  MSG=$(echo -e "$WARNINGS" | sed 's/^│ //' | tr '\n' ' ' | sed 's/  */ /g; s/^ //; s/ $//')
+  # Use systemMessage JSON so the warning is shown directly to the user
+  echo "{\"systemMessage\": \"Backup warning: ${MSG}\"}"
   touch "$REMINDED"
 fi
 

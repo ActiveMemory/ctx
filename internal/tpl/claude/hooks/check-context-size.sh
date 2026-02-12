@@ -15,7 +15,7 @@
 #   Prompts 16-30: every 5th prompt
 #   Prompts   30+: every 3rd prompt
 #
-# Output: Checkpoint messages to stderr (non-blocking, visible to Claude)
+# Output: Checkpoint messages to stdout (prepended as context for Claude)
 # Exit: Always 0 (never blocks execution)
 
 # Read hook input from stdin (JSON)
@@ -59,12 +59,12 @@ elif [ "$COUNT" -gt 15 ]; then
 fi
 
 if [ "$SHOULD_CHECK" = true ]; then
-    echo "" >&2
-    echo "┌─ Context Checkpoint (prompt #${COUNT}) ────────────────" >&2
-    echo "│ Assess remaining context capacity." >&2
-    echo "│ If usage exceeds ~80%, inform the user." >&2
-    echo "└──────────────────────────────────────────────────" >&2
-    echo "" >&2
+    echo ""
+    echo "┌─ Context Checkpoint (prompt #${COUNT}) ────────────────"
+    echo "│ Assess remaining context capacity."
+    echo "│ If usage exceeds ~80%, inform the user."
+    echo "└──────────────────────────────────────────────────"
+    echo ""
     log "prompt#${COUNT} CHECKPOINT"
 else
     log "prompt#${COUNT} silent"

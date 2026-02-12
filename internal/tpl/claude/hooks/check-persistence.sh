@@ -19,7 +19,7 @@
 # last nudge (or session start). If the agent is already persisting, the
 # hook stays silent.
 #
-# Output: Nudge messages to stderr (non-blocking, visible to Claude)
+# Output: Nudge messages to stdout (prepended as context for Claude)
 # Exit: Always 0 (never blocks execution)
 
 # Read hook input from stdin (JSON)
@@ -97,13 +97,13 @@ elif [ "$COUNT" -gt 25 ] && [ "$SINCE_NUDGE" -ge 15 ]; then
 fi
 
 if [ "$SHOULD_NUDGE" = true ]; then
-  echo "" >&2
-  echo "┌─ Persistence Checkpoint (prompt #${COUNT}) ───────────" >&2
-  echo "│ No context files updated in ${SINCE_NUDGE}+ prompts." >&2
-  echo "│ Have you discovered learnings, made decisions," >&2
-  echo "│ or completed tasks worth persisting?" >&2
-  echo "└──────────────────────────────────────────────────" >&2
-  echo "" >&2
+  echo ""
+  echo "┌─ Persistence Checkpoint (prompt #${COUNT}) ───────────"
+  echo "│ No context files updated in ${SINCE_NUDGE}+ prompts."
+  echo "│ Have you discovered learnings, made decisions,"
+  echo "│ or completed tasks worth persisting?"
+  echo "└──────────────────────────────────────────────────"
+  echo ""
 
   log "prompt#${COUNT} NUDGE since_nudge=${SINCE_NUDGE}"
 
