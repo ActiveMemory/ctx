@@ -133,7 +133,7 @@ Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.
       archive helper. #priority:medium #source:report-3 #done:2026-02-11
 
 **Security** (from `ideas/REPORT-4-security.md`):
-Overall risk LOW. No critical/high findings. 3 medium, 5 low..
+Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
 - [ ] M-1: Add path boundary validation on `--context-dir` / `CTX_DIR`.
       No guard prevents operations outside project root. In AI-agent
