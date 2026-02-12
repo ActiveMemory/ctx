@@ -77,9 +77,10 @@ Overall drift severity LOW. 14 existing doc.go files are accurate. Key gaps belo
       with `export`, remove "(Phase 3)" annotation. Godoc shows a command
       that doesn't exist. #priority:high #source:report-2 #done:2026-02-11
 
-- [ ] Fix `internal/claude/doc.go`: change stale `tpl/commands/*.md` to
+- [x] Fix `internal/claude/doc.go`: change stale `tpl/commands/*.md` to
       `claude/skills/*/SKILL.md`, add `prompt-coach.sh` and
       `check-context-size.sh` to embedded assets list. #priority:medium #source:report-2
+      #done:2026-02-11
 
 - [ ] Fix `internal/bootstrap/bootstrap.go:44-46` godoc: add 5 missing
       subcommands (decision, learnings, recall, journal, serve) or replace
