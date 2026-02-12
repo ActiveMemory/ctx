@@ -128,9 +128,9 @@ Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.
       tpl_journal.go, tpl_recall.go, tpl_loop.go. #priority:medium
       #source:report-3 #done:2026-02-11
 
-- [ ] Unify task archiving logic: 3 separate implementations in
+- [x] Unify task archiving logic: 3 separate implementations in
       task/run.go, compact/task.go, drift/fix.go. Create shared
-      archive helper. #priority:medium #source:report-3
+      archive helper. #priority:medium #source:report-3 #done:2026-02-11
 
 **Security** (from `ideas/REPORT-4-security.md`):
 Overall risk LOW. No critical/high findings. 3 medium, 5 low.

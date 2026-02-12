@@ -101,7 +101,6 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	tasksPath := tasksFilePath()
-	archiveDir := archiveDirPath()
 	nl := config.NewlineLF
 
 	// Check if TASKS.md exists
@@ -172,34 +171,10 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 		return nil
 	}
 
-	// Ensure the archive directory exists
-	if mkdirErr := os.MkdirAll(archiveDir, config.PermExec); mkdirErr != nil {
-		return fmt.Errorf("failed to create archive directory: %w", mkdirErr)
-	}
-
-	// Generate archive filename
-	now := time.Now()
-	archiveFilename := fmt.Sprintf("tasks-%s.md", now.Format("2006-01-02"))
-	archiveFilePath := filepath.Join(archiveDir, archiveFilename)
-
-	// Check if the archive file already exists for today - append if so
-	var finalArchiveContent string
-	if existingContent, readExistErr := os.ReadFile(filepath.Clean(archiveFilePath)); readExistErr == nil {
-		finalArchiveContent = string(existingContent) +
-			nl + archivedContent.String()
-	} else {
-		finalArchiveContent = "# Task Archive — " + now.Format("2006-01-02") +
-			nl + nl +
-			"Archived from TASKS.md" +
-			nl + nl +
-			archivedContent.String()
-	}
-
-	// Write the archive file
-	if writeErr := os.WriteFile(
-		archiveFilePath, []byte(finalArchiveContent), config.PermFile,
-	); writeErr != nil {
-		return fmt.Errorf("failed to write archive: %w", writeErr)
+	// Write to archive
+	archiveFilePath, writeErr := compact.WriteArchive(archivedContent.String())
+	if writeErr != nil {
+		return writeErr
 	}
 
 	// Remove archived blocks from lines and write back

@@ -11,11 +11,11 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
@@ -144,34 +144,15 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		return errNoCompletedTasks()
 	}
 
-	// Create an archive directory
-	archiveDir := filepath.Join(rc.ContextDir(), config.DirArchive)
-	if mkErr := os.MkdirAll(archiveDir, config.PermExec); mkErr != nil {
-		return errMkdir(archiveDir, mkErr)
-	}
-
-	// Write to the archive file
-	archiveFile := filepath.Join(
-		archiveDir,
-		fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
-	)
-
-	archiveContent := config.HeadingArchivedTasks + " - " +
-		time.Now().Format("2006-01-02") +
-		nl + nl
+	// Build archive content
+	var archiveContent string
 	for _, t := range completedTasks {
 		archiveContent += config.PrefixTaskDone + " " + t + nl
 	}
 
-	// Append to the existing archive file if it exists
-	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
-		archiveContent = string(existing) + nl + archiveContent
-	}
-
-	if writeErr := os.WriteFile(
-		archiveFile, []byte(archiveContent), config.PermFile,
-	); writeErr != nil {
-		return errFileWrite(archiveFile, writeErr)
+	archiveFile, writeErr := compact.WriteArchive(archiveContent)
+	if writeErr != nil {
+		return writeErr
 	}
 
 	// Write updated TASKS.md

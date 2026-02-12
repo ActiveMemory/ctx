@@ -9,9 +9,7 @@ package compact
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -114,27 +112,16 @@ func compactTasks(
 		}
 
 		if len(blocksToArchive) > 0 {
-			archiveDir := filepath.Join(rc.ContextDir(), config.DirArchive)
-			if mkErr := os.MkdirAll(archiveDir, config.PermExec); mkErr == nil {
-				archiveFile := filepath.Join(
-					archiveDir,
-					fmt.Sprintf("tasks-%s.md", time.Now().Format("2006-01-02")),
-				)
-				nl := config.NewlineLF
-				archiveContent := fmt.Sprintf(
-					"# Archived Tasks - %s"+nl+nl, time.Now().Format("2006-01-02"),
-				)
-				for _, block := range blocksToArchive {
-					archiveContent += block.BlockContent() + nl + nl
-				}
-				if writeErr := os.WriteFile(
-					archiveFile, []byte(archiveContent), config.PermFile,
-				); writeErr == nil {
-					cmd.Println(fmt.Sprintf(
-						"%s Archived %d tasks to %s (older than %d days)", green("✓"),
-						len(blocksToArchive), archiveFile, archiveDays,
-					))
-				}
+			nl := config.NewlineLF
+			var content string
+			for _, block := range blocksToArchive {
+				content += block.BlockContent() + nl + nl
+			}
+			if archiveFile, err := WriteArchive(content); err == nil {
+				cmd.Println(fmt.Sprintf(
+					"%s Archived %d tasks to %s (older than %d days)", green("✓"),
+					len(blocksToArchive), archiveFile, archiveDays,
+				))
 			}
 		}
 	}
