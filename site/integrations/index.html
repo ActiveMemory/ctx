@@ -576,6 +576,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#generated-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#generated-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1235,6 +1246,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#generated-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generated Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#generated-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1777,6 +1799,47 @@ for popular AI coding assistants.</p>
    packet (subsequent invocations within the cooldown window are silent)</li>
 <li><strong>Next session</strong>: Claude reads context files and continues with context</li>
 </ol>
+<h3 id="generated-hooks">Generated Hooks<a class="headerlink" href="#generated-hooks" title="Permanent link">&para;</a></h3>
+<p><code>ctx init</code> installs lifecycle hooks to <code>.claude/hooks/</code> and wires them
+into <code>.claude/settings.local.json</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Event</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>block-non-path-ctx.sh</code></td>
+<td>PreToolUse (Bash)</td>
+<td>Block <code>./ctx</code> or <code>go run</code> — force PATH install</td>
+</tr>
+<tr>
+<td><code>prompt-coach.sh</code></td>
+<td>UserPromptSubmit</td>
+<td>Detect prompt anti-patterns and suggest improvements</td>
+</tr>
+<tr>
+<td><code>check-context-size.sh</code></td>
+<td>UserPromptSubmit</td>
+<td>Nudge context assessment as sessions grow</td>
+</tr>
+<tr>
+<td><code>check-persistence.sh</code></td>
+<td>UserPromptSubmit</td>
+<td>Remind to persist learnings/decisions</td>
+</tr>
+<tr>
+<td><code>cleanup-tmp.sh</code></td>
+<td>SessionEnd</td>
+<td>Remove stale temp files (older than 15 days)</td>
+</tr>
+</tbody>
+</table>
+<p>A catch-all PreToolUse hook also runs <code>ctx agent</code> on every tool use
+(with cooldown) to autoload context.</p>
 <h3 id="generated-configuration">Generated Configuration<a class="headerlink" href="#generated-configuration" title="Permanent link">&para;</a></h3>
 <p><code>.claude/settings.local.json</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>

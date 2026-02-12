@@ -701,6 +701,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#permission-hygiene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Hygiene
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temp-file-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temp File Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -868,6 +890,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#permission-hygiene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Hygiene
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temp-file-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temp File Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -994,12 +1038,39 @@ malicious contributor could add harmful instructions to
   never contain sensitive data. Exception: <code>sessions/</code> and <code>journal/</code> contain
   raw conversation data and should be gitignored</li>
 </ul>
+<h2 id="permission-hygiene">Permission Hygiene<a class="headerlink" href="#permission-hygiene" title="Permanent link">&para;</a></h2>
+<p>Claude Code's <code>.claude/settings.local.json</code> accumulates pre-approved
+permissions over time. Some permissions can bypass safety hooks:</p>
+<ul>
+<li><code>Bash(git push:*)</code> pre-approves pushes, skipping the confirmation
+  dialog where <code>block-git-push.sh</code> would intervene</li>
+<li>Broad permissions like <code>Bash(echo:*)</code> or <code>Bash(cat:*)</code> could be
+  composed into writes to sensitive files (<code>CLAUDE.md</code>,
+  <code>settings.local.json</code>, <code>.claude/hooks/</code>)</li>
+</ul>
+<p>Periodically review your permissions for:</p>
+<ul>
+<li><strong>Hook bypass</strong>: permissions that pre-approve commands safety hooks
+  are designed to intercept</li>
+<li><strong>Destructive commands</strong>: <code>rm -rf</code>, <code>git reset --hard</code>, etc.</li>
+<li><strong>Config injection vectors</strong>: permissions that allow modifying files
+  controlling agent behavior</li>
+</ul>
+<h2 id="temp-file-cleanup">Temp File Cleanup<a class="headerlink" href="#temp-file-cleanup" title="Permanent link">&para;</a></h2>
+<p>Hook state files accumulate in the user-specific temp directory
+(<code>$XDG_RUNTIME_DIR/ctx-&lt;uid&gt;/</code> or <code>/tmp/ctx-&lt;uid&gt;/</code>). A <code>SessionEnd</code>
+hook automatically removes files older than 15 days. For manual cleanup
+or cron scheduling, use:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>.context/tools/cleanup-ctx-tmp.sh<span class="w">        </span><span class="c1"># default: 15-day threshold</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>.context/tools/cleanup-ctx-tmp.sh<span class="w"> </span><span class="m">7</span><span class="w">      </span><span class="c1"># custom: 7-day threshold</span>
+</span></code></pre></div>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Review before committing</strong>: Always review <code>.context/</code> files before committing</li>
 <li><strong>Use .gitignore</strong>: If you must store sensitive notes locally,
    add them to <code>.gitignore</code></li>
 <li><strong>Drift detection</strong>: Run <code>ctx drift</code> to check for potential issues</li>
+<li><strong>Permission audit</strong>: Review <code>.claude/settings.local.json</code> after busy sessions</li>
 </ol>
 <h2 id="attribution">Attribution<a class="headerlink" href="#attribution" title="Permanent link">&para;</a></h2>
 <p>We appreciate responsible disclosure and will acknowledge security researchers
