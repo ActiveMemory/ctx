@@ -115,10 +115,10 @@ Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.
       Reduces 103 lines to ~30. #priority:medium #source:report-3
       #done:2026-02-11
 
-- [ ] Move utility functions from `recall/run.go` to `recall/fmt.go`:
+- [x] Move utility functions from `recall/run.go` to `recall/fmt.go`:
       formatDuration, formatTokens, stripLineNumbers, extractSystemReminders,
       normalizeCodeFences, formatToolUse. Brings run.go from 649 to
-      ~490 lines. #priority:medium #source:report-3
+      ~490 lines. #priority:medium #source:report-3 #done:2026-02-11
 
 - [ ] Convert `formatToolUse` switch (recall/run.go:596) to dispatch map:
       45-line switch becomes 10-line `map[string]string`
