@@ -40,6 +40,9 @@ dist/
 .claude/settings.local.json
 .claude/ralph-loop.local.md
 
+# Session captures (sensitive, never committed)
+.context/sessions/
+
 # Hook diagnostic logs (machine-specific, not committed)
 .context/logs/
 

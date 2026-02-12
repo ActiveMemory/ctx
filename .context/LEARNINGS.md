@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-11 | Gitignore rules for sensitive directories must survive cleanup sweeps |
 | 2026-02-11 | Chain-of-thought prompting improves agent reasoning accuracy |
 | 2026-02-07 | Agent ignores repeated hook output (repetition fatigue) |
 | 2026-02-06 | PROMPT.md deleted — was stale project briefing, not a Ralph loop prompt |
@@ -50,6 +51,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-11-195405] Gitignore rules for sensitive directories must survive cleanup sweeps
+
+**Context**: During a stale-reference sweep, the .context/sessions/ gitignore rule was removed because sessions were consolidated into journals. But the gitignore rule exists to prevent sensitive data from being committed, not to document architecture. The directory may still exist locally.
+
+**Lesson**: Gitignore entries for sensitive paths are security controls, not documentation. Never remove them during doc/reference cleanups even if the feature they relate to was removed.
+
+**Application**: Before removing any gitignore entry, ask: does this entry exist for security/privacy or for architecture? Security entries stay permanently.
 
 ---
 
