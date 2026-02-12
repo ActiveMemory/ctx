@@ -40,9 +40,10 @@ import (
 
 // Initialize registers all ctx subcommands with the root command.
 //
-// This function attaches all available subcommands (init, status, load, add,
-// complete, agent, drift, sync, compact, watch, hook, tasks, loop)
-// to the provided root command.
+// This function attaches all available subcommands to the provided root
+// command, including init, status, load, add, complete, agent, drift,
+// sync, compact, decision, watch, hook, learnings, tasks, loop, recall,
+// journal, and serve.
 //
 // Parameters:
 //   - cmd: The root cobra command to attach subcommands to
