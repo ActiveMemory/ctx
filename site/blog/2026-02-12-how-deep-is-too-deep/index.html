@@ -975,13 +975,13 @@ templates fail because they do not encode project-specific knowledge.
 A consolidation skill with eight Rust-based analysis dimensions was mostly 
 noise for a Go project. The fix was not a better template. It was growing 
 expertise from this project's own history.</p>
-<p>In every case, the answer was not "go deeper into ML".</p>
+<p>In every case, the answer was <strong>not</strong> "<em>go deeper into ML</em>".</p>
 <p>The answer was <strong>knowing which abstraction was leaking</strong> 
 and fixing it <strong>at the right layer</strong>.</p>
 <h2 id="agentic-systems-are-not-an-ml-problem">Agentic Systems Are Not an ML Problem<a class="headerlink" href="#agentic-systems-are-not-an-ml-problem" title="Permanent link">&para;</a></h2>
 <p>The mistake is assuming agent failures originate where the model was
 trained, rather than where it is deployed.</p>
-<p>Agentic AI is a systems problem under uncertainty:</p>
+<p>Agentic AI is a <strong>systems problem</strong> under <strong>chaotic uncertainty</strong>:</p>
 <ul>
 <li>Feedback loops between the agent and its environment</li>
 <li>Error accumulation across iterations</li>
@@ -1019,7 +1019,7 @@ autonomous loops, <strong>they compound</strong>. </p>
 </tr>
 </tbody>
 </table>
-<p>The depth that matters is diagnostic, not theoretical.</p>
+<p>The depth that matters is <strong>diagnostic</strong>, not theoretical.</p>
 <h2 id="the-real-answer">The Real Answer<a class="headerlink" href="#the-real-answer" title="Permanent link">&para;</a></h2>
 <p><strong>Not turtles all the way down</strong>.</p>
 <p>Go deep enough to:</p>
@@ -1041,13 +1041,13 @@ ones <strong>leak</strong>.</p>
 <h2 id="a-practical-litmus-test">A Practical Litmus Test<a class="headerlink" href="#a-practical-litmus-test" title="Permanent link">&para;</a></h2>
 <p>If a failure occurs and your instinct is to:</p>
 <ul>
-<li>add more prompt text: abstraction leak above</li>
-<li>add retries or heuristics: error accumulation</li>
-<li>change the model: scale masking</li>
-<li>reach for ML theory: you are probably going too deep</li>
+<li><strong>Add more prompt text</strong>: abstraction leak above</li>
+<li><strong>Add retries or heuristics</strong>: error accumulation</li>
+<li><strong>Change the model</strong>: scale masking</li>
+<li><strong>Reach for ML theory</strong>: you are probably (<em>but not always</em>) going too deep</li>
 </ul>
-<p>The right depth is the shallowest layer where the failure becomes
-predictable.</p>
+<p>The right depth is <strong>the shallowest layer where the failure becomes
+predictable</strong>.</p>
 <h2 id="the-ctx-lesson">The <code>ctx</code> Lesson<a class="headerlink" href="#the-ctx-lesson" title="Permanent link">&para;</a></h2>
 <p>Every design decision in <code>ctx</code> is downstream of this principle.</p>
 <p>The <strong>attention budget</strong> exists because the model's internal attention

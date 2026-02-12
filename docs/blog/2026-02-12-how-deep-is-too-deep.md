@@ -200,7 +200,7 @@ expertise from this project's own history.
 [fight-post]: 2026-02-04-skills-that-fight-the-platform.md
 [import-post]: 2026-02-05-you-cant-import-expertise.md
 
-In every case, the answer was not "go deeper into ML".
+In every case, the answer was **not** "*go deeper into ML*".
 
 The answer was **knowing which abstraction was leaking** 
 and fixing it **at the right layer**.
@@ -210,7 +210,7 @@ and fixing it **at the right layer**.
 The mistake is assuming agent failures originate where the model was
 trained, rather than where it is deployed.
 
-Agentic AI is a systems problem under uncertainty:
+Agentic AI is a **systems problem** under **chaotic uncertainty**:
 
 * Feedback loops between the agent and its environment
 * Error accumulation across iterations
@@ -233,7 +233,7 @@ It is about:
 | Recognizing distribution shift before it compounds        | Hand-tuning learning rate schedules               |
 | Predicting when scale hides errors instead of fixing them | Chasing theoretical purity divorced from practice |
 
-The depth that matters is diagnostic, not theoretical.
+The depth that matters is **diagnostic**, not theoretical.
 
 ## The Real Answer
 
@@ -261,13 +261,13 @@ ones **leak**.
 
 If a failure occurs and your instinct is to:
 
-* add more prompt text: abstraction leak above
-* add retries or heuristics: error accumulation
-* change the model: scale masking
-* reach for ML theory: you are probably going too deep
+* **Add more prompt text**: abstraction leak above
+* **Add retries or heuristics**: error accumulation
+* **Change the model**: scale masking
+* **Reach for ML theory**: you are probably (*but not always*) going too deep
 
-The right depth is the shallowest layer where the failure becomes
-predictable.
+The right depth is **the shallowest layer where the failure becomes
+predictable**.
 
 ## The `ctx` Lesson
 
