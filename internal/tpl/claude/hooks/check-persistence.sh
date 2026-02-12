@@ -26,7 +26,11 @@
 HOOK_INPUT=$(cat)
 SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // "unknown"')
 
-STATE_FILE="/tmp/ctx-persistence-nudge-${SESSION_ID}"
+# Use a user-specific temp directory to prevent symlink race attacks (M-3).
+CTX_TMPDIR="${XDG_RUNTIME_DIR:-/tmp}/ctx-$(id -u)"
+mkdir -p "$CTX_TMPDIR" && chmod 700 "$CTX_TMPDIR"
+
+STATE_FILE="${CTX_TMPDIR}/persistence-nudge-${SESSION_ID}"
 CONTEXT_DIR=".context"
 LOG_DIR="${CONTEXT_DIR}/logs"
 LOG_FILE="${LOG_DIR}/check-persistence.log"

@@ -24,7 +24,12 @@
 # Exit: Always 0 (never blocks execution)
 
 MAX_SUGGESTIONS=3
-SESSION_FILE="/tmp/ctx-prompt-coach-$$-$(date +%Y%m%d).state"
+
+# Use a user-specific temp directory to prevent symlink race attacks (M-3).
+CTX_TMPDIR="${XDG_RUNTIME_DIR:-/tmp}/ctx-$(id -u)"
+mkdir -p "$CTX_TMPDIR" && chmod 700 "$CTX_TMPDIR"
+
+SESSION_FILE="${CTX_TMPDIR}/prompt-coach-$$-$(date +%Y%m%d).state"
 
 # Initialize session file if it doesn't exist
 if [ ! -f "$SESSION_FILE" ]; then

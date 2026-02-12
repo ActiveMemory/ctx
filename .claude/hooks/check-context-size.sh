@@ -22,7 +22,11 @@
 HOOK_INPUT=$(cat)
 SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // "unknown"')
 
-COUNTER_FILE="/tmp/ctx-context-check-${SESSION_ID}"
+# Use a user-specific temp directory to prevent symlink race attacks (M-3).
+CTX_TMPDIR="${XDG_RUNTIME_DIR:-/tmp}/ctx-$(id -u)"
+mkdir -p "$CTX_TMPDIR" && chmod 700 "$CTX_TMPDIR"
+
+COUNTER_FILE="${CTX_TMPDIR}/context-check-${SESSION_ID}"
 LOG_DIR=".context/logs"
 LOG_FILE="${LOG_DIR}/check-context-size.log"
 
