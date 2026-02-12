@@ -19,7 +19,12 @@
 # If CTX_BACKUP_SMB_URL is not set, the SMB mount check is skipped.
 
 MARKER="$HOME/.local/state/ctx-last-backup"
-REMINDED="/tmp/ctx-backup-reminded"
+
+# Use a user-specific temp directory to prevent symlink race attacks (M-3).
+CTX_TMPDIR="${XDG_RUNTIME_DIR:-/tmp}/ctx-$(id -u)"
+mkdir -p "$CTX_TMPDIR" && chmod 700 "$CTX_TMPDIR"
+
+REMINDED="${CTX_TMPDIR}/backup-reminded"
 MAX_AGE_DAYS=2
 
 # Only remind once per day to avoid spam
