@@ -12,6 +12,12 @@ topics:
 
 # The Attention Budget
 
+!!! note "Update (2026-02-11)"
+    As of v0.4.0, ctx consolidated sessions into the journal mechanism.
+    References to `.context/sessions/` in this post reflect the
+    architecture at the time of writing. Session history is now accessed
+    via `ctx recall` and stored in `.context/journal/`.
+
 ![ctx](../images/ctx-banner.png)
 
 ## Why Your AI Forgets What You Just Told It

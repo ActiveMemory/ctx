@@ -135,7 +135,7 @@ var RegExMultiPart = regexp.MustCompile(`-p\d+\.md$`)
 // RegExGlobStar matches glob-like wildcards: *.ext, */, *) etc.
 var RegExGlobStar = regexp.MustCompile(`\*(\.\w+|[/)])`)
 
-// RegExToolBold matches tool-use lines like "🔧 **Glob: .context/sessions/*.md**".
+// RegExToolBold matches tool-use lines like "🔧 **Glob: .context/journal/*.md**".
 var RegExToolBold = regexp.MustCompile(`🔧\s*\*\*(.+?)\*\*`)
 
 // RegExTurnHeader matches conversation turn headers.

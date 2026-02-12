@@ -279,11 +279,11 @@ Run `ctx watch` alongside the loop to automatically process context updates:
 ./loop.sh 2>&1 | tee /tmp/loop.log
 
 # Terminal 2: Watch for context updates
-ctx watch --log /tmp/loop.log --auto-save
+ctx watch --log /tmp/loop.log
 ```
 
-The `--auto-save` flag periodically saves session snapshots, creating a
-history of the loop's progress.
+The watch command processes context updates from the loop output in
+real time.
 
 ## Project Setup
 

@@ -23,7 +23,7 @@ adaptive intervals:
    - Inform the user concisely: "Context is getting full. Consider
      wrapping up or starting a new session."
    - Offer to persist unsaved learnings, decisions, or session notes
-   - Suggest running `/ctx-save` if significant work is unpersisted
+   - Suggest running `/ctx-reflect` if significant work is unpersisted
 
 2. **If usage is moderate**, continue silently; do not mention the
    checkpoint

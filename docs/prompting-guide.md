@@ -77,7 +77,7 @@ Framing as "*why*" encourages investigation before action. The AI will trace
 through code, check configurations, and identify the actual cause.
 
 !!! example "Real Example"
-    "Why can't I run /ctx-save?" led to discovering missing permissions
+    "Why can't I run /ctx-reflect?" led to discovering missing permissions
     in settings.local.json bootstrapping—a fix that benefited all users.
 
 ### "Is this consistent with our decisions?"

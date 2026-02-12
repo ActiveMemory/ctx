@@ -114,11 +114,11 @@ that:
 
 Example:
 ```
-add session enrichment to ctx-save skill
+add reasoning nudges to agent playbook and skills
 
-The save command produces scaffolds with empty placeholders.
-The skill now instructs the agent to fill them in immediately
-after saving.
+Chain-of-thought prompting dramatically improves accuracy.
+Added step-by-step reasoning instructions to 7 skills and
+the playbook template.
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```

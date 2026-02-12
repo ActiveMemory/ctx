@@ -47,7 +47,6 @@ All commands support these flags:
 | [`ctx recall`](#ctx-recall)       | Browse and export AI session history                      |
 | [`ctx journal`](#ctx-journal)     | Generate static site from journal entries                 |
 | [`ctx serve`](#ctx-serve)         | Serve static site locally                                 |
-| [`ctx session`](#ctx-session)     | Save, list, load, and parse session snapshots             |
 | [`ctx watch`](#ctx-watch)         | Auto-apply context updates from AI output                 |
 | [`ctx hook`](#ctx-hook)           | Generate AI tool integration configs                      |
 | [`ctx loop`](#ctx-loop)           | Generate autonomous loop script                           |
@@ -74,7 +73,7 @@ ctx init [flags]
 **Creates**:
 
 - `.context/` directory with all template files
-- `.claude/hooks/` with auto-save and enforcement scripts (for Claude Code)
+- `.claude/hooks/` with enforcement and monitoring scripts (for Claude Code)
 - `.claude/skills/` with ctx Agent Skills (following agentskills.io spec)
 - `.claude/settings.local.json` with hook configuration and pre-approved ctx permissions
 - `PROMPT.md` with session prompt (autonomous mode with `--ralph`)
@@ -378,14 +377,12 @@ ctx compact [flags]
 | Flag             | Description                                |
 |------------------|--------------------------------------------|
 | `--archive`      | Create `.context/archive/` for old content |
-| `--no-auto-save` | Skip auto-saving session before compact    |
 
 **Example**:
 
 ```bash
 ctx compact
 ctx compact --archive
-ctx compact --no-auto-save
 ```
 
 ---
@@ -739,7 +736,6 @@ ctx watch [flags]
 |----------------|-------------------------------------|
 | `--log <file>` | Log file to watch (default: stdin)  |
 | `--dry-run`    | Preview updates without applying    |
-| `--auto-save`  | Periodically save session snapshots |
 
 **Example**:
 
@@ -780,102 +776,6 @@ ctx hook <tool>
 ctx hook claude-code
 ctx hook cursor
 ctx hook aider
-```
-
----
-
-### `ctx session`
-
-Manage session snapshots.
-
-#### ctx session save
-
-Save the current context snapshot.
-
-```bash
-ctx session save [topic] [flags]
-```
-
-**Flags**:
-
-| Flag            | Short | Description                                              |
-|-----------------|-------|----------------------------------------------------------|
-| `--type <type>` | `-t`  | Session type: `feature`, `bugfix`, `refactor`, `session` |
-
-**Example**:
-
-```bash
-ctx session save
-ctx session save "feature-auth"
-ctx session save "bugfix" --type bugfix
-```
-
-#### `ctx session list`
-
-List saved sessions.
-
-```bash
-ctx session list [flags]
-```
-
-**Flags**:
-
-| Flag      | Short | Description                                  |
-|-----------|-------|----------------------------------------------|
-| `--limit` | `-n`  | Maximum sessions to display (default: 10)    |
-
-**Output**: Table of sessions with index, date, topic, and type.
-
-**Example**:
-
-```bash
-ctx session list
-ctx session list --limit 5
-```
-
-#### `ctx session load`
-
-Load and display a previous session.
-
-```bash
-ctx session load <index|date|topic>
-```
-
-**Arguments**:
-
-* `index`: Numeric index from `session list`
-* `date`: Date pattern (e.g., `2026-01-21`)
-* `topic`: Topic keyword match
-
-**Example:**
-
-```bash
-ctx session load 1           # by index
-ctx session load 2026-01-21  # by date
-ctx session load auth        # by topic
-```
-
-#### `ctx session parse`
-
-Parse JSONL transcript to readable markdown.
-
-```bash
-ctx session parse <file> [flags]
-```
-
-**Flags:**
-
-| Flag         | Short | Description                                     |
-|--------------|-------|-------------------------------------------------|
-| `--output`   | `-o`  | Output file (default: stdout)                   |
-| `--extract`  |       | Extract decisions and learnings from transcript |
-
-**Example**:
-
-```bash
-ctx session parse ~/.claude/projects/.../transcript.jsonl
-ctx session parse transcript.jsonl --extract
-ctx session parse transcript.jsonl -o conversation.md
 ```
 
 ---

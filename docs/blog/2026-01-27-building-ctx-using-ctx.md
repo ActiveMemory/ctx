@@ -12,6 +12,11 @@ topics:
 
 # Building ctx Using ctx
 
+!!! note "Update (2026-02-11)"
+    As of v0.4.0, ctx consolidated sessions into the journal mechanism.
+    References to `.context/sessions/`, auto-save hooks, and `SessionEnd`
+    auto-save in this post reflect the architecture at the time of writing.
+
 ![ctx](../images/ctx-banner.png)
 
 ## A Meta-Experiment in AI-Assisted Development

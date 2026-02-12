@@ -12,6 +12,11 @@ topics:
 
 # The Anatomy of a Skill That Works
 
+!!! note "Update (2026-02-11)"
+    As of v0.4.0, ctx consolidated sessions into the journal mechanism.
+    References to `ctx-save`, `ctx session`, and `.context/sessions/`
+    in this post reflect the architecture at the time of writing.
+
 ![ctx](../images/ctx-banner.png)
 
 ## What 20 Skill Rewrites Taught Me About Guiding AI

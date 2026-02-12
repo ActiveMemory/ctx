@@ -103,7 +103,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 			"\n%s exists but has no ctx content.\n", config.FilePromptMd,
 		)
 		cmd.Println(
-			"Would you like to merge ctx session prompt instructions?",
+			"Would you like to merge ctx prompt instructions?",
 		)
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)

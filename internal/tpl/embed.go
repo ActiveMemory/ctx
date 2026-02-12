@@ -103,7 +103,7 @@ func ListSkills() ([]string, error) {
 // SkillContent reads a skill's SKILL.md file by skill name.
 //
 // Parameters:
-//   - name: Skill directory name (e.g., "ctx-save")
+//   - name: Skill directory name (e.g., "ctx-status")
 //
 // Returns:
 //   - []byte: SKILL.md content from claude/skills/<name>/
@@ -124,7 +124,7 @@ func MakefileCtx() ([]byte, error) {
 // ClaudeHookByFileName reads a Claude Code hook script by name.
 //
 // Parameters:
-//   - name: Hook script filename (e.g., "session-end-auto-save.sh")
+//   - name: Hook script filename (e.g., "block-non-path-ctx.sh")
 //
 // Returns:
 //   - []byte: Hook script content from claude/hooks/

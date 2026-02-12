@@ -272,7 +272,7 @@ func TestNormalizeContent(t *testing.T) {
 	}{
 		{
 			"strips tool bold",
-			`🔧 **Glob: .context/sessions/*.md**`,
+			`🔧 **Glob: .context/journal/*.md**`,
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "**Glob") {
 					t.Error("bold markers not stripped from tool line")

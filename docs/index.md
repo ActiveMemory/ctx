@@ -262,17 +262,14 @@ updates conversation content.
 See [Session Journal](session-journal.md) for the full pipeline
 including enrichment and normalization.
 
-### Save and Restore Sessions
+### Browse Session History
 
 ```bash
-# Save a snapshot of current context
-ctx session save "before-refactor"
+# List recent sessions
+ctx recall list --limit 5
 
-# List saved sessions
-ctx session list
-
-# Load a previous session
-ctx session load "before-refactor"
+# Export sessions to browsable journal
+ctx recall export --all
 ```
 
 ### Run an Autonomous Loop

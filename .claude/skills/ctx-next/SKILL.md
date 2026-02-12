@@ -125,7 +125,7 @@ useful)*
 > ---
 >
 > *Based on 24 pending tasks across 3 phases. Last session:
-> ctx-save-enrichment (2026-02-08).*
+> doc-drift-cleanup (2026-02-11).*
 
 ### Bad Output
 

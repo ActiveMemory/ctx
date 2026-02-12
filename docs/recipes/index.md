@@ -51,7 +51,7 @@ Aider, Copilot, or Windsurf. Includes shell completion,
 watch mode for non-native tools, and verification.
 
 **Uses**: `ctx init`, `ctx hook`, `ctx agent`, `ctx completion`,
-`ctx watch`, `ctx session parse`
+`ctx watch`
 
 ---
 
