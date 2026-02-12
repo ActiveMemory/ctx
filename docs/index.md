@@ -200,7 +200,7 @@ or previous session topics.
 └── sessions/           # Session snapshots
 
 .claude/                # Claude Code integration (if detected)
-├── hooks/              # Auto-save and enforcement scripts
+├── hooks/              # Lifecycle hooks (enforcement, coaching, cleanup)
 ├── skills/             # ctx Agent Skills (agentskills.io spec)
 └── settings.local.json # Hook configuration
 ```

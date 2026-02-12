@@ -1,30 +1,44 @@
 # Decisions
 
 <!-- INDEX:START -->
-| Date       | Decision                                                                         |
-|------------|----------------------------------------------------------------------------------|
-| 2026-02-11 | Remove .context/sessions/ storage layer and ctx session command                  |
-| 2026-02-06 | Drop ctx-journal-summarize skill (duplicates ctx-blog)                           |
-| 2026-02-04 | E/A/R classification as the standard for skill evaluation                        |
-| 2026-01-29 | Add quick reference index to DECISIONS.md                                        |
-| 2026-01-28 | No custom UI - IDE is the interface                                              |
-| 2026-01-28 | ctx recall is Claude-first                                                       |
-| 2026-01-28 | Tasks must include explicit deliverables, not just implementation steps          |
-| 2026-01-28 | Use tool-agnostic Session type with tool-specific parsers for recall system      |
+| Date | Decision |
+|------|--------|
+| 2026-02-12 | Drop prompt-coach hook |
+| 2026-02-06 | Drop ctx-journal-summarize skill (duplicates ctx-blog) |
+| 2026-02-04 | E/A/R classification as the standard for skill evaluation |
+| 2026-01-29 | Add quick reference index to DECISIONS.md |
+| 2026-01-28 | No custom UI - IDE is the interface |
+| 2026-01-28 | ctx recall is Claude-first |
+| 2026-01-28 | Tasks must include explicit deliverables, not just implementation steps |
+| 2026-01-28 | Use tool-agnostic Session type with tool-specific parsers for recall system |
 | 2026-01-27 | Use reverse-chronological order (newest first) for DECISIONS.md and LEARNINGS.md |
-| 2026-01-25 | Removed AGENTS.md from project root                                              |
-| 2026-01-25 | Keep CONSTITUTION Minimal                                                        |
-| 2026-01-25 | Centralize Constants with Semantic Prefixes                                      |
-| 2026-01-21 | Separate Orchestrator Directive from Agent Tasks                                 |
-| 2026-01-21 | Hooks Use ctx from PATH, Not Hardcoded Paths                                     |
-| 2026-01-20 | Use SessionEnd Hook for Auto-Save                                                |
-| 2026-01-20 | Handle CLAUDE.md Creation/Merge in ctx init                                      |
-| 2026-01-20 | Auto-Save Before Compact                                                         |
-| 2026-01-20 | Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md                              |
-| 2026-01-20 | Two-Tier Context Persistence Model                                               |
-| 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed)                            |
-| 2026-01-20 | Generic Core with Optional Claude Code Enhancements                              |
+| 2026-01-25 | Removed AGENTS.md from project root |
+| 2026-01-25 | Keep CONSTITUTION Minimal |
+| 2026-01-25 | Centralize Constants with Semantic Prefixes |
+| 2026-01-21 | Separate Orchestrator Directive from Agent Tasks |
+| 2026-01-21 | Hooks Use ctx from PATH, Not Hardcoded Paths |
+| 2026-01-20 | Use SessionEnd Hook for Auto-Save |
+| 2026-01-20 | Handle CLAUDE.md Creation/Merge in ctx init |
+| 2026-01-20 | Auto-Save Before Compact |
+| 2026-01-20 | Session Filename Format: YYYY-MM-DD-HHMMSS-topic.md |
+| 2026-01-20 | Two-Tier Context Persistence Model |
+| 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
+| 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-12-005516] Drop prompt-coach hook
+
+**Status**: Accepted
+
+**Context**: Prompt-coach has been running since installation with zero useful tips fired. All counters across all state files are 0. The delivery mechanism is broken (stdout goes to AI not user, stderr is swallowed). Even if fixed with systemMessage, the coaching patterns are too narrow for experienced users and the prompting guide already covers best practices.
+
+**Decision**: Drop prompt-coach hook
+
+**Rationale**: Three layers of not-working: (1) patterns too narrow to match real prompts, (2) output channel invisible to user, (3) L-3 PID bug creates orphan temp files. Removing it eliminates the largest source of temp file accumulation, simplifies the hook stack, and removes dead code.
+
+**Consequences**: One fewer hook in UserPromptSubmit (faster prompt submission). Eliminates prompt-coach temp file accumulation entirely — reduces cleanup burden. Need to remove: template script, config constant, script loader, hookScripts entry, settings.local.json reference, and active hook file.
+
+---
 
 ## [2026-02-11] Remove .context/sessions/ storage layer and ctx session command
 

@@ -227,9 +227,9 @@ sequenceDiagram
     Hook-->>CC: Coaching feedback
 
     Note over CC: Event: SessionEnd
-    CC->>Hook: auto-save-session.sh
-    Hook->>CTX: ctx session save
-    Hook-->>CC: Session persisted
+    CC->>Hook: cleanup-tmp.sh
+    Hook->>FS: Remove stale temp files
+    Hook-->>CC: Cleanup complete
 ```
 
 ## Context File Lifecycle
@@ -351,11 +351,11 @@ ctx/
 │   ├── task/                    # Task checkbox parsing
 │   ├── tpl/                     # Embedded templates (go:embed)
 │   │   ├── claude/
-│   │   │   ├── hooks/           #   Hook scripts (4 .sh files)
+│   │   │   ├── hooks/           #   Hook scripts (5 .sh files)
 │   │   │   └── skills/          #   Skill templates (16 directories)
 │   │   ├── entry-templates/     #   Decision/learning entry templates
 │   │   ├── ralph/               #   Ralph loop PROMPT.md
-│   │   └── tools/               #   context-watch.sh
+│   │   └── tools/               #   context-watch.sh, cleanup-ctx-tmp.sh
 │   └── validation/              # Input sanitization
 ├── docs/                        # Documentation site source (mkdocs)
 │   ├── cli-reference.md

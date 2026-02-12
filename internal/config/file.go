@@ -124,6 +124,8 @@ const (
 	FileContextWatch = "context-watch.sh"
 	// FileMakefileCtx is the ctx-owned Makefile include for project root.
 	FileMakefileCtx = "Makefile.ctx"
+	// FileCleanupTmp is the hook script for temp file cleanup on session end.
+	FileCleanupTmp = "cleanup-tmp.sh"
 	// CmdAutoloadContext is the inline command for the PreToolUse hook
 	// that autoloads the context packet on every tool use. The cooldown
 	// inside ctx agent prevents repetitive output.

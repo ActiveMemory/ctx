@@ -53,6 +53,22 @@ graph TD
    packet (subsequent invocations within the cooldown window are silent)
 3. **Next session**: Claude reads context files and continues with context
 
+### Generated Hooks
+
+`ctx init` installs lifecycle hooks to `.claude/hooks/` and wires them
+into `.claude/settings.local.json`:
+
+| Hook | Event | Purpose |
+|------|-------|---------|
+| `block-non-path-ctx.sh` | PreToolUse (Bash) | Block `./ctx` or `go run` — force PATH install |
+| `prompt-coach.sh` | UserPromptSubmit | Detect prompt anti-patterns and suggest improvements |
+| `check-context-size.sh` | UserPromptSubmit | Nudge context assessment as sessions grow |
+| `check-persistence.sh` | UserPromptSubmit | Remind to persist learnings/decisions |
+| `cleanup-tmp.sh` | SessionEnd | Remove stale temp files (older than 15 days) |
+
+A catch-all PreToolUse hook also runs `ctx agent` on every tool use
+(with cooldown) to autoload context.
+
 ### Generated Configuration
 
 `.claude/settings.local.json`:

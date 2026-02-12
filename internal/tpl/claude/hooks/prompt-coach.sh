@@ -20,7 +20,7 @@
 # - "make it better" (vague) → define "better" with criteria
 # - "update the component" (vague) → specify which component and what changes
 #
-# Output: Warnings to stderr (non-blocking)
+# Output: Tips to stdout (prepended as context for Claude)
 # Exit: Always 0 (never blocks execution)
 
 MAX_SUGGESTIONS=3
@@ -79,15 +79,15 @@ suggest() {
     local count=$(get_count "$pattern")
 
     if [ "$count" -lt "$MAX_SUGGESTIONS" ]; then
-        echo "" >&2
-        echo "┌─ Prompt Tip ─────────────────────────────────────" >&2
-        echo "│ $tip" >&2
+        echo ""
+        echo "┌─ Prompt Tip ─────────────────────────────────────"
+        echo "│ $tip"
         if [ -n "$example" ]; then
-            echo "│" >&2
-            echo "│ Example: $example" >&2
+            echo "│"
+            echo "│ Example: $example"
         fi
-        echo "└──────────────────────────────────────────────────" >&2
-        echo "" >&2
+        echo "└──────────────────────────────────────────────────"
+        echo ""
         increment_count "$pattern"
     fi
 }

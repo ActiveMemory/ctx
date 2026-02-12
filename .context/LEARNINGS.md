@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-12 | Prompt-coach hook outputs to stdout (UserPromptSubmit) which is prepended as AI context, not shown to the user. stderr with exit 0 is swallowed entirely. The only user-visible options are systemMessage JSON (warning banner) or exit 2 (blocks the prompt). There is no non-blocking user-visible output channel for UserPromptSubmit hooks. |
 | 2026-02-11 | Gitignore rules for sensitive directories must survive cleanup sweeps |
 | 2026-02-11 | Chain-of-thought prompting improves agent reasoning accuracy |
 | 2026-02-07 | Agent ignores repeated hook output (repetition fatigue) |
@@ -51,6 +52,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-12-005510] Prompt-coach hook outputs to stdout (UserPromptSubmit) which is prepended as AI context, not shown to the user. stderr with exit 0 is swallowed entirely. The only user-visible options are systemMessage JSON (warning banner) or exit 2 (blocks the prompt). There is no non-blocking user-visible output channel for UserPromptSubmit hooks.
+
+**Context**: Debugging why prompt-coach tips were invisible to the user despite firing correctly
+
+**Lesson**: UserPromptSubmit hook stdout goes to the AI as context, not the user terminal. stderr with exit 0 is invisible. No non-blocking user-facing output channel exists for this hook type.
+
+**Application**: Design hooks for their actual audience: AI-facing hooks use stdout, user-facing feedback needs systemMessage or a different mechanism entirely.
 
 ---
 

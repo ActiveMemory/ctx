@@ -65,6 +65,8 @@ Analysis of 69 sessions found 8 recurring workflow patterns. 7 have automation g
 - [x] create "use-case-based" user-facing documentation (the problem, how
       ctx solves it, typical workflow, best practices, gotchas, etc.)
 
+- [ ] Remove prompt-coach hook — delivery mechanism doesn't work (stdout goes to AI not user, stderr is invisible, no viable user-facing channel). Zero useful tips fired across all usage. Creates orphan temp files via L-3 PID bug. The prompting guide already covers best practices. #priority:medium #added:2026-02-12-005504
+
 - [ ] Recipes section needs human review. For example, certain workflows can
       be autonomously done by asking AI "can you record our learnings?" but
       from the documenation it's not clear. Spend as much time as necessary

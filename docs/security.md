@@ -81,12 +81,44 @@ This means:
   never contain sensitive data. Exception: `sessions/` and `journal/` contain
   raw conversation data and should be gitignored
 
+## Permission Hygiene
+
+Claude Code's `.claude/settings.local.json` accumulates pre-approved
+permissions over time. Some permissions can bypass safety hooks:
+
+* `Bash(git push:*)` pre-approves pushes, skipping the confirmation
+  dialog where `block-git-push.sh` would intervene
+* Broad permissions like `Bash(echo:*)` or `Bash(cat:*)` could be
+  composed into writes to sensitive files (`CLAUDE.md`,
+  `settings.local.json`, `.claude/hooks/`)
+
+Periodically review your permissions for:
+
+* **Hook bypass**: permissions that pre-approve commands safety hooks
+  are designed to intercept
+* **Destructive commands**: `rm -rf`, `git reset --hard`, etc.
+* **Config injection vectors**: permissions that allow modifying files
+  controlling agent behavior
+
+## Temp File Cleanup
+
+Hook state files accumulate in the user-specific temp directory
+(`$XDG_RUNTIME_DIR/ctx-<uid>/` or `/tmp/ctx-<uid>/`). A `SessionEnd`
+hook automatically removes files older than 15 days. For manual cleanup
+or cron scheduling, use:
+
+```bash
+.context/tools/cleanup-ctx-tmp.sh        # default: 15-day threshold
+.context/tools/cleanup-ctx-tmp.sh 7      # custom: 7-day threshold
+```
+
 ## Best Practices
 
 1. **Review before committing**: Always review `.context/` files before committing
 2. **Use .gitignore**: If you must store sensitive notes locally,
    add them to `.gitignore`
 3. **Drift detection**: Run `ctx drift` to check for potential issues
+4. **Permission audit**: Review `.claude/settings.local.json` after busy sessions
 
 ## Attribution
 

@@ -65,6 +65,23 @@ func CheckContextSizeScript() ([]byte, error) {
 	return content, nil
 }
 
+// CleanupTmpScript returns the session-end temp file cleanup hook script.
+//
+// The script removes stale files (older than 15 days) from the user-specific
+// ctx temp directory on session end.
+// It is installed to .claude/hooks/ during ctx init --claude.
+//
+// Returns:
+//   - []byte: Raw bytes of the cleanup-tmp.sh script
+//   - error: Non-nil if the embedded file cannot be read
+func CleanupTmpScript() ([]byte, error) {
+	content, err := tpl.ClaudeHookByFileName(config.FileCleanupTmp)
+	if err != nil {
+		return nil, errFileRead(config.FileCleanupTmp, err)
+	}
+	return content, nil
+}
+
 // CheckPersistenceScript returns the persistence nudge hook script.
 //
 // The script counts prompts since the last .context/ file modification
