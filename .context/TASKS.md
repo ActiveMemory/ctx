@@ -82,19 +82,22 @@ Overall drift severity LOW. 14 existing doc.go files are accurate. Key gaps belo
       `check-context-size.sh` to embedded assets list. #priority:medium #source:report-2
       #done:2026-02-11
 
-- [ ] Fix `internal/bootstrap/bootstrap.go:44-46` godoc: add 5 missing
+- [x] Fix `internal/bootstrap/bootstrap.go:44-46` godoc: add 5 missing
       subcommands (decision, learnings, recall, journal, serve) or replace
       with "all ctx subcommands" to avoid future drift. #priority:medium #source:report-2
+      #done:2026-02-11
 
-- [ ] Fix `internal/cli/hook/run.go` Claude Code example: update stale
+- [x] Fix `internal/cli/hook/run.go` Claude Code example: update stale
       `preToolCall` JSON key to `PreToolUse` with nested matcher
-      structure. #priority:medium #source:report-2
+      structure. #priority:medium #source:report-2 #done:2026-02-11
 
-- [ ] Add doc.go files for packages lacking documentation: `status`,
+- [x] Add doc.go files for packages lacking documentation: `status`,
       `sync`, `watch`, `serve`, `config`, `validation`. #priority:low #source:report-2
+      #done:2026-02-11
 
-- [ ] Fix package comment mismatch: `internal/cli/decision/decision.go:7`
+- [x] Fix package comment mismatch: `internal/cli/decision/decision.go:7`
       says "Package decisions" but package is `decision`. #priority:low #source:report-2
+      #done:2026-02-11
 
 **Maintainability** (from `ideas/REPORT-3-maintainability.md`):
 Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.

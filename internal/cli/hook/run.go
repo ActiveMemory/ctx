@@ -59,12 +59,18 @@ Run 'ctx agent' for a quick context summary.
 `)
 		cmd.Println(green("```"))
 		cmd.Println()
-		cmd.Println("Or use a hook in .claude/settings.json:")
+		cmd.Println("Or use a hook in .claude/settings.local.json:")
 		cmd.Println()
 		cmd.Println(green("```json"))
 		cmd.Println(`{
   "hooks": {
-    "preToolCall": "ctx agent --budget 4000"
+    "PreToolUse": [{
+      "matcher": "",
+      "hooks": [{
+        "type": "command",
+        "command": "ctx agent --budget 4000"
+      }]
+    }]
   }
 }`)
 		cmd.Println(green("```"))
