@@ -253,8 +253,7 @@ ctx compact --archive
 * Learnings: deduplicates entries with similar content
 * All files: removes empty sections left behind
 
-The `--archive` flag preserves old content. Skip the auto-save with
-`--no-auto-save`.
+The `--archive` flag preserves old content.
 
 ### `ctx status`
 

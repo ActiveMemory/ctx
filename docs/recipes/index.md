@@ -13,8 +13,8 @@ into a step-by-step workflow.
     **Commands** (`ctx status`, `ctx add task`) run in your
     terminal.
 
-    **Skills** (`/ctx-save`, `/ctx-next`) run inside
-    your AI coding assistant. 
+    **Skills** (`/ctx-reflect`, `/ctx-next`) run inside
+    your AI coding assistant.
 
     Recipes combine both.
 
@@ -66,9 +66,8 @@ Walk through a full ctx session from start to finish: loading
 context, picking what to work on, committing with context
 capture, reflecting, and saving a snapshot.
 
-**Uses**: `ctx status`, `ctx agent`, `ctx session save/list/load`,
-`/ctx-remember`, `/ctx-next`, `/ctx-commit`, `/ctx-reflect`,
-`/ctx-save`
+**Uses**: `ctx status`, `ctx agent`,
+`/ctx-remember`, `/ctx-next`, `/ctx-commit`, `/ctx-reflect`
 
 ---
 
