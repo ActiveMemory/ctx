@@ -9,10 +9,14 @@
 package bootstrap
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // version is set at build time via ldflags:
@@ -34,6 +38,7 @@ var version = "dev"
 func RootCmd() *cobra.Command {
 	var contextDir string
 	var noColor bool
+	var allowOutsideCwd bool
 
 	cmd := &cobra.Command{
 		Use:   "ctx",
@@ -53,6 +58,15 @@ func RootCmd() *cobra.Command {
 			if noColor {
 				color.NoColor = true
 			}
+
+			// Validate that the context directory stays within the project root.
+			if !allowOutsideCwd {
+				if err := validation.ValidateBoundary(rc.ContextDir()); err != nil {
+					fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+					fmt.Fprintln(os.Stderr, "Use --allow-outside-cwd to override this check.")
+					os.Exit(1)
+				}
+			}
 		},
 	}
 
@@ -68,6 +82,12 @@ func RootCmd() *cobra.Command {
 		"no-color",
 		false,
 		"Disable colored output",
+	)
+	cmd.PersistentFlags().BoolVar(
+		&allowOutsideCwd,
+		"allow-outside-cwd",
+		false,
+		"Allow context directory outside current working directory",
 	)
 
 	return cmd

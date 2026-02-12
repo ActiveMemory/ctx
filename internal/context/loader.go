@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Load reads all context files from the specified directory.
@@ -41,6 +42,11 @@ func Load(dir string) (*Context, error) {
 	}
 	if !info.IsDir() {
 		return nil, &NotFoundError{Dir: dir}
+	}
+
+	// Reject context directories that contain symlinks (M-2 defense).
+	if err := validation.CheckSymlinks(dir); err != nil {
+		return nil, err
 	}
 
 	ctx := &Context{
