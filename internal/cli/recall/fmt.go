@@ -15,6 +15,19 @@ import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
+// Claude Code tool names used in session transcripts.
+const (
+	toolRead      = "Read"
+	toolWrite     = "Write"
+	toolEdit      = "Edit"
+	toolBash      = "Bash"
+	toolGrep      = "Grep"
+	toolGlob      = "Glob"
+	toolWebFetch  = "WebFetch"
+	toolWebSearch = "WebSearch"
+	toolTask      = "Task"
+)
+
 // fenceForContent returns the appropriate code fence for content.
 //
 // Uses longer fences when content contains backticks to avoid
@@ -379,57 +392,35 @@ func normalizeCodeFences(content string) string {
 //
 // Returns:
 //   - string: Formatted string like "Read: /path/to/file" or just tool name
+// toolDisplayKey maps tool names to the JSON input key that best
+// describes each invocation.
+var toolDisplayKey = map[string]string{
+	toolRead:      "file_path",
+	toolWrite:     "file_path",
+	toolEdit:      "file_path",
+	toolBash:      "command",
+	toolGrep:      "pattern",
+	toolGlob:      "pattern",
+	toolWebFetch:  "url",
+	toolWebSearch: "query",
+	toolTask:      "description",
+}
+
 func formatToolUse(t parser.ToolUse) string {
-	// Parse the JSON input to extract meaningful parameters
+	key, ok := toolDisplayKey[t.Name]
+	if !ok {
+		return t.Name
+	}
 	var input map[string]any
 	if err := json.Unmarshal([]byte(t.Input), &input); err != nil {
 		return t.Name
 	}
-
-	// Extract the most relevant parameter based on tool type
-	switch t.Name {
-	case "Read":
-		if path, ok := input["file_path"].(string); ok {
-			return fmt.Sprintf("Read: %s", path)
-		}
-	case "Write":
-		if path, ok := input["file_path"].(string); ok {
-			return fmt.Sprintf("Write: %s", path)
-		}
-	case "Edit":
-		if path, ok := input["file_path"].(string); ok {
-			return fmt.Sprintf("Edit: %s", path)
-		}
-	case "Bash":
-		if cmd, ok := input["command"].(string); ok {
-			// Truncate long commands for readability
-			if len(cmd) > 100 {
-				cmd = cmd[:100] + "..."
-			}
-			return fmt.Sprintf("Bash: %s", cmd)
-		}
-	case "Grep":
-		if pattern, ok := input["pattern"].(string); ok {
-			return fmt.Sprintf("Grep: %s", pattern)
-		}
-	case "Glob":
-		if pattern, ok := input["pattern"].(string); ok {
-			return fmt.Sprintf("Glob: %s", pattern)
-		}
-	case "WebFetch":
-		if url, ok := input["url"].(string); ok {
-			return fmt.Sprintf("WebFetch: %s", url)
-		}
-	case "WebSearch":
-		if query, ok := input["query"].(string); ok {
-			return fmt.Sprintf("WebSearch: %s", query)
-		}
-	case "Task":
-		if desc, ok := input["description"].(string); ok {
-			return fmt.Sprintf("Task: %s", desc)
-		}
+	val, ok := input[key].(string)
+	if !ok {
+		return t.Name
 	}
-
-	// Default: just show the tool name
-	return t.Name
+	if t.Name == toolBash && len(val) > 100 {
+		val = val[:100] + "..."
+	}
+	return fmt.Sprintf("%s: %s", t.Name, val)
 }

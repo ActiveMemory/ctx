@@ -120,9 +120,9 @@ Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.
       normalizeCodeFences, formatToolUse. Brings run.go from 649 to
       ~490 lines. #priority:medium #source:report-3 #done:2026-02-11
 
-- [ ] Convert `formatToolUse` switch (recall/run.go:596) to dispatch map:
+- [x] Convert `formatToolUse` switch (recall/run.go:596) to dispatch map:
       45-line switch becomes 10-line `map[string]string`
-      lookup. #priority:low #source:report-3
+      lookup. #priority:low #source:report-3 #done:2026-02-11
 
 - [ ] Split `config/tpl.go` (401 lines) by feature area: tpl_entry.go,
       tpl_journal.go, tpl_recall.go, tpl_session.go,
