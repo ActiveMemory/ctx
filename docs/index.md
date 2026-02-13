@@ -356,7 +356,7 @@ Trust is continuously re-earned.
 
 ## `ctx` Is Leverage
 
-!!! note "Humans are decision engines"
+!!! note "Humans are Decision Engines"
     Execution should not consume judgment.
 
     Humans are **not** typists.
