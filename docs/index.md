@@ -5,7 +5,7 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: The ctx Manifesto
+title: The Manifesto
 icon: lucide/flame
 ---
 
@@ -29,7 +29,7 @@ Verification, not vibes.**
 
 Code is an *incantation*.
 
-Creation is the act.
+Creation is the **act**.
 
 And creation does **not** happen in a vacuum.
 
