@@ -219,7 +219,7 @@ We build to:
 
 **Not** permanently.
 
-`ctx` **records archeology** so the cost is paid once.
+`ctx` **records archeology** so the cost is paid **once**.
 
 ---
 
