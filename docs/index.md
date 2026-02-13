@@ -337,7 +337,7 @@ Opaque systems erode trust: Transparent context compounds understanding.
 
 ## Continuously Verify the System
 
-!!! warning "Stability is temporary"
+!!! warning "Stability is Temporary"
     Every assumption has a half-life.
 
     * Models drift.
