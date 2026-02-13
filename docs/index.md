@@ -320,9 +320,9 @@ We continuously ask:
 !!! important "Traceability Builds Trust"
     Systems that cannot explain themselves will not be trusted.
 
-    `{}` is the what.
+    `{}` is the **what**.
 
-    `ctx` is the why.
+    `ctx` is the **why**.
 
 We record:
 
