@@ -129,7 +129,7 @@ Speed without orientation is noise.
 
 ## Persistent Context Beats Prompt Memory
 
-!!! important "Transience is the default failure mode"
+!!! important "Transience Is the Default Failure Mode"
     * Prompts **decay**.
     * Chats **fragment**.
     * Memory heuristics **drift**.
@@ -207,7 +207,7 @@ If we cannot **predict**, **measure**, and **verify** the result...
 
 ## Build to Learn, Not to Accumulate
 
-!!! note "Prototypes have an expiration date"
+!!! note "Prototypes Have an Expiration Date"
     A prototype's value is **information**, not longevity.
 
 Prototypes exist to **reduce** uncertainty.
