@@ -269,7 +269,7 @@ A repeated mistake is a missing `ctx` artifact.
 
 ## Encode Intent Into the Environment
 
-!!! danger "Goodwill does not belong to the table"
+!!! danger "Goodwill Does not Belong to the Table"
     Alignment that depends on memory will decay.
 
     Alignment cannot depend on memory or goodwill.
