@@ -91,16 +91,14 @@ ctx add learning "Mock functions must be hoisted in Jest"
 | [Integrations](https://ctx.ist/integrations/)   | Claude Code, Cursor, Aider setup       |
 | [Ralph Loop](https://ctx.ist/ralph-loop/)       | Autonomous AI development workflows    |
 
-## Design Philosophy
+## Manifesto
 
-1. **File-based**: No database, no daemon. Just markdown and convention.
-2. **Git-native**: Context versions with code, branches with code, merges with
-   code.
-3. **Human-readable**: Engineers can read, edit, and understand context
-   directly.
-4. **Token-efficient**: Markdown is cheaper than JSON/XML.
-5. **Tool-agnostic**: Works with Claude Code, Cursor, Aider, Copilot, or raw
-   CLI.
+> **Creation, not code. Context, not prompts. Verification, not vibes.**
+
+`ctx` is infrastructure for preserving intent under scale. Without durable
+context, intelligence resets. With `ctx`, creation compounds.
+
+Read the full **[Manifesto](MANIFESTO.md)** | **[ctx.ist/manifesto](https://ctx.ist/manifesto/)**
 
 ## Contributing
 

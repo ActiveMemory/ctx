@@ -22,6 +22,14 @@ conventions, and learnings:
 * `ctx` enables **cognitive continuity**.
 * **Cognitive continuity** enables durable, *symbiotic-like* human–AI workflows.
 
+!!! quote "The `ctx` Manifesto"
+    **Creation, not code. Context, not prompts. Verification, not vibes.**
+
+    Without durable context, intelligence resets.
+    With `ctx`, creation compounds.
+
+    **[Read the Manifesto →](manifesto.md)**
+
 ## Community
 
 **Open source is better together**.
