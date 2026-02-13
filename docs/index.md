@@ -161,7 +161,7 @@ If **intent** exists only in a prompt, alignment is already degrading.
 
 ## What `ctx` Is Not
 
-!!! note "Avoid category errors"
+!!! note "Avoid Category Errors"
     Mislabeling `ctx` guarantees misuse.
 
 `ctx` is not a memory feature.
@@ -178,17 +178,15 @@ If **intent** exists only in a prompt, alignment is already degrading.
 
 ## Verified Reality Is the Scoreboard
 
-!!! danger "Activity is a false proxy"
+!!! danger "Activity is a False Proxy"
     Output volume correlates poorly with impact.
 
-* Code is **not** progress.
-* Activity is **not** impact.
+    * Code is **not** progress.
+    * Activity is **not** impact.
 
 The only truth that **compounds** is verified change in the real world.
 
-Hypotheses are cheap.
-
-Outcomes are not.
+Hypotheses are cheap; outcomes are **not**.
 
 `ctx` captures:
 
