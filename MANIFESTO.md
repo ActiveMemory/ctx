@@ -8,12 +8,14 @@
 
 **Verification, not vibes.**
 
-!!! note "This Is NOT a Metaphor"
-Code executes instructions.
-
-    **Creation produces outcomes**.
-
-    Confusing the two is how teams ship motion instead of progress.
+> [!NOTE]
+> **This Is NOT a Metaphor**
+>
+> Code executes instructions.
+>
+> **Creation produces outcomes**.
+>
+> Confusing the two is how teams ship motion instead of progress.
 
 * It was **never** about the code.
 * Code has **zero** standalone value.
@@ -29,10 +31,12 @@ And creation does **not** happen in a vacuum.
 
 ## `ctx` Is the Substrate
 
-!!! important "Constraints Have Moved"
-Human bandwidth is no longer the limiting factor.
-
-    **Context integrity** is.
+> [!IMPORTANT]
+> **Constraints Have Moved**
+>
+> Human bandwidth is no longer the limiting factor.
+>
+> **Context integrity** is.
 
 Human bandwidth is no longer the constraint.
 
@@ -52,21 +56,25 @@ Creation is now limited by:
 
 **Not** by capacity.
 
-!!! warning "Velocity Amplifies"
-Faster execution on broken context **compounds** error.
-
-    Speed multiplies whatever is already wrong.
+> [!WARNING]
+> **Velocity Amplifies**
+>
+> Faster execution on broken context **compounds** error.
+>
+> Speed multiplies whatever is already wrong.
 
 ---
 
 ## Humans Author Meaning
 
-!!! important "Intent Is Authored"
-Systems can optimize.
-
-    Models can generalize.
-
-    Meaning **must** be chosen.
+> [!IMPORTANT]
+> **Intent Is Authored**
+>
+> Systems can optimize.
+>
+> Models can generalize.
+>
+> Meaning **must** be chosen.
 
 **Intent is not emergent.**
 
@@ -88,17 +96,21 @@ Nothing important should live only in conversation.
 
 Nothing critical should depend on recall.
 
-!!! danger "Oral Tradition Does not Scale"
-If intent cannot be inspected, it cannot be enforced.
+> [!CAUTION]
+> **Oral Tradition Does not Scale**
+>
+> If intent cannot be inspected, it cannot be enforced.
 
 ---
 
 ## `ctx` Before Action
 
-!!! caution "Orientation Precedes Motion"
-Acting first and understanding later is not bravery.
-
-    **It is debt**.
+> [!CAUTION]
+> **Orientation Precedes Motion**
+>
+> Acting first and understanding later is not bravery.
+>
+> **It is debt**.
 
 **Never act without `ctx`.**
 
@@ -118,11 +130,12 @@ Speed without orientation is noise.
 
 ## Persistent Context Beats Prompt Memory
 
-!!! important "Transience Is the Default Failure Mode"
-* Prompts **decay**.
-* Chats **fragment**.
-* Memory heuristics **drift**.
-
+> [!IMPORTANT]
+> **Transience Is the Default Failure Mode**
+>
+> * Prompts **decay**.
+> * Chats **fragment**.
+> * Memory heuristics **drift**.
 
 Prompts are transient.
 
@@ -146,17 +159,21 @@ Knowledge lives in the **artifacts**:
 
 If **intent** exists only in a prompt, alignment is already degrading.
 
-!!! warning "Artifacts Outlive Sessions"
-What is not written will be **re-learned**.
-
-     **At full cost**.
+> [!WARNING]
+> **Artifacts Outlive Sessions**
+>
+> What is not written will be **re-learned**.
+>
+> **At full cost**.
 
 ---
 
 ## What `ctx` Is Not
 
-!!! note "Avoid Category Errors"
-Mislabeling `ctx` guarantees misuse.
+> [!NOTE]
+> **Avoid Category Errors**
+>
+> Mislabeling `ctx` guarantees misuse.
 
 `ctx` is not a memory feature.
 
@@ -172,11 +189,13 @@ Mislabeling `ctx` guarantees misuse.
 
 ## Verified Reality Is the Scoreboard
 
-!!! danger "Activity is a False Proxy"
-Output volume correlates poorly with impact.
-
-    * Code is **not** progress.
-    * Activity is **not** impact.
+> [!CAUTION]
+> **Activity is a False Proxy**
+>
+> Output volume correlates poorly with impact.
+>
+> * Code is **not** progress.
+> * Activity is **not** impact.
 
 The only truth that **compounds** is verified change in the real world.
 
@@ -196,8 +215,10 @@ If we cannot **predict**, **measure**, and **verify** the result...
 
 ## Build to Learn, Not to Accumulate
 
-!!! note "Prototypes Have an Expiration Date"
-A prototype's value is **information**, not longevity.
+> [!NOTE]
+> **Prototypes Have an Expiration Date**
+>
+> A prototype's value is **information**, not longevity.
 
 Prototypes exist to **reduce** uncertainty.
 
@@ -219,10 +240,12 @@ We build to:
 
 ## Failures Are Assets
 
-!!! important "Failure Without Capture is Waste"
-Pain that does not teach is pure loss.
-
-    Failures are not erased: They are preserved.
+> [!IMPORTANT]
+> **Failure Without Capture is Waste**
+>
+> Pain that does not teach is pure loss.
+>
+> Failures are not erased: They are preserved.
 
 Each failure becomes:
 
@@ -238,12 +261,14 @@ A repeated mistake is a missing `ctx` artifact.
 
 ## Structure Enables Scale
 
-!!! warning "Unbounded Autonomy Destabilizes"
-Power without a structure produces chaos.
-
-    Transpose it:
-
-    Power without any structure **becomes** chaos.
+> [!WARNING]
+> **Unbounded Autonomy Destabilizes**
+>
+> Power without a structure produces chaos.
+>
+> Transpose it:
+>
+> Power without any structure **becomes** chaos.
 
 `ctx` defines:
 
@@ -263,12 +288,14 @@ Power without a structure produces chaos.
 
 ## Encode Intent Into the Environment
 
-!!! danger "Goodwill Does not Belong to the Table"
-Alignment that depends on memory will decay.
-
-    Alignment cannot depend on memory or goodwill.
-
-    **Don't leave goodwill on the table**.
+> [!CAUTION]
+> **Goodwill Does not Belong to the Table**
+>
+> Alignment that depends on memory will decay.
+>
+> Alignment cannot depend on memory or goodwill.
+>
+> **Don't leave goodwill on the table**.
 
 **Intent** is encoded as:
 
@@ -287,10 +314,12 @@ Laws **must** be enforceable.
 
 ## Cost Is a First-Class Signal
 
-!!! important "Attention Is the Scarcest Resource"
-**Not** ideas.
-
-    **Not** ambition.
+> [!IMPORTANT]
+> **Attention Is the Scarcest Resource**
+>
+> **Not** ideas.
+>
+> **Not** ambition.
 
 Ideas do not compete on time: They compete on cost and impact:
 
@@ -311,12 +340,14 @@ We continuously ask:
 
 ## Show the Why
 
-!!! important "Traceability Builds Trust"
-Systems that cannot explain themselves will not be trusted.
-
-    `{}` is the **what**.
-
-    `ctx` is the **why**.
+> [!IMPORTANT]
+> **Traceability Builds Trust**
+>
+> Systems that cannot explain themselves will not be trusted.
+>
+> `{}` is the **what**.
+>
+> `ctx` is the **why**.
 
 We record:
 
@@ -331,12 +362,14 @@ Opaque systems erode trust: Transparent context compounds understanding.
 
 ## Continuously Verify the System
 
-!!! warning "Stability is Temporary"
-Every assumption has a half-life.
-
-    * Models drift.
-    * Tools change.
-    * Assumptions rot.
+> [!WARNING]
+> **Stability is Temporary**
+>
+> Every assumption has a half-life.
+>
+> * Models drift.
+> * Tools change.
+> * Assumptions rot.
 
 `ctx` must be verified against reality.
 
@@ -350,12 +383,14 @@ Trust is continuously re-earned.
 
 ## `ctx` Is Leverage
 
-!!! note "Humans are Decision Engines"
-Execution should not consume judgment.
-
-    Humans are **not** typists.
-
-    **We** are authors.
+> [!NOTE]
+> **Humans are Decision Engines**
+>
+> Execution should not consume judgment.
+>
+> Humans are **not** typists.
+>
+> **We** are authors.
 
 Human effort is reserved for:
 
@@ -374,12 +409,14 @@ Toil is **automated**.
 
 ## The Thesis
 
-!!! success "Invariant"
-Everything else is an implementation detail.
-
-    * Creation is the **act**.
-    * `ctx` is the **substrate**.
-    * Verification is the **truth**.
+> [!TIP]
+> **Invariant**
+>
+> Everything else is an implementation detail.
+>
+> * Creation is the **act**.
+> * `ctx` is the **substrate**.
+> * Verification is the **truth**.
 
 Code executes → Models reason → Agents amplify.
 
@@ -388,4 +425,3 @@ Code executes → Models reason → Agents amplify.
 Without `ctx`, intelligence resets.
 
 With `ctx`, **creation compounds**.
-
