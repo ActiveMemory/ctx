@@ -22,7 +22,7 @@ import (
 
 // createClaudeHooks creates .claude/hooks/ directory and settings.local.json.
 //
-// Creates hook scripts (block-non-path-ctx.sh, prompt-coach.sh, etc.) and
+// Creates hook scripts (block-non-path-ctx.sh, check-context-size.sh, etc.) and
 // merges hooks into existing settings rather than overwriting.
 //
 // Parameters:
@@ -52,7 +52,6 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		loadFunc func() ([]byte, error)
 	}{
 		{config.FileBlockNonPathScript, claude.BlockNonPathCtxScript},
-		{config.FilePromptCoach, claude.PromptCoachScript},
 		{config.FileCheckContextSize, claude.CheckContextSizeScript},
 		{config.FileCheckPersistence, claude.CheckPersistenceScript},
 		{config.FileCleanupTmp, claude.CleanupTmpScript},

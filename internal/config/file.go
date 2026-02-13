@@ -106,8 +106,6 @@ const (
 	// FileBlockNonPathScript is the hook script that blocks non-PATH ctx
 	// invocations.
 	FileBlockNonPathScript = "block-non-path-ctx.sh"
-	// FilePromptCoach is the hook script for prompt quality feedback.
-	FilePromptCoach = "prompt-coach.sh"
 	// FileCheckContextSize is the hook script for context size checkpoints.
 	FileCheckContextSize = "check-context-size.sh"
 	// FileCheckPersistence is the hook script for persistence nudges.

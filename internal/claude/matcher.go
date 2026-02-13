@@ -63,8 +63,8 @@ func sessionEndHookMatcher(hooksDir string) []HookMatcher {
 
 // userPromptSubmitHookMatcher builds the UserPromptSubmit hook matchers.
 //
-// It returns a single matcher with hooks for prompt coaching and context
-// size monitoring, both triggered when the user submits a prompt.
+// It returns a single matcher with hooks for context size monitoring
+// and persistence nudges, both triggered when the user submits a prompt.
 //
 // Parameters:
 //   - hooksDir: directory containing hook scripts
@@ -73,11 +73,8 @@ func sessionEndHookMatcher(hooksDir string) []HookMatcher {
 //   - []HookMatcher: matchers for UserPromptSubmit lifecycle event
 func userPromptSubmitHookMatcher(hooksDir string) []HookMatcher {
 	return []HookMatcher{{
-		// Prompt coaching, context monitoring, and persistence nudges
+		// Context monitoring and persistence nudges
 		Hooks: []Hook{
-			NewHook(
-				HookTypeCommand, path.Join(hooksDir, config.FilePromptCoach),
-			),
 			NewHook(
 				HookTypeCommand, path.Join(hooksDir, config.FileCheckContextSize),
 			),

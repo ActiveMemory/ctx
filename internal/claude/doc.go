@@ -12,7 +12,6 @@
 //
 // Embedded assets:
 //   - block-non-path-ctx.sh: Prevents non-PATH ctx invocations
-//   - prompt-coach.sh: Detects prompt antipatterns and suggests improvements
 //   - check-context-size.sh: Adaptive context capacity reminders
 //   - check-persistence.sh: Nudges agent to persist learnings and decisions
 //   - skills/*/SKILL.md: Agent skill definitions for Claude Code

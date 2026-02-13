@@ -205,3 +205,5 @@ help:
 	@echo "Context CLI - Available targets:"
 	@echo ""
 	@grep -E '^## ' $(MAKEFILE_LIST) | sed 's/## /  /'
+
+-include Makefile.ctx

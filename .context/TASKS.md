@@ -65,12 +65,41 @@ Analysis of 69 sessions found 8 recurring workflow patterns. 7 have automation g
 - [x] create "use-case-based" user-facing documentation (the problem, how
       ctx solves it, typical workflow, best practices, gotchas, etc.)
 
-- [ ] Remove prompt-coach hook — delivery mechanism doesn't work (stdout goes to AI not user, stderr is invisible, no viable user-facing channel). Zero useful tips fired across all usage. Creates orphan temp files via L-3 PID bug. The prompting guide already covers best practices. #priority:medium #added:2026-02-12-005504
+- [x] Remove prompt-coach hook — delivery mechanism doesn't work (stdout goes to AI not user, stderr is invisible, no viable user-facing channel). Zero useful tips fired across all usage. Creates orphan temp files via L-3 PID bug. The prompting guide already covers best practices. #priority:medium #added:2026-02-12-005504 #done:2026-02-12
 
 - [ ] Recipes section needs human review. For example, certain workflows can
       be autonomously done by asking AI "can you record our learnings?" but
       from the documenation it's not clear. Spend as much time as necessary
       on every single recipe.
+
+- [ ] Add git worktree recipe to documentation: parallel agent development
+      using worktrees for independent task tracks. Cover setup (worktree
+      creation as sibling dirs), task grouping by blast radius, launching
+      separate claude sessions, merging back, cleanup. Include the 3-4
+      worktree practical limit and the "don't run ctx init in worktrees"
+      gotcha. #priority:medium #added:2026-02-12
+
+- [ ] Blog: "Parallel Agents with Git Worktrees" — how to use worktrees
+      with ctx to tackle large task backlogs. Narrative: 30 open tasks,
+      grouping by file overlap, spawning parallel agents, merging results.
+      Practical guide with the ctx project as the example. Connects to the
+      agent-team-strategies report (REPORT-8). #priority:medium
+      #added:2026-02-12
+
+- [ ] "Borrow from the future" merge skill: given two folders of the same
+      project (a "present" and a "future" copy), extract and apply the delta.
+      Use case: parallel worktree or separate checkout where commits can't
+      be pushed/pulled normally. Strategy ladder:
+      (1) Both are git repos → compare commit histories, cherry-pick or
+          generate patch series (`git format-patch` / `git am`)
+      (2) Only one is a git repo → export the non-git side to a temp git
+          repo, diff against the other, produce a patch
+      (3) Neither is git → recursive diff, present changes for selective
+          application
+      Should handle: file additions, deletions, renames, binary files.
+      Should warn: conflicting changes in both copies. Could be a skill
+      (`/ctx-borrow`) or a standalone `ctx borrow --from ../ctx-future`
+      CLI command. #priority:low #added:2026-02-12
 
 **Documentation Drift** (from `ideas/REPORT-2-documentation-drift.md`):
 Overall drift severity LOW. 14 existing doc.go files are accurate. Key gaps below.
@@ -153,9 +182,10 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
       vulnerable to symlink race. Use `os.CreateTemp()` or user-specific
       subdirectory. #priority:low #source:report-4
 
-- [ ] L-3: Fix prompt-coach.sh session tracking: uses `$$` (hook PID)
+- [-] L-3: Fix prompt-coach.sh session tracking: uses `$$` (hook PID)
       instead of session ID, so counter state never persists across
       prompts. Rate limiting is broken. #priority:low #source:report-4
+      Skipped: moot — prompt-coach hook removed entirely.
 
 - [ ] L-5: Remove or secure debug logging in `block-git-push.sh`:
       appends all intercepted git commands to world-readable
@@ -290,7 +320,9 @@ better discovery and navigation.
 
 **Features (priority order):**
 
-- [ ] Fix block-non-path-ctx.sh hook: too aggressive matching blocks git -C path commands that don't invoke ctx #added:2026-02-07-211544
+- [x] Fix block-non-path-ctx.sh hook: too aggressive matching blocks git -C path commands that don't invoke ctx #added:2026-02-07-211544
+      **Done**: Anchored patterns to command position (start of line or after `&&`, `;`, `||`, `|`).
+      Split `^` out of alternation groups since grep -E doesn't anchor `^` inside `(^|...)`. #done:2026-02-12
 
 - [ ] T1.1: Topics system
       - Single `/topics/index.md` page
