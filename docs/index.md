@@ -5,301 +5,396 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Getting Started
-icon: lucide/rocket
+title: Manifesto
+icon: lucide/flame
 ---
 
 ![ctx](images/ctx-banner.png)
 
-## `ctx`
+# The `ctx` Manifesto
 
-`ctx` (*Context*) is a file-based system that enables AI coding assistants to
-persist project knowledge across sessions. Instead of re-explaining your
-codebase every time, context files let AI tools remember decisions,
-conventions, and learnings:
+**Creation, not code.
+Context, not prompts.
+Verification, not vibes.**
 
-* A session is interactive.
-* `ctx` enables **cognitive continuity**.
-* **Cognitive continuity** enables durable, *symbiotic-like* human–AI workflows.
+!!! note "This is not a metaphor"
+    Code executes instructions.
+    Creation produces outcomes.
 
-!!! quote "The `ctx` Manifesto"
-    **Creation, not code. Context, not prompts. Verification, not vibes.**
+    Confusing the two is how teams ship motion instead of progress.
 
-    Without durable context, intelligence resets.
-    With `ctx`, creation compounds.
+* It was **never** about the code.
+* Code has **zero** standalone value.
+* Code is an **implementation detail**.
 
-    **[Read the Manifesto →](manifesto.md)**
+Code is an *incantation*.
 
-## Community
+Creation is the act.
 
-**Open source is better together**.
+And creation does **not** happen in a vacuum.
 
-<!-- the long line is required for zensical to render block quote -->
+---
 
-!!! tip "Help `ctx` Change How AI Remembers"
-    **If the idea behind `ctx` resonates, a star helps it reach engineers 
-    who run into context drift every day.**
+## `ctx` Is the Substrate
 
-    → https://github.com/ActiveMemory/ctx
+!!! important "Constraints have moved"
+    Human bandwidth is no longer the limiting factor.
 
-    `ctx` is free and open source software, and **contributions are always
-    welcome** and appreciated.
+    **Context integrity** is.
 
-Join the community to ask questions, share feedback, and connect with
-other users:
+Human bandwidth is no longer the constraint.
 
-- [:fontawesome-brands-stack-exchange: **IRC**](https://web.libera.chat/#ctx): 
-   join `#ctx` on `irc.libera.chat`
-- [:fontawesome-brands-github: **GitHub**](https://github.com/ActiveMemory/ctx):
-  Star the repo, report issues, contribute
+`ctx` is.
 
-## Why?
+* **Without** durable context, intelligence resets.
+* **Without** memory, reasoning decays.
+* **Without** structure, scale collapses.
 
-Most AI-driven development fails not because models are weak—they fail because 
-**context is ephemeral**. Every new session starts near zero:
+Creation is now limited by:
 
-* You re-explain architecture
-* The AI repeats past mistakes
-* Decisions get rediscovered instead of remembered
+* **clarity** of intent
+* **quality** of context
+* **rigor** of verification
 
-`ctx` solves this by treating context as **infrastructure**: 
-files that version with your code and persist across sessions.
+**Not** by speed.
 
-## Installation
+**Not** by capacity.
 
-### Build from Source (*Recommended*)
+!!! warning "Velocity amplifies"
+    Faster execution on broken context **compounds** error.
 
-Requires [Go 1.25+](https://go.dev/):
+    Speed multiplies whatever is already wrong.
 
-```bash
-git clone https://github.com/ActiveMemory/ctx.git
-cd ctx
-make build
-sudo make install
-# or:
-# sudo mv ctx /usr/local/bin/
-```
+---
 
-Building from source gives you the latest features and bug fixes. 
+## Humans Author Meaning
 
-Since `ctx` is predominantly a developer tool, this is the 
-**recommended approach**: 
+!!! important "Intent is authored"
+    Systems can optimize.
+    Models can generalize.
+    Meaning **must** be chosen.
 
-You get the freshest code and can inspect what you are installing.
+**Intent is not emergent.**
 
-### Binary Downloads
+Vision, goals, and direction are **human responsibilities**.
 
-Pre-built binaries are available from the
-[releases page](https://github.com/ActiveMemory/ctx/releases) if you prefer
-not to build from source.
+We decide:
 
-=== "Linux (x86_64)"
+* **What** matters
+* **What** success means
+* **What** world we are building
 
-    ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-linux-amd64
-    chmod +x ctx-0.3.0-linux-amd64
-    sudo mv ctx-0.3.0-linux-amd64 /usr/local/bin/ctx
-    ```
+`ctx` encodes **the intent** so it
 
-=== "Linux (ARM64)"
+* **survives** time,
+* **survives** handoffs,
+* **survives** scale.
 
-    ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-linux-arm64
-    chmod +x ctx-0.3.0-linux-arm64
-    sudo mv ctx-0.3.0-linux-arm64 /usr/local/bin/ctx
-    ```
+Nothing important should live only in conversation.
 
-=== "macOS (Apple Silicon)"
+Nothing critical should depend on recall.
 
-    ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-darwin-arm64
-    chmod +x ctx-0.3.0-darwin-arm64
-    sudo mv ctx-0.3.0-darwin-arm64 /usr/local/bin/ctx
-    ```
+!!! danger "Oral tradition does not scale"
+    If intent cannot be inspected, it cannot be enforced.
 
-=== "macOS (Intel)"
+---
 
-    ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-darwin-amd64
-    chmod +x ctx-0.3.0-darwin-amd64
-    sudo mv ctx-0.3.0-darwin-amd64 /usr/local/bin/ctx
-    ```
+## `ctx` Before Action
 
-=== "Windows"
+!!! caution "Orientation precedes motion"
+    Acting first and understanding later is not bravery.
 
-    Download `ctx-0.3.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
+    **It is debt**.
 
-#### Verifying Checksums
+**Never act without `ctx`.**
 
-Each binary has a corresponding `.sha256` checksum file. To verify your download:
+Before execution, we must verify:
 
-```bash
-# Download the checksum file
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-linux-amd64.sha256
+* **Where** we are;
+* **Why** we are here;
+* **What** constraints apply;
+* **What** assumptions are active.
 
-# Verify the binary
-sha256sum -c ctx-0.3.0-linux-amd64.sha256
-```
+Action without `ctx` is gambling.
+Speed without orientation is noise.
 
-On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
+`ctx` is not overhead.
 
-Verify installation:
+It is the cost of correctness.
 
-```bash
-ctx --version
-```
+---
 
-### Version Control (Strongly Recommended)
+## Persistent Context Beats Prompt Memory
 
-`ctx` does not require git, but using version control with your `.context/`
-directory is strongly recommended. AI sessions occasionally modify or
-overwrite context files inadvertently. With git, the AI can check history
-and restore lost content — without it, the data is gone. Several `ctx`
-features (journal changelog, blog generation) also use git history directly.
+!!! important "Transience is the default failure mode"
+    Prompts **decay**.
+    Chats **fragment**.
+    Memory heuristics **drift**.
 
-## Quick Start
 
-### 1. Initialize Context
+Prompts are transient.
 
-```bash
-cd your-project
-ctx init
-```
+Chats are lossy.
 
-This creates a `.context/` directory with template files and configures 
-AI tool hooks (*for Claude Code*).
+Memory heuristics drift.
 
-### 2. Check Status
+Context **must be**:
 
-```bash
-ctx status
-```
+* durable
+* structured
+* explicit
+* queryable
 
-Shows context summary: files present, token estimate, and recent activity.
+Knowledge lives in the **artifacts**:
 
-### 3. Start Using with AI
+* Decisions
+* Documentation
+* Dependency maps
+* Evaluation history
 
-With Claude Code, context loads automatically via hooks. For other tools,
-paste the output of:
+If intent exists only in a prompt, alignment is already degrading.
 
-```bash
-ctx agent --budget 8000
-```
+!!! warning "Artifacts Outlive Sessions"
+    What is not written will be **re-learned**.
 
-### 4. Verify It Works
+     **At full cost**.
 
-Ask your AI: **"Do you remember?"**
+---
 
-It should cite specific context: current tasks, recent decisions, 
-or previous session topics.
+## What `ctx` Is Not
 
-## What Gets Created
+!!! note "Avoid category errors"
+    Mislabeling `ctx` guarantees misuse.
 
-```
-.context/
-├── CONSTITUTION.md     # Hard rules — NEVER violate these
-├── TASKS.md            # Current and planned work
-├── CONVENTIONS.md      # Project patterns and standards
-├── ARCHITECTURE.md     # System overview
-├── DECISIONS.md        # Architectural decisions with rationale
-├── LEARNINGS.md        # Lessons learned, gotchas, tips
-├── GLOSSARY.md         # Domain terms and abbreviations
-├── AGENT_PLAYBOOK.md   # How AI tools should use this
-└── sessions/           # Session snapshots
+`ctx` is not a memory feature.
 
-.claude/                # Claude Code integration (if detected)
-├── hooks/              # Lifecycle hooks (enforcement, coaching, cleanup)
-├── skills/             # ctx Agent Skills (agentskills.io spec)
-└── settings.local.json # Hook configuration
-```
+* `ctx` is **not** prompt engineering.
+* `ctx` is **not** a productivity hack.
+* `ctx` is **not** automation theater.
 
-See [Context Files](context-files.md) for detailed documentation of each file.
+`ctx` is a **system** for preserving intent under scale.
 
-## Common Workflows
+`ctx` is **infrastructure**.
 
-### Track Context
+---
 
-```bash
-# Add a task
-ctx add task "Implement user authentication"
+## Verified Reality Is the Scoreboard
 
-# Record a decision (full ADR fields required)
-ctx add decision "Use PostgreSQL for primary database" \
-  --context "Need a reliable database for production" \
-  --rationale "PostgreSQL offers ACID compliance and JSON support" \
-  --consequences "Team needs PostgreSQL training"
+!!! danger "Activity is a false proxy"
+    Output volume correlates poorly with impact.
 
-# Note a learning
-ctx add learning "Mock functions must be hoisted in Jest" \
-  --context "Tests failed with undefined mock errors" \
-  --lesson "Jest hoists mock calls to top of file" \
-  --application "Place jest.mock() before imports"
+* Code is **not** progress.
+* Activity is **not** impact.
 
-# Mark task complete
-ctx complete "user auth"
-```
+The only truth that **compounds** is verified change in the real world.
 
-### Check Context Health
+Hypotheses are cheap.
 
-```bash
-# Detect stale paths, missing files, potential secrets
-ctx drift
+Outcomes are not.
 
-# See full context summary
-ctx status
-```
+`ctx` captures:
 
-### Browse Session History
+* **What** we expected;
+* **What** we observed;
+* **Where** reality diverged.
 
-Export AI session transcripts to a browsable journal site:
+If we cannot **predict**, **measure**, and **verify** the result...
 
-```bash
-# Export all sessions to .context/journal/
-ctx recall export --all
+...it does not count.
 
-# Generate and serve the journal site
-ctx journal site --serve
-```
+---
 
-Then open [http://localhost:8000](http://localhost:8000).
+## Build to Learn, Not to Accumulate
 
-To update the journal after new sessions, run the same two commands
-again; `recall export` preserves existing YAML frontmatter and only
-updates conversation content.
+!!! note "Prototypes have an expiration date"
+    A prototype's value is **information**, not longevity.
 
-See [Session Journal](session-journal.md) for the full pipeline
-including enrichment and normalization.
+Prototypes exist to **reduce** uncertainty.
 
-### Browse Session History
+We build to:
 
-```bash
-# List recent sessions
-ctx recall list --limit 5
+* **Test** assumptions;
+* **Validate** architecture;
+* **Answer** specific questions.
 
-# Export sessions to browsable journal
-ctx recall export --all
-```
+**Not** everything.
 
-### Run an Autonomous Loop
+**Not** blindly.
 
-Generate a script that iterates an AI agent until a completion
-signal is detected:
+**Not** permanently.
 
-```bash
-ctx loop
-chmod +x loop.sh
-./loop.sh
-```
+`ctx` **records archeology** so the cost is paid once.
 
-See [Autonomous Loops](autonomous-loop.md) for configuration
-and advanced usage.
+---
 
-## Next Steps
+## Failures Are Assets
 
-* [Prompting Guide](prompting-guide.md) — Effective prompts for AI sessions
-* [CLI Reference](cli-reference.md) — All commands and options
-* [Context Files](context-files.md) — File formats and structure
-* [Session Journal](session-journal.md) — Browse and search session history
-* [Autonomous Loops](autonomous-loop.md) — Iterative AI development workflows
-* [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider
-* [Blog](blog/index.md) — Stories and lessons from building ctx
+!!! important "Failure without capture is waste"
+    Pain that does not teach is pure loss.
+
+Failures are not erased: They are preserved.
+
+Each failure becomes:
+
+* A documented **hypothesis**;
+* An analyzed **deviation**;
+* A permanent **artifact**.
+
+Rollback fixes symptoms: `ctx` fixes systems.
+
+A repeated mistake is a missing `ctx` artifact.
+
+---
+
+## Structure Enables Scale
+
+!!! warning "Unbounded autonomy destabilizes"
+    Power without structure produces chaos.
+
+    Transpose it:
+
+    Power without structure **becomes** chaos.
+
+`ctx` defines:
+
+* Roles;
+* Boundaries;
+* Protocols;
+* Escalation paths;
+* Decision rights.
+
+**Ambiguity is a system failure**.
+
+* Debates must be **structured**.
+* Decisions must be **explicit**.
+* History must be **retained**.
+
+---
+
+## Encode Intent Into the Environment
+
+!!! danger "Goodwill does not belong to the table"
+    Alignment that depends on memory will decay.
+
+    Alignment cannot depend on memory or goodwill.
+
+    **Don't leave goodwill on the table**.
+
+**Intent** is encoded as:
+
+* Policies;
+* Schemas;
+* Constraints;
+* Evaluation harnesses.
+
+Rules **must** be machine-readable.
+
+Laws **must** be enforceable.
+
+**If intent is implicit, drift is guaranteed**.
+
+---
+
+## Cost Is a First-Class Signal
+
+!!! important "Attention is the scarce resource"
+    **Not** ideas.
+
+    **Not** ambition.
+
+Ideas do not compete on time: They compete on cost and impact:
+
+* **Attention** is **finite**.
+* **Compute** is **finite**.
+* **Context** is **expensive**.
+
+We continuously ask:
+
+* **What** is the most valuable next action
+* **What** outcome justifies the cost
+
+`ctx` guides allocation.
+
+**Learning reshapes priority**.
+
+---
+
+## Show the Why
+
+!!! important "Traceability builds trust"
+    Systems that cannot explain themselves will not be trusted.
+
+    `{}` is the what.
+
+    `ctx` is the why.
+
+We record:
+
+* **Explored** paths;
+* **Rejected** options;
+* **Assumptions** made;
+* **Evidence** used.
+
+Opaque systems erode trust: Transparent context compounds understanding.
+
+---
+
+## Continuously Verify the System
+
+!!! warning "Stability is temporary"
+    Every assumption has a half-life.
+
+    * Models drift.
+    * Tools change.
+    * Assumptions rot.
+
+`ctx` must be verified against reality.
+
+**Trust is a spectrum**.
+
+Trust is continuously re-earned.
+
+**Benchmarks**, **regressions**, and **evaluations** are **safety rails**.
+
+---
+
+## `ctx` Is Leverage
+
+!!! note "Humans are decision engines"
+    Execution should not consume judgment.
+
+    Humans are **not** typists.
+
+    **We** are authors.
+
+Human effort is reserved for:
+
+* Judgment;
+* Design;
+* Taste;
+* Synthesis.
+
+Repetition is **delegated**.
+
+Toil is **automated**.
+
+`ctx` **preserves** leverage across time.
+
+---
+
+## The Thesis
+
+!!! success "Invariant"
+    Everything else is an implementation detail.
+
+    * Creation is the **act**.
+    * `ctx` is the **substrate**.
+    * Verification is the **truth**.
+
+Code executes → Models reason → Agents amplify.
+
+**`ctx` lives on.**
+
+Without `ctx`, intelligence resets.
+
+With `ctx`, **creation compounds**.

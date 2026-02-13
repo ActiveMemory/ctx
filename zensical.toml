@@ -21,8 +21,8 @@ The documentation on this website is distributed under
 """
 
 nav = [
-  { "Getting Started" = "index.md" },
-  { "Manifesto" = "manifesto.md" },
+  { "The ctx Manifesto" = "index.md" },
+  { "Getting Started" = "getting-started.md" },
   { "Recipes" = "recipes/index.md" },
   { "The Session Journal" = "session-journal.md" },
   { "Prompting Guide" = "prompting-guide.md" },
