@@ -40,7 +40,7 @@ And creation does **not** happen in a vacuum.
 
 ## `ctx` Is the Substrate
 
-!!! important "Constraints have moved"
+!!! important "Constraints Have Moved"
     Human bandwidth is no longer the limiting factor.
 
     **Context integrity** is.
