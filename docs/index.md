@@ -244,12 +244,12 @@ A repeated mistake is a missing `ctx` artifact.
 
 ## Structure Enables Scale
 
-!!! warning "Unbounded autonomy destabilizes"
-    Power without structure produces chaos.
+!!! warning "Unbounded Autonomy Destabilizes"
+    Power without a structure produces chaos.
 
     Transpose it:
 
-    Power without structure **becomes** chaos.
+    Power without any structure **becomes** chaos.
 
 `ctx` defines:
 
