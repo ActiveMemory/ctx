@@ -60,7 +60,7 @@ Creation is now limited by:
 
 **Not** by capacity.
 
-!!! warning "Velocity amplifies"
+!!! warning "Velocity Amplifies"
     Faster execution on broken context **compounds** error.
 
     Speed multiplies whatever is already wrong.
@@ -69,7 +69,7 @@ Creation is now limited by:
 
 ## Humans Author Meaning
 
-!!! important "Intent is authored"
+!!! important "Intent Is Authored"
     Systems can optimize.
     Models can generalize.
     Meaning **must** be chosen.
