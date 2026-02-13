@@ -13,11 +13,13 @@ icon: lucide/flame
 
 # The `ctx` Manifesto
 
-**Creation, not code.
-Context, not prompts.
-Verification, not vibes.**
+**Creation, not code**.
 
-!!! note "This is not a metaphor"
+**Context, not prompts**.
+
+**Verification, not vibes.**
+
+!!! note "This is NOT a Metaphor"
     Code executes instructions.
     Creation produces outcomes.
 
