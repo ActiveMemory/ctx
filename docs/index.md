@@ -118,9 +118,7 @@ Before execution, we must verify:
 Action without `ctx` is gambling.
 Speed without orientation is noise.
 
-`ctx` is not overhead.
-
-It is the cost of correctness.
+`ctx` is **not** overhead: It is the cost of correctness.
 
 ---
 
