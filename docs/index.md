@@ -52,9 +52,9 @@ Human bandwidth is no longer the constraint.
 
 Creation is now limited by:
 
-* **clarity** of intent
-* **quality** of context
-* **rigor** of verification
+* **Clarity** of intent;
+* **Quality** of context;
+* **Rigor** of verification.
 
 **Not** by speed.
 
