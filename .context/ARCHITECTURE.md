@@ -221,11 +221,6 @@ sequenceDiagram
     Hook->>CTX: ctx status (token count)
     Hook-->>CC: Warn if context is large
 
-    Note over CC: Event: UserPromptSubmit
-    CC->>Hook: prompt-coach.sh
-    Hook->>Hook: Analyze prompt quality
-    Hook-->>CC: Coaching feedback
-
     Note over CC: Event: SessionEnd
     CC->>Hook: cleanup-tmp.sh
     Hook->>FS: Remove stale temp files
@@ -351,7 +346,7 @@ ctx/
 │   ├── task/                    # Task checkbox parsing
 │   ├── tpl/                     # Embedded templates (go:embed)
 │   │   ├── claude/
-│   │   │   ├── hooks/           #   Hook scripts (5 .sh files)
+│   │   │   ├── hooks/           #   Hook scripts (4 .sh files)
 │   │   │   └── skills/          #   Skill templates (16 directories)
 │   │   ├── entry-templates/     #   Decision/learning entry templates
 │   │   ├── ralph/               #   Ralph loop PROMPT.md

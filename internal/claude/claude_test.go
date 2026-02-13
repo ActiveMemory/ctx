@@ -28,28 +28,6 @@ func TestBlockNonPathCtxScript(t *testing.T) {
 	}
 }
 
-func TestPromptCoachScript(t *testing.T) {
-	content, err := PromptCoachScript()
-	if err != nil {
-		t.Fatalf("PromptCoachScript() unexpected error: %v", err)
-	}
-
-	if len(content) == 0 {
-		t.Error("PromptCoachScript() returned empty content")
-	}
-
-	// Check for expected script content
-	script := string(content)
-	if !strings.Contains(script, "#!/") {
-		t.Error("PromptCoachScript() script missing shebang")
-	}
-
-	// Check that it contains pattern detection logic
-	if !strings.Contains(script, "idiomatic") {
-		t.Error("PromptCoachScript() should contain anti-pattern detection")
-	}
-}
-
 func TestSkills(t *testing.T) {
 	skills, err := Skills()
 	if err != nil {

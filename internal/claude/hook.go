@@ -32,7 +32,7 @@ func NewHook(hookType HookType, cmd string) Hook {
 //
 // The returned hooks configure PreToolUse to block non-PATH ctx
 // invocations and autoload context on every tool use, and
-// UserPromptSubmit for prompt coaching.
+// UserPromptSubmit for context monitoring and persistence nudges.
 //
 // Parameters:
 //   - projectDir: Project root directory for absolute hook paths; if empty,

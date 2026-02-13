@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-12 | Git worktrees enable parallel Claude Code agent sessions without file conflicts. Create worktrees OUTSIDE the project as sibling directories. 3-4 parallel worktrees is the practical limit. |
 | 2026-02-12 | Claude Code UserPromptSubmit hooks: stderr with exit 0 is swallowed (only visible in verbose mode Ctrl+O). stdout with exit 0 is prepended as context for the AI. For user-visible warnings use systemMessage JSON on stdout. For AI-facing nudges use plain text on stdout. There is no non-blocking stderr channel for this hook type. |
 | 2026-02-12 | Prompt-coach hook outputs to stdout (UserPromptSubmit) which is prepended as AI context, not shown to the user. stderr with exit 0 is swallowed entirely. The only user-visible options are systemMessage JSON (warning banner) or exit 2 (blocks the prompt). There is no non-blocking user-visible output channel for UserPromptSubmit hooks. |
 | 2026-02-11 | Gitignore rules for sensitive directories must survive cleanup sweeps |
@@ -53,6 +54,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-12] Git worktrees for parallel agent development
+
+**Context**: Explored using git worktrees for parallel agent development across a large task backlog
+
+**Lesson**: Git worktrees enable parallel Claude Code agent sessions without file conflicts. Create worktrees OUTSIDE the project as sibling directories (`git worktree add ../ctx-docs -b work/docs`). Each worktree gets its own branch, staging area, and working files but shares the same `.git` object database. Group tasks by blast radius (files touched) to minimize merge conflicts. 3-4 parallel worktrees is the practical limit before merge complexity outweighs productivity gains.
+
+**Application**: When tackling many independent tasks: (1) group by file overlap, (2) create worktrees as siblings with `git worktree add ../name -b work/name`, (3) launch separate claude sessions in each, (4) merge back to main as tracks complete, (5) cleanup with `git worktree remove`. Don't run `ctx init` in worktrees — `.context/` is already tracked.
 
 ---
 

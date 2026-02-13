@@ -61,7 +61,6 @@ into `.claude/settings.local.json`:
 | Hook | Event | Purpose |
 |------|-------|---------|
 | `block-non-path-ctx.sh` | PreToolUse (Bash) | Block `./ctx` or `go run` — force PATH install |
-| `prompt-coach.sh` | UserPromptSubmit | Detect prompt anti-patterns and suggest improvements |
 | `check-context-size.sh` | UserPromptSubmit | Nudge context assessment as sessions grow |
 | `check-persistence.sh` | UserPromptSubmit | Remind to persist learnings/decisions |
 | `cleanup-tmp.sh` | SessionEnd | Remove stale temp files (older than 15 days) |

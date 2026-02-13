@@ -33,8 +33,12 @@ fi
 # Check for forbidden patterns
 BLOCKED_REASON=""
 
-# Pattern 1: ./ctx or ./dist/ctx or ./dist/ctx-*
-if echo "$COMMAND" | grep -qE '(\./ctx|\./dist/ctx)'; then
+# Pattern 1: ./ctx or ./dist/ctx at command position (not as a path argument)
+# Must appear at start of command or after a command separator (&&, ||, ;, |)
+# to avoid false positives like "git -C ./ctx/path status"
+# Note: ^ inside (^|...) alternation doesn't anchor in grep -E, so split the check.
+if echo "$COMMAND" | grep -qE '^ *(\./ctx( |$)|\./dist/ctx)' || \
+   echo "$COMMAND" | grep -qE '(&&|;|\|\||\|) *(\./ctx( |$)|\./dist/ctx)'; then
     BLOCKED_REASON="Use 'ctx' from PATH, not './ctx' or './dist/ctx'. Ask the user to run: make build && sudo make install"
 fi
 
@@ -43,10 +47,11 @@ if echo "$COMMAND" | grep -qE 'go run \./cmd/ctx'; then
     BLOCKED_REASON="Use 'ctx' from PATH, not 'go run ./cmd/ctx'. Ask the user to run: make build && sudo make install"
 fi
 
-# Pattern 3: Absolute paths to ctx binary (but not just 'ctx' or paths in /usr/local/bin, /usr/bin)
+# Pattern 3: Absolute paths to ctx binary at command position
 # Match things like /home/user/project/ctx or /tmp/ctx but allow /usr/local/bin/ctx
-# Only match when ctx is the binary (end of path), not a directory in the middle of a path
-if echo "$COMMAND" | grep -qE '(/home/|/tmp/|/var/)[^ ]*/ctx( |$)'; then
+# Must be at command position to avoid false positives like "git -C /home/user/ctx log"
+if echo "$COMMAND" | grep -qE '^ *(/home/|/tmp/|/var/)[^ ]*/ctx( |$)' || \
+   echo "$COMMAND" | grep -qE '(&&|;|\|\||\|) *(/home/|/tmp/|/var/)[^ ]*/ctx( |$)'; then
     # Exception: allow /tmp/ctx-test for integration tests
     if ! echo "$COMMAND" | grep -qE '/tmp/ctx-test'; then
         BLOCKED_REASON="Use 'ctx' from PATH, not absolute paths. Ask the user to run: make build && sudo make install"
