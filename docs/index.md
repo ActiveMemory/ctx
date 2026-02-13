@@ -19,7 +19,7 @@ icon: lucide/flame
 
 **Verification, not vibes.**
 
-!!! note "This is NOT a Metaphor"
+!!! note "This Is NOT a Metaphor"
     Code executes instructions.
 
     **Creation produces outcomes**.
