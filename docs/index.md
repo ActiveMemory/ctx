@@ -80,9 +80,9 @@ Vision, goals, and direction are **human responsibilities**.
 
 We decide:
 
-* **What** matters
-* **What** success means
-* **What** world we are building
+* **What** matters;
+* **What** success means;
+* **What** world we are building.
 
 `ctx` encodes **the intent** so it
 
