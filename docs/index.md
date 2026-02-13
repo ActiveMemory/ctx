@@ -298,7 +298,7 @@ Laws **must** be enforceable.
 
 ## Cost Is a First-Class Signal
 
-!!! important "Attention is the scarce resource"
+!!! important "Attention Is the Scarcest Resource"
     **Not** ideas.
 
     **Not** ambition.
