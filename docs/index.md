@@ -230,10 +230,10 @@ We build to:
 
 ## Failures Are Assets
 
-!!! important "Failure without capture is waste"
+!!! important "Failure Without Capture is Waste"
     Pain that does not teach is pure loss.
 
-Failures are not erased: They are preserved.
+    Failures are not erased: They are preserved.
 
 Each failure becomes:
 
