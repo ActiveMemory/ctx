@@ -138,19 +138,19 @@ Memory heuristics drift.
 
 Context **must be**:
 
-* durable
-* structured
-* explicit
-* queryable
+* Durable;
+* Structured;
+* Explicit;
+* Queryable.
 
 Knowledge lives in the **artifacts**:
 
-* Decisions
-* Documentation
-* Dependency maps
-* Evaluation history
+* Decisions;
+* Documentation;
+* Dependency maps;
+* Evaluation history.
 
-If intent exists only in a prompt, alignment is already degrading.
+If **intent** exists only in a prompt, alignment is already degrading.
 
 !!! warning "Artifacts Outlive Sessions"
     What is not written will be **re-learned**.
