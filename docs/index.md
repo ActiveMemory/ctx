@@ -101,7 +101,7 @@ Nothing critical should depend on recall.
 
 ## `ctx` Before Action
 
-!!! caution "Orientation precedes motion"
+!!! caution "Orientation Precedes Motion"
     Acting first and understanding later is not bravery.
 
     **It is debt**.
