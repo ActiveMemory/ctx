@@ -21,6 +21,7 @@ icon: lucide/flame
 
 !!! note "This is NOT a Metaphor"
     Code executes instructions.
+
     Creation produces outcomes.
 
     Confusing the two is how teams ship motion instead of progress.
