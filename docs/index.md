@@ -94,7 +94,7 @@ Nothing important should live only in conversation.
 
 Nothing critical should depend on recall.
 
-!!! danger "Oral tradition does not scale"
+!!! danger "Oral Tradition Does not Scale"
     If intent cannot be inspected, it cannot be enforced.
 
 ---
