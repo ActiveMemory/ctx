@@ -125,9 +125,9 @@ Speed without orientation is noise.
 ## Persistent Context Beats Prompt Memory
 
 !!! important "Transience is the default failure mode"
-    Prompts **decay**.
-    Chats **fragment**.
-    Memory heuristics **drift**.
+    * Prompts **decay**.
+    * Chats **fragment**.
+    * Memory heuristics **drift**.
 
 
 Prompts are transient.
