@@ -74,7 +74,9 @@ Creation is now limited by:
 
 !!! important "Intent Is Authored"
     Systems can optimize.
+
     Models can generalize.
+
     Meaning **must** be chosen.
 
 **Intent is not emergent.**
