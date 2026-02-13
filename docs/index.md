@@ -317,7 +317,7 @@ We continuously ask:
 
 ## Show the Why
 
-!!! important "Traceability builds trust"
+!!! important "Traceability Builds Trust"
     Systems that cannot explain themselves will not be trusted.
 
     `{}` is the what.
