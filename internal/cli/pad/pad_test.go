@@ -38,7 +38,7 @@ func setupEncrypted(t *testing.T) string {
 	rc.OverrideContextDir(config.DirContext)
 
 	ctxDir := filepath.Join(dir, config.DirContext)
-	if err := os.MkdirAll(ctxDir, 0755); err != nil {
+	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -70,14 +70,14 @@ func setupPlaintext(t *testing.T) string {
 
 	// Write .contextrc with encryption disabled
 	rcContent := "scratchpad_encrypt: false\n"
-	if err := os.WriteFile(filepath.Join(dir, ".contextrc"), []byte(rcContent), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, ".contextrc"), []byte(rcContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	rc.Reset()
 
 	ctxDir := filepath.Join(dir, config.DirContext)
-	if err := os.MkdirAll(ctxDir, 0755); err != nil {
+	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -146,7 +146,7 @@ func TestAdd_Plaintext(t *testing.T) {
 
 	// Verify the file is plain text
 	path := filepath.Join(config.DirContext, config.FileScratchpadMd)
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // test reads a known test file path
 	if err != nil {
 		t.Fatalf("ReadFile() error: %v", err)
 	}
@@ -480,7 +480,7 @@ func TestNoKey_EncryptedFileExists(t *testing.T) {
 	rc.OverrideContextDir(config.DirContext)
 
 	ctxDir := filepath.Join(dir, config.DirContext)
-	if err := os.MkdirAll(ctxDir, 0755); err != nil {
+	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -488,7 +488,7 @@ func TestNoKey_EncryptedFileExists(t *testing.T) {
 	if err := os.WriteFile(
 		filepath.Join(ctxDir, config.FileScratchpadEnc),
 		[]byte("encrypted data here but dummy"),
-		0644,
+		0600,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -521,8 +521,8 @@ func TestDecryptionFailure_WrongKey(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected decryption error with wrong key")
 	}
-	if !strings.Contains(err.Error(), "Wrong key") {
-		t.Errorf("error = %q, want 'Wrong key' message", err.Error())
+	if !strings.Contains(err.Error(), "wrong key") {
+		t.Errorf("error = %q, want 'wrong key' message", err.Error())
 	}
 }
 

@@ -83,7 +83,7 @@ func runResolve(cmd *cobra.Command) error {
 
 // decryptFile reads and decrypts a single file, returning its entries.
 func decryptFile(key []byte, path string) ([]string, error) {
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // path is constructed from config constants
 	if err != nil {
 		return nil, err
 	}

@@ -40,7 +40,9 @@ func TestCheckSymlinks(t *testing.T) {
 	t.Run("regular directory passes", func(t *testing.T) {
 		dir := t.TempDir()
 		// Create a regular file inside.
-		os.WriteFile(filepath.Join(dir, "file.md"), []byte("ok"), 0644)
+		if err := os.WriteFile(filepath.Join(dir, "file.md"), []byte("ok"), 0600); err != nil {
+			t.Fatal(err)
+		}
 
 		if err := CheckSymlinks(dir); err != nil {
 			t.Errorf("CheckSymlinks on regular dir: unexpected error: %v", err)
@@ -50,9 +52,13 @@ func TestCheckSymlinks(t *testing.T) {
 	t.Run("directory that is a symlink fails", func(t *testing.T) {
 		tmp := t.TempDir()
 		realDir := filepath.Join(tmp, "real")
-		os.Mkdir(realDir, 0755)
+		if err := os.Mkdir(realDir, 0750); err != nil {
+			t.Fatal(err)
+		}
 		linkDir := filepath.Join(tmp, "link")
-		os.Symlink(realDir, linkDir)
+		if err := os.Symlink(realDir, linkDir); err != nil {
+			t.Fatal(err)
+		}
 
 		err := CheckSymlinks(linkDir)
 		if err == nil {
@@ -64,8 +70,12 @@ func TestCheckSymlinks(t *testing.T) {
 		dir := t.TempDir()
 		// Create a real file elsewhere and symlink it into the dir.
 		realFile := filepath.Join(t.TempDir(), "real.md")
-		os.WriteFile(realFile, []byte("secret"), 0644)
-		os.Symlink(realFile, filepath.Join(dir, "TASKS.md"))
+		if err := os.WriteFile(realFile, []byte("secret"), 0600); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.Symlink(realFile, filepath.Join(dir, "TASKS.md")); err != nil {
+			t.Fatal(err)
+		}
 
 		err := CheckSymlinks(dir)
 		if err == nil {
