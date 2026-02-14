@@ -32,9 +32,9 @@ No continuity.
 Modern systems are not much different:
 
 * Close the browser tab.
-* Lose the Slack scrollback.
+    * Lose the Slack scrollback.
 * Open a new LLM session.
-* Start from zero.
+    * Start from zero.
 
 **Resets externalize reconstruction cost onto humans.**
 
