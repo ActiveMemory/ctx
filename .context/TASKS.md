@@ -67,6 +67,8 @@ Analysis of 69 sessions found 8 recurring workflow patterns. 7 have automation g
 
 - [x] Remove prompt-coach hook — delivery mechanism doesn't work (stdout goes to AI not user, stderr is invisible, no viable user-facing channel). Zero useful tips fired across all usage. Creates orphan temp files via L-3 PID bug. The prompting guide already covers best practices. #priority:medium #added:2026-02-12-005504 #done:2026-02-12
 
+- [ ] BUG: SessionEnd hook ["$CLAUDE_PROJECT_DIR"/.claude/hooks/auto-save-session.sh] failed: /bin/sh: line 1: /home/jose/WORKSPACE/ctx/.claude/hooks/auto-save-session.sh: No such file or directory
+
 - [ ] Recipes section needs human review. For example, certain workflows can
       be autonomously done by asking AI "can you record our learnings?" but
       from the documenation it's not clear. Spend as much time as necessary
@@ -275,6 +277,110 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
       compositions for feature dev (3 agents), consolidation sprint
       (3-4 agents), release prep (2 agents), doc sprint (3 agents).
       Include coordination patterns and anti-patterns. #priority:low #source:report-8
+
+### Phase 3: Encrypted Scratchpad (`ctx pad`) `#priority:high`
+
+**Context**: Secure one-liner scratchpad, encrypted at rest, synced via git.
+AES-256-GCM with symmetric key (gitignored). Plaintext fallback via config.
+Spec: `specs/scratchpad.md`
+
+**Core infrastructure:**
+
+- [ ] P3.1: Create `internal/crypto/` package — AES-256-GCM encrypt/decrypt,
+      key generation (256-bit via `crypto/rand`), file format
+      `[12-byte nonce][ciphertext+tag]`. Go stdlib only, no external deps.
+      Include comprehensive tests (round-trip, wrong key, corrupted data,
+      empty plaintext). **Read `specs/scratchpad.md` before starting any
+      P3 task.** #priority:high #added:2026-02-13
+
+- [ ] P3.2: Add config constants — `FileScratchpadEnc`, `FileScratchpadMd`,
+      `FileScratchpadKey`, `PermSecret = 0600` in `internal/config/`.
+      Add `ScratchpadEncrypt bool` field to `internal/rc/types.go`
+      (default true). #priority:high #added:2026-02-13
+
+- [ ] P3.3: Wire into `ctx init` — generate key (0600), gitignore it,
+      create empty encrypted scratchpad. Skip if key exists (idempotent).
+      Warn if `.enc` exists but no key. Respect `scratchpad_encrypt`
+      config for plaintext fallback. Print key path on creation (never
+      print key content). #priority:high #added:2026-02-13
+
+**CLI commands:**
+
+- [ ] P3.4: Create `internal/cli/pad/` package — cobra command with
+      subcommands: `list` (default), `add`, `rm`, `edit`, `mv`.
+      Register in `bootstrap.go`. Add `doc.go`. #priority:high
+      #added:2026-02-13
+
+- [ ] P3.5: Implement `ctx pad` (list) — decrypt, number entries 1-based,
+      print to stdout. Handle: empty scratchpad, missing key, wrong key,
+      missing file. #priority:high #added:2026-02-13
+
+- [ ] P3.6: Implement `ctx pad add "..."` — decrypt, append line,
+      re-encrypt. Create scratchpad file on first add if not exists.
+      #priority:high #added:2026-02-13
+
+- [ ] P3.7: Implement `ctx pad rm N` — decrypt, remove entry at position N,
+      re-encrypt. Validate index bounds. #priority:medium #added:2026-02-13
+
+- [ ] P3.8: Implement `ctx pad edit N "..."` — decrypt, replace entry at
+      position N, re-encrypt. Validate index bounds. #priority:medium
+      #added:2026-02-13
+
+- [ ] P3.9: Implement `ctx pad mv N M` — decrypt, move entry from position
+      N to position M, re-encrypt. Validate both indices. #priority:medium
+      #added:2026-02-13
+
+**Conflict resolution:**
+
+- [ ] P3.10: Implement `ctx pad resolve` — detect git merge conflict on
+      scratchpad file, decrypt both sides (ours/theirs), output both
+      numbered lists. Used by skill for interactive merge. #priority:medium
+      #added:2026-02-13
+
+**Skill and permissions:**
+
+- [ ] P3.11: Create `/ctx-pad` skill (`SKILL.md`) — wraps `ctx pad`
+      commands. Maps natural language to CLI (add, rm, edit, mv, list).
+      `allowed-tools: Bash(ctx:*)`. #priority:high #added:2026-02-13
+
+- [ ] P3.12: Add `"Bash(ctx pad:*)"` to `DefaultClaudePermissions` in
+      `internal/config/file.go`. #priority:medium #added:2026-02-13
+
+**Tests:**
+
+- [ ] P3.13: Unit tests for `internal/crypto/` — encrypt/decrypt round-trip,
+      wrong key rejection, corrupted ciphertext, empty input, large input.
+      #priority:high #added:2026-02-13
+
+- [ ] P3.14: Unit tests for `internal/cli/pad/` — all commands, index
+      bounds, missing file, missing key, plaintext mode. #priority:high
+      #added:2026-02-13
+
+- [ ] P3.15: Integration test — `ctx init` → `ctx pad add` → `ctx pad` →
+      `ctx pad rm` → verify encrypted file is opaque, plaintext fallback
+      works. #priority:medium #added:2026-02-13
+
+**Documentation:**
+
+- [ ] P3.16: Add scratchpad section to user-facing documentation — what it
+      is, encrypted by default, how to use, key distribution (copy the
+      file), `.contextrc` plaintext override. #priority:medium
+      #added:2026-02-13
+
+- [ ] P3.17: Add scratchpad recipe — "Syncing sensitive notes across
+      machines": init on machine A, copy key to machine B, push/pull
+      workflow, what to do on merge conflict. #priority:medium
+      #added:2026-02-13
+
+- [ ] P3.18: Add scratchpad recipe — "Using the scratchpad with Claude":
+      example skill interactions, natural language examples, when to use
+      scratchpad vs context files. #priority:medium #added:2026-02-13
+
+- [ ] P3.19: Update Getting Started / Quick Start to mention scratchpad
+      as part of `ctx init` output. #priority:low #added:2026-02-13
+
+- [ ] P3.20: Update `ctx help` (when it exists) to include `pad` command.
+      #priority:low #added:2026-02-13
 
 ### Phase 1: Journal Site Improvements `#priority:high`
 

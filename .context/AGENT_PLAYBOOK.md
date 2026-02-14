@@ -296,6 +296,31 @@ Never assume. If you don't see it in files, you don't know it.
 - If uncertain, say "I don't see this documented"
 - Trust files over intuition
 
+## Planning Non-Trivial Work
+
+Before implementing a feature or multi-task effort, follow this sequence:
+
+**1. Spec first** — Write a design document in `specs/` covering: problem,
+solution, storage, CLI surface, error cases, and non-goals. Keep it concise
+but complete enough that another session could implement from it alone.
+
+**2. Task it out** — Break the work into individual tasks in TASKS.md under
+a dedicated Phase section. Each task should be independently completable and
+verifiable.
+
+**3. Cross-reference** — The Phase header in TASKS.md must reference the
+spec: `Spec: \`specs/feature-name.md\``. The first task in the phase should
+include: "Read `specs/feature-name.md` before starting any PX task."
+
+**4. Read before building** — When picking up a task that references a spec,
+read the spec first. Don't rely on the task description alone — it's a
+summary, not the full design.
+
+**Why this matters**: Sessions are ephemeral. The spec is the contract
+between the session that designed the feature and the session that builds it.
+Without the cross-reference, the building session may never find the spec.
+Without reading the spec, the building session works from incomplete context.
+
 ## When to Consolidate vs Add Features
 
 **Signs you should consolidate first:**

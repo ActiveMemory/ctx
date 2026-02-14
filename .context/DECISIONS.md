@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-13 | Spec-first planning for non-trivial features |
 | 2026-02-12 | Drop prompt-coach hook |
 | 2026-02-06 | Drop ctx-journal-summarize skill (duplicates ctx-blog) |
 | 2026-02-04 | E/A/R classification as the standard for skill evaluation |
@@ -25,6 +26,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-13-133318] Spec-first planning for non-trivial features
+
+**Status**: Accepted
+
+**Context**: Designed ctx pad (encrypted scratchpad). Created spec, then tasks. Noticed the tasks alone wouldn't lead a future session to the spec.
+
+**Decision**: Spec-first planning for non-trivial features
+
+**Rationale**: Implementation sessions work from TASKS.md. If the spec isn't referenced there, the session builds from task summaries alone — incomplete context leads to design drift. Redundant references catch agents that skip ahead.
+
+**Consequences**: All non-trivial features now follow: write specs/feature.md → task out in TASKS.md with Phase header referencing the spec → first task includes bold read-the-spec instruction. AGENT_PLAYBOOK.md updated with 'Planning Non-Trivial Work' section.
+
+---
 
 ## [2026-02-12-005516] Drop prompt-coach hook
 

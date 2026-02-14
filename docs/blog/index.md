@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Before Context Windows, We Had Bouncers](2026-02-14-irc-as-context.md)
+
+*Jose Alekhinne / February 14, 2026*
+
+IRC is stateless. You disconnect, you vanish. Modern systems are not much
+different: close the tab, lose the scrollback, open a new LLM session, start
+from zero. This post traces the line from IRC bouncers like ZNC to context
+engineering: stateless protocols require stateful wrappers, volatile interfaces
+require durable memory. Before context windows, we had bouncers. Before AI
+memory files, we had buffers.
+
+**Topics**: context engineering, infrastructure, IRC, persistence,
+state continuity
+
+---
+
 ### [How Deep Is Too Deep?](2026-02-12-how-deep-is-too-deep.md)
 
 *Jose Alekhinne / February 12, 2026*

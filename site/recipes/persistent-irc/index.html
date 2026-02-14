@@ -12,36 +12,32 @@
         <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/recipes/">
+        <link rel="canonical" href="https://ctx.ist/recipes/persistent-irc/">
       
       
-        <link rel="prev" href="../getting-started/">
-      
-      
-        <link rel="next" href="../session-journal/">
       
       
         
       
       
-      <link rel="icon" href="../images/favicon-32.png">
+      <link rel="icon" href="../../images/favicon-32.png">
       <meta name="generator" content="zensical-0.0.20">
     
     
       
-        <title>Recipes - ctx: do you remember?</title>
+        <title>Persistent IRC Presence with ZNC - ctx: do you remember?</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -60,7 +56,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -85,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#the-problem" class="md-skip">
           Skip to content
         </a>
       
@@ -101,9 +97,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -120,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Recipes
+              Persistent IRC Presence with ZNC
             
           </span>
         </div>
@@ -209,9 +205,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     ctx: do you remember?
@@ -238,7 +234,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -267,7 +263,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../../getting-started/" class="md-nav__link">
         
   
   
@@ -293,37 +289,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Recipes
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -341,226 +310,6 @@
   
 
       </a>
-      
-        
-
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Started
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Getting Started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#setting-up-ctx-across-ai-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setting Up ctx Across AI Tools
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#daily-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Workflow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Daily Workflow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-complete-session" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Complete Session
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tracking-work-across-sessions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tracking Work Across Sessions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#persisting-decisions-learnings-and-conventions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Persisting Decisions, Learnings, and Conventions
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Maintenance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#detecting-and-fixing-drift" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Detecting and Fixing Drift
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#history-and-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        History and Discovery
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="History and Discovery">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#browsing-and-enriching-past-sessions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Browsing and Enriching Past Sessions
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Infrastructure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Infrastructure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#persistent-irc-presence-with-znc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Persistent IRC Presence with ZNC
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Advanced
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#running-an-unattended-ai-agent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running an Unattended AI Agent
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#turning-activity-into-content" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Turning Activity into Content
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -572,7 +321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../session-journal/" class="md-nav__link">
+      <a href="../../session-journal/" class="md-nav__link">
         
   
   
@@ -601,7 +350,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompting-guide/" class="md-nav__link">
+      <a href="../../prompting-guide/" class="md-nav__link">
         
   
   
@@ -630,7 +379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../comparison/" class="md-nav__link">
+      <a href="../../comparison/" class="md-nav__link">
         
   
   
@@ -659,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-reference/" class="md-nav__link">
+      <a href="../../cli-reference/" class="md-nav__link">
         
   
   
@@ -688,7 +437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../context-files/" class="md-nav__link">
+      <a href="../../context-files/" class="md-nav__link">
         
   
   
@@ -717,7 +466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../autonomous-loop/" class="md-nav__link">
+      <a href="../../autonomous-loop/" class="md-nav__link">
         
   
   
@@ -746,7 +495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/" class="md-nav__link">
+      <a href="../../integrations/" class="md-nav__link">
         
   
   
@@ -775,7 +524,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../versions/" class="md-nav__link">
+      <a href="../../versions/" class="md-nav__link">
         
   
   
@@ -804,7 +553,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-security/" class="md-nav__link">
+      <a href="../../agent-security/" class="md-nav__link">
         
   
   
@@ -833,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/" class="md-nav__link">
+      <a href="../../security/" class="md-nav__link">
         
   
   
@@ -862,7 +611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../blog/" class="md-nav__link">
+      <a href="../../blog/" class="md-nav__link">
         
   
   
@@ -910,22 +659,154 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
+        The Problem
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Getting Started">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Workflow">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#setting-up-ctx-across-ai-tools" class="md-nav__link">
+  <a href="#step-1-provision-a-vps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Setting Up ctx Across AI Tools
+        Step 1: Provision a VPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-install-znc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Install ZNC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-generate-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Generate Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-tls-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: TLS Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-start-znc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Start ZNC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-lock-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Lock Firewall
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-connect-your-irc-client-to-znc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Connect Your IRC Client to ZNC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-enable-sasl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Enable SASL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-9-enable-useful-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Enable Useful Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-auto-op-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Auto-Op Correctly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-11-optional-motd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 11: Optional MOTD
       
     </span>
   </a>
@@ -938,175 +819,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-workflow" class="md-nav__link">
+  <a href="#common-failure-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Workflow
+        Common Failure Modes
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Daily Workflow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-complete-session" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Complete Session
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tracking-work-across-sessions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tracking Work Across Sessions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#persisting-decisions-learnings-and-conventions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Persisting Decisions, Learnings, and Conventions
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#maintenance" class="md-nav__link">
+  <a href="#why-do-we-use-bouncers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Maintenance
+        Why Do We Use Bouncers?
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Maintenance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#detecting-and-fixing-drift" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Detecting and Fixing Drift
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#history-and-discovery" class="md-nav__link">
+  <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        History and Discovery
+        See Also
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="History and Discovery">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#browsing-and-enriching-past-sessions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Browsing and Enriching Past Sessions
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Infrastructure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Infrastructure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#persistent-irc-presence-with-znc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Persistent IRC Presence with ZNC
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Advanced
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#running-an-unattended-ai-agent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running an Unattended AI Agent
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#turning-activity-into-content" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Turning Activity into Content
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1136,117 +877,231 @@
   
 
 
-  <h1>Recipes</h1>
+  <h1>Persistent IRC Presence with ZNC</h1>
 
-<p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<p>Workflow recipes showing how ctx commands and skills work together.
-Each recipe solves a specific problem by combining multiple tools
-into a step-by-step workflow.</p>
-<div class="admonition tip">
-<p class="admonition-title">Commands vs. Skills</p>
-<p><strong>Commands</strong> (<code>ctx status</code>, <code>ctx add task</code>) run in your
-terminal.</p>
-<p><strong>Skills</strong> (<code>/ctx-reflect</code>, <code>/ctx-next</code>) run inside
-your AI coding assistant.</p>
-<p>Recipes combine both.</p>
-<p>Think of commands as <strong>structure</strong> and skills as <strong>behavior</strong>.</p>
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p>IRC is stateless. You disconnect, you vanish. You reconnect, you reconstruct.</p>
+<p>This is not unique to IRC. Close the browser tab, lose the Slack scrollback,
+open a new LLM session, start from zero. Resets externalize reconstruction
+cost onto humans.</p>
+<p>This recipe builds a persistent IRC presence using <a href="https://znc.in">ZNC</a> 
+as an always-on bouncer:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Client → ZNC → IRC
+</span></code></pre></div>
+<p>Client sessions become disposable. Presence becomes infrastructural.</p>
+<p>This is not a nostalgia project. It is a pattern: stateless protocol,
+stateful wrapper, persistent presence. The same pattern that ctx applies
+to AI sessions.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Small VPS (IPv4 + IPv6 optional)</li>
+<li>ZNC installed</li>
+<li>TLS listener</li>
+<li>Firewall restricted to your IP</li>
+<li>SASL authentication upstream</li>
+<li>Buffers stored on disk</li>
+</ul>
+<p>No screenshots. No click-driven instructions. Only primitives.</p>
+<h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-provision-a-vps">Step 1: Provision a VPS<a class="headerlink" href="#step-1-provision-a-vps" title="Permanent link">&para;</a></h3>
+<p>Any minimal Linux host works. You need:</p>
+<ul>
+<li>A static public IP</li>
+<li>Inbound TCP port (e.g., 6699)</li>
+<li>SSH access</li>
+<li>Firewall control</li>
+</ul>
+<p>Lock SSH before anything else.</p>
+<h3 id="step-2-install-znc">Step 2: Install ZNC<a class="headerlink" href="#step-2-install-znc" title="Permanent link">&para;</a></h3>
+<p>On Fedora:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>znc
+</span></code></pre></div>
+<p>On Debian/Ubuntu:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>znc
+</span></code></pre></div>
+<p>Do not start the systemd service yet.</p>
+<h3 id="step-3-generate-configuration">Step 3: Generate Configuration<a class="headerlink" href="#step-3-generate-configuration" title="Permanent link">&para;</a></h3>
+<p>Run configuration as the ZNC service user, not your shell user.</p>
+<p>This avoids the classic "<em>config in wrong directory</em>" failure.</p>
+<p>Check the service file:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>systemctl<span class="w"> </span>cat<span class="w"> </span>znc
+</span></code></pre></div>
+<p>Note the <code>User=</code> and <code>--datadir=</code> values. Usually:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>- User: `_znc`
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Datadir: `/var/lib/znc`
+</span></code></pre></div>
+<p>Switch to that user:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>_znc<span class="w"> </span>znc<span class="w"> </span>--makeconf<span class="w"> </span>--datadir<span class="o">=</span>/var/lib/znc
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Wrong Directory</p>
+<p>If you previously ran <code>znc --makeconf</code> as yourself, you likely
+created <code>~/.znc/</code>. That will <strong>not</strong> be used by systemd. </p>
+<p>Delete or ignore it.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Guide Your Agent</p>
-<p>These recipes show explicit commands and skills, but agents
-trained on the ctx playbook are <strong>proactive</strong>: they offer to
-save learnings after debugging, record decisions after
-trade-offs, create follow-up tasks after completing work, and
-suggest what to work on next.</p>
-<p><strong>Your questions train the agent.</strong> Asking "<em>what have we
-learned?</em>" or "<em>is our context clean?</em>" does two things: it
-triggers the workflow right now, <strong>and</strong> it reinforces the
-pattern. The more you guide, the more the agent habituates the
-behavior and begins offering on its own.</p>
-<p>Don't wait passively for proactive behavior — especially in
-early sessions. <strong>Ask, guide, reinforce.</strong> Over time, you ask
-less and the agent offers more.</p>
-<p>Each recipe includes a <strong>Conversational Approach</strong> section
-showing these natural-language patterns.</p>
+<h3 id="step-4-tls-certificate">Step 4: TLS Certificate<a class="headerlink" href="#step-4-tls-certificate" title="Permanent link">&para;</a></h3>
+<p>ZNC needs a PEM file. If you see <code>Unable to locate pem file</code>, generate one:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>_znc<span class="w"> </span>znc<span class="w"> </span>--datadir<span class="o">=</span>/var/lib/znc<span class="w"> </span>--makepem
+</span></code></pre></div>
+<p>Ensure <code>znc.conf</code> points to the correct PEM path inside <code>/var/lib/znc</code>.
+Do not reference your home directory.</p>
+<h3 id="step-5-start-znc">Step 5: Start ZNC<a class="headerlink" href="#step-5-start-znc" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>znc
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>znc
+</span></code></pre></div>
+<p>Verify:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>znc
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ss<span class="w"> </span>-lntp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">6699</span>
+</span></code></pre></div>
+<h3 id="step-6-lock-firewall">Step 6: Lock Firewall<a class="headerlink" href="#step-6-lock-firewall" title="Permanent link">&para;</a></h3>
+<p>Do not leave the port open to the world. Restrict inbound TCP <code>6699</code> 
+<strong>to your IP only</strong>.</p>
+<p>Test connectivity from your machine:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vps_ip&gt;:6699
+</span></code></pre></div>
+<p>If this hangs, it is the firewall. Not TLS. Not ZNC.</p>
+<h3 id="step-7-connect-your-irc-client-to-znc">Step 7: Connect Your IRC Client to ZNC<a class="headerlink" href="#step-7-connect-your-irc-client-to-znc" title="Permanent link">&para;</a></h3>
+<p>Configure your client:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server</td>
+<td><code>&lt;vps_ip&gt;</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td><code>6699</code></td>
+</tr>
+<tr>
+<td>SSL</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Username</td>
+<td><code>znc_user/network_name</code></td>
+</tr>
+<tr>
+<td>Password</td>
+<td>Your ZNC password</td>
+</tr>
+</tbody>
+</table>
+<p>Example username: <code>jose/libera</code></p>
+<div class="admonition warning">
+<p class="admonition-title">Password Field</p>
+<p>Do not use "personal password" for ZNC. </p>
+<p>That field is for <code>NickServ</code>, not ZNC. </p>
+<p>If you see <code>You need to send your password</code>, 
+you put it in the wrong field.</p>
 </div>
-<hr />
-<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<h3 id="setting-up-ctx-across-ai-tools"><a href="multi-tool-setup/">Setting Up ctx Across AI Tools</a><a class="headerlink" href="#setting-up-ctx-across-ai-tools" title="Permanent link">&para;</a></h3>
-<p>Initialize ctx and configure hooks for Claude Code, Cursor,
-Aider, Copilot, or Windsurf. Includes shell completion,
-watch mode for non-native tools, and verification.</p>
-<p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx hook</code>, <code>ctx agent</code>, <code>ctx completion</code>,
-<code>ctx watch</code></p>
-<hr />
-<h2 id="daily-workflow">Daily Workflow<a class="headerlink" href="#daily-workflow" title="Permanent link">&para;</a></h2>
-<p>These recipes cover the workflows you’ll use every day when
-working with ctx.</p>
-<h3 id="the-complete-session"><a href="session-lifecycle/">The Complete Session</a><a class="headerlink" href="#the-complete-session" title="Permanent link">&para;</a></h3>
-<p>Walk through a full ctx session from start to finish: loading
-context, picking what to work on, committing with context
-capture, reflecting, and saving a snapshot.</p>
-<p><strong>Uses</strong>: <code>ctx status</code>, <code>ctx agent</code>,
-<code>/ctx-remember</code>, <code>/ctx-next</code>, <code>/ctx-commit</code>, <code>/ctx-reflect</code></p>
-<hr />
-<h3 id="tracking-work-across-sessions"><a href="task-management/">Tracking Work Across Sessions</a><a class="headerlink" href="#tracking-work-across-sessions" title="Permanent link">&para;</a></h3>
-<p>Add, prioritize, complete, snapshot, and archive tasks. Keep
-TASKS.md focused as your project evolves across dozens of
-sessions.</p>
-<p><strong>Uses</strong>: <code>ctx add task</code>, <code>ctx complete</code>, <code>ctx tasks archive</code>,
-<code>ctx tasks snapshot</code>, <code>/ctx-add-task</code>, <code>/ctx-archive</code>, <code>/ctx-next</code></p>
-<hr />
-<h3 id="persisting-decisions-learnings-and-conventions"><a href="knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a><a class="headerlink" href="#persisting-decisions-learnings-and-conventions" title="Permanent link">&para;</a></h3>
-<p>Record architectural decisions with rationale, capture gotchas
-and lessons learned, and codify coding conventions so they
-survive across sessions and team members.</p>
-<p><strong>Uses</strong>: <code>ctx add decision</code>, <code>ctx add learning</code>,
-<code>ctx add convention</code>, <code>ctx decisions reindex</code>,
-<code>ctx learnings reindex</code>, <code>/ctx-add-decision</code>,
-<code>/ctx-add-learning</code>, <code>/ctx-add-convention</code>, <code>/ctx-reflect</code></p>
-<hr />
-<h2 id="maintenance">Maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h2>
-<h3 id="detecting-and-fixing-drift"><a href="context-health/">Detecting and Fixing Drift</a><a class="headerlink" href="#detecting-and-fixing-drift" title="Permanent link">&para;</a></h3>
-<p>Keep context files accurate by detecting structural drift
-(stale paths, missing files) and semantic drift (outdated
-conventions, superseded decisions). Includes alignment audits
-to verify documentation claims match agent instructions.</p>
-<p><strong>Uses</strong>: <code>ctx drift</code>, <code>ctx sync</code>, <code>ctx compact</code>, <code>ctx status</code>,
-<code>/ctx-drift</code>, <code>/ctx-alignment-audit</code>, <code>/ctx-status</code>,
-<code>/ctx-prompt-audit</code></p>
-<hr />
-<h2 id="history-and-discovery">History and Discovery<a class="headerlink" href="#history-and-discovery" title="Permanent link">&para;</a></h2>
-<h3 id="browsing-and-enriching-past-sessions"><a href="session-archaeology/">Browsing and Enriching Past Sessions</a><a class="headerlink" href="#browsing-and-enriching-past-sessions" title="Permanent link">&para;</a></h3>
-<p>Export your AI session history to a browsable journal site.
-Normalize rendering, enrich entries with metadata, and search
-across months of work.</p>
-<p><strong>Uses</strong>: <code>ctx recall list/show/export</code>, <code>ctx journal site</code>,
-<code>ctx serve</code>, <code>/ctx-recall</code>, <code>/ctx-journal-normalize</code>,
-<code>/ctx-journal-enrich</code>, <code>/ctx-journal-enrich-all</code></p>
-<hr />
-<h2 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h2>
-<h3 id="persistent-irc-presence-with-znc"><a href="persistent-irc/">Persistent IRC Presence with ZNC</a><a class="headerlink" href="#persistent-irc-presence-with-znc" title="Permanent link">&para;</a></h3>
-<p>Set up an always-on IRC bouncer so client sessions become disposable
-and presence becomes infrastructural. The same pattern ctx applies to
-AI sessions: stateless protocol, stateful wrapper.</p>
-<p><strong>Uses</strong>: ZNC, TLS, SASL, firewall rules</p>
-<hr />
-<h2 id="advanced">Advanced<a class="headerlink" href="#advanced" title="Permanent link">&para;</a></h2>
-<h3 id="running-an-unattended-ai-agent"><a href="autonomous-loops/">Running an Unattended AI Agent</a><a class="headerlink" href="#running-an-unattended-ai-agent" title="Permanent link">&para;</a></h3>
-<p>Set up a loop where an AI agent works through tasks overnight
-without you at the keyboard, using ctx for persistent memory
-between iterations.</p>
-<p>This recipe shows how ctx supports long-running agent loops
-without losing context or intent.</p>
-<p><strong>Uses</strong>: <code>ctx init --ralph</code>, <code>ctx loop</code>, <code>ctx watch</code>, <code>ctx load</code>,
-<code>/ctx-loop</code>, <code>/ctx-implement</code>, <code>/ctx-context-monitor</code></p>
-<hr />
-<h3 id="turning-activity-into-content"><a href="publishing/">Turning Activity into Content</a><a class="headerlink" href="#turning-activity-into-content" title="Permanent link">&para;</a></h3>
-<p>Generate blog posts from project activity, write changelog
-posts from commit ranges, and publish a browsable journal
-site from your session history.</p>
-<p><strong>Uses</strong>: <code>ctx journal site</code>, <code>ctx serve</code>, <code>ctx recall export</code>,
-<code>/ctx-blog</code>, <code>/ctx-blog-changelog</code>, <code>/ctx-journal-enrich</code>,
-<code>/ctx-journal-normalize</code></p>
+<h3 id="step-8-enable-sasl">Step 8: Enable SASL<a class="headerlink" href="#step-8-enable-sasl" title="Permanent link">&para;</a></h3>
+<p>Configure SASL <strong>inside ZNC</strong>, not in your client.</p>
+<p>In the ZNC web interface: </p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>User → Networks → libera → Modules → enable &quot;sasl&quot;
+</span></code></pre></div>
+<p>Configure:</p>
+<ul>
+<li><strong>Username</strong>: Your IRC nickname</li>
+<li><strong>Password</strong>: Your NickServ password</li>
+<li><strong>Mechanism</strong>: <code>PLAIN</code></li>
+</ul>
+<p>Reconnect the network through ZNC's <code>*status</code> virtual user:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>/msg *status Disconnect
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/msg *status Connect
+</span></code></pre></div>
+<p><code>*status</code> is ZNC's built-in control interface. You message it like a
+user, and it executes commands on ZNC itself. <code>/msg *status Help</code> lists
+all available commands.</p>
+<p>Then verify SASL worked:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>/msg NickServ STATUS &lt;nick&gt;
+</span></code></pre></div>
+<p>It should return <code>"identified"</code> without manual <code>IDENTIFY</code>.</p>
+<p><strong>Authentication belongs in infrastructure</strong>.</p>
+<h3 id="step-9-enable-useful-modules">Step 9: Enable Useful Modules<a class="headerlink" href="#step-9-enable-useful-modules" title="Permanent link">&para;</a></h3>
+<p><strong>Network modules</strong> (<em>per-network, e.g., <code>Libera.Chat</code></em>):</p>
+<ul>
+<li><code>autoattach</code>: Reattach to channels on client reconnect</li>
+<li><code>buffextras</code>: Log joins, parts, and mode changes in buffer</li>
+<li><code>keepnick</code>: Reclaim your nick automatically</li>
+<li><code>log</code>: Write channel and query logs to disk</li>
+<li><code>route_replies</code>: Route server replies to the requesting client</li>
+<li><code>sasl</code>: Authenticate upstream (<em>configured in Step 8</em>)</li>
+<li><code>savebuff</code>: Persist buffers across ZNC restarts</li>
+<li><code>simple_away</code>: Set away status when no clients are connected</li>
+</ul>
+<p><strong>Global modules</strong> (<em>apply to all networks</em>):</p>
+<ul>
+<li><code>corecaps</code>: Negotiate IRCv3 capabilities with the server (<em>highly recommended</em>)</li>
+<li><code>webadmin</code>: Browser-based admin panel for managing ZNC</li>
+</ul>
+<p><strong>Avoid</strong>:</p>
+<ul>
+<li><code>nickserv</code>: Use <code>sasl</code> instead</li>
+<li><code>autoop</code>: Use <code>ChanServ</code> instead</li>
+</ul>
+<h3 id="step-10-auto-op-correctly">Step 10: Auto-Op Correctly<a class="headerlink" href="#step-10-auto-op-correctly" title="Permanent link">&para;</a></h3>
+<p>If you are the founder of a channel:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/msg ChanServ FLAGS #channel &lt;nick&gt; +AO
+</span></code></pre></div>
+<p>If <code>ChanServ</code> says "You are not logged in," SASL is not configured correctly.</p>
+<h3 id="step-11-optional-motd">Step 11: Optional MOTD<a class="headerlink" href="#step-11-optional-motd" title="Permanent link">&para;</a></h3>
+<p>ZNC can print a banner when your client connects:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>// Context: https://ctx.ist
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>// do you remember?
+</span></code></pre></div>
+<p>This is not decoration; it is a <strong>reminder</strong>: <strong>memory is infrastructure</strong>.</p>
+<h2 id="common-failure-modes">Common Failure Modes<a class="headerlink" href="#common-failure-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>systemd service fails</td>
+<td>Config in wrong directory</td>
+<td>Generate under <code>/var/lib/znc</code> as <code>_znc</code></td>
+</tr>
+<tr>
+<td>TLS timeout</td>
+<td>Firewall</td>
+<td>Test with <code>openssl</code>, not assumptions</td>
+</tr>
+<tr>
+<td>ChanServ says not logged in</td>
+<td>SASL not configured in ZNC</td>
+<td>Move auth upstream</td>
+</tr>
+<tr>
+<td>Duplicate nick on reconnect</td>
+<td>Client handling NickServ, not ZNC</td>
+<td>Move auth upstream</td>
+</tr>
+</tbody>
+</table>
+<h2 id="why-do-we-use-bouncers">Why Do We Use Bouncers?<a class="headerlink" href="#why-do-we-use-bouncers" title="Permanent link">&para;</a></h2>
+<p>Without a bouncer: disconnect → reset → reconstruct.</p>
+<p>With a bouncer: <strong>continuity</strong>.</p>
+<p>ZNC is <strong>not</strong> retro: It is a memory layer. </p>
+<p>Before LLM context windows, we had buffers. </p>
+<p><strong>Stateless protocols require stateful wrappers</strong>: The pattern persists.</p>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../blog/2026-02-14-irc-as-context/">Before Context Windows, We Had Bouncers</a>:
+  The blog post exploring this pattern</li>
+<li><a href="../autonomous-loops/">Running an Unattended AI Agent</a>: Another recipe
+  about persistent infrastructure for ephemeral sessions</li>
+</ul>
 
 
 
@@ -1284,44 +1139,6 @@ site from your session history.</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting Started">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Getting Started
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../session-journal/" class="md-footer__link md-footer__link--next" aria-label="Next: The Session Journal">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                The Session Journal
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -1381,10 +1198,10 @@ The documentation on this website is distributed under
       
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

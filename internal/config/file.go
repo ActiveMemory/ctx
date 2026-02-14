@@ -12,6 +12,8 @@ const (
 	PermFile = 0644
 	// PermExec is the standard permission for directories and executable files.
 	PermExec = 0755
+	// PermSecret is the permission for secret files (owner rw only).
+	PermSecret = 0600
 )
 
 // File extension constants.
@@ -153,6 +155,16 @@ const (
 	FileDependency = "DEPENDENCIES.md"
 )
 
+// Scratchpad file constants for .context/ directory.
+const (
+	// FileScratchpadEnc is the encrypted scratchpad file.
+	FileScratchpadEnc = "scratchpad.enc"
+	// FileScratchpadMd is the plaintext scratchpad file.
+	FileScratchpadMd = "scratchpad.md"
+	// FileScratchpadKey is the scratchpad encryption key file.
+	FileScratchpadKey = ".scratchpad.key"
+)
+
 // FileType maps short names to actual file names.
 var FileType = map[string]string{
 	EntryDecision:   FileDecision,
@@ -229,4 +241,5 @@ var DefaultClaudePermissions = []string{
 	"Bash(ctx add:*)",
 	"Bash(ctx tasks:*)",
 	"Bash(ctx loop:*)",
+	"Bash(ctx pad:*)",
 }

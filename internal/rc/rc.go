@@ -92,6 +92,20 @@ func ArchiveAfterDays() int {
 	return RC().ArchiveAfterDays
 }
 
+// ScratchpadEncrypt returns whether the scratchpad should be encrypted.
+//
+// Returns true (default) when the field is not set in .contextrc.
+//
+// Returns:
+//   - bool: True if scratchpad encryption is enabled (default true)
+func ScratchpadEncrypt() bool {
+	v := RC().ScratchpadEncrypt
+	if v == nil {
+		return true
+	}
+	return *v
+}
+
 // OverrideContextDir sets a CLI-provided override for the context directory.
 //
 // This takes precedence over all other configuration sources.

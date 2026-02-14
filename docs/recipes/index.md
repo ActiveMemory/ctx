@@ -124,6 +124,18 @@ across months of work.
 
 ---
 
+## Infrastructure
+
+### [Persistent IRC Presence with ZNC](persistent-irc.md)
+
+Set up an always-on IRC bouncer so client sessions become disposable
+and presence becomes infrastructural. The same pattern ctx applies to
+AI sessions: stateless protocol, stateful wrapper.
+
+**Uses**: ZNC, TLS, SASL, firewall rules
+
+---
+
 ## Advanced
 
 ### [Running an Unattended AI Agent](autonomous-loops.md)

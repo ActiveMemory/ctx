@@ -14,10 +14,12 @@ package rc
 //   - PriorityOrder: Custom file loading priority order
 //   - AutoArchive: Whether to auto-archive completed tasks (default true)
 //   - ArchiveAfterDays: Days before archiving completed tasks (default 7)
+//   - ScratchpadEncrypt: Whether to encrypt the scratchpad (default true)
 type CtxRC struct {
-	ContextDir       string   `yaml:"context_dir"`
-	TokenBudget      int      `yaml:"token_budget"`
-	PriorityOrder    []string `yaml:"priority_order"`
-	AutoArchive      bool     `yaml:"auto_archive"`
-	ArchiveAfterDays int      `yaml:"archive_after_days"`
+	ContextDir         string   `yaml:"context_dir"`
+	TokenBudget        int      `yaml:"token_budget"`
+	PriorityOrder      []string `yaml:"priority_order"`
+	AutoArchive        bool     `yaml:"auto_archive"`
+	ArchiveAfterDays   int      `yaml:"archive_after_days"`
+	ScratchpadEncrypt  *bool    `yaml:"scratchpad_encrypt"`
 }

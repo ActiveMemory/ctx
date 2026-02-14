@@ -17,6 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/tpl"
 )
@@ -122,6 +123,12 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Printf("  %s Tools: %v\n", color.YellowString("⚠"), err)
 	}
 
+	// Set up scratchpad
+	if err := initScratchpad(cmd, contextDir); err != nil {
+		// Non-fatal: warn but continue
+		cmd.Printf("  %s Scratchpad: %v\n", color.YellowString("⚠"), err)
+	}
+
 	// Create project root files
 	cmd.Println("\nCreating project root files...")
 
@@ -164,4 +171,112 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	cmd.Println("  3. Run 'ctx agent' to get AI-ready context packet")
 
 	return nil
+}
+
+// initScratchpad sets up the scratchpad key or plaintext file.
+//
+// When encryption is enabled (default):
+//   - Generates a 256-bit key at .context/.scratchpad.key if not present
+//   - Adds the key file to .gitignore
+//   - Warns if .enc exists but no key
+//
+// When encryption is disabled:
+//   - Creates empty .context/scratchpad.md if not present
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - contextDir: The .context/ directory path
+//
+// Returns:
+//   - error: Non-nil if key generation or file operations fail
+func initScratchpad(cmd *cobra.Command, contextDir string) error {
+	green := color.New(color.FgGreen).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+
+	if !rc.ScratchpadEncrypt() {
+		// Plaintext mode: create empty scratchpad.md if not present
+		mdPath := filepath.Join(contextDir, config.FileScratchpadMd)
+		if _, err := os.Stat(mdPath); err != nil {
+			if err := os.WriteFile(mdPath, nil, config.PermFile); err != nil {
+				return fmt.Errorf("failed to create %s: %w", mdPath, err)
+			}
+			cmd.Printf("  %s %s (plaintext scratchpad)\n", green("✓"), mdPath)
+		} else {
+			cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), mdPath)
+		}
+		return nil
+	}
+
+	// Encrypted mode
+	kPath := filepath.Join(contextDir, config.FileScratchpadKey)
+	encPath := filepath.Join(contextDir, config.FileScratchpadEnc)
+
+	// Check if key already exists (idempotent)
+	if _, err := os.Stat(kPath); err == nil {
+		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), kPath)
+		return nil
+	}
+
+	// Warn if encrypted file exists but no key
+	if _, err := os.Stat(encPath); err == nil {
+		cmd.Printf("  %s Encrypted scratchpad found but no key at %s\n",
+			yellow("⚠"), kPath)
+		return nil
+	}
+
+	// Generate key
+	key, err := crypto.GenerateKey()
+	if err != nil {
+		return fmt.Errorf("failed to generate scratchpad key: %w", err)
+	}
+
+	if err := crypto.SaveKey(kPath, key); err != nil {
+		return fmt.Errorf("failed to save scratchpad key: %w", err)
+	}
+	cmd.Printf("  %s Scratchpad key created at %s\n", green("✓"), kPath)
+	cmd.Println("  Copy this file to your other machines at the same path.")
+
+	// Add key to .gitignore
+	if err := addToGitignore(contextDir, config.FileScratchpadKey); err != nil {
+		cmd.Printf("  %s Could not update .gitignore: %v\n", yellow("⚠"), err)
+	}
+
+	return nil
+}
+
+// addToGitignore ensures an entry exists in .gitignore.
+//
+// Creates .gitignore if it doesn't exist. Checks if the entry is already
+// present before adding.
+//
+// Parameters:
+//   - contextDir: The .context/ directory (entry is relative to this)
+//   - filename: The filename to add (e.g., ".scratchpad.key")
+func addToGitignore(contextDir, filename string) error {
+	entry := filepath.Join(contextDir, filename)
+	gitignorePath := ".gitignore"
+
+	// Read existing .gitignore
+	content, err := os.ReadFile(gitignorePath)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+
+	// Check if already present
+	lines := strings.Split(string(content), "\n")
+	for _, line := range lines {
+		if strings.TrimSpace(line) == entry {
+			return nil // already present
+		}
+	}
+
+	// Append entry
+	var newContent string
+	if len(content) > 0 && !strings.HasSuffix(string(content), "\n") {
+		newContent = string(content) + "\n" + entry + "\n"
+	} else {
+		newContent = string(content) + entry + "\n"
+	}
+
+	return os.WriteFile(gitignorePath, []byte(newContent), config.PermFile)
 }
