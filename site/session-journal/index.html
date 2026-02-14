@@ -635,6 +635,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#obsidian-vault-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obsidian Vault Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#full-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1279,6 +1290,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#obsidian-vault-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obsidian Vault Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#full-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1384,7 +1406,8 @@
 <p>Session journals contain <strong>sensitive data</strong> such as
 file contents, commands, API keys, internal discussions, 
 error messages with stack traces, and more. </p>
-<p>The <code>.context/journal-site/</code> directory <strong>MUST</strong> be <code>..gitignore</code>d.</p>
+<p>The <code>.context/journal-site/</code> and <code>.context/journal-obsidian/</code>
+directories <strong>MUST</strong> be <code>.gitignore</code>d.</p>
 <ul>
 <li><strong>DO NOT</strong> host your journal publicly.</li>
 <li><strong>DO NOT</strong> commit your journal files to version control.</li>
@@ -1814,10 +1837,37 @@ prompts, tools, and skills that aren't in the JSONL.</p>
 your session, <code>ctx init</code> also installs a <code>check-context-size.sh</code> hook that
 triggers the <code>/ctx-context-monitor</code> skill at adaptive intervals.</p>
 </div>
+<h2 id="obsidian-vault-export">Obsidian Vault Export<a class="headerlink" href="#obsidian-vault-export" title="Permanent link">&para;</a></h2>
+<p>If you use <a href="https://obsidian.md/">Obsidian</a> for knowledge management, you can
+export your journal as an Obsidian vault instead of (or alongside) the static
+site:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
+</span></code></pre></div>
+<p>This generates a vault in <code>.context/journal-obsidian/</code> with:</p>
+<ul>
+<li><strong>Wikilinks</strong> (<code>[[target|display]]</code>) instead of Markdown links</li>
+<li><strong>MOC pages</strong> (Map of Content) for topics, key files, and session types</li>
+<li><strong>Related sessions footer</strong> per entry — links to entries sharing the same topics</li>
+<li><strong>Transformed frontmatter</strong> — <code>topics</code> renamed to <code>tags</code> (Obsidian-recognized),
+  <code>aliases</code> added from title for search</li>
+<li><strong>Graph-optimized structure</strong> — MOC hubs + cross-linked entries create dense
+  graph connectivity</li>
+</ul>
+<p>To use: open the output directory in Obsidian ("Open folder as vault").</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Custom output directory</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx-journal
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Static site vs Obsidian vault</p>
+<p>Use <code>ctx journal site</code> when you want a <strong>web-browsable</strong> archive with search
+and dark mode. Use <code>ctx journal obsidian</code> when you want <strong>graph view</strong>,
+<strong>backlinks</strong>, and <strong>tag-based navigation</strong> inside Obsidian. Both use the
+same enriched source entries — you can generate both.</p>
+</div>
 <h2 id="full-pipeline">Full Pipeline<a class="headerlink" href="#full-pipeline" title="Permanent link">&para;</a></h2>
 <p>The complete journal workflow has four stages. Each is idempotent — safe to
 re-run, and stages skip already-processed entries.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>export → normalize → enrich → rebuild
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>export → normalize → enrich → rebuild
 </span></code></pre></div>
 <table>
 <thead>
@@ -1853,25 +1903,31 @@ re-run, and stages skip already-processed entries.</p>
 <td>Generates static HTML site</td>
 <td>—</td>
 </tr>
+<tr>
+<td><strong>Obsidian</strong></td>
+<td><code>ctx journal obsidian</code></td>
+<td>Generates Obsidian vault with wikilinks</td>
+<td>—</td>
+</tr>
 </tbody>
 </table>
 <h3 id="using-make-journal">Using <code>make journal</code><a class="headerlink" href="#using-make-journal" title="Permanent link">&para;</a></h3>
 <p>If your project includes <code>Makefile.ctx</code> (deployed by <code>ctx init</code>), the first
 and last stages are combined:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>journal<span class="w">           </span><span class="c1"># export + rebuild</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>make<span class="w"> </span>journal<span class="w">           </span><span class="c1"># export + rebuild</span>
 </span></code></pre></div>
 <p>After it runs, it reminds you to normalize and enrich in Claude Code:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Next steps (in Claude Code):
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  1. /ctx-journal-normalize  — fix markdown rendering (skips already normalized)
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  2. /ctx-journal-enrich     — add metadata per entry (skips if frontmatter exists)
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Then re-run: make journal
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Next steps (in Claude Code):
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  1. /ctx-journal-normalize  — fix markdown rendering (skips already normalized)
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  2. /ctx-journal-enrich     — add metadata per entry (skips if frontmatter exists)
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Then re-run: make journal
 </span></code></pre></div>
 <h3 id="normalizing-journal-entries">Normalizing Journal Entries<a class="headerlink" href="#normalizing-journal-entries" title="Permanent link">&para;</a></h3>
 <p>Raw exported sessions may have rendering issues: nested code fences,
 malformed metadata blocks, or broken lists. The <code>/ctx-journal-normalize</code>
 skill fixes these in the <strong>source files</strong> so the site renders correctly.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/ctx-journal-normalize
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>/ctx-journal-normalize
 </span></code></pre></div>
 <p>It backs up <code>.context/journal/</code> before modifying anything, and marks processed
 files with <code>&lt;!-- normalized: YYYY-MM-DD --&gt;</code> so re-runs skip them.</p>
@@ -1879,28 +1935,29 @@ files with <code>&lt;!-- normalized: YYYY-MM-DD --&gt;</code> so re-runs skip th
 content, and clean markdown produces better metadata extraction.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <p><strong>Daily workflow:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Export, browse, then enrich in Claude Code</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>make<span class="w"> </span>journal<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>journal-serve
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Then in Claude Code: /ctx-journal-enrich &lt;session&gt;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Export, browse, then enrich in Claude Code</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>make<span class="w"> </span>journal<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>journal-serve
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Then in Claude Code: /ctx-journal-enrich &lt;session&gt;</span>
 </span></code></pre></div></p>
 <p><strong>After a productive session:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Export just that session and add notes</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;session-id&gt;
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Edit .context/journal/&lt;session&gt;.md</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Regenerate: ctx journal site</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Export just that session and add notes</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&lt;session-id&gt;
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Edit .context/journal/&lt;session&gt;.md</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Regenerate: ctx journal site</span>
 </span></code></pre></div></p>
 <p><strong>Searching across all sessions:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Use grep on the journal directory</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;authentication&quot;</span><span class="w"> </span>.context/journal/
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Use grep on the journal directory</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;authentication&quot;</span><span class="w"> </span>.context/journal/
 </span></code></pre></div></p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <p>The journal site uses <a href="https://pypi.org/project/zensical/">zensical</a> for static site generation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../cli-reference/#ctx-recall">ctx recall</a>: Session discovery and listing</li>
-<li><a href="../../cli-reference/#ctx-journal">ctx journal</a>: Site generation commands</li>
+<li><a href="../../cli-reference/#ctx-journal-site">ctx journal site</a>: Static site generation</li>
+<li><a href="../../cli-reference/#ctx-journal-obsidian">ctx journal obsidian</a>: Obsidian vault export</li>
 <li><a href="../../context-files/">Context Files</a>: The <code>.context/</code> directory structure</li>
 </ul>
 

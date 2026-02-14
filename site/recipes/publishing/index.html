@@ -726,6 +726,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#alternative-export-to-obsidian-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: Export to Obsidian Vault
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#step-5-draft-blog-posts-from-activity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -867,6 +878,11 @@
 <td>Generate a static site from journal entries</td>
 </tr>
 <tr>
+<td><code>ctx journal obsidian</code></td>
+<td>Command</td>
+<td>Generate an Obsidian vault from journal entries</td>
+</tr>
+<tr>
 <td><code>ctx serve</code></td>
 <td>Command</td>
 <td>Serve the journal site locally</td>
@@ -1005,13 +1021,25 @@ parallel.</p>
 <p>This runs <code>ctx recall export --all</code> followed by <code>ctx journal site --build</code>, then
 reminds you to normalize and enrich before rebuilding. To serve the built site,
 use <code>make journal-serve</code> or <code>ctx serve</code>.</p>
+<h3 id="alternative-export-to-obsidian-vault">Alternative: Export to Obsidian Vault<a class="headerlink" href="#alternative-export-to-obsidian-vault" title="Permanent link">&para;</a></h3>
+<p>If you use <a href="https://obsidian.md/">Obsidian</a> for knowledge management, generate
+a vault instead of (or alongside) the static site:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx-journal
+</span></code></pre></div>
+<p>This produces an Obsidian-ready directory with wikilinks, MOC (Map of Content)
+pages for topics/files/types, and a "Related Sessions" footer on each entry for
+graph connectivity. Open the output directory in Obsidian as a vault.</p>
+<p>The vault uses the same enriched source entries as the static site. Both outputs
+can coexist — the static site goes to <code>.context/journal-site/</code>, the vault to
+<code>.context/journal-obsidian/</code>.</p>
 <h3 id="step-5-draft-blog-posts-from-activity">Step 5: Draft Blog Posts from Activity<a class="headerlink" href="#step-5-draft-blog-posts-from-activity" title="Permanent link">&para;</a></h3>
 <p>When your project reaches a milestone worth sharing, use <code>/ctx-blog</code> to draft a
 post from recent activity. The skill gathers context from multiple sources:
 <code>git log</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, completed tasks, and journal entries.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/ctx-blog about the caching layer we just built
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/ctx-blog last week&#39;s refactoring work
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/ctx-blog lessons learned from the migration
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/ctx-blog about the caching layer we just built
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/ctx-blog last week&#39;s refactoring work
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>/ctx-blog lessons learned from the migration
 </span></code></pre></div>
 <p>The skill gathers recent commits, decisions, and learnings; identifies a
 narrative arc; drafts an outline for approval; writes the full post; and saves
@@ -1021,9 +1049,9 @@ honest discussion of what went wrong.</p>
 <h3 id="step-6-write-changelog-posts-from-commit-ranges">Step 6: Write Changelog Posts from Commit Ranges<a class="headerlink" href="#step-6-write-changelog-posts-from-commit-ranges" title="Permanent link">&para;</a></h3>
 <p>For release notes or "what changed" posts, <code>/ctx-blog-changelog</code> takes a
 starting commit and a theme, then analyzes everything that changed:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/ctx-blog-changelog 040ce99 &quot;building the journal system&quot;
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/ctx-blog-changelog HEAD~30 &quot;what&#39;s new in v0.2.0&quot;
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>/ctx-blog-changelog v0.1.0 &quot;the road to v0.2.0&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-blog-changelog 040ce99 &quot;building the journal system&quot;
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/ctx-blog-changelog HEAD~30 &quot;what&#39;s new in v0.2.0&quot;
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/ctx-blog-changelog v0.1.0 &quot;the road to v0.2.0&quot;
 </span></code></pre></div>
 <p>The skill diffs the commit range, identifies the most-changed files, and
 constructs a narrative organized by theme rather than chronology, including a
@@ -1036,34 +1064,37 @@ your agent can suggest content at natural moments:</p>
 <p>"Your journal has 6 new entries since the last rebuild. Want me to normalize, enrich, and regenerate the site?"</p>
 </blockquote>
 <p>You can also drive it with natural language:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&quot;write about what we did this week&quot;
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>&quot;turn today&#39;s session into a blog post&quot;
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>&quot;make a changelog post covering everything since the last release&quot;
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>&quot;enrich the last few journal entries&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&quot;write about what we did this week&quot;
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>&quot;turn today&#39;s session into a blog post&quot;
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>&quot;make a changelog post covering everything since the last release&quot;
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>&quot;enrich the last few journal entries&quot;
 </span></code></pre></div>
 <p>The agent has full visibility into your <code>.context/</code> state (tasks completed,
 decisions recorded, learnings captured), so its suggestions are grounded in what
 actually happened.</p>
 <h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
 <p>The full pipeline from raw transcripts to published content:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Export all sessions</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># 2. In Claude Code: normalize rendering</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/ctx-journal-normalize
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 3. In Claude Code: enrich all entries with metadata</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>/ctx-journal-enrich-all
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 4. Build and serve the journal site</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>make<span class="w"> </span>journal
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>make<span class="w"> </span>journal-serve
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># 5. In Claude Code: draft a blog post</span>
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># 6. In Claude Code: write a changelog post</span>
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Export all sessions</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. In Claude Code: normalize rendering</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/ctx-journal-normalize
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. In Claude Code: enrich all entries with metadata</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>/ctx-journal-enrich-all
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Build and serve the journal site</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>make<span class="w"> </span>journal
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>make<span class="w"> </span>journal-serve
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># 4b. Or generate an Obsidian vault</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># 5. In Claude Code: draft a blog post</span>
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># 6. In Claude Code: write a changelog post</span>
+</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
 </span></code></pre></div>
 <p>The journal pipeline is idempotent at every stage. You can rerun <code>ctx recall
 export --all</code> without losing enrichment. You can rerun <code>/ctx-journal-normalize</code>
@@ -1100,7 +1131,8 @@ as you want.</p>
 <ul>
 <li><a href="../../session-journal/">Session Journal</a>: journal system, enrichment schema, context monitor</li>
 <li><a href="../../cli-reference/#ctx-recall">CLI Reference: ctx recall</a>: export, list, show session history</li>
-<li><a href="../../cli-reference/#ctx-journal">CLI Reference: ctx journal</a>: site generation commands</li>
+<li><a href="../../cli-reference/#ctx-journal-site">CLI Reference: ctx journal site</a>: static site generation</li>
+<li><a href="../../cli-reference/#ctx-journal-obsidian">CLI Reference: ctx journal obsidian</a>: Obsidian vault export</li>
 <li><a href="../../cli-reference/#ctx-serve">CLI Reference: ctx serve</a>: local site serving</li>
 <li><a href="../session-archaeology/">Browsing and Enriching Past Sessions</a>: journal browsing workflow</li>
 <li><a href="../session-lifecycle/">The Complete Session</a>: capturing context during a session</li>

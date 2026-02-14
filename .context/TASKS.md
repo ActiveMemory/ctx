@@ -47,21 +47,28 @@ Score 7.5/10. Strong structural discipline. Key refactoring opportunities below.
 **Security** (from `ideas/REPORT-4-security.md`):
 Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
-- [ ] M-1: Add path boundary validation on `--context-dir` / `CTX_DIR`.
+- [x] M-1: Add path boundary validation on `--context-dir` / `CTX_DIR`.
       No guard prevents operations outside project root. In AI-agent
       context with auto-approved commands, a prompt-injected agent could
       write to sensitive locations. Add optional boundary check with
       `--allow-outside-cwd` escape hatch. #priority:medium #source:report-4
+      Done: `ValidateBoundary()` + `CheckSymlinks()` in internal/validation/path.go,
+      enforced globally in PersistentPreRun. Tests in path_test.go.
 
-- [ ] M-2: Add symlink detection before file read/write in `.context/`.
+- [x] M-2: Add symlink detection before file read/write in `.context/`.
       No `Lstat()` or `EvalSymlinks()` calls anywhere. A malicious
       `.context/` with symlinks could cause reads/writes outside project
       boundary. #priority:medium #source:report-4
+      Done: `CheckSymlinks()` in internal/validation/path.go uses
+      `Lstat()` on dir + children. Called from context/loader.go:48.
+      Tests in path_test.go.
 
-- [ ] M-3: Use secure temp file patterns for cooldown tombstones and
+- [x] M-3: Use secure temp file patterns for cooldown tombstones and
       counter files. Predictable `/tmp/ctx-*` paths with `$PPID` are
       vulnerable to symlink race. Use `os.CreateTemp()` or user-specific
       subdirectory. #priority:low #source:report-4
+      Done: `secureTempDir()` in internal/cli/agent/cooldown.go uses
+      $XDG_RUNTIME_DIR/ctx or os.TempDir()/ctx-<uid> (0700). Files 0600.
 
 - [-] L-3: Fix prompt-coach.sh session tracking: uses `$$` (hook PID)
       instead of session ID, so counter state never persists across
@@ -172,6 +179,93 @@ Spec: `specs/scratchpad.md`
 
 - [ ] P3.20: Update `ctx help` (when it exists) to include `pad` command.
       #priority:low #added:2026-02-13
+
+### Phase 4: Obsidian Vault Export (`ctx journal obsidian`) `#priority:high`
+
+**Context**: Export enriched journal entries as an Obsidian vault with wikilinks,
+MOC pages, and graph-optimized cross-linking. Reuses existing journal scan/parse/index
+infrastructure with an Obsidian-specific output layer.
+Spec: `specs/journal-obsidian.md`
+
+- [x] P4.0: Read `specs/journal-obsidian.md` before starting any P4 task.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.1: Add Obsidian constants to `internal/config/`
+      New constants: `ObsidianDirName`, `ObsidianDirEntries`, `ObsidianConfigDir`,
+      `ObsidianAppConfig`, MOC filenames, `ObsidianMOCPrefix`. Follow existing
+      `Journal*` constant naming pattern.
+      Done: `internal/config/obsidian.go` — 3 const blocks covering dirs,
+      config, MOC filenames, format templates, and README.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.2: Implement wikilink conversion (`wikilink.go`)
+      - `convertMarkdownLinks(content string) string` — regex-based markdown
+        link → wikilink conversion. Skip external URLs. Strip `.md` extension
+        and path prefixes from targets.
+      - `formatWikilink(target, display string) string` — format `[[target|display]]`
+      - Unit tests in `wikilink_test.go`
+      Done: 11 test cases covering internal, external, multipart, mixed links.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.3: Implement frontmatter transformation (`frontmatter.go`)
+      - `transformFrontmatter(content string) string` — rename `topics` → `tags`,
+        add `aliases` from title, add `source_file` field. Preserve all other
+        fields. Parse and re-emit YAML frontmatter.
+      - Unit tests for frontmatter transformation
+      Done: `frontmatter.go` + `frontmatter_test.go` with 8 test cases.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.4: Implement MOC page generation (`moc.go`)
+      - `generateHomeMOC(entries, topics, keyFiles, sessionTypes)` — root hub
+      - `generateObsidianTopicsMOC(topics)` — topics index with wikilinks
+      - `generateObsidianTopicPage(topic)` — individual topic page
+      - `generateObsidianFilesMOC(keyFiles)` — files index with wikilinks
+      - `generateObsidianFilePage(kf)` — individual file page
+      - `generateObsidianTypesMOC(types)` — types index with wikilinks
+      - `generateObsidianTypePage(st)` — individual type page
+      - All use wikilinks, grouped by month, same threshold logic as site
+      Done: All 7 generators + `generateObsidianGroupedPage` helper.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.5: Implement related sessions footer (`moc.go`)
+      - `generateRelatedFooter(entry, topicIndex)` — append topic/type links
+        and "see also" entries sharing topics. Creates bidirectional graph edges.
+      Done: `generateRelatedFooter` + `collectRelated` with score-based
+      prioritization. Lives in `moc.go` alongside MOC generators.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.6: Implement vault orchestration (`vault.go`)
+      - `runJournalObsidian(cmd, output)` → `buildObsidianVault(cmd, journalDir, output)`
+        1. Scan entries (reuse `scanJournalEntries`)
+        2. Create output dirs (`entries/`, `topics/`, `files/`, `types/`, `.obsidian/`)
+        3. Write `.obsidian/app.json`
+        4. Transform and write entries (normalize, convert links, transform
+           frontmatter, add related footer)
+        5. Build indices (reuse `buildTopicIndex` etc.)
+        6. Generate and write MOC pages
+        7. Generate and write Home.md
+      - Normalize content but do NOT write back to source files
+      Done: Full pipeline with extracted `buildObsidianVault` for testability.
+      Filter helpers: `filterRegularEntries`, `filterEntriesWithTopics`,
+      `filterEntriesWithKeyFiles`, `filterEntriesWithType`, `buildTopicLookup`.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.7: Add Cobra command (`obsidian.go`)
+      - `journalObsidianCmd()` — register under `ctx journal obsidian`
+        with `--output` flag (default `.context/journal-obsidian/`)
+      - Wire into `journal.go` command tree
+      Done: `obsidian.go` + updated `journal.go` to add command.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
+
+- [x] P4.8: Integration test
+      - Test fixtures with sample enriched entries
+      - Run full pipeline, verify: vault structure, wikilink format in entries,
+        MOC pages contain wikilinks, `.obsidian/app.json` exists, frontmatter
+        has `tags` not `topics`
+      Done: `vault_test.go` with 12 test functions — unit tests for all
+      generators, filter helpers, related footer, and a full integration test
+      with 3 sample entries verifying vault structure end-to-end.
+      #added:2026-02-14-150803 #done:2026-02-14-152520
 
 ### Phase 1: Journal Site Improvements `#priority:high`
 

@@ -17,7 +17,8 @@ icon: lucide/book-open
     file contents, commands, API keys, internal discussions, 
     error messages with stack traces, and more. 
     
-    The `.context/journal-site/` directory **MUST** be `..gitignore`d.
+    The `.context/journal-site/` and `.context/journal-obsidian/`
+    directories **MUST** be `.gitignore`d.
 
     * **DO NOT** host your journal publicly.
     * **DO NOT** commit your journal files to version control.
@@ -390,6 +391,40 @@ prompts, tools, and skills that aren't in the JSONL.
     your session, `ctx init` also installs a `check-context-size.sh` hook that
     triggers the `/ctx-context-monitor` skill at adaptive intervals.
 
+## Obsidian Vault Export
+
+If you use [Obsidian](https://obsidian.md/) for knowledge management, you can
+export your journal as an Obsidian vault instead of (or alongside) the static
+site:
+
+```bash
+ctx journal obsidian
+```
+
+This generates a vault in `.context/journal-obsidian/` with:
+
+- **Wikilinks** (`[[target|display]]`) instead of Markdown links
+- **MOC pages** (Map of Content) for topics, key files, and session types
+- **Related sessions footer** per entry — links to entries sharing the same topics
+- **Transformed frontmatter** — `topics` renamed to `tags` (Obsidian-recognized),
+  `aliases` added from title for search
+- **Graph-optimized structure** — MOC hubs + cross-linked entries create dense
+  graph connectivity
+
+To use: open the output directory in Obsidian ("Open folder as vault").
+
+```bash
+# Custom output directory
+ctx journal obsidian --output ~/vaults/ctx-journal
+```
+
+!!! tip "Static site vs Obsidian vault"
+
+    Use `ctx journal site` when you want a **web-browsable** archive with search
+    and dark mode. Use `ctx journal obsidian` when you want **graph view**,
+    **backlinks**, and **tag-based navigation** inside Obsidian. Both use the
+    same enriched source entries — you can generate both.
+
 ## Full Pipeline
 
 The complete journal workflow has four stages. Each is idempotent — safe to
@@ -405,6 +440,7 @@ export → normalize → enrich → rebuild
 | **Normalize** | `/ctx-journal-normalize`   | Fixes fence nesting and metadata tables | `<!-- normalized -->` marker |
 | **Enrich**    | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present  |
 | **Rebuild**   | `ctx journal site --build` | Generates static HTML site              | —                            |
+| **Obsidian**  | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | —                            |
 
 ### Using `make journal`
 
@@ -475,5 +511,6 @@ pip install zensical
 ## See Also
 
 * [ctx recall](../cli-reference.md#ctx-recall): Session discovery and listing
-* [ctx journal](../cli-reference.md#ctx-journal): Site generation commands
+* [ctx journal site](../cli-reference.md#ctx-journal-site): Static site generation
+* [ctx journal obsidian](../cli-reference.md#ctx-journal-obsidian): Obsidian vault export
 * [Context Files](../context-files.md): The `.context/` directory structure

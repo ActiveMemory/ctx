@@ -32,6 +32,7 @@ This recipe shows how to turn that raw session history into a **browsable**,
 | `ctx recall show`         | Command | Inspect a specific session in detail         |
 | `ctx recall export`       | Command | Export sessions to editable journal Markdown |
 | `ctx journal site`        | Command | Generate a static site from journal entries  |
+| `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries |
 | `ctx serve`               | Command | Serve the journal site locally               |
 | `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant     |
 | `/ctx-journal-normalize`  | Skill   | Fix rendering issues in exported Markdown    |
@@ -55,6 +56,7 @@ export -> normalize -> enrich -> rebuild
 | Normalize | `/ctx-journal-normalize`   | Fixes nested fences and metadata formatting | `<!-- normalized -->` marker | Agent only   |
 | Enrich    | `/ctx-journal-enrich-all`  | Adds frontmatter, summaries, topic tags     | Frontmatter already present  | Agent only   |
 | Rebuild   | `ctx journal site --build` | Generates browsable static HTML             | N/A                          | CLI only     |
+| Obsidian  | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks     | N/A                          | CLI only     |
 
 !!! tip "Where to run Each Stage"
     Export (*Steps 1 to 3*) works equally well from the terminal or inside your
@@ -349,7 +351,7 @@ and it can map the question to recall commands.
     Session transcripts can contain sensitive data such as file contents,
     commands, error messages with stack traces, and potentially API keys.
     
-    Add `.context/journal/` and `.context/journal-site/` to your `.gitignore`.
+    Add `.context/journal/`, `.context/journal-site/`, and `.context/journal-obsidian/` to your `.gitignore`.
 
 ## Next Up
 

@@ -887,6 +887,11 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 <td>Generate a static site from journal entries</td>
 </tr>
 <tr>
+<td><code>ctx journal obsidian</code></td>
+<td>Command</td>
+<td>Generate an Obsidian vault from journal entries</td>
+</tr>
+<tr>
 <td><code>ctx serve</code></td>
 <td>Command</td>
 <td>Serve the journal site locally</td>
@@ -955,6 +960,13 @@ Each stage skips entries that have already been processed.</p>
 <td>Rebuild</td>
 <td><code>ctx journal site --build</code></td>
 <td>Generates browsable static HTML</td>
+<td>N/A</td>
+<td>CLI only</td>
+</tr>
+<tr>
+<td>Obsidian</td>
+<td><code>ctx journal obsidian</code></td>
+<td>Generates Obsidian vault with wikilinks</td>
 <td>N/A</td>
 <td>CLI only</td>
 </tr>
@@ -1170,7 +1182,7 @@ and it can map the question to recall commands.</li>
 <p>Journal files <strong>MUST</strong> be <code>.gitignore</code>d.</p>
 <p>Session transcripts can contain sensitive data such as file contents,
 commands, error messages with stack traces, and potentially API keys.</p>
-<p>Add <code>.context/journal/</code> and <code>.context/journal-site/</code> to your <code>.gitignore</code>.</p>
+<p>Add <code>.context/journal/</code>, <code>.context/journal-site/</code>, and <code>.context/journal-obsidian/</code> to your <code>.gitignore</code>.</p>
 </div>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../autonomous-loops/">Running an Unattended AI Agent</a></strong>:

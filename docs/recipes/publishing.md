@@ -25,6 +25,7 @@ You want to turn this raw activity into:
 |---------------------------|----------|-----------------------------------------------------|
 | `ctx recall export`       | Command  | Export session JSONL to editable markdown           |
 | `ctx journal site`        | Command  | Generate a static site from journal entries         |
+| `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries     |
 | `ctx serve`               | Command  | Serve the journal site locally                      |
 | `make journal`            | Makefile | Shortcut for export + site rebuild                  |
 | `/ctx-journal-normalize`  | Skill    | Fix markdown rendering in exported entries          |
@@ -162,6 +163,24 @@ This runs `ctx recall export --all` followed by `ctx journal site --build`, then
 reminds you to normalize and enrich before rebuilding. To serve the built site,
 use `make journal-serve` or `ctx serve`.
 
+### Alternative: Export to Obsidian Vault
+
+If you use [Obsidian](https://obsidian.md/) for knowledge management, generate
+a vault instead of (or alongside) the static site:
+
+```bash
+ctx journal obsidian
+ctx journal obsidian --output ~/vaults/ctx-journal
+```
+
+This produces an Obsidian-ready directory with wikilinks, MOC (Map of Content)
+pages for topics/files/types, and a "Related Sessions" footer on each entry for
+graph connectivity. Open the output directory in Obsidian as a vault.
+
+The vault uses the same enriched source entries as the static site. Both outputs
+can coexist — the static site goes to `.context/journal-site/`, the vault to
+`.context/journal-obsidian/`.
+
 ### Step 5: Draft Blog Posts from Activity
 
 When your project reaches a milestone worth sharing, use `/ctx-blog` to draft a
@@ -236,6 +255,9 @@ ctx recall export --all
 make journal
 make journal-serve
 
+# 4b. Or generate an Obsidian vault
+ctx journal obsidian
+
 # 5. In Claude Code: draft a blog post
 /ctx-blog about the features we shipped this week
 
@@ -282,7 +304,8 @@ Or explore the [full recipe list](index.md).
 
 * [Session Journal](../session-journal.md): journal system, enrichment schema, context monitor
 * [CLI Reference: ctx recall](../cli-reference.md#ctx-recall): export, list, show session history
-* [CLI Reference: ctx journal](../cli-reference.md#ctx-journal): site generation commands
+* [CLI Reference: ctx journal site](../cli-reference.md#ctx-journal-site): static site generation
+* [CLI Reference: ctx journal obsidian](../cli-reference.md#ctx-journal-obsidian): Obsidian vault export
 * [CLI Reference: ctx serve](../cli-reference.md#ctx-serve): local site serving
 * [Browsing and Enriching Past Sessions](session-archaeology.md): journal browsing workflow
 * [The Complete Session](session-lifecycle.md): capturing context during a session

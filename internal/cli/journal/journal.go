@@ -28,14 +28,17 @@ publishing your AI session history.
 
 Subcommands:
   site      Generate a static site from journal entries
+  obsidian  Generate an Obsidian vault from journal entries
 
 Examples:
   ctx journal site                    # Generate site in .context/journal-site/
   ctx journal site --output ~/public  # Custom output directory
-  ctx journal site --serve            # Generate and serve locally`,
+  ctx journal site --serve            # Generate and serve locally
+  ctx journal obsidian                # Generate Obsidian vault`,
 	}
 
 	cmd.AddCommand(journalSiteCmd())
+	cmd.AddCommand(journalObsidianCmd())
 
 	return cmd
 }

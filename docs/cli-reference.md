@@ -691,6 +691,38 @@ ctx journal site --build            # Generate and build HTML
 ctx journal site --serve            # Generate and serve locally
 ```
 
+#### `ctx journal obsidian`
+
+Generate an Obsidian vault from journal entries in `.context/journal/`.
+
+```bash
+ctx journal obsidian [flags]
+```
+
+**Flags**:
+
+| Flag       | Short | Description                                             |
+|------------|-------|---------------------------------------------------------|
+| `--output` | `-o`  | Output directory (default: .context/journal-obsidian)   |
+
+Creates an Obsidian-compatible vault with:
+
+- **Wikilinks** (`[[target|display]]`) for all internal navigation
+- **MOC pages** (Map of Content) for topics, key files, and session types
+- **Related sessions footer** linking entries that share topics
+- **Transformed frontmatter** (`topics` → `tags` for Obsidian integration)
+- **Minimal `.obsidian/`** config enforcing wikilink mode
+
+No external dependencies required. Open the output directory as an Obsidian
+vault directly.
+
+**Example**:
+
+```bash
+ctx journal obsidian                          # Generate in .context/journal-obsidian/
+ctx journal obsidian --output ~/vaults/ctx    # Custom output directory
+```
+
 ---
 
 ### `ctx serve`

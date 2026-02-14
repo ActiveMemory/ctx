@@ -139,8 +139,9 @@ Normalize rendering, enrich entries with metadata, and search
 across months of work.
 
 **Uses**: `ctx recall list/show/export`, `ctx journal site`,
-`ctx serve`, `/ctx-recall`, `/ctx-journal-normalize`,
-`/ctx-journal-enrich`, `/ctx-journal-enrich-all`
+`ctx journal obsidian`, `ctx serve`, `/ctx-recall`,
+`/ctx-journal-normalize`, `/ctx-journal-enrich`,
+`/ctx-journal-enrich-all`
 
 ---
 
@@ -177,6 +178,6 @@ Generate blog posts from project activity, write changelog
 posts from commit ranges, and publish a browsable journal
 site from your session history.
 
-**Uses**: `ctx journal site`, `ctx serve`, `ctx recall export`,
-`/ctx-blog`, `/ctx-blog-changelog`, `/ctx-journal-enrich`,
-`/ctx-journal-normalize`
+**Uses**: `ctx journal site`, `ctx journal obsidian`, `ctx serve`,
+`ctx recall export`, `/ctx-blog`, `/ctx-blog-changelog`,
+`/ctx-journal-enrich`, `/ctx-journal-normalize`
