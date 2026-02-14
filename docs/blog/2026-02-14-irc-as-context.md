@@ -90,10 +90,10 @@ Presence becomes **infrastructural**.
 
 !!! tip "ZNC is tmux for IRC"
     * Close your laptop.
-    * ZNC remains.
+      * ZNC remains.
 
     * Switch devices.
-    * ZNC persists.
+      * ZNC persists.
 
 This is **not** convenience; this is **continuity**.
 
@@ -138,10 +138,10 @@ That is **friction**.
     * `ZNC` does this for IRC.
     * `ctx` does this for agents.
 
+    Same principle:
+
     * Volatile interface.
     * Persistent substrate.
-
-    Same principle.  
 
     Different fabric.
 
