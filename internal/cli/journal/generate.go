@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -211,8 +212,9 @@ func generateZensicalToml(
 	)
 	for _, e := range recent {
 		title := e.Title
-		if len(title) > config.JournalMaxNavTitleLen {
-			title = title[:config.JournalMaxNavTitleLen] + config.Ellipsis
+		if utf8.RuneCountInString(title) > config.JournalMaxNavTitleLen {
+			runes := []rune(title)
+			title = string(runes[:config.JournalMaxNavTitleLen]) + config.Ellipsis
 		}
 		title = strings.ReplaceAll(title, `"`, `\"`)
 		sb.WriteString(fmt.Sprintf(
