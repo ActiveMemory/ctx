@@ -8,6 +8,7 @@ package compact
 
 import (
 	"strings"
+	"unicode/utf8"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -73,8 +74,9 @@ func removeEmptySections(content string) (string, int) {
 // Returns:
 //   - string: Original string if within limit, otherwise truncated with "..."
 func truncateString(s string, maxLen int) string {
-	if len(s) <= maxLen {
+	if utf8.RuneCountInString(s) <= maxLen {
 		return s
 	}
-	return s[:maxLen-3] + config.Ellipsis
+	runes := []rune(s)
+	return string(runes[:maxLen-3]) + config.Ellipsis
 }

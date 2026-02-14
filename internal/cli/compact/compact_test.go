@@ -26,6 +26,7 @@ func TestTruncateString(t *testing.T) {
 		{"exactly10!", 10, "exactly10!"},
 		{"this is a longer string", 10, "this is..."},
 		{"", 10, ""},
+		{"hello — world of things", 10, "hello —..."},
 	}
 
 	for _, tt := range tests {

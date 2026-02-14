@@ -8,6 +8,7 @@ package status
 
 import (
 	"strings"
+	"unicode/utf8"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -52,9 +53,10 @@ func contentPreview(content string, n int) []string {
 		}
 
 		// Truncate long lines
-		if len(trimmed) > config.MaxPreviewLen {
-			truncateAt := config.MaxPreviewLen - len(config.Ellipsis)
-			trimmed = trimmed[:truncateAt] + config.Ellipsis
+		if utf8.RuneCountInString(trimmed) > config.MaxPreviewLen {
+			runes := []rune(trimmed)
+			truncateAt := config.MaxPreviewLen - utf8.RuneCountInString(config.Ellipsis)
+			trimmed = string(runes[:truncateAt]) + config.Ellipsis
 		}
 
 		preview = append(preview, trimmed)
