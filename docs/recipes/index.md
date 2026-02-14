@@ -55,6 +55,17 @@ watch mode for non-native tools, and verification.
 
 ---
 
+### [Keeping Context in a Separate Repo](external-context.md)
+
+Store context files outside the project tree — in a private repo,
+shared directory, or anywhere else. Useful for open-source projects
+with private context or multi-repo setups.
+
+**Uses**: `ctx init`, `--context-dir`, `--allow-outside-cwd`,
+`.contextrc`, `/ctx-status`
+
+---
+
 ## Daily Workflow
 
 These recipes cover the workflows you’ll use every day when
