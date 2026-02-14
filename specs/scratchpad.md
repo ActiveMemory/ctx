@@ -63,11 +63,42 @@ When `false`:
 ## CLI Commands
 
 ```
-ctx pad              # list all entries (numbered, 1-based)
-ctx pad add "..."    # append entry
-ctx pad rm N         # delete entry at position N
-ctx pad edit N "..." # replace entry at position N
-ctx pad mv N M       # move entry from position N to position M
+ctx pad                       # list all entries (numbered, 1-based)
+ctx pad show N                # output raw text of entry N (1-based, no numbering prefix)
+ctx pad add "..."             # append entry
+ctx pad rm N                  # delete entry at position N
+ctx pad edit N "..."          # replace entry at position N
+ctx pad edit N --append "..."  # append text to entry at position N
+ctx pad edit N --prepend "..." # prepend text to entry at position N
+ctx pad mv N M                # move entry from position N to position M
+```
+
+### Append / Prepend Flags
+
+`ctx pad edit` supports `--append` and `--prepend` flags as an alternative to
+full replacement:
+
+- `--append "text"` — concatenates a space and the given text to the **end** of
+  the existing entry: `old + " " + text`.
+- `--prepend "text"` — concatenates the given text and a space to the
+  **beginning** of the existing entry: `text + " " + old`.
+
+The flags are **mutually exclusive** with each other and with the positional
+replacement text argument. Providing more than one is an error.
+
+Examples:
+
+```
+# Full replacement (existing behavior):
+ctx pad edit 2 "new text"
+
+# Append to entry 2:
+ctx pad edit 2 --append "updated at 3pm"
+# If entry 2 was "check DNS", it becomes "check DNS updated at 3pm"
+
+# Prepend to entry 2:
+ctx pad edit 2 --prepend "URGENT:"
+# If entry 2 was "check DNS", it becomes "URGENT: check DNS"
 ```
 
 ### Output Format
@@ -77,6 +108,16 @@ ctx pad mv N M       # move entry from position N to position M
   1. remember to check DNS config on staging
   2. API rate limit is 1000/min not 500
   3. deploy window is Tuesday 2-4am UTC
+```
+
+`ctx pad show 3`:
+```
+deploy window is Tuesday 2-4am UTC
+```
+
+Raw text only, no numbering prefix. Designed for pipe composability:
+```
+ctx pad edit 1 --append "$(ctx pad show 3)"
 ```
 
 `ctx pad add "..."`:
@@ -144,6 +185,8 @@ Wraps `ctx pad` commands. Claude maps natural language to CLI:
 - "delete the third one" → `ctx pad rm 3`
 - "move the last one to the top" → `ctx pad mv N 1`
 - "change entry 2 to ..." → `ctx pad edit 2 "..."`
+- "add 'URGENT' to the start of entry 3" → `ctx pad edit 3 --prepend "URGENT"`
+- "append 'done' to entry 1" → `ctx pad edit 1 --append "done"`
 
 The skill has `allowed-tools: Bash(ctx:*)`.
 

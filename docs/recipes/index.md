@@ -124,18 +124,6 @@ across months of work.
 
 ---
 
-## Infrastructure
-
-### [Persistent IRC Presence with ZNC](persistent-irc.md)
-
-Set up an always-on IRC bouncer so client sessions become disposable
-and presence becomes infrastructural. The same pattern ctx applies to
-AI sessions: stateless protocol, stateful wrapper.
-
-**Uses**: ZNC, TLS, SASL, firewall rules
-
----
-
 ## Advanced
 
 ### [Running an Unattended AI Agent](autonomous-loops.md)
@@ -149,6 +137,17 @@ without losing context or intent.
 
 **Uses**: `ctx init --ralph`, `ctx loop`, `ctx watch`, `ctx load`,
 `/ctx-loop`, `/ctx-implement`, `/ctx-context-monitor`
+
+---
+
+### [Parallel Agent Development with Git Worktrees](parallel-worktrees.md)
+
+Split a large backlog across 3-4 agents using git worktrees,
+each on its own branch and working directory. Group tasks by
+file overlap, work in parallel, merge back.
+
+**Uses**: `/ctx-worktree`, `/ctx-next`, `git worktree`,
+`git merge`
 
 ---
 

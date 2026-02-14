@@ -1,4 +1,4 @@
-# Codebase Audit Recipe
+# Codebase Audit Runbook
 
 **When to use**: Before a release, after a long YOLO sprint, quarterly, or when
 planning the next phase of work. Generates analysis reports that feed into task

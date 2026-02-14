@@ -31,6 +31,7 @@ stored at .context/.scratchpad.key (gitignored). The encrypted file
 When invoked without a subcommand, lists all entries.
 
 Subcommands:
+  show     Output raw text of an entry by number
   add      Append a new entry
   rm       Remove an entry by number
   edit     Replace an entry by number
@@ -41,6 +42,7 @@ Subcommands:
 		},
 	}
 
+	cmd.AddCommand(showCmd())
 	cmd.AddCommand(addCmd())
 	cmd.AddCommand(rmCmd())
 	cmd.AddCommand(editCmd())

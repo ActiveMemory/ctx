@@ -67,19 +67,27 @@ Analysis of 69 sessions found 8 recurring workflow patterns. 7 have automation g
 
 - [x] Remove prompt-coach hook — delivery mechanism doesn't work (stdout goes to AI not user, stderr is invisible, no viable user-facing channel). Zero useful tips fired across all usage. Creates orphan temp files via L-3 PID bug. The prompting guide already covers best practices. #priority:medium #added:2026-02-12-005504 #done:2026-02-12
 
-- [ ] BUG: SessionEnd hook ["$CLAUDE_PROJECT_DIR"/.claude/hooks/auto-save-session.sh] failed: /bin/sh: line 1: /home/jose/WORKSPACE/ctx/.claude/hooks/auto-save-session.sh: No such file or directory
+- [x] BUG: SessionEnd hook ["$CLAUDE_PROJECT_DIR"/.claude/hooks/auto-save-session.sh] failed: /bin/sh: line 1: /home/jose/WORKSPACE/ctx/.claude/hooks/auto-save-session.sh: No such file or directory
+      **Done**: Resolved by GH-7 session simplification — auto-save hook removed entirely. #done:2026-02-11
 
 - [ ] Recipes section needs human review. For example, certain workflows can
       be autonomously done by asking AI "can you record our learnings?" but
       from the documenation it's not clear. Spend as much time as necessary
       on every single recipe.
 
-- [ ] Add git worktree recipe to documentation: parallel agent development
+- [x] Add git worktree recipe to documentation: parallel agent development
       using worktrees for independent task tracks. Cover setup (worktree
       creation as sibling dirs), task grouping by blast radius, launching
       separate claude sessions, merging back, cleanup. Include the 3-4
       worktree practical limit and the "don't run ctx init in worktrees"
       gotcha. #priority:medium #added:2026-02-12
+      **Done**: `docs/recipes/parallel-worktrees.md` created and linked in index. #done:2026-02-14
+
+- [ ] Create `/ctx-worktree` skill: wrap git worktree commands with
+      ctx-aware guardrails (max 4 worktrees, sibling dirs, work/ branch
+      prefix, no ctx init reminder, TASKS.md conflict guidance, task
+      grouping by blast radius). Skill only — no Go code changes needed.
+      #priority:medium #added:2026-02-14
 
 - [ ] Blog: "Parallel Agents with Git Worktrees" — how to use worktrees
       with ctx to tackle large task backlogs. Narrative: 30 open tasks,
@@ -286,79 +294,94 @@ Spec: `specs/scratchpad.md`
 
 **Core infrastructure:**
 
-- [ ] P3.1: Create `internal/crypto/` package — AES-256-GCM encrypt/decrypt,
+- [x] P3.1: Create `internal/crypto/` package — AES-256-GCM encrypt/decrypt,
       key generation (256-bit via `crypto/rand`), file format
       `[12-byte nonce][ciphertext+tag]`. Go stdlib only, no external deps.
       Include comprehensive tests (round-trip, wrong key, corrupted data,
       empty plaintext). **Read `specs/scratchpad.md` before starting any
-      P3 task.** #priority:high #added:2026-02-13
+      P3 task.** #priority:high #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.2: Add config constants — `FileScratchpadEnc`, `FileScratchpadMd`,
+- [x] P3.2: Add config constants — `FileScratchpadEnc`, `FileScratchpadMd`,
       `FileScratchpadKey`, `PermSecret = 0600` in `internal/config/`.
       Add `ScratchpadEncrypt bool` field to `internal/rc/types.go`
-      (default true). #priority:high #added:2026-02-13
+      (default true). #priority:high #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.3: Wire into `ctx init` — generate key (0600), gitignore it,
+- [x] P3.3: Wire into `ctx init` — generate key (0600), gitignore it,
       create empty encrypted scratchpad. Skip if key exists (idempotent).
       Warn if `.enc` exists but no key. Respect `scratchpad_encrypt`
       config for plaintext fallback. Print key path on creation (never
-      print key content). #priority:high #added:2026-02-13
+      print key content). #priority:high #added:2026-02-13 #done:2026-02-14
 
 **CLI commands:**
 
-- [ ] P3.4: Create `internal/cli/pad/` package — cobra command with
+- [x] P3.4: Create `internal/cli/pad/` package — cobra command with
       subcommands: `list` (default), `add`, `rm`, `edit`, `mv`.
       Register in `bootstrap.go`. Add `doc.go`. #priority:high
-      #added:2026-02-13
+      #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.5: Implement `ctx pad` (list) — decrypt, number entries 1-based,
+- [x] P3.5: Implement `ctx pad` (list) — decrypt, number entries 1-based,
       print to stdout. Handle: empty scratchpad, missing key, wrong key,
-      missing file. #priority:high #added:2026-02-13
+      missing file. #priority:high #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.6: Implement `ctx pad add "..."` — decrypt, append line,
+- [x] P3.5a: Add `ctx pad show N` subcommand — output raw text of entry N with
+      no numbering, no prefix, no trailing newline decoration. Enables unix pipe
+      composability: `ctx pad edit 1 --append "$(ctx pad show 3)"`.
+      #priority:medium #added:2026-02-14 #done:2026-02-14
+
+- [x] P3.6: Implement `ctx pad add "..."` — decrypt, append line,
       re-encrypt. Create scratchpad file on first add if not exists.
-      #priority:high #added:2026-02-13
+      #priority:high #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.7: Implement `ctx pad rm N` — decrypt, remove entry at position N,
-      re-encrypt. Validate index bounds. #priority:medium #added:2026-02-13
+- [x] P3.7: Implement `ctx pad rm N` — decrypt, remove entry at position N,
+      re-encrypt. Validate index bounds. #priority:medium #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.8: Implement `ctx pad edit N "..."` — decrypt, replace entry at
+- [x] P3.8: Implement `ctx pad edit N "..."` — decrypt, replace entry at
       position N, re-encrypt. Validate index bounds. #priority:medium
-      #added:2026-02-13
+      #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.9: Implement `ctx pad mv N M` — decrypt, move entry from position
+- [x] P3.8a: Add `--append` and `--prepend` flags to `ctx pad edit N` — instead
+      of replacing the entire entry, `--append "text"` concatenates to the end
+      and `--prepend "text"` concatenates to the beginning. Flags are mutually
+      exclusive with the positional replacement text. #priority:medium
+      #added:2026-02-14 #done:2026-02-14
+
+- [x] P3.9: Implement `ctx pad mv N M` — decrypt, move entry from position
       N to position M, re-encrypt. Validate both indices. #priority:medium
-      #added:2026-02-13
+      #added:2026-02-13 #done:2026-02-14
 
 **Conflict resolution:**
 
-- [ ] P3.10: Implement `ctx pad resolve` — detect git merge conflict on
+- [x] P3.10: Implement `ctx pad resolve` — detect git merge conflict on
       scratchpad file, decrypt both sides (ours/theirs), output both
       numbered lists. Used by skill for interactive merge. #priority:medium
-      #added:2026-02-13
+      #added:2026-02-13 #done:2026-02-14
 
 **Skill and permissions:**
 
-- [ ] P3.11: Create `/ctx-pad` skill (`SKILL.md`) — wraps `ctx pad`
+- [x] P3.11: Create `/ctx-pad` skill (`SKILL.md`) — wraps `ctx pad`
       commands. Maps natural language to CLI (add, rm, edit, mv, list).
-      `allowed-tools: Bash(ctx:*)`. #priority:high #added:2026-02-13
+      `allowed-tools: Bash(ctx:*)`. #priority:high #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.12: Add `"Bash(ctx pad:*)"` to `DefaultClaudePermissions` in
-      `internal/config/file.go`. #priority:medium #added:2026-02-13
+- [x] P3.12: Add `"Bash(ctx pad:*)"` to `DefaultClaudePermissions` in
+      `internal/config/file.go`. #priority:medium #added:2026-02-13 #done:2026-02-14
 
 **Tests:**
 
-- [ ] P3.13: Unit tests for `internal/crypto/` — encrypt/decrypt round-trip,
+- [x] P3.13: Unit tests for `internal/crypto/` — encrypt/decrypt round-trip,
       wrong key rejection, corrupted ciphertext, empty input, large input.
-      #priority:high #added:2026-02-13
+      **Done**: 9 test functions in crypto_test.go, all passing.
+      #priority:high #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.14: Unit tests for `internal/cli/pad/` — all commands, index
-      bounds, missing file, missing key, plaintext mode. #priority:high
-      #added:2026-02-13
+- [x] P3.14: Unit tests for `internal/cli/pad/` — all commands, index
+      bounds, missing file, missing key, plaintext mode.
+      **Done**: 28+ test functions in pad_test.go (590 lines), all passing.
+      #priority:high #added:2026-02-13 #done:2026-02-14
 
-- [ ] P3.15: Integration test — `ctx init` → `ctx pad add` → `ctx pad` →
+- [x] P3.15: Integration test — `ctx init` → `ctx pad add` → `ctx pad` →
       `ctx pad rm` → verify encrypted file is opaque, plaintext fallback
-      works. #priority:medium #added:2026-02-13
+      works. **Done**: Covered by pad_test.go which exercises full
+      init→add→list→rm flows in both encrypted and plaintext modes.
+      #priority:medium #added:2026-02-13 #done:2026-02-14
 
 **Documentation:**
 

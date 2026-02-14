@@ -1,9 +1,4 @@
----
-title: "Persistent IRC Presence with ZNC"
-icon: lucide/radio
----
-
-![ctx](../images/ctx-banner.png)
+# Persistent IRC Presence with ZNC
 
 ## The Problem
 
@@ -13,7 +8,7 @@ This is not unique to IRC. Close the browser tab, lose the Slack scrollback,
 open a new LLM session, start from zero. Resets externalize reconstruction
 cost onto humans.
 
-This recipe builds a persistent IRC presence using [ZNC](https://znc.in) 
+This runbook builds a persistent IRC presence using [ZNC](https://znc.in) 
 as an always-on bouncer:
 
 ```
@@ -91,11 +86,11 @@ Switch to that user:
 sudo -u _znc znc --makeconf --datadir=/var/lib/znc
 ```
 
-!!! warning "Wrong Directory"
-    If you previously ran `znc --makeconf` as yourself, you likely
-    created `~/.znc/`. That will **not** be used by systemd. 
-
-    Delete or ignore it.
+> [!WARNING]
+> If you previously ran `znc --makeconf` as yourself, you likely
+> created `~/.znc/`. That will **not** be used by systemd.
+>
+> Delete or ignore it.
 
 ### Step 4: TLS Certificate
 
@@ -149,13 +144,13 @@ Configure your client:
 
 Example username: `jose/libera`
 
-!!! warning "Password Field"
-    Do not use "personal password" for ZNC. 
-
-    That field is for `NickServ`, not ZNC. 
-
-    If you see `You need to send your password`, 
-    you put it in the wrong field.
+> [!WARNING]
+> Do not use "personal password" for ZNC.
+>
+> That field is for `NickServ`, not ZNC.
+>
+> If you see `You need to send your password`,
+> you put it in the wrong field.
 
 ### Step 8: Enable SASL
 
@@ -261,7 +256,7 @@ Before LLM context windows, we had buffers.
 
 ## See Also
 
-* [Before Context Windows, We Had Bouncers](../blog/2026-02-14-irc-as-context.md):
+* [Before Context Windows, We Had Bouncers](../docs/blog/2026-02-14-irc-as-context.md):
   The blog post exploring this pattern
-* [Running an Unattended AI Agent](autonomous-loops.md): Another recipe
+* [Running an Unattended AI Agent](../docs/recipes/autonomous-loops.md): Another recipe
   about persistent infrastructure for ephemeral sessions

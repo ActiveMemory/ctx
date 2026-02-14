@@ -268,6 +268,152 @@ func TestEdit_OutOfRange(t *testing.T) {
 	}
 }
 
+func TestEdit_Append(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "check DNS")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("edit", "1", "--append", "on staging"))
+	if err != nil {
+		t.Fatalf("edit --append error: %v", err)
+	}
+	if !strings.Contains(out, "Updated entry 1.") {
+		t.Errorf("output = %q, want 'Updated entry 1.'", out)
+	}
+
+	// Verify the entry was appended
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "check DNS on staging") {
+		t.Errorf("list output = %q, want 'check DNS on staging'", out)
+	}
+}
+
+func TestEdit_Prepend(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "check DNS")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("edit", "1", "--prepend", "URGENT:"))
+	if err != nil {
+		t.Fatalf("edit --prepend error: %v", err)
+	}
+	if !strings.Contains(out, "Updated entry 1.") {
+		t.Errorf("output = %q, want 'Updated entry 1.'", out)
+	}
+
+	// Verify the entry was prepended
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "URGENT: check DNS") {
+		t.Errorf("list output = %q, want 'URGENT: check DNS'", out)
+	}
+}
+
+func TestEdit_AppendAndPrependMutuallyExclusive(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "note")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("edit", "1", "--append", "suffix", "--prepend", "prefix"))
+	if err == nil {
+		t.Fatal("expected error for --append + --prepend")
+	}
+	if !strings.Contains(err.Error(), "mutually exclusive") {
+		t.Errorf("error = %q, want 'mutually exclusive'", err.Error())
+	}
+}
+
+func TestEdit_PositionalAndFlagMutuallyExclusive(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "note")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("edit", "1", "replacement", "--append", "suffix"))
+	if err == nil {
+		t.Fatal("expected error for positional + --append")
+	}
+	if !strings.Contains(err.Error(), "mutually exclusive") {
+		t.Errorf("error = %q, want 'mutually exclusive'", err.Error())
+	}
+}
+
+func TestEdit_NoTextProvided(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "note")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("edit", "1"))
+	if err == nil {
+		t.Fatal("expected error when no text or flag provided")
+	}
+	if !strings.Contains(err.Error(), "provide replacement text") {
+		t.Errorf("error = %q, want 'provide replacement text'", err.Error())
+	}
+}
+
+func TestShow_Valid(t *testing.T) {
+	setupEncrypted(t)
+
+	for _, e := range []string{"alpha", "beta", "gamma"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("show", "2"))
+	if err != nil {
+		t.Fatalf("show error: %v", err)
+	}
+
+	// Should output raw text with a single trailing newline, no numbering prefix.
+	if out != "beta\n" {
+		t.Errorf("output = %q, want %q", out, "beta\n")
+	}
+}
+
+func TestShow_OutOfRange(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "only")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("show", "5"))
+	if err == nil {
+		t.Fatal("expected error for out-of-range index")
+	}
+	if !strings.Contains(err.Error(), "does not exist") {
+		t.Errorf("error = %q, want 'does not exist'", err.Error())
+	}
+}
+
+func TestShow_EmptyScratchpad(t *testing.T) {
+	setupEncrypted(t)
+
+	_, err := runCmd(newPadCmd("show", "1"))
+	if err == nil {
+		t.Fatal("expected error for empty scratchpad")
+	}
+	if !strings.Contains(err.Error(), "does not exist") {
+		t.Errorf("error = %q, want 'does not exist'", err.Error())
+	}
+}
+
 func TestMv(t *testing.T) {
 	setupEncrypted(t)
 
