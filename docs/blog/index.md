@@ -11,6 +11,21 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Parallel Agents with Git Worktrees](2026-02-14-parallel-agents-with-worktrees.md)
+
+*Jose Alekhinne / February 14, 2026*
+
+I had 30 open tasks and most of them didn't touch the same files. Running
+one agent at a time meant serial execution on work that was fundamentally
+parallel. This post is about using git worktrees to partition a backlog by
+file overlap, run 3-4 agents simultaneously, and merge the results — the
+same attention budget principle applied to execution instead of context.
+
+**Topics**: agent teams, parallelism, git worktrees, context engineering,
+task management
+
+---
+
 ### [Before Context Windows, We Had Bouncers](2026-02-14-irc-as-context.md)
 
 *Jose Alekhinne / February 14, 2026*
