@@ -136,8 +136,8 @@ func TestSaveKey_LoadKey_RoundTrip(t *testing.T) {
 
 	path := filepath.Join(t.TempDir(), "test.key")
 
-	if err := SaveKey(path, key); err != nil {
-		t.Fatalf("SaveKey() error: %v", err)
+	if saveErr := SaveKey(path, key); saveErr != nil {
+		t.Fatalf("SaveKey() error: %v", saveErr)
 	}
 
 	// Verify file permissions

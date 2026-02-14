@@ -20,8 +20,8 @@ import (
 
 // Error messages matching the spec.
 const (
-	errNoKey       = "Encrypted scratchpad found but no key. Place your key at .context/.scratchpad.key"
-	errDecryptFail = "Decryption failed. Wrong key?"
+	errNoKey       = "encrypted scratchpad found but no key; place your key at .context/.scratchpad.key"
+	errDecryptFail = "decryption failed: wrong key?"
 	msgEmpty       = "Scratchpad is empty."
 	msgKeyCreated  = "Scratchpad key created at %s\nCopy this file to your other machines at the same path.\n"
 )
@@ -68,7 +68,7 @@ func ensureKey() error {
 	}
 
 	// Ensure .context/ directory exists.
-	if err := os.MkdirAll(filepath.Dir(kp), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(kp), 0750); err != nil {
 		return fmt.Errorf("create context dir: %w", err)
 	}
 
@@ -117,7 +117,7 @@ func ensureGitignore(contextDir, filename string) error {
 func readEntries() ([]string, error) {
 	path := scratchpadPath()
 
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // path is constructed from config constants
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, nil
