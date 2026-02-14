@@ -9,37 +9,35 @@
         <meta name="description" content="ctx provides temporal continuity across sessions">
       
       
-        <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
+        <meta name="author" content="Jose Alekhinne">
       
       
-        <link rel="canonical" href="https://ctx.ist/blog/">
+        <link rel="canonical" href="https://ctx.ist/blog/2026-02-14-parallel-agents-with-worktrees/">
       
-      
-        <link rel="prev" href="../security/">
       
       
       
         
       
       
-      <link rel="icon" href="../images/favicon-32.png">
+      <link rel="icon" href="../../images/favicon-32.png">
       <meta name="generator" content="zensical-0.0.20">
     
     
       
-        <title>Blog - ctx: do you remember?</title>
+        <title>Parallel Agents with Git Worktrees - ctx: do you remember?</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -58,7 +56,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -83,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#posts" class="md-skip">
+        <a href="#parallel-agents-with-git-worktrees" class="md-skip">
           Skip to content
         </a>
       
@@ -99,9 +97,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -118,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Blog
+              Parallel Agents with Git Worktrees
             
           </span>
         </div>
@@ -207,9 +205,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     ctx: do you remember?
@@ -236,7 +234,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -265,7 +263,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../../getting-started/" class="md-nav__link">
         
   
   
@@ -294,7 +292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/" class="md-nav__link">
+      <a href="../../recipes/" class="md-nav__link">
         
   
   
@@ -323,7 +321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../session-journal/" class="md-nav__link">
+      <a href="../../session-journal/" class="md-nav__link">
         
   
   
@@ -352,7 +350,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../prompting-guide/" class="md-nav__link">
+      <a href="../../prompting-guide/" class="md-nav__link">
         
   
   
@@ -381,7 +379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../comparison/" class="md-nav__link">
+      <a href="../../comparison/" class="md-nav__link">
         
   
   
@@ -410,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-reference/" class="md-nav__link">
+      <a href="../../cli-reference/" class="md-nav__link">
         
   
   
@@ -439,7 +437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../context-files/" class="md-nav__link">
+      <a href="../../context-files/" class="md-nav__link">
         
   
   
@@ -468,7 +466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../autonomous-loop/" class="md-nav__link">
+      <a href="../../autonomous-loop/" class="md-nav__link">
         
   
   
@@ -497,7 +495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/" class="md-nav__link">
+      <a href="../../integrations/" class="md-nav__link">
         
   
   
@@ -526,7 +524,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../versions/" class="md-nav__link">
+      <a href="../../versions/" class="md-nav__link">
         
   
   
@@ -555,7 +553,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-security/" class="md-nav__link">
+      <a href="../../agent-security/" class="md-nav__link">
         
   
   
@@ -584,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/" class="md-nav__link">
+      <a href="../../security/" class="md-nav__link">
         
   
   
@@ -610,37 +608,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-newspaper" viewBox="0 0 24 24"><path d="M15 18h-5M18 14h-8M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -658,174 +629,6 @@
   
 
       </a>
-      
-        
-
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#posts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Posts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Posts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parallel-agents-with-git-worktrees" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parallel Agents with Git Worktrees
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#before-context-windows-we-had-bouncers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Context Windows, We Had Bouncers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-deep-is-too-deep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How Deep Is Too Deep?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#defense-in-depth-securing-ai-agents" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Defense in Depth: Securing AI Agents
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#not-everything-is-a-skill" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Not Everything Is a Skill
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-anatomy-of-a-skill-that-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Anatomy of a Skill That Works
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#you-cant-import-expertise" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You Can't Import Expertise
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#skills-that-fight-the-platform" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Skills That Fight the Platform
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-attention-budget-why-your-ai-forgets-what-you-just-told-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Attention Budget: Why Your AI Forgets What You Just Told It
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-v020-the-archaeology-release" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ctx v0.2.0: The Archaeology Release
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#refactoring-with-intent-human-guided-sessions-in-ai-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring with Intent: Human-Guided Sessions in AI Development
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -848,6 +651,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -856,151 +661,112 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#posts" class="md-nav__link">
+  <a href="#the-backlog-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Posts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Posts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parallel-agents-with-git-worktrees" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parallel Agents with Git Worktrees
+        The Backlog Problem
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#before-context-windows-we-had-bouncers" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#the-insight-file-overlap-is-the-constraint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Before Context Windows, We Had Bouncers
+        The Insight: File Overlap Is the Constraint
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#how-deep-is-too-deep" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#git-worktrees-the-mechanism" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How Deep Is Too Deep?
+        Git Worktrees: The Mechanism
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#defense-in-depth-securing-ai-agents" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Defense in Depth: Securing AI Agents
+        The Setup
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#not-everything-is-a-skill" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#what-actually-happened" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Not Everything Is a Skill
+        What Actually Happened
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#the-anatomy-of-a-skill-that-works" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#the-tasksmd-conflict" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Anatomy of a Skill That Works
+        The TASKS.md Conflict
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#you-cant-import-expertise" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        You Can't Import Expertise
+        Limits
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#skills-that-fight-the-platform" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#the-pattern" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Skills That Fight the Platform
+        The Pattern
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#the-attention-budget-why-your-ai-forgets-what-you-just-told-it" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#should-this-be-a-skill" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Attention Budget: Why Your AI Forgets What You Just Told It
+        Should This Be a Skill?
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#ctx-v020-the-archaeology-release" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#the-takeaway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ctx v0.2.0: The Archaeology Release
+        The Takeaway
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#refactoring-with-intent-human-guided-sessions-in-ai-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring with Intent: Human-Guided Sessions in AI Development
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1030,133 +796,223 @@
   
 
 
-  <h1>Blog</h1>
-
-<p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<p>Stories, insights, and lessons learned from building and using ctx.</p>
+<h1 id="parallel-agents-with-git-worktrees">Parallel Agents with Git Worktrees<a class="headerlink" href="#parallel-agents-with-git-worktrees" title="Permanent link">&para;</a></h1>
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<h2 id="the-backlog-problem">The Backlog Problem<a class="headerlink" href="#the-backlog-problem" title="Permanent link">&para;</a></h2>
+<p><em>Jose Alekhinne / 2026-02-14</em></p>
+<div class="admonition question">
+<p class="admonition-title">What do you do with 30 open tasks?</p>
+<p>You could work through them one at a time.
+One agent, one branch, one commit stream.</p>
+<p>Or you could ask: <strong>which of these don't touch each other?</strong></p>
+</div>
+<p>I had 30 open tasks in <code>TASKS.md</code>. Some were docs. Some were a new
+encryption package. Some were test coverage for a stable module. Some
+were blog posts.</p>
+<p>They had almost zero file overlap.</p>
+<p>Running one agent at a time meant serial execution on work that was
+fundamentally parallel. I was bottlenecking on <em>me</em>, not on the
+machine.</p>
+<h2 id="the-insight-file-overlap-is-the-constraint">The Insight: File Overlap Is the Constraint<a class="headerlink" href="#the-insight-file-overlap-is-the-constraint" title="Permanent link">&para;</a></h2>
+<p>This is not a scheduling problem. It is a <strong>conflict avoidance</strong> problem.</p>
+<p>Two agents can work simultaneously on the same codebase if and only if
+they don't touch the same files. The moment they do, you get merge
+conflicts — and merge conflicts on AI-generated code are expensive
+because the human has to arbitrate choices they didn't make.</p>
+<p>So the question becomes: <strong>can you partition your backlog into
+non-overlapping tracks?</strong></p>
+<p>For <code>ctx</code>, the answer was obvious:</p>
+<table>
+<thead>
+<tr>
+<th>Track</th>
+<th>Touches</th>
+<th>Tasks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>work/docs</code></td>
+<td><code>docs/</code>, <code>hack/</code></td>
+<td>Blog posts, recipes, runbooks</td>
+</tr>
+<tr>
+<td><code>work/pad</code></td>
+<td><code>internal/cli/pad/</code>, specs</td>
+<td>Scratchpad encryption, CLI, tests</td>
+</tr>
+<tr>
+<td><code>work/tests</code></td>
+<td><code>internal/cli/recall/</code></td>
+<td>Recall test coverage</td>
+</tr>
+</tbody>
+</table>
+<p>Three tracks. Near-zero overlap. Three agents.</p>
+<h2 id="git-worktrees-the-mechanism">Git Worktrees: The Mechanism<a class="headerlink" href="#git-worktrees-the-mechanism" title="Permanent link">&para;</a></h2>
+<p>Git has a feature that most people don't use: <strong>worktrees</strong>.</p>
+<p>A worktree is a second (or third, or fourth) working directory that
+shares the same <code>.git</code> object database as your main checkout. Each
+worktree has its own branch, its own index, its own working tree. But
+they all share history, refs, and objects.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../ctx-docs<span class="w"> </span>-b<span class="w"> </span>work/docs
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../ctx-pad<span class="w"> </span>-b<span class="w"> </span>work/pad
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../ctx-tests<span class="w"> </span>-b<span class="w"> </span>work/tests
+</span></code></pre></div>
+<p>Three directories. Three branches. One repository.</p>
+<p>This is cheaper than three clones. And because they share objects,
+<code>git merge</code> afterwards is fast — it's a local operation on shared data.</p>
+<h2 id="the-setup">The Setup<a class="headerlink" href="#the-setup" title="Permanent link">&para;</a></h2>
+<p>The workflow I landed on:</p>
+<p><strong>1. Group tasks by blast radius.</strong></p>
+<p>Read <code>TASKS.md</code>. For each pending task, estimate which files and
+directories it touches. Group tasks that share files into the same
+track. Tasks with no overlap go into separate tracks.</p>
+<p>This is the part that requires human judgment. An agent can propose
+groupings, but you need to verify that the boundaries are real. A task
+that says "update docs" but actually touches Go code will poison a docs
+track.</p>
+<p><strong>2. Create worktrees as sibling directories.</strong></p>
+<p>Not subdirectories. Siblings. If your main checkout is at
+<code>~/WORKSPACE/ctx</code>, worktrees go at <code>~/WORKSPACE/ctx-docs</code>,
+<code>~/WORKSPACE/ctx-pad</code>, etc.</p>
+<p>Why siblings? Because some tools (and some agents) walk up the directory
+tree looking for <code>.git</code>. A worktree inside the main checkout confuses
+them.</p>
+<p><strong>3. Launch one agent per worktree.</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Terminal 1</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>../ctx-docs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>claude
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Terminal 2</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">cd</span><span class="w"> </span>../ctx-pad<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>claude
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Terminal 3</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">cd</span><span class="w"> </span>../ctx-tests<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>claude
+</span></code></pre></div>
+<p>Each agent gets a full working copy with <code>.context/</code> intact. It reads
+the same <code>TASKS.md</code>, the same <code>DECISIONS.md</code>, the same <code>CONVENTIONS.md</code>.
+It knows the full project state. It just works on a different slice.</p>
+<p><strong>4. Do NOT run <code>ctx init</code> in worktrees.</strong></p>
+<p>This is the gotcha. The <code>.context/</code> directory is tracked in git. Running
+<code>ctx init</code> in a worktree would overwrite shared context files — wiping
+decisions, learnings, and tasks that belong to the whole project.</p>
+<p>The worktree already has everything it needs. Leave it alone.</p>
+<h2 id="what-actually-happened">What Actually Happened<a class="headerlink" href="#what-actually-happened" title="Permanent link">&para;</a></h2>
+<p>I ran three agents for about 40 minutes. Here is roughly what each
+track produced:</p>
+<p><strong><code>work/docs</code></strong>: Parallel worktrees recipe, blog post edits, recipe
+index reorganization, IRC recipe moved from <code>docs/</code> to <code>hack/</code>.</p>
+<p><strong><code>work/pad</code></strong>: <code>ctx pad show</code> subcommand, <code>--append</code> and <code>--prepend</code>
+flags on <code>ctx pad edit</code>, spec updates, 28 new test functions.</p>
+<p><strong><code>work/tests</code></strong>: Recall test coverage, edge case tests.</p>
+<p>Merging took about five minutes. Two of the three merges were clean.
+The third had a conflict in <code>TASKS.md</code> — both the docs track and the
+pad track had marked different tasks as <code>[x]</code>.</p>
+<h2 id="the-tasksmd-conflict">The TASKS.md Conflict<a class="headerlink" href="#the-tasksmd-conflict" title="Permanent link">&para;</a></h2>
+<p>This deserves its own section because it will happen <strong>every time</strong>.</p>
+<p>When two agents work in parallel, they both read <code>TASKS.md</code> at the
+start and mark tasks complete as they go. When you merge, git sees two
+branches that modified the same file differently.</p>
+<p>The resolution is always the same: <strong>accept all completions from both
+sides</strong>. No task should go from <code>[x]</code> back to <code>[ ]</code>. The merge is
+additive.</p>
+<p>This is one of those conflicts that sounds scary but is trivially
+mechanical. You're not arbitrating design decisions. You're combining
+two checklists.</p>
+<h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
+<p><strong>3-4 worktrees, maximum.</strong> I tried four once. By the time I merged
+the third track, the fourth had drifted far enough that its changes
+needed rebasing. The merge complexity grows faster than the parallelism
+benefit.</p>
+<p>Three is the sweet spot. Two is conservative but safe. Four is possible
+if the tracks are truly independent.</p>
+<p><strong>Group by directory, not by priority.</strong> It is tempting to put all the
+high-priority tasks in one track. Don't. Two high-priority tasks that
+touch the same files must be in the same track, regardless of urgency.
+The constraint is file overlap, not importance.</p>
+<p><strong>Commit frequently.</strong> Smaller commits make merge conflicts easier
+to resolve. An agent that writes 500 lines in a single commit is harder
+to merge than one that commits every logical step.</p>
+<p><strong>Name tracks by concern.</strong> <code>work/docs</code> and <code>work/pad</code> tell you what's
+happening. <code>work/track-1</code> and <code>work/track-2</code> tell you nothing.</p>
+<h2 id="the-pattern">The Pattern<a class="headerlink" href="#the-pattern" title="Permanent link">&para;</a></h2>
+<p>This is the same pattern that shows up everywhere in <code>ctx</code>:</p>
+<p><a href="../2026-02-03-the-attention-budget/"><strong>The attention budget</strong></a> taught me that you can't dump
+everything into one context window. You have to partition, prioritize,
+and load selectively.</p>
+<p>Worktrees are the same principle applied to <strong>execution</strong>: you can't
+dump every task into one agent's workstream. You have to partition by
+blast radius, assign selectively, and merge deliberately.</p>
+<p>The <a href="../2026-02-08-not-everything-is-a-skill/">codebase audit</a> that generated these 30 tasks used
+eight parallel agents for <em>analysis</em>. Worktrees let me use parallel
+agents for <em>implementation</em>. Same coordination pattern, different
+artifact.</p>
+<p>And the <a href="../2026-02-14-irc-as-context/">IRC bouncer post</a> from earlier today argued that
+stateless protocols need stateful wrappers. Worktrees are the same:
+git branches are stateless forks; <code>.context/</code> is the stateful wrapper
+that gives each agent the project's full memory.</p>
+<h2 id="should-this-be-a-skill">Should This Be a Skill?<a class="headerlink" href="#should-this-be-a-skill" title="Permanent link">&para;</a></h2>
+<p>I asked myself the <a href="../2026-02-08-not-everything-is-a-skill/">same question I asked about the codebase
+audit</a>: should this be a <code>/ctx-worktree</code> skill?</p>
+<p>This time the answer is yes. Unlike the audit prompt — which I tweak
+every time and run quarterly — the worktree workflow is:</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Worktree workflow</th>
+<th>Codebase audit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frequency</td>
+<td>Weekly</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td>Stability</td>
+<td>Same steps every time</td>
+<td>Tweaked every time</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Mechanical, bounded</td>
+<td>Bespoke, 8 agents</td>
+</tr>
+<tr>
+<td>Trigger</td>
+<td>Large backlog</td>
+<td>"I feel like auditing"</td>
+</tr>
+</tbody>
+</table>
+<p>The commands are mechanical: <code>git worktree add</code>, <code>git worktree remove</code>,
+branch naming, safety checks. This is exactly what skills are for:
+<strong>stable contracts</strong> for repetitive operations.</p>
+<p>So <code>/ctx-worktree</code> exists. It enforces the 4-worktree limit, creates
+sibling directories, uses <code>work/</code> branch prefixes, and reminds you
+not to run <code>ctx init</code> in worktrees.</p>
+<h2 id="the-takeaway">The Takeaway<a class="headerlink" href="#the-takeaway" title="Permanent link">&para;</a></h2>
+<p>Serial execution is the default. But serial is not always necessary.</p>
+<p>If your backlog partitions cleanly by file overlap, you can multiply
+your throughput with nothing more exotic than <code>git worktree</code> and
+a second terminal window.</p>
+<p>The hard part is not the git commands. It is the <strong>discipline</strong>:
+grouping by blast radius instead of priority, accepting that <code>TASKS.md</code>
+will conflict, and knowing when three tracks is enough.</p>
 <hr />
-<h2 id="posts">Posts<a class="headerlink" href="#posts" title="Permanent link">&para;</a></h2>
-<h3 id="parallel-agents-with-git-worktrees"><a href="2026-02-14-parallel-agents-with-worktrees/">Parallel Agents with Git Worktrees</a><a class="headerlink" href="#parallel-agents-with-git-worktrees" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 14, 2026</em></p>
-<p>I had 30 open tasks and most of them didn't touch the same files. Running
-one agent at a time meant serial execution on work that was fundamentally
-parallel. This post is about using git worktrees to partition a backlog by
-file overlap, run 3-4 agents simultaneously, and merge the results — the
-same attention budget principle applied to execution instead of context.</p>
-<p><strong>Topics</strong>: agent teams, parallelism, git worktrees, context engineering,
-task management</p>
+<div class="admonition quote">
+<p class="admonition-title">If you remember one thing from this post...</p>
+<p><strong>Partition by blast radius, not by priority.</strong></p>
+<p>Two tasks that touch the same files belong in the same track,
+no matter how important the other one is.</p>
+<p><strong>The constraint is file overlap. Everything else is scheduling.</strong></p>
+</div>
 <hr />
-<h3 id="before-context-windows-we-had-bouncers"><a href="2026-02-14-irc-as-context/">Before Context Windows, We Had Bouncers</a><a class="headerlink" href="#before-context-windows-we-had-bouncers" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 14, 2026</em></p>
-<p>IRC is stateless. You disconnect, you vanish. Modern systems are not much
-different: close the tab, lose the scrollback, open a new LLM session, start
-from zero. This post traces the line from IRC bouncers like ZNC to context
-engineering: stateless protocols require stateful wrappers, volatile interfaces
-require durable memory. Before context windows, we had bouncers. Before AI
-memory files, we had buffers.</p>
-<p><strong>Topics</strong>: context engineering, infrastructure, IRC, persistence,
-state continuity</p>
-<hr />
-<h3 id="how-deep-is-too-deep"><a href="2026-02-12-how-deep-is-too-deep/">How Deep Is Too Deep?</a><a class="headerlink" href="#how-deep-is-too-deep" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 12, 2026</em></p>
-<p>I kept feeling like I should go deeper into ML theory. Then I spent a week
-debugging an agent failure that had nothing to do with model architecture and
-everything to do with knowing which abstraction was leaking. This post is
-about when depth compounds and when it doesn't: why the useful understanding
-lives one or two layers below where you work, not at the bottom of the stack.</p>
-<p><strong>Topics</strong>: AI foundations, abstraction boundaries, agentic systems,
-context engineering, failure modes</p>
-<hr />
-<h3 id="defense-in-depth-securing-ai-agents"><a href="2026-02-09-defense-in-depth-securing-ai-agents/">Defense in Depth: Securing AI Agents</a><a class="headerlink" href="#defense-in-depth-securing-ai-agents" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 9, 2026</em></p>
-<p>I was writing the autonomous loops recipe and realized the security
-advice was "use CONSTITUTION.md for guardrails." Then I read that
-sentence back and realized: that is wishful thinking. This post
-traces five defense layers for unattended AI agents, each with a
-bypass, and shows why the strength is in the combination, not any
-single layer.</p>
-<p><strong>Topics</strong>: agent security, defense in depth, prompt injection,
-autonomous loops, container isolation</p>
-<hr />
-<h3 id="not-everything-is-a-skill"><a href="2026-02-08-not-everything-is-a-skill/">Not Everything Is a Skill</a><a class="headerlink" href="#not-everything-is-a-skill" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 8, 2026</em></p>
-<p>I ran an 8-agent codebase audit and got actionable results. The natural
-instinct was to wrap the prompt as a <code>/ctx-audit</code> skill. Then I applied
-my own criteria from the skill trilogy: <strong>it failed all three tests</strong>.
-This post is about the difference between skills and recipes, why the
-attention budget applies to your skill library too, and why the best
-automation decision is sometimes not to automate.</p>
-<p><strong>Topics</strong>: skill design, context engineering, automation discipline,
-recipes, agent teams</p>
-<hr />
-<h3 id="the-anatomy-of-a-skill-that-works"><a href="2026-02-07-the-anatomy-of-a-skill-that-works/">The Anatomy of a Skill That Works</a><a class="headerlink" href="#the-anatomy-of-a-skill-that-works" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 7, 2026</em></p>
-<p>I had 20 skills. Most were well-intentioned stubs: a description, a command,
-and a wish for the best. Then I rewrote all of them in a single session.
-<strong>Seven lessons emerged</strong>: quality gates prevent premature execution, negative
-triggers are load-bearing, examples set boundaries better than rules, and
-skills are contracts, not instructions. The practical companion to the
-previous two skill design posts.</p>
-<p><strong>Topics</strong>: skill design, context engineering, quality gates, E/A/R framework,
-practical patterns</p>
-<hr />
-<h3 id="you-cant-import-expertise"><a href="2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a><a class="headerlink" href="#you-cant-import-expertise" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 5, 2026</em></p>
-<p>I found a well-crafted consolidation skill: four files, ten patterns, eight
-analysis dimensions. Applied my own E/A/R framework: <strong>70% was noise</strong>. The
-template was thorough, correct, and almost entirely useless for my project.
-This post is about why good skills can't be copy-pasted, and how to grow
-them from your project's own drift history instead.</p>
-<p><strong>Topics</strong>: skill adaptation, E/A/R framework, convention drift, consolidation,
-project-specific expertise</p>
-<hr />
-<h3 id="skills-that-fight-the-platform"><a href="2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a><a class="headerlink" href="#skills-that-fight-the-platform" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 4, 2026</em></p>
-<p>AI coding agents ship with carefully designed system prompts. When custom
-skills conflict with those defaults, the AI has to <strong>reconcile contradictory
-instructions</strong>: The result is <strong>unpredictable</strong>. This post catalogues five
-conflict patterns discovered while building <code>ctx</code>: judgment suppression,
-redundant guidance, guilt-tripping, phantom dependencies, and universal
-triggers.</p>
-<p><strong>Topics</strong>: context engineering, skill design, system prompts, antipatterns,
-AI safety primitives</p>
-<hr />
-<h3 id="the-attention-budget-why-your-ai-forgets-what-you-just-told-it"><a href="2026-02-03-the-attention-budget/">The Attention Budget: Why Your AI Forgets What You Just Told It</a><a class="headerlink" href="#the-attention-budget-why-your-ai-forgets-what-you-just-told-it" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 3, 2026</em></p>
-<p>Every token you send to an AI consumes a finite resource: <strong>the attention budget</strong>.
-Understanding this constraint shaped every design decision in ctx: hierarchical
-file structure, explicit budgets, progressive disclosure, and filesystem-as-index.
-This post explains the theory and how ctx operationalizes it.</p>
-<p><strong>Topics</strong>: attention mechanics, context engineering, progressive disclosure,
-ctx primitives, token budgets</p>
-<hr />
-<h3 id="ctx-v020-the-archaeology-release"><a href="2026-02-01-ctx-v0.2.0-the-archaeology-release/">ctx v0.2.0: The Archaeology Release</a><a class="headerlink" href="#ctx-v020-the-archaeology-release" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 1, 2026</em></p>
-<p>What if your AI could remember everything? Not just the current session, but
-every session. <code>ctx v0.2.0</code> introduces the <strong>recall</strong> and <strong>journal</strong> systems:
-making 86 commits of history searchable, exportable, and analyzable. 
-This post tells the story of why those features exist.</p>
-<p><strong>Topics</strong>: session recall, journal system, structured entries, token budgets,
-meta-tools</p>
-<hr />
-<h3 id="refactoring-with-intent-human-guided-sessions-in-ai-development"><a href="2026-02-01-refactoring-with-intent/">Refactoring with Intent: Human-Guided Sessions in AI Development</a><a class="headerlink" href="#refactoring-with-intent-human-guided-sessions-in-ai-development" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / February 1, 2026</em></p>
-<p>The <strong>YOLO mode shipped</strong> <strong>14 commands</strong> <strong>in a week</strong>. But technical debt 
-doesn't send invoices:it just waits. This is the story of what happened when 
-we stopped auto-accepting everything and started guiding the AI with intent: 
-27 commits across 4 days, a major version release, and lessons that apply far 
-beyond ctx.</p>
-<p><strong>Topics</strong>: refactoring, code quality, documentation standards, module
-decomposition, YOLO versus intentional development</p>
-<hr />
-<h3 id="building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development"><a href="2026-01-27-building-ctx-using-ctx/">Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development</a><a class="headerlink" href="#building-ctx-using-ctx-a-meta-experiment-in-ai-assisted-development" title="Permanent link">&para;</a></h3>
-<p><em>Jose Alekhinne / January 27, 2026</em></p>
-<p>What happens when you build a tool designed to give AI memory, using that very
-same tool to remember what you're building? <strong>This is the story of <code>ctx</code></strong>:
-how <code>ctx</code> evolved from a hasty "<em>YOLO</em>" experiment to a <strong>disciplined system</strong> 
-for persistent AI context, and what we learned along the way.</p>
-<p><strong>Topics</strong>: dogfooding, AI-assisted development, Ralph Loop, session
-persistence, architectural decisions</p>
+<p><em>The practical setup — skill invocation, worktree creation, merge
+workflow, and cleanup — lives in the recipe:
+<a href="../../recipes/parallel-worktrees/">Parallel Agent Development with Git Worktrees</a>.</em></p>
 
 
 
@@ -1194,28 +1050,6 @@ persistence, architectural decisions</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../security/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Security">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Security
-              </div>
-            </div>
-          </a>
-        
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -1275,10 +1109,10 @@ The documentation on this website is distributed under
       
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>
