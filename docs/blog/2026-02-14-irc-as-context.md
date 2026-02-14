@@ -90,10 +90,10 @@ Presence becomes **infrastructural**.
 
 !!! tip "ZNC is tmux for IRC"
     * Close your laptop.
-      * ZNC remains.
+        * ZNC remains.
 
     * Switch devices.
-      * ZNC persists.
+        * ZNC persists.
 
 This is **not** convenience; this is **continuity**.
 
@@ -230,7 +230,7 @@ Continuity is **not** a feature; it is a **design decision**.
 If you want the actual setup (*VPS, ZNC, TLS, SASL, firewall...*) there is
 a step-by-step recipe:
 
-**[Persistent IRC Presence with ZNC](https://github.com/ActiveMemory/ctx/blob/main/docs/recipes/persistent-irc.md)**
+**[Persistent IRC Presence with ZNC](../recipes/persistent-irc.md)**.
 
 ---
 
