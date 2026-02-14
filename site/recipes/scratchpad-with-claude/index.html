@@ -12,7 +12,7 @@
         <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/recipes/persistent-irc/">
+        <link rel="canonical" href="https://ctx.ist/recipes/scratchpad-with-claude/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Persistent IRC Presence with ZNC - ctx: do you remember?</title>
+        <title>Using the Scratchpad with Claude - ctx: do you remember?</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#the-problem" class="md-skip">
+        <a href="#problem" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Persistent IRC Presence with ZNC
+              Using the Scratchpad with Claude
             
           </span>
         </div>
@@ -659,10 +659,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-problem" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Problem
+        Problem
       
     </span>
   </a>
@@ -670,10 +670,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture
+        Commands and Skills Used
       
     </span>
   </a>
@@ -693,10 +693,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-provision-a-vps" class="md-nav__link">
+  <a href="#step-1-add-a-note-naturally" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Provision a VPS
+        Step 1: Add a Note Naturally
       
     </span>
   </a>
@@ -704,10 +704,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-install-znc" class="md-nav__link">
+  <a href="#step-2-view-your-scratchpad" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Install ZNC
+        Step 2: View Your Scratchpad
       
     </span>
   </a>
@@ -715,10 +715,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-generate-configuration" class="md-nav__link">
+  <a href="#step-3-edit-an-entry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Generate Configuration
+        Step 3: Edit an Entry
       
     </span>
   </a>
@@ -726,10 +726,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-tls-certificate" class="md-nav__link">
+  <a href="#step-4-compose-entries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: TLS Certificate
+        Step 4: Compose Entries
       
     </span>
   </a>
@@ -737,10 +737,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-start-znc" class="md-nav__link">
+  <a href="#step-5-reorder-by-priority" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Start ZNC
+        Step 5: Reorder by Priority
       
     </span>
   </a>
@@ -748,65 +748,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-lock-firewall" class="md-nav__link">
+  <a href="#step-6-clean-up" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Lock Firewall
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-7-connect-your-irc-client-to-znc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 7: Connect Your IRC Client to ZNC
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-8-enable-sasl" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 8: Enable SASL
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-9-enable-useful-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 9: Enable Useful Modules
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-10-auto-op-correctly" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 10: Auto-Op Correctly
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-11-optional-motd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 11: Optional MOTD
+        Step 6: Clean Up
       
     </span>
   </a>
@@ -819,10 +764,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-failure-modes" class="md-nav__link">
+  <a href="#conversational-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Failure Modes
+        Conversational Approach
       
     </span>
   </a>
@@ -830,10 +775,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-do-we-use-bouncers" class="md-nav__link">
+  <a href="#when-to-use-scratchpad-vs-context-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Do We Use Bouncers?
+        When to Use Scratchpad vs Context Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
       
     </span>
   </a>
@@ -877,230 +833,244 @@
   
 
 
-  <h1>Persistent IRC Presence with ZNC</h1>
+  <h1>Using the Scratchpad with Claude</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>IRC is stateless. You disconnect, you vanish. You reconnect, you reconstruct.</p>
-<p>This is not unique to IRC. Close the browser tab, lose the Slack scrollback,
-open a new LLM session, start from zero. Resets externalize reconstruction
-cost onto humans.</p>
-<p>This recipe builds a persistent IRC presence using <a href="https://znc.in">ZNC</a> 
-as an always-on bouncer:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Client → ZNC → IRC
-</span></code></pre></div>
-<p>Client sessions become disposable. Presence becomes infrastructural.</p>
-<p>This is not a nostalgia project. It is a pattern: stateless protocol,
-stateful wrapper, persistent presence. The same pattern that ctx applies
-to AI sessions.</p>
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Small VPS (IPv4 + IPv6 optional)</li>
-<li>ZNC installed</li>
-<li>TLS listener</li>
-<li>Firewall restricted to your IP</li>
-<li>SASL authentication upstream</li>
-<li>Buffers stored on disk</li>
-</ul>
-<p>No screenshots. No click-driven instructions. Only primitives.</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>During a session you accumulate quick notes, reminders, intermediate values,
+and sometimes sensitive tokens. They don't fit <code>TASKS.md</code> (not work items) or
+<code>DECISIONS.md</code> (not decisions). They don't have the structured fields that
+<code>LEARNINGS.md</code> requires.</p>
+<p>Without somewhere to put them, they get lost between sessions.</p>
+<p><strong>How do you capture working memory that persists across sessions without
+polluting your structured context files?</strong></p>
+<h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx pad</code></td>
+<td>CLI command</td>
+<td>List all scratchpad entries</td>
+</tr>
+<tr>
+<td><code>ctx pad show N</code></td>
+<td>CLI command</td>
+<td>Output raw text of entry N (pipe-friendly)</td>
+</tr>
+<tr>
+<td><code>ctx pad add</code></td>
+<td>CLI command</td>
+<td>Add a new entry</td>
+</tr>
+<tr>
+<td><code>ctx pad edit</code></td>
+<td>CLI command</td>
+<td>Replace, append to, or prepend to an entry</td>
+</tr>
+<tr>
+<td><code>ctx pad rm</code></td>
+<td>CLI command</td>
+<td>Remove an entry</td>
+</tr>
+<tr>
+<td><code>ctx pad mv</code></td>
+<td>CLI command</td>
+<td>Reorder entries</td>
+</tr>
+<tr>
+<td><code>/ctx-pad</code></td>
+<td>Skill</td>
+<td>Natural language interface to all pad commands</td>
+</tr>
+</tbody>
+</table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
-<h3 id="step-1-provision-a-vps">Step 1: Provision a VPS<a class="headerlink" href="#step-1-provision-a-vps" title="Permanent link">&para;</a></h3>
-<p>Any minimal Linux host works. You need:</p>
-<ul>
-<li>A static public IP</li>
-<li>Inbound TCP port (e.g., 6699)</li>
-<li>SSH access</li>
-<li>Firewall control</li>
-</ul>
-<p>Lock SSH before anything else.</p>
-<h3 id="step-2-install-znc">Step 2: Install ZNC<a class="headerlink" href="#step-2-install-znc" title="Permanent link">&para;</a></h3>
-<p>On Fedora:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>znc
+<h3 id="step-1-add-a-note-naturally">Step 1: Add a Note Naturally<a class="headerlink" href="#step-1-add-a-note-naturally" title="Permanent link">&para;</a></h3>
+<p>You don't need to remember any syntax. Just tell your assistant what to
+jot down:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>You: &quot;jot down: check DNS propagation after deploy&quot;
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Agent: &quot;Added to scratchpad:
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  1. check DNS propagation after deploy&quot;
 </span></code></pre></div>
-<p>On Debian/Ubuntu:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>znc
+<p>Behind the scenes, the agent runs <code>ctx pad add "check DNS propagation after deploy"</code>.</p>
+<h3 id="step-2-view-your-scratchpad">Step 2: View Your Scratchpad<a class="headerlink" href="#step-2-view-your-scratchpad" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;show my scratchpad&quot;
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: &quot;Your scratchpad has 3 entries:
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  1. check DNS propagation after deploy
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  2. staging API endpoint: api.staging.example.com/v2
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  3. retry limit should be 5, not 3&quot;
 </span></code></pre></div>
-<p>Do not start the systemd service yet.</p>
-<h3 id="step-3-generate-configuration">Step 3: Generate Configuration<a class="headerlink" href="#step-3-generate-configuration" title="Permanent link">&para;</a></h3>
-<p>Run configuration as the ZNC service user, not your shell user.</p>
-<p>This avoids the classic "<em>config in wrong directory</em>" failure.</p>
-<p>Check the service file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>systemctl<span class="w"> </span>cat<span class="w"> </span>znc
+<h3 id="step-3-edit-an-entry">Step 3: Edit an Entry<a class="headerlink" href="#step-3-edit-an-entry" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>You: &quot;update entry 2 to include the new endpoint&quot;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Agent: &quot;Updated entry 2:
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  was: staging API endpoint: api.staging.example.com/v2
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  now: staging API endpoint: api.prod.example.com/v2&quot;
 </span></code></pre></div>
-<p>Note the <code>User=</code> and <code>--datadir=</code> values. Usually:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>- User: `_znc`
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Datadir: `/var/lib/znc`
+<p>For partial edits, the agent can use <code>--append</code> or <code>--prepend</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: &quot;append the port number to entry 2&quot;
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Agent: &quot;Updated entry 2:
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  staging API endpoint: api.prod.example.com/v2 :8443&quot;
 </span></code></pre></div>
-<p>Switch to that user:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>_znc<span class="w"> </span>znc<span class="w"> </span>--makeconf<span class="w"> </span>--datadir<span class="o">=</span>/var/lib/znc
+<h3 id="step-4-compose-entries">Step 4: Compose Entries<a class="headerlink" href="#step-4-compose-entries" title="Permanent link">&para;</a></h3>
+<p>Use <code>ctx pad show N</code> to pipe entry content into other operations:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You: &quot;append the content of entry 3 to entry 1&quot;
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Agent: [runs ctx pad edit 1 --append &quot;$(ctx pad show 3)&quot;]
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>       &quot;Done. Entry 1 is now:
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        check DNS propagation after deploy retry limit should be 5, not 3&quot;
 </span></code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Wrong Directory</p>
-<p>If you previously ran <code>znc --makeconf</code> as yourself, you likely
-created <code>~/.znc/</code>. That will <strong>not</strong> be used by systemd. </p>
-<p>Delete or ignore it.</p>
-</div>
-<h3 id="step-4-tls-certificate">Step 4: TLS Certificate<a class="headerlink" href="#step-4-tls-certificate" title="Permanent link">&para;</a></h3>
-<p>ZNC needs a PEM file. If you see <code>Unable to locate pem file</code>, generate one:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>_znc<span class="w"> </span>znc<span class="w"> </span>--datadir<span class="o">=</span>/var/lib/znc<span class="w"> </span>--makepem
+<h3 id="step-5-reorder-by-priority">Step 5: Reorder by Priority<a class="headerlink" href="#step-5-reorder-by-priority" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: &quot;move entry 4 to the top&quot;
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Agent: [runs ctx pad mv 4 1]
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       &quot;Moved entry 4 to position 1. Scratchpad reordered.&quot;
 </span></code></pre></div>
-<p>Ensure <code>znc.conf</code> points to the correct PEM path inside <code>/var/lib/znc</code>.
-Do not reference your home directory.</p>
-<h3 id="step-5-start-znc">Step 5: Start ZNC<a class="headerlink" href="#step-5-start-znc" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>znc
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>znc
+<h3 id="step-6-clean-up">Step 6: Clean Up<a class="headerlink" href="#step-6-clean-up" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>You: &quot;remove entry 2, it&#39;s done&quot;
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Agent: [runs ctx pad rm 2]
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>       &quot;Removed entry 2. 3 entries remaining.&quot;
 </span></code></pre></div>
-<p>Verify:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>znc
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ss<span class="w"> </span>-lntp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">6699</span>
-</span></code></pre></div>
-<h3 id="step-6-lock-firewall">Step 6: Lock Firewall<a class="headerlink" href="#step-6-lock-firewall" title="Permanent link">&para;</a></h3>
-<p>Do not leave the port open to the world. Restrict inbound TCP <code>6699</code> 
-<strong>to your IP only</strong>.</p>
-<p>Test connectivity from your machine:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vps_ip&gt;:6699
-</span></code></pre></div>
-<p>If this hangs, it is the firewall. Not TLS. Not ZNC.</p>
-<h3 id="step-7-connect-your-irc-client-to-znc">Step 7: Connect Your IRC Client to ZNC<a class="headerlink" href="#step-7-connect-your-irc-client-to-znc" title="Permanent link">&para;</a></h3>
-<p>Configure your client:</p>
+<h2 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h2>
+<p>The <code>/ctx-pad</code> skill translates natural language into commands. You
+describe intent; the agent handles the mechanics.</p>
 <table>
 <thead>
 <tr>
-<th>Setting</th>
-<th>Value</th>
+<th>You say</th>
+<th>What the agent does</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Server</td>
-<td><code>&lt;vps_ip&gt;</code></td>
+<td>"jot down: check DNS after deploy"</td>
+<td><code>ctx pad add "check DNS after deploy"</code></td>
 </tr>
 <tr>
-<td>Port</td>
-<td><code>6699</code></td>
+<td>"show my scratchpad" / "what's on my pad"</td>
+<td><code>ctx pad</code></td>
 </tr>
 <tr>
-<td>SSL</td>
-<td>Enabled</td>
+<td>"show me entry 3"</td>
+<td><code>ctx pad show 3</code></td>
 </tr>
 <tr>
-<td>Username</td>
-<td><code>znc_user/network_name</code></td>
+<td>"delete the third one"</td>
+<td><code>ctx pad rm 3</code></td>
 </tr>
 <tr>
-<td>Password</td>
-<td>Your ZNC password</td>
+<td>"change entry 2 to ..."</td>
+<td><code>ctx pad edit 2 "new text"</code></td>
+</tr>
+<tr>
+<td>"add the port to entry 2"</td>
+<td><code>ctx pad edit 2 --append ":8443"</code></td>
+</tr>
+<tr>
+<td>"move the last one to the top"</td>
+<td><code>ctx pad mv N 1</code></td>
+</tr>
+<tr>
+<td>"anything on my scratchpad?"</td>
+<td><code>ctx pad</code></td>
 </tr>
 </tbody>
 </table>
-<p>Example username: <code>jose/libera</code></p>
-<div class="admonition warning">
-<p class="admonition-title">Password Field</p>
-<p>Do not use "personal password" for ZNC. </p>
-<p>That field is for <code>NickServ</code>, not ZNC. </p>
-<p>If you see <code>You need to send your password</code>, 
-you put it in the wrong field.</p>
-</div>
-<h3 id="step-8-enable-sasl">Step 8: Enable SASL<a class="headerlink" href="#step-8-enable-sasl" title="Permanent link">&para;</a></h3>
-<p>Configure SASL <strong>inside ZNC</strong>, not in your client.</p>
-<p>In the ZNC web interface: </p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>User → Networks → libera → Modules → enable &quot;sasl&quot;
-</span></code></pre></div>
-<p>Configure:</p>
-<ul>
-<li><strong>Username</strong>: Your IRC nickname</li>
-<li><strong>Password</strong>: Your NickServ password</li>
-<li><strong>Mechanism</strong>: <code>PLAIN</code></li>
-</ul>
-<p>Reconnect the network through ZNC's <code>*status</code> virtual user:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>/msg *status Disconnect
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/msg *status Connect
-</span></code></pre></div>
-<p><code>*status</code> is ZNC's built-in control interface. You message it like a
-user, and it executes commands on ZNC itself. <code>/msg *status Help</code> lists
-all available commands.</p>
-<p>Then verify SASL worked:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>/msg NickServ STATUS &lt;nick&gt;
-</span></code></pre></div>
-<p>It should return <code>"identified"</code> without manual <code>IDENTIFY</code>.</p>
-<p><strong>Authentication belongs in infrastructure</strong>.</p>
-<h3 id="step-9-enable-useful-modules">Step 9: Enable Useful Modules<a class="headerlink" href="#step-9-enable-useful-modules" title="Permanent link">&para;</a></h3>
-<p><strong>Network modules</strong> (<em>per-network, e.g., <code>Libera.Chat</code></em>):</p>
-<ul>
-<li><code>autoattach</code>: Reattach to channels on client reconnect</li>
-<li><code>buffextras</code>: Log joins, parts, and mode changes in buffer</li>
-<li><code>keepnick</code>: Reclaim your nick automatically</li>
-<li><code>log</code>: Write channel and query logs to disk</li>
-<li><code>route_replies</code>: Route server replies to the requesting client</li>
-<li><code>sasl</code>: Authenticate upstream (<em>configured in Step 8</em>)</li>
-<li><code>savebuff</code>: Persist buffers across ZNC restarts</li>
-<li><code>simple_away</code>: Set away status when no clients are connected</li>
-</ul>
-<p><strong>Global modules</strong> (<em>apply to all networks</em>):</p>
-<ul>
-<li><code>corecaps</code>: Negotiate IRCv3 capabilities with the server (<em>highly recommended</em>)</li>
-<li><code>webadmin</code>: Browser-based admin panel for managing ZNC</li>
-</ul>
-<p><strong>Avoid</strong>:</p>
-<ul>
-<li><code>nickserv</code>: Use <code>sasl</code> instead</li>
-<li><code>autoop</code>: Use <code>ChanServ</code> instead</li>
-</ul>
-<h3 id="step-10-auto-op-correctly">Step 10: Auto-Op Correctly<a class="headerlink" href="#step-10-auto-op-correctly" title="Permanent link">&para;</a></h3>
-<p>If you are the founder of a channel:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/msg ChanServ FLAGS #channel &lt;nick&gt; +AO
-</span></code></pre></div>
-<p>If <code>ChanServ</code> says "You are not logged in," SASL is not configured correctly.</p>
-<h3 id="step-11-optional-motd">Step 11: Optional MOTD<a class="headerlink" href="#step-11-optional-motd" title="Permanent link">&para;</a></h3>
-<p>ZNC can print a banner when your client connects:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>// Context: https://ctx.ist
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>// do you remember?
-</span></code></pre></div>
-<p>This is not decoration; it is a <strong>reminder</strong>: <strong>memory is infrastructure</strong>.</p>
-<h2 id="common-failure-modes">Common Failure Modes<a class="headerlink" href="#common-failure-modes" title="Permanent link">&para;</a></h2>
+<p>The skill recognizes variations: "scratchpad", "pad", "notes", "sticky notes".
+You don't need to use exact trigger phrases.</p>
+<h2 id="when-to-use-scratchpad-vs-context-files">When to Use Scratchpad vs Context Files<a class="headerlink" href="#when-to-use-scratchpad-vs-context-files" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Problem</th>
-<th>Cause</th>
-<th>Fix</th>
+<th>Situation</th>
+<th>Use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>systemd service fails</td>
-<td>Config in wrong directory</td>
-<td>Generate under <code>/var/lib/znc</code> as <code>_znc</code></td>
+<td>Temporary reminders ("check X after deploy")</td>
+<td><strong>Scratchpad</strong></td>
 </tr>
 <tr>
-<td>TLS timeout</td>
-<td>Firewall</td>
-<td>Test with <code>openssl</code>, not assumptions</td>
+<td>Working values during debugging (ports, endpoints, counts)</td>
+<td><strong>Scratchpad</strong></td>
 </tr>
 <tr>
-<td>ChanServ says not logged in</td>
-<td>SASL not configured in ZNC</td>
-<td>Move auth upstream</td>
+<td>Sensitive tokens or API keys (short-term storage)</td>
+<td><strong>Scratchpad</strong></td>
 </tr>
 <tr>
-<td>Duplicate nick on reconnect</td>
-<td>Client handling NickServ, not ZNC</td>
-<td>Move auth upstream</td>
+<td>Quick notes that don't fit anywhere else</td>
+<td><strong>Scratchpad</strong></td>
+</tr>
+<tr>
+<td>Work items with completion tracking</td>
+<td><strong>TASKS.md</strong></td>
+</tr>
+<tr>
+<td>Trade-offs between alternatives with rationale</td>
+<td><strong>DECISIONS.md</strong></td>
+</tr>
+<tr>
+<td>Reusable lessons with context/lesson/application</td>
+<td><strong>LEARNINGS.md</strong></td>
+</tr>
+<tr>
+<td>Codified patterns and standards</td>
+<td><strong>CONVENTIONS.md</strong></td>
 </tr>
 </tbody>
 </table>
-<h2 id="why-do-we-use-bouncers">Why Do We Use Bouncers?<a class="headerlink" href="#why-do-we-use-bouncers" title="Permanent link">&para;</a></h2>
-<p>Without a bouncer: disconnect → reset → reconstruct.</p>
-<p>With a bouncer: <strong>continuity</strong>.</p>
-<p>ZNC is <strong>not</strong> retro: It is a memory layer. </p>
-<p>Before LLM context windows, we had buffers. </p>
-<p><strong>Stateless protocols require stateful wrappers</strong>: The pattern persists.</p>
+<p><strong>Decision guide:</strong></p>
+<ul>
+<li>If it has structured fields (context, rationale, lesson, application),
+  it belongs in a context file.</li>
+<li>If it's a work item you'll mark done, it belongs in <code>TASKS.md</code>.</li>
+<li>If it's a quick note, reminder, or working value — especially if it's
+  sensitive or ephemeral — it belongs on the scratchpad.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Scratchpad Is Not a Junk Drawer</p>
+<p>The scratchpad is for working memory, not long-term storage.
+If a note is still relevant after several sessions, promote it:
+a persistent reminder becomes a task, a recurring value becomes a
+convention, a hard-won insight becomes a learning.</p>
+</div>
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Entries persist across sessions.</strong> The scratchpad is committed
+  (encrypted) to git, so entries survive session boundaries. Pick up
+  where you left off.</li>
+<li><strong>Entries are numbered and reorderable.</strong> Use <code>ctx pad mv</code> to put
+  high-priority items at the top.</li>
+<li><strong><code>ctx pad show N</code> enables unix piping.</strong> Output raw entry text
+  with no numbering prefix. Compose with <code>--append</code>, <code>--prepend</code>, or
+  other shell tools.</li>
+<li><strong>Never mention the key file contents to the AI.</strong> The agent knows
+  how to use <code>ctx pad</code> commands but should never read or print
+  <code>.context/.scratchpad.key</code> directly.</li>
+<li><strong>Encryption is transparent.</strong> You interact with plaintext; the
+  encryption/decryption happens automatically on every read/write.</li>
+</ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../blog/2026-02-14-irc-as-context/">Before Context Windows, We Had Bouncers</a>:
-  The blog post exploring this pattern</li>
-<li><a href="../autonomous-loops/">Running an Unattended AI Agent</a>: Another recipe
-  about persistent infrastructure for ephemeral sessions</li>
+<li><a href="../../scratchpad/">Scratchpad</a>: feature overview, all 9 commands,
+  encryption details, plaintext override</li>
+<li><a href="../knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a>:
+  for structured knowledge that outlives the scratchpad</li>
+<li><a href="../session-lifecycle/">The Complete Session</a>: full session lifecycle
+  showing how the scratchpad fits into the broader workflow</li>
 </ul>
 
 

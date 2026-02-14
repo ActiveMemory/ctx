@@ -83,11 +83,13 @@ Analysis of 69 sessions found 8 recurring workflow patterns. 7 have automation g
       gotcha. #priority:medium #added:2026-02-12
       **Done**: `docs/recipes/parallel-worktrees.md` created and linked in index. #done:2026-02-14
 
-- [ ] Create `/ctx-worktree` skill: wrap git worktree commands with
+- [x] Create `/ctx-worktree` skill: wrap git worktree commands with
       ctx-aware guardrails (max 4 worktrees, sibling dirs, work/ branch
       prefix, no ctx init reminder, TASKS.md conflict guidance, task
       grouping by blast radius). Skill only — no Go code changes needed.
       #priority:medium #added:2026-02-14
+      **Done**: `.claude/skills/ctx-worktree/SKILL.md` with all 6 guardrails,
+      embedded in template for deployment via `ctx init`. #done:2026-02-14
 
 - [ ] Blog: "Parallel Agents with Git Worktrees" — how to use worktrees
       with ctx to tackle large task backlogs. Narrative: 30 open tasks,
@@ -197,9 +199,10 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
       prompts. Rate limiting is broken. #priority:low #source:report-4
       Skipped: moot — prompt-coach hook removed entirely.
 
-- [ ] L-5: Remove or secure debug logging in `block-git-push.sh`:
+- [x] L-5: Remove or secure debug logging in `block-git-push.sh`:
       appends all intercepted git commands to world-readable
       `/tmp/claude-hook-debug.log`. #priority:low #source:report-4
+      **Done**: Debug logging removed from both deployed and template versions. #done:2026-02-14
 
 **Blog Themes** (from `ideas/REPORT-5-blog-themes.md`):
 8 post proposals with narrative sequencing. See report for full details.
@@ -385,19 +388,25 @@ Spec: `specs/scratchpad.md`
 
 **Documentation:**
 
-- [ ] P3.16: Add scratchpad section to user-facing documentation — what it
+- [x] P3.16: Add scratchpad section to user-facing documentation — what it
       is, encrypted by default, how to use, key distribution (copy the
       file), `.contextrc` plaintext override. #priority:medium
       #added:2026-02-13
+      **Done**: `docs/scratchpad.md` — feature docs page with all 9 commands,
+      encryption details, key distribution, plaintext override, decision table. #done:2026-02-14
 
-- [ ] P3.17: Add scratchpad recipe — "Syncing sensitive notes across
+- [x] P3.17: Add scratchpad recipe — "Syncing sensitive notes across
       machines": init on machine A, copy key to machine B, push/pull
       workflow, what to do on merge conflict. #priority:medium
       #added:2026-02-13
+      **Done**: `docs/recipes/scratchpad-sync.md` — 5-step workflow, merge
+      conflict walkthrough, conversational resolution example. #done:2026-02-14
 
-- [ ] P3.18: Add scratchpad recipe — "Using the scratchpad with Claude":
+- [x] P3.18: Add scratchpad recipe — "Using the scratchpad with Claude":
       example skill interactions, natural language examples, when to use
       scratchpad vs context files. #priority:medium #added:2026-02-13
+      **Done**: `docs/recipes/scratchpad-with-claude.md` — 6-step workflow,
+      natural language mapping table, decision guide. #done:2026-02-14
 
 - [ ] P3.19: Update Getting Started / Quick Start to mention scratchpad
       as part of `ctx init` output. #priority:low #added:2026-02-13

@@ -9,10 +9,10 @@
         <meta name="description" content="ctx provides temporal continuity across sessions">
       
       
-        <meta name="author" content="Jose Alekhinne">
+        <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/blog/2026-02-14-irc-as-context/">
+        <link rel="canonical" href="https://ctx.ist/recipes/scratchpad-sync/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Before Context Windows, We Had Bouncers - ctx: do you remember?</title>
+        <title>Syncing Scratchpad Notes Across Machines - ctx: do you remember?</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#before-context-windows-we-had-bouncers" class="md-skip">
+        <a href="#problem" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Before Context Windows, We Had Bouncers
+              Syncing Scratchpad Notes Across Machines
             
           </span>
         </div>
@@ -292,7 +292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -611,7 +611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../blog/" class="md-nav__link">
         
   
   
@@ -651,8 +651,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -661,10 +659,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-reset-problem" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Reset Problem
+        Problem
       
     </span>
   </a>
@@ -672,10 +670,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stateless-protocol-stateful-life" class="md-nav__link">
+  <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stateless Protocol, Stateful Life
+        Commands and Skills Used
       
     </span>
   </a>
@@ -683,10 +681,110 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-bouncer-pattern" class="md-nav__link">
+  <a href="#the-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Bouncer Pattern
+        The Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initialize-on-machine-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initialize on Machine A
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-copy-the-key-to-machine-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Copy the Key to Machine B
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-normal-pushpull-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Normal Push/Pull Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-read-and-write-from-either-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Read and Write from Either Machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-handle-merge-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Handle Merge Conflicts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-conflict-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Conflict Walkthrough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Merge Conflict Walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conversational-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversational Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
       
     </span>
   </a>
@@ -694,87 +792,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#presence-without-flapping" class="md-nav__link">
+  <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Presence Without Flapping
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-llm-context-windows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before LLM Context Windows
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#minimal-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Minimal Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#platform-memory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Platform Memory
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#signal-density" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Signal Density
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#infrastructure-as-cognition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Infrastructure as Cognition
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#build-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Build It
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#motd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MOTD
+        See Also
       
     </span>
   </a>
@@ -807,198 +828,197 @@
   
 
 
-<h1 id="before-context-windows-we-had-bouncers">Before Context Windows, We Had Bouncers<a class="headerlink" href="#before-context-windows-we-had-bouncers" title="Permanent link">&para;</a></h1>
+  <h1>Syncing Scratchpad Notes Across Machines</h1>
+
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="the-reset-problem">The Reset Problem<a class="headerlink" href="#the-reset-problem" title="Permanent link">&para;</a></h2>
-<p><a href="https://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a> is <strong>stateless</strong>.</p>
-<ul>
-<li>You disconnect, you vanish.</li>
-<li>You reconnect, you begin again.</li>
-</ul>
-<p>No buffer.</p>
-<p>No memory.</p>
-<p>No continuity.</p>
-<p>Modern systems are not much different:</p>
-<ul>
-<li>Close the browser tab.<ul>
-<li>Lose the Slack scrollback.</li>
-</ul>
-</li>
-<li>Open a new LLM session.<ul>
-<li>Start from zero.</li>
-</ul>
-</li>
-</ul>
-<p><strong>Resets externalize reconstruction cost onto humans.</strong></p>
-<p>Reconstruction is <strong>tax</strong>.
-Tax becomes <strong>entropy</strong>.</p>
-<hr />
-<h2 id="stateless-protocol-stateful-life">Stateless Protocol, Stateful Life<a class="headerlink" href="#stateless-protocol-stateful-life" title="Permanent link">&para;</a></h2>
-<p>IRC is minimal:</p>
-<ul>
-<li>A TCP connection.</li>
-<li>A nickname.</li>
-<li>A channel.</li>
-<li>A stream of lines.</li>
-</ul>
-<p>When the connection drops, you literally <em>*</em>disappear** from the graph.</p>
-<p>The protocol is <strong>stateless</strong>; human systems <strong>are not</strong>.</p>
-<p>So you:</p>
-<ul>
-<li>Reconnect.</li>
-<li>Ask what you missed.</li>
-<li>Scroll.</li>
-<li>Reconstruct.</li>
-</ul>
-<p>The machine forgets; <strong>you</strong> pay.</p>
-<hr />
-<h2 id="the-bouncer-pattern">The Bouncer Pattern<a class="headerlink" href="#the-bouncer-pattern" title="Permanent link">&para;</a></h2>
-<p>A <code>bouncer</code> is a daemon that remains connected when you do not.</p>
-<ul>
-<li>It holds your seat.</li>
-<li>It buffers what you missed.</li>
-<li>It keeps your identity online.</li>
-</ul>
-<p><a href="https://en.wikipedia.org/wiki/ZNC">ZNC</a> is one such bouncer.</p>
-<p>With <strong>ZNC</strong>:</p>
-<ul>
-<li>Your client does not connect to IRC.</li>
-<li>It connects to ZNC.</li>
-<li>ZNC connects upstream.</li>
-</ul>
-<p>Client sessions become <strong>ephemeral</strong>.<br />
-Presence becomes <strong>infrastructural</strong>.</p>
-<div class="admonition tip">
-<p class="admonition-title">ZNC is tmux for IRC</p>
-<ul>
-<li>
-<p>Close your laptop.</p>
-<ul>
-<li>ZNC remains.</li>
-</ul>
-</li>
-<li>
-<p>Switch devices.</p>
-<ul>
-<li>ZNC persists.</li>
-</ul>
-</li>
-</ul>
-</div>
-<p>This is <strong>not</strong> convenience; this is <strong>continuity</strong>.</p>
-<hr />
-<h2 id="presence-without-flapping">Presence Without Flapping<a class="headerlink" href="#presence-without-flapping" title="Permanent link">&para;</a></h2>
-<p>With a bouncer:</p>
-<ul>
-<li>Closing your client does not emit <code>PART</code>.</li>
-<li>Reopening does not emit <code>JOIN</code>.</li>
-</ul>
-<p>You do not flap in and out of existence.</p>
-<p>From the channel’s perspective, you remain.</p>
-<p>From your perspective, history accumulates.</p>
-<ul>
-<li>Buffers persist.</li>
-<li>Identity persists.</li>
-<li>Context persists.</li>
-</ul>
-<p>This pattern predates AI.</p>
-<hr />
-<h2 id="before-llm-context-windows">Before LLM Context Windows<a class="headerlink" href="#before-llm-context-windows" title="Permanent link">&para;</a></h2>
-<p>An LLM session without memory is IRC without a bouncer.</p>
-<ul>
-<li>Close the window.</li>
-<li>Start over.</li>
-<li>Re-explain intent.</li>
-<li>Rehydrate context.</li>
-</ul>
-<p>That is <strong>friction</strong>.</p>
-<div class="admonition tip">
-<p class="admonition-title">This Walks and Talks like ctx</p>
-<p>Context engineering moves memory
-<strong>out of sessions</strong> and <strong>into infrastructure</strong>.</p>
-<ul>
-<li><code>ZNC</code> does this for IRC.</li>
-<li><code>ctx</code> does this for agents.</li>
-</ul>
-<p>Same principle:</p>
-<ul>
-<li>Volatile interface.</li>
-<li>Persistent substrate.</li>
-</ul>
-<p>Different fabric.</p>
-</div>
-<hr />
-<h2 id="minimal-architecture">Minimal Architecture<a class="headerlink" href="#minimal-architecture" title="Permanent link">&para;</a></h2>
-<p>My setup is intentionally boring:</p>
-<ul>
-<li>A $5 small VPS.</li>
-<li>ZNC installed.</li>
-<li>TLS enabled.</li>
-<li>Firewall restricted.</li>
-</ul>
-<p>Then:</p>
-<ul>
-<li><strong>ZNC</strong> connects to <code>Libera.Chat</code>.</li>
-<li><code>SASL</code> authentication lives inside <strong>ZNC</strong>.</li>
-<li>Buffers are stored on disk.</li>
-</ul>
-<p>My client connects to my VPS, not the network.</p>
-<p>The commands do not matter: The <strong>boundaries</strong> do.</p>
-<ul>
-<li>Authentication in <strong>infrastructure</strong>, <strong>not</strong> in the client.</li>
-<li>Memory <strong>server-side</strong>, <strong>not</strong> in scrollback.</li>
-<li>Presence <strong>decoupled</strong> from activity.</li>
-</ul>
-<p>Everything else is configuration.</p>
-<hr />
-<h2 id="platform-memory">Platform Memory<a class="headerlink" href="#platform-memory" title="Permanent link">&para;</a></h2>
-<p>Yes, it is 2026.</p>
-<ul>
-<li>Discord stores history.</li>
-<li>Slack stores history.</li>
-<li>The dumpster fire on gasoline called X, too, stores history.</li>
-</ul>
-<p><strong>HOWEVER</strong>, they own your <strong>substrate</strong>.</p>
-<p>Running a bouncer is <strong>quiet sovereignty</strong>:</p>
-<ul>
-<li>Logs are mine.</li>
-<li>Presence is continuous.</li>
-<li>State does not reset because I closed a tab.</li>
-</ul>
-<p><strong>Small acts compound</strong>.</p>
-<hr />
-<h2 id="signal-density">Signal Density<a class="headerlink" href="#signal-density" title="Permanent link">&para;</a></h2>
-<p><strong>Primitive systems select for builders</strong>.</p>
-<p>Consistent presence in small rooms compounds reputation.</p>
-<p><strong>Quiet compounding outperforms viral spikes.</strong></p>
-<hr />
-<h2 id="infrastructure-as-cognition">Infrastructure as Cognition<a class="headerlink" href="#infrastructure-as-cognition" title="Permanent link">&para;</a></h2>
-<p><strong>ZNC</strong> is not interesting because it is retro;
-it is interesting because it models a principle:</p>
-<ul>
-<li>Stateless protocols <strong>require</strong> stateful wrappers.</li>
-<li>Volatile interfaces <strong>require</strong> durable memory.</li>
-<li>Human systems <strong>require</strong> continuity.</li>
-</ul>
-<p>Distilled:</p>
-<p><strong>Humans require context.</strong></p>
-<p>Before context windows, we had bouncers.  </p>
-<p>Before AI memory files, we had buffers.</p>
-<p>Continuity is <strong>not</strong> a feature; it is a <strong>design decision</strong>.</p>
-<hr />
-<h2 id="build-it">Build It<a class="headerlink" href="#build-it" title="Permanent link">&para;</a></h2>
-<p>If you want the actual setup (<em>VPS, ZNC, TLS, SASL, firewall...</em>) there is
-a step-by-step runbook:</p>
-<p><strong><a href="https://github.com/ActiveMemory/ctx/blob/main/hack/persistent-irc.md">Persistent IRC Presence with ZNC</a></strong>.</p>
-<hr />
-<h2 id="motd">MOTD<a class="headerlink" href="#motd" title="Permanent link">&para;</a></h2>
-<p>When my client connects to my bouncer, it prints:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>//   /    Context:                     https://ctx.ist
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>// ,&#39;`./    do you remember?
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>// `.,&#39;\
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>//   \    Copyright 2026-present Context contributors.
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>//                 SPDX-License-Identifier: Apache-2.0
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>You work from multiple machines — a desktop and a laptop, or a local
+machine and a remote dev server.</p>
+<p>The scratchpad entries are encrypted. The ciphertext (<code>.context/scratchpad.enc</code>)
+travels with git, but the encryption key (<code>.context/.scratchpad.key</code>) is
+gitignored. Without the key on each machine, you cannot read or write entries.</p>
+<p><strong>How do you distribute the key and keep the scratchpad in sync?</strong></p>
+<h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx init</code></td>
+<td>CLI command</td>
+<td>Initialize context (generates key automatically)</td>
+</tr>
+<tr>
+<td><code>ctx pad add</code></td>
+<td>CLI command</td>
+<td>Add a scratchpad entry</td>
+</tr>
+<tr>
+<td><code>ctx pad rm</code></td>
+<td>CLI command</td>
+<td>Remove a scratchpad entry</td>
+</tr>
+<tr>
+<td><code>ctx pad edit</code></td>
+<td>CLI command</td>
+<td>Edit a scratchpad entry</td>
+</tr>
+<tr>
+<td><code>ctx pad resolve</code></td>
+<td>CLI command</td>
+<td>Show both sides of a merge conflict</td>
+</tr>
+<tr>
+<td><code>scp</code></td>
+<td>Shell</td>
+<td>Copy the key file between machines</td>
+</tr>
+<tr>
+<td><code>git push</code> / <code>git pull</code></td>
+<td>Shell</td>
+<td>Sync the encrypted file via git</td>
+</tr>
+<tr>
+<td><code>/ctx-pad</code></td>
+<td>Skill</td>
+<td>Natural language interface to pad commands</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-initialize-on-machine-a">Step 1: Initialize on Machine A<a class="headerlink" href="#step-1-initialize-on-machine-a" title="Permanent link">&para;</a></h3>
+<p>Run <code>ctx init</code> on your first machine. The key is created automatically:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># ...</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Created .context/.scratchpad.key (0600)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Created .context/scratchpad.enc</span>
 </span></code></pre></div>
+<p>The key is gitignored. The <code>.enc</code> file is tracked.</p>
+<h3 id="step-2-copy-the-key-to-machine-b">Step 2: Copy the Key to Machine B<a class="headerlink" href="#step-2-copy-the-key-to-machine-b" title="Permanent link">&para;</a></h3>
+<p>Use any secure transfer method:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># scp</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>scp<span class="w"> </span>.context/.scratchpad.key<span class="w"> </span>user@machine-b:project/.context/
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Or use a password manager, USB drive, etc.</span>
+</span></code></pre></div>
+<p>Set permissions on Machine B:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>project/.context/.scratchpad.key
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Secure the Transfer</p>
+<p>The key is a raw 256-bit AES key. Anyone with the key can decrypt
+the scratchpad. Use an encrypted channel (SSH, password manager
+vault) — never paste it in plaintext over email or chat.</p>
+</div>
+<h3 id="step-3-normal-pushpull-workflow">Step 3: Normal Push/Pull Workflow<a class="headerlink" href="#step-3-normal-pushpull-workflow" title="Permanent link">&para;</a></h3>
+<p>The encrypted file is committed, so standard git sync works:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Machine A: add entries and push</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;staging API key: sk-test-abc123&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>git<span class="w"> </span>add<span class="w"> </span>.context/scratchpad.enc
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update scratchpad&quot;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>git<span class="w"> </span>push
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Machine B: pull and read</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>git<span class="w"> </span>pull
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ctx<span class="w"> </span>pad
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   1. staging API key: sk-test-abc123</span>
+</span></code></pre></div>
+<p>Both machines have the same key, so both can decrypt the same <code>.enc</code> file.</p>
+<h3 id="step-4-read-and-write-from-either-machine">Step 4: Read and Write from Either Machine<a class="headerlink" href="#step-4-read-and-write-from-either-machine" title="Permanent link">&para;</a></h3>
+<p>Once the key is distributed, all <code>ctx pad</code> commands work identically on
+both machines. Entries added on Machine A are visible on Machine B after
+a <code>git pull</code>, and vice versa.</p>
+<h3 id="step-5-handle-merge-conflicts">Step 5: Handle Merge Conflicts<a class="headerlink" href="#step-5-handle-merge-conflicts" title="Permanent link">&para;</a></h3>
+<p>If both machines add entries between syncs, pulling will create a merge
+conflict on <code>.context/scratchpad.enc</code>. Git cannot merge binary (encrypted)
+content automatically.</p>
+<p>Use <code>ctx pad resolve</code> to see both sides:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># === Ours (this machine) ===</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">#   1. staging API key: sk-test-abc123</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#   2. check DNS after deploy</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># === Theirs (incoming) ===</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">#   1. staging API key: sk-test-abc123</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">#   2. new endpoint: api.example.com/v2</span>
+</span></code></pre></div>
+<p>Then reconstruct the merged scratchpad:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Start fresh with all entries from both sides</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;staging API key: sk-test-abc123&quot;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check DNS after deploy&quot;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;new endpoint: api.example.com/v2&quot;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Mark the conflict resolved</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>git<span class="w"> </span>add<span class="w"> </span>.context/scratchpad.enc
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Resolve scratchpad merge conflict&quot;</span>
+</span></code></pre></div>
+<h2 id="merge-conflict-walkthrough">Merge Conflict Walkthrough<a class="headerlink" href="#merge-conflict-walkthrough" title="Permanent link">&para;</a></h2>
+<p>Here's a full scenario showing how conflicts arise and how to resolve them:</p>
+<p><strong>1. Both machines start in sync</strong> (1 entry):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Machine A: 1. staging API key: sk-test-abc123
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Machine B: 1. staging API key: sk-test-abc123
+</span></code></pre></div>
+<p><strong>2. Both add entries independently</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Machine A adds: &quot;check DNS after deploy&quot;
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Machine B adds: &quot;new endpoint: api.example.com/v2&quot;
+</span></code></pre></div>
+<p><strong>3. Machine A pushes first. Machine B pulls and gets a conflict</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>pull
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># CONFLICT (content): Merge conflict in .context/scratchpad.enc</span>
+</span></code></pre></div>
+<p><strong>4. Machine B runs <code>ctx pad resolve</code></strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># === Ours ===</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">#   1. staging API key: sk-test-abc123</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">#   2. new endpoint: api.example.com/v2</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1">#</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># === Theirs ===</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">#   1. staging API key: sk-test-abc123</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1">#   2. check DNS after deploy</span>
+</span></code></pre></div>
+<p><strong>5. Rebuild with entries from both sides and commit</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Clear and rebuild (or use the skill to guide you)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;staging API key: sk-test-abc123&quot;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check DNS after deploy&quot;</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;new endpoint: api.example.com/v2&quot;</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>git<span class="w"> </span>add<span class="w"> </span>.context/scratchpad.enc
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Merge scratchpad: keep entries from both machines&quot;</span>
+</span></code></pre></div>
+<h3 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h3>
+<p>When working with an AI assistant, you can resolve conflicts naturally:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>You: &quot;I have a scratchpad merge conflict. Can you resolve it?&quot;
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Agent: &quot;Let me check both sides.&quot;
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>       [runs ctx pad resolve]
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>       &quot;Ours has 2 entries, theirs has 2 entries. Entry 1 is the
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>       same on both sides. I&#39;ll merge the unique entries from each.
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>       Done — 3 entries total. Want me to commit the resolution?&quot;
+</span></code></pre></div>
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Back up the key</strong>. If you lose it, you lose access to all encrypted
+  entries. Store a copy in your password manager.</li>
+<li><strong>One key per project</strong>. Each <code>ctx init</code> generates a unique key.
+  Don't reuse keys across projects.</li>
+<li><strong>Plaintext fallback for non-sensitive projects</strong>. If encryption adds
+  friction and you have nothing sensitive, set <code>scratchpad_encrypt: false</code>
+  in <code>.contextrc</code>. Merge conflicts become trivial text merges.</li>
+<li><strong>Never commit the key</strong>. It's gitignored by default. Don't override
+  this.</li>
+</ul>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../scratchpad/">Scratchpad</a>: feature overview, all commands, when
+  to use scratchpad vs context files</li>
+<li><a href="../knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a>:
+  for structured knowledge that outlives the scratchpad</li>
+</ul>
 
 
 

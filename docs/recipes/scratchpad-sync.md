@@ -1,0 +1,207 @@
+---
+title: "Syncing Scratchpad Notes Across Machines"
+icon: lucide/key-round
+---
+
+![ctx](../images/ctx-banner.png)
+
+## Problem
+
+You work from multiple machines — a desktop and a laptop, or a local
+machine and a remote dev server.
+
+The scratchpad entries are encrypted. The ciphertext (`.context/scratchpad.enc`)
+travels with git, but the encryption key (`.context/.scratchpad.key`) is
+gitignored. Without the key on each machine, you cannot read or write entries.
+
+**How do you distribute the key and keep the scratchpad in sync?**
+
+## Commands and Skills Used
+
+| Tool | Type | Purpose |
+|------|------|---------|
+| `ctx init` | CLI command | Initialize context (generates key automatically) |
+| `ctx pad add` | CLI command | Add a scratchpad entry |
+| `ctx pad rm` | CLI command | Remove a scratchpad entry |
+| `ctx pad edit` | CLI command | Edit a scratchpad entry |
+| `ctx pad resolve` | CLI command | Show both sides of a merge conflict |
+| `scp` | Shell | Copy the key file between machines |
+| `git push` / `git pull` | Shell | Sync the encrypted file via git |
+| `/ctx-pad` | Skill | Natural language interface to pad commands |
+
+## The Workflow
+
+### Step 1: Initialize on Machine A
+
+Run `ctx init` on your first machine. The key is created automatically:
+
+```bash
+ctx init
+# ...
+# Created .context/.scratchpad.key (0600)
+# Created .context/scratchpad.enc
+```
+
+The key is gitignored. The `.enc` file is tracked.
+
+### Step 2: Copy the Key to Machine B
+
+Use any secure transfer method:
+
+```bash
+# scp
+scp .context/.scratchpad.key user@machine-b:project/.context/
+
+# Or use a password manager, USB drive, etc.
+```
+
+Set permissions on Machine B:
+
+```bash
+chmod 600 project/.context/.scratchpad.key
+```
+
+!!! warning "Secure the Transfer"
+    The key is a raw 256-bit AES key. Anyone with the key can decrypt
+    the scratchpad. Use an encrypted channel (SSH, password manager
+    vault) — never paste it in plaintext over email or chat.
+
+### Step 3: Normal Push/Pull Workflow
+
+The encrypted file is committed, so standard git sync works:
+
+```bash
+# Machine A: add entries and push
+ctx pad add "staging API key: sk-test-abc123"
+git add .context/scratchpad.enc
+git commit -m "Update scratchpad"
+git push
+
+# Machine B: pull and read
+git pull
+ctx pad
+#   1. staging API key: sk-test-abc123
+```
+
+Both machines have the same key, so both can decrypt the same `.enc` file.
+
+### Step 4: Read and Write from Either Machine
+
+Once the key is distributed, all `ctx pad` commands work identically on
+both machines. Entries added on Machine A are visible on Machine B after
+a `git pull`, and vice versa.
+
+### Step 5: Handle Merge Conflicts
+
+If both machines add entries between syncs, pulling will create a merge
+conflict on `.context/scratchpad.enc`. Git cannot merge binary (encrypted)
+content automatically.
+
+Use `ctx pad resolve` to see both sides:
+
+```bash
+ctx pad resolve
+# === Ours (this machine) ===
+#   1. staging API key: sk-test-abc123
+#   2. check DNS after deploy
+#
+# === Theirs (incoming) ===
+#   1. staging API key: sk-test-abc123
+#   2. new endpoint: api.example.com/v2
+```
+
+Then reconstruct the merged scratchpad:
+
+```bash
+# Start fresh with all entries from both sides
+ctx pad add "staging API key: sk-test-abc123"
+ctx pad add "check DNS after deploy"
+ctx pad add "new endpoint: api.example.com/v2"
+
+# Mark the conflict resolved
+git add .context/scratchpad.enc
+git commit -m "Resolve scratchpad merge conflict"
+```
+
+## Merge Conflict Walkthrough
+
+Here's a full scenario showing how conflicts arise and how to resolve them:
+
+**1. Both machines start in sync** (1 entry):
+
+```
+Machine A: 1. staging API key: sk-test-abc123
+Machine B: 1. staging API key: sk-test-abc123
+```
+
+**2. Both add entries independently**:
+
+```
+Machine A adds: "check DNS after deploy"
+Machine B adds: "new endpoint: api.example.com/v2"
+```
+
+**3. Machine A pushes first. Machine B pulls and gets a conflict**:
+
+```bash
+git pull
+# CONFLICT (content): Merge conflict in .context/scratchpad.enc
+```
+
+**4. Machine B runs `ctx pad resolve`**:
+
+```bash
+ctx pad resolve
+# === Ours ===
+#   1. staging API key: sk-test-abc123
+#   2. new endpoint: api.example.com/v2
+#
+# === Theirs ===
+#   1. staging API key: sk-test-abc123
+#   2. check DNS after deploy
+```
+
+**5. Rebuild with entries from both sides and commit**:
+
+```bash
+# Clear and rebuild (or use the skill to guide you)
+ctx pad add "staging API key: sk-test-abc123"
+ctx pad add "check DNS after deploy"
+ctx pad add "new endpoint: api.example.com/v2"
+
+git add .context/scratchpad.enc
+git commit -m "Merge scratchpad: keep entries from both machines"
+```
+
+### Conversational Approach
+
+When working with an AI assistant, you can resolve conflicts naturally:
+
+```text
+You: "I have a scratchpad merge conflict. Can you resolve it?"
+
+Agent: "Let me check both sides."
+       [runs ctx pad resolve]
+       "Ours has 2 entries, theirs has 2 entries. Entry 1 is the
+       same on both sides. I'll merge the unique entries from each.
+       Done — 3 entries total. Want me to commit the resolution?"
+```
+
+## Tips
+
+* **Back up the key**. If you lose it, you lose access to all encrypted
+  entries. Store a copy in your password manager.
+* **One key per project**. Each `ctx init` generates a unique key.
+  Don't reuse keys across projects.
+* **Plaintext fallback for non-sensitive projects**. If encryption adds
+  friction and you have nothing sensitive, set `scratchpad_encrypt: false`
+  in `.contextrc`. Merge conflicts become trivial text merges.
+* **Never commit the key**. It's gitignored by default. Don't override
+  this.
+
+## See Also
+
+* [Scratchpad](../scratchpad.md): feature overview, all commands, when
+  to use scratchpad vs context files
+* [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
+  for structured knowledge that outlives the scratchpad

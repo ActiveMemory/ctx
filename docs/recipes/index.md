@@ -95,6 +95,26 @@ survive across sessions and team members.
 
 ---
 
+### [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md)
+
+Distribute your scratchpad encryption key, push and pull encrypted
+notes via git, and resolve merge conflicts when two machines edit
+simultaneously.
+
+**Uses**: `ctx init`, `ctx pad`, `ctx pad resolve`, `scp`
+
+---
+
+### [Using the Scratchpad with Claude](scratchpad-with-claude.md)
+
+Use the encrypted scratchpad for quick notes, working memory, and
+sensitive values during AI sessions. Natural language in, encrypted
+storage out.
+
+**Uses**: `ctx pad`, `/ctx-pad`, `ctx pad show`, `ctx pad edit`
+
+---
+
 ## Maintenance
 
 ### [Detecting and Fixing Drift](context-health.md)
