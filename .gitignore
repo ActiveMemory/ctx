@@ -50,6 +50,7 @@ dist/
 .context/journal/
 .context/journal.bak/
 .context/journal-site/
+.context/journal-obsidian/
 
 # Some ideas are best kept hidden.
 ideas
