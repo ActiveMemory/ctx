@@ -393,6 +393,10 @@ BEFORE any work:
 3. Explain which rule prevents the work
 ```
 
+## Further Reading
+
+- [Building ctx Using ctx](blog/2026-01-27-building-ctx-using-ctx.md) — The dogfooding story: how autonomous loops built the tool that powers them
+
 ## Resources
 
 - [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/) — Original inspiration

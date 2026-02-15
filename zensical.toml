@@ -23,17 +23,20 @@ The documentation on this website is distributed under
 nav = [
   { "The ctx Manifesto" = "index.md" },
   { "Getting Started" = "getting-started.md" },
-  { "Recipes" = "recipes/index.md" },
-  { "The Session Journal" = "session-journal.md" },
-  { "Prompting Guide" = "prompting-guide.md" },
-  { "ctx and Similar Tools" = "comparison.md"},
-  { "CLI Reference" = "cli-reference.md" },
+  { "Adopting ctx" = "migration.md" },
   { "Context Files" = "context-files.md" },
+  { "Prompting Guide" = "prompting-guide.md" },
+  { "CLI Reference" = "cli-reference.md" },
+  { "The Session Journal" = "session-journal.md" },
+  { "Skills" = "skills.md" },
+  { "Scratchpad" = "scratchpad.md" },
+  { "Recipes" = "recipes/index.md" },
   { "Autonomous Loops" = "autonomous-loop.md" },
   { "Integrations" = "integrations.md" },
-  { "Version History" = "versions.md" },
+  { "ctx and Similar Tools" = "comparison.md" },
   { "Agent Security" = "agent-security.md" },
   { "Security" = "security.md" },
+  { "Version History" = "versions.md" },
   { "Blog" = "blog/index.md" }
 ]
 

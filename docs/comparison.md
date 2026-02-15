@@ -247,3 +247,9 @@ live next to code; **not** behind a service boundary.
 * you want black-box memory systems
 
 These are valid goals; just different ones.
+
+---
+
+## Further Reading
+
+- [You Can't Import Expertise](blog/2026-02-05-you-cant-import-expertise.md) — Why project-specific context matters more than generic best practices

@@ -435,6 +435,10 @@ Verify the stated deliverable exists and works.
 
 ---
 
+## Further Reading
+
+- [The Attention Budget](blog/2026-02-03-the-attention-budget.md) — Why your AI forgets what you just told it, and how token budgets shape context strategy
+
 ## Contributing
 
 Found a prompt that works well?

@@ -7,22 +7,28 @@
         <loc>https://ctx.ist/getting-started/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/</loc>
+        <loc>https://ctx.ist/migration/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/session-journal/</loc>
+        <loc>https://ctx.ist/context-files/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/prompting-guide/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/comparison/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/cli-reference/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/context-files/</loc>
+        <loc>https://ctx.ist/session-journal/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/skills/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/scratchpad/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/autonomous-loop/</loc>
@@ -31,13 +37,16 @@
         <loc>https://ctx.ist/integrations/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/versions/</loc>
+        <loc>https://ctx.ist/comparison/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/agent-security/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/versions/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/blog/</loc>

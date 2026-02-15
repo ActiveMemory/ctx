@@ -479,6 +479,11 @@ Learnings require: `context`, `lesson`, `application` attributes.
 Decisions require: `context`, `rationale`, `consequences` attributes.
 Updates missing required attributes are rejected with an error.
 
+## Further Reading
+
+- [Skills That Fight the Platform](blog/2026-02-04-skills-that-fight-the-platform.md) — Common pitfalls in skill design that work against the host tool
+- [The Anatomy of a Skill That Works](blog/2026-02-07-the-anatomy-of-a-skill-that-works.md) — What makes a skill reliable: the E/A/R framework and quality gates
+
 ### Usage with ctx watch
 
 ```bash

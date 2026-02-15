@@ -443,6 +443,10 @@ All context files follow these conventions:
 4. **Lists are ordered** — Items appear in priority/chronological order
 5. **Tags are inline** — Backtick-wrapped tags like `#priority:high`
 
+## Further Reading
+
+- [Refactoring with Intent](blog/2026-02-01-refactoring-with-intent.md) — How persistent context prevents drift during refactoring sessions
+
 ## Token Efficiency
 
 Keep context files concise:

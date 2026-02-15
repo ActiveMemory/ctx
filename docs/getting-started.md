@@ -190,8 +190,154 @@ ctx agent --budget 8000
 
 Ask your AI: **"Do you remember?"**
 
-It should cite specific context: current tasks, recent decisions, 
+It should cite specific context: current tasks, recent decisions,
 or previous session topics.
+
+## Your First Session
+
+Here's what a complete first session looks like, from initialization to
+the moment your AI cites your project context back to you.
+
+### Step 1: Initialize Your Project
+
+```bash
+cd your-project
+ctx init
+```
+
+```
+Context initialized in .context/
+
+  ✓ CONSTITUTION.md
+  ✓ TASKS.md
+  ✓ DECISIONS.md
+  ✓ LEARNINGS.md
+  ✓ CONVENTIONS.md
+  ✓ ARCHITECTURE.md
+  ✓ GLOSSARY.md
+  ✓ AGENT_PLAYBOOK.md
+
+Creating project root files...
+  ✓ PROMPT.md
+  ✓ IMPLEMENTATION_PLAN.md
+
+Setting up Claude Code integration...
+  ✓ Claude hooks
+  ✓ .scratchpad.key
+
+Next steps:
+  1. Edit .context/TASKS.md to add your current tasks
+  2. Run 'ctx status' to see context summary
+  3. Run 'ctx agent' to get AI-ready context packet
+```
+
+This created your `.context/` directory with template files. If you're using
+Claude Code, it also configured hooks so context loads automatically.
+
+### Step 2: Populate Your Context
+
+Add a task and a decision — these are the entries your AI will remember:
+
+```bash
+ctx add task "Implement user authentication"
+```
+
+```
+✓ Added to TASKS.md
+```
+
+```bash
+ctx add decision "Use PostgreSQL for primary database" \
+  --context "Need a reliable database for production" \
+  --rationale "PostgreSQL offers ACID compliance and JSON support" \
+  --consequences "Team needs PostgreSQL training"
+```
+
+```
+✓ Added to DECISIONS.md
+```
+
+These entries are what the AI will recall in future sessions. You don't need
+to populate everything now — context grows naturally as you work.
+
+### Step 3: Check Your Context
+
+```bash
+ctx status
+```
+
+```
+Context Status
+====================
+
+Context Directory: .context/
+Total Files: 8
+Token Estimate: 1,247 tokens
+
+Files:
+  ✓ CONSTITUTION.md (loaded)
+  ✓ TASKS.md (1 items)
+  ✓ DECISIONS.md (1 items)
+  ○ LEARNINGS.md (empty)
+  ✓ CONVENTIONS.md (loaded)
+  ✓ ARCHITECTURE.md (loaded)
+  ✓ GLOSSARY.md (loaded)
+  ✓ AGENT_PLAYBOOK.md (loaded)
+
+Recent Activity:
+  - TASKS.md modified 2 minutes ago
+  - DECISIONS.md modified 1 minute ago
+```
+
+Notice the **token estimate** — this is how much context your AI will load.
+The `○` next to LEARNINGS.md means it's still empty; it will fill in as you
+capture lessons during development.
+
+### Step 4: Start an AI Session
+
+With **Claude Code**, context loads automatically via hooks — just start a
+session and it's there. For other tools, generate a context packet:
+
+```bash
+ctx agent --budget 8000
+```
+
+```markdown
+# Context Packet
+Generated: 2026-02-14T15:30:45Z | Budget: 8000 tokens | Used: 1247
+
+## Read These Files (in order)
+1. .context/CONSTITUTION.md
+2. .context/TASKS.md
+3. .context/DECISIONS.md
+...
+
+## Current Tasks
+- [ ] Implement user authentication
+
+## Recent Decisions
+- Use PostgreSQL for primary database
+...
+```
+
+Paste this output into your AI tool's system prompt or conversation start.
+
+### Step 5: Verify It Works
+
+Ask your AI: **"What are our current tasks?"**
+
+A working setup produces a response like:
+
+> Based on the project context, you have one active task:
+>
+> - **Implement user authentication** (pending)
+>
+> There's also a recent architectural decision to **use PostgreSQL for
+> the primary database**, chosen for its ACID compliance and JSON support.
+> Want me to start on the authentication task?
+
+That's the success moment — the AI is citing your exact context entries
+from Step 2, not hallucinating or asking you to re-explain.
 
 ## What Gets Created
 

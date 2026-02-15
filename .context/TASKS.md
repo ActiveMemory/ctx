@@ -14,16 +14,23 @@ STRUCTURE RULES (see CONSTITUTION.md):
 Analysis of 69 sessions found 8 recurring workflow patterns. 
 7 have automation gaps worth addressing.
 
-- [x] Create a Skills Reference page (docs/skills.md): standalone page listing all ctx-shipped skills with name, one-liner description, and link to the recipe or doc page that covers it in depth. Analogous to cli-reference.md but for slash commands. Scope: ctx-bundled skills only (shipped via internal/tpl/claude/skills/); project-specific skills are out of scope. Should include: skill name, description, when to use, key commands it wraps, and cross-links to recipes where the skill appears. #priority:medium #added:2026-02-14-125604
+- [x] Create a Skills Reference page (docs/skills.md): standalone page listing 
+  all ctx-shipped skills with name, one-liner description, and link to the recipe 
+  or doc page that covers it in depth. Analogous to cli-reference.md but for 
+  slash commands. Scope: ctx-bundled skills only
+  (shipped via internal/tpl/claude/skills/); project-specific skills are out of 
+  scope. Should include: skill name, description, when to use, key commands it 
+  wraps, and cross-links to recipes where the skill appears. 
+  #priority:medium #added:2026-02-14-125604
 
-- [ ] Blog: "Parallel Agents with Git Worktrees" — how to use worktrees
+- [x] Blog: "Parallel Agents with Git Worktrees" — how to use worktrees
       with ctx to tackle large task backlogs. Narrative: 30 open tasks,
       grouping by file overlap, spawning parallel agents, merging results.
       Practical guide with the ctx project as the example. Connects to the
       agent-team-strategies report (REPORT-8). #priority:medium
-      #added:2026-02-12
+      #added:2026-02-12 #done:2026-02-14
 
-- [ ] "Borrow from the future" merge skill: given two folders of the same
+- [x] "Borrow from the future" merge skill: given two folders of the same
       project (a "present" and a "future" copy), extract and apply the delta.
       Use case: parallel worktree or separate checkout where commits can't
       be pushed/pulled normally. Strategy ladder:
@@ -36,7 +43,9 @@ Analysis of 69 sessions found 8 recurring workflow patterns.
       Should handle: file additions, deletions, renames, binary files.
       Should warn: conflicting changes in both copies. Could be a skill
       (`/ctx-borrow`) or a standalone `ctx borrow --from ../ctx-future`
-      CLI command. #priority:low #added:2026-02-12
+      CLI command. #priority:low #added:2026-02-12 #done:2026-02-14
+      Done: Implemented as `/ctx-borrow` skill in `.claude/skills/ctx-borrow/SKILL.md`.
+      Covers all 3 strategy tiers, conflict detection, dry-run, and selective apply.
 
 **Documentation Drift** (from `ideas/REPORT-2-documentation-drift.md`):
 Overall drift severity LOW. 14 existing doc.go files are accurate. Key gaps below.
@@ -70,7 +79,7 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
       Done: `secureTempDir()` in internal/cli/agent/cooldown.go uses
       $XDG_RUNTIME_DIR/ctx or os.TempDir()/ctx-<uid> (0700). Files 0600.
 
-- [-] L-3: Fix prompt-coach.sh session tracking: uses `$$` (hook PID)
+- [x] L-3: Fix prompt-coach.sh session tracking: uses `$$` (hook PID)
       instead of session ID, so counter state never persists across
       prompts. Rate limiting is broken. #priority:low #source:report-4
       Skipped: moot — prompt-coach hook removed entirely.
@@ -116,9 +125,11 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
       higher, demote Session Journal and Autonomous Loops. Current order
       front-loads advanced features. #priority:medium #source:report-7
 
-- [ ] Cross-reference blog posts from documentation pages via "Further
+- [x] Cross-reference blog posts from documentation pages via "Further
       Reading" sections (6 specific link suggestions in
-      report). #priority:low #source:report-7
+      report). #priority:low #source:report-7 #done:2026-02-14
+      Done: Added "Further Reading" to autonomous-loop, prompting-guide,
+      integrations, context-files, and comparison pages.
 
 - [ ] Create migration/adoption guide for existing projects: how ctx
       interacts with existing CLAUDE.md, .cursorrules, the --merge
@@ -142,37 +153,7 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
 AES-256-GCM with symmetric key (gitignored). Plaintext fallback via config.
 Spec: `specs/scratchpad.md`
 
-**Core infrastructure:**
-
-
-
-
-**CLI commands:**
-
-
-
-
-
-
-
-
-
-**Conflict resolution:**
-
-
-**Skill and permissions:**
-
-
-
-**Tests:**
-
-
-
-
 **Documentation:**
-
-
-
 
 - [ ] P3.19: Update Getting Started / Quick Start to mention scratchpad
       as part of `ctx init` output. #priority:low #added:2026-02-13
@@ -273,11 +254,7 @@ Spec: `specs/journal-obsidian.md`
 technologies, key_files). The site generator should leverage this metadata for
 better discovery and navigation.
 
-
-
-
 **Features (priority order):**
-
 
 - [ ] T1.1: Topics system
       - Single `/topics/index.md` page

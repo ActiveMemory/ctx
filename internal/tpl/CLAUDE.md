@@ -56,9 +56,24 @@ ctx status
 
 ## Before Session Ends
 
-**ALWAYS offer to persist context before the user quits:**
+**ALWAYS offer to persist context before the user quits.**
 
-1. Add learnings: `ctx add learning "..."`
-2. Add decisions: `ctx add decision "..."`
+Learnings require `--context`, `--lesson`, `--application`:
+
+```bash
+ctx add learning "Title" \
+  --context "What prompted this" \
+  --lesson "The key insight" \
+  --application "How to apply it going forward"
+```
+
+Decisions require `--context`, `--rationale`, `--consequences`:
+
+```bash
+ctx add decision "Title" \
+  --context "What prompted this" \
+  --rationale "Why this choice" \
+  --consequences "What changes as a result"
+```
 
 <!-- ctx:end -->

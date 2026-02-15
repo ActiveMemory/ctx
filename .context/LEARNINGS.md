@@ -3,6 +3,15 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-14 | ctx add learning/decision requires structured flags, not just a string |
+| 2026-02-14 | ctx init is non-destructive toward tool-specific configs |
+| 2026-02-14 | merge insertion is position-aware, not append |
+| 2026-02-14 | ctx init CLAUDE.md handling is a 3-state machine |
+| 2026-02-14 | Skills can replace CLI commands for interactive workflows |
+| 2026-02-14 | color.NoColor in init for CLI test files |
+| 2026-02-14 | Recall CLI tests isolate via HOME env var |
+| 2026-02-14 | formatDuration accepts interface not time.Duration |
+| 2026-02-14 | normalizeCodeFences regex splits language specifiers |
 | 2026-02-13 | Specs get lost without cross-references from TASKS.md |
 | 2026-02-12 | Claude Code UserPromptSubmit hooks: stderr with exit 0 is swallowed (only visible in verbose mode Ctrl+O). stdout with exit 0 is prepended as context for the AI. For user-visible warnings use systemMessage JSON on stdout. For AI-facing nudges use plain text on stdout. There is no non-blocking stderr channel for this hook type. |
 | 2026-02-12 | Prompt-coach hook outputs to stdout (UserPromptSubmit) which is prepended as AI context, not shown to the user. stderr with exit 0 is swallowed entirely. The only user-visible options are systemMessage JSON (warning banner) or exit 2 (blocks the prompt). There is no non-blocking user-visible output channel for UserPromptSubmit hooks. |
@@ -54,6 +63,96 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-14-164053] ctx add learning/decision requires structured flags, not just a string
+
+**Context**: Repeatedly suggested bare ctx add learning '...' in session endings despite this being wrong
+
+**Lesson**: Learnings require --context, --lesson, --application. Decisions require --context, --rationale, --consequences. A bare string only sets the title — the command will fail without the required flags.
+
+**Application**: Never suggest ctx add learning 'text' as a one-liner. Always show the full flag form. The CLAUDE.md template and session-end prompts should model the correct syntax.
+
+---
+
+## [2026-02-14-164029] ctx init is non-destructive toward tool-specific configs
+
+**Context**: Verified by reading run.go — no code paths touch .cursorrules, .aider.conf.yml, or copilot instructions
+
+**Lesson**: ctx init only creates .context/, CLAUDE.md, .claude/, PROMPT.md, and IMPLEMENTATION_PLAN.md. It has zero awareness of other tools' config files.
+
+**Application**: State this definitively in docs rather than hedging — it's confirmed by the code
+
+---
+
+## [2026-02-14-164013] merge insertion is position-aware, not append
+
+**Context**: Reading fs.go findInsertionPoint() to document --merge behavior
+
+**Lesson**: The --merge flag finds the first H1 heading, skips trailing blank lines, and inserts the ctx block there. If no H1 is found, it inserts at the top. Content is never appended to the end.
+
+**Application**: Document the insertion position clearly — users care about where their content ends up in the merged file
+
+---
+
+## [2026-02-14-164011] ctx init CLAUDE.md handling is a 3-state machine
+
+**Context**: Reading claude.go to write the migration guide
+
+**Lesson**: ctx init checks for: no file (create), file without ctx markers (merge/prompt), file with markers (skip or force-replace). The markers <!-- ctx:context --> / <!-- ctx:end --> are the pivot.
+
+**Application**: When documenting merge behavior, describe all three states explicitly rather than just the happy path
+
+---
+
+## [2026-02-14-163855] Skills can replace CLI commands for interactive workflows
+
+**Context**: Evaluating whether /ctx-borrow needed a full CLI command or if the skill was sufficient
+
+**Lesson**: A well-structured skill recipe is a guide, not a rigid script. The agent improvises beyond literal instructions and adapts to edge cases using its available tools.
+
+**Application**: Prefer skills over CLI commands when the workflow requires judgment calls (conflict resolution, selective application, strategy selection). Reserve CLI commands for deterministic, non-interactive operations.
+
+---
+
+## [2026-02-14-163552] color.NoColor in init for CLI test files
+
+**Context**: Recall CLI tests had ANSI escape codes in output making string assertions unreliable
+
+**Lesson**: Setting color.NoColor = true in a package-level init function disables ANSI codes for all tests in the package
+
+**Application**: Add init with color.NoColor = true in test files for CLI packages that use fatih/color. Cleaner than per-test setup.
+
+---
+
+## [2026-02-14-163551] Recall CLI tests isolate via HOME env var
+
+**Context**: Needed integration tests for recall list/show/export without touching real session data
+
+**Lesson**: parser.FindSessions reads os.UserHomeDir which uses HOME env var. Setting t.Setenv HOME to tmpDir with .claude/projects/ structure gives full isolation.
+
+**Application**: For recall integration tests: t.Setenv HOME to tmpDir, create .claude/projects/dir/ with JSONL fixtures. See internal/cli/recall/run_test.go.
+
+---
+
+## [2026-02-14-163550] formatDuration accepts interface not time.Duration
+
+**Context**: Writing unit tests for formatDuration in recall/fmt.go
+
+**Lesson**: formatDuration takes interface with Minutes method, not time.Duration directly. A stub type is needed for testing.
+
+**Application**: Use a stubDuration struct with a mins field and Minutes method when testing formatDuration. See internal/cli/recall/fmt_test.go.
+
+---
+
+## [2026-02-14-163549] normalizeCodeFences regex splits language specifiers
+
+**Context**: Writing test for normalizeCodeFences, expected inline fence with lang tag to stay joined but the regex matched characters after backticks
+
+**Lesson**: The inline fence regex treats any non-whitespace adjacent to triple-backtick fences as a split point, separating lang tags from the fence
+
+**Application**: When testing normalizeCodeFences, use plain fences without language tags. See internal/cli/recall/fmt_test.go.
 
 ---
 

@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-14 | Place Adopting ctx at nav position 3 |
+| 2026-02-14 | Borrow-from-the-future implemented as skill, not CLI command |
 | 2026-02-13 | Spec-first planning for non-trivial features |
 | 2026-02-12 | Drop prompt-coach hook |
 | 2026-02-06 | Drop ctx-journal-summarize skill (duplicates ctx-blog) |
@@ -26,6 +28,34 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-14-164103] Place Adopting ctx at nav position 3
+
+**Status**: Accepted
+
+**Context**: Adding migration/adoption guide to the docs site navigation
+
+**Decision**: Place Adopting ctx at nav position 3
+
+**Rationale**: After 'how do I install?' (Getting Started) the immediate next question for most users is 'I already have stuff, how do I add this?' Context Files is reference material that comes after adoption.
+
+**Consequences**: New users with existing projects find the guide early in the nav flow. Getting Started remains the entry point for greenfield projects.
+
+---
+
+## [2026-02-14-163859] Borrow-from-the-future implemented as skill, not CLI command
+
+**Status**: Accepted
+
+**Context**: Task proposed either /ctx-borrow skill or ctx borrow CLI command for merging deltas between two directories
+
+**Decision**: Borrow-from-the-future implemented as skill, not CLI command
+
+**Rationale**: The workflow requires interactive judgment: conflict resolution, selective file application, strategy selection between 3 tiers. An agent adapts to edge cases; CLI flags cannot.
+
+**Consequences**: No ctx borrow subcommand. Users invoke /ctx-borrow in their AI tool. Non-AI users would need to manually run git diff/patch commands.
+
+---
 
 ## [2026-02-13-133318] Spec-first planning for non-trivial features
 
