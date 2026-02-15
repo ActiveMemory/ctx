@@ -46,5 +46,5 @@ func errNoSiteConfig(dir string) error {
 // Returns:
 //   - error: Formatted error with install instructions
 func errZensicalNotFound() error {
-	return fmt.Errorf("zensical not found. Install with: pip install zensical")
+	return fmt.Errorf("zensical not found. Install with: pipx install zensical")
 }

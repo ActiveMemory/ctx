@@ -36,7 +36,7 @@ Creates a site structure with:
   - Navigation and search support
 
 Requires zensical to be installed for building/serving:
-  pip install zensical
+  pipx install zensical
 
 Examples:
   ctx journal site                    # Generate in .context/journal-site/

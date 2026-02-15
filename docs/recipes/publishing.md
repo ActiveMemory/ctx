@@ -151,7 +151,7 @@ ctx journal site --output ~/my-journal
 
 The site is generated in `.context/journal-site/` by default. It uses
 [zensical](https://pypi.org/project/zensical/) for static site generation
-(`pip install zensical`).
+(`pipx install zensical`).
 
 Or use the Makefile shortcut that combines export and rebuild:
 

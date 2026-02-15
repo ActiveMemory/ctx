@@ -587,3 +587,644 @@ func TestFormatEntries_TrailingNewline(t *testing.T) {
 		t.Errorf("formatEntries = %q, want %q", string(data), "a\nb\n")
 	}
 }
+
+func TestValidateIndex(t *testing.T) {
+	entries := []string{"a", "b", "c"}
+
+	// Valid indices
+	for _, n := range []int{1, 2, 3} {
+		if err := validateIndex(n, entries); err != nil {
+			t.Errorf("validateIndex(%d) should be valid: %v", n, err)
+		}
+	}
+
+	// Invalid indices
+	for _, n := range []int{0, -1, 4, 100} {
+		if err := validateIndex(n, entries); err == nil {
+			t.Errorf("validateIndex(%d) should be invalid", n)
+		}
+	}
+}
+
+func TestValidateIndex_EmptySlice(t *testing.T) {
+	err := validateIndex(1, nil)
+	if err == nil {
+		t.Error("validateIndex on nil slice should fail")
+	}
+}
+
+func TestErrEntryRange(t *testing.T) {
+	msg := errEntryRange(5, 3)
+	if !strings.Contains(msg, "5") || !strings.Contains(msg, "3") {
+		t.Errorf("errEntryRange = %q, want indices 5 and 3 mentioned", msg)
+	}
+}
+
+func TestCmd_HasSubcommands(t *testing.T) {
+	cmd := Cmd()
+	if cmd.Use != "pad" {
+		t.Errorf("cmd.Use = %q, want 'pad'", cmd.Use)
+	}
+
+	names := make(map[string]bool)
+	for _, sub := range cmd.Commands() {
+		names[sub.Use] = true
+	}
+	for _, expected := range []string{"show N", "add TEXT", "rm N", "edit N [TEXT]", "mv N M", "resolve"} {
+		if !names[expected] {
+			t.Errorf("missing subcommand %q", expected)
+		}
+	}
+}
+
+func TestRm_InvalidIndex(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "solo")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Non-numeric argument
+	_, err := runCmd(newPadCmd("rm", "abc"))
+	if err == nil {
+		t.Error("expected error for non-numeric rm argument")
+	}
+}
+
+func TestMv_InvalidIndex(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "entry")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Non-numeric first argument
+	_, err := runCmd(newPadCmd("mv", "abc", "1"))
+	if err == nil {
+		t.Error("expected error for non-numeric mv src argument")
+	}
+
+	// Non-numeric second argument
+	_, err = runCmd(newPadCmd("mv", "1", "abc"))
+	if err == nil {
+		t.Error("expected error for non-numeric mv dst argument")
+	}
+}
+
+func TestShow_InvalidIndex(t *testing.T) {
+	setupEncrypted(t)
+
+	_, err := runCmd(newPadCmd("show", "abc"))
+	if err == nil {
+		t.Error("expected error for non-numeric show argument")
+	}
+}
+
+func TestEdit_InvalidIndex(t *testing.T) {
+	setupEncrypted(t)
+
+	_, err := runCmd(newPadCmd("edit", "abc", "text"))
+	if err == nil {
+		t.Error("expected error for non-numeric edit argument")
+	}
+}
+
+func TestEnsureGitignore_NewFile(t *testing.T) {
+	dir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(dir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	err := ensureGitignore(".context", ".scratchpad.key")
+	if err != nil {
+		t.Fatalf("ensureGitignore error: %v", err)
+	}
+
+	data, err := os.ReadFile(".gitignore")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), filepath.Join(".context", ".scratchpad.key")) {
+		t.Errorf(".gitignore = %q, want key entry", string(data))
+	}
+}
+
+func TestEnsureGitignore_AlreadyPresent(t *testing.T) {
+	dir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(dir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	entry := filepath.Join(".context", ".scratchpad.key")
+	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	err := ensureGitignore(".context", ".scratchpad.key")
+	if err != nil {
+		t.Fatalf("ensureGitignore error: %v", err)
+	}
+
+	data, _ := os.ReadFile(".gitignore")
+	// Should not duplicate the entry
+	count := strings.Count(string(data), entry)
+	if count != 1 {
+		t.Errorf("expected 1 occurrence of entry, got %d", count)
+	}
+}
+
+func TestEnsureGitignore_AppendToExisting(t *testing.T) {
+	dir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(dir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	// Write file without trailing newline
+	if err := os.WriteFile(".gitignore", []byte("node_modules"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	err := ensureGitignore(".context", ".scratchpad.key")
+	if err != nil {
+		t.Fatalf("ensureGitignore error: %v", err)
+	}
+
+	data, _ := os.ReadFile(".gitignore")
+	if !strings.Contains(string(data), "node_modules\n") {
+		t.Error("existing content should be preserved with newline")
+	}
+	if !strings.Contains(string(data), filepath.Join(".context", ".scratchpad.key")) {
+		t.Error("new entry should be present")
+	}
+}
+
+func TestScratchpadPath_Plaintext(t *testing.T) {
+	setupPlaintext(t)
+
+	path := scratchpadPath()
+	if !strings.HasSuffix(path, config.FileScratchpadMd) {
+		t.Errorf("scratchpadPath() = %q, want suffix %q", path, config.FileScratchpadMd)
+	}
+}
+
+func TestScratchpadPath_Encrypted(t *testing.T) {
+	setupEncrypted(t)
+
+	path := scratchpadPath()
+	if !strings.HasSuffix(path, config.FileScratchpadEnc) {
+		t.Errorf("scratchpadPath() = %q, want suffix %q", path, config.FileScratchpadEnc)
+	}
+}
+
+func TestKeyPath(t *testing.T) {
+	setupEncrypted(t)
+
+	path := keyPath()
+	if !strings.HasSuffix(path, config.FileScratchpadKey) {
+		t.Errorf("keyPath() = %q, want suffix %q", path, config.FileScratchpadKey)
+	}
+}
+
+func TestEnsureKey_KeyAlreadyExists(t *testing.T) {
+	setupEncrypted(t)
+
+	// Key already exists from setup
+	err := ensureKey()
+	if err != nil {
+		t.Fatalf("ensureKey should succeed when key already exists: %v", err)
+	}
+}
+
+func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
+	dir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(dir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		rc.Reset()
+	})
+
+	rc.Reset()
+	rc.OverrideContextDir(config.DirContext)
+
+	ctxDir := filepath.Join(dir, config.DirContext)
+	if err := os.MkdirAll(ctxDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create enc file but no key
+	encPath := filepath.Join(ctxDir, config.FileScratchpadEnc)
+	if err := os.WriteFile(encPath, []byte("data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	err := ensureKey()
+	if err == nil {
+		t.Fatal("expected error when enc file exists without key")
+	}
+	if !strings.Contains(err.Error(), "no key") {
+		t.Errorf("error = %q, want 'no key' message", err.Error())
+	}
+}
+
+func TestEnsureKey_GeneratesNewKey(t *testing.T) {
+	dir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(dir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		rc.Reset()
+	})
+
+	rc.Reset()
+	rc.OverrideContextDir(config.DirContext)
+
+	ctxDir := filepath.Join(dir, config.DirContext)
+	if err := os.MkdirAll(ctxDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	// No key, no enc file -- should generate
+	err := ensureKey()
+	if err != nil {
+		t.Fatalf("ensureKey error: %v", err)
+	}
+
+	kp := filepath.Join(ctxDir, config.FileScratchpadKey)
+	if _, err := os.Stat(kp); err != nil {
+		t.Error("key file should have been created")
+	}
+}
+
+func TestWriteEntries_Plaintext(t *testing.T) {
+	setupPlaintext(t)
+
+	entries := []string{"one", "two"}
+	if err := writeEntries(entries); err != nil {
+		t.Fatalf("writeEntries error: %v", err)
+	}
+
+	path := scratchpadPath()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "one\ntwo\n" {
+		t.Errorf("file = %q, want %q", string(data), "one\ntwo\n")
+	}
+}
+
+func TestReadEntries_Plaintext(t *testing.T) {
+	setupPlaintext(t)
+
+	path := scratchpadPath()
+	if err := os.WriteFile(path, []byte("alpha\nbeta\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	entries, err := readEntries()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 2 || entries[0] != "alpha" || entries[1] != "beta" {
+		t.Errorf("entries = %v, want [alpha beta]", entries)
+	}
+}
+
+func TestReadEntries_NoFile(t *testing.T) {
+	setupEncrypted(t)
+
+	entries, err := readEntries()
+	if err != nil {
+		t.Fatalf("readEntries with no file should return nil, nil: %v", err)
+	}
+	if entries != nil {
+		t.Errorf("entries = %v, want nil", entries)
+	}
+}
+
+func TestResolve_PlaintextMode(t *testing.T) {
+	setupPlaintext(t)
+
+	_, err := runCmd(newPadCmd("resolve"))
+	if err == nil {
+		t.Fatal("expected error for resolve in plaintext mode")
+	}
+	if !strings.Contains(err.Error(), "only needed for encrypted") {
+		t.Errorf("error = %q, want 'only needed for encrypted'", err.Error())
+	}
+}
+
+func TestResolve_NoConflictFiles(t *testing.T) {
+	setupEncrypted(t)
+
+	_, err := runCmd(newPadCmd("resolve"))
+	if err == nil {
+		t.Fatal("expected error when no conflict files exist")
+	}
+	if !strings.Contains(err.Error(), "no conflict files found") {
+		t.Errorf("error = %q, want 'no conflict files'", err.Error())
+	}
+}
+
+func TestResolve_WithConflictFiles(t *testing.T) {
+	setupEncrypted(t)
+
+	// Load the key
+	kp := filepath.Join(config.DirContext, config.FileScratchpadKey)
+	key, err := crypto.LoadKey(kp)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create encrypted "ours" file
+	oursPlain := []byte("ours-entry\n")
+	oursCipher, err := crypto.Encrypt(key, oursPlain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	oursPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".ours")
+	if err := os.WriteFile(oursPath, oursCipher, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create encrypted "theirs" file
+	theirsPlain := []byte("theirs-entry\n")
+	theirsCipher, err := crypto.Encrypt(key, theirsPlain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	theirsPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".theirs")
+	if err := os.WriteFile(theirsPath, theirsCipher, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("resolve"))
+	if err != nil {
+		t.Fatalf("resolve error: %v", err)
+	}
+	if !strings.Contains(out, "OURS") {
+		t.Error("output should contain OURS section")
+	}
+	if !strings.Contains(out, "THEIRS") {
+		t.Error("output should contain THEIRS section")
+	}
+	if !strings.Contains(out, "ours-entry") {
+		t.Error("output should contain ours-entry")
+	}
+	if !strings.Contains(out, "theirs-entry") {
+		t.Error("output should contain theirs-entry")
+	}
+}
+
+func TestResolve_OnlyOursFile(t *testing.T) {
+	setupEncrypted(t)
+
+	kp := filepath.Join(config.DirContext, config.FileScratchpadKey)
+	key, err := crypto.LoadKey(kp)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	oursPlain := []byte("ours-only\n")
+	oursCipher, err := crypto.Encrypt(key, oursPlain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	oursPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".ours")
+	if err := os.WriteFile(oursPath, oursCipher, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("resolve"))
+	if err != nil {
+		t.Fatalf("resolve error: %v", err)
+	}
+	if !strings.Contains(out, "OURS") {
+		t.Error("output should contain OURS section")
+	}
+	if strings.Contains(out, "THEIRS") {
+		t.Error("output should NOT contain THEIRS section when only ours exists")
+	}
+}
+
+func TestMv_SamePosition(t *testing.T) {
+	setupEncrypted(t)
+
+	for _, e := range []string{"A", "B", "C"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	// Move entry 2 to position 2 (noop)
+	out, err := runCmd(newPadCmd("mv", "2", "2"))
+	if err != nil {
+		t.Fatalf("mv error: %v", err)
+	}
+	if !strings.Contains(out, "Moved entry 2 to 2.") {
+		t.Errorf("output = %q", out)
+	}
+}
+
+func TestList_PlaintextEmpty(t *testing.T) {
+	setupPlaintext(t)
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatalf("list error: %v", err)
+	}
+	if !strings.Contains(out, msgEmpty) {
+		t.Errorf("output = %q, want empty message", out)
+	}
+}
+
+func TestAdd_MultiplePlaintext(t *testing.T) {
+	setupPlaintext(t)
+
+	for i, e := range []string{"first", "second", "third"} {
+		out, err := runCmd(newPadCmd("add", e))
+		if err != nil {
+			t.Fatalf("add error: %v", err)
+		}
+		expected := strings.TrimSpace(out)
+		_ = expected
+		if !strings.Contains(out, "Added entry") {
+			t.Errorf("add %d: output = %q, want 'Added entry'", i+1, out)
+		}
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "first") || !strings.Contains(out, "second") || !strings.Contains(out, "third") {
+		t.Errorf("list output missing entries: %q", out)
+	}
+}
+
+func TestEdit_AppendOutOfRange(t *testing.T) {
+	setupEncrypted(t)
+
+	_, err := runCmd(newPadCmd("edit", "1", "--append", "suffix"))
+	if err == nil {
+		t.Fatal("expected error for append on empty scratchpad")
+	}
+}
+
+func TestEdit_PrependOutOfRange(t *testing.T) {
+	setupEncrypted(t)
+
+	_, err := runCmd(newPadCmd("edit", "1", "--prepend", "prefix"))
+	if err == nil {
+		t.Fatal("expected error for prepend on empty scratchpad")
+	}
+}
+
+func TestDecryptFile_BadData(t *testing.T) {
+	key, _ := crypto.GenerateKey()
+	dir := t.TempDir()
+	path := filepath.Join(dir, "bad.enc")
+	if err := os.WriteFile(path, []byte("not-encrypted"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := decryptFile(key, path)
+	if err == nil {
+		t.Fatal("expected decryption error for bad data")
+	}
+	if !strings.Contains(err.Error(), "wrong key") {
+		t.Errorf("error = %q, want 'wrong key'", err.Error())
+	}
+}
+
+func TestDecryptFile_MissingFile(t *testing.T) {
+	key, _ := crypto.GenerateKey()
+
+	_, err := decryptFile(key, "/nonexistent/path")
+	if err == nil {
+		t.Fatal("expected error for missing file")
+	}
+}
+
+func TestDecryptFile_ValidData(t *testing.T) {
+	key, _ := crypto.GenerateKey()
+	dir := t.TempDir()
+	path := filepath.Join(dir, "good.enc")
+
+	plaintext := []byte("entry1\nentry2\n")
+	ciphertext, err := crypto.Encrypt(key, plaintext)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, ciphertext, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	entries, err := decryptFile(key, path)
+	if err != nil {
+		t.Fatalf("decryptFile error: %v", err)
+	}
+	if len(entries) != 2 || entries[0] != "entry1" || entries[1] != "entry2" {
+		t.Errorf("entries = %v, want [entry1 entry2]", entries)
+	}
+}
+
+func TestRm_Plaintext(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{"one", "two"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("rm", "1"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "Removed entry 1.") {
+		t.Errorf("output = %q", out)
+	}
+
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(out, "one") {
+		t.Error("entry 'one' should be removed")
+	}
+	if !strings.Contains(out, "two") {
+		t.Error("entry 'two' should remain")
+	}
+}
+
+func TestEdit_PlaintextReplace(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "original")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("edit", "1", "replaced"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "Updated entry 1.") {
+		t.Errorf("output = %q", out)
+	}
+
+	out, err = runCmd(newPadCmd("show", "1"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "replaced") {
+		t.Error("entry should be replaced")
+	}
+}
+
+func TestMv_Plaintext(t *testing.T) {
+	setupPlaintext(t)
+
+	for _, e := range []string{"A", "B", "C"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("mv", "1", "3"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "Moved entry 1 to 3.") {
+		t.Errorf("output = %q", out)
+	}
+
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimSpace(out), "\n")
+	if len(lines) != 3 {
+		t.Fatalf("expected 3 lines, got %d", len(lines))
+	}
+	if !strings.Contains(lines[0], "B") {
+		t.Errorf("line 1 = %q, want B", lines[0])
+	}
+	if !strings.Contains(lines[1], "C") {
+		t.Errorf("line 2 = %q, want C", lines[1])
+	}
+	if !strings.Contains(lines[2], "A") {
+		t.Errorf("line 3 = %q, want A", lines[2])
+	}
+}

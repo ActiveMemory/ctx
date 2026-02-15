@@ -234,3 +234,240 @@ func TestGetRC_Singleton(t *testing.T) {
 		t.Error("RC() should return same instance")
 	}
 }
+
+func TestPriorityOrder(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// Default has nil PriorityOrder
+	order := PriorityOrder()
+	if order != nil {
+		t.Errorf("PriorityOrder() = %v, want nil", order)
+	}
+}
+
+func TestPriorityOrder_Custom(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `priority_order:
+  - TASKS.md
+  - DECISIONS.md
+  - LEARNINGS.md
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	order := PriorityOrder()
+	if len(order) != 3 {
+		t.Fatalf("PriorityOrder() len = %d, want 3", len(order))
+	}
+	if order[0] != "TASKS.md" {
+		t.Errorf("PriorityOrder()[0] = %q, want %q", order[0], "TASKS.md")
+	}
+}
+
+func TestAutoArchive(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// Default is true
+	if !AutoArchive() {
+		t.Error("AutoArchive() = false, want true")
+	}
+}
+
+func TestAutoArchive_Disabled(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `auto_archive: false`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	if AutoArchive() {
+		t.Error("AutoArchive() = true, want false")
+	}
+}
+
+func TestArchiveAfterDays(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	days := ArchiveAfterDays()
+	if days != DefaultArchiveAfterDays {
+		t.Errorf("ArchiveAfterDays() = %d, want %d", days, DefaultArchiveAfterDays)
+	}
+}
+
+func TestArchiveAfterDays_Custom(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `archive_after_days: 30`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	days := ArchiveAfterDays()
+	if days != 30 {
+		t.Errorf("ArchiveAfterDays() = %d, want %d", days, 30)
+	}
+}
+
+func TestScratchpadEncrypt_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// Default (nil pointer) should return true
+	if !ScratchpadEncrypt() {
+		t.Error("ScratchpadEncrypt() = false, want true (default)")
+	}
+}
+
+func TestScratchpadEncrypt_Explicit(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `scratchpad_encrypt: false`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	if ScratchpadEncrypt() {
+		t.Error("ScratchpadEncrypt() = true, want false")
+	}
+}
+
+func TestScratchpadEncrypt_ExplicitTrue(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `scratchpad_encrypt: true`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	if !ScratchpadEncrypt() {
+		t.Error("ScratchpadEncrypt() = false, want true")
+	}
+}
+
+func TestFilePriority_DefaultOrder(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// CONSTITUTION.md should be first in default FileReadOrder
+	p := FilePriority(config.FileConstitution)
+	if p != 1 {
+		t.Errorf("FilePriority(%q) = %d, want 1", config.FileConstitution, p)
+	}
+
+	// TASKS.md should be second
+	p = FilePriority(config.FileTask)
+	if p != 2 {
+		t.Errorf("FilePriority(%q) = %d, want 2", config.FileTask, p)
+	}
+
+	// Unknown file gets 100
+	p = FilePriority("UNKNOWN.md")
+	if p != 100 {
+		t.Errorf("FilePriority(%q) = %d, want 100", "UNKNOWN.md", p)
+	}
+}
+
+func TestFilePriority_CustomOrder(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `priority_order:
+  - DECISIONS.md
+  - TASKS.md
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	// DECISIONS.md should be first in custom order
+	p := FilePriority(config.FileDecision)
+	if p != 1 {
+		t.Errorf("FilePriority(%q) = %d, want 1", config.FileDecision, p)
+	}
+
+	// TASKS.md should be second
+	p = FilePriority(config.FileTask)
+	if p != 2 {
+		t.Errorf("FilePriority(%q) = %d, want 2", config.FileTask, p)
+	}
+
+	// File not in custom order gets 100
+	p = FilePriority("UNKNOWN.md")
+	if p != 100 {
+		t.Errorf("FilePriority(%q) = %d, want 100", "UNKNOWN.md", p)
+	}
+}
+
+func TestContextDir_NoOverride(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	dir := ContextDir()
+	if dir != config.DirContext {
+		t.Errorf("ContextDir() = %q, want %q", dir, config.DirContext)
+	}
+}
+
+func TestGetRC_NegativeEnvBudget(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	t.Setenv(config.EnvCtxTokenBudget, "-100")
+
+	Reset()
+
+	// Negative budget should be ignored (budget > 0 check)
+	rc := RC()
+	if rc.TokenBudget != DefaultTokenBudget {
+		t.Errorf("TokenBudget = %d, want %d (default on negative env)", rc.TokenBudget, DefaultTokenBudget)
+	}
+}

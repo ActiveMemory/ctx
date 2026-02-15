@@ -11,6 +11,23 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Why Zensical](2026-02-15-why-zensical.md)
+
+*Jose Alekhinne / February 15, 2026*
+
+I needed a static site generator for the journal system and the instinct
+was Hugo — same language as ctx, fast, well-established. But instinct is
+not analysis. The journal entries are standard Markdown with YAML
+frontmatter. That is it. No JSX, no shortcodes, no custom templating.
+This post is about why zensical — a pre-1.0 tool from the Material for
+MkDocs team — was the right choice: thin dependencies, MkDocs-compatible
+config, 4-5x faster incremental rebuilds, and zero lock-in.
+
+**Topics**: tooling, static site generators, journal system,
+infrastructure decisions, context engineering
+
+---
+
 ### [Parallel Agents with Git Worktrees](2026-02-14-parallel-agents-with-worktrees.md)
 
 *Jose Alekhinne / February 14, 2026*

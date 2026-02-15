@@ -81,3 +81,19 @@ func CheckPersistenceScript() ([]byte, error) {
 	}
 	return content, nil
 }
+
+// CheckJournalScript returns the journal export/enrich reminder hook script.
+//
+// The script detects unexported Claude sessions and unenriched journal entries,
+// then prints actionable commands. Runs once per day (throttled by marker file).
+//
+// Returns:
+//   - []byte: Raw bytes of the check-journal.sh script
+//   - error: Non-nil if the embedded file cannot be read
+func CheckJournalScript() ([]byte, error) {
+	content, err := tpl.ClaudeHookByFileName(config.FileCheckJournal)
+	if err != nil {
+		return nil, errFileRead(config.FileCheckJournal, err)
+	}
+	return content, nil
+}

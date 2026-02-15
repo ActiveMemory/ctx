@@ -7,7 +7,12 @@
 package learnings
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestCmd(t *testing.T) {
@@ -49,5 +54,87 @@ func TestCmd_HasReindexSubcommand(t *testing.T) {
 
 	if !found {
 		t.Error("reindex subcommand not found")
+	}
+}
+
+func TestRunReindex_NoFile(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rc.Reset()
+	defer rc.Reset()
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"reindex"})
+
+	err := cmd.Execute()
+	if err == nil {
+		t.Fatal("expected error when LEARNINGS.md does not exist")
+	}
+}
+
+func TestRunReindex_WithFile(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rc.Reset()
+	defer rc.Reset()
+
+	// Create the context directory and LEARNINGS.md file
+	ctxDir := filepath.Join(tempDir, config.DirContext)
+	_ = os.MkdirAll(ctxDir, 0755)
+
+	content := `# Learnings
+
+## 2026-01-15 — Always validate input
+
+**Context:** Found a bug from invalid input
+**Lesson:** Validate at boundaries
+**Application:** Add validation to all handlers
+`
+	_ = os.WriteFile(filepath.Join(ctxDir, config.FileLearning), []byte(content), 0644)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"reindex"})
+
+	err := cmd.Execute()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// Verify the file was updated
+	updated, err := os.ReadFile(filepath.Join(ctxDir, config.FileLearning))
+	if err != nil {
+		t.Fatalf("failed to read updated file: %v", err)
+	}
+	if len(updated) == 0 {
+		t.Error("updated file is empty")
+	}
+}
+
+func TestRunReindex_EmptyFile(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rc.Reset()
+	defer rc.Reset()
+
+	// Create the context directory and empty LEARNINGS.md
+	ctxDir := filepath.Join(tempDir, config.DirContext)
+	_ = os.MkdirAll(ctxDir, 0755)
+	_ = os.WriteFile(filepath.Join(ctxDir, config.FileLearning), []byte("# Learnings\n"), 0644)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"reindex"})
+
+	err := cmd.Execute()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
 }

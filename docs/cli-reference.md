@@ -679,7 +679,7 @@ all sessions by date, and individual pages for each journal entry.
 Requires `zensical` to be installed for `--build` or `--serve`:
 
 ```bash
-pip install zensical
+pipx install zensical
 ```
 
 **Example**:
@@ -738,7 +738,7 @@ If no directory is specified, serves the journal site (`.context/journal-site`).
 Requires `zensical` to be installed:
 
 ```bash
-pip install zensical
+pipx install zensical
 ```
 
 **Example**:

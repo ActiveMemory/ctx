@@ -54,6 +54,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		{config.FileBlockNonPathScript, claude.BlockNonPathCtxScript},
 		{config.FileCheckContextSize, claude.CheckContextSizeScript},
 		{config.FileCheckPersistence, claude.CheckPersistenceScript},
+		{config.FileCheckJournal, claude.CheckJournalScript},
 		{config.FileCleanupTmp, claude.CleanupTmpScript},
 	}
 	for _, hs := range hookScripts {

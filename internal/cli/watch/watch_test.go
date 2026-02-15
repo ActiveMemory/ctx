@@ -347,3 +347,499 @@ func TestRunCompleteSilentNoMatch(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 }
+
+func TestRunCompleteSilent_NoArgs(t *testing.T) {
+	err := runCompleteSilent([]string{})
+	if err == nil {
+		t.Fatal("expected error for empty args")
+	}
+	if !strings.Contains(err.Error(), "no task specified") {
+		t.Errorf("error = %q, want 'no task specified'", err.Error())
+	}
+}
+
+func TestRunWatch_NoContext(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	// Reset package-level vars
+	watchLog = ""
+	watchDryRun = false
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	err := runWatch(cmd, nil)
+	if err == nil {
+		t.Fatal("expected error when no .context/ exists")
+	}
+	if !strings.Contains(err.Error(), "ctx init") {
+		t.Errorf("error = %q, want 'ctx init' suggestion", err.Error())
+	}
+}
+
+func TestRunWatch_WithLogFile(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchLog = ""
+		watchDryRun = false
+		rc.Reset()
+	})
+
+	rc.Reset()
+
+	// Initialize context
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a log file with context-update commands
+	logContent := `Some output
+<context-update type="task">Task from log file</context-update>
+More output
+`
+	logPath := filepath.Join(tmpDir, "test.log")
+	if err := os.WriteFile(logPath, []byte(logContent), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--log", logPath})
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	err := cmd.Execute()
+	if err != nil {
+		t.Fatalf("runWatch error: %v", err)
+	}
+
+	// Verify task was written
+	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
+	content, err := os.ReadFile(filepath.Clean(tasksPath))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(content), "Task from log file") {
+		t.Error("task from log file should be added")
+	}
+}
+
+func TestRunWatch_DryRun(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchLog = ""
+		watchDryRun = false
+		rc.Reset()
+	})
+
+	rc.Reset()
+
+	// Initialize context
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a log file with updates
+	logContent := `<context-update type="task">Dry run task</context-update>
+`
+	logPath := filepath.Join(tmpDir, "dry.log")
+	if err := os.WriteFile(logPath, []byte(logContent), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--log", logPath, "--dry-run"})
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	err := cmd.Execute()
+	if err != nil {
+		t.Fatalf("runWatch error: %v", err)
+	}
+
+	out := buf.String()
+	if !strings.Contains(out, "DRY RUN") {
+		t.Error("output should indicate dry run mode")
+	}
+	if !strings.Contains(out, "Would apply") {
+		t.Error("output should show what would be applied")
+	}
+}
+
+func TestRunWatch_InvalidLogFile(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchLog = ""
+		watchDryRun = false
+		rc.Reset()
+	})
+
+	rc.Reset()
+
+	// Initialize context
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--log", "/nonexistent/path/to/log"})
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	err := cmd.Execute()
+	if err == nil {
+		t.Fatal("expected error for nonexistent log file")
+	}
+	if !strings.Contains(err.Error(), "failed to open log file") {
+		t.Errorf("error = %q, want 'failed to open log file'", err.Error())
+	}
+}
+
+func TestProcessStream_DryRunMode(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchDryRun = false
+		watchLog = ""
+		rc.Reset()
+	})
+
+	rc.Reset()
+
+	// Initialize context
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a log file with the dry-run content (use Execute to properly set flags)
+	logContent := `<context-update type="task">Dry run stream task</context-update>
+`
+	logPath := filepath.Join(tmpDir, "drystream.log")
+	if err := os.WriteFile(logPath, []byte(logContent), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--log", logPath, "--dry-run"})
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	err := cmd.Execute()
+	if err != nil {
+		t.Fatalf("processStream error: %v", err)
+	}
+
+	out := buf.String()
+	if !strings.Contains(out, "Would apply") {
+		t.Errorf("dry run should show 'Would apply', got: %q", out)
+	}
+	if !strings.Contains(out, "Dry run stream task") {
+		t.Errorf("dry run should show task content, got: %q", out)
+	}
+}
+
+func TestProcessStream_FailedApply(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchDryRun = false
+	})
+
+	// Initialize context
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	watchDryRun = false
+
+	// Decision without required fields should fail
+	input := `<context-update type="decision">Bad decision</context-update>
+`
+	reader := strings.NewReader(input)
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+
+	err := processStream(cmd, reader)
+	if err != nil {
+		t.Fatalf("processStream should not return error for failed apply: %v", err)
+	}
+
+	out := buf.String()
+	if !strings.Contains(out, "Failed to apply") {
+		t.Error("output should indicate failed apply")
+	}
+}
+
+func TestProcessStream_MultipleUpdates(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchDryRun = false
+	})
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	watchDryRun = false
+
+	input := `<context-update type="task">First task</context-update>
+<context-update type="task">Second task</context-update>
+<context-update type="convention">Use snake_case</context-update>
+`
+	reader := strings.NewReader(input)
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+
+	err := processStream(cmd, reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	out := buf.String()
+	if strings.Count(out, "Applied") < 3 {
+		t.Errorf("expected 3 applied updates, got: %q", out)
+	}
+}
+
+func TestProcessStream_DecisionWithAttributes(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchDryRun = false
+	})
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	watchDryRun = false
+
+	input := `<context-update type="decision" context="Need a DB" rationale="PostgreSQL is mature" consequences="Team needs PG training">Use PostgreSQL</context-update>
+`
+	reader := strings.NewReader(input)
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+
+	err := processStream(cmd, reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Verify decision was written
+	decPath := filepath.Join(rc.ContextDir(), config.FileDecision)
+	content, err := os.ReadFile(filepath.Clean(decPath))
+	if err != nil {
+		t.Fatal(err)
+	}
+	contentStr := string(content)
+	if !strings.Contains(contentStr, "Use PostgreSQL") {
+		t.Error("decision title should be in file")
+	}
+	if !strings.Contains(contentStr, "Need a DB") {
+		t.Error("context attribute should be in file")
+	}
+}
+
+func TestProcessStream_NoUpdates(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchDryRun = false
+	})
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	watchDryRun = false
+
+	input := `Just regular text with no updates.
+Another line of normal output.
+`
+	reader := strings.NewReader(input)
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+
+	err := processStream(cmd, reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	out := buf.String()
+	if strings.Contains(out, "Applied") {
+		t.Error("should have no applied updates for plain text")
+	}
+}
+
+func TestContextUpdate_Fields(t *testing.T) {
+	u := ContextUpdate{
+		Type:         "learning",
+		Content:      "Title",
+		Context:      "ctx",
+		Lesson:       "lesson",
+		Application:  "app",
+		Rationale:    "rat",
+		Consequences: "cons",
+	}
+	if u.Type != "learning" || u.Content != "Title" {
+		t.Error("ContextUpdate fields should be set correctly")
+	}
+	if u.Context != "ctx" || u.Lesson != "lesson" || u.Application != "app" {
+		t.Error("learning fields should be set correctly")
+	}
+	if u.Rationale != "rat" || u.Consequences != "cons" {
+		t.Error("decision fields should be set correctly")
+	}
+}
+
+func TestCmd_HasFlags(t *testing.T) {
+	cmd := Cmd()
+	if cmd.Use != "watch" {
+		t.Errorf("cmd.Use = %q, want 'watch'", cmd.Use)
+	}
+
+	logFlag := cmd.Flags().Lookup("log")
+	if logFlag == nil {
+		t.Fatal("expected --log flag")
+	}
+
+	dryRunFlag := cmd.Flags().Lookup("dry-run")
+	if dryRunFlag == nil {
+		t.Fatal("expected --dry-run flag")
+	}
+}
+
+func TestExtractAttribute_Consequences(t *testing.T) {
+	tag := `<context-update type="decision" consequences="something changes">`
+	result := extractAttribute(tag, "consequences")
+	if result != "something changes" {
+		t.Errorf("extractAttribute(consequences) = %q, want 'something changes'", result)
+	}
+}
+
+func TestExtractAttribute_Application(t *testing.T) {
+	tag := `<context-update type="learning" application="use jq">`
+	result := extractAttribute(tag, "application")
+	if result != "use jq" {
+		t.Errorf("extractAttribute(application) = %q, want 'use jq'", result)
+	}
+}
+
+func TestProcessStream_CompleteUpdate(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		watchDryRun = false
+	})
+
+	initCmd := initialize.Cmd()
+	initCmd.SetArgs([]string{})
+	if err := initCmd.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	// Write a task to complete
+	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
+	tasksContent := "# Tasks\n\n- [ ] Implement login\n- [ ] Write tests\n"
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	watchDryRun = false
+
+	input := `<context-update type="complete">login</context-update>
+`
+	reader := strings.NewReader(input)
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+
+	err := processStream(cmd, reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Verify the task was completed
+	content, err := os.ReadFile(filepath.Clean(tasksPath))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(content), "- [x] Implement login") {
+		t.Error("login task should be marked complete")
+	}
+}

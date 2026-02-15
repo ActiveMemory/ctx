@@ -397,7 +397,36 @@ ctx status
 
 ### Browse Session History
 
-Export AI session transcripts to a browsable journal site:
+List and search past AI sessions from the terminal:
+
+```bash
+ctx recall list --limit 5
+```
+
+#### Journal Site
+
+Export session transcripts to a browsable static site with search,
+navigation, and topic indices. This requires
+[zensical](https://pypi.org/project/zensical/) (**Python >= 3.10**),
+a Python-based static site generator from the Material for MkDocs team
+([why zensical?](blog/2026-02-15-why-zensical.md)).
+
+Install it once with [pipx](https://pipx.pypa.io/):
+
+```bash
+# One-time setup
+pipx install zensical
+```
+
+!!! warning "Avoid `pip install zensical`"
+    `pip install` often fails: For example, on macOS, system Python installs a
+    non-functional stub (*`zensical` requires `Python >= 3.10`), and
+    Homebrew Python blocks system-wide installs (`PEP 668`). 
+
+    `pipx` creates an **isolated environment** with the 
+    **correct Python version** automatically.
+
+Then export and serve:
 
 ```bash
 # Export all sessions to .context/journal/
@@ -407,24 +436,14 @@ ctx recall export --all
 ctx journal site --serve
 ```
 
-Then open [http://localhost:8000](http://localhost:8000).
+Open [http://localhost:8000](http://localhost:8000) to browse.
 
-To update the journal after new sessions, run the same two commands
-again; `recall export` preserves existing YAML frontmatter and only
+To update after new sessions, run the same two commands again;
+`recall export` preserves existing YAML frontmatter and only
 updates conversation content.
 
 See [Session Journal](session-journal.md) for the full pipeline
 including enrichment and normalization.
-
-### Browse Session History
-
-```bash
-# List recent sessions
-ctx recall list --limit 5
-
-# Export sessions to browsable journal
-ctx recall export --all
-```
 
 ### Run an Autonomous Loop
 

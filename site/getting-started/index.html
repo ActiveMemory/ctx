@@ -614,16 +614,22 @@
     </span>
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="Browse Session History">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#browse-session-history_1" class="md-nav__link">
+  <a href="#journal-site" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Browse Session History
+        Journal Site
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1409,16 +1415,22 @@
     </span>
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="Browse Session History">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#browse-session-history_1" class="md-nav__link">
+  <a href="#journal-site" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Browse Session History
+        Journal Site
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1769,32 +1781,46 @@ from Step 2, not hallucinating or asking you to re-explain.</p>
 </span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <h3 id="browse-session-history">Browse Session History<a class="headerlink" href="#browse-session-history" title="Permanent link">&para;</a></h3>
-<p>Export AI session transcripts to a browsable journal site:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Export all sessions to .context/journal/</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Generate and serve the journal site</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
+<p>List and search past AI sessions from the terminal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
 </span></code></pre></div>
-<p>Then open <a href="http://localhost:8000">http://localhost:8000</a>.</p>
-<p>To update the journal after new sessions, run the same two commands
-again; <code>recall export</code> preserves existing YAML frontmatter and only
+<h4 id="journal-site">Journal Site<a class="headerlink" href="#journal-site" title="Permanent link">&para;</a></h4>
+<p>Export session transcripts to a browsable static site with search,
+navigation, and topic indices. This requires
+<a href="https://pypi.org/project/zensical/">zensical</a> (<strong>Python &gt;= 3.10</strong>),
+a Python-based static site generator from the Material for MkDocs team
+(<a href="../blog/2026-02-15-why-zensical/">why zensical?</a>).</p>
+<p>Install it once with <a href="https://pipx.pypa.io/">pipx</a>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># One-time setup</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Avoid <code>pip install zensical</code></p>
+<p><code>pip install</code> often fails: For example, on macOS, system Python installs a
+non-functional stub (*<code>zensical</code> requires <code>Python &gt;= 3.10</code>), and
+Homebrew Python blocks system-wide installs (<code>PEP 668</code>). </p>
+<p><code>pipx</code> creates an <strong>isolated environment</strong> with the 
+<strong>correct Python version</strong> automatically.</p>
+</div>
+<p>Then export and serve:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Export all sessions to .context/journal/</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Generate and serve the journal site</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
+</span></code></pre></div>
+<p>Open <a href="http://localhost:8000">http://localhost:8000</a> to browse.</p>
+<p>To update after new sessions, run the same two commands again;
+<code>recall export</code> preserves existing YAML frontmatter and only
 updates conversation content.</p>
 <p>See <a href="../session-journal/">Session Journal</a> for the full pipeline
 including enrichment and normalization.</p>
-<h3 id="browse-session-history_1">Browse Session History<a class="headerlink" href="#browse-session-history_1" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># List recent sessions</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Export sessions to browsable journal</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span></code></pre></div>
 <h3 id="run-an-autonomous-loop">Run an Autonomous Loop<a class="headerlink" href="#run-an-autonomous-loop" title="Permanent link">&para;</a></h3>
 <p>Generate a script that iterates an AI agent until a completion
 signal is detected:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>loop
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>./loop.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>loop
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>./loop.sh
 </span></code></pre></div>
 <p>See <a href="../autonomous-loop/">Autonomous Loops</a> for configuration
 and advanced usage.</p>

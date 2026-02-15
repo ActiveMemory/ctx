@@ -2038,8 +2038,13 @@ content, and clean markdown produces better metadata extraction.</p>
 </span></code></pre></div></p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <p>The journal site uses <a href="https://pypi.org/project/zensical/">zensical</a> for static site generation:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span>zensical
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
+<blockquote>
+<p><strong>macOS note:</strong> <code>pip install zensical</code> may install a non-functional stub on
+system Python 3.9. Use <code>pipx install zensical</code> instead, which creates an
+isolated environment and handles Python version management automatically.</p>
+</blockquote>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../cli-reference/#ctx-recall">ctx recall</a>: Session discovery and listing</li>

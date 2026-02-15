@@ -263,7 +263,7 @@ navigation when frontmatter exists.
 
 You can also serve an existing site without regenerating using `ctx serve`.
 
-The site generator requires `zensical` (`pip install zensical`).
+The site generator requires `zensical` (`pipx install zensical`).
 
 ## Where the Agent Adds Value
 

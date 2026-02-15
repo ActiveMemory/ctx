@@ -81,6 +81,9 @@ func userPromptSubmitHookMatcher(hooksDir string) []HookMatcher {
 			NewHook(
 				HookTypeCommand, path.Join(hooksDir, config.FileCheckPersistence),
 			),
+			NewHook(
+				HookTypeCommand, path.Join(hooksDir, config.FileCheckJournal),
+			),
 		},
 	}}
 }

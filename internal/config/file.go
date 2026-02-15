@@ -112,6 +112,8 @@ const (
 	FileCheckContextSize = "check-context-size.sh"
 	// FileCheckPersistence is the hook script for persistence nudges.
 	FileCheckPersistence = "check-persistence.sh"
+	// FileCheckJournal is the hook script for journal export/enrich reminders.
+	FileCheckJournal = "check-journal.sh"
 	// FileClaudeMd is the Claude Code configuration file in the project root.
 	FileClaudeMd = "CLAUDE.md"
 	// FilePromptMd is the session prompt file in the project root.

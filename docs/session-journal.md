@@ -505,8 +505,12 @@ grep -r "authentication" .context/journal/
 The journal site uses [zensical](https://pypi.org/project/zensical/) for static site generation:
 
 ```bash
-pip install zensical
+pipx install zensical
 ```
+
+> **macOS note:** `pip install zensical` may install a non-functional stub on
+> system Python 3.9. Use `pipx install zensical` instead, which creates an
+> isolated environment and handles Python version management automatically.
 
 ## See Also
 

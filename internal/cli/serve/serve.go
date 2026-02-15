@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 If no directory is specified, serves the journal site (.context/journal-site).
 
 Requires zensical to be installed:
-  pip install zensical
+  pipx install zensical
 
 Examples:
   ctx serve                           # Serve journal site
