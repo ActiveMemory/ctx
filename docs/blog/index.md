@@ -11,6 +11,20 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [ctx v0.3.0: The Discipline Release](2026-02-15-ctx-v0.3.0-the-discipline-release.md)
+
+*Jose Alekhinne / February 15, 2026*
+
+No new headline feature. No architectural pivot. No rewrite. Just 35+
+documentation and quality commits against ~15 feature commits — and
+somehow, the tool feels like it grew up overnight. This post is about
+what a release looks like when the ratio of polish to features is 3:1.
+
+**Topics**: release, skills migration, consolidation, code quality,
+E/A/R framework
+
+---
+
 ### [Why Zensical](2026-02-15-why-zensical.md)
 
 *Jose Alekhinne / February 15, 2026*
