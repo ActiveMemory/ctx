@@ -149,13 +149,18 @@ Verify installation:
 ctx --version
 ```
 
-### Version Control (Strongly Recommended)
+### Version Control (*Strongly Recommended*)
 
 `ctx` does not require git, but using version control with your `.context/`
-directory is strongly recommended. AI sessions occasionally modify or
-overwrite context files inadvertently. With git, the AI can check history
-and restore lost content — without it, the data is gone. Several `ctx`
-features (journal changelog, blog generation) also use git history directly.
+directory is strongly recommended. 
+
+AI sessions occasionally modify or overwrite context files inadvertently. 
+
+With `git`, the AI can check history and restore lost content: 
+Without it, the data is gone. 
+
+Also, several `ctx` features (journal changelog, blog generation) also use 
+`git` history directly.
 
 ## Quick Start
 
@@ -232,7 +237,7 @@ Next steps:
 ```
 
 This created your `.context/` directory with template files. If you're using
-Claude Code, it also configured hooks so context loads automatically.
+Claude Code, it also configures hooks so context loads automatically.
 
 ### Step 2: Populate Your Context
 
@@ -289,9 +294,10 @@ Recent Activity:
   - DECISIONS.md modified 1 minute ago
 ```
 
-Notice the **token estimate** — this is how much context your AI will load.
-The `○` next to LEARNINGS.md means it's still empty; it will fill in as you
-capture lessons during development.
+Notice the **token estimate**: This is how much context your AI will load.
+
+The `○` next to `LEARNINGS.md` means it's still empty; 
+it will fill in as you capture lessons during development.
 
 ### Step 4: Start an AI Session
 
@@ -316,7 +322,7 @@ Generated: 2026-02-14T15:30:45Z | Budget: 8000 tokens | Used: 1247
 - [ ] Implement user authentication
 
 ## Recent Decisions
-- Use PostgreSQL for primary database
+- Use PostgreSQL for the primary database
 ...
 ```
 
@@ -328,16 +334,21 @@ Ask your AI: **"What are our current tasks?"**
 
 A working setup produces a response like:
 
-> Based on the project context, you have one active task:
->
-> - **Implement user authentication** (pending)
->
-> There's also a recent architectural decision to **use PostgreSQL for
-> the primary database**, chosen for its ACID compliance and JSON support.
-> Want me to start on the authentication task?
+```text
+Based on the project context, you have one active task:
 
-That's the success moment — the AI is citing your exact context entries
-from Step 2, not hallucinating or asking you to re-explain.
+- **Implement user authentication** (pending)
+
+There's also a recent architectural decision to **use PostgreSQL for
+the primary database**, chosen for its ACID compliance and JSON support.
+
+Want me to start on the authentication task?
+```
+
+That's the success moment 🎉: 
+
+The AI is citing your exact context entries from Step 2, not hallucinating or 
+asking you to re-explain.
 
 ## What Gets Created
 
@@ -406,12 +417,19 @@ ctx recall list --limit 5
 #### Journal Site
 
 Export session transcripts to a browsable static site with search,
-navigation, and topic indices. This requires
-[zensical](https://pypi.org/project/zensical/) (**Python >= 3.10**),
-a Python-based static site generator from the Material for MkDocs team
-([why zensical?](blog/2026-02-15-why-zensical.md)).
+navigation, and topic indices. 
 
-Install it once with [pipx](https://pipx.pypa.io/):
+!!! info ""
+    The `ctx journal` command requires
+    [zensical](https://pypi.org/project/zensical/) (**Python >= 3.10**).
+
+    `zensical` is a Python-based static site generator from the 
+    *Material* for *MkDocs* team.
+
+    (*[why zensical?](blog/2026-02-15-why-zensical.md)*).
+
+If you don't have it on your system, 
+install `zensical` once with [pipx](https://pipx.pypa.io/):
 
 ```bash
 # One-time setup
@@ -420,13 +438,13 @@ pipx install zensical
 
 !!! warning "Avoid `pip install zensical`"
     `pip install` often fails: For example, on macOS, system Python installs a
-    non-functional stub (*`zensical` requires `Python >= 3.10`), and
+    non-functional stub (*`zensical` requires `Python >= 3.10`*), and
     Homebrew Python blocks system-wide installs (`PEP 668`). 
 
     `pipx` creates an **isolated environment** with the 
     **correct Python version** automatically.
 
-Then export and serve:
+Then, **export and serve**:
 
 ```bash
 # Export all sessions to .context/journal/
@@ -443,7 +461,7 @@ To update after new sessions, run the same two commands again;
 updates conversation content.
 
 See [Session Journal](session-journal.md) for the full pipeline
-including enrichment and normalization.
+including **normalization** and **enrichment**.
 
 ### Run an Autonomous Loop
 
