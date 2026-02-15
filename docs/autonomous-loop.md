@@ -262,7 +262,11 @@ ctx add learning "Rate limiting requires Redis connection"
 
 Or via update command:
 ```xml
-<context-update type="learning">Rate limiting requires Redis connection</context-update>
+<context-update type="learning"
+  context="Implementing rate limiter"
+  lesson="Rate limiting requires Redis connection"
+  application="Ensure Redis is provisioned before enabling rate limits"
+>Rate Limiting Redis Dependency</context-update>
 ```
 
 **Record decision:**

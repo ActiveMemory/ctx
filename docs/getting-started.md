@@ -372,6 +372,43 @@ asking you to re-explain.
 
 See [Context Files](context-files.md) for detailed documentation of each file.
 
+### What to `.gitignore`
+
+**Commit** your `.context/` knowledge files: **that's the whole point**.
+
+**`.gitignore`** generated and sensitive paths:
+
+```gitignore
+# Session data (large, potentially sensitive)
+.context/sessions/
+.context/journal/
+.context/journal-site/
+.context/journal-obsidian/
+
+# Hook logs (machine-specific)
+.context/logs/
+
+# Encryption key (NEVER commit)
+.context/.scratchpad.key
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
+```
+
+`ctx init` does **not** create a `.gitignore` for you: Add these
+entries to your project's existing `.gitignore`.
+
+!!! tip "Rule of Thumb"
+    * If it's knowledge (*decisions, tasks, learnings,
+      conventions*), **commit it**. 
+    * If it's generated output, raw session data, or a secret, `.gitignore` it.
+
+*See also*:
+
+* [Security considerations](security.md),
+* [Scratchpad encryption](scratchpad.md),
+* [Session Journal](session-journal.md)
+
 ## Common Workflows
 
 ### Track Context

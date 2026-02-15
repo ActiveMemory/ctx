@@ -423,9 +423,18 @@ and update context.
 **Context Update Commands:** Format for automated updates via `ctx watch`:
 
 ```xml
-<context-update type="learning">Key takeaway from today's work</context-update>
-<context-update type="decision">Use Redis for caching</context-update>
+<context-update type="task">Implement rate limiting</context-update>
 <context-update type="complete">user auth</context-update>
+<context-update type="learning"
+  context="Debugging hooks"
+  lesson="Hooks receive JSON via stdin"
+  application="Use jq to parse input"
+>Hook Input Format</context-update>
+<context-update type="decision"
+  context="Need a caching layer"
+  rationale="Redis is fast and team has experience"
+  consequences="Must provision Redis infrastructure"
+>Use Redis for caching</context-update>
 ```
 
 See [Integrations](integrations.md#context-update-commands) for full documentation.
