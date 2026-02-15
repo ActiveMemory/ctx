@@ -3,6 +3,13 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-15 | Permission drift needs auditing like code drift |
+| 2026-02-15 | Skill() permissions do not support name prefix globs |
+| 2026-02-15 | Wildcard trusted binaries, keep git granular |
+| 2026-02-15 | settings.local.json accumulates session debris |
+| 2026-02-15 | Skill vs runbook for agent self-modification |
+| 2026-02-15 | Cross-repo links to published docs should use ctx.ist |
+| 2026-02-15 | G304 gosec false positives in test files are safe to suppress |
 | 2026-02-14 | ctx add learning/decision requires structured flags, not just a string |
 | 2026-02-14 | ctx init is non-destructive toward tool-specific configs |
 | 2026-02-14 | merge insertion is position-aware, not append |
@@ -63,6 +70,76 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-15-044503] Permission drift needs auditing like code drift
+
+**Context**: settings.local.json is gitignored so it drifts independently — no PR review, no CI check catches stale or missing permissions
+
+**Lesson**: Permission drift is a distinct category from code or context drift. Skills get added/removed but their Skill() entries in settings.local.json lag behind. The /ctx-drift skill now checks for this.
+
+**Application**: Run /ctx-drift periodically to catch: missing Bash(ctx:*), missing Skill(ctx-*) for installed skills, stale Skill(ctx-*) for removed skills, granular entries that should be consolidated.
+
+---
+
+## [2026-02-15-044500] Skill() permissions do not support name prefix globs
+
+**Context**: Tried to use Skill(ctx-*) to cover all ctx skills in settings.local.json
+
+**Lesson**: Claude Code Skill() permission wildcards only match arguments (e.g., Skill(commit *)), not skill name prefixes. Skill(ctx-*) will not match ctx-add-learning, ctx-agent, etc.
+
+**Application**: List each Skill(ctx-*) entry individually in DefaultClaudePermissions and settings.local.json. When adding a new ctx-* skill, add its Skill() entry to both places.
+
+---
+
+## [2026-02-15-044457] Wildcard trusted binaries, keep git granular
+
+**Context**: Consolidated 22 ctx entries into Bash(ctx:*) and 6 make entries into Bash(make:*), but kept git commands individual
+
+**Lesson**: Trusted binaries (your own CLI, make) should use a single Bash(cmd:*) wildcard. Git needs per-command entries because safe (git log) and destructive (git reset --hard) commands share the same binary and hooks don't block all destructive git operations.
+
+**Application**: Use Bash(ctx:*) and Bash(make:*) wildcards. List git commands individually: git add, git branch, git commit, git diff, git log, git remote, git restore, git show, git stash, git status, git tag. Never wildcard Bash(git:*).
+
+---
+
+## [2026-02-15-044453] settings.local.json accumulates session debris
+
+**Context**: Audited settings.local.json and found 24 removable entries out of 90 — garbage, one-offs, subsumed patterns, stale references
+
+**Lesson**: Every Allow click appends an entry. Over time: hardcoded paths, literal arguments, duplicate intent (env var ordering), garbage entries, and stale skill references accumulate. Invisible drift because the file is gitignored.
+
+**Application**: Run periodic permission hygiene using hack/sanitize-permissions.md runbook. Use /ctx-drift to detect permission drift (missing skills, stale entries, consolidation opportunities).
+
+---
+
+## [2026-02-15-044450] Skill vs runbook for agent self-modification
+
+**Context**: Considered building a skill to clean up settings.local.json permissions
+
+**Lesson**: When a skill would edit files that control agent behavior (permissions, hooks, instructions), a runbook is safer. Auto-accept makes self-modifying skills an escalation vector.
+
+**Application**: Use runbooks (human edits, agent advises) for operations on .claude/settings.local.json, CLAUDE.md, hooks, and CONSTITUTION.md. Reserve skills for operations where agent autonomy is safe.
+
+---
+
+## [2026-02-15-040313] Cross-repo links to published docs should use ctx.ist
+
+**Context**: hack/persistent-irc.md linked to docs/ via relative paths, getting-started.md linked to MANIFESTO.md via GitHub — both bypass ctx.ist rendering (admonitions, nav, search)
+
+**Lesson**: When content is published on ctx.ist, always link to the site URL, not the GitHub blob or a relative file path. GitHub won't render zensical admonitions and readers lose navigation context.
+
+**Application**: When adding See Also or cross-references in runbooks or docs, use https://ctx.ist/... URLs for anything the site publishes. Reserve GitHub links for repo-only content (issues, releases, security tab, source files not on the site).
+
+---
+
+## [2026-02-15-034225] G304 gosec false positives in test files are safe to suppress
+
+**Context**: gosec flags os.ReadFile with variable paths as G304 (potential file inclusion), even in test files where paths come from t.TempDir() and compile-time constants
+
+**Lesson**: G304 requires user-controlled input to be exploitable. Test files using t.TempDir() and constants have no attack vector. Suppress with //nolint:gosec // test file path
+
+**Application**: When gosec raises G304 in test files, verify paths aren't from external input, then suppress with nolint comment rather than restructuring the code
 
 ---
 

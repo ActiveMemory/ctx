@@ -113,16 +113,25 @@ describe intent; the agent handles the mechanics.
 | You say | What the agent does |
 |---------|---------------------|
 | "jot down: check DNS after deploy" | `ctx pad add "check DNS after deploy"` |
+| "remember this: retry limit is 5" | `ctx pad add "retry limit is 5"` |
 | "show my scratchpad" / "what's on my pad" | `ctx pad` |
-| "show me entry 3" | `ctx pad show 3` |
-| "delete the third one" | `ctx pad rm 3` |
-| "change entry 2 to ..." | `ctx pad edit 2 "new text"` |
+| "show me entry 3" / "what's in entry 3" | `ctx pad show 3` |
+| "delete the third one" / "remove entry 3" | `ctx pad rm 3` |
+| "change entry 2 to ..." / "replace entry 2 with ..." | `ctx pad edit 2 "new text"` |
+| "append '-- important' to entry 3" / "add to entry 3: ..." | `ctx pad edit 3 --append " -- important"` |
+| "prepend 'URGENT:' to entry 1" | `ctx pad edit 1 --prepend "URGENT: "` |
 | "add the port to entry 2" | `ctx pad edit 2 --append ":8443"` |
-| "move the last one to the top" | `ctx pad mv N 1` |
+| "prioritize entry 4" / "move entry 4 to the top" | `ctx pad mv 4 1` |
+| "move entry 1 to the bottom" / "deprioritize entry 1" | `ctx pad mv 1 N` |
 | "anything on my scratchpad?" | `ctx pad` |
 
-The skill recognizes variations: "scratchpad", "pad", "notes", "sticky notes".
-You don't need to use exact trigger phrases.
+The skill recognizes variations: "scratchpad", "pad", "notes", "sticky
+notes", "jot down", "remember this", "note to self". You don't need to use
+exact trigger phrases.
+
+The key insight is **ambiguity around "add"**: "add a note" creates a new
+entry, while "add to entry 3" appends to an existing one. The skill
+distinguishes these from context.
 
 ## When to Use Scratchpad vs Context Files
 

@@ -128,6 +128,16 @@ storage out.
 
 ## Maintenance
 
+### [Claude Code Permission Hygiene](claude-code-permissions.md)
+
+Keep `.claude/settings.local.json` clean: recommended safe defaults,
+what to never pre-approve, and a maintenance workflow for cleaning
+up session debris.
+
+**Uses**: `ctx init`, `/ctx-drift`, `/sanitize-permissions`
+
+---
+
 ### [Detecting and Fixing Drift](context-health.md)
 
 Keep context files accurate by detecting structural drift

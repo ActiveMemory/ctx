@@ -169,6 +169,59 @@ If a skill was intentionally customized, note it and move on.
 Offer to update only ctx-managed skills, and always show the
 diff before overwriting.
 
+## Permission Drift
+
+After checking skills, verify that `.claude/settings.local.json`
+has the expected ctx permissions. This file is gitignored, so it
+drifts independently from the codebase.
+
+### Procedure
+
+1. Read `.claude/settings.local.json` and extract the allow list.
+
+2. Check for **missing ctx defaults**. Every entry in
+   `DefaultClaudePermissions` (defined in
+   `internal/config/file.go`) should be present. The current
+   expected set is:
+
+   - `Bash(ctx:*)` — covers all ctx subcommands
+   - `Skill(ctx-*)` — one entry per ctx-shipped skill
+
+   To get the authoritative list:
+
+   ```bash
+   ctx init --force 2>/dev/null  # in a temp dir
+   ```
+
+   Then compare permissions from the generated
+   `settings.local.json` against the project's copy.
+
+3. Check for **stale skill permissions**. If a `Skill(ctx-*)`
+   entry references a skill that no longer exists in
+   `.claude/skills/`, flag it.
+
+4. Check for **missing skill permissions**. If a `ctx-*` skill
+   exists in `.claude/skills/` but has no corresponding
+   `Skill(ctx-*)` in the allow list, flag it.
+
+### Interpreting Permission Drift
+
+| Finding                           | Action                                          |
+|-----------------------------------|-------------------------------------------------|
+| Missing `Bash(ctx:*)`            | Suggest adding — required for ctx to work       |
+| Missing `Skill(ctx-*)` entry     | Suggest adding — skill will prompt every time   |
+| Stale `Skill(ctx-*)` entry       | Suggest removing — dead reference               |
+| Granular `Bash(ctx <sub>:*)`     | Suggest consolidating to `Bash(ctx:*)`          |
+| One-off / session debris entries  | Note as hygiene issue (see `hack/sanitize-permissions.md`) |
+
+### Important
+
+Do **not** edit `settings.local.json` directly. Report findings
+and let the user make changes. This file controls agent
+permissions — self-modification is a security concern. Refer
+users to `hack/sanitize-permissions.md` for the manual cleanup
+procedure.
+
 ## Proactive Use
 
 Run drift detection without being asked when:

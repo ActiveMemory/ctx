@@ -231,15 +231,37 @@ var Packages = map[string]string{
 	"Gemfile":          "Ruby dependencies",
 }
 
-// DefaultClaudePermissions lists the default permissions for ctx commands.
+// DefaultClaudePermissions lists the default permissions for ctx commands and skills.
 //
-// These permissions allow Claude Code to run ctx CLI commands without
-// prompting for approval. All ctx subcommands are pre-approved.
+// These permissions allow Claude Code to run ctx CLI commands and skills without
+// prompting for approval. The Bash wildcard covers all ctx subcommands; the Skill
+// entries cover all ctx-shipped skills.
 var DefaultClaudePermissions = []string{
-	"Bash(ctx status:*)",
-	"Bash(ctx agent:*)",
-	"Bash(ctx add:*)",
-	"Bash(ctx tasks:*)",
-	"Bash(ctx loop:*)",
-	"Bash(ctx pad:*)",
+	"Bash(ctx:*)",
+	"Skill(ctx-add-convention)",
+	"Skill(ctx-add-decision)",
+	"Skill(ctx-add-learning)",
+	"Skill(ctx-add-task)",
+	"Skill(ctx-agent)",
+	"Skill(ctx-alignment-audit)",
+	"Skill(ctx-archive)",
+	"Skill(ctx-blog)",
+	"Skill(ctx-blog-changelog)",
+	"Skill(ctx-borrow)",
+	"Skill(ctx-commit)",
+	"Skill(ctx-context-monitor)",
+	"Skill(ctx-drift)",
+	"Skill(ctx-implement)",
+	"Skill(ctx-journal-enrich)",
+	"Skill(ctx-journal-enrich-all)",
+	"Skill(ctx-journal-normalize)",
+	"Skill(ctx-loop)",
+	"Skill(ctx-next)",
+	"Skill(ctx-pad)",
+	"Skill(ctx-prompt-audit)",
+	"Skill(ctx-recall)",
+	"Skill(ctx-reflect)",
+	"Skill(ctx-remember)",
+	"Skill(ctx-status)",
+	"Skill(ctx-worktree)",
 }

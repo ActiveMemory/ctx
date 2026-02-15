@@ -294,9 +294,9 @@ func TestInitCreatesPermissions(t *testing.T) {
 	}
 
 	requiredPerms := []string{
-		"Bash(ctx status:*)",
-		"Bash(ctx agent:*)",
-		"Bash(ctx add:*)",
+		"Bash(ctx:*)",
+		"Skill(ctx-agent)",
+		"Skill(ctx-add-learning)",
 	}
 
 	for _, p := range requiredPerms {
@@ -331,7 +331,7 @@ func TestInitMergesPermissions(t *testing.T) {
 			Allow: []string{
 				"Bash(git status:*)",
 				"Bash(make build:*)",
-				"Bash(ctx status:*)", // Already has one ctx permission
+				"Bash(ctx:*)", // Already has the ctx wildcard
 			},
 		},
 	}
@@ -371,19 +371,19 @@ func TestInitMergesPermissions(t *testing.T) {
 		t.Error("existing permission 'Bash(make build:*)' was removed")
 	}
 
-	// Check new ctx permissions were added
-	if !permSet["Bash(ctx agent:*)"] {
-		t.Error("missing new permission 'Bash(ctx agent:*)'")
+	// Check new ctx skill permissions were added
+	if !permSet["Skill(ctx-agent)"] {
+		t.Error("missing new permission 'Skill(ctx-agent)'")
 	}
-	// Check no duplicates (ctx status should appear once)
+	// Check no duplicates (ctx wildcard should appear once)
 	count := 0
 	for _, p := range settings.Permissions.Allow {
-		if p == "Bash(ctx status:*)" {
+		if p == "Bash(ctx:*)" {
 			count++
 		}
 	}
 	if count != 1 {
-		t.Errorf("'Bash(ctx status:*)' appears %d times, expected 1", count)
+		t.Errorf("'Bash(ctx:*)' appears %d times, expected 1", count)
 	}
 }
 

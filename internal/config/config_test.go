@@ -504,19 +504,23 @@ func TestDefaultClaudePermissions(t *testing.T) {
 		t.Error("DefaultClaudePermissions should not be empty")
 	}
 
-	// Check that essential ctx commands are included
-	expected := []string{
-		"Bash(ctx status:*)",
-		"Bash(ctx agent:*)",
-		"Bash(ctx add:*)",
-	}
-
+	// Check that the ctx wildcard is included (covers all subcommands)
 	permSet := make(map[string]bool)
 	for _, p := range DefaultClaudePermissions {
 		permSet[p] = true
 	}
 
-	for _, e := range expected {
+	if !permSet["Bash(ctx:*)"] {
+		t.Error("DefaultClaudePermissions missing: Bash(ctx:*)")
+	}
+
+	// Check that ctx skills are included
+	expectedSkills := []string{
+		"Skill(ctx-add-learning)",
+		"Skill(ctx-agent)",
+		"Skill(ctx-status)",
+	}
+	for _, e := range expectedSkills {
 		if !permSet[e] {
 			t.Errorf("DefaultClaudePermissions missing: %s", e)
 		}
