@@ -1358,7 +1358,7 @@
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
 <h2 id="adopting-ctx-in-existing-projects">Adopting ctx in Existing Projects<a class="headerlink" href="#adopting-ctx-in-existing-projects" title="Permanent link">&para;</a></h2>
 <p>Already have a <code>CLAUDE.md</code>, <code>.cursorrules</code>, or <code>.aider.conf.yml</code>?
-This guide covers how to adopt <code>ctx</code> without disrupting your current setup.</p>
+This guide covers how to adopt <code>ctx</code> without disrupting your current workflow.</p>
 <h2 id="quick-paths">Quick Paths<a class="headerlink" href="#quick-paths" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1370,7 +1370,7 @@ This guide covers how to adopt <code>ctx</code> without disrupting your current 
 </thead>
 <tbody>
 <tr>
-<td>Nothing (greenfield)</td>
+<td>Nothing (<em>greenfield</em>)</td>
 <td><code>ctx init</code></td>
 <td>Creates <code>.context/</code>, <code>CLAUDE.md</code>, hooks — full setup</td>
 </tr>
@@ -1397,7 +1397,7 @@ This guide covers how to adopt <code>ctx</code> without disrupting your current 
 </tbody>
 </table>
 <hr />
-<h2 id="existing-claudemd">Existing CLAUDE.md<a class="headerlink" href="#existing-claudemd" title="Permanent link">&para;</a></h2>
+<h2 id="existing-claudemd">Existing <code>CLAUDE.md</code><a class="headerlink" href="#existing-claudemd" title="Permanent link">&para;</a></h2>
 <p>This is the most common scenario. You have a <code>CLAUDE.md</code> with project-specific
 instructions and don't want to lose them.</p>
 <h3 id="what-ctx-init-does">What <code>ctx init</code> Does<a class="headerlink" href="#what-ctx-init-does" title="Permanent link">&para;</a></h3>
@@ -1422,12 +1422,12 @@ instructions and don't want to lose them.</p>
 <tr>
 <td>Exists, no ctx markers</td>
 <td><strong>Prompts</strong> to merge</td>
-<td>Auto-merges (no prompt)</td>
-<td>Auto-merges (no prompt)</td>
+<td>Auto-merges (<em>no prompt</em>)</td>
+<td>Auto-merges (<em>no prompt</em>)</td>
 </tr>
 <tr>
 <td>Exists, has ctx markers</td>
-<td>Skips (already set up)</td>
+<td>Skips (<em>already set up</em>)</td>
 <td>Skips</td>
 <td>Replaces ctx block only</td>
 </tr>
@@ -1443,7 +1443,7 @@ instructions and don't want to lose them.</p>
 </ol>
 <p>Your content before and after the ctx block remains exactly as it was.</p>
 <h3 id="before-after-example">Before / After Example<a class="headerlink" href="#before-after-example" title="Permanent link">&para;</a></h3>
-<p><strong>Before</strong> — your existing <code>CLAUDE.md</code>:</p>
+<p><strong>Before</strong>: your existing <code>CLAUDE.md</code>:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh"># My Project</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gu">## Build Commands</span>
@@ -1484,7 +1484,7 @@ between markers and can be updated independently.</p>
 <h3 id="the-force-flag">The <code>--force</code> Flag<a class="headerlink" href="#the-force-flag" title="Permanent link">&para;</a></h3>
 <p>If your <code>CLAUDE.md</code> already has ctx markers (from a previous <code>ctx init</code>), the
 default behavior is to skip it. Use <code>--force</code> to replace the ctx block with the
-latest template — useful after upgrading <code>ctx</code>:</p>
+latest template: This is useful after <strong>upgrading</strong> <code>ctx</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force
 </span></code></pre></div>
 <p>This only replaces content between <code>&lt;!-- ctx:context --&gt;</code> and <code>&lt;!-- ctx:end --&gt;</code>.
@@ -1498,7 +1498,7 @@ created before any changes.</p>
 <p>To restore:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cp<span class="w"> </span>CLAUDE.md.1738000000.bak<span class="w"> </span>CLAUDE.md
 </span></code></pre></div>
-<p>Or if you're using git, simply:</p>
+<p>Or if you are using <code>git</code>, simply:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>CLAUDE.md
 </span></code></pre></div>
 <hr />
@@ -1542,13 +1542,13 @@ have.</p>
 to it:</p>
 <ul>
 <li><strong>Cursor</strong>: Reference <code>.context/</code> files in your system prompt
-  (see <a href="../integrations/#cursor-ide">Cursor setup</a>)</li>
+  (<em>see <a href="../integrations/#cursor-ide">Cursor setup</a></em>)</li>
 <li><strong>Aider</strong>: Add <code>.context/</code> files to the <code>read:</code> list in <code>.aider.conf.yml</code>
-  (see <a href="../integrations/#aider">Aider setup</a>)</li>
+  (<em>see <a href="../integrations/#aider">Aider setup</a></em>)</li>
 <li><strong>Copilot</strong>: Keep <code>.context/</code> files open or reference them in comments
-  (see <a href="../integrations/#github-copilot">Copilot setup</a>)</li>
+  (<em>see <a href="../integrations/#github-copilot">Copilot setup</a></em>)</li>
 </ul>
-<p>You can generate tool-specific configuration with:</p>
+<p>You can generate a tool-specific configuration with:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>cursor<span class="w">    </span><span class="c1"># Generate Cursor config snippet</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>aider<span class="w">     </span><span class="c1"># Generate .aider.conf.yml</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>copilot<span class="w">   </span><span class="c1"># Generate Copilot tips</span>
@@ -1620,17 +1620,17 @@ for any other documentation file:</p>
 </span></code></pre></div>
 <p>Common conflict scenarios:</p>
 <ul>
-<li><strong>TASKS.md</strong>: Two people added tasks — keep both</li>
-<li><strong>DECISIONS.md</strong>: Same decision recorded differently — unify the entry</li>
-<li><strong>LEARNINGS.md</strong>: Parallel discoveries — keep both, remove duplicates</li>
+<li><strong>TASKS.md</strong>: Two people added tasks: Keep both.</li>
+<li><strong>DECISIONS.md</strong>: Same decision recorded differently: Unify the entry</li>
+<li><strong>LEARNINGS.md</strong>: Parallel discoveries: Keep both, remove duplicates</li>
 </ul>
 <h3 id="gradual-adoption">Gradual Adoption<a class="headerlink" href="#gradual-adoption" title="Permanent link">&para;</a></h3>
 <p>You don't need the whole team to switch at once:</p>
 <ol>
-<li>One person runs <code>ctx init --merge</code> and commits</li>
-<li><code>CLAUDE.md</code> instructions work immediately for Claude Code users</li>
-<li>Other tool users can adopt at their own pace using <code>ctx hook &lt;tool&gt;</code></li>
-<li>Context files benefit everyone who reads them, even without tool integration</li>
+<li>One person runs <code>ctx init --merge</code> and commits.</li>
+<li><code>CLAUDE.md</code> instructions work immediately for Claude Code users.</li>
+<li>Other tool users can adopt at their own pace using <code>ctx hook &lt;tool&gt;</code>.</li>
+<li>Context files benefit everyone who reads them, even without tool integration.</li>
 </ol>
 <hr />
 <h2 id="verifying-it-worked">Verifying It Worked<a class="headerlink" href="#verifying-it-worked" title="Permanent link">&para;</a></h2>
@@ -1642,11 +1642,11 @@ for any other documentation file:</p>
 <p>Start a new AI session and ask: <strong>"Do you remember?"</strong></p>
 <p>The AI should cite specific context:</p>
 <ul>
-<li>Current tasks from <code>.context/TASKS.md</code></li>
-<li>Recent decisions or learnings</li>
-<li>Session history (if you've had prior sessions)</li>
+<li>Current tasks from <code>.context/TASKS.md</code>;</li>
+<li>Recent decisions or learnings;</li>
+<li>Session history (<em>if you've had prior sessions</em>);</li>
 </ul>
-<p>If it responds with generic "I don't have memory" — check that <code>ctx</code> is in
+<p>If it responds with generic "<em>I don't have memory</em>", check that <code>ctx</code> is in
 your PATH (<code>which ctx</code>) and that hooks are configured
 (see <a href="../integrations/#troubleshooting">Troubleshooting</a>).</p>
 <h3 id="verify-the-merge">Verify the Merge<a class="headerlink" href="#verify-the-merge" title="Permanent link">&para;</a></h3>
@@ -1661,10 +1661,10 @@ your PATH (<code>which ctx</code>) and that hooks are configured
 <hr />
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../getting-started/">Getting Started</a> — Full setup walkthrough</li>
-<li><a href="../context-files/">Context Files</a> — What each <code>.context/</code> file does</li>
-<li><a href="../integrations/">Integrations</a> — Per-tool setup (Claude Code, Cursor, Aider, Copilot)</li>
-<li><a href="../cli-reference/">CLI Reference</a> — All <code>ctx</code> commands and flags</li>
+<li><a href="../getting-started/">Getting Started</a>: Full setup walkthrough</li>
+<li><a href="../context-files/">Context Files</a>: What each <code>.context/</code> file does</li>
+<li><a href="../integrations/">Integrations</a>: Per-tool setup (<em>Claude Code, Cursor, Aider, Copilot</em>)</li>
+<li><a href="../cli-reference/">CLI Reference</a>: All <code>ctx</code> commands and flags</li>
 </ul>
 
 

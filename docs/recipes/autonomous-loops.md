@@ -262,7 +262,11 @@ applies them:
 
 ```xml
 <context-update type="complete">user registration</context-update>
-<context-update type="learning">Email verification needs SMTP configured</context-update>
+<context-update type="learning"
+  context="Setting up user registration"
+  lesson="Email verification needs SMTP configured"
+  application="Add SMTP setup to deployment checklist"
+>SMTP Requirement</context-update>
 ```
 
 ### Step 7: Completion Signals End the Loop

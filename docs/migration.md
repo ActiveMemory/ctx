@@ -14,21 +14,21 @@ icon: lucide/package-plus
 ## Adopting ctx in Existing Projects
 
 Already have a `CLAUDE.md`, `.cursorrules`, or `.aider.conf.yml`?
-This guide covers how to adopt `ctx` without disrupting your current setup.
+This guide covers how to adopt `ctx` without disrupting your current workflow.
 
 ## Quick Paths
 
-| You have...                        | Command                   | What happens                                            |
-|------------------------------------|---------------------------|---------------------------------------------------------|
-| Nothing (greenfield)               | `ctx init`                | Creates `.context/`, `CLAUDE.md`, hooks — full setup    |
-| Existing `CLAUDE.md`               | `ctx init --merge`        | Backs up your file, inserts ctx block after the H1      |
-| Existing `CLAUDE.md` + ctx markers | `ctx init --force`        | Replaces the ctx block, leaves your content intact      |
-| `.cursorrules` / `.aider.conf.yml` | `ctx init`                | ctx ignores those files — they coexist cleanly          |
-| Team repo, first adopter           | `ctx init --merge && git add .context/ CLAUDE.md` | Initialize and commit for the team |
+| You have...                        | Command                                           | What happens                                         |
+|------------------------------------|---------------------------------------------------|------------------------------------------------------|
+| Nothing (*greenfield*)             | `ctx init`                                        | Creates `.context/`, `CLAUDE.md`, hooks — full setup |
+| Existing `CLAUDE.md`               | `ctx init --merge`                                | Backs up your file, inserts ctx block after the H1   |
+| Existing `CLAUDE.md` + ctx markers | `ctx init --force`                                | Replaces the ctx block, leaves your content intact   |
+| `.cursorrules` / `.aider.conf.yml` | `ctx init`                                        | ctx ignores those files — they coexist cleanly       |
+| Team repo, first adopter           | `ctx init --merge && git add .context/ CLAUDE.md` | Initialize and commit for the team                   |
 
 ---
 
-## Existing CLAUDE.md
+## Existing `CLAUDE.md`
 
 This is the most common scenario. You have a `CLAUDE.md` with project-specific
 instructions and don't want to lose them.
@@ -38,11 +38,11 @@ instructions and don't want to lose them.
 When `ctx init` detects an existing `CLAUDE.md`, it checks for ctx markers
 (`<!-- ctx:context -->` ... `<!-- ctx:end -->`):
 
-| State                    | Default behavior          | With `--merge`           | With `--force`           |
-|--------------------------|---------------------------|--------------------------|--------------------------|
-| No `CLAUDE.md`           | Creates from template     | Creates from template    | Creates from template    |
-| Exists, no ctx markers   | **Prompts** to merge      | Auto-merges (no prompt)  | Auto-merges (no prompt)  |
-| Exists, has ctx markers  | Skips (already set up)    | Skips                    | Replaces ctx block only  |
+| State                    | Default behavior         | With `--merge`            | With `--force`            |
+|--------------------------|--------------------------|---------------------------|---------------------------|
+| No `CLAUDE.md`           | Creates from template    | Creates from template     | Creates from template     |
+| Exists, no ctx markers   | **Prompts** to merge     | Auto-merges (*no prompt*) | Auto-merges (*no prompt*) |
+| Exists, has ctx markers  | Skips (*already set up*) | Skips                     | Replaces ctx block only   |
 
 ### The `--merge` Flag
 
@@ -57,7 +57,7 @@ Your content before and after the ctx block remains exactly as it was.
 
 ### Before / After Example
 
-**Before** — your existing `CLAUDE.md`:
+**Before**: your existing `CLAUDE.md`:
 
 ```markdown
 # My Project
@@ -106,7 +106,7 @@ between markers and can be updated independently.
 
 If your `CLAUDE.md` already has ctx markers (from a previous `ctx init`), the
 default behavior is to skip it. Use `--force` to replace the ctx block with the
-latest template — useful after upgrading `ctx`:
+latest template: This is useful after **upgrading** `ctx`:
 
 ```bash
 ctx init --force
@@ -131,7 +131,7 @@ To restore:
 cp CLAUDE.md.1738000000.bak CLAUDE.md
 ```
 
-Or if you're using git, simply:
+Or if you are using `git`, simply:
 
 ```bash
 git checkout CLAUDE.md
@@ -161,13 +161,13 @@ The `.context/` directory is the source of truth. Tool-specific configs point
 to it:
 
 - **Cursor**: Reference `.context/` files in your system prompt
-  (see [Cursor setup](integrations.md#cursor-ide))
+  (*see [Cursor setup](integrations.md#cursor-ide)*)
 - **Aider**: Add `.context/` files to the `read:` list in `.aider.conf.yml`
-  (see [Aider setup](integrations.md#aider))
+  (*see [Aider setup](integrations.md#aider)*)
 - **Copilot**: Keep `.context/` files open or reference them in comments
-  (see [Copilot setup](integrations.md#github-copilot))
+  (*see [Copilot setup](integrations.md#github-copilot)*)
 
-You can generate tool-specific configuration with:
+You can generate a tool-specific configuration with:
 
 ```bash
 ctx hook cursor    # Generate Cursor config snippet
@@ -237,18 +237,18 @@ git commit
 
 Common conflict scenarios:
 
-- **TASKS.md**: Two people added tasks — keep both
-- **DECISIONS.md**: Same decision recorded differently — unify the entry
-- **LEARNINGS.md**: Parallel discoveries — keep both, remove duplicates
+- **TASKS.md**: Two people added tasks: Keep both.
+- **DECISIONS.md**: Same decision recorded differently: Unify the entry
+- **LEARNINGS.md**: Parallel discoveries: Keep both, remove duplicates
 
 ### Gradual Adoption
 
 You don't need the whole team to switch at once:
 
-1. One person runs `ctx init --merge` and commits
-2. `CLAUDE.md` instructions work immediately for Claude Code users
-3. Other tool users can adopt at their own pace using `ctx hook <tool>`
-4. Context files benefit everyone who reads them, even without tool integration
+1. One person runs `ctx init --merge` and commits.
+2. `CLAUDE.md` instructions work immediately for Claude Code users.
+3. Other tool users can adopt at their own pace using `ctx hook <tool>`.
+4. Context files benefit everyone who reads them, even without tool integration.
 
 ---
 
@@ -268,11 +268,11 @@ Start a new AI session and ask: **"Do you remember?"**
 
 The AI should cite specific context:
 
-- Current tasks from `.context/TASKS.md`
-- Recent decisions or learnings
-- Session history (if you've had prior sessions)
+* Current tasks from `.context/TASKS.md`;
+* Recent decisions or learnings;
+* Session history (*if you've had prior sessions*);
 
-If it responds with generic "I don't have memory" — check that `ctx` is in
+If it responds with generic "*I don't have memory*", check that `ctx` is in
 your PATH (`which ctx`) and that hooks are configured
 (see [Troubleshooting](integrations.md#troubleshooting)).
 
@@ -293,7 +293,7 @@ grep -c "ctx:end" CLAUDE.md      # Should print 1
 
 ## Further Reading
 
-- [Getting Started](getting-started.md) — Full setup walkthrough
-- [Context Files](context-files.md) — What each `.context/` file does
-- [Integrations](integrations.md) — Per-tool setup (Claude Code, Cursor, Aider, Copilot)
-- [CLI Reference](cli-reference.md) — All `ctx` commands and flags
+* [Getting Started](getting-started.md): Full setup walkthrough
+* [Context Files](context-files.md): What each `.context/` file does
+* [Integrations](integrations.md): Per-tool setup (*Claude Code, Cursor, Aider, Copilot*)
+* [CLI Reference](cli-reference.md): All `ctx` commands and flags

@@ -419,8 +419,12 @@ ctx watch --log /tmp/ai.log
 The AI can emit updates like:
 
 ```xml
-<context-update type="learning">Important thing learned today</context-update>
 <context-update type="complete">implement caching</context-update>
+<context-update type="learning"
+  context="Implementing caching layer"
+  lesson="Important thing learned today"
+  application="Apply this insight going forward"
+>Caching Insight</context-update>
 ```
 
 ---
