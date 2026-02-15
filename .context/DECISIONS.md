@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-15 | Pair judgment recipes with mechanical recipes |
 | 2026-02-14 | Place Adopting ctx at nav position 3 |
 | 2026-02-14 | Borrow-from-the-future implemented as skill, not CLI command |
 | 2026-02-13 | Spec-first planning for non-trivial features |
@@ -28,6 +29,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-15-105923] Pair judgment recipes with mechanical recipes
+
+**Status**: Accepted
+
+**Context**: Created 'When to Use Agent Teams' as a decision-framework companion to the existing 'Parallel Worktrees' how-to recipe
+
+**Decision**: Pair judgment recipes with mechanical recipes
+
+**Rationale**: Mechanical recipes answer 'how' but not 'when' or 'why'. Users need judgment guidance to avoid misapplying powerful features. The same pattern applies to permissions (recipe + runbook) and drift (skill + permission drift section).
+
+**Consequences**: New advanced features should ship with both a how-to recipe and a when-to-use guide. Index the judgment recipe before the mechanical one so users encounter the thinking before the doing.
+
+---
 
 ## [2026-02-14-164103] Place Adopting ctx at nav position 3
 

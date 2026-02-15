@@ -182,6 +182,16 @@ without losing context or intent.
 
 ---
 
+### [When to Use a Team of Agents](when-to-use-agent-teams.md)
+
+Decision framework for choosing between a single agent, parallel
+worktrees, and a full agent team. Covers the file overlap test,
+when teams make things worse, and what ctx provides at each level.
+
+**Uses**: `/ctx-worktree`, `/ctx-next`, `ctx status`
+
+---
+
 ### [Parallel Agent Development with Git Worktrees](parallel-worktrees.md)
 
 Split a large backlog across 3-4 agents using git worktrees,

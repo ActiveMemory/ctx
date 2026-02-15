@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-15 | Gitignored folders accumulate stale artifacts |
+| 2026-02-15 | Editor artifacts need gitignore coverage from day one |
 | 2026-02-15 | Permission drift needs auditing like code drift |
 | 2026-02-15 | Skill() permissions do not support name prefix globs |
 | 2026-02-15 | Wildcard trusted binaries, keep git granular |
@@ -70,6 +72,26 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-15-105918] Gitignored folders accumulate stale artifacts
+
+**Context**: Found a published blog draft still sitting in the gitignored ideas/ folder
+
+**Lesson**: Gitignored directories are invisible to git status, so stale files persist indefinitely. Published drafts, old reports, and resolved spikes linger because nothing flags them.
+
+**Application**: Periodically ls gitignored working directories (ideas/, dist/, etc.) and clean up artifacts that have been promoted or are no longer relevant.
+
+---
+
+## [2026-02-15-105914] Editor artifacts need gitignore coverage from day one
+
+**Context**: Found .swp files showing as untracked — vim swap files were not in .gitignore
+
+**Lesson**: The default Go .gitignore template covers .idea/ and .vscode/ but not vim artifacts (*.swp, *.swo, *~). These accumulate silently.
+
+**Application**: When setting up a new project, add *.swp, *.swo, *~ to .gitignore alongside IDE directories.
 
 ---
 
