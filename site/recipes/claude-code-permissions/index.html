@@ -12,7 +12,7 @@
         <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/recipes/scratchpad-with-claude/">
+        <link rel="canonical" href="https://ctx.ist/recipes/claude-code-permissions/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Using the Scratchpad with Claude - ctx: do you remember?</title>
+        <title>Claude Code Permission Hygiene - ctx: do you remember?</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#problem" class="md-skip">
+        <a href="#the-problem" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Using the Scratchpad with Claude
+              Claude Code Permission Hygiene
             
           </span>
         </div>
@@ -746,10 +746,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
       
     </span>
   </a>
@@ -768,77 +768,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-workflow" class="md-nav__link">
+  <a href="#recommended-defaults" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Workflow
+        Recommended Defaults
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Workflow">
+    <nav class="md-nav" aria-label="Recommended Defaults">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-add-a-note-naturally" class="md-nav__link">
+  <a href="#design-principles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Add a Note Naturally
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-view-your-scratchpad" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: View Your Scratchpad
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-edit-an-entry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Edit an Entry
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-compose-entries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Compose Entries
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-reorder-by-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Reorder by Priority
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-6-clean-up" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Clean Up
+        Design Principles
       
     </span>
   </a>
@@ -851,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#conversational-approach" class="md-nav__link">
+  <a href="#hooks-your-safety-net" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Conversational Approach
+        Hooks: Your Safety Net
       
     </span>
   </a>
@@ -862,21 +807,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-to-use-scratchpad-vs-context-files" class="md-nav__link">
+  <a href="#the-maintenance-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When to Use Scratchpad vs Context Files
+        The Maintenance Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Maintenance Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#after-busy-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        After busy sessions
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#tips" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#periodically" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tips
+        Periodically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-adding-new-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When adding new skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adapting-for-other-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapting for Other Languages
       
     </span>
   </a>
@@ -920,264 +904,250 @@
   
 
 
-  <h1>Using the Scratchpad with Claude</h1>
+  <h1>Claude Code Permission Hygiene</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>During a session you accumulate quick notes, reminders, intermediate values,
-and sometimes sensitive tokens. They don't fit <code>TASKS.md</code> (not work items) or
-<code>DECISIONS.md</code> (not decisions). They don't have the structured fields that
-<code>LEARNINGS.md</code> requires.</p>
-<p>Without somewhere to put them, they get lost between sessions.</p>
-<p><strong>How do you capture working memory that persists across sessions without
-polluting your structured context files?</strong></p>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p>Claude Code's <code>.claude/settings.local.json</code> controls what the agent can do
+without asking. Over time, this file accumulates one-off permissions from
+individual sessions — exact commands with hardcoded paths, duplicate entries,
+and stale skill references. A noisy allow list makes it harder to spot
+dangerous permissions and increases the surface area for unintended behavior.</p>
+<p>Since <code>settings.local.json</code> is gitignored, it drifts independently from your
+codebase. There is no PR review, no CI check — just whatever you clicked
+"Allow" on.</p>
+<p>This recipe shows what a well-maintained permission file looks like and how to
+keep it clean.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Tool</th>
-<th>Type</th>
-<th>Purpose</th>
+<th>Command/Skill</th>
+<th>Role in this workflow</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>ctx pad</code></td>
-<td>CLI command</td>
-<td>List all scratchpad entries</td>
+<td><code>ctx init</code></td>
+<td>Populates default ctx permissions and hooks</td>
 </tr>
 <tr>
-<td><code>ctx pad show N</code></td>
-<td>CLI command</td>
-<td>Output raw text of entry N (pipe-friendly)</td>
+<td><code>/ctx-drift</code></td>
+<td>Detects missing or stale permission entries</td>
 </tr>
 <tr>
-<td><code>ctx pad add</code></td>
-<td>CLI command</td>
-<td>Add a new entry</td>
-</tr>
-<tr>
-<td><code>ctx pad edit</code></td>
-<td>CLI command</td>
-<td>Replace, append to, or prepend to an entry</td>
-</tr>
-<tr>
-<td><code>ctx pad rm</code></td>
-<td>CLI command</td>
-<td>Remove an entry</td>
-</tr>
-<tr>
-<td><code>ctx pad mv</code></td>
-<td>CLI command</td>
-<td>Reorder entries</td>
-</tr>
-<tr>
-<td><code>/ctx-pad</code></td>
-<td>Skill</td>
-<td>Natural language interface to all pad commands</td>
+<td><code>/sanitize-permissions</code></td>
+<td>Audits for dangerous patterns (security-focused)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
-<h3 id="step-1-add-a-note-naturally">Step 1: Add a Note Naturally<a class="headerlink" href="#step-1-add-a-note-naturally" title="Permanent link">&para;</a></h3>
-<p>You don't need to remember any syntax. Just tell your assistant what to
-jot down:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>You: &quot;jot down: check DNS propagation after deploy&quot;
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Agent: &quot;Added to scratchpad:
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  1. check DNS propagation after deploy&quot;
+<h2 id="recommended-defaults">Recommended Defaults<a class="headerlink" href="#recommended-defaults" title="Permanent link">&para;</a></h2>
+<p>After running <code>ctx init</code>, your <code>settings.local.json</code> will have the ctx
+defaults pre-populated. Here is an opinionated safe starting point for a Go
+project using ctx:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;allow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="s2">&quot;Bash(/tmp/ctx-*:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="s2">&quot;Bash(CGO_ENABLED=0 go build:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="s2">&quot;Bash(CGO_ENABLED=0 go test:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="s2">&quot;Bash(ctx:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="s2">&quot;Bash(git add:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="s2">&quot;Bash(git branch:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="s2">&quot;Bash(git check-ignore:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="s2">&quot;Bash(git checkout:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="s2">&quot;Bash(git commit:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="s2">&quot;Bash(git diff:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="s2">&quot;Bash(git log:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="s2">&quot;Bash(git remote:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="s2">&quot;Bash(git restore:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="s2">&quot;Bash(git show:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">      </span><span class="s2">&quot;Bash(git stash:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">      </span><span class="s2">&quot;Bash(git status:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">      </span><span class="s2">&quot;Bash(git tag:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">      </span><span class="s2">&quot;Bash(go build:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">      </span><span class="s2">&quot;Bash(go fmt:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">      </span><span class="s2">&quot;Bash(go test:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">      </span><span class="s2">&quot;Bash(go vet:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">      </span><span class="s2">&quot;Bash(golangci-lint run:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">      </span><span class="s2">&quot;Bash(grep:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">      </span><span class="s2">&quot;Bash(ls:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">      </span><span class="s2">&quot;Bash(make:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-convention)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-decision)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-learning)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-add-task)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-agent)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-archive)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-commit)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-drift)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-next)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-recall)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-reflect)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-remember)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">      </span><span class="s2">&quot;Skill(ctx-status)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">      </span><span class="s2">&quot;WebSearch&quot;</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Behind the scenes, the agent runs <code>ctx pad add "check DNS propagation after deploy"</code>.</p>
-<h3 id="step-2-view-your-scratchpad">Step 2: View Your Scratchpad<a class="headerlink" href="#step-2-view-your-scratchpad" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;show my scratchpad&quot;
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: &quot;Your scratchpad has 3 entries:
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  1. check DNS propagation after deploy
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  2. staging API endpoint: api.staging.example.com/v2
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  3. retry limit should be 5, not 3&quot;
-</span></code></pre></div>
-<h3 id="step-3-edit-an-entry">Step 3: Edit an Entry<a class="headerlink" href="#step-3-edit-an-entry" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>You: &quot;update entry 2 to include the new endpoint&quot;
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Agent: &quot;Updated entry 2:
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  was: staging API endpoint: api.staging.example.com/v2
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  now: staging API endpoint: api.prod.example.com/v2&quot;
-</span></code></pre></div>
-<p>For partial edits, the agent can use <code>--append</code> or <code>--prepend</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: &quot;append the port number to entry 2&quot;
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Agent: &quot;Updated entry 2:
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  staging API endpoint: api.prod.example.com/v2 :8443&quot;
-</span></code></pre></div>
-<h3 id="step-4-compose-entries">Step 4: Compose Entries<a class="headerlink" href="#step-4-compose-entries" title="Permanent link">&para;</a></h3>
-<p>Use <code>ctx pad show N</code> to pipe entry content into other operations:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You: &quot;append the content of entry 3 to entry 1&quot;
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Agent: [runs ctx pad edit 1 --append &quot;$(ctx pad show 3)&quot;]
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>       &quot;Done. Entry 1 is now:
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        check DNS propagation after deploy retry limit should be 5, not 3&quot;
-</span></code></pre></div>
-<h3 id="step-5-reorder-by-priority">Step 5: Reorder by Priority<a class="headerlink" href="#step-5-reorder-by-priority" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: &quot;move entry 4 to the top&quot;
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Agent: [runs ctx pad mv 4 1]
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       &quot;Moved entry 4 to position 1. Scratchpad reordered.&quot;
-</span></code></pre></div>
-<h3 id="step-6-clean-up">Step 6: Clean Up<a class="headerlink" href="#step-6-clean-up" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>You: &quot;remove entry 2, it&#39;s done&quot;
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Agent: [runs ctx pad rm 2]
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>       &quot;Removed entry 2. 3 entries remaining.&quot;
-</span></code></pre></div>
-<h2 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h2>
-<p>The <code>/ctx-pad</code> skill translates natural language into commands. You
-describe intent; the agent handles the mechanics.</p>
-<table>
-<thead>
-<tr>
-<th>You say</th>
-<th>What the agent does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>"jot down: check DNS after deploy"</td>
-<td><code>ctx pad add "check DNS after deploy"</code></td>
-</tr>
-<tr>
-<td>"remember this: retry limit is 5"</td>
-<td><code>ctx pad add "retry limit is 5"</code></td>
-</tr>
-<tr>
-<td>"show my scratchpad" / "what's on my pad"</td>
-<td><code>ctx pad</code></td>
-</tr>
-<tr>
-<td>"show me entry 3" / "what's in entry 3"</td>
-<td><code>ctx pad show 3</code></td>
-</tr>
-<tr>
-<td>"delete the third one" / "remove entry 3"</td>
-<td><code>ctx pad rm 3</code></td>
-</tr>
-<tr>
-<td>"change entry 2 to ..." / "replace entry 2 with ..."</td>
-<td><code>ctx pad edit 2 "new text"</code></td>
-</tr>
-<tr>
-<td>"append '-- important' to entry 3" / "add to entry 3: ..."</td>
-<td><code>ctx pad edit 3 --append " -- important"</code></td>
-</tr>
-<tr>
-<td>"prepend 'URGENT:' to entry 1"</td>
-<td><code>ctx pad edit 1 --prepend "URGENT: "</code></td>
-</tr>
-<tr>
-<td>"add the port to entry 2"</td>
-<td><code>ctx pad edit 2 --append ":8443"</code></td>
-</tr>
-<tr>
-<td>"prioritize entry 4" / "move entry 4 to the top"</td>
-<td><code>ctx pad mv 4 1</code></td>
-</tr>
-<tr>
-<td>"move entry 1 to the bottom" / "deprioritize entry 1"</td>
-<td><code>ctx pad mv 1 N</code></td>
-</tr>
-<tr>
-<td>"anything on my scratchpad?"</td>
-<td><code>ctx pad</code></td>
-</tr>
-</tbody>
-</table>
-<p>The skill recognizes variations: "scratchpad", "pad", "notes", "sticky
-notes", "jot down", "remember this", "note to self". You don't need to use
-exact trigger phrases.</p>
-<p>The key insight is <strong>ambiguity around "add"</strong>: "add a note" creates a new
-entry, while "add to entry 3" appends to an existing one. The skill
-distinguishes these from context.</p>
-<h2 id="when-to-use-scratchpad-vs-context-files">When to Use Scratchpad vs Context Files<a class="headerlink" href="#when-to-use-scratchpad-vs-context-files" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Situation</th>
-<th>Use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Temporary reminders ("check X after deploy")</td>
-<td><strong>Scratchpad</strong></td>
-</tr>
-<tr>
-<td>Working values during debugging (ports, endpoints, counts)</td>
-<td><strong>Scratchpad</strong></td>
-</tr>
-<tr>
-<td>Sensitive tokens or API keys (short-term storage)</td>
-<td><strong>Scratchpad</strong></td>
-</tr>
-<tr>
-<td>Quick notes that don't fit anywhere else</td>
-<td><strong>Scratchpad</strong></td>
-</tr>
-<tr>
-<td>Work items with completion tracking</td>
-<td><strong>TASKS.md</strong></td>
-</tr>
-<tr>
-<td>Trade-offs between alternatives with rationale</td>
-<td><strong>DECISIONS.md</strong></td>
-</tr>
-<tr>
-<td>Reusable lessons with context/lesson/application</td>
-<td><strong>LEARNINGS.md</strong></td>
-</tr>
-<tr>
-<td>Codified patterns and standards</td>
-<td><strong>CONVENTIONS.md</strong></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Decision guide:</strong></p>
-<ul>
-<li>If it has structured fields (context, rationale, lesson, application),
-  it belongs in a context file.</li>
-<li>If it's a work item you'll mark done, it belongs in <code>TASKS.md</code>.</li>
-<li>If it's a quick note, reminder, or working value — especially if it's
-  sensitive or ephemeral — it belongs on the scratchpad.</li>
-</ul>
-<div class="admonition tip">
-<p class="admonition-title">Scratchpad Is Not a Junk Drawer</p>
-<p>The scratchpad is for working memory, not long-term storage.
-If a note is still relevant after several sessions, promote it:
-a persistent reminder becomes a task, a recurring value becomes a
-convention, a hard-won insight becomes a learning.</p>
+<div class="admonition note">
+<p class="admonition-title">This is a starting point, not a mandate</p>
+<p>Your project may need more or fewer entries. The goal is intentional
+permissions — every entry should be there because you decided it belongs,
+not because you clicked "Allow" once during debugging.</p>
 </div>
-<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<h3 id="design-principles">Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h3>
+<p><strong>Use wildcards for trusted binaries.</strong> If you trust the binary (your own
+project's CLI, <code>make</code>, <code>go</code>), a single wildcard like <code>Bash(ctx:*)</code> beats
+twenty subcommand entries. It reduces noise and means new subcommands work
+without re-prompting.</p>
+<p><strong>Keep git commands granular.</strong> Unlike <code>ctx</code> or <code>make</code>, git has both safe
+commands (<code>git log</code>, <code>git status</code>) and destructive ones (<code>git reset --hard</code>,
+<code>git clean -f</code>). Listing safe commands individually prevents accidentally
+pre-approving dangerous ones.</p>
+<p><strong>Pre-approve all ctx skills.</strong> Skills shipped with ctx (<code>Skill(ctx-*)</code>) are
+safe to pre-approve — they are part of your project and you control their
+content. This prevents the agent from prompting on every skill invocation.</p>
+<p><strong>Never pre-approve these:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Bash(git push:*)</code></td>
+<td>Bypasses <code>block-git-push.sh</code> hook confirmation</td>
+</tr>
+<tr>
+<td><code>Bash(git reset:*)</code></td>
+<td>Can discard uncommitted work</td>
+</tr>
+<tr>
+<td><code>Bash(git clean:*)</code></td>
+<td>Deletes untracked files</td>
+</tr>
+<tr>
+<td><code>Bash(rm -rf:*)</code></td>
+<td>Recursive delete with no confirmation</td>
+</tr>
+<tr>
+<td><code>Bash(sudo:*)</code></td>
+<td>Privilege escalation (also blocked by hook)</td>
+</tr>
+<tr>
+<td><code>Bash(curl:*)</code> / <code>Bash(wget:*)</code></td>
+<td>Arbitrary network requests</td>
+</tr>
+<tr>
+<td><code>Skill(sanitize-permissions)</code></td>
+<td>Edits this file — self-modification vector</td>
+</tr>
+<tr>
+<td><code>Skill(release)</code></td>
+<td>Runs release pipeline — high impact</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hooks-your-safety-net">Hooks: Your Safety Net<a class="headerlink" href="#hooks-your-safety-net" title="Permanent link">&para;</a></h2>
+<p>Permissions and hooks work together. Even if a command is pre-approved, hooks
+still run. The difference is that pre-approved commands skip the user
+confirmation dialog — so if a hook blocks the command, the user never sees it.</p>
+<p>ctx ships these hooks by default:</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>What it blocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>block-git-push.sh</code></td>
+<td>All <code>git push</code> commands</td>
+</tr>
+<tr>
+<td><code>block-dangerous-commands.sh</code></td>
+<td><code>sudo</code>, copies to <code>~/.local/bin</code></td>
+</tr>
+<tr>
+<td><code>block-non-path-ctx.sh</code></td>
+<td>Running ctx from wrong path</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Pre-approved + hook-blocked = silent block</p>
+<p>If you pre-approve <code>Bash(git push:*)</code>, the hook still blocks it, but
+the user never sees the confirmation dialog. The agent gets a block
+response and must handle it. This is confusing — better to not
+pre-approve commands that hooks are designed to intercept.</p>
+</div>
+<h2 id="the-maintenance-workflow">The Maintenance Workflow<a class="headerlink" href="#the-maintenance-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="after-busy-sessions">After busy sessions<a class="headerlink" href="#after-busy-sessions" title="Permanent link">&para;</a></h3>
+<p>Permissions accumulate fastest during debugging and exploration sessions.
+After a session where you clicked "Allow" many times:</p>
+<ol>
+<li>Open <code>.claude/settings.local.json</code> in your editor</li>
+<li>Look for entries at the bottom of the allow list (new entries append there)</li>
+<li>Delete anything that looks session-specific:</li>
+<li>Exact commands with hardcoded paths</li>
+<li>Commands with literal string arguments</li>
+<li>Entries that duplicate an existing wildcard</li>
+</ol>
+<p>See <a href="https://github.com/ActiveMemory/ctx/blob/main/hack/sanitize-permissions.md"><code>hack/sanitize-permissions.md</code></a>
+for a step-by-step runbook.</p>
+<h3 id="periodically">Periodically<a class="headerlink" href="#periodically" title="Permanent link">&para;</a></h3>
+<p>Run <code>/ctx-drift</code> to catch permission drift:</p>
 <ul>
-<li><strong>Entries persist across sessions.</strong> The scratchpad is committed
-  (encrypted) to git, so entries survive session boundaries. Pick up
-  where you left off.</li>
-<li><strong>Entries are numbered and reorderable.</strong> Use <code>ctx pad mv</code> to put
-  high-priority items at the top.</li>
-<li><strong><code>ctx pad show N</code> enables unix piping.</strong> Output raw entry text
-  with no numbering prefix. Compose with <code>--append</code>, <code>--prepend</code>, or
-  other shell tools.</li>
-<li><strong>Never mention the key file contents to the AI.</strong> The agent knows
-  how to use <code>ctx pad</code> commands but should never read or print
-  <code>.context/.scratchpad.key</code> directly.</li>
-<li><strong>Encryption is transparent.</strong> You interact with plaintext; the
-  encryption/decryption happens automatically on every read/write.</li>
+<li>Missing <code>Bash(ctx:*)</code> wildcard</li>
+<li>Missing <code>Skill(ctx-*)</code> entries for installed skills</li>
+<li>Stale <code>Skill(ctx-*)</code> entries for removed skills</li>
+<li>Granular <code>Bash(ctx &lt;subcommand&gt;:*)</code> entries that should be consolidated</li>
 </ul>
+<p>Run <code>/sanitize-permissions</code> to catch security issues:</p>
+<ul>
+<li>Hook bypass patterns</li>
+<li>Destructive commands</li>
+<li>Overly broad permissions</li>
+<li>Injection vectors</li>
+</ul>
+<h3 id="when-adding-new-skills">When adding new skills<a class="headerlink" href="#when-adding-new-skills" title="Permanent link">&para;</a></h3>
+<p>If you create a custom <code>ctx-*</code> skill, add its <code>Skill()</code> entry to the allow
+list manually. <code>ctx init</code> only populates the defaults — it won't pick up
+custom skills.</p>
+<h2 id="adapting-for-other-languages">Adapting for Other Languages<a class="headerlink" href="#adapting-for-other-languages" title="Permanent link">&para;</a></h2>
+<p>The recommended defaults above are Go-specific. For other stacks, swap the
+build/test tooling:</p>
+<p><strong>Node.js / TypeScript:</strong>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="s2">&quot;Bash(npm run:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="s2">&quot;Bash(npm test:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s2">&quot;Bash(npx:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s2">&quot;Bash(node:*)&quot;</span>
+</span></code></pre></div></p>
+<p><strong>Python:</strong>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="s2">&quot;Bash(pytest:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s2">&quot;Bash(python:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">&quot;Bash(pip show:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">&quot;Bash(ruff:*)&quot;</span>
+</span></code></pre></div></p>
+<p><strong>Rust:</strong>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="s2">&quot;Bash(cargo build:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="s2">&quot;Bash(cargo test:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">&quot;Bash(cargo clippy:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">&quot;Bash(cargo fmt:*)&quot;</span>
+</span></code></pre></div></p>
+<p>The ctx, git, and skill entries remain the same across all stacks.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../scratchpad/">Scratchpad</a>: feature overview, all 9 commands,
-  encryption details, plaintext override</li>
-<li><a href="../knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a>:
-  for structured knowledge that outlives the scratchpad</li>
-<li><a href="../session-lifecycle/">The Complete Session</a>: full session lifecycle
-  showing how the scratchpad fits into the broader workflow</li>
+<li><a href="../multi-tool-setup/">Setting Up ctx Across AI Tools</a>: full setup recipe
+  including <code>settings.local.json</code> creation</li>
+<li><a href="../context-health/">Context Health</a>: keeping <code>.context/</code> files accurate</li>
+<li><a href="https://github.com/ActiveMemory/ctx/blob/main/hack/sanitize-permissions.md"><code>hack/sanitize-permissions.md</code></a>:
+  manual cleanup runbook</li>
 </ul>
 
 

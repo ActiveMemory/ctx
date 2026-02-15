@@ -28,7 +28,7 @@ conventions, and learnings:
     Without durable context, intelligence resets.
     With `ctx`, creation compounds.
 
-    **[Read the Manifesto →](https://github.com/ActiveMemory/ctx/blob/main/MANIFESTO.md)**
+    **[Read the Manifesto →](https://ctx.ist/)**
 
 ## Community
 

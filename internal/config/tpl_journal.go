@@ -158,8 +158,8 @@ icon = "fontawesome/brands/github"
 link = "https://github.com/ActiveMemory/ctx"
 
 [[project.extra.social]]
-icon = "fontawesome/brands/discord"
-link = "https://discord.gg/kampus"
+icon = "fontawesome/brands/stack-exchange"
+link = "https://web.libera.chat/#ctx"
 
 [project.extra]
 generator = false

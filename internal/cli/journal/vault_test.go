@@ -344,7 +344,7 @@ Just a plain session without enrichment.
 
 	// Verify .obsidian/app.json content
 	appConfig, readErr := os.ReadFile(filepath.Join(
-		outputDir, config.ObsidianConfigDir, config.ObsidianAppConfigFile))
+		outputDir, config.ObsidianConfigDir, config.ObsidianAppConfigFile)) //nolint:gosec // test file path
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -353,7 +353,7 @@ Just a plain session without enrichment.
 	}
 
 	// Verify Home.md contains wikilinks
-	home, readErr := os.ReadFile(filepath.Join(outputDir, config.ObsidianHomeMOC))
+	home, readErr := os.ReadFile(filepath.Join(outputDir, config.ObsidianHomeMOC)) //nolint:gosec // test file path
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -364,7 +364,7 @@ Just a plain session without enrichment.
 
 	// Verify entry has transformed frontmatter (topics → tags)
 	entry1Out, readErr := os.ReadFile(filepath.Join(
-		outputDir, config.ObsidianDirEntries, "2026-02-14-add-caching-abc12345.md"))
+		outputDir, config.ObsidianDirEntries, "2026-02-14-add-caching-abc12345.md")) //nolint:gosec // test file path
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
