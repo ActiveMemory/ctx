@@ -256,23 +256,29 @@ better discovery and navigation.
 
 **Features (priority order):**
 
-- [ ] T1.1: Topics system
+- [x] T1.1: Topics system
       - Single `/topics/index.md` page
       - Popular topics (2+ sessions) get dedicated pages (`/topics/{topic}.md`)
       - Long-tail topics (1 session) listed inline with direct session links
       - All on one page for Ctrl+F discoverability
       #added:2026-02-03
+      Done: `index.go` — `buildTopicIndex`, `generateTopicsIndex`, `generateTopicPage`.
+      Wired in `run.go`. Tests in `journal_test.go`.
 
-- [ ] T1.2: Key files index
+- [x] T1.2: Key files index
       - Reverse lookup: file → sessions that touched it
       - Uses `key_files` from frontmatter (not parsed from conversation)
       - `/files/index.md` or similar
       #added:2026-02-03
+      Done: `index.go` — `buildKeyFileIndex`, `generateKeyFilesIndex`, `generateKeyFilePage`.
+      Wired in `run.go`.
 
-- [ ] T1.3: Session type pages
+- [x] T1.3: Session type pages
       - Dedicated page per type: `/types/debugging.md`, `/types/feature.md`, etc.
       - Groups sessions by type (feature, bugfix, refactor, exploration, debugging, documentation)
       #added:2026-02-03
+      Done: `index.go` — `buildTypeIndex`, `generateTypesIndex`, `generateTypePage`.
+      Wired in `run.go`.
 
 - [ ] T1.4: Investigate inconsistent tool output collapsing
       - Some files have collapsed tool outputs (`<details>`), others don't
@@ -309,8 +315,13 @@ indexing — grep across 100+ journal files won't scale.
   from the documenation it's not clear. Spend as much time as necessary
   on every single recipe.
 
-- [ ] Investigate ctx init overwriting user-generated content in .context/ files. Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template. Need guard to prevent reinit from destroying user data (decisions, learnings, tasks). Consider: skip existing files, merge strategy, or --force-only overwrite. #added:2026-02-06-182205
-- [ ] Add ctx help command; use-case-oriented cheat sheet for lazy CLI users. Should cover: (1) core CLI commands grouped by workflow (getting started, tracking decisions, browsing history, AI context), (2) available slash-command skills with one-line descriptions, (3) common workflow recipes showing how commands and skills combine. One screen, no scrolling. Not a skill; a real CLI command. #added:2026-02-06-184257
+- [ ] Investigate ctx init overwriting user-generated content in .context/ 
+      files. Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with 
+      empty template. Need guard to prevent reinit from destroying user data 
+     (decisions, learnings, tasks). Consider: skip existing files, merge strategy, 
+      or --force-only overwrite. #added:2026-02-06-182205
+- [ ] Add ctx help command; use-case-oriented cheat sheet for lazy CLI users. 
+      Should cover: (1) core CLI commands grouped by workflow (getting started, tracking decisions, browsing history, AI context), (2) available slash-command skills with one-line descriptions, (3) common workflow recipes showing how commands and skills combine. One screen, no scrolling. Not a skill; a real CLI command. #added:2026-02-06-184257
 - [ ] Add topic-based navigation to blog when post count reaches 15+ #priority:low #added:2026-02-07-015054
 - [ ] Review hook diagnostic logs after a long session. Check `.context/logs/check-persistence.log` and `.context/logs/check-context-size.log` to verify hooks fire correctly. Tune nudge frequency if needed. #priority:medium #added:2026-02-09
 - [ ] Run `/consolidate` to address codebase drift. Considerable drift has

@@ -256,7 +256,7 @@ Before LLM context windows, we had buffers.
 
 ## See Also
 
-* [Before Context Windows, We Had Bouncers](../docs/blog/2026-02-14-irc-as-context.md):
+* [Before Context Windows, We Had Bouncers](https://ctx.ist/blog/2026-02-14-irc-as-context/):
   The blog post exploring this pattern
-* [Running an Unattended AI Agent](../docs/recipes/autonomous-loops.md): Another recipe
+* [Running an Unattended AI Agent](https://ctx.ist/recipes/autonomous-loops/): Another recipe
   about persistent infrastructure for ephemeral sessions

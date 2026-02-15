@@ -106,11 +106,13 @@ func runJournalSite(
 		}
 
 		// Normalize the source file for readability
-		normalized := softWrapContent(
-			mergeConsecutiveTurns(
-				consolidateToolRuns(
-					cleanToolOutputJSON(
-						stripSystemReminders(string(content)),
+		normalized := collapseToolOutputs(
+			softWrapContent(
+				mergeConsecutiveTurns(
+					consolidateToolRuns(
+						cleanToolOutputJSON(
+							stripSystemReminders(string(content)),
+						),
 					),
 				),
 			),
