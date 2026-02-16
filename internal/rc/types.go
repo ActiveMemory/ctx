@@ -15,6 +15,7 @@ package rc
 //   - AutoArchive: Whether to auto-archive completed tasks (default true)
 //   - ArchiveAfterDays: Days before archiving completed tasks (default 7)
 //   - ScratchpadEncrypt: Whether to encrypt the scratchpad (default true)
+//   - AllowOutsideCwd: Skip boundary validation for external context dirs (default false)
 type CtxRC struct {
 	ContextDir         string   `yaml:"context_dir"`
 	TokenBudget        int      `yaml:"token_budget"`
@@ -22,4 +23,5 @@ type CtxRC struct {
 	AutoArchive        bool     `yaml:"auto_archive"`
 	ArchiveAfterDays   int      `yaml:"archive_after_days"`
 	ScratchpadEncrypt  *bool    `yaml:"scratchpad_encrypt"`
+	AllowOutsideCwd    bool     `yaml:"allow_outside_cwd"`
 }

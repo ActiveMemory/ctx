@@ -82,6 +82,23 @@ func CheckPersistenceScript() ([]byte, error) {
 	return content, nil
 }
 
+// PostCommitScript returns the post-commit nudge hook script.
+//
+// The script detects successful git commit commands and nudges the agent to
+// offer context capture (decision/learning) and suggest running lints and
+// tests before the user pushes.
+//
+// Returns:
+//   - []byte: Raw bytes of the post-commit.sh script
+//   - error: Non-nil if the embedded file cannot be read
+func PostCommitScript() ([]byte, error) {
+	content, err := tpl.ClaudeHookByFileName(config.FilePostCommit)
+	if err != nil {
+		return nil, errFileRead(config.FilePostCommit, err)
+	}
+	return content, nil
+}
+
 // CheckJournalScript returns the journal export/enrich reminder hook script.
 //
 // The script detects unexported Claude sessions and unenriched journal entries,

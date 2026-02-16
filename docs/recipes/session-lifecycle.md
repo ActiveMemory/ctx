@@ -17,6 +17,16 @@ How do they fit together into a coherent workflow?
 This recipe walks through a complete session, from opening your editor to
 persisting context before you close it, so you can see how each piece connects.
 
+!!! tip "TL;DR"
+    1. **Load**: "Do you remember?" or `/ctx-remember`
+    2. **Orient**: `/ctx-status` — check file health and token usage
+    3. **Pick**: `/ctx-next` — choose what to work on
+    4. **Work**: implement, test, iterate
+    5. **Commit**: `/ctx-commit` — commit and capture decisions/learnings
+    6. **Reflect**: `/ctx-reflect` — identify what to persist
+
+    Read on for the full walkthrough with examples.
+
 ## Commands and Skills Used
 
 | Tool                   | Type        | Purpose                                          |
@@ -193,11 +203,13 @@ rather than "*what*", and then commits.
 
 After the commit succeeds, it prompts you:
 
-> **Any context to capture?**
->
-> - **Decision**: Did you make a design choice or trade-off?
-> - **Learning**: Did you hit a gotcha or discover something?
-> - **Neither**: No context to capture; we are done.
+```text
+**Any context to capture?**
+
+- **Decision**: Did you make a design choice or trade-off?
+- **Learning**: Did you hit a gotcha or discover something?
+- **Neither**: No context to capture; we are done.
+```
 
 If you made a decision, the skill records it with `ctx add decision`. If you
 learned something, it records it with `ctx add learning` including context,

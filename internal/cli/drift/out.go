@@ -73,7 +73,7 @@ func outputDriftText(cmd *cobra.Command, report *drift.Report) error {
 			switch w.Type {
 			case drift.IssueDeadPath:
 				pathRefs = append(pathRefs, w)
-			case drift.IssueStaleness:
+			case drift.IssueStaleness, drift.IssueStaleAge:
 				staleness = append(staleness, w)
 			default:
 				other = append(other, w)

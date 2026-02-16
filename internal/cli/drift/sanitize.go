@@ -27,6 +27,8 @@ func formatCheckName(name drift.CheckName) string {
 		return "Constitution rules respected"
 	case drift.CheckRequiredFiles:
 		return "All required files present"
+	case drift.CheckFileAge:
+		return "No stale files by age"
 	default:
 		return string(name)
 	}

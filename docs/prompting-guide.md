@@ -282,6 +282,7 @@ Skills are formalized prompts. Use them by name:
 | `/ctx-loop`             | Generate autonomous loop script                |
 | `/ctx-pad`              | Manage encrypted scratchpad                    |
 | `/ctx-archive`          | Archive completed tasks                        |
+| `/check-links`          | Audit docs for dead links                      |
 
 Skills combine a prompt, tool permissions, and domain knowledge
 into a single invocation. 

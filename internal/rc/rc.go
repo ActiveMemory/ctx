@@ -106,6 +106,16 @@ func ScratchpadEncrypt() bool {
 	return *v
 }
 
+// AllowOutsideCwd returns whether boundary validation should be skipped.
+//
+// Returns false (default) when the field is not set in .contextrc.
+//
+// Returns:
+//   - bool: True if context directory is allowed outside the project root
+func AllowOutsideCwd() bool {
+	return RC().AllowOutsideCwd
+}
+
 // OverrideContextDir sets a CLI-provided override for the context directory.
 //
 // This takes precedence over all other configuration sources.

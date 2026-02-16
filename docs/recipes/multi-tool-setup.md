@@ -19,6 +19,17 @@ This recipe walks through the complete setup for each tool, from initialization
 through verification, so you end up with a working memory layer regardless of
 which AI tool you use.
 
+!!! tip "TL;DR"
+    ```bash
+    cd your-project
+    ctx init                              # creates .context/ and Claude Code hooks
+    source <(ctx completion zsh)          # shell completion (or bash/fish)
+    # For other tools:
+    ctx hook cursor                       # or: aider, copilot, windsurf
+    ```
+
+    Then start your AI tool and ask: *"Do you remember?"*
+
 ## Commands and Skills Used
 
 | Command/Skill       | Role in this workflow                                        |

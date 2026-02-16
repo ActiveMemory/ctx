@@ -12,6 +12,8 @@ const (
 	IssueSecret IssueType = "potential_secret"
 	// IssueMissing indicates a required context file that does not exist.
 	IssueMissing IssueType = "missing_file"
+	// IssueStaleAge indicates a context file that hasn't been modified recently.
+	IssueStaleAge IssueType = "stale_age"
 )
 
 // StatusType represents the overall status of a drift report.
@@ -38,6 +40,8 @@ const (
 	CheckConstitution CheckName = "constitution_check"
 	// CheckRequiredFiles ensures all required context files are present.
 	CheckRequiredFiles CheckName = "required_files"
+	// CheckFileAge checks whether context files have been modified recently.
+	CheckFileAge CheckName = "file_age_check"
 )
 
 // Issue represents a detected drift issue.

@@ -90,6 +90,10 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 **Improvements** (from `ideas/REPORT-6-improvements.md`):
 21 opportunities across 7 categories. Key items not already tracked elsewhere:
 
+- [x] Align ctx recall list docs with CLI reality #priority:high #added:2026-02-15-191942
+
+- [ ] Align ctx recall list CLI output with docs: columnar table format with aligned headers (Slug, Project, Date, Duration, Turns, Tokens) #priority:high #added:2026-02-15-192053
+
 - [ ] Increase recall test coverage from 8.8% to 50%+. Core user-facing
       feature with near-zero safety net. Session format has already
       changed once. #priority:high #source:report-6

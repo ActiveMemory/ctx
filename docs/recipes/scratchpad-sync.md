@@ -16,6 +16,15 @@ gitignored. Without the key on each machine, you cannot read or write entries.
 
 **How do you distribute the key and keep the scratchpad in sync?**
 
+!!! tip "TL;DR"
+    ```bash
+    ctx init                                                 # 1. generates .scratchpad.key
+    scp .context/.scratchpad.key user@machine-b:project/.context/  # 2. copy key
+    chmod 600 project/.context/.scratchpad.key                # 3. secure it
+    # Normal git push/pull syncs the encrypted scratchpad.enc
+    # On conflict: ctx pad resolve → rebuild → git add + commit
+    ```
+
 ## Commands and Skills Used
 
 | Tool | Type | Purpose |

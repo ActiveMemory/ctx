@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -863,4 +864,127 @@ func TestRunDrift_FixWithErrorsOutput(t *testing.T) {
 	// Now test the full runDrift path that prints Fixed/Skipped/Error counts
 	// by calling it directly via the cobra command
 	_ = buf.String() // consume
+}
+
+// --- checkFileAge tests ---
+
+func TestCheckFileAge_StaleFile(t *testing.T) {
+	tmpDir, cleanup := setupContextDir(t)
+	defer cleanup()
+
+	// Backdate DECISIONS.md to 45 days ago
+	decisionsPath := filepath.Join(tmpDir, config.DirContext, config.FileDecision)
+	past := time.Now().AddDate(0, 0, -45)
+	if err := os.Chtimes(decisionsPath, past, past); err != nil {
+		t.Fatalf("failed to backdate file: %v", err)
+	}
+
+	ctx, err := context.Load("")
+	if err != nil {
+		t.Fatalf("failed to load context: %v", err)
+	}
+
+	report := drift.Detect(ctx)
+
+	// Should have at least one stale_age warning for DECISIONS.md
+	found := false
+	for _, w := range report.Warnings {
+		if w.Type == drift.IssueStaleAge && w.File == config.FileDecision {
+			found = true
+			if !strings.Contains(w.Message, "days ago") {
+				t.Errorf("expected 'days ago' in message, got: %s", w.Message)
+			}
+		}
+	}
+	if !found {
+		t.Error("expected stale_age warning for DECISIONS.md")
+	}
+}
+
+func TestCheckFileAge_ConstitutionExcluded(t *testing.T) {
+	tmpDir, cleanup := setupContextDir(t)
+	defer cleanup()
+
+	// Backdate CONSTITUTION.md to 60 days ago
+	constPath := filepath.Join(tmpDir, config.DirContext, config.FileConstitution)
+	past := time.Now().AddDate(0, 0, -60)
+	if err := os.Chtimes(constPath, past, past); err != nil {
+		t.Fatalf("failed to backdate file: %v", err)
+	}
+
+	ctx, err := context.Load("")
+	if err != nil {
+		t.Fatalf("failed to load context: %v", err)
+	}
+
+	report := drift.Detect(ctx)
+
+	// Should NOT have a stale_age warning for CONSTITUTION.md
+	for _, w := range report.Warnings {
+		if w.Type == drift.IssueStaleAge && w.File == config.FileConstitution {
+			t.Error("CONSTITUTION.md should be excluded from file age check")
+		}
+	}
+}
+
+func TestCheckFileAge_RecentFiles(t *testing.T) {
+	_, cleanup := setupContextDir(t)
+	defer cleanup()
+
+	ctx, err := context.Load("")
+	if err != nil {
+		t.Fatalf("failed to load context: %v", err)
+	}
+
+	report := drift.Detect(ctx)
+
+	// Freshly initialized files should pass the file age check
+	for _, w := range report.Warnings {
+		if w.Type == drift.IssueStaleAge {
+			t.Errorf("unexpected stale_age warning for fresh file: %s", w.File)
+		}
+	}
+
+	// CheckFileAge should be in the passed list
+	found := false
+	for _, p := range report.Passed {
+		if p == drift.CheckFileAge {
+			found = true
+		}
+	}
+	if !found {
+		t.Error("expected CheckFileAge in passed checks for fresh context")
+	}
+}
+
+func TestFormatCheckName_FileAge(t *testing.T) {
+	got := formatCheckName(drift.CheckFileAge)
+	want := "No stale files by age"
+	if got != want {
+		t.Errorf("formatCheckName(CheckFileAge) = %q, want %q", got, want)
+	}
+}
+
+func TestApplyFixes_StaleAge(t *testing.T) {
+	cmd, buf := newTestCmd()
+	ctx := &context.Context{}
+	report := &drift.Report{
+		Warnings: []drift.Issue{
+			{File: "DECISIONS.md", Type: drift.IssueStaleAge, Message: "last modified 45 days ago"},
+		},
+		Violations: []drift.Issue{},
+	}
+
+	result := applyFixes(cmd, ctx, report)
+	if result.skipped != 1 {
+		t.Errorf("expected 1 skipped, got %d", result.skipped)
+	}
+	if result.fixed != 0 {
+		t.Errorf("expected 0 fixed, got %d", result.fixed)
+	}
+
+	out := buf.String()
+	if !strings.Contains(out, "Cannot auto-fix file age") {
+		t.Errorf("expected file age skip message, got: %s", out)
+	}
 }

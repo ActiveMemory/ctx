@@ -18,11 +18,23 @@ and suddenly `ARCHITECTURE.md` references paths that no longer exist,
 `TASKS.md` is 80 percent completed checkboxes, and `CONVENTIONS.md` describes
 patterns you stopped using two months ago.
 
-**Stale context is worse than no context**: an AI tool that trusts outdated
-references will **hallucinate confidently**.
+**Stale context is worse than no context**: 
+
+An AI tool that trusts outdated references will **hallucinate confidently**.
 
 This recipe shows how to detect drift, fix it, and keep your `.context/`
 directory lean and accurate.
+
+!!! tip "TL;DR"
+    ```bash
+    ctx drift                      # detect problems
+    ctx drift --fix                # auto-fix the easy ones
+    ctx sync --dry-run && ctx sync # reconcile after refactors
+    ctx compact --archive          # archive old completed tasks
+    ctx status                     # verify
+    ```
+
+    Or just ask your agent: *"Is our context clean?"*
 
 ## Commands and Skills Used
 
@@ -67,7 +79,7 @@ The simplest way to check context health:
 Is our context clean?
 Anything stale?
 How healthy are our context files?
-````
+```
 
 Or invoke the skill directly:
 
@@ -77,13 +89,13 @@ Or invoke the skill directly:
 
 The agent performs two layers of analysis:
 
-Layer 1, structural checks (via `ctx drift`): dead paths, missing files,
+**Layer 1**, structural checks (*via `ctx drift`*): Dead paths, missing files,
 completed task counts, constitution violations. Fast and programmatic.
 
-Layer 2, semantic analysis (agent-driven): does `CONVENTIONS.md` describe
+**Layer 2**, semantic analysis (*agent-driven*): Does `CONVENTIONS.md` describe
 patterns the code no longer follows? Does `DECISIONS.md` contain entries whose
 rationale no longer applies? Are there learnings about bugs that are now fixed?
-This is where the agent adds value the CLI cannot: it reads both context files
+This is where the agent adds value the CLI cannot: It reads both context files
 and source code and compares them.
 
 The agent reports both layers together, explains each finding in plain language,
@@ -118,36 +130,43 @@ This turns maintenance from a scheduled chore into a conversation that happens
 
 ### Step 3: Real-Time Detection During Work
 
-Agents notice drift while working, not just during explicit checks. When an
-agent reads `ARCHITECTURE.md` to understand a module and then opens the actual
-source tree, it can see mismatches immediately:
+Agents *can* notice drift while working — when a mismatch is directly in the
+path of their current task. If an agent reads `ARCHITECTURE.md` to find where
+to add a handler and `internal/handlers/` doesn't exist, it will notice because
+the stale reference blocks its work:
 
 ```text
-Agent: I notice ARCHITECTURE.md still references `internal/handlers/`
-       which we deleted in the last refactor. Want me to run drift
-       detection so we can clean up any other stale references?
+Agent: ARCHITECTURE.md references `internal/handlers/` but that directory
+       doesn't exist. I'll look at the actual source tree to find where
+       handlers live now.
 ```
 
-The agent is already reading context files to do its job. Noticing staleness is
-a natural byproduct of that.
+This happens reliably when the drift intersects the task. What is *less*
+reliable is the agent generalizing from one mismatch to "*there might be more
+stale references; let me run drift detection*" That leap requires the agent
+to know `/ctx-drift` exists and to decide the current task should pause for
+maintenance.
+
+If you want that behavior, **reinforce** it:
+
+```text
+Good catch. Yes, run /ctx-drift and clean up any other stale references.
+```
+
+Over time, agents that have seen this pattern will start offering proactively.
+But do not expect it from a cold start.
 
 ### Step 4: Archival and Cleanup
 
-Agents spot clutter too. When `TASKS.md` is loaded and most of the content is
-completed checkboxes, the agent can offer to tidy up:
+`ctx drift` detects when `TASKS.md` has more than 10 completed items and
+flags it as a staleness warning. Running `ctx drift --fix` archives completed
+tasks automatically. 
 
-```text
-Agent: TASKS.md has 25 completed tasks obscuring the 4 pending ones.
-       Want me to archive the finished work so we can focus on what's
-       active?
-```
-
-The same applies to `LEARNINGS.md` with near-duplicate entries, or `DECISIONS.md`
-with entries that were superseded.
+You can also run `/ctx-archive` to compact on demand.
 
 ### Step 5: Alignment Audits
 
-A related problem is **alignment drift**: documentation that makes claims about
+A related problem is **alignment drift**: Documentation that makes claims about
 agent behavior not backed by actual playbook or skill instructions. 
 
 Over time, docs accumulate aspirational statements that no instruction teaches 
@@ -155,7 +174,7 @@ the agent to do.
 
 Use `/ctx-alignment-audit` to trace behavioral claims in documentation against
 the playbook and skill files. The skill identifies gaps, proposes fixes, and
-checks instruction file health (token budgets, bloat signals).
+checks instruction file health (*token budgets, bloat signals*).
 
 To avoid confusion with `/ctx-prompt-audit`:
 
@@ -222,8 +241,8 @@ Auto-fix mechanical issues:
 ctx drift --fix
 ```
 
-This handles removing dead path references, updating unambiguous renames, clearing
-empty sections. Issues requiring judgment are flagged but left for you.
+This handles removing dead path references, updating unambiguous renames, 
+clearing empty sections. Issues requiring judgment are flagged but left for you.
 
 Run `ctx drift` again afterward to confirm what remains.
 
@@ -242,18 +261,20 @@ to code that no longer exists.
 
 ### `ctx compact`
 
-Archive completed tasks and deduplicate learnings:
+Consolidate completed tasks and clean up empty sections:
 
 ```bash
-ctx compact --archive
+ctx compact              # move completed tasks to Completed section, remove empty sections
+ctx compact --archive    # also copy tasks older than 7 days to .context/archive/
 ```
 
-* Tasks: moves completed tasks older than 7 days to
-  `.context/archive/tasks-YYYY-MM-DD.md`
-* Learnings: deduplicates entries with similar content
+* Tasks: moves completed items (with all subtasks done) into the Completed
+  section of `TASKS.md`
 * All files: removes empty sections left behind
+* With `--archive`: also writes tasks older than 7 days to
+  `.context/archive/tasks-YYYY-MM-DD.md`
 
-The `--archive` flag preserves old content.
+Without `--archive`, nothing is deleted — tasks are reorganized in place.
 
 ### `ctx status`
 
@@ -304,9 +325,12 @@ ctx status                     # 5. Verify
 
 ## Tips
 
-Your agent is your first line of defense. It cross-references context files with
-source code during normal work. It will often notice a renamed package, a
-deleted directory, or an outdated convention before `ctx drift` runs. 
+Agents cross-reference context files with source code during normal work. When
+drift intersects their current task, they will notice: a renamed package, a
+deleted directory, a path that doesn't resolve. But they rarely generalize from
+one mismatch to a full audit on their own. Reinforce the pattern: when an agent
+mentions a stale reference, ask it to run `/ctx-drift`. Over time, it starts
+offering.
 
 When an agent says "*this reference looks stale,*" it is **usually right**.
 

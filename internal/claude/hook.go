@@ -48,6 +48,7 @@ func DefaultHooks(projectDir string) HookConfig {
 
 	return HookConfig{
 		PreToolUse:       preToolUserHookMatcher(hooksDir),
+		PostToolUse:      postToolUseHookMatcher(hooksDir),
 		UserPromptSubmit: userPromptSubmitHookMatcher(hooksDir),
 		SessionEnd:       sessionEndHookMatcher(hooksDir),
 	}

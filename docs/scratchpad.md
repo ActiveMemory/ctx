@@ -21,12 +21,12 @@ Entries are numbered, reorderable, and persist across sessions.
 
 ## Encrypted by Default
 
-Scratchpad entries are encrypted with AES-256-GCM before touching disk.
+Scratchpad entries are encrypted with `AES-256-GCM` before touching the disk.
 
-| Component | Path | Git status |
-|-----------|------|------------|
+| Component      | Path                       | Git status                     |
+|----------------|----------------------------|--------------------------------|
 | Encryption key | `.context/.scratchpad.key` | Gitignored, `0600` permissions |
-| Encrypted data | `.context/scratchpad.enc` | Committed |
+| Encrypted data | `.context/scratchpad.enc`  | Committed                      |
 
 The key is generated automatically during `ctx init` (256-bit via
 `crypto/rand`). The ciphertext format is `[12-byte nonce][ciphertext+tag]`.
@@ -40,17 +40,17 @@ Because the key is gitignored and the data is committed, you get:
 
 ## Commands
 
-| Command | Purpose |
-|---------|---------|
-| `ctx pad` | List all entries (numbered 1-based) |
-| `ctx pad show N` | Output raw text of entry N (no prefix, pipe-friendly) |
-| `ctx pad add "text"` | Append a new entry |
-| `ctx pad rm N` | Remove entry at position N |
-| `ctx pad edit N "text"` | Replace entry N with new text |
-| `ctx pad edit N --append "text"` | Append text to the end of entry N |
-| `ctx pad edit N --prepend "text"` | Prepend text to the beginning of entry N |
-| `ctx pad mv N M` | Move entry from position N to position M |
-| `ctx pad resolve` | Show both sides of a merge conflict for resolution |
+| Command                           | Purpose                                               |
+|-----------------------------------|-------------------------------------------------------|
+| `ctx pad`                         | List all entries (numbered 1-based)                   |
+| `ctx pad show N`                  | Output raw text of entry N (no prefix, pipe-friendly) |
+| `ctx pad add "text"`              | Append a new entry                                    |
+| `ctx pad rm N`                    | Remove entry at position N                            |
+| `ctx pad edit N "text"`           | Replace entry N with new text                         |
+| `ctx pad edit N --append "text"`  | Append text to the end of entry N                     |
+| `ctx pad edit N --prepend "text"` | Prepend text to the beginning of entry N              |
+| `ctx pad mv N M`                  | Move entry from position N to position M              |
+| `ctx pad resolve`                 | Show both sides of a merge conflict for resolution    |
 
 All commands decrypt on read, operate on plaintext in memory, and
 re-encrypt on write. The key file is never printed to stdout.
@@ -82,16 +82,22 @@ ctx pad rm 2
 
 ## Using with AI
 
+!!! tip "Use Natural Language"
+    As in many `ctx` features, the `ctx` scratchpad can also be used with
+    natural langauge. You don't have to memorize the CLI commands.
+
+    CLI gives you "*precision*", whereas natural language gives you **flow**.
+
 The `/ctx-pad` skill maps natural language to `ctx pad` commands. You
 don't need to remember the syntax:
 
-| You say | What happens |
-|---------|-------------|
-| "jot down: check DNS after deploy" | `ctx pad add "check DNS after deploy"` |
-| "show my scratchpad" | `ctx pad` |
-| "delete the third entry" | `ctx pad rm 3` |
-| "update entry 2 to include the new endpoint" | `ctx pad edit 2 "..."` |
-| "move entry 4 to the top" | `ctx pad mv 4 1` |
+| You say                                      | What happens                           |
+|----------------------------------------------|----------------------------------------|
+| "jot down: check DNS after deploy"           | `ctx pad add "check DNS after deploy"` |
+| "show my scratchpad"                         | `ctx pad`                              |
+| "delete the third entry"                     | `ctx pad rm 3`                         |
+| "update entry 2 to include the new endpoint" | `ctx pad edit 2 "..."`                 |
+| "move entry 4 to the top"                    | `ctx pad mv 4 1`                       |
 
 The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.
@@ -99,7 +105,7 @@ English; the agent picks the right command.
 ## Key Distribution
 
 The encryption key (`.context/.scratchpad.key`) stays on the machine
-where it was generated. ctx never transmits it.
+where it was generated. `ctx` **never** transmits it.
 
 To share the scratchpad across machines:
 
@@ -108,9 +114,10 @@ To share the scratchpad across machines:
 3. Both machines can now read and write the same scratchpad
 
 !!! warning "Never Commit the Key"
-    The key is gitignored by default. If you override this, anyone with
-    repo access can decrypt your scratchpad. Treat the key like an SSH
-    private key.
+    The key is `.gitignore`d by default. If you override this, anyone with
+    repo access can decrypt your scratchpad. 
+
+    Treat the key like an SSH private key.
 
 See the [Syncing Scratchpad Notes Across Machines](recipes/scratchpad-sync.md)
 recipe for a step-by-step walkthrough.
@@ -137,16 +144,16 @@ In plaintext mode:
 
 ## When to Use Scratchpad vs Context Files
 
-| Use case | Where it goes |
-|----------|--------------|
-| Temporary reminders ("check X after deploy") | Scratchpad |
-| Working values during debugging | Scratchpad |
-| Sensitive tokens or API keys (short-term) | Scratchpad |
-| Quick notes that don't fit anywhere else | Scratchpad |
-| Work items with completion tracking | `TASKS.md` |
-| Trade-offs with rationale | `DECISIONS.md` |
-| Reusable lessons with context/lesson/application | `LEARNINGS.md` |
-| Codified patterns and standards | `CONVENTIONS.md` |
+| Use case                                         | Where it goes    |
+|--------------------------------------------------|------------------|
+| Temporary reminders ("*check X after deploy*")   | Scratchpad       |
+| Working values during debugging                  | Scratchpad       |
+| Sensitive tokens or API keys (short-term)        | Scratchpad       |
+| Quick notes that don't fit anywhere else         | Scratchpad       |
+| Work items with completion tracking              | `TASKS.md`       |
+| Trade-offs with rationale                        | `DECISIONS.md`   |
+| Reusable lessons with context/lesson/application | `LEARNINGS.md`   |
+| Codified patterns and standards                  | `CONVENTIONS.md` |
 
 **Rule of thumb**: if it needs structure or will be referenced months later,
 use a context file. If it's working memory for the current session or week,

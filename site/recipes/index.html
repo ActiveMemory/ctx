@@ -85,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#guide-your-agent" class="md-skip">
           Skip to content
         </a>
       
@@ -589,6 +589,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#guide-your-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guide Your Agent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -727,6 +738,17 @@
     <span class="md-ellipsis">
       
         Claude Code Permission Hygiene
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Snapshots
       
     </span>
   </a>
@@ -1075,6 +1097,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#guide-your-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guide Your Agent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1220,6 +1253,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#permission-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#detecting-and-fixing-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1353,8 +1397,8 @@
   <h1>Recipes</h1>
 
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<p>Workflow recipes showing how ctx commands and skills work together.
-Each recipe solves a specific problem by combining multiple tools
+<p>Workflow recipes showing how <code>ctx</code> commands and skills work together.</p>
+<p>Each recipe solves a specific problem by combining multiple tools
 into a step-by-step workflow.</p>
 <div class="admonition tip">
 <p class="admonition-title">Commands vs. Skills</p>
@@ -1365,35 +1409,40 @@ your AI coding assistant.</p>
 <p>Recipes combine both.</p>
 <p>Think of commands as <strong>structure</strong> and skills as <strong>behavior</strong>.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Guide Your Agent</p>
+<h2 id="guide-your-agent">Guide Your Agent<a class="headerlink" href="#guide-your-agent" title="Permanent link">&para;</a></h2>
 <p>These recipes show explicit commands and skills, but agents
-trained on the ctx playbook are <strong>proactive</strong>: they offer to
+trained on the <code>ctx</code> playbook are <strong>proactive</strong>: they offer to
 save learnings after debugging, record decisions after
 trade-offs, create follow-up tasks after completing work, and
 suggest what to work on next.</p>
 <p><strong>Your questions train the agent.</strong> Asking "<em>what have we
-learned?</em>" or "<em>is our context clean?</em>" does two things: it
-triggers the workflow right now, <strong>and</strong> it reinforces the
-pattern. The more you guide, the more the agent habituates the
-behavior and begins offering on its own.</p>
-<p>Don't wait passively for proactive behavior — especially in
-early sessions. <strong>Ask, guide, reinforce.</strong> Over time, you ask
-less and the agent offers more.</p>
+learned?</em>" or "<em>is our context clean?</em>" does two things: </p>
+<ul>
+<li>It triggers the workflow right now, </li>
+<li><strong>and</strong> it <strong>reinforces</strong> the pattern. </li>
+</ul>
+<p>The more you guide, the more the agent <strong>habituates</strong> the behavior and begins 
+offering on its own.</p>
 <p>Each recipe includes a <strong>Conversational Approach</strong> section
 showing these natural-language patterns.</p>
+<div class="admonition tip help your agent help you">
+<p class="admonition-title">Tip</p>
+<p>Don't wait passively for proactive behavior: especially in
+early sessions. </p>
+<p><strong>Ask, guide, reinforce.</strong> Over time, you ask less and 
+the agent offers more.</p>
 </div>
 <hr />
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <h3 id="setting-up-ctx-across-ai-tools"><a href="multi-tool-setup/">Setting Up ctx Across AI Tools</a><a class="headerlink" href="#setting-up-ctx-across-ai-tools" title="Permanent link">&para;</a></h3>
-<p>Initialize ctx and configure hooks for Claude Code, Cursor,
+<p>Initialize <code>ctx</code> and configure hooks for Claude Code, Cursor,
 Aider, Copilot, or Windsurf. Includes shell completion,
 watch mode for non-native tools, and verification.</p>
 <p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx hook</code>, <code>ctx agent</code>, <code>ctx completion</code>,
 <code>ctx watch</code></p>
 <hr />
 <h3 id="keeping-context-in-a-separate-repo"><a href="external-context/">Keeping Context in a Separate Repo</a><a class="headerlink" href="#keeping-context-in-a-separate-repo" title="Permanent link">&para;</a></h3>
-<p>Store context files outside the project tree — in a private repo,
+<p>Store context files outside the project tree: in a private repo,
 shared directory, or anywhere else. Useful for open-source projects
 with private context or multi-repo setups.</p>
 <p><strong>Uses</strong>: <code>ctx init</code>, <code>--context-dir</code>, <code>--allow-outside-cwd</code>,
@@ -1403,7 +1452,7 @@ with private context or multi-repo setups.</p>
 <p>These recipes cover the workflows you’ll use every day when
 working with ctx.</p>
 <h3 id="the-complete-session"><a href="session-lifecycle/">The Complete Session</a><a class="headerlink" href="#the-complete-session" title="Permanent link">&para;</a></h3>
-<p>Walk through a full ctx session from start to finish: loading
+<p>Walk through a full <code>ctx</code> session from start to finish: loading
 context, picking what to work on, committing with context
 capture, reflecting, and saving a snapshot.</p>
 <p><strong>Uses</strong>: <code>ctx status</code>, <code>ctx agent</code>,
@@ -1411,7 +1460,7 @@ capture, reflecting, and saving a snapshot.</p>
 <hr />
 <h3 id="tracking-work-across-sessions"><a href="task-management/">Tracking Work Across Sessions</a><a class="headerlink" href="#tracking-work-across-sessions" title="Permanent link">&para;</a></h3>
 <p>Add, prioritize, complete, snapshot, and archive tasks. Keep
-TASKS.md focused as your project evolves across dozens of
+<code>TASKS.md</code> focused as your project evolves across dozens of
 sessions.</p>
 <p><strong>Uses</strong>: <code>ctx add task</code>, <code>ctx complete</code>, <code>ctx tasks archive</code>,
 <code>ctx tasks snapshot</code>, <code>/ctx-add-task</code>, <code>/ctx-archive</code>, <code>/ctx-next</code></p>
@@ -1439,7 +1488,7 @@ storage out.</p>
 <hr />
 <h2 id="maintenance">Maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h2>
 <h3 id="hook-output-patterns"><a href="hook-output-patterns/">Hook Output Patterns</a><a class="headerlink" href="#hook-output-patterns" title="Permanent link">&para;</a></h3>
-<p>Choose the right output pattern for your Claude Code hooks: VERBATIM
+<p>Choose the right output pattern for your Claude Code hooks: <code>VERBATIM</code>
 relay for user-facing reminders, hard gates for invariants, agent
 directives for nudges, and five more patterns across the spectrum.</p>
 <p><strong>Uses</strong>: <code>.claude/hooks/</code>, <code>settings.local.json</code></p>
@@ -1448,13 +1497,20 @@ directives for nudges, and five more patterns across the spectrum.</p>
 <p>Keep <code>.claude/settings.local.json</code> clean: recommended safe defaults,
 what to never pre-approve, and a maintenance workflow for cleaning
 up session debris.</p>
-<p><strong>Uses</strong>: <code>ctx init</code>, <code>/ctx-drift</code>, <code>/sanitize-permissions</code></p>
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>/ctx-drift</code>, <code>/sanitize-permissions</code>,
+<code>ctx permissions snapshot</code>, <code>ctx permissions restore</code></p>
+<hr />
+<h3 id="permission-snapshots"><a href="permission-snapshots/">Permission Snapshots</a><a class="headerlink" href="#permission-snapshots" title="Permanent link">&para;</a></h3>
+<p>Capture a known-good permission baseline as a golden image, then restore
+at session start to automatically drop session-accumulated permissions.</p>
+<p><strong>Uses</strong>: <code>ctx permissions snapshot</code>, <code>ctx permissions restore</code>,
+<code>/sanitize-permissions</code></p>
 <hr />
 <h3 id="detecting-and-fixing-drift"><a href="context-health/">Detecting and Fixing Drift</a><a class="headerlink" href="#detecting-and-fixing-drift" title="Permanent link">&para;</a></h3>
 <p>Keep context files accurate by detecting structural drift
-(stale paths, missing files) and semantic drift (outdated
-conventions, superseded decisions). Includes alignment audits
-to verify documentation claims match agent instructions.</p>
+(stale paths, missing files, stale file ages) and task
+staleness. Includes alignment audits to verify documentation
+claims match agent instructions.</p>
 <p><strong>Uses</strong>: <code>ctx drift</code>, <code>ctx sync</code>, <code>ctx compact</code>, <code>ctx status</code>,
 <code>/ctx-drift</code>, <code>/ctx-alignment-audit</code>, <code>/ctx-status</code>,
 <code>/ctx-prompt-audit</code></p>

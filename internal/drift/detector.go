@@ -8,12 +8,18 @@
 package drift
 
 import (
+	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
+
+const staleAgeDays = 30
+
+var staleAgeExclude = []string{config.FileConstitution}
 
 // Status returns the overall status of the report.
 //
@@ -58,6 +64,9 @@ func Detect(ctx *context.Context) *Report {
 
 	// Check for empty required files
 	checkRequiredFiles(ctx, report)
+
+	// Check for files not modified recently
+	checkFileAge(ctx, report)
 
 	return report
 }
@@ -229,6 +238,46 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 
 	if allPresent {
 		report.Passed = append(report.Passed, CheckRequiredFiles)
+	}
+}
+
+// checkFileAge flags context files whose ModTime is older than staleAgeDays.
+//
+// Files listed in staleAgeExclude (e.g., CONSTITUTION.md) are skipped because
+// they are expected to be static.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to check
+//   - report: Report to append warnings to (modified in place)
+func checkFileAge(ctx *context.Context, report *Report) {
+	foundStale := false
+	cutoff := time.Now().AddDate(0, 0, -staleAgeDays)
+
+	for _, f := range ctx.Files {
+		excluded := false
+		for _, ex := range staleAgeExclude {
+			if f.Name == ex {
+				excluded = true
+				break
+			}
+		}
+		if excluded {
+			continue
+		}
+
+		if f.ModTime.Before(cutoff) {
+			days := int(time.Since(f.ModTime).Hours() / 24)
+			report.Warnings = append(report.Warnings, Issue{
+				File:    f.Name,
+				Type:    IssueStaleAge,
+				Message: fmt.Sprintf("last modified %d days ago", days),
+			})
+			foundStale = true
+		}
+	}
+
+	if !foundStale {
+		report.Passed = append(report.Passed, CheckFileAge)
 	}
 }
 

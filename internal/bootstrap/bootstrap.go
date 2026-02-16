@@ -31,6 +31,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/load"
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
+	"github.com/ActiveMemory/ctx/internal/cli/permissions"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
@@ -69,6 +70,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		task.Cmd,
 		loop.Cmd,
 		pad.Cmd,
+		permissions.Cmd,
 		recall.Cmd,
 		journal.Cmd,
 		serve.Cmd,

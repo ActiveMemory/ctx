@@ -16,6 +16,20 @@ grows cluttered with completed checkboxes that obscure the remaining work.
 
 How do you manage work items that span multiple sessions without losing context?
 
+!!! tip "TL;DR"
+    ```bash
+    ctx add task "Fix race condition" --priority high   # add
+    ctx add task "Write tests" --section "Phase 2"      # add to phase
+    ctx complete "race condition"                        # mark done
+    ctx tasks snapshot "before-refactor"                 # backup
+    ctx tasks archive                                    # clean up
+    ```
+    ```text
+    /ctx-next                                            # pick what's next
+    ```
+
+    Read on for the full workflow and conversational patterns.
+
 ## Commands and Skills Used
 
 | Tool                 | Type    | Purpose                                   |
@@ -311,12 +325,16 @@ needing to remember what happened or how to format it.
 When you confirm that work is finished, or when the agent can see that it is,
 it marks the task done and suggests the next step:
 
-> **You**: "The cooldown logic is working now."
->
-> **Agent**: "Marked 'Implement ctx agent cooldown' as done. Your highest-
-> priority remaining task is 'Add --section flag to ctx add task'.
->
-> It's the last item in Phase 1 and a quick win. Want to start on that?"
+```text
+You: 
+"The cooldown logic is working now."
+
+Agent: 
+"Marked 'Implement ctx agent cooldown' as done. Your highest-
+priority remaining task is 'Add --section flag to ctx add task'.
+
+It's the last item in Phase 1 and a quick win. Want to start on that?"
+```
 
 The agent chains completion into next-task selection.
 
@@ -326,12 +344,16 @@ One sentence from you triggers two operations.
 
 At the end of a session, the agent reviews what happened and catches loose ends:
 
-> **You**: "I think we're good for today."
->
-> **Agent**: "Before we wrap up: during the middleware work you mentioned
-> wanting to add metrics for rate limit hits. That never made it into TASKS.md.
->
-> Want me to add it as a task so it's there next session?"
+```
+You: 
+"I think we're good for today."
+
+Agent: 
+"Before we wrap up: during the middleware work you mentioned
+wanting to add metrics for rate limit hits. That never made it into TASKS.md.
+
+Want me to add it as a task so it's there next session?"
+```
 
 This is the proactive persistence model at work.
 

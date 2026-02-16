@@ -336,6 +336,20 @@ func TestCheckJournalScript(t *testing.T) {
 	}
 }
 
+func TestPostCommitScript(t *testing.T) {
+	content, err := PostCommitScript()
+	if err != nil {
+		t.Fatalf("PostCommitScript() unexpected error: %v", err)
+	}
+	if len(content) == 0 {
+		t.Error("PostCommitScript() returned empty content")
+	}
+	script := string(content)
+	if !strings.Contains(script, "#!/") {
+		t.Error("PostCommitScript() script missing shebang")
+	}
+}
+
 // TestScriptErrorPaths swaps tpl.FS with an empty embed.FS to trigger
 // error branches in all script and skill functions.
 func TestScriptErrorPaths(t *testing.T) {
@@ -357,6 +371,9 @@ func TestScriptErrorPaths(t *testing.T) {
 	}
 	if _, err := CheckJournalScript(); err == nil {
 		t.Error("CheckJournalScript() expected error with empty FS")
+	}
+	if _, err := PostCommitScript(); err == nil {
+		t.Error("PostCommitScript() expected error with empty FS")
 	}
 	if _, err := Skills(); err == nil {
 		t.Error("Skills() expected error with empty FS")

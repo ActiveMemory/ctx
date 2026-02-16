@@ -214,6 +214,19 @@ clues that the scope expanded or shifted.
 **Fix (a)**: Add missing files, remove stale entries.
 **Fix (b)**: Rewrite the description to match current behavior.
 
+### 12. Dead Doc Links
+
+Documentation links drift when pages are renamed, moved, or deleted.
+
+Invoke the `/check-links` skill to scan all `docs/` markdown files for:
+
+- **Internal links** pointing to files that don't exist
+- **External links** that return errors (reported as warnings, not failures)
+- **Image references** to missing files
+
+Internal broken links count as findings to fix. External failures are
+informational — network partitions happen.
+
 ## Consolidation Decision Matrix
 
 Use this to prioritize what to fix:
@@ -263,11 +276,12 @@ After running checks, report:
 | `/verify`      | Confirms claims; use after fixing findings|
 | `/update-docs` | Syncs docs with code; run after changes   |
 | `ctx drift`    | Checks `.context/` files; this checks `.go` |
+| `/check-links` | Dead doc links; invoked as check #12      |
 
 ## Quality Checklist
 
 Before reporting the consolidation results:
-- [ ] All 11 checks were run (not skipped)
+- [ ] All 12 checks were run (not skipped)
 - [ ] Accepted exceptions were respected (e.g., `IsUser()`)
 - [ ] Findings are prioritized (highest impact first)
 - [ ] Each finding has a concrete fix suggestion with file path

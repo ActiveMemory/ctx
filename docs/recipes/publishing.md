@@ -19,6 +19,24 @@ You want to turn this raw activity into:
 - blog posts
 - changelog posts
 
+!!! tip "TL;DR"
+    ```bash
+    ctx recall export --all             # 1. export sessions to markdown
+    ```
+    ```text
+    /ctx-journal-normalize              # 2. fix rendering issues
+    /ctx-journal-enrich-all             # 3. add metadata and tags
+    ```
+    ```bash
+    ctx journal site --serve            # 4. build and serve the journal
+    ```
+    ```text
+    /ctx-blog about the caching layer   # 5. draft a blog post
+    /ctx-blog-changelog v0.1.0 "v0.2"   # 6. write a changelog post
+    ```
+
+    Read on for details on each stage.
+
 ## Commands and Skills Used
 
 | Tool                      | Type     | Purpose                                             |

@@ -9,24 +9,24 @@ icon: lucide/shield
 
 Claude Code's `.claude/settings.local.json` controls what the agent can do
 without asking. Over time, this file accumulates one-off permissions from
-individual sessions — exact commands with hardcoded paths, duplicate entries,
-and stale skill references. A noisy allow list makes it harder to spot
+individual sessions: Exact commands with hardcoded paths, duplicate entries,
+and stale skill references. A noisy "*allowlist*" makes it harder to spot
 dangerous permissions and increases the surface area for unintended behavior.
 
-Since `settings.local.json` is gitignored, it drifts independently from your
-codebase. There is no PR review, no CI check — just whatever you clicked
-"Allow" on.
+Since `settings.local.json` is `.gitignore`d, it drifts independently of your
+codebase. There is no PR review, no CI check: just whatever you clicked
+"*Allow*" on.
 
 This recipe shows what a well-maintained permission file looks like and how to
 keep it clean.
 
 ## Commands and Skills Used
 
-| Command/Skill           | Role in this workflow                               |
-|-------------------------|-----------------------------------------------------|
-| `ctx init`              | Populates default ctx permissions and hooks          |
-| `/ctx-drift`            | Detects missing or stale permission entries           |
-| `/sanitize-permissions` | Audits for dangerous patterns (security-focused)      |
+| Command/Skill           | Role in this workflow                            |
+|-------------------------|--------------------------------------------------|
+| `ctx init`              | Populates default ctx permissions and hooks      |
+| `/ctx-drift`            | Detects missing or stale permission entries      |
+| `/sanitize-permissions` | Audits for dangerous patterns (security-focused) |
 
 ## Recommended Defaults
 
@@ -83,9 +83,11 @@ project using ctx:
 ```
 
 !!! note "This is a starting point, not a mandate"
-    Your project may need more or fewer entries. The goal is intentional
-    permissions — every entry should be there because you decided it belongs,
-    not because you clicked "Allow" once during debugging.
+    Your project may need more or fewer entries. 
+
+    The goal is intentional permissions: Every entry should be there because
+    **you** decided it belongs, not because you clicked "*Allow*" once during
+    debugging.
 
 ### Design Principles
 
@@ -105,36 +107,37 @@ content. This prevents the agent from prompting on every skill invocation.
 
 **Never pre-approve these:**
 
-| Pattern                  | Risk                                              |
-|--------------------------|---------------------------------------------------|
-| `Bash(git push:*)`       | Bypasses `block-git-push.sh` hook confirmation    |
-| `Bash(git reset:*)`      | Can discard uncommitted work                      |
-| `Bash(git clean:*)`      | Deletes untracked files                           |
-| `Bash(rm -rf:*)`         | Recursive delete with no confirmation             |
-| `Bash(sudo:*)`           | Privilege escalation (also blocked by hook)        |
-| `Bash(curl:*)` / `Bash(wget:*)` | Arbitrary network requests                 |
-| `Skill(sanitize-permissions)` | Edits this file — self-modification vector   |
-| `Skill(release)`         | Runs release pipeline — high impact               |
+| Pattern                         | Risk                                           |
+|---------------------------------|------------------------------------------------|
+| `Bash(git push:*)`              | Bypasses `block-git-push.sh` hook confirmation |
+| `Bash(git reset:*)`             | Can discard uncommitted work                   |
+| `Bash(git clean:*)`             | Deletes untracked files                        |
+| `Bash(rm -rf:*)`                | Recursive delete with no confirmation          |
+| `Bash(sudo:*)`                  | Privilege escalation (also blocked by hook)    |
+| `Bash(curl:*)` / `Bash(wget:*)` | Arbitrary network requests                     |
+| `Skill(sanitize-permissions)`   | Edits this file — self-modification vector     |
+| `Skill(release)`                | Runs release pipeline — high impact            |
 
 ## Hooks: Your Safety Net
 
 Permissions and hooks work together. Even if a command is pre-approved, hooks
 still run. The difference is that pre-approved commands skip the user
-confirmation dialog — so if a hook blocks the command, the user never sees it.
+confirmation dialog: So if a hook blocks the command, the user never sees it.
 
-ctx ships these hooks by default:
+`ctx` ships these hooks by default:
 
-| Hook                          | What it blocks                              |
-|-------------------------------|---------------------------------------------|
-| `block-git-push.sh`          | All `git push` commands                     |
-| `block-dangerous-commands.sh` | `sudo`, copies to `~/.local/bin`           |
-| `block-non-path-ctx.sh`      | Running ctx from wrong path                 |
+| Hook                          | What it blocks                   |
+|-------------------------------|----------------------------------|
+| `block-git-push.sh`           | All `git push` commands          |
+| `block-dangerous-commands.sh` | `sudo`, copies to `~/.local/bin` |
+| `block-non-path-ctx.sh`       | Running ctx from wrong path      |
 
 !!! warning "Pre-approved + hook-blocked = silent block"
     If you pre-approve `Bash(git push:*)`, the hook still blocks it, but
     the user never sees the confirmation dialog. The agent gets a block
-    response and must handle it. This is confusing — better to not
-    pre-approve commands that hooks are designed to intercept.
+    response and must handle it, which is confusing.
+
+    It's better not to pre-approve commands that hooks are designed to intercept.
 
 ## The Maintenance Workflow
 
@@ -144,11 +147,11 @@ Permissions accumulate fastest during debugging and exploration sessions.
 After a session where you clicked "Allow" many times:
 
 1. Open `.claude/settings.local.json` in your editor
-2. Look for entries at the bottom of the allow list (new entries append there)
+2. Look for entries at the bottom of the allowlist (*new entries append there*)
 3. Delete anything that looks session-specific:
-   - Exact commands with hardcoded paths
-   - Commands with literal string arguments
-   - Entries that duplicate an existing wildcard
+   * Exact commands with hardcoded paths
+   * Commands with literal string arguments
+   * Entries that duplicate an existing wildcard
 
 See [`hack/sanitize-permissions.md`](https://github.com/ActiveMemory/ctx/blob/main/hack/sanitize-permissions.md)
 for a step-by-step runbook.
@@ -157,23 +160,31 @@ for a step-by-step runbook.
 
 Run `/ctx-drift` to catch permission drift:
 
-- Missing `Bash(ctx:*)` wildcard
-- Missing `Skill(ctx-*)` entries for installed skills
-- Stale `Skill(ctx-*)` entries for removed skills
-- Granular `Bash(ctx <subcommand>:*)` entries that should be consolidated
+* Missing `Bash(ctx:*)` wildcard
+* Missing `Skill(ctx-*)` entries for installed skills
+* Stale `Skill(ctx-*)` entries for removed skills
+* Granular `Bash(ctx <subcommand>:*)` entries that should be consolidated
 
 Run `/sanitize-permissions` to catch security issues:
 
-- Hook bypass patterns
-- Destructive commands
-- Overly broad permissions
-- Injection vectors
+* Hook bypass patterns
+* Destructive commands
+* Overly broad permissions
+* Injection vectors
 
 ### When adding new skills
 
-If you create a custom `ctx-*` skill, add its `Skill()` entry to the allow
-list manually. `ctx init` only populates the defaults — it won't pick up
-custom skills.
+If you create a custom `ctx-*` skill, add its `Skill()` entry to the
+allowlist manually. 
+
+`ctx init` only populates the defaults: It won't pick up custom skills.
+
+### Golden image snapshots
+
+If manual cleanup is too tedious, use a golden image to automate it. Snapshot
+a curated permission set, then restore at session start to automatically drop
+session-accumulated permissions. See the
+[Permission Snapshots](permission-snapshots.md) recipe for the full workflow.
 
 ## Adapting for Other Languages
 
@@ -204,7 +215,7 @@ build/test tooling:
 "Bash(cargo fmt:*)"
 ```
 
-The ctx, git, and skill entries remain the same across all stacks.
+The `ctx`, `git`, and skill entries remain the same across all stacks.
 
 ## See Also
 

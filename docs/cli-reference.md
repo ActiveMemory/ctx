@@ -43,6 +43,7 @@ All commands support these flags:
 | [`ctx sync`](#ctx-sync)           | Reconcile context with codebase state                     |
 | [`ctx compact`](#ctx-compact)     | Archive completed tasks, clean up files                   |
 | [`ctx tasks`](#ctx-tasks)         | Task archival and snapshots                               |
+| [`ctx permissions`](#ctx-permissions) | Permission snapshots (golden image)                   |
 | [`ctx decisions`](#ctx-decisions) | Reindex `DECISIONS.md`                                    |
 | [`ctx learnings`](#ctx-learnings) | Reindex `LEARNINGS.md`                                    |
 | [`ctx recall`](#ctx-recall)       | Browse and export AI session history                      |
@@ -478,6 +479,59 @@ Snapshots are stored in `.context/archive/` with timestamped names
 ```bash
 ctx tasks snapshot
 ctx tasks snapshot "before-refactor"
+```
+
+---
+
+### `ctx permissions`
+
+Manage Claude Code permission snapshots.
+
+```bash
+ctx permissions <subcommand>
+```
+
+#### `ctx permissions snapshot`
+
+Save `.claude/settings.local.json` as the golden image.
+
+```bash
+ctx permissions snapshot
+```
+
+Creates `.claude/settings.golden.json` as a byte-for-byte copy of the
+current settings. Overwrites if the golden file already exists.
+
+The golden file is meant to be committed to version control and shared
+with the team.
+
+**Example**:
+
+```bash
+ctx permissions snapshot
+# Saved golden image: .claude/settings.golden.json
+```
+
+#### `ctx permissions restore`
+
+Replace `settings.local.json` with the golden image.
+
+```bash
+ctx permissions restore
+```
+
+Prints a diff of dropped (session-accumulated) and restored permissions.
+No-op if the files already match.
+
+**Example**:
+
+```bash
+ctx permissions restore
+# Dropped 3 session permission(s):
+#   - Bash(cat /tmp/debug.log:*)
+#   - Bash(rm /tmp/test-*:*)
+#   - Bash(curl https://example.com:*)
+# Restored from golden image.
 ```
 
 ---
@@ -988,15 +1042,27 @@ Optional `.contextrc` (*YAML format*) at project root:
 
 ```yaml
 # .contextrc
-context_dir: .context # Context directory name
-token_budget: 8000    # Default token budget
-priority_order:       # File loading priority
+context_dir: .context    # Context directory name
+token_budget: 8000       # Default token budget
+priority_order:          # File loading priority
   - TASKS.md
   - DECISIONS.md
   - CONVENTIONS.md
-auto_archive: true    # Auto-archive old items
-archive_after_days: 7 # Days before archiving
+auto_archive: true       # Auto-archive old items
+archive_after_days: 7    # Days before archiving
+scratchpad_encrypt: true # Encrypt scratchpad (default: true)
+allow_outside_cwd: false # Skip boundary check (default: false)
 ```
+
+| Field                | Type       | Default      | Description                                        |
+|----------------------|------------|--------------|----------------------------------------------------|
+| `context_dir`        | `string`   | `.context`   | Context directory name (relative to project root)  |
+| `token_budget`       | `int`      | `8000`       | Default token budget for `ctx agent`               |
+| `priority_order`     | `[]string` | *(all files)* | File loading priority for context packets         |
+| `auto_archive`       | `bool`     | `false`      | Auto-archive completed tasks                       |
+| `archive_after_days` | `int`      | `7`          | Days before completed tasks are archived           |
+| `scratchpad_encrypt` | `bool`     | `true`       | Encrypt scratchpad with AES-256-GCM                |
+| `allow_outside_cwd`  | `bool`     | `false`      | Skip boundary check for external context dirs      |
 
 **Priority order:** CLI flags > Environment variables > `.contextrc` > Defaults
 

@@ -75,6 +75,11 @@ func applyFixes(
 			cmd.Println(fmt.Sprintf("%s Cannot auto-fix dead path in %s:%d (%s)",
 				yellow("○"), issue.File, issue.Line, issue.Path))
 			result.skipped++
+
+		case drift.IssueStaleAge:
+			cmd.Println(fmt.Sprintf("%s Cannot auto-fix file age: %s",
+				yellow("○"), issue.File))
+			result.skipped++
 		}
 	}
 

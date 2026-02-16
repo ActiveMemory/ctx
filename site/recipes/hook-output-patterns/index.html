@@ -849,18 +849,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#patterns-not-yet-implemented" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Patterns Not Yet Implemented
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Patterns Not Yet Implemented">
+    <nav class="md-nav" aria-label="Pattern 5: Silent Side-Effect">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -965,10 +954,11 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>Claude Code hooks can output text, JSON, or nothing at all. But the <em>format</em>
-of that output determines who sees it and who acts on it. Choose wrong and
-your carefully crafted warning gets silently absorbed by the agent, or your
-agent-directed nudge gets dumped on the user as noise.</p>
-<p>This recipe catalogs the known hook output patterns and explains when to
+of that output determines <strong>who sees it</strong> and <strong>who acts on it</strong>. </p>
+<p>Choose the wrong pattern, and your carefully crafted warning gets silently 
+absorbed by the agent, or your agent-directed nudge gets dumped on the user 
+as noise.</p>
+<p>This recipe catalogs the known hook output patterns and explains when to 
 use each one.</p>
 <h2 id="the-spectrum">The Spectrum<a class="headerlink" href="#the-spectrum" title="Permanent link">&para;</a></h2>
 <p>These patterns form a spectrum based on <strong>who decides</strong> what the user sees:</p>
@@ -1014,29 +1004,29 @@ use each one.</p>
 </tr>
 </tbody>
 </table>
-<p>The spectrum runs from <strong>full hook control</strong> (hard gate) to <strong>full
-invisibility</strong> (silent side-effect). Most hooks belong somewhere in the
+<p>The spectrum runs from <strong>full hook control</strong> (<em>hard gate</em>) to <strong>full
+invisibility</strong> (<em>silent side effect</em>). Most hooks belong somewhere in the
 middle.</p>
 <hr />
 <h2 id="pattern-1-hard-gate">Pattern 1: Hard Gate<a class="headerlink" href="#pattern-1-hard-gate" title="Permanent link">&para;</a></h2>
-<p><strong>Block the tool call entirely.</strong> The agent cannot proceed — it must find
+<p><strong>Block the tool call entirely</strong>. The agent cannot proceed: it must find
 another approach or tell the user.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;decision&quot;: &quot;block&quot;, &quot;reason&quot;: &quot;Use ctx from PATH, not ./ctx&quot;}&#39;</span>
 </span></code></pre></div>
-<p><strong>When to use:</strong> Enforcing invariants that must never be violated.
+<p><strong>When to use</strong>: Enforcing invariants that must never be violated:
 Constitution rules, security boundaries, destructive command prevention.</p>
-<p><strong>Hook type:</strong> <code>PreToolUse</code> only (Claude Code first-class mechanism).</p>
-<p><strong>Examples in ctx:</strong></p>
+<p><strong>Hook type</strong>: <code>PreToolUse</code> only (<em>Claude Code first-class mechanism</em>).</p>
+<p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>block-non-path-ctx.sh</code> — Enforces the PATH invocation rule</li>
-<li><code>block-git-push.sh</code> — Requires explicit user approval for pushes</li>
-<li><code>block-dangerous-commands.sh</code> — Prevents <code>sudo</code>, copies to <code>~/.local/bin</code></li>
+<li><code>block-non-path-ctx.sh</code>: Enforces the PATH invocation rule</li>
+<li><code>block-git-push.sh</code>: Requires explicit user approval for pushes
+*<code>block-dangerous-commands.sh</code>: Prevents <code>sudo</code>, copies to <code>~/.local/bin</code></li>
 </ul>
-<p><strong>Trade-off:</strong> The agent gets a block response with a reason. Good reasons
-help the agent recover ("use X instead"); bad reasons leave it stuck.</p>
+<p><strong>Trade-off</strong>: The agent gets a block response with a reason. Good reasons
+help the agent recover ("<em>use X instead</em>"); bad reasons leave it stuck.</p>
 <hr />
 <h2 id="pattern-2-verbatim-relay">Pattern 2: VERBATIM Relay<a class="headerlink" href="#pattern-2-verbatim-relay" title="Permanent link">&para;</a></h2>
-<p><strong>Force the agent to show this to the user as-is.</strong> The explicit instruction
+<p><strong>Force the agent to show this to the user as-is</strong>. The explicit instruction
 overcomes the agent's tendency to silently absorb context.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;IMPORTANT: Relay this warning to the user VERBATIM before answering their question.&quot;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
@@ -1044,25 +1034,25 @@ overcomes the agent's tendency to silently absorb context.</p>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ You have 12 sessions not yet exported.&quot;</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
 </span></code></pre></div>
-<p><strong>When to use:</strong> Actionable reminders the user needs to see regardless of
-what they asked. Stale backups, unexported sessions, resource warnings.</p>
-<p><strong>Hook type:</strong> <code>UserPromptSubmit</code> (runs before the agent sees the prompt).</p>
-<p><strong>Examples in ctx:</strong></p>
+<p><strong>When to use</strong>: Actionable reminders the user needs to see regardless of
+what they asked: Stale backups, unexported sessions, resource warnings.</p>
+<p><strong>Hook type</strong>: <code>UserPromptSubmit</code> (<em>runs before the agent sees the prompt</em>).</p>
+<p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>check-journal.sh</code> — Unexported sessions and unenriched entries</li>
-<li><code>check-context-size.sh</code> — Context capacity warning</li>
-<li><code>check-backup-age.sh</code> — Stale backup warning</li>
+<li><code>check-journal.sh</code>: Unexported sessions and unenriched entries</li>
+<li><code>check-context-size.sh</code>: Context capacity warning</li>
+<li><code>check-backup-age.sh</code>: Stale backup warning</li>
 </ul>
-<p><strong>Trade-off:</strong> Noisy if overused. Every VERBATIM relay adds a preamble
+<p><strong>Trade-off</strong>: Noisy if overused. Every VERBATIM relay adds a preamble
 before the agent's actual answer. Throttle with once-per-day markers or
 adaptive frequency.</p>
-<p><strong>Key detail:</strong> The phrase <code>IMPORTANT: Relay this ... VERBATIM</code> is what
+<p><strong>Key detail</strong>: The phrase <code>IMPORTANT: Relay this ... VERBATIM</code> is what
 makes this work. Without it, agents tend to process the information
-internally and never surface it. The explicit instruction is the pattern —
-the box-drawing is just formatting.</p>
+internally and never surface it. The explicit instruction is the pattern:
+the box-drawing is just fancy formatting.</p>
 <hr />
 <h2 id="pattern-3-agent-directive">Pattern 3: Agent Directive<a class="headerlink" href="#pattern-3-agent-directive" title="Permanent link">&para;</a></h2>
-<p><strong>Tell the agent to do something, not the user.</strong> The agent decides whether
+<p><strong>Tell the agent to do something, not the user</strong>. The agent decides whether
 and how to involve the user.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Persistence Checkpoint (prompt #25) ───────────&quot;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ No context files updated in 15+ prompts.&quot;</span>
@@ -1070,50 +1060,46 @@ and how to involve the user.</p>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ or completed tasks worth persisting?&quot;</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└──────────────────────────────────────────────────&quot;</span>
 </span></code></pre></div>
-<p><strong>When to use:</strong> Behavioral nudges. The hook detects a condition and
+<p><strong>When to use</strong>: Behavioral nudges. The hook detects a condition and
 asks the agent to consider an action. The user may never need to know.</p>
-<p><strong>Hook type:</strong> <code>UserPromptSubmit</code>.</p>
-<p><strong>Examples in ctx:</strong></p>
+<p><strong>Hook type</strong>: <code>UserPromptSubmit</code>.</p>
+<p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>check-persistence.sh</code> — Nudges the agent to persist context</li>
+<li><code>check-persistence.sh</code>: Nudges the agent to persist context</li>
 </ul>
 <p><strong>Trade-off:</strong> No guarantee the agent acts. The nudge is one signal among
 many in the context window. Strong phrasing helps ("Have you...?" is better
 than "Consider..."), but ultimately the agent decides.</p>
 <hr />
 <h2 id="pattern-4-silent-context-injection">Pattern 4: Silent Context Injection<a class="headerlink" href="#pattern-4-silent-context-injection" title="Permanent link">&para;</a></h2>
-<p><strong>Load context with no visible output.</strong> The agent gets enriched without
+<p><strong>Load context with no visible output</strong>. The agent gets enriched without
 either party noticing.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 </span></code></pre></div>
 <p><strong>When to use:</strong> Background context loading that should be invisible.
-The agent benefits from the information but neither it nor the user needs
+The agent benefits from the information, but neither it, nor the user needs
 to know it happened.</p>
 <p><strong>Hook type:</strong> <code>PreToolUse</code> with <code>.*</code> matcher (runs on every tool call).</p>
-<p><strong>Examples in ctx:</strong></p>
+<p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li>The <code>ctx agent</code> PreToolUse hook — injects project context silently</li>
+<li>The <code>ctx agent</code> <code>PreToolUse</code> hook: injects project context silently</li>
 </ul>
-<p><strong>Trade-off:</strong> Adds latency to every tool call. Keep the injected content
+<p><strong>Trade-off</strong>: Adds latency to every tool call. Keep the injected content
 small and fast to generate.</p>
 <hr />
 <h2 id="pattern-5-silent-side-effect">Pattern 5: Silent Side-Effect<a class="headerlink" href="#pattern-5-silent-side-effect" title="Permanent link">&para;</a></h2>
-<p><strong>Do work, produce no output.</strong> Housekeeping that needs no acknowledgment.</p>
+<p><strong>Do work, produce no output</strong>: Housekeeping that needs no acknowledgment.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CTX_TMPDIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
 </span></code></pre></div>
-<p><strong>When to use:</strong> Cleanup, log rotation, temp file management. Anything
+<p><strong>When to use</strong>: Cleanup, log rotation, temp file management. Anything
 where the action is the point and nobody needs to know it happened.</p>
-<p><strong>Hook type:</strong> <code>SessionEnd</code>, or any hook where output is irrelevant.</p>
-<p><strong>Examples in ctx:</strong></p>
+<p><strong>Hook type</strong>: <code>SessionEnd</code>, or any hook where output is irrelevant.</p>
+<p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>cleanup-tmp.sh</code> — Removes stale temp files on session end</li>
+<li><code>cleanup-tmp.sh</code>: Removes stale temp files on session end</li>
 </ul>
-<p><strong>Trade-off:</strong> None, if the action is truly invisible. If it can fail in
+<p><strong>Trade-off</strong>: None, if the action is truly invisible. If it can fail in
 a way that matters, consider logging.</p>
-<hr />
-<h2 id="patterns-not-yet-implemented">Patterns Not Yet Implemented<a class="headerlink" href="#patterns-not-yet-implemented" title="Permanent link">&para;</a></h2>
-<p>The following patterns are logical extensions of the ones above. They
-don't exist in ctx hooks yet, but the need for them has come up.</p>
 <h3 id="pattern-6-conditional-relay">Pattern 6: Conditional Relay<a class="headerlink" href="#pattern-6-conditional-relay" title="Permanent link">&para;</a></h3>
 <p><strong>Tell the agent to relay only if a condition holds in context.</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;If the user&#39;s question involves modifying .context/ files,&quot;</span>
@@ -1125,9 +1111,9 @@ don't exist in ctx hooks yet, but the need for them has come up.</p>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Otherwise, proceed normally.&quot;</span>
 </span></code></pre></div>
-<p><strong>When to use:</strong> Warnings that only matter in certain contexts. Avoids
+<p><strong>When to use</strong>: Warnings that only matter in certain contexts. Avoids
 noise when the user is doing unrelated work.</p>
-<p><strong>Trade-off:</strong> Depends on the agent's judgment about when the condition
+<p><strong>Trade-off</strong>: Depends on the agent's judgment about when the condition
 holds. More fragile than VERBATIM relay, but less noisy.</p>
 <h3 id="pattern-7-suggested-action">Pattern 7: Suggested Action<a class="headerlink" href="#pattern-7-suggested-action" title="Permanent link">&para;</a></h3>
 <p><strong>Give the agent a specific command to propose to the user.</strong></p>
@@ -1139,7 +1125,7 @@ holds. More fragile than VERBATIM relay, but less noisy.</p>
 </span></code></pre></div>
 <p><strong>When to use:</strong> The hook detects a fixable condition and knows the fix.
 Goes beyond a nudge — gives the agent a concrete next step. The agent
-still asks permission, but knows exactly what to propose.</p>
+still asks for permission but knows exactly what to propose.</p>
 <p><strong>Trade-off:</strong> The suggestion might be wrong or outdated. The "ask the
 user before proceeding" part is critical.</p>
 <h3 id="pattern-8-escalating-severity">Pattern 8: Escalating Severity<a class="headerlink" href="#pattern-8-escalating-severity" title="Permanent link">&para;</a></h3>
@@ -1188,8 +1174,8 @@ Give the user (or agent) the exact next step.</p>
 <p><strong>Use box-drawing for visual structure.</strong> The <code>┌─ ─┐ │ └─ ─┘</code> pattern
 makes hook output visually distinct from agent prose. It also signals
 "this is machine-generated, not agent opinion."</p>
-<p><strong>Test the silence path.</strong> Most hook runs should produce no output (the
-condition isn't met). Make sure the common case is fast and silent.</p>
+<p><strong>Test the silence path.</strong> Most hook runs should produce no output (<em>the
+condition isn't met</em>). Make sure the common case is fast and silent.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../claude-code-permissions/">Claude Code Permission Hygiene</a>: how

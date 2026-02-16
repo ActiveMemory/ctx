@@ -20,6 +20,20 @@ with its own branch, but they share the same `.git` object database.
 Combined with ctx's persistent context, each agent session picks up the
 full project state and works independently.
 
+!!! tip "TL;DR"
+    ```text
+    /ctx-worktree                                     # 1. group tasks by file overlap
+    ```
+    ```bash
+    git worktree add ../myproject-docs -b work/docs   # 2. create worktrees
+    cd ../myproject-docs && claude                     # 3. launch agents (one per track)
+    ```
+    ```text
+    /ctx-worktree teardown docs                        # 4. merge back and clean up
+    ```
+
+    TASKS.md will conflict on merge — accept all `[x]` completions from both sides.
+
 ## Commands and Skills Used
 
 | Tool             | Type    | Purpose                                     |

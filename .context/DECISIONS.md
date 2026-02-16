@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-15 | Hook output patterns are a reference catalog, not an implementation backlog |
 | 2026-02-15 | Pair judgment recipes with mechanical recipes |
 | 2026-02-14 | Place Adopting ctx at nav position 3 |
 | 2026-02-14 | Borrow-from-the-future implemented as skill, not CLI command |
@@ -29,6 +30,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-15-170006] Hook output patterns are a reference catalog, not an implementation backlog
+
+**Status**: Accepted
+
+**Context**: Patterns 6-8 in hook-output-patterns.md (conditional relay, suggested action, escalating severity) were initially framed as 'not yet implemented' which implied planned work. Analysis showed all three are either already used in practice (suggested action appears in check-journal.sh, check-backup-age.sh, block-non-path-ctx.sh; conditional relay is just bash if-then-else already in check-persistence.sh and check-journal.sh) or not justified by current need (escalating severity would require agent-side protocol training for a three-tier system when the existing two-tier silent/VERBATIM split covers all use cases).
+
+**Decision**: Hook output patterns are a reference catalog, not an implementation backlog
+
+**Rationale**: The recipe documents hook patterns for anyone writing hooks — it is not scoped to ctx-only patterns. Removing them would lose legitimate reference material. But framing them as 'not yet implemented' violated the ctx manifesto: not written means nonexistent, and there were no backing tasks. The patterns stay as equal entries in the catalog without implementation promises.
+
+**Consequences**: Patterns 6-8 are presented as first-class patterns alongside 1-5, without a 'not yet implemented' section. No tasks created. If a concrete need arises for any of these patterns in ctx hooks, a task gets created at that point — not before.
+
+---
 
 ## [2026-02-15-105923] Pair judgment recipes with mechanical recipes
 

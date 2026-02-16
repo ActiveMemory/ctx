@@ -60,7 +60,8 @@ func RootCmd() *cobra.Command {
 			}
 
 			// Validate that the context directory stays within the project root.
-			if !allowOutsideCwd {
+			// Skip if CLI flag is set or .contextrc has allow_outside_cwd: true.
+			if !allowOutsideCwd && !rc.AllowOutsideCwd() {
 				if err := validation.ValidateBoundary(rc.ContextDir()); err != nil {
 					fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 					fmt.Fprintln(os.Stderr, "Use --allow-outside-cwd to override this check.")

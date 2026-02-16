@@ -55,6 +55,7 @@ func createClaudeHooks(cmd *cobra.Command, force bool) error {
 		{config.FileCheckContextSize, claude.CheckContextSizeScript},
 		{config.FileCheckPersistence, claude.CheckPersistenceScript},
 		{config.FileCheckJournal, claude.CheckJournalScript},
+		{config.FilePostCommit, claude.PostCommitScript},
 		{config.FileCleanupTmp, claude.CleanupTmpScript},
 	}
 	for _, hs := range hookScripts {
@@ -113,6 +114,7 @@ func mergeSettingsHooks(
 
 	// Check if hooks already exist
 	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0
+	hasPostToolUse := len(settings.Hooks.PostToolUse) > 0
 	hasUserPromptSubmit := len(settings.Hooks.UserPromptSubmit) > 0
 	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
 
@@ -120,6 +122,10 @@ func mergeSettingsHooks(
 	hooksModified := false
 	if !hasPreToolUse || force {
 		settings.Hooks.PreToolUse = defaultHooks.PreToolUse
+		hooksModified = true
+	}
+	if !hasPostToolUse || force {
+		settings.Hooks.PostToolUse = defaultHooks.PostToolUse
 		hooksModified = true
 	}
 	if !hasUserPromptSubmit || force {

@@ -21,23 +21,43 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.
 There is no table of contents, no search, and no summaries.
 
 This recipe shows how to turn that raw session history into a **browsable**,
-**searchable**, and **enriched **journal site** you can navigate 
+**searchable**, and **enriched** **journal site** you can navigate
 **in your browser**.
+
+!!! tip "TL;DR"
+    ```bash
+    # Terminal: export and generate
+    ctx recall export --all
+    ctx journal site --serve
+    ```
+
+    ```text
+    # AI assistant: normalize and enrich
+    /ctx-journal-normalize
+    /ctx-journal-enrich-all
+    ```
+
+    ```bash
+    # Terminal: rebuild with enrichments
+    ctx journal site --serve
+    ```
+
+    Read on for what each stage does and why.
 
 ## Commands and Skills Used
 
-| Tool                      | Type    | Purpose                                      |
-|---------------------------|---------|----------------------------------------------|
-| `ctx recall list`         | Command | List parsed sessions with metadata           |
-| `ctx recall show`         | Command | Inspect a specific session in detail         |
-| `ctx recall export`       | Command | Export sessions to editable journal Markdown |
-| `ctx journal site`        | Command | Generate a static site from journal entries  |
+| Tool                      | Type    | Purpose                                         |
+|---------------------------|---------|-------------------------------------------------|
+| `ctx recall list`         | Command | List parsed sessions with metadata              |
+| `ctx recall show`         | Command | Inspect a specific session in detail            |
+| `ctx recall export`       | Command | Export sessions to editable journal Markdown    |
+| `ctx journal site`        | Command | Generate a static site from journal entries     |
 | `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries |
-| `ctx serve`               | Command | Serve the journal site locally               |
-| `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant     |
-| `/ctx-journal-normalize`  | Skill   | Fix rendering issues in exported Markdown    |
-| `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry   |
-| `/ctx-journal-enrich-all` | Skill   | Batch-enrich all unenriched entries          |
+| `ctx serve`               | Command | Serve the journal site locally                  |
+| `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant        |
+| `/ctx-journal-normalize`  | Skill   | Fix rendering issues in exported Markdown       |
+| `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry      |
+| `/ctx-journal-enrich-all` | Skill   | Batch-enrich all unenriched entries             |
 
 ## The Workflow
 
@@ -182,8 +202,11 @@ The skill backs up `.context/journal/` before modifying anything and marks each
 processed file with a `<!-- normalized: YYYY-MM-DD -->` comment so subsequent
 runs skip already-normalized entries.
 
-Run normalize before enrich. The enrichment skill reads conversation content to
-extract metadata, and clean Markdown produces better results.
+!!! tip "Normalize Before Enrich"
+    Run **normalize** before **enrich**. 
+
+    The enrichment skill reads conversation content to
+    extract metadata, and clean Markdown produces better results.
 
 ### Step 5: Enrich with Metadata
 
@@ -191,7 +214,7 @@ Raw exports have timestamps and transcripts but lack the semantic metadata that
 makes sessions searchable: topics, technology tags, outcome status, and
 summaries. The `/ctx-journal-enrich*` skills add this structured frontmatter.
 
-Batch enrichment (recommended):
+Batch enrichment (*recommended*):
 
 ```text
 /ctx-journal-enrich-all
@@ -242,7 +265,8 @@ The skill also generates a summary and can extract **decisions**,
 
 ### Step 6: Generate and Serve the Site
 
-With exported, normalized, and enriched journal files, generate the static site:
+With **exported**, **normalized**, and **enriched** journal files, 
+generate the static site:
 
 ```bash
 # Generate site structure only

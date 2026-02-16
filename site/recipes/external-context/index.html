@@ -993,20 +993,32 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>Context files contain project-specific decisions, learnings, conventions, and
-tasks. By default they live in <code>.context/</code> inside the project tree, and that
+tasks. By default, they live in <code>.context/</code> inside the project tree, and that
 works well when the context can be public.</p>
 <p>But sometimes you need the context <em>outside</em> the project:</p>
 <ul>
-<li><strong>Open-source projects with private context</strong> — your architectural notes,
+<li><strong>Open-source projects with private context</strong>: Your architectural notes,
   internal task lists, and scratchpad entries shouldn't ship with the public
   repo.</li>
-<li><strong>Compliance or IP concerns</strong> — context files reference sensitive design
+<li><strong>Compliance or IP concerns</strong>: Context files reference sensitive design
   rationale that belongs in a separate access-controlled repository.</li>
-<li><strong>Personal preference</strong> — you want a single context repo that covers
+<li><strong>Personal preference</strong>: You want a single context repo that covers
   multiple projects, or you just prefer keeping notes separate from code.</li>
 </ul>
 <p>ctx supports this through three configuration methods. This recipe shows how
 to set them up and how to tell your AI assistant where to find the context.</p>
+<div class="admonition tip">
+<p class="admonition-title">TL;DR</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mkdir<span class="w"> </span>~/repos/myproject-context<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/repos/myproject-context<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>init
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>--context-dir<span class="w"> </span>~/repos/myproject-context<span class="w"> </span>--allow-outside-cwd<span class="w"> </span>init
+</span></code></pre></div>
+Then create <code>.contextrc</code> in the project root:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/repos/myproject-context</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span></code></pre></div>
+All <code>ctx</code> commands now use the external directory automatically.</p>
+</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1051,168 +1063,161 @@ to set them up and how to tell your AI assistant where to find the context.</p>
 </table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-create-the-private-context-repo">Step 1: Create the Private Context Repo<a class="headerlink" href="#step-1-create-the-private-context-repo" title="Permanent link">&para;</a></h3>
-<p>Create a separate repository for your context files. This can live anywhere —
+<p>Create a separate repository for your context files. This can live anywhere:
 a private GitHub repo, a shared drive, a sibling directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create the context repo</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mkdir<span class="w"> </span>~/repos/myproject-context
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject-context
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>git<span class="w"> </span>init
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create the context repo</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mkdir<span class="w"> </span>~/repos/myproject-context
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject-context
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>git<span class="w"> </span>init
 </span></code></pre></div>
 <h3 id="step-2-initialize-ctx-pointing-at-it">Step 2: Initialize ctx Pointing at It<a class="headerlink" href="#step-2-initialize-ctx-pointing-at-it" title="Permanent link">&para;</a></h3>
 <p>From your project root, initialize ctx with <code>--context-dir</code> pointing to the
 external location. Because the directory is outside your project tree, you also
 need <code>--allow-outside-cwd</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>--context-dir<span class="w"> </span>~/repos/myproject-context<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--allow-outside-cwd<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>init
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>--context-dir<span class="w"> </span>~/repos/myproject-context<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--allow-outside-cwd<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>init
 </span></code></pre></div>
 <p>This creates the full <code>.context/</code>-style file set inside
 <code>~/repos/myproject-context/</code> instead of <code>~/repos/myproject/.context/</code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Boundary Validation</p>
-<p>ctx validates that the context directory is within the current working
+<p><code>ctx</code> validates that the <code>.context</code> directory is within the current working
 directory. If your external directory is truly outside the project root,
-every ctx command needs <code>--allow-outside-cwd</code> — unless you persist the
-setting in <code>.contextrc</code> (next step).</p>
+every <code>ctx</code> command needs <code>--allow-outside-cwd</code> — or persist the setting
+in <code>.contextrc</code> (<em>next step</em>).</p>
 </div>
 <h3 id="step-3-make-it-stick">Step 3: Make It Stick<a class="headerlink" href="#step-3-make-it-stick" title="Permanent link">&para;</a></h3>
 <p>Typing <code>--context-dir</code> and <code>--allow-outside-cwd</code> on every command is tedious.
 Pick one of these methods to make the configuration permanent.</p>
-<h4 id="option-a-contextrc-recommended">Option A: <code>.contextrc</code> (Recommended)<a class="headerlink" href="#option-a-contextrc-recommended" title="Permanent link">&para;</a></h4>
+<h4 id="option-a-contextrc-recommended">Option A: <code>.contextrc</code> (<em>Recommended</em>)<a class="headerlink" href="#option-a-contextrc-recommended" title="Permanent link">&para;</a></h4>
 <p>Create a <code>.contextrc</code> file in your project root:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># .contextrc — committed to the project repo</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/repos/myproject-context</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># .contextrc — committed to the project repo</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/repos/myproject-context</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
 <p>ctx reads <code>.contextrc</code> automatically. Every command now uses the external
 directory without extra flags:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>status<span class="w">          </span><span class="c1"># reads from ~/repos/myproject-context</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Redis MULTI doesn&#39;t roll back on error&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>status<span class="w">          </span><span class="c1"># reads from ~/repos/myproject-context</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;Redis MULTI doesn&#39;t roll back on error&quot;</span>
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Commit <code>.contextrc</code></p>
 <p><code>.contextrc</code> belongs in the project repo. It contains no secrets — just a
-path — and it lets teammates share the same configuration.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Boundary override</p>
-<p>When <code>context_dir</code> in <code>.contextrc</code> points outside the project root, you
-still need <code>--allow-outside-cwd</code> on each command, or set it as a shell
-alias (see below). The <code>.contextrc</code> replaces the <code>--context-dir</code> flag but
-does not override the boundary check.</p>
+path and a boundary override. It lets teammates share the same configuration.</p>
 </div>
 <h4 id="option-b-ctx_dir-environment-variable">Option B: <code>CTX_DIR</code> Environment Variable<a class="headerlink" href="#option-b-ctx_dir-environment-variable" title="Permanent link">&para;</a></h4>
 <p>Good for CI pipelines, temporary overrides, or when you don't want to commit
 a <code>.contextrc</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># In your shell profile (~/.bashrc, ~/.zshrc)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CTX_DIR</span><span class="o">=</span>~/repos/myproject-context
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># In your shell profile (~/.bashrc, ~/.zshrc)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CTX_DIR</span><span class="o">=</span>~/repos/myproject-context
 </span></code></pre></div>
 <p>Or for a single session:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">CTX_DIR</span><span class="o">=</span>~/repos/myproject-context<span class="w"> </span>ctx<span class="w"> </span>status
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">CTX_DIR</span><span class="o">=</span>~/repos/myproject-context<span class="w"> </span>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <h4 id="option-c-shell-alias">Option C: Shell Alias<a class="headerlink" href="#option-c-shell-alias" title="Permanent link">&para;</a></h4>
-<p>If you use the same external directory regularly and want to bake in
-<code>--allow-outside-cwd</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># ~/.bashrc or ~/.zshrc</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ctx</span><span class="o">=</span><span class="s1">&#39;ctx --context-dir ~/repos/myproject-context --allow-outside-cwd&#39;</span>
+<p>If you prefer a shell alias over <code>.contextrc</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># ~/.bashrc or ~/.zshrc</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ctx</span><span class="o">=</span><span class="s1">&#39;ctx --context-dir ~/repos/myproject-context --allow-outside-cwd&#39;</span>
 </span></code></pre></div>
 <h4 id="priority-order">Priority Order<a class="headerlink" href="#priority-order" title="Permanent link">&para;</a></h4>
-<p>When multiple methods are set, ctx resolves the context directory in this
-order (highest priority first):</p>
+<p>When multiple methods are set, <code>ctx</code> resolves the context directory in this
+order (<em>highest priority first</em>):</p>
 <ol>
 <li><code>--context-dir</code> flag</li>
 <li><code>CTX_DIR</code> environment variable</li>
 <li><code>context_dir</code> in <code>.contextrc</code></li>
 <li>Default: <code>.context/</code></li>
 </ol>
-<h3 id="step-4-configure-claudemd-to-reference-the-external-context">Step 4: Configure CLAUDE.md to Reference the External Context<a class="headerlink" href="#step-4-configure-claudemd-to-reference-the-external-context" title="Permanent link">&para;</a></h3>
+<h3 id="step-4-configure-claudemd-to-reference-the-external-context">Step 4: Configure <code>CLAUDE.md</code> to Reference the External Context<a class="headerlink" href="#step-4-configure-claudemd-to-reference-the-external-context" title="Permanent link">&para;</a></h3>
 <p>When context lives outside the project tree, your AI assistant needs to know
 where to find it. Claude Code reads <code>CLAUDE.md</code> from the project root, so add
 a pointer there:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gh"># CLAUDE.md</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="gu">## Context Location</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>This project&#39;s context files live in a separate repository:
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="gs">**~/repos/myproject-context/**</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>When using ctx commands, the <span class="sb">`.contextrc`</span> in this project root handles
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>the path automatically. To load context manually:
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>```bash
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>ctx agent --budget 4000 --context-dir ~/repos/myproject-context --allow-outside-cwd
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gh"># CLAUDE.md</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gu">## Context Location</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>This project&#39;s context files live in a separate repository:
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="gs">**~/repos/myproject-context/**</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>When using ctx commands, the <span class="sb">`.contextrc`</span> in this project root handles
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>the path automatically. To load context manually:
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>```bash
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>ctx agent --budget 4000 --context-dir ~/repos/myproject-context --allow-outside-cwd
 </span></code></pre></div>
 <p>Read the context files from that directory:
-- <code>~/repos/myproject-context/TASKS.md</code> — current work items
-- <code>~/repos/myproject-context/DECISIONS.md</code> — architectural decisions
-- <code>~/repos/myproject-context/CONVENTIONS.md</code> — code patterns
-- <code>~/repos/myproject-context/CONSTITUTION.md</code> — hard rules
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>For Claude Code hooks, update `.claude/settings.local.json` to pass the
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>external path:
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>```json
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>{
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  &quot;hooks&quot;: {
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    &quot;PreToolUse&quot;: [
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>      {
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        &quot;matcher&quot;: &quot;&quot;,
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        &quot;hooks&quot;: [
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>          {
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>            &quot;type&quot;: &quot;command&quot;,
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>            &quot;command&quot;: &quot;ctx agent --budget 4000 --session $PPID --context-dir ~/repos/myproject-context --allow-outside-cwd 2&gt;/dev/null || true&quot;
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>          }
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        ]
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>      }
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    ]
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>  }
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>}
+- <code>~/repos/myproject-context/TASKS.md</code>: current work items
+- <code>~/repos/myproject-context/DECISIONS.md</code>: architectural decisions
+- <code>~/repos/myproject-context/CONVENTIONS.md</code>: code patterns
+- <code>~/repos/myproject-context/CONSTITUTION.md</code>: hard rules
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>For Claude Code hooks, update `.claude/settings.local.json` to pass the
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>external path:
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>```json
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>{
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  &quot;hooks&quot;: {
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    &quot;PreToolUse&quot;: [
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>      {
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        &quot;matcher&quot;: &quot;&quot;,
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        &quot;hooks&quot;: [
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>          {
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>            &quot;type&quot;: &quot;command&quot;,
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>            &quot;command&quot;: &quot;ctx agent --budget 4000 --session $PPID --context-dir ~/repos/myproject-context --allow-outside-cwd 2&gt;/dev/null || true&quot;
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>          }
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>        ]
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>      }
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    ]
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  }
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>}
 </span></code></pre></div></p>
 <h3 id="step-5-share-with-teammates">Step 5: Share with Teammates<a class="headerlink" href="#step-5-share-with-teammates" title="Permanent link">&para;</a></h3>
 <p>Teammates clone both repos and set up <code>.contextrc</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Clone the project</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:org/myproject.git
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">cd</span><span class="w"> </span>myproject
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Clone the private context repo</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:org/myproject-context.git<span class="w"> </span>~/repos/myproject-context
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Clone the project</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:org/myproject.git
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">cd</span><span class="w"> </span>myproject
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Clone the private context repo</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:org/myproject-context.git<span class="w"> </span>~/repos/myproject-context
 </span></code></pre></div>
 <p>If <code>.contextrc</code> is already committed to the project, they're done — ctx
 commands will find the external context automatically.</p>
 <p>If teammates use different paths, each developer sets their own <code>CTX_DIR</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CTX_DIR</span><span class="o">=</span>~/my-own-path/myproject-context
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CTX_DIR</span><span class="o">=</span>~/my-own-path/myproject-context
 </span></code></pre></div>
 <p>For scratchpad key distribution across the team, see the
 <a href="../scratchpad-sync/">Syncing Scratchpad Notes</a> recipe.</p>
 <h3 id="step-6-day-to-day-sync">Step 6: Day-to-Day Sync<a class="headerlink" href="#step-6-day-to-day-sync" title="Permanent link">&para;</a></h3>
 <p>The external context repo has its own git history. Treat it like any other
 repo — commit and push after sessions:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject-context
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># After a session</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>git<span class="w"> </span>add<span class="w"> </span>-A
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Session: refactored auth module, added rate-limit learning&quot;</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>git<span class="w"> </span>push
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject-context
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># After a session</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>git<span class="w"> </span>add<span class="w"> </span>-A
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Session: refactored auth module, added rate-limit learning&quot;</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>git<span class="w"> </span>push
 </span></code></pre></div>
 <p>Your AI assistant can do this too. When ending a session:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: &quot;Save what we learned and push the context repo.&quot;
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Agent: [runs ctx add learning, then commits and pushes the context repo]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>You: &quot;Save what we learned and push the context repo.&quot;
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Agent: [runs ctx add learning, then commits and pushes the context repo]
 </span></code></pre></div>
 <p>You can also set up a post-session habit: project code gets committed to the
 project repo, context gets committed to the context repo.</p>
 <h2 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h2>
 <p>You don't need to remember the flags. Ask your assistant:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>You: &quot;Set up ctx to use ~/repos/myproject-context as the context directory.&quot;
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Agent: &quot;I&#39;ll create a .contextrc in the project root pointing to that path.
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>       I&#39;ll also update CLAUDE.md so future sessions know where to find
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>       context. Want me to initialize the context files there too?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>You: &quot;Set up ctx to use ~/repos/myproject-context as the context directory.&quot;
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Agent: &quot;I&#39;ll create a .contextrc in the project root pointing to that path.
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>       I&#39;ll also update CLAUDE.md so future sessions know where to find
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>       context. Want me to initialize the context files there too?&quot;
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>You: &quot;My context is in a separate repo. Can you load it?&quot;
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Agent: [reads .contextrc, finds the path, loads context from the external dir]
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>       &quot;Loaded. You have 3 pending tasks, last session was about the auth
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>       refactor.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>You: &quot;My context is in a separate repo. Can you load it?&quot;
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Agent: [reads .contextrc, finds the path, loads context from the external dir]
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>       &quot;Loaded. You have 3 pending tasks, last session was about the auth
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>       refactor.&quot;
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1224,8 +1229,8 @@ project repo, context gets committed to the context repo.</p>
 <li><strong>Use <code>.contextrc</code> over env vars</strong> when the path is stable. It's committed,
   documented, and works for the whole team without per-developer shell setup.</li>
 <li><strong>Don't forget the boundary flag</strong>. The most common error is
-  <code>Error: context directory is outside the project root</code>. Add
-  <code>--allow-outside-cwd</code> or use a shell alias.</li>
+  <code>Error: context directory is outside the project root</code>. Set
+  <code>allow_outside_cwd: true</code> in <code>.contextrc</code> or pass <code>--allow-outside-cwd</code>.</li>
 <li><strong>Commit both repos at session boundaries</strong>. Context without code history
   (or code without context history) loses half the value.</li>
 </ul>

@@ -880,6 +880,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#golden-image-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Golden image snapshots
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -939,12 +950,12 @@
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>Claude Code's <code>.claude/settings.local.json</code> controls what the agent can do
 without asking. Over time, this file accumulates one-off permissions from
-individual sessions — exact commands with hardcoded paths, duplicate entries,
-and stale skill references. A noisy allow list makes it harder to spot
+individual sessions: Exact commands with hardcoded paths, duplicate entries,
+and stale skill references. A noisy "<em>allowlist</em>" makes it harder to spot
 dangerous permissions and increases the surface area for unintended behavior.</p>
-<p>Since <code>settings.local.json</code> is gitignored, it drifts independently from your
-codebase. There is no PR review, no CI check — just whatever you clicked
-"Allow" on.</p>
+<p>Since <code>settings.local.json</code> is <code>.gitignore</code>d, it drifts independently of your
+codebase. There is no PR review, no CI check: just whatever you clicked
+"<em>Allow</em>" on.</p>
 <p>This recipe shows what a well-maintained permission file looks like and how to
 keep it clean.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -1022,9 +1033,10 @@ project using ctx:</p>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">This is a starting point, not a mandate</p>
-<p>Your project may need more or fewer entries. The goal is intentional
-permissions — every entry should be there because you decided it belongs,
-not because you clicked "Allow" once during debugging.</p>
+<p>Your project may need more or fewer entries. </p>
+<p>The goal is intentional permissions: Every entry should be there because
+<strong>you</strong> decided it belongs, not because you clicked "<em>Allow</em>" once during
+debugging.</p>
 </div>
 <h3 id="design-principles">Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h3>
 <p><strong>Use wildcards for trusted binaries.</strong> If you trust the binary (your own
@@ -1084,8 +1096,8 @@ content. This prevents the agent from prompting on every skill invocation.</p>
 <h2 id="hooks-your-safety-net">Hooks: Your Safety Net<a class="headerlink" href="#hooks-your-safety-net" title="Permanent link">&para;</a></h2>
 <p>Permissions and hooks work together. Even if a command is pre-approved, hooks
 still run. The difference is that pre-approved commands skip the user
-confirmation dialog — so if a hook blocks the command, the user never sees it.</p>
-<p>ctx ships these hooks by default:</p>
+confirmation dialog: So if a hook blocks the command, the user never sees it.</p>
+<p><code>ctx</code> ships these hooks by default:</p>
 <table>
 <thead>
 <tr>
@@ -1112,8 +1124,8 @@ confirmation dialog — so if a hook blocks the command, the user never sees it.
 <p class="admonition-title">Pre-approved + hook-blocked = silent block</p>
 <p>If you pre-approve <code>Bash(git push:*)</code>, the hook still blocks it, but
 the user never sees the confirmation dialog. The agent gets a block
-response and must handle it. This is confusing — better to not
-pre-approve commands that hooks are designed to intercept.</p>
+response and must handle it, which is confusing.</p>
+<p>It's better not to pre-approve commands that hooks are designed to intercept.</p>
 </div>
 <h2 id="the-maintenance-workflow">The Maintenance Workflow<a class="headerlink" href="#the-maintenance-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="after-busy-sessions">After busy sessions<a class="headerlink" href="#after-busy-sessions" title="Permanent link">&para;</a></h3>
@@ -1121,7 +1133,7 @@ pre-approve commands that hooks are designed to intercept.</p>
 After a session where you clicked "Allow" many times:</p>
 <ol>
 <li>Open <code>.claude/settings.local.json</code> in your editor</li>
-<li>Look for entries at the bottom of the allow list (new entries append there)</li>
+<li>Look for entries at the bottom of the allowlist (<em>new entries append there</em>)</li>
 <li>Delete anything that looks session-specific:</li>
 <li>Exact commands with hardcoded paths</li>
 <li>Commands with literal string arguments</li>
@@ -1145,9 +1157,14 @@ for a step-by-step runbook.</p>
 <li>Injection vectors</li>
 </ul>
 <h3 id="when-adding-new-skills">When adding new skills<a class="headerlink" href="#when-adding-new-skills" title="Permanent link">&para;</a></h3>
-<p>If you create a custom <code>ctx-*</code> skill, add its <code>Skill()</code> entry to the allow
-list manually. <code>ctx init</code> only populates the defaults — it won't pick up
-custom skills.</p>
+<p>If you create a custom <code>ctx-*</code> skill, add its <code>Skill()</code> entry to the
+allowlist manually. </p>
+<p><code>ctx init</code> only populates the defaults: It won't pick up custom skills.</p>
+<h3 id="golden-image-snapshots">Golden image snapshots<a class="headerlink" href="#golden-image-snapshots" title="Permanent link">&para;</a></h3>
+<p>If manual cleanup is too tedious, use a golden image to automate it. Snapshot
+a curated permission set, then restore at session start to automatically drop
+session-accumulated permissions. See the
+<a href="../permission-snapshots/">Permission Snapshots</a> recipe for the full workflow.</p>
 <h2 id="adapting-for-other-languages">Adapting for Other Languages<a class="headerlink" href="#adapting-for-other-languages" title="Permanent link">&para;</a></h2>
 <p>The recommended defaults above are Go-specific. For other stacks, swap the
 build/test tooling:</p>
@@ -1169,7 +1186,7 @@ build/test tooling:</p>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">&quot;Bash(cargo clippy:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">&quot;Bash(cargo fmt:*)&quot;</span>
 </span></code></pre></div></p>
-<p>The ctx, git, and skill entries remain the same across all stacks.</p>
+<p>The <code>ctx</code>, <code>git</code>, and skill entries remain the same across all stacks.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../multi-tool-setup/">Setting Up ctx Across AI Tools</a>: full setup recipe

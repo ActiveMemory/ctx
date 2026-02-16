@@ -5,7 +5,8 @@ icon: lucide/chef-hat
 
 ![ctx](../images/ctx-banner.png)
 
-Workflow recipes showing how ctx commands and skills work together.
+Workflow recipes showing how `ctx` commands and skills work together.
+
 Each recipe solves a specific problem by combining multiple tools
 into a step-by-step workflow.
 
@@ -20,25 +21,32 @@ into a step-by-step workflow.
 
     Think of commands as **structure** and skills as **behavior**.
 
-!!! info "Guide Your Agent"
-    These recipes show explicit commands and skills, but agents
-    trained on the ctx playbook are **proactive**: they offer to
-    save learnings after debugging, record decisions after
-    trade-offs, create follow-up tasks after completing work, and
-    suggest what to work on next.
+## Guide Your Agent
 
-    **Your questions train the agent.** Asking "*what have we
-    learned?*" or "*is our context clean?*" does two things: it
-    triggers the workflow right now, **and** it reinforces the
-    pattern. The more you guide, the more the agent habituates the
-    behavior and begins offering on its own.
+These recipes show explicit commands and skills, but agents
+trained on the `ctx` playbook are **proactive**: they offer to
+save learnings after debugging, record decisions after
+trade-offs, create follow-up tasks after completing work, and
+suggest what to work on next.
 
-    Don't wait passively for proactive behavior — especially in
-    early sessions. **Ask, guide, reinforce.** Over time, you ask
-    less and the agent offers more.
+**Your questions train the agent.** Asking "*what have we
+learned?*" or "*is our context clean?*" does two things: 
 
-    Each recipe includes a **Conversational Approach** section
-    showing these natural-language patterns.
+* It triggers the workflow right now, 
+* **and** it **reinforces** the pattern. 
+
+The more you guide, the more the agent **habituates** the behavior and begins 
+offering on its own.
+
+Each recipe includes a **Conversational Approach** section
+showing these natural-language patterns.
+
+!!! tip Help Your Agent Help You
+    Don't wait passively for proactive behavior: especially in
+    early sessions. 
+
+    **Ask, guide, reinforce.** Over time, you ask less and 
+    the agent offers more.
 
 ---
 
@@ -46,7 +54,7 @@ into a step-by-step workflow.
 
 ### [Setting Up ctx Across AI Tools](multi-tool-setup.md)
 
-Initialize ctx and configure hooks for Claude Code, Cursor,
+Initialize `ctx` and configure hooks for Claude Code, Cursor,
 Aider, Copilot, or Windsurf. Includes shell completion,
 watch mode for non-native tools, and verification.
 
@@ -57,7 +65,7 @@ watch mode for non-native tools, and verification.
 
 ### [Keeping Context in a Separate Repo](external-context.md)
 
-Store context files outside the project tree — in a private repo,
+Store context files outside the project tree: in a private repo,
 shared directory, or anywhere else. Useful for open-source projects
 with private context or multi-repo setups.
 
@@ -73,7 +81,7 @@ working with ctx.
 
 ### [The Complete Session](session-lifecycle.md)
 
-Walk through a full ctx session from start to finish: loading
+Walk through a full `ctx` session from start to finish: loading
 context, picking what to work on, committing with context
 capture, reflecting, and saving a snapshot.
 
@@ -85,7 +93,7 @@ capture, reflecting, and saving a snapshot.
 ### [Tracking Work Across Sessions](task-management.md)
 
 Add, prioritize, complete, snapshot, and archive tasks. Keep
-TASKS.md focused as your project evolves across dozens of
+`TASKS.md` focused as your project evolves across dozens of
 sessions.
 
 **Uses**: `ctx add task`, `ctx complete`, `ctx tasks archive`,
@@ -130,7 +138,7 @@ storage out.
 
 ### [Hook Output Patterns](hook-output-patterns.md)
 
-Choose the right output pattern for your Claude Code hooks: VERBATIM
+Choose the right output pattern for your Claude Code hooks: `VERBATIM`
 relay for user-facing reminders, hard gates for invariants, agent
 directives for nudges, and five more patterns across the spectrum.
 
@@ -144,16 +152,27 @@ Keep `.claude/settings.local.json` clean: recommended safe defaults,
 what to never pre-approve, and a maintenance workflow for cleaning
 up session debris.
 
-**Uses**: `ctx init`, `/ctx-drift`, `/sanitize-permissions`
+**Uses**: `ctx init`, `/ctx-drift`, `/sanitize-permissions`,
+`ctx permissions snapshot`, `ctx permissions restore`
+
+---
+
+### [Permission Snapshots](permission-snapshots.md)
+
+Capture a known-good permission baseline as a golden image, then restore
+at session start to automatically drop session-accumulated permissions.
+
+**Uses**: `ctx permissions snapshot`, `ctx permissions restore`,
+`/sanitize-permissions`
 
 ---
 
 ### [Detecting and Fixing Drift](context-health.md)
 
 Keep context files accurate by detecting structural drift
-(stale paths, missing files) and semantic drift (outdated
-conventions, superseded decisions). Includes alignment audits
-to verify documentation claims match agent instructions.
+(stale paths, missing files, stale file ages) and task
+staleness. Includes alignment audits to verify documentation
+claims match agent instructions.
 
 **Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
 `/ctx-drift`, `/ctx-alignment-audit`, `/ctx-status`,

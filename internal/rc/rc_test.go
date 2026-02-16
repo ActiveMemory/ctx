@@ -455,6 +455,36 @@ func TestContextDir_NoOverride(t *testing.T) {
 	}
 }
 
+func TestAllowOutsideCwd_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// Default is false
+	if AllowOutsideCwd() {
+		t.Error("AllowOutsideCwd() = true, want false (default)")
+	}
+}
+
+func TestAllowOutsideCwd_Enabled(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `allow_outside_cwd: true`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	if !AllowOutsideCwd() {
+		t.Error("AllowOutsideCwd() = false, want true")
+	}
+}
+
 func TestGetRC_NegativeEnvBudget(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()

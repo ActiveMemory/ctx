@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-15 | Two-tier hook output is sufficient — don't over-engineer severity levels |
 | 2026-02-15 | Gitignored folders accumulate stale artifacts |
 | 2026-02-15 | Editor artifacts need gitignore coverage from day one |
 | 2026-02-15 | Permission drift needs auditing like code drift |
@@ -72,6 +73,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-15-170015] Two-tier hook output is sufficient — don't over-engineer severity levels
+
+**Context**: Evaluated whether ctx hooks need a formal INFO/WARN/CRITICAL severity protocol (Pattern 8 in hook-output-patterns.md). Reviewed all shipped hooks: block-non-path-ctx (hard gate), check-context-size (VERBATIM relay), check-persistence (unprefixed nudge), check-journal (VERBATIM + suggested action), check-backup-age (VERBATIM + suggested action), cleanup-tmp (silent side-effect).
+
+**Lesson**: ctx already has a working two-tier system: unprefixed output (agent absorbs as context, mentions if relevant — e.g. check-persistence.sh) and 'IMPORTANT: Relay VERBATIM' prefixed output (agent interrupts immediately — e.g. check-context-size.sh). A three-tier system adds protocol complexity (agent training in CLAUDE.md, consistent prefix usage) without covering cases the two tiers don't already handle.
+
+**Application**: When writing new hooks, choose between silent (no output), unprefixed (agent context — may or may not relay), and VERBATIM (guaranteed relay). Don't introduce new severity prefixes unless the two-tier model demonstrably fails for a specific hook.
 
 ---
 

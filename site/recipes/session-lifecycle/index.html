@@ -981,6 +981,18 @@ individual commands and skills feel disconnected.</p>
 <p>How do they fit together into a coherent workflow?</p>
 <p>This recipe walks through a complete session, from opening your editor to
 persisting context before you close it, so you can see how each piece connects.</p>
+<div class="admonition tip">
+<p class="admonition-title">TL;DR</p>
+<ol>
+<li><strong>Load</strong>: "Do you remember?" or <code>/ctx-remember</code></li>
+<li><strong>Orient</strong>: <code>/ctx-status</code> — check file health and token usage</li>
+<li><strong>Pick</strong>: <code>/ctx-next</code> — choose what to work on</li>
+<li><strong>Work</strong>: implement, test, iterate</li>
+<li><strong>Commit</strong>: <code>/ctx-commit</code> — commit and capture decisions/learnings</li>
+<li><strong>Reflect</strong>: <code>/ctx-reflect</code> — identify what to persist</li>
+</ol>
+<p>Read on for the full walkthrough with examples.</p>
+</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1160,14 +1172,12 @@ pick up the <code>/ctx-commit</code> skill for you.</p>
 reviews the staged changes, drafts a commit message focused on "<em>why</em>"
 rather than "<em>what</em>", and then commits.</p>
 <p>After the commit succeeds, it prompts you:</p>
-<blockquote>
-<p><strong>Any context to capture?</strong></p>
-<ul>
-<li><strong>Decision</strong>: Did you make a design choice or trade-off?</li>
-<li><strong>Learning</strong>: Did you hit a gotcha or discover something?</li>
-<li><strong>Neither</strong>: No context to capture; we are done.</li>
-</ul>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>**Any context to capture?**
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>- **Decision**: Did you make a design choice or trade-off?
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>- **Learning**: Did you hit a gotcha or discover something?
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>- **Neither**: No context to capture; we are done.
+</span></code></pre></div>
 <p>If you made a decision, the skill records it with <code>ctx add decision</code>. If you
 learned something, it records it with <code>ctx add learning</code> including context,
 lesson, and application fields. This is the bridge between committing code and
@@ -1186,7 +1196,7 @@ and a commit is a natural milestone.</p>
 <h3 id="step-6-reflect">Step 6: Reflect<a class="headerlink" href="#step-6-reflect" title="Permanent link">&para;</a></h3>
 <p>At natural breakpoints (<em>after finishing a feature, resolving a complex bug,
 or before switching tasks</em>) pause to reflect:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/ctx-reflect
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-reflect
 </span></code></pre></div>
 <p>The skill works through a checklist: learnings discovered, decisions made, tasks
 completed or created, and whether there are items worth persisting. It then
@@ -1223,7 +1233,7 @@ milestones as reflection triggers on its own.</p>
 <h3 id="step-7-persist-before-ending">Step 7: Persist Before Ending<a class="headerlink" href="#step-7-persist-before-ending" title="Permanent link">&para;</a></h3>
 <p>Before ending the session, make sure any outstanding learnings and decisions
 are captured:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-reflect
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/ctx-reflect
 </span></code></pre></div>
 <p>The agent will review what happened during the session and offer to persist
 any outstanding learnings, decisions, or task updates.</p>

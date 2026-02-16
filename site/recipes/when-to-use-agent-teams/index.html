@@ -937,34 +937,35 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>You have a task and you're wondering: should I throw more agents at it?</p>
+<p>You have a task, and you are wondering: "<em>should I throw more agents at it?</em>"</p>
 <p>More agents <em>can</em> mean faster results, but they also mean coordination
 overhead, merge conflicts, divergent mental models, and wasted tokens
-re-reading context. The wrong setup costs more than it saves.</p>
-<p>This recipe is a decision framework. It helps you choose between a single
-agent, parallel worktrees, and a full agent team — and explains what ctx
+re-reading context. </p>
+<p>The wrong setup costs more than it saves.</p>
+<p>This recipe is a <strong>decision framework</strong>: It helps you choose between a single
+agent, parallel worktrees, and a full agent team, and explains what <code>ctx</code>
 provides at each level.</p>
 <h2 id="the-spectrum">The Spectrum<a class="headerlink" href="#the-spectrum" title="Permanent link">&para;</a></h2>
 <p>There are three modes, ordered by complexity:</p>
-<h3 id="1-single-agent-default">1. Single Agent (Default)<a class="headerlink" href="#1-single-agent-default" title="Permanent link">&para;</a></h3>
+<h3 id="1-single-agent-default">1. Single Agent (<em>Default</em>)<a class="headerlink" href="#1-single-agent-default" title="Permanent link">&para;</a></h3>
 <p>One agent, one session, one branch. This is correct for most work.</p>
-<p><strong>Use when:</strong></p>
+<p><strong>Use when</strong>:</p>
 <ul>
-<li>The task has linear dependencies (step 2 needs step 1's output)</li>
+<li>The task has linear dependencies (<em>step 2 needs step 1's output</em>)</li>
 <li>Changes touch overlapping files</li>
-<li>You need tight feedback loops (review each change before the next)</li>
+<li>You need tight feedback loops (<em>review each change before the next</em>)</li>
 <li>The task requires deep understanding of a single area</li>
 <li>Total effort is less than a few hours of agent time</li>
 </ul>
-<p><strong>What ctx provides:</strong> Full <code>.context/</code> — tasks, decisions, learnings,
-conventions — all in one session. The agent builds a coherent mental
-model and persists it as it goes.</p>
-<p><strong>Example tasks:</strong> Bug fixes, feature implementation, refactoring a
+<p><strong>What <code>ctx</code> provides</strong>: Full <code>.context/</code>: tasks, decisions, learnings,
+conventions, all in one session. </p>
+<p>The agent builds a coherent mental model and persists it as it goes.</p>
+<p><strong>Example tasks</strong>: Bug fixes, feature implementation, refactoring a
 module, writing documentation for one area, debugging.</p>
-<h3 id="2-parallel-worktrees-independent-tracks">2. Parallel Worktrees (Independent Tracks)<a class="headerlink" href="#2-parallel-worktrees-independent-tracks" title="Permanent link">&para;</a></h3>
+<h3 id="2-parallel-worktrees-independent-tracks">2. Parallel Worktrees (<em>Independent Tracks</em>)<a class="headerlink" href="#2-parallel-worktrees-independent-tracks" title="Permanent link">&para;</a></h3>
 <p>2-4 agents, each in a separate git worktree on its own branch, working
 on non-overlapping parts of the codebase.</p>
-<p><strong>Use when:</strong></p>
+<p><strong>Use when</strong>:</p>
 <ul>
 <li>You have 5+ independent tasks in the backlog</li>
 <li>Tasks group cleanly by directory or package</li>
@@ -972,29 +973,29 @@ on non-overlapping parts of the codebase.</p>
 <li>Each track can be completed and merged independently</li>
 <li>You want parallelism without coordination complexity</li>
 </ul>
-<p><strong>What ctx provides:</strong> Shared <code>.context/</code> via git (each worktree sees
-the same tasks, decisions, conventions). <code>/ctx-worktree</code> skill for
-setup and teardown. TASKS.md as a lightweight work queue.</p>
-<p><strong>Example tasks:</strong> Docs + new package + test coverage (three tracks
-that don't touch the same files). Parallel recipe writing. Independent
+<p><strong>What <code>ctx</code> provides</strong>: Shared <code>.context/</code> via <code>git</code> (<em>each worktree sees
+the same tasks, decisions, conventions</em>). <code>/ctx-worktree</code> skill for
+setup and teardown. <code>TASKS.md</code> as a lightweight work queue.</p>
+<p><strong>Example tasks</strong>: Docs + new package + test coverage (<em>three tracks
+that don't touch the same files</em>). Parallel recipe writing. Independent
 module development.</p>
 <p><strong>See:</strong> <a href="../parallel-worktrees/">Parallel Agent Development with Git Worktrees</a></p>
-<h3 id="3-agent-team-coordinated-swarm">3. Agent Team (Coordinated Swarm)<a class="headerlink" href="#3-agent-team-coordinated-swarm" title="Permanent link">&para;</a></h3>
+<h3 id="3-agent-team-coordinated-swarm">3. Agent Team (<em>Coordinated Swarm</em>)<a class="headerlink" href="#3-agent-team-coordinated-swarm" title="Permanent link">&para;</a></h3>
 <p>Multiple agents communicating via messages, sharing a task list, with
 a lead agent coordinating. Claude Code's team/swarm feature.</p>
 <p><strong>Use when:</strong></p>
 <ul>
 <li>Tasks have dependencies but can still partially overlap</li>
 <li>You need research and implementation happening simultaneously</li>
-<li>The work requires different roles (researcher, implementer, tester)</li>
+<li>The work requires different roles (<em>researcher, implementer, tester</em>)</li>
 <li>A lead agent needs to review and integrate others' work</li>
 <li>The task is large enough that coordination cost is justified</li>
 </ul>
-<p><strong>What ctx provides:</strong> <code>.context/</code> as shared state that all agents
+<p><strong>What <code>ctx</code> provides</strong>: <code>.context/</code> as shared state that all agents
 can read. Task tracking for work assignment. Decisions and learnings
 as team memory that survives individual agent turnover.</p>
 <p><strong>Example tasks:</strong> Large refactor across modules where a lead reviews
-merges. Research + implementation where one agent explores options
+merges. Research and implementation where one agent explores options
 while another builds. Multi-file feature that needs integration testing
 after parallel implementation.</p>
 <h2 id="the-decision-framework">The Decision Framework<a class="headerlink" href="#the-decision-framework" title="Permanent link">&para;</a></h2>
@@ -1029,17 +1030,17 @@ belong in the same track (or the same single-agent session).</p>
 file costs more time than the parallelism saves.</p>
 <h2 id="when-teams-make-things-worse">When Teams Make Things Worse<a class="headerlink" href="#when-teams-make-things-worse" title="Permanent link">&para;</a></h2>
 <p>More agents is not always better. Watch for these patterns:</p>
-<p><strong>Merge hell.</strong> If you're spending more time resolving conflicts than
-the parallel work saved, you split wrong. Re-group by file overlap.</p>
-<p><strong>Context divergence.</strong> Each agent builds its own mental model. After
+<p><strong>Merge hell</strong>. If you are spending more time resolving conflicts than
+the parallel work saved, you split wrong: Re-group by file overlap.</p>
+<p><strong>Context divergence</strong>: Each agent builds its own mental model. After
 30 minutes of independent work, agent A might make assumptions that
 contradict agent B's approach. Shorter tracks with frequent merges
 reduce this.</p>
-<p><strong>Coordination theater.</strong> A lead agent spending most of its time
+<p><strong>Coordination theater</strong>: A lead agent spending most of its time
 assigning tasks, checking status, and sending messages instead of
 doing work. If the task list is clear enough, worktrees with no
 communication are cheaper.</p>
-<p><strong>Re-reading overhead.</strong> Every agent reads <code>.context/</code> on startup.
+<p><strong>Re-reading overhead</strong>: Every agent reads <code>.context/</code> on startup.
 A team of 4 agents each reading 4000 tokens of context = 16000 tokens
 before anyone does any work. For small tasks, that overhead dominates.</p>
 <h2 id="what-ctx-gives-you-at-each-level">What ctx Gives You at Each Level<a class="headerlink" href="#what-ctx-gives-you-at-each-level" title="Permanent link">&para;</a></h2>
@@ -1060,7 +1061,7 @@ before anyone does any work. For small tasks, that overhead dominates.</p>
 <td>Shared via filesystem</td>
 </tr>
 <tr>
-<td>TASKS.md</td>
+<td><code>TASKS.md</code></td>
 <td>Work queue</td>
 <td>Split by track</td>
 <td>Assigned by lead</td>
@@ -1093,22 +1094,22 @@ before anyone does any work. For small tasks, that overhead dominates.</p>
 </table>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Start with one agent.</strong> Only add parallelism when you've identified
+<li><strong>Start with one agent</strong>. Only add parallelism when you have identified
   the bottleneck. "This would go faster with more agents" is usually
   wrong for tasks under 2 hours.</li>
-<li><strong>The 3-4 agent ceiling is real.</strong> Coordination overhead grows
+<li><strong>The 3-4 agent ceiling is real</strong>. Coordination overhead grows
   quadratically. 2 agents = 1 communication pair. 4 agents = 6 pairs.
-  Beyond 4, you're managing agents more than doing work.</li>
+  Beyond 4, you are managing agents more than doing work.</li>
 <li><strong>Worktrees &gt; teams for most parallelism needs.</strong> If agents don't
   need to talk to each other during execution, worktrees give you
   parallelism with zero coordination overhead.</li>
-<li><strong>Use ctx as the shared brain.</strong> Whether it's one agent or four, the
+<li><strong>Use <code>ctx</code> as the shared brain</strong>. Whether it's one agent or four, the
   <code>.context/</code> directory is the single source of truth. Decisions go in
-  DECISIONS.md, not in chat messages between agents.</li>
-<li><strong>Merge early, merge often.</strong> Long-lived parallel branches diverge.
+  <code>DECISIONS.md</code>, <strong>not</strong> in chat messages between agents.</li>
+<li><strong>Merge early, merge often</strong>. Long-lived parallel branches diverge.
   Merge a track as soon as it's done rather than waiting for all tracks
   to finish.</li>
-<li><strong>TASKS.md conflicts are normal.</strong> Multiple agents completing different
+<li><strong><code>TASKS.md</code> conflicts are normal</strong>. Multiple agents completing different
   tasks will conflict on merge. The resolution is always additive: accept
   all <code>[x]</code> completions from both sides.</li>
 </ul>

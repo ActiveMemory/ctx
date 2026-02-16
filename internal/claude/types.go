@@ -14,10 +14,12 @@ package claude
 //
 // Fields:
 //   - PreToolUse: Matchers that run before each tool invocation
+//   - PostToolUse: Matchers that run after a successful tool invocation
 //   - UserPromptSubmit: Matchers that run when the user submits a prompt
 //   - SessionEnd: Matchers that run when a session ends
 type HookConfig struct {
 	PreToolUse       []HookMatcher `json:"PreToolUse,omitempty"`
+	PostToolUse      []HookMatcher `json:"PostToolUse,omitempty"`
 	UserPromptSubmit []HookMatcher `json:"UserPromptSubmit,omitempty"`
 	SessionEnd       []HookMatcher `json:"SessionEnd,omitempty"`
 }

@@ -41,6 +41,28 @@ func preToolUserHookMatcher(hooksDir string) []HookMatcher {
 	}}
 }
 
+// postToolUseHookMatcher builds the PostToolUse hook matchers.
+//
+// It returns a single Bash matcher that runs the post-commit nudge script
+// after successful tool invocations, prompting the agent to offer context
+// capture and suggest running lints/tests before the user pushes.
+//
+// Parameters:
+//   - hooksDir: directory containing hook scripts
+//
+// Returns:
+//   - []HookMatcher: matchers for PostToolUse lifecycle event
+func postToolUseHookMatcher(hooksDir string) []HookMatcher {
+	return []HookMatcher{{
+		// Post-commit nudge: context capture and lint/test reminder
+		Matcher: MatcherBash,
+		Hooks: []Hook{NewHook(
+			HookTypeCommand,
+			path.Join(hooksDir, config.FilePostCommit),
+		)},
+	}}
+}
+
 // sessionEndHookMatcher builds the SessionEnd hook matchers.
 //
 // It returns a single matcher that runs the temp file cleanup script

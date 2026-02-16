@@ -21,6 +21,19 @@ the agent persists its context as part of the work.
 This is the key insight: unattended operation works because the agent treats
 context persistence as a first-class deliverable, not an afterthought.
 
+!!! tip "TL;DR"
+    ```bash
+    ctx init --ralph                                  # 1. init for unattended mode
+    # Edit TASKS.md with phased work items
+    ctx loop --tool claude --max-iterations 10        # 2. generate loop.sh
+    ./loop.sh 2>&1 | tee /tmp/loop.log &              # 3. run the loop
+    ctx watch --log /tmp/loop.log                      # 4. process context updates
+    # Next morning:
+    ctx status && ctx load                             # 5. review results
+    ```
+
+    Read on for permissions, isolation, and completion signals.
+
 ## Commands and Skills Used
 
 | Tool                    | Type    | Purpose                                                            |

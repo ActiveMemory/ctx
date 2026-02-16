@@ -114,6 +114,9 @@ const (
 	FileCheckPersistence = "check-persistence.sh"
 	// FileCheckJournal is the hook script for journal export/enrich reminders.
 	FileCheckJournal = "check-journal.sh"
+	// FilePostCommit is the hook script for post-commit nudges (context
+	// capture and lint/test reminders).
+	FilePostCommit = "post-commit.sh"
 	// FileClaudeMd is the Claude Code configuration file in the project root.
 	FileClaudeMd = "CLAUDE.md"
 	// FilePromptMd is the session prompt file in the project root.
@@ -122,6 +125,8 @@ const (
 	FileImplementationPlan = "IMPLEMENTATION_PLAN.md"
 	// FileSettings is the Claude Code local settings file.
 	FileSettings = ".claude/settings.local.json"
+	// FileSettingsGolden is the golden image of the Claude Code settings.
+	FileSettingsGolden = ".claude/settings.golden.json"
 	// FileContextWatch is the context monitoring tool script.
 	FileContextWatch = "context-watch.sh"
 	// FileMakefileCtx is the ctx-owned Makefile include for project root.

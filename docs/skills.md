@@ -13,43 +13,56 @@ icon: lucide/sparkles
 
 ## Skills Reference
 
-Skills are slash commands that run **inside your AI assistant** (e.g.,
-`/ctx-next`), as opposed to CLI commands that run in your terminal
-(e.g., `ctx status`). Skills give your agent structured workflows —
-they know what to read, what to run, and when to ask. Most wrap one or
-more `ctx` CLI commands with opinionated behavior on top. See the
-[Prompting Guide](prompting-guide.md) for natural-language triggers
-that invoke these skills conversationally.
+Skills are slash commands that run **inside your AI assistant** (*e.g.,
+`/ctx-next`*), as opposed to CLI commands that run in your terminal
+(*e.g., `ctx status`*). 
+
+Skills give your agent structured workflows: It knows what to read, what to 
+run, and when to ask. Most wrap one or more `ctx` CLI commands with 
+opinionated behavior on top. 
+
+!!! tip "Skills Are Best Used Conversationally"
+    The beauty of `ctx` is that it's designed to be intuitive and 
+    conversational, allowing you to interact with your AI assistant 
+    naturally. That's why you don't have to memorize many of
+    these skills.
+
+    See the [**Prompting Guide**](prompting-guide.md) for natural-language 
+    triggers that invoke these skills conversationally.
+
+    However, when you need a more precise control, you have the option
+    to invoke the relevant skills directly.
 
 ## All Skills
 
-| Skill | Description | Type |
-|-------|-------------|------|
-| [`/ctx-remember`](#ctx-remember) | Recall project context and present structured readback | user-invocable |
-| [`/ctx-status`](#ctx-status) | Show context summary with interpretation | user-invocable |
-| [`/ctx-agent`](#ctx-agent) | Load full context packet for AI consumption | user-invocable |
-| [`/ctx-next`](#ctx-next) | Suggest 1-3 concrete next actions with rationale | user-invocable |
-| [`/ctx-commit`](#ctx-commit) | Commit with integrated context persistence | user-invocable |
-| [`/ctx-reflect`](#ctx-reflect) | Pause and reflect on session progress | user-invocable |
-| [`/ctx-add-task`](#ctx-add-task) | Add actionable task to TASKS.md | user-invocable |
-| [`/ctx-add-decision`](#ctx-add-decision) | Record architectural decision with rationale | user-invocable |
-| [`/ctx-add-learning`](#ctx-add-learning) | Record gotchas and lessons learned | user-invocable |
-| [`/ctx-add-convention`](#ctx-add-convention) | Record coding convention for consistency | user-invocable |
-| [`/ctx-archive`](#ctx-archive) | Archive completed tasks from TASKS.md | user-invocable |
-| [`/ctx-pad`](#ctx-pad) | Manage encrypted scratchpad entries | user-invocable |
-| [`/ctx-recall`](#ctx-recall) | Browse and export AI session history | user-invocable |
-| [`/ctx-journal-enrich`](#ctx-journal-enrich) | Enrich single journal entry with metadata | user-invocable |
-| [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all) | Batch-enrich all unenriched journal entries | user-invocable |
-| [`/ctx-journal-normalize`](#ctx-journal-normalize) | Normalize journal markdown for clean rendering | user-invocable |
-| [`/ctx-blog`](#ctx-blog) | Generate blog post draft from project activity | user-invocable |
-| [`/ctx-blog-changelog`](#ctx-blog-changelog) | Generate themed blog post from a commit range | user-invocable |
-| [`/ctx-drift`](#ctx-drift) | Detect and fix context drift | user-invocable |
-| [`/ctx-alignment-audit`](#ctx-alignment-audit) | Audit docs claims against agent instructions | user-invocable |
-| [`/ctx-prompt-audit`](#ctx-prompt-audit) | Analyze prompting patterns for improvement | user-invocable |
-| [`/ctx-context-monitor`](#ctx-context-monitor) | Respond to context checkpoint signals | automatic |
-| [`/ctx-implement`](#ctx-implement) | Execute a plan step-by-step with verification | user-invocable |
-| [`/ctx-loop`](#ctx-loop) | Generate autonomous loop script | user-invocable |
-| [`/ctx-worktree`](#ctx-worktree) | Manage git worktrees for parallel agents | user-invocable |
+| Skill                                                | Description                                            | Type           |
+|------------------------------------------------------|--------------------------------------------------------|----------------|
+| [`/ctx-remember`](#ctx-remember)                     | Recall project context and present structured readback | user-invocable |
+| [`/ctx-status`](#ctx-status)                         | Show context summary with interpretation               | user-invocable |
+| [`/ctx-agent`](#ctx-agent)                           | Load full context packet for AI consumption            | user-invocable |
+| [`/ctx-next`](#ctx-next)                             | Suggest 1-3 concrete next actions with rationale       | user-invocable |
+| [`/ctx-commit`](#ctx-commit)                         | Commit with integrated context persistence             | user-invocable |
+| [`/ctx-reflect`](#ctx-reflect)                       | Pause and reflect on session progress                  | user-invocable |
+| [`/ctx-add-task`](#ctx-add-task)                     | Add actionable task to TASKS.md                        | user-invocable |
+| [`/ctx-add-decision`](#ctx-add-decision)             | Record architectural decision with rationale           | user-invocable |
+| [`/ctx-add-learning`](#ctx-add-learning)             | Record gotchas and lessons learned                     | user-invocable |
+| [`/ctx-add-convention`](#ctx-add-convention)         | Record coding convention for consistency               | user-invocable |
+| [`/ctx-archive`](#ctx-archive)                       | Archive completed tasks from TASKS.md                  | user-invocable |
+| [`/ctx-pad`](#ctx-pad)                               | Manage encrypted scratchpad entries                    | user-invocable |
+| [`/ctx-recall`](#ctx-recall)                         | Browse and export AI session history                   | user-invocable |
+| [`/ctx-journal-enrich`](#ctx-journal-enrich)         | Enrich single journal entry with metadata              | user-invocable |
+| [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all) | Batch-enrich all unenriched journal entries            | user-invocable |
+| [`/ctx-journal-normalize`](#ctx-journal-normalize)   | Normalize journal markdown for clean rendering         | user-invocable |
+| [`/ctx-blog`](#ctx-blog)                             | Generate blog post draft from project activity         | user-invocable |
+| [`/ctx-blog-changelog`](#ctx-blog-changelog)         | Generate themed blog post from a commit range          | user-invocable |
+| [`/ctx-drift`](#ctx-drift)                           | Detect and fix context drift                           | user-invocable |
+| [`/ctx-alignment-audit`](#ctx-alignment-audit)       | Audit docs claims against agent instructions           | user-invocable |
+| [`/ctx-prompt-audit`](#ctx-prompt-audit)             | Analyze prompting patterns for improvement             | user-invocable |
+| [`/check-links`](#check-links)                       | Audit docs for dead internal and external links        | user-invocable |
+| [`/ctx-context-monitor`](#ctx-context-monitor)       | Respond to context checkpoint signals                  | automatic      |
+| [`/ctx-implement`](#ctx-implement)                   | Execute a plan step-by-step with verification          | user-invocable |
+| [`/ctx-loop`](#ctx-loop)                             | Generate autonomous loop script                        | user-invocable |
+| [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents               | user-invocable |
 
 ---
 
@@ -301,12 +314,11 @@ prompt quality.
 
 ### `/ctx-drift`
 
-Detect and fix context drift at two layers: structural (stale paths,
-missing files, constitution violations via `ctx drift`) and semantic
-(outdated conventions, superseded decisions). Also detects skill drift
-against canonical templates.
+Detect and fix context drift: stale paths, missing files, file age
+staleness, task accumulation, and constitution violations via
+`ctx drift`. Also detects skill drift against canonical templates.
 
-**Wraps**: `ctx drift [--fix]`, plus semantic analysis of context files
+**Wraps**: `ctx drift [--fix]`
 
 **See also**:
 [Detecting and Fixing Drift](recipes/context-health.md)
@@ -340,13 +352,29 @@ positive observations.
 
 ---
 
+### `/check-links`
+
+Scan all markdown files under `docs/` for broken links. Two passes:
+internal links (verify file targets exist on disk) and external links
+(HTTP HEAD with timeout, report failures as warnings). Also checks
+image references.
+
+Invoked automatically as check #12 during `/consolidate`.
+
+**Wraps**: Glob + Grep to scan, `curl` for external checks
+
+**See also**:
+[`/consolidate`](#consolidate-related-skills)
+
+---
+
 ### `/ctx-context-monitor`
 
 Respond to context checkpoint signals when usage hits high thresholds.
 Fires at adaptive intervals and offers context persistence before
 the session ends.
 
-**Type**: automatic — triggered by the `check-context-size` hook,
+**Type**: Automatic: Triggered by the `check-context-size` hook,
 not user-invocable
 
 **Wraps**: hook-driven; suggests `/ctx-reflect`
@@ -406,5 +434,7 @@ grouping, and tear down with merge.
 
 `ctx init` deploys the 25 skills listed above to `.claude/skills/`.
 Teams can add their own project-specific skills to the same directory
-— they follow the same format and are invoked the same way. Custom
-skills are not covered in this reference.
+
+Project-specific skills follow the same format and are invoked the same way. 
+
+Custom skills are not covered in this reference.

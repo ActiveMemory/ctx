@@ -1029,10 +1029,20 @@
 and suddenly <code>ARCHITECTURE.md</code> references paths that no longer exist,
 <code>TASKS.md</code> is 80 percent completed checkboxes, and <code>CONVENTIONS.md</code> describes
 patterns you stopped using two months ago.</p>
-<p><strong>Stale context is worse than no context</strong>: an AI tool that trusts outdated
-references will <strong>hallucinate confidently</strong>.</p>
+<p><strong>Stale context is worse than no context</strong>: </p>
+<p>An AI tool that trusts outdated references will <strong>hallucinate confidently</strong>.</p>
 <p>This recipe shows how to detect drift, fix it, and keep your <code>.context/</code>
 directory lean and accurate.</p>
+<div class="admonition tip">
+<p class="admonition-title">TL;DR</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># detect problems</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># auto-fix the easy ones</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># reconcile after refactors</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># archive old completed tasks</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># verify</span>
+</span></code></pre></div>
+<p>Or just ask your agent: <em>"Is our context clean?"</em></p>
+</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1110,72 +1120,74 @@ offering more.</p>
 </div>
 <h3 id="step-1-ask-your-agent">Step 1: Ask Your Agent<a class="headerlink" href="#step-1-ask-your-agent" title="Permanent link">&para;</a></h3>
 <p>The simplest way to check context health:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Is our context clean?
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Anything stale?
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>How healthy are our context files?
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>````
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Or invoke the skill directly:
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>```text
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>/ctx-drift
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Is our context clean?
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Anything stale?
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>How healthy are our context files?
+</span></code></pre></div>
+<p>Or invoke the skill directly:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-drift
 </span></code></pre></div>
 <p>The agent performs two layers of analysis:</p>
-<p>Layer 1, structural checks (via <code>ctx drift</code>): dead paths, missing files,
+<p><strong>Layer 1</strong>, structural checks (<em>via <code>ctx drift</code></em>): Dead paths, missing files,
 completed task counts, constitution violations. Fast and programmatic.</p>
-<p>Layer 2, semantic analysis (agent-driven): does <code>CONVENTIONS.md</code> describe
+<p><strong>Layer 2</strong>, semantic analysis (<em>agent-driven</em>): Does <code>CONVENTIONS.md</code> describe
 patterns the code no longer follows? Does <code>DECISIONS.md</code> contain entries whose
 rationale no longer applies? Are there learnings about bugs that are now fixed?
-This is where the agent adds value the CLI cannot: it reads both context files
+This is where the agent adds value the CLI cannot: It reads both context files
 and source code and compares them.</p>
 <p>The agent reports both layers together, explains each finding in plain language,
 and offers to fix what it can.</p>
 <h3 id="step-2-maintenance-at-session-start">Step 2: Maintenance at Session Start<a class="headerlink" href="#step-2-maintenance-at-session-start" title="Permanent link">&para;</a></h3>
 <p>You do not need to ask explicitly. A proactive agent can check context health
 as part of its startup routine and mention anything worth addressing:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Agent: Good morning. I&#39;ve loaded the context files. A few things
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>       before we start:
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       - ARCHITECTURE.md references `pkg/auth/` which is now empty
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>       - DECISIONS.md hasn&#39;t been updated in 40 days
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>       - There are 18 completed tasks ready for archival
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>       Want me to run a quick maintenance pass, or should we jump
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>       straight into today&#39;s work?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Agent: Good morning. I&#39;ve loaded the context files. A few things
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       before we start:
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>       - ARCHITECTURE.md references `pkg/auth/` which is now empty
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       - DECISIONS.md hasn&#39;t been updated in 40 days
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>       - There are 18 completed tasks ready for archival
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       Want me to run a quick maintenance pass, or should we jump
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>       straight into today&#39;s work?
 </span></code></pre></div>
 <p>If the agent does not offer this on its own, a gentle nudge is enough:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Anything stale before we start?
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>How&#39;s the context looking?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Anything stale before we start?
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>How&#39;s the context looking?
 </span></code></pre></div>
 <p>This turns maintenance from a scheduled chore into a conversation that happens
 <strong>when</strong> it matters.</p>
 <h3 id="step-3-real-time-detection-during-work">Step 3: Real-Time Detection During Work<a class="headerlink" href="#step-3-real-time-detection-during-work" title="Permanent link">&para;</a></h3>
-<p>Agents notice drift while working, not just during explicit checks. When an
-agent reads <code>ARCHITECTURE.md</code> to understand a module and then opens the actual
-source tree, it can see mismatches immediately:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Agent: I notice ARCHITECTURE.md still references `internal/handlers/`
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       which we deleted in the last refactor. Want me to run drift
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>       detection so we can clean up any other stale references?
+<p>Agents <em>can</em> notice drift while working — when a mismatch is directly in the
+path of their current task. If an agent reads <code>ARCHITECTURE.md</code> to find where
+to add a handler and <code>internal/handlers/</code> doesn't exist, it will notice because
+the stale reference blocks its work:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Agent: ARCHITECTURE.md references `internal/handlers/` but that directory
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>       doesn&#39;t exist. I&#39;ll look at the actual source tree to find where
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>       handlers live now.
 </span></code></pre></div>
-<p>The agent is already reading context files to do its job. Noticing staleness is
-a natural byproduct of that.</p>
+<p>This happens reliably when the drift intersects the task. What is <em>less</em>
+reliable is the agent generalizing from one mismatch to "<em>there might be more
+stale references; let me run drift detection</em>" That leap requires the agent
+to know <code>/ctx-drift</code> exists and to decide the current task should pause for
+maintenance.</p>
+<p>If you want that behavior, <strong>reinforce</strong> it:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Good catch. Yes, run /ctx-drift and clean up any other stale references.
+</span></code></pre></div>
+<p>Over time, agents that have seen this pattern will start offering proactively.
+But do not expect it from a cold start.</p>
 <h3 id="step-4-archival-and-cleanup">Step 4: Archival and Cleanup<a class="headerlink" href="#step-4-archival-and-cleanup" title="Permanent link">&para;</a></h3>
-<p>Agents spot clutter too. When <code>TASKS.md</code> is loaded and most of the content is
-completed checkboxes, the agent can offer to tidy up:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Agent: TASKS.md has 25 completed tasks obscuring the 4 pending ones.
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>       Want me to archive the finished work so we can focus on what&#39;s
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>       active?
-</span></code></pre></div>
-<p>The same applies to <code>LEARNINGS.md</code> with near-duplicate entries, or <code>DECISIONS.md</code>
-with entries that were superseded.</p>
+<p><code>ctx drift</code> detects when <code>TASKS.md</code> has more than 10 completed items and
+flags it as a staleness warning. Running <code>ctx drift --fix</code> archives completed
+tasks automatically. </p>
+<p>You can also run <code>/ctx-archive</code> to compact on demand.</p>
 <h3 id="step-5-alignment-audits">Step 5: Alignment Audits<a class="headerlink" href="#step-5-alignment-audits" title="Permanent link">&para;</a></h3>
-<p>A related problem is <strong>alignment drift</strong>: documentation that makes claims about
+<p>A related problem is <strong>alignment drift</strong>: Documentation that makes claims about
 agent behavior not backed by actual playbook or skill instructions. </p>
 <p>Over time, docs accumulate aspirational statements that no instruction teaches 
 the agent to do.</p>
 <p>Use <code>/ctx-alignment-audit</code> to trace behavioral claims in documentation against
 the playbook and skill files. The skill identifies gaps, proposes fixes, and
-checks instruction file health (token budgets, bloat signals).</p>
+checks instruction file health (<em>token budgets, bloat signals</em>).</p>
 <p>To avoid confusion with <code>/ctx-prompt-audit</code>:</p>
 <ul>
 <li><code>/ctx-alignment-audit</code> checks whether documentation claims are supported by
@@ -1189,25 +1201,25 @@ checks instruction file health (token budgets, bloat signals).</p>
 need direct control, use the commands directly.</p>
 <h3 id="ctx-drift"><code>ctx drift</code><a class="headerlink" href="#ctx-drift" title="Permanent link">&para;</a></h3>
 <p>Scan context files for structural problems:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>drift
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>drift
 </span></code></pre></div>
 <p>Sample output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Drift Report
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>============
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Warnings (3):
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  ARCHITECTURE.md:14  path &quot;internal/api/router.go&quot; does not exist
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  ARCHITECTURE.md:28  path &quot;pkg/auth/&quot; directory is empty
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  CONVENTIONS.md:9    path &quot;internal/handlers/&quot; not found
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Violations (1):
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  TASKS.md            31 completed tasks (recommend archival)
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Staleness:
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  DECISIONS.md        last modified 45 days ago
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  LEARNINGS.md        last modified 32 days ago
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>Exit code: 1 (warnings found)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Drift Report
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>============
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Warnings (3):
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  ARCHITECTURE.md:14  path &quot;internal/api/router.go&quot; does not exist
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  ARCHITECTURE.md:28  path &quot;pkg/auth/&quot; directory is empty
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  CONVENTIONS.md:9    path &quot;internal/handlers/&quot; not found
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Violations (1):
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  TASKS.md            31 completed tasks (recommend archival)
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Staleness:
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  DECISIONS.md        last modified 45 days ago
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  LEARNINGS.md        last modified 32 days ago
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>Exit code: 1 (warnings found)
 </span></code></pre></div>
 <table>
 <thead>
@@ -1237,37 +1249,39 @@ need direct control, use the commands directly.</p>
 </table>
 <p>Exit codes: <code>0</code> equals clean, <code>1</code> equals warnings, <code>3</code> equals violations.</p>
 <p>For CI integration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.warnings | length&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.warnings | length&#39;</span>
 </span></code></pre></div>
 <h3 id="ctx-drift-fix"><code>ctx drift --fix</code><a class="headerlink" href="#ctx-drift-fix" title="Permanent link">&para;</a></h3>
 <p>Auto-fix mechanical issues:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
 </span></code></pre></div>
-<p>This handles removing dead path references, updating unambiguous renames, clearing
-empty sections. Issues requiring judgment are flagged but left for you.</p>
+<p>This handles removing dead path references, updating unambiguous renames, 
+clearing empty sections. Issues requiring judgment are flagged but left for you.</p>
 <p>Run <code>ctx drift</code> again afterward to confirm what remains.</p>
 <h3 id="ctx-sync"><code>ctx sync</code><a class="headerlink" href="#ctx-sync" title="Permanent link">&para;</a></h3>
 <p>After a refactor, reconcile context with the actual codebase structure:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w">   </span><span class="c1"># preview first</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>sync<span class="w">             </span><span class="c1"># apply</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w">   </span><span class="c1"># preview first</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>sync<span class="w">             </span><span class="c1"># apply</span>
 </span></code></pre></div>
 <p><code>ctx sync</code> scans for <strong>structural changes</strong>, compares with <code>ARCHITECTURE.md</code>, 
 checks for new dependencies worth documenting, and identifies context referring 
 to code that no longer exists.</p>
 <h3 id="ctx-compact"><code>ctx compact</code><a class="headerlink" href="#ctx-compact" title="Permanent link">&para;</a></h3>
-<p>Archive completed tasks and deduplicate learnings:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
+<p>Consolidate completed tasks and clean up empty sections:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>compact<span class="w">              </span><span class="c1"># move completed tasks to Completed section, remove empty sections</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">    </span><span class="c1"># also copy tasks older than 7 days to .context/archive/</span>
 </span></code></pre></div>
 <ul>
-<li>Tasks: moves completed tasks older than 7 days to
-  <code>.context/archive/tasks-YYYY-MM-DD.md</code></li>
-<li>Learnings: deduplicates entries with similar content</li>
+<li>Tasks: moves completed items (with all subtasks done) into the Completed
+  section of <code>TASKS.md</code></li>
 <li>All files: removes empty sections left behind</li>
+<li>With <code>--archive</code>: also writes tasks older than 7 days to
+  <code>.context/archive/tasks-YYYY-MM-DD.md</code></li>
 </ul>
-<p>The <code>--archive</code> flag preserves old content.</p>
+<p>Without <code>--archive</code>, nothing is deleted — tasks are reorganized in place.</p>
 <h3 id="ctx-status"><code>ctx status</code><a class="headerlink" href="#ctx-status" title="Permanent link">&para;</a></h3>
 <p>Quick health overview:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
 </span></code></pre></div>
 <p>Shows file counts, token estimates, modification times, and drift warnings in a
 single glance.</p>
@@ -1279,27 +1293,30 @@ single glance.</p>
 <li><code>/ctx-prompt-audit</code>: are our context files readable, compact, and efficient?</li>
 </ul>
 <p>Run them inside your AI assistant:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>/ctx-alignment-audit
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>/ctx-prompt-audit
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>/ctx-alignment-audit
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>/ctx-prompt-audit
 </span></code></pre></div>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>Conversational approach (recommended):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Is our context clean?   -&gt; agent runs structural plus semantic checks
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Fix what you can        -&gt; agent auto-fixes and proposes edits
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Archive the done tasks  -&gt; agent runs ctx compact --archive
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>How&#39;s token usage?      -&gt; agent checks ctx status
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Is our context clean?   -&gt; agent runs structural plus semantic checks
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Fix what you can        -&gt; agent auto-fixes and proposes edits
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Archive the done tasks  -&gt; agent runs ctx compact --archive
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>How&#39;s token usage?      -&gt; agent checks ctx status
 </span></code></pre></div>
 <p>CLI approach (for CI, scripts, or direct control):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># 2. Auto-fix the easy ones</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># 3. Reconcile after refactors</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># 4. Archive old completed tasks</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># 5. Verify</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># 2. Auto-fix the easy ones</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># 3. Reconcile after refactors</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># 4. Archive old completed tasks</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># 5. Verify</span>
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
-<p>Your agent is your first line of defense. It cross-references context files with
-source code during normal work. It will often notice a renamed package, a
-deleted directory, or an outdated convention before <code>ctx drift</code> runs. </p>
+<p>Agents cross-reference context files with source code during normal work. When
+drift intersects their current task, they will notice: a renamed package, a
+deleted directory, a path that doesn't resolve. But they rarely generalize from
+one mismatch to a full audit on their own. Reinforce the pattern: when an agent
+mentions a stale reference, ask it to run <code>/ctx-drift</code>. Over time, it starts
+offering.</p>
 <p>When an agent says "<em>this reference looks stale,</em>" it is <strong>usually right</strong>.</p>
 <p>Semantic drift is more damaging than structural drift. <code>ctx drift</code> catches dead
 paths. But <code>CONVENTIONS.md</code> describing a pattern your code stopped following
