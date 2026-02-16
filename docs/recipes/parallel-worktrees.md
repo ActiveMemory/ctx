@@ -176,6 +176,11 @@ prompts work:
 - **Commit frequently** in each worktree. Smaller commits make merge
   conflicts easier to resolve.
 
+## Next Up
+
+**[When to Use a Team of Agents →](when-to-use-agent-teams.md)**: Decide
+when multi-agent coordination is worth the overhead.
+
 ## See Also
 
 - [Running an Unattended AI Agent](autonomous-loops.md) — for serial

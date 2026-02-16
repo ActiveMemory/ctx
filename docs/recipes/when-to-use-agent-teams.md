@@ -180,6 +180,12 @@ before anyone does any work. For small tasks, that overhead dominates.
   tasks will conflict on merge. The resolution is always additive: accept
   all `[x]` completions from both sides.
 
+## Go Deeper
+
+* [CLI Reference](../cli-reference.md) — all commands and flags
+* [Integrations](../integrations.md) — setup for Claude Code, Cursor, Aider
+* [Session Journal](../session-journal.md) — browse and search session history
+
 ## See Also
 
 * [Parallel Agent Development with Git Worktrees](parallel-worktrees.md):

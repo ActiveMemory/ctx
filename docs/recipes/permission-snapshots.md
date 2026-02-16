@@ -99,6 +99,11 @@ work with agents trained on the ctx playbook:
 | "Clean up my permissions"                 | Agent runs `/sanitize-permissions` then snapshot |
 | "What permissions did I accumulate?"      | Agent diffs local vs golden                  |
 
+## Next Up
+
+**[Keeping Context in a Separate Repo →](external-context.md)**: Share
+`.context/` across projects or keep it in a dedicated repository.
+
 ## See Also
 
 * [Permission Hygiene](claude-code-permissions.md): recommended defaults and

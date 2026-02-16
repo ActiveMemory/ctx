@@ -468,3 +468,7 @@ Keep context files **concise**:
 * Prefer bullet points over paragraphs;
 * Keep examples minimal but illustrative;
 * Archive old completed items periodically.
+
+----
+
+**Next Up**: [Prompting Guide →](prompting-guide.md) — effective prompts for AI sessions with ctx.

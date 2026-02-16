@@ -26,7 +26,10 @@ nav = [
     "blog/index.md",
   ]},
   { "Home" = [
+    "about.md",
     "getting-started.md",
+    "first-session.md",
+    "common-workflows.md",
     "context-files.md",
     "prompting-guide.md",
   ]},
