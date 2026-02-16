@@ -1,0 +1,34 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{"type": "command", "command": "ctx system block-non-path-ctx"}]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [{"type": "command", "command": "ctx agent --budget 4000 2>/dev/null || true"}]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{"type": "command", "command": "ctx system post-commit"}]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {"type": "command", "command": "ctx system check-context-size"},
+          {"type": "command", "command": "ctx system check-persistence"},
+          {"type": "command", "command": "ctx system check-journal"}
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [{"type": "command", "command": "ctx system cleanup-tmp"}]
+      }
+    ]
+  }
+}

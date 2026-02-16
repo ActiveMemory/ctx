@@ -3,7 +3,7 @@
 # Common targets for Go developers
 
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
-test-coverage smoke site site-serve site-setup audit check \
+test-coverage smoke site site-serve site-setup audit check plugin \
 journal journal-serve watch-session backup backup-global backup-all gpg-fix gpg-test
 
 # Default binary name and output
@@ -112,10 +112,31 @@ audit:
 ## check: Build + audit (single entry point for build, fmt, vet, lint, test)
 check: build audit
 
+# Skills included in the Claude Code plugin (generic, non-project-specific)
+PLUGIN_SKILLS := ctx-add-convention ctx-add-decision ctx-add-learning ctx-add-task \
+	ctx-agent ctx-alignment-audit ctx-archive ctx-blog ctx-blog-changelog \
+	ctx-commit ctx-context-monitor ctx-drift ctx-implement \
+	ctx-journal-enrich ctx-journal-enrich-all ctx-journal-normalize \
+	ctx-loop ctx-next ctx-pad ctx-prompt-audit ctx-recall ctx-reflect \
+	ctx-remember ctx-status ctx-worktree
+
+## plugin: Generate Claude Code plugin directory
+plugin:
+	@rm -rf plugin/ctx-plugin
+	@mkdir -p plugin/ctx-plugin/.claude-plugin plugin/ctx-plugin/hooks
+	@cp internal/tpl/claude/plugin/plugin.json plugin/ctx-plugin/.claude-plugin/
+	@cp internal/tpl/claude/plugin/hooks.json plugin/ctx-plugin/hooks/
+	@for skill in $(PLUGIN_SKILLS); do \
+		mkdir -p plugin/ctx-plugin/skills/$$skill && \
+		cp internal/tpl/claude/skills/$$skill/SKILL.md plugin/ctx-plugin/skills/$$skill/; \
+	done
+	@echo "Plugin built: plugin/ctx-plugin/"
+
 ## clean: Remove build artifacts
 clean:
 	rm -f $(BINARY)
 	rm -rf dist/
+	rm -rf plugin/ctx-plugin/
 
 ## release: Full release process (build, tag, push)
 release:

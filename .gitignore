@@ -38,6 +38,7 @@ go.work.sum
 dist/
 /ctx
 /amem
+plugin/ctx-plugin/
 
 # Local Claude Code settings (machine-specific paths)
 .claude/settings.local.json

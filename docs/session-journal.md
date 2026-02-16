@@ -388,7 +388,7 @@ prompts, tools, and skills that aren't in the JSONL.
 !!! tip "Pair with the context checkpoint hook"
 
     The monitor is for **manual observation**. For **automated alerts** within
-    your session, `ctx init` also installs a `check-context-size.sh` hook that
+    your session, the ctx plugin includes a `check-context-size` hook that
     triggers the `/ctx-context-monitor` skill at adaptive intervals.
 
 ## Obsidian Vault Export

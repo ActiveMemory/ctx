@@ -432,8 +432,8 @@ grouping, and tear down with merge.
 
 ## Project-Specific Skills
 
-`ctx init` deploys the 25 skills listed above to `.claude/skills/`.
-Teams can add their own project-specific skills to the same directory
+The ctx plugin ships the skills listed above.
+Teams can add their own project-specific skills to `.claude/skills/`
 
 Project-specific skills follow the same format and are invoked the same way. 
 

@@ -2243,7 +2243,7 @@ keep it clean.</p>
 <tbody>
 <tr>
 <td><code>ctx init</code></td>
-<td>Populates default ctx permissions and hooks</td>
+<td>Populates default ctx permissions</td>
 </tr>
 <tr>
 <td><code>/ctx-drift</code></td>
@@ -2335,7 +2335,7 @@ content. This prevents the agent from prompting on every skill invocation.</p>
 <tbody>
 <tr>
 <td><code>Bash(git push:*)</code></td>
-<td>Bypasses <code>block-git-push.sh</code> hook confirmation</td>
+<td>Bypasses <code>block-git-push</code> hook confirmation</td>
 </tr>
 <tr>
 <td><code>Bash(git reset:*)</code></td>
@@ -2371,7 +2371,22 @@ content. This prevents the agent from prompting on every skill invocation.</p>
 <p>Permissions and hooks work together. Even if a command is pre-approved, hooks
 still run. The difference is that pre-approved commands skip the user
 confirmation dialog: So if a hook blocks the command, the user never sees it.</p>
-<p><code>ctx</code> ships these hooks by default:</p>
+<p>The ctx plugin ships these blocking hooks:</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>What it blocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx system block-non-path-ctx</code></td>
+<td>Running ctx from wrong path</td>
+</tr>
+</tbody>
+</table>
+<p>Project-local hooks (not part of the plugin) can add more:</p>
 <table>
 <thead>
 <tr>
@@ -2387,10 +2402,6 @@ confirmation dialog: So if a hook blocks the command, the user never sees it.</p
 <tr>
 <td><code>block-dangerous-commands.sh</code></td>
 <td><code>sudo</code>, copies to <code>~/.local/bin</code></td>
-</tr>
-<tr>
-<td><code>block-non-path-ctx.sh</code></td>
-<td>Running ctx from wrong path</td>
 </tr>
 </tbody>
 </table>
@@ -2433,7 +2444,7 @@ for a step-by-step runbook.</p>
 <h3 id="when-adding-new-skills">When adding new skills<a class="headerlink" href="#when-adding-new-skills" title="Permanent link">&para;</a></h3>
 <p>If you create a custom <code>ctx-*</code> skill, add its <code>Skill()</code> entry to the
 allowlist manually. </p>
-<p><code>ctx init</code> only populates the defaults: It won't pick up custom skills.</p>
+<p><code>ctx init</code> only populates the default permissions: It won't pick up custom skills.</p>
 <h3 id="golden-image-snapshots">Golden image snapshots<a class="headerlink" href="#golden-image-snapshots" title="Permanent link">&para;</a></h3>
 <p>If manual cleanup is too tedious, use a golden image to automate it. Snapshot
 a curated permission set, then restore at session start to automatically drop

@@ -92,7 +92,7 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
 - [x] Align ctx recall list docs with CLI reality #priority:high #added:2026-02-15-191942
 
-- [ ] Add drift check: verify .claude/hooks/*.sh files have execute permission #priority:medium #added:2026-02-15-194829
+- [x] ~~Add drift check: verify .claude/hooks/*.sh files have execute permission~~ Moot: hooks are now Go subcommands (v0.6.0 plugin conversion) #priority:medium #added:2026-02-15-194829 #done:2026-02-16
 
 - [ ] Align ctx recall list CLI output with docs: columnar table format with aligned headers (Slug, Project, Date, Duration, Turns, Tokens) #priority:high #added:2026-02-15-192053
 

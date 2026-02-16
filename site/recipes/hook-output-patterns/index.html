@@ -2297,9 +2297,9 @@ Constitution rules, security boundaries, destructive command prevention.</p>
 <p><strong>Hook type</strong>: <code>PreToolUse</code> only (<em>Claude Code first-class mechanism</em>).</p>
 <p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>block-non-path-ctx.sh</code>: Enforces the PATH invocation rule</li>
-<li><code>block-git-push.sh</code>: Requires explicit user approval for pushes
-*<code>block-dangerous-commands.sh</code>: Prevents <code>sudo</code>, copies to <code>~/.local/bin</code></li>
+<li><code>ctx system block-non-path-ctx</code>: Enforces the PATH invocation rule</li>
+<li><code>block-git-push.sh</code>: Requires explicit user approval for pushes (<em>project-local</em>)</li>
+<li><code>block-dangerous-commands.sh</code>: Prevents <code>sudo</code>, copies to <code>~/.local/bin</code> (<em>project-local</em>)</li>
 </ul>
 <p><strong>Trade-off</strong>: The agent gets a block response with a reason. Good reasons
 help the agent recover ("<em>use X instead</em>"); bad reasons leave it stuck.</p>
@@ -2318,9 +2318,9 @@ what they asked: Stale backups, unexported sessions, resource warnings.</p>
 <p><strong>Hook type</strong>: <code>UserPromptSubmit</code> (<em>runs before the agent sees the prompt</em>).</p>
 <p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>check-journal.sh</code>: Unexported sessions and unenriched entries</li>
-<li><code>check-context-size.sh</code>: Context capacity warning</li>
-<li><code>check-backup-age.sh</code>: Stale backup warning</li>
+<li><code>ctx system check-journal</code>: Unexported sessions and unenriched entries</li>
+<li><code>ctx system check-context-size</code>: Context capacity warning</li>
+<li><code>check-backup-age.sh</code>: Stale backup warning (<em>project-local</em>)</li>
 </ul>
 <p><strong>Trade-off</strong>: Noisy if overused. Every VERBATIM relay adds a preamble
 before the agent's actual answer. Throttle with once-per-day markers or
@@ -2344,7 +2344,7 @@ asks the agent to consider an action. The user may never need to know.</p>
 <p><strong>Hook type</strong>: <code>UserPromptSubmit</code>.</p>
 <p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>check-persistence.sh</code>: Nudges the agent to persist context</li>
+<li><code>ctx system check-persistence</code>: Nudges the agent to persist context</li>
 </ul>
 <p><strong>Trade-off:</strong> No guarantee the agent acts. The nudge is one signal among
 many in the context window. Strong phrasing helps ("Have you...?" is better
@@ -2375,7 +2375,7 @@ where the action is the point and nobody needs to know it happened.</p>
 <p><strong>Hook type</strong>: <code>SessionEnd</code>, or any hook where output is irrelevant.</p>
 <p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
-<li><code>cleanup-tmp.sh</code>: Removes stale temp files on session end</li>
+<li><code>ctx system cleanup-tmp</code>: Removes stale temp files on session end</li>
 </ul>
 <p><strong>Trade-off</strong>: None, if the action is truly invisible. If it can fail in
 a way that matters, consider logging.</p>

@@ -97,11 +97,13 @@ elif [ "$COUNT" -gt 25 ] && [ "$SINCE_NUDGE" -ge 15 ]; then
 fi
 
 if [ "$SHOULD_NUDGE" = true ]; then
+  echo "IMPORTANT: Relay this persistence checkpoint to the user VERBATIM before answering their question."
   echo ""
   echo "┌─ Persistence Checkpoint (prompt #${COUNT}) ───────────"
   echo "│ No context files updated in ${SINCE_NUDGE}+ prompts."
   echo "│ Have you discovered learnings, made decisions,"
-  echo "│ or completed tasks worth persisting?"
+  echo "│ established conventions, or completed tasks"
+  echo "│ worth persisting?"
   echo "└──────────────────────────────────────────────────"
   echo ""
 

@@ -146,11 +146,11 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		)
 	}
 
-	// Create Claude Code hooks
-	cmd.Println("\nSetting up Claude Code integration...")
-	if err := createClaudeHooks(cmd, force); err != nil {
+	// Merge permissions into settings.local.json (no hook scaffolding)
+	cmd.Println("\nSetting up Claude Code permissions...")
+	if err := mergeSettingsPermissions(cmd); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Printf("  %s Claude hooks: %v\n", color.YellowString("⚠"), err)
+		cmd.Printf("  %s Permissions: %v\n", color.YellowString("⚠"), err)
 	}
 
 	// Handle CLAUDE.md creation/merge
@@ -174,6 +174,10 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
 	cmd.Println("  2. Run 'ctx status' to see context summary")
 	cmd.Println("  3. Run 'ctx agent' to get AI-ready context packet")
+	cmd.Println()
+	cmd.Println("Claude Code users: install the ctx plugin for hooks & skills:")
+	cmd.Println("  /plugin marketplace add ActiveMemory/ctx")
+	cmd.Println("  /plugin install ctx@activememory-ctx")
 
 	return nil
 }

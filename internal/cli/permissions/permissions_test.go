@@ -10,7 +10,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"os"
-	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
@@ -384,7 +383,7 @@ func TestCmdHasSubcommands(t *testing.T) {
 
 // Verify golden file path is under .claude/ (not .context/).
 func TestGoldenFilePath(t *testing.T) {
-	if !strings.HasPrefix(config.FileSettingsGolden, filepath.Join(config.DirClaude, "")) {
+	if !strings.HasPrefix(config.FileSettingsGolden, config.DirClaude+"/") {
 		t.Errorf("FileSettingsGolden = %q, want prefix %q", config.FileSettingsGolden, config.DirClaude+"/")
 	}
 }

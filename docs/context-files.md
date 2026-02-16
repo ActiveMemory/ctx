@@ -430,7 +430,7 @@ and update context.
 <context-update type="learning"
   context="Debugging hooks"
   lesson="Hooks receive JSON via stdin"
-  application="Use jq to parse input"
+  application="Parse JSON stdin with the host language"
 >Hook Input Format</context-update>
 <context-update type="decision"
   context="Need a caching layer"

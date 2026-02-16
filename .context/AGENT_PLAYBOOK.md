@@ -287,6 +287,24 @@ Track task progress with timestamps for session correlation:
 2. Work on it
 3. Complete → change `[ ]` to `[x]`, add `#done:$(date +%Y-%m-%d-%H%M%S)`
 
+## Own the Whole Branch
+
+When working on a branch, you own every issue on it — lint failures, test
+failures, build errors — regardless of who introduced them. Never dismiss
+a problem as "pre-existing" or "not related to my changes."
+
+- **If `make lint` fails, fix it.** The branch must be green when you're done.
+- **If tests break, investigate.** Even if the failing test is in a file you
+  didn't touch, something you changed may have caused it — or it may have been
+  broken before and it's still your job to fix it on this branch.
+- **No "not my problem" responses.** The user gave you a clean branch. If it's
+  broken now, you broke it or you inherited it — either way, fix it.
+- **Run the full validation suite** (`make lint`, `go test ./...`, `go build`)
+  before declaring any phase complete.
+
+This applies doubly when making sweeping changes (refactors, dead code removal,
+package restructuring). The blast radius is wide — verify everything.
+
 ## How to Avoid Hallucinating Memory
 
 Never assume. If you don't see it in files, you don't know it.

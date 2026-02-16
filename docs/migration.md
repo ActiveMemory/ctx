@@ -20,7 +20,7 @@ This guide covers how to adopt `ctx` without disrupting your current workflow.
 
 | You have...                        | Command                                           | What happens                                         |
 |------------------------------------|---------------------------------------------------|------------------------------------------------------|
-| Nothing (*greenfield*)             | `ctx init`                                        | Creates `.context/`, `CLAUDE.md`, hooks — full setup |
+| Nothing (*greenfield*)             | `ctx init`                                        | Creates `.context/`, `CLAUDE.md`, permissions        |
 | Existing `CLAUDE.md`               | `ctx init --merge`                                | Backs up your file, inserts ctx block after the H1   |
 | Existing `CLAUDE.md` + ctx markers | `ctx init --force`                                | Replaces the ctx block, leaves your content intact   |
 | `.cursorrules` / `.aider.conf.yml` | `ctx init`                                        | ctx ignores those files — they coexist cleanly       |
@@ -142,18 +142,20 @@ git checkout CLAUDE.md
 ## Existing .cursorrules / Aider / Copilot
 
 `ctx` doesn't touch tool-specific config files. It creates its own files
-(`.context/`, `CLAUDE.md`, `.claude/`) and coexists with whatever you already
-have.
+(`.context/`, `CLAUDE.md`) and coexists with whatever you already have.
 
 ### What ctx Creates vs. What It Leaves Alone
 
-| ctx creates                   | ctx does NOT touch                    |
-|-------------------------------|---------------------------------------|
-| `.context/` directory         | `.cursorrules`                        |
-| `CLAUDE.md` (or merges into)  | `.aider.conf.yml`                     |
-| `.claude/hooks/`              | `.github/copilot-instructions.md`     |
-| `.claude/skills/`             | `.windsurfrules`                      |
-| `.claude/settings.local.json` | Any other tool-specific config        |
+| ctx creates                              | ctx does NOT touch                    |
+|------------------------------------------|---------------------------------------|
+| `.context/` directory                    | `.cursorrules`                        |
+| `CLAUDE.md` (or merges into)             | `.aider.conf.yml`                     |
+| `.claude/settings.local.json` (permissions only) | `.github/copilot-instructions.md` |
+|                                          | `.windsurfrules`                      |
+|                                          | Any other tool-specific config        |
+
+Claude Code hooks and skills are provided by the **ctx plugin**
+(installed separately via `claude /plugin`).
 
 ### Running ctx Alongside Other Tools
 
@@ -213,14 +215,13 @@ Teammates pull and immediately have context. No per-developer setup needed.
 
 ### What About .claude/?
 
-The `.claude/` directory contains hooks and skills that `ctx init` generates.
-These are project-level automation — commit them too:
+The `.claude/` directory contains permissions that `ctx init` seeds.
+Hooks and skills are provided by the ctx plugin (not per-project files).
 
 | File                          | Commit? | Why                                  |
 |-------------------------------|---------|--------------------------------------|
-| `.claude/hooks/*.sh`          | Yes     | Shared enforcement and coaching      |
-| `.claude/skills/`             | Yes     | Shared agent skills                  |
-| `.claude/settings.local.json` | Yes     | Hook wiring (project-level)          |
+| `.claude/settings.local.json` | No      | Machine-specific, accumulates session permissions |
+| `.claude/settings.golden.json`| Yes     | Curated permission snapshot (via `ctx permissions snapshot`) |
 
 ### Merge Conflicts in Context Files
 
