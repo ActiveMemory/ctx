@@ -94,9 +94,11 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
 - [x] ~~Add drift check: verify .claude/hooks/*.sh files have execute permission~~ Moot: hooks are now Go subcommands (v0.6.0 plugin conversion) #priority:medium #added:2026-02-15-194829 #done:2026-02-16
 
-- [ ] ctx init should distinguish partial .context/ (only logs) from fully initialized. Check for essential files (TASKS.md, CONSTITUTION.md) instead of just directory existence. #added:2026-02-16-110811
+- [ ] Blog: "Building a Claude Code Marketplace Plugin" — narrative from session history, journals, and git diff of feat/plugin-conversion branch. Covers: motivation (shell hooks to Go subcommands), plugin directory layout, marketplace.json, eliminating make plugin, bugs found during dogfooding (hooks creating partial .context/), and the fix. Use /ctx-blog-changelog with branch diff as source material. #added:2026-02-16-111948
 
-- [ ] Hooks should no-op when .context/ is not properly initialized (missing essential files). Currently hooks create .context/logs/ as side effect before ctx init, then ctx init thinks the dir is already initialized. #added:2026-02-16-110721
+- [x] ctx init should distinguish partial .context/ (only logs) from fully initialized. Check for essential files (TASKS.md, CONSTITUTION.md) instead of just directory existence. #added:2026-02-16-110811 #done:2026-02-16
+
+- [x] Hooks should no-op when .context/ is not properly initialized (missing essential files). Currently hooks create .context/logs/ as side effect before ctx init, then ctx init thinks the dir is already initialized. #added:2026-02-16-110721 #done:2026-02-16
 
 - [ ] Rename internal/tpl to internal/assets -- the package now holds both .context/ templates and the Claude Code plugin (skills, hooks, manifest). "tpl" is misleading. Mechanical refactor: rename dir, update all ~15 import sites, update embed.go package doc. Low priority, no behavior change. #added:2026-02-16-104745
 
