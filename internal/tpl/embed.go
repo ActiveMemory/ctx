@@ -4,8 +4,12 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package tpl provides embedded template files for initializing
-// .context/ directories.
+// Package tpl provides embedded assets for ctx: .context/ templates
+// stamped by "ctx init" and the Claude Code plugin (skills, hooks,
+// manifest) served directly from claude/.
+//
+// The name "tpl" is historical — a rename to "assets" is tracked as
+// cleanup work but deferred to avoid churn across 15+ import sites.
 package tpl
 
 import "embed"

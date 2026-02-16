@@ -80,11 +80,10 @@ sudo make install
 # sudo mv ctx /usr/local/bin/
 ```
 
-For **Claude Code** users, also **build and install the plugin**:
+For **Claude Code** users, also **install the plugin**:
 
 ```bash
-make plugin
-claude /plugin install ./plugin/ctx-plugin
+claude /plugin install ./internal/tpl/claude
 ```
 
 Building from source gives you the latest features and bug fixes.

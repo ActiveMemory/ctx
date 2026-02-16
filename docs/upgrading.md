@@ -97,9 +97,8 @@ cp .context.bak/.scratchpad.enc .context/ 2>/dev/null
 If you use Claude Code, update the plugin to get new hooks and skills:
 
 ```bash
-# Rebuild from source
-make plugin
-claude /plugin install ./plugin/ctx-plugin
+# From source
+claude /plugin install ./internal/tpl/claude
 
 # Or update from marketplace
 claude /plugin install ctx@activememory-ctx

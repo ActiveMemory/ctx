@@ -31,9 +31,8 @@ ctx init
 2. Install the ctx plugin in Claude Code:
 
 ```bash
-# From the ctx repository (after building)
-make plugin
-claude /plugin install ./plugin/ctx-plugin
+# From the ctx repository
+claude /plugin install ./internal/tpl/claude
 
 # Or from the marketplace
 claude /plugin marketplace add ActiveMemory/ctx

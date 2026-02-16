@@ -2309,12 +2309,11 @@ Knowledge files are yours and should never be overwritten.</p>
 </span></code></pre></div>
 <h3 id="5-update-the-ctx-plugin">5. Update the ctx Plugin<a class="headerlink" href="#5-update-the-ctx-plugin" title="Permanent link">&para;</a></h3>
 <p>If you use Claude Code, update the plugin to get new hooks and skills:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Rebuild from source</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>make<span class="w"> </span>plugin
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>./plugin/ctx-plugin
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Or update from marketplace</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>ctx@activememory-ctx
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From source</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>./internal/tpl/claude
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or update from marketplace</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>install<span class="w"> </span>ctx@activememory-ctx
 </span></code></pre></div>
 <h3 id="6-review-custom-settings">6. Review Custom Settings<a class="headerlink" href="#6-review-custom-settings" title="Permanent link">&para;</a></h3>
 <p>If you added custom permissions to <code>.claude/settings.local.json</code> beyond
