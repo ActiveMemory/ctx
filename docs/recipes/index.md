@@ -142,7 +142,7 @@ Choose the right output pattern for your Claude Code hooks: `VERBATIM`
 relay for user-facing reminders, **hard gates** for invariants, agent
 directives for nudges, and five more patterns across the spectrum.
 
-**Uses**: `.claude/hooks/`, `settings.local.json`
+**Uses**: ctx plugin hooks, `settings.local.json`
 
 ---
 

@@ -18,24 +18,35 @@ for popular AI coding assistants.
 
 ## Claude Code (Full Integration)
 
-Claude Code has the deepest integration with automatic context loading.
+Claude Code has the deepest integration via the **ctx plugin**.
 
-### Automatic Setup
+### Setup
 
-Running `ctx init` automatically configures Claude Code:
+1. Install ctx and initialize your project:
 
 ```bash
 ctx init
 ```
 
-This creates:
+2. Install the ctx plugin in Claude Code:
 
-| File/Directory                | Purpose                |
+```bash
+# From the ctx repository
+claude /plugin install ./internal/tpl/claude
+
+# Or from the marketplace
+claude /plugin marketplace add ActiveMemory/ctx
+claude /plugin install ctx@activememory-ctx
+```
+
+This gives you:
+
+| Component                     | Purpose                |
 |-------------------------------|------------------------|
 | `.context/`                   | All context files      |
-| `.claude/hooks/`              | Lifecycle scripts      |
-| `.claude/settings.local.json` | Hook configuration     |
 | `CLAUDE.md`                   | Bootstrap instructions |
+| Plugin hooks                  | Lifecycle automation   |
+| Plugin skills                 | Agent Skills           |
 
 ### How It Works
 
@@ -53,26 +64,27 @@ graph TD
    packet (*subsequent invocations within the cooldown window are silent*)
 3. **Next session**: Claude reads context files and continues with context
 
-### Generated Hooks
+### Plugin Hooks
 
-`ctx init` installs lifecycle hooks to `.claude/hooks/` and wires them
-into `.claude/settings.local.json`:
+The ctx plugin provides lifecycle hooks implemented as Go subcommands
+(`ctx system *`):
 
-| Hook                    | Event              | Purpose                                          |
-|-------------------------|--------------------|--------------------------------------------------|
-| `block-non-path-ctx.sh` | PreToolUse (Bash)  | Block `./ctx` or `go run`: force `$PATH` install |
-| `check-context-size.sh` | UserPromptSubmit   | Nudge context assessment as sessions grow        |
-| `check-journal.sh`      | UserPromptSubmit   | Remind to export/enrich journal entries          |
-| `check-persistence.sh`  | UserPromptSubmit   | Remind to persist learnings/decisions            |
-| `post-commit.sh`        | PostToolUse (Bash) | Nudge context capture and QA after git commits   |
-| `cleanup-tmp.sh`        | SessionEnd         | Remove stale temp files (older than 15 days)     |
+| Hook                             | Event              | Purpose                                          |
+|----------------------------------|--------------------|--------------------------------------------------|
+| `ctx system block-non-path-ctx`  | PreToolUse (Bash)  | Block `./ctx` or `go run`: force `$PATH` install |
+| `ctx system check-context-size`  | UserPromptSubmit   | Nudge context assessment as sessions grow        |
+| `ctx system check-journal`       | UserPromptSubmit   | Remind to export/enrich journal entries          |
+| `ctx system check-persistence`   | UserPromptSubmit   | Remind to persist learnings/decisions            |
+| `ctx system post-commit`         | PostToolUse (Bash) | Nudge context capture and QA after git commits   |
+| `ctx system cleanup-tmp`         | SessionEnd         | Remove stale temp files (older than 15 days)     |
 
 A catch-all `PreToolUse` hook also runs `ctx agent` on every tool use
 (with cooldown) to autoload context.
 
-### Generated Configuration
+### Hook Configuration
 
-`.claude/settings.local.json`:
+The plugin's `hooks.json` wires everything automatically — no manual
+configuration in `settings.local.json` needed:
 
 ```json
 {
@@ -81,7 +93,7 @@ A catch-all `PreToolUse` hook also runs `ctx agent` on every tool use
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/block-non-path-ctx.sh" }
+          { "type": "command", "command": "ctx system block-non-path-ctx" }
         ]
       },
       {
@@ -95,23 +107,23 @@ A catch-all `PreToolUse` hook also runs `ctx agent` on every tool use
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/post-commit.sh" }
+          { "type": "command", "command": "ctx system post-commit" }
         ]
       }
     ],
     "UserPromptSubmit": [
       {
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/check-context-size.sh" },
-          { "type": "command", "command": ".claude/hooks/check-persistence.sh" },
-          { "type": "command", "command": ".claude/hooks/check-journal.sh" }
+          { "type": "command", "command": "ctx system check-context-size" },
+          { "type": "command", "command": "ctx system check-persistence" },
+          { "type": "command", "command": "ctx system check-journal" }
         ]
       }
     ],
     "SessionEnd": [
       {
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/cleanup-tmp.sh" }
+          { "type": "command", "command": "ctx system cleanup-tmp" }
         ]
       }
     ]
@@ -146,7 +158,7 @@ The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 | Issue                | Solution                                                   |
 |----------------------|------------------------------------------------------------|
 | Context not loading  | Check `ctx` is in PATH: `which ctx`                        |
-| Hook errors          | Check script permissions: `chmod +x .claude/hooks/*.sh`    |
+| Hook errors          | Verify plugin is installed: `claude /plugin list`          |
 
 ### Manual Context Load
 
@@ -162,8 +174,8 @@ cat .context/TASKS.md
 
 ### Agent Skills
 
-`ctx init` installs Agent Skills to `.claude/skills/` following the
-[agentskills.io specification](https://agentskills.io). 
+The ctx plugin ships Agent Skills following the
+[agentskills.io specification](https://agentskills.io).
 
 These are invoked in Claude Code with `/skill-name`.
 
@@ -495,7 +507,7 @@ Learnings and decisions support structured attributes for better documentation:
 <context-update type="learning"
   context="Debugging Claude Code hooks"
   lesson="Hooks receive JSON via stdin, not environment variables"
-  application="Use jq to parse: COMMAND=$(echo $INPUT | jq -r .tool_input.command)"
+  application="Parse JSON stdin with the host language (Go, Python, etc.) — no jq needed"
 >Hook Input Format</context-update>
 ```
 

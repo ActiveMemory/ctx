@@ -411,92 +411,6 @@ func TestEnsureGitignoreEntries_NoTrailingNewline(t *testing.T) {
 	}
 }
 
-// --- deployHookScript tests ---
-
-func TestDeployHookScript_New(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	if err := os.MkdirAll(config.DirClaudeHooks, 0700); err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := newTestCmd()
-	green := func(a ...interface{}) string { return "" }
-	yellow := func(a ...interface{}) string { return "" }
-
-	err := deployHookScript(cmd, config.FileBlockNonPathScript,
-		claude.BlockNonPathCtxScript, false, green, yellow)
-	if err != nil {
-		t.Fatalf("deployHookScript failed: %v", err)
-	}
-
-	path := filepath.Join(config.DirClaudeHooks, config.FileBlockNonPathScript)
-	if _, err := os.Stat(path); err != nil {
-		t.Errorf("script not created: %v", err)
-	}
-}
-
-func TestDeployHookScript_ExistsNoForce(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	if err := os.MkdirAll(config.DirClaudeHooks, 0750); err != nil {
-		t.Fatal(err)
-	}
-
-	path := filepath.Join(config.DirClaudeHooks, config.FileBlockNonPathScript)
-	if err := os.WriteFile(path, []byte("#!/bin/bash\n# old"), 0600); err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := newTestCmd()
-	green := func(a ...interface{}) string { return "" }
-	yellow := func(a ...interface{}) string { return "" }
-
-	err := deployHookScript(cmd, config.FileBlockNonPathScript,
-		claude.BlockNonPathCtxScript, false, green, yellow)
-	if err != nil {
-		t.Fatalf("deployHookScript failed: %v", err)
-	}
-
-	// Content should not have changed (skipped)
-	content, _ := os.ReadFile(path) //nolint:gosec // test temp path
-	if !strings.Contains(string(content), "# old") {
-		t.Error("script was overwritten when force=false")
-	}
-}
-
-func TestDeployHookScript_ExistsForce(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	if err := os.MkdirAll(config.DirClaudeHooks, 0750); err != nil {
-		t.Fatal(err)
-	}
-
-	path := filepath.Join(config.DirClaudeHooks, config.FileBlockNonPathScript)
-	if err := os.WriteFile(path, []byte("#!/bin/bash\n# old"), 0600); err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := newTestCmd()
-	green := func(a ...interface{}) string { return "" }
-	yellow := func(a ...interface{}) string { return "" }
-
-	err := deployHookScript(cmd, config.FileBlockNonPathScript,
-		claude.BlockNonPathCtxScript, true, green, yellow)
-	if err != nil {
-		t.Fatalf("deployHookScript failed: %v", err)
-	}
-
-	// Content should have changed (force overwrite)
-	content, _ := os.ReadFile(path) //nolint:gosec // test temp path
-	if strings.Contains(string(content), "# old") {
-		t.Error("script was not overwritten when force=true")
-	}
-}
-
 // --- createTools tests ---
 
 func TestCreateTools(t *testing.T) {
@@ -602,68 +516,6 @@ func TestCreateEntryTemplates_ExistsNoForce(t *testing.T) {
 	content, _ := os.ReadFile(tplPath) //nolint:gosec // test temp path
 	if !strings.Contains(string(content), "# original") {
 		t.Error("template was overwritten when force=false")
-	}
-}
-
-// --- createClaudeSkills tests ---
-
-func TestCreateClaudeSkills(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	cmd := newTestCmd()
-	if err := createClaudeSkills(cmd, false); err != nil {
-		t.Fatalf("createClaudeSkills failed: %v", err)
-	}
-
-	// Check that some skills were created
-	entries, err := os.ReadDir(".claude/skills")
-	if err != nil {
-		t.Fatalf("failed to read skills dir: %v", err)
-	}
-	if len(entries) == 0 {
-		t.Error("no skills created")
-	}
-
-	// Check that at least one SKILL.md file exists
-	found := false
-	for _, e := range entries {
-		if e.IsDir() {
-			skillPath := filepath.Join(".claude/skills", e.Name(), "SKILL.md")
-			if _, err := os.Stat(skillPath); err == nil {
-				found = true
-				break
-			}
-		}
-	}
-	if !found {
-		t.Error("no SKILL.md files found")
-	}
-}
-
-func TestCreateClaudeSkills_ExistsNoForce(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	// Create a skill directory with existing SKILL.md
-	skillDir := ".claude/skills/test-skill"
-	if err := os.MkdirAll(skillDir, 0750); err != nil {
-		t.Fatal(err)
-	}
-	skillPath := filepath.Join(skillDir, "SKILL.md")
-	if err := os.WriteFile(skillPath, []byte("# original skill"), 0600); err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := newTestCmd()
-	if err := createClaudeSkills(cmd, false); err != nil {
-		t.Fatalf("createClaudeSkills failed: %v", err)
-	}
-
-	// Our custom skill should still have original content
-	content, _ := os.ReadFile(skillPath) //nolint:gosec // test temp path
-	if !strings.Contains(string(content), "# original skill") {
-		t.Error("custom skill was overwritten when force=false")
 	}
 }
 
@@ -1117,15 +969,15 @@ func TestUpdatePlanSection_TemplateMissingMarkers(t *testing.T) {
 	}
 }
 
-// --- mergeSettingsHooks tests ---
+// --- mergeSettingsPermissions tests ---
 
-func TestMergeSettingsHooks_NewSettings(t *testing.T) {
+func TestMergeSettingsPermissions_NewSettings(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
 	cmd := newTestCmd()
-	if err := mergeSettingsHooks(cmd, "", false); err != nil {
-		t.Fatalf("mergeSettingsHooks failed: %v", err)
+	if err := mergeSettingsPermissions(cmd); err != nil {
+		t.Fatalf("mergeSettingsPermissions failed: %v", err)
 	}
 
 	content, err := os.ReadFile(config.FileSettings)
@@ -1138,15 +990,12 @@ func TestMergeSettingsHooks_NewSettings(t *testing.T) {
 		t.Fatalf("failed to parse settings: %v", err)
 	}
 
-	if len(settings.Hooks.PreToolUse) == 0 {
-		t.Error("no PreToolUse hooks created")
-	}
 	if len(settings.Permissions.Allow) == 0 {
 		t.Error("no permissions created")
 	}
 }
 
-func TestMergeSettingsHooks_ExistingWithAllHooksAndPerms(t *testing.T) {
+func TestMergeSettingsPermissions_ExistingWithAllPerms(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
@@ -1154,10 +1003,7 @@ func TestMergeSettingsHooks_ExistingWithAllHooksAndPerms(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Create settings with all hooks and all permissions already present
-	defaultHooks := claude.DefaultHooks("")
 	settings := claude.Settings{
-		Hooks: defaultHooks,
 		Permissions: claude.PermissionsConfig{
 			Allow: config.DefaultClaudePermissions,
 		},
@@ -1168,82 +1014,8 @@ func TestMergeSettingsHooks_ExistingWithAllHooksAndPerms(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if err := mergeSettingsHooks(cmd, "", false); err != nil {
-		t.Fatalf("mergeSettingsHooks failed: %v", err)
-	}
-}
-
-func TestMergeSettingsHooks_ForceOverwrite(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	if err := os.MkdirAll(config.DirClaude, 0750); err != nil {
-		t.Fatal(err)
-	}
-
-	// Create minimal settings
-	settings := claude.Settings{
-		Hooks: claude.HookConfig{
-			PreToolUse: []claude.HookMatcher{{
-				Hooks: []claude.Hook{{Type: claude.HookTypeCommand, Command: "echo old"}},
-			}},
-		},
-	}
-	data, _ := json.MarshalIndent(settings, "", "  ")
-	if err := os.WriteFile(config.FileSettings, data, 0600); err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := newTestCmd()
-	if err := mergeSettingsHooks(cmd, "", true); err != nil {
-		t.Fatalf("mergeSettingsHooks failed: %v", err)
-	}
-
-	content, _ := os.ReadFile(config.FileSettings)
-	var updated claude.Settings
-	if err := json.Unmarshal(content, &updated); err != nil {
-		t.Fatal(err)
-	}
-
-	// Should have overwritten PreToolUse
-	if len(updated.Hooks.PreToolUse) == 0 {
-		t.Error("PreToolUse hooks missing after force")
-	}
-}
-
-// --- createClaudeHooks tests ---
-
-func TestCreateClaudeHooks(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	cmd := newTestCmd()
-	if err := createClaudeHooks(cmd, false); err != nil {
-		t.Fatalf("createClaudeHooks failed: %v", err)
-	}
-
-	// Check that hook scripts were created
-	hookFiles := []string{
-		config.FileBlockNonPathScript,
-		config.FileCheckContextSize,
-		config.FileCheckPersistence,
-		config.FileCleanupTmp,
-	}
-	for _, f := range hookFiles {
-		path := filepath.Join(config.DirClaudeHooks, f)
-		if _, err := os.Stat(path); err != nil {
-			t.Errorf("hook script %s not created: %v", f, err)
-		}
-	}
-
-	// Check settings.local.json exists
-	if _, err := os.Stat(config.FileSettings); err != nil {
-		t.Error("settings.local.json not created")
-	}
-
-	// Check skills directory exists
-	if _, err := os.Stat(".claude/skills"); err != nil {
-		t.Error("skills directory not created")
+	if err := mergeSettingsPermissions(cmd); err != nil {
+		t.Fatalf("mergeSettingsPermissions failed: %v", err)
 	}
 }
 

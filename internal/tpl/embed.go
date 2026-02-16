@@ -4,13 +4,17 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package tpl provides embedded template files for initializing
-// .context/ directories.
+// Package tpl provides embedded assets for ctx: .context/ templates
+// stamped by "ctx init" and the Claude Code plugin (skills, hooks,
+// manifest) served directly from claude/.
+//
+// The name "tpl" is historical — a rename to "assets" is tracked as
+// cleanup work but deferred to avoid churn across 15+ import sites.
 package tpl
 
 import "embed"
 
-//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md claude/hooks/*.sh ralph/*.md tools/*.sh
+//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md ralph/*.md tools/*.sh
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -119,18 +123,6 @@ func SkillContent(name string) ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func MakefileCtx() ([]byte, error) {
 	return FS.ReadFile("Makefile.ctx")
-}
-
-// ClaudeHookByFileName reads a Claude Code hook script by name.
-//
-// Parameters:
-//   - name: Hook script filename (e.g., "block-non-path-ctx.sh")
-//
-// Returns:
-//   - []byte: Hook script content from claude/hooks/
-//   - error: Non-nil if the file is not found or read fails
-func ClaudeHookByFileName(name string) ([]byte, error) {
-	return FS.ReadFile("claude/hooks/" + name)
 }
 
 // RalphTemplate reads a Ralph-mode template file by name.

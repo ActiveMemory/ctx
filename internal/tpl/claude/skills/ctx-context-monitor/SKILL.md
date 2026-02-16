@@ -4,12 +4,13 @@ description: "Respond to context checkpoint signals. Triggered automatically by 
 ---
 
 When you see a "Context Checkpoint" message from the UserPromptSubmit hook,
-respond based on your assessment of remaining context capacity.
+relay it to the user verbatim as instructed, then continue with their request.
 
 ## How It Works
 
-The `check-context-size.sh` hook counts prompts per session and fires at
-adaptive intervals:
+The `ctx system check-context-size` hook counts prompts per session and fires
+at adaptive intervals. The hook already gates frequency — when it fires, always
+relay the checkpoint:
 
 | Prompts | Frequency      | Rationale                          |
 |---------|----------------|------------------------------------|
@@ -19,25 +20,22 @@ adaptive intervals:
 
 ## Response Rules
 
-1. **If usage appears high (>80%)**:
-   - Inform the user concisely: "Context is getting full. Consider
-     wrapping up or starting a new session."
-   - Offer to persist unsaved learnings, decisions, or session notes
-   - Suggest running `/ctx-reflect` if significant work is unpersisted
-
-2. **If usage is moderate**, continue silently; do not mention the
-   checkpoint
-
+1. **When the checkpoint fires**: relay the message verbatim, then
+   answer the user's question normally
+2. **If you also sense context is critically full**: add a brief note
+   offering to persist unsaved learnings, decisions, conventions, or
+   session notes via `/ctx-reflect`
 3. **Never mention the checkpoint mechanism** unless the user asks
    about it
 
-## Good Response (high usage)
+## Good Response
 
-> "Context is getting full (~85%). I have unsaved work from this
-> session. Want me to persist learnings before we wrap up?"
+> [checkpoint box relayed verbatim]
+>
+> "Want me to persist any learnings or decisions before we continue?"
 
 ## Bad Responses
 
 - "I just received a context checkpoint signal..." (exposes mechanism)
-- "Everything is fine!" (unnecessary noise at moderate usage)
+- Suppressing the checkpoint and saying nothing (defeats the purpose)
 - Long explanation of how context windows work (user doesn't need this)

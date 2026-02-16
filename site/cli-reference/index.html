@@ -3101,7 +3101,7 @@
 <tbody>
 <tr>
 <td><a href="#ctx-init"><code>ctx init</code></a></td>
-<td>Initialize <code>.context/</code> directory with templates and hooks</td>
+<td>Initialize <code>.context/</code> directory with templates</td>
 </tr>
 <tr>
 <td><a href="#ctx-status"><code>ctx status</code></a></td>
@@ -3221,13 +3221,13 @@
 <p><strong>Creates</strong>:</p>
 <ul>
 <li><code>.context/</code> directory with all template files</li>
-<li><code>.claude/hooks/</code> with enforcement and monitoring scripts (for Claude Code)</li>
-<li><code>.claude/skills/</code> with ctx Agent Skills (following agentskills.io spec)</li>
-<li><code>.claude/settings.local.json</code> with hook configuration and pre-approved ctx permissions</li>
+<li><code>.claude/settings.local.json</code> with pre-approved ctx permissions</li>
 <li><code>PROMPT.md</code> with session prompt (autonomous mode with <code>--ralph</code>)</li>
 <li><code>IMPLEMENTATION_PLAN.md</code> with high-level project direction</li>
 <li><code>CLAUDE.md</code> with bootstrap instructions (or merges into existing)</li>
 </ul>
+<p>Claude Code hooks and skills are provided by the <strong>ctx plugin</strong>
+(see <a href="../integrations/#claude-code-full-integration">Integrations</a>).</p>
 <p><strong>Example</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Collaborative mode (agent asks questions when unclear)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>init
@@ -4048,7 +4048,7 @@ them to context files.</p>
 <tbody>
 <tr>
 <td><code>claude-code</code></td>
-<td>Claude Code CLI</td>
+<td>Redirects to plugin install instructions</td>
 </tr>
 <tr>
 <td><code>cursor</code></td>
@@ -4068,10 +4068,14 @@ them to context files.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Claude Code uses the plugin system</p>
+<p>Claude Code integration is now provided via the ctx plugin.
+Running <code>ctx hook claude-code</code> prints plugin install instructions.</p>
+</div>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>claude-code
-</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>cursor
-</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>aider
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>cursor
+</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>aider
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-loop"><code>ctx loop</code><a class="headerlink" href="#ctx-loop" title="Permanent link">&para;</a></h3>

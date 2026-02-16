@@ -2383,21 +2383,26 @@ trade-offs between alternatives with structured fields: context, rationale,
 and consequences. Decisions prevent re-debating settled questions.</p>
 <p><strong>Learnings</strong> (<code>LEARNINGS.md</code>) answer "<em>what did we discover the hard way?</em>"
 They record gotchas and debugging insights specific to this project with
-structured fields: context, lesson, and application. Learnings prevent
-repeating past mistakes.</p>
+structured fields: context, lesson, and application. </p>
+<p><strong>Learnings prevent repeating past mistakes</strong>.</p>
 <p><strong>Conventions</strong> (<code>CONVENTIONS.md</code>) answer "<em>how do we do things here?</em>" They
 record patterns and standards. No structured fields required: just a name,
 a rule, and an example. Conventions keep code consistent across sessions.</p>
 <div class="admonition tip">
 <p class="admonition-title">Decision, Learning, or Convention?</p>
 <ul>
-<li>If you chose between alternatives, it is a decision.</li>
-<li>If you discovered something surprising, it is a learning.</li>
-<li>If you are codifying a repeated pattern, it is a convention.</li>
+<li>If you chose between alternatives, it is a <strong>decision</strong>.</li>
+<li>If you discovered something surprising, it is a <strong>learning</strong>.</li>
+<li>If you are codifying a repeated pattern, it is a <strong>convention</strong>.</li>
 </ul>
 </div>
 <h3 id="step-2-record-decisions">Step 2: Record Decisions<a class="headerlink" href="#step-2-record-decisions" title="Permanent link">&para;</a></h3>
-<p><strong>Decisions</strong> have three structured fields: context, rationale, and consequences.</p>
+<p><strong>Decisions</strong> have three structured fields: </p>
+<ul>
+<li><strong>context</strong>, </li>
+<li><strong>rationale</strong>, </li>
+<li>and <strong>consequences</strong>.</li>
+</ul>
 <p>The easiest way to record one is to tell your agent:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>You: &quot;Save that as a decision: we picked file-based cooldown
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>      tokens over env vars.&quot;
@@ -2456,7 +2461,7 @@ expressive than what you would type at a command prompt.</p>
 <li>(3) Did it take real effort to discover?</li>
 </ul>
 <p><strong>All three must pass</strong>.</p>
-<p>Learnings capture principles and heuristics, not code snippets.</p>
+<p><strong>Learnings</strong> capture principles and heuristics, not code snippets.</p>
 <details class="note">
 <summary>CLI command for scripting and automation</summary>
 <p>When no agent is in the loop:</p>
@@ -2467,7 +2472,7 @@ expressive than what you would type at a command prompt.</p>
 </span></code></pre></div>
 </details>
 <h3 id="step-4-record-conventions">Step 4: Record Conventions<a class="headerlink" href="#step-4-record-conventions" title="Permanent link">&para;</a></h3>
-<p>Conventions are simpler: just a name, a rule, and optionally a section.</p>
+<p><strong>Conventions</strong> are simpler: just a name, a rule, and optionally a section.</p>
 <p>These are short enough that either approach works:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You: &quot;We&#39;ve been using kebab-case for every CLI flag. Codify that.&quot;
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>

@@ -24,7 +24,7 @@ keep it clean.
 
 | Command/Skill           | Role in this workflow                            |
 |-------------------------|--------------------------------------------------|
-| `ctx init`              | Populates default ctx permissions and hooks      |
+| `ctx init`              | Populates default ctx permissions                |
 | `/ctx-drift`            | Detects missing or stale permission entries      |
 | `/sanitize-permissions` | Audits for dangerous patterns (security-focused) |
 
@@ -109,7 +109,7 @@ content. This prevents the agent from prompting on every skill invocation.
 
 | Pattern                         | Risk                                           |
 |---------------------------------|------------------------------------------------|
-| `Bash(git push:*)`              | Bypasses `block-git-push.sh` hook confirmation |
+| `Bash(git push:*)`              | Bypasses `block-git-push` hook confirmation    |
 | `Bash(git reset:*)`             | Can discard uncommitted work                   |
 | `Bash(git clean:*)`             | Deletes untracked files                        |
 | `Bash(rm -rf:*)`                | Recursive delete with no confirmation          |
@@ -124,13 +124,18 @@ Permissions and hooks work together. Even if a command is pre-approved, hooks
 still run. The difference is that pre-approved commands skip the user
 confirmation dialog: So if a hook blocks the command, the user never sees it.
 
-`ctx` ships these hooks by default:
+The ctx plugin ships these blocking hooks:
+
+| Hook                              | What it blocks                   |
+|-----------------------------------|----------------------------------|
+| `ctx system block-non-path-ctx`   | Running ctx from wrong path      |
+
+Project-local hooks (not part of the plugin) can add more:
 
 | Hook                          | What it blocks                   |
 |-------------------------------|----------------------------------|
 | `block-git-push.sh`           | All `git push` commands          |
 | `block-dangerous-commands.sh` | `sudo`, copies to `~/.local/bin` |
-| `block-non-path-ctx.sh`       | Running ctx from wrong path      |
 
 !!! warning "Pre-approved + hook-blocked = silent block"
     If you pre-approve `Bash(git push:*)`, the hook still blocks it, but
@@ -177,7 +182,7 @@ Run `/sanitize-permissions` to catch security issues:
 If you create a custom `ctx-*` skill, add its `Skill()` entry to the
 allowlist manually. 
 
-`ctx init` only populates the defaults: It won't pick up custom skills.
+`ctx init` only populates the default permissions: It won't pick up custom skills.
 
 ### Golden image snapshots
 

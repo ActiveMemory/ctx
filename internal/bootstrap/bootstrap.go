@@ -36,6 +36,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
+	"github.com/ActiveMemory/ctx/internal/cli/system"
 	"github.com/ActiveMemory/ctx/internal/cli/task"
 	"github.com/ActiveMemory/ctx/internal/cli/watch"
 )
@@ -74,6 +75,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		recall.Cmd,
 		journal.Cmd,
 		serve.Cmd,
+		system.Cmd,
 	} {
 		cmd.AddCommand(c())
 	}

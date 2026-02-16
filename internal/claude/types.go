@@ -24,14 +24,11 @@ type HookConfig struct {
 	SessionEnd       []HookMatcher `json:"SessionEnd,omitempty"`
 }
 
+// HookType is the type identifier for a hook (e.g., "command").
 type HookType string
 
-var HookTypeCommand HookType = "command"
-
+// Matcher is a regex pattern for matching tool names in hooks.
 type Matcher string
-
-var MatcherBash Matcher = "Bash"
-var MatcherAll Matcher = ".*"
 
 // HookMatcher associates a regex pattern with hooks to execute.
 //

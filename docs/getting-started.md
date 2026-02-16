@@ -80,10 +80,16 @@ sudo make install
 # sudo mv ctx /usr/local/bin/
 ```
 
-Building from source gives you the latest features and bug fixes. 
+For **Claude Code** users, also **install the plugin**:
 
-Since `ctx` is predominantly a developer tool, this is the 
-**recommended approach**: 
+```bash
+claude /plugin install ./internal/tpl/claude
+```
+
+Building from source gives you the latest features and bug fixes.
+
+Since `ctx` is predominantly a developer tool, this is the
+**recommended approach**:
 
 You get the freshest code and can inspect what you are installing.
 
@@ -96,38 +102,38 @@ not to build from source.
 === "Linux (x86_64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-linux-amd64
-    chmod +x ctx-0.3.0-linux-amd64
-    sudo mv ctx-0.3.0-linux-amd64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.6.0/ctx-0.6.0-linux-amd64
+    chmod +x ctx-0.6.0-linux-amd64
+    sudo mv ctx-0.6.0-linux-amd64 /usr/local/bin/ctx
     ```
 
 === "Linux (ARM64)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-linux-arm64
-    chmod +x ctx-0.3.0-linux-arm64
-    sudo mv ctx-0.3.0-linux-arm64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.6.0/ctx-0.6.0-linux-arm64
+    chmod +x ctx-0.6.0-linux-arm64
+    sudo mv ctx-0.6.0-linux-arm64 /usr/local/bin/ctx
     ```
 
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-darwin-arm64
-    chmod +x ctx-0.3.0-darwin-arm64
-    sudo mv ctx-0.3.0-darwin-arm64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.6.0/ctx-0.6.0-darwin-arm64
+    chmod +x ctx-0.6.0-darwin-arm64
+    sudo mv ctx-0.6.0-darwin-arm64 /usr/local/bin/ctx
     ```
 
 === "macOS (Intel)"
 
     ```bash
-    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-darwin-amd64
-    chmod +x ctx-0.3.0-darwin-amd64
-    sudo mv ctx-0.3.0-darwin-amd64 /usr/local/bin/ctx
+    curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.6.0/ctx-0.6.0-darwin-amd64
+    chmod +x ctx-0.6.0-darwin-amd64
+    sudo mv ctx-0.6.0-darwin-amd64 /usr/local/bin/ctx
     ```
 
 === "Windows"
 
-    Download `ctx-0.3.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
+    Download `ctx-0.6.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
 
 #### Verifying Checksums
 
@@ -135,10 +141,10 @@ Each binary has a corresponding `.sha256` checksum file. To verify your download
 
 ```bash
 # Download the checksum file
-curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.3.0/ctx-0.3.0-linux-amd64.sha256
+curl -LO https://github.com/ActiveMemory/ctx/releases/download/v0.6.0/ctx-0.6.0-linux-amd64.sha256
 
 # Verify the binary
-sha256sum -c ctx-0.3.0-linux-amd64.sha256
+sha256sum -c ctx-0.6.0-linux-amd64.sha256
 ```
 
 On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
@@ -171,8 +177,9 @@ cd your-project
 ctx init
 ```
 
-This creates a `.context/` directory with template files and configures 
-AI tool hooks (*for Claude Code*).
+This creates a `.context/` directory with template files.
+For Claude Code, install the [ctx plugin](integrations.md#claude-code-full-integration)
+for automatic hooks and skills.
 
 ### 2. Check Status
 
@@ -184,8 +191,8 @@ Shows context summary: files present, token estimate, and recent activity.
 
 ### 3. Start Using with AI
 
-With Claude Code, context loads automatically via hooks. For other tools,
-paste the output of:
+With Claude Code (and the ctx plugin installed), context loads automatically
+via hooks. For other tools, paste the output of:
 
 ```bash
 ctx agent --budget 8000
@@ -226,9 +233,12 @@ Creating project root files...
   ✓ PROMPT.md
   ✓ IMPLEMENTATION_PLAN.md
 
-Setting up Claude Code integration...
-  ✓ Claude hooks
+Setting up Claude Code permissions...
   ✓ .scratchpad.key
+
+Claude Code plugin (hooks + skills):
+  Install: claude /plugin marketplace add ActiveMemory/ctx
+  Then:    claude /plugin install ctx@activememory-ctx
 
 Next steps:
   1. Edit .context/TASKS.md to add your current tasks
@@ -236,8 +246,8 @@ Next steps:
   3. Run 'ctx agent' to get AI-ready context packet
 ```
 
-This created your `.context/` directory with template files. If you're using
-Claude Code, it also configures hooks so context loads automatically.
+This created your `.context/` directory with template files. For Claude Code,
+install the ctx plugin to get automatic hooks and skills.
 
 ### Step 2: Populate Your Context
 
@@ -301,8 +311,8 @@ it will fill in as you capture lessons during development.
 
 ### Step 4: Start an AI Session
 
-With **Claude Code**, context loads automatically via hooks — just start a
-session and it's there. For other tools, generate a context packet:
+With **Claude Code** (and the ctx plugin), context loads automatically — just
+start a session and it's there. For other tools, generate a context packet:
 
 ```bash
 ctx agent --budget 8000
@@ -363,12 +373,10 @@ asking you to re-explain.
 ├── GLOSSARY.md         # Domain terms and abbreviations
 ├── AGENT_PLAYBOOK.md   # How AI tools should use this
 └── sessions/           # Session snapshots
-
-.claude/                # Claude Code integration (if detected)
-├── hooks/              # Lifecycle hooks (enforcement, coaching, cleanup)
-├── skills/             # ctx Agent Skills (agentskills.io spec)
-└── settings.local.json # Hook configuration
 ```
+
+Claude Code integration (hooks + skills) is provided by the
+**ctx plugin** — see [Integrations](integrations.md#claude-code-full-integration).
 
 See [Context Files](context-files.md) for detailed documentation of each file.
 

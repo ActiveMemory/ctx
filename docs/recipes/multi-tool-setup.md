@@ -22,7 +22,7 @@ which AI tool you use.
 !!! tip "TL;DR"
     ```bash
     cd your-project
-    ctx init                              # creates .context/ and Claude Code hooks
+    ctx init                              # creates .context/ and seeds permissions
     source <(ctx completion zsh)          # shell completion (or bash/fish)
     # For other tools:
     ctx hook cursor                       # or: aider, copilot, windsurf
@@ -34,7 +34,7 @@ which AI tool you use.
 
 | Command/Skill       | Role in this workflow                                        |
 |---------------------|--------------------------------------------------------------|
-| `ctx init`          | Create `.context/` directory, templates, and tool hooks      |
+| `ctx init`          | Create `.context/` directory, templates, and permissions     |
 | `ctx hook`          | Generate integration configuration for a specific AI tool    |
 | `ctx agent`         | Print a token-budgeted context packet for AI consumption     |
 | `ctx load`          | Output assembled context in read order (for manual pasting)  |
@@ -47,8 +47,7 @@ which AI tool you use.
 ### Step 1: Initialize ctx
 
 Run `ctx init` in your project root. This creates the `.context/` directory
-with all template files and, if Claude Code is detected, generates hooks and
-Agent Skills automatically.
+with all template files and seeds ctx permissions in `settings.local.json`.
 
 ```bash
 cd your-project
@@ -67,11 +66,13 @@ This produces the following structure:
   LEARNINGS.md        # Lessons learned, gotchas, tips
   GLOSSARY.md         # Domain terms and abbreviations
   AGENT_PLAYBOOK.md   # How AI tools should use this system
+```
 
-.claude/              # Claude Code integration (auto-generated)
-  hooks/              # Enforcement scripts
-  skills/             # ctx Agent Skills (agentskills.io spec)
-  settings.local.json # Hook configuration
+For Claude Code, install the **ctx plugin** to get hooks and skills:
+
+```bash
+claude /plugin marketplace add ActiveMemory/ctx
+claude /plugin install ctx@activememory-ctx
 ```
 
 If you only need the core files (*useful for lightweight setups with Cursor or
@@ -106,13 +107,9 @@ Each command prints the configuration you need. How you apply it depends on the
 tool.
 
 !!! tip "Claude is a First-Class Citizen"
-    You don't need any extra steps to integrate with Claude Code.
-
-    `ctx init` already wrote `.claude/settings.local.json` with
-    a `PreToolUse` hook.
-
-    The `PreToolUse` hook runs
-    `ctx agent --budget 4000 --session $PPID` on every tool call
+    With the ctx plugin installed, Claude Code gets hooks and skills
+    automatically. The `PreToolUse` hook runs
+    `ctx agent --budget 4000` on every tool call
     (*with a 10-minute cooldown so it only fires once per window*).
 
 **Cursor**: Add the system prompt snippet to `.cursor/settings.json`:
@@ -214,7 +211,7 @@ If context is not loading, check the basics:
 | Symptom                         | Fix                                                           |
 |---------------------------------|---------------------------------------------------------------|
 | `ctx: command not found`        | Ensure ctx is in your PATH: `which ctx`                       |
-| Hook permission errors          | Run `chmod +x .claude/hooks/*.sh`                             |
+| Hook errors                     | Verify plugin is installed: `claude /plugin list`             |
 | Context not refreshing          | Cooldown may be active; wait 10 minutes or set `--cooldown 0` |
 
 ### Step 5: Enable Watch Mode for Non-Native Tools
@@ -301,8 +298,8 @@ ctx hook aider
 * Start with `ctx init` (not `--minimal`) for your first project. The full
   template set gives the agent more to work with, and you can always delete
   files later.
-* For Claude Code, adjust the token budget in `.claude/settings.local.json`
-  as your project grows.
+* For Claude Code, the token budget is configured in the plugin's `hooks.json`.
+  To customize, adjust the `--budget` flag in the `ctx agent` hook command.
 * The `--session $PPID` flag isolates cooldowns per Claude Code process, so
   parallel sessions do not suppress each other.
 * Commit your `.context/` directory to version control. Several ctx features

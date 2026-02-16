@@ -93,7 +93,7 @@ useful)*
 ### Rules for recommendations:
 
 - **1-3 items only** — more than 3 defeats the purpose
-- **Be specific** — "Fix `block-non-path-ctx.sh` hook" not
+- **Be specific** — "Fix `block-non-path-ctx` hook" not
   "work on hooks"
 - **Include the priority tag** so the user sees the weight
 - **Rationale must reference context** — why *this* task, not
@@ -108,7 +108,7 @@ useful)*
 
 > ### Recommended Next
 >
-> **1. Fix `block-non-path-ctx.sh` hook** `#priority:high`
+> **1. Fix `block-non-path-ctx` hook** `#priority:high`
 > > Still open from yesterday's session. The hook is too
 > > aggressive — it blocks `git -C path` commands that don't
 > > invoke ctx. Quick fix, clears a blocker.

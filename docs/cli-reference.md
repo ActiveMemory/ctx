@@ -33,7 +33,7 @@ All commands support these flags:
 
 | Command                           | Description                                               |
 |-----------------------------------|-----------------------------------------------------------|
-| [`ctx init`](#ctx-init)           | Initialize `.context/` directory with templates and hooks |
+| [`ctx init`](#ctx-init)           | Initialize `.context/` directory with templates           |
 | [`ctx status`](#ctx-status)       | Show context summary (files, tokens, drift)               |
 | [`ctx agent`](#ctx-agent)         | Print token-budgeted context packet for AI consumption    |
 | [`ctx load`](#ctx-load)           | Output assembled context in read order                    |
@@ -76,12 +76,13 @@ ctx init [flags]
 **Creates**:
 
 - `.context/` directory with all template files
-- `.claude/hooks/` with enforcement and monitoring scripts (for Claude Code)
-- `.claude/skills/` with ctx Agent Skills (following agentskills.io spec)
-- `.claude/settings.local.json` with hook configuration and pre-approved ctx permissions
+- `.claude/settings.local.json` with pre-approved ctx permissions
 - `PROMPT.md` with session prompt (autonomous mode with `--ralph`)
 - `IMPLEMENTATION_PLAN.md` with high-level project direction
 - `CLAUDE.md` with bootstrap instructions (or merges into existing)
+
+Claude Code hooks and skills are provided by the **ctx plugin**
+(see [Integrations](integrations.md#claude-code-full-integration)).
 
 **Example**:
 
@@ -843,18 +844,21 @@ ctx hook <tool>
 
 **Supported tools**:
 
-| Tool          | Description     |
-|---------------|-----------------|
-| `claude-code` | Claude Code CLI |
-| `cursor`      | Cursor IDE      |
-| `aider`       | Aider CLI       |
-| `copilot`     | GitHub Copilot  |
-| `windsurf`    | Windsurf IDE    |
+| Tool          | Description                                  |
+|---------------|----------------------------------------------|
+| `claude-code` | Redirects to plugin install instructions     |
+| `cursor`      | Cursor IDE                                   |
+| `aider`       | Aider CLI                                    |
+| `copilot`     | GitHub Copilot                               |
+| `windsurf`    | Windsurf IDE                                 |
+
+!!! note "Claude Code uses the plugin system"
+    Claude Code integration is now provided via the ctx plugin.
+    Running `ctx hook claude-code` prints plugin install instructions.
 
 **Example**:
 
 ```bash
-ctx hook claude-code
 ctx hook cursor
 ctx hook aider
 ```

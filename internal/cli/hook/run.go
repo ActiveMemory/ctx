@@ -36,44 +36,14 @@ func runHook(cmd *cobra.Command, args []string) error {
 		cmd.Println(cyan("Claude Code Integration"))
 		cmd.Println(cyan("======================="))
 		cmd.Println()
-		cmd.Println("Add this to your project's CLAUDE.md or system prompt:")
+		cmd.Println("Claude Code integration is now provided via the ctx plugin.")
 		cmd.Println()
-		cmd.Println(green("```markdown"))
-		cmd.Print(`## Context
-
-Before starting any task, load the project context:
-
-1. Read .context/CONSTITUTION.md — These rules are INVIOLABLE
-2. Read .context/TASKS.md — Current work items
-3. Read .context/CONVENTIONS.md — Project patterns
-4. Read .context/ARCHITECTURE.md — System overview
-5. Read .context/DECISIONS.md — Why things are the way they are
-
-When you make changes:
-- Add decisions: <context-update type="decision">Your decision</context-update>
-- Add tasks: <context-update type="task">New task</context-update>
-- Add learnings: <context-update type="learning">What you learned</context-update>
-- Complete tasks: <context-update type="complete">task description</context-update>
-
-Run 'ctx agent' for a quick context summary.
-`)
-		cmd.Println(green("```"))
+		cmd.Println("Install the plugin:")
+		cmd.Println(green("  /plugin marketplace add ActiveMemory/ctx"))
+		cmd.Println(green("  /plugin install ctx@activememory-ctx"))
 		cmd.Println()
-		cmd.Println("Or use a hook in .claude/settings.local.json:")
-		cmd.Println()
-		cmd.Println(green("```json"))
-		cmd.Println(`{
-  "hooks": {
-    "PreToolUse": [{
-      "matcher": "",
-      "hooks": [{
-        "type": "command",
-        "command": "ctx agent --budget 4000"
-      }]
-    }]
-  }
-}`)
-		cmd.Println(green("```"))
+		cmd.Println("The plugin provides hooks (context monitoring, persistence")
+		cmd.Println("nudges, post-commit capture) and 25 skills automatically.")
 
 	case "cursor":
 		cmd.Println(cyan("Cursor IDE Integration"))
@@ -158,7 +128,7 @@ Run 'ctx agent' for AI-ready context packet.
 	default:
 		cmd.Printf("Unknown tool: %s\n\n", tool)
 		cmd.Println("Supported tools:")
-		cmd.Println("  claude-code  - Anthropic's Claude Code CLI")
+		cmd.Println("  claude-code  - Anthropic's Claude Code CLI (use plugin instead)")
 		cmd.Println("  cursor       - Cursor IDE")
 		cmd.Println("  aider        - Aider AI coding assistant")
 		cmd.Println("  copilot      - GitHub Copilot")

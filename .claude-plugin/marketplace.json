@@ -1,0 +1,16 @@
+{
+  "name": "activememory-ctx",
+  "owner": {"name": "Context contributors"},
+  "metadata": {
+    "description": "Official ctx plugins for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "ctx",
+      "source": "./internal/tpl/claude",
+      "description": "Persistent context for AI coding assistants",
+      "version": "0.6.0"
+    }
+  ]
+}
