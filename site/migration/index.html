@@ -2562,8 +2562,15 @@
 
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
 <h2 id="adopting-ctx-in-existing-projects">Adopting ctx in Existing Projects<a class="headerlink" href="#adopting-ctx-in-existing-projects" title="Permanent link">&para;</a></h2>
-<p>Already have a <code>CLAUDE.md</code>, <code>.cursorrules</code>, or <code>.aider.conf.yml</code>?
-This guide covers how to adopt <code>ctx</code> without disrupting your current workflow.</p>
+<div class="admonition tip">
+<p class="admonition-title">Claude Code User?</p>
+<p>You probably want the plugin instead of this page.
+Install ctx from the marketplace (<code>/plugin</code> → search "ctx" → Install) and
+you're done — hooks, skills, and updates are handled for you.
+See <a href="../getting-started/">Getting Started</a> for the full walkthrough.</p>
+</div>
+<p>This guide covers adopting <code>ctx</code> in existing projects — regardless of
+which tools your team uses.</p>
 <h2 id="quick-paths">Quick Paths<a class="headerlink" href="#quick-paths" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2728,7 +2735,7 @@ created before any changes.</p>
 <td><code>.aider.conf.yml</code></td>
 </tr>
 <tr>
-<td><code>.claude/settings.local.json</code> (permissions only)</td>
+<td><code>.claude/settings.local.json</code> (seeded by <code>ctx init</code>; the plugin manages hooks and skills)</td>
 <td><code>.github/copilot-instructions.md</code></td>
 </tr>
 <tr>
@@ -2741,8 +2748,8 @@ created before any changes.</p>
 </tr>
 </tbody>
 </table>
-<p>Claude Code hooks and skills are provided by the <strong>ctx plugin</strong>
-(installed separately via <code>claude /plugin</code>).</p>
+<p>Claude Code hooks and skills are provided by the <strong>ctx plugin</strong>,
+installed from the Claude Code marketplace (<code>/plugin</code> → search "ctx" → Install).</p>
 <h3 id="running-ctx-alongside-other-tools">Running ctx Alongside Other Tools<a class="headerlink" href="#running-ctx-alongside-other-tools" title="Permanent link">&para;</a></h3>
 <p>The <code>.context/</code> directory is the source of truth. Tool-specific configs point
 to it:</p>
@@ -2781,7 +2788,7 @@ project knowledge — not secrets or personal preferences.</p>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--merge
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Commit everything</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>add<span class="w"> </span>.context/<span class="w"> </span>CLAUDE.md<span class="w"> </span>.claude/
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>add<span class="w"> </span>.context/<span class="w"> </span>CLAUDE.md
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add ctx context management&quot;</span>
 </span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>git<span class="w"> </span>push
 </span></code></pre></div>

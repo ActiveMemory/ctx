@@ -13,8 +13,14 @@ icon: lucide/package-plus
 
 ## Adopting ctx in Existing Projects
 
-Already have a `CLAUDE.md`, `.cursorrules`, or `.aider.conf.yml`?
-This guide covers how to adopt `ctx` without disrupting your current workflow.
+!!! tip "Claude Code User?"
+    You probably want the plugin instead of this page.
+    Install ctx from the marketplace (`/plugin` → search "ctx" → Install) and
+    you're done — hooks, skills, and updates are handled for you.
+    See [Getting Started](getting-started.md) for the full walkthrough.
+
+This guide covers adopting `ctx` in existing projects — regardless of
+which tools your team uses.
 
 ## Quick Paths
 
@@ -150,12 +156,12 @@ git checkout CLAUDE.md
 |------------------------------------------|---------------------------------------|
 | `.context/` directory                    | `.cursorrules`                        |
 | `CLAUDE.md` (or merges into)             | `.aider.conf.yml`                     |
-| `.claude/settings.local.json` (permissions only) | `.github/copilot-instructions.md` |
+| `.claude/settings.local.json` (seeded by `ctx init`; the plugin manages hooks and skills) | `.github/copilot-instructions.md` |
 |                                          | `.windsurfrules`                      |
 |                                          | Any other tool-specific config        |
 
-Claude Code hooks and skills are provided by the **ctx plugin**
-(installed separately via `claude /plugin`).
+Claude Code hooks and skills are provided by the **ctx plugin**,
+installed from the Claude Code marketplace (`/plugin` → search "ctx" → Install).
 
 ### Running ctx Alongside Other Tools
 
@@ -206,7 +212,7 @@ project knowledge — not secrets or personal preferences.
 ctx init --merge
 
 # Commit everything
-git add .context/ CLAUDE.md .claude/
+git add .context/ CLAUDE.md
 git commit -m "Add ctx context management"
 git push
 ```

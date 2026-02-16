@@ -94,6 +94,8 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
 - [x] ~~Add drift check: verify .claude/hooks/*.sh files have execute permission~~ Moot: hooks are now Go subcommands (v0.6.0 plugin conversion) #priority:medium #added:2026-02-15-194829 #done:2026-02-16
 
+- [ ] Add binary/plugin version drift detection hook. A session-start or PreToolUse hook that runs ctx --version, compares the binary semver against the plugin's expected minimum version, and emits a warning if mismatched (e.g. 'Your ctx binary is v0.5.x but this plugin expects v0.6.x — reinstall the binary to get the best out of ctx'). Use an existing hook warning pattern. The plugin cannot and should not auto-install the binary (requires sudo). #priority:medium #added:2026-02-16-155633
+
 - [ ] Rename journal slugs to title-based filenames #priority:medium #added:2026-02-16-141643
 
 - [ ] Blog: "Building a Claude Code Marketplace Plugin" — narrative from session history, journals, and git diff of feat/plugin-conversion branch. Covers: motivation (shell hooks to Go subcommands), plugin directory layout, marketplace.json, eliminating make plugin, bugs found during dogfooding (hooks creating partial .context/), and the fix. Use /ctx-blog-changelog with branch diff as source material. #added:2026-02-16-111948
