@@ -66,7 +66,7 @@ watch mode for non-native tools, and verification.
 ### [Keeping Context in a Separate Repo](external-context.md)
 
 Store context files outside the project tree: in a private repo,
-shared directory, or anywhere else. Useful for open-source projects
+shared directory, or anywhere else. Useful for open source projects
 with private context or multi-repo setups.
 
 **Uses**: `ctx init`, `--context-dir`, `--allow-outside-cwd`,
@@ -76,7 +76,7 @@ with private context or multi-repo setups.
 
 ## Daily Workflow
 
-These recipes cover the workflows you’ll use every day when
+These recipes cover the workflows you will use every day when
 working with ctx.
 
 ### [The Complete Session](session-lifecycle.md)
@@ -116,7 +116,7 @@ survive across sessions and team members.
 
 ### [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md)
 
-Distribute your scratchpad encryption key, push and pull encrypted
+Distribute your **scratchpad** encryption key, push and pull encrypted
 notes via git, and resolve merge conflicts when two machines edit
 simultaneously.
 
@@ -126,7 +126,7 @@ simultaneously.
 
 ### [Using the Scratchpad with Claude](scratchpad-with-claude.md)
 
-Use the encrypted scratchpad for quick notes, working memory, and
+Use the encrypted **scratchpad** for quick notes, working memory, and
 sensitive values during AI sessions. Natural language in, encrypted
 storage out.
 
@@ -139,7 +139,7 @@ storage out.
 ### [Hook Output Patterns](hook-output-patterns.md)
 
 Choose the right output pattern for your Claude Code hooks: `VERBATIM`
-relay for user-facing reminders, hard gates for invariants, agent
+relay for user-facing reminders, **hard gates** for invariants, agent
 directives for nudges, and five more patterns across the spectrum.
 
 **Uses**: `.claude/hooks/`, `settings.local.json`
@@ -170,7 +170,7 @@ at session start to automatically drop session-accumulated permissions.
 ### [Detecting and Fixing Drift](context-health.md)
 
 Keep context files accurate by detecting structural drift
-(stale paths, missing files, stale file ages) and task
+(*stale paths, missing files, stale file ages*) and task
 staleness. Includes alignment audits to verify documentation
 claims match agent instructions.
 
@@ -203,7 +203,7 @@ Set up a loop where an AI agent works through tasks overnight
 without you at the keyboard, using ctx for persistent memory
 between iterations.
 
-This recipe shows how ctx supports long-running agent loops
+This recipe shows how `ctx` supports long-running agent loops
 without losing context or intent.
 
 **Uses**: `ctx init --ralph`, `ctx loop`, `ctx watch`, `ctx load`,
@@ -214,8 +214,10 @@ without losing context or intent.
 ### [When to Use a Team of Agents](when-to-use-agent-teams.md)
 
 Decision framework for choosing between a single agent, parallel
-worktrees, and a full agent team. Covers the file overlap test,
-when teams make things worse, and what ctx provides at each level.
+worktrees, and a full agent team. 
+
+This recipe covers the file overlap test, when teams make things worse, and 
+what ctx provides at each level.
 
 **Uses**: `/ctx-worktree`, `/ctx-next`, `ctx status`
 
@@ -223,7 +225,7 @@ when teams make things worse, and what ctx provides at each level.
 
 ### [Parallel Agent Development with Git Worktrees](parallel-worktrees.md)
 
-Split a large backlog across 3-4 agents using git worktrees,
+Split a large backlog across 3-4 agents using **git worktrees**,
 each on its own branch and working directory. Group tasks by
 file overlap, work in parallel, merge back.
 
@@ -236,7 +238,10 @@ file overlap, work in parallel, merge back.
 
 Generate blog posts from project activity, write changelog
 posts from commit ranges, and publish a browsable journal
-site from your session history.
+site from your session history. 
+
+The output is generic Markdown, but the skills are tuned for the `ctx`-style 
+blog artifacts you see on this website.
 
 **Uses**: `ctx journal site`, `ctx journal obsidian`, `ctx serve`,
 `ctx recall export`, `/ctx-blog`, `/ctx-blog-changelog`,

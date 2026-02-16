@@ -4,16 +4,67 @@
         <loc>https://ctx.ist/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/getting-started/</loc>
+        <loc>https://ctx.ist/blog/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/</loc>
+        <loc>https://ctx.ist/getting-started/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/context-files/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/prompting-guide/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/session-lifecycle/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/knowledge-capture/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/context-health/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/task-management/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/session-archaeology/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/autonomous-loops/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/publishing/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/multi-tool-setup/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/claude-code-permissions/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/permission-snapshots/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/external-context/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/hook-output-patterns/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/scratchpad-with-claude/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/scratchpad-sync/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/when-to-use-agent-teams/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli-reference/</loc>
@@ -34,24 +85,21 @@
         <loc>https://ctx.ist/integrations/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/comparison/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/versions/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/migration/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/upgrading/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/comparison/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/agent-security/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/versions/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/blog/</loc>
       </url>
 </urlset>

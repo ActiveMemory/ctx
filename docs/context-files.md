@@ -456,15 +456,15 @@ All context files follow these conventions:
 
 ## Further Reading
 
-- [Refactoring with Intent](blog/2026-02-01-refactoring-with-intent.md):
-  How persistent context prevents drift during refactoring sessions
+* [Refactoring with Intent](blog/2026-02-01-refactoring-with-intent.md):
+  How persistent context prevents drift during refactoring sessions.
 
 ## Token Efficiency
 
-Keep context files concise:
+Keep context files **concise**:
 
-* Use abbreviations in tags, not prose
-* Omit obvious words ("*The*," "*This*")
-* Prefer bullet points over paragraphs
-* Keep examples minimal but illustrative
-* Archive old completed items periodically
+* Use abbreviations in tags, not prose;
+* Omit obvious words ("*The*," "*This*");
+* Prefer bullet points over paragraphs;
+* Keep examples minimal but illustrative;
+* Archive old completed items periodically.

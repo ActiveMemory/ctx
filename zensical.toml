@@ -21,27 +21,55 @@ The documentation on this website is distributed under
 """
 
 nav = [
-  { "The ctx Manifesto" = "index.md" },
-  { "Getting Started" = "getting-started.md" },
-  { "Recipes" = "recipes/index.md" },
-  { "Context Files" = "context-files.md" },
-  { "Prompting Guide" = "prompting-guide.md" },
-  { "CLI Reference" = "cli-reference.md" },
-  { "The Session Journal" = "session-journal.md" },
-  { "Skills" = "skills.md" },
-  { "Scratchpad" = "scratchpad.md" },
-  { "Autonomous Loops" = "autonomous-loop.md" },
-  { "Integrations" = "integrations.md" },
-  { "Adopting ctx" = "migration.md" },
-  { "Upgrading ctx" = "upgrading.md" },
-  { "ctx and Similar Tools" = "comparison.md" },
-  { "Agent Security" = "agent-security.md" },
-  { "Security" = "security.md" },
-  { "Version History" = "versions.md" },
-  { "Blog" = "blog/index.md" }
+  { "ctx Manifesto" = "index.md" },
+  { "ctx Blog" = [
+    "blog/index.md",
+  ]},
+  { "Home" = [
+    "getting-started.md",
+    "context-files.md",
+    "prompting-guide.md",
+  ]},
+  { "Recipes" = [
+    "recipes/index.md",
+    "recipes/session-lifecycle.md",
+    "recipes/knowledge-capture.md",
+    "recipes/context-health.md",
+    "recipes/task-management.md",
+    "recipes/session-archaeology.md",
+    "recipes/autonomous-loops.md",
+    "recipes/publishing.md",
+    "recipes/multi-tool-setup.md",
+    "recipes/claude-code-permissions.md",
+    "recipes/permission-snapshots.md",
+    "recipes/external-context.md",
+    "recipes/hook-output-patterns.md",
+    "recipes/scratchpad-with-claude.md",
+    "recipes/scratchpad-sync.md",
+    "recipes/parallel-worktrees.md",
+    "recipes/when-to-use-agent-teams.md",
+  ]},
+  { "Reference" = [
+    "cli-reference.md",
+    "session-journal.md",
+    "skills.md",
+    "scratchpad.md",
+    "autonomous-loop.md",
+    "integrations.md",
+    "comparison.md",
+    "versions.md",
+  ]},
+  { "Operations" = [
+    "migration.md",
+    "upgrading.md",
+  ]},
+  { "Security" = [
+    "agent-security.md",
+    "security.md",
+  ]},
 ]
 
-#extra_css = ["stylesheets/extra.css"]
+extra_css = ["stylesheets/extra.css"]
 #extra_javascript = ["javascripts/extra.js"]
 
 [project.theme]
@@ -62,6 +90,8 @@ features = [
     "navigation.instant.prefetch",
     "navigation.path",
     "navigation.sections",
+    "navigation.tabs",
+    "navigation.tabs.sticky",
     "navigation.top",
     "navigation.tracking",
     "search.highlight",

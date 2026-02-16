@@ -11,7 +11,7 @@ icon: lucide/flame
 
 ![ctx](images/ctx-banner.png)
 
-# The `ctx` Manifesto
+# `ctx` Manifesto
 
 **Creation, not code**.
 
