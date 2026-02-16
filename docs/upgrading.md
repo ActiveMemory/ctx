@@ -14,9 +14,12 @@ icon: lucide/arrow-up-circle
 ## Upgrading ctx
 
 New versions of `ctx` may ship updated hooks, skills, permissions,
-CLAUDE.md directives, or Makefile targets. A version upgrade means
-getting the new binary **and** regenerating the infrastructure it
-installs into your project.
+`CLAUDE.md` directives, or `Makefile` targets. 
+
+A version upgrade means:
+
+* getting the new binary, 
+* **and** regenerating the infrastructure it installs into your project.
 
 ## What Changes Between Versions
 
@@ -59,9 +62,10 @@ ctx --version   # verify
 ctx init --force --merge
 ```
 
-`--force` regenerates infrastructure files (hooks, skills, settings,
-Makefile.ctx). `--merge` preserves your content outside ctx markers in
-`CLAUDE.md` and `PROMPT.md`.
+* `--force` regenerates infrastructure files (*hooks, skills, settings,
+Makefile.ctx*). 
+* `--merge` preserves your content outside ctx markers in `CLAUDE.md` and 
+  `PROMPT.md`.
 
 ### 4. Restore Knowledge Files
 
@@ -119,13 +123,14 @@ rm -rf .context.bak .claude.bak CLAUDE.md.bak PROMPT.md.bak
 The old binary still works with your existing `.context/` files. But you
 may miss:
 
-- **New hooks** that enforce better practices or catch mistakes
-- **Updated skill prompts** that produce better results
-- **New `.gitignore` entries** for directories added in newer versions
-- **Bug fixes** in the CLI itself
+* **New hooks** that enforce better practices or catch mistakes;
+* **Updated skill prompts** that produce better results;
+* **New `.gitignore` entries** for directories added in newer versions;
+* **Bug fixes** in the CLI itself.
 
-Context files are plain Markdown — they never break between versions.
-The surrounding infrastructure is what evolves.
+Context files are plain Markdown: They **never** break between versions.
+
+**The surrounding infrastructure is what evolves**.
 
 ## Quick Reference
 

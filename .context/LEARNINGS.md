@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-15 | Hook scripts can lose execute permission without warning |
 | 2026-02-15 | Two-tier hook output is sufficient — don't over-engineer severity levels |
 | 2026-02-15 | Gitignored folders accumulate stale artifacts |
 | 2026-02-15 | Editor artifacts need gitignore coverage from day one |
@@ -73,6 +74,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-15-194827] Hook scripts can lose execute permission without warning
+
+**Context**: Every Bash call showed PreToolUse:Bash hook error. Commands succeeded but UX was degraded.
+
+**Lesson**: block-non-path-ctx.sh had -rw-r--r-- instead of -rwxr-xr-x. Claude Code reports non-executable hooks as 'hook error' but still runs the command.
+
+**Application**: After editing or regenerating hook scripts, verify permissions with ls -la .claude/hooks/*.sh. Consider adding a chmod +x step to ctx init or a drift check for hook permissions.
 
 ---
 

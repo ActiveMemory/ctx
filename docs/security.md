@@ -31,18 +31,18 @@ Send details to **security@ctx.ist**
 
 ### What to Include
 
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if any)
+* Description of the vulnerability
+* Steps to reproduce
+* Potential impact
+* Suggested fix (if any)
 
 ### Response Timeline
 
-| Stage              | Timeframe                              |
-|--------------------|----------------------------------------|
-| Acknowledgment     | Within 48 hours                        |
-| Initial assessment | Within 7 days                          |
-| Resolution target  | Within 30 days (depending on severity) |
+| Stage              | Timeframe                                |
+|--------------------|------------------------------------------|
+| Acknowledgment     | Within 48 hours                          |
+| Initial assessment | Within 7 days                            |
+| Resolution target  | Within 30 days (*depending on severity*) |
 
 ## Trust Model
 
@@ -115,7 +115,7 @@ or cron scheduling, use:
 ## Best Practices
 
 1. **Review before committing**: Always review `.context/` files before committing
-2. **Use .gitignore**: If you must store sensitive notes locally,
+2. **Use `.gitignore`**: If you must store sensitive notes locally,
    add them to `.gitignore`
 3. **Drift detection**: Run `ctx drift` to check for potential issues
 4. **Permission audit**: Review `.claude/settings.local.json` after busy sessions

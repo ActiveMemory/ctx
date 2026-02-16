@@ -7,10 +7,7 @@
         <loc>https://ctx.ist/getting-started/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/migration/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/upgrading/</loc>
+        <loc>https://ctx.ist/recipes/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/context-files/</loc>
@@ -31,13 +28,16 @@
         <loc>https://ctx.ist/scratchpad/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/autonomous-loop/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/integrations/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/migration/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/upgrading/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/comparison/</loc>

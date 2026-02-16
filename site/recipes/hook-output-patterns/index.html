@@ -292,45 +292,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-package-plus" viewBox="0 0 24 24"><path d="M16 16h6M19 13v6M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14M7.5 4.27l9 5.15"/><path d="M3.29 7 12 12l8.71-5M12 22V12"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Adopting ctx
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../upgrading/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Upgrading ctx
+    Recipes
   
 
     
@@ -524,35 +495,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Recipes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../autonomous-loop/" class="md-nav__link">
         
   
@@ -592,6 +534,64 @@
     
   
     Integrations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-package-plus" viewBox="0 0 24 24"><path d="M16 16h6M19 13v6M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14M7.5 4.27l9 5.15"/><path d="M3.29 7 12 12l8.71-5M12 22V12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../upgrading/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading ctx
   
 
     
@@ -1124,10 +1124,10 @@ holds. More fragile than VERBATIM relay, but less noisy.</p>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└───────────────────────────────────────────────&quot;</span>
 </span></code></pre></div>
 <p><strong>When to use:</strong> The hook detects a fixable condition and knows the fix.
-Goes beyond a nudge — gives the agent a concrete next step. The agent
+Goes beyond a nudge: Gives the agent <strong>a concrete next step</strong>. The agent
 still asks for permission but knows exactly what to propose.</p>
-<p><strong>Trade-off:</strong> The suggestion might be wrong or outdated. The "ask the
-user before proceeding" part is critical.</p>
+<p><strong>Trade-off:</strong> The suggestion might be wrong or outdated. The "<em>ask the
+user before proceeding</em>" part is critical.</p>
 <h3 id="pattern-8-escalating-severity">Pattern 8: Escalating Severity<a class="headerlink" href="#pattern-8-escalating-severity" title="Permanent link">&para;</a></h3>
 <p><strong>Different urgency tiers with different relay expectations.</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># INFO: agent processes silently, mentions if relevant</span>
@@ -1164,17 +1164,17 @@ tiers. Without a shared protocol, the prefixes are just text.</p>
 </span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  └─ Yes → Silent side-effect
 </span></code></pre></div>
 <h2 id="design-tips">Design Tips<a class="headerlink" href="#design-tips" title="Permanent link">&para;</a></h2>
-<p><strong>Throttle aggressively.</strong> VERBATIM relays that fire every prompt will be
+<p><strong>Throttle aggressively</strong>. VERBATIM relays that fire every prompt will be
 ignored or resented. Use once-per-day markers (<code>touch $REMINDED</code>), adaptive
 frequency (every Nth prompt), or staleness checks (only fire if condition
 persists).</p>
-<p><strong>Include actionable commands.</strong> "You have 12 unexported sessions" is less
+<p><strong>Include actionable commands</strong>. "You have 12 unexported sessions" is less
 useful than "You have 12 unexported sessions. Run: <code>ctx recall export --all</code>."
 Give the user (or agent) the exact next step.</p>
 <p><strong>Use box-drawing for visual structure.</strong> The <code>┌─ ─┐ │ └─ ─┘</code> pattern
 makes hook output visually distinct from agent prose. It also signals
 "this is machine-generated, not agent opinion."</p>
-<p><strong>Test the silence path.</strong> Most hook runs should produce no output (<em>the
+<p><strong>Test the silence path</strong>. Most hook runs should produce no output (<em>the
 condition isn't met</em>). Make sure the common case is fast and silent.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

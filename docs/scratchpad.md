@@ -30,9 +30,9 @@ Scratchpad entries are encrypted with `AES-256-GCM` before touching the disk.
 
 The key is generated automatically during `ctx init` (256-bit via
 `crypto/rand`). The ciphertext format is `[12-byte nonce][ciphertext+tag]`.
-No external dependencies — Go stdlib only.
+No external dependencies: Go stdlib only.
 
-Because the key is gitignored and the data is committed, you get:
+Because the key is `.gitignore`d and the data is committed, you get:
 
 * **At-rest encryption**: the `.enc` file is opaque without the key
 * **Git sync**: push/pull the encrypted file like any other tracked file
@@ -109,9 +109,9 @@ where it was generated. `ctx` **never** transmits it.
 
 To share the scratchpad across machines:
 
-1. Copy the key manually: `scp`, USB drive, password manager
-2. Push/pull the `.enc` file via git as usual
-3. Both machines can now read and write the same scratchpad
+1. Copy the key manually: `scp`, USB drive, password manager.
+2. Push/pull the `.enc` file via git as usual.
+3. Both machines can now read and write the same scratchpad.
 
 !!! warning "Never Commit the Key"
     The key is `.gitignore`d by default. If you override this, anyone with
@@ -132,39 +132,44 @@ scratchpad_encrypt: false
 
 In plaintext mode:
 
-* Entries are stored in `.context/scratchpad.md` instead of `.enc`
-* No key is generated or required
-* All `ctx pad` commands work identically
-* The file is human-readable and diffable
+* Entries are stored in `.context/scratchpad.md` instead of `.enc`.
+* No key is generated or required.
+* All `ctx pad` commands work identically.
+* The file is human-readable and diffable.
 
-!!! tip "When to Use Plaintext"
+!!! tip "When Should You Use Plaintext"
     Plaintext mode is useful for non-sensitive projects, solo work where
     encryption adds friction, or when you want scratchpad entries visible
     in `git diff`.
 
-## When to Use Scratchpad vs Context Files
+## When Should You Use Scratchpad versus Context Files
 
-| Use case                                         | Where it goes    |
-|--------------------------------------------------|------------------|
-| Temporary reminders ("*check X after deploy*")   | Scratchpad       |
-| Working values during debugging                  | Scratchpad       |
-| Sensitive tokens or API keys (short-term)        | Scratchpad       |
-| Quick notes that don't fit anywhere else         | Scratchpad       |
-| Work items with completion tracking              | `TASKS.md`       |
-| Trade-offs with rationale                        | `DECISIONS.md`   |
-| Reusable lessons with context/lesson/application | `LEARNINGS.md`   |
-| Codified patterns and standards                  | `CONVENTIONS.md` |
+| Use case                                            | Where it goes    |
+|-----------------------------------------------------|------------------|
+| Temporary reminders ("*check X after deploy*")      | Scratchpad       |
+| Working values during debugging                     | Scratchpad       |
+| Sensitive tokens or API keys (short-term)           | Scratchpad       |
+| Quick notes that don't fit anywhere else            | Scratchpad       |
+| Items that are not directly relevant to the project | Scratchpad       |
+| Things that you want to keep near, but also hidden  | Scratchpad       |
+| Work items with completion tracking                 | `TASKS.md`       |
+| Trade-offs with rationale                           | `DECISIONS.md`   |
+| Reusable lessons with context/lesson/application    | `LEARNINGS.md`   |
+| Codified patterns and standards                     | `CONVENTIONS.md` |
 
-**Rule of thumb**: if it needs structure or will be referenced months later,
-use a context file. If it's working memory for the current session or week,
-use the scratchpad.
+**Rule of thumb**: 
+
+* If it needs structure or will be referenced months later, use
+  a **context file** (*i.e. `DECISIONS.md`, `LEARNINGS.md`, `TASKS.md`*). 
+* If it is **working memory** for the **current** session or week, use 
+  **the scratchpad**.
 
 ## See Also
 
 * [Syncing Scratchpad Notes Across Machines](recipes/scratchpad-sync.md):
-  key distribution, push/pull workflow, merge conflict resolution
+  Key distribution, push/pull workflow, merge conflict resolution
 * [Using the Scratchpad with Claude](recipes/scratchpad-with-claude.md):
-  natural language examples, when to use scratchpad vs context files
-* [Context Files](context-files.md): format and conventions for all
+  Natural language examples, when to use scratchpad vs context files
+* [Context Files](context-files.md): Format and conventions for all
   `.context/` files
-* [Security](security.md): trust model and permission hygiene
+* [Security](security.md): Trust model and permission hygiene
