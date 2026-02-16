@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-15 | Add TL;DR admonitions to recipes longer than ~200 lines |
 | 2026-02-15 | Hook output patterns are a reference catalog, not an implementation backlog |
 | 2026-02-15 | Pair judgment recipes with mechanical recipes |
 | 2026-02-14 | Place Adopting ctx at nav position 3 |
@@ -30,6 +31,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-15-194828] Add TL;DR admonitions to recipes longer than ~200 lines
+
+**Status**: Accepted
+
+**Context**: Recipes bury the actionable pipeline at the bottom in Putting It All Together sections. Users must scroll past 300+ lines of explanation.
+
+**Decision**: Add TL;DR admonitions to recipes longer than ~200 lines
+
+**Rationale**: A tip admonition after the intro surfaces the quick-start commands immediately. Users who want depth still read the full page.
+
+**Consequences**: 10 recipes now have TL;DRs. New recipes over ~200 lines should follow the pattern. Short recipes (permission-snapshots, scratchpad-with-claude) skip it.
+
+---
 
 ## [2026-02-15-170006] Hook output patterns are a reference catalog, not an implementation backlog
 

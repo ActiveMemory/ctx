@@ -7,9 +7,10 @@ icon: lucide/folder-symlink
 
 ## The Problem
 
-Context files contain project-specific decisions, learnings, conventions, and
-tasks. By default, they live in `.context/` inside the project tree, and that
-works well when the context can be public.
+`ctx` files contain project-specific **decisions**, **learnings**, 
+**conventions**, and **tasks**. By default, they live in 
+`.context/` inside the project tree, and that works well when the context
+can be public.
 
 But sometimes you need the context *outside* the project:
 
@@ -21,7 +22,7 @@ But sometimes you need the context *outside* the project:
 * **Personal preference**: You want a single context repo that covers
   multiple projects, or you just prefer keeping notes separate from code.
 
-ctx supports this through three configuration methods. This recipe shows how
+`ctx` supports this through three configuration methods. This recipe shows how
 to set them up and how to tell your AI assistant where to find the context.
 
 !!! tip "TL;DR"
@@ -80,9 +81,12 @@ This creates the full `.context/`-style file set inside
 
 !!! warning "Boundary Validation"
     `ctx` validates that the `.context` directory is within the current working
-    directory. If your external directory is truly outside the project root,
-    every `ctx` command needs `--allow-outside-cwd` — or persist the setting
-    in `.contextrc` (*next step*).
+    directory. 
+
+    If your external directory is truly outside the project root:
+
+    * Either every `ctx` command needs `--allow-outside-cwd`, 
+    * or you can persist the setting in `.contextrc` (*next step*).
 
 ### Step 3: Make It Stick
 

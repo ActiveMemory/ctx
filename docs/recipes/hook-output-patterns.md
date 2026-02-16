@@ -204,11 +204,11 @@ echo "└───────────────────────�
 ```
 
 **When to use:** The hook detects a fixable condition and knows the fix.
-Goes beyond a nudge — gives the agent a concrete next step. The agent
+Goes beyond a nudge: Gives the agent **a concrete next step**. The agent
 still asks for permission but knows exactly what to propose.
 
-**Trade-off:** The suggestion might be wrong or outdated. The "ask the
-user before proceeding" part is critical.
+**Trade-off:** The suggestion might be wrong or outdated. The "*ask the
+user before proceeding*" part is critical.
 
 ### Pattern 8: Escalating Severity
 
@@ -257,12 +257,12 @@ Is this housekeeping?
 
 ## Design Tips
 
-**Throttle aggressively.** VERBATIM relays that fire every prompt will be
+**Throttle aggressively**. VERBATIM relays that fire every prompt will be
 ignored or resented. Use once-per-day markers (`touch $REMINDED`), adaptive
 frequency (every Nth prompt), or staleness checks (only fire if condition
 persists).
 
-**Include actionable commands.** "You have 12 unexported sessions" is less
+**Include actionable commands**. "You have 12 unexported sessions" is less
 useful than "You have 12 unexported sessions. Run: `ctx recall export --all`."
 Give the user (or agent) the exact next step.
 
@@ -270,7 +270,7 @@ Give the user (or agent) the exact next step.
 makes hook output visually distinct from agent prose. It also signals
 "this is machine-generated, not agent opinion."
 
-**Test the silence path.** Most hook runs should produce no output (*the
+**Test the silence path**. Most hook runs should produce no output (*the
 condition isn't met*). Make sure the common case is fast and silent.
 
 ## See Also
