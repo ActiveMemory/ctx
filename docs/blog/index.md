@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [ctx v0.6.0: The Integration Release](2026-02-16-ctx-v0.6.0-the-integration-release.md)
+
+*Jose Alekhinne / February 16, 2026*
+
+ctx is now a Claude Marketplace plugin. Two commands, no build step,
+no shell scripts. v0.6.0 replaces six Bash hook scripts with compiled
+Go subcommands, ships 25 skills as a plugin served directly from
+source, and closes three medium-severity security findings. The version
+jumped from 0.3.0 to 0.6.0 because this is the release that turns a
+developer tool into a distributable product.
+
+**Topics**: release, plugin system, Claude Marketplace, distribution,
+security hardening
+
+---
+
 ### [ctx v0.3.0: The Discipline Release](2026-02-15-ctx-v0.3.0-the-discipline-release.md)
 
 *Jose Alekhinne / February 15, 2026*

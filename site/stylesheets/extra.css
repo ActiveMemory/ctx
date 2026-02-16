@@ -5,7 +5,11 @@
     font-weight: 600;
   }
 
-
+  .md-typeset hr {
+    border-bottom: .05rem solid #0B11FF;
+    display: flow-root;
+    margin: 1.5em 0;
+  }
 
 }
 
@@ -26,5 +30,11 @@
 
   .md-typeset a {
     color: #f2c77a;
+  }
+
+  .md-typeset hr {
+    border-bottom: .05rem solid #E9A221;
+    display: flow-root;
+    margin: 1.5em 0;
   }
 }

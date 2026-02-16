@@ -34,3 +34,14 @@ func extractFrontmatter(content string) string {
 	}
 	return content[:len(fmOpen)+end+len(fmClose)]
 }
+
+// stripFrontmatter removes the YAML frontmatter block from content,
+// returning the remaining content. If no frontmatter is found, the
+// original content is returned unchanged.
+func stripFrontmatter(content string) string {
+	fm := extractFrontmatter(content)
+	if fm == "" {
+		return content
+	}
+	return strings.TrimLeft(content[len(fm):], config.NewlineLF)
+}

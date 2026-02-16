@@ -7,7 +7,16 @@
         <loc>https://ctx.ist/blog/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/about/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/getting-started/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/first-session/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/common-workflows/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/context-files/</loc>

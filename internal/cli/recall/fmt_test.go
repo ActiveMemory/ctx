@@ -364,19 +364,36 @@ func TestFormatJournalEntryPart_SinglePart(t *testing.T) {
 
 	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "2026-01-15-test-slug-abc12345")
 
+	// Verify YAML frontmatter
+	if !strings.Contains(got, "---\ndate: \"2026-01-15\"") {
+		t.Error("missing YAML frontmatter with date")
+	}
+	if !strings.Contains(got, "time: \"10:30:00\"") {
+		t.Error("missing time in frontmatter")
+	}
+	if !strings.Contains(got, "project: myproject") {
+		t.Error("missing project in frontmatter")
+	}
 	// Verify slug in heading
 	if !strings.Contains(got, "# test-slug") {
 		t.Error("missing slug in heading")
 	}
-	// Verify metadata fields
-	for _, field := range []string{"**ID**:", "**Date**:", "**Time**:", "**Duration**:", "**Tool**:", "**Project**:"} {
-		if !strings.Contains(got, field) {
-			t.Errorf("missing metadata field %q", field)
-		}
+	// Verify collapsible metadata table
+	if !strings.Contains(got, "<details>") {
+		t.Error("missing details block")
 	}
-	// Verify token stats
+	if !strings.Contains(got, "<td><strong>ID</strong></td>") {
+		t.Error("missing ID in metadata table")
+	}
+	if !strings.Contains(got, "<td><strong>Date</strong></td>") {
+		t.Error("missing Date in metadata table")
+	}
+	// Verify token stats in metadata table
 	if !strings.Contains(got, "15.0K") {
 		t.Error("missing total tokens")
+	}
+	if !strings.Contains(got, "<td><strong>Tokens</strong></td>") {
+		t.Error("missing Tokens in metadata table")
 	}
 	// Verify conversation content
 	if !strings.Contains(got, "Hello") {
@@ -417,8 +434,11 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 
 	// Part 1 of 3: has metadata + nav
 	part1 := formatJournalEntryPart(s, s.Messages[:2], 0, 1, 3, baseName)
-	if !strings.Contains(part1, "**ID**:") {
-		t.Error("part 1 should have metadata")
+	if !strings.Contains(part1, "<details>") {
+		t.Error("part 1 should have details metadata")
+	}
+	if !strings.Contains(part1, "<td><strong>ID</strong></td>") {
+		t.Error("part 1 should have ID in metadata table")
 	}
 	if !strings.Contains(part1, "**Part 1 of 3**") {
 		t.Error("part 1 should have part indicator")
@@ -429,8 +449,8 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 
 	// Part 2 of 3: no metadata, has nav
 	part2 := formatJournalEntryPart(s, s.Messages[2:], 2, 2, 3, baseName)
-	if strings.Contains(part2, "**ID**:") {
-		t.Error("part 2 should NOT have metadata")
+	if strings.Contains(part2, "<details>") {
+		t.Error("part 2 should NOT have HTML details metadata")
 	}
 	if !strings.Contains(part2, "**Part 2 of 3**") {
 		t.Error("part 2 should have part indicator")
@@ -513,11 +533,14 @@ func TestFormatJournalEntryPart_WithToolUse(t *testing.T) {
 	if !strings.Contains(got, "Error") {
 		t.Error("missing error marker for IsError result")
 	}
-	// Verify collapsible details for long output
+	// Verify collapsible details for long output uses <pre> (not code fences)
 	if !strings.Contains(got, "<details>") {
 		t.Error("long output (>10 lines) should use <details>")
 	}
 	if !strings.Contains(got, "</details>") {
 		t.Error("long output should have closing </details>")
+	}
+	if !strings.Contains(got, "<pre>") {
+		t.Error("collapsed output should use <pre> tag, not code fences")
 	}
 }

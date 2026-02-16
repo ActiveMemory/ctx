@@ -71,4 +71,16 @@ const (
 	// TplRecallPartFilename formats a multi-part filename.
 	// Args: baseName, part.
 	TplRecallPartFilename = "%s-p%d.md"
+
+	// TplMetaDetailsOpen opens a collapsible details block with an HTML table.
+	// Markdown tables don't render inside <details> in Zensical, so we use HTML.
+	// Args: summary text.
+	TplMetaDetailsOpen = "<details>\n<summary>%s</summary>\n<table>"
+
+	// TplMetaDetailsClose closes a collapsible details block with HTML table.
+	TplMetaDetailsClose = "</table>\n</details>"
+
+	// TplMetaRow formats a single row in an HTML metadata table.
+	// Args: label, value.
+	TplMetaRow = "<tr><td><strong>%s</strong></td><td>%s</td></tr>"
 )

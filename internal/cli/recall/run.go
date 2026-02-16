@@ -140,14 +140,16 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 			// Generate content for this part
 			content := formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName)
 
-			// If file exists and not --force, preserve YAML frontmatter
-			if fileExists && !force {
+			// Preserve enriched YAML frontmatter from existing file
+			if fileExists {
 				existing, readErr := os.ReadFile(filepath.Clean(path))
 				if readErr == nil {
 					if fm := extractFrontmatter(string(existing)); fm != "" {
-						content = fm + "\n" + content
+						content = fm + "\n" + stripFrontmatter(content)
 					}
 				}
+			}
+			if fileExists && !force {
 				updated++
 			} else {
 				exported++

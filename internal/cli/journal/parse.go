@@ -97,6 +97,12 @@ func parseJournalEntry(path, filename string) journalEntry {
 				if fm.Title != "" {
 					entry.Title = fm.Title
 				}
+				if fm.Time != "" {
+					entry.Time = fm.Time
+				}
+				if fm.Project != "" {
+					entry.Project = fm.Project
+				}
 				entry.Topics = fm.Topics
 				entry.Type = fm.Type
 				entry.Outcome = fm.Outcome

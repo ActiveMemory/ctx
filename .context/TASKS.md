@@ -94,6 +94,8 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
 - [x] ~~Add drift check: verify .claude/hooks/*.sh files have execute permission~~ Moot: hooks are now Go subcommands (v0.6.0 plugin conversion) #priority:medium #added:2026-02-15-194829 #done:2026-02-16
 
+- [ ] Rename journal slugs to title-based filenames #priority:medium #added:2026-02-16-141643
+
 - [ ] Blog: "Building a Claude Code Marketplace Plugin" — narrative from session history, journals, and git diff of feat/plugin-conversion branch. Covers: motivation (shell hooks to Go subcommands), plugin directory layout, marketplace.json, eliminating make plugin, bugs found during dogfooding (hooks creating partial .context/), and the fix. Use /ctx-blog-changelog with branch diff as source material. #added:2026-02-16-111948
 
 - [x] ctx init should distinguish partial .context/ (only logs) from fully initialized. Check for essential files (TASKS.md, CONSTITUTION.md) instead of just directory existence. #added:2026-02-16-110811 #done:2026-02-16

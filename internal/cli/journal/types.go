@@ -18,6 +18,8 @@ type groupedIndex struct {
 type journalFrontmatter struct {
 	Title    string   `yaml:"title"`
 	Date     string   `yaml:"date"`
+	Time     string   `yaml:"time,omitempty"`
+	Project  string   `yaml:"project,omitempty"`
 	Type     string   `yaml:"type"`
 	Outcome  string   `yaml:"outcome"`
 	Topics   []string `yaml:"topics"`

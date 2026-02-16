@@ -9,6 +9,7 @@ package recall
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -91,56 +92,72 @@ func formatJournalEntryPart(
 	nl := config.NewlineLF
 	sep := config.Separator
 
-	// Header
-	if s.Slug != "" {
-		sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, s.Slug))
-	} else {
-		sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, baseName))
-	}
-
-	// Navigation header for multipart sessions
-	if totalParts > 1 {
-		sb.WriteString(formatPartNavigation(part, totalParts, baseName))
-		sb.WriteString(nl + sep + nl + nl)
-	}
-
-	// Metadata (use local time) - only on part 1
+	// Metadata (YAML frontmatter + HTML details) - only on part 1
 	if part == 1 {
 		localStart := s.StartTime.Local()
-		sb.WriteString(fmt.Sprintf(config.MetadataID+" %s"+nl, s.ID))
-		sb.WriteString(fmt.Sprintf(
-			config.MetadataDate+" %s"+nl, localStart.Format("2006-01-02")),
-		)
-		sb.WriteString(fmt.Sprintf(
-			config.MetadataTime+" %s"+nl, localStart.Format("15:04:05")),
-		)
-		sb.WriteString(fmt.Sprintf(
-			config.MetadataDuration+" %s"+nl, formatDuration(s.Duration)),
-		)
-		sb.WriteString(fmt.Sprintf(config.MetadataTool+" %s"+nl, s.Tool))
-		sb.WriteString(fmt.Sprintf(config.MetadataProject+" %s"+nl, s.Project))
+		dateStr := localStart.Format("2006-01-02")
+		timeStr := localStart.Format("15:04:05")
+		durationStr := formatDuration(s.Duration)
+
+		// Basic YAML frontmatter
+		sb.WriteString(sep + nl)
+		sb.WriteString(fmt.Sprintf("date: %q"+nl, dateStr))
+		sb.WriteString(fmt.Sprintf("time: %q"+nl, timeStr))
+		sb.WriteString(fmt.Sprintf("project: %s"+nl, s.Project))
 		if s.GitBranch != "" {
-			sb.WriteString(fmt.Sprintf(config.MetadataBranch+" %s"+nl, s.GitBranch))
+			sb.WriteString(fmt.Sprintf("branch: %s"+nl, s.GitBranch))
 		}
 		if s.Model != "" {
-			sb.WriteString(fmt.Sprintf(config.MetadataModel+" %s"+nl, s.Model))
+			sb.WriteString(fmt.Sprintf("model: %s"+nl, s.Model))
 		}
-		sb.WriteString(nl)
+		sb.WriteString(sep + nl + nl)
 
-		// Token stats
-		sb.WriteString(fmt.Sprintf(config.MetadataTurns+" %d"+nl, s.TurnCount))
-		sb.WriteString(fmt.Sprintf(config.TplRecallTokens+nl,
+		// Header
+		if s.Slug != "" {
+			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, s.Slug))
+		} else {
+			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, baseName))
+		}
+
+		// Navigation header for multipart sessions
+		if totalParts > 1 {
+			sb.WriteString(formatPartNavigation(part, totalParts, baseName))
+			sb.WriteString(nl + sep + nl + nl)
+		}
+
+		// Session metadata as collapsible HTML table
+		// (Markdown tables don't render inside <details> in Zensical)
+		summaryText := fmt.Sprintf("%s · %s · %s", dateStr, durationStr, s.Model)
+		sb.WriteString(fmt.Sprintf(config.TplMetaDetailsOpen, summaryText))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "ID", s.ID))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Date", dateStr))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Time", timeStr))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Duration", durationStr))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Tool", s.Tool))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Project", s.Project))
+		if s.GitBranch != "" {
+			sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Branch", s.GitBranch))
+		}
+		if s.Model != "" {
+			sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Model", s.Model))
+		}
+		sb.WriteString(config.TplMetaDetailsClose + nl + nl)
+
+		// Token stats as collapsible HTML table
+		turnStr := fmt.Sprintf("%d", s.TurnCount)
+		sb.WriteString(fmt.Sprintf(config.TplMetaDetailsOpen, turnStr))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Turns", turnStr))
+		tokenSummary := fmt.Sprintf("%s (in: %s, out: %s)",
 			formatTokens(s.TotalTokens),
 			formatTokens(s.TotalTokensIn),
-			formatTokens(s.TotalTokensOut)))
+			formatTokens(s.TotalTokensOut))
+		sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Tokens", tokenSummary))
 		if totalParts > 1 {
-			sb.WriteString(fmt.Sprintf(config.MetadataParts+" %d"+nl, totalParts))
+			sb.WriteString(fmt.Sprintf(config.TplMetaRow+nl, "Parts",
+				fmt.Sprintf("%d", totalParts)))
 		}
-		sb.WriteString(nl + sep + nl + nl)
+		sb.WriteString(config.TplMetaDetailsClose + nl + nl)
 
-		// Summary section (placeholder for the user to fill in)
-		sb.WriteString(config.RecallHeadingSummary + nl + nl)
-		sb.WriteString(config.TplRecallSummaryPlaceholder + nl + nl)
 		sb.WriteString(sep + nl + nl)
 
 		// Tool usage summary
@@ -156,6 +173,19 @@ func formatJournalEntryPart(
 					config.TplRecallToolCount+nl, name, count),
 				)
 			}
+			sb.WriteString(nl + sep + nl + nl)
+		}
+	} else {
+		// Header (non-part-1)
+		if s.Slug != "" {
+			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, s.Slug))
+		} else {
+			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, baseName))
+		}
+
+		// Navigation header for multipart sessions
+		if totalParts > 1 {
+			sb.WriteString(formatPartNavigation(part, totalParts, baseName))
 			sb.WriteString(nl + sep + nl + nl)
 		}
 	}
@@ -211,9 +241,7 @@ func formatJournalEntryPart(
 				if lines > config.RecallDetailsThreshold {
 					summary := fmt.Sprintf(config.TplRecallDetailsSummary, lines)
 					sb.WriteString(fmt.Sprintf(config.TplRecallDetailsOpen+nl+nl, summary))
-					sb.WriteString(fmt.Sprintf(
-						config.TplRecallFencedBlock+nl, fence, content, fence),
-					)
+					sb.WriteString("<pre>" + nl + html.EscapeString(content) + nl + "</pre>" + nl)
 					sb.WriteString(config.TplRecallDetailsClose + nl)
 				} else {
 					sb.WriteString(fmt.Sprintf(
