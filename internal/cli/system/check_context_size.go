@@ -36,6 +36,9 @@ func checkContextSizeCmd() *cobra.Command {
 }
 
 func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
+	if !isInitialized() {
+		return nil
+	}
 	input := readInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {

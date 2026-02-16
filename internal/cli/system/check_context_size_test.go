@@ -13,6 +13,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -35,6 +36,7 @@ func TestCheckContextSize_SilentEarly(t *testing.T) {
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(t.TempDir())
 	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
 
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, `{"session_id":"test-silent"}`)
@@ -56,6 +58,7 @@ func TestCheckContextSize_CheckpointAt18(t *testing.T) {
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
 
 	// Pre-set counter to 17 so next increment = 18 (18 > 15, 18 is not divisible by 5)
 	// Need count 20 for first trigger (20 > 15, 20 % 5 == 0)
@@ -86,6 +89,7 @@ func TestCheckContextSize_CheckpointAt33(t *testing.T) {
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
 
 	// Pre-set counter to 32 so next = 33 (33 > 30, 33 % 3 == 0)
 	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-33")
@@ -112,6 +116,7 @@ func TestCheckContextSize_EmptyStdin(t *testing.T) {
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
 
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, "")
@@ -119,6 +124,21 @@ func TestCheckContextSize_EmptyStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	// Should not panic or error with empty input
+}
+
+// setupContextDir creates a minimal .context/ with essential files so that
+// isInitialized() returns true. Must be called after chdir to the work dir.
+func setupContextDir(t *testing.T) {
+	t.Helper()
+	dir := ".context"
+	if err := os.MkdirAll(dir, 0o750); err != nil {
+		t.Fatal(err)
+	}
+	for _, f := range config.FilesRequired {
+		if err := os.WriteFile(filepath.Join(dir, f), []byte("# "+f+"\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
 }
 
 // createTempStdin writes content to a temp file and returns it opened for reading.

@@ -23,9 +23,7 @@ func TestCheckPersistence_Init(t *testing.T) {
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create .context/ with a file
-	_ = os.MkdirAll(".context", 0o750)
-	_ = os.WriteFile(".context/TASKS.md", []byte("# Tasks"), 0o600)
+	setupContextDir(t)
 
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, `{"session_id":"persist-init"}`)
@@ -55,8 +53,7 @@ func TestCheckPersistence_MtimeReset(t *testing.T) {
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	_ = os.MkdirAll(".context", 0o750)
-	_ = os.WriteFile(".context/TASKS.md", []byte("# Tasks"), 0o600)
+	setupContextDir(t)
 
 	// Create state file with old mtime to simulate context modification
 	stateFile := filepath.Join(tmpDir, "ctx", "persistence-nudge-persist-mtime")
@@ -89,9 +86,7 @@ func TestCheckPersistence_NudgeAt20(t *testing.T) {
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	_ = os.MkdirAll(".context", 0o750)
-	// Set mtime far in the future so it won't appear as "modified"
-	_ = os.WriteFile(".context/TASKS.md", []byte("# Tasks"), 0o600)
+	setupContextDir(t)
 	futureMtime := time.Now().Unix() + 3600
 
 	stateFile := filepath.Join(tmpDir, "ctx", "persistence-nudge-persist-20")
@@ -123,8 +118,7 @@ func TestCheckPersistence_Every15AfterPrompt25(t *testing.T) {
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	_ = os.MkdirAll(".context", 0o750)
-	_ = os.WriteFile(".context/TASKS.md", []byte("# Tasks"), 0o600)
+	setupContextDir(t)
 	futureMtime := time.Now().Unix() + 3600
 
 	stateFile := filepath.Join(tmpDir, "ctx", "persistence-nudge-persist-40")

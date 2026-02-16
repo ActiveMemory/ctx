@@ -56,17 +56,22 @@ func readPersistenceState(path string) (persistenceState, bool) {
 		if len(parts) != 2 {
 			continue
 		}
-		val, err := strconv.ParseInt(parts[1], 10, 64)
-		if err != nil {
-			continue
-		}
 		switch parts[0] {
 		case "count":
-			state.Count = int(val)
+			n, err := strconv.Atoi(parts[1])
+			if err == nil {
+				state.Count = n
+			}
 		case "last_nudge":
-			state.LastNudge = int(val)
+			n, err := strconv.Atoi(parts[1])
+			if err == nil {
+				state.LastNudge = n
+			}
 		case "last_mtime":
-			state.LastMtime = val
+			n, err := strconv.ParseInt(parts[1], 10, 64)
+			if err == nil {
+				state.LastMtime = n
+			}
 		}
 	}
 	return state, true
@@ -103,6 +108,9 @@ func getLatestContextMtime(contextDir string) int64 {
 }
 
 func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
+	if !isInitialized() {
+		return nil
+	}
 	input := readInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {

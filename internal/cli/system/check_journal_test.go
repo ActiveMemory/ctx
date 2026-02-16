@@ -43,6 +43,7 @@ func TestCheckJournal_DailyThrottle(t *testing.T) {
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
+	setupContextDir(t)
 	// Create journal dir and projects dir
 	_ = os.MkdirAll(".context/journal", 0o750)
 	fakeProjectsDir := filepath.Join(tmpDir, "claude-projects")
@@ -75,6 +76,7 @@ func TestCheckJournal_Unenriched(t *testing.T) {
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
+	setupContextDir(t)
 	// Create journal dir with unenriched entry
 	_ = os.MkdirAll(".context/journal", 0o750)
 	_ = os.WriteFile(".context/journal/2026-01-01-test.md",
@@ -107,6 +109,7 @@ func TestCheckJournal_BothStages(t *testing.T) {
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
+	setupContextDir(t)
 	// Create old journal entry (unenriched) with old mtime
 	_ = os.MkdirAll(".context/journal", 0o750)
 	_ = os.WriteFile(".context/journal/2025-01-01-test.md",

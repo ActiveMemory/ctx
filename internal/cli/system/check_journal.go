@@ -31,6 +31,9 @@ func checkJournalCmd() *cobra.Command {
 }
 
 func runCheckJournal(cmd *cobra.Command) error {
+	if !isInitialized() {
+		return nil
+	}
 	tmpDir := secureTempDir()
 	remindedFile := filepath.Join(tmpDir, "journal-reminded")
 	journalDir := ".context/journal"
