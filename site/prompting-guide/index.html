@@ -325,6 +325,35 @@
   
   
     <li class="md-nav__item">
+      <a href="../upgrading/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../context-files/" class="md-nav__link">
         
   
@@ -1788,7 +1817,7 @@
 <p>This guide documents prompts that reliably produce good results.</p>
 <hr />
 <h2 id="session-start">Session Start<a class="headerlink" href="#session-start" title="Permanent link">&para;</a></h2>
-<h3 id="do-you-remember">"Do you remember?"<a class="headerlink" href="#do-you-remember" title="Permanent link">&para;</a></h3>
+<h3 id="do-you-remember">"<em>Do you remember?</em>"<a class="headerlink" href="#do-you-remember" title="Permanent link">&para;</a></h3>
 <p>Triggers the AI to silently read <code>TASKS.md</code>, <code>DECISIONS.md</code>,
 <code>LEARNINGS.md</code>, and check recent history via <code>ctx recall</code> before
 responding with a <strong>structured readback</strong>:</p>
@@ -1807,41 +1836,42 @@ context (session names, task counts, decisions), not vague summaries.</p>
 <p>If the AI instead narrates its discovery process ("Let me check if
 there are files..."), it has not loaded <code>CLAUDE.md</code> or
 <code>AGENT_PLAYBOOK.md</code> properly.</p>
-<h3 id="whats-the-current-state">"What's the current state?"<a class="headerlink" href="#whats-the-current-state" title="Permanent link">&para;</a></h3>
+<h3 id="whats-the-current-state">"<em>What's the current state?</em>"<a class="headerlink" href="#whats-the-current-state" title="Permanent link">&para;</a></h3>
 <p>Prompts reading of <code>TASKS.md</code>, recent sessions, and status overview.</p>
 <p>Use this when resuming work after a break.</p>
 <p><strong>Variants</strong>:</p>
 <ul>
-<li>"Where did we leave off?"</li>
-<li>"What's in progress?"</li>
-<li>"Show me the open tasks"</li>
+<li>"<em>Where did we leave off?</em>"</li>
+<li>"<em>What's in progress?</em>"</li>
+<li>"<em>Show me the open tasks.</em>"</li>
 </ul>
 <hr />
 <h2 id="during-work">During Work<a class="headerlink" href="#during-work" title="Permanent link">&para;</a></h2>
-<h3 id="why-doesnt-x-work">"Why doesn't X work?"<a class="headerlink" href="#why-doesnt-x-work" title="Permanent link">&para;</a></h3>
+<h3 id="why-doesnt-x-work">"<em>Why doesn't X work?</em>"<a class="headerlink" href="#why-doesnt-x-work" title="Permanent link">&para;</a></h3>
 <p>This triggers <strong>root cause analysis</strong> rather than surface-level fixes.</p>
 <p>Use this when something fails unexpectedly.</p>
 <p>Framing as "<em>why</em>" encourages investigation before action. The AI will trace 
 through code, check configurations, and identify the actual cause.</p>
 <div class="admonition example">
 <p class="admonition-title">Real Example</p>
-<p>"Why can't I run /ctx-reflect?" led to discovering missing permissions
-in settings.local.json bootstrapping—a fix that benefited all users.</p>
+<p>"<em>Why can't I run /ctx-reflect?</em>" led to discovering missing permissions
+in <code>settings.local.json</code> bootstrapping.</p>
+<p>This was a fix that benefited all users of <code>ctx</code>.</p>
 </div>
-<h3 id="is-this-consistent-with-our-decisions">"Is this consistent with our decisions?"<a class="headerlink" href="#is-this-consistent-with-our-decisions" title="Permanent link">&para;</a></h3>
+<h3 id="is-this-consistent-with-our-decisions">"<em>Is this consistent with our decisions?</em>"<a class="headerlink" href="#is-this-consistent-with-our-decisions" title="Permanent link">&para;</a></h3>
 <p>This prompts checking <code>DECISIONS.md</code> before implementing.</p>
 <p>Use this before making architectural choices.</p>
 <p><strong>Variants</strong>:</p>
 <ul>
-<li>"Check if we've decided on this before"</li>
-<li>"Does this align with our conventions?"</li>
+<li>"<em>Check if we've decided on this before</em>"</li>
+<li>"<em>Does this align with our conventions?</em>"</li>
 </ul>
-<h3 id="what-would-break-if-we">"What would break if we..."<a class="headerlink" href="#what-would-break-if-we" title="Permanent link">&para;</a></h3>
+<h3 id="what-would-break-if-we">"<em>What would break if we...</em>"<a class="headerlink" href="#what-would-break-if-we" title="Permanent link">&para;</a></h3>
 <p>This triggers <strong>defensive thinking</strong> and <strong>impact analysis</strong>.</p>
 <p>Use this before making significant changes.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>What would break if we change the Settings struct?
 </span></code></pre></div>
-<h3 id="before-you-start-read-x">"Before you start, read X"<a class="headerlink" href="#before-you-start-read-x" title="Permanent link">&para;</a></h3>
+<h3 id="before-you-start-read-x">"<em>Before you start, read X</em>"<a class="headerlink" href="#before-you-start-read-x" title="Permanent link">&para;</a></h3>
 <p>This ensures specific context is loaded before work begins.</p>
 <p>Use this when you know the relevant context exists in a specific file.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Before you start, check ctx recall for the auth discussion session
@@ -1866,17 +1896,17 @@ a wrong approach.</p>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Undo that last change and try a different approach.
 </span></code></pre></div>
-<p>These work because they <strong>interrupt momentum</strong>. Without explicit
-course correction, the AI tends to commit harder to a wrong path
-rather than reconsidering.</p>
+<p>These work because they <strong>interrupt momentum</strong>. </p>
+<p>Without explicit course correction, the AI tends to commit harder to a wrong 
+path rather than reconsidering.</p>
 <h2 id="reflection-and-persistence">Reflection and Persistence<a class="headerlink" href="#reflection-and-persistence" title="Permanent link">&para;</a></h2>
-<h3 id="what-did-we-learn">"What did we learn?"<a class="headerlink" href="#what-did-we-learn" title="Permanent link">&para;</a></h3>
+<h3 id="what-did-we-learn">"<em>What did we learn?</em>"<a class="headerlink" href="#what-did-we-learn" title="Permanent link">&para;</a></h3>
 <p>This prompts <strong>reflection</strong> on the session and often triggers adding
 learnings to <code>LEARNINGS.md</code>.</p>
 <p>Use this after completing a task or debugging session.</p>
 <p>This is an <strong>explicit reflection prompt</strong>. The AI will summarize insights
 and often offer to persist them.</p>
-<h3 id="add-this-as-a-learningdecision">"Add this as a learning/decision"<a class="headerlink" href="#add-this-as-a-learningdecision" title="Permanent link">&para;</a></h3>
+<h3 id="add-this-as-a-learningdecision">"<em>Add this as a learning/decision</em>"<a class="headerlink" href="#add-this-as-a-learningdecision" title="Permanent link">&para;</a></h3>
 <p>This is an <strong>explicit persistence request</strong>.</p>
 <p>Use this when you have discovered something worth remembering.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Add this as a learning: &quot;JSON marshal escapes angle brackets by default&quot;
@@ -1885,13 +1915,13 @@ and often offer to persist them.</p>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Add this as a learning.
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a># and let the AI autonomously infer and summarize.
 </span></code></pre></div>
-<h3 id="save-context-before-we-end">"Save context before we end"<a class="headerlink" href="#save-context-before-we-end" title="Permanent link">&para;</a></h3>
+<h3 id="save-context-before-we-end">"<em>Save context before we end</em>"<a class="headerlink" href="#save-context-before-we-end" title="Permanent link">&para;</a></h3>
 <p>This triggers <strong>context persistence</strong> before the session closes.</p>
 <p>Use it at the end of the session or before switching topics.</p>
 <p><strong>Variants</strong>:</p>
 <ul>
-<li>"Let's persist what we did"</li>
-<li>"Update the context files"</li>
+<li>"<em>Let's persist what we did</em>"</li>
+<li>"<em>Update the context files</em>"</li>
 <li><code>/ctx-reflect</code> (<em>Agent Skill in Claude Code</em>)</li>
 </ul>
 <hr />
@@ -1901,27 +1931,27 @@ and often offer to persist them.</p>
 <p>Use this when you need to understand how something works.</p>
 <p>This works because "<strong>Explore</strong>" signals that <strong>investigation is needed</strong>, 
 not immediate action.</p>
-<h3 id="how-does-x-work-in-this-codebase">"How does X work in this codebase?"<a class="headerlink" href="#how-does-x-work-in-this-codebase" title="Permanent link">&para;</a></h3>
+<h3 id="how-does-x-work-in-this-codebase">"<em>How does X work in this codebase?</em>"<a class="headerlink" href="#how-does-x-work-in-this-codebase" title="Permanent link">&para;</a></h3>
 <p>This prompts reading actual code rather than explaining general concepts.</p>
 <p>Use this to understand the existing implementation.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>How does session saving work in this codebase?
 </span></code></pre></div>
-<h3 id="find-all-places-where-x">"Find all places where X"<a class="headerlink" href="#find-all-places-where-x" title="Permanent link">&para;</a></h3>
+<h3 id="find-all-places-where-x">"<em>Find all places where X</em>"<a class="headerlink" href="#find-all-places-where-x" title="Permanent link">&para;</a></h3>
 <p>This triggers a <strong>comprehensive search</strong> across the codebase.</p>
 <p>Use this before refactoring or understanding the impact.</p>
 <hr />
 <h2 id="meta-and-process">Meta and Process<a class="headerlink" href="#meta-and-process" title="Permanent link">&para;</a></h2>
-<h3 id="what-should-we-document-from-this">"What should we document from this?"<a class="headerlink" href="#what-should-we-document-from-this" title="Permanent link">&para;</a></h3>
+<h3 id="what-should-we-document-from-this">"<em>What should we document from this?</em>"<a class="headerlink" href="#what-should-we-document-from-this" title="Permanent link">&para;</a></h3>
 <p>This prompts identifying learnings, decisions, and conventions
 worth persisting.</p>
 <p>Use this after complex discussions or implementations.</p>
-<h3 id="is-this-the-right-approach">"Is this the right approach?"<a class="headerlink" href="#is-this-the-right-approach" title="Permanent link">&para;</a></h3>
+<h3 id="is-this-the-right-approach">"<em>Is this the right approach?</em>"<a class="headerlink" href="#is-this-the-right-approach" title="Permanent link">&para;</a></h3>
 <p>This invites the AI to challenge the current direction.</p>
 <p>Use this when you want a sanity check.</p>
-<p>This works because it allows AI to disagree. 
-AIs often default to agreeing; this prompt signals you want an 
+<p>This works because it allows AI to disagree. </p>
+<p>AIs often default to agreeing; this prompt signals you want an 
 <strong>honest assessment</strong>.</p>
-<h3 id="what-am-i-missing">"What am I missing?"<a class="headerlink" href="#what-am-i-missing" title="Permanent link">&para;</a></h3>
+<h3 id="what-am-i-missing">"<em>What am I missing?</em>"<a class="headerlink" href="#what-am-i-missing" title="Permanent link">&para;</a></h3>
 <p>This prompts thinking about edge cases, overlooked requirements,
 or unconsidered approaches.</p>
 <p>Use this before finalizing a design or implementation.</p>
@@ -1962,14 +1992,6 @@ load context or trigger specific behaviors:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>/ctx-reflect</code></td>
-<td>Structured reflection checkpoint</td>
-</tr>
-<tr>
-<td><code>/ctx-recall</code></td>
-<td>Browse session history for past discussions</td>
-</tr>
-<tr>
 <td><code>/ctx-status</code></td>
 <td>Quick context summary</td>
 </tr>
@@ -1978,26 +2000,50 @@ load context or trigger specific behaviors:</p>
 <td>Load full context packet</td>
 </tr>
 <tr>
-<td><code>/consolidate</code></td>
-<td>Detect and fix code-level drift</td>
+<td><code>/ctx-remember</code></td>
+<td>Recall project context and structured readback</td>
 </tr>
 <tr>
-<td><code>/update-docs</code></td>
-<td>Sync docs and conventions after code changes</td>
+<td><code>/ctx-recall</code></td>
+<td>Browse session history for past discussions</td>
 </tr>
 <tr>
-<td><code>/verify</code></td>
-<td>Verify before claiming work is complete</td>
+<td><code>/ctx-reflect</code></td>
+<td>Structured reflection checkpoint</td>
 </tr>
 <tr>
-<td><code>/qa</code></td>
-<td>Run QA checks before committing</td>
+<td><code>/ctx-next</code></td>
+<td>Suggest what to work on next</td>
+</tr>
+<tr>
+<td><code>/ctx-commit</code></td>
+<td>Commit with context persistence</td>
+</tr>
+<tr>
+<td><code>/ctx-drift</code></td>
+<td>Detect and fix context drift</td>
+</tr>
+<tr>
+<td><code>/ctx-implement</code></td>
+<td>Execute a plan step-by-step with verification</td>
+</tr>
+<tr>
+<td><code>/ctx-loop</code></td>
+<td>Generate autonomous loop script</td>
+</tr>
+<tr>
+<td><code>/ctx-pad</code></td>
+<td>Manage encrypted scratchpad</td>
+</tr>
+<tr>
+<td><code>/ctx-archive</code></td>
+<td>Archive completed tasks</td>
 </tr>
 </tbody>
 </table>
 <p>Skills combine a prompt, tool permissions, and domain knowledge
-into a single invocation. See <a href="../integrations/">Integrations</a> for
-setup details.</p>
+into a single invocation. </p>
+<p>See <a href="../integrations/">Integrations</a> for setup details.</p>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <p>Based on our <code>ctx</code> development experience (<em>i.e., "sipping our own champagne"</em>)
@@ -2012,44 +2058,44 @@ so far, here are some prompts that tend to produce poor results:</p>
 </thead>
 <tbody>
 <tr>
-<td>"Fix this"</td>
+<td>"<em>Fix this</em>"</td>
 <td>Too vague, may patch symptoms</td>
-<td>"Why is this failing?"</td>
+<td>"<em>Why is this failing?</em>"</td>
 </tr>
 <tr>
-<td>"Make it work"</td>
+<td>"<em>Make it work</em>"</td>
 <td>Encourages quick hacks</td>
-<td>"What's the right way to solve this?"</td>
+<td>"<em>What's the right way to solve this?</em>"</td>
 </tr>
 <tr>
-<td>"Just do it"</td>
+<td>"<em>Just do it</em>"</td>
 <td>Skips planning</td>
-<td>"Plan this, then implement"</td>
+<td>"<em>Plan this, then implement</em>"</td>
 </tr>
 <tr>
-<td>"You should remember"</td>
+<td>"<em>You should remember</em>"</td>
 <td>Confrontational</td>
-<td>"Do you remember?"</td>
+<td>"<em>Do you remember?</em>"</td>
 </tr>
 <tr>
-<td>"Obviously..."</td>
+<td>"<em>Obviously...</em>"</td>
 <td>Discourages questions</td>
 <td>State the requirement directly</td>
 </tr>
 <tr>
-<td>"Idiomatic X"</td>
+<td>"<em>Idiomatic X</em>"</td>
 <td>Triggers language priors</td>
-<td>"Follow project conventions"</td>
+<td>"<em>Follow project conventions</em>"</td>
 </tr>
 <tr>
-<td>"Implement everything"</td>
+<td>"<em>Implement everything</em>"</td>
 <td>No phasing, sprawl risk</td>
 <td>Break into tasks, implement one at a time</td>
 </tr>
 <tr>
-<td>"You should know this"</td>
+<td>"<em>You should know this</em>"</td>
 <td>Assumes context is loaded</td>
-<td>"Before you start, read X"</td>
+<td>"<em>Before you start, read X</em>"</td>
 </tr>
 </tbody>
 </table>
@@ -2065,59 +2111,63 @@ so far, here are some prompts that tend to produce poor results:</p>
 <tbody>
 <tr>
 <td>Load context</td>
-<td>"Do you remember?"</td>
+<td>"<em>Do you remember?</em>"</td>
 </tr>
 <tr>
 <td>Resume work</td>
-<td>"What's the current state?"</td>
+<td>"<em>What's the current state?</em>"</td>
+</tr>
+<tr>
+<td>What's next</td>
+<td><code>/ctx-next</code></td>
 </tr>
 <tr>
 <td>Debug</td>
-<td>"Why doesn't X work?"</td>
+<td>"<em>Why doesn't X work?</em>"</td>
 </tr>
 <tr>
 <td>Validate</td>
-<td>"Is this consistent with our decisions?"</td>
+<td>"<em>Is this consistent with our decisions?</em>"</td>
 </tr>
 <tr>
 <td>Impact analysis</td>
-<td>"What would break if we..."</td>
+<td>"<em>What would break if we...</em>"</td>
 </tr>
 <tr>
 <td>Reflect</td>
-<td>"What did we learn?"</td>
+<td><code>/ctx-reflect</code></td>
 </tr>
 <tr>
 <td>Persist</td>
-<td>"Add this as a learning"</td>
+<td>"<em>Add this as a learning</em>"</td>
 </tr>
 <tr>
 <td>Explore</td>
-<td>"How does X work in this codebase?"</td>
+<td>"<em>How does X work in this codebase?</em>"</td>
 </tr>
 <tr>
 <td>Sanity check</td>
-<td>"Is this the right approach?"</td>
+<td>"<em>Is this the right approach?</em>"</td>
 </tr>
 <tr>
 <td>Completeness</td>
-<td>"What am I missing?"</td>
+<td>"*What am I missing?"</td>
 </tr>
 <tr>
 <td>Constrain scope</td>
-<td>"Only change files in X. Nothing else."</td>
+<td>"<em>Only change files in X. Nothing else.</em>"</td>
 </tr>
 <tr>
 <td>Course correct</td>
-<td>"Stop. That's not what I meant."</td>
+<td>"<em>Stop. That's not what I meant.</em>"</td>
 </tr>
 <tr>
 <td>Check health</td>
-<td>"Run <code>ctx drift</code>"</td>
+<td>"<em>Run <code>ctx drift</code></em>"</td>
 </tr>
 <tr>
-<td>Save context</td>
-<td><code>/ctx-reflect</code></td>
+<td>Commit</td>
+<td><code>/ctx-commit</code></td>
 </tr>
 </tbody>
 </table>
@@ -2130,9 +2180,9 @@ so far, here are some prompts that tend to produce poor results:</p>
 <p>This prevents the AI from jumping straight to code. The three phases
 map to different modes of thinking:</p>
 <ul>
-<li><strong>Explore</strong>: read, search, understand — no changes</li>
-<li><strong>Plan</strong>: propose approach, trade-offs, scope — no changes</li>
-<li><strong>Implement</strong>: write code, run tests, verify — changes</li>
+<li><strong>Explore</strong>: read, search, understand: no changes</li>
+<li><strong>Plan</strong>: propose approach, trade-offs, scope: no changes</li>
+<li><strong>Implement</strong>: write code, run tests, verify: changes</li>
 </ul>
 <p>Small fixes skip straight to implement. Complex or uncertain work
 benefits from all three.</p>
@@ -2161,13 +2211,13 @@ benefits from all three.</p>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Confirm the flag exists in the code and the example works.
 </span></code></pre></div>
 <p>Notice each prompt includes <strong>what to verify and how</strong>. Without that,
-you get "should work now" instead of evidence.</p>
+you get a "<em>should work now</em>" instead of evidence.</p>
 <hr />
 <h2 id="writing-tasks-as-prompts">Writing Tasks as Prompts<a class="headerlink" href="#writing-tasks-as-prompts" title="Permanent link">&para;</a></h2>
 <p>Tasks in <code>TASKS.md</code> are <strong>indirect prompts</strong> to the AI. How you write them
 shapes how the AI approaches the work.</p>
 <h3 id="state-the-deliverable-not-just-steps">State the Deliverable, Not Just Steps<a class="headerlink" href="#state-the-deliverable-not-just-steps" title="Permanent link">&para;</a></h3>
-<p>Bad task (implementation-focused):
+<p>Bad task (<em>implementation-focused</em>):
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">- [ ]</span> T1.1.0: Parser system
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="k">- [ ]</span> Implement line parser
@@ -2175,7 +2225,7 @@ shapes how the AI approaches the work.</p>
 </span></code></pre></div></p>
 <p>The AI may complete all subtasks but miss the actual goal. What does
 "Parser system" deliver to the user?</p>
-<p>Good task (deliverable-focused):
+<p>Good task (<strong>deliverable-focused</strong>):
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">- [ ]</span> T1.1.0: Parser CLI command
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  <span class="gs">**Deliverable**</span>: <span class="sb">`ctx recall list`</span> command that shows parsed sessions
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="k">- [ ]</span> Define data structures
@@ -2191,18 +2241,20 @@ shapes how the AI approaches the work.</p>
 </span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="k">- [ ]</span> User can log in and get a token
 </span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="k">- [ ]</span> Protected routes reject unauthenticated requests
 </span></code></pre></div>
-<p>This prevents premature "task complete" when only the implementation
-details are done but the feature doesn't actually work.</p>
+<p>This prevents premature "<em>task complete</em>" when only the implementation
+details are done, but the feature doesn't actually work.</p>
 <h3 id="subtasks-parent-task">Subtasks ≠ Parent Task<a class="headerlink" href="#subtasks-parent-task" title="Permanent link">&para;</a></h3>
 <p>Completing all subtasks does <strong>not</strong> mean the parent task is complete.</p>
-<p>The parent task describes <strong>what</strong> the user gets.
-Subtasks describe <strong>how</strong> to build it.</p>
+<p>The parent task describes <strong>what</strong> the user gets.</p>
+<p>Subtasks describe <strong>how</strong> to build it.</p>
 <p>Always re-read the parent task description before marking it complete.
 Verify the stated deliverable exists and works.</p>
 <hr />
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../blog/2026-02-03-the-attention-budget/">The Attention Budget</a> — Why your AI forgets what you just told it, and how token budgets shape context strategy</li>
+<li><a href="../blog/2026-02-03-the-attention-budget/">The Attention Budget</a>: 
+  Why your AI forgets what you just told it, and how token budgets shape 
+  context strategy</li>
 </ul>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
 <p>Found a prompt that works well?

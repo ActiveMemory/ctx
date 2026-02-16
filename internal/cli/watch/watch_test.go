@@ -412,7 +412,7 @@ func TestRunWatch_WithLogFile(t *testing.T) {
 More output
 `
 	logPath := filepath.Join(tmpDir, "test.log")
-	if err := os.WriteFile(logPath, []byte(logContent), 0644); err != nil {
+	if err := os.WriteFile(logPath, []byte(logContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -464,7 +464,7 @@ func TestRunWatch_DryRun(t *testing.T) {
 	logContent := `<context-update type="task">Dry run task</context-update>
 `
 	logPath := filepath.Join(tmpDir, "dry.log")
-	if err := os.WriteFile(logPath, []byte(logContent), 0644); err != nil {
+	if err := os.WriteFile(logPath, []byte(logContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -551,7 +551,7 @@ func TestProcessStream_DryRunMode(t *testing.T) {
 	logContent := `<context-update type="task">Dry run stream task</context-update>
 `
 	logPath := filepath.Join(tmpDir, "drystream.log")
-	if err := os.WriteFile(logPath, []byte(logContent), 0644); err != nil {
+	if err := os.WriteFile(logPath, []byte(logContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -815,7 +815,7 @@ func TestProcessStream_CompleteUpdate(t *testing.T) {
 	// Write a task to complete
 	tasksPath := filepath.Join(rc.ContextDir(), config.FileTask)
 	tasksContent := "# Tasks\n\n- [ ] Implement login\n- [ ] Write tests\n"
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 

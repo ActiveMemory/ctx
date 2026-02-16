@@ -107,18 +107,18 @@ The site is generated in `.context/journal-site/` by default.
 
 Open [http://localhost:8000](http://localhost:8000) after running `--serve`.
 
-- Use the sidebar to navigate by date
-- Use search (`/` key) to find specific content
-- Click any session to see the full conversation
+* Use the sidebar to navigate by date
+* Use search (`/` key) to find specific content
+* Click any session to see the full conversation
 
 ## Editing Sessions
 
 Exported sessions are plain Markdown in `.context/journal/`. You can:
 
-- **Add summaries** - Fill in the `## Summary` section
-- **Add notes** - Insert your own commentary anywhere
-- **Highlight key moments** - Use Markdown formatting
-- **Delete noise** - Remove irrelevant tool outputs
+* **Add summaries**: Fill in the `## Summary` section
+* **Add notes**: Insert your own commentary anywhere
+* **Highlight key moments**: Use Markdown formatting
+* **Delete noise**: Remove irrelevant tool outputs
 
 After editing, regenerate the site:
 
@@ -126,14 +126,14 @@ After editing, regenerate the site:
 ctx journal site --serve
 ```
 
-!!! info "Re-exporting preserves your enrichments"
-
+!!! info "Re-Exporting Preserves Your Enrichments"
     Running `ctx recall export --all` **updates existing files** by default:
-    YAML frontmatter (topics, type, outcome, etc.) is preserved, and only
+
+    YAML frontmatter (*topics, type, outcome, etc.*) is preserved, and only
     the conversation content is regenerated.
 
     Use `--skip-existing` to leave existing files completely untouched, or
-    `--force` to overwrite everything (frontmatter will be lost).
+    `--force` to overwrite everything (*frontmatter will be lost*).
 
 ## Large Sessions
 
@@ -508,13 +508,18 @@ The journal site uses [zensical](https://pypi.org/project/zensical/) for static 
 pipx install zensical
 ```
 
-> **macOS note:** `pip install zensical` may install a non-functional stub on
-> system Python 3.9. Use `pipx install zensical` instead, which creates an
-> isolated environment and handles Python version management automatically.
+!!! warn "Use pipx for zensical"
+    `pip install zensical` may install a non-functional stub on
+    system Python 3.9. 
+
+    Use `pipx install zensical` instead, which creates an
+    isolated environment and handles Python version management automatically.
+
+    This issue especially happens on *Mac OSX*.
 
 ## See Also
 
-* [ctx recall](../cli-reference.md#ctx-recall): Session discovery and listing
-* [ctx journal site](../cli-reference.md#ctx-journal-site): Static site generation
-* [ctx journal obsidian](../cli-reference.md#ctx-journal-obsidian): Obsidian vault export
+* [`ctx recall`](../cli-reference.md#ctx-recall): Session discovery and listing
+* [`ctx journal site`](../cli-reference.md#ctx-journal-site): Static site generation
+* [`ctx journal obsidian`](../cli-reference.md#ctx-journal-obsidian): Obsidian vault export
 * [Context Files](../context-files.md): The `.context/` directory structure

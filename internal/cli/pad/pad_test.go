@@ -875,7 +875,7 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 	}
 
 	path := scratchpadPath()
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -954,7 +954,8 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	oursPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".ours")
-	if err := os.WriteFile(oursPath, oursCipher, 0600); err != nil {
+	err = os.WriteFile(oursPath, oursCipher, 0600)
+	if err != nil {
 		t.Fatal(err)
 	}
 
@@ -965,7 +966,8 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	theirsPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".theirs")
-	if err := os.WriteFile(theirsPath, theirsCipher, 0600); err != nil {
+	err = os.WriteFile(theirsPath, theirsCipher, 0600)
+	if err != nil {
 		t.Fatal(err)
 	}
 
@@ -1002,7 +1004,8 @@ func TestResolve_OnlyOursFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	oursPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".ours")
-	if err := os.WriteFile(oursPath, oursCipher, 0600); err != nil {
+	err = os.WriteFile(oursPath, oursCipher, 0600)
+	if err != nil {
 		t.Fatal(err)
 	}
 
@@ -1127,7 +1130,8 @@ func TestDecryptFile_ValidData(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(path, ciphertext, 0600); err != nil {
+	err = os.WriteFile(path, ciphertext, 0600)
+	if err != nil {
 		t.Fatal(err)
 	}
 

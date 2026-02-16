@@ -325,6 +325,35 @@
   
   
     <li class="md-nav__item">
+      <a href="../upgrading/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../context-files/" class="md-nav__link">
         
   
@@ -681,6 +710,17 @@
   
     <nav class="md-nav" aria-label="Maintenance">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hook-output-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Output Patterns
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#claude-code-permission-hygiene" class="md-nav__link">
@@ -1158,6 +1198,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#hook-output-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Output Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#claude-code-permission-hygiene" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1387,6 +1438,12 @@ storage out.</p>
 <p><strong>Uses</strong>: <code>ctx pad</code>, <code>/ctx-pad</code>, <code>ctx pad show</code>, <code>ctx pad edit</code></p>
 <hr />
 <h2 id="maintenance">Maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h2>
+<h3 id="hook-output-patterns"><a href="hook-output-patterns/">Hook Output Patterns</a><a class="headerlink" href="#hook-output-patterns" title="Permanent link">&para;</a></h3>
+<p>Choose the right output pattern for your Claude Code hooks: VERBATIM
+relay for user-facing reminders, hard gates for invariants, agent
+directives for nudges, and five more patterns across the spectrum.</p>
+<p><strong>Uses</strong>: <code>.claude/hooks/</code>, <code>settings.local.json</code></p>
+<hr />
 <h3 id="claude-code-permission-hygiene"><a href="claude-code-permissions/">Claude Code Permission Hygiene</a><a class="headerlink" href="#claude-code-permission-hygiene" title="Permanent link">&para;</a></h3>
 <p>Keep <code>.claude/settings.local.json</code> clean: recommended safe defaults,
 what to never pre-approve, and a maintenance workflow for cleaning

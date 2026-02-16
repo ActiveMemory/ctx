@@ -363,7 +363,7 @@ func TestRunDrift_NoContext(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
 	if err := os.Chdir(tmpDir); err != nil {
@@ -395,7 +395,7 @@ func TestRunDrift_WithFix(t *testing.T) {
 	// Write TASKS.md with completed tasks to trigger staleness fix
 	tasksPath := filepath.Join(tmpDir, config.DirContext, config.FileTask)
 	tasksContent := "# Tasks\n\n## In Progress\n\n- [ ] Do something\n\n## Completed\n\n- [x] Done thing 1\n- [x] Done thing 2\n- [x] Done thing 3\n- [x] Done thing 4\n- [x] Done thing 5\n- [x] Done thing 6\n"
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
 	}
 
@@ -416,7 +416,7 @@ func TestRunDrift_JSONWithViolations(t *testing.T) {
 	// Create a file that looks like it has secrets to trigger a violation
 	constPath := filepath.Join(tmpDir, config.DirContext, "CONSTITUTION.md")
 	constContent := "# Constitution\n\n- NEVER commit secrets\n"
-	if err := os.WriteFile(constPath, []byte(constContent), 0644); err != nil {
+	if err := os.WriteFile(constPath, []byte(constContent), 0600); err != nil {
 		t.Fatalf("failed to write CONSTITUTION.md: %v", err)
 	}
 
@@ -489,7 +489,7 @@ func TestApplyFixes_MissingFile(t *testing.T) {
 
 	// Remove a required file to simulate missing_file issue
 	constPath := filepath.Join(tmpDir, config.DirContext, "CONSTITUTION.md")
-	os.Remove(constPath)
+	_ = os.Remove(constPath)
 
 	report := &drift.Report{
 		Warnings: []drift.Issue{
@@ -564,7 +564,7 @@ func TestApplyFixes_Staleness_NoCompletedTasks(t *testing.T) {
 	// Write TASKS.md with no completed tasks
 	tasksPath := filepath.Join(tmpDir, config.DirContext, config.FileTask)
 	tasksContent := "# Tasks\n\n## In Progress\n\n- [ ] Do something\n\n## Completed\n\n"
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
 	}
 
@@ -594,7 +594,7 @@ func TestApplyFixes_Staleness_Success(t *testing.T) {
 	// Write TASKS.md with completed tasks
 	tasksPath := filepath.Join(tmpDir, config.DirContext, config.FileTask)
 	tasksContent := "# Tasks\n\n## In Progress\n\n- [ ] Do something\n\n## Completed\n\n- [x] Done thing 1\n- [x] Done thing 2\n"
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
 	}
 
@@ -622,7 +622,7 @@ func TestApplyFixes_Staleness_Success(t *testing.T) {
 	}
 
 	// Verify TASKS.md no longer has completed tasks
-	content, err := os.ReadFile(tasksPath)
+	content, err := os.ReadFile(tasksPath) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatalf("failed to read TASKS.md: %v", err)
 	}
@@ -639,7 +639,7 @@ func TestFixMissingFile_Success(t *testing.T) {
 
 	// Remove CONSTITUTION.md
 	constPath := filepath.Join(rc.ContextDir(), "CONSTITUTION.md")
-	os.Remove(constPath)
+	_ = os.Remove(constPath)
 
 	err := fixMissingFile("CONSTITUTION.md")
 	if err != nil {
@@ -687,7 +687,7 @@ func TestFixStaleness_NoCompletedTasks(t *testing.T) {
 
 	tasksPath := filepath.Join(tmpDir, config.DirContext, config.FileTask)
 	tasksContent := "# Tasks\n\n## In Progress\n\n- [ ] Do something\n"
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
 	}
 
@@ -719,7 +719,7 @@ func TestRunDrift_FixWithStaleness(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		sb.WriteString(fmt.Sprintf("- [x] Completed task %d\n", i))
 	}
-	if err := os.WriteFile(tasksPath, []byte(sb.String()), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(sb.String()), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
 	}
 
@@ -742,7 +742,7 @@ func TestFixStaleness_CompletedSectionWithNextSection(t *testing.T) {
 	// TASKS.md has a Completed section followed by another ## heading
 	tasksPath := filepath.Join(tmpDir, config.DirContext, config.FileTask)
 	tasksContent := "# Tasks\n\n## In Progress\n\n- [ ] Active\n\n## Completed\n\n- [x] Done thing\n\n## Archive\n\nSome archived content\n"
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
 	}
 
@@ -763,7 +763,7 @@ func TestFixStaleness_CompletedSectionWithNextSection(t *testing.T) {
 	}
 
 	// Verify Archive section is preserved
-	content, err := os.ReadFile(tasksPath)
+	content, err := os.ReadFile(tasksPath) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatalf("failed to read TASKS.md: %v", err)
 	}
@@ -778,7 +778,7 @@ func TestRunDrift_FixTriggersRecheck(t *testing.T) {
 
 	// Remove a required file so fixMissingFile gets called and succeeds
 	constPath := filepath.Join(tmpDir, config.DirContext, "CONSTITUTION.md")
-	os.Remove(constPath)
+	_ = os.Remove(constPath)
 
 	// Use runDrift directly with a cobra command that captures output
 	cmd := Cmd()
@@ -807,7 +807,7 @@ func TestRunDrift_GenericError(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	origDir, _ := os.Getwd()
 	if err := os.Chdir(tmpDir); err != nil {
@@ -820,7 +820,7 @@ func TestRunDrift_GenericError(t *testing.T) {
 
 	// Create .context as a file, not a directory. context.Load should
 	// return a NotFoundError in this case.
-	if err := os.WriteFile(filepath.Join(tmpDir, config.DirContext), []byte("not a dir"), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(tmpDir, config.DirContext), []byte("not a dir"), 0600); err != nil {
 		t.Fatalf("failed to create fake .context: %v", err)
 	}
 

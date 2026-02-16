@@ -343,8 +343,8 @@ Just a plain session without enrichment.
 	assertFileExists(t, filepath.Join(outputDir, config.ObsidianDirEntries, "2026-02-13-fix-cache-def67890.md"))
 
 	// Verify .obsidian/app.json content
-	appConfig, readErr := os.ReadFile(filepath.Join(
-		outputDir, config.ObsidianConfigDir, config.ObsidianAppConfigFile)) //nolint:gosec // test file path
+	appConfig, readErr := os.ReadFile(filepath.Join( //nolint:gosec // test file path
+		outputDir, config.ObsidianConfigDir, config.ObsidianAppConfigFile))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -363,8 +363,8 @@ Just a plain session without enrichment.
 	}
 
 	// Verify entry has transformed frontmatter (topics → tags)
-	entry1Out, readErr := os.ReadFile(filepath.Join(
-		outputDir, config.ObsidianDirEntries, "2026-02-14-add-caching-abc12345.md")) //nolint:gosec // test file path
+	entry1Out, readErr := os.ReadFile(filepath.Join( //nolint:gosec // test file path
+		outputDir, config.ObsidianDirEntries, "2026-02-14-add-caching-abc12345.md"))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -386,7 +386,7 @@ Just a plain session without enrichment.
 
 	// Verify topic MOC was created (caching has 2 entries = popular)
 	assertFileExists(t, filepath.Join(outputDir, config.ObsidianTopicsMOC))
-	topicsMOC, readErr := os.ReadFile(filepath.Join(outputDir, config.ObsidianTopicsMOC))
+	topicsMOC, readErr := os.ReadFile(filepath.Join(outputDir, config.ObsidianTopicsMOC)) //nolint:gosec // test file path
 	if readErr != nil {
 		t.Fatal(readErr)
 	}

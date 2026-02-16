@@ -24,6 +24,17 @@ const (
 	DirJournalSite = "journal-site"
 )
 
+// GitignoreEntries lists the recommended .gitignore entries added by ctx init.
+var GitignoreEntries = []string{
+	".context/sessions/",
+	".context/journal/",
+	".context/journal-site/",
+	".context/journal-obsidian/",
+	".context/logs/",
+	".context/.scratchpad.key",
+	".claude/settings.local.json",
+}
+
 // Journal site output directories.
 const (
 	// JournalDirDocs is the docs subdirectory in the generated site.

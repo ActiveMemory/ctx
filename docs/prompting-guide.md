@@ -26,7 +26,7 @@ This guide documents prompts that reliably produce good results.
 
 ## Session Start
 
-### "Do you remember?"
+### "*Do you remember?*"
 
 Triggers the AI to silently read `TASKS.md`, `DECISIONS.md`,
 `LEARNINGS.md`, and check recent history via `ctx recall` before
@@ -51,7 +51,7 @@ If the AI instead narrates its discovery process ("Let me check if
 there are files..."), it has not loaded `CLAUDE.md` or
 `AGENT_PLAYBOOK.md` properly.
 
-### "What's the current state?"
+### "*What's the current state?*"
 
 Prompts reading of `TASKS.md`, recent sessions, and status overview.
 
@@ -59,15 +59,15 @@ Use this when resuming work after a break.
 
 **Variants**:
 
-* "Where did we leave off?"
-* "What's in progress?"
-* "Show me the open tasks"
+* "*Where did we leave off?*"
+* "*What's in progress?*"
+* "*Show me the open tasks.*"
 
 ---
 
 ## During Work
 
-### "Why doesn't X work?"
+### "*Why doesn't X work?*"
 
 This triggers **root cause analysis** rather than surface-level fixes.
 
@@ -77,10 +77,12 @@ Framing as "*why*" encourages investigation before action. The AI will trace
 through code, check configurations, and identify the actual cause.
 
 !!! example "Real Example"
-    "Why can't I run /ctx-reflect?" led to discovering missing permissions
-    in settings.local.json bootstrapping—a fix that benefited all users.
+    "*Why can't I run /ctx-reflect?*" led to discovering missing permissions
+    in `settings.local.json` bootstrapping.
 
-### "Is this consistent with our decisions?"
+    This was a fix that benefited all users of `ctx`.
+
+### "*Is this consistent with our decisions?*"
 
 This prompts checking `DECISIONS.md` before implementing.
 
@@ -88,10 +90,10 @@ Use this before making architectural choices.
 
 **Variants**:
 
-* "Check if we've decided on this before"
-* "Does this align with our conventions?"
+* "*Check if we've decided on this before*"
+* "*Does this align with our conventions?*"
 
-### "What would break if we..."
+### "*What would break if we...*"
 
 This triggers **defensive thinking** and **impact analysis**.
 
@@ -101,7 +103,7 @@ Use this before making significant changes.
 What would break if we change the Settings struct?
 ```
 
-### "Before you start, read X"
+### "*Before you start, read X*"
 
 This ensures specific context is loaded before work begins.
 
@@ -148,13 +150,14 @@ Let's step back. Explain what you're about to do before changing anything.
 Undo that last change and try a different approach.
 ```
 
-These work because they **interrupt momentum**. Without explicit
-course correction, the AI tends to commit harder to a wrong path
-rather than reconsidering.
+These work because they **interrupt momentum**. 
+
+Without explicit course correction, the AI tends to commit harder to a wrong 
+path rather than reconsidering.
 
 ## Reflection and Persistence
 
-### "What did we learn?"
+### "*What did we learn?*"
 
 This prompts **reflection** on the session and often triggers adding
 learnings to `LEARNINGS.md`.
@@ -164,7 +167,7 @@ Use this after completing a task or debugging session.
 This is an **explicit reflection prompt**. The AI will summarize insights
 and often offer to persist them.
 
-### "Add this as a learning/decision"
+### "*Add this as a learning/decision*"
 
 This is an **explicit persistence request**.
 
@@ -178,7 +181,7 @@ Add this as a learning.
 # and let the AI autonomously infer and summarize.
 ```
 
-### "Save context before we end"
+### "*Save context before we end*"
 
 This triggers **context persistence** before the session closes.
 
@@ -186,9 +189,9 @@ Use it at the end of the session or before switching topics.
 
 **Variants**:
 
-- "Let's persist what we did"
-- "Update the context files"
-- `/ctx-reflect` (*Agent Skill in Claude Code*)
+* "*Let's persist what we did*"
+* "*Update the context files*"
+* `/ctx-reflect` (*Agent Skill in Claude Code*)
 
 ---
 
@@ -203,7 +206,7 @@ Use this when you need to understand how something works.
 This works because "**Explore**" signals that **investigation is needed**, 
 not immediate action.
 
-### "How does X work in this codebase?"
+### "*How does X work in this codebase?*"
 
 This prompts reading actual code rather than explaining general concepts.
 
@@ -213,7 +216,7 @@ Use this to understand the existing implementation.
 How does session saving work in this codebase?
 ```
 
-### "Find all places where X"
+### "*Find all places where X*"
 
 This triggers a **comprehensive search** across the codebase.
 
@@ -223,24 +226,25 @@ Use this before refactoring or understanding the impact.
 
 ## Meta and Process
 
-### "What should we document from this?"
+### "*What should we document from this?*"
 
 This prompts identifying learnings, decisions, and conventions
 worth persisting.
 
 Use this after complex discussions or implementations.
 
-### "Is this the right approach?"
+### "*Is this the right approach?*"
 
 This invites the AI to challenge the current direction.
 
 Use this when you want a sanity check.
 
 This works because it allows AI to disagree. 
+
 AIs often default to agreeing; this prompt signals you want an 
 **honest assessment**.
 
-### "What am I missing?"
+### "*What am I missing?*"
 
 This prompts thinking about edge cases, overlooked requirements,
 or unconsidered approaches.
@@ -264,20 +268,25 @@ load context or trigger specific behaviors:
 
 Skills are formalized prompts. Use them by name:
 
-| Skill            | When to use                                    |
-|------------------|------------------------------------------------|
-| `/ctx-reflect`   | Structured reflection checkpoint               |
-| `/ctx-recall`    | Browse session history for past discussions    |
-| `/ctx-status`    | Quick context summary                          |
-| `/ctx-agent`     | Load full context packet                       |
-| `/consolidate`   | Detect and fix code-level drift                |
-| `/update-docs`   | Sync docs and conventions after code changes   |
-| `/verify`        | Verify before claiming work is complete        |
-| `/qa`            | Run QA checks before committing                |
+| Skill                   | When to use                                    |
+|-------------------------|------------------------------------------------|
+| `/ctx-status`           | Quick context summary                          |
+| `/ctx-agent`            | Load full context packet                       |
+| `/ctx-remember`         | Recall project context and structured readback |
+| `/ctx-recall`           | Browse session history for past discussions    |
+| `/ctx-reflect`          | Structured reflection checkpoint               |
+| `/ctx-next`             | Suggest what to work on next                   |
+| `/ctx-commit`           | Commit with context persistence                |
+| `/ctx-drift`            | Detect and fix context drift                   |
+| `/ctx-implement`        | Execute a plan step-by-step with verification  |
+| `/ctx-loop`             | Generate autonomous loop script                |
+| `/ctx-pad`              | Manage encrypted scratchpad                    |
+| `/ctx-archive`          | Archive completed tasks                        |
 
 Skills combine a prompt, tool permissions, and domain knowledge
-into a single invocation. See [Integrations](integrations.md) for
-setup details.
+into a single invocation. 
+
+See [Integrations](integrations.md) for setup details.
 
 ---
 
@@ -286,37 +295,38 @@ setup details.
 Based on our `ctx` development experience (*i.e., "sipping our own champagne"*)
 so far, here are some prompts that tend to produce poor results:
 
-| Prompt                 | Problem                       | Better Alternative                        |
-|------------------------|-------------------------------|-------------------------------------------|
-| "Fix this"             | Too vague, may patch symptoms | "Why is this failing?"                    |
-| "Make it work"         | Encourages quick hacks        | "What's the right way to solve this?"     |
-| "Just do it"           | Skips planning                | "Plan this, then implement"               |
-| "You should remember"  | Confrontational               | "Do you remember?"                        |
-| "Obviously..."         | Discourages questions         | State the requirement directly            |
-| "Idiomatic X"          | Triggers language priors      | "Follow project conventions"              |
-| "Implement everything" | No phasing, sprawl risk       | Break into tasks, implement one at a time |
-| "You should know this" | Assumes context is loaded     | "Before you start, read X"                |
+| Prompt                   | Problem                       | Better Alternative                        |
+|--------------------------|-------------------------------|-------------------------------------------|
+| "*Fix this*"             | Too vague, may patch symptoms | "*Why is this failing?*"                  |
+| "*Make it work*"         | Encourages quick hacks        | "*What's the right way to solve this?*"   |
+| "*Just do it*"           | Skips planning                | "*Plan this, then implement*"             |
+| "*You should remember*"  | Confrontational               | "*Do you remember?*"                      |
+| "*Obviously...*"         | Discourages questions         | State the requirement directly            |
+| "*Idiomatic X*"          | Triggers language priors      | "*Follow project conventions*"            |
+| "*Implement everything*" | No phasing, sprawl risk       | Break into tasks, implement one at a time |
+| "*You should know this*" | Assumes context is loaded     | "*Before you start, read X*"              |
 
 ---
 
 ## Quick Reference
 
-| Goal            | Prompt                                   |
-|-----------------|------------------------------------------|
-| Load context    | "Do you remember?"                       |
-| Resume work     | "What's the current state?"              |
-| Debug           | "Why doesn't X work?"                    |
-| Validate        | "Is this consistent with our decisions?" |
-| Impact analysis | "What would break if we..."              |
-| Reflect         | "What did we learn?"                     |
-| Persist         | "Add this as a learning"                 |
-| Explore         | "How does X work in this codebase?"      |
-| Sanity check    | "Is this the right approach?"            |
-| Completeness    | "What am I missing?"                     |
-| Constrain scope | "Only change files in X. Nothing else."  |
-| Course correct  | "Stop. That's not what I meant."         |
-| Check health    | "Run `ctx drift`"                        |
-| Save context    | `/ctx-reflect`                           |
+| Goal            | Prompt                                     |
+|-----------------|--------------------------------------------|
+| Load context    | "*Do you remember?*"                       |
+| Resume work     | "*What's the current state?*"              |
+| What's next     | `/ctx-next`                                |
+| Debug           | "*Why doesn't X work?*"                    |
+| Validate        | "*Is this consistent with our decisions?*" |
+| Impact analysis | "*What would break if we...*"              |
+| Reflect         | `/ctx-reflect`                             |
+| Persist         | "*Add this as a learning*"                 |
+| Explore         | "*How does X work in this codebase?*"      |
+| Sanity check    | "*Is this the right approach?*"            |
+| Completeness    | "*What am I missing?"                      |
+| Constrain scope | "*Only change files in X. Nothing else.*"  |
+| Course correct  | "*Stop. That's not what I meant.*"         |
+| Check health    | "*Run `ctx drift`*"                        |
+| Commit          | `/ctx-commit`                              |
 
 ---
 
@@ -332,9 +342,9 @@ Then propose a plan. After I approve, implement with tests.
 This prevents the AI from jumping straight to code. The three phases
 map to different modes of thinking:
 
-- **Explore**: read, search, understand — no changes
-- **Plan**: propose approach, trade-offs, scope — no changes
-- **Implement**: write code, run tests, verify — changes
+- **Explore**: read, search, understand: no changes
+- **Plan**: propose approach, trade-offs, scope: no changes
+- **Implement**: write code, run tests, verify: changes
 
 Small fixes skip straight to implement. Complex or uncertain work
 benefits from all three.
@@ -375,7 +385,7 @@ Confirm the flag exists in the code and the example works.
 ```
 
 Notice each prompt includes **what to verify and how**. Without that,
-you get "should work now" instead of evidence.
+you get a "*should work now*" instead of evidence.
 
 ---
 
@@ -386,7 +396,7 @@ shapes how the AI approaches the work.
 
 ### State the Deliverable, Not Just Steps
 
-Bad task (implementation-focused):
+Bad task (*implementation-focused*):
 ```markdown
 - [ ] T1.1.0: Parser system
   - [ ] Define data structures
@@ -397,7 +407,7 @@ Bad task (implementation-focused):
 The AI may complete all subtasks but miss the actual goal. What does
 "Parser system" deliver to the user?
 
-Good task (deliverable-focused):
+Good task (**deliverable-focused**):
 ```markdown
 - [ ] T1.1.0: Parser CLI command
   **Deliverable**: `ctx recall list` command that shows parsed sessions
@@ -420,14 +430,15 @@ For complex tasks, add explicit "done when" criteria:
   - [ ] Protected routes reject unauthenticated requests
 ```
 
-This prevents premature "task complete" when only the implementation
-details are done but the feature doesn't actually work.
+This prevents premature "*task complete*" when only the implementation
+details are done, but the feature doesn't actually work.
 
 ### Subtasks ≠ Parent Task
 
 Completing all subtasks does **not** mean the parent task is complete.
 
 The parent task describes **what** the user gets.
+
 Subtasks describe **how** to build it.
 
 Always re-read the parent task description before marking it complete.
@@ -437,7 +448,9 @@ Verify the stated deliverable exists and works.
 
 ## Further Reading
 
-- [The Attention Budget](blog/2026-02-03-the-attention-budget.md) — Why your AI forgets what you just told it, and how token budgets shape context strategy
+- [The Attention Budget](blog/2026-02-03-the-attention-budget.md): 
+  Why your AI forgets what you just told it, and how token budgets shape 
+  context strategy
 
 ## Contributing
 

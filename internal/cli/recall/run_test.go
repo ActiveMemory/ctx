@@ -221,7 +221,7 @@ func TestRunRecallExport_SingleSession(t *testing.T) {
 	// Verify content of exported file
 	for _, e := range entries {
 		if strings.Contains(e.Name(), "export-session") {
-			content, err := os.ReadFile(filepath.Join(journalDir, e.Name()))
+			content, err := os.ReadFile(filepath.Join(journalDir, e.Name())) //nolint:gosec // test temp path
 			if err != nil {
 				t.Fatalf("read journal file: %v", err)
 			}

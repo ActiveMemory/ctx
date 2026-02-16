@@ -19,12 +19,13 @@ This is a complete reference for all `ctx` commands.
 
 All commands support these flags:
 
-| Flag                   | Description                                       |
-|------------------------|---------------------------------------------------|
-| `--help`               | Show command help                                 |
-| `--version`            | Show version                                      |
-| `--context-dir <path>` | Override context directory (default: `.context/`) |
-| `--no-color`           | Disable colored output                            |
+| Flag                   | Description                                              |
+|------------------------|----------------------------------------------------------|
+| `--help`               | Show command help                                        |
+| `--version`            | Show version                                             |
+| `--context-dir <path>` | Override context directory (default: `.context/`)        |
+| `--no-color`           | Disable colored output                                   |
+| `--allow-outside-cwd`  | Allow context directory outside current working directory |
 
 > The `NO_COLOR=1` environment variable also disables colored output.
 
@@ -42,14 +43,15 @@ All commands support these flags:
 | [`ctx sync`](#ctx-sync)           | Reconcile context with codebase state                     |
 | [`ctx compact`](#ctx-compact)     | Archive completed tasks, clean up files                   |
 | [`ctx tasks`](#ctx-tasks)         | Task archival and snapshots                               |
-| [`ctx decisions`](#ctx-decisions) | Reindex DECISIONS.md                                      |
-| [`ctx learnings`](#ctx-learnings) | Reindex LEARNINGS.md                                      |
+| [`ctx decisions`](#ctx-decisions) | Reindex `DECISIONS.md`                                    |
+| [`ctx learnings`](#ctx-learnings) | Reindex `LEARNINGS.md`                                    |
 | [`ctx recall`](#ctx-recall)       | Browse and export AI session history                      |
 | [`ctx journal`](#ctx-journal)     | Generate static site from journal entries                 |
 | [`ctx serve`](#ctx-serve)         | Serve static site locally                                 |
 | [`ctx watch`](#ctx-watch)         | Auto-apply context updates from AI output                 |
 | [`ctx hook`](#ctx-hook)           | Generate AI tool integration configs                      |
 | [`ctx loop`](#ctx-loop)           | Generate autonomous loop script                           |
+| [`ctx pad`](#ctx-pad)             | Encrypted scratchpad for sensitive one-liners             |
 
 ---
 
@@ -144,10 +146,12 @@ ctx agent [flags]
 
 **Flags**:
 
-| Flag                | Description                  |
-|---------------------|------------------------------|
-| `--budget <tokens>` | Token budget (default: 8000) |
-| `--format md\|json` | Output format (default: md)  |
+| Flag         | Default | Description                                       |
+|--------------|---------|---------------------------------------------------|
+| `--budget`   | 8000    | Token budget for context packet                   |
+| `--format`   | md      | Output format: `md` or `json`                     |
+| `--cooldown` | 10m     | Suppress repeated output within this duration     |
+| `--session`  | (none)  | Session ID for cooldown isolation (e.g., `$PPID`) |
 
 **Output**:
 
@@ -156,15 +160,6 @@ ctx agent [flags]
 - Current tasks
 - Key conventions
 - Recent decisions
-
-**Flags**:
-
-| Flag         | Default | Description                                       |
-|--------------|---------|---------------------------------------------------|
-| `--budget`   | 8000    | Token budget for context packet                   |
-| `--format`   | md      | Output format: `md` or `json`                     |
-| `--cooldown` | 10m     | Suppress repeated output within this duration     |
-| `--session`  | (none)  | Session ID for cooldown isolation (e.g., `$PPID`) |
 
 **Example**:
 
@@ -232,7 +227,7 @@ ctx add <type> <content> [flags]
 
 | Flag                      | Short | Description                                                 |
 |---------------------------|-------|-------------------------------------------------------------|
-| `--priority <level>`      |       | Priority for tasks: `high`, `medium`, `low`                 |
+| `--priority <level>`      | `-p`  | Priority for tasks: `high`, `medium`, `low`                 |
 | `--section <name>`        | `-s`  | Target section within file                                  |
 | `--context`               | `-c`  | Context (required for decisions and learnings)              |
 | `--rationale`             | `-r`  | Rationale for decisions (required for decisions)            |
@@ -503,7 +498,7 @@ Regenerate the quick-reference index at the top of DECISIONS.md.
 ctx decisions reindex
 ```
 
-The index is a compact table showing date and title for each decision,
+The index is a compact table showing the date and title for each decision,
 allowing AI tools to quickly scan entries without reading the full file.
 
 Use this after manual edits to DECISIONS.md or when migrating existing
@@ -534,7 +529,7 @@ Regenerate the quick-reference index at the top of LEARNINGS.md.
 ctx learnings reindex
 ```
 
-The index is a compact table showing date and title for each learning,
+The index is a compact table showing the date and title for each learning,
 allowing AI tools to quickly scan entries without reading the full file.
 
 Use this after manual edits to LEARNINGS.md or when migrating existing
@@ -713,8 +708,8 @@ Creates an Obsidian-compatible vault with:
 - **Transformed frontmatter** (`topics` → `tags` for Obsidian integration)
 - **Minimal `.obsidian/`** config enforcing wikilink mode
 
-No external dependencies required. Open the output directory as an Obsidian
-vault directly.
+No external dependencies are required:
+Open the output directory as an Obsidian  vault directly.
 
 **Example**:
 
@@ -863,15 +858,121 @@ See [Autonomous Loops](autonomous-loop.md) for detailed workflow documentation.
 
 ---
 
+### `ctx pad`
+
+Encrypted scratchpad for sensitive one-liners that travel with the project.
+
+When invoked without a subcommand, lists all entries.
+
+```bash
+ctx pad
+ctx pad <subcommand>
+```
+
+#### `ctx pad add`
+
+Append a new entry to the scratchpad.
+
+```bash
+ctx pad add <text>
+```
+
+**Example**:
+
+```bash
+ctx pad add "DATABASE_URL=postgres://user:pass@host/db"
+```
+
+#### `ctx pad show`
+
+Output the raw text of an entry by number.
+
+```bash
+ctx pad show <n>
+```
+
+**Arguments**:
+
+- `n`: 1-based entry number
+
+**Example**:
+
+```bash
+ctx pad show 3
+```
+
+#### `ctx pad rm`
+
+Remove an entry by number.
+
+```bash
+ctx pad rm <n>
+```
+
+**Arguments**:
+
+- `n`: 1-based entry number
+
+#### `ctx pad edit`
+
+Replace, append to, or prepend to an entry.
+
+```bash
+ctx pad edit <n> [text]
+```
+
+**Arguments**:
+
+- `n`: 1-based entry number
+- `text`: Replacement text (mutually exclusive with `--append`/`--prepend`)
+
+**Flags**:
+
+| Flag        | Description                             |
+|-------------|-----------------------------------------|
+| `--append`  | Append text to the end of the entry     |
+| `--prepend` | Prepend text to the beginning of entry  |
+
+**Example**:
+
+```bash
+ctx pad edit 2 "new text"
+ctx pad edit 2 --append " suffix"
+ctx pad edit 2 --prepend "prefix "
+```
+
+#### `ctx pad mv`
+
+Move an entry from one position to another.
+
+```bash
+ctx pad mv <from> <to>
+```
+
+**Arguments**:
+
+- `from`: Source position (1-based)
+- `to`: Destination position (1-based)
+
+#### `ctx pad resolve`
+
+Show both sides of a merge conflict in the encrypted scratchpad.
+
+```bash
+ctx pad resolve
+```
+
+---
+
 ## Exit Codes
 
-| Code | Meaning              |
-|------|----------------------|
-| 0    | Success              |
-| 1    | General error        |
-| 2    | Context not found    |
-| 3    | Invalid arguments    |
-| 4    | File operation error |
+| Code | Meaning                                |
+|------|----------------------------------------|
+| 0    | Success                                |
+| 1    | General error / warnings (e.g. drift)  |
+| 2    | Context not found                      |
+| 3    | Violations found (e.g. drift)          |
+| 4    | File operation error                   |
 
 ## Environment Variables
 
@@ -883,7 +984,7 @@ See [Autonomous Loops](autonomous-loop.md) for detailed workflow documentation.
 
 ## Configuration File
 
-Optional `.contextrc` (YAML format) at project root:
+Optional `.contextrc` (*YAML format*) at project root:
 
 ```yaml
 # .contextrc

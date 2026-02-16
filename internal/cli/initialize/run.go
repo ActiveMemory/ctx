@@ -165,6 +165,11 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Printf("  %s Makefile: %v\n", color.YellowString("⚠"), err)
 	}
 
+	// Update .gitignore with recommended entries
+	if err := ensureGitignoreEntries(cmd); err != nil {
+		cmd.Printf("  %s .gitignore: %v\n", color.YellowString("⚠"), err)
+	}
+
 	cmd.Println("\nNext steps:")
 	cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
 	cmd.Println("  2. Run 'ctx status' to see context summary")
@@ -241,6 +246,54 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 		cmd.Printf("  %s Could not update .gitignore: %v\n", yellow("⚠"), err)
 	}
 
+	return nil
+}
+
+// ensureGitignoreEntries appends recommended .gitignore entries that are not
+// already present. Creates .gitignore if it does not exist.
+func ensureGitignoreEntries(cmd *cobra.Command) error {
+	gitignorePath := ".gitignore"
+
+	content, err := os.ReadFile(gitignorePath)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+
+	// Build set of existing trimmed lines.
+	existing := make(map[string]bool)
+	for _, line := range strings.Split(string(content), "\n") {
+		existing[strings.TrimSpace(line)] = true
+	}
+
+	// Collect missing entries.
+	var missing []string
+	for _, entry := range config.GitignoreEntries {
+		if !existing[entry] {
+			missing = append(missing, entry)
+		}
+	}
+
+	if len(missing) == 0 {
+		return nil
+	}
+
+	// Build block to append.
+	var sb strings.Builder
+	if len(content) > 0 && !strings.HasSuffix(string(content), "\n") {
+		sb.WriteString("\n")
+	}
+	sb.WriteString("\n# ctx managed entries\n")
+	for _, entry := range missing {
+		sb.WriteString(entry + "\n")
+	}
+
+	if err := os.WriteFile(gitignorePath, append(content, []byte(sb.String())...), config.PermFile); err != nil {
+		return err
+	}
+
+	green := color.New(color.FgGreen).SprintFunc()
+	cmd.Printf("  %s .gitignore updated (%d entries added)\n", green("✓"), len(missing))
+	cmd.Println("  Review with: cat .gitignore")
 	return nil
 }
 

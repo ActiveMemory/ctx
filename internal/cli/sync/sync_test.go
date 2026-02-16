@@ -13,8 +13,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
@@ -112,7 +110,7 @@ func TestSyncCommand_DryRunWithActions(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create an important directory not documented in ARCHITECTURE.md
-	if err := os.Mkdir(filepath.Join(dir, "src"), 0755); err != nil {
+	if err := os.Mkdir(filepath.Join(dir, "src"), 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -129,7 +127,7 @@ func TestSyncCommand_WithActions(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create an important undocumented directory
-	if err := os.Mkdir(filepath.Join(dir, "cmd"), 0755); err != nil {
+	if err := os.Mkdir(filepath.Join(dir, "cmd"), 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -179,7 +177,7 @@ func TestCheckNewDirectories_ImportantDirs(t *testing.T) {
 
 	// Create important directories
 	for _, d := range []string{"src", "lib", "pkg", "internal", "cmd", "api"} {
-		if mkErr := os.Mkdir(filepath.Join(dir, d), 0755); mkErr != nil {
+		if mkErr := os.Mkdir(filepath.Join(dir, d), 0750); mkErr != nil {
 			t.Fatal(mkErr)
 		}
 	}
@@ -205,7 +203,7 @@ func TestCheckNewDirectories_SkipsHiddenAndVendor(t *testing.T) {
 
 	// Create directories that should be skipped
 	for _, d := range []string{".git", "node_modules", "vendor", "dist", "build"} {
-		if mkErr := os.Mkdir(filepath.Join(dir, d), 0755); mkErr != nil {
+		if mkErr := os.Mkdir(filepath.Join(dir, d), 0750); mkErr != nil {
 			t.Fatal(mkErr)
 		}
 	}
@@ -225,7 +223,7 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 
 	// Write ARCHITECTURE.md that mentions "src"
 	archPath := filepath.Join(dir, config.DirContext, config.FileArchitecture)
-	if err := os.WriteFile(archPath, []byte("# Architecture\n\nThe src directory contains...\n"), 0644); err != nil {
+	if err := os.WriteFile(archPath, []byte("# Architecture\n\nThe src directory contains...\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -234,7 +232,7 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if mkErr := os.Mkdir(filepath.Join(dir, "src"), 0755); mkErr != nil {
+	if mkErr := os.Mkdir(filepath.Join(dir, "src"), 0750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 
@@ -265,12 +263,12 @@ func TestCheckPackageFiles_WithPackageFile(t *testing.T) {
 
 	// Remove any existing dependency docs so the check triggers
 	archPath := filepath.Join(dir, config.DirContext, config.FileArchitecture)
-	_ = os.WriteFile(archPath, []byte("# Architecture\n\nSimple app.\n"), 0644)
+	_ = os.WriteFile(archPath, []byte("# Architecture\n\nSimple app.\n"), 0600)
 	depsPath := filepath.Join(dir, config.DirContext, config.FileDependency)
 	_ = os.Remove(depsPath)
 
 	// Create a package.json
-	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -296,11 +294,11 @@ func TestCheckPackageFiles_WithDepsDoc(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create a package.json and DEPENDENCIES.md
-	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	depsPath := filepath.Join(dir, config.DirContext, config.FileDependency)
-	if err := os.WriteFile(depsPath, []byte("# Dependencies\n\nAll documented.\n"), 0644); err != nil {
+	if err := os.WriteFile(depsPath, []byte("# Dependencies\n\nAll documented.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -340,7 +338,7 @@ func TestCheckConfigFiles_WithConfigFile(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create a tsconfig.json
-	if err := os.WriteFile(filepath.Join(dir, "tsconfig.json"), []byte(`{}`), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "tsconfig.json"), []byte(`{}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -366,13 +364,13 @@ func TestCheckConfigFiles_DocumentedInConventions(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create tsconfig.json
-	if err := os.WriteFile(filepath.Join(dir, "tsconfig.json"), []byte(`{}`), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "tsconfig.json"), []byte(`{}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	// Write CONVENTIONS.md mentioning tsconfig
 	convPath := filepath.Join(dir, config.DirContext, config.FileConvention)
-	if err := os.WriteFile(convPath, []byte("# Conventions\n\ntsconfig.json is configured for strict mode.\n"), 0644); err != nil {
+	if err := os.WriteFile(convPath, []byte("# Conventions\n\ntsconfig.json is configured for strict mode.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -407,10 +405,10 @@ func TestRunSync_DryRunWithSuggestions(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create multiple action triggers
-	if err := os.Mkdir(filepath.Join(dir, "lib"), 0755); err != nil {
+	if err := os.Mkdir(filepath.Join(dir, "lib"), 0750); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module test\n"), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module test\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -429,7 +427,7 @@ func TestRunSync_DryRunWithSuggestions(t *testing.T) {
 func TestRunSync_NonDryRunWithSuggestions(t *testing.T) {
 	dir := setupSyncDir(t)
 
-	if err := os.Mkdir(filepath.Join(dir, "api"), 0755); err != nil {
+	if err := os.Mkdir(filepath.Join(dir, "api"), 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -458,7 +456,7 @@ func TestRunSync_ActionWithEmptySuggestion(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create important dir to trigger actions
-	if err := os.Mkdir(filepath.Join(dir, "services"), 0755); err != nil {
+	if err := os.Mkdir(filepath.Join(dir, "services"), 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -481,13 +479,13 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Create a go.mod
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module test\n"), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module test\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	// Write ARCHITECTURE.md that mentions "dependencies"
 	archPath := filepath.Join(dir, config.DirContext, config.FileArchitecture)
-	if err := os.WriteFile(archPath, []byte("# Architecture\n\nProject dependencies are managed via go.mod.\n"), 0644); err != nil {
+	if err := os.WriteFile(archPath, []byte("# Architecture\n\nProject dependencies are managed via go.mod.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -509,7 +507,7 @@ func TestSyncCommand_OutputFormat(t *testing.T) {
 
 	// Create multiple triggers
 	for _, d := range []string{"src", "components"} {
-		if err := os.Mkdir(filepath.Join(dir, d), 0755); err != nil {
+		if err := os.Mkdir(filepath.Join(dir, d), 0750); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -540,5 +538,5 @@ func TestRunSync_CmdType(t *testing.T) {
 	}
 
 	// Validate it's a *cobra.Command
-	var _ *cobra.Command = cmd
+	_ = cmd
 }

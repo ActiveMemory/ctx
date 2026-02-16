@@ -356,7 +356,7 @@ func TestSnapshotCommand_NoTasks(t *testing.T) {
 	// Create .context but no TASKS.md
 	rc.Reset()
 	rc.OverrideContextDir(config.DirContext)
-	if err := os.MkdirAll(config.DirContext, 0755); err != nil {
+	if err := os.MkdirAll(config.DirContext, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -416,7 +416,7 @@ func TestArchiveCommand_NoTasks(t *testing.T) {
 
 	rc.Reset()
 	rc.OverrideContextDir(config.DirContext)
-	if err := os.MkdirAll(config.DirContext, 0755); err != nil {
+	if err := os.MkdirAll(config.DirContext, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -457,7 +457,7 @@ func TestArchiveCommand_WithCompletedTasks(t *testing.T) {
 - [x] Completed task 2
 `
 	tasksPath := filepath.Join(config.DirContext, config.FileTask)
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -473,7 +473,7 @@ func TestArchiveCommand_WithCompletedTasks(t *testing.T) {
 	}
 
 	// Verify TASKS.md no longer has completed tasks
-	data, err := os.ReadFile(tasksPath)
+	data, err := os.ReadFile(tasksPath) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -494,7 +494,7 @@ func TestArchiveCommand_DryRunWithCompleted(t *testing.T) {
 - [ ] Not done task
 `
 	tasksPath := filepath.Join(config.DirContext, config.FileTask)
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -510,7 +510,7 @@ func TestArchiveCommand_DryRunWithCompleted(t *testing.T) {
 	}
 
 	// Verify TASKS.md was NOT modified
-	data, err := os.ReadFile(tasksPath)
+	data, err := os.ReadFile(tasksPath) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -563,7 +563,7 @@ func TestSnapshotCommand_SnapshotContentFormat(t *testing.T) {
 
 	tasksContent := "# Tasks\n\n- [ ] My task\n"
 	tasksPath := filepath.Join(config.DirContext, config.FileTask)
-	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0644); err != nil {
+	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 

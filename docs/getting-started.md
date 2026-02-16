@@ -395,8 +395,8 @@ See [Context Files](context-files.md) for detailed documentation of each file.
 .claude/settings.local.json
 ```
 
-`ctx init` does **not** create a `.gitignore` for you: Add these
-entries to your project's existing `.gitignore`.
+`ctx init` automatically adds these entries to your `.gitignore`.
+Review the additions with `cat .gitignore` after init.
 
 !!! tip "Rule of Thumb"
     * If it's knowledge (*decisions, tasks, learnings,

@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://ctx.ist/context-files/">
       
       
-        <link rel="prev" href="../migration/">
+        <link rel="prev" href="../upgrading/">
       
       
         <link rel="next" href="../prompting-guide/">
@@ -306,6 +306,35 @@
     
   
     Adopting ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrading/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading ctx
   
 
     
@@ -1660,42 +1689,42 @@
 </thead>
 <tbody>
 <tr>
-<td>CONSTITUTION.md</td>
-<td>Hard rules that must NEVER be violated</td>
+<td><code>CONSTITUTION.md</code></td>
+<td>Hard rules that must <strong>NEVER</strong> be violated</td>
 <td>1 (highest)</td>
 </tr>
 <tr>
-<td>TASKS.md</td>
+<td><code>TASKS.md</code></td>
 <td>Current and planned work</td>
 <td>2</td>
 </tr>
 <tr>
-<td>CONVENTIONS.md</td>
+<td><code>CONVENTIONS.md</code></td>
 <td>Project patterns and standards</td>
 <td>3</td>
 </tr>
 <tr>
-<td>ARCHITECTURE.md</td>
+<td><code>ARCHITECTURE.md</code></td>
 <td>System overview and components</td>
 <td>4</td>
 </tr>
 <tr>
-<td>DECISIONS.md</td>
+<td><code>DECISIONS.md</code></td>
 <td>Architectural decisions with rationale</td>
 <td>5</td>
 </tr>
 <tr>
-<td>LEARNINGS.md</td>
+<td><code>LEARNINGS.md</code></td>
 <td>Lessons learned, gotchas, tips</td>
 <td>6</td>
 </tr>
 <tr>
-<td>GLOSSARY.md</td>
+<td><code>GLOSSARY.md</code></td>
 <td>Domain terms and abbreviations</td>
 <td>7</td>
 </tr>
 <tr>
-<td>AGENT_PLAYBOOK.md</td>
+<td><code>AGENT_PLAYBOOK.md</code></td>
 <td>Instructions for AI tools</td>
 <td>8 (lowest)</td>
 </tr>
@@ -1719,7 +1748,7 @@
    lookup as needed.</li>
 <li><code>AGENT_PLAYBOOK.md</code>: Meta instructions last. How to use this context
    system itself. Loaded last because the agent should understand the
-   <em>content</em> (rules, tasks, patterns) before the <em>operating manual</em>.</li>
+   <em>content</em> (<em>rules, tasks, patterns</em>) before the <em>operating manual</em>.</li>
 </ol>
 <hr />
 <h2 id="constitutionmd"><code>CONSTITUTION.md</code><a class="headerlink" href="#constitutionmd" title="Permanent link">&para;</a></h2>
@@ -1761,9 +1790,10 @@ regardless of the task.</p>
 <h2 id="tasksmd"><code>TASKS.md</code><a class="headerlink" href="#tasksmd" title="Permanent link">&para;</a></h2>
 <p><strong>Purpose:</strong> Track current work, planned work, and blockers.</p>
 <h3 id="structure_1">Structure<a class="headerlink" href="#structure_1" title="Permanent link">&para;</a></h3>
-<p>Tasks are organized by <strong>Phase</strong> — logical groupings that preserve order and
-enable replay. Tasks stay in their Phase permanently; status is tracked via
-checkboxes and inline tags.</p>
+<p>Tasks are organized by <strong>Phase</strong>: logical groupings that preserve order and
+enable replay. </p>
+<p>Tasks stay in their Phase permanently; status is tracked via checkboxes and 
+inline tags.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># Tasks</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gu">## Phase 1: Initial Setup</span>
@@ -1877,8 +1907,8 @@ session started vs completed work.</p>
 </table>
 <h3 id="guidelines_1">Guidelines<a class="headerlink" href="#guidelines_1" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Never delete tasks — mark as <code>[x]</code> completed or <code>[-]</code> skipped</li>
-<li>Never move tasks between sections — use inline tags for status</li>
+<li>Never delete tasks; mark as <code>[x]</code> completed or <code>[-]</code> skipped</li>
+<li>Never move tasks between sections; use inline tags for status</li>
 <li>Use <code>ctx tasks archive</code> periodically to move completed tasks to archive</li>
 <li>Mark current work with <code>#in-progress</code> inline tag</li>
 </ul>
@@ -1910,7 +1940,7 @@ get re-debated.</p>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="gs">**Status**</span>: Accepted
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="gs">**Context**</span>: Starting new project, need to choose type checking level.
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="gs">**Context**</span>: Starting a new project, need to choose the type-checking level.
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="gs">**Decision**</span>: Enable TypeScript strict mode with all strict flags.
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
@@ -2122,22 +2152,23 @@ and update context.</p>
 <h2 id="parsing-rules">Parsing Rules<a class="headerlink" href="#parsing-rules" title="Permanent link">&para;</a></h2>
 <p>All context files follow these conventions:</p>
 <ol>
-<li><strong>Headers define structure</strong> — <code>#</code> for title, <code>##</code> for sections, <code>###</code> for 
+<li><strong>Headers define structure</strong>: <code>#</code> for title, <code>##</code> for sections, <code>###</code> for 
    items</li>
-<li><strong>Bold keys for fields</strong> — <code>**Key**:</code> followed by value</li>
-<li><strong>Code blocks are literal</strong> — Never parse code block content as structure</li>
-<li><strong>Lists are ordered</strong> — Items appear in priority/chronological order</li>
-<li><strong>Tags are inline</strong> — Backtick-wrapped tags like <code>#priority:high</code></li>
+<li><strong>Bold keys for fields</strong>: <code>**Key**:</code> followed by value</li>
+<li><strong>Code blocks are literal</strong>: Never parse code block content as structure</li>
+<li><strong>Lists are ordered</strong>: Items appear in priority/chronological order</li>
+<li><strong>Tags are inline</strong>: Backtick-wrapped tags like <code>#priority:high</code></li>
 </ol>
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../blog/2026-02-01-refactoring-with-intent/">Refactoring with Intent</a> — How persistent context prevents drift during refactoring sessions</li>
+<li><a href="../blog/2026-02-01-refactoring-with-intent/">Refactoring with Intent</a>:
+  How persistent context prevents drift during refactoring sessions</li>
 </ul>
 <h2 id="token-efficiency">Token Efficiency<a class="headerlink" href="#token-efficiency" title="Permanent link">&para;</a></h2>
 <p>Keep context files concise:</p>
 <ul>
 <li>Use abbreviations in tags, not prose</li>
-<li>Omit obvious words ("The", "This")</li>
+<li>Omit obvious words ("<em>The</em>," "<em>This</em>")</li>
 <li>Prefer bullet points over paragraphs</li>
 <li>Keep examples minimal but illustrative</li>
 <li>Archive old completed items periodically</li>
@@ -2184,7 +2215,7 @@ and update context.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../migration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Adopting ctx">
+          <a href="../upgrading/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Upgrading ctx">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2194,7 +2225,7 @@ and update context.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Adopting ctx
+                Upgrading ctx
               </div>
             </div>
           </a>

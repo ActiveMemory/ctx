@@ -128,6 +128,16 @@ storage out.
 
 ## Maintenance
 
+### [Hook Output Patterns](hook-output-patterns.md)
+
+Choose the right output pattern for your Claude Code hooks: VERBATIM
+relay for user-facing reminders, hard gates for invariants, agent
+directives for nudges, and five more patterns across the spectrum.
+
+**Uses**: `.claude/hooks/`, `settings.local.json`
+
+---
+
 ### [Claude Code Permission Hygiene](claude-code-permissions.md)
 
 Keep `.claude/settings.local.json` clean: recommended safe defaults,

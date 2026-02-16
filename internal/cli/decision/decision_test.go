@@ -86,7 +86,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 
 	// Create the context directory and DECISIONS.md file
 	ctxDir := filepath.Join(tempDir, config.DirContext)
-	_ = os.MkdirAll(ctxDir, 0755)
+	_ = os.MkdirAll(ctxDir, 0750)
 
 	content := `# Decisions
 
@@ -96,7 +96,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 **Rationale:** YAML is human-readable
 **Consequences:** Added yaml dependency
 `
-	_ = os.WriteFile(filepath.Join(ctxDir, config.FileDecision), []byte(content), 0644)
+	_ = os.WriteFile(filepath.Join(ctxDir, config.FileDecision), []byte(content), 0600)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"reindex"})
@@ -107,7 +107,7 @@ func TestRunReindex_WithFile(t *testing.T) {
 	}
 
 	// Verify the file was updated
-	updated, err := os.ReadFile(filepath.Join(ctxDir, config.FileDecision))
+	updated, err := os.ReadFile(filepath.Join(ctxDir, config.FileDecision)) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatalf("failed to read updated file: %v", err)
 	}
@@ -127,8 +127,8 @@ func TestRunReindex_EmptyFile(t *testing.T) {
 
 	// Create the context directory and empty DECISIONS.md
 	ctxDir := filepath.Join(tempDir, config.DirContext)
-	_ = os.MkdirAll(ctxDir, 0755)
-	_ = os.WriteFile(filepath.Join(ctxDir, config.FileDecision), []byte("# Decisions\n"), 0644)
+	_ = os.MkdirAll(ctxDir, 0750)
+	_ = os.WriteFile(filepath.Join(ctxDir, config.FileDecision), []byte("# Decisions\n"), 0600)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"reindex"})

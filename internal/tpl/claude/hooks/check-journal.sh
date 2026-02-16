@@ -81,6 +81,7 @@ if [ "$UNEXPORTED" -eq 0 ] && [ "$UNENRICHED" -eq 0 ]; then
   exit 0
 fi
 
+echo "IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question."
 echo ""
 echo "┌─ Journal Reminder ─────────────────────────────"
 
@@ -104,7 +105,6 @@ else
 fi
 
 echo "└────────────────────────────────────────────────"
-echo ""
 
 touch "$REMINDED"
 

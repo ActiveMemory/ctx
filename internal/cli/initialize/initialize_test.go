@@ -140,7 +140,7 @@ func TestHandleMakefileCtx_ExistingMakefileWithoutInclude(t *testing.T) {
 	defer cleanup()
 
 	// Create existing Makefile without the include
-	if err := os.WriteFile("Makefile", []byte("build:\n\tgo build\n"), 0644); err != nil {
+	if err := os.WriteFile("Makefile", []byte("build:\n\tgo build\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -171,7 +171,7 @@ func TestHandleMakefileCtx_ExistingMakefileWithInclude(t *testing.T) {
 
 	// Create Makefile that already has the include
 	original := "build:\n\tgo build\n\n" + includeDirective + "\n"
-	if err := os.WriteFile("Makefile", []byte(original), 0644); err != nil {
+	if err := os.WriteFile("Makefile", []byte(original), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -197,7 +197,7 @@ func TestHandleMakefileCtx_MakefileNoTrailingNewline(t *testing.T) {
 	defer cleanup()
 
 	// Create Makefile without trailing newline
-	if err := os.WriteFile("Makefile", []byte("build:\n\tgo build"), 0644); err != nil {
+	if err := os.WriteFile("Makefile", []byte("build:\n\tgo build"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -239,7 +239,7 @@ func TestAddToGitignore_AlreadyPresent(t *testing.T) {
 	defer cleanup()
 
 	entry := ".context/.scratchpad.key"
-	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0644); err != nil {
+	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -261,7 +261,7 @@ func TestAddToGitignore_AppendNoTrailingNewline(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := os.WriteFile(".gitignore", []byte("node_modules"), 0644); err != nil {
+	if err := os.WriteFile(".gitignore", []byte("node_modules"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -278,13 +278,146 @@ func TestAddToGitignore_AppendNoTrailingNewline(t *testing.T) {
 	}
 }
 
+// --- ensureGitignoreEntries tests ---
+
+func TestEnsureGitignoreEntries_CreatesNew(t *testing.T) {
+	_, cleanup := helper(t)
+	defer cleanup()
+
+	cmd := newTestCmd()
+	if err := ensureGitignoreEntries(cmd); err != nil {
+		t.Fatalf("ensureGitignoreEntries failed: %v", err)
+	}
+
+	content, err := os.ReadFile(".gitignore")
+	if err != nil {
+		t.Fatalf("expected .gitignore to be created: %v", err)
+	}
+	contentStr := string(content)
+
+	for _, entry := range config.GitignoreEntries {
+		if !strings.Contains(contentStr, entry) {
+			t.Errorf("missing entry %q in .gitignore", entry)
+		}
+	}
+	if !strings.Contains(contentStr, "# ctx managed entries") {
+		t.Error("missing comment header")
+	}
+}
+
+func TestEnsureGitignoreEntries_AppendsOnlyMissing(t *testing.T) {
+	_, cleanup := helper(t)
+	defer cleanup()
+
+	// Pre-populate with some entries
+	existing := ".context/sessions/\n.context/logs/\n"
+	if err := os.WriteFile(".gitignore", []byte(existing), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := newTestCmd()
+	if err := ensureGitignoreEntries(cmd); err != nil {
+		t.Fatalf("ensureGitignoreEntries failed: %v", err)
+	}
+
+	content, err := os.ReadFile(".gitignore")
+	if err != nil {
+		t.Fatal(err)
+	}
+	contentStr := string(content)
+
+	// All entries should be present
+	for _, entry := range config.GitignoreEntries {
+		if !strings.Contains(contentStr, entry) {
+			t.Errorf("missing entry %q in .gitignore", entry)
+		}
+	}
+
+	// Already-present entries should not be duplicated
+	if strings.Count(contentStr, ".context/sessions/") != 1 {
+		t.Error("duplicate .context/sessions/ entry")
+	}
+	if strings.Count(contentStr, ".context/logs/") != 1 {
+		t.Error("duplicate .context/logs/ entry")
+	}
+}
+
+func TestEnsureGitignoreEntries_Idempotent(t *testing.T) {
+	_, cleanup := helper(t)
+	defer cleanup()
+
+	cmd := newTestCmd()
+	if err := ensureGitignoreEntries(cmd); err != nil {
+		t.Fatalf("first call failed: %v", err)
+	}
+	first, _ := os.ReadFile(".gitignore")
+
+	cmd2 := newTestCmd()
+	if err := ensureGitignoreEntries(cmd2); err != nil {
+		t.Fatalf("second call failed: %v", err)
+	}
+	second, _ := os.ReadFile(".gitignore")
+
+	if string(first) != string(second) {
+		t.Errorf("file changed on second call:\n--- first ---\n%s\n--- second ---\n%s", first, second)
+	}
+}
+
+func TestEnsureGitignoreEntries_PreservesExistingContent(t *testing.T) {
+	_, cleanup := helper(t)
+	defer cleanup()
+
+	existing := "node_modules/\n*.log\nbuild/\n"
+	if err := os.WriteFile(".gitignore", []byte(existing), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := newTestCmd()
+	if err := ensureGitignoreEntries(cmd); err != nil {
+		t.Fatalf("ensureGitignoreEntries failed: %v", err)
+	}
+
+	content, err := os.ReadFile(".gitignore")
+	if err != nil {
+		t.Fatal(err)
+	}
+	contentStr := string(content)
+
+	if !strings.HasPrefix(contentStr, existing) {
+		t.Error("existing content was not preserved")
+	}
+}
+
+func TestEnsureGitignoreEntries_NoTrailingNewline(t *testing.T) {
+	_, cleanup := helper(t)
+	defer cleanup()
+
+	existing := "node_modules/"
+	if err := os.WriteFile(".gitignore", []byte(existing), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := newTestCmd()
+	if err := ensureGitignoreEntries(cmd); err != nil {
+		t.Fatalf("ensureGitignoreEntries failed: %v", err)
+	}
+
+	content, _ := os.ReadFile(".gitignore")
+	contentStr := string(content)
+
+	// Should have a newline before the comment header
+	if !strings.Contains(contentStr, "node_modules/\n\n# ctx managed entries\n") {
+		t.Errorf("unexpected content format: %q", contentStr)
+	}
+}
+
 // --- deployHookScript tests ---
 
 func TestDeployHookScript_New(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := os.MkdirAll(config.DirClaudeHooks, 0755); err != nil {
+	if err := os.MkdirAll(config.DirClaudeHooks, 0700); err != nil {
 		t.Fatal(err)
 	}
 
@@ -308,12 +441,12 @@ func TestDeployHookScript_ExistsNoForce(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := os.MkdirAll(config.DirClaudeHooks, 0755); err != nil {
+	if err := os.MkdirAll(config.DirClaudeHooks, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	path := filepath.Join(config.DirClaudeHooks, config.FileBlockNonPathScript)
-	if err := os.WriteFile(path, []byte("#!/bin/bash\n# old"), 0755); err != nil {
+	if err := os.WriteFile(path, []byte("#!/bin/bash\n# old"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -328,7 +461,7 @@ func TestDeployHookScript_ExistsNoForce(t *testing.T) {
 	}
 
 	// Content should not have changed (skipped)
-	content, _ := os.ReadFile(path)
+	content, _ := os.ReadFile(path) //nolint:gosec // test temp path
 	if !strings.Contains(string(content), "# old") {
 		t.Error("script was overwritten when force=false")
 	}
@@ -338,12 +471,12 @@ func TestDeployHookScript_ExistsForce(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := os.MkdirAll(config.DirClaudeHooks, 0755); err != nil {
+	if err := os.MkdirAll(config.DirClaudeHooks, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	path := filepath.Join(config.DirClaudeHooks, config.FileBlockNonPathScript)
-	if err := os.WriteFile(path, []byte("#!/bin/bash\n# old"), 0755); err != nil {
+	if err := os.WriteFile(path, []byte("#!/bin/bash\n# old"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -358,7 +491,7 @@ func TestDeployHookScript_ExistsForce(t *testing.T) {
 	}
 
 	// Content should have changed (force overwrite)
-	content, _ := os.ReadFile(path)
+	content, _ := os.ReadFile(path) //nolint:gosec // test temp path
 	if strings.Contains(string(content), "# old") {
 		t.Error("script was not overwritten when force=true")
 	}
@@ -371,7 +504,7 @@ func TestCreateTools(t *testing.T) {
 	defer cleanup()
 
 	contextDir := ".context"
-	if err := os.MkdirAll(contextDir, 0755); err != nil {
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -396,13 +529,13 @@ func TestCreateTools_ExistsNoForce(t *testing.T) {
 
 	contextDir := ".context"
 	toolsDir := filepath.Join(contextDir, config.DirTools)
-	if err := os.MkdirAll(toolsDir, 0755); err != nil {
+	if err := os.MkdirAll(toolsDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create a tool file manually
 	toolPath := filepath.Join(toolsDir, "context-watch.sh")
-	if err := os.WriteFile(toolPath, []byte("#!/bin/bash\n# original"), 0755); err != nil {
+	if err := os.WriteFile(toolPath, []byte("#!/bin/bash\n# original"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -412,7 +545,7 @@ func TestCreateTools_ExistsNoForce(t *testing.T) {
 	}
 
 	// Should not be overwritten
-	content, _ := os.ReadFile(toolPath)
+	content, _ := os.ReadFile(toolPath) //nolint:gosec // test temp path
 	if !strings.Contains(string(content), "# original") {
 		t.Error("tool was overwritten when force=false")
 	}
@@ -425,7 +558,7 @@ func TestCreateEntryTemplates(t *testing.T) {
 	defer cleanup()
 
 	contextDir := ".context"
-	if err := os.MkdirAll(contextDir, 0755); err != nil {
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -450,13 +583,13 @@ func TestCreateEntryTemplates_ExistsNoForce(t *testing.T) {
 
 	contextDir := ".context"
 	templatesDir := filepath.Join(contextDir, "templates")
-	if err := os.MkdirAll(templatesDir, 0755); err != nil {
+	if err := os.MkdirAll(templatesDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create a template file manually
 	tplPath := filepath.Join(templatesDir, "decision.md")
-	if err := os.WriteFile(tplPath, []byte("# original"), 0644); err != nil {
+	if err := os.WriteFile(tplPath, []byte("# original"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -466,7 +599,7 @@ func TestCreateEntryTemplates_ExistsNoForce(t *testing.T) {
 	}
 
 	// Should not be overwritten
-	content, _ := os.ReadFile(tplPath)
+	content, _ := os.ReadFile(tplPath) //nolint:gosec // test temp path
 	if !strings.Contains(string(content), "# original") {
 		t.Error("template was overwritten when force=false")
 	}
@@ -514,11 +647,11 @@ func TestCreateClaudeSkills_ExistsNoForce(t *testing.T) {
 
 	// Create a skill directory with existing SKILL.md
 	skillDir := ".claude/skills/test-skill"
-	if err := os.MkdirAll(skillDir, 0755); err != nil {
+	if err := os.MkdirAll(skillDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 	skillPath := filepath.Join(skillDir, "SKILL.md")
-	if err := os.WriteFile(skillPath, []byte("# original skill"), 0644); err != nil {
+	if err := os.WriteFile(skillPath, []byte("# original skill"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -528,7 +661,7 @@ func TestCreateClaudeSkills_ExistsNoForce(t *testing.T) {
 	}
 
 	// Our custom skill should still have original content
-	content, _ := os.ReadFile(skillPath)
+	content, _ := os.ReadFile(skillPath) //nolint:gosec // test temp path
 	if !strings.Contains(string(content), "# original skill") {
 		t.Error("custom skill was overwritten when force=false")
 	}
@@ -573,7 +706,7 @@ func TestHandlePromptMd_ExistsWithMarkers_NoForce(t *testing.T) {
 	defer cleanup()
 
 	existing := "# Prompt\n\n" + config.PromptMarkerStart + "\nold\n" + config.PromptMarkerEnd + "\n\n## Custom\n"
-	if err := os.WriteFile(config.FilePromptMd, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FilePromptMd, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -594,7 +727,7 @@ func TestHandlePromptMd_ExistsWithMarkers_Force(t *testing.T) {
 	defer cleanup()
 
 	existing := "# Prompt\n\n" + config.PromptMarkerStart + "\nold prompt\n" + config.PromptMarkerEnd + "\n\n## Custom\n"
-	if err := os.WriteFile(config.FilePromptMd, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FilePromptMd, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -621,7 +754,7 @@ func TestHandlePromptMd_MergeAutoMerge(t *testing.T) {
 	defer cleanup()
 
 	existing := "# My Prompt\n\nExisting content.\n"
-	if err := os.WriteFile(config.FilePromptMd, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FilePromptMd, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -668,7 +801,7 @@ func TestHandleImplementationPlan_ExistsWithMarkers_NoForce(t *testing.T) {
 	defer cleanup()
 
 	existing := "# Plan\n\n" + config.PlanMarkerStart + "\nold\n" + config.PlanMarkerEnd + "\n"
-	if err := os.WriteFile(config.FileImplementationPlan, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FileImplementationPlan, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -688,7 +821,7 @@ func TestHandleImplementationPlan_ExistsWithMarkers_Force(t *testing.T) {
 	defer cleanup()
 
 	existing := "# Plan\n\n" + config.PlanMarkerStart + "\nold plan\n" + config.PlanMarkerEnd + "\n\n## Custom\n"
-	if err := os.WriteFile(config.FileImplementationPlan, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FileImplementationPlan, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -713,7 +846,7 @@ func TestHandleImplementationPlan_MergeAutoMerge(t *testing.T) {
 	defer cleanup()
 
 	existing := "# My Plan\n\nExisting plan content.\n"
-	if err := os.WriteFile(config.FileImplementationPlan, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FileImplementationPlan, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -759,7 +892,7 @@ func TestHandleClaudeMd_ExistsWithMarkers_NoForce(t *testing.T) {
 	defer cleanup()
 
 	existing := "# Project\n\n" + config.CtxMarkerStart + "\nold\n" + config.CtxMarkerEnd + "\n"
-	if err := os.WriteFile(config.FileClaudeMd, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FileClaudeMd, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -779,7 +912,7 @@ func TestHandleClaudeMd_ExistsWithMarkers_Force(t *testing.T) {
 	defer cleanup()
 
 	existing := "# Project\n\n" + config.CtxMarkerStart + "\nold ctx\n" + config.CtxMarkerEnd + "\n\n## Custom\n"
-	if err := os.WriteFile(config.FileClaudeMd, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FileClaudeMd, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -804,7 +937,7 @@ func TestHandleClaudeMd_AutoMerge(t *testing.T) {
 	defer cleanup()
 
 	existing := "# My Project\n\nExisting content.\n"
-	if err := os.WriteFile(config.FileClaudeMd, []byte(existing), 0644); err != nil {
+	if err := os.WriteFile(config.FileClaudeMd, []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1017,7 +1150,7 @@ func TestMergeSettingsHooks_ExistingWithAllHooksAndPerms(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := os.MkdirAll(config.DirClaude, 0755); err != nil {
+	if err := os.MkdirAll(config.DirClaude, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1030,7 +1163,7 @@ func TestMergeSettingsHooks_ExistingWithAllHooksAndPerms(t *testing.T) {
 		},
 	}
 	data, _ := json.MarshalIndent(settings, "", "  ")
-	if err := os.WriteFile(config.FileSettings, data, 0644); err != nil {
+	if err := os.WriteFile(config.FileSettings, data, 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1044,7 +1177,7 @@ func TestMergeSettingsHooks_ForceOverwrite(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := os.MkdirAll(config.DirClaude, 0755); err != nil {
+	if err := os.MkdirAll(config.DirClaude, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1057,7 +1190,7 @@ func TestMergeSettingsHooks_ForceOverwrite(t *testing.T) {
 		},
 	}
 	data, _ := json.MarshalIndent(settings, "", "  ")
-	if err := os.WriteFile(config.FileSettings, data, 0644); err != nil {
+	if err := os.WriteFile(config.FileSettings, data, 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1121,7 +1254,7 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 	defer cleanup()
 
 	// Set scratchpad_encrypt to false via .contextrc
-	if err := os.WriteFile(".contextrc", []byte(`scratchpad_encrypt = false`+"\n"), 0644); err != nil {
+	if err := os.WriteFile(".contextrc", []byte(`scratchpad_encrypt = false`+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	// Reset rc cache to pick up new config
@@ -1132,7 +1265,7 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 	_ = os.Remove(".contextrc")
 
 	contextDir := ".context"
-	if err := os.MkdirAll(contextDir, 0755); err != nil {
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1157,7 +1290,7 @@ func TestInitScratchpad_KeyExists(t *testing.T) {
 	defer cleanup()
 
 	contextDir := ".context"
-	if err := os.MkdirAll(contextDir, 0755); err != nil {
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1173,7 +1306,7 @@ func TestInitScratchpad_KeyExists(t *testing.T) {
 	}
 
 	// Key should not have been overwritten
-	content, _ := os.ReadFile(keyPath)
+	content, _ := os.ReadFile(keyPath) //nolint:gosec // test temp path
 	if string(content) != "existing-key" {
 		t.Error("existing key was overwritten")
 	}
@@ -1184,13 +1317,13 @@ func TestInitScratchpad_EncExistsNoKey(t *testing.T) {
 	defer cleanup()
 
 	contextDir := ".context"
-	if err := os.MkdirAll(contextDir, 0755); err != nil {
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create encrypted file without key
 	encPath := filepath.Join(contextDir, config.FileScratchpadEnc)
-	if err := os.WriteFile(encPath, []byte("encrypted-data"), 0644); err != nil {
+	if err := os.WriteFile(encPath, []byte("encrypted-data"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1321,7 +1454,7 @@ func TestRunInit_Merge(t *testing.T) {
 	t.Setenv("CTX_SKIP_PATH_CHECK", "1")
 
 	// Create existing CLAUDE.md
-	if err := os.WriteFile(config.FileClaudeMd, []byte("# My Project\n\nExisting.\n"), 0644); err != nil {
+	if err := os.WriteFile(config.FileClaudeMd, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 

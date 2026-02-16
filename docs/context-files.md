@@ -19,16 +19,16 @@ Files are designed to be human-readable, AI-parseable, and token-efficient.
 
 ## File Overview
 
-| File              | Purpose                                | Priority    |
-|-------------------|----------------------------------------|-------------|
-| CONSTITUTION.md   | Hard rules that must NEVER be violated | 1 (highest) |
-| TASKS.md          | Current and planned work               | 2           |
-| CONVENTIONS.md    | Project patterns and standards         | 3           |
-| ARCHITECTURE.md   | System overview and components         | 4           |
-| DECISIONS.md      | Architectural decisions with rationale | 5           |
-| LEARNINGS.md      | Lessons learned, gotchas, tips         | 6           |
-| GLOSSARY.md       | Domain terms and abbreviations         | 7           |
-| AGENT_PLAYBOOK.md | Instructions for AI tools              | 8 (lowest)  |
+| File                | Purpose                                    | Priority    |
+|---------------------|--------------------------------------------|-------------|
+| `CONSTITUTION.md`   | Hard rules that must **NEVER** be violated | 1 (highest) |
+| `TASKS.md`          | Current and planned work                   | 2           |
+| `CONVENTIONS.md`    | Project patterns and standards             | 3           |
+| `ARCHITECTURE.md`   | System overview and components             | 4           |
+| `DECISIONS.md`      | Architectural decisions with rationale     | 5           |
+| `LEARNINGS.md`      | Lessons learned, gotchas, tips             | 6           |
+| `GLOSSARY.md`       | Domain terms and abbreviations             | 7           |
+| `AGENT_PLAYBOOK.md` | Instructions for AI tools                  | 8 (lowest)  |
 
 ## Read Order Rationale
 
@@ -49,7 +49,7 @@ The priority order follows a logical progression for AI tools:
    lookup as needed.
 8. `AGENT_PLAYBOOK.md`: Meta instructions last. How to use this context
    system itself. Loaded last because the agent should understand the
-   *content* (rules, tasks, patterns) before the *operating manual*.
+   *content* (*rules, tasks, patterns*) before the *operating manual*.
 
 ---
 
@@ -102,9 +102,11 @@ is wrong.
 
 ### Structure
 
-Tasks are organized by **Phase** — logical groupings that preserve order and
-enable replay. Tasks stay in their Phase permanently; status is tracked via
-checkboxes and inline tags.
+Tasks are organized by **Phase**: logical groupings that preserve order and
+enable replay. 
+
+Tasks stay in their Phase permanently; status is tracked via checkboxes and 
+inline tags.
 
 ```markdown
 # Tasks
@@ -166,8 +168,8 @@ session started vs completed work.
 
 ### Guidelines
 
-* Never delete tasks — mark as `[x]` completed or `[-]` skipped
-* Never move tasks between sections — use inline tags for status
+* Never delete tasks; mark as `[x]` completed or `[-]` skipped
+* Never move tasks between sections; use inline tags for status
 * Use `ctx tasks archive` periodically to move completed tasks to archive
 * Mark current work with `#in-progress` inline tag
 
@@ -207,7 +209,7 @@ get re-debated.
 
 **Status**: Accepted
 
-**Context**: Starting new project, need to choose type checking level.
+**Context**: Starting a new project, need to choose the type-checking level.
 
 **Decision**: Enable TypeScript strict mode with all strict flags.
 
@@ -445,23 +447,24 @@ See [Integrations](integrations.md#context-update-commands) for full documentati
 
 All context files follow these conventions:
 
-1. **Headers define structure** — `#` for title, `##` for sections, `###` for 
+1. **Headers define structure**: `#` for title, `##` for sections, `###` for 
    items
-2. **Bold keys for fields** — `**Key**:` followed by value
-3. **Code blocks are literal** — Never parse code block content as structure
-4. **Lists are ordered** — Items appear in priority/chronological order
-5. **Tags are inline** — Backtick-wrapped tags like `#priority:high`
+2. **Bold keys for fields**: `**Key**:` followed by value
+3. **Code blocks are literal**: Never parse code block content as structure
+4. **Lists are ordered**: Items appear in priority/chronological order
+5. **Tags are inline**: Backtick-wrapped tags like `#priority:high`
 
 ## Further Reading
 
-- [Refactoring with Intent](blog/2026-02-01-refactoring-with-intent.md) — How persistent context prevents drift during refactoring sessions
+- [Refactoring with Intent](blog/2026-02-01-refactoring-with-intent.md):
+  How persistent context prevents drift during refactoring sessions
 
 ## Token Efficiency
 
 Keep context files concise:
 
 * Use abbreviations in tags, not prose
-* Omit obvious words ("The", "This")
+* Omit obvious words ("*The*," "*This*")
 * Prefer bullet points over paragraphs
 * Keep examples minimal but illustrative
 * Archive old completed items periodically

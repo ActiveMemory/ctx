@@ -325,6 +325,35 @@
   
   
     <li class="md-nav__item">
+      <a href="../upgrading/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../context-files/" class="md-nav__link">
         
   
@@ -840,6 +869,89 @@
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ctx pad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-add" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad add
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-show" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad show
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-rm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad rm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-edit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad edit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-mv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad mv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-resolve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad resolve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1633,6 +1745,89 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-pad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ctx pad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-add" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad add
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-show" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad show
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-rm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad rm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-edit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad edit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-mv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad mv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-resolve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad resolve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1728,6 +1923,10 @@
 <td><code>--no-color</code></td>
 <td>Disable colored output</td>
 </tr>
+<tr>
+<td><code>--allow-outside-cwd</code></td>
+<td>Allow context directory outside current working directory</td>
+</tr>
 </tbody>
 </table>
 <blockquote>
@@ -1784,11 +1983,11 @@
 </tr>
 <tr>
 <td><a href="#ctx-decisions"><code>ctx decisions</code></a></td>
-<td>Reindex DECISIONS.md</td>
+<td>Reindex <code>DECISIONS.md</code></td>
 </tr>
 <tr>
 <td><a href="#ctx-learnings"><code>ctx learnings</code></a></td>
-<td>Reindex LEARNINGS.md</td>
+<td>Reindex <code>LEARNINGS.md</code></td>
 </tr>
 <tr>
 <td><a href="#ctx-recall"><code>ctx recall</code></a></td>
@@ -1813,6 +2012,10 @@
 <tr>
 <td><a href="#ctx-loop"><code>ctx loop</code></a></td>
 <td>Generate autonomous loop script</td>
+</tr>
+<tr>
+<td><a href="#ctx-pad"><code>ctx pad</code></a></td>
+<td>Encrypted scratchpad for sensitive one-liners</td>
 </tr>
 </tbody>
 </table>
@@ -1929,33 +2132,6 @@
 <thead>
 <tr>
 <th>Flag</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--budget &lt;tokens&gt;</code></td>
-<td>Token budget (default: 8000)</td>
-</tr>
-<tr>
-<td><code>--format md\|json</code></td>
-<td>Output format (default: md)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Output</strong>:</p>
-<ul>
-<li>Read order for context files</li>
-<li>Constitution rules (never truncated)</li>
-<li>Current tasks</li>
-<li>Key conventions</li>
-<li>Recent decisions</li>
-</ul>
-<p><strong>Flags</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
 <th>Default</th>
 <th>Description</th>
 </tr>
@@ -1983,6 +2159,14 @@
 </tr>
 </tbody>
 </table>
+<p><strong>Output</strong>:</p>
+<ul>
+<li>Read order for context files</li>
+<li>Constitution rules (never truncated)</li>
+<li>Current tasks</li>
+<li>Key conventions</li>
+<li>Recent decisions</li>
+</ul>
 <p><strong>Example</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Default (8000 tokens, markdown)</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>agent
@@ -2070,7 +2254,7 @@
 <tbody>
 <tr>
 <td><code>--priority &lt;level&gt;</code></td>
-<td></td>
+<td><code>-p</code></td>
 <td>Priority for tasks: <code>high</code>, <code>medium</code>, <code>low</code></td>
 </tr>
 <tr>
@@ -2372,7 +2556,7 @@ pending tasks (<code>[ ]</code>) remain in TASKS.md.</p>
 <p>Regenerate the quick-reference index at the top of DECISIONS.md.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
 </span></code></pre></div>
-<p>The index is a compact table showing date and title for each decision,
+<p>The index is a compact table showing the date and title for each decision,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to DECISIONS.md or when migrating existing
 files to use the index format.</p>
@@ -2389,7 +2573,7 @@ files to use the index format.</p>
 <p>Regenerate the quick-reference index at the top of LEARNINGS.md.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
 </span></code></pre></div>
-<p>The index is a compact table showing date and title for each learning,
+<p>The index is a compact table showing the date and title for each learning,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to LEARNINGS.md or when migrating existing
 files to use the index format.</p>
@@ -2599,8 +2783,8 @@ all sessions by date, and individual pages for each journal entry.</p>
 <li><strong>Transformed frontmatter</strong> (<code>topics</code> → <code>tags</code> for Obsidian integration)</li>
 <li><strong>Minimal <code>.obsidian/</code></strong> config enforcing wikilink mode</li>
 </ul>
-<p>No external dependencies required. Open the output directory as an Obsidian
-vault directly.</p>
+<p>No external dependencies are required:
+Open the output directory as an Obsidian  vault directly.</p>
 <p><strong>Example</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w">                          </span><span class="c1"># Generate in .context/journal-obsidian/</span>
 </span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx<span class="w">    </span><span class="c1"># Custom output directory</span>
@@ -2768,6 +2952,85 @@ AI builds on its previous work.</p>
 </span></code></pre></div>
 <p>See <a href="../autonomous-loop/">Autonomous Loops</a> for detailed workflow documentation.</p>
 <hr />
+<h3 id="ctx-pad"><code>ctx pad</code><a class="headerlink" href="#ctx-pad" title="Permanent link">&para;</a></h3>
+<p>Encrypted scratchpad for sensitive one-liners that travel with the project.</p>
+<p>When invoked without a subcommand, lists all entries.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>ctx<span class="w"> </span>pad
+</span><span id="__span-56-2"><a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>&lt;subcommand&gt;
+</span></code></pre></div>
+<h4 id="ctx-pad-add"><code>ctx pad add</code><a class="headerlink" href="#ctx-pad-add" title="Permanent link">&para;</a></h4>
+<p>Append a new entry to the scratchpad.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span>&lt;text&gt;
+</span></code></pre></div>
+<p><strong>Example</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;DATABASE_URL=postgres://user:pass@host/db&quot;</span>
+</span></code></pre></div>
+<h4 id="ctx-pad-show"><code>ctx pad show</code><a class="headerlink" href="#ctx-pad-show" title="Permanent link">&para;</a></h4>
+<p>Output the raw text of an entry by number.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span>&lt;n&gt;
+</span></code></pre></div>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>n</code>: 1-based entry number</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">3</span>
+</span></code></pre></div>
+<h4 id="ctx-pad-rm"><code>ctx pad rm</code><a class="headerlink" href="#ctx-pad-rm" title="Permanent link">&para;</a></h4>
+<p>Remove an entry by number.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span>&lt;n&gt;
+</span></code></pre></div>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>n</code>: 1-based entry number</li>
+</ul>
+<h4 id="ctx-pad-edit"><code>ctx pad edit</code><a class="headerlink" href="#ctx-pad-edit" title="Permanent link">&para;</a></h4>
+<p>Replace, append to, or prepend to an entry.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span>&lt;n&gt;<span class="w"> </span><span class="o">[</span>text<span class="o">]</span>
+</span></code></pre></div>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>n</code>: 1-based entry number</li>
+<li><code>text</code>: Replacement text (mutually exclusive with <code>--append</code>/<code>--prepend</code>)</li>
+</ul>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--append</code></td>
+<td>Append text to the end of the entry</td>
+</tr>
+<tr>
+<td><code>--prepend</code></td>
+<td>Prepend text to the beginning of entry</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;new text&quot;</span>
+</span><span id="__span-63-2"><a id="__codelineno-63-2" name="__codelineno-63-2" href="#__codelineno-63-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot; suffix&quot;</span>
+</span><span id="__span-63-3"><a id="__codelineno-63-3" name="__codelineno-63-3" href="#__codelineno-63-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">&quot;prefix &quot;</span>
+</span></code></pre></div>
+<h4 id="ctx-pad-mv"><code>ctx pad mv</code><a class="headerlink" href="#ctx-pad-mv" title="Permanent link">&para;</a></h4>
+<p>Move an entry from one position to another.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>mv<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;
+</span></code></pre></div>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>from</code>: Source position (1-based)</li>
+<li><code>to</code>: Destination position (1-based)</li>
+</ul>
+<h4 id="ctx-pad-resolve"><code>ctx pad resolve</code><a class="headerlink" href="#ctx-pad-resolve" title="Permanent link">&para;</a></h4>
+<p>Show both sides of a merge conflict in the encrypted scratchpad.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
+</span></code></pre></div>
+<hr />
 <h2 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2783,7 +3046,7 @@ AI builds on its previous work.</p>
 </tr>
 <tr>
 <td>1</td>
-<td>General error</td>
+<td>General error / warnings (e.g. drift)</td>
 </tr>
 <tr>
 <td>2</td>
@@ -2791,7 +3054,7 @@ AI builds on its previous work.</p>
 </tr>
 <tr>
 <td>3</td>
-<td>Invalid arguments</td>
+<td>Violations found (e.g. drift)</td>
 </tr>
 <tr>
 <td>4</td>
@@ -2823,16 +3086,16 @@ AI builds on its previous work.</p>
 </tbody>
 </table>
 <h2 id="configuration-file">Configuration File<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
-<p>Optional <code>.contextrc</code> (YAML format) at project root:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="c1"># .contextrc</span>
-</span><span id="__span-56-2"><a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context</span><span class="w"> </span><span class="c1"># Context directory name</span>
-</span><span id="__span-56-3"><a id="__codelineno-56-3" name="__codelineno-56-3" href="#__codelineno-56-3"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">    </span><span class="c1"># Default token budget</span>
-</span><span id="__span-56-4"><a id="__codelineno-56-4" name="__codelineno-56-4" href="#__codelineno-56-4"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">       </span><span class="c1"># File loading priority</span>
-</span><span id="__span-56-5"><a id="__codelineno-56-5" name="__codelineno-56-5" href="#__codelineno-56-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
-</span><span id="__span-56-6"><a id="__codelineno-56-6" name="__codelineno-56-6" href="#__codelineno-56-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
-</span><span id="__span-56-7"><a id="__codelineno-56-7" name="__codelineno-56-7" href="#__codelineno-56-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
-</span><span id="__span-56-8"><a id="__codelineno-56-8" name="__codelineno-56-8" href="#__codelineno-56-8"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Auto-archive old items</span>
-</span><span id="__span-56-9"><a id="__codelineno-56-9" name="__codelineno-56-9" href="#__codelineno-56-9"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"> </span><span class="c1"># Days before archiving</span>
+<p>Optional <code>.contextrc</code> (<em>YAML format</em>) at project root:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a><span class="c1"># .contextrc</span>
+</span><span id="__span-66-2"><a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context</span><span class="w"> </span><span class="c1"># Context directory name</span>
+</span><span id="__span-66-3"><a id="__codelineno-66-3" name="__codelineno-66-3" href="#__codelineno-66-3"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">    </span><span class="c1"># Default token budget</span>
+</span><span id="__span-66-4"><a id="__codelineno-66-4" name="__codelineno-66-4" href="#__codelineno-66-4"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">       </span><span class="c1"># File loading priority</span>
+</span><span id="__span-66-5"><a id="__codelineno-66-5" name="__codelineno-66-5" href="#__codelineno-66-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
+</span><span id="__span-66-6"><a id="__codelineno-66-6" name="__codelineno-66-6" href="#__codelineno-66-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
+</span><span id="__span-66-7"><a id="__codelineno-66-7" name="__codelineno-66-7" href="#__codelineno-66-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
+</span><span id="__span-66-8"><a id="__codelineno-66-8" name="__codelineno-66-8" href="#__codelineno-66-8"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Auto-archive old items</span>
+</span><span id="__span-66-9"><a id="__codelineno-66-9" name="__codelineno-66-9" href="#__codelineno-66-9"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"> </span><span class="c1"># Days before archiving</span>
 </span></code></pre></div>
 <p><strong>Priority order:</strong> CLI flags &gt; Environment variables &gt; <code>.contextrc</code> &gt; Defaults</p>
 <p>All settings are optional. Missing values use defaults.</p>

@@ -59,6 +59,7 @@ elif [ "$COUNT" -gt 15 ]; then
 fi
 
 if [ "$SHOULD_CHECK" = true ]; then
+    echo "IMPORTANT: Relay this context checkpoint to the user VERBATIM before answering their question."
     echo ""
     echo "┌─ Context Checkpoint (prompt #${COUNT}) ────────────────"
     echo "│ Assess remaining context capacity."

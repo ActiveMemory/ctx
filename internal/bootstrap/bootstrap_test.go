@@ -216,7 +216,7 @@ func TestRootCmdPersistentPreRun_BoundaryViolation(t *testing.T) {
 	}
 
 	// Run this test in a subprocess with the env var set
-	sub := exec.Command(os.Args[0], "-test.run=^TestRootCmdPersistentPreRun_BoundaryViolation$")
+	sub := exec.Command(os.Args[0], "-test.run=^TestRootCmdPersistentPreRun_BoundaryViolation$") //nolint:gosec // test re-exec pattern
 	sub.Env = append(os.Environ(), "TEST_BOUNDARY_EXIT=1")
 	err := sub.Run()
 	if err == nil {

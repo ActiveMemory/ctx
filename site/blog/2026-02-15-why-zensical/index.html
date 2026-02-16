@@ -25,7 +25,7 @@
     
     
       
-        <title>Why Zensical - ctx: do you remember?</title>
+        <title>Version Numbers Are Lagging Indicators - ctx: do you remember?</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#why-zensical" class="md-skip">
+        <a href="#version-numbers-are-lagging-indicators" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Why Zensical
+              Version Numbers Are Lagging Indicators
             
           </span>
         </div>
@@ -302,6 +302,35 @@
     
   
     Adopting ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../upgrading/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading ctx
   
 
     
@@ -748,10 +777,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#choosing-the-right-renderer-for-the-wrong-reasons-is-still-wrong" class="md-nav__link">
+  <a href="#why-ctxs-journal-site-runs-on-a-v0021-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing the Right Renderer for the Wrong Reasons Is Still Wrong
+        Why ctx's Journal Site Runs on a v0.0.21 Tool
       
     </span>
   </a>
@@ -759,10 +788,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-ctx-actually-needs" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What ctx Actually Needs
+        The Problem
       
     </span>
   </a>
@@ -770,10 +799,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-squidfunk-lineage" class="md-nav__link">
+  <a href="#the-evaluation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The squidfunk Lineage
+        The Evaluation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Evaluation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Team
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-the-migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Migration Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-the-dependency-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The Dependency Tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-the-fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The Fit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-caveat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Caveat
       
     </span>
   </a>
@@ -781,10 +882,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-caveat-pre-10" class="md-nav__link">
+  <a href="#the-evaluation-framework" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Caveat: Pre-1.0
+        The Evaluation Framework
       
     </span>
   </a>
@@ -792,21 +893,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#a-rust-shaped-future" class="md-nav__link">
+  <a href="#the-broader-pattern" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A Rust-Shaped Future
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Decision
+        The Broader Pattern
       
     </span>
   </a>
@@ -839,84 +929,89 @@
   
 
 
-<h1 id="why-zensical">Why Zensical<a class="headerlink" href="#why-zensical" title="Permanent link">&para;</a></h1>
+<h1 id="version-numbers-are-lagging-indicators">Version Numbers Are Lagging Indicators<a class="headerlink" href="#version-numbers-are-lagging-indicators" title="Permanent link">&para;</a></h1>
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="choosing-the-right-renderer-for-the-wrong-reasons-is-still-wrong">Choosing the Right Renderer for the Wrong Reasons Is Still Wrong<a class="headerlink" href="#choosing-the-right-renderer-for-the-wrong-reasons-is-still-wrong" title="Permanent link">&para;</a></h2>
-<p><em>Jose Alekhinne / February 15, 2026</em></p>
+<h2 id="why-ctxs-journal-site-runs-on-a-v0021-tool">Why ctx's Journal Site Runs on a v0.0.21 Tool<a class="headerlink" href="#why-ctxs-journal-site-runs-on-a-v0021-tool" title="Permanent link">&para;</a></h2>
+<p><em>Jose Alekhinne / 2026-02-15</em></p>
 <div class="admonition question">
-<p class="admonition-title">How do you pick a static site generator for a Go project?</p>
-<p>You pick the one that respects what you already have.</p>
+<p class="admonition-title">Would you ship production infrastructure on a v0.0.21 dependency?</p>
+<p>Most engineers wouldn't. Version numbers signal maturity. Pre-1.0
+means unstable API, missing features, risk.</p>
+<p>But version numbers tell you where a project <strong>has been</strong>.
+They say nothing about where it's <strong>going</strong>.</p>
+<p>I just bet ctx's entire journal site on a tool that hasn't
+hit v0.1.0. Here's why I'd do it again.</p>
 </div>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>When <a href="../2026-02-01-ctx-v0.2.0-the-archaeology-release/">v0.2.0</a> shipped the journal system, the pipeline was clear:
 export sessions to Markdown, enrich them with YAML frontmatter, and
 render them into something browsable. The first two steps were solved.
 The third needed a tool.</p>
-<p>The obvious candidates were:</p>
-<table>
-<thead>
-<tr>
-<th>Generator</th>
-<th>Language</th>
-<th>Strength</th>
-<th>Problem for ctx</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Hugo</td>
-<td>Go</td>
-<td>Blazing fast</td>
-<td>Templating is painful</td>
-</tr>
-<tr>
-<td>Astro</td>
-<td>JS</td>
-<td>Modern, flexible</td>
-<td>JS ecosystem overkill for docs</td>
-</tr>
-<tr>
-<td>MkDocs</td>
-<td>Python</td>
-<td>Great defaults</td>
-<td>Slow on large sites</td>
-</tr>
-<tr>
-<td>Zensical</td>
-<td>Python</td>
-<td>MkDocs DNA, built for scale</td>
-<td>Pre-1.0</td>
-</tr>
-</tbody>
-</table>
-<p>The instinct was Hugo. Same language as <code>ctx</code>. Fast. Well-established.</p>
-<p>But instinct is not analysis.</p>
-<hr />
-<h2 id="what-ctx-actually-needs">What ctx Actually Needs<a class="headerlink" href="#what-ctx-actually-needs" title="Permanent link">&para;</a></h2>
 <p>The journal entries are standard Markdown with YAML frontmatter, tables,
 and fenced code blocks. That is the entire format. No JSX. No shortcodes.
 No custom templating. Just Markdown rendered well.</p>
-<p>This is the same principle behind the <a href="../2026-02-03-the-attention-budget/">attention budget</a>:
-<strong>do not overfit the tool to hypothetical requirements</strong>. The right
-amount of capability is the minimum needed for the current task.</p>
-<p>Hugo is a powerful static site generator. It is also a powerful
-templating engine, a powerful asset pipeline, and a powerful taxonomy
-system. For rendering Markdown journals, that power is overhead:
-complexity you pay for but never use.</p>
-<p>What <code>ctx</code> needs is:</p>
+<p>The requirements are modest:</p>
 <ul>
 <li>Read <code>mkdocs.yml</code></li>
 <li>Render Markdown with extensions (admonitions, tabs, tables)</li>
 <li>Search</li>
-<li>Fast incremental rebuilds during <code>--serve</code></li>
+<li>Handle 100+ files without choking on incremental rebuilds</li>
+<li>Look good out of the box</li>
+<li>Not lock me in</li>
 </ul>
-<p>That is exactly what <a href="https://github.com/zensical/zensical">zensical</a> does.</p>
+<p>The obvious candidates:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Language</th>
+<th>Strengths</th>
+<th>Pain Points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hugo</strong></td>
+<td>Go</td>
+<td>Blazing fast, mature</td>
+<td>Templating is painful; Go templates fight you on anything non-trivial</td>
+</tr>
+<tr>
+<td><strong>Astro</strong></td>
+<td>JS/TS</td>
+<td>Modern, flexible</td>
+<td>JS ecosystem overhead; overkill for a docs site</td>
+</tr>
+<tr>
+<td><strong>MkDocs + Material</strong></td>
+<td>Python</td>
+<td>Beautiful defaults, massive community (22k+ stars)</td>
+<td>Slow incremental rebuilds on large sites; limited extensibility model</td>
+</tr>
+<tr>
+<td><strong>Zensical</strong></td>
+<td>Python</td>
+<td>Built to fix MkDocs' limits; 4-5x faster rebuilds</td>
+<td>v0.0.21; module system not yet shipped</td>
+</tr>
+</tbody>
+</table>
+<p>The instinct was Hugo. Same language as <code>ctx</code>. Fast. Well-established.</p>
+<p>But instinct is not analysis. I picked the one with the lowest version
+number.</p>
 <hr />
-<h2 id="the-squidfunk-lineage">The squidfunk Lineage<a class="headerlink" href="#the-squidfunk-lineage" title="Permanent link">&para;</a></h2>
-<p>Zensical comes from the same team that built
-<a href="https://github.com/squidfunk/mkdocs-material">Material for MkDocs</a> -- the most popular MkDocs theme with
-22k+ stars. These people know docs-as-code deeply. They did not build
-zensical because MkDocs was bad. They built it because MkDocs hit a
-ceiling:</p>
+<h2 id="the-evaluation">The Evaluation<a class="headerlink" href="#the-evaluation" title="Permanent link">&para;</a></h2>
+<p>Here is what I actually evaluated, in order:</p>
+<h3 id="1-the-team">1. The Team<a class="headerlink" href="#1-the-team" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/zensical/zensical">Zensical</a> is built by <a href="https://github.com/squidfunk">squidfunk</a> --
+the same person behind <a href="https://github.com/squidfunk/mkdocs-material">Material for MkDocs</a>, the most popular
+MkDocs theme with 22,000+ stars. It powers documentation sites for projects
+across every language and framework.</p>
+<p>This is not someone learning how to build static site generators.
+This is someone who spent years understanding exactly where MkDocs
+breaks and decided to fix it from the ground up.</p>
+<p>They did not build zensical because MkDocs was bad. They built it
+because MkDocs hit a ceiling:</p>
 <ul>
 <li>
 <p><strong>Incremental rebuilds</strong>: 4-5x faster during serve. When you have
@@ -930,76 +1025,222 @@ ceiling:</p>
   that slows down as content accumulates is a tool you will eventually
   replace.</p>
 </li>
-<li>
-<p><strong>Migration-friendly</strong>: Reads <code>mkdocs.yml</code> natively. If <code>ctx</code> ever
-  needed to pivot back to MkDocs or forward to something else, there
-  is no lock-in. The configuration is portable.</p>
-</li>
 </ul>
+<p><strong>A proven team starting fresh is more predictable than an
+unproven team at v3.0.</strong></p>
+<h3 id="2-the-architecture">2. The Architecture<a class="headerlink" href="#2-the-architecture" title="Permanent link">&para;</a></h3>
+<p>Zensical is investing in a Rust-based Markdown parser with CommonMark
+support. That signals something about the team's priorities:
+<strong>performance foundations first, features second</strong>.</p>
+<p>ctx's journal will grow. Every exported session adds files.
+Every enrichment pass adds metadata. Choosing a tool that
+gets <em>slower</em> as you add content means choosing to migrate later.
+Choosing one built for scale means the decision holds.</p>
+<h3 id="3-the-migration-path">3. The Migration Path<a class="headerlink" href="#3-the-migration-path" title="Permanent link">&para;</a></h3>
+<p>Zensical reads <code>mkdocs.yml</code> natively. If it doesn't work out,
+I can move back to MkDocs + Material with zero content changes.
+The Markdown is standard. The frontmatter is standard. The
+configuration is compatible.</p>
 <p>This is the <a href="../2026-02-14-irc-as-context/">infrastructure pattern</a> again. The same way ZNC
 decouples presence from the client, zensical decouples rendering from
 the generator. The Markdown is yours. The frontmatter is standard
 YAML. The configuration is MkDocs-compatible. You are not locked into
 anything except your own content.</p>
+<p><strong>No lock-in</strong> is not a feature. It's a design philosophy. It's
+the same reason ctx uses plain Markdown files in <code>.context/</code>
+instead of a database: the format should outlive the tool.</p>
+<div class="admonition tip">
+<p class="admonition-title">Lock-in Is the Real Risk, Not Version Numbers</p>
+<p>A mature tool with a proprietary format is riskier than a
+young tool with a standard one. Version numbers measure
+time invested. Portability measures respect for the user.</p>
+</div>
+<h3 id="4-the-dependency-tree">4. The Dependency Tree<a class="headerlink" href="#4-the-dependency-tree" title="Permanent link">&para;</a></h3>
+<p>Here is what <code>pip install zensical</code> actually pulls in:</p>
+<ul>
+<li>click</li>
+<li>Markdown</li>
+<li>Pygments</li>
+<li>pymdown-extensions</li>
+<li>PyYAML</li>
+</ul>
+<p>Five dependencies. All well-known. No framework bloat. No
+bundler. No transpiler. No node_modules black hole.</p>
+<p>3k GitHub stars at v0.0.21 is strong early traction for a pre-1.0
+project. The dependency tree is thin. No bloat.</p>
+<h3 id="5-the-fit">5. The Fit<a class="headerlink" href="#5-the-fit" title="Permanent link">&para;</a></h3>
+<p>This is the same principle behind the <a href="../2026-02-03-the-attention-budget/">attention budget</a>:
+<strong>do not overfit the tool to hypothetical requirements</strong>. The right
+amount of capability is the minimum needed for the current task.</p>
+<p>Hugo is a powerful static site generator. It is also a powerful
+templating engine, a powerful asset pipeline, and a powerful taxonomy
+system. For rendering Markdown journals, that power is overhead:
+complexity you pay for but never use.</p>
+<p>ctx's journal files are standard Markdown with YAML frontmatter,
+tables, and fenced code blocks. That is exactly the sweet spot
+Zensical inherits from Material for MkDocs. No custom plugins
+needed. No special syntax. No templating gymnastics.</p>
+<p>The requirements match the capabilities. Not the capabilities
+that are promised -- the ones that exist today, at v0.0.21.</p>
 <hr />
-<h2 id="the-caveat-pre-10">The Caveat: Pre-1.0<a class="headerlink" href="#the-caveat-pre-10" title="Permanent link">&para;</a></h2>
-<p>Zensical is <code>v0.0.21</code>. Genuinely early.</p>
-<p>The module system for third-party extensions opens early 2026. If <code>ctx</code>
-ever needs custom plugins -- auto-linking to session IDs, special
-journal metadata rendering -- they would need to wait for that or work
-around it.</p>
-<p>The install UX is also rough. We discovered this firsthand:
+<h2 id="the-caveat">The Caveat<a class="headerlink" href="#the-caveat" title="Permanent link">&para;</a></h2>
+<p>It would be dishonest not to mention what's missing.</p>
+<p>The module system for third-party extensions opens in early 2026.
+If ctx ever needs custom plugins -- auto-linking session IDs,
+rendering special journal metadata -- that infrastructure isn't
+there yet.</p>
+<p>The install experience is rough. We discovered this firsthand:
 <code>pip install zensical</code> often fails on macOS (system Python stubs,
 Homebrew's PEP 668 restrictions). The answer is
 <a href="https://pipx.pypa.io/">pipx</a>, which creates an isolated environment
 with the correct Python version automatically. That friction is typical
 for young Python tooling, and it is documented in the
 <a href="../../getting-started/#journal-site">Getting Started guide</a>.</p>
-<p>But for <code>ctx</code>'s use case -- rendering journal Markdown into a browsable
-site -- it is almost ideal. The journals are exactly the sweet spot
-zensical inherits from Material for MkDocs: standard Markdown, YAML
-frontmatter, fenced code, tables. No custom plugins needed.</p>
+<p>And 3,000 stars at v0.0.21 is strong early traction, but it's
+still early. The community is small. Stack Overflow answers
+don't exist yet. When something breaks, you're reading source
+code, not documentation.</p>
+<p><strong>These are real costs. I chose to pay them because the
+alternative costs are higher.</strong></p>
+<p>Hugo's templating pain would cost me time on every site change.
+Astro's JS ecosystem would add complexity I don't need. MkDocs
+would work today but hit scaling walls tomorrow. Zensical's costs
+are front-loaded and shrinking. The others compound.</p>
 <hr />
-<h2 id="a-rust-shaped-future">A Rust-Shaped Future<a class="headerlink" href="#a-rust-shaped-future" title="Permanent link">&para;</a></h2>
-<p>Zensical is investing in a Rust-based Markdown parser with CommonMark
-support. That signals something about the team's priorities:
-<strong>performance foundations first, features second</strong>.</p>
-<p>3k GitHub stars at <code>v0.0.21</code> is strong early traction for a pre-1.0
-project. The dependency tree is thin: click, Markdown, Pygments,
-pymdown-extensions, PyYAML. No bloat.</p>
-<p>A pre-1.0 tool with a proven team, thin dependencies, and a Rust
-performance roadmap is a better bet than a mature tool that does not
-fit the use case.</p>
+<h2 id="the-evaluation-framework">The Evaluation Framework<a class="headerlink" href="#the-evaluation-framework" title="Permanent link">&para;</a></h2>
+<p>For anyone facing a similar choice, here is the framework that
+emerged:</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>What It Tells You</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Team track record</strong></td>
+<td>Whether the architecture will be sound</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Migration path</strong></td>
+<td>Whether you can leave if wrong</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Current fit</strong></td>
+<td>Whether it solves <em>your</em> problem today</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Dependency tree</strong></td>
+<td>How much complexity you're inheriting</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Version number</strong></td>
+<td>How long the project has existed</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Star count</strong></td>
+<td>Community interest (not quality)</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Feature list</strong></td>
+<td>What's possible (not what you need)</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table>
+<p>The bottom three are the metrics most engineers optimize for.
+The top four are the ones that predict whether you'll still be
+happy with the choice in a year.</p>
+<div class="admonition warning">
+<p class="admonition-title">Features You Don't Need Are Not Free</p>
+<p>Every feature in a dependency is code you inherit but don't
+control. A tool with 200 features where you use 5 means
+195 features worth of surface area for bugs, breaking changes,
+and security issues that have nothing to do with your use case.</p>
+<p><strong>Fit is the inverse of feature count.</strong></p>
+</div>
 <hr />
-<h2 id="the-decision">The Decision<a class="headerlink" href="#the-decision" title="Permanent link">&para;</a></h2>
-<p>The alternatives were real. Hugo is fast but its templating is painful
-for pure documentation. Astro is modern but brings the entire JS
-ecosystem for a problem that does not need it. MkDocs works but
-struggles at scale -- and the journal will only grow.</p>
-<p>For a Go project that generates Markdown journals, zensical hits
-the right balance: Python-based but thin, great defaults, and the
-team behind it has a decade of docs-as-code experience.</p>
+<h2 id="the-broader-pattern">The Broader Pattern<a class="headerlink" href="#the-broader-pattern" title="Permanent link">&para;</a></h2>
+<p>This is part of a theme I keep encountering in this project:</p>
+<p><strong>Leading indicators beat lagging indicators.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Lagging Indicator</th>
+<th>Leading Indicator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tooling</strong></td>
+<td>Version number, star count</td>
+<td>Team track record, architecture</td>
+</tr>
+<tr>
+<td><strong>Code quality</strong></td>
+<td>Test coverage percentage</td>
+<td>Whether tests catch real bugs</td>
+</tr>
+<tr>
+<td><strong>Context persistence</strong></td>
+<td>Number of files in <code>.context/</code></td>
+<td>Whether the AI makes fewer mistakes</td>
+</tr>
+<tr>
+<td><strong>Skills</strong></td>
+<td>Number of skills created</td>
+<td>Whether each skill fires at the right time</td>
+</tr>
+<tr>
+<td><strong>Consolidation</strong></td>
+<td>Lines of code refactored</td>
+<td>Whether drift stops accumulating</td>
+</tr>
+</tbody>
+</table>
+<p>Version numbers, star counts, coverage percentages, file counts --
+these are all measures of <em>effort expended</em>. They say nothing about
+<em>value delivered</em>.</p>
+<p>The question is never "how mature is this tool?" The question is
+"does this tool's trajectory intersect with my needs?"</p>
+<p>Zensical's trajectory: a proven team fixing known problems in a
+proven architecture, with a standard format and no lock-in.</p>
+<p>ctx's needs: render standard Markdown into a browsable site, at
+scale, without complexity.</p>
+<p>The intersection is clean. The version number is noise.</p>
 <p>This is the same kind of decision that shows up throughout <code>ctx</code>:</p>
 <ul>
 <li><a href="../2026-02-04-skills-that-fight-the-platform/">Skills that fight the platform</a> taught that the best
   integration extends existing behavior, not replaces it.</li>
 <li><a href="../2026-02-05-you-cant-import-expertise/">You can't import expertise</a> taught that tools should
   grow from your project's actual needs, not from feature checklists.</li>
+<li><a href="../../../ideas/blog-draft-2026-02-12-context-as-infrastructure/">Context as infrastructure</a> argues that the format should
+  outlive the tool -- and zensical honors that principle by reading
+  standard Markdown and standard MkDocs configuration.</li>
 </ul>
-<p>Zensical does not try to be everything. It tries to render Markdown
-well, fast, and at scale. That is what <code>ctx</code> needs. Nothing more.</p>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">If you remember one thing from this post...</p>
-<p>Pick tools that respect what you already have.</p>
-<p>The journal entries are Markdown. The configuration is MkDocs-compatible.
-The content is portable.</p>
-<p>The best infrastructure decision is the one that does not
-force you to change your content to fit the tool.</p>
+<p><strong>Version numbers measure where a project has been.
+The team and the architecture tell you where it's going.</strong></p>
+<p>A v0.0.21 tool built by the right team on the right
+foundations is a safer bet than a v5.0 tool that doesn't
+fit your problem.</p>
+<p><strong>Bet on trajectories, not timestamps.</strong></p>
 </div>
 <hr />
-<p><em>This post started as an evaluation note in <code>ideas/</code>. The analysis
-held up. The note became a post. The meta continues.</em></p>
+<p><em>This post started as an evaluation note in <code>ideas/</code> and a separate
+decision log. The analysis held up. The two merged into one.
+The meta continues.</em></p>
 
 
 

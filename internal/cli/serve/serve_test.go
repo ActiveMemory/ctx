@@ -71,8 +71,8 @@ func TestRunServe_NotADirectory(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp file: %v", err)
 	}
-	defer os.Remove(tmpFile.Name())
-	tmpFile.Close()
+	defer func() { _ = os.Remove(tmpFile.Name()) }()
+	_ = tmpFile.Close()
 
 	serveErr := runServe([]string{tmpFile.Name()})
 	if serveErr == nil {
@@ -88,7 +88,7 @@ func TestRunServe_NoSiteConfig(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	serveErr := runServe([]string{tmpDir})
 	if serveErr == nil {
@@ -104,18 +104,16 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	// Create a zensical.toml so we pass the config check
 	tomlPath := filepath.Join(tmpDir, config.FileZensicalToml)
-	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0644); err != nil {
+	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0600); err != nil {
 		t.Fatalf("failed to create zensical.toml: %v", err)
 	}
 
 	// Ensure zensical is not in PATH
-	origPath := os.Getenv("PATH")
-	os.Setenv("PATH", "")
-	defer os.Setenv("PATH", origPath)
+	t.Setenv("PATH", "")
 
 	serveErr := runServe([]string{tmpDir})
 	if serveErr == nil {
@@ -185,27 +183,29 @@ func TestRunServe_WithMockZensical(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	tomlPath := filepath.Join(tmpDir, config.FileZensicalToml)
-	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0644); err != nil {
+	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0600); err != nil {
 		t.Fatalf("failed to create zensical.toml: %v", err)
 	}
 
 	// Create a fake zensical binary that just exits successfully
 	binDir := filepath.Join(tmpDir, "bin")
-	if err := os.MkdirAll(binDir, 0755); err != nil {
+	if err := os.MkdirAll(binDir, 0750); err != nil {
 		t.Fatalf("failed to create bin dir: %v", err)
 	}
 	fakeZensical := filepath.Join(binDir, "zensical")
-	if err := os.WriteFile(fakeZensical, []byte("#!/bin/sh\nexit 0\n"), 0755); err != nil {
+	if err := os.WriteFile(fakeZensical, []byte("#!/bin/sh\nexit 0\n"), 0600); err != nil {
 		t.Fatalf("failed to create fake zensical: %v", err)
+	}
+	if err := os.Chmod(fakeZensical, 0755); err != nil { //nolint:gosec // test needs executable
+		t.Fatalf("failed to chmod fake zensical: %v", err)
 	}
 
 	// Set PATH to include our fake binary
 	origPath := os.Getenv("PATH")
-	os.Setenv("PATH", binDir+":"+origPath)
-	defer os.Setenv("PATH", origPath)
+	t.Setenv("PATH", binDir+":"+origPath)
 
 	serveErr := runServe([]string{tmpDir})
 	if serveErr != nil {

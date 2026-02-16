@@ -9,10 +9,10 @@
         <meta name="description" content="ctx provides temporal continuity across sessions">
       
       
-        <meta name="author" content="Jose Alekhinne">
+        <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/blog/2026-02-05-you-cant-import-expertise/">
+        <link rel="canonical" href="https://ctx.ist/recipes/hook-output-patterns/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>You Can't Import Expertise - ctx: do you remember?</title>
+        <title>Hook Output Patterns - ctx: do you remember?</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#you-cant-import-expertise" class="md-skip">
+        <a href="#the-problem" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              You Can't Import Expertise
+              Hook Output Patterns
             
           </span>
         </div>
@@ -524,7 +524,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -727,7 +727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../blog/" class="md-nav__link">
         
   
   
@@ -767,8 +767,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -777,10 +775,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-good-skills-cant-be-copy-pasted" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Good Skills Can't Be Copy-Pasted
+        The Problem
       
     </span>
   </a>
@@ -788,10 +786,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-skill-looked-great-on-paper" class="md-nav__link">
+  <a href="#the-spectrum" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Skill Looked Great on Paper
+        The Spectrum
       
     </span>
   </a>
@@ -799,22 +797,99 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#applying-ear-the-70-20-10-split" class="md-nav__link">
+  <a href="#pattern-1-hard-gate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Applying E/A/R: The 70-20-10 Split
+        Pattern 1: Hard Gate
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Applying E&#x2f;A&#x2f;R: The 70-20-10 Split">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-2-verbatim-relay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: VERBATIM Relay
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-3-agent-directive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Agent Directive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-4-silent-context-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Silent Context Injection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-5-silent-side-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 5: Silent Side-Effect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patterns-not-yet-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patterns Not Yet Implemented
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Patterns Not Yet Implemented">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#what-was-redundant-70" class="md-nav__link">
+  <a href="#pattern-6-conditional-relay" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Was Redundant (~70%)
+        Pattern 6: Conditional Relay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-7-suggested-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 7: Suggested Action
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-8-escalating-severity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 8: Escalating Severity
       
     </span>
   </a>
@@ -827,49 +902,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-does-a-b-in-code-organization-actually-mean" class="md-nav__link">
+  <a href="#choosing-a-pattern" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Does a B+ in Code Organization Actually Mean?!
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What Does a B+ in Code Organization Actually Mean?!">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-was-activation-10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Was Activation (~10%)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-was-expert-20" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Was Expert (~20%)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-the-skill-didnt-know" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What the Skill Didn't Know
+        Choosing a Pattern
       
     </span>
   </a>
@@ -877,10 +913,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-adapted-skill" class="md-nav__link">
+  <a href="#design-tips" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Adapted Skill
+        Design Tips
       
     </span>
   </a>
@@ -888,43 +924,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-deeper-pattern" class="md-nav__link">
+  <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Deeper Pattern
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-template-trap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Template Trap
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-litmus-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Litmus Test
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-good-adaptation-looks-like" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Good Adaptation Looks Like
+        See Also
       
     </span>
   </a>
@@ -957,324 +960,243 @@
   
 
 
-<h1 id="you-cant-import-expertise">You Can't Import Expertise<a class="headerlink" href="#you-cant-import-expertise" title="Permanent link">&para;</a></h1>
+  <h1>Hook Output Patterns</h1>
+
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="why-good-skills-cant-be-copy-pasted">Why Good Skills Can't Be Copy-Pasted<a class="headerlink" href="#why-good-skills-cant-be-copy-pasted" title="Permanent link">&para;</a></h2>
-<p><em>Jose Alekhinne / 2026-02-05</em></p>
-<div class="admonition question">
-<p class="admonition-title">Have you ever dropped a well-crafted template into a project and had it do... nothing useful?</p>
-<p>The template was thorough. The structure was sound. The advice was correct.</p>
-<p>And yet it sat there, inert, while the same old problems kept drifting in.</p>
-</div>
-<p>I found a consolidation skill online. It was well-organized: four files,
-ten refactoring patterns, eight analysis dimensions, six report templates.
-Professional. Comprehensive. Exactly the kind of thing you'd bookmark and
-think <em>"I'll use this."</em></p>
-<p>Then I stopped, and applied <code>ctx</code>'s own evaluation framework: </p>
-<p><strong>70% of it was noise!</strong></p>
-<p>This post is about <strong>why</strong>.</p>
-<blockquote>
-<p><strong>Templates describe categories of problems.</strong></p>
-<p><strong>Expertise encodes which problems actually happen, and how often.</strong></p>
-</blockquote>
-<h2 id="the-skill-looked-great-on-paper">The Skill Looked Great on Paper<a class="headerlink" href="#the-skill-looked-great-on-paper" title="Permanent link">&para;</a></h2>
-<p>Here is what the consolidation skill offered:</p>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p>Claude Code hooks can output text, JSON, or nothing at all. But the <em>format</em>
+of that output determines who sees it and who acts on it. Choose wrong and
+your carefully crafted warning gets silently absorbed by the agent, or your
+agent-directed nudge gets dumped on the user as noise.</p>
+<p>This recipe catalogs the known hook output patterns and explains when to
+use each one.</p>
+<h2 id="the-spectrum">The Spectrum<a class="headerlink" href="#the-spectrum" title="Permanent link">&para;</a></h2>
+<p>These patterns form a spectrum based on <strong>who decides</strong> what the user sees:</p>
 <table>
 <thead>
 <tr>
-<th>File</th>
-<th>Content</th>
+<th>Pattern</th>
+<th>Who decides?</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>SKILL.md</code></td>
-<td>Entry point: 8 analysis dimensions, workflow, output formats</td>
+<td>Hard gate</td>
+<td>Hook decides (agent can't proceed)</td>
 </tr>
 <tr>
-<td><code>analysis-dimensions.md</code></td>
-<td>Detailed criteria for duplication, architecture, quality</td>
+<td>VERBATIM relay</td>
+<td>Hook decides (agent must show)</td>
 </tr>
 <tr>
-<td><code>consolidation-patterns.md</code></td>
-<td>10 refactoring patterns with before/after code</td>
+<td>Escalating severity</td>
+<td>Hook suggests, agent judges urgency</td>
 </tr>
 <tr>
-<td><code>report-templates.md</code></td>
-<td>6 output templates: executive summary, roadmap, onboarding</td>
+<td>Conditional relay</td>
+<td>Hook sets criteria, agent evaluates</td>
+</tr>
+<tr>
+<td>Suggested action</td>
+<td>Hook proposes, agent + user decide</td>
+</tr>
+<tr>
+<td>Agent directive</td>
+<td>Agent decides entirely</td>
+</tr>
+<tr>
+<td>Silent injection</td>
+<td>Nobody — invisible background context</td>
+</tr>
+<tr>
+<td>Silent side-effect</td>
+<td>Nobody — invisible background work</td>
 </tr>
 </tbody>
 </table>
-<p>It had a scoring system (<code>0-10</code> per dimension, letter grades <code>A+</code> through <code>F</code>).
-It had severity classifications with color-coded emojis. It had bash commands
-for detection. It even had antipattern warnings.</p>
-<p><strong>By any standard template review, this skill passes.</strong></p>
-<p>It looks like something an expert wrote. </p>
-<p>And that's <strong>exactly</strong> the trap.</p>
-<h2 id="applying-ear-the-70-20-10-split">Applying E/A/R: The 70-20-10 Split<a class="headerlink" href="#applying-ear-the-70-20-10-split" title="Permanent link">&para;</a></h2>
-<p>In a <a href="../2026-02-04-skills-that-fight-the-platform/" title="Skills That Fight the Platform">previous post</a>, I described the <strong>E/A/R framework</strong> for
-evaluating skills:</p>
-<ul>
-<li><strong>Expert</strong>: Knowledge that took years to learn. Keep.</li>
-<li><strong>Activation</strong>: Useful triggers or scaffolding. Keep if lightweight.</li>
-<li><strong>Redundant</strong>: Restates what the AI already knows. Delete.</li>
-</ul>
-<p>Target: &gt;70% Expert, &lt;10% Redundant.</p>
-<p>This skill scored the inverse.</p>
-<h3 id="what-was-redundant-70">What Was Redundant (~70%)<a class="headerlink" href="#what-was-redundant-70" title="Permanent link">&para;</a></h3>
-<p>Every code example was <strong>Rust</strong>. My project is <strong>Go</strong>.</p>
-<p>The analysis dimensions: duplication detection, architectural structure,
-code organization, refactoring opportunities... These are things Claude already
-does when you ask it to review code. </p>
-<p>The skill restated them with more ceremony but no more insight.</p>
-<p>The six report templates were generic scaffolding: Executive Summary,
-Onboarding Document, Architecture Documentation. They are useful if you are
-writing a consulting deliverable, but not when you are trying to catch
-convention drift in a &gt;15K-line Go CLI.</p>
-<h2 id="what-does-a-b-in-code-organization-actually-mean">What Does a <code>B+</code> in Code Organization <em>Actually</em> Mean?!<a class="headerlink" href="#what-does-a-b-in-code-organization-actually-mean" title="Permanent link">&para;</a></h2>
-<p>The scoring system (<em><code>0-10</code> per dimension, letter grades</em>) added ceremony
-without actionable insight. </p>
-<p>What is a <code>B+</code>? What do I do differently for an <code>A-</code>?</p>
-<p><strong>The skill told the AI what it already knew, in more words.</strong></p>
-<h3 id="what-was-activation-10">What Was Activation (<em>~10%</em>)<a class="headerlink" href="#what-was-activation-10" title="Permanent link">&para;</a></h3>
-<p>The consolidation checklist (<em>semantics preserved? tests pass? docs updated?</em>)
-was useful as a <strong>gate</strong>. But, it's the kind of thing you could inline in three
-lines.</p>
-<p>The phased roadmap structure was reasonable scaffolding for sequencing work.</p>
-<h3 id="what-was-expert-20">What Was Expert (<em>~20%</em>)<a class="headerlink" href="#what-was-expert-20" title="Permanent link">&para;</a></h3>
-<p>Three concepts survived:</p>
-<ol>
-<li>
-<p><strong>The Consolidation Decision Matrix</strong>: A concrete framework mapping
-   similarity level and instance count to action. "<em>Exact duplicate, 2+
-   instances: consolidate immediately.</em>" "<em>&lt;3 instances: leave it:
-   duplication is cheaper than wrong abstraction.</em>" This is the kind of
-   nuance that prevents premature generalization.</p>
-</li>
-<li>
-<p><strong>The Safe Migration Pattern</strong>: Create the new API alongside old, deprecate,
-   migrate incrementally, delete. Straightforward to describe, yet
-   forgettable under pressure.</p>
-</li>
-<li>
-<p><strong>Debt Interest Rate framing</strong>: Categorizing technical debt by how fast
-   it compounds (security vulns = daily, missing tests = per-change,
-   doc gaps = constant low cost). This changes prioritization.</p>
-</li>
-</ol>
-<p><strong>Three ideas out of four files and 700+ lines.</strong> The rest was filler
-that competed with the AI's built-in capabilities.</p>
-<h2 id="what-the-skill-didnt-know">What the Skill Didn't Know<a class="headerlink" href="#what-the-skill-didnt-know" title="Permanent link">&para;</a></h2>
-<div class="admonition tip">
-<p class="admonition-title">AI Without Context is Just a Corpus</p>
-<p>LLMs are optimized on insanely large corpora.
-And then they are passed through several layers of
-human-assisted refinement.
-The whole process costs millions of dollars.</p>
-<p>Yet, the uncomfortable truth is that no corpus can "<em>infer</em>"
-your project's design, convetions, patterns, habits, history,
-vision, and deliverables.</p>
-<p>Your project is unique: So should your skills be.</p>
-</div>
-<p>Here is the part no template can provide: </p>
-<p><strong><code>ctx</code>'s actual drift patterns.</strong></p>
-<p>Before evaluating the skill, I did <strong>archaeology</strong>. I read through:</p>
-<ul>
-<li>Blog posts from previous refactoring sessions</li>
-<li>The project's learnings and decisions files</li>
-<li>Session journals spanning <strong>weeks of development</strong></li>
-</ul>
-<p>What I found was specific:</p>
-<table>
-<thead>
-<tr>
-<th>Drift Pattern</th>
-<th>Where</th>
-<th>How Often</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Is</code>/<code>Has</code>/<code>Can</code> predicate prefixes</td>
-<td>5+ exported methods</td>
-<td>Every YOLO sprint</td>
-</tr>
-<tr>
-<td>Magic strings instead of constants</td>
-<td>7+ files</td>
-<td>Gradual accumulation</td>
-</tr>
-<tr>
-<td>Hardcoded file permissions (<code>0755</code>)</td>
-<td>80+ instances</td>
-<td>Since day one</td>
-</tr>
-<tr>
-<td>Lines exceeding 80 characters</td>
-<td>Especially test files</td>
-<td>Every session</td>
-</tr>
-<tr>
-<td>Duplicate code blocks</td>
-<td>Test and non-test code</td>
-<td>When agent is task-focused</td>
-</tr>
-</tbody>
-</table>
-<p>The generic skill had no check for any of these. It couldn't; because these
-patterns are specific to this project's conventions, its Go codebase, and
-its development rhythm.</p>
-<div class="admonition tip">
-<p class="admonition-title">The Insight</p>
-<p>The skill's analysis dimensions were about <em>categories of problems</em>.</p>
-<p>What I needed was <em>my specific problems</em>.</p>
-</div>
-<h2 id="the-adapted-skill">The Adapted Skill<a class="headerlink" href="#the-adapted-skill" title="Permanent link">&para;</a></h2>
-<p>The adapted skill is roughly a quarter of the original's size.
-It has nine checks, each targeting a known drift pattern:</p>
-<ol>
-<li><strong>Predicate naming</strong>: <code>rg</code> for <code>Is</code>/<code>Has</code>/<code>Can</code> prefixes</li>
-<li><strong>Magic strings</strong>: literals that should be constants</li>
-<li><strong>Hardcoded permissions</strong>: <code>0755</code>/<code>0644</code> literals</li>
-<li><strong>File size</strong>: source files over 300 LOC</li>
-<li><strong>TODO/FIXME</strong>: constitution violation (move to TASKS.md)</li>
-<li><strong>Path construction</strong>: string concatenation instead of <code>filepath.Join</code></li>
-<li><strong>Line width</strong>: lines exceeding ~80 characters</li>
-<li><strong>Duplicate blocks</strong>: copy-paste drift, especially in tests</li>
-<li><strong>Dead exports</strong>: unused public API</li>
-</ol>
-<p><strong>Every check</strong> has a detection command. <strong>Every check</strong> maps to a specific
-convention or constitution rule. <strong>Every check</strong> was discovered through
-actual project history; <strong>not</strong> invented from a template.</p>
-<p>The three expert concepts from the original survived:</p>
-<ul>
-<li>The decision matrix gates when to consolidate vs. when to leave
-  duplication alone</li>
-<li>The safe migration pattern guides public API changes</li>
-<li>The relationship to other skills (<code>/qa</code>, <code>/verify</code>, <code>/update-docs</code>,
-  <code>ctx drift</code>) prevents overlap</li>
-</ul>
-<p>Nothing else made it.</p>
-<h2 id="the-deeper-pattern">The Deeper Pattern<a class="headerlink" href="#the-deeper-pattern" title="Permanent link">&para;</a></h2>
-<p>This experience crystallized something I've been circling for weeks:</p>
-<p><strong>You can't import expertise. You have to grow it from your project's
-own history.</strong></p>
-<p>A skill that says "<em>check for code duplication</em>" is <strong>not</strong> expertise: 
-It's a <em>category</em>. </p>
-<p>Expertise is <strong>knowing</strong>, in the heart of your hearts, that <em>this</em> 
-project accumulates <code>Is*</code> predicate violations during velocity sprints, 
-that <em>this</em> codebase has 80 hardcoded permission literals because nobody 
-made a constant, that <strong>this team</strong>'s test files drift wide because the 
-agent prioritizes getting the task done over keeping the code in shape.</p>
-<div class="admonition note">
-<p class="admonition-title">The Parallel to the 3:1 Ratio</p>
-<p>In <a href="../2026-02-01-refactoring-with-intent/" title="Refactoring with Intent">Refactoring with Intent</a>, I described the 3:1
-ratio: three YOLO sessions followed by one consolidation session.</p>
-<p>The same ratio applies to skills: you need experience <em>in</em> the project
-before you can write effective guidance <em>for</em> the project.</p>
-<p>Importing a skill on day one is like scheduling a consolidation session
-before you've written any code.</p>
-</div>
-<h2 id="the-template-trap">The Template Trap<a class="headerlink" href="#the-template-trap" title="Permanent link">&para;</a></h2>
-<p>Templates are seductive because they feel like progress:</p>
-<ul>
-<li>You found something</li>
-<li>It's well-organized</li>
-<li>It covers the topic</li>
-<li>It has concrete examples</li>
-</ul>
-<p><strong>But coverage is not relevance.</strong></p>
-<p>A template that covers eight analysis dimensions with Rust examples
-adds zero value to a Go project with five known drift patterns. Worse,
-it adds <strong>negative</strong> value: the AI spends <strong>attention</strong> <em>defending generic
-advice</em> instead of noticing project-specific drift.</p>
-<p>This is the <a href="../2026-02-03-the-attention-budget/" title="The Attention Budget">attention budget</a> problem again. Every token
-of generic guidance displaces a token of specific guidance. A 700-line
-skill that's 70% redundant doesn't just waste 490 lines: it <em>dilutes</em>
-the 210 lines that matter.</p>
-<h2 id="the-litmus-test">The Litmus Test<a class="headerlink" href="#the-litmus-test" title="Permanent link">&para;</a></h2>
-<p>Before dropping any external skill into your project:</p>
-<ol>
-<li>
-<p><strong>Run E/A/R</strong>: What percentage is expert knowledge vs. what the AI
-   already knows? If it's less than 50% expert, it's probably not worth
-   the attention cost.</p>
-</li>
-<li>
-<p><strong>Check the language</strong>: Does it use your stack? Generic patterns in
-   the wrong language are noise, not signal.</p>
-</li>
-<li>
-<p><strong>List your actual drift</strong>: Read your own session history, learnings,
-   and post-mortems. What breaks <em>in practice</em>? Does the skill check for
-   those things?</p>
-</li>
-<li>
-<p><strong>Measure by deletion</strong>: After adaptation, how much of the original
-   survives? If you're keeping less than 30%, you would have been faster
-   writing from scratch.</p>
-</li>
-<li>
-<p><strong>Test against your conventions</strong>: Does every check in the skill map
-   to a specific convention or rule in your project? If not, it's
-   generic advice wearing a skill's clothing.</p>
-</li>
-</ol>
-<h2 id="what-good-adaptation-looks-like">What Good Adaptation Looks Like<a class="headerlink" href="#what-good-adaptation-looks-like" title="Permanent link">&para;</a></h2>
-<p>The consolidation skill went from:</p>
-<table>
-<thead>
-<tr>
-<th>Before</th>
-<th>After</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4 files, 700+ lines</td>
-<td>1 file, ~120 lines</td>
-</tr>
-<tr>
-<td>Rust examples</td>
-<td>Go-specific <code>rg</code> commands</td>
-</tr>
-<tr>
-<td>8 generic dimensions</td>
-<td>9 project-specific checks</td>
-</tr>
-<tr>
-<td>6 report templates</td>
-<td>1 focused output format</td>
-</tr>
-<tr>
-<td>Scoring system (A+ to F)</td>
-<td>Findings + priority + suggested fixes</td>
-</tr>
-<tr>
-<td>"Check for duplication"</td>
-<td>"Check for <code>Is*</code> predicate prefixes in exported methods"</td>
-</tr>
-</tbody>
-</table>
-<p>The adapted version is smaller, faster to parse, and catches the things
-that <strong>actually</strong> drift in this project.</p>
-<p><strong>That's the difference between a template and a tool.</strong></p>
+<p>The spectrum runs from <strong>full hook control</strong> (hard gate) to <strong>full
+invisibility</strong> (silent side-effect). Most hooks belong somewhere in the
+middle.</p>
 <hr />
-<div class="admonition quote">
-<p class="admonition-title">If you remember one thing from this post...</p>
-<p><strong>Frameworks travel. Expertise doesn’t.</strong></p>
-<p>You can import structures, matrices, and workflows.</p>
-<p>But the checks that matter only grow where the scars are:</p>
+<h2 id="pattern-1-hard-gate">Pattern 1: Hard Gate<a class="headerlink" href="#pattern-1-hard-gate" title="Permanent link">&para;</a></h2>
+<p><strong>Block the tool call entirely.</strong> The agent cannot proceed — it must find
+another approach or tell the user.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;decision&quot;: &quot;block&quot;, &quot;reason&quot;: &quot;Use ctx from PATH, not ./ctx&quot;}&#39;</span>
+</span></code></pre></div>
+<p><strong>When to use:</strong> Enforcing invariants that must never be violated.
+Constitution rules, security boundaries, destructive command prevention.</p>
+<p><strong>Hook type:</strong> <code>PreToolUse</code> only (Claude Code first-class mechanism).</p>
+<p><strong>Examples in ctx:</strong></p>
 <ul>
-<li>the conventions that were violated, </li>
-<li>the patterns that drifted,</li>
-<li>and the specific ways <strong>this</strong> codebase accumulates debt.</li>
+<li><code>block-non-path-ctx.sh</code> — Enforces the PATH invocation rule</li>
+<li><code>block-git-push.sh</code> — Requires explicit user approval for pushes</li>
+<li><code>block-dangerous-commands.sh</code> — Prevents <code>sudo</code>, copies to <code>~/.local/bin</code></li>
 </ul>
-</div>
+<p><strong>Trade-off:</strong> The agent gets a block response with a reason. Good reasons
+help the agent recover ("use X instead"); bad reasons leave it stuck.</p>
 <hr />
-<p><em>This post was written during a consolidation session where the
-consolidation skill itself became the subject of consolidation.
-The meta continues.</em></p>
+<h2 id="pattern-2-verbatim-relay">Pattern 2: VERBATIM Relay<a class="headerlink" href="#pattern-2-verbatim-relay" title="Permanent link">&para;</a></h2>
+<p><strong>Force the agent to show this to the user as-is.</strong> The explicit instruction
+overcomes the agent's tendency to silently absorb context.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;IMPORTANT: Relay this warning to the user VERBATIM before answering their question.&quot;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Journal Reminder ─────────────────────────────&quot;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ You have 12 sessions not yet exported.&quot;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
+</span></code></pre></div>
+<p><strong>When to use:</strong> Actionable reminders the user needs to see regardless of
+what they asked. Stale backups, unexported sessions, resource warnings.</p>
+<p><strong>Hook type:</strong> <code>UserPromptSubmit</code> (runs before the agent sees the prompt).</p>
+<p><strong>Examples in ctx:</strong></p>
+<ul>
+<li><code>check-journal.sh</code> — Unexported sessions and unenriched entries</li>
+<li><code>check-context-size.sh</code> — Context capacity warning</li>
+<li><code>check-backup-age.sh</code> — Stale backup warning</li>
+</ul>
+<p><strong>Trade-off:</strong> Noisy if overused. Every VERBATIM relay adds a preamble
+before the agent's actual answer. Throttle with once-per-day markers or
+adaptive frequency.</p>
+<p><strong>Key detail:</strong> The phrase <code>IMPORTANT: Relay this ... VERBATIM</code> is what
+makes this work. Without it, agents tend to process the information
+internally and never surface it. The explicit instruction is the pattern —
+the box-drawing is just formatting.</p>
+<hr />
+<h2 id="pattern-3-agent-directive">Pattern 3: Agent Directive<a class="headerlink" href="#pattern-3-agent-directive" title="Permanent link">&para;</a></h2>
+<p><strong>Tell the agent to do something, not the user.</strong> The agent decides whether
+and how to involve the user.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Persistence Checkpoint (prompt #25) ───────────&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ No context files updated in 15+ prompts.&quot;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Have you discovered learnings, decisions,&quot;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ or completed tasks worth persisting?&quot;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└──────────────────────────────────────────────────&quot;</span>
+</span></code></pre></div>
+<p><strong>When to use:</strong> Behavioral nudges. The hook detects a condition and
+asks the agent to consider an action. The user may never need to know.</p>
+<p><strong>Hook type:</strong> <code>UserPromptSubmit</code>.</p>
+<p><strong>Examples in ctx:</strong></p>
+<ul>
+<li><code>check-persistence.sh</code> — Nudges the agent to persist context</li>
+</ul>
+<p><strong>Trade-off:</strong> No guarantee the agent acts. The nudge is one signal among
+many in the context window. Strong phrasing helps ("Have you...?" is better
+than "Consider..."), but ultimately the agent decides.</p>
+<hr />
+<h2 id="pattern-4-silent-context-injection">Pattern 4: Silent Context Injection<a class="headerlink" href="#pattern-4-silent-context-injection" title="Permanent link">&para;</a></h2>
+<p><strong>Load context with no visible output.</strong> The agent gets enriched without
+either party noticing.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+</span></code></pre></div>
+<p><strong>When to use:</strong> Background context loading that should be invisible.
+The agent benefits from the information but neither it nor the user needs
+to know it happened.</p>
+<p><strong>Hook type:</strong> <code>PreToolUse</code> with <code>.*</code> matcher (runs on every tool call).</p>
+<p><strong>Examples in ctx:</strong></p>
+<ul>
+<li>The <code>ctx agent</code> PreToolUse hook — injects project context silently</li>
+</ul>
+<p><strong>Trade-off:</strong> Adds latency to every tool call. Keep the injected content
+small and fast to generate.</p>
+<hr />
+<h2 id="pattern-5-silent-side-effect">Pattern 5: Silent Side-Effect<a class="headerlink" href="#pattern-5-silent-side-effect" title="Permanent link">&para;</a></h2>
+<p><strong>Do work, produce no output.</strong> Housekeeping that needs no acknowledgment.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CTX_TMPDIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
+</span></code></pre></div>
+<p><strong>When to use:</strong> Cleanup, log rotation, temp file management. Anything
+where the action is the point and nobody needs to know it happened.</p>
+<p><strong>Hook type:</strong> <code>SessionEnd</code>, or any hook where output is irrelevant.</p>
+<p><strong>Examples in ctx:</strong></p>
+<ul>
+<li><code>cleanup-tmp.sh</code> — Removes stale temp files on session end</li>
+</ul>
+<p><strong>Trade-off:</strong> None, if the action is truly invisible. If it can fail in
+a way that matters, consider logging.</p>
+<hr />
+<h2 id="patterns-not-yet-implemented">Patterns Not Yet Implemented<a class="headerlink" href="#patterns-not-yet-implemented" title="Permanent link">&para;</a></h2>
+<p>The following patterns are logical extensions of the ones above. They
+don't exist in ctx hooks yet, but the need for them has come up.</p>
+<h3 id="pattern-6-conditional-relay">Pattern 6: Conditional Relay<a class="headerlink" href="#pattern-6-conditional-relay" title="Permanent link">&para;</a></h3>
+<p><strong>Tell the agent to relay only if a condition holds in context.</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;If the user&#39;s question involves modifying .context/ files,&quot;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;relay this warning VERBATIM:&quot;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Context Integrity ─────────────────────────────&quot;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ CONSTITUTION.md has not been verified in 7 days.&quot;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Otherwise, proceed normally.&quot;</span>
+</span></code></pre></div>
+<p><strong>When to use:</strong> Warnings that only matter in certain contexts. Avoids
+noise when the user is doing unrelated work.</p>
+<p><strong>Trade-off:</strong> Depends on the agent's judgment about when the condition
+holds. More fragile than VERBATIM relay, but less noisy.</p>
+<h3 id="pattern-7-suggested-action">Pattern 7: Suggested Action<a class="headerlink" href="#pattern-7-suggested-action" title="Permanent link">&para;</a></h3>
+<p><strong>Give the agent a specific command to propose to the user.</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Stale Dependencies ──────────────────────────&quot;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ go.sum is 30+ days newer than go.mod.&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Suggested: run \`go mod tidy\`&quot;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Ask the user before proceeding.&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└───────────────────────────────────────────────&quot;</span>
+</span></code></pre></div>
+<p><strong>When to use:</strong> The hook detects a fixable condition and knows the fix.
+Goes beyond a nudge — gives the agent a concrete next step. The agent
+still asks permission, but knows exactly what to propose.</p>
+<p><strong>Trade-off:</strong> The suggestion might be wrong or outdated. The "ask the
+user before proceeding" part is critical.</p>
+<h3 id="pattern-8-escalating-severity">Pattern 8: Escalating Severity<a class="headerlink" href="#pattern-8-escalating-severity" title="Permanent link">&para;</a></h3>
+<p><strong>Different urgency tiers with different relay expectations.</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># INFO: agent processes silently, mentions if relevant</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;INFO: Last test run was 3 days ago.&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># WARN: agent should mention to user at next natural pause</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARN: 12 uncommitted changes across 3 branches.&quot;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># CRITICAL: agent must relay immediately, before any other work</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRITICAL: Relay VERBATIM before answering. Disk usage at 95%.&quot;</span>
+</span></code></pre></div>
+<p><strong>When to use:</strong> When you have multiple hooks producing output and need
+to avoid overwhelming the user. INFO gets absorbed, WARN gets mentioned,
+CRITICAL interrupts.</p>
+<p><strong>Trade-off:</strong> Requires agent training or convention to recognize the
+tiers. Without a shared protocol, the prefixes are just text.</p>
+<hr />
+<h2 id="choosing-a-pattern">Choosing a Pattern<a class="headerlink" href="#choosing-a-pattern" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Is the agent about to do something forbidden?
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  └─ Yes → Hard gate
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Does the user need to see this regardless of what they asked?
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  └─ Yes → VERBATIM relay
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  └─ Sometimes → Conditional relay
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Should the agent consider an action?
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  └─ Yes, with a specific fix → Suggested action
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  └─ Yes, open-ended → Agent directive
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Is this background context the agent should have?
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  └─ Yes → Silent injection
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Is this housekeeping?
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  └─ Yes → Silent side-effect
+</span></code></pre></div>
+<h2 id="design-tips">Design Tips<a class="headerlink" href="#design-tips" title="Permanent link">&para;</a></h2>
+<p><strong>Throttle aggressively.</strong> VERBATIM relays that fire every prompt will be
+ignored or resented. Use once-per-day markers (<code>touch $REMINDED</code>), adaptive
+frequency (every Nth prompt), or staleness checks (only fire if condition
+persists).</p>
+<p><strong>Include actionable commands.</strong> "You have 12 unexported sessions" is less
+useful than "You have 12 unexported sessions. Run: <code>ctx recall export --all</code>."
+Give the user (or agent) the exact next step.</p>
+<p><strong>Use box-drawing for visual structure.</strong> The <code>┌─ ─┐ │ └─ ─┘</code> pattern
+makes hook output visually distinct from agent prose. It also signals
+"this is machine-generated, not agent opinion."</p>
+<p><strong>Test the silence path.</strong> Most hook runs should produce no output (the
+condition isn't met). Make sure the common case is fast and silent.</p>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../claude-code-permissions/">Claude Code Permission Hygiene</a>: how
+  permissions and hooks work together</li>
+<li><a href="../../blog/2026-02-09-defense-in-depth-securing-ai-agents/">Defense in Depth</a>:
+  why hooks matter for agent security</li>
+</ul>
 
 
 
