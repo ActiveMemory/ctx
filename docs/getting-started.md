@@ -80,12 +80,6 @@ sudo make install
 # sudo mv ctx /usr/local/bin/
 ```
 
-For **Claude Code** users, also **install the plugin**:
-
-```bash
-claude /plugin install ./internal/tpl/claude
-```
-
 Building from source gives you the latest features and bug fixes.
 
 Since `ctx` is predominantly a developer tool, this is the
@@ -154,6 +148,18 @@ Verify installation:
 ```bash
 ctx --version
 ```
+
+### Claude Code Plugin
+
+**Claude Code** users should install the ctx plugin for hooks and skills:
+
+```bash
+/plugin marketplace add ActiveMemory/ctx
+/plugin install ctx@activememory-ctx
+```
+
+This gives you context monitoring, persistence nudges, post-commit
+capture, and 25 skills automatically.
 
 ### Version Control (*Strongly Recommended*)
 

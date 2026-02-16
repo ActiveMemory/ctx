@@ -90,9 +90,15 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 
+# Update plugin.json version to match VERSION
+PLUGIN_JSON="internal/tpl/claude/.claude-plugin/plugin.json"
+echo "Updating plugin version in ${PLUGIN_JSON}..."
+VERSION_NUM="${VERSION#v}"  # Remove 'v' prefix
+sed -i.bak -E "s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"version\": \"${VERSION_NUM}\"/" "${PLUGIN_JSON}"
+rm -f "${PLUGIN_JSON}.bak"
+
 # Update version references in documentation
 echo "Updating version references in docs/index.md..."
-VERSION_NUM="${VERSION#v}"  # Remove 'v' prefix
 sed -i.bak -E "s|/v[0-9]+\.[0-9]+\.[0-9]+/ctx-[0-9]+\.[0-9]+\.[0-9]+|/v${VERSION_NUM}/ctx-${VERSION_NUM}|g" docs/index.md
 sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-amd64|ctx-${VERSION_NUM}-linux-amd64|g" docs/index.md
 sed -i.bak -E "s|ctx-[0-9]+\.[0-9]+\.[0-9]+-linux-arm64|ctx-${VERSION_NUM}-linux-arm64|g" docs/index.md
@@ -120,7 +126,7 @@ make site
 
 # Commit docs and site updates
 echo "Committing documentation updates..."
-git add docs/index.md docs/versions.md site/
+git add docs/index.md docs/versions.md site/ "${PLUGIN_JSON}"
 git diff --cached --quiet || git commit -m "docs: update download links and versions page for ${VERSION}"
 echo ""
 
