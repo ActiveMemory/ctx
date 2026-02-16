@@ -21,18 +21,18 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hook <tool>",
 		Short: "Generate AI tool integration configs",
-		Long: `Generate configuration and instructions 
+		Long: `Generate configuration and instructions
 for integrating Context with AI tools.
 
 Supported tools:
-  claude-code  - Anthropic's Claude Code CLI
+  claude-code  - Anthropic's Claude Code CLI (use plugin instead)
   cursor       - Cursor IDE
   aider        - Aider AI coding assistant
   copilot      - GitHub Copilot
   windsurf     - Windsurf IDE
 
 Example:
-  ctx hook claude-code`,
+  ctx hook cursor`,
 		Args: cobra.ExactArgs(1),
 		RunE: runHook,
 	}

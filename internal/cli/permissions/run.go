@@ -9,7 +9,6 @@ package permissions
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -38,7 +37,7 @@ func runSnapshot(cmd *cobra.Command) error {
 		return errWriteFile(config.FileSettingsGolden, err)
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "%s golden image: %s\n", verb, config.FileSettingsGolden)
+	cmd.Printf("%s golden image: %s\n", verb, config.FileSettingsGolden)
 	return nil
 }
 
@@ -59,7 +58,7 @@ func runRestore(cmd *cobra.Command) error {
 			if writeErr := os.WriteFile(config.FileSettings, goldenBytes, config.PermFile); writeErr != nil {
 				return errWriteFile(config.FileSettings, writeErr)
 			}
-			fmt.Fprintln(cmd.OutOrStdout(), "Restored golden image (no local settings existed).")
+			cmd.Println("Restored golden image (no local settings existed).")
 			return nil
 		}
 		return errReadFile(config.FileSettings, err)
@@ -67,7 +66,7 @@ func runRestore(cmd *cobra.Command) error {
 
 	// Fast path: files are identical.
 	if bytes.Equal(goldenBytes, localBytes) {
-		fmt.Fprintln(cmd.OutOrStdout(), "Settings already match golden image.")
+		cmd.Println("Settings already match golden image.")
 		return nil
 	}
 
@@ -82,21 +81,20 @@ func runRestore(cmd *cobra.Command) error {
 
 	restored, dropped := diffStringSlices(golden.Permissions.Allow, local.Permissions.Allow)
 
-	out := cmd.OutOrStdout()
 	if len(dropped) > 0 {
-		fmt.Fprintf(out, "Dropped %d session permission(s):\n", len(dropped))
+		cmd.Printf("Dropped %d session permission(s):\n", len(dropped))
 		for _, p := range dropped {
-			fmt.Fprintf(out, "  - %s\n", p)
+			cmd.Printf("  - %s\n", p)
 		}
 	}
 	if len(restored) > 0 {
-		fmt.Fprintf(out, "Restored %d permission(s):\n", len(restored))
+		cmd.Printf("Restored %d permission(s):\n", len(restored))
 		for _, p := range restored {
-			fmt.Fprintf(out, "  + %s\n", p)
+			cmd.Printf("  + %s\n", p)
 		}
 	}
 	if len(dropped) == 0 && len(restored) == 0 {
-		fmt.Fprintln(out, "Permission lists match; other settings differ.")
+		cmd.Println("Permission lists match; other settings differ.")
 	}
 
 	// Write golden bytes (byte-for-byte copy).
@@ -104,7 +102,7 @@ func runRestore(cmd *cobra.Command) error {
 		return errWriteFile(config.FileSettings, err)
 	}
 
-	fmt.Fprintln(out, "Restored from golden image.")
+	cmd.Println("Restored from golden image.")
 	return nil
 }
 

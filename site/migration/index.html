@@ -2481,7 +2481,7 @@ This guide covers how to adopt <code>ctx</code> without disrupting your current 
 <tr>
 <td>Nothing (<em>greenfield</em>)</td>
 <td><code>ctx init</code></td>
-<td>Creates <code>.context/</code>, <code>CLAUDE.md</code>, hooks — full setup</td>
+<td>Creates <code>.context/</code>, <code>CLAUDE.md</code>, permissions</td>
 </tr>
 <tr>
 <td>Existing <code>CLAUDE.md</code></td>
@@ -2613,8 +2613,7 @@ created before any changes.</p>
 <hr />
 <h2 id="existing-cursorrules-aider-copilot">Existing .cursorrules / Aider / Copilot<a class="headerlink" href="#existing-cursorrules-aider-copilot" title="Permanent link">&para;</a></h2>
 <p><code>ctx</code> doesn't touch tool-specific config files. It creates its own files
-(<code>.context/</code>, <code>CLAUDE.md</code>, <code>.claude/</code>) and coexists with whatever you already
-have.</p>
+(<code>.context/</code>, <code>CLAUDE.md</code>) and coexists with whatever you already have.</p>
 <h3 id="what-ctx-creates-vs-what-it-leaves-alone">What ctx Creates vs. What It Leaves Alone<a class="headerlink" href="#what-ctx-creates-vs-what-it-leaves-alone" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2633,19 +2632,21 @@ have.</p>
 <td><code>.aider.conf.yml</code></td>
 </tr>
 <tr>
-<td><code>.claude/hooks/</code></td>
+<td><code>.claude/settings.local.json</code> (permissions only)</td>
 <td><code>.github/copilot-instructions.md</code></td>
 </tr>
 <tr>
-<td><code>.claude/skills/</code></td>
+<td></td>
 <td><code>.windsurfrules</code></td>
 </tr>
 <tr>
-<td><code>.claude/settings.local.json</code></td>
+<td></td>
 <td>Any other tool-specific config</td>
 </tr>
 </tbody>
 </table>
+<p>Claude Code hooks and skills are provided by the <strong>ctx plugin</strong>
+(installed separately via <code>claude /plugin</code>).</p>
 <h3 id="running-ctx-alongside-other-tools">Running ctx Alongside Other Tools<a class="headerlink" href="#running-ctx-alongside-other-tools" title="Permanent link">&para;</a></h3>
 <p>The <code>.context/</code> directory is the source of truth. Tool-specific configs point
 to it:</p>
@@ -2690,8 +2691,8 @@ project knowledge — not secrets or personal preferences.</p>
 </span></code></pre></div>
 <p>Teammates pull and immediately have context. No per-developer setup needed.</p>
 <h3 id="what-about-claude">What About .claude/?<a class="headerlink" href="#what-about-claude" title="Permanent link">&para;</a></h3>
-<p>The <code>.claude/</code> directory contains hooks and skills that <code>ctx init</code> generates.
-These are project-level automation — commit them too:</p>
+<p>The <code>.claude/</code> directory contains permissions that <code>ctx init</code> seeds.
+Hooks and skills are provided by the ctx plugin (not per-project files).</p>
 <table>
 <thead>
 <tr>
@@ -2702,19 +2703,14 @@ These are project-level automation — commit them too:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>.claude/hooks/*.sh</code></td>
-<td>Yes</td>
-<td>Shared enforcement and coaching</td>
-</tr>
-<tr>
-<td><code>.claude/skills/</code></td>
-<td>Yes</td>
-<td>Shared agent skills</td>
-</tr>
-<tr>
 <td><code>.claude/settings.local.json</code></td>
+<td>No</td>
+<td>Machine-specific, accumulates session permissions</td>
+</tr>
+<tr>
+<td><code>.claude/settings.golden.json</code></td>
 <td>Yes</td>
-<td>Hook wiring (project-level)</td>
+<td>Curated permission snapshot (via <code>ctx permissions snapshot</code>)</td>
 </tr>
 </tbody>
 </table>

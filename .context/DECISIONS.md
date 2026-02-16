@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-16 | ctx v0.6.0: Plugin conversion — shell hooks to Go subcommands |
 | 2026-02-15 | allow_outside_cwd belongs in .contextrc, not just CLI |
 | 2026-02-15 | Add TL;DR admonitions to recipes longer than ~200 lines |
 | 2026-02-15 | Hook output patterns are a reference catalog, not an implementation backlog |
@@ -32,6 +33,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-16-100447] ctx v0.6.0: Plugin conversion — shell hooks to Go subcommands
+
+**Status**: Accepted
+
+**Context**: ctx v0.4.0 deployed 6 shell scripts to .claude/hooks/ via ctx init, requiring jq and coupling ctx to per-project scaffolding
+
+**Decision**: ctx v0.6.0: Plugin conversion — shell hooks to Go subcommands
+
+**Rationale**: Go subcommands (ctx system *) eliminate jq dependency, ship as compiled binary, enable testing with go test, and leverage Claude Code's plugin system for distribution
+
+**Consequences**: ctx init no longer creates .claude/hooks/ or .claude/skills/. Users install the ctx plugin separately. Existing projects need to remove old .sh hooks and install the plugin. Version jumps from 0.4.0 to 0.6.0 to signal the magnitude.
+
+---
 
 ## [2026-02-15-231015] allow_outside_cwd belongs in .contextrc, not just CLI
 

@@ -203,28 +203,28 @@ sequenceDiagram
     CLI-->>User: Session transcript
 ```
 
-### 5. Hook Lifecycle
+### 5. Hook Lifecycle (via ctx plugin)
 
 ```mermaid
 sequenceDiagram
     participant CC as Claude Code
-    participant Hook as Hook Script
-    participant CTX as ctx CLI
+    participant CTX as ctx system
+    participant FS as Filesystem
 
     Note over CC: Event: PreToolUse
-    CC->>Hook: block-non-path-ctx.sh
-    Hook->>Hook: Check if tool invokes ctx via absolute path
-    Hook-->>CC: BLOCK or ALLOW
+    CC->>CTX: ctx system block-non-path-ctx
+    CTX->>CTX: Check if tool invokes ctx via absolute path
+    CTX-->>CC: BLOCK or ALLOW
 
-    Note over CC: Event: PreToolUse
-    CC->>Hook: check-context-size.sh
-    Hook->>CTX: ctx status (token count)
-    Hook-->>CC: Warn if context is large
+    Note over CC: Event: UserPromptSubmit
+    CC->>CTX: ctx system check-context-size
+    CTX->>CTX: Increment counter, check thresholds
+    CTX-->>CC: Checkpoint message (or silent)
 
     Note over CC: Event: SessionEnd
-    CC->>Hook: cleanup-tmp.sh
-    Hook->>FS: Remove stale temp files
-    Hook-->>CC: Cleanup complete
+    CC->>CTX: ctx system cleanup-tmp
+    CTX->>FS: Remove stale temp files
+    CTX-->>CC: (silent)
 ```
 
 ## Context File Lifecycle

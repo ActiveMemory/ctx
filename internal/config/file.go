@@ -105,18 +105,6 @@ const (
 
 // Claude Code integration file names.
 const (
-	// FileBlockNonPathScript is the hook script that blocks non-PATH ctx
-	// invocations.
-	FileBlockNonPathScript = "block-non-path-ctx.sh"
-	// FileCheckContextSize is the hook script for context size checkpoints.
-	FileCheckContextSize = "check-context-size.sh"
-	// FileCheckPersistence is the hook script for persistence nudges.
-	FileCheckPersistence = "check-persistence.sh"
-	// FileCheckJournal is the hook script for journal export/enrich reminders.
-	FileCheckJournal = "check-journal.sh"
-	// FilePostCommit is the hook script for post-commit nudges (context
-	// capture and lint/test reminders).
-	FilePostCommit = "post-commit.sh"
 	// FileClaudeMd is the Claude Code configuration file in the project root.
 	FileClaudeMd = "CLAUDE.md"
 	// FilePromptMd is the session prompt file in the project root.
@@ -131,12 +119,6 @@ const (
 	FileContextWatch = "context-watch.sh"
 	// FileMakefileCtx is the ctx-owned Makefile include for project root.
 	FileMakefileCtx = "Makefile.ctx"
-	// FileCleanupTmp is the hook script for temp file cleanup on session end.
-	FileCleanupTmp = "cleanup-tmp.sh"
-	// CmdAutoloadContext is the inline command for the PreToolUse hook
-	// that autoloads the context packet on every tool use. The cooldown
-	// inside ctx agent prevents repetitive output.
-	CmdAutoloadContext = "ctx agent --budget 4000 --session $PPID 2>/dev/null || true"
 )
 
 // Context file name constants for .context/ directory.

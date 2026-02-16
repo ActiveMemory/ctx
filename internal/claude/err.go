@@ -8,18 +8,6 @@ package claude
 
 import "fmt"
 
-// errFileRead wraps a file read failure with the file path for context.
-//
-// Parameters:
-//   - path: File path that failed to read
-//   - err: Underlying error from the read operation
-//
-// Returns:
-//   - error: Wrapped error with format "failed to read <path>: <cause>"
-func errFileRead(path string, err error) error {
-	return fmt.Errorf("failed to read %s: %w", path, err)
-}
-
 // errSkillList wraps a failure to list embedded skill directories.
 //
 // Parameters:

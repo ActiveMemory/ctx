@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-16 | gosec G301/G306: use 0o750 for dirs, 0o600 for files in test code too |
+| 2026-02-16 | golangci-lint errcheck: use cmd.Printf not fmt.Fprintf in Cobra commands |
 | 2026-02-15 | Dead link checking is consolidation check 12, not a standalone concern |
 | 2026-02-15 | Hook scripts can lose execute permission without warning |
 | 2026-02-15 | Two-tier hook output is sufficient — don't over-engineer severity levels |
@@ -75,6 +77,26 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-16-100442] gosec G301/G306: use 0o750 for dirs, 0o600 for files in test code too
+
+**Context**: Plugin conversion: test files used 0o755 and 0o644 which triggered gosec warnings
+
+**Lesson**: gosec checks ALL code including tests. Test helper MkdirAll and WriteFile calls need the same restrictive permissions as production code.
+
+**Application**: Use 0o750 for os.MkdirAll and 0o600 for os.WriteFile everywhere, including test setup code.
+
+---
+
+## [2026-02-16-100438] golangci-lint errcheck: use cmd.Printf not fmt.Fprintf in Cobra commands
+
+**Context**: Plugin conversion: permissions/run.go had 7 errcheck failures from fmt.Fprintf(cmd.OutOrStdout(), ...)
+
+**Lesson**: Cobra's cmd.Printf/cmd.Println write to OutOrStdout() without returning errors, avoiding errcheck lint. fmt.Fprintf returns (int, error) that must be handled.
+
+**Application**: Always use cmd.Printf/cmd.Println for Cobra command output. Reserve fmt.Fprintf for non-Cobra io.Writer contexts.
 
 ---
 

@@ -45,21 +45,26 @@ and consequences. Decisions prevent re-debating settled questions.
 
 **Learnings** (`LEARNINGS.md`) answer "*what did we discover the hard way?*"
 They record gotchas and debugging insights specific to this project with
-structured fields: context, lesson, and application. Learnings prevent
-repeating past mistakes.
+structured fields: context, lesson, and application. 
+
+**Learnings prevent repeating past mistakes**.
 
 **Conventions** (`CONVENTIONS.md`) answer "*how do we do things here?*" They
 record patterns and standards. No structured fields required: just a name,
 a rule, and an example. Conventions keep code consistent across sessions.
 
 !!! tip "Decision, Learning, or Convention?"
-    * If you chose between alternatives, it is a decision.
-    * If you discovered something surprising, it is a learning.
-    * If you are codifying a repeated pattern, it is a convention.
+    * If you chose between alternatives, it is a **decision**.
+    * If you discovered something surprising, it is a **learning**.
+    * If you are codifying a repeated pattern, it is a **convention**.
 
 ### Step 2: Record Decisions
 
-**Decisions** have three structured fields: context, rationale, and consequences.
+**Decisions** have three structured fields: 
+
+* **context**, 
+* **rationale**, 
+* and **consequences**.
 
 The easiest way to record one is to tell your agent:
 
@@ -135,7 +140,7 @@ The `/ctx-add-learning` skill applies three quality filters:
 
 **All three must pass**.
 
-Learnings capture principles and heuristics, not code snippets.
+**Learnings** capture principles and heuristics, not code snippets.
 
 ??? note "CLI command for scripting and automation"
     When no agent is in the loop:
@@ -149,7 +154,7 @@ Learnings capture principles and heuristics, not code snippets.
 
 ### Step 4: Record Conventions
 
-Conventions are simpler: just a name, a rule, and optionally a section.
+**Conventions** are simpler: just a name, a rule, and optionally a section.
 
 These are short enough that either approach works:
 

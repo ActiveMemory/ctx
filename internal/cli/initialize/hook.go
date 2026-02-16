@@ -11,7 +11,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -20,78 +19,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// createClaudeHooks creates .claude/hooks/ directory and settings.local.json.
+// mergeSettingsPermissions merges ctx permissions into settings.local.json.
 //
-// Creates hook scripts (block-non-path-ctx.sh, check-context-size.sh, etc.) and
-// merges hooks into existing settings rather than overwriting.
-//
-// Parameters:
-//   - cmd: Cobra command for output messages
-//   - force: If true, overwrite existing hooks and scripts
-//
-// Returns:
-//   - error: Non-nil if directory creation or file operations fail
-func createClaudeHooks(cmd *cobra.Command, force bool) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-
-	// Get the current working directory for paths
-	cwd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("failed to get working directory: %w", err)
-	}
-
-	// Create .claude/hooks/ directory
-	if err := os.MkdirAll(config.DirClaudeHooks, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create %s: %w", config.DirClaudeHooks, err)
-	}
-
-	// Deploy hook scripts
-	hookScripts := []struct {
-		filename string
-		loadFunc func() ([]byte, error)
-	}{
-		{config.FileBlockNonPathScript, claude.BlockNonPathCtxScript},
-		{config.FileCheckContextSize, claude.CheckContextSizeScript},
-		{config.FileCheckPersistence, claude.CheckPersistenceScript},
-		{config.FileCheckJournal, claude.CheckJournalScript},
-		{config.FilePostCommit, claude.PostCommitScript},
-		{config.FileCleanupTmp, claude.CleanupTmpScript},
-	}
-	for _, hs := range hookScripts {
-		if err := deployHookScript(cmd, hs.filename, hs.loadFunc, force, green, yellow); err != nil {
-			return err
-		}
-	}
-
-	// Handle settings.local.json - merge rather than overwrite
-	if err := mergeSettingsHooks(cmd, cwd, force); err != nil {
-		return err
-	}
-
-	// Create .claude/skills/ directories with Agent Skills
-	if err := createClaudeSkills(cmd, force); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// mergeSettingsHooks creates or merges hooks and permissions into settings.local.json.
-//
-// Only adds missing hooks and permissions to preserve user customizations.
-// Creates the .claude/ directory if needed.
+// Only adds missing permissions to preserve user customizations. Does not
+// manage hooks — hook configuration is now provided by the ctx Claude Code
+// plugin.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
-//   - projectDir: Project root directory for hook paths
-//   - force: If true, overwrite existing hooks (permissions are always merged additively)
 //
 // Returns:
 //   - error: Non-nil if JSON parsing or file operations fail
-func mergeSettingsHooks(
-	cmd *cobra.Command, projectDir string, force bool,
-) error {
+func mergeSettingsPermissions(cmd *cobra.Command) error {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
@@ -108,39 +47,11 @@ func mergeSettingsHooks(
 		}
 	}
 
-	// Get our defaults
-	defaultHooks := claude.DefaultHooks(projectDir)
-	defaultPerms := config.DefaultClaudePermissions
-
-	// Check if hooks already exist
-	hasPreToolUse := len(settings.Hooks.PreToolUse) > 0
-	hasPostToolUse := len(settings.Hooks.PostToolUse) > 0
-	hasUserPromptSubmit := len(settings.Hooks.UserPromptSubmit) > 0
-	hasSessionEnd := len(settings.Hooks.SessionEnd) > 0
-
-	// Merge hooks - only add what's missing (or force overwrite)
-	hooksModified := false
-	if !hasPreToolUse || force {
-		settings.Hooks.PreToolUse = defaultHooks.PreToolUse
-		hooksModified = true
-	}
-	if !hasPostToolUse || force {
-		settings.Hooks.PostToolUse = defaultHooks.PostToolUse
-		hooksModified = true
-	}
-	if !hasUserPromptSubmit || force {
-		settings.Hooks.UserPromptSubmit = defaultHooks.UserPromptSubmit
-		hooksModified = true
-	}
-	if !hasSessionEnd || force {
-		settings.Hooks.SessionEnd = defaultHooks.SessionEnd
-		hooksModified = true
-	}
-
 	// Merge permissions - always additive, never removes existing permissions
+	defaultPerms := config.DefaultClaudePermissions
 	permsModified := mergePermissions(&settings.Permissions, defaultPerms)
 
-	if !hooksModified && !permsModified {
+	if !permsModified {
 		cmd.Printf(
 			"  %s %s (no changes needed)\n", yellow("○"), config.FileSettings,
 		)
@@ -152,7 +63,7 @@ func mergeSettingsHooks(
 		return fmt.Errorf("failed to create %s: %w", config.DirClaude, err)
 	}
 
-	// Write settings with pretty formatting (disable HTML escaping to avoid \u003e for >)
+	// Write settings with pretty formatting
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
@@ -165,43 +76,12 @@ func mergeSettingsHooks(
 		return fmt.Errorf("failed to write %s: %w", config.FileSettings, err)
 	}
 
-	// Report what was done
-	switch {
-	case fileExists && hooksModified && permsModified:
-		cmd.Printf("  %s %s (merged hooks and permissions)\n", green("✓"), config.FileSettings)
-	case fileExists && hooksModified:
-		cmd.Printf("  %s %s (merged hooks)\n", green("✓"), config.FileSettings)
-	case fileExists && permsModified:
+	if fileExists {
 		cmd.Printf("  %s %s (added ctx permissions)\n", green("✓"), config.FileSettings)
-	default:
+	} else {
 		cmd.Printf("  %s %s\n", green("✓"), config.FileSettings)
 	}
 
-	return nil
-}
-
-// deployHookScript writes a hook script to .claude/hooks/ if it doesn't
-// already exist (or force is true).
-func deployHookScript(
-	cmd *cobra.Command,
-	filename string,
-	loadFunc func() ([]byte, error),
-	force bool,
-	green, yellow func(a ...interface{}) string,
-) error {
-	path := filepath.Join(config.DirClaudeHooks, filename)
-	if _, err := os.Stat(path); err == nil && !force {
-		cmd.Printf("  %s %s (exists, skipped)\n", yellow("○"), path)
-		return nil
-	}
-	content, err := loadFunc()
-	if err != nil {
-		return fmt.Errorf("failed to load hook script %s: %w", filename, err)
-	}
-	if err := os.WriteFile(path, content, config.PermExec); err != nil {
-		return fmt.Errorf("failed to write %s: %w", path, err)
-	}
-	cmd.Printf("  %s %s\n", green("✓"), path)
 	return nil
 }
 

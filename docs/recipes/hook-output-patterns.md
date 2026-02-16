@@ -54,9 +54,9 @@ Constitution rules, security boundaries, destructive command prevention.
 
 **Examples in `ctx`**:
 
-* `block-non-path-ctx.sh`: Enforces the PATH invocation rule
-* `block-git-push.sh`: Requires explicit user approval for pushes
-*`block-dangerous-commands.sh`: Prevents `sudo`, copies to `~/.local/bin`
+* `ctx system block-non-path-ctx`: Enforces the PATH invocation rule
+* `block-git-push.sh`: Requires explicit user approval for pushes (*project-local*)
+* `block-dangerous-commands.sh`: Prevents `sudo`, copies to `~/.local/bin` (*project-local*)
 
 **Trade-off**: The agent gets a block response with a reason. Good reasons
 help the agent recover ("*use X instead*"); bad reasons leave it stuck.
@@ -83,9 +83,9 @@ what they asked: Stale backups, unexported sessions, resource warnings.
 
 **Examples in `ctx`**:
 
-- `check-journal.sh`: Unexported sessions and unenriched entries
-- `check-context-size.sh`: Context capacity warning
-- `check-backup-age.sh`: Stale backup warning
+- `ctx system check-journal`: Unexported sessions and unenriched entries
+- `ctx system check-context-size`: Context capacity warning
+- `check-backup-age.sh`: Stale backup warning (*project-local*)
 
 **Trade-off**: Noisy if overused. Every VERBATIM relay adds a preamble
 before the agent's actual answer. Throttle with once-per-day markers or
@@ -118,7 +118,7 @@ asks the agent to consider an action. The user may never need to know.
 
 **Examples in `ctx`**:
 
-* `check-persistence.sh`: Nudges the agent to persist context
+* `ctx system check-persistence`: Nudges the agent to persist context
 
 **Trade-off:** No guarantee the agent acts. The nudge is one signal among
 many in the context window. Strong phrasing helps ("Have you...?" is better
@@ -165,7 +165,7 @@ where the action is the point and nobody needs to know it happened.
 
 **Examples in `ctx`**:
 
-* `cleanup-tmp.sh`: Removes stale temp files on session end
+* `ctx system cleanup-tmp`: Removes stale temp files on session end
 
 **Trade-off**: None, if the action is truly invisible. If it can fail in
 a way that matters, consider logging.
