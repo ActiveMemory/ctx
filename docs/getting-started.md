@@ -516,10 +516,10 @@ and advanced usage.
 
 ## Next Steps
 
-* [Prompting Guide](prompting-guide.md) — Effective prompts for AI sessions
-* [CLI Reference](cli-reference.md) — All commands and options
-* [Context Files](context-files.md) — File formats and structure
-* [Session Journal](session-journal.md) — Browse and search session history
-* [Autonomous Loops](autonomous-loop.md) — Iterative AI development workflows
-* [Integrations](integrations.md) — Setup for Claude Code, Cursor, Aider
-* [Blog](blog/index.md) — Stories and lessons from building ctx
+* [Prompting Guide](prompting-guide.md): Effective prompts for AI sessions
+* [CLI Reference](cli-reference.md): All commands and options
+* [Context Files](context-files.md): File formats and structure
+* [Session Journal](session-journal.md): Browse and search session history
+* [Autonomous Loops](autonomous-loop.md): Iterative AI development workflows
+* [Integrations](integrations.md): Setup for Claude Code, Cursor, Aider
+* [Blog](blog/index.md): Stories and lessons from building ctx

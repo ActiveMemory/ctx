@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-15 | Dead link checking is consolidation check 12, not a standalone concern |
 | 2026-02-15 | Hook scripts can lose execute permission without warning |
 | 2026-02-15 | Two-tier hook output is sufficient — don't over-engineer severity levels |
 | 2026-02-15 | Gitignored folders accumulate stale artifacts |
@@ -74,6 +75,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-15-231022] Dead link checking is consolidation check 12, not a standalone concern
+
+**Context**: User identified dead links in rendered site as a problem. Initial instinct was a standalone task or drift extension.
+
+**Lesson**: Doc link rot is code-level drift — same category as magic strings or stale architecture diagrams. It belongs in /consolidate's check list, with a standalone /check-links skill that consolidate invokes.
+
+**Application**: When a new audit concern emerges, check if it fits an existing audit skill before creating an isolated one. Consolidate is the natural home for anything that drifts silently between sessions.
 
 ---
 

@@ -1,0 +1,30 @@
+[data-md-color-scheme="default"] {
+  .md-tabs__item--active {
+    color: #000480;
+    border-bottom-color: #0B11FF;
+    font-weight: 600;
+  }
+
+
+
+}
+
+[data-md-color-scheme="slate"] {
+  .md-tabs__item--active {
+    color: #E9A221;
+    border-bottom-color: #FFD892;
+    font-weight: 700;
+  }
+
+  .md-nav--primary .md-nav__item .md-nav__link--active {
+    color: #E9A221;
+  }
+
+  .md-nav__item .md-nav__link--active {
+    color: #E9A221;
+  }
+
+  .md-typeset a {
+    color: #f2c77a;
+  }
+}

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-15 | allow_outside_cwd belongs in .contextrc, not just CLI |
 | 2026-02-15 | Add TL;DR admonitions to recipes longer than ~200 lines |
 | 2026-02-15 | Hook output patterns are a reference catalog, not an implementation backlog |
 | 2026-02-15 | Pair judgment recipes with mechanical recipes |
@@ -31,6 +32,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-15-231015] allow_outside_cwd belongs in .contextrc, not just CLI
+
+**Status**: Accepted
+
+**Context**: External context recipe claimed .contextrc could persist the boundary override, but the field didn't exist. Choice: fix the docs or make the promise true.
+
+**Decision**: allow_outside_cwd belongs in .contextrc, not just CLI
+
+**Rationale**: If a user already declared context_dir pointing outside the project, requiring --allow-outside-cwd on every command is redundant ceremony. .contextrc is configure-once-forget-about-it — the boundary flag should live there too.
+
+**Consequences**: New allow_outside_cwd bool field in CtxRC. PersistentPreRun checks both the CLI flag and .contextrc. Shell aliases (Option C) become optional rather than necessary.
+
+---
 
 ## [2026-02-15-194828] Add TL;DR admonitions to recipes longer than ~200 lines
 

@@ -50,7 +50,7 @@ graph TD
 
 1. **Session start**: Claude reads `CLAUDE.md`, which tells it to check `.context/`
 2. **First tool use**: `PreToolUse` hook runs `ctx agent` and emits the context
-   packet (subsequent invocations within the cooldown window are silent)
+   packet (*subsequent invocations within the cooldown window are silent*)
 3. **Next session**: Claude reads context files and continues with context
 
 ### Generated Hooks
@@ -58,14 +58,16 @@ graph TD
 `ctx init` installs lifecycle hooks to `.claude/hooks/` and wires them
 into `.claude/settings.local.json`:
 
-| Hook | Event | Purpose |
-|------|-------|---------|
-| `block-non-path-ctx.sh` | PreToolUse (Bash) | Block `./ctx` or `go run` — force PATH install |
-| `check-context-size.sh` | UserPromptSubmit | Nudge context assessment as sessions grow |
-| `check-persistence.sh` | UserPromptSubmit | Remind to persist learnings/decisions |
-| `cleanup-tmp.sh` | SessionEnd | Remove stale temp files (older than 15 days) |
+| Hook                    | Event              | Purpose                                          |
+|-------------------------|--------------------|--------------------------------------------------|
+| `block-non-path-ctx.sh` | PreToolUse (Bash)  | Block `./ctx` or `go run`: force `$PATH` install |
+| `check-context-size.sh` | UserPromptSubmit   | Nudge context assessment as sessions grow        |
+| `check-journal.sh`      | UserPromptSubmit   | Remind to export/enrich journal entries          |
+| `check-persistence.sh`  | UserPromptSubmit   | Remind to persist learnings/decisions            |
+| `post-commit.sh`        | PostToolUse (Bash) | Nudge context capture and QA after git commits   |
+| `cleanup-tmp.sh`        | SessionEnd         | Remove stale temp files (older than 15 days)     |
 
-A catch-all PreToolUse hook also runs `ctx agent` on every tool use
+A catch-all `PreToolUse` hook also runs `ctx agent` on every tool use
 (with cooldown) to autoload context.
 
 ### Generated Configuration
@@ -77,12 +79,39 @@ A catch-all PreToolUse hook also runs `ctx agent` on every tool use
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/block-non-path-ctx.sh" }
+        ]
+      },
+      {
         "matcher": ".*",
         "hooks": [
-          {
-            "type": "command",
-            "command": "ctx agent --budget 4000 --session $PPID 2>/dev/null || true"
-          }
+          { "type": "command", "command": "ctx agent --budget 4000 2>/dev/null || true" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/post-commit.sh" }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/check-context-size.sh" },
+          { "type": "command", "command": ".claude/hooks/check-persistence.sh" },
+          { "type": "command", "command": ".claude/hooks/check-journal.sh" }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/cleanup-tmp.sh" }
         ]
       }
     ]
@@ -92,7 +121,7 @@ A catch-all PreToolUse hook also runs `ctx agent` on every tool use
 
 ### Customizing Token Budget and Cooldown
 
-Edit the PreToolUse command to change the token budget or cooldown:
+Edit the `PreToolUse` command to change the token budget or cooldown:
 
 ```text
 "command": "ctx agent --budget 8000 --session $PPID 2>/dev/null || true"
@@ -108,9 +137,9 @@ The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 1. Start a new Claude Code session
 2. Ask: **"Do you remember?"**
 3. Claude should cite specific context:
-   * Current tasks from `.context/TASKS.md`
-   * Recent decisions or learnings
-   * Recent session history from `ctx recall`
+     * Current tasks from `.context/TASKS.md`;
+     * Recent **decisions** or **learnings**;
+     * Recent **session history** from `ctx recall`.
 
 ### Troubleshooting
 
@@ -134,23 +163,24 @@ cat .context/TASKS.md
 ### Agent Skills
 
 `ctx init` installs Agent Skills to `.claude/skills/` following the
-[agentskills.io specification](https://agentskills.io). These are invoked
-in Claude Code with `/skill-name`.
+[agentskills.io specification](https://agentskills.io). 
+
+These are invoked in Claude Code with `/skill-name`.
 
 #### Context Skills
 
-| Skill          | Description                                        |
-|----------------|----------------------------------------------------|
-| `/ctx-status`  | Show context summary (tasks, decisions, learnings) |
-| `/ctx-agent`   | Get AI-optimized context packet                    |
+| Skill                  | Description                                          |
+|------------------------|------------------------------------------------------|
+| `/ctx-status`          | Show context summary (tasks, decisions, learnings)   |
+| `/ctx-agent`           | Get AI-optimized context packet                      |
 | `/ctx-drift`           | Detect and fix context drift (structural + semantic) |
 | `/ctx-alignment-audit` | Audit doc claims against playbook instructions       |
-| `/ctx-reflect` | Review session and suggest what to persist         |
+| `/ctx-reflect`         | Review session and suggest what to persist           |
 
 #### Context Persistence Skills
 
-| Command             | Description                                        |
-|---------------------|----------------------------------------------------|
+| Command               | Description                                        |
+|-----------------------|----------------------------------------------------|
 | `/ctx-add-task`       | Add a task to TASKS.md                             |
 | `/ctx-add-learning`   | Add a learning to LEARNINGS.md                     |
 | `/ctx-add-decision`   | Add a decision with context/rationale/consequences |
@@ -159,11 +189,11 @@ in Claude Code with `/skill-name`.
 
 #### Session History Skills
 
-| Command                  | Description                                     |
-|--------------------------|-------------------------------------------------|
-| `/ctx-recall`            | Browse AI session history                       |
-| `/ctx-journal-enrich`    | Enrich a journal entry with frontmatter/tags    |
-| `/ctx-journal-enrich-all`| Batch-enrich all unenriched journal entries     |
+| Command                   | Description                                  |
+|---------------------------|----------------------------------------------|
+| `/ctx-recall`             | Browse AI session history                    |
+| `/ctx-journal-enrich`     | Enrich a journal entry with frontmatter/tags |
+| `/ctx-journal-enrich-all` | Batch-enrich all unenriched journal entries  |
 
 #### Blogging Skills
 
