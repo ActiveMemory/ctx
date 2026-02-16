@@ -13,6 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // secureTempDir returns a user-specific temp directory for ctx state files.
@@ -84,4 +86,16 @@ func isDailyThrottled(markerPath string) bool {
 // touchFile creates or updates the modification time of a file.
 func touchFile(path string) {
 	_ = os.WriteFile(path, nil, 0o600)
+}
+
+// isInitialized reports whether .context/ has been properly set up via
+// "ctx init". Hooks should no-op when this returns false to avoid
+// creating partial state (e.g. .context/logs/) before initialization.
+func isInitialized() bool {
+	for _, f := range config.FilesRequired {
+		if _, err := os.Stat(filepath.Join(".context", f)); err != nil {
+			return false
+		}
+	}
+	return true
 }

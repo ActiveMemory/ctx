@@ -35,6 +35,9 @@ var (
 )
 
 func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
+	if !isInitialized() {
+		return nil
+	}
 	input := readInput(stdin)
 	command := input.ToolInput.Command
 

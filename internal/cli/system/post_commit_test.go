@@ -7,11 +7,17 @@
 package system
 
 import (
+	"os"
 	"strings"
 	"testing"
 )
 
 func TestPostCommit_GitCommit(t *testing.T) {
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(t.TempDir())
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, `{"tool_input":{"command":"git commit -m 'test'"}}`)
 
@@ -29,6 +35,11 @@ func TestPostCommit_GitCommit(t *testing.T) {
 }
 
 func TestPostCommit_AmendSkipped(t *testing.T) {
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(t.TempDir())
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, `{"tool_input":{"command":"git commit --amend"}}`)
 
@@ -43,6 +54,11 @@ func TestPostCommit_AmendSkipped(t *testing.T) {
 }
 
 func TestPostCommit_NonGitCommand(t *testing.T) {
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(t.TempDir())
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, `{"tool_input":{"command":"ls -la"}}`)
 
@@ -57,6 +73,11 @@ func TestPostCommit_NonGitCommand(t *testing.T) {
 }
 
 func TestPostCommit_EmptyCommand(t *testing.T) {
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(t.TempDir())
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, `{"tool_input":{"command":""}}`)
 
@@ -71,6 +92,11 @@ func TestPostCommit_EmptyCommand(t *testing.T) {
 }
 
 func TestPostCommit_GitCommitWithHeredoc(t *testing.T) {
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(t.TempDir())
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
 	cmd := newTestCmd()
 	stdin := createTempStdin(t, `{"tool_input":{"command":"git commit -m \"$(cat <<'EOF'\nFix bug\nEOF\n)\""}}`)
 
@@ -81,5 +107,24 @@ func TestPostCommit_GitCommitWithHeredoc(t *testing.T) {
 	out := cmdOutput(cmd)
 	if !strings.Contains(out, "Post-Commit") {
 		t.Errorf("expected post-commit for heredoc commit, got: %s", out)
+	}
+}
+
+func TestPostCommit_NoContextDir(t *testing.T) {
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(t.TempDir())
+	defer func() { _ = os.Chdir(origDir) }()
+	// No setupContextDir — simulates pre-init state
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"tool_input":{"command":"git commit -m 'test'"}}`)
+
+	if err := runPostCommit(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	if strings.Contains(out, "Post-Commit") {
+		t.Errorf("expected silence when .context/ not initialized, got: %s", out)
 	}
 }

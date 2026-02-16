@@ -44,9 +44,11 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 
 	contextDir := rc.ContextDir()
 
-	// Check if .context/ already exists
+	// Check if .context/ already exists and is properly initialized.
+	// A directory with only logs/ (created by hooks before init) is
+	// treated as uninitialized — no overwrite prompt needed.
 	if _, err := os.Stat(contextDir); err == nil {
-		if !force {
+		if !force && hasEssentialFiles(contextDir) {
 			// Prompt for confirmation
 			cmd.Printf("%s already exists. Overwrite? [y/N] ", contextDir)
 			reader := bufio.NewReader(os.Stdin)
@@ -251,6 +253,19 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	}
 
 	return nil
+}
+
+// hasEssentialFiles reports whether contextDir contains at least one of the
+// essential context files (TASKS.md, CONSTITUTION.md, DECISIONS.md). A
+// directory with only logs/ or other non-essential content is considered
+// uninitialized.
+func hasEssentialFiles(contextDir string) bool {
+	for _, f := range config.FilesRequired {
+		if _, err := os.Stat(filepath.Join(contextDir, f)); err == nil {
+			return true
+		}
+	}
+	return false
 }
 
 // ensureGitignoreEntries appends recommended .gitignore entries that are not
