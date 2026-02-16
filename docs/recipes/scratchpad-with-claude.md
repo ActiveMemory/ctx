@@ -176,6 +176,11 @@ distinguishes these from context.
 * **Encryption is transparent.** You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.
 
+## Next Up
+
+**[Syncing Scratchpad Notes Across Machines →](scratchpad-sync.md)**: Distribute
+encryption keys and scratchpad data across environments.
+
 ## See Also
 
 * [Scratchpad](../scratchpad.md): feature overview, all 9 commands,

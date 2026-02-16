@@ -222,6 +222,11 @@ build/test tooling:
 
 The `ctx`, `git`, and skill entries remain the same across all stacks.
 
+## Next Up
+
+**[Permission Snapshots →](permission-snapshots.md)**: Save and restore
+permission baselines for reproducible setups.
+
 ## See Also
 
 * [Setting Up ctx Across AI Tools](multi-tool-setup.md): full setup recipe

@@ -315,8 +315,8 @@ ctx hook aider
 
 ## Next Up
 
-**[The Complete Session](session-lifecycle.md)**: Walk through a full `ctx`
-session from start to finish.
+**[Claude Code Permission Hygiene →](claude-code-permissions.md)**: Recommended
+permission defaults and maintenance workflow for Claude Code.
 
 ## See Also
 

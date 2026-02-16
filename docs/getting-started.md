@@ -9,89 +9,74 @@ title: Getting Started
 icon: lucide/rocket
 ---
 
-![ctx](images/ctx-banner.png)
+## Prerequisites
 
-## `ctx`
+`ctx` does not require git, but using version control with your `.context/`
+directory is strongly recommended.
 
-`ctx` (*Context*) is a file-based system that enables AI coding assistants to
-persist project knowledge across sessions. Instead of re-explaining your
-codebase every time, context files let AI tools remember decisions,
-conventions, and learnings:
+AI sessions occasionally modify or overwrite context files inadvertently.
 
-* A session is interactive.
-* `ctx` enables **cognitive continuity**.
-* **Cognitive continuity** enables durable, *symbiotic-like* human–AI workflows.
+With `git`, the AI can check history and restore lost content:
+Without it, the data is gone.
 
-!!! quote "The `ctx` Manifesto"
-    **Creation, not code. Context, not prompts. Verification, not vibes.**
-
-    Without durable context, intelligence resets.
-    With `ctx`, creation compounds.
-
-    **[Read the Manifesto →](https://ctx.ist/)**
-
-## Community
-
-**Open source is better together**.
-
-<!-- the long line is required for zensical to render block quote -->
-
-!!! tip "Help `ctx` Change How AI Remembers"
-    **If the idea behind `ctx` resonates, a star helps it reach engineers 
-    who run into context drift every day.**
-
-    → https://github.com/ActiveMemory/ctx
-
-    `ctx` is free and open source software, and **contributions are always
-    welcome** and appreciated.
-
-Join the community to ask questions, share feedback, and connect with
-other users:
-
-- [:fontawesome-brands-stack-exchange: **IRC**](https://web.libera.chat/#ctx): 
-   join `#ctx` on `irc.libera.chat`
-- [:fontawesome-brands-github: **GitHub**](https://github.com/ActiveMemory/ctx):
-  Star the repo, report issues, contribute
-
-## Why?
-
-Most AI-driven development fails not because models are weak—they fail because 
-**context is ephemeral**. Every new session starts near zero:
-
-* You re-explain architecture
-* The AI repeats past mistakes
-* Decisions get rediscovered instead of remembered
-
-`ctx` solves this by treating context as **infrastructure**: 
-files that version with your code and persist across sessions.
+Also, several `ctx` features (journal changelog, blog generation) also use
+`git` history directly.
 
 ## Installation
 
-### Build from Source (*Recommended*)
+A full ctx installation has two parts:
 
-Requires [Go 1.25+](https://go.dev/):
+1. **The `ctx` binary** — the CLI tool itself
+2. **The Claude Code plugin** — hooks and skills that make Claude Code
+   context-aware
+
+You need **both**. The binary alone gives you the CLI but Claude Code
+won't autoload context, nudge you to persist decisions, or provide
+the `/ctx-*` skills.
+
+Pick one of the options below — each is a complete path from zero to
+a working setup.
+
+### Option 1: Build from Source (*Recommended*)
+
+Requires [Go 1.25+](https://go.dev/) and
+[Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview).
 
 ```bash
 git clone https://github.com/ActiveMemory/ctx.git
 cd ctx
 make build
 sudo make install
-# or:
-# sudo mv ctx /usr/local/bin/
+```
+
+**Install the Claude Code plugin** from your local clone:
+
+1. Launch `claude`
+2. Type `/plugin` and press Enter
+3. Select **Marketplaces** → **Add Marketplace**
+4. Enter the path to the plugin directory in your clone,
+   e.g. `~/WORKSPACE/ctx/internal/tpl/claude`
+5. Back in `/plugin`, select **Install** and choose `ctx`
+
+This points Claude Code at the plugin source on disk. Changes you make
+to hooks or skills take effect immediately — no reinstall needed.
+
+**Verify:**
+
+```bash
+ctx --version       # binary is in PATH
+claude /plugin list # plugin is installed
 ```
 
 Building from source gives you the latest features and bug fixes.
-
 Since `ctx` is predominantly a developer tool, this is the
-**recommended approach**:
+**recommended approach**: you get the freshest code, can inspect what
+you are installing, and the plugin stays in sync with the binary.
 
-You get the freshest code and can inspect what you are installing.
-
-### Binary Downloads
+### Option 2: Binary Download + Marketplace
 
 Pre-built binaries are available from the
-[releases page](https://github.com/ActiveMemory/ctx/releases) if you prefer
-not to build from source.
+[releases page](https://github.com/ActiveMemory/ctx/releases).
 
 === "Linux (x86_64)"
 
@@ -129,6 +114,21 @@ not to build from source.
 
     Download `ctx-0.6.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
 
+**Install the Claude Code plugin** from the marketplace:
+
+1. Launch `claude`
+2. Type `/plugin` and press Enter
+3. Select **Marketplaces** → **Add Marketplace**
+4. Enter `ActiveMemory/ctx`
+5. Back in `/plugin`, select **Install** and choose `ctx`
+
+**Verify:**
+
+```bash
+ctx --version       # binary is in PATH
+claude /plugin list # plugin is installed
+```
+
 #### Verifying Checksums
 
 Each binary has a corresponding `.sha256` checksum file. To verify your download:
@@ -143,36 +143,20 @@ sha256sum -c ctx-0.6.0-linux-amd64.sha256
 
 On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
 
-Verify installation:
+----
 
-```bash
-ctx --version
-```
+??? note "What the Plugin Provides"
 
-### Claude Code Plugin
+    After installation (either option) you get:
 
-**Claude Code** users should install the ctx plugin for hooks and skills:
+    - **Context autoloading** — `ctx agent` runs on every tool use (with cooldown)
+    - **Persistence nudges** — reminders to capture learnings and decisions
+    - **Post-commit hooks** — nudge context capture after `git commit`
+    - **Context size monitoring** — alerts as sessions grow large
+    - **25+ skills** — `/ctx-status`, `/ctx-add-task`, `/ctx-recall`, and more
 
-```bash
-/plugin marketplace add ActiveMemory/ctx
-/plugin install ctx@activememory-ctx
-```
-
-This gives you context monitoring, persistence nudges, post-commit
-capture, and 25 skills automatically.
-
-### Version Control (*Strongly Recommended*)
-
-`ctx` does not require git, but using version control with your `.context/`
-directory is strongly recommended. 
-
-AI sessions occasionally modify or overwrite context files inadvertently. 
-
-With `git`, the AI can check history and restore lost content: 
-Without it, the data is gone. 
-
-Also, several `ctx` features (journal changelog, blog generation) also use 
-`git` history directly.
+    See [Integrations](integrations.md#claude-code-full-integration) for the
+    full hook and skill reference.
 
 ## Quick Start
 
@@ -211,329 +195,9 @@ Ask your AI: **"Do you remember?"**
 It should cite specific context: current tasks, recent decisions,
 or previous session topics.
 
-## Your First Session
+----
 
-Here's what a complete first session looks like, from initialization to
-the moment your AI cites your project context back to you.
+**Next Up**:
 
-### Step 1: Initialize Your Project
-
-```bash
-cd your-project
-ctx init
-```
-
-```
-Context initialized in .context/
-
-  ✓ CONSTITUTION.md
-  ✓ TASKS.md
-  ✓ DECISIONS.md
-  ✓ LEARNINGS.md
-  ✓ CONVENTIONS.md
-  ✓ ARCHITECTURE.md
-  ✓ GLOSSARY.md
-  ✓ AGENT_PLAYBOOK.md
-
-Creating project root files...
-  ✓ PROMPT.md
-  ✓ IMPLEMENTATION_PLAN.md
-
-Setting up Claude Code permissions...
-  ✓ .scratchpad.key
-
-Claude Code plugin (hooks + skills):
-  Install: claude /plugin marketplace add ActiveMemory/ctx
-  Then:    claude /plugin install ctx@activememory-ctx
-
-Next steps:
-  1. Edit .context/TASKS.md to add your current tasks
-  2. Run 'ctx status' to see context summary
-  3. Run 'ctx agent' to get AI-ready context packet
-```
-
-This created your `.context/` directory with template files. For Claude Code,
-install the ctx plugin to get automatic hooks and skills.
-
-### Step 2: Populate Your Context
-
-Add a task and a decision — these are the entries your AI will remember:
-
-```bash
-ctx add task "Implement user authentication"
-```
-
-```
-✓ Added to TASKS.md
-```
-
-```bash
-ctx add decision "Use PostgreSQL for primary database" \
-  --context "Need a reliable database for production" \
-  --rationale "PostgreSQL offers ACID compliance and JSON support" \
-  --consequences "Team needs PostgreSQL training"
-```
-
-```
-✓ Added to DECISIONS.md
-```
-
-These entries are what the AI will recall in future sessions. You don't need
-to populate everything now — context grows naturally as you work.
-
-### Step 3: Check Your Context
-
-```bash
-ctx status
-```
-
-```
-Context Status
-====================
-
-Context Directory: .context/
-Total Files: 8
-Token Estimate: 1,247 tokens
-
-Files:
-  ✓ CONSTITUTION.md (loaded)
-  ✓ TASKS.md (1 items)
-  ✓ DECISIONS.md (1 items)
-  ○ LEARNINGS.md (empty)
-  ✓ CONVENTIONS.md (loaded)
-  ✓ ARCHITECTURE.md (loaded)
-  ✓ GLOSSARY.md (loaded)
-  ✓ AGENT_PLAYBOOK.md (loaded)
-
-Recent Activity:
-  - TASKS.md modified 2 minutes ago
-  - DECISIONS.md modified 1 minute ago
-```
-
-Notice the **token estimate**: This is how much context your AI will load.
-
-The `○` next to `LEARNINGS.md` means it's still empty; 
-it will fill in as you capture lessons during development.
-
-### Step 4: Start an AI Session
-
-With **Claude Code** (and the ctx plugin), context loads automatically — just
-start a session and it's there. For other tools, generate a context packet:
-
-```bash
-ctx agent --budget 8000
-```
-
-```markdown
-# Context Packet
-Generated: 2026-02-14T15:30:45Z | Budget: 8000 tokens | Used: 1247
-
-## Read These Files (in order)
-1. .context/CONSTITUTION.md
-2. .context/TASKS.md
-3. .context/DECISIONS.md
-...
-
-## Current Tasks
-- [ ] Implement user authentication
-
-## Recent Decisions
-- Use PostgreSQL for the primary database
-...
-```
-
-Paste this output into your AI tool's system prompt or conversation start.
-
-### Step 5: Verify It Works
-
-Ask your AI: **"What are our current tasks?"**
-
-A working setup produces a response like:
-
-```text
-Based on the project context, you have one active task:
-
-- **Implement user authentication** (pending)
-
-There's also a recent architectural decision to **use PostgreSQL for
-the primary database**, chosen for its ACID compliance and JSON support.
-
-Want me to start on the authentication task?
-```
-
-That's the success moment 🎉: 
-
-The AI is citing your exact context entries from Step 2, not hallucinating or 
-asking you to re-explain.
-
-## What Gets Created
-
-```
-.context/
-├── CONSTITUTION.md     # Hard rules — NEVER violate these
-├── TASKS.md            # Current and planned work
-├── CONVENTIONS.md      # Project patterns and standards
-├── ARCHITECTURE.md     # System overview
-├── DECISIONS.md        # Architectural decisions with rationale
-├── LEARNINGS.md        # Lessons learned, gotchas, tips
-├── GLOSSARY.md         # Domain terms and abbreviations
-├── AGENT_PLAYBOOK.md   # How AI tools should use this
-└── sessions/           # Session snapshots
-```
-
-Claude Code integration (hooks + skills) is provided by the
-**ctx plugin** — see [Integrations](integrations.md#claude-code-full-integration).
-
-See [Context Files](context-files.md) for detailed documentation of each file.
-
-### What to `.gitignore`
-
-**Commit** your `.context/` knowledge files: **that's the whole point**.
-
-**`.gitignore`** generated and sensitive paths:
-
-```gitignore
-# Session data (large, potentially sensitive)
-.context/sessions/
-.context/journal/
-.context/journal-site/
-.context/journal-obsidian/
-
-# Hook logs (machine-specific)
-.context/logs/
-
-# Encryption key (NEVER commit)
-.context/.scratchpad.key
-
-# Claude Code local settings (machine-specific)
-.claude/settings.local.json
-```
-
-`ctx init` automatically adds these entries to your `.gitignore`.
-Review the additions with `cat .gitignore` after init.
-
-!!! tip "Rule of Thumb"
-    * If it's knowledge (*decisions, tasks, learnings,
-      conventions*), **commit it**. 
-    * If it's generated output, raw session data, or a secret, `.gitignore` it.
-
-*See also*:
-
-* [Security considerations](security.md),
-* [Scratchpad encryption](scratchpad.md),
-* [Session Journal](session-journal.md)
-
-## Common Workflows
-
-### Track Context
-
-```bash
-# Add a task
-ctx add task "Implement user authentication"
-
-# Record a decision (full ADR fields required)
-ctx add decision "Use PostgreSQL for primary database" \
-  --context "Need a reliable database for production" \
-  --rationale "PostgreSQL offers ACID compliance and JSON support" \
-  --consequences "Team needs PostgreSQL training"
-
-# Note a learning
-ctx add learning "Mock functions must be hoisted in Jest" \
-  --context "Tests failed with undefined mock errors" \
-  --lesson "Jest hoists mock calls to top of file" \
-  --application "Place jest.mock() before imports"
-
-# Mark task complete
-ctx complete "user auth"
-```
-
-### Check Context Health
-
-```bash
-# Detect stale paths, missing files, potential secrets
-ctx drift
-
-# See full context summary
-ctx status
-```
-
-### Browse Session History
-
-List and search past AI sessions from the terminal:
-
-```bash
-ctx recall list --limit 5
-```
-
-#### Journal Site
-
-Export session transcripts to a browsable static site with search,
-navigation, and topic indices. 
-
-!!! info ""
-    The `ctx journal` command requires
-    [zensical](https://pypi.org/project/zensical/) (**Python >= 3.10**).
-
-    `zensical` is a Python-based static site generator from the 
-    *Material* for *MkDocs* team.
-
-    (*[why zensical?](blog/2026-02-15-why-zensical.md)*).
-
-If you don't have it on your system, 
-install `zensical` once with [pipx](https://pipx.pypa.io/):
-
-```bash
-# One-time setup
-pipx install zensical
-```
-
-!!! warning "Avoid `pip install zensical`"
-    `pip install` often fails: For example, on macOS, system Python installs a
-    non-functional stub (*`zensical` requires `Python >= 3.10`*), and
-    Homebrew Python blocks system-wide installs (`PEP 668`). 
-
-    `pipx` creates an **isolated environment** with the 
-    **correct Python version** automatically.
-
-Then, **export and serve**:
-
-```bash
-# Export all sessions to .context/journal/
-ctx recall export --all
-
-# Generate and serve the journal site
-ctx journal site --serve
-```
-
-Open [http://localhost:8000](http://localhost:8000) to browse.
-
-To update after new sessions, run the same two commands again;
-`recall export` preserves existing YAML frontmatter and only
-updates conversation content.
-
-See [Session Journal](session-journal.md) for the full pipeline
-including **normalization** and **enrichment**.
-
-### Run an Autonomous Loop
-
-Generate a script that iterates an AI agent until a completion
-signal is detected:
-
-```bash
-ctx loop
-chmod +x loop.sh
-./loop.sh
-```
-
-See [Autonomous Loops](autonomous-loop.md) for configuration
-and advanced usage.
-
-## Next Steps
-
-* [Prompting Guide](prompting-guide.md): Effective prompts for AI sessions
-* [CLI Reference](cli-reference.md): All commands and options
-* [Context Files](context-files.md): File formats and structure
-* [Session Journal](session-journal.md): Browse and search session history
-* [Autonomous Loops](autonomous-loop.md): Iterative AI development workflows
-* [Integrations](integrations.md): Setup for Claude Code, Cursor, Aider
-* [Blog](blog/index.md): Stories and lessons from building ctx
+* [Your First Session →](first-session.md) — a step-by-step walkthrough from `ctx init` to verified recall
+* [Common Workflows →](common-workflows.md) — day-to-day commands for tracking context, checking health, and browsing history

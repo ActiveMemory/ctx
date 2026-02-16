@@ -273,6 +273,11 @@ makes hook output visually distinct from agent prose. It also signals
 **Test the silence path**. Most hook runs should produce no output (*the
 condition isn't met*). Make sure the common case is fast and silent.
 
+## Next Up
+
+**[Using the Scratchpad with Claude →](scratchpad-with-claude.md)**: Store
+short-lived sensitive notes in an encrypted scratchpad.
+
 ## See Also
 
 - [Claude Code Permission Hygiene](claude-code-permissions.md): how

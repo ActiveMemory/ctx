@@ -208,6 +208,11 @@ Agent: "Let me check both sides."
 * **Never commit the key**. It's gitignored by default. Don't override
   this.
 
+## Next Up
+
+**[Parallel Agent Development with Git Worktrees →](parallel-worktrees.md)**:
+Run multiple agents on independent task tracks using git worktrees.
+
 ## See Also
 
 * [Scratchpad](../scratchpad.md): feature overview, all commands, when

@@ -462,3 +462,11 @@ Found a prompt that works well?
 2. What behavior it triggers
 3. When to use it
 4. Why it works (*optional but helpful*)
+
+----
+
+**Go Deeper**:
+
+* [Recipes](recipes/index.md) — targeted how-to guides for specific tasks
+* [CLI Reference](cli-reference.md) — all commands and flags
+* [Integrations](integrations.md) — setup for Claude Code, Cursor, Aider

@@ -284,6 +284,11 @@ Agent: [reads .contextrc, finds the path, loads context from the external dir]
 * **Commit both repos at session boundaries**. Context without code history
   (or code without context history) loses half the value.
 
+## Next Up
+
+**[Hook Output Patterns →](hook-output-patterns.md)**: Design clear, consistent
+output for ctx hooks.
+
 ## See Also
 
 * [Setting Up ctx Across AI Tools](multi-tool-setup.md): initial setup recipe
