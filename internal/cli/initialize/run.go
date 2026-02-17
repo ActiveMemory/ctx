@@ -125,6 +125,17 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Printf("  %s Tools: %v\n", color.YellowString("⚠"), err)
 	}
 
+	// Create .context/sessions/ directory for session summaries
+	sessionsDir := filepath.Join(contextDir, config.DirSessions)
+	if err := os.MkdirAll(sessionsDir, config.PermExec); err != nil {
+		cmd.Println(fmt.Sprintf(
+			"  %s sessions/: %v", color.YellowString("⚠"), err,
+		))
+	} else {
+		green := color.New(color.FgGreen).SprintFunc()
+		cmd.Println(fmt.Sprintf("  %s sessions/", green("✓")))
+	}
+
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
 		// Non-fatal: warn but continue
