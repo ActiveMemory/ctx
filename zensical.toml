@@ -54,15 +54,15 @@ nav = [
   ]},
   { "Reference" = [
     "cli-reference.md",
-    "session-journal.md",
     "skills.md",
+    "session-journal.md",
     "scratchpad.md",
-    "autonomous-loop.md",
-    "integrations.md",
     "comparison.md",
     "versions.md",
   ]},
   { "Operations" = [
+    "integrations.md",
+    "autonomous-loop.md",
     "migration.md",
     "upgrading.md",
   ]},

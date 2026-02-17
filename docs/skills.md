@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Skills Reference
+title: Skills
 icon: lucide/sparkles
 ---
 
 ![ctx](images/ctx-banner.png)
 
-## Skills Reference
+## Skills
 
 Skills are slash commands that run **inside your AI assistant** (*e.g.,
 `/ctx-next`*), as opposed to CLI commands that run in your terminal
