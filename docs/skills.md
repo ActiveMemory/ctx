@@ -331,7 +331,7 @@ Audit behavioral claims in docs and recipes against actual agent
 instructions. Traces each claim to its backing instruction and reports
 coverage as Covered, Partial, or Gap.
 
-**Wraps**: reads AGENT_PLAYBOOK.md, `.claude/skills/`, CLAUDE.md,
+**Wraps**: reads AGENT_PLAYBOOK.md, plugin skill definitions, CLAUDE.md,
 and docs/recipes
 
 **See also**:
@@ -433,8 +433,10 @@ grouping, and tear down with merge.
 ## Project-Specific Skills
 
 The ctx plugin ships the skills listed above.
-Teams can add their own project-specific skills to `.claude/skills/`
+Teams can add their own project-specific skills to `.claude/skills/` in the
+project root — these are separate from plugin-shipped skills and are scoped
+to the project.
 
-Project-specific skills follow the same format and are invoked the same way. 
+Project-specific skills follow the same format and are invoked the same way.
 
 Custom skills are not covered in this reference.

@@ -2076,6 +2076,8 @@
       
         
       
+        
+      
     
     
     
@@ -2168,6 +2170,36 @@
     
   
     Autonomous Loops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-git-pull-request" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M6 9v12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing to ctx
   
 
     
@@ -3223,7 +3255,7 @@ staleness, task accumulation, and constitution violations via
 <p>Audit behavioral claims in docs and recipes against actual agent
 instructions. Traces each claim to its backing instruction and reports
 coverage as Covered, Partial, or Gap.</p>
-<p><strong>Wraps</strong>: reads AGENT_PLAYBOOK.md, <code>.claude/skills/</code>, CLAUDE.md,
+<p><strong>Wraps</strong>: reads AGENT_PLAYBOOK.md, plugin skill definitions, CLAUDE.md,
 and docs/recipes</p>
 <p><strong>See also</strong>:
 <a href="../recipes/context-health/">Detecting and Fixing Drift</a></p>
@@ -3287,8 +3319,10 @@ grouping, and tear down with merge.</p>
 <hr />
 <h2 id="project-specific-skills">Project-Specific Skills<a class="headerlink" href="#project-specific-skills" title="Permanent link">&para;</a></h2>
 <p>The ctx plugin ships the skills listed above.
-Teams can add their own project-specific skills to <code>.claude/skills/</code></p>
-<p>Project-specific skills follow the same format and are invoked the same way. </p>
+Teams can add their own project-specific skills to <code>.claude/skills/</code> in the
+project root — these are separate from plugin-shipped skills and are scoped
+to the project.</p>
+<p>Project-specific skills follow the same format and are invoked the same way.</p>
 <p>Custom skills are not covered in this reference.</p>
 
 
