@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // findSessionsWithFilter scans common locations and additional directories
@@ -37,6 +39,15 @@ func findSessionsWithFilter(
 		claudeDir := filepath.Join(home, ".claude", "projects")
 		if info, err := os.Stat(claudeDir); err == nil && info.IsDir() {
 			sessions, _ := ScanDirectory(claudeDir)
+			allSessions = append(allSessions, sessions...)
+		}
+	}
+
+	// Check .context/sessions/ in the current working directory
+	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
+		sessionsDir := filepath.Join(cwd, config.DirContext, config.DirSessions)
+		if info, statErr := os.Stat(sessionsDir); statErr == nil && info.IsDir() {
+			sessions, _ := ScanDirectory(sessionsDir)
 			allSessions = append(allSessions, sessions...)
 		}
 	}

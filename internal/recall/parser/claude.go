@@ -38,7 +38,7 @@ func NewClaudeCodeParser() *ClaudeCodeParser {
 // Returns:
 //   - string: The identifier "claude-code"
 func (p *ClaudeCodeParser) Tool() string {
-	return "claude-code"
+	return config.ToolClaudeCode
 }
 
 // Matches returns true if the file appears to be a Claude Code session file.

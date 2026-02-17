@@ -41,7 +41,7 @@ func (p *ClaudeCodeParser) buildSession(
 	session := &Session{
 		ID:         id,
 		Slug:       first.Slug,
-		Tool:       "claude-code",
+		Tool:       config.ToolClaudeCode,
 		SourceFile: sourcePath,
 		CWD:        first.CWD,
 		Project:    filepath.Base(first.CWD),

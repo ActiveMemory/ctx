@@ -22,6 +22,8 @@ const (
 	DirTools = "tools"
 	// DirJournalSite is the journal static site output directory within .context/.
 	DirJournalSite = "journal-site"
+	// DirSessions is the subdirectory for session summaries within .context/.
+	DirSessions = "sessions"
 )
 
 // GitignoreEntries lists the recommended .gitignore entries added by ctx init.
