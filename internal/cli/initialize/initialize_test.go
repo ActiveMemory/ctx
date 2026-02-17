@@ -310,7 +310,7 @@ func TestEnsureGitignoreEntries_AppendsOnlyMissing(t *testing.T) {
 	defer cleanup()
 
 	// Pre-populate with some entries
-	existing := ".context/sessions/\n.context/logs/\n"
+	existing := ".context/journal/\n.context/logs/\n"
 	if err := os.WriteFile(".gitignore", []byte(existing), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -334,8 +334,8 @@ func TestEnsureGitignoreEntries_AppendsOnlyMissing(t *testing.T) {
 	}
 
 	// Already-present entries should not be duplicated
-	if strings.Count(contentStr, ".context/sessions/") != 1 {
-		t.Error("duplicate .context/sessions/ entry")
+	if strings.Count(contentStr, ".context/journal/") != 1 {
+		t.Error("duplicate .context/journal/ entry")
 	}
 	if strings.Count(contentStr, ".context/logs/") != 1 {
 		t.Error("duplicate .context/logs/ entry")

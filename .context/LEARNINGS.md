@@ -385,6 +385,8 @@
 
 ## [2026-02-11-195405] Gitignore rules for sensitive directories must survive cleanup sweeps
 
+> **Superseded** (2026-02-17): `.context/sessions/` was fully removed in v0.4.0. The directory is no longer created, referenced, or used by any code path. The gitignore entry was removed as dead weight during the issue #7 cleanup. The general principle (audit before removing security controls) remains sound, but no longer applies to sessions.
+
 **Context**: During a stale-reference sweep, the .context/sessions/ gitignore rule was removed because sessions were consolidated into journals. But the gitignore rule exists to prevent sensitive data from being committed, not to document architecture. The directory may still exist locally.
 
 **Lesson**: Gitignore entries for sensitive paths are security controls, not documentation. Never remove them during doc/reference cleanups even if the feature they relate to was removed.

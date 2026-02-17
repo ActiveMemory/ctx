@@ -173,8 +173,7 @@ asking you to re-explain.
 ├── DECISIONS.md        # Architectural decisions with rationale
 ├── LEARNINGS.md        # Lessons learned, gotchas, tips
 ├── GLOSSARY.md         # Domain terms and abbreviations
-├── AGENT_PLAYBOOK.md   # How AI tools should use this
-└── sessions/           # Session snapshots
+└── AGENT_PLAYBOOK.md   # How AI tools should use this
 ```
 
 Claude Code integration (hooks + skills) is provided by the
@@ -189,8 +188,7 @@ See [Context Files](context-files.md) for detailed documentation of each file.
 **`.gitignore`** generated and sensitive paths:
 
 ```gitignore
-# Session data (large, potentially sensitive)
-.context/sessions/
+# Journal data (large, potentially sensitive)
 .context/journal/
 .context/journal-site/
 .context/journal-obsidian/

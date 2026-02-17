@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Parallel Agents, Merge Debt, and the Myth of Overnight Progress](2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress.md)
+
+*Jose Alekhinne / February 17, 2026*
+
+You discover agents can run in parallel. So you open ten terminals.
+Then twenty. The fans spin, tokens burn, the screen looks like progress.
+It is not progress — it is merge debt being manufactured in real time.
+This post is about the five-agent ceiling, why role separation beats
+file locking, why overnight loops are an illusion, and why the only
+metric that matters is time from idea to verified, mergeable change.
+
+**Topics**: agent workflows, parallelism, verification, context
+engineering, engineering practice
+
+---
+
 ### [ctx v0.6.0: The Integration Release](2026-02-16-ctx-v0.6.0-the-integration-release.md)
 
 *Jose Alekhinne / February 16, 2026*

@@ -26,7 +26,6 @@ const (
 
 // GitignoreEntries lists the recommended .gitignore entries added by ctx init.
 var GitignoreEntries = []string{
-	".context/sessions/",
 	".context/journal/",
 	".context/journal-site/",
 	".context/journal-obsidian/",
