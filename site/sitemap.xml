@@ -94,12 +94,6 @@
         <loc>https://ctx.ist/versions/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/integrations/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/autonomous-loop/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/contributing/</loc>
       </url>
       <url>
@@ -107,6 +101,12 @@
       </url>
       <url>
         <loc>https://ctx.ist/upgrading/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/integrations/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/autonomous-loop/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/agent-security/</loc>

@@ -61,11 +61,11 @@ nav = [
     "versions.md",
   ]},
   { "Operations" = [
-    "integrations.md",
-    "autonomous-loop.md",
     "contributing.md",
     "migration.md",
     "upgrading.md",
+    "integrations.md",
+    "autonomous-loop.md",
   ]},
   { "Security" = [
     "agent-security.md",
