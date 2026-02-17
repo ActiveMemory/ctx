@@ -103,6 +103,14 @@ const (
 	RoleAssistant = "assistant"
 )
 
+// Tool identifiers for session parsers.
+const (
+	// ToolClaudeCode is the tool identifier for Claude Code sessions.
+	ToolClaudeCode = "claude-code"
+	// ToolMarkdown is the tool identifier for Markdown session files.
+	ToolMarkdown = "markdown"
+)
+
 // Claude Code integration file names.
 const (
 	// FileClaudeMd is the Claude Code configuration file in the project root.
