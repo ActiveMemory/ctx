@@ -47,8 +47,10 @@ your working tree — no reinstall needed after edits:
 1. Launch `claude`
 2. Type `/plugin` and press Enter
 3. Select **Marketplaces** → **Add Marketplace**
-4. Enter the **absolute path** to the plugin directory in your clone,
-   e.g. `~/WORKSPACE/ctx/internal/tpl/claude`
+4. Enter the **absolute path** to the root of your clone,
+   e.g. `~/WORKSPACE/ctx`
+   (this is where `.claude-plugin/marketplace.json` lives — it points
+   Claude Code to the actual plugin in `internal/tpl/claude`)
 5. Back in `/plugin`, select **Install** and choose `ctx`
 
 !!! tip "Local Plugin = Live Edits"

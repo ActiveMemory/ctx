@@ -107,7 +107,7 @@
 
 **Context**: Setting up the contributor workflow for ctx development
 
-**Lesson**: Claude Code marketplace plugins can source from a local directory path (e.g. ~/WORKSPACE/ctx/internal/tpl/claude). Edits to skills and hooks under that path take effect on the next Claude Code load — no reinstall needed
+**Lesson**: Claude Code marketplace plugins source from the repo root where `.claude-plugin/marketplace.json` lives (e.g. ~/WORKSPACE/ctx). The marketplace.json points to the actual plugin in `internal/tpl/claude`. Edits to skills and hooks under that path take effect on the next Claude Code load — no reinstall needed
 
 **Application**: The contributor docs instruct devs to add their local clone as a marketplace source rather than using the GitHub URL. This gives them live feedback on skill changes without a rebuild cycle.
 
