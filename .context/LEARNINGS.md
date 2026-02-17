@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-16 | Security docs are most vulnerable to stale paths after architecture migrations |
+| 2026-02-16 | Duplicate skills appear with namespace prefix in Claude Code |
+| 2026-02-16 | Local marketplace plugin enables live skill editing |
 | 2026-02-16 | gosec G301/G306: use 0o750 for dirs, 0o600 for files in test code too |
 | 2026-02-16 | golangci-lint errcheck: use cmd.Printf not fmt.Fprintf in Cobra commands |
 | 2026-02-15 | Dead link checking is consolidation check 12, not a standalone concern |
@@ -77,6 +80,36 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-16-164547] Security docs are most vulnerable to stale paths after architecture migrations
+
+**Context**: Migrated from per-project .claude/hooks/ and .claude/skills/ to plugin model; found 5 security docs still referencing the old paths
+
+**Lesson**: When moving infrastructure from per-project files to a plugin/external model, audit security docs first — stale paths in security guidance give users a false sense of protection (e.g. 'make .claude/hooks/ immutable' for a directory that no longer exists)
+
+**Application**: After any file-layout migration, grep security and agent-security docs for old paths before anything else
+
+---
+
+## [2026-02-16-164521] Duplicate skills appear with namespace prefix in Claude Code
+
+**Context**: Had both .claude/skills/ctx-status and the marketplace plugin providing the same skill
+
+**Lesson**: When a repo-local .claude/skills/ directory and a marketplace plugin both define the same skill name, Claude Code lists both: the local version unprefixed and the plugin version with a ctx: namespace prefix (e.g. ctx-status and ctx:ctx-status)
+
+**Application**: To avoid confusing duplicates, ensure distributed skills live only in the plugin source (internal/tpl/claude/skills/) and not also in .claude/skills/. Dev-only skills that aren't in the plugin won't collide.
+
+---
+
+## [2026-02-16-164518] Local marketplace plugin enables live skill editing
+
+**Context**: Setting up the contributor workflow for ctx development
+
+**Lesson**: Claude Code marketplace plugins can source from a local directory path (e.g. ~/WORKSPACE/ctx/internal/tpl/claude). Edits to skills and hooks under that path take effect on the next Claude Code load — no reinstall needed
+
+**Application**: The contributor docs instruct devs to add their local clone as a marketplace source rather than using the GitHub URL. This gives them live feedback on skill changes without a rebuild cycle.
 
 ---
 

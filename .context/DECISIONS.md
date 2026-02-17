@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-16 | Permission docs match DefaultClaudePermissions exactly |
+| 2026-02-16 | No symlinks for cross-directory skill sharing |
+| 2026-02-16 | Single source of truth for distributed skills |
 | 2026-02-16 | ctx v0.6.0: Plugin conversion — shell hooks to Go subcommands |
 | 2026-02-15 | allow_outside_cwd belongs in .contextrc, not just CLI |
 | 2026-02-15 | Add TL;DR admonitions to recipes longer than ~200 lines |
@@ -33,6 +36,48 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-16-164550] Permission docs match DefaultClaudePermissions exactly
+
+**Status**: Accepted
+
+**Context**: claude-code-permissions.md showed a curated subset of 13 skill permissions while DefaultClaudePermissions in config/file.go had 26 entries
+
+**Decision**: Permission docs match DefaultClaudePermissions exactly
+
+**Rationale**: A curated subset causes confusion when ctx init seeds more permissions than the docs recommend — users wonder where the extra entries came from and whether they are safe
+
+**Consequences**: The recommended defaults section now lists all 26 skill entries from DefaultClaudePermissions; future skill additions must update both config/file.go and the recipe
+
+---
+
+## [2026-02-16-164512] No symlinks for cross-directory skill sharing
+
+**Status**: Accepted
+
+**Context**: Considered symlinking .claude/skills/ctx-* to internal/tpl/claude/skills/ to avoid duplication
+
+**Decision**: No symlinks for cross-directory skill sharing
+
+**Rationale**: Git on Windows checks out symlinks as plain text files containing the target path unless Developer Mode is enabled and core.symlinks=true. Most contributors won't have this configured, breaking the build/embed on forked repos
+
+**Consequences**: We keep two physical directories with distinct purposes instead of linking them. Contributors install the plugin from their local clone directory to get the ctx-* skills.
+
+---
+
+## [2026-02-16-164509] Single source of truth for distributed skills
+
+**Status**: Accepted
+
+**Context**: Discovered ctx-* skills were duplicated between .claude/skills/ and internal/tpl/claude/skills/, causing double entries in Claude Code's skill list
+
+**Decision**: Single source of truth for distributed skills
+
+**Rationale**: internal/tpl/claude/skills/ is what gets embedded in the binary and served by the marketplace plugin — it is the distribution path. .claude/skills/ now holds only the 12 dev-only skills (release, qa, backup, etc.) that are never distributed
+
+**Consequences**: Skill edits for user-facing ctx-* skills happen in internal/tpl/claude/skills/. Dev-only skills live in .claude/skills/. No sync script needed.
+
+---
 
 ## [2026-02-16-100447] ctx v0.6.0: Plugin conversion — shell hooks to Go subcommands
 
