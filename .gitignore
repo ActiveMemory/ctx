@@ -52,6 +52,11 @@ dist/
 .context/journal-site/
 .context/journal-obsidian/
 
+# VS Code extension build artifacts
+editors/vscode/node_modules/
+editors/vscode/dist/
+editors/vscode/*.vsix
+
 # Some ideas are best kept hidden.
 ideas
 .context/.scratchpad.key

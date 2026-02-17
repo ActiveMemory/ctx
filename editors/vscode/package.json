@@ -1,0 +1,121 @@
+{
+  "name": "ctx-context",
+  "displayName": "ctx — Persistent Context for AI",
+  "description": "Chat participant (@ctx) for persistent project context across AI coding sessions",
+  "version": "0.7.0",
+  "publisher": "activememory",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ActiveMemory/ctx"
+  },
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": [
+    "AI",
+    "Chat"
+  ],
+  "keywords": [
+    "ctx",
+    "context",
+    "ai",
+    "copilot",
+    "chat"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "chatParticipants": [
+      {
+        "id": "ctx.participant",
+        "name": "ctx",
+        "fullName": "ctx",
+        "description": "Persistent project context for AI coding sessions",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "init",
+            "description": "Initialize a new .context/ directory with template files"
+          },
+          {
+            "name": "status",
+            "description": "Show context summary with token estimate"
+          },
+          {
+            "name": "agent",
+            "description": "Print AI-ready context packet"
+          },
+          {
+            "name": "drift",
+            "description": "Detect stale or invalid context"
+          },
+          {
+            "name": "recall",
+            "description": "Browse and search AI session history"
+          },
+          {
+            "name": "hook",
+            "description": "Generate AI tool integration configs (e.g. copilot, claude)"
+          },
+          {
+            "name": "add",
+            "description": "Add a new item to a context file (task, decision, learning)"
+          },
+          {
+            "name": "load",
+            "description": "Output assembled context Markdown"
+          },
+          {
+            "name": "compact",
+            "description": "Archive completed tasks and clean up context"
+          },
+          {
+            "name": "sync",
+            "description": "Reconcile context with codebase"
+          }
+        ],
+        "disambiguation": [
+          {
+            "category": "context",
+            "description": "The user wants to manage persistent project context, initialize a .context/ directory, check context status, detect drift, recall session history, or load context for AI sessions.",
+            "examples": [
+              "Initialize project context",
+              "Show my context status",
+              "What is the context drift?",
+              "Load my project context",
+              "Recall previous AI sessions",
+              "Add a task to my context",
+              "Compact my context files"
+            ]
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "ctx",
+      "properties": {
+        "ctx.executablePath": {
+          "type": "string",
+          "default": "ctx",
+          "description": "Path to the ctx executable. Defaults to 'ctx' (found via PATH)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "test": "vitest run",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.93.0",
+    "@vscode/vsce": "^3.7.1",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.0",
+    "vitest": "^4.0.18"
+  }
+}
