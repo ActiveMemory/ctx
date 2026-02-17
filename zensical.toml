@@ -55,9 +55,9 @@ nav = [
   { "Reference" = [
     "cli-reference.md",
     "skills.md",
+    "comparison.md",
     "session-journal.md",
     "scratchpad.md",
-    "comparison.md",
     "versions.md",
   ]},
   { "Operations" = [
