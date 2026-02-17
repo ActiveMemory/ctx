@@ -58,3 +58,4 @@ dist/
 # Some ideas are best kept hidden.
 ideas
 .context/.scratchpad.key
+.DS_Store
