@@ -123,7 +123,7 @@ boundaries.
 |----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Dedicated user account** | No `sudo`, no privileged group membership (`docker`, `wheel`, `adm`). The agent cannot escalate privileges.                                                                                                    |
 | **Filesystem permissions** | Project directory writable; everything else read-only or inaccessible. Agent cannot reach other projects, home directories, or system config.                                                                  |
-| **Immutable config files** | `CLAUDE.md`, `.claude/settings.local.json`, `.claude/hooks/`, and `.context/CONSTITUTION.md` owned by a different user or marked immutable (`chattr +i` on Linux). The agent cannot modify its own guardrails. |
+| **Immutable config files** | `CLAUDE.md`, `.claude/settings.local.json`, and `.context/CONSTITUTION.md` owned by a different user or marked immutable (`chattr +i` on Linux). The agent cannot modify its own guardrails. |
 
 **What it catches**: Privilege escalation, self-modification, lateral
 movement to other projects or users.

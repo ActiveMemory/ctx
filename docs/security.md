@@ -90,7 +90,7 @@ permissions over time. Some permissions can bypass safety hooks:
   dialog where `block-git-push.sh` would intervene
 * Broad permissions like `Bash(echo:*)` or `Bash(cat:*)` could be
   composed into writes to sensitive files (`CLAUDE.md`,
-  `settings.local.json`, `.claude/hooks/`)
+  `settings.local.json`)
 
 Periodically review your permissions for:
 

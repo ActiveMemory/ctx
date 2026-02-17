@@ -12,13 +12,13 @@
         <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/upgrading/">
+        <link rel="canonical" href="https://ctx.ist/contributing/">
       
       
-        <link rel="prev" href="../migration/">
+        <link rel="prev" href="../autonomous-loop/">
       
       
-        <link rel="next" href="../agent-security/">
+        <link rel="next" href="../migration/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Upgrading ctx - ctx: do you remember?</title>
+        <title>Contributing to ctx - ctx: do you remember?</title>
       
     
     
@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#upgrading-ctx" class="md-skip">
+        <a href="#development-setup" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Upgrading ctx
+              Contributing to ctx
             
           </span>
         </div>
@@ -1703,10 +1703,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-git-pull-request" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M6 9v12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing to ctx
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1724,6 +1751,297 @@
   
 
       </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#development-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-fork-or-clone-the-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Fork (or Clone) the Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-build-and-install-the-binary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Build and Install the Binary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-install-the-plugin-from-your-local-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Install the Plugin from Your Local Clone
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Layout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project Layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#skills-two-directories-one-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills: Two Directories, One Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-to-day-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day-to-Day Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day-to-Day Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#go-code-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go Code Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-or-hook-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skill or Hook Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-docs-site-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Docs Site Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submitting-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submitting Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Submitting Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before You Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull-request-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pull Request Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commit Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#legal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Legal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#developer-certificate-of-origin-dco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Developer Certificate of Origin (DCO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-of-conduct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code of Conduct
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1763,37 +2081,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Upgrading ctx
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../upgrading/" class="md-nav__link">
         
   
   
@@ -1811,152 +2102,6 @@
   
 
       </a>
-      
-        
-
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#upgrading-ctx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrading ctx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-changes-between-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Changes Between Versions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Upgrade Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-install-the-new-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Install the New Version
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-reinitialize" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Reinitialize
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-update-the-ctx-plugin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Update the ctx Plugin
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-review-custom-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Review Custom Settings
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-verify" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Verify
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-clean-up" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Clean Up
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-if-i-skip-the-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What If I Skip the Upgrade?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2120,44 +2265,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrading-ctx" class="md-nav__link">
+  <a href="#development-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrading ctx
+        Development Setup
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-changes-between-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Changes Between Versions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Upgrade Steps">
+    <nav class="md-nav" aria-label="Development Setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-install-the-new-version" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Install the New Version
+        Prerequisites
       
     </span>
   </a>
@@ -2165,10 +2288,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-reinitialize" class="md-nav__link">
+  <a href="#1-fork-or-clone-the-repository" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Reinitialize
+        1. Fork (or Clone) the Repository
       
     </span>
   </a>
@@ -2176,10 +2299,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-update-the-ctx-plugin" class="md-nav__link">
+  <a href="#2-build-and-install-the-binary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Update the ctx Plugin
+        2. Build and Install the Binary
       
     </span>
   </a>
@@ -2187,10 +2310,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-review-custom-settings" class="md-nav__link">
+  <a href="#3-install-the-plugin-from-your-local-clone" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Review Custom Settings
+        3. Install the Plugin from Your Local Clone
       
     </span>
   </a>
@@ -2198,21 +2321,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-verify" class="md-nav__link">
+  <a href="#4-verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Verify
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-clean-up" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Clean Up
+        4. Verify
       
     </span>
   </a>
@@ -2225,24 +2337,202 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-if-i-skip-the-upgrade" class="md-nav__link">
+  <a href="#project-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What If I Skip the Upgrade?
+        Project Layout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project Layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#skills-two-directories-one-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills: Two Directories, One Rule
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
+  <a href="#day-to-day-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Reference
+        Day-to-Day Workflow
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Day-to-Day Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#go-code-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go Code Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-or-hook-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skill or Hook Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-docs-site-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Docs Site Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submitting-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submitting Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Submitting Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before You Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull-request-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pull Request Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commit Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Style
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#legal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Legal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#developer-certificate-of-origin-dco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Developer Certificate of Origin (DCO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-of-conduct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code of Conduct
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2312,117 +2602,172 @@
   
 
 
-  <h1>Upgrading ctx</h1>
+  <h1>Contributing to ctx</h1>
 
-<p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<h2 id="upgrading-ctx">Upgrading ctx<a class="headerlink" href="#upgrading-ctx" title="Permanent link">&para;</a></h2>
-<p>New versions of <code>ctx</code> may ship updated permissions, <code>CLAUDE.md</code> directives,
-or plugin hooks and skills.</p>
+<h2 id="development-setup">Development Setup<a class="headerlink" href="#development-setup" title="Permanent link">&para;</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://go.dev/">Go 1.25+</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/claude-code/overview">Claude Code</a></li>
+<li>Git</li>
+</ul>
+<h3 id="1-fork-or-clone-the-repository">1. Fork (or Clone) the Repository<a class="headerlink" href="#1-fork-or-clone-the-repository" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Fork on GitHub, then:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;you&gt;/ctx.git
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>ctx
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Or, if you have push access:</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ActiveMemory/ctx.git
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">cd</span><span class="w"> </span>ctx
+</span></code></pre></div>
+<h3 id="2-build-and-install-the-binary">2. Build and Install the Binary<a class="headerlink" href="#2-build-and-install-the-binary" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>make<span class="w"> </span>build
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</span></code></pre></div>
+<p>This compiles the <code>ctx</code> binary and places it in <code>/usr/local/bin/</code>.</p>
+<h3 id="3-install-the-plugin-from-your-local-clone">3. Install the Plugin from Your Local Clone<a class="headerlink" href="#3-install-the-plugin-from-your-local-clone" title="Permanent link">&para;</a></h3>
+<p>The repository ships a Claude Code plugin under <code>internal/tpl/claude/</code>.
+Point Claude Code at your local copy so that skills and hooks reflect
+your working tree — no reinstall needed after edits:</p>
+<ol>
+<li>Launch <code>claude</code></li>
+<li>Type <code>/plugin</code> and press Enter</li>
+<li>Select <strong>Marketplaces</strong> → <strong>Add Marketplace</strong></li>
+<li>Enter the <strong>absolute path</strong> to the plugin directory in your clone,
+   e.g. <code>~/WORKSPACE/ctx/internal/tpl/claude</code></li>
+<li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code></li>
+</ol>
 <div class="admonition tip">
-<p class="admonition-title">Claude Code User?</p>
-<p>The marketplace can update <strong>skills, hooks, and prompts</strong> independently:
-<code>/plugin</code> → select <strong>ctx</strong> → <strong>Update now</strong> (or enable auto-update).</p>
-<p>The <code>ctx</code> <strong>binary</strong> is separate —
-<a href="../getting-started/#installation">rebuild from source or download a new release</a>
-when one is available, then run <code>ctx init --force --merge</code>.
-Knowledge files are preserved automatically.</p>
+<p class="admonition-title">Local Plugin = Live Edits</p>
+<p>Because the marketplace points at a directory on disk, any change
+you make to a skill or hook under <code>internal/tpl/claude/</code> takes
+effect the next time Claude Code loads it. No rebuild, no
+reinstall.</p>
 </div>
-<h2 id="what-changes-between-versions">What Changes Between Versions<a class="headerlink" href="#what-changes-between-versions" title="Permanent link">&para;</a></h2>
-<p><code>ctx init</code> generates two categories of files:</p>
+<h3 id="4-verify">4. Verify<a class="headerlink" href="#4-verify" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>--version<span class="w">       </span><span class="c1"># binary is in PATH</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>list<span class="w"> </span><span class="c1"># plugin is installed</span>
+</span></code></pre></div>
+<p>You should see the <code>ctx</code> plugin listed, sourced from your local path.</p>
+<hr />
+<h2 id="project-layout">Project Layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx/
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── cmd/ctx/                  # CLI entry point
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── internal/
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── cli/                  # Command implementations
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ├── context/              # Core context logic
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ├── drift/                # Drift detection
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   ├── claude/               # Claude Code integration helpers
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   └── tpl/                  # Embedded templates and plugin
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│       └── claude/           # ← Claude Code plugin (skills, hooks)
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│           └── skills/       #   Source of truth for distributed skills
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>├── .claude/
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   └── skills/               # Dev-only skills (not distributed)
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>├── specs/                    # Feature specifications
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>├── docs/                     # Documentation site source
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>└── .context/                 # ctx&#39;s own context (dogfooding)
+</span></code></pre></div>
+<h3 id="skills-two-directories-one-rule">Skills: Two Directories, One Rule<a class="headerlink" href="#skills-two-directories-one-rule" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Category</th>
-<th>Examples</th>
-<th>Changes between versions?</th>
+<th>Directory</th>
+<th>What lives here</th>
+<th>Distributed to users?</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Infrastructure</strong></td>
-<td><code>.claude/settings.local.json</code> (permissions), ctx-managed sections in <code>CLAUDE.md</code> and <code>PROMPT.md</code>, <strong>ctx plugin</strong> (hooks + skills)</td>
+<td><code>internal/tpl/claude/skills/</code></td>
+<td>The 25 <code>ctx-*</code> skills that ship with the plugin</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><strong>Knowledge</strong></td>
-<td><code>.context/TASKS.md</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, <code>CONVENTIONS.md</code>, <code>ARCHITECTURE.md</code>, <code>GLOSSARY.md</code>, <code>CONSTITUTION.md</code>, <code>AGENT_PLAYBOOK.md</code></td>
-<td><strong>No</strong>: this is <strong>your</strong> data</td>
+<td><code>.claude/skills/</code></td>
+<td>Dev-only skills (release, QA, backup, etc.)</td>
+<td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Infrastructure is regenerated by <code>ctx init</code> and plugin updates.
-Knowledge files are yours and should never be overwritten.</p>
-<h2 id="upgrade-steps">Upgrade Steps<a class="headerlink" href="#upgrade-steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-install-the-new-version">1. Install the New Version<a class="headerlink" href="#1-install-the-new-version" title="Permanent link">&para;</a></h3>
-<p>Build from source or download the binary:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/ctx-source
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>pull
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>make<span class="w"> </span>build
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>--version<span class="w">   </span><span class="c1"># verify</span>
+<p><strong><code>internal/tpl/claude/skills/</code></strong> is the single source of truth for
+user-facing skills. If you are adding or modifying a <code>ctx-*</code> skill,
+edit it there.</p>
+<p><strong><code>.claude/skills/</code></strong> holds skills that only make sense inside this
+repository (release automation, QA checks, backup scripts). These are
+never distributed to users.</p>
+<hr />
+<h2 id="day-to-day-workflow">Day-to-Day Workflow<a class="headerlink" href="#day-to-day-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="go-code-changes">Go Code Changes<a class="headerlink" href="#go-code-changes" title="Permanent link">&para;</a></h3>
+<p>After modifying Go source files, rebuild and reinstall:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
 </span></code></pre></div>
-<h3 id="2-reinitialize">2. Reinitialize<a class="headerlink" href="#2-reinitialize" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
+<p>The <code>ctx</code> binary is statically compiled — there is no hot reload.
+You must rebuild for Go changes to take effect.</p>
+<h3 id="skill-or-hook-changes">Skill or Hook Changes<a class="headerlink" href="#skill-or-hook-changes" title="Permanent link">&para;</a></h3>
+<p>Edit files under <code>internal/tpl/claude/skills/</code> or
+<code>internal/tpl/claude/hooks/</code>. Changes are picked up by Claude Code
+automatically (no rebuild needed).</p>
+<h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">            </span><span class="c1"># fast: all tests</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>make<span class="w"> </span>audit<span class="w">           </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>make<span class="w"> </span>smoke<span class="w">           </span><span class="c1"># build + run basic commands end-to-end</span>
 </span></code></pre></div>
-<ul>
-<li><code>--force</code> regenerates infrastructure files (permissions, ctx-managed
-  sections in <code>CLAUDE.md</code> and <code>PROMPT.md</code>).</li>
-<li><code>--merge</code> preserves your content outside ctx markers.</li>
-</ul>
-<p>Knowledge files (<code>.context/TASKS.md</code>, <code>DECISIONS.md</code>, etc.) are <strong>preserved
-automatically</strong> — <code>ctx init</code> only overwrites infrastructure, never your data.</p>
-<blockquote>
-<p><strong>Scratchpad key</strong>: If you use <code>ctx pad</code>, verify that <code>.context/.scratchpad.key</code>
-is still present after reinit. It should be preserved, but losing it means
-losing access to encrypted scratchpad data.</p>
-</blockquote>
-<h3 id="3-update-the-ctx-plugin">3. Update the ctx Plugin<a class="headerlink" href="#3-update-the-ctx-plugin" title="Permanent link">&para;</a></h3>
-<p>If you use Claude Code, update the plugin to get new hooks and skills:</p>
+<h3 id="running-the-docs-site-locally">Running the Docs Site Locally<a class="headerlink" href="#running-the-docs-site-locally" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>site-setup<span class="w">      </span><span class="c1"># one-time: create venv, install zensical</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>make<span class="w"> </span>site-serve<span class="w">      </span><span class="c1"># serve at localhost</span>
+</span></code></pre></div>
+<hr />
+<h2 id="submitting-changes">Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
+<h3 id="before-you-start">Before You Start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Open <code>/plugin</code> in Claude Code.</li>
-<li>Select <strong>ctx</strong>.</li>
-<li>Click <strong>Update now</strong>.</li>
+<li>Check existing issues to avoid duplicating effort</li>
+<li>For large changes, open an issue first to discuss the approach</li>
+<li>Read the specs in <code>specs/</code> for design context</li>
 </ol>
-<p>Or enable <strong>auto-update</strong> so the plugin stays current without manual steps.</p>
-<h3 id="4-review-custom-settings">4. Review Custom Settings<a class="headerlink" href="#4-review-custom-settings" title="Permanent link">&para;</a></h3>
-<p>If you added custom permissions to <code>.claude/settings.local.json</code> beyond
-what <code>ctx init</code> provides, diff and merge:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>diff<span class="w"> </span>.claude.bak/settings.local.json<span class="w"> </span>.claude/settings.local.json
+<h3 id="pull-request-process">Pull Request Process<a class="headerlink" href="#pull-request-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create a feature branch: <code>git checkout -b feature/my-feature</code></li>
+<li>Make your changes</li>
+<li>Run <code>make audit</code> to catch issues early</li>
+<li>Commit with a clear message (see below)</li>
+<li>Push and open a pull request</li>
+</ol>
+<h3 id="commit-messages">Commit Messages<a class="headerlink" href="#commit-messages" title="Permanent link">&para;</a></h3>
+<p>Follow conventional commits:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>type(scope): description
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>[optional body]
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>[optional footer]
 </span></code></pre></div>
-<p>Manually add back any custom entries that the new init dropped.</p>
-<h3 id="5-verify">5. Verify<a class="headerlink" href="#5-verify" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>status<span class="w">          </span><span class="c1"># context files intact</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>drift<span class="w">           </span><span class="c1"># no broken references</span>
-</span></code></pre></div>
-<h3 id="6-clean-up">6. Clean Up<a class="headerlink" href="#6-clean-up" title="Permanent link">&para;</a></h3>
-<p>If you made manual backups, remove them once satisfied:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.context.bak<span class="w"> </span>.claude.bak<span class="w"> </span>CLAUDE.md.bak<span class="w"> </span>PROMPT.md.bak
-</span></code></pre></div>
-<h2 id="what-if-i-skip-the-upgrade">What If I Skip the Upgrade?<a class="headerlink" href="#what-if-i-skip-the-upgrade" title="Permanent link">&para;</a></h2>
-<p>The old binary still works with your existing <code>.context/</code> files. But you
-may miss:</p>
+<p>Types: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>test</code>, <code>refactor</code>, <code>chore</code></p>
+<p>Examples:</p>
 <ul>
-<li><strong>New plugin hooks</strong> that enforce better practices or catch mistakes;</li>
-<li><strong>Updated skill prompts</strong> that produce better results;</li>
-<li><strong>New <code>.gitignore</code> entries</strong> for directories added in newer versions;</li>
-<li><strong>Bug fixes</strong> in the CLI itself.</li>
+<li><code>feat(cli): add ctx export command</code></li>
+<li><code>fix(drift): handle missing files gracefully</code></li>
+<li><code>docs: update installation instructions</code></li>
 </ul>
-<p>The plugin and the binary can be updated independently. You can update
-the plugin (for new hooks/skills) even if you stay on an older binary,
-and vice versa.</p>
-<p>Context files are plain Markdown: They <strong>never</strong> break between versions.</p>
-<p><strong>The surrounding infrastructure is what evolves</strong>.</p>
-<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Plugin users (Claude Code)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /plugin → select ctx → Update now</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Then update the binary and reinitialize:</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># From-source / manual users</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># install new ctx binary, then:</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># /plugin → select ctx → Update now   (if using Claude Code)</span>
+<h3 id="code-style">Code Style<a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Follow Go conventions (<code>gofmt</code>, <code>go vet</code>)</li>
+<li>Keep functions focused and small</li>
+<li>Add tests for new functionality</li>
+<li>Handle errors explicitly</li>
+</ul>
+<hr />
+<h2 id="legal">Legal<a class="headerlink" href="#legal" title="Permanent link">&para;</a></h2>
+<h3 id="developer-certificate-of-origin-dco">Developer Certificate of Origin (DCO)<a class="headerlink" href="#developer-certificate-of-origin-dco" title="Permanent link">&para;</a></h3>
+<p>By contributing, you agree to the
+<a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
+<p>All commits must be signed off:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </span></code></pre></div>
+<h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
+<p>Contributions are licensed under the
+<a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE">Apache 2.0 License</a>.</p>
+<h3 id="code-of-conduct">Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Permanent link">&para;</a></h3>
+<p>This project follows the
+<a href="https://github.com/ActiveMemory/ctx/blob/main/CODE_OF_CONDUCT.md">Contributor Covenant Code of Conduct</a>.</p>
 
 
 
@@ -2465,7 +2810,7 @@ and vice versa.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../migration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Integrating ctx">
+          <a href="../autonomous-loop/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Autonomous Loops">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2475,20 +2820,20 @@ and vice versa.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Integrating ctx
+                Autonomous Loops
               </div>
             </div>
           </a>
         
         
           
-          <a href="../agent-security/" class="md-footer__link md-footer__link--next" aria-label="Next: Defense in Depth: Securing AI Agents">
+          <a href="../migration/" class="md-footer__link md-footer__link--next" aria-label="Next: Integrating ctx">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Defense in Depth: Securing AI Agents
+                Integrating ctx
               </div>
             </div>
             <div class="md-footer__button md-icon">

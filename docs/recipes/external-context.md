@@ -178,25 +178,16 @@ Read the context files from that directory:
 - `~/repos/myproject-context/CONSTITUTION.md`: hard rules
 ```
 
-For Claude Code hooks, update `.claude/settings.local.json` to pass the
-external path:
+The ctx plugin's PreToolUse hook runs `ctx agent` automatically. To make it
+use the external path, create a `.contextrc` in the project root (Step 3
+above) — the hook inherits the same configuration. No manual hook
+editing is needed.
 
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "ctx agent --budget 4000 --session $PPID --context-dir ~/repos/myproject-context --allow-outside-cwd 2>/dev/null || true"
-          }
-        ]
-      }
-    ]
-  }
-}
+If you use `CTX_DIR` instead of `.contextrc`, export it in your shell
+profile so the hook process inherits it:
+
+```bash
+export CTX_DIR=~/repos/myproject-context
 ```
 
 ### Step 5: Share with Teammates

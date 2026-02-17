@@ -31,6 +31,11 @@ accomplished and identify context worth persisting.
 
 ## Reflection Checklist
 
+Before listing items, step back and reason through the session
+as a whole: what was the arc, what surprised you, what would
+you do differently? This framing surfaces insights that a
+mechanical checklist misses.
+
 Work through each category. Skip categories with nothing
 to report; do not force empty sections.
 

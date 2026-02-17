@@ -26,10 +26,14 @@ Record an architectural decision in DECISIONS.md.
 
 For lightweight decisions, use a single statement:
 
-> "In the context of **[situation]**, facing **[constraint]**, we decided for **[choice]** and against **[alternatives]**, to achieve **[benefit]**, accepting that **[trade-off]**."
+> "In the context of **[situation]**, facing **[constraint]**, we decided for 
+> **[choice]** and against **[alternatives]**, to achieve **[benefit]**, 
+> accepting that **[trade-off]**."
 
 Example:
-> "In the context of needing a CLI framework, facing Go ecosystem options, we decided for Cobra and against urfave/cli, to achieve better subcommand support, accepting that it has more boilerplate."
+> "In the context of needing a CLI framework, facing Go ecosystem options, 
+> we decided for Cobra and against urfave/cli, to achieve better subcommand 
+> support, accepting that it has more boilerplate."
 
 ### Full Format
 

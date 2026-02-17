@@ -63,6 +63,7 @@ nav = [
   { "Operations" = [
     "integrations.md",
     "autonomous-loop.md",
+    "contributing.md",
     "migration.md",
     "upgrading.md",
   ]},

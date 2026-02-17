@@ -59,7 +59,8 @@ ctx init --ralph
 ````
 
 This creates `.context/` with the template files, a `PROMPT.md` configured for
-autonomous iteration, and Claude Code hooks and skills under `.claude/`.
+autonomous iteration, and seeds Claude Code permissions in
+`.claude/settings.local.json`. Install the ctx plugin for hooks and skills.
 
 Without `--ralph`, the agent will often pause when requirements are unclear.
 For unattended runs, you want it to choose a default and document the trade-off
@@ -201,7 +202,7 @@ For unattended runs, enforce isolation at the infrastructure level:
 | Virtual machine   | Prefer a dedicated VM with no shared folders, no host passthrough, and no keys to other machines.                                                                                                                                                             |
 | Network           | If the agent does not need the internet, disable outbound access entirely. If it does, restrict to specific domains via firewall rules.                                                                                                                       |
 | Resource limits   | Apply CPU, memory, and disk limits (cgroups/container limits). A runaway loop should not fill disk or consume all RAM.                                                                                                                                        |
-| Self-modification | Make instruction files read-only. `CLAUDE.md`, `.claude/settings.local.json`, `.claude/hooks/`, and `.context/CONSTITUTION.md` should not be writable by the agent user.                                                                                      |
+| Self-modification | Make instruction files read-only. `CLAUDE.md`, `.claude/settings.local.json`, and `.context/CONSTITUTION.md` should not be writable by the agent user. If using project-local hooks, protect those too.                                                            |
 
 A minimal Docker setup for overnight runs:
 

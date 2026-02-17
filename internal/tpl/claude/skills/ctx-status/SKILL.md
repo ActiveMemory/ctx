@@ -84,12 +84,12 @@ After running, summarize the key points for the user:
 
 ## Interpreting Results
 
-| Observation                  | Suggestion                        |
-|------------------------------|-----------------------------------|
-| Many empty files             | Context is sparse; populate core files (TASKS, CONVENTIONS) |
-| High token count (>30k)      | Consider `ctx compact` or archiving completed tasks |
-| No recent activity           | Context may be stale; check if files need updating |
-| TASKS.md has 0 active        | All work done, or tasks need to be added |
+| Observation             | Suggestion                                                  |
+|-------------------------|-------------------------------------------------------------|
+| Many empty files        | Context is sparse; populate core files (TASKS, CONVENTIONS) |
+| High token count (>30k) | Consider `ctx compact` or archiving completed tasks         |
+| No recent activity      | Context may be stale; check if files need updating          |
+| TASKS.md has 0 active   | All work done, or tasks need to be added                    |
 
 ## Quality Checklist
 

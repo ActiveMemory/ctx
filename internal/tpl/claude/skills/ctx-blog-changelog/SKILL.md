@@ -113,8 +113,9 @@ topics:
 [Comparison table or code diff showing improvement]
 
 ## Key Commits
-| Commit | Change |
-|--------|--------|
+
+| Commit | Change      |
+|--------|-------------|
 | abc123 | Description |
 
 ## Lessons Learned

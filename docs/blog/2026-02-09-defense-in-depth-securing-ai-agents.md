@@ -135,9 +135,8 @@ open raw sockets. These are kernel boundaries.
 | Immutable config files      | Self-modification of guardrails between iterations |
 
 Make the agent's instruction files read-only: `CLAUDE.md`,
-`.claude/settings.local.json`, `.claude/hooks/`,
-`.context/CONSTITUTION.md`. Own them as a different user, or mark
-them immutable with `chattr +i` on Linux.
+`.claude/settings.local.json`, `.context/CONSTITUTION.md`. Own them
+as a different user, or mark them immutable with `chattr +i` on Linux.
 
 **The hole**: Actions within the agent's legitimate scope. If the
 agent has write access to source code (which it needs), it can

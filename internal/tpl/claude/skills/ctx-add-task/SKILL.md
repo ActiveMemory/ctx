@@ -42,6 +42,10 @@ If the user provides only a topic, ask:
 ctx add task "Task description" [--priority high|medium|low] [--section "Phase N"]
 ```
 
+**Placement**: Without `--section`, the task is inserted before the
+first unchecked task in TASKS.md. Use `--section` only when you need
+a specific section (e.g., `--section "Maintenance"`).
+
 **Example — specific and actionable:**
 ```bash
 ctx add task "Add --cooldown flag to ctx agent to suppress repeated output within a time window. Use tombstone file per session for isolation." --priority medium
