@@ -185,7 +185,15 @@ Shows context summary: files present, token estimate, and recent activity.
 ### 3. Start Using with AI
 
 With Claude Code (and the ctx plugin installed), context loads automatically
-via hooks. For other tools, paste the output of:
+via hooks.
+
+With **VS Code Copilot Chat**, install the
+[ctx extension](integrations.md#vs-code-chat-extension-ctx) and use
+`@ctx /status`, `@ctx /agent`, and other slash commands directly in chat.
+Run `ctx hook copilot --write` to generate `.github/copilot-instructions.md`
+for automatic context loading.
+
+For other tools, paste the output of:
 
 ```bash
 ctx agent --budget 8000

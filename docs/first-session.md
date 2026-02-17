@@ -114,7 +114,15 @@ it will fill in as you capture lessons during development.
 ## Step 4: Start an AI Session
 
 With **Claude Code** (and the ctx plugin), context loads automatically — just
-start a session and it's there. For other tools, generate a context packet:
+start a session and it's there.
+
+With **VS Code Copilot Chat** (and the
+[ctx extension](integrations.md#vs-code-chat-extension-ctx)), type
+`@ctx /agent` in chat to load your context packet, or `@ctx /status`
+to check your project context. Run `ctx hook copilot --write` once
+to generate `.github/copilot-instructions.md` for automatic context loading.
+
+For other tools, generate a context packet:
 
 ```bash
 ctx agent --budget 8000
@@ -178,6 +186,9 @@ asking you to re-explain.
 
 Claude Code integration (hooks + skills) is provided by the
 **ctx plugin** — see [Integrations](integrations.md#claude-code-full-integration).
+
+VS Code Copilot Chat integration is provided by the
+**ctx extension** — see [Integrations](integrations.md#vs-code-chat-extension-ctx).
 
 See [Context Files](context-files.md) for detailed documentation of each file.
 

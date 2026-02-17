@@ -839,8 +839,14 @@ ctx watch --dry-run
 Generate AI tool integration configuration.
 
 ```bash
-ctx hook <tool>
+ctx hook <tool> [flags]
 ```
+
+**Flags**:
+
+| Flag      | Short | Description                                                            |
+|-----------|-------|------------------------------------------------------------------------|
+| `--write` | `-w`  | Write the generated config to disk (e.g. `.github/copilot-instructions.md`) |
 
 **Supported tools**:
 
@@ -859,8 +865,12 @@ ctx hook <tool>
 **Example**:
 
 ```bash
+# Print hook instructions to stdout
 ctx hook cursor
 ctx hook aider
+
+# Generate and write .github/copilot-instructions.md
+ctx hook copilot --write
 ```
 
 ---
