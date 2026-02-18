@@ -554,3 +554,72 @@ func TestAddFromFile(t *testing.T) {
 		t.Error("content from file was not added to LEARNINGS.md")
 	}
 }
+
+// TestIsInsideHTMLComment unit-tests the isInsideHTMLComment helper directly.
+func TestIsInsideHTMLComment(t *testing.T) {
+	cases := []struct {
+		name    string
+		content string
+		idx     int
+		want    bool
+	}{
+		{
+			name:    "position before any comment",
+			content: "hello <!-- comment --> world",
+			idx:     3, // inside "hello"
+			want:    false,
+		},
+		{
+			name:    "position inside comment",
+			content: "hello <!-- comment --> world",
+			idx:     10, // inside " comment "
+			want:    true,
+		},
+		{
+			name:    "position after comment close",
+			content: "hello <!-- comment --> world",
+			idx:     23, // inside " world"
+			want:    false,
+		},
+		{
+			name:    "inline single-line comment: position after close",
+			content: "<!-- INDEX:START -->\n## [real entry]",
+			idx:     20, // start of "## ["
+			want:    false,
+		},
+		{
+			name:    "multi-line comment: heading inside",
+			content: "<!-- FORMATS\n## [YYYY-MM-DD] Template\n-->\n## [real]",
+			idx:     13, // start of "## [YYYY"
+			want:    true,
+		},
+		{
+			name:    "multi-line comment: heading after close",
+			content: "<!-- FORMATS\n## [YYYY-MM-DD] Template\n-->\n## [real]",
+			idx:     41, // start of "## [real]"
+			want:    false,
+		},
+		{
+			name:    "unclosed comment treated as inside",
+			content: "<!-- unclosed\n## [heading]",
+			idx:     14,
+			want:    true,
+		},
+		{
+			name:    "no comment at all",
+			content: "# Decisions\n\n## [2026-01-01] Entry\n",
+			idx:     13, // start of "## ["
+			want:    false,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := isInsideHTMLComment(tc.content, tc.idx)
+			if got != tc.want {
+				t.Errorf("isInsideHTMLComment(%q, %d) = %v, want %v",
+					tc.content, tc.idx, got, tc.want)
+			}
+		})
+	}
+}
