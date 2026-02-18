@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-17 | Scattered themes deserve standalone blog posts when they haven't been dissected |
+| 2026-02-17 | Blog arc structure: each post has an "Arc" section connecting to the series |
 | 2026-02-16 | Permission docs match DefaultClaudePermissions exactly |
 | 2026-02-16 | No symlinks for cross-directory skill sharing |
 | 2026-02-16 | Single source of truth for distributed skills |
@@ -36,6 +38,34 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-17] Scattered themes deserve standalone blog posts when they haven't been dissected
+
+**Status**: Accepted
+
+**Context**: The "context as infrastructure" theme appeared across 5+ posts but was never the main topic. Similarly, the 3:1 ratio was mentioned but never analyzed. "Code is cheap, judgment is not" was implicit throughout but never stated. User feedback existed as raw notes but not as a narrative.
+
+**Decision**: When a theme is scattered across the blog but never dissected as the primary subject, it deserves a standalone deep-dive post. The ideas/ drafts serve as raw material; publishing means: updating dates, fixing paths, weaving cross-links, and adding an "Arc" section.
+
+**Rationale**: Scattered mentions create implicit understanding. A standalone post creates explicit, linkable, searchable understanding. The cross-link web strengthens both the new post and every post that referenced the theme.
+
+**Consequences**: Published 4 posts in one session (3:1 Ratio, Code Is Cheap, Context as Infrastructure, When a System Starts Explaining Itself). Each required cross-linking to/from 3-6 companion posts. The blog now has a coherent arc with explicit connections.
+
+---
+
+## [2026-02-17] Blog arc structure: each post has an "Arc" section connecting to the series
+
+**Status**: Accepted
+
+**Context**: The blog series grew to 18+ posts. Each post was standalone but the narrative connections were implicit. Readers landing on one post couldn't see where it fit in the larger argument.
+
+**Decision**: Every blog post includes a "The Arc" section near the end that explicitly connects it to related posts in the series, framing where this post sits in the broader narrative.
+
+**Rationale**: The Arc section serves two purposes: (1) it helps readers navigate the series, and (2) it forces the author to articulate how each post relates to the whole, which improves coherence and catches thematic gaps.
+
+**Consequences**: All new posts must include an Arc section. Existing posts gain Arc sections and "See also" links as they are cross-linked from new posts. The blog becomes a web, not a list.
+
+---
 
 ## [2026-02-16-164550] Permission docs match DefaultClaudePermissions exactly
 

@@ -3,6 +3,10 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-17 | Hook grep patterns match inside quoted arguments — use specific anchors |
+| 2026-02-17 | Blog publishing from ideas/ requires a consistent checklist |
+| 2026-02-17 | Reports graduate to ideas/done/ only after all items are tracked or resolved |
+| 2026-02-17 | Agent must never place binaries — nudge the user to install |
 | 2026-02-17 | rsync between worktrees can clobber permissions and gitignored files |
 | 2026-02-16 | Security docs are most vulnerable to stale paths after architecture migrations |
 | 2026-02-16 | Duplicate skills appear with namespace prefix in Claude Code |
@@ -81,6 +85,46 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-17] Hook grep patterns match inside quoted arguments — use specific anchors
+
+**Context**: Added `(cp|install|mv)\s.*/bin` to block-dangerous-commands.sh. It matched "install" inside `ctx add learning "...install...*/bin/..."` quoted text, blocking legitimate commands.
+
+**Lesson**: Shell hook grep patterns operate on the full command string and cannot distinguish between command names and text inside quoted arguments. Generic patterns like `install\s.*/bin` are too broad. Use specific directory lists and anchor to command-start positions to reduce false positives.
+
+**Application**: When writing hook patterns: (1) list specific dangerous destinations instead of generic `/bin`, (2) anchor with `(^|;|&&|\|\|)\s*` to match command position, (3) test with `ctx add learning` containing the blocked words to verify no false positives.
+
+---
+
+## [2026-02-17] Blog publishing from ideas/ requires a consistent checklist
+
+**Context**: Published 4 blog posts from ideas/ drafts in one session. Each required the same steps: date update, path fixes, cross-links, Arc section, blog index, See also in companions. Missing any step left broken links or orphaned posts.
+
+**Lesson**: Blog publishing is a repeatable workflow with 7 steps: (1) update date and frontmatter, (2) fix relative paths from ideas/ to docs/blog/, (3) add cross-links to/from companion posts, (4) add "The Arc" section connecting to the series narrative, (5) update blog index, (6) add "See also" in related posts, (7) verify all link targets exist.
+
+**Application**: Follow this checklist for every ideas/ → docs/blog/ promotion. Consider making it a recipe in hack/runbooks/ if the pattern continues.
+
+---
+
+## [2026-02-17] Reports graduate to ideas/done/ only after all items are tracked or resolved
+
+**Context**: Moving REPORT-6 and REPORT-7 to ideas/done/. Each had a mix of completed, skipped, and untracked items. Moving before tracking would lose the untracked items.
+
+**Lesson**: Before graduating a report: (1) cross-reference every item against TASKS.md and the codebase, (2) add trackers for undone items, (3) create specs for items that need design, (4) put remaining low-priority items in a future-considerations document, (5) update TASKS.md path references, (6) then move.
+
+**Application**: Always do the full cross-reference before moving reports to done/. The report is the source of truth until every item has a home elsewhere.
+
+---
+
+## [2026-02-17] Agent must never place binaries — nudge the user to install
+
+**Context**: Agent removed ~/go/bin/ctx and discussed copying to /usr/local/bin. Both actions bypass the proper installation path (make install with elevated privileges) which the agent cannot run.
+
+**Lesson**: The agent must never place binaries in any bin directory — not via cp, mv, go install, or any other mechanism. When a rebuild is needed, the agent builds with `make build` and asks the user to run the privileged install step themselves.
+
+**Application**: When ctx binary is stale or missing: (1) run `make build`, (2) ask the user to install it (requires privileges), (3) wait for confirmation before continuing. Hooks in block-dangerous-commands.sh now block cp/mv to bin dirs and `go install` as a command.
 
 ---
 

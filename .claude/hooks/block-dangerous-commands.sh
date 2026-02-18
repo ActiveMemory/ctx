@@ -10,7 +10,8 @@
 #
 # BLOCKED:
 # - sudo *              (cannot enter password)
-# - cp/install to ~/.local/bin  (workaround for PATH ctx rules)
+# - cp/install/mv to any bin directory (agent must not install binaries)
+# - go install           (writes to ~/go/bin, shadows system ctx)
 # - ./ctx, ./dist/ctx, go run ./cmd/ctx, absolute-path ctx
 #   (must use ctx from PATH per AGENT_PLAYBOOK.md)
 #
@@ -32,9 +33,16 @@ if echo "$COMMAND" | grep -qE '(^|\s|;|&&|\|\|)sudo\s'; then
   BLOCKED_REASON="Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed."
 fi
 
-# cp/install to ~/.local/bin — known workaround that breaks PATH ctx rules
-if echo "$COMMAND" | grep -qE '(cp|install)\s.*~/\.local/bin'; then
-  BLOCKED_REASON="Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH."
+# cp/mv to specific bin directories — agent must never install binaries
+# Use explicit directory list to avoid false positives from "install" inside quoted args.
+if [ -z "$BLOCKED_REASON" ] && echo "$COMMAND" | grep -qE '(cp|mv)\s+\S+\s+(/usr/local/bin|/usr/bin|~/go/bin|~/.local/bin|/home/\S+/go/bin|/home/\S+/.local/bin)'; then
+  BLOCKED_REASON="Agent must not copy binaries to bin directories. Ask the user to run 'sudo make install' instead."
+fi
+
+# go install — writes to ~/go/bin, can shadow the system ctx
+# Anchor to command start position (after separator or line start) to avoid matching inside quoted text.
+if [ -z "$BLOCKED_REASON" ] && echo "$COMMAND" | grep -qE '(^|;|&&|\|\|)\s*go install\b'; then
+  BLOCKED_REASON="Agent must not run 'go install'. Ask the user to run 'sudo make install' instead."
 fi
 
 # ./ctx or ./dist/ctx — must use ctx from PATH, not relative paths

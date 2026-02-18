@@ -128,3 +128,20 @@
   `# File Organization` sections listing files — they drift when files are
   added, renamed, or removed, and the filesystem is self-documenting
 - **Copyright headers**: All source files get the project copyright header
+
+## Blog Publishing
+
+- **Checklist for ideas/ → docs/blog/ promotion**:
+  1. Update date in frontmatter to publish date
+  2. Fix relative paths (from `../docs/blog/` to peer references)
+  3. Add cross-links to/from companion posts ("See also" sections)
+  4. Add "The Arc" section connecting to the series narrative
+  5. Update `docs/blog/index.md` with entry (newest first)
+  6. Verify all link targets exist
+  7. Build and test before commit
+- **Arc section**: Every post includes "The Arc" near the end, framing
+  where the post sits in the broader blog narrative
+- **See also links**: Use italic `*See also: [Title](file) -- one-line
+  description connecting the two posts.*` format at the end of posts
+- **Frontmatter**: Include copyright header, title, date, author, topics list
+- **Blog index order**: Newest post first, with topic tags and 3-4 line summary

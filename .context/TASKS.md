@@ -87,7 +87,7 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 **Blog Themes** (from `ideas/REPORT-5-blog-themes.md`):
 8 post proposals with narrative sequencing. See report for full details.
 
-**Improvements** (from `ideas/REPORT-6-improvements.md`):
+**Improvements** (from `ideas/done/REPORT-6-improvements.md`):
 21 opportunities across 7 categories. Key items not already tracked elsewhere:
 
 - [x] Align ctx recall list docs with CLI reality #priority:high #added:2026-02-15-191942
@@ -145,7 +145,7 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
       Context Protocol. Would enable deep integration with any
       MCP-compatible client. #priority:low #source:report-6
 
-**User-Facing Documentation** (from `ideas/REPORT-7-documentation.md`):
+**User-Facing Documentation** (from `ideas/done/REPORT-7-documentation.md`):
 Docs are feature-organized, not problem-organized. Key structural improvements:
 
 - [x] Create use-case page: "I Keep Re-Explaining My Codebase" -- the #1
@@ -193,6 +193,40 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
       Skipped: Not enough content to warrant a page. The few troubleshooting
       items are already inline where they belong (Integrations, Autonomous Loop).
 
+- [ ] Use-case page: "My AI Keeps Making the Same Mistakes" — problem-first
+      page showcasing DECISIONS.md and CONSTITUTION.md. Partially covered in
+      about.md but deserves standalone treatment as the #2 pain point.
+      #priority:medium #source:report-7 #added:2026-02-17
+
+- [ ] Use-case page: "Joining a ctx Project" — team onboarding guide. What
+      to read first, how to check context health, starting your first session,
+      adding context, session etiquette, common pitfalls. Currently
+      undocumented. #priority:medium #source:report-7 #added:2026-02-17
+
+- [ ] Use-case page: "Keeping AI Honest" — unique ctx differentiator.
+      Covers confabulation problem, grounded memory via context files,
+      anti-hallucination rules in AGENT_PLAYBOOK, verification loop,
+      ctx drift for detecting stale context. #priority:medium
+      #source:report-7 #added:2026-02-17
+
+- [ ] Expand comparison page with specific tool comparisons: .cursorrules,
+      Aider --read, Copilot @workspace, Cline memory, Windsurf rules.
+      Current page positions against categories but not the specific tools
+      users are evaluating. #priority:low #source:report-7 #added:2026-02-17
+
+- [ ] FAQ page: collect answers to common questions currently scattered
+      across docs — Why markdown? Does it work offline? What gets committed?
+      How big should my token budget be? Why not a database?
+      #priority:low #source:report-7 #added:2026-02-17
+
+- [ ] Enhance security page for team workflows: code review for .context/
+      files, gitignore patterns, team conventions for context management,
+      multi-developer sharing. #priority:low #source:report-7 #added:2026-02-17
+
+- [ ] Version history changelog summaries: each version entry should have
+      2-3 bullet points describing key changes, not just a link to the
+      source tree. #priority:low #source:report-7 #added:2026-02-17
+
 **Agent Team Strategies** (from `ideas/REPORT-8-agent-teams.md`):
 8 team compositions proposed. Reference material, not tasks. Key takeaways:
 
@@ -206,6 +240,13 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
 **Context**: Secure one-liner scratchpad, encrypted at rest, synced via git.
 AES-256-GCM with symmetric key (gitignored). Plaintext fallback via config.
 Spec: `specs/scratchpad.md`
+
+**Features:**
+
+- [ ] P3.21: `ctx pad import FILE` — bulk-import lines from a file into
+      the scratchpad. Each non-empty line becomes a separate entry. Supports
+      stdin via `-`. Single write cycle. Spec: `specs/pad-import.md`
+      #priority:medium #added:2026-02-17
 
 **Documentation:**
 
@@ -391,6 +432,17 @@ indexing — grep across 100+ journal files won't scale.
       date range filtering. Currently the agent eyeballs dates from the
       full list output, which works but is inefficient for large session
       histories. #priority:low #added:2026-02-09
+- [ ] Enhance CONTRIBUTING.md: add architecture overview for contributors
+      (package map), how to add a new command (pattern to follow), how to
+      add a new parser (interface to implement), how to create a skill
+      (directory structure), and test expectations per package. Lowers the
+      contribution barrier. #priority:medium #source:report-6 #added:2026-02-17
+- [ ] Aider/Cursor parser implementations: the recall architecture was
+      designed for extensibility (tool-agnostic Session type with
+      tool-specific parsers). Adding basic Aider and Cursor parsers would
+      validate the parser interface, broaden the user base, and fulfill
+      the "works with any AI tool" promise. Aider format is simpler than
+      Claude Code's. #priority:medium #source:report-6 #added:2026-02-17
 
 **GitHub Issues**:
 
