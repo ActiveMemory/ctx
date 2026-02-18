@@ -158,9 +158,9 @@ The pharmacological metaphor says the same thing from the user’s lens:
 
 ## Throughput on Ambiguous Work
 
-Finishing a promotion packet quickly is not a productivity story.
+Finishing a promotion packet quickly is **not** a productivity story.
 
-It is the collapse of reconstruction cost.
+It is **the collapse of reconstruction cost**.
 
 Most complex work is **not** execution. It is:
 
