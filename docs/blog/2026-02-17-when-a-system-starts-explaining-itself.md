@@ -94,9 +94,9 @@ The question is correct. The category is wrong.
 * Infrastructure lives in the environment.
 
 !!! tip "ctx Is not a Skill: It is a Form of Relief"
-    What early adopters experience is not an ability.
+    What early adopters experience is **not** an ability.
 
-    It is the removal of a cognitive constraint.
+    **It is the removal of a cognitive constraint**.
 
 This is the same distinction that emerged in the  
 [skills trilogy][not-skill-post]:
