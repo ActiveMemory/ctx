@@ -5,6 +5,10 @@
   "version": "0.7.0",
   "publisher": "activememory",
   "license": "Apache-2.0",
+  "homepage": "https://github.com/ActiveMemory/ctx",
+  "bugs": {
+    "url": "https://github.com/ActiveMemory/ctx/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ActiveMemory/ctx"
@@ -12,6 +16,13 @@
   "engines": {
     "vscode": "^1.93.0"
   },
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "markdown": "github",
+  "qna": "https://github.com/ActiveMemory/ctx/discussions",
   "categories": [
     "AI",
     "Chat"
