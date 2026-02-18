@@ -14,8 +14,10 @@ import (
 
 // insertAfterHeader finds a header line and inserts content after it.
 //
-// Skips blank lines and ctx markers between the header and insertion point.
-// Falls back to appending at the end if the header is not found.
+// Skips blank lines and HTML comment blocks (<!-- ... -->) between the header
+// and the insertion point, so new entries land after index tables, format
+// guides, and other comment-wrapped metadata. Falls back to appending at the
+// end if the header is not found.
 //
 // Parameters:
 //   - content: Existing file content
@@ -39,19 +41,20 @@ func insertAfterHeader(content, entry, header string) []byte {
 	insertPoint := idx + lineEnd
 	insertPoint = skipNewline(content, insertPoint)
 
-	// Skip blank lines and ctx markers
+	// Skip blank lines and any HTML comment blocks (<!-- ... -->).
+	// This handles INDEX markers, format-guide comments, and ctx markers alike.
 	for insertPoint < len(content) {
 		if n := skipNewline(content, insertPoint); n > insertPoint {
 			insertPoint = n
 			continue
 		}
 
-		// No context marker: we found the insertion point.
-		if !startsWithCtxMarker(content[insertPoint:]) {
+		// Not an HTML comment: we found the insertion point.
+		if !strings.HasPrefix(content[insertPoint:], config.CommentOpen) {
 			break
 		}
 
-		// Skip past the closing marker
+		// Skip past the closing --> of this comment block.
 		hasCommentEnd, endIdx := containsEndComment(content[insertPoint:])
 		if !hasCommentEnd {
 			break
@@ -150,11 +153,37 @@ func insertTaskAfterSection(entry, content, section string) []byte {
 	return []byte(content + config.NewlineLF + entry)
 }
 
+// isInsideHTMLComment reports whether the position idx in content falls
+// inside an HTML comment block (<!-- ... -->).
+//
+// Parameters:
+//   - content: String to check
+//   - idx: Position to test
+//
+// Returns:
+//   - bool: True if idx is between a <!-- and its closing -->
+func isInsideHTMLComment(content string, idx int) bool {
+	// Find the last <!-- before idx
+	openIdx := strings.LastIndex(content[:idx], config.CommentOpen)
+	if openIdx == -1 {
+		return false
+	}
+	// Check whether a --> closes that block before idx
+	closeIdx := strings.Index(content[openIdx:], config.CommentClose)
+	if closeIdx == -1 {
+		// Unclosed comment — treat as inside
+		return true
+	}
+	// The comment closes at openIdx+closeIdx; if that position is >= idx,
+	// the position is still inside the comment.
+	return openIdx+closeIdx+len(config.CommentClose) > idx
+}
+
 // insertDecision inserts a decision entry before existing entries.
 //
-// Finds the first "## [" marker and inserts before it, maintaining
-// reverse-chronological order. Falls back to insertAfterHeader if no entries
-// exist.
+// Finds the first "## [" marker that is NOT inside an HTML comment block
+// and inserts before it, maintaining reverse-chronological order.
+// Falls back to insertAfterHeader if no real entries exist yet.
 //
 // Parameters:
 //   - content: Existing file content
@@ -164,27 +193,39 @@ func insertTaskAfterSection(entry, content, section string) []byte {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func insertDecision(content, entry, header string) []byte {
-	// Find the first entry marker "## [" (timestamp-prefixed sections)
-	entryIdx := strings.Index(content, "## [")
-	if entryIdx != -1 {
-		// Insert before the first entry, with a separator after
-		return []byte(
-			content[:entryIdx] + entry +
-				config.NewlineLF + config.Separator +
-				config.NewlineLF + config.NewlineLF +
-				content[entryIdx:],
-		)
+	// Walk through all "## [" occurrences, skipping those inside HTML comments
+	// (e.g. the template example inside <!-- DECISION FORMATS ... -->).
+	search := content
+	offset := 0
+	for {
+		rel := strings.Index(search, "## [")
+		if rel == -1 {
+			break
+		}
+		entryIdx := offset + rel
+		if !isInsideHTMLComment(content, entryIdx) {
+			// Found a real entry — insert before it.
+			return []byte(
+				content[:entryIdx] + entry +
+					config.NewlineLF + config.Separator +
+					config.NewlineLF + config.NewlineLF +
+					content[entryIdx:],
+			)
+		}
+		// This match is inside a comment — skip past it and keep looking.
+		offset = entryIdx + len("## [")
+		search = content[offset:]
 	}
 
-	// No existing entries - find the header and insert after it
+	// No existing real entries - find the header and insert after it
 	return insertAfterHeader(content, entry, header)
 }
 
 // insertLearning inserts a learning entry before existing entries.
 //
-// Finds the first "## [" marker and inserts before it, maintaining
-// reverse-chronological order. Falls back to insertAfterHeader if no entries
-// exist.
+// Finds the first "## [" marker that is NOT inside an HTML comment block
+// and inserts before it, maintaining reverse-chronological order.
+// Falls back to insertAfterHeader if no real entries exist yet.
 //
 // Parameters:
 //   - content: Existing file content
@@ -193,14 +234,25 @@ func insertDecision(content, entry, header string) []byte {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func insertLearning(content, entry string) []byte {
-	// Find the first entry marker "## [" (timestamp-prefixed sections)
-	entryIdx := strings.Index(content, config.HeadingLearningStart)
-	if entryIdx != -1 {
-		return []byte(
-			content[:entryIdx] + entry + config.NewlineLF +
-				config.Separator + config.NewlineLF + config.NewlineLF +
-				content[entryIdx:],
-		)
+	// Walk through all "## [" occurrences, skipping those inside HTML comments.
+	search := content
+	offset := 0
+	for {
+		rel := strings.Index(search, config.HeadingLearningStart)
+		if rel == -1 {
+			break
+		}
+		entryIdx := offset + rel
+		if !isInsideHTMLComment(content, entryIdx) {
+			return []byte(
+				content[:entryIdx] + entry + config.NewlineLF +
+					config.Separator + config.NewlineLF + config.NewlineLF +
+					content[entryIdx:],
+			)
+		}
+		// This match is inside a comment — skip past it and keep looking.
+		offset = entryIdx + len(config.HeadingLearningStart)
+		search = content[offset:]
 	}
 
 	// No existing entries - find the header and insert after it
