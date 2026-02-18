@@ -145,3 +145,5 @@
   description connecting the two posts.*` format at the end of posts
 - **Frontmatter**: Include copyright header, title, date, author, topics list
 - **Blog index order**: Newest post first, with topic tags and 3-4 line summary
+
+- Update admonitions for historical blog content: Use MkDocs admonitions (\!\!\! note "Update") at the top of blog post sections where features have been superseded or installation has changed. Link to current documentation. Keep original content intact below for historical context.

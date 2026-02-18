@@ -3,8 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
-| 2026-02-17 | Scattered themes deserve standalone blog posts when they haven't been dissected |
-| 2026-02-17 | Blog arc structure: each post has an "Arc" section connecting to the series |
+| 2026-02-18 | Knowledge scaling: archive path for decisions and learnings |
 | 2026-02-16 | Permission docs match DefaultClaudePermissions exactly |
 | 2026-02-16 | No symlinks for cross-directory skill sharing |
 | 2026-02-16 | Single source of truth for distributed skills |
@@ -38,6 +37,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-18-071514] Knowledge scaling: archive path for decisions and learnings
+
+**Status**: Accepted
+
+**Context**: DECISIONS.md and LEARNINGS.md grow monotonically with no archival path. Tasks have ctx tasks archive but knowledge files accumulate forever. Long-lived projects will hit token budget pressure and signal-to-noise decay.
+
+**Decision**: Knowledge scaling: archive path for decisions and learnings
+
+**Rationale**: Follow the existing task archive pattern. Move old entries to .context/archive/ files. Extend ctx compact --archive to cover all three file types. Add superseded-entry convention for decisions.
+
+**Consequences**: New spec at specs/knowledge-scaling.md. Phase 5 tasks (P5.1-P5.7) added to TASKS.md. New CLI commands: ctx decisions archive, ctx learnings archive. New .contextrc keys: archive_knowledge_after_days, archive_keep_recent.
+
+---
 
 ## [2026-02-17] Scattered themes deserve standalone blog posts when they haven't been dissected
 

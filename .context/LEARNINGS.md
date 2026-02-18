@@ -3,10 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
-| 2026-02-17 | Hook grep patterns match inside quoted arguments — use specific anchors |
-| 2026-02-17 | Blog publishing from ideas/ requires a consistent checklist |
-| 2026-02-17 | Reports graduate to ideas/done/ only after all items are tracked or resolved |
-| 2026-02-17 | Agent must never place binaries — nudge the user to install |
+| 2026-02-18 | Blog posts are living documents |
 | 2026-02-17 | rsync between worktrees can clobber permissions and gitignored files |
 | 2026-02-16 | Security docs are most vulnerable to stale paths after architecture migrations |
 | 2026-02-16 | Duplicate skills appear with namespace prefix in Claude Code |
@@ -85,6 +82,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-18-071508] Blog posts are living documents
+
+**Context**: Session spent enriching two blog posts with cross-links, update admonitions, citations, and contextual notes. Every post had 3-6 places where a link or admonition improved reader experience.
+
+**Lesson**: Blog posts benefit from periodic enrichment passes: cross-linking to newer content, adding update admonitions for superseded features, citing sources, and adding contextual admonitions that connect ideas across posts.
+
+**Application**: Schedule blog enrichment as part of consolidation sessions. When a new feature supersedes something described in a blog post, add an update admonition immediately rather than waiting.
 
 ---
 
