@@ -6,34 +6,30 @@
   }
 
   .md-typeset hr {
-    border-bottom: .05rem solid #0B11FF;
+    border-bottom: .05rem solid #3A4BD9;
     display: flow-root;
     margin: 1.5em 0;
   }
-
 }
 
 [data-md-color-scheme="slate"] {
   .md-tabs__item--active {
-    color: #E9A221;
-    border-bottom-color: #FFD892;
+    color: #F2B94B;
+    border-bottom-color: #F2B94B;
     font-weight: 700;
   }
 
-  .md-nav--primary .md-nav__item .md-nav__link--active {
-    color: #E9A221;
-  }
-
+  .md-nav--primary .md-nav__item .md-nav__link--active,
   .md-nav__item .md-nav__link--active {
-    color: #E9A221;
+    color: #F2B94B;
   }
 
   .md-typeset a {
-    color: #f2c77a;
+    color: #F5C46A;
   }
 
   .md-typeset hr {
-    border-bottom: .05rem solid #E9A221;
+    border-bottom: .05rem solid #C48A1A;
     display: flow-root;
     margin: 1.5em 0;
   }
