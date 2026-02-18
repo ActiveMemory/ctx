@@ -86,7 +86,7 @@ When a tool is understood, it is categorized:
 
 When a substrate appears, it is **misclassified**:
 
-> "Is this a skill?"
+> "*Is this a skill?*" 🦋
 
 The question is correct. The category is wrong.
 
