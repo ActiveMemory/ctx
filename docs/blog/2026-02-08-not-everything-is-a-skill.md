@@ -302,7 +302,7 @@ that the cost of automation is not just the effort to build it.
 It is the **ongoing attention tax** of maintaining it, the context
 it consumes, and the false confidence it creates when it drifts.
 
-A recipe in `hack/codebase-audit.md` is honest about what it is:
+A recipe in `hack/runbooks/codebase-audit.md` is honest about what it is:
 
 A prompt I wrote once, improved once, and will adapt again next
 time: 
@@ -353,6 +353,6 @@ the right things and to make the rest easy to find when you need it.
 ---
 
 *This post was written during the session that produced the codebase
-audit reports and distilled the prompt into `hack/codebase-audit.md`.
+audit reports and distilled the prompt into `hack/runbooks/codebase-audit.md`.
 The audit generated seven tasks, one Makefile target, and zero new
 skills. The meta continues.*

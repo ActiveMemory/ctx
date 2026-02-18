@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-17 | rsync between worktrees can clobber permissions and gitignored files |
 | 2026-02-16 | Security docs are most vulnerable to stale paths after architecture migrations |
 | 2026-02-16 | Duplicate skills appear with namespace prefix in Claude Code |
 | 2026-02-16 | Local marketplace plugin enables live skill editing |
@@ -83,6 +84,16 @@
 
 ---
 
+## [2026-02-17-183937] rsync between worktrees can clobber permissions and gitignored files
+
+**Context**: Used rsync -av to borrow upstream changes; it overwrote .claude/hooks/*.sh with non-executable copies and clobbered gitignored settings.local.json
+
+**Lesson**: rsync -av preserves source permissions, not destination. Gitignored files have no git safety net. Use --no-perms or --chmod=+x for scripts, and --exclude gitignored paths explicitly.
+
+**Application**: When borrowing between worktrees: 1) exclude gitignored paths (.claude/settings.local.json, ideas/, .context/logs/) 2) restore +x on hook scripts after sync 3) consider the ctx-borrow skill which handles these edge cases
+
+---
+
 ## [2026-02-16-164547] Security docs are most vulnerable to stale paths after architecture migrations
 
 **Context**: Migrated from per-project .claude/hooks/ and .claude/skills/ to plugin model; found 5 security docs still referencing the old paths
@@ -99,7 +110,7 @@
 
 **Lesson**: When a repo-local .claude/skills/ directory and a marketplace plugin both define the same skill name, Claude Code lists both: the local version unprefixed and the plugin version with a ctx: namespace prefix (e.g. ctx-status and ctx:ctx-status)
 
-**Application**: To avoid confusing duplicates, ensure distributed skills live only in the plugin source (internal/tpl/claude/skills/) and not also in .claude/skills/. Dev-only skills that aren't in the plugin won't collide.
+**Application**: To avoid confusing duplicates, ensure distributed skills live only in the plugin source (internal/assets/claude/skills/) and not also in .claude/skills/. Dev-only skills that aren't in the plugin won't collide.
 
 ---
 
@@ -107,7 +118,7 @@
 
 **Context**: Setting up the contributor workflow for ctx development
 
-**Lesson**: Claude Code marketplace plugins source from the repo root where `.claude-plugin/marketplace.json` lives (e.g. ~/WORKSPACE/ctx). The marketplace.json points to the actual plugin in `internal/tpl/claude`. Edits to skills and hooks under that path take effect on the next Claude Code load — no reinstall needed
+**Lesson**: Claude Code marketplace plugins source from the repo root where `.claude-plugin/marketplace.json` lives (e.g. ~/WORKSPACE/ctx). The marketplace.json points to the actual plugin in `internal/assets/claude`. Edits to skills and hooks under that path take effect on the next Claude Code load — no reinstall needed
 
 **Application**: The contributor docs instruct devs to add their local clone as a marketplace source rather than using the GitHub URL. This gives them live feedback on skill changes without a rebuild cycle.
 
@@ -219,7 +230,7 @@
 
 **Lesson**: Every Allow click appends an entry. Over time: hardcoded paths, literal arguments, duplicate intent (env var ordering), garbage entries, and stale skill references accumulate. Invisible drift because the file is gitignored.
 
-**Application**: Run periodic permission hygiene using hack/sanitize-permissions.md runbook. Use /ctx-drift to detect permission drift (missing skills, stale entries, consolidation opportunities).
+**Application**: Run periodic permission hygiene using hack/runbooks/sanitize-permissions.md runbook. Use /ctx-drift to detect permission drift (missing skills, stale entries, consolidation opportunities).
 
 ---
 
@@ -235,7 +246,7 @@
 
 ## [2026-02-15-040313] Cross-repo links to published docs should use ctx.ist
 
-**Context**: hack/persistent-irc.md linked to docs/ via relative paths, getting-started.md linked to MANIFESTO.md via GitHub — both bypass ctx.ist rendering (admonitions, nav, search)
+**Context**: hack/runbooks/persistent-irc.md linked to docs/ via relative paths, getting-started.md linked to MANIFESTO.md via GitHub — both bypass ctx.ist rendering (admonitions, nav, search)
 
 **Lesson**: When content is published on ctx.ist, always link to the site URL, not the GitHub blob or a relative file path. GitHub won't render zensical admonitions and readers lose navigation context.
 

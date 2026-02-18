@@ -15,6 +15,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -36,6 +37,8 @@ var version = "dev"
 // Returns:
 //   - *cobra.Command: The configured root command with usage and version info
 func RootCmd() *cobra.Command {
+	config.BinaryVersion = version
+
 	var contextDir string
 	var noColor bool
 	var allowOutsideCwd bool

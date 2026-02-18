@@ -491,6 +491,8 @@
       
         
       
+        
+      
     
     
     
@@ -553,6 +555,36 @@
     
   
     About ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../is-ctx-right/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Is ctx Right for Me?
   
 
     
@@ -1859,7 +1891,7 @@
   <span class="md-ellipsis">
     
   
-    Defense in Depth: Securing AI Agents
+    Securing AI Agents
   
 
     
@@ -2335,7 +2367,7 @@ the table, something is wrong.</p>
 <h2 id="lesson-7-template-drift-is-a-real-maintenance-burden">Lesson 7: Template Drift Is a Real Maintenance Burden<a class="headerlink" href="#lesson-7-template-drift-is-a-real-maintenance-burden" title="Permanent link">&para;</a></h2>
 <p><code>ctx</code> deploys skills through templates (via <code>ctx init</code>). Every
 skill exists in two places: the live version (<code>.claude/skills/</code>)
-and the template (<code>internal/tpl/claude/skills/</code>).</p>
+and the template (<code>internal/assets/claude/skills/</code>).</p>
 <p>They must match.</p>
 <p>During the rewrite, every skill update required editing both files
 and running <code>diff</code> to verify. This sounds trivial, but across 16
@@ -2346,7 +2378,7 @@ the agent appears to follow rules that no longer exist.</p>
 <p>The lesson: <strong>if your skills have a deployment mechanism, build
 the drift check into your workflow.</strong> We added a row to the
 <code>update-docs</code> skill's mapping table specifically for this:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>| <span class="sb">`internal/tpl/claude/skills/`</span> | <span class="sb">`.claude/skills/`</span> (live) |
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>| <span class="sb">`internal/assets/claude/skills/`</span> | <span class="sb">`.claude/skills/`</span> (live) |
 </span></code></pre></div>
 <p>Intentional differences (<em>like project-specific scripts in the
 live version but not the template</em>) should be documented, not

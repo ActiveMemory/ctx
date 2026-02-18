@@ -171,7 +171,7 @@ After a session where you clicked "Allow" many times:
    * Commands with literal string arguments
    * Entries that duplicate an existing wildcard
 
-See [`hack/sanitize-permissions.md`](https://github.com/ActiveMemory/ctx/blob/main/hack/sanitize-permissions.md)
+See [`hack/runbooks/sanitize-permissions.md`](https://github.com/ActiveMemory/ctx/blob/main/hack/runbooks/sanitize-permissions.md)
 for a step-by-step runbook.
 
 ### Periodically
@@ -245,5 +245,5 @@ permission baselines for reproducible setups.
 * [Setting Up ctx Across AI Tools](multi-tool-setup.md): full setup recipe
   including `settings.local.json` creation
 * [Context Health](context-health.md): keeping `.context/` files accurate
-* [`hack/sanitize-permissions.md`](https://github.com/ActiveMemory/ctx/blob/main/hack/sanitize-permissions.md):
+* [`hack/runbooks/sanitize-permissions.md`](https://github.com/ActiveMemory/ctx/blob/main/hack/runbooks/sanitize-permissions.md):
   manual cleanup runbook

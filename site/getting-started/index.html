@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://ctx.ist/getting-started/">
       
       
-        <link rel="prev" href="../about/">
+        <link rel="prev" href="../is-ctx-right/">
       
       
         <link rel="next" href="../first-session/">
@@ -499,6 +499,8 @@
       
         
       
+        
+      
     
     
     
@@ -564,6 +566,36 @@
     
   
     About ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../is-ctx-right/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Is ctx Right for Me?
   
 
     
@@ -2044,7 +2076,7 @@
   <span class="md-ellipsis">
     
   
-    Defense in Depth: Securing AI Agents
+    Securing AI Agents
   
 
     
@@ -2352,7 +2384,7 @@ a working setup.</p>
 <li>Enter the path to the <strong>root of your clone</strong>,
    e.g. <code>~/WORKSPACE/ctx</code>
    (this is where <code>.claude-plugin/marketplace.json</code> lives — it points
-   Claude Code to the actual plugin in <code>internal/tpl/claude</code>)</li>
+   Claude Code to the actual plugin in <code>internal/assets/claude</code>)</li>
 <li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code></li>
 </ol>
 <p>This points Claude Code at the plugin source on disk. Changes you make
@@ -2439,7 +2471,8 @@ full hook and skill reference.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span>your-project
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
-<p>This creates a <code>.context/</code> directory with template files.
+<p>This creates a <code>.context/</code> directory with template files and a
+<code>.scratchpad.key</code> for the <a href="../scratchpad/">encrypted scratchpad</a>.
 For Claude Code, install the <a href="../integrations/#claude-code-full-integration">ctx plugin</a>
 for automatic hooks and skills.</p>
 <h3 id="2-check-status">2. Check Status<a class="headerlink" href="#2-check-status" title="Permanent link">&para;</a></h3>
@@ -2503,7 +2536,7 @@ or previous session topics.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../about/" class="md-footer__link md-footer__link--prev" aria-label="Previous: About ctx">
+          <a href="../is-ctx-right/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Is ctx Right for Me?">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2513,7 +2546,7 @@ or previous session topics.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                About ctx
+                Is ctx Right for Me?
               </div>
             </div>
           </a>

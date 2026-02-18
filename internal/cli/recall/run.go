@@ -87,12 +87,15 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 		return fmt.Errorf("failed to create journal directory: %w", err)
 	}
 
+	// Build session index for dedup (session_id → filename).
+	sessionIndex := buildSessionIndex(journalDir)
+
 	// Export each session
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	dim := color.New(color.FgHiBlack)
 
-	var exported, updated, skipped int
+	var exported, updated, skipped, renamed int
 	for _, s := range toExport {
 		// Count non-empty messages to determine if splitting is needed
 		var nonEmptyMsgs []parser.Message
@@ -109,8 +112,29 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 			numParts = 1
 		}
 
-		baseFilename := formatJournalFilename(s)
+		// Determine title-based slug. Check existing frontmatter for
+		// an enriched title first (preserves human-curated titles).
+		var existingTitle string
+		if oldFile := lookupSessionFile(sessionIndex, s.ID); oldFile != "" {
+			oldPath := filepath.Join(journalDir, oldFile)
+			if data, readErr := os.ReadFile(filepath.Clean(oldPath)); readErr == nil {
+				existingTitle = extractFrontmatterField(string(data), "title")
+			}
+		}
+		slug, title := titleSlug(s, existingTitle)
+
+		baseFilename := formatJournalFilename(s, slug)
 		baseName := strings.TrimSuffix(baseFilename, ".md")
+
+		// Handle dedup: rename old file(s) if the slug changed.
+		if oldFile := lookupSessionFile(sessionIndex, s.ID); oldFile != "" {
+			oldBase := strings.TrimSuffix(oldFile, config.ExtMarkdown)
+			newBase := baseName
+			if oldBase != newBase {
+				renameJournalFiles(journalDir, oldBase, newBase, numParts)
+				renamed++
+			}
+		}
 
 		// Export each part
 		for part := 1; part <= numParts; part++ {
@@ -138,7 +162,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 			}
 
 			// Generate content for this part
-			content := formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName)
+			content := formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName, title)
 
 			// Preserve enriched YAML frontmatter from existing file
 			if fileExists {
@@ -175,6 +199,9 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 	}
 	if updated > 0 {
 		cmd.Printf("Updated %d existing session(s) (YAML frontmatter preserved)\n", updated)
+	}
+	if renamed > 0 {
+		cmd.Printf("Renamed %d session(s) to title-based filenames\n", renamed)
 	}
 	if skipped > 0 {
 		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s).\n", skipped)
@@ -248,43 +275,38 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProje
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 
-	// Print sessions
-	for i, s := range filtered {
-		// Session number and slug
-		_, _ = header.Fprintf(cmd.OutOrStdout(), "%2d. %s", i+1, s.Slug)
-		_, _ = dim.Fprintf(cmd.OutOrStdout(), " (%s...)\n", s.ID[:8])
-
-		// Details
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "    Project: %s", s.Project)
-		if s.GitBranch != "" {
-			_, _ = dim.Fprintf(cmd.OutOrStdout(), " (%s)", s.GitBranch)
+	// Compute dynamic column widths from data.
+	slugW, projW := len("Slug"), len("Project")
+	for _, s := range filtered {
+		slug := truncate(s.Slug, 36)
+		if len(slug) > slugW {
+			slugW = len(slug)
 		}
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
-
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "    Time: %s", s.StartTime.Format("2006-01-02 15:04"))
-		if s.Duration.Minutes() >= 1 {
-			_, _ = dim.Fprintf(cmd.OutOrStdout(), " (%s)", formatDuration(s.Duration))
+		if len(s.Project) > projW {
+			projW = len(s.Project)
 		}
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
-
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "    Turns: %d", s.TurnCount)
-		if s.TotalTokens > 0 {
-			_, _ = dim.Fprintf(cmd.OutOrStdout(), ", Tokens: %s", formatTokens(s.TotalTokens))
-		}
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
-
-		// Preview
-		if s.FirstUserMsg != "" {
-			preview := s.FirstUserMsg
-			if len(preview) > 60 {
-				preview = preview[:60] + "..."
-			}
-			_, _ = dim.Fprintf(cmd.OutOrStdout(), "    \"%s\"\n", preview)
-		}
-
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
 	}
 
+	// Print column header.
+	rowFmt := fmt.Sprintf("  %%-%ds  %%-%ds  %%-17s  %%8s  %%5s  %%7s\n", slugW, projW)
+	_, _ = header.Fprintf(cmd.OutOrStdout(), rowFmt,
+		"Slug", "Project", "Date", "Duration", "Turns", "Tokens")
+
+	// Print sessions.
+	for _, s := range filtered {
+		slug := truncate(s.Slug, 36)
+		dateStr := s.StartTime.Local().Format("2006-01-02 15:04")
+		dur := formatDuration(s.Duration)
+		turns := fmt.Sprintf("%d", s.TurnCount)
+		tokens := ""
+		if s.TotalTokens > 0 {
+			tokens = formatTokens(s.TotalTokens)
+		}
+		_, _ = fmt.Fprintf(cmd.OutOrStdout(), rowFmt,
+			slug, s.Project, dateStr, dur, turns, tokens)
+	}
+
+	_, _ = fmt.Fprintln(cmd.OutOrStdout())
 	if len(sessions) > len(filtered) {
 		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Use --limit to see more sessions\n")
 	}

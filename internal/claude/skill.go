@@ -7,7 +7,7 @@
 package claude
 
 import (
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Skills returns the list of embedded skill directory names.
@@ -22,7 +22,7 @@ import (
 //     (e.g., "ctx-status", "ctx-reflect")
 //   - error: Non-nil if the skills directory cannot be read
 func Skills() ([]string, error) {
-	names, err := tpl.ListSkills()
+	names, err := assets.ListSkills()
 	if err != nil {
 		return nil, errSkillList(err)
 	}
@@ -38,7 +38,7 @@ func Skills() ([]string, error) {
 //   - []byte: Raw bytes of the SKILL.md file
 //   - error: Non-nil if the skill does not exist or cannot be read
 func SkillContent(name string) ([]byte, error) {
-	content, err := tpl.SkillContent(name)
+	content, err := assets.SkillContent(name)
 	if err != nil {
 		return nil, errSkillRead(name, err)
 	}

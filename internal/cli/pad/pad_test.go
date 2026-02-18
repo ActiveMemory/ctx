@@ -8,6 +8,7 @@ package pad
 
 import (
 	"bytes"
+	"encoding/base64"
 	"os"
 	"path/filepath"
 	"strings"
@@ -1230,5 +1231,440 @@ func TestMv_Plaintext(t *testing.T) {
 	}
 	if !strings.Contains(lines[2], "A") {
 		t.Errorf("line 3 = %q, want A", lines[2])
+	}
+}
+
+// --- Blob helper tests ---
+
+func TestIsBlob(t *testing.T) {
+	if !isBlob("my plan:::SGVsbG8=") {
+		t.Error("expected isBlob to return true for blob entry")
+	}
+	if isBlob("just a plain entry") {
+		t.Error("expected isBlob to return false for plain entry")
+	}
+}
+
+func TestSplitBlob_Valid(t *testing.T) {
+	data := []byte("hello world")
+	encoded := base64.StdEncoding.EncodeToString(data)
+	entry := "my label" + BlobSep + encoded
+
+	label, decoded, ok := splitBlob(entry)
+	if !ok {
+		t.Fatal("splitBlob returned ok=false for valid blob")
+	}
+	if label != "my label" {
+		t.Errorf("label = %q, want %q", label, "my label")
+	}
+	if string(decoded) != "hello world" {
+		t.Errorf("data = %q, want %q", string(decoded), "hello world")
+	}
+}
+
+func TestSplitBlob_NonBlob(t *testing.T) {
+	_, _, ok := splitBlob("just a plain entry")
+	if ok {
+		t.Error("splitBlob should return ok=false for non-blob entry")
+	}
+}
+
+func TestSplitBlob_MalformedBase64(t *testing.T) {
+	_, _, ok := splitBlob("label:::not-valid-base64!!!")
+	if ok {
+		t.Error("splitBlob should return ok=false for malformed base64")
+	}
+}
+
+func TestMakeBlob_Roundtrip(t *testing.T) {
+	original := []byte("secret file content\nwith newlines\n")
+	entry := makeBlob("my file", original)
+
+	label, data, ok := splitBlob(entry)
+	if !ok {
+		t.Fatal("splitBlob failed on makeBlob output")
+	}
+	if label != "my file" {
+		t.Errorf("label = %q, want %q", label, "my file")
+	}
+	if string(data) != string(original) {
+		t.Errorf("data = %q, want %q", string(data), string(original))
+	}
+}
+
+func TestDisplayEntry_Blob(t *testing.T) {
+	entry := makeBlob("my plan", []byte("content"))
+	display := displayEntry(entry)
+	if display != "my plan [BLOB]" {
+		t.Errorf("displayEntry = %q, want %q", display, "my plan [BLOB]")
+	}
+}
+
+func TestDisplayEntry_Plain(t *testing.T) {
+	entry := "just a note"
+	display := displayEntry(entry)
+	if display != entry {
+		t.Errorf("displayEntry = %q, want %q", display, entry)
+	}
+}
+
+// --- Blob add tests ---
+
+func TestAdd_BlobEncrypted(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	// Create a test file.
+	testFile := filepath.Join(dir, "test-blob.md")
+	content := "secret plan content\n"
+	if err := os.WriteFile(testFile, []byte(content), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("add", "--file", testFile, "my plan"))
+	if err != nil {
+		t.Fatalf("add --file error: %v", err)
+	}
+	if !strings.Contains(out, "Added entry 1.") {
+		t.Errorf("output = %q, want 'Added entry 1.'", out)
+	}
+
+	// Verify listing shows [BLOB].
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "my plan [BLOB]") {
+		t.Errorf("list output = %q, want 'my plan [BLOB]'", out)
+	}
+}
+
+func TestAdd_BlobTooLarge(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	testFile := filepath.Join(dir, "big.bin")
+	data := make([]byte, MaxBlobSize+1)
+	if err := os.WriteFile(testFile, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("add", "--file", testFile, "big blob"))
+	if err == nil {
+		t.Fatal("expected error for file exceeding MaxBlobSize")
+	}
+	if !strings.Contains(err.Error(), "file too large") {
+		t.Errorf("error = %q, want 'file too large'", err.Error())
+	}
+}
+
+func TestAdd_BlobFileNotFound(t *testing.T) {
+	setupEncrypted(t)
+
+	_, err := runCmd(newPadCmd("add", "--file", "/nonexistent/file.md", "missing"))
+	if err == nil {
+		t.Fatal("expected error for missing file")
+	}
+	if !strings.Contains(err.Error(), "read file") {
+		t.Errorf("error = %q, want 'read file'", err.Error())
+	}
+}
+
+// --- Blob list tests ---
+
+func TestList_BlobDisplay(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	// Add a plain entry.
+	if _, err := runCmd(newPadCmd("add", "plain note")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Add a blob entry.
+	testFile := filepath.Join(dir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte("file content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "1. plain note") {
+		t.Errorf("list missing plain entry: %q", out)
+	}
+	if !strings.Contains(out, "2. my blob [BLOB]") {
+		t.Errorf("list missing blob entry: %q", out)
+	}
+}
+
+// --- Blob show tests ---
+
+func TestShow_BlobAutoDecodes(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	content := "decoded file content\n"
+	testFile := filepath.Join(dir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte(content), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("show", "1"))
+	if err != nil {
+		t.Fatalf("show error: %v", err)
+	}
+	if out != content {
+		t.Errorf("show output = %q, want %q", out, content)
+	}
+}
+
+func TestShow_BlobOutFlag(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	content := "file to recover\n"
+	testFile := filepath.Join(dir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte(content), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+		t.Fatal(err)
+	}
+
+	outFile := filepath.Join(dir, "recovered.txt")
+	out, err := runCmd(newPadCmd("show", "1", "--out", outFile))
+	if err != nil {
+		t.Fatalf("show --out error: %v", err)
+	}
+	if !strings.Contains(out, "Wrote") {
+		t.Errorf("output = %q, want 'Wrote' confirmation", out)
+	}
+
+	recovered, err := os.ReadFile(outFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(recovered) != content {
+		t.Errorf("recovered = %q, want %q", string(recovered), content)
+	}
+}
+
+func TestShow_OutFlagOnPlainEntry(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "plain note")); err != nil {
+		t.Fatal(err)
+	}
+
+	outFile := filepath.Join(dir, "out.txt")
+	_, err := runCmd(newPadCmd("show", "1", "--out", outFile))
+	if err == nil {
+		t.Fatal("expected error for --out on plain entry")
+	}
+	if !strings.Contains(err.Error(), "blob") {
+		t.Errorf("error = %q, want mention of 'blob'", err.Error())
+	}
+}
+
+// --- Blob edit tests ---
+
+func TestEdit_BlobReplaceFile(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	// Add a blob entry.
+	v1 := filepath.Join(dir, "v1.txt")
+	if err := os.WriteFile(v1, []byte("version 1"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", v1, "my blob")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Replace the file content.
+	v2 := filepath.Join(dir, "v2.txt")
+	if err := os.WriteFile(v2, []byte("version 2"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	out, err := runCmd(newPadCmd("edit", "1", "--file", v2))
+	if err != nil {
+		t.Fatalf("edit --file error: %v", err)
+	}
+	if !strings.Contains(out, "Updated entry 1.") {
+		t.Errorf("output = %q", out)
+	}
+
+	// Verify content changed but label preserved.
+	out, err = runCmd(newPadCmd("show", "1"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out != "version 2" {
+		t.Errorf("show = %q, want %q", out, "version 2")
+	}
+
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(listOut, "my blob [BLOB]") {
+		t.Errorf("list = %q, want label preserved", listOut)
+	}
+}
+
+func TestEdit_BlobReplaceLabel(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	v1 := filepath.Join(dir, "v1.txt")
+	if err := os.WriteFile(v1, []byte("content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", v1, "old label")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("edit", "1", "--label", "new label"))
+	if err != nil {
+		t.Fatalf("edit --label error: %v", err)
+	}
+	if !strings.Contains(out, "Updated entry 1.") {
+		t.Errorf("output = %q", out)
+	}
+
+	// Verify label changed.
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(listOut, "new label [BLOB]") {
+		t.Errorf("list = %q, want 'new label [BLOB]'", listOut)
+	}
+
+	// Verify content preserved.
+	showOut, err := runCmd(newPadCmd("show", "1"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if showOut != "content" {
+		t.Errorf("show = %q, want %q", showOut, "content")
+	}
+}
+
+func TestEdit_BlobReplaceBoth(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	v1 := filepath.Join(dir, "v1.txt")
+	if err := os.WriteFile(v1, []byte("old content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", v1, "old label")); err != nil {
+		t.Fatal(err)
+	}
+
+	v2 := filepath.Join(dir, "v2.txt")
+	if err := os.WriteFile(v2, []byte("new content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("edit", "1", "--file", v2, "--label", "new label"))
+	if err != nil {
+		t.Fatalf("edit --file --label error: %v", err)
+	}
+	if !strings.Contains(out, "Updated entry 1.") {
+		t.Errorf("output = %q", out)
+	}
+
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(listOut, "new label [BLOB]") {
+		t.Errorf("list = %q, want 'new label [BLOB]'", listOut)
+	}
+
+	showOut, err := runCmd(newPadCmd("show", "1"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if showOut != "new content" {
+		t.Errorf("show = %q, want %q", showOut, "new content")
+	}
+}
+
+func TestEdit_AppendOnBlobErrors(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	testFile := filepath.Join(dir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte("content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("edit", "1", "--append", "suffix"))
+	if err == nil {
+		t.Fatal("expected error for --append on blob entry")
+	}
+	if !strings.Contains(err.Error(), "cannot append to a blob entry") {
+		t.Errorf("error = %q, want 'cannot append to a blob entry'", err.Error())
+	}
+}
+
+func TestEdit_PrependOnBlobErrors(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	testFile := filepath.Join(dir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte("content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("edit", "1", "--prepend", "prefix"))
+	if err == nil {
+		t.Fatal("expected error for --prepend on blob entry")
+	}
+	if !strings.Contains(err.Error(), "cannot prepend to a blob entry") {
+		t.Errorf("error = %q, want 'cannot prepend to a blob entry'", err.Error())
+	}
+}
+
+func TestEdit_LabelOnNonBlobErrors(t *testing.T) {
+	setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "plain note")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("edit", "1", "--label", "new label"))
+	if err == nil {
+		t.Fatal("expected error for --label on non-blob entry")
+	}
+	if !strings.Contains(err.Error(), "not a blob entry") {
+		t.Errorf("error = %q, want 'not a blob entry'", err.Error())
+	}
+}
+
+func TestEdit_FileAndPositionalMutuallyExclusive(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	testFile := filepath.Join(dir, "blob.txt")
+	if err := os.WriteFile(testFile, []byte("content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", testFile, "my blob")); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("edit", "1", "replacement", "--file", testFile))
+	if err == nil {
+		t.Fatal("expected error for --file + positional text")
+	}
+	if !strings.Contains(err.Error(), "mutually exclusive") {
+		t.Errorf("error = %q, want 'mutually exclusive'", err.Error())
 	}
 }

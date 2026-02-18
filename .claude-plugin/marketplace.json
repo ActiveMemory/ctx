@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "ctx",
-      "source": "./internal/tpl/claude",
+      "source": "./internal/assets/claude",
       "description": "Persistent context for AI coding assistants",
       "version": "0.6.0"
     }

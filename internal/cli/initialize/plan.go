@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // handleImplementationPlan creates or merges IMPLEMENTATION_PLAN.md in the
@@ -42,7 +42,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Get template content
-	templateContent, err := tpl.Template(config.FileImplementationPlan)
+	templateContent, err := assets.Template(config.FileImplementationPlan)
 	if err != nil {
 		return fmt.Errorf(
 			"failed to read IMPLEMENTATION_PLAN.md template: %w", err)

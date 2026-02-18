@@ -90,5 +90,5 @@ func warnFileErr(
 // Returns:
 //   - error: Includes installation instructions
 func errZensicalNotFound() error {
-	return fmt.Errorf("zensical not found. Install with: pipx install zensical")
+	return fmt.Errorf("zensical not found. Install with: pipx install zensical (requires Python >= 3.10)")
 }

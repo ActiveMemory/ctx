@@ -50,8 +50,8 @@ conventions for consistency.
 | `internal/recall/`                 | `docs/session-journal.md`                          |
 | `internal/bootstrap/`              | `docs/index.md` (getting started)                  |
 | `internal/claude/`, `internal/rc/` | `docs/integrations.md`                             |
-| `internal/tpl/`                    | `docs/context-files.md` (templates)                |
-| `internal/tpl/claude/skills/`      | `.claude/skills/` (live versions)                  |
+| `internal/assets/`                    | `docs/context-files.md` (templates)                |
+| `internal/assets/claude/skills/`      | `.claude/skills/` (live versions)                  |
 | `SECURITY.md`                      | `docs/security.md`                                 |
 | `.context/` schema changes         | `docs/context-files.md`                            |
 
@@ -66,7 +66,7 @@ conventions for consistency.
 - **Removed features**: still referenced in docs?
 - **Changed defaults**: do examples in docs use old defaults?
 - **Skill templates changed**: do live versions in
-  `.claude/skills/` match `internal/tpl/claude/skills/`?
+  `.claude/skills/` match `internal/assets/claude/skills/`?
 - **Architecture drift**: when packages are added, removed, or
   renamed, or when dependency relationships change, update
   `.context/ARCHITECTURE.md` (component map, dependency graph,
@@ -146,6 +146,6 @@ and internal conventions. They are complementary.
 Before reporting results, verify:
 - [ ] All changed packages were mapped to their affected docs
 - [ ] Each flagged doc section was actually read (not assumed)
-- [ ] Skill template/live drift was checked if `internal/tpl/`
+- [ ] Skill template/live drift was checked if `internal/assets/`
       was touched
 - [ ] Self-maintenance was done (mapping table is current)

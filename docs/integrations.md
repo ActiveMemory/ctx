@@ -32,7 +32,7 @@ ctx init
 
 ```bash
 # From the ctx repository
-claude /plugin install ./internal/tpl/claude
+claude /plugin install ./internal/assets/claude
 
 # Or from the marketplace
 claude /plugin marketplace add ActiveMemory/ctx

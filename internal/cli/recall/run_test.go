@@ -218,21 +218,102 @@ func TestRunRecallExport_SingleSession(t *testing.T) {
 		t.Error("expected at least one journal file")
 	}
 
-	// Verify content of exported file
+	// Verify content of exported file.
+	// Filename is now title-based (derived from FirstUserMsg "hello from test").
 	for _, e := range entries {
-		if strings.Contains(e.Name(), "export-session") {
+		if strings.Contains(e.Name(), "hello-from-test") {
 			content, err := os.ReadFile(filepath.Join(journalDir, e.Name())) //nolint:gosec // test temp path
 			if err != nil {
 				t.Fatalf("read journal file: %v", err)
 			}
-			if !strings.Contains(string(content), "export-session") {
-				t.Error("journal file missing session slug")
-			}
 			if !strings.Contains(string(content), "hello from test") {
 				t.Error("journal file missing user message")
+			}
+			if !strings.Contains(string(content), "session_id:") {
+				t.Error("journal file missing session_id in frontmatter")
 			}
 			return
 		}
 	}
-	t.Error("no journal file found matching export-session slug")
+	t.Errorf("no journal file found matching hello-from-test slug, got: %v", func() []string {
+		var names []string
+		for _, e := range entries {
+			names = append(names, e.Name())
+		}
+		return names
+	}())
+}
+
+func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dedupproj")
+	sessionID := "dedup123-full-uuid-value"
+	createTestSessionJSONL(t, projDir, sessionID, "random-slug", "/home/test/dedupproj")
+
+	// Create .context directory
+	contextDir := filepath.Join(tmpDir, ".context")
+	journalDir := filepath.Join(contextDir, "journal")
+	if err := os.MkdirAll(journalDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	// Pre-create a legacy file with the old slug-based name (no session_id).
+	// The short ID is the first 8 chars of the session ID: "dedup123".
+	oldFilename := "2026-01-20-random-slug-dedup123.md"
+	oldContent := "---\ndate: \"2026-01-20\"\n---\n\n# random-slug\n\nOld content\n"
+	if err := os.WriteFile(filepath.Join(journalDir, oldFilename), []byte(oldContent), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	cmd := Cmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs([]string{"export", "--all", "--all-projects"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	entries, err := os.ReadDir(journalDir)
+	if err != nil {
+		t.Fatalf("read journal dir: %v", err)
+	}
+
+	// Should have exactly 1 file (renamed, not duplicated).
+	mdFiles := 0
+	var fileNames []string
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".md") {
+			mdFiles++
+			fileNames = append(fileNames, e.Name())
+		}
+	}
+	if mdFiles != 1 {
+		t.Errorf("expected 1 journal file (deduped), got %d: %v", mdFiles, fileNames)
+	}
+
+	// The old file should be gone.
+	if _, err := os.Stat(filepath.Join(journalDir, oldFilename)); err == nil {
+		t.Error("old file should have been renamed")
+	}
+
+	// The new file should have the title-based slug.
+	found := false
+	for _, name := range fileNames {
+		if strings.Contains(name, "hello-from-test") && strings.Contains(name, "dedup123") {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("expected title-based filename with short ID, got: %v", fileNames)
+	}
 }

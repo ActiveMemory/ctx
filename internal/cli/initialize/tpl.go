@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // createEntryTemplates creates .context/templates/ with entry templates for
@@ -43,7 +43,7 @@ func createEntryTemplates(
 	}
 
 	// Get list of entry templates
-	entryTemplates, err := tpl.ListEntry()
+	entryTemplates, err := assets.ListEntry()
 	if err != nil {
 		return fmt.Errorf("failed to list entry templates: %w", err)
 	}
@@ -57,7 +57,7 @@ func createEntryTemplates(
 			continue
 		}
 
-		content, err := tpl.Entry(name)
+		content, err := assets.Entry(name)
 		if err != nil {
 			return fmt.Errorf("failed to read entry template %s: %w", name, err)
 		}

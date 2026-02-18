@@ -87,8 +87,8 @@ For each gap, propose a fix:
 
 Always update both the live copy (`.context/AGENT_PLAYBOOK.md`
 or `.claude/skills/`) AND the template copy
-(`internal/tpl/AGENT_PLAYBOOK.md` or
-`internal/tpl/claude/skills/`) to keep them in sync.
+(`internal/assets/AGENT_PLAYBOOK.md` or
+`internal/assets/claude/skills/`) to keep them in sync.
 
 ## What Makes a Claim "Covered"
 

@@ -497,6 +497,8 @@
       
         
       
+        
+      
     
     
     
@@ -559,6 +561,36 @@
     
   
     About ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../is-ctx-right/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Is ctx Right for Me?
   
 
     
@@ -2188,7 +2220,7 @@
   <span class="md-ellipsis">
     
   
-    Defense in Depth: Securing AI Agents
+    Securing AI Agents
   
 
     
@@ -2626,7 +2658,7 @@
 </span></code></pre></div>
 <p>This compiles the <code>ctx</code> binary and places it in <code>/usr/local/bin/</code>.</p>
 <h3 id="3-install-the-plugin-from-your-local-clone">3. Install the Plugin from Your Local Clone<a class="headerlink" href="#3-install-the-plugin-from-your-local-clone" title="Permanent link">&para;</a></h3>
-<p>The repository ships a Claude Code plugin under <code>internal/tpl/claude/</code>.
+<p>The repository ships a Claude Code plugin under <code>internal/assets/claude/</code>.
 Point Claude Code at your local copy so that skills and hooks reflect
 your working tree — no reinstall needed after edits:</p>
 <ol>
@@ -2636,13 +2668,13 @@ your working tree — no reinstall needed after edits:</p>
 <li>Enter the <strong>absolute path</strong> to the root of your clone,
    e.g. <code>~/WORKSPACE/ctx</code>
    (this is where <code>.claude-plugin/marketplace.json</code> lives — it points
-   Claude Code to the actual plugin in <code>internal/tpl/claude</code>)</li>
+   Claude Code to the actual plugin in <code>internal/assets/claude</code>)</li>
 <li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code></li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Local Plugin = Live Edits</p>
 <p>Because the marketplace points at a directory on disk, any change
-you make to a skill or hook under <code>internal/tpl/claude/</code> takes
+you make to a skill or hook under <code>internal/assets/claude/</code> takes
 effect the next time Claude Code loads it. No rebuild, no
 reinstall.</p>
 </div>
@@ -2680,7 +2712,7 @@ reinstall.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>internal/tpl/claude/skills/</code></td>
+<td><code>internal/assets/claude/skills/</code></td>
 <td>The 25 <code>ctx-*</code> skills that ship with the plugin</td>
 <td>Yes</td>
 </tr>
@@ -2691,7 +2723,7 @@ reinstall.</p>
 </tr>
 </tbody>
 </table>
-<p><strong><code>internal/tpl/claude/skills/</code></strong> is the single source of truth for
+<p><strong><code>internal/assets/claude/skills/</code></strong> is the single source of truth for
 user-facing skills. If you are adding or modifying a <code>ctx-*</code> skill,
 edit it there.</p>
 <p><strong><code>.claude/skills/</code></strong> holds skills that only make sense inside this
@@ -2706,8 +2738,8 @@ never distributed to users.</p>
 <p>The <code>ctx</code> binary is statically compiled — there is no hot reload.
 You must rebuild for Go changes to take effect.</p>
 <h3 id="skill-or-hook-changes">Skill or Hook Changes<a class="headerlink" href="#skill-or-hook-changes" title="Permanent link">&para;</a></h3>
-<p>Edit files under <code>internal/tpl/claude/skills/</code> or
-<code>internal/tpl/claude/hooks/</code>. Changes are picked up by Claude Code
+<p>Edit files under <code>internal/assets/claude/skills/</code> or
+<code>internal/assets/claude/hooks/</code>. Changes are picked up by Claude Code
 automatically (no rebuild needed).</p>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">            </span><span class="c1"># fast: all tests</span>
@@ -2715,7 +2747,7 @@ automatically (no rebuild needed).</p>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>make<span class="w"> </span>smoke<span class="w">           </span><span class="c1"># build + run basic commands end-to-end</span>
 </span></code></pre></div>
 <h3 id="running-the-docs-site-locally">Running the Docs Site Locally<a class="headerlink" href="#running-the-docs-site-locally" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>site-setup<span class="w">      </span><span class="c1"># one-time: create venv, install zensical</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>site-setup<span class="w">      </span><span class="c1"># one-time: install zensical via pipx</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>make<span class="w"> </span>site-serve<span class="w">      </span><span class="c1"># serve at localhost</span>
 </span></code></pre></div>
 <hr />

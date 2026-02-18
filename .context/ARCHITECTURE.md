@@ -64,7 +64,7 @@ dependencies. Everything else builds upward from them.
 | Package           | Purpose                                                                                                                                                                          | Depends On |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
 | `internal/config` | Constants, regex patterns, file names, read order, permissions (9 files covering config, file names, directories, entries, headings, markers, patterns, regex, token formatting) | (none)     |
-| `internal/tpl`    | Embedded templates via go:embed; provides access to all `.context/` scaffolds, skill definitions, hook scripts, and tools                                                        | (none)     |
+| `internal/assets`    | Embedded templates via go:embed; provides access to all `.context/` scaffolds, skill definitions, hook scripts, and tools                                                        | (none)     |
 
 ### Core Packages
 
@@ -77,7 +77,7 @@ dependencies. Everything else builds upward from them.
 | `internal/task`          | Parse task checkboxes in TASKS.md; match state, indentation, content                                                                          | `internal/config`                     |
 | `internal/validation`    | Input sanitization (filenames)                                                                                                                | `internal/config`                     |
 | `internal/recall/parser` | Parse AI session transcripts (JSONL) into structured data; extensible parser registry supporting Claude Code (and designed for Aider, Cursor) | `internal/config`                     |
-| `internal/claude`        | Generate Claude Code integration: hooks, skills, settings, permissions                                                                        | `internal/config`, `internal/tpl`     |
+| `internal/claude`        | Generate Claude Code integration: hooks, skills, settings, permissions                                                                        | `internal/config`, `internal/assets`     |
 
 ### Entry Point
 
@@ -300,7 +300,7 @@ remote URLs, relative paths, and exact CWD matching.
 
 Skills exist in two locations:
 
-- **Templates** (`internal/tpl/claude/skills/`): embedded in the
+- **Templates** (`internal/assets/claude/skills/`): embedded in the
   binary, deployed on `ctx init`
 - **Live** (`.claude/skills/`): project-local copies that the user
   and agent can edit

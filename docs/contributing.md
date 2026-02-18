@@ -40,7 +40,7 @@ This compiles the `ctx` binary and places it in `/usr/local/bin/`.
 
 ### 3. Install the Plugin from Your Local Clone
 
-The repository ships a Claude Code plugin under `internal/tpl/claude/`.
+The repository ships a Claude Code plugin under `internal/assets/claude/`.
 Point Claude Code at your local copy so that skills and hooks reflect
 your working tree — no reinstall needed after edits:
 
@@ -50,12 +50,12 @@ your working tree — no reinstall needed after edits:
 4. Enter the **absolute path** to the root of your clone,
    e.g. `~/WORKSPACE/ctx`
    (this is where `.claude-plugin/marketplace.json` lives — it points
-   Claude Code to the actual plugin in `internal/tpl/claude`)
+   Claude Code to the actual plugin in `internal/assets/claude`)
 5. Back in `/plugin`, select **Install** and choose `ctx`
 
 !!! tip "Local Plugin = Live Edits"
     Because the marketplace points at a directory on disk, any change
-    you make to a skill or hook under `internal/tpl/claude/` takes
+    you make to a skill or hook under `internal/assets/claude/` takes
     effect the next time Claude Code loads it. No rebuild, no
     reinstall.
 
@@ -94,10 +94,10 @@ ctx/
 
 | Directory | What lives here | Distributed to users? |
 |---|---|---|
-| `internal/tpl/claude/skills/` | The 25 `ctx-*` skills that ship with the plugin | Yes |
+| `internal/assets/claude/skills/` | The 25 `ctx-*` skills that ship with the plugin | Yes |
 | `.claude/skills/` | Dev-only skills (release, QA, backup, etc.) | No |
 
-**`internal/tpl/claude/skills/`** is the single source of truth for
+**`internal/assets/claude/skills/`** is the single source of truth for
 user-facing skills. If you are adding or modifying a `ctx-*` skill,
 edit it there.
 
@@ -122,8 +122,8 @@ You must rebuild for Go changes to take effect.
 
 ### Skill or Hook Changes
 
-Edit files under `internal/tpl/claude/skills/` or
-`internal/tpl/claude/hooks/`. Changes are picked up by Claude Code
+Edit files under `internal/assets/claude/skills/` or
+`internal/assets/claude/hooks/`. Changes are picked up by Claude Code
 automatically (no rebuild needed).
 
 ### Running Tests
@@ -137,7 +137,7 @@ make smoke           # build + run basic commands end-to-end
 ### Running the Docs Site Locally
 
 ```bash
-make site-setup      # one-time: create venv, install zensical
+make site-setup      # one-time: install zensical via pipx
 make site-serve      # serve at localhost
 ```
 

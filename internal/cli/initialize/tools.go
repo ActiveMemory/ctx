@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // createTools creates .context/tools/ with embedded tool scripts.
@@ -39,7 +39,7 @@ func createTools(cmd *cobra.Command, contextDir string, force bool) error {
 		return fmt.Errorf("failed to create %s: %w", toolsDir, err)
 	}
 
-	tools, err := tpl.ListTools()
+	tools, err := assets.ListTools()
 	if err != nil {
 		return fmt.Errorf("failed to list tools: %w", err)
 	}
@@ -52,7 +52,7 @@ func createTools(cmd *cobra.Command, contextDir string, force bool) error {
 			continue
 		}
 
-		content, err := tpl.Tool(name)
+		content, err := assets.Tool(name)
 		if err != nil {
 			return fmt.Errorf("failed to read tool %s: %w", name, err)
 		}

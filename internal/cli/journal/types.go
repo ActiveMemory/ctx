@@ -16,14 +16,15 @@ type groupedIndex struct {
 
 // journalFrontmatter represents YAML frontmatter in enriched journal entries.
 type journalFrontmatter struct {
-	Title    string   `yaml:"title"`
-	Date     string   `yaml:"date"`
-	Time     string   `yaml:"time,omitempty"`
-	Project  string   `yaml:"project,omitempty"`
-	Type     string   `yaml:"type"`
-	Outcome  string   `yaml:"outcome"`
-	Topics   []string `yaml:"topics"`
-	KeyFiles []string `yaml:"key_files"`
+	Title     string   `yaml:"title"`
+	Date      string   `yaml:"date"`
+	Time      string   `yaml:"time,omitempty"`
+	Project   string   `yaml:"project,omitempty"`
+	SessionID string   `yaml:"session_id,omitempty"`
+	Type      string   `yaml:"type"`
+	Outcome   string   `yaml:"outcome"`
+	Topics    []string `yaml:"topics"`
+	KeyFiles  []string `yaml:"key_files"`
 }
 
 // journalEntry represents a parsed journal file.
@@ -33,6 +34,7 @@ type journalEntry struct {
 	Date       string
 	Time       string
 	Project    string
+	SessionID  string
 	Path       string
 	Size       int64
 	Suggestive bool

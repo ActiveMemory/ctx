@@ -28,6 +28,7 @@ func Cmd() *cobra.Command {
 		checkContextSizeCmd(),
 		checkPersistenceCmd(),
 		checkJournalCmd(),
+		checkVersionCmd(),
 		blockNonPathCtxCmd(),
 		postCommitCmd(),
 		cleanupTmpCmd(),

@@ -103,6 +103,9 @@ func parseJournalEntry(path, filename string) journalEntry {
 				if fm.Project != "" {
 					entry.Project = fm.Project
 				}
+				if fm.SessionID != "" {
+					entry.SessionID = fm.SessionID
+				}
 				entry.Topics = fm.Topics
 				entry.Type = fm.Type
 				entry.Outcome = fm.Outcome

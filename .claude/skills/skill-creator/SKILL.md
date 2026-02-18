@@ -163,5 +163,5 @@ Before finalizing a skill:
 4. **Add examples**: good/bad pairs for output quality
 5. **Run the litmus test**: verify all 7 points above
 6. **If template-worthy**: also create the version in
-   `internal/tpl/claude/skills/` so it deploys with
+   `internal/assets/claude/skills/` so it deploys with
    `ctx init`

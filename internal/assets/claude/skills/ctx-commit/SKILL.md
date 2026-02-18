@@ -78,7 +78,7 @@ ctx add learning --context "..." --lesson "..." --application "..."
 
 If the committed files include source code that could affect
 documentation (Go files in `internal/cli/`, `internal/config/`,
-`internal/tpl/`, `cmd/`), remind the user:
+`internal/assets/`, `cmd/`), remind the user:
 
 > Source files changed — want me to run `/update-docs` to check
 > for doc drift?

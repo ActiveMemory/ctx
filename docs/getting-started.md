@@ -57,7 +57,7 @@ sudo make install
 4. Enter the path to the **root of your clone**,
    e.g. `~/WORKSPACE/ctx`
    (this is where `.claude-plugin/marketplace.json` lives — it points
-   Claude Code to the actual plugin in `internal/tpl/claude`)
+   Claude Code to the actual plugin in `internal/assets/claude`)
 5. Back in `/plugin`, select **Install** and choose `ctx`
 
 This points Claude Code at the plugin source on disk. Changes you make
@@ -169,7 +169,8 @@ cd your-project
 ctx init
 ```
 
-This creates a `.context/` directory with template files.
+This creates a `.context/` directory with template files and a
+`.scratchpad.key` for the [encrypted scratchpad](scratchpad.md).
 For Claude Code, install the [ctx plugin](integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
 

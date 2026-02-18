@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package tpl
+package assets
 
 import (
 	"strings"
@@ -275,5 +275,19 @@ func TestToolContent(t *testing.T) {
 	}
 	if !strings.HasPrefix(string(content), "#!/bin/bash") {
 		t.Error("context-watch.sh missing bash shebang")
+	}
+}
+
+func TestPluginVersion(t *testing.T) {
+	ver, err := PluginVersion()
+	if err != nil {
+		t.Fatalf("PluginVersion() error: %v", err)
+	}
+	if ver == "" {
+		t.Error("PluginVersion() returned empty string")
+	}
+	// Should be a semver-like string
+	if !strings.Contains(ver, ".") {
+		t.Errorf("PluginVersion() = %q, expected semver format", ver)
 	}
 }

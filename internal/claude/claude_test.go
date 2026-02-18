@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 func TestSkills(t *testing.T) {
@@ -123,12 +123,12 @@ func TestErrSkillRead(t *testing.T) {
 	}
 }
 
-// TestScriptErrorPaths swaps tpl.FS with an empty embed.FS to trigger
+// TestScriptErrorPaths swaps assets.FS with an empty embed.FS to trigger
 // error branches in skill functions.
 func TestScriptErrorPaths(t *testing.T) {
-	orig := tpl.FS
-	defer func() { tpl.FS = orig }()
-	tpl.FS = embed.FS{} // empty FS causes all reads to fail
+	orig := assets.FS
+	defer func() { assets.FS = orig }()
+	assets.FS = embed.FS{} // empty FS causes all reads to fail
 
 	if _, err := Skills(); err == nil {
 		t.Error("Skills() expected error with empty FS")

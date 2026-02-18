@@ -33,6 +33,10 @@ const (
 	InsightWordBoundaryMin = 100
 )
 
+// BinaryVersion holds the ctx binary version, set by bootstrap at startup.
+// Defaults to "dev" when not set (e.g., during tests).
+var BinaryVersion = "dev"
+
 // Recall/export constants.
 const (
 	// RecallShortIDLen is the truncation length for session IDs in filenames.

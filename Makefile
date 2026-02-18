@@ -25,9 +25,12 @@ test:
 test-v:
 	CGO_ENABLED=0 go test -v ./...
 
-## test-cover: Run tests with coverage
+## test-cover: Generate HTML coverage report in dist/coverage.html
 test-cover:
-	CGO_ENABLED=0 go test -cover ./...
+	@mkdir -p dist
+	@CGO_ENABLED=0 go test -coverprofile=dist/coverage.out ./...
+	@go tool cover -html=dist/coverage.out -o dist/coverage.html
+	@echo "Coverage report: dist/coverage.html"
 
 ## test-coverage: Run tests with coverage and check against target (70%)
 test-coverage:
@@ -144,19 +147,17 @@ install:
 	cp $(BINARY) /usr/local/bin/$(BINARY)
 	@echo "Installed ctx to /usr/local/bin/ctx"
 
-## site-setup: Create venv and install zensical
+## site-setup: Install zensical via pipx
 site-setup:
-	python3 -m venv .venv
-	.venv/bin/pip install --upgrade pip
-	.venv/bin/pip install zensical
+	pipx install zensical
 
 ## site: Build documentation site
 site:
-	.venv/bin/zensical build
+	zensical build
 
 ## site-serve: Serve documentation site locally
 site-serve:
-	.venv/bin/zensical serve
+	zensical serve
 
 ## journal: Export sessions and regenerate journal site
 journal:

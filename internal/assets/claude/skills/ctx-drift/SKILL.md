@@ -212,14 +212,14 @@ drifts independently from the codebase.
 | Missing `Skill(ctx-*)` entry     | Suggest adding — skill will prompt every time   |
 | Stale `Skill(ctx-*)` entry       | Suggest removing — dead reference               |
 | Granular `Bash(ctx <sub>:*)`     | Suggest consolidating to `Bash(ctx:*)`          |
-| One-off / session debris entries  | Note as hygiene issue (see `hack/sanitize-permissions.md`) |
+| One-off / session debris entries  | Note as hygiene issue (see `hack/runbooks/sanitize-permissions.md`) |
 
 ### Important
 
 Do **not** edit `settings.local.json` directly. Report findings
 and let the user make changes. This file controls agent
 permissions — self-modification is a security concern. Refer
-users to `hack/sanitize-permissions.md` for the manual cleanup
+users to `hack/runbooks/sanitize-permissions.md` for the manual cleanup
 procedure.
 
 ## Proactive Use

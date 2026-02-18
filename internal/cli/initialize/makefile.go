@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // includeDirective is the line appended to the user's Makefile to pull
@@ -41,7 +41,7 @@ func handleMakefileCtx(cmd *cobra.Command) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Deploy Makefile.ctx (always overwrite — ctx-owned)
-	content, err := tpl.MakefileCtx()
+	content, err := assets.MakefileCtx()
 	if err != nil {
 		return fmt.Errorf("failed to read Makefile.ctx template: %w", err)
 	}

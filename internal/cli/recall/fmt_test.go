@@ -362,7 +362,7 @@ func TestFormatJournalEntryPart_SinglePart(t *testing.T) {
 		},
 	}
 
-	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "2026-01-15-test-slug-abc12345")
+	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "2026-01-15-test-slug-abc12345", "")
 
 	// Verify YAML frontmatter
 	if !strings.Contains(got, "---\ndate: \"2026-01-15\"") {
@@ -433,7 +433,7 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 	baseName := "2026-02-01-multi-part-session-multi-se"
 
 	// Part 1 of 3: has metadata + nav
-	part1 := formatJournalEntryPart(s, s.Messages[:2], 0, 1, 3, baseName)
+	part1 := formatJournalEntryPart(s, s.Messages[:2], 0, 1, 3, baseName, "")
 	if !strings.Contains(part1, "<details>") {
 		t.Error("part 1 should have details metadata")
 	}
@@ -448,7 +448,7 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 	}
 
 	// Part 2 of 3: no metadata, has nav
-	part2 := formatJournalEntryPart(s, s.Messages[2:], 2, 2, 3, baseName)
+	part2 := formatJournalEntryPart(s, s.Messages[2:], 2, 2, 3, baseName, "")
 	if strings.Contains(part2, "<details>") {
 		t.Error("part 2 should NOT have HTML details metadata")
 	}
@@ -519,7 +519,7 @@ func TestFormatJournalEntryPart_WithToolUse(t *testing.T) {
 		},
 	}
 
-	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "tool-session")
+	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "tool-session", "")
 
 	// Verify formatted tool use
 	if !strings.Contains(got, "Read: /tmp/test.go") {
@@ -542,5 +542,112 @@ func TestFormatJournalEntryPart_WithToolUse(t *testing.T) {
 	}
 	if !strings.Contains(got, "<pre>") {
 		t.Error("collapsed output should use <pre> tag, not code fences")
+	}
+}
+
+func TestFormatJournalFilename_WithSlugOverride(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &parser.Session{
+		ID:        "abc12345-full-session-uuid",
+		Slug:      "random-claude-slug",
+		StartTime: time.Date(2026, 1, 15, 10, 0, 0, 0, time.UTC),
+	}
+
+	// Without override: uses s.Slug.
+	got := formatJournalFilename(s, "")
+	if got != "2026-01-15-random-claude-slug-abc12345.md" {
+		t.Errorf("without override = %q", got)
+	}
+
+	// With override: uses the override slug.
+	got = formatJournalFilename(s, "fix-auth-bug")
+	if got != "2026-01-15-fix-auth-bug-abc12345.md" {
+		t.Errorf("with override = %q", got)
+	}
+}
+
+func TestFormatJournalEntryPart_SessionIDInFrontmatter(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &parser.Session{
+		ID:        "abc12345-full-session-uuid",
+		Slug:      "test-slug",
+		Tool:      "claude-code",
+		Project:   "myproject",
+		StartTime: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC),
+		EndTime:   time.Date(2026, 1, 15, 11, 0, 0, 0, time.UTC),
+		Duration:  30 * time.Minute,
+		TurnCount: 1,
+		Messages: []parser.Message{
+			{Role: "user", Text: "Hello", Timestamp: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC)},
+		},
+	}
+
+	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
+
+	if !strings.Contains(got, `session_id: "abc12345-full-session-uuid"`) {
+		t.Error("missing session_id in frontmatter")
+	}
+}
+
+func TestFormatJournalEntryPart_TitleInFrontmatterAndHeading(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &parser.Session{
+		ID:        "abc12345-full-session-uuid",
+		Slug:      "random-slug",
+		Tool:      "claude-code",
+		Project:   "myproject",
+		StartTime: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC),
+		EndTime:   time.Date(2026, 1, 15, 11, 0, 0, 0, time.UTC),
+		Duration:  30 * time.Minute,
+		TurnCount: 1,
+		Messages: []parser.Message{
+			{Role: "user", Text: "Hello", Timestamp: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC)},
+		},
+	}
+
+	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "base", "Fix Authentication Bug")
+
+	// Title should appear in frontmatter.
+	if !strings.Contains(got, `title: "Fix Authentication Bug"`) {
+		t.Error("missing title in frontmatter")
+	}
+	// Title should be used in H1 heading.
+	if !strings.Contains(got, "# Fix Authentication Bug") {
+		t.Error("H1 heading should use title")
+	}
+	// Slug should NOT be in the heading when title is provided.
+	if strings.Contains(got, "# random-slug") {
+		t.Error("H1 heading should use title, not slug")
+	}
+}
+
+func TestFormatJournalEntryPart_NoTitleUsesSlug(t *testing.T) {
+	t.Setenv("TZ", "UTC")
+
+	s := &parser.Session{
+		ID:        "abc12345-full-session-uuid",
+		Slug:      "gleaming-wobbling-sutherland",
+		Tool:      "claude-code",
+		Project:   "myproject",
+		StartTime: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC),
+		EndTime:   time.Date(2026, 1, 15, 11, 0, 0, 0, time.UTC),
+		Duration:  30 * time.Minute,
+		TurnCount: 1,
+		Messages: []parser.Message{
+			{Role: "user", Text: "Hello", Timestamp: time.Date(2026, 1, 15, 10, 30, 0, 0, time.UTC)},
+		},
+	}
+
+	got := formatJournalEntryPart(s, s.Messages, 0, 1, 1, "base", "")
+
+	if !strings.Contains(got, "# gleaming-wobbling-sutherland") {
+		t.Error("H1 heading should fall back to slug when no title")
+	}
+	// No title field in frontmatter when empty.
+	if strings.Contains(got, "title:") {
+		t.Error("should not have title field in frontmatter when empty")
 	}
 }

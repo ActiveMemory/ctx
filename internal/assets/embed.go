@@ -4,17 +4,17 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package tpl provides embedded assets for ctx: .context/ templates
+// Package assets provides embedded assets for ctx: .context/ templates
 // stamped by "ctx init" and the Claude Code plugin (skills, hooks,
 // manifest) served directly from claude/.
-//
-// The name "tpl" is historical — a rename to "assets" is tracked as
-// cleanup work but deferred to avoid churn across 15+ import sites.
-package tpl
+package assets
 
-import "embed"
+import (
+	"embed"
+	"encoding/json"
+)
 
-//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md ralph/*.md tools/*.sh
+//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md tools/*.sh
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -171,4 +171,19 @@ func ListTools() ([]string, error) {
 //   - error: Non-nil if the file is not found or read fails
 func Tool(name string) ([]byte, error) {
 	return FS.ReadFile("tools/" + name)
+}
+
+// PluginVersion returns the version string from the embedded plugin.json.
+func PluginVersion() (string, error) {
+	data, err := FS.ReadFile("claude/.claude-plugin/plugin.json")
+	if err != nil {
+		return "", err
+	}
+	var manifest struct {
+		Version string `json:"version"`
+	}
+	if err := json.Unmarshal(data, &manifest); err != nil {
+		return "", err
+	}
+	return manifest.Version, nil
 }

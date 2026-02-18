@@ -53,18 +53,27 @@ func fenceForContent(content string) string {
 // Format: YYYY-MM-DD-slug-shortid.md
 // Uses local time for the date.
 //
+// When slugOverride is non-empty it replaces s.Slug in the filename,
+// allowing title-derived slugs to be used instead of Claude Code's
+// random slug.
+//
 // Parameters:
 //   - s: Session to generate filename for
+//   - slugOverride: If non-empty, used instead of s.Slug
 //
 // Returns:
-//   - string: Filename like "2026-01-15-gleaming-wobbling-sutherland-abc12345.md"
-func formatJournalFilename(s *parser.Session) string {
+//   - string: Filename like "2026-01-15-fix-auth-bug-abc12345.md"
+func formatJournalFilename(s *parser.Session, slugOverride string) string {
 	date := s.StartTime.Local().Format("2006-01-02")
 	shortID := s.ID
 	if len(shortID) > config.RecallShortIDLen {
 		shortID = shortID[:config.RecallShortIDLen]
 	}
-	return fmt.Sprintf(config.TplRecallFilename, date, s.Slug, shortID)
+	slug := s.Slug
+	if slugOverride != "" {
+		slug = slugOverride
+	}
+	return fmt.Sprintf(config.TplRecallFilename, date, slug, shortID)
 }
 
 // formatJournalEntryPart generates Markdown content for a part of a journal entry.
@@ -79,6 +88,7 @@ func formatJournalFilename(s *parser.Session) string {
 //   - part: Current part number (1-indexed)
 //   - totalParts: Total number of parts
 //   - baseName: Base filename without extension (for navigation links)
+//   - title: Human-readable title for frontmatter and H1 heading (may be empty)
 //
 // Returns:
 //   - string: Markdown content for this part
@@ -86,7 +96,7 @@ func formatJournalEntryPart(
 	s *parser.Session,
 	messages []parser.Message,
 	startMsgIdx, part, totalParts int,
-	baseName string,
+	baseName, title string,
 ) string {
 	var sb strings.Builder
 	nl := config.NewlineLF
@@ -110,14 +120,21 @@ func formatJournalEntryPart(
 		if s.Model != "" {
 			sb.WriteString(fmt.Sprintf("model: %s"+nl, s.Model))
 		}
+		sb.WriteString(fmt.Sprintf("session_id: %q"+nl, s.ID))
+		if title != "" {
+			sb.WriteString(fmt.Sprintf("title: %q"+nl, title))
+		}
 		sb.WriteString(sep + nl + nl)
 
-		// Header
-		if s.Slug != "" {
-			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, s.Slug))
-		} else {
-			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, baseName))
+		// Header — prefer title, fall back to slug, then baseName.
+		heading := title
+		if heading == "" {
+			heading = s.Slug
 		}
+		if heading == "" {
+			heading = baseName
+		}
+		sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, heading))
 
 		// Navigation header for multipart sessions
 		if totalParts > 1 {
@@ -176,12 +193,15 @@ func formatJournalEntryPart(
 			sb.WriteString(nl + sep + nl + nl)
 		}
 	} else {
-		// Header (non-part-1)
-		if s.Slug != "" {
-			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, s.Slug))
-		} else {
-			sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, baseName))
+		// Header (non-part-1) — same fallback as part 1.
+		heading := title
+		if heading == "" {
+			heading = s.Slug
 		}
+		if heading == "" {
+			heading = baseName
+		}
+		sb.WriteString(fmt.Sprintf(config.TplJournalPageHeading+nl+nl, heading))
 
 		// Navigation header for multipart sessions
 		if totalParts > 1 {
@@ -355,6 +375,14 @@ func formatTokens(tokens int) string {
 		return fmt.Sprintf("%.1fK", float64(tokens)/1000)
 	}
 	return fmt.Sprintf("%.1fM", float64(tokens)/1000000)
+}
+
+// truncate shortens s to max characters, appending "…" if truncated.
+func truncate(s string, max int) string {
+	if len(s) <= max {
+		return s
+	}
+	return s[:max-1] + "…"
 }
 
 // stripLineNumbers removes Claude Code's line number prefixes from content.

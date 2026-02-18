@@ -1,9 +1,11 @@
 ---
-title: "Defense in Depth: Securing AI Agents"
+title: Securing AI Agents
 icon: lucide/shield-check
 ---
 
 ![ctx](images/ctx-banner.png)
+
+# Defense in Depth: Securing AI Agents
 
 ## The Problem
 

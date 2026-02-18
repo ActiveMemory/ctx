@@ -1277,3 +1277,58 @@ func TestGenerateZensicalToml_NoTopics(t *testing.T) {
 		t.Error("toml should not have Topics nav when no topics provided")
 	}
 }
+
+func TestParseJournalEntry_SessionID(t *testing.T) {
+	tmpDir := t.TempDir()
+	filename := "2026-01-15-fix-auth-abc12345.md"
+	content := `---
+title: "Fix Authentication Bug"
+date: "2026-01-15"
+session_id: "abc12345-full-session-uuid"
+---
+
+# Fix Authentication Bug
+
+**Time**: 10:30:00
+**Project**: ctx
+
+Session content here.
+`
+	path := filepath.Join(tmpDir, filename)
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+
+	entry := parseJournalEntry(path, filename)
+
+	if entry.SessionID != "abc12345-full-session-uuid" {
+		t.Errorf("SessionID = %q, want %q", entry.SessionID, "abc12345-full-session-uuid")
+	}
+	if entry.Title != "Fix Authentication Bug" {
+		t.Errorf("Title = %q, want %q", entry.Title, "Fix Authentication Bug")
+	}
+}
+
+func TestParseJournalEntry_NoSessionID(t *testing.T) {
+	tmpDir := t.TempDir()
+	filename := "2026-01-15-old-slug-abc12345.md"
+	content := `---
+date: "2026-01-15"
+---
+
+# old-slug
+
+**Time**: 10:30:00
+**Project**: ctx
+`
+	path := filepath.Join(tmpDir, filename)
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+
+	entry := parseJournalEntry(path, filename)
+
+	if entry.SessionID != "" {
+		t.Errorf("SessionID should be empty for legacy files, got %q", entry.SessionID)
+	}
+}

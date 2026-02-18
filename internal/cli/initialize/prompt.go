@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // handlePromptMd creates or merges PROMPT.md in the project root.
@@ -49,12 +49,12 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	var templateContent []byte
 	var err error
 	if ralph {
-		templateContent, err = tpl.RalphTemplate(config.FilePromptMd)
+		templateContent, err = assets.RalphTemplate(config.FilePromptMd)
 		if err != nil {
 			return fmt.Errorf("failed to read ralph PROMPT.md template: %w", err)
 		}
 	} else {
-		templateContent, err = tpl.Template(config.FilePromptMd)
+		templateContent, err = assets.Template(config.FilePromptMd)
 		if err != nil {
 			return fmt.Errorf("failed to read PROMPT.md template: %w", err)
 		}

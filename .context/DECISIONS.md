@@ -55,7 +55,7 @@
 
 **Status**: Accepted
 
-**Context**: Considered symlinking .claude/skills/ctx-* to internal/tpl/claude/skills/ to avoid duplication
+**Context**: Considered symlinking .claude/skills/ctx-* to internal/assets/claude/skills/ to avoid duplication
 
 **Decision**: No symlinks for cross-directory skill sharing
 
@@ -69,13 +69,13 @@
 
 **Status**: Accepted
 
-**Context**: Discovered ctx-* skills were duplicated between .claude/skills/ and internal/tpl/claude/skills/, causing double entries in Claude Code's skill list
+**Context**: Discovered ctx-* skills were duplicated between .claude/skills/ and internal/assets/claude/skills/, causing double entries in Claude Code's skill list
 
 **Decision**: Single source of truth for distributed skills
 
-**Rationale**: internal/tpl/claude/skills/ is what gets embedded in the binary and served by the marketplace plugin — it is the distribution path. .claude/skills/ now holds only the 12 dev-only skills (release, qa, backup, etc.) that are never distributed
+**Rationale**: internal/assets/claude/skills/ is what gets embedded in the binary and served by the marketplace plugin — it is the distribution path. .claude/skills/ now holds only the 12 dev-only skills (release, qa, backup, etc.) that are never distributed
 
-**Consequences**: Skill edits for user-facing ctx-* skills happen in internal/tpl/claude/skills/. Dev-only skills live in .claude/skills/. No sync script needed.
+**Consequences**: Skill edits for user-facing ctx-* skills happen in internal/assets/claude/skills/. Dev-only skills live in .claude/skills/. No sync script needed.
 
 ---
 

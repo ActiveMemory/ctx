@@ -27,6 +27,7 @@ nav = [
   ]},
   { "Home" = [
     "about.md",
+    "is-ctx-right.md",
     "getting-started.md",
     "first-session.md",
     "common-workflows.md",

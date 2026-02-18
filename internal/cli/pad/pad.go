@@ -28,6 +28,10 @@ Entries are short one-liners encrypted with AES-256-GCM. The key is
 stored at .context/.scratchpad.key (gitignored). The encrypted file
 (.context/scratchpad.enc) is committed to git.
 
+File blobs can be stored as entries using "add --file". Blob entries use
+the format "label:::base64data" and are shown as "label [BLOB]" in the
+list view. Use "show N" to decode or "show N --out file" to write to disk.
+
 When invoked without a subcommand, lists all entries.
 
 Subcommands:
@@ -65,7 +69,7 @@ func runList(cmd *cobra.Command) error {
 	}
 
 	for i, entry := range entries {
-		cmd.Printf("  %d. %s\n", i+1, entry)
+		cmd.Printf("  %d. %s\n", i+1, displayEntry(entry))
 	}
 
 	return nil

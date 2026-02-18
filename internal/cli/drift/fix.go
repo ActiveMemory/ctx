@@ -21,7 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
-	"github.com/ActiveMemory/ctx/internal/tpl"
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // applyFixes attempts to auto-fix issues in the drift report.
@@ -182,7 +182,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 // Returns:
 //   - error: Non-nil if the template is not found or file write fails
 func fixMissingFile(filename string) error {
-	content, err := tpl.Template(filename)
+	content, err := assets.Template(filename)
 	if err != nil {
 		return errNoTemplate(filename, err)
 	}

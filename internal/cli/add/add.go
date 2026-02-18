@@ -67,7 +67,8 @@ Examples:
     --lesson "go:embed only works with files in same or child directories" \
     --application "Keep embedded files in internal/templates/, not project root"
   ctx add task "Implement user authentication" --priority high`,
-		Args: cobra.MinimumNArgs(1),
+		Args:      cobra.MinimumNArgs(1),
+		ValidArgs: []string{"task", "decision", "learning", "convention"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runAdd(cmd, args, addConfig{
 				priority:     priority,
@@ -87,6 +88,9 @@ Examples:
 		"priority", "p", "",
 		"Priority level for tasks (high, medium, low)",
 	)
+	_ = cmd.RegisterFlagCompletionFunc("priority", func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"high", "medium", "low"}, cobra.ShellCompDirectiveNoFileComp
+	})
 	cmd.Flags().StringVarP(
 		&section,
 		"section", "s", "",

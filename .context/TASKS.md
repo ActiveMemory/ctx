@@ -18,7 +18,7 @@ Analysis of 69 sessions found 8 recurring workflow patterns.
   all ctx-shipped skills with name, one-liner description, and link to the recipe 
   or doc page that covers it in depth. Analogous to cli-reference.md but for 
   slash commands. Scope: ctx-bundled skills only
-  (shipped via internal/tpl/claude/skills/); project-specific skills are out of 
+  (shipped via internal/assets/claude/skills/); project-specific skills are out of 
   scope. Should include: skill name, description, when to use, key commands it 
   wraps, and cross-links to recipes where the skill appears. 
   #priority:medium #added:2026-02-14-125604
@@ -94,9 +94,14 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
 - [x] ~~Add drift check: verify .claude/hooks/*.sh files have execute permission~~ Moot: hooks are now Go subcommands (v0.6.0 plugin conversion) #priority:medium #added:2026-02-15-194829 #done:2026-02-16
 
-- [ ] Add binary/plugin version drift detection hook. A session-start or PreToolUse hook that runs ctx --version, compares the binary semver against the plugin's expected minimum version, and emits a warning if mismatched (e.g. 'Your ctx binary is v0.5.x but this plugin expects v0.6.x — reinstall the binary to get the best out of ctx'). Use an existing hook warning pattern. The plugin cannot and should not auto-install the binary (requires sudo). #priority:medium #added:2026-02-16-155633
+- [x] Add binary/plugin version drift detection hook. A session-start or PreToolUse hook that runs ctx --version, compares the binary semver against the plugin's expected minimum version, and emits a warning if mismatched (e.g. 'Your ctx binary is v0.5.x but this plugin expects v0.6.x — reinstall the binary to get the best out of ctx'). Use an existing hook warning pattern. The plugin cannot and should not auto-install the binary (requires sudo). #priority:medium #added:2026-02-16-155633 #done:2026-02-17
+      Done: `ctx system check-version` hook — compares `config.BinaryVersion` (ldflags)
+      against embedded `plugin.json` version. Daily throttle, skips dev builds.
+      Registered in system.go, added to hooks.json under UserPromptSubmit.
 
-- [ ] Rename journal slugs to title-based filenames #priority:medium #added:2026-02-16-141643
+- [x] Rename journal slugs to title-based filenames #priority:medium #added:2026-02-16-141643 #done:2026-02-17
+      Done: Title-based slugs (enriched title > FirstUserMsg > Claude slug > short ID),
+      session_id in YAML frontmatter, dedup via session index with rename-on-re-export.
 
 - [ ] Blog: "Building a Claude Code Marketplace Plugin" — narrative from session history, journals, and git diff of feat/plugin-conversion branch. Covers: motivation (shell hooks to Go subcommands), plugin directory layout, marketplace.json, eliminating make plugin, bugs found during dogfooding (hooks creating partial .context/), and the fix. Use /ctx-blog-changelog with branch diff as source material. #added:2026-02-16-111948
 
@@ -104,21 +109,37 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 
 - [x] Hooks should no-op when .context/ is not properly initialized (missing essential files). Currently hooks create .context/logs/ as side effect before ctx init, then ctx init thinks the dir is already initialized. #added:2026-02-16-110721 #done:2026-02-16
 
-- [ ] Rename internal/tpl to internal/assets -- the package now holds both .context/ templates and the Claude Code plugin (skills, hooks, manifest). "tpl" is misleading. Mechanical refactor: rename dir, update all ~15 import sites, update embed.go package doc. Low priority, no behavior change. #added:2026-02-16-104745
+- [x] Rename internal/tpl to internal/assets -- the package now holds both .context/ templates and the Claude Code plugin (skills, hooks, manifest). "tpl" is misleading. Mechanical refactor: rename dir, update all ~15 import sites, update embed.go package doc. Low priority, no behavior change. #added:2026-02-16-104745 #done:2026-02-17
+      Done: Renamed dir, updated package declaration, 10 Go import sites,
+      17 doc/context/skill/config files, glossary entry. Historical specs/ untouched.
 
-- [ ] Align ctx recall list CLI output with docs: columnar table format with aligned headers (Slug, Project, Date, Duration, Turns, Tokens) #priority:high #added:2026-02-15-192053
+- [x] Align ctx recall list CLI output with docs: columnar table format with aligned headers (Slug, Project, Date, Duration, Turns, Tokens) #priority:high #added:2026-02-15-192053 #done:2026-02-17
+      Done: Replaced multi-line per-session format with single-row columnar
+      table. Dynamic slug/project widths, truncate helper for long slugs.
 
-- [ ] Increase recall test coverage from 8.8% to 50%+. Core user-facing
+- [x] Increase recall test coverage from 8.8% to 50%+. Core user-facing
       feature with near-zero safety net. Session format has already
-      changed once. #priority:high #source:report-6
+      changed once. #priority:high #source:report-6 #done:2026-02-17
+      Done: 84.0% coverage. All new slug/index/dedup functions at 87-100%.
 
-- [ ] CI coverage enforcement: extend `test-coverage` Makefile target
+- [-] CI coverage enforcement: extend `test-coverage` Makefile target
       beyond just `internal/context` to enforce project-wide and
       per-package minimums. #priority:medium #source:report-6
+      Skipped: Replaced with HTML coverage report task below.
 
-- [ ] Shell completion enrichment: add subcommand argument completions
+- [x] HTML coverage report: generate browsable HTML coverage output
+      (go tool cover -html) and optionally publish to the docs site.
+      Add as part of a `make audit` target that runs vet, test, and
+      coverage in one pass for pre-commit checks. #priority:medium
+      #added:2026-02-17 #done:2026-02-17
+      Done: Replaced `make test-cover` (was duplicate of `test`) with
+      HTML report generation → dist/coverage.html.
+
+- [x] Shell completion enrichment: add subcommand argument completions
       (e.g., `ctx add task|decision|learning|convention`). Cobra supports
-      this natively. #priority:low #source:report-6
+      this natively. #priority:low #source:report-6 #done:2026-02-17
+      Done: ValidArgs on `ctx add` for entry types, RegisterFlagCompletionFunc
+      on --priority for high/medium/low. Both with ShellCompDirectiveNoFileComp.
 
 - [ ] MCP server integration: expose context as tools/resources via Model
       Context Protocol. Would enable deep integration with any
@@ -127,21 +148,31 @@ Overall risk LOW. No critical/high findings. 3 medium, 5 low.
 **User-Facing Documentation** (from `ideas/REPORT-7-documentation.md`):
 Docs are feature-organized, not problem-organized. Key structural improvements:
 
-- [ ] Create use-case page: "I Keep Re-Explaining My Codebase" -- the #1
+- [x] Create use-case page: "I Keep Re-Explaining My Codebase" -- the #1
       pain point driving adoption. Lead with the problem, show ctx
-      solution, before/after comparison. #priority:high #source:report-7
+      solution, before/after comparison. #priority:high #source:report-7 #done:2026-02-17
+      Done: docs/re-explaining.md — pain-point landing page with problem statement,
+      before/after comparison, mechanism overview, and 5-minute try-it path.
 
-- [ ] Create use-case page: "Is ctx Right for My Project?" -- decision
+- [x] Create use-case page: "Is ctx Right for My Project?" -- decision
       framework for evaluation, good fit vs not right fit,
-      try-in-5-minutes. #priority:high #source:report-7
+      try-in-5-minutes. #priority:high #source:report-7 #done:2026-02-17
+      Done: docs/is-ctx-right.md — good fit/not right fit checklists, project size
+      guide, zero-commitment 5-minute trial, links to Getting Started and Comparison.
 
-- [ ] Expand Getting Started with guided first-session walkthrough showing
+- [x] Expand Getting Started with guided first-session walkthrough showing
       full interaction end-to-end (what user types, what ctx outputs,
-      what AI says back). #priority:medium #source:report-7
+      what AI says back). #priority:medium #source:report-7 #done:2026-02-17
+      Done: Already covered by docs/first-session.md — 5-step walkthrough
+      with exact commands, outputs, and AI response.
 
-- [ ] Reorder site navigation: promote Prompting Guide and Context Files
+- [x] Reorder site navigation: promote Prompting Guide and Context Files
       higher, demote Session Journal and Autonomous Loops. Current order
-      front-loads advanced features. #priority:medium #source:report-7
+      front-loads advanced features. #priority:medium #source:report-7 #done:2026-02-17
+      Done: Nav has been significantly restructured since this was filed.
+      Context Files and Prompting Guide are in Home. Session Journal is in
+      Reference, Autonomous Loops in Recipes. Current order is a natural
+      funnel from problem → setup → daily use → reference.
 
 - [x] Cross-reference blog posts from documentation pages via "Further
       Reading" sections (6 specific link suggestions in
@@ -149,13 +180,18 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
       Done: Added "Further Reading" to autonomous-loop, prompting-guide,
       integrations, context-files, and comparison pages.
 
-- [ ] Create migration/adoption guide for existing projects: how ctx
+- [-] Create migration/adoption guide for existing projects: how ctx
       interacts with existing CLAUDE.md, .cursorrules, the --merge
       flag in workflow context. #priority:medium #source:report-7
+      Skipped: No migration needed — ctx is additive markdown files.
+      Coexistence with CLAUDE.md/.cursorrules already covered in
+      Getting Started and Integrations.
 
-- [ ] Create troubleshooting page: consolidate scattered troubleshooting
+- [-] Create troubleshooting page: consolidate scattered troubleshooting
       into one page (ctx not in PATH, hooks not firing, context not
       loading). #priority:low #source:report-7
+      Skipped: Not enough content to warrant a page. The few troubleshooting
+      items are already inline where they belong (Integrations, Autonomous Loop).
 
 **Agent Team Strategies** (from `ideas/REPORT-8-agent-teams.md`):
 8 team compositions proposed. Reference material, not tasks. Key takeaways:
@@ -173,11 +209,13 @@ Spec: `specs/scratchpad.md`
 
 **Documentation:**
 
-- [ ] P3.19: Update Getting Started / Quick Start to mention scratchpad
-      as part of `ctx init` output. #priority:low #added:2026-02-13
+- [x] P3.19: Update Getting Started / Quick Start to mention scratchpad
+      as part of `ctx init` output. #priority:low #added:2026-02-13 #done:2026-02-17
+      Done: Added scratchpad mention to Getting Started init section.
 
-- [ ] P3.20: Update `ctx help` (when it exists) to include `pad` command.
-      #priority:low #added:2026-02-13
+- [x] P3.20: Update `ctx help` (when it exists) to include `pad` command.
+      #priority:low #added:2026-02-13 #done:2026-02-17
+      Done: `pad` already appears in `ctx --help` via Cobra registration.
 
 ### Phase 4: Obsidian Vault Export (`ctx journal obsidian`) `#priority:high`
 
@@ -356,17 +394,21 @@ indexing — grep across 100+ journal files won't scale.
 
 **GitHub Issues**:
 
-- [ ] GH-6: Fix `ctx journal site --build` silent failure on macOS system
+- [x] GH-6: Fix `ctx journal site --build` silent failure on macOS system
       Python 3.9. The stub package v0.0.2 installs but has no CLI binary.
       Update error message to suggest `pipx install zensical` and note
       Python >= 3.10 requirement. #priority:high #source:github-issue-6
-      #added:2026-02-11
+      #added:2026-02-11 #done:2026-02-17
+      Done: Updated error messages in journal/err.go and serve/err.go
+      to include "(requires Python >= 3.10)".
 
-- [ ] GH-8: Replace `pip install zensical` → `pipx install zensical` across
+- [x] GH-8: Replace `pip install zensical` → `pipx install zensical` across
       docs and Go error messages. 5 doc files + 4 Go source locations need
       updating. Keep Makefile's `.venv/bin/pip install` as-is (venv context).
       See issue for full file:line inventory. #priority:high #source:github-issue-8
-      #added:2026-02-11
+      #added:2026-02-11 #done:2026-02-17
+      Done: Go source already used pipx. Replaced Makefile .venv approach
+      with direct pipx/zensical calls. Updated docs/contributing.md.
 
 
 ## Blocked

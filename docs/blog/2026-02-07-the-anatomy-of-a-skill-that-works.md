@@ -258,7 +258,7 @@ the table, something is wrong.
 
 `ctx` deploys skills through templates (via `ctx init`). Every
 skill exists in two places: the live version (`.claude/skills/`)
-and the template (`internal/tpl/claude/skills/`).
+and the template (`internal/assets/claude/skills/`).
 
 They must match.
 
@@ -275,7 +275,7 @@ the drift check into your workflow.** We added a row to the
 `update-docs` skill's mapping table specifically for this:
 
 ```markdown
-| `internal/tpl/claude/skills/` | `.claude/skills/` (live) |
+| `internal/assets/claude/skills/` | `.claude/skills/` (live) |
 ```
 
 Intentional differences (*like project-specific scripts in the

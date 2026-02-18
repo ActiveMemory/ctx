@@ -55,7 +55,7 @@ ctx add learning "Agent ignores repeated hook output (repetition fatigue)" \
 ctx add learning "go:embed only works with files in same or child directories" \
   --context "Tried to embed files from parent directory, got compile error" \
   --lesson "go:embed paths are relative to the source file and cannot use .. to escape the package" \
-  --application "Keep embedded files in internal/tpl/ or child directories, not project root"
+  --application "Keep embedded files in internal/assets/ or child directories, not project root"
 ```
 
 **Example — workflow insight:**

@@ -230,7 +230,7 @@ Continuity is **not** a feature; it is a **design decision**.
 If you want the actual setup (*VPS, ZNC, TLS, SASL, firewall...*) there is
 a step-by-step runbook:
 
-**[Persistent IRC Presence with ZNC](https://github.com/ActiveMemory/ctx/blob/main/hack/persistent-irc.md)**.
+**[Persistent IRC Presence with ZNC](https://github.com/ActiveMemory/ctx/blob/main/hack/runbooks/persistent-irc.md)**.
 
 ---
 
