@@ -26,6 +26,10 @@ linters:
       # Test files use literal strings for clarity
       - linters: [goconst]
         path: "_test\\.go"
+      # Test files construct paths from test constants, not user input
+      - linters: [gosec]
+        text: "G304"
+        path: "_test\\.go"
 
 run:
   timeout: 5m
