@@ -65,9 +65,9 @@ The early reports arrived without coordination:
 !!! quote "Why the Cloak and Dagger?"
     "Why is this not in the marketplace?"
 
-And then something more important happened.
+And then something more important happened:
 
-Someone else started making a video.
+Someone else started making a video!
 
 That was the **boundary**.
 
