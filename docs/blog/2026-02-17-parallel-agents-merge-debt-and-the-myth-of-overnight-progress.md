@@ -367,10 +367,11 @@ The entire blog series has been circling this point:
   decoration.
 * The [worktrees post][worktrees-post] was about multiplying throughput
   without multiplying interference. 
-* The [discipline release][discipline-post] was about what a release looks 
-  like when polish outweighs features: `3:1`.
+* The [discipline release][discipline-post] was about what a release looks
+  like when polish outweighs features: [3:1][ratio].
 
 [discipline-post]: 2026-02-15-ctx-v0.3.0-the-discipline-release.md
+[ratio]: 2026-02-17-the-3-1-ratio.md
 
 Every post has arrived (*and made me converge*) at the same answer so far: 
 

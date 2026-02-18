@@ -120,7 +120,7 @@ repo_url = "https://github.com/ActiveMemory/ctx"
 repo_name = "ActiveMemory/ctx"
 copyright = """
 Copyright &copy; 2026&ndash;present <a href="https://github.com/ActiveMemory/ctx/">Context contributors</a>.<br>
-Context's code is distributed under
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code></a>'s code is distributed under
 <a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
 """
 

@@ -215,9 +215,11 @@ that *this* codebase has 80 hardcoded permission literals because nobody
 made a constant, that **this team**'s test files drift wide because the 
 agent prioritizes getting the task done over keeping the code in shape.
 
-!!! note "The Parallel to the 3:1 Ratio"
+!!! note "The Parallel to the [3:1 Ratio][ratio]"
     In [Refactoring with Intent][refactoring-post], I described the 3:1
     ratio: three YOLO sessions followed by one consolidation session.
+
+[ratio]: 2026-02-17-the-3-1-ratio.md
 
     The same ratio applies to skills: you need experience *in* the project
     before you can write effective guidance *for* the project.

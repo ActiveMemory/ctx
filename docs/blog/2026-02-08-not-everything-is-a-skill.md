@@ -295,7 +295,7 @@ should be a YOLO sprint.
   is worth importing. Now the audit is teaching me that 
   **not every useful prompt is worth institutionalizing**.
 
-[refactor-post]: 2026-02-01-refactoring-with-intent.md
+[refactor-post]: 2026-02-17-the-3-1-ratio.md
 
 The common thread is **restraint**: Knowing when to stop. Recognizing
 that the cost of automation is not just the effort to build it.

@@ -250,10 +250,12 @@ YOLO mode has its place: for *prototyping*, *exploration*, and *discovery*.
 **BUT** (*and it's a huge "but"*), it needs to be followed by 
 **consolidation sessions**.
 
-The ratio that worked for me: **3:1**.
+The ratio that worked for me: **[3:1][ratio]**.
 
 * Three YOLO sessions create enough surface area to reveal patterns;
 * the fourth session turns those patterns into structure.
+
+[ratio]: 2026-02-17-the-3-1-ratio.md "The 3:1 Ratio: the evidence and the practice"
 
 ### 2. Documentation **IS** Code
 

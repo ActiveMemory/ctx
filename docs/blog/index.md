@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [The 3:1 Ratio](2026-02-17-the-3-1-ratio.md)
+
+*Jose Alekhinne / February 17, 2026*
+
+AI-assisted development makes technical debt worse -- not because the AI
+writes bad code, but because it writes code so fast that drift accumulates
+before you notice. Three weeks of git history prove a rhythm: three feature
+sessions, one consolidation session. This post shows the evidence, the
+concrete drift that accumulated, and the decision matrix for when to clean
+up versus leave things alone.
+
+**Topics**: consolidation, technical debt, development workflow, convention
+drift, code quality
+
+---
+
 ### [Parallel Agents, Merge Debt, and the Myth of Overnight Progress](2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress.md)
 
 *Jose Alekhinne / February 17, 2026*

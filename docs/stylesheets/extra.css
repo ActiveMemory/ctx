@@ -28,6 +28,11 @@
     color: #F5C46A;
   }
 
+  .md-typeset a code {
+    color: #F5C46A;
+    background: none !important;
+  }
+
   .md-typeset hr {
     border-bottom: .05rem solid #C48A1A;
     display: flow-root;
