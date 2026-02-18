@@ -235,6 +235,48 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
       (3-4 agents), release prep (2 agents), doc sprint (3 agents).
       Include coordination patterns and anti-patterns. #priority:low #source:report-8
 
+### PR Review: VS Code/Copilot Integration (GH-16) `#priority:high`
+
+**Context**: PR #16 by @bilersan adds VS Code/Copilot support — a Markdown
+session parser, `ctx hook copilot --write`, and a VS Code chat participant
+extension. 7993 additions, touches recall parser, hook, init, and config.
+https://github.com/ActiveMemory/ctx/pull/16
+
+- [ ] PR-16.1: Baseline — verify current parser behavior is intact.
+      Run full journal pipeline (export → normalize → enrich → site build)
+      on main branch BEFORE applying PR changes. Back up the resulting
+      journal-site output as the baseline artifact.
+      #priority:high #added:2026-02-17
+
+- [ ] PR-16.2: Apply PR changes and re-run the full journal pipeline
+      (export → normalize → enrich → site build) with the proposed code.
+      Visually inspect the journal website for rendering issues, missing
+      entries, or format changes.
+      #priority:high #added:2026-02-17
+
+- [ ] PR-16.3: Semantic diff — compare baseline journal output against
+      PR journal output. Check for: missing sessions, changed turn
+      attribution (human vs assistant), lost metadata, format differences
+      in exported Markdown. Any discrepancy in existing Claude Code
+      sessions is a regression.
+      #priority:high #added:2026-02-17
+
+- [ ] PR-16.4: Code quality review. Assess:
+      (a) Does MarkdownSessionParser respect the existing parser interface
+          (`parser.go`, `parse.go`)? (b) Are the hook/init changes backward
+          compatible? (c) Does `config/dir.go` and `config/file.go` follow
+          existing constant naming conventions? (d) Test coverage — are the
+          390 lines of parser tests sufficient for edge cases? (e) Does the
+          VS Code extension follow reasonable practices (bundling, security,
+          error handling)? (f) Are there any concerns about the `.context/sessions/`
+          directory creation in init (given the journal consolidation)?
+      #priority:high #added:2026-02-17
+
+- [ ] PR-16.5: Post-review — leave structured feedback on the PR with
+      findings from PR-16.1 through PR-16.4. Approve, request changes,
+      or comment based on results.
+      #priority:high #added:2026-02-17
+
 ### Phase 3: Encrypted Scratchpad (`ctx pad`) `#priority:high`
 
 **Context**: Secure one-liner scratchpad, encrypted at rest, synced via git.

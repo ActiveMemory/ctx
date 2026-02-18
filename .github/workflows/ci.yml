@@ -33,6 +33,19 @@ jobs:
       - name: Vet
         run: CGO_ENABLED=0 go vet ./...
 
+  dco:
+    name: DCO
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check DCO sign-off
+        uses: tim-actions/dco@master
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
