@@ -28,6 +28,25 @@
     color: #F5C46A;
   }
 
+  /* Firefox */
+  .md-sidebar__scrollwrap:focus-within,
+  .md-sidebar__scrollwrap:hover {
+    scrollbar-color: #C48A1A #0000;
+  }
+
+  /* WebKit */
+  .md-sidebar__scrollwrap::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  .md-sidebar__scrollwrap:hover::-webkit-scrollbar-thumb {
+    background-color: #C48A1A;
+  }
+
+  .md-sidebar__scrollwrap::-webkit-scrollbar-thumb:active {
+    background-color: #F2B94B;
+  }
+
   .md-typeset .headerlink:focus,
   .md-typeset .headerlink:hover,
   .md-typeset :target > .headerlink {
