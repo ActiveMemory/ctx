@@ -189,8 +189,8 @@ Most complex work is **not** execution. It is:
 
 The system becomes real when two things happen:
 
-1. It can be installed as a versioned artifact
-2. It survives contact with a hostile, real codebase
+1. It can be installed as a *versioned artifact**.
+2. It **survives** contact with a hostile, real codebase.
 
 This is why the  
 [first integration into a living system](2026-02-16-ctx-v0.6.0-the-integration-release.md)  
