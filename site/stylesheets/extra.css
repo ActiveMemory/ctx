@@ -55,6 +55,10 @@
     transition: color .18s ease, text-shadow .18s ease;
   }
 
+  .md-nav--secondary .md-nav__link[for]:focus, .md-nav--secondary .md-nav__link[for]:hover, .md-nav--secondary .md-nav__link[href]:focus, .md-nav--secondary .md-nav__link[href]:hover {
+    color: #FFE3A8;
+  }
+
   .md-typeset a code {
     color: #F5C46A;
     background: none !important;
