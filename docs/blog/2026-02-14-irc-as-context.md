@@ -245,3 +245,10 @@ When my client connects to my bouncer, it prints:
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 ```
+
+---
+
+*See also: [Context as Infrastructure](2026-02-17-context-as-infrastructure.md)
+-- the post that takes this observation to its conclusion: stateless
+protocols need stateful wrappers, and AI sessions need persistent
+filesystems.*

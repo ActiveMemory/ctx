@@ -276,7 +276,7 @@ This is the same kind of decision that shows up throughout `ctx`:
 
 [fight]: 2026-02-04-skills-that-fight-the-platform.md
 [import]: 2026-02-05-you-cant-import-expertise.md
-[infra]: ../../ideas/blog-draft-2026-02-12-context-as-infrastructure.md
+[infra]: 2026-02-17-context-as-infrastructure.md
 
 ---
 

@@ -7,6 +7,7 @@
 package rc
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -26,8 +27,10 @@ func loadRC() *CtxRC {
 	// Try to load .contextrc from the current directory
 	data, err := os.ReadFile(config.FileContextRC)
 	if err == nil {
-		// Parse YAML, ignoring errors (use defaults for invalid config)
-		_ = yaml.Unmarshal(data, cfg)
+		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
+			fmt.Fprintf(os.Stderr, "ctx: warning: failed to parse %s: %v (using defaults)\n",
+				config.FileContextRC, yamlErr)
+		}
 	}
 
 	// Apply environment variable overrides

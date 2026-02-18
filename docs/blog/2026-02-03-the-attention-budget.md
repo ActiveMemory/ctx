@@ -328,6 +328,10 @@ Your AI will thank you.
 
 ---
 
+*See also: [Context as Infrastructure](2026-02-17-context-as-infrastructure.md)
+-- the architectural companion to this post, explaining how to structure
+the context that this post teaches you to budget.*
+
 *See also: [Code Is Cheap. Judgment Is Not.](2026-02-17-code-is-cheap-judgment-is-not.md)
 -- why curation (the human skill this post describes) is the bottleneck
 that AI cannot solve, and the thread that connects every post in this

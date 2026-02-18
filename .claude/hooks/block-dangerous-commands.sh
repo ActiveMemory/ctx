@@ -57,9 +57,7 @@ if [ -z "$BLOCKED_REASON" ] && echo "$COMMAND" | grep -qE '(^|;|&&|\|\||\|)\s*(/
 fi
 
 if [ -n "$BLOCKED_REASON" ]; then
-  cat << EOF
-{"decision": "block", "reason": "$BLOCKED_REASON"}
-EOF
+  jq -n --arg reason "$BLOCKED_REASON" '{"decision":"block","reason":$reason}'
   exit 0
 fi
 

@@ -12,7 +12,7 @@
         <meta name="author" content="Jose Alekhinne">
       
       
-        <link rel="canonical" href="https://ctx.ist/blog/2026-02-07-the-anatomy-of-a-skill-that-works/">
+        <link rel="canonical" href="https://ctx.ist/blog/2026-02-17-context-as-infrastructure/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>The Anatomy of a Skill That Works - ctx: do you remember?</title>
+        <title>Context as Infrastructure - ctx: do you remember?</title>
       
     
     
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#the-anatomy-of-a-skill-that-works" class="md-skip">
+        <a href="#context-as-infrastructure" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              The Anatomy of a Skill That Works
+              Context as Infrastructure
             
           </span>
         </div>
@@ -1970,10 +1970,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-20-skill-rewrites-taught-me-about-guiding-ai" class="md-nav__link">
+  <a href="#why-your-ai-needs-a-filesystem-not-a-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What 20 Skill Rewrites Taught Me About Guiding AI
+        Why Your AI Needs a Filesystem, Not a Prompt
       
     </span>
   </a>
@@ -1981,10 +1981,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-starting-point" class="md-nav__link">
+  <a href="#the-prompt-paradigm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Starting Point
+        The Prompt Paradigm
       
     </span>
   </a>
@@ -1992,10 +1992,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-pattern-that-emerged" class="md-nav__link">
+  <a href="#the-infrastructure-paradigm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Pattern That Emerged
+        The Infrastructure Paradigm
       
     </span>
   </a>
@@ -2003,10 +2003,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lesson-1-quality-gates-prevent-premature-execution" class="md-nav__link">
+  <a href="#separation-of-concerns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lesson 1: Quality Gates Prevent Premature Execution
+        Separation of Concerns
       
     </span>
   </a>
@@ -2014,10 +2014,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lesson-2-when-not-to-use-is-not-optional" class="md-nav__link">
+  <a href="#the-two-tier-persistence-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lesson 2: "When NOT to Use" Is Not Optional
+        The Two-Tier Persistence Model
       
     </span>
   </a>
@@ -2025,10 +2025,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lesson-3-examples-set-boundaries-better-than-rules" class="md-nav__link">
+  <a href="#decision-records-as-first-class-citizens" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lesson 3: Examples Set Boundaries Better Than Rules
+        Decision Records as First-Class Citizens
       
     </span>
   </a>
@@ -2036,10 +2036,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lesson-4-skills-are-read-by-agents-not-humans" class="md-nav__link">
+  <a href="#the-ide-is-the-interface-decision" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lesson 4: Skills Are Read by Agents, Not Humans
+        The "IDE Is the Interface" Decision
       
     </span>
   </a>
@@ -2047,10 +2047,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lesson-5-the-description-field-is-the-trigger" class="md-nav__link">
+  <a href="#progressive-disclosure-for-ai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lesson 5: The Description Field Is the Trigger
+        Progressive Disclosure for AI
       
     </span>
   </a>
@@ -2058,10 +2058,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lesson-6-flag-tables-beat-prose" class="md-nav__link">
+  <a href="#the-philosophical-shift" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lesson 6: Flag Tables Beat Prose
+        The Philosophical Shift
       
     </span>
   </a>
@@ -2069,10 +2069,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lesson-7-template-drift-is-a-real-maintenance-burden" class="md-nav__link">
+  <a href="#beyond-ctx-the-principles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lesson 7: Template Drift Is a Real Maintenance Burden
+        Beyond ctx: The Principles
       
     </span>
   </a>
@@ -2080,21 +2080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-rewrite-scorecard" class="md-nav__link">
+  <a href="#the-arc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Rewrite Scorecard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-meta-lesson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Meta-Lesson
+        The Arc
       
     </span>
   </a>
@@ -2127,340 +2116,465 @@
   
 
 
-<h1 id="the-anatomy-of-a-skill-that-works">The Anatomy of a Skill That Works<a class="headerlink" href="#the-anatomy-of-a-skill-that-works" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Update (2026-02-11)</p>
-<p>As of v0.4.0, ctx consolidated sessions into the journal mechanism.
-References to <code>ctx-save</code>, <code>ctx session</code>, and <code>.context/sessions/</code>
-in this post reflect the architecture at the time of writing.</p>
-</div>
+<h1 id="context-as-infrastructure">Context as Infrastructure<a class="headerlink" href="#context-as-infrastructure" title="Permanent link">&para;</a></h1>
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="what-20-skill-rewrites-taught-me-about-guiding-ai">What 20 Skill Rewrites Taught Me About Guiding AI<a class="headerlink" href="#what-20-skill-rewrites-taught-me-about-guiding-ai" title="Permanent link">&para;</a></h2>
-<p><em>Jose Alekhinne / 2026-02-07</em></p>
+<h2 id="why-your-ai-needs-a-filesystem-not-a-prompt">Why Your AI Needs a Filesystem, Not a Prompt<a class="headerlink" href="#why-your-ai-needs-a-filesystem-not-a-prompt" title="Permanent link">&para;</a></h2>
+<p><em>Jose Alekhinne / February 17, 2026</em></p>
 <div class="admonition question">
-<p class="admonition-title">Why do some skills produce great results while others get ignored or produce garbage?</p>
-<p>I had 20 skills. Most were well-intentioned stubs: a description,
-a command to run, and a wish for the best.</p>
-<p>Then I <strong>rewrote all of them in a single session</strong>. This is what I learned.</p>
+<p class="admonition-title">Where does your AI's knowledge live between sessions?</p>
+<p>If the answer is "in a prompt I paste at the start," you are treating
+context as a <strong>consumable</strong>. Something assembled, used, and discarded.</p>
+<p>What if you treated it as <strong>infrastructure</strong> instead?</p>
 </div>
-<p>In <a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>, I described what skills
-should <em>not</em> do. In <a href="../2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a>, I showed
-why templates fail. This post completes the trilogy: the concrete
-patterns that make a skill actually work.</p>
-<h2 id="the-starting-point">The Starting Point<a class="headerlink" href="#the-starting-point" title="Permanent link">&para;</a></h2>
-<p>Here is what a typical skill looked like before the rewrite:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>name: ctx-save
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gu">description: &quot;Save session snapshot.&quot;</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gu">---</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Save the current context state to <span class="sb">`.context/sessions/`</span>.
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gu">## Execution</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ctx session save $ARGUMENTS
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Report the saved session file path to the user.
-</span></code></pre></div>
-<p>Seven lines of body. A vague description. No guidance on <em>when</em> to use
-it, <em>when not to</em>, what the command actually accepts, or how to tell
-if it worked.</p>
-<p>As a result, the agent would either never trigger the skill (<em>the
-description was too vague</em>), or trigger it and produce shallow output
-(<em>no examples to calibrate quality</em>).</p>
-<p><strong>A skill without boundaries is just a suggestion.</strong></p>
-<p>More precisely: the most effective boundary I found was a <strong>quality gate
-that runs <em>before</em> execution</strong>, not during it.</p>
-<h2 id="the-pattern-that-emerged">The Pattern That Emerged<a class="headerlink" href="#the-pattern-that-emerged" title="Permanent link">&para;</a></h2>
-<p>After rewriting 20 skills, a <strong>repeatable anatomy</strong> emerged—independent
-of the skill’s purpose. Not every skill needs every section, but the
-effective ones share the same bones:</p>
-<table>
-<thead>
-<tr>
-<th>Section</th>
-<th>What It Does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Before X-ing</td>
-<td>Pre-flight checks; prevents premature execution</td>
-</tr>
-<tr>
-<td>When to Use</td>
-<td>Positive triggers; narrows activation</td>
-</tr>
-<tr>
-<td>When NOT to Use</td>
-<td>Negative triggers; prevents misuse</td>
-</tr>
-<tr>
-<td>Usage Examples</td>
-<td>Invocation patterns the agent can pattern-match</td>
-</tr>
-<tr>
-<td>Process/Execution</td>
-<td>What to do; commands, steps, flags</td>
-</tr>
-<tr>
-<td>Good/Bad Examples</td>
-<td>Desired vs undesired output; sets boundaries</td>
-</tr>
-<tr>
-<td>Quality Checklist</td>
-<td>Verify before claiming completion</td>
-</tr>
-</tbody>
-</table>
-<p>I realized <strong>the first three sections matter more than the rest</strong>;
-because <strong>a skill with great execution steps but no activation guidance
-is like a manual for a tool nobody knows they have</strong>.</p>
+<p>This post synthesizes a thread that has been running through every
+<code>ctx</code> blog post -- from the <a href="../2026-01-27-building-ctx-using-ctx/">origin story</a> to the
+<a href="../2026-02-03-the-attention-budget/">attention budget</a> to the <a href="../2026-02-15-ctx-v0.3.0-the-discipline-release/">discipline release</a>.
+The thread is this: <strong>context is not a prompt problem. It is an
+infrastructure problem.</strong> And the tools we build for it should look
+more like filesystems than clipboard managers.</p>
+<hr />
+<h2 id="the-prompt-paradigm">The Prompt Paradigm<a class="headerlink" href="#the-prompt-paradigm" title="Permanent link">&para;</a></h2>
+<p>Most AI-assisted development treats context as ephemeral:</p>
+<ol>
+<li>Start a session.</li>
+<li>Paste your system prompt, your conventions, your current task.</li>
+<li>Work.</li>
+<li>Session ends. Everything evaporates.</li>
+<li>Next session: paste again.</li>
+</ol>
+<p>This works for short interactions. For sustained development -- where
+decisions compound over days and weeks -- it fails in three ways:</p>
+<p><strong>It does not persist.</strong> A decision made on Tuesday must be re-explained
+on Wednesday. A learning captured in one session is invisible to the
+next.</p>
+<p><strong>It does not scale.</strong> As the project grows, the "paste everything"
+approach hits the context window ceiling. You start triaging what to
+include, often cutting exactly the context that would have prevented
+the next mistake.</p>
+<p><strong>It does not compose.</strong> A system prompt is a monolith. You cannot
+load part of it, update one section, or share a subset with a different
+workflow. It is all or nothing.</p>
 <div class="admonition warning">
-<p class="admonition-title">Anti-Pattern: The Perfect Execution Trap</p>
-<p>A skill with detailed execution steps but no activation guidance
-will fail more often than a vague skill—because it executes
-confidently at the wrong time.</p>
+<p class="admonition-title">The Copy-Paste Tax</p>
+<p>Every session that starts with pasting a prompt is paying a tax:
+the human time to assemble the context, the risk of forgetting
+something, and the silent assumption that yesterday's prompt is
+still accurate today.</p>
+<p>Over 70+ sessions, that tax compounds into a significant
+maintenance burden -- one that most developers absorb without
+questioning it.</p>
 </div>
-<h2 id="lesson-1-quality-gates-prevent-premature-execution">Lesson 1: Quality Gates Prevent Premature Execution<a class="headerlink" href="#lesson-1-quality-gates-prevent-premature-execution" title="Permanent link">&para;</a></h2>
-<p>The single most impactful addition was a "<em>Before X-ing</em>" section at the
-top of each skill. Not process steps; pre-flight checks.</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gu">## Before Recording</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">1.</span> <span class="gs">**Check if it belongs here**</span>: is this learning specific
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   to this project, or general knowledge?
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">2.</span> <span class="gs">**Check for duplicates**</span>: search LEARNINGS.md for similar
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   entries
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">3.</span> <span class="gs">**Gather the details**</span>: identify context, lesson, and
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   application before recording
+<hr />
+<h2 id="the-infrastructure-paradigm">The Infrastructure Paradigm<a class="headerlink" href="#the-infrastructure-paradigm" title="Permanent link">&para;</a></h2>
+<p><code>ctx</code> takes a different approach. Context is not assembled per-session;
+it is <strong>maintained as persistent files</strong> in a <code>.context/</code> directory:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>.context/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  CONSTITUTION.md     # Inviolable rules
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  TASKS.md            # Current work items
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  CONVENTIONS.md      # Code patterns and standards
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  DECISIONS.md        # Architectural choices with rationale
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  LEARNINGS.md        # Gotchas and lessons learned
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  ARCHITECTURE.md     # System structure
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  GLOSSARY.md         # Domain terminology
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  AGENT_PLAYBOOK.md   # Operating manual for agents
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  journal/            # Enriched session summaries
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  archive/            # Completed work, cold storage
 </span></code></pre></div>
-<ul>
-<li>Without this gate, the agent would execute immediately on trigger.</li>
-<li>With it, the agent pauses to verify preconditions.</li>
-</ul>
-<p>The difference is dramatic: instead of shallow, reflexive execution, you get
-considered output.</p>
-<div class="admonition tip">
-<p class="admonition-title">Readback</p>
-<p>For the astute readers, the aviation parallel is intentional:</p>
-<p>Pilots do not skip the pre-flight checklist because they have flown before.</p>
-<p>The checklist exists precisely because the stakes are high enough that
-"I know what I'm doing" is not sufficient.</p>
-</div>
-<h2 id="lesson-2-when-not-to-use-is-not-optional">Lesson 2: "<em>When NOT to Use</em>" Is <strong>Not</strong> Optional<a class="headerlink" href="#lesson-2-when-not-to-use-is-not-optional" title="Permanent link">&para;</a></h2>
-<p>Every skill had a "<em>When to Use</em>" section. Almost none had "<em>When NOT
-to Use</em>". This is a problem.</p>
-<p>AI agents are biased toward action. Given a skill that says "use
-when journal entries need enrichment," the agent will find reasons
-to enrich.</p>
-<p>Without explicit negative triggers, <strong>over-activation is not a bug—it
-is the default behavior</strong>.</p>
-<p>Some examples of negative triggers that made a real difference:</p>
+<p>Each file has a single purpose. Each can be loaded independently.
+Each persists across sessions, tools, and team members.</p>
+<p>This is not a novel idea. It is the same idea behind every piece of
+infrastructure software engineers already use:</p>
 <table>
 <thead>
 <tr>
-<th>Skill</th>
-<th>Negative Trigger</th>
+<th>Traditional Infrastructure</th>
+<th>ctx Equivalent</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>ctx-reflect</td>
-<td>"When the user is in flow; do not interrupt"</td>
+<td>Database</td>
+<td><code>.context/*.md</code> files</td>
 </tr>
 <tr>
-<td>ctx-save</td>
-<td>"After trivial changes; a typo does not need a snapshot"</td>
+<td>Configuration files</td>
+<td><code>CONSTITUTION.md</code></td>
 </tr>
 <tr>
-<td>prompt-audit</td>
-<td>"Unsolicited; only when the user invokes it"</td>
+<td>Environment variables</td>
+<td><code>.contextrc</code></td>
 </tr>
 <tr>
-<td>qa</td>
-<td>"Mid-development when code is intentionally incomplete"</td>
+<td>Log files</td>
+<td><code>journal/</code></td>
+</tr>
+<tr>
+<td>Schema migrations</td>
+<td>Decision records</td>
+</tr>
+<tr>
+<td>Deployment manifests</td>
+<td><code>AGENT_PLAYBOOK.md</code></td>
 </tr>
 </tbody>
 </table>
-<p>These are not just nice-to-have. They are load-bearing. Without
-them, the agent will trigger the skill at the wrong time, produce
-unwanted output, and erode the user's trust in the skill system.</p>
-<h2 id="lesson-3-examples-set-boundaries-better-than-rules">Lesson 3: Examples Set Boundaries Better Than Rules<a class="headerlink" href="#lesson-3-examples-set-boundaries-better-than-rules" title="Permanent link">&para;</a></h2>
-<p>The most common failure mode of thin skills was not wrong behavior
-but <em>vague</em> behavior. The agent would do roughly the right thing,
-but at a quality level that required human cleanup.</p>
-<p>Rules like "<em>be constructive, not critical</em>" are too abstract. What
-does "<em>constructive</em>" look like in a prompt audit report? The agent
-has to guess.</p>
-<p>Good/bad example pairs avoid guessing:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gu">### Good Example</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">&gt; </span><span class="ge">This session implemented the cooldown mechanism for</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">&gt; </span><span class="ge">`ctx agent`. We discovered that `$PPID` in hook context</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">&gt; </span><span class="ge">resolves to the Claude Code PID.</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">&gt;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="ge">&gt; I&#39;d suggest persisting:</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">&gt; </span><span class="ge">- **Learning**: `$PPID` resolves to Claude Code PID</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">&gt; </span><span class="ge">  `ctx add learning --context &quot;...&quot; --lesson &quot;...&quot;`</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">&gt; </span><span class="ge">- **Task**: mark &quot;Add cooldown&quot; as done</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="gu">### Bad Examples</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">*</span><span class="w"> </span>&quot;<span class="ge">*We did some stuff. Want me to save it?*</span>&quot;
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">*</span><span class="w"> </span>Listing 10 trivial learnings that are general knowledge
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">*</span><span class="w"> </span>Persisting without asking the user first
-</span></code></pre></div>
-<p>The good example shows the exact format, level of detail, and
-command syntax. The bad examples show where the boundary is.</p>
-<p>Together, they define a quality corridor without prescribing
-every word.</p>
-<p><strong>Rules describe. Examples demonstrate.</strong></p>
-<h2 id="lesson-4-skills-are-read-by-agents-not-humans">Lesson 4: Skills Are Read by Agents, Not Humans<a class="headerlink" href="#lesson-4-skills-are-read-by-agents-not-humans" title="Permanent link">&para;</a></h2>
-<p>This seems obvious, but it has <strong>non-obvious</strong> consequences. During
-the rewrite, one skill included guidance that said "<em>use a blog or
-notes app</em>" for general knowledge that does not belong in the
-project's learnings file.</p>
-<p>The agent does not have a notes app. It does not browse the web
-to find one. This instruction, clearly written for a human
-audience, was <em>dead weight</em> in a skill consumed by an AI.</p>
-<div class="admonition tip">
-<p class="admonition-title">Skills are for the Agents</p>
-<p>Every sentence in a skill should be actionable by the agent.</p>
-<p>If the guidance requires human judgment or human tools, it belongs in
-documentation, not in a skill.</p>
-<p>The corollary: <strong>command references must be exact.</strong> A skill that
-says "<em>save it somewhere</em>" is useless. A skill that says
-<code>ctx add learning --context "..." --lesson "..." --application "..."</code>
-is actionable.</p>
-<p>The agent can pattern-match and fill in the blanks.</p>
-</div>
-<p><strong>Litmus test</strong>: If a sentence starts with "<em>you could…</em>" or assumes
-external tools, it does not belong in a skill.</p>
-<h2 id="lesson-5-the-description-field-is-the-trigger">Lesson 5: The Description Field Is the Trigger<a class="headerlink" href="#lesson-5-the-description-field-is-the-trigger" title="Permanent link">&para;</a></h2>
-<p>This was covered in <a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>,
-but the rewrite reinforced it with data. Several skills had good
-bodies but vague descriptions:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Before: vague, activates too broadly or not at all</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Show</span><span class="nv"> </span><span class="s">context</span><span class="nv"> </span><span class="s">summary.&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After: specific, activates at the right time</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Show</span><span class="nv"> </span><span class="s">context</span><span class="nv"> </span><span class="s">summary.</span><span class="nv"> </span><span class="s">Use</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">session</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">or</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s">when</span><span class="nv"> </span><span class="s">unclear</span><span class="nv"> </span><span class="s">about</span><span class="nv"> </span><span class="s">current</span><span class="nv"> </span><span class="s">project</span><span class="nv"> </span><span class="s">state.&quot;</span>
-</span></code></pre></div>
-<p>The description is not a title. It is the <strong>activation condition</strong>.</p>
-<p>The platform's skill matching reads this field to decide whether
-to surface the skill. A vague description means the skill either
-never triggers or triggers when it should not.</p>
-<h2 id="lesson-6-flag-tables-beat-prose">Lesson 6: Flag Tables Beat Prose<a class="headerlink" href="#lesson-6-flag-tables-beat-prose" title="Permanent link">&para;</a></h2>
-<p>Most skills wrap CLI tools. The thin versions described flags in
-prose, if at all. The rewritten versions use tables:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>| Flag        | Short | Default | Purpose                  |
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>|-------------|-------|---------|--------------------------|
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>| <span class="sb">`--limit`</span>   | <span class="sb">`-n`</span>  | 20      | Maximum sessions to show |
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| <span class="sb">`--project`</span> | <span class="sb">`-p`</span>  | &quot;&quot;      | Filter by project name   |
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>| <span class="sb">`--full`</span>    |       | false   | Show complete content    |
-</span></code></pre></div>
-<p>Tables are scannable, complete, and unambiguous. The agent can
-read them faster than parsing prose, and they serve as both
-reference and validation: If the agent invokes a flag not in
-the table, something is wrong.</p>
-<h2 id="lesson-7-template-drift-is-a-real-maintenance-burden">Lesson 7: Template Drift Is a Real Maintenance Burden<a class="headerlink" href="#lesson-7-template-drift-is-a-real-maintenance-burden" title="Permanent link">&para;</a></h2>
-<p><code>ctx</code> deploys skills through templates (via <code>ctx init</code>). Every
-skill exists in two places: the live version (<code>.claude/skills/</code>)
-and the template (<code>internal/assets/claude/skills/</code>).</p>
-<p>They must match.</p>
-<p>During the rewrite, every skill update required editing both files
-and running <code>diff</code> to verify. This sounds trivial, but across 16
-template-backed skills, it was the most error-prone part of the
-process.</p>
-<p>Template drift is dangerous because it creates <strong>false confidence</strong>:
-the agent appears to follow rules that no longer exist.</p>
-<p>The lesson: <strong>if your skills have a deployment mechanism, build
-the drift check into your workflow.</strong> We added a row to the
-<code>update-docs</code> skill's mapping table specifically for this:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>| <span class="sb">`internal/assets/claude/skills/`</span> | <span class="sb">`.claude/skills/`</span> (live) |
-</span></code></pre></div>
-<p>Intentional differences (<em>like project-specific scripts in the
-live version but not the template</em>) should be documented, not
-discovered later as bugs.</p>
-<h2 id="the-rewrite-scorecard">The Rewrite Scorecard<a class="headerlink" href="#the-rewrite-scorecard" title="Permanent link">&para;</a></h2>
+<p>The parallel is not metaphorical. Context files <strong>are</strong> infrastructure:
+they are versioned (git tracks them), they are structured (Markdown
+with conventions), they have schemas (required fields for decisions
+and learnings), and they have lifecycle management (archiving, compaction,
+indexing).</p>
+<hr />
+<h2 id="separation-of-concerns">Separation of Concerns<a class="headerlink" href="#separation-of-concerns" title="Permanent link">&para;</a></h2>
+<p>The most important design decision in <code>ctx</code> is not any individual
+feature. It is the <strong>separation of context into distinct files with
+distinct purposes</strong>.</p>
+<p>A single <code>CONTEXT.md</code> file would be simpler to implement. It would
+also be impossible to maintain.</p>
+<p>Why? Because different types of context have different lifecycles:</p>
 <table>
 <thead>
 <tr>
-<th>Metric</th>
-<th>Before</th>
-<th>After</th>
+<th>Context Type</th>
+<th>Changes</th>
+<th>Read By</th>
+<th>Load When</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Average skill body</td>
-<td>~15 lines</td>
-<td>~80 lines</td>
+<td>Constitution</td>
+<td>Rarely</td>
+<td>Every session</td>
+<td>Always</td>
 </tr>
 <tr>
-<td>Skills with quality gate</td>
-<td>0</td>
-<td>20</td>
+<td>Tasks</td>
+<td>Every session</td>
+<td>Session start</td>
+<td>Always</td>
 </tr>
 <tr>
-<td>Skills with "When NOT"</td>
-<td>0</td>
-<td>20</td>
+<td>Conventions</td>
+<td>Weekly</td>
+<td>Before coding</td>
+<td>When writing code</td>
 </tr>
 <tr>
-<td>Skills with examples</td>
-<td>3</td>
-<td>20</td>
+<td>Decisions</td>
+<td>When decided</td>
+<td>When questioning</td>
+<td>When revisiting</td>
 </tr>
 <tr>
-<td>Skills with flag tables</td>
-<td>2</td>
-<td>12</td>
+<td>Learnings</td>
+<td>When learned</td>
+<td>When stuck</td>
+<td>When debugging</td>
 </tr>
 <tr>
-<td>Skills with checklist</td>
-<td>0</td>
-<td>20</td>
+<td>Journal</td>
+<td>Every session</td>
+<td>Rarely</td>
+<td>When investigating</td>
 </tr>
 </tbody>
 </table>
-<p>More lines, but almost entirely Expert content (per the
-<a href="../2026-02-05-you-cant-import-expertise/">E/A/R framework</a>). No personality roleplay, no
-redundant guidance, no capability lists. Just project-specific
-knowledge the platform does not have.</p>
-<h2 id="the-meta-lesson">The Meta-Lesson<a class="headerlink" href="#the-meta-lesson" title="Permanent link">&para;</a></h2>
-<p>The previous two posts argued that skills should provide
-knowledge, not personality; that they should complement the
-platform, not fight it; that they should grow from project
-history, not imported templates.</p>
-<p>This post adds the missing piece: <strong>structure.</strong></p>
-<p><strong>A skill without a structure is a wish.</strong></p>
-<p>A skill with quality gates, negative triggers, examples, and
-checklists is a <strong>tool</strong>: the difference is not the content; it
-is <strong>whether the agent can reliably execute it without human
-intervention</strong>.</p>
+<p>Loading everything into every session wastes the
+<a href="../2026-02-03-the-attention-budget/">attention budget</a> on context that is irrelevant to
+the current task. Loading nothing forces the AI to operate blind.</p>
+<p>Separation of concerns allows <strong>progressive disclosure</strong>: load the
+minimum that matters for this moment, with the option to load more
+when needed.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Session start: load the essentials</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Deep investigation: load everything</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cat<span class="w"> </span>.context/DECISIONS.md
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cat<span class="w"> </span>.context/journal/2026-02-05-*.md
+</span></code></pre></div>
+<p>The filesystem is the index. File names, directory structure, and
+timestamps encode relevance. The AI does not need to read every file;
+it needs to know <strong>where to look</strong>.</p>
+<hr />
+<h2 id="the-two-tier-persistence-model">The Two-Tier Persistence Model<a class="headerlink" href="#the-two-tier-persistence-model" title="Permanent link">&para;</a></h2>
+<p><code>ctx</code> uses two tiers of persistence, and the distinction is
+architectural:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Purpose</th>
+<th>Location</th>
+<th>Token Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Curated</strong></td>
+<td>Quick context reload</td>
+<td><code>.context/*.md</code></td>
+<td>Low (budgeted)</td>
+</tr>
+<tr>
+<td><strong>Full dump</strong></td>
+<td>Safety net, archaeology</td>
+<td><code>.context/journal/*.md</code></td>
+<td>Zero (not auto-loaded)</td>
+</tr>
+</tbody>
+</table>
+<p>The curated tier is what the AI sees at session start. It is
+optimized for signal density: structured entries, indexed tables,
+reverse-chronological order (newest first, so the most relevant
+content survives truncation).</p>
+<p>The full dump tier is for humans and for deep investigation. It
+contains everything: enriched journals, archived tasks. It is never
+auto-loaded because its volume would destroy attention density.</p>
+<p>This two-tier model is analogous to how traditional systems separate
+hot and cold storage. The hot path (curated context) is optimized for
+read performance -- measured not in milliseconds, but in
+<strong>tokens consumed per unit of useful information</strong>. The cold path
+(journal) is optimized for completeness.</p>
 <div class="admonition tip">
-<p class="admonition-title">Skills are Interfaces</p>
-<p><strong>Good skills are not instructions. They are contracts.</strong>:</p>
-<ul>
-<li>They specify preconditions, postconditions, and boundaries.</li>
-<li>They show what success looks like and what failure looks like.</li>
-<li>They trust the agent's intelligence but do not trust its assumptions.</li>
-</ul>
+<p class="admonition-title">Nothing Is Ever Truly Lost</p>
+<p>The full dump tier means that context does not need to be
+<em>perfect</em> -- it just needs to be <em>findable</em>.</p>
+<p>A decision that was not captured in DECISIONS.md can be recovered
+from the session transcript where it was discussed. A learning
+that was not formalized can be found in the journal entry from
+that day.</p>
+<p>The curated tier is the fast path. The full dump tier is the
+safety net.</p>
 </div>
+<hr />
+<h2 id="decision-records-as-first-class-citizens">Decision Records as First-Class Citizens<a class="headerlink" href="#decision-records-as-first-class-citizens" title="Permanent link">&para;</a></h2>
+<p>One of the patterns that emerged from <code>ctx</code>'s own development is
+the power of <strong>structured decision records</strong>.</p>
+<p>v0.1.0 allowed adding decisions as one-liners:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span>
+</span></code></pre></div>
+<p>v0.2.0 enforced structure:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for user data&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;ACID compliance, team familiarity&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--consequences<span class="w"> </span><span class="s2">&quot;Need connection pooling, team training&quot;</span>
+</span></code></pre></div>
+<p>The difference is not cosmetic. A one-liner decision teaches the AI
+<em>what</em> was decided. A structured decision teaches it <em>why</em> -- and
+<em>why</em> is what prevents the AI from unknowingly reversing the decision
+in a future session.</p>
+<p>This is infrastructure thinking: decisions are not notes. They are
+<strong>records</strong> with required fields, just like database rows have schemas.
+The enforcement exists because incomplete records are worse than no
+records -- they create false confidence that the context is captured
+when it is not.</p>
+<hr />
+<h2 id="the-ide-is-the-interface-decision">The "IDE Is the Interface" Decision<a class="headerlink" href="#the-ide-is-the-interface-decision" title="Permanent link">&para;</a></h2>
+<p>Early in <code>ctx</code>'s development, there was a temptation to build a custom
+UI: a web dashboard for browsing sessions, editing context, viewing
+analytics.</p>
+<p>The decision was <strong>no</strong>. The IDE is the interface.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># This is the ctx &quot;UI&quot;:
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>code .context/
+</span></code></pre></div>
+<p>This decision was not about minimalism for its own sake. It was about
+recognizing that <code>.context/</code> files are <strong>just files</strong> -- and files have
+a mature, well-understood infrastructure:</p>
+<ul>
+<li><strong>Version control</strong>: <code>git diff .context/DECISIONS.md</code> shows exactly
+  what changed and when.</li>
+<li><strong>Search</strong>: Your IDE's full-text search works across all context files.</li>
+<li><strong>Editing</strong>: Markdown in any editor, with preview, spell check,
+  and syntax highlighting.</li>
+<li><strong>Collaboration</strong>: Pull requests on context files work the same as
+  pull requests on code.</li>
+</ul>
+<p>Building a custom UI would have meant maintaining a parallel
+infrastructure that duplicates what every IDE already provides. It
+would have introduced its own bugs, its own update cycle, and its
+own learning curve.</p>
+<p>The filesystem is not a limitation. It is <strong>the most mature, most
+composable, most portable infrastructure available</strong>.</p>
+<div class="admonition info">
+<p class="admonition-title">Context Files in Git</p>
+<p>Because <code>.context/</code> lives in the repository, context changes are
+part of the commit history. A decision made in commit <code>abc123</code> is
+as traceable as a code change in the same commit.</p>
+<p>This is not possible with prompt-based context, which exists
+outside version control entirely.</p>
+</div>
+<hr />
+<h2 id="progressive-disclosure-for-ai">Progressive Disclosure for AI<a class="headerlink" href="#progressive-disclosure-for-ai" title="Permanent link">&para;</a></h2>
+<p>The concept of progressive disclosure comes from human interface
+design: show the user the minimum needed to make progress, with the
+option to drill deeper.</p>
+<p><code>ctx</code> applies the same principle to AI context:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What the AI Sees</th>
+<th>Token Cost</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level 0</td>
+<td><code>ctx status</code> (one-line summary)</td>
+<td>~100</td>
+<td>Quick check</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><code>ctx agent --budget 4000</code></td>
+<td>~4,000</td>
+<td>Normal work</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><code>ctx agent --budget 8000</code></td>
+<td>~8,000</td>
+<td>Complex tasks</td>
+</tr>
+<tr>
+<td>Level 3</td>
+<td>Direct file reads</td>
+<td>10,000+</td>
+<td>Deep investigation</td>
+</tr>
+</tbody>
+</table>
+<p>Each level trades tokens for depth. Level 1 is sufficient for most
+work: the AI knows the active tasks, the key conventions, and the
+recent decisions. Level 3 is for archaeology: understanding why a
+decision was made three weeks ago, or finding a pattern in the session
+history.</p>
+<p>The explicit <code>--budget</code> flag is the mechanism that makes this work.
+Without it, the default behavior would be to load everything (because
+more context <em>feels</em> safer), which destroys the attention density that
+makes the loaded context useful.</p>
+<p><strong>The constraint is the feature.</strong> A budget of 4,000 tokens forces
+<code>ctx</code> to prioritize ruthlessly: constitution first, then tasks, then
+conventions, then decisions, then learnings -- in that order, cutting
+off when the budget is exhausted.</p>
+<hr />
+<h2 id="the-philosophical-shift">The Philosophical Shift<a class="headerlink" href="#the-philosophical-shift" title="Permanent link">&para;</a></h2>
+<p>The shift from "context as prompt" to "context as infrastructure"
+changes how you think about AI-assisted development:</p>
+<table>
+<thead>
+<tr>
+<th>Prompt Thinking</th>
+<th>Infrastructure Thinking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"What do I paste today?"</td>
+<td>"What has changed since yesterday?"</td>
+</tr>
+<tr>
+<td>"How do I fit everything in?"</td>
+<td>"What's the minimum that matters?"</td>
+</tr>
+<tr>
+<td>"The AI forgot my conventions"</td>
+<td>"The conventions are in a file"</td>
+</tr>
+<tr>
+<td>"I need to re-explain"</td>
+<td>"I need to update the record"</td>
+</tr>
+<tr>
+<td>"This session is getting slow"</td>
+<td>"Time to compact and archive"</td>
+</tr>
+</tbody>
+</table>
+<p>The first column treats AI interaction as a conversation. The second
+treats it as a <strong>system</strong> -- one that can be maintained, optimized,
+and debugged.</p>
+<p>Context is not something you <em>give</em> the AI. It is something you
+<strong>maintain</strong> -- like a database, like a config file, like any other
+piece of infrastructure that a running system depends on.</p>
+<hr />
+<h2 id="beyond-ctx-the-principles">Beyond ctx: The Principles<a class="headerlink" href="#beyond-ctx-the-principles" title="Permanent link">&para;</a></h2>
+<p>The patterns that <code>ctx</code> implements are not specific to <code>ctx</code>. They are
+applicable to any project that uses AI-assisted development:</p>
+<ol>
+<li>
+<p><strong>Separate context by purpose.</strong> Do not put everything in one file.
+   Different types of information have different lifecycles and
+   different relevance windows.</p>
+</li>
+<li>
+<p><strong>Make context persistent.</strong> If a decision matters, write it down
+   in a file that survives the session. If a learning matters, capture
+   it with structure.</p>
+</li>
+<li>
+<p><strong>Budget explicitly.</strong> Know how much context you are loading and
+   whether it is worth the attention cost.</p>
+</li>
+<li>
+<p><strong>Use the filesystem.</strong> File names, directory structure, and
+   timestamps are metadata that the AI can navigate. A well-organized
+   directory is an index that costs zero tokens to maintain.</p>
+</li>
+<li>
+<p><strong>Version your context.</strong> Put context files in git. Changes to
+   decisions are as important as changes to code.</p>
+</li>
+<li>
+<p><strong>Design for degradation.</strong> Sessions will get long. Attention will
+   dilute. Build mechanisms (compaction, archiving, cooldowns) that
+   make degradation visible and manageable.</p>
+</li>
+</ol>
+<p>These are not <code>ctx</code> features. They are <strong>infrastructure principles</strong>
+that happen to be implemented as a CLI tool. Any team could implement
+them with nothing more than a directory convention and a few shell
+scripts.</p>
+<p>The tool is a convenience. The principles are what matter.</p>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">If you remember one thing from this post...</p>
-<p><strong>Skills that work have bones, not just flesh.</strong></p>
-<p>Quality gates, negative triggers, examples, and checklists
-are the skeleton. The domain knowledge is the muscle.</p>
-<p>Without the skeleton, the muscle has nothing to attach to.</p>
+<p><strong>Prompts are conversations. Infrastructure persists.</strong></p>
+<p>Your AI does not need a better prompt. It needs a filesystem:
+versioned, structured, budgeted, and maintained.</p>
+<p><strong>The best context is the context that was there before
+you started the session.</strong></p>
 </div>
 <hr />
-<p><em>This post was written during the same session that rewrote all
-22 skills. The skill-creator skill was updated to encode these
-patterns. The meta continues.</em></p>
+<h2 id="the-arc">The Arc<a class="headerlink" href="#the-arc" title="Permanent link">&para;</a></h2>
+<p>This post is the architectural companion to the
+<a href="../2026-02-03-the-attention-budget/">Attention Budget</a>. That post explained <em>why</em> context
+must be curated (token economics). This one explains <em>how</em> to
+structure it (filesystem, separation of concerns, persistence tiers).</p>
+<p>Together with <a href="../2026-02-17-code-is-cheap-judgment-is-not/">Code Is Cheap, Judgment Is Not</a>, they
+form a trilogy about what matters in AI-assisted development:</p>
+<ul>
+<li><strong>Attention Budget</strong>: the resource you're managing</li>
+<li><strong>Context as Infrastructure</strong>: the system you build to manage it</li>
+<li><strong>Code Is Cheap</strong>: the human skill that no system replaces</li>
+</ul>
+<p>And the practices that keep it all honest:</p>
+<ul>
+<li><a href="../2026-02-17-the-3-1-ratio/">The 3:1 Ratio</a>: the cadence for maintaining both
+  code and context</li>
+<li><a href="../2026-02-14-irc-as-context/">IRC as Context</a>: the historical precedent -- stateless
+  protocols have always needed stateful wrappers</li>
+</ul>
+<hr />
+<p><em>This post synthesizes ideas from across the ctx blog series: the
+attention budget primitive, the two-tier persistence model, the IDE
+decision, and the progressive disclosure pattern. The principles are
+drawn from three weeks of building ctx and 70+ sessions of treating
+context as infrastructure rather than conversation.</em></p>
+<p><em>See also: <a href="../2026-02-17-when-a-system-starts-explaining-itself/">When a System Starts Explaining Itself</a>
+-- what happens when this infrastructure starts compounding in someone
+else's environment.</em></p>
 
 
 

@@ -69,6 +69,18 @@ This means:
 * **Git-tracked**: All context files are meant to be committed, so they should
   never contain sensitive data
 
+### The `--file` Flag
+
+The `ctx add` subcommands accept a `--file` flag that reads content from an
+arbitrary file path. **No boundary check is enforced** — any file readable by
+the current user can be supplied. This is by design: `ctx` runs as the local
+user and does not elevate privileges.
+
+In an AI-agent context, be aware that a confused or prompt-injected agent
+could be instructed to run `ctx add task --file /etc/shadow`, which would
+copy that file's contents into `.context/TASKS.md`. Hooks and constitution
+rules are the appropriate mitigation layer here.
+
 ### Best Practices
 
 1. **Review before committing**: Always review `.context/` files before 

@@ -124,7 +124,7 @@ simultaneously.
 
 ---
 
-### [Using the Scratchpad with Claude](scratchpad-with-claude.md)
+### [Using the Scratchpad](scratchpad-with-claude.md)
 
 Use the encrypted **scratchpad** for quick notes, working memory, and
 sensitive values during AI sessions. Natural language in, encrypted

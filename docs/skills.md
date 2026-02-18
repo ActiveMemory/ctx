@@ -219,7 +219,7 @@ one-liner notes. Encrypted at rest with AES-256-GCM.
 `ctx pad mv`
 
 **See also**: [Scratchpad](scratchpad.md),
-[Using the Scratchpad with Claude](recipes/scratchpad-with-claude.md)
+[Using the Scratchpad](recipes/scratchpad-with-claude.md)
 
 ---
 

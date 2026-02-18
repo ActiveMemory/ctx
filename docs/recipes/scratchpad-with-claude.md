@@ -1,5 +1,5 @@
 ---
-title: "Using the Scratchpad with Claude"
+title: "Using the Scratchpad"
 icon: lucide/sticky-note
 ---
 
@@ -25,6 +25,8 @@ polluting your structured context files?**
 | `ctx pad show N` | CLI command | Output raw text of entry N (pipe-friendly) |
 | `ctx pad add` | CLI command | Add a new entry |
 | `ctx pad edit` | CLI command | Replace, append to, or prepend to an entry |
+| `ctx pad add --file` | CLI command | Ingest a file as a blob entry |
+| `ctx pad show N --out` | CLI command | Extract a blob entry to a file |
 | `ctx pad rm` | CLI command | Remove an entry |
 | `ctx pad mv` | CLI command | Reorder entries |
 | `/ctx-pad` | Skill | Natural language interface to all pad commands |
@@ -104,6 +106,37 @@ You: "remove entry 2, it's done"
 Agent: [runs ctx pad rm 2]
        "Removed entry 2. 3 entries remaining."
 ```
+
+### Step 7: Store a File as a Blob
+
+The scratchpad can hold small files (up to 64 KB) as encrypted blob entries.
+The file is base64-encoded and stored alongside a label you provide:
+
+```bash
+# Ingest a file — the first argument is the label
+ctx pad add "deploy config" --file ./deploy.yaml
+
+# List shows the label with a [BLOB] marker
+ctx pad
+#   1. check DNS propagation after deploy
+#   2. deploy config [BLOB]
+```
+
+### Step 8: Extract a Blob
+
+Use `show --out` to write the decoded file back to disk:
+
+```bash
+# Write blob entry to a file
+ctx pad show 2 --out ./recovered-deploy.yaml
+
+# Or print to stdout (for piping)
+ctx pad show 2 | head -5
+```
+
+Blob entries are encrypted identically to text entries — they're just
+base64-encoded before encryption. The `--out` flag decodes and writes the
+raw bytes.
 
 ## Conversational Approach
 

@@ -11,6 +11,22 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [When a System Starts Explaining Itself](2026-02-17-when-a-system-starts-explaining-itself.md)
+
+*Jose Alekhinne / February 17, 2026*
+
+Every new substrate begins as a private advantage. Reality begins when
+other people start describing it in their own language -- not accurately,
+not consistently, but involuntarily. "Better than Adderall" is not praise;
+it is a diagnostic: executive function has been externalized. This post
+collects the first external signals from real users, and asks what it
+means when a system starts explaining itself without its creator present.
+
+**Topics**: field notes, adoption signals, infrastructure vs tools,
+context engineering, substrates
+
+---
+
 ### [Code Is Cheap. Judgment Is Not.](2026-02-17-code-is-cheap-judgment-is-not.md)
 
 *Jose Alekhinne / February 17, 2026*
@@ -25,6 +41,23 @@ not threatening.
 
 **Topics**: AI and expertise, context engineering, judgment vs production,
 human-AI collaboration, automation discipline
+
+---
+
+### [Context as Infrastructure](2026-02-17-context-as-infrastructure.md)
+
+*Jose Alekhinne / February 17, 2026*
+
+Where does your AI's knowledge live between sessions? If the answer is
+"in a prompt I paste at the start," you are treating context as a consumable.
+This post argues for treating it as infrastructure instead: persistent files,
+separation of concerns, two-tier storage, progressive disclosure, and the
+filesystem as the most mature interface available. The architectural companion
+to The Attention Budget and the second piece of the trilogy completed by
+Code Is Cheap.
+
+**Topics**: context engineering, infrastructure, progressive disclosure,
+persistence, design philosophy
 
 ---
 

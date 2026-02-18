@@ -49,6 +49,8 @@ Because the key is `.gitignore`d and the data is committed, you get:
 | `ctx pad edit N "text"`           | Replace entry N with new text                         |
 | `ctx pad edit N --append "text"`  | Append text to the end of entry N                     |
 | `ctx pad edit N --prepend "text"` | Prepend text to the beginning of entry N              |
+| `ctx pad add TEXT --file PATH`    | Ingest a file as a blob entry (TEXT is the label)     |
+| `ctx pad show N --out PATH`      | Write decoded blob content to a file                  |
 | `ctx pad mv N M`                  | Move entry from position N to position M              |
 | `ctx pad resolve`                 | Show both sides of a merge conflict for resolution    |
 
@@ -79,6 +81,41 @@ ctx pad mv 2 1
 # Clean up
 ctx pad rm 2
 ```
+
+## File Blobs
+
+The scratchpad can store small files (up to 64 KB) as blob entries. Files
+are base64-encoded and stored with a human-readable label.
+
+```bash
+# Ingest a file — first argument is the label
+ctx pad add "deploy config" --file ./deploy.yaml
+
+# Listing shows label with a [BLOB] marker
+ctx pad
+#   1. check DNS propagation after deploy
+#   2. deploy config [BLOB]
+
+# Extract to a file
+ctx pad show 2 --out ./recovered.yaml
+
+# Or print decoded content to stdout
+ctx pad show 2
+```
+
+Blob entries are encrypted identically to text entries. The internal format
+is `label:::base64data` — you never need to construct this manually.
+
+| Constraint | Value |
+|---|---|
+| Max file size (pre-encoding) | 64 KB |
+| Storage format | `label:::base64(content)` |
+| Display | `label [BLOB]` in listings |
+
+!!! tip "When to Use Blobs"
+    Blobs are for small files you want encrypted and portable: config
+    snippets, key fragments, deployment manifests, test fixtures. For
+    anything larger than 64 KB, use the filesystem directly.
 
 ## Using with AI
 
@@ -168,8 +205,8 @@ In plaintext mode:
 
 * [Syncing Scratchpad Notes Across Machines](recipes/scratchpad-sync.md):
   Key distribution, push/pull workflow, merge conflict resolution
-* [Using the Scratchpad with Claude](recipes/scratchpad-with-claude.md):
-  Natural language examples, when to use scratchpad vs context files
+* [Using the Scratchpad](recipes/scratchpad-with-claude.md):
+  Natural language examples, blob workflow, when to use scratchpad vs context files
 * [Context Files](context-files.md): Format and conventions for all
   `.context/` files
 * [Security](security.md): Trust model and permission hygiene

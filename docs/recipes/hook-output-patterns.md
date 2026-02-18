@@ -359,7 +359,7 @@ If the platform provides a runtime variable for paths, always use it.
 
 ## Next Up
 
-**[Using the Scratchpad with Claude →](scratchpad-with-claude.md)**: Store
+**[Using the Scratchpad →](scratchpad-with-claude.md)**: Store
 short-lived sensitive notes in an encrypted scratchpad.
 
 ## See Also

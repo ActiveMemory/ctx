@@ -199,6 +199,7 @@ it.**
 [not-skill-post]: 2026-02-08-not-everything-is-a-skill.md
 [security-post]: 2026-02-09-defense-in-depth-securing-ai-agents.md
 [merge-debt-post]: 2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress.md
+[infra-post]: 2026-02-17-context-as-infrastructure.md
 
 ---
 
@@ -302,6 +303,9 @@ through every previous entry in this blog:
 - [Parallel Agents][merge-debt-post] showed that scale amplifies
   the gap between production and judgment
 
+- [Context as Infrastructure][infra-post] showed that the system
+  you build for context is infrastructure, not conversation
+
 From YOLO mode to defense in depth, the pattern is the same:
 production is the easy part. Judgment is the hard part. AI changed
 the ratio, not the rule.
@@ -314,3 +318,7 @@ building ctx with AI assistance, the decisions recorded in
 DECISIONS.md, the learnings captured in LEARNINGS.md, and the git
 history that tracks where the human mattered and where the AI
 ran unsupervised.*
+
+*See also: [When a System Starts Explaining Itself](2026-02-17-when-a-system-starts-explaining-itself.md)
+-- what happens after the arc: the first field notes from the moment
+the system starts compounding in someone else's hands.*
