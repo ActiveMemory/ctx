@@ -164,9 +164,9 @@ It is **the collapse of reconstruction cost**.
 
 Most complex work is **not** execution. It is:
 
-* Remembering why something mattered;
-* Recovering prior decisions;
-* Rebuilding mental state.
+* **Remembering** why something mattered;
+* **Recovering** prior decisions;
+* **Rebuilding** mental state.
 
 **Persistent context** removes that tax.
 
