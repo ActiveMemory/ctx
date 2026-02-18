@@ -248,6 +248,12 @@ Spec: `specs/scratchpad.md`
       stdin via `-`. Single write cycle. Spec: `specs/pad-import.md`
       #priority:medium #added:2026-02-17
 
+- [ ] P3.22: `ctx pad export [DIR]` — export all blob entries to a directory
+      as files. Label becomes filename, timestamp prefix on collision,
+      --force to overwrite, --dry-run to preview. Counterpart to pad import.
+      Replaces fragile bash script (hack/pad-export-blobs.sh).
+      Spec: `specs/pad-export.md` #priority:medium #added:2026-02-17
+
 **Documentation:**
 
 - [x] P3.19: Update Getting Started / Quick Start to mention scratchpad
