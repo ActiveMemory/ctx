@@ -2219,8 +2219,8 @@
 <h1 id="ctx-v020-the-archaeology-release">ctx v0.2.0: The Archaeology Release<a class="headerlink" href="#ctx-v020-the-archaeology-release" title="Permanent link">&para;</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Update (2026-02-11)</p>
-<p>As of v0.4.0, ctx consolidated sessions into the journal mechanism.
-The <code>.context/sessions/</code> directory referenced in this post has been
+<p>As of <code>v0.4.0</code>, <code>ctx</code> consolidated sessions into the journal mechanism.</p>
+<p>The <code>.context/sessions/</code> directory referenced in this post has been
 eliminated. Session history is now accessed via <code>ctx recall</code> and
 enriched journals live in <code>.context/journal/</code>.</p>
 </div>
@@ -2228,7 +2228,7 @@ enriched journals live in <code>.context/journal/</code>.</p>
 <h2 id="digging-through-the-past-to-build-the-future">Digging Through the Past to Build the Future<a class="headerlink" href="#digging-through-the-past-to-build-the-future" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-01</em></p>
 <div class="admonition question">
-<p class="admonition-title">What if your AI could remember everything?</p>
+<p class="admonition-title">What if Your AI Could Remember Everything?</p>
 <p>Not just the current session, but <strong>every</strong> session:</p>
 <ul>
 <li><strong>Every</strong> decision made,</li>
@@ -2240,36 +2240,38 @@ enriched journals live in <code>.context/journal/</code>.</p>
 <p>Between <code>v0.1.2</code> and <code>v0.2.0</code>, <strong>86 commits landed across 5 days</strong>. </p>
 <p>The release notes list features and fixes. </p>
 <p>This post tells the story of <strong>why</strong> those features exist, and what 
-building them taught me.</p>
+building them <strong>taught</strong> me.</p>
 <p><strong>This isn't a changelog</strong>: It is an explanation of intent.</p>
 <h2 id="the-problem-amnesia-isnt-just-session-level">The Problem: Amnesia Isn't Just Session-Level<a class="headerlink" href="#the-problem-amnesia-isnt-just-session-level" title="Permanent link">&para;</a></h2>
-<p>v0.1.0 solved <strong>reset amnesia</strong>: </p>
+<p><code>v0.1.0</code> solved <strong>reset amnesia</strong>: </p>
 <p>The AI now <strong>remembers</strong> <em>decisions</em>, <em>learnings</em>,
 and <em>tasks</em> <strong>across sessions</strong>. </p>
-<p>But a new problem emerged, which I can sum up as: "I (<em>the human</em>) am not AI".</p>
+<p>But a <strong>new problem</strong> emerged, which I can sum up as: </p>
+<p>"I (<em>the human</em>) am <strong>not</strong> AI."</p>
 <p>Frankly, <strong>I couldn't remember what the AI remembered.</strong></p>
+<p>Let alone, I cannot remember what I ate for breakfast!</p>
 <p>In the course of days, I realized session transcripts piled up in 
 <code>.context/sessions/</code>; I was <code>grep</code>ping, <code>JSONL</code> files with
-thousands of lines... Raw tool calls, assistant responses, user messages...
-all interleaved. </p>
-<p>Valuable context effectively buried in machine-readable noise.</p>
+thousands of lines... Raw tool calls, assistant responses, user messages...</p>
+<p>...all interleaved. </p>
+<p>Valuable context was effectively buried in machine-readable noise.</p>
 <p>I found myself grepping through files to answer questions like:</p>
 <ul>
-<li>"When did we decide to use constants instead of literals?"</li>
-<li>"What was the session where we fixed the hook regex?"</li>
-<li>"How did the <code>embed.go</code> split actually happen?"</li>
+<li>"<em>When did we decide to use constants instead of literals?</em>"</li>
+<li>"<em>What was the session where we fixed the hook regex?</em>"</li>
+<li>"<em>How did the <code>embed.go</code> split actually happen?</em>"</li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Fate is Whimsical</p>
-<p>The irony was <strong>painful</strong>: 
-I built a tool to prevent AI amnesia, but I was suffering from 
+<p>The irony was <strong>painful</strong>:</p>
+<p>I built a tool to prevent AI amnesia, but I was suffering from 
 <strong>human amnesia</strong> about what happened in AI sessions.</p>
 </div>
 <p>This was the moment <code>ctx</code> stopped being just an AI tool and started
 needing to support <strong>the human</strong> on the other side of the loop.</p>
 <h2 id="the-solution-recall-and-journal">The Solution: Recall and Journal<a class="headerlink" href="#the-solution-recall-and-journal" title="Permanent link">&para;</a></h2>
-<p>v0.2.0 introduces two interconnected systems.</p>
-<p>They solve different problems; and only work well together.</p>
+<p><code>v0.2.0</code> introduces two interconnected systems.</p>
+<p>They solve different problems and only work well <strong>together</strong>.</p>
 <h3 id="ctx-recall-browse-your-past"><code>ctx recall</code>: Browse Your Past<a class="headerlink" href="#ctx-recall-browse-your-past" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all sessions for this project</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list
@@ -2281,7 +2283,7 @@ needing to support <strong>the human</strong> on the other side of the loop.</p>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>gleaming-wobbling-sutherland<span class="w"> </span>--full
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="sb">````</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>The<span class="w"> </span><span class="sb">`</span>recall<span class="sb">`</span><span class="w"> </span>system<span class="w"> </span>parses<span class="w"> </span>Claude<span class="w"> </span>Code<span class="s1">&#39;s JSONL transcripts and presents</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>The<span class="w"> </span><span class="sb">`</span>recall<span class="sb">`</span><span class="w"> </span>system<span class="w"> </span>parses<span class="w"> </span>Claude<span class="w"> </span>Code<span class="s1">&#39;s `JSONL` transcripts and presents</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s1">them in a human-readable format:</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">| Session                       | Date       | Turns | Duration |</span>
@@ -2295,24 +2297,25 @@ needing to support <strong>the human</strong> on the other side of the loop.</p>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s1">!!! note &quot;2,121 lines of new code&quot;</span>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="s1">    The `ctx recall` feature was the largest single addition:</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="s1">    parser library, CLI commands, test suite, and slash command.</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="s1">### `ctx journal`: From Raw to Rich</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="s1">Listing sessions isn&#39;</span>t<span class="w"> </span>enough.<span class="w"> </span>The<span class="w"> </span>transcripts<span class="w"> </span>are<span class="w"> </span>still<span class="w"> </span>unwieldy.
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>Recall<span class="w"> </span>answers<span class="w"> </span>*what<span class="w"> </span>happened*.
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>Journal<span class="w"> </span>answers<span class="w"> </span>*what<span class="w"> </span>mattered*.
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="sb">```</span>bash
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="c1"># Export sessions to editable Markdown</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="c1"># Generate a static site from journal entries</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="c1"># Serve it locally</span>
-</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>ctx<span class="w"> </span>serve
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="s1">    parser library, CLI commands, test suite, and slash command.</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="s1">### `ctx journal`: From Raw to Rich</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="s1">Listing sessions isn&#39;</span>t<span class="w"> </span>enough.<span class="w"> </span>The<span class="w"> </span>transcripts<span class="w"> </span>are<span class="w"> </span>still<span class="w"> </span>unwieldy.
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>*<span class="w"> </span>**Recall**<span class="w"> </span>answers<span class="w"> </span>*what<span class="w"> </span>happened*.
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>*<span class="w"> </span>**Journal**<span class="w"> </span>answers<span class="w"> </span>*what<span class="w"> </span>mattered*.
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="sb">```</span>bash
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Export sessions to editable Markdown</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="c1"># Generate a static site from journal entries</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="c1"># Serve it locally</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>ctx<span class="w"> </span>serve
 </span></code></pre></div>
 <p>The exported files land in <code>.context/journal/</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.context/journal/
@@ -2321,7 +2324,7 @@ needing to support <strong>the human</strong> on the other side of the loop.</p>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├── 2026-01-29-crystalline-gliding-willow-ff7fd67d.md
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>└── 2026-01-31-declarative-hugging-snowglobe-4549026d.md
 </span></code></pre></div>
-<p>Each file is a structured Markdown document ready for enrichment.</p>
+<p>Each file is a structured Markdown document ready for <strong>enrichment</strong>.</p>
 <p>They are meant to be <strong>read</strong>, <strong>edited</strong>, and <strong>reasoned about</strong>; 
 not just stored.</p>
 <h2 id="the-meta-slash-commands-for-self-analysis">The Meta: Slash Commands for Self-Analysis<a class="headerlink" href="#the-meta-slash-commands-for-self-analysis" title="Permanent link">&para;</a></h2>
@@ -2352,16 +2355,21 @@ analyze and synthesize session history:</p>
 <p>This very post was drafted using <code>/ctx-blog</code>. The previous post about
 refactoring was drafted the same way.</p>
 <p>So, yes: <strong>The meta continues</strong>: <code>ctx</code> now helps write posts about <code>ctx</code>.</p>
-<p>With the current release, <code>ctx</code> is no longer just recording history: It is
-<strong>participating</strong> in its <strong>interpretation</strong>.</p>
+<p>With the current release, <code>ctx</code> is no longer just recording history: </p>
+<p>It is <strong>participating</strong> in its <strong>interpretation</strong>.</p>
 <h2 id="the-structure-decisions-as-first-class-citizens">The Structure: Decisions as First-Class Citizens<a class="headerlink" href="#the-structure-decisions-as-first-class-citizens" title="Permanent link">&para;</a></h2>
 <p><code>v0.1.0</code> let you add decisions with a simple command:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span>
 </span></code></pre></div>
-<p>But sessions showed a pattern: decisions added this way were incomplete.
-Context was missing. Rationale was vague. Consequences were never stated.</p>
+<p>But sessions showed a pattern: decisions added this way were <strong>incomplete</strong>:</p>
+<ul>
+<li><strong>Context was missing</strong>;</li>
+<li>Rationale was <strong>vague</strong>; </li>
+<li>Consequences were <strong>never stated</strong>.</li>
+</ul>
 <p>Once recall and journaling existed, this weakness became impossible
-to ignore. Structure stopped being optional.</p>
+to ignore: </p>
+<p>Structure stopped being optional.</p>
 <p><code>v0.2.0</code> <strong>enforces</strong> structure:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for user data&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -2371,7 +2379,7 @@ to ignore. Structure stopped being optional.</p>
 <p>All three flags are <strong>required</strong>. No more placeholder text. </p>
 <p>Every decision is now a proper Architecture Decision Record (*ADR),
 not a note.</p>
-<p>The same enforcement applies to learnings, too:</p>
+<p>The same enforcement applies to <strong>learnings</strong> too:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;CGO breaks ARM64 builds&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;go test failed with gcc errors on ARM64&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Always use CGO_ENABLED=0 for cross-platform builds&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -2387,13 +2395,13 @@ consequences, it understands the <strong>why</strong>, <em>not</em> just the <st
 <p>A subtle but important change: <code>DECISIONS.md</code> and <code>LEARNINGS.md</code> now use
 <strong>reverse-chronological order</strong>.</p>
 <p>One reason is token budgets, obviously; <strong>another</strong> reason is to
-help your fellow human (<em>i.e., the Author</em>): Earlier decisions are more likely
-to be relevant, and they are more likely to have more emphasis on the
-project. So it follows that they should be read first.</p>
+help your fellow human (<em>i.e., the Author</em>): </p>
+<p>Earlier decisions are more likely to be relevant, and they are more likely to
+have more emphasis on the project. So it follows that they should be read first.</p>
 <p>But back to AI:</p>
-<p>When the AI reads a file, it reads from the top. If the token budget is
-tight, old content gets truncated. As in any good engineering practice,
-it's always <em>about the tradeoffs</em>.</p>
+<p>When the AI reads a file, it reads from the top (<em>and seldom from the bottom</em>). </p>
+<p>If the token budget is tight, old content gets <strong>truncated</strong>. 
+As in any good engineering practice, it's always <em>about the tradeoffs</em>.</p>
 <p>Reverse order ensures the most recent—and most relevant—context is
 always loaded first.</p>
 <h2 id="the-index-quick-reference-tables">The Index: Quick Reference Tables<a class="headerlink" href="#the-index-quick-reference-tables" title="Permanent link">&para;</a></h2>
@@ -2403,10 +2411,21 @@ always loaded first.</p>
 <li><strong>For humans</strong>, it's a table of contents.</li>
 </ul>
 <p>The same structure serves two very different readers.</p>
-<h2 id="the-configuration-contextrc">The Configuration: .contextrc<a class="headerlink" href="#the-configuration-contextrc" title="Permanent link">&para;</a></h2>
-<p>Projects can now customize ctx behavior via <code>.contextrc</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Reindex after manual edits</p>
+<p>If you edit entries by hand, rebuild the index with:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
+</span></code></pre></div>
+<p>See the <a href="../../recipes/knowledge-capture/#step-5-reindex-after-manual-edits">Knowledge Capture</a>
+recipe for details.</p>
+</div>
+<h2 id="the-configuration-contextrc">The Configuration: <code>.contextrc</code><a class="headerlink" href="#the-configuration-contextrc" title="Permanent link">&para;</a></h2>
+<p><a href="../../cli-reference/#contextrc">Projects can now customize ctx behavior 
+via <code>.contextrc</code></a>.</p>
 <p>This makes ctx usable in real teams, not just personal projects.</p>
-<p>Priority order: CLI flags &gt; environment variables &gt; .contextrc &gt; defaults</p>
+<p>Priority order: CLI flags &gt; environment variables &gt; <code>.contextrc</code> &gt; 
+sensible defaults</p>
 <h2 id="the-flags-global-cli-options">The Flags: Global CLI Options<a class="headerlink" href="#the-flags-global-cli-options" title="Permanent link">&para;</a></h2>
 <p>Three new global flags work with any command.</p>
 <p>These enable automation: </p>
@@ -2414,12 +2433,12 @@ always loaded first.</p>
 <code>ctx</code> without hacks or workarounds.</p>
 <h2 id="the-refactoring-under-the-hood">The Refactoring: Under the Hood<a class="headerlink" href="#the-refactoring-under-the-hood" title="Permanent link">&para;</a></h2>
 <p>These aren't user-visible changes.</p>
-<p>They are the kind of work you only appreciate later, when everything
+<p>They are the kind of work you only appreciate <strong>later</strong>, when everything
 else becomes easier to build.</p>
 <h2 id="what-we-learned-building-v020">What We Learned Building v0.2.0<a class="headerlink" href="#what-we-learned-building-v020" title="Permanent link">&para;</a></h2>
 <h3 id="1-raw-data-isnt-knowledge">1. Raw Data Isn't Knowledge<a class="headerlink" href="#1-raw-data-isnt-knowledge" title="Permanent link">&para;</a></h3>
-<p><code>JSONL</code> transcripts contain <strong>everything</strong>, and I mean "<strong>everything</strong>":
-They even contain hidden system messages that Anthropic injects to the
+<p><code>JSONL</code> transcripts contain <strong>everything</strong>, and I mean "<strong>everything</strong>":</p>
+<p>They even contain hidden system messages that Anthropic injects to the
 LLM's conversation to treat humans better: It's immense.</p>
 <p>But "<em>everything</em>" isn't useful until it is transformed into something
 a human can <strong>reason</strong> about.</p>
@@ -2436,7 +2455,7 @@ a human can <strong>reason</strong> about.</p>
 <p>That makes it a <strong>user experience</strong> concern, not an <em>implementation detail</em>.</p>
 <h3 id="4-meta-tools-compound">4. Meta-Tools Compound<a class="headerlink" href="#4-meta-tools-compound" title="Permanent link">&para;</a></h3>
 <p>Tools that analyze their own development tend to generalize well.</p>
-<p>The journal system started as a way to understand ctx itself.</p>
+<p>The journal system started as a way to understand <code>ctx</code> itself.</p>
 <p>It immediately became useful for everything else.</p>
 <h2 id="v020-in-the-numbers">v0.2.0 in The Numbers<a class="headerlink" href="#v020-in-the-numbers" title="Permanent link">&para;</a></h2>
 <p>This was a heavy release. The numbers reflect that:</p>
@@ -2481,8 +2500,16 @@ a human can <strong>reason</strong> about.</p>
 <p>But those are future posts.</p>
 <p>This one was about making the <strong>past</strong> usable.</p>
 <h2 id="get-started">Get Started<a class="headerlink" href="#get-started" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>go<span class="w"> </span>install<span class="w"> </span>github.com/ActiveMemory/ctx/cmd/ctx@latest
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>init
+<div class="admonition note">
+<p class="admonition-title">Update</p>
+<p>Since this post, <code>ctx</code> became a first-class Claude Code Marketplace
+plugin. Installation is now simpler. </p>
+<p>See the <a href="../../getting-started/">Getting Started</a> guide for the 
+current instructions.</p>
+</div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>build
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
 <div class="admonition quote">
 <p class="admonition-title">The Archaeological Record</p>

@@ -2,6 +2,7 @@
 title: "Refactoring with Intent: Human-Guided Sessions in AI Development"
 date: 2026-02-01
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - refactoring
   - code quality
@@ -18,13 +19,16 @@ topics:
 
 *Jose Alekhinne / 2026-02-01*
 
-!!! question "What happens when you slow down?"
-    YOLO mode shipped 14 commands in a week. But technical debt doesn't
-    send invoices—it just waits.
+!!! question "What Happens When You Slow Down?"
+    YOLO mode shipped 14 commands in a week. 
+
+    But technical debt doesn't send invoices: It just waits.
 
 This is the story of what happened when I stopped auto-accepting everything
-and started **guiding the AI with intent**. The result: 27 commits across
-4 days, a major version release, and lessons that apply far beyond `ctx`.
+and started **guiding the AI with intent**. 
+
+The result: 27 commits across 4 days, a major version release, and 
+lessons that apply far beyond `ctx`.
 
 !!! info "The Refactoring Window"
     **January 28 - February 1, 2026**
@@ -35,8 +39,9 @@ and started **guiding the AI with intent**. The result: 27 commits across
 
 ## The Velocity Trap
 
-In the [previous post][first-post], I documented the YOLO mode that birthed
+In the [previous post][first-post], I documented the "*YOLO mode*" that birthed
 `ctx`: auto-accept everything, let the AI run free, ship features fast.
+
 It worked: **until it didn't**.
 
 [first-post]: 2026-01-27-building-ctx-using-ctx.md "Building ctx Using ctx"
@@ -50,7 +55,7 @@ The codebase had accumulated patterns I didn't notice during the sprint:
 | Monolithic `embed.go`   | 150+ lines, 5 concerns | Untestable, hard to extend         |
 | Inconsistent docstrings | Everywhere             | AI can't learn project conventions |
 
-I didn't see these during YOLO mode because, honestly, **I wasn't looking**.
+I didn't see these during "*YOLO mode*" because, honestly, **I wasn't looking**.
 
 **Auto-accept means auto-ignore**.
 
@@ -63,21 +68,22 @@ In contrast, refactoring mode is **when** you start paying attention to that
 
 On January 28th, I changed the workflow:
 
-1. **Read every diff before accepting**
-2. **Ask "why this way?" before committing**
-3. **Document patterns, not just features**
+1. **Read every diff before accepting**.
+2. **Ask "why this way?" before committing**.
+3. **Document patterns, not just features**.
 
 The first commit of this era was telling:
 
 ```text
-feat: add structured attributes to context-update XML format
+feat: add structured attributes to context. update XML format
 ```
 
-Not a new feature—a *refinement*:
+Not a new feature: A *refinement*:
 
-The XML format for context updates needed `type` and `timestamp` attributes. 
+The `XML` format for context updates needed `type` and `timestamp` attributes. 
 
 YOLO mode would have shipped something that worked. Intentional mode asked:  
+
 **"What does well-structured look like?"**
 
 ## The Decomposition: `embed.go`
@@ -91,6 +97,8 @@ The most satisfying refactor was splitting `internal/claude/embed.go`.
 * Permission handling
 * Script templates
 * Type definitions
+
+... your "*de facto*" God object.
 
 **After**: Five focused modules:
 
@@ -125,7 +133,7 @@ what good Go looks like in **this** project.
     What I wanted from AI was to **understand** and **follow** the project's 
     conventions, and **trust** the author.
 
-The next time it generates code, it has better examples to learn from.
+The next time it generates code, it has **better** examples to learn from.
 
 ## The Documentation Debt
 
@@ -135,7 +143,7 @@ The January 29th sessions focused on standardization.
 
 ### Terminology Fixes
 
-* "context-update" → "entry" (what users actually call them)
+* "context-update" → "entry" (*what users actually call them*)
 * Consistent naming across CLI, docs, and code comments
 
 ### Go Docstrings
@@ -157,7 +165,8 @@ func Parse(s string) Entry { ... }
 ```
 
 This is intentionally more structured than typical GoDoc:
-It serves as documentation **and** as training data for future 
+
+It serves as documentation **and** doubles as training data for future 
 AI-generated code.
 
 ### CLI Output Convention
@@ -171,12 +180,12 @@ Examples:
   ✗ Error: File not found
 ```
 
-A consistent output shape makes both human scanning and AI reasoning
-more reliable.
+A **consistent** output shape makes both **human scanning** and 
+**AI reasoning** more **reliable**.
 
 These aren't exciting commits. But they are **force multipliers**:
 
-Every future AI session now has better examples to follow.
+Every future AI session now has **better** examples to follow.
 
 ## The Journal System
 
@@ -184,14 +193,14 @@ Every future AI session now has better examples to follow.
 
 This is where **v0.2.0** becomes more than a refactor.
 
-The biggest feature of this change window wasn't a refactor—it was
+The biggest feature of this change window wasn't a refactor; it was
 the **journal system**.
 
 !!! note "45 files changed, 1680 insertions"
     This commit added the infrastructure for synthesizing AI session
     history into human-readable content.
 
-The journal system includes:
+The **journal system** includes:
 
 | Component                | Purpose                                            |
 |--------------------------|----------------------------------------------------|
@@ -248,7 +257,7 @@ isn't sustainable in the long term.
 YOLO mode has its place: for *prototyping*, *exploration*, and *discovery*.
 
 **BUT** (*and it's a huge "but"*), it needs to be followed by 
-**consolidation sessions**.
+[**consolidation sessions**][ratio].
 
 The ratio that worked for me: **[3:1][ratio]**.
 
@@ -270,12 +279,19 @@ When `embed.go` became unwieldy, the temptation was to remove functionality.
 
 The right answer was decomposition:
 
-* Same functionality
-* Better organization
-* Easier to test
-* Easier to extend
+* Same functionality;
+* **Better** organization;
+* **Easier** to test;
+* **Easier** to extend.
 
 The result: more lines overall, but dramatically better structure.
+
+!!! tip "The AI Benefit"
+    Smaller, focused files also help AI assistants. 
+
+    When a file fits comfortably in the context window, the AI can 
+    reason about it *completely* instead of working from truncated snippets,
+    preserving token budget for the actual task.
 
 ### 4. Meta-Tools Pay Dividends
 
@@ -283,9 +299,9 @@ The **journal system** took almost a full day to implement.
 
 Yet it paid for itself immediately:
 
-* This blog post was generated from session history
-* Future posts will be easier
-* The archaeological record is now **browsable**, not just `grep`-able
+* This blog post was generated from session history;
+* Future posts will be easier;
+* The archaeological record is now **browsable**, not just `grep`-able.
 
 ## The Release: v0.2.0
 
@@ -311,10 +327,10 @@ Opening files no longer triggered the familiar
 
 This post was written using the tools built during this refactoring window:
 
-1. Session history exported via `ctx recall export`
-2. Journal entries enriched via `/ctx-journal-enrich`
-3. Blog draft generated via `/ctx-blog`
-4. Final editing done (*by yours truly*), with full project context loaded
+1. Session history exported via `ctx recall export`;
+2. Journal entries enriched via `/ctx-journal-enrich`;
+3. Blog draft generated via `/ctx-blog`;
+4. Final editing done (*by yours truly*), with full project context loaded.
 
 !!! info "The Context Is Massive"
     The `ctx` session files now contain 50+ development snapshots: each one

@@ -2,6 +2,7 @@
 title: "The Attention Budget: Why Your AI Forgets What You Just Told It"
 date: 2026-02-03
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - attention mechanics
   - context engineering
@@ -13,7 +14,8 @@ topics:
 # The Attention Budget
 
 !!! note "Update (2026-02-11)"
-    As of v0.4.0, ctx consolidated sessions into the journal mechanism.
+    As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.
+
     References to `.context/sessions/` in this post reflect the
     architecture at the time of writing. Session history is now accessed
     via `ctx recall` and stored in `.context/journal/`.
@@ -24,7 +26,7 @@ topics:
 
 *Jose Alekhinne / 2026-02-03*
 
-!!! question "Ever wondered why AI gets worse the longer you talk?"
+!!! question "Ever Wondered Why AI Gets Worse the Longer You Talk?"
     You paste a 2000-line file, explain the bug in detail, provide three
     examples...
 
@@ -38,12 +40,17 @@ Understanding that single fact shaped every design decision behind `ctx`.
 
 Here's something that took me too long to internalize: **context is not free**.
 
-Every token you send to an AI model consumes a finite resource I call the
-*attention budget*. 
+Every token you send to an AI model consumes a **finite** resource I call the
+**attention budget**.
+
+**Attention budget is real**.
 
 The model doesn't just read tokens; it forms relationships
-between them: For `n` tokens, that's roughly `n^2` relationships.
-Double the context, and the computation quadruples.
+between them: 
+
+For `n` tokens, that's roughly `n^2` relationships. 
+
+**Double the context, and the computation quadruples**.
 
 But the more important constraint isn't cost: It's **attention density**.
 
@@ -51,8 +58,8 @@ But the more important constraint isn't cost: It's **attention density**.
     **Attention density** is how much focus each token receives relative to all
     other tokens in the context window.
 
-As context grows, attention density drops: Each token gets a smaller slice
-of the model's focus. Nothing is ignored; but everything becomes blurrier.
+As context grows, attention density drops: Each token gets a **smaller slice**
+of the model's focus. Nothing is ignored; but everything becomes **blurrier**.
 
 Think of it like a **flashlight**: In a small room, it illuminates everything
 clearly. In a warehouse, it becomes a dim glow that barely reaches the corners.
@@ -64,34 +71,37 @@ ctx agent --budget 4000 # Force prioritization
 ctx agent --budget 8000 # More context, lower attention density
 ```
 
-The budget isn't just about cost. It's about **preserving signal**.
+The budget isn't just about cost: It's about **preserving signal**.
 
 ## The Middle Gets Lost
 
 This one surprised me.
 
 Research shows that transformer-based models tend to attend more strongly to
-the **beginning** and **end** of a context window than to its middle (*a 
-phenomenon often called "lost in the middle"*). 
+the **beginning** and **end** of a context window than to its middle (*a
+phenomenon often called 
+"[lost in the middle](https://arxiv.org/abs/2307.03172)"*)[^1].
+
+[^1]: Liu et al., "Lost in the Middle: How Language Models Use Long Contexts," *Transactions of the Association for Computational Linguistics*, vol. 12, pp. 157–173, 2023.
 
 **Positional anchors matter, and the middle has fewer of them**.
 
 In practice, this means that information placed "*somewhere in the middle*"
 is statistically less salient, even if it's important.
 
-`ctx` orders context files by **logical progression**—what the agent needs to
+`ctx` orders context files by **logical progression**: What the agent needs to
 know before it can understand the next thing:
 
-1. `CONSTITUTION.md`: Constraints before action
-2. `TASKS.md`: Focus before patterns
-3. `CONVENTIONS.md`: How to write before where to write
-4. `ARCHITECTURE.md`: Structure before history
-5. `DECISIONS.md`: Past choices before gotchas
-6. `LEARNINGS.md`: Lessons before terminology
-7. `GLOSSARY.md`: Reference material
-8. `AGENT_PLAYBOOK.md`: Meta instructions last
+1. `CONSTITUTION.md`: Constraints before action.
+2. `TASKS.md`: Focus before patterns.
+3. `CONVENTIONS.md`: How to write before where to write.
+4. `ARCHITECTURE.md`: Structure before history.
+5. `DECISIONS.md`: Past choices before gotchas.
+6. `LEARNINGS.md`: Lessons before terminology.
+7. `GLOSSARY.md`: Reference material.
+8. `AGENT_PLAYBOOK.md`: Meta instructions last.
 
-This ordering is about logical dependencies, not attention engineering.
+This ordering is about **logical dependencies**, not attention engineering.
 But it happens to be **attention-friendly** too:
 
 The files that matter most—**CONSTITUTION**, **TASKS**, **CONVENTIONS**—land
@@ -100,12 +110,13 @@ at the **beginning** of the context window, where attention is strongest.
 Reference material like **GLOSSARY** sits in the middle, where lower salience
 is acceptable.
 
-And **AGENT_PLAYBOOK**—the operating manual for the context system itself—sits
-at the **end**, also outside the "lost in the middle" zone. The agent reads
+And **AGENT_PLAYBOOK**, the operating manual for the context system itself, sits
+at the **end**, also outside the "*lost in the middle*" zone. The agent reads
 *what* to work with before learning *how* the system works.
 
 This is `ctx`'s first primitive: **hierarchical importance**.
-Not all context is equal.
+
+**Not all context is equal**.
 
 ## `ctx` Primitives
 
@@ -172,7 +183,7 @@ An AI agent can scan ~50 tokens of index and decide which
 
 This is **just-in-time context**.
 
-References are cheaper than full text.
+References are cheaper than the full text.
 
 ### Primitive 4: Filesystem as Navigation
 
@@ -206,7 +217,7 @@ File names, timestamps, and directories encode relevance.
 The naive approach to context is dumping everything upfront:
 
 > "Here's my entire codebase, all my documentation, every decision I've ever
-> made—now help me fix this typo."
+> made. Now help me fix this typo 🙏."
 
 This is an **antipattern**.
 
@@ -229,18 +240,18 @@ cat .context/sessions/...       # Deep dive when needed
 | `ctx agent --budget 8000` | 8000   | Complex tasks |
 | Full session read         | 10000+ | Investigation |
 
-Summaries first. Details on demand.
+Summaries **first**. Details: **on demand**.
 
 ## Quality Over Quantity
 
-Here's the counterintuitive part: **more context can make AI worse**.
+Here is the counterintuitive part: **more context can make AI worse**.
 
 Extra tokens add noise, not clarity:
 
 * Hallucinated connections increase.
 * Signal per token drops.
 
-The goal isn't maximum context. It's **maximum signal per token**.
+The goal isn't maximum context: It is **maximum signal per token**.
 
 This principle drives several `ctx` features:
 
@@ -288,7 +299,7 @@ Headings remain scannable. Tables pack density.
 
 And above all: **single source of truth**.
 
-Reference decisions; don't duplicate them.
+**Reference** decisions; **don't duplicate** them.
 
 ## The `ctx` Philosophy
 
@@ -298,6 +309,7 @@ Reference decisions; don't duplicate them.
     `ctx` creates versioned files that persist across time and sessions.
 
 The attention budget is fixed. You can't expand it.
+
 But you can **spend it wisely**:
 
 1. Hierarchical importance
@@ -313,7 +325,7 @@ This is why `ctx` exists: **not** to cram more context into AI sessions,
 
 I now approach every AI interaction with one question:
 
-> "Given a fixed attention budget, what's the highest-signal thing I can load?"
+> "*Given a fixed attention budget, what's the highest-signal thing I can load?*"
 
 Not "*how do I explain everything*," but "*what's the minimum that matters*."
 
@@ -329,10 +341,10 @@ Your AI will thank you.
 ---
 
 *See also: [Context as Infrastructure](2026-02-17-context-as-infrastructure.md)
--- the architectural companion to this post, explaining how to structure
+that's the architectural companion to this post, explaining how to structure
 the context that this post teaches you to budget.*
 
 *See also: [Code Is Cheap. Judgment Is Not.](2026-02-17-code-is-cheap-judgment-is-not.md)
--- why curation (the human skill this post describes) is the bottleneck
+that explains why curation (the human skill this post describes) is the bottleneck
 that AI cannot solve, and the thread that connects every post in this
 blog.*

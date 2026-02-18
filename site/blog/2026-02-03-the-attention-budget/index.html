@@ -2147,8 +2147,8 @@
 <h1 id="the-attention-budget">The Attention Budget<a class="headerlink" href="#the-attention-budget" title="Permanent link">&para;</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Update (2026-02-11)</p>
-<p>As of v0.4.0, ctx consolidated sessions into the journal mechanism.
-References to <code>.context/sessions/</code> in this post reflect the
+<p>As of <code>v0.4.0</code>, <code>ctx</code> consolidated sessions into the journal mechanism.</p>
+<p>References to <code>.context/sessions/</code> in this post reflect the
 architecture at the time of writing. Session history is now accessed
 via <code>ctx recall</code> and stored in <code>.context/journal/</code>.</p>
 </div>
@@ -2156,7 +2156,7 @@ via <code>ctx recall</code> and stored in <code>.context/journal/</code>.</p>
 <h2 id="why-your-ai-forgets-what-you-just-told-it">Why Your AI Forgets What You Just Told It<a class="headerlink" href="#why-your-ai-forgets-what-you-just-told-it" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-03</em></p>
 <div class="admonition question">
-<p class="admonition-title">Ever wondered why AI gets worse the longer you talk?</p>
+<p class="admonition-title">Ever Wondered Why AI Gets Worse the Longer You Talk?</p>
 <p>You paste a 2000-line file, explain the bug in detail, provide three
 examples...</p>
 <p>...and the AI still suggests a fix that ignores half of what you said.</p>
@@ -2165,57 +2165,60 @@ examples...</p>
 <p>Understanding that single fact shaped every design decision behind <code>ctx</code>.</p>
 <h2 id="the-finite-resource-nobody-talks-about">The Finite Resource Nobody Talks About<a class="headerlink" href="#the-finite-resource-nobody-talks-about" title="Permanent link">&para;</a></h2>
 <p>Here's something that took me too long to internalize: <strong>context is not free</strong>.</p>
-<p>Every token you send to an AI model consumes a finite resource I call the
-<em>attention budget</em>. </p>
+<p>Every token you send to an AI model consumes a <strong>finite</strong> resource I call the
+<strong>attention budget</strong>.</p>
+<p><strong>Attention budget is real</strong>.</p>
 <p>The model doesn't just read tokens; it forms relationships
-between them: For <code>n</code> tokens, that's roughly <code>n^2</code> relationships.
-Double the context, and the computation quadruples.</p>
+between them: </p>
+<p>For <code>n</code> tokens, that's roughly <code>n^2</code> relationships. </p>
+<p><strong>Double the context, and the computation quadruples</strong>.</p>
 <p>But the more important constraint isn't cost: It's <strong>attention density</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">Attention Density</p>
 <p><strong>Attention density</strong> is how much focus each token receives relative to all
 other tokens in the context window.</p>
 </div>
-<p>As context grows, attention density drops: Each token gets a smaller slice
-of the model's focus. Nothing is ignored; but everything becomes blurrier.</p>
+<p>As context grows, attention density drops: Each token gets a <strong>smaller slice</strong>
+of the model's focus. Nothing is ignored; but everything becomes <strong>blurrier</strong>.</p>
 <p>Think of it like a <strong>flashlight</strong>: In a small room, it illuminates everything
 clearly. In a warehouse, it becomes a dim glow that barely reaches the corners.</p>
 <p>This is why <code>ctx agent</code> has an explicit <code>--budget</code> flag:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="c1"># Force prioritization</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="c1"># More context, lower attention density</span>
 </span></code></pre></div>
-<p>The budget isn't just about cost. It's about <strong>preserving signal</strong>.</p>
+<p>The budget isn't just about cost: It's about <strong>preserving signal</strong>.</p>
 <h2 id="the-middle-gets-lost">The Middle Gets Lost<a class="headerlink" href="#the-middle-gets-lost" title="Permanent link">&para;</a></h2>
 <p>This one surprised me.</p>
 <p>Research shows that transformer-based models tend to attend more strongly to
-the <strong>beginning</strong> and <strong>end</strong> of a context window than to its middle (<em>a 
-phenomenon often called "lost in the middle"</em>). </p>
+the <strong>beginning</strong> and <strong>end</strong> of a context window than to its middle (<em>a
+phenomenon often called 
+"<a href="https://arxiv.org/abs/2307.03172">lost in the middle</a>"</em>)<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
 <p><strong>Positional anchors matter, and the middle has fewer of them</strong>.</p>
 <p>In practice, this means that information placed "<em>somewhere in the middle</em>"
 is statistically less salient, even if it's important.</p>
-<p><code>ctx</code> orders context files by <strong>logical progression</strong>—what the agent needs to
+<p><code>ctx</code> orders context files by <strong>logical progression</strong>: What the agent needs to
 know before it can understand the next thing:</p>
 <ol>
-<li><code>CONSTITUTION.md</code>: Constraints before action</li>
-<li><code>TASKS.md</code>: Focus before patterns</li>
-<li><code>CONVENTIONS.md</code>: How to write before where to write</li>
-<li><code>ARCHITECTURE.md</code>: Structure before history</li>
-<li><code>DECISIONS.md</code>: Past choices before gotchas</li>
-<li><code>LEARNINGS.md</code>: Lessons before terminology</li>
-<li><code>GLOSSARY.md</code>: Reference material</li>
-<li><code>AGENT_PLAYBOOK.md</code>: Meta instructions last</li>
+<li><code>CONSTITUTION.md</code>: Constraints before action.</li>
+<li><code>TASKS.md</code>: Focus before patterns.</li>
+<li><code>CONVENTIONS.md</code>: How to write before where to write.</li>
+<li><code>ARCHITECTURE.md</code>: Structure before history.</li>
+<li><code>DECISIONS.md</code>: Past choices before gotchas.</li>
+<li><code>LEARNINGS.md</code>: Lessons before terminology.</li>
+<li><code>GLOSSARY.md</code>: Reference material.</li>
+<li><code>AGENT_PLAYBOOK.md</code>: Meta instructions last.</li>
 </ol>
-<p>This ordering is about logical dependencies, not attention engineering.
+<p>This ordering is about <strong>logical dependencies</strong>, not attention engineering.
 But it happens to be <strong>attention-friendly</strong> too:</p>
 <p>The files that matter most—<strong>CONSTITUTION</strong>, <strong>TASKS</strong>, <strong>CONVENTIONS</strong>—land
 at the <strong>beginning</strong> of the context window, where attention is strongest.</p>
 <p>Reference material like <strong>GLOSSARY</strong> sits in the middle, where lower salience
 is acceptable.</p>
-<p>And <strong>AGENT_PLAYBOOK</strong>—the operating manual for the context system itself—sits
-at the <strong>end</strong>, also outside the "lost in the middle" zone. The agent reads
+<p>And <strong>AGENT_PLAYBOOK</strong>, the operating manual for the context system itself, sits
+at the <strong>end</strong>, also outside the "<em>lost in the middle</em>" zone. The agent reads
 <em>what</em> to work with before learning <em>how</em> the system works.</p>
-<p>This is <code>ctx</code>'s first primitive: <strong>hierarchical importance</strong>.
-Not all context is equal.</p>
+<p>This is <code>ctx</code>'s first primitive: <strong>hierarchical importance</strong>.</p>
+<p><strong>Not all context is equal</strong>.</p>
 <h2 id="ctx-primitives"><code>ctx</code> Primitives<a class="headerlink" href="#ctx-primitives" title="Permanent link">&para;</a></h2>
 <p><code>ctx</code> is built on four primitives that directly address the <strong>attention
 budget</strong> problem.</p>
@@ -2309,7 +2312,7 @@ purposes</strong>:</p>
 <p>An AI agent can scan ~50 tokens of index and decide which 
 200-token entries are worth loading.</p>
 <p>This is <strong>just-in-time context</strong>.</p>
-<p>References are cheaper than full text.</p>
+<p>References are cheaper than the full text.</p>
 <h3 id="primitive-4-filesystem-as-navigation">Primitive 4: Filesystem as Navigation<a class="headerlink" href="#primitive-4-filesystem-as-navigation" title="Permanent link">&para;</a></h3>
 <p><code>ctx</code> uses the filesystem itself as a context structure:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>.context/
@@ -2332,7 +2335,7 @@ it needs to know <strong>where to look</strong>.</p>
 <p>The naive approach to context is dumping everything upfront:</p>
 <blockquote>
 <p>"Here's my entire codebase, all my documentation, every decision I've ever
-made—now help me fix this typo."</p>
+made. Now help me fix this typo 🙏."</p>
 </blockquote>
 <p>This is an <strong>antipattern</strong>.</p>
 <div class="admonition warning">
@@ -2376,15 +2379,15 @@ density</strong>.</p>
 </tr>
 </tbody>
 </table>
-<p>Summaries first. Details on demand.</p>
+<p>Summaries <strong>first</strong>. Details: <strong>on demand</strong>.</p>
 <h2 id="quality-over-quantity">Quality Over Quantity<a class="headerlink" href="#quality-over-quantity" title="Permanent link">&para;</a></h2>
-<p>Here's the counterintuitive part: <strong>more context can make AI worse</strong>.</p>
+<p>Here is the counterintuitive part: <strong>more context can make AI worse</strong>.</p>
 <p>Extra tokens add noise, not clarity:</p>
 <ul>
 <li>Hallucinated connections increase.</li>
 <li>Signal per token drops.</li>
 </ul>
-<p>The goal isn't maximum context. It's <strong>maximum signal per token</strong>.</p>
+<p>The goal isn't maximum context: It is <strong>maximum signal per token</strong>.</p>
 <p>This principle drives several <code>ctx</code> features:</p>
 <table>
 <thead>
@@ -2438,15 +2441,15 @@ but how to <strong>design for it</strong>.</p>
 <p><strong>Structure beats prose</strong>: Bullet points survive compression.</p>
 <p>Headings remain scannable. Tables pack density.</p>
 <p>And above all: <strong>single source of truth</strong>.</p>
-<p>Reference decisions; don't duplicate them.</p>
+<p><strong>Reference</strong> decisions; <strong>don't duplicate</strong> them.</p>
 <h2 id="the-ctx-philosophy">The <code>ctx</code> Philosophy<a class="headerlink" href="#the-ctx-philosophy" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Context as Infrastructure</p>
 <p><code>ctx</code> is not a prompt: It is <strong>infrastructure</strong>.</p>
 <p><code>ctx</code> creates versioned files that persist across time and sessions.</p>
 </div>
-<p>The attention budget is fixed. You can't expand it.
-But you can <strong>spend it wisely</strong>:</p>
+<p>The attention budget is fixed. You can't expand it.</p>
+<p>But you can <strong>spend it wisely</strong>:</p>
 <ol>
 <li>Hierarchical importance</li>
 <li>Progressive disclosure</li>
@@ -2459,7 +2462,7 @@ But you can <strong>spend it wisely</strong>:</p>
 <h2 id="the-mental-model">The Mental Model<a class="headerlink" href="#the-mental-model" title="Permanent link">&para;</a></h2>
 <p>I now approach every AI interaction with one question:</p>
 <blockquote>
-<p>"Given a fixed attention budget, what's the highest-signal thing I can load?"</p>
+<p>"<em>Given a fixed attention budget, what's the highest-signal thing I can load?</em>"</p>
 </blockquote>
 <p>Not "<em>how do I explain everything</em>," but "<em>what's the minimum that matters</em>."</p>
 <p>That shift (<em>from abundance to curation</em>) is the difference between
@@ -2469,12 +2472,20 @@ frustrating sessions and <strong>productive</strong> ones.</p>
 <p>Your AI will thank you.</p>
 <hr />
 <p><em>See also: <a href="../2026-02-17-context-as-infrastructure/">Context as Infrastructure</a>
--- the architectural companion to this post, explaining how to structure
+that's the architectural companion to this post, explaining how to structure
 the context that this post teaches you to budget.</em></p>
 <p><em>See also: <a href="../2026-02-17-code-is-cheap-judgment-is-not/">Code Is Cheap. Judgment Is Not.</a>
--- why curation (the human skill this post describes) is the bottleneck
+that explains why curation (the human skill this post describes) is the bottleneck
 that AI cannot solve, and the thread that connects every post in this
 blog.</em></p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Liu et al., "Lost in the Middle: How Language Models Use Long Contexts," <em>Transactions of the Association for Computational Linguistics</em>, vol. 12, pp. 157–173, 2023.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 

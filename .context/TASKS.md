@@ -445,6 +445,46 @@ indexing — grep across 100+ journal files won't scale.
 
 **Design status**: Understanding confirmed, ready for design approaches.
 
+### Phase 5: Knowledge Scaling `#priority:medium`
+
+**Context**: DECISIONS.md and LEARNINGS.md grow monotonically with no archival path.
+Tasks have `ctx tasks archive` / `ctx compact --archive`, but decisions and learnings
+accumulate forever. Long-lived projects will hit token budget pressure and
+signal-to-noise decay. Spec: `specs/knowledge-scaling.md`
+
+- [ ] P5.1: Extract reusable entry parser for decisions and learnings. The
+      archive commands need to parse entries, filter by date, and write back.
+      Reuse existing reindex parsing logic where possible.
+      #priority:medium #added:2026-02-18
+
+- [ ] P5.2: `ctx decisions archive` command — move entries older than N days
+      to `.context/archive/decisions-YYYY-MM-DD.md`. Flags: `--days` (default
+      90), `--dry-run`, `--all`, `--keep`. Rebuild index after archival.
+      #priority:medium #added:2026-02-18
+
+- [ ] P5.3: `ctx learnings archive` command — same pattern as P5.2 but for
+      learnings. Write to `.context/archive/learnings-YYYY-MM-DD.md`.
+      #priority:medium #added:2026-02-18
+
+- [ ] P5.4: Extend `ctx compact --archive` to include decisions and learnings
+      alongside existing task archival. Same age threshold.
+      #priority:medium #added:2026-02-18
+
+- [ ] P5.5: Superseded entry convention — document `~~Superseded by [...]~~`
+      marker for decisions. `compact --archive` archives superseded entries
+      regardless of age. Add to CONVENTIONS.md.
+      #priority:low #added:2026-02-18
+
+- [ ] P5.6: `.contextrc` configuration — `archive_knowledge_after_days` (default
+      90) and `archive_keep_recent` (default 5). Wire into archive commands and
+      compact.
+      #priority:low #added:2026-02-18
+
+- [ ] P5.7: Documentation — update cli-reference.md, context-files.md,
+      recipes/context-health.md. Update `/consolidate` skill to suggest
+      archival when files are large.
+      #priority:low #added:2026-02-18
+
 ### Phase 2: Export Preservation `#priority:medium`
 
 - [ ] T2.1: `ctx recall export --update` mode
