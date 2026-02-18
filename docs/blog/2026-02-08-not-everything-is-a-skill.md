@@ -356,3 +356,7 @@ the right things and to make the rest easy to find when you need it.
 audit reports and distilled the prompt into `hack/runbooks/codebase-audit.md`.
 The audit generated seven tasks, one Makefile target, and zero new
 skills. The meta continues.*
+
+*See also: [Code Is Cheap. Judgment Is Not.](2026-02-17-code-is-cheap-judgment-is-not.md)
+-- the capstone that threads this post's restraint argument into the
+broader case for why judgment, not production, is the bottleneck.*

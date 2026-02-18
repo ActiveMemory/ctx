@@ -11,6 +11,23 @@ Stories, insights, and lessons learned from building and using ctx.
 
 ## Posts
 
+### [Code Is Cheap. Judgment Is Not.](2026-02-17-code-is-cheap-judgment-is-not.md)
+
+*Jose Alekhinne / February 17, 2026*
+
+AI does not replace workers. It replaces unstructured effort. Three weeks
+of building ctx with an AI agent proved it: YOLO mode showed production
+is cheap, the 3:1 ratio showed judgment has a cadence, the attention
+budget showed framing is scarce, and the skill trilogy showed taste is
+load-bearing. This post threads every previous blog entry into one
+argument -- and ends with a personal note on why that's empowering,
+not threatening.
+
+**Topics**: AI and expertise, context engineering, judgment vs production,
+human-AI collaboration, automation discipline
+
+---
+
 ### [The 3:1 Ratio](2026-02-17-the-3-1-ratio.md)
 
 *Jose Alekhinne / February 17, 2026*

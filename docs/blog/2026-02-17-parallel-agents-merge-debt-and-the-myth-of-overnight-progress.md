@@ -427,3 +427,11 @@ This is *slower* to watch. **Faster** to ship.
     **Progress is not what the machine produces while you sleep.**
 
     **Progress is what survives contact with the main branch.**
+
+---
+
+*See also: [Code Is Cheap. Judgment Is Not.][judgment] -- the argument
+that production capacity was never the bottleneck, and why multiplying
+agents amplifies the need for human judgment rather than replacing it.*
+
+[judgment]: 2026-02-17-code-is-cheap-judgment-is-not.md

@@ -325,3 +325,10 @@ frustrating sessions and **productive** ones.
 **Spend your tokens wisely**.
 
 Your AI will thank you.
+
+---
+
+*See also: [Code Is Cheap. Judgment Is Not.](2026-02-17-code-is-cheap-judgment-is-not.md)
+-- why curation (the human skill this post describes) is the bottleneck
+that AI cannot solve, and the thread that connects every post in this
+blog.*
