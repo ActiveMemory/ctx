@@ -57,7 +57,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 				return fmt.Errorf("failed to read input: %w", err)
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
-			if response != "y" && response != "yes" {
+			if response != "y" && response != "yes" { //nolint:goconst // trivial user input check
 				cmd.Println("Aborted.")
 				return nil
 			}

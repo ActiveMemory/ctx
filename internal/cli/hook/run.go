@@ -132,8 +132,8 @@ ctx recall list   # Recent session history
 <!-- ctx:copilot:end -->
 `
 
-// toolConfigFiles maps tool names to their configuration file paths.
-var toolConfigFiles = map[string]string{
+// ToolConfigFiles maps tool names to their configuration file paths.
+var ToolConfigFiles = map[string]string{
 	"copilot":  filepath.Join(".github", "copilot-instructions.md"),
 	"cursor":   ".cursorrules",
 	"windsurf": ".windsurfrules",
@@ -285,7 +285,7 @@ func writeCopilotInstructions(cmd *cobra.Command) error {
 	}
 
 	// Check if file exists
-	existingContent, err := os.ReadFile(targetFile)
+	existingContent, err := os.ReadFile(filepath.Clean(targetFile)) //nolint:gosec // targetFile is constructed from constants, not user input
 	fileExists := err == nil
 
 	if fileExists {
