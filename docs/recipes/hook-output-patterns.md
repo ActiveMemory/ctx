@@ -273,6 +273,90 @@ makes hook output visually distinct from agent prose. It also signals
 **Test the silence path**. Most hook runs should produce no output (*the
 condition isn't met*). Make sure the common case is fast and silent.
 
+## Common Pitfalls
+
+Lessons from 19 days of hook debugging in `ctx`. Every one of these was
+encountered, debugged, and fixed in production.
+
+### Silent misfire: wrong key name
+
+```json
+{ "PreToolUseHooks": [ ... ] }
+```
+
+The key is `PreToolUse`, not `PreToolUseHooks`. Claude Code validates
+silently -- a misspelled key means the hook is ignored with no error.
+**Always test with a debug `echo` first** to confirm the hook fires
+before adding real logic.
+
+### JSON escaping breaks shell commands
+
+Go's `json.Marshal` escapes `>`, `<`, and `&` as Unicode sequences
+(`\u003e`) by default. This breaks shell commands in generated config:
+
+```json
+"command": "ctx agent 2\u003e/dev/null"
+```
+
+Fix: use `json.Encoder` with `SetEscapeHTML(false)` when generating
+hook configuration.
+
+### Stdin, not environment variables
+
+Hook input arrives as **JSON via stdin**, not environment variables:
+
+```bash
+# Wrong:
+COMMAND="$CLAUDE_TOOL_INPUT"
+
+# Right:
+HOOK_INPUT=$(cat)
+COMMAND=$(echo "$HOOK_INPUT" | jq -r '.tool_input.command // empty')
+```
+
+### Regex overfitting
+
+A regex meant to catch `ctx` as a binary will also match `ctx` as a
+directory component:
+
+```bash
+# Too broad -- blocks: git -C /home/jose/WORKSPACE/ctx status
+(/home/|/tmp/|/var/)[^ ]*ctx[^ ]*
+
+# Narrow to binary only:
+(/home/|/tmp/|/var/)[^ ]*/ctx( |$)
+```
+
+Test hook regexes against paths that contain the target string as a
+*substring*, not just as the final component.
+
+### Repetition fatigue
+
+Injecting context on every tool call sounds safe. In practice, after
+seeing the same context injection fifteen times, the agent treats it as
+background noise -- conventions stated in the injected context get
+violated because salience has been destroyed by repetition.
+
+Fix: **cooldowns**. `ctx agent --session $PPID --cooldown 10m` injects
+at most once per ten minutes per session using a tombstone file in
+`/tmp/`. This is not an optimization; it is a correction for a design
+flaw. Every injection consumes attention budget -- 50 tool calls at
+4,000 tokens each means 200,000 tokens of repeated context, most of
+it wasted.
+
+### Hardcoded paths
+
+A username rename (`parallels` to `jose`) broke every hook at once.
+Use `$CLAUDE_PROJECT_DIR` instead of absolute paths:
+
+```json
+"command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-git-push.sh"
+```
+
+If the platform provides a runtime variable for paths, always use it.
+
+---
+
 ## Next Up
 
 **[Using the Scratchpad with Claude →](scratchpad-with-claude.md)**: Store
