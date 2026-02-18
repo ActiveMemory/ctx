@@ -263,7 +263,7 @@ The whole premise of `ctx` is the ruthless elimination of noise.
 
 Numbers optimize funnels; substrates alter cognition.
 
-The only valid measurement is **irreversible reality*:
+The only valid measurement is **irreversible reality**:
 
 * A merged PR;
 * A reproducible install;
