@@ -292,7 +292,7 @@ personal workflow,
 
 to...
 
-a **shared infrastructure for thought*.
+a **shared infrastructure for thought**.
 
 **Not** by growth.  
 
