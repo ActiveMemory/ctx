@@ -1403,6 +1403,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#silent-misfire-wrong-key-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Silent misfire: wrong key name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json-escaping-breaks-shell-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON escaping breaks shell commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdin-not-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stdin, not environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regex-overfitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regex overfitting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repetition-fatigue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repetition fatigue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardcoded-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardcoded paths
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-up" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2323,6 +2406,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#silent-misfire-wrong-key-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Silent misfire: wrong key name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json-escaping-breaks-shell-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON escaping breaks shell commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdin-not-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stdin, not environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regex-overfitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regex overfitting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repetition-fatigue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repetition fatigue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardcoded-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardcoded paths
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-up" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2637,6 +2803,61 @@ makes hook output visually distinct from agent prose. It also signals
 "this is machine-generated, not agent opinion."</p>
 <p><strong>Test the silence path</strong>. Most hook runs should produce no output (<em>the
 condition isn't met</em>). Make sure the common case is fast and silent.</p>
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<p>Lessons from 19 days of hook debugging in <code>ctx</code>. Every one of these was
+encountered, debugged, and fixed in production.</p>
+<h3 id="silent-misfire-wrong-key-name">Silent misfire: wrong key name<a class="headerlink" href="#silent-misfire-wrong-key-name" title="Permanent link">&para;</a></h3>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;PreToolUseHooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</span></code></pre></div>
+<p>The key is <code>PreToolUse</code>, not <code>PreToolUseHooks</code>. Claude Code validates
+silently -- a misspelled key means the hook is ignored with no error.
+<strong>Always test with a debug <code>echo</code> first</strong> to confirm the hook fires
+before adding real logic.</p>
+<h3 id="json-escaping-breaks-shell-commands">JSON escaping breaks shell commands<a class="headerlink" href="#json-escaping-breaks-shell-commands" title="Permanent link">&para;</a></h3>
+<p>Go's <code>json.Marshal</code> escapes <code>&gt;</code>, <code>&lt;</code>, and <code>&amp;</code> as Unicode sequences
+(<code>\u003e</code>) by default. This breaks shell commands in generated config:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx agent 2\u003e/dev/null&quot;</span>
+</span></code></pre></div>
+<p>Fix: use <code>json.Encoder</code> with <code>SetEscapeHTML(false)</code> when generating
+hook configuration.</p>
+<h3 id="stdin-not-environment-variables">Stdin, not environment variables<a class="headerlink" href="#stdin-not-environment-variables" title="Permanent link">&para;</a></h3>
+<p>Hook input arrives as <strong>JSON via stdin</strong>, not environment variables:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Wrong:</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CLAUDE_TOOL_INPUT</span><span class="s2">&quot;</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Right:</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">HOOK_INPUT</span><span class="o">=</span><span class="k">$(</span>cat<span class="k">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOOK_INPUT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.tool_input.command // empty&#39;</span><span class="k">)</span>
+</span></code></pre></div>
+<h3 id="regex-overfitting">Regex overfitting<a class="headerlink" href="#regex-overfitting" title="Permanent link">&para;</a></h3>
+<p>A regex meant to catch <code>ctx</code> as a binary will also match <code>ctx</code> as a
+directory component:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Too broad -- blocks: git -C /home/jose/WORKSPACE/ctx status</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="o">(</span>/home/<span class="p">|</span>/tmp/<span class="p">|</span>/var/<span class="o">)[</span>^<span class="w"> </span><span class="o">]</span>*ctx<span class="o">[</span>^<span class="w"> </span><span class="o">]</span>*
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Narrow to binary only:</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="o">(</span>/home/<span class="p">|</span>/tmp/<span class="p">|</span>/var/<span class="o">)[</span>^<span class="w"> </span><span class="o">]</span>*/ctx<span class="o">(</span><span class="w"> </span><span class="p">|</span>$<span class="o">)</span>
+</span></code></pre></div>
+<p>Test hook regexes against paths that contain the target string as a
+<em>substring</em>, not just as the final component.</p>
+<h3 id="repetition-fatigue">Repetition fatigue<a class="headerlink" href="#repetition-fatigue" title="Permanent link">&para;</a></h3>
+<p>Injecting context on every tool call sounds safe. In practice, after
+seeing the same context injection fifteen times, the agent treats it as
+background noise -- conventions stated in the injected context get
+violated because salience has been destroyed by repetition.</p>
+<p>Fix: <strong>cooldowns</strong>. <code>ctx agent --session $PPID --cooldown 10m</code> injects
+at most once per ten minutes per session using a tombstone file in
+<code>/tmp/</code>. This is not an optimization; it is a correction for a design
+flaw. Every injection consumes attention budget -- 50 tool calls at
+4,000 tokens each means 200,000 tokens of repeated context, most of
+it wasted.</p>
+<h3 id="hardcoded-paths">Hardcoded paths<a class="headerlink" href="#hardcoded-paths" title="Permanent link">&para;</a></h3>
+<p>A username rename (<code>parallels</code> to <code>jose</code>) broke every hook at once.
+Use <code>$CLAUDE_PROJECT_DIR</code> instead of absolute paths:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\&quot;$CLAUDE_PROJECT_DIR\&quot;/.claude/hooks/block-git-push.sh&quot;</span>
+</span></code></pre></div>
+<p>If the platform provides a runtime variable for paths, always use it.</p>
+<hr />
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../scratchpad-with-claude/">Using the Scratchpad with Claude →</a></strong>: Store
 short-lived sensitive notes in an encrypted scratchpad.</p>
