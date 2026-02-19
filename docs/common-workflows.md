@@ -9,6 +9,8 @@ title: Common Workflows
 icon: lucide/repeat
 ---
 
+![ctx](images/ctx-banner.png)
+
 ## Track Context
 
 ```bash

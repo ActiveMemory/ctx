@@ -9,6 +9,8 @@ title: Getting Started
 icon: lucide/rocket
 ---
 
+![ctx](images/ctx-banner.png)
+
 ## Prerequisites
 
 `ctx` does not require git, but using version control with your `.context/`

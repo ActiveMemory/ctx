@@ -9,6 +9,8 @@ title: Your First Session
 icon: lucide/play
 ---
 
+![ctx](images/ctx-banner.png)
+
 Here's what a complete first session looks like, from initialization to
 the moment your AI cites your project context back to you.
 

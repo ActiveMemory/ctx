@@ -9,6 +9,8 @@ title: Is ctx Right for Me?
 icon: lucide/compass
 ---
 
+![ctx](images/ctx-banner.png)
+
 ## Good Fit
 
 `ctx` shines when context matters more than code. If any of these sound like
