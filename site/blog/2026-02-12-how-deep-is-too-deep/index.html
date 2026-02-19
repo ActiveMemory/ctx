@@ -1992,10 +1992,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-uncomfortable-observation" class="md-nav__link">
+  <a href="#the-honest-observation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Uncomfortable Observation
+        The Honest Observation
       
     </span>
   </a>
@@ -2132,17 +2132,18 @@
 <h2 id="when-master-ml-is-the-wrong-next-step">When "Master ML" Is the Wrong Next Step<a class="headerlink" href="#when-master-ml-is-the-wrong-next-step" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-12</em></p>
 <div class="admonition question">
-<p class="admonition-title">Have you ever felt like you should understand more of the stack beneath you?</p>
-<p>You can talk about transformers at a whiteboard. </p>
-<p>You can explain attention to a colleague. </p>
+<p class="admonition-title">Have You Ever Felt Like You Should Understand More of the Stack Beneath You?</p>
+<p>You can talk about transformers at a whiteboard.</p>
+<p>You can explain attention to a colleague.</p>
 <p>You can use agentic AI to ship real software.</p>
-<p>But somewhere in the back of your mind, there is a voice:
-"<em>Maybe I should go deeper. Maybe I need to master machine learning.</em>"</p>
+<p>But somewhere in the back of your mind, there is a voice:</p>
+<p>"<em>Maybe I should go deeper. Maybe I need to master machine learning.</em>"</p>
 </div>
-<p>I had that voice for <strong>months</strong>. Then I spent a week debugging an agent failure
-that had nothing to do with ML theory and <strong>everything</strong> to do with knowing
-<strong>which abstraction was leaking</strong>.</p>
-<p>This post is about when <strong>depth compounds</strong> and when it does not.</p>
+<p>I had that voice for <strong>months</strong>. </p>
+<p>Then I spent a week debugging an agent failure that had <strong>nothing</strong> to do with
+ML theory and <strong>everything</strong> to do with knowing <strong>which abstraction was leaking</strong>.</p>
+<p>This post is about when <strong>depth compounds</strong> and (<em>more importantly</em>) 
+when it does <strong>not</strong>.</p>
 <h2 id="the-hierarchy-nobody-questions">The Hierarchy Nobody Questions<a class="headerlink" href="#the-hierarchy-nobody-questions" title="Permanent link">&para;</a></h2>
 <p>There is an implicit stack most people carry around when thinking about AI:</p>
 <table>
@@ -2182,10 +2183,10 @@ that had nothing to do with ML theory and <strong>everything</strong> to do with
 <p>At some point down that stack, you hit a comfortable plateau: the layer
 where you can hold a conversation but not debug a failure.</p>
 <p>The instinctive response is to go deeper.</p>
-<p>But that instinct hides a more important question.</p>
-<p>Does depth still compound when the abstractions above you are moving
-<em>hyper-exponentially</em>?</p>
-<h2 id="the-uncomfortable-observation">The Uncomfortable Observation<a class="headerlink" href="#the-uncomfortable-observation" title="Permanent link">&para;</a></h2>
+<p>But that instinct hides a more important question:</p>
+<p>"Does depth still compound when the abstractions above you are moving
+<em>hyper-exponentially</em>?"</p>
+<h2 id="the-honest-observation">The Honest  Observation<a class="headerlink" href="#the-honest-observation" title="Permanent link">&para;</a></h2>
 <p>If you squint hard enough, a large chunk of modern ML intuition collapses
 into older fields:</p>
 <table>
@@ -2219,12 +2220,12 @@ into older fields:</p>
 </tbody>
 </table>
 <p>Nothing here is <em>uniquely</em> "<em>AI</em>".</p>
-<p>Most of this math predates the term deep learning.</p>
-<p>In some cases, by decades.</p>
+<p>Most of this math <strong>predates</strong> the term deep learning.
+In some cases, <strong>by decades</strong>.</p>
 <p>So what changed?</p>
 <h2 id="same-tools-different-regime">Same Tools, Different Regime<a class="headerlink" href="#same-tools-different-regime" title="Permanent link">&para;</a></h2>
-<p>The mistake is assuming this is a new theory problem.</p>
-<p>It is not.</p>
+<p>The mistake is assuming this is a new theory problem:
+It is <strong>not</strong>.</p>
 <p><strong>It is a new operating regime</strong>.</p>
 <p>Classical numerical methods were developed under assumptions like:</p>
 <ul>
@@ -2234,18 +2235,18 @@ into older fields:</p>
 </ul>
 <p><strong>Modern ML violates all three</strong>: <em>On purpose</em>.</p>
 <p>Today's models operate with millions to trillions of parameters, wildly
-underdetermined systems, and objective functions we know are wrong but
-optimize anyway. </p>
+underdetermined systems, and objective functions <strong>we know are wrong</strong> but
+<strong>optimize anyway</strong>.</p>
+<p>It is complete and utter madness! </p>
 <p>At this scale, familiar concepts <strong>warp</strong>:</p>
 <ul>
 <li>What we call "<em>local minima</em>" are overwhelmingly saddle points in
-  high-dimensional spaces</li>
-<li><strong>Noise</strong> stops being noise and starts becoming <strong>structure</strong></li>
-<li>Overfitting can <strong>coexist</strong> with generalization</li>
-<li>Bigger models outperform "<em>better</em>" ones</li>
+  high-dimensional spaces.</li>
+<li><strong>Noise</strong> stops being noise and starts becoming <strong>structure</strong>.</li>
+<li>Overfitting can <strong>coexist</strong> with generalization.</li>
+<li>Bigger models outperform "<em>better</em>" ones.</li>
 </ul>
-<p>The math did not change.</p>
-<p>The phase did.</p>
+<p>The math did not change: The <strong>phase</strong> did.</p>
 <p>This is less numerical analysis and more *<em>statistical physics</em>: Same
 equations, but behavior dominated by phase transitions and emergent
 structure.</p>
@@ -2258,14 +2259,14 @@ structure.</p>
 <p>Why small theoretical gains disappear under data.</p>
 <p>Why "<em>just make it bigger</em>", ironically, keeps working longer than it
 should.</p>
-<p>That is not a triumph of ML theory.</p>
-<p>It is a property of <strong>high-dimensional systems under loose objectives</strong>.</p>
+<p>That is not a triumph of ML theory: It is a property of <strong>high-dimensional 
+systems under loose objectives</strong>.</p>
 <h2 id="where-depth-actually-pays-off">Where Depth Actually Pays Off<a class="headerlink" href="#where-depth-actually-pays-off" title="Permanent link">&para;</a></h2>
 <p>This reframes the original question.</p>
-<p>You do not need depth because this is "AI".</p>
-<p>You need depth where failure modes propagate upward.</p>
-<p>I learned this building <code>ctx</code>. The agent failures I have spent the most
-time debugging were never about the model's architecture.</p>
+<p>You do not need depth because this is "<em>AI</em>".</p>
+<p><strong>You need depth where failure modes propagate upward</strong>.</p>
+<p>I learned this building <code>ctx</code>: The agent failures I have spent the most
+time debugging were <strong>never</strong> about the model's architecture.</p>
 <p>They were about:</p>
 <ul>
 <li>
@@ -2294,24 +2295,24 @@ time debugging were never about the model's architecture.</p>
   made the failure mode rarer and harder to reproduce.</p>
 </li>
 </ul>
-<p>This is the kind of depth that <strong>compounds</strong>.</p>
-<p>Not deriving backprop.</p>
-<p>Understanding when correct math produces misleading intuition.</p>
+<p>This is the kind of depth that <strong>compounds</strong>.
+Not deriving backprop. <strong>But</strong>, understanding when correct math 
+produces misleading intuition.</p>
 <h2 id="the-connection-to-context-engineering">The Connection to Context Engineering<a class="headerlink" href="#the-connection-to-context-engineering" title="Permanent link">&para;</a></h2>
 <p>This is the same pattern I keep finding at different altitudes.</p>
 <p>In "<a href="../2026-02-03-the-attention-budget/">The Attention Budget</a>", 
 I wrote about how dumping everything into the context window degrades the 
-model's focus. The fix was not a better model.
+model's focus. The fix was not a better model:
 It was better curation: load less, load the right things, 
 <strong>preserve signal per token</strong>.</p>
 <p>In "<a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>", I wrote about how custom
 instructions can conflict with the model's built-in behavior. The fix
-was not deeper ML knowledge. It was an understanding that the model already
+was not deeper ML knowledge: It was an understanding that the model already
 has judgment and that you should extend it, not override it.</p>
 <p>In "<a href="../2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a>", I wrote about how generic 
 templates fail because they do not encode project-specific knowledge. 
 A consolidation skill with eight Rust-based analysis dimensions was mostly 
-noise for a Go project. The fix was not a better template. It was growing 
+noise for a Go project. The fix was not a better template: It was growing 
 expertise from this project's own history.</p>
 <p>In every case, the answer was <strong>not</strong> "<em>go deeper into ML</em>".</p>
 <p>The answer was <strong>knowing which abstraction was leaking</strong> 
@@ -2321,21 +2322,21 @@ and fixing it <strong>at the right layer</strong>.</p>
 trained, rather than where it is deployed.</p>
 <p>Agentic AI is a <strong>systems problem</strong> under <strong>chaotic uncertainty</strong>:</p>
 <ul>
-<li>Feedback loops between the agent and its environment</li>
-<li>Error accumulation across iterations</li>
-<li>Brittle representations that break outside training distribution</li>
-<li>Misplaced trust in outputs that look correct</li>
+<li>Feedback loops between the agent and its environment;</li>
+<li>Error accumulation across iterations;</li>
+<li>Brittle representations that break outside training distribution;</li>
+<li>Misplaced trust in outputs that look correct.</li>
 </ul>
 <p>In short-lived interactions, model quirks are tolerable. In long-running
-autonomous loops, <strong>they compound</strong>. </p>
+autonomous loops, however, <strong>they compound</strong>. </p>
 <p>That is where shallow understanding becomes expensive.</p>
-<p>But the understanding you need is not about optimizer internals.</p>
+<p>But the understanding you need is <strong>not</strong> about optimizer internals.</p>
 <p>It is about:</p>
 <table>
 <thead>
 <tr>
 <th>What Matters</th>
-<th>What Does Not (for Most Practitioners)</th>
+<th>What Does Not (<em>for Most Practitioner</em>s)</th>
 </tr>
 </thead>
 <tbody>
@@ -2362,20 +2363,21 @@ autonomous loops, <strong>they compound</strong>. </p>
 <p><strong>Not turtles all the way down</strong>.</p>
 <p>Go deep enough to:</p>
 <ul>
-<li>Diagnose failures instead of cargo-culting fixes</li>
-<li>Reason about uncertainty instead of trusting confidence</li>
-<li>Design guardrails that align with model behavior, not hope</li>
+<li>Diagnose failures instead of cargo-culting fixes;</li>
+<li>Reason about uncertainty instead of trusting confidence;</li>
+<li>Design guardrails that align with model behavior, not hope.</li>
 </ul>
 <p>Stop before:</p>
 <ul>
-<li>Hand-deriving gradients for the sake of it</li>
-<li>Obsessing over optimizer internals you will never touch</li>
+<li>Hand-deriving gradients for the sake of it;</li>
+<li>Obsessing over optimizer internals you will never touch;</li>
 <li>Chasing theoretical purity divorced from the scale you actually
-  operate at</li>
+  operate at.</li>
 </ul>
 <p>This is <strong>not</strong> about mastering ML.</p>
 <p>It is about knowing <strong>which abstractions you can safely trust</strong> and which
 ones <strong>leak</strong>.</p>
+<p><strong>Hint</strong>: Any useful abstraction almost certainly <strong>leaks</strong>.</p>
 <h2 id="a-practical-litmus-test">A Practical Litmus Test<a class="headerlink" href="#a-practical-litmus-test" title="Permanent link">&para;</a></h2>
 <p>If a failure occurs and your instinct is to:</p>
 <ul>
@@ -2388,26 +2390,28 @@ ones <strong>leak</strong>.</p>
 predictable</strong>.</p>
 <h2 id="the-ctx-lesson">The <code>ctx</code> Lesson<a class="headerlink" href="#the-ctx-lesson" title="Permanent link">&para;</a></h2>
 <p>Every design decision in <code>ctx</code> is downstream of this principle.</p>
-<p>The <strong>attention budget</strong> exists because the model's internal attention
+<p>The <strong><a href="../2026-02-03-the-attention-budget/">attention budget</a></strong> exists 
+because the model's internal attention
 mechanism has real limits: You do not need to understand the math of
 softmax to build around it. <strong>But</strong> you do need to understand that more
 context is not always better and that attention density degrades with
 scale.</p>
-<p>The <strong>skill system</strong> exists because the model's built-in behavior is already
+<p>The <strong><a href="../2026-02-07-the-anatomy-of-a-skill-that-works/">skill system</a></strong> exists 
+because the model's built-in behavior is already
 good: You <strong>do not</strong> need to understand RLHF to build effective skills. <strong>But</strong>
 you do need to understand that <strong>the model already has judgment</strong> and your
 skills should teach it things it does not know, not override how it
 thinks.</p>
-<p><strong>Defense in depth</strong> exists because <strong>soft instructions are probabilistic</strong>:
+<p><strong><a href="../2026-02-09-defense-in-depth-securing-ai-agents/">Defense in depth</a></strong> 
+exists because <strong>soft instructions are probabilistic</strong>:
 You <strong>do not</strong> need to understand the transformer architecture to know that a
 Markdown file is not a security boundary. <strong>But</strong> you do need to understand
 that the model follows instructions from context, and context can be
 poisoned.</p>
 <p>In each case, the useful depth was one or two layers below the
-abstraction I was working at.</p>
-<p>Not at the bottom of the stack.</p>
-<p>The boundary between useful understanding and academic exercise is where
-your failure modes live.</p>
+abstraction I was working at: <strong>Not</strong> at the bottom of the stack.</p>
+<p>The <strong>boundary</strong> between <em>useful understanding</em> and <em>academic exercise</em> 
+<strong>is</strong> where your <strong>failure modes</strong> live.</p>
 <h2 id="closing-thought">Closing Thought<a class="headerlink" href="#closing-thought" title="Permanent link">&para;</a></h2>
 <p>Most modern AI systems do not fail because the math is wrong.</p>
 <p>They fail because we apply correct math in the wrong regime, then build
@@ -2474,7 +2478,7 @@ answer turned out to be "no, but understand why not". The meta continues.</em></
   
     <div class="md-copyright__highlight">
       Copyright &copy; 2026&ndash;present Context contributors.<br>
-<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code></a>'s code is distributed under
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
 <a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
 The documentation on this website is distributed under
 <a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.

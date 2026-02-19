@@ -2139,8 +2139,7 @@
 </li>
 </ul>
 <p><strong>Resets externalize reconstruction cost onto humans.</strong></p>
-<p>Reconstruction is <strong>tax</strong>.
-Tax becomes <strong>entropy</strong>.</p>
+<p>Reconstruction is <strong>tax</strong>: Tax becomes <strong>entropy</strong>.</p>
 <hr />
 <h2 id="stateless-protocol-stateful-life">Stateless Protocol, Stateful Life<a class="headerlink" href="#stateless-protocol-stateful-life" title="Permanent link">&para;</a></h2>
 <p>IRC is minimal:</p>
@@ -2150,33 +2149,33 @@ Tax becomes <strong>entropy</strong>.</p>
 <li>A channel.</li>
 <li>A stream of lines.</li>
 </ul>
-<p>When the connection drops, you literally <em>*</em>disappear** from the graph.</p>
+<p>When the connection drops, you literally <strong>disappear</strong> from the graph.</p>
 <p>The protocol is <strong>stateless</strong>; human systems <strong>are not</strong>.</p>
 <p>So you:</p>
 <ul>
-<li>Reconnect.</li>
-<li>Ask what you missed.</li>
-<li>Scroll.</li>
+<li>Reconnect;</li>
+<li>Ask what you missed;</li>
+<li>Scroll;</li>
 <li>Reconstruct.</li>
 </ul>
 <p>The machine forgets; <strong>you</strong> pay.</p>
 <hr />
 <h2 id="the-bouncer-pattern">The Bouncer Pattern<a class="headerlink" href="#the-bouncer-pattern" title="Permanent link">&para;</a></h2>
-<p>A <code>bouncer</code> is a daemon that remains connected when you do not.</p>
+<p>A <code>bouncer</code> is a daemon that remains connected when you do not:</p>
 <ul>
-<li>It holds your seat.</li>
-<li>It buffers what you missed.</li>
+<li>It holds your seat;</li>
+<li>It buffers what you missed;</li>
 <li>It keeps your identity online.</li>
 </ul>
 <p><a href="https://en.wikipedia.org/wiki/ZNC">ZNC</a> is one such bouncer.</p>
 <p>With <strong>ZNC</strong>:</p>
 <ul>
-<li>Your client does not connect to IRC.</li>
-<li>It connects to ZNC.</li>
-<li>ZNC connects upstream.</li>
+<li>Your client does not connect to IRC;</li>
+<li>It connects to <code>ZNC</code>;</li>
+<li><code>ZNC</code> connects upstream.</li>
 </ul>
-<p>Client sessions become <strong>ephemeral</strong>.<br />
-Presence becomes <strong>infrastructural</strong>.</p>
+<p>Client sessions become <strong>ephemeral</strong>.</p>
+<p>Presence becomes <strong>infrastructural</strong>.</p>
 <div class="admonition tip">
 <p class="admonition-title">ZNC is tmux for IRC</p>
 <ul>
@@ -2203,17 +2202,17 @@ Presence becomes <strong>infrastructural</strong>.</p>
 <li>Reopening does not emit <code>JOIN</code>.</li>
 </ul>
 <p>You do not flap in and out of existence.</p>
-<p>From the channel’s perspective, you remain.</p>
+<p>From the channel's perspective, you remain.</p>
 <p>From your perspective, history accumulates.</p>
 <ul>
-<li>Buffers persist.</li>
-<li>Identity persists.</li>
-<li>Context persists.</li>
+<li>Buffers <strong>persist</strong>;</li>
+<li>Identity <strong>persists</strong>;</li>
+<li><strong>Context persists</strong>.</li>
 </ul>
 <p>This pattern predates AI.</p>
 <hr />
 <h2 id="before-llm-context-windows">Before LLM Context Windows<a class="headerlink" href="#before-llm-context-windows" title="Permanent link">&para;</a></h2>
-<p>An LLM session without memory is IRC without a bouncer.</p>
+<p>An LLM session without memory is IRC without a bouncer:</p>
 <ul>
 <li>Close the window.</li>
 <li>Start over.</li>
@@ -2252,19 +2251,19 @@ Presence becomes <strong>infrastructural</strong>.</p>
 <li>Buffers are stored on disk.</li>
 </ul>
 <p>My client connects to my VPS, not the network.</p>
-<p>The commands do not matter: The <strong>boundaries</strong> do.</p>
+<p>The commands do not matter: The <strong>boundaries</strong> do:</p>
 <ul>
-<li>Authentication in <strong>infrastructure</strong>, <strong>not</strong> in the client.</li>
-<li>Memory <strong>server-side</strong>, <strong>not</strong> in scrollback.</li>
+<li>Authentication in <strong>infrastructure</strong>, <strong>not</strong> in the client;</li>
+<li>Memory <strong>server-side</strong>, <strong>not</strong> in scrollback;</li>
 <li>Presence <strong>decoupled</strong> from activity.</li>
 </ul>
 <p>Everything else is configuration.</p>
 <hr />
 <h2 id="platform-memory">Platform Memory<a class="headerlink" href="#platform-memory" title="Permanent link">&para;</a></h2>
-<p>Yes, it is 2026.</p>
+<p>Yes, I know, it is 2026:</p>
 <ul>
-<li>Discord stores history.</li>
-<li>Slack stores history.</li>
+<li>Discord stores history;</li>
+<li>Slack stores history;</li>
 <li>The dumpster fire on gasoline called X, too, stores history.</li>
 </ul>
 <p><strong>HOWEVER</strong>, they own your <strong>substrate</strong>.</p>
@@ -2283,15 +2282,16 @@ Presence becomes <strong>infrastructural</strong>.</p>
 <hr />
 <h2 id="infrastructure-as-cognition">Infrastructure as Cognition<a class="headerlink" href="#infrastructure-as-cognition" title="Permanent link">&para;</a></h2>
 <p><strong>ZNC</strong> is not interesting because it is retro;
-it is interesting because it models a principle:</p>
+it is interesting because it models a <strong>principle</strong>:</p>
 <ul>
-<li>Stateless protocols <strong>require</strong> stateful wrappers.</li>
-<li>Volatile interfaces <strong>require</strong> durable memory.</li>
+<li>Stateless protocols <strong>require</strong> stateful wrappers;</li>
+<li>Volatile interfaces <strong>require</strong> durable memory;</li>
 <li>Human systems <strong>require</strong> continuity.</li>
 </ul>
 <p>Distilled:</p>
 <p><strong>Humans require context.</strong></p>
 <p>Before context windows, we had bouncers.  </p>
+<hr />
 <p>Before AI memory files, we had buffers.</p>
 <p>Continuity is <strong>not</strong> a feature; it is a <strong>design decision</strong>.</p>
 <hr />
@@ -2358,7 +2358,7 @@ filesystems.</em></p>
   
     <div class="md-copyright__highlight">
       Copyright &copy; 2026&ndash;present Context contributors.<br>
-<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code></a>'s code is distributed under
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
 <a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
 The documentation on this website is distributed under
 <a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.

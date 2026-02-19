@@ -2149,10 +2149,10 @@
 <h2 id="when-markdown-is-not-a-security-boundary">When Markdown Is Not a Security Boundary<a class="headerlink" href="#when-markdown-is-not-a-security-boundary" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-09</em></p>
 <div class="admonition question">
-<p class="admonition-title">What happens when your AI agent runs overnight and nobody is watching?</p>
-<p>It follows instructions. That is the problem.</p>
-<p>Not because it is malicious. Because it is <strong>controllable</strong>.
-It follows instructions from context, and context can be poisoned.</p>
+<p class="admonition-title">What Happens When Your AI Agent Runs Overnight and Nobody Is Watching?</p>
+<p>It follows instructions: <strong>That is the problem</strong>.</p>
+<p>Not because it is malicious. Because it is <strong>controllable</strong>.</p>
+<p>It follows instructions from context, and <strong>context can be poisoned</strong>.</p>
 </div>
 <p>I was writing the <a href="../../recipes/autonomous-loops/">autonomous loops recipe</a> for <code>ctx</code>:
 the guide for running an AI agent in a loop overnight, unattended,
@@ -2171,7 +2171,7 @@ of instructions in a context window that also contains system prompts,
 project files, conversation history, tool outputs, and whatever the
 agent fetched from the internet.</p>
 <p>An attacker who can inject content into <em>any</em> of those sources can
-redirect the agent's behavior. And "attacker" does not always mean
+redirect the agent's behavior. And "<em>attacker</em>" does not always mean
 a person with malicious intent. It can be:</p>
 <table>
 <thead>
@@ -2204,26 +2204,37 @@ a person with malicious intent. It can be:</p>
 </tbody>
 </table>
 <p><strong>That last vector is the one that kept me up at night</strong> (<em>literally!</em>):</p>
-<p>In an autonomous loop, the agent modifies files as part of its job. If it
-modifies its <em>own</em> configuration files, the next iteration loads the
-modified config. No human reviews it. No diff is shown. The agent
-that starts iteration <code>N+1</code> is running with rules written by
-iteration <code>N</code>.</p>
+<p>In an autonomous loop, the agent modifies files as part of its job. </p>
+<p>If it modifies its <em>own</em> configuration files, the next iteration loads the
+modified config. </p>
+<ul>
+<li>No human reviews it. </li>
+<li>No diff is shown. </li>
+<li>The agent that starts iteration <code>N+1</code> is running with rules written by
+iteration <code>N</code>.</li>
+</ul>
 <p><strong>The agent can rewrite its own guardrails.</strong></p>
 <h2 id="five-layers-each-with-a-hole">Five Layers, Each With a Hole<a class="headerlink" href="#five-layers-each-with-a-hole" title="Permanent link">&para;</a></h2>
-<p>What followed was a week of peeling back assumptions. Every defense
-I examined had a bypass, and the bypass was always the same shape:
+<p>That's five nested layers of swiss cheese. Alone, each of them has large
+holes. Together, they create a <strong>boundary</strong>.</p>
+<p>What followed was a week of peeling back assumptions:</p>
+<p>Every defenseI examined had a bypass, and the bypass was always the same shape:
 the defense was enforced at a level the agent could reach.</p>
 <h3 id="layer-1-soft-instructions-probabilistic">Layer 1: Soft Instructions (Probabilistic)<a class="headerlink" href="#layer-1-soft-instructions-probabilistic" title="Permanent link">&para;</a></h3>
-<p><code>CONSTITUTION.md</code>, the Agent Playbook, system prompts. These tell
-the agent what to do. The agent <em>usually</em> follows them.</p>
-<p><strong>The hole</strong>: Prompt injection. A sufficiently crafted payload
-overrides soft instructions. Long context windows dilute attention
-on rules stated early. Edge cases where instructions are ambiguous
-get resolved in unpredictable ways.</p>
+<p><code>CONSTITUTION.md</code>, the <strong>Agent Playbook</strong>, <strong>system prompts</strong>: 
+These tell the agent what to do. </p>
+<p>The agent <em>usually</em> follows them.</p>
+<p>"<strong>Usually</strong>" is the keyword here.</p>
+<p><strong>The hole</strong>: Prompt injection:</p>
+<ul>
+<li>A sufficiently crafted payload overrides soft instructions. </li>
+<li>Long context windows <strong>dilute</strong> attention on rules stated early. </li>
+<li>Edge cases where instructions are ambiguous get resolved in 
+  <strong>unpredictable</strong> ways.</li>
+</ul>
 <p><strong>Verdict</strong>: Necessary. Not sufficient. Good for the common case.
 Never trust it as a security boundary.</p>
-<h3 id="layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations">Layer 2: Application Controls (Deterministic at Runtime, Mutable Across Iterations)<a class="headerlink" href="#layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations" title="Permanent link">&para;</a></h3>
+<h3 id="layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations">Layer 2: Application Controls (<em>Deterministic at Runtime, Mutable Across Iterations</em>)<a class="headerlink" href="#layer-2-application-controls-deterministic-at-runtime-mutable-across-iterations" title="Permanent link">&para;</a></h3>
 <p>Permission allowlists in <code>.claude/settings.local.json</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2239,21 +2250,25 @@ Never trust it as a security boundary.</p>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>If <code>rm</code>, <code>curl</code>, <code>sudo</code>, or <code>docker</code> are not in the allowlist, the
-agent cannot invoke them. This is deterministic. The application
-enforces it regardless of what any prompt says.</p>
-<p><strong>The hole</strong>: The agent can modify the allowlist itself. It has
-<code>Write</code> permission. The allowlist lives in a file. The agent writes
-to the file. The next iteration loads the modified allowlist.</p>
+agent cannot invoke them. This is <strong>deterministic</strong>. </p>
+<p>The application enforces it regardless of what any prompt says.</p>
+<p><strong>The hole</strong>: The agent can modify the allowlist itself: </p>
+<ul>
+<li>It has <code>Write</code> permission. </li>
+<li>The allowlist lives in a file. </li>
+<li>The agent writes to the file. </li>
+<li>The next iteration loads the modified allowlist.</li>
+</ul>
 <p>The application enforces the rules, but the application reads the
 rules from files the agent can write.</p>
 <p><strong>Verdict</strong>: Strong first layer. Must be combined with
 self-modification prevention.</p>
-<h3 id="layer-3-os-level-isolation-unbypassable">Layer 3: OS-Level Isolation (Unbypassable)<a class="headerlink" href="#layer-3-os-level-isolation-unbypassable" title="Permanent link">&para;</a></h3>
+<h3 id="layer-3-os-level-isolation-unbypassable">Layer 3: OS-Level Isolation (<em>Unbypassable</em>)<a class="headerlink" href="#layer-3-os-level-isolation-unbypassable" title="Permanent link">&para;</a></h3>
 <p>This is where the defenses stop having holes in the same shape.</p>
 <p>The operating system enforces access controls that no
 application-level trick can override. An unprivileged user cannot
 read files owned by root. A process without <code>CAP_NET_RAW</code> cannot
-open raw sockets. These are kernel boundaries.</p>
+open raw sockets. These are <strong>kernel</strong> boundaries.</p>
 <table>
 <thead>
 <tr>
@@ -2279,17 +2294,19 @@ open raw sockets. These are kernel boundaries.</p>
 <p>Make the agent's instruction files read-only: <code>CLAUDE.md</code>,
 <code>.claude/settings.local.json</code>, <code>.context/CONSTITUTION.md</code>. Own them
 as a different user, or mark them immutable with <code>chattr +i</code> on Linux.</p>
-<p><strong>The hole</strong>: Actions within the agent's legitimate scope. If the
-agent has write access to source code (which it needs), it can
-introduce vulnerabilities in the code itself. You cannot prevent
-this without removing the agent's ability to do its job.</p>
+<p><strong>The hole</strong>: Actions within the agent's legitimate scope: </p>
+<ul>
+<li>If the agent has write access to source code (<em>which it needs</em>), it can
+introduce vulnerabilities in the code itself. </li>
+<li>You cannot prevent this without removing the agent's ability to do its job.</li>
+</ul>
 <p><strong>Verdict</strong>: Essential. This is the layer that makes Layers 1 and 2
-trustworthy.</p>
+<strong>trustworthy</strong>.</p>
 <p>OS-level isolation does not make the agent safe; it makes the other
-layers meaningful.</p>
+layers <strong>meaningful</strong>.</p>
 <h3 id="layer-4-network-controls">Layer 4: Network Controls<a class="headerlink" href="#layer-4-network-controls" title="Permanent link">&para;</a></h3>
-<p>An agent that cannot reach the internet cannot exfiltrate data.
-It also cannot ingest new instructions mid-loop from external
+<p>An agent that cannot reach the internet cannot exfiltrate data.</p>
+<p>It also cannot ingest new instructions mid-loop from external
 documents, error pages, or hostile content.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Container with no network</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="o">=</span>none<span class="w"> </span>...
@@ -2299,16 +2316,19 @@ documents, error pages, or hostile content.</p>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-d<span class="w"> </span>proxy.golang.org<span class="w"> </span>-j<span class="w"> </span>ACCEPT
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-j<span class="w"> </span>DROP
 </span></code></pre></div>
-<p>If the agent genuinely does not need the network, disable it
-entirely. If it needs to fetch dependencies, allow specific
-registries and block everything else.</p>
-<p><strong>The hole</strong>: None, if the agent does not need the network. The
-tradeoff is that many real workloads need dependency resolution,
+<ul>
+<li>If the agent genuinely does not need the network, disable it
+  entirely. </li>
+<li>If it needs to fetch dependencies, allow specific
+  registries and block everything else.</li>
+</ul>
+<p><strong>The hole</strong>: <strong>None</strong>, if the agent does not need the network. </p>
+<p>Thetradeoff is that many real workloads need dependency resolution,
 so a full airgap requires pre-populated caches.</p>
 <h3 id="layer-5-infrastructure-isolation">Layer 5: Infrastructure Isolation<a class="headerlink" href="#layer-5-infrastructure-isolation" title="Permanent link">&para;</a></h3>
-<p>The strongest boundary is a separate machine.
-The moment you stop arguing about prompts and start arguing about
-kernels, you are finally doing security.</p>
+<p>The strongest boundary is a <strong>separate machine</strong>.</p>
+<p><strong>The moment you stop arguing about prompts and start arguing about
+kernels, you are finally doing security</strong>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--network<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--cap-drop<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
@@ -2319,18 +2339,20 @@ kernels, you are finally doing security.</p>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>your-dev-image<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>./loop.sh
 </span></code></pre></div>
-<p>Critical: <strong>never mount the Docker socket</strong>
-(<code>/var/run/docker.sock</code>). An agent with socket access can spawn
-sibling containers with full host access, effectively escaping
-the sandbox. This is not theoretical: the Docker socket grants
+<div class="admonition danger">
+<p class="admonition-title">Never Mount the Docker Socket</p>
+<p>Do not mount <code>/var/run/docker.sock</code>, like, <strong>ever</strong>. </p>
+<p>An agent with socket access can spawn sibling containers with 
+full host access, effectively escaping the sandbox. </p>
+<p>This is <strong>not</strong> theoretical: the Docker socket grants
 root-equivalent access to the host.</p>
-<p><strong>Use rootless Docker or Podman to eliminate this escalation path
-entirely</strong>.</p>
-<p>Virtual machines are even stronger. The guest kernel has no
+<p><strong>Use rootless Docker or Podman to eliminate this escalation path entirely</strong>.</p>
+</div>
+<p>Virtual machines are even stronger: The guest kernel has no
 visibility into the host OS. No shared folders, no filesystem
 passthrough, no SSH keys to other machines.</p>
 <h2 id="the-pattern">The Pattern<a class="headerlink" href="#the-pattern" title="Permanent link">&para;</a></h2>
-<p>Each layer is straightforward: The strength is in the <em>combination</em>:</p>
+<p>Each layer is straightforward: The strength is in the <strong>combination</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -2388,23 +2410,24 @@ passthrough, no SSH keys to other machines.</p>
 <p><strong>Remove any one layer and there is an attack path through the
 remaining ones.</strong></p>
 <h2 id="common-mistakes-i-see">Common Mistakes I See<a class="headerlink" href="#common-mistakes-i-see" title="Permanent link">&para;</a></h2>
-<p>These are real patterns, not hypotheticals:</p>
+<p>These are real patterns, <strong>not</strong> hypotheticals:</p>
 <p><strong>"I'll just use <code>--dangerously-skip-permissions</code>."</strong> This disables
 Layer 2 entirely. Without Layers 3 through 5, you have no
-protection at all. The flag means what it says. Only use it inside
-a properly isolated container or VM.</p>
+protection at all. The flag means what it says. If you <strong>ever</strong> need to,
+<strong>think thrice</strong>, you probably don't. But, if you ever need to usee this
+<strong>only use it inside a properly isolated VM</strong> (<em>not even a container: a "VM"</em>).</p>
 <p><strong>"The agent is sandboxed in Docker."</strong> A Docker container with the
 Docker socket mounted, running as root, with <code>--privileged</code>, and
 full network access is not sandboxed. It is a root shell with extra
 steps.</p>
-<p><strong>"I reviewed the CLAUDE.md, it's fine."</strong> You reviewed it before
+<p><strong>"I reviewed <code>CLAUDE.md</code>, it's fine."</strong> You reviewed it <strong>before</strong>
 the loop started. The agent modified it during iteration 3. Iteration
 4 loaded the modified version. Unless the file is immutable, your
-review is stale.</p>
+review is futile.</p>
 <p><strong>"The agent only has access to this one project."</strong> Does the
 project directory contain <code>.env</code> files? SSH keys? API tokens?
 A <code>.git/config</code> with push access to a remote? Filesystem isolation
-means isolating what is <em>in</em> the directory too.</p>
+means isolating what is <strong>in</strong> the directory too.</p>
 <h2 id="the-connection-to-context-engineering">The Connection to Context Engineering<a class="headerlink" href="#the-connection-to-context-engineering" title="Permanent link">&para;</a></h2>
 <p>This is the same lesson I keep rediscovering, wearing different
 clothes.</p>
@@ -2415,30 +2438,33 @@ context window is full of code, error messages, and tool outputs,
 the security rules stated at the top get diluted.</p>
 <p>In <a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>, I wrote about how
 custom instructions can conflict with the AI's built-in behavior.
-Security rules have the same problem: telling an agent "never run
-curl" in Markdown while giving it unrestricted shell access creates
-a contradiction. The agent resolves contradictions unpredictably.</p>
+Security rules have the same problem: telling an agent "<em>never run
+curl</em>" in Markdown while giving it unrestricted shell access creates
+a contradiction: The agent resolves contradictions unpredictably.
+<strong>The agent will often pick the path of least resistance to attain
+its objective function</strong>. And, trust me, agents can get far more
+creative than the best red-teamer you know.</p>
 <p>In <a href="../2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a>, I wrote about how
 generic templates fail because they do not encode project-specific
-knowledge. Generic security advice fails the same way. "Don't
-exfiltrate data" is a category. Blocking outbound network access is
-a control.</p>
+knowledge. Generic security advice fails the same way: "<em>Don't
+exfiltrate data</em>" is a <strong>category</strong>; blocking outbound network access is
+a <strong>control</strong>.</p>
 <p><strong>The pattern across all of these</strong>: Soft instructions are useful
-for the common case. Hard boundaries are required for security.
-Know which is which.</p>
+for the common case. <strong>Hard boundaries are required for security</strong>.</p>
+<p>Know which is which.</p>
 <h2 id="the-checklist">The Checklist<a class="headerlink" href="#the-checklist" title="Permanent link">&para;</a></h2>
 <p>Before running an unattended AI agent:</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Agent runs as a dedicated unprivileged user (no sudo, no
-  docker group)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Agent runs as a dedicated unprivileged user (<em>no sudo, no
+  docker group</em>)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Agent's config files are immutable or owned by a different
   user</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Permission allowlist restricts tools to the project's
   toolchain</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Container drops all capabilities (<code>--cap-drop=ALL</code>)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Docker socket is NOT mounted</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Docker socket is <strong>NOT</strong> mounted</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Network is disabled or restricted to specific domains</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Resource limits are set (memory, CPU, disk)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Resource limits are set (<em>memory, CPU, disk</em>)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No SSH keys, API tokens, or credentials are accessible</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Project directory does not contain <code>.env</code> or secrets files</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Iteration cap is set (<code>--max-iterations</code>)</li>
@@ -2457,7 +2483,7 @@ unprivileged users, filesystem permissions, containers, VMs,
 network controls, resource limits, and self-modification prevention.</p>
 <p>The <a href="../../agent-security/">Agent Security</a> page consolidates the threat
 model and defense layers into a standalone reference.</p>
-<p>These are not theoretical improvements. They are the minimum
+<p>These are <strong>not</strong> theoretical improvements. They are the minimum
 responsible guidance for a tool that helps people run AI agents
 overnight.</p>
 <hr />
@@ -2520,7 +2546,7 @@ two documents. The meta continues.</em></p>
   
     <div class="md-copyright__highlight">
       Copyright &copy; 2026&ndash;present Context contributors.<br>
-<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code></a>'s code is distributed under
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
 <a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
 The documentation on this website is distributed under
 <a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.

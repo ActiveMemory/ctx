@@ -2111,8 +2111,8 @@
 <p><em>Jose Alekhinne / 2026-02-14</em></p>
 <div class="admonition question">
 <p class="admonition-title">What do you do with 30 open tasks?</p>
-<p>You could work through them one at a time.
-One agent, one branch, one commit stream.</p>
+<p>You could work through them one at a time.</p>
+<p>One agent, one branch, one commit stream.</p>
 <p>Or you could ask: <strong>which of these don't touch each other?</strong></p>
 </div>
 <p>I had 30 open tasks in <code>TASKS.md</code>. Some were docs. Some were a new
@@ -2120,13 +2120,13 @@ encryption package. Some were test coverage for a stable module. Some
 were blog posts.</p>
 <p>They had almost zero file overlap.</p>
 <p>Running one agent at a time meant serial execution on work that was
-fundamentally parallel. I was bottlenecking on <em>me</em>, not on the
-machine.</p>
+fundamentally parallel:</p>
+<p>I was bottlenecking on <strong>me</strong>, not on the machine.</p>
 <h2 id="the-insight-file-overlap-is-the-constraint">The Insight: File Overlap Is the Constraint<a class="headerlink" href="#the-insight-file-overlap-is-the-constraint" title="Permanent link">&para;</a></h2>
 <p>This is not a scheduling problem. It is a <strong>conflict avoidance</strong> problem.</p>
 <p>Two agents can work simultaneously on the same codebase if and only if
 they don't touch the same files. The moment they do, you get merge
-conflicts — and merge conflicts on AI-generated code are expensive
+conflicts: And merge conflicts on AI-generated code are expensive
 because the human has to arbitrate choices they didn't make.</p>
 <p>So the question becomes: <strong>can you partition your backlog into
 non-overlapping tracks?</strong></p>
@@ -2160,7 +2160,7 @@ non-overlapping tracks?</strong></p>
 <p>Three tracks. Near-zero overlap. Three agents.</p>
 <h2 id="git-worktrees-the-mechanism">Git Worktrees: The Mechanism<a class="headerlink" href="#git-worktrees-the-mechanism" title="Permanent link">&para;</a></h2>
 <p>Git has a feature that most people don't use: <strong>worktrees</strong>.</p>
-<p>A worktree is a second (or third, or fourth) working directory that
+<p>A <strong>worktree</strong> is a second (<em>or third, or fourth</em>) working directory that
 shares the same <code>.git</code> object database as your main checkout. Each
 worktree has its own branch, its own index, its own working tree. But
 they all share history, refs, and objects.</p>
@@ -2169,8 +2169,8 @@ they all share history, refs, and objects.</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../ctx-tests<span class="w"> </span>-b<span class="w"> </span>work/tests
 </span></code></pre></div>
 <p>Three directories. Three branches. One repository.</p>
-<p>This is cheaper than three clones. And because they share objects,
-<code>git merge</code> afterwards is fast — it's a local operation on shared data.</p>
+<p>This is <strong>cheaper</strong> than three clones. And because they share objects,
+<code>git merge</code> afterwards is fast: It's a local operation on shared data.</p>
 <h2 id="the-setup">The Setup<a class="headerlink" href="#the-setup" title="Permanent link">&para;</a></h2>
 <p>The workflow I landed on:</p>
 <p><strong>1. Group tasks by blast radius.</strong></p>
@@ -2367,7 +2367,7 @@ workflow, and cleanup — lives in the recipe:
   
     <div class="md-copyright__highlight">
       Copyright &copy; 2026&ndash;present Context contributors.<br>
-<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code></a>'s code is distributed under
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
 <a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
 The documentation on this website is distributed under
 <a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.

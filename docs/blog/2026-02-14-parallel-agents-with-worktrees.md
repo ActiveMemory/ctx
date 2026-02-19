@@ -20,6 +20,7 @@ topics:
 
 !!! question "What do you do with 30 open tasks?"
     You could work through them one at a time.
+
     One agent, one branch, one commit stream.
 
     Or you could ask: **which of these don't touch each other?**
@@ -31,8 +32,9 @@ were blog posts.
 They had almost zero file overlap.
 
 Running one agent at a time meant serial execution on work that was
-fundamentally parallel. I was bottlenecking on *me*, not on the
-machine.
+fundamentally parallel:
+
+I was bottlenecking on **me**, not on the machine.
 
 ## The Insight: File Overlap Is the Constraint
 
@@ -40,7 +42,7 @@ This is not a scheduling problem. It is a **conflict avoidance** problem.
 
 Two agents can work simultaneously on the same codebase if and only if
 they don't touch the same files. The moment they do, you get merge
-conflicts — and merge conflicts on AI-generated code are expensive
+conflicts: And merge conflicts on AI-generated code are expensive
 because the human has to arbitrate choices they didn't make.
 
 So the question becomes: **can you partition your backlog into
@@ -60,7 +62,7 @@ Three tracks. Near-zero overlap. Three agents.
 
 Git has a feature that most people don't use: **worktrees**.
 
-A worktree is a second (or third, or fourth) working directory that
+A **worktree** is a second (*or third, or fourth*) working directory that
 shares the same `.git` object database as your main checkout. Each
 worktree has its own branch, its own index, its own working tree. But
 they all share history, refs, and objects.
@@ -73,8 +75,8 @@ git worktree add ../ctx-tests -b work/tests
 
 Three directories. Three branches. One repository.
 
-This is cheaper than three clones. And because they share objects,
-`git merge` afterwards is fast — it's a local operation on shared data.
+This is **cheaper** than three clones. And because they share objects,
+`git merge` afterwards is fast: It's a local operation on shared data.
 
 ## The Setup
 

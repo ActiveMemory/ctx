@@ -18,21 +18,24 @@ topics:
 
 *Jose Alekhinne / 2026-02-12*
 
-!!! question "Have you ever felt like you should understand more of the stack beneath you?"
-    You can talk about transformers at a whiteboard. 
+!!! question "Have You Ever Felt Like You Should Understand More of the Stack Beneath You?"
+    You can talk about transformers at a whiteboard.
 
-    You can explain attention to a colleague. 
+    You can explain attention to a colleague.
 
     You can use agentic AI to ship real software.
 
     But somewhere in the back of your mind, there is a voice:
+
     "*Maybe I should go deeper. Maybe I need to master machine learning.*"
 
-I had that voice for **months**. Then I spent a week debugging an agent failure
-that had nothing to do with ML theory and **everything** to do with knowing
-**which abstraction was leaking**.
+I had that voice for **months**. 
 
-This post is about when **depth compounds** and when it does not.
+Then I spent a week debugging an agent failure that had **nothing** to do with
+ML theory and **everything** to do with knowing **which abstraction was leaking**.
+
+This post is about when **depth compounds** and (*more importantly*) 
+when it does **not**.
 
 ## The Hierarchy Nobody Questions
 
@@ -52,12 +55,12 @@ where you can hold a conversation but not debug a failure.
 
 The instinctive response is to go deeper.
 
-But that instinct hides a more important question.
+But that instinct hides a more important question:
 
-Does depth still compound when the abstractions above you are moving
-*hyper-exponentially*?
+"Does depth still compound when the abstractions above you are moving
+*hyper-exponentially*?"
 
-## The Uncomfortable Observation
+## The Honest  Observation
 
 If you squint hard enough, a large chunk of modern ML intuition collapses
 into older fields:
@@ -72,17 +75,15 @@ into older fields:
 
 Nothing here is *uniquely* "*AI*".
 
-Most of this math predates the term deep learning.
-
-In some cases, by decades.
+Most of this math **predates** the term deep learning.
+In some cases, **by decades**.
 
 So what changed?
 
 ## Same Tools, Different Regime
 
-The mistake is assuming this is a new theory problem.
-
-It is not.
+The mistake is assuming this is a new theory problem:
+It is **not**.
 
 **It is a new operating regime**.
 
@@ -95,20 +96,20 @@ Classical numerical methods were developed under assumptions like:
 **Modern ML violates all three**: *On purpose*.
 
 Today's models operate with millions to trillions of parameters, wildly
-underdetermined systems, and objective functions we know are wrong but
-optimize anyway. 
+underdetermined systems, and objective functions **we know are wrong** but
+**optimize anyway**.
+
+It is complete and utter madness! 
 
 At this scale, familiar concepts **warp**:
 
 * What we call "*local minima*" are overwhelmingly saddle points in
-  high-dimensional spaces
-* **Noise** stops being noise and starts becoming **structure**
-* Overfitting can **coexist** with generalization
-* Bigger models outperform "*better*" ones
+  high-dimensional spaces.
+* **Noise** stops being noise and starts becoming **structure**.
+* Overfitting can **coexist** with generalization.
+* Bigger models outperform "*better*" ones.
 
-The math did not change.
-
-The phase did.
+The math did not change: The **phase** did.
 
 This is less numerical analysis and more **statistical physics*: Same
 equations, but behavior dominated by phase transitions and emergent
@@ -131,20 +132,19 @@ Why small theoretical gains disappear under data.
 Why "*just make it bigger*", ironically, keeps working longer than it
 should.
 
-That is not a triumph of ML theory.
-
-It is a property of **high-dimensional systems under loose objectives**.
+That is not a triumph of ML theory: It is a property of **high-dimensional 
+systems under loose objectives**.
 
 ## Where Depth Actually Pays Off
 
 This reframes the original question.
 
-You do not need depth because this is "AI".
+You do not need depth because this is "*AI*".
 
-You need depth where failure modes propagate upward.
+**You need depth where failure modes propagate upward**.
 
-I learned this building `ctx`. The agent failures I have spent the most
-time debugging were never about the model's architecture.
+I learned this building `ctx`: The agent failures I have spent the most
+time debugging were **never** about the model's architecture.
 
 They were about:
 
@@ -159,21 +159,19 @@ They were about:
   compounds requires understanding why generalization has limits, not
   just that it does.
 
-- **Error accumulation**: 
+* **Error accumulation**: 
   In a single prompt, model quirks are tolerable. In autonomous loops
   running overnight, they compound. A small bias in how the model
   interprets instructions becomes a large drift by iteration 20.
 
-- **Scale hiding errors**: 
+* **Scale hiding errors**: 
   The model's raw capability masked problems that only surfaced under
   specific conditions. More parameters did not fix the issue. They just
   made the failure mode rarer and harder to reproduce.
 
 This is the kind of depth that **compounds**.
-
-Not deriving backprop.
-
-Understanding when correct math produces misleading intuition.
+Not deriving backprop. **But**, understanding when correct math 
+produces misleading intuition.
 
 ## The Connection to Context Engineering
 
@@ -181,19 +179,19 @@ This is the same pattern I keep finding at different altitudes.
 
 In "[The Attention Budget][attention-post]", 
 I wrote about how dumping everything into the context window degrades the 
-model's focus. The fix was not a better model.
+model's focus. The fix was not a better model:
 It was better curation: load less, load the right things, 
 **preserve signal per token**.
 
 In "[Skills That Fight the Platform][fight-post]", I wrote about how custom
 instructions can conflict with the model's built-in behavior. The fix
-was not deeper ML knowledge. It was an understanding that the model already
+was not deeper ML knowledge: It was an understanding that the model already
 has judgment and that you should extend it, not override it.
 
 In "[You Can't Import Expertise][import-post]", I wrote about how generic 
 templates fail because they do not encode project-specific knowledge. 
 A consolidation skill with eight Rust-based analysis dimensions was mostly 
-noise for a Go project. The fix was not a better template. It was growing 
+noise for a Go project. The fix was not a better template: It was growing 
 expertise from this project's own history.
 
 [attention-post]: 2026-02-03-the-attention-budget.md
@@ -212,21 +210,21 @@ trained, rather than where it is deployed.
 
 Agentic AI is a **systems problem** under **chaotic uncertainty**:
 
-* Feedback loops between the agent and its environment
-* Error accumulation across iterations
-* Brittle representations that break outside training distribution
-* Misplaced trust in outputs that look correct
+* Feedback loops between the agent and its environment;
+* Error accumulation across iterations;
+* Brittle representations that break outside training distribution;
+* Misplaced trust in outputs that look correct.
 
 In short-lived interactions, model quirks are tolerable. In long-running
-autonomous loops, **they compound**. 
+autonomous loops, however, **they compound**. 
 
 That is where shallow understanding becomes expensive.
 
-But the understanding you need is not about optimizer internals.
+But the understanding you need is **not** about optimizer internals.
 
 It is about:
 
-| What Matters                                              | What Does Not (for Most Practitioners)            |
+| What Matters                                              | What Does Not (*for Most Practitioner*s)          |
 |-----------------------------------------------------------|---------------------------------------------------|
 | Why gradient descent fails in specific regimes            | How to derive it from scratch                     |
 | When memorization masquerades as reasoning                | The formal definition of VC dimension             |
@@ -241,21 +239,23 @@ The depth that matters is **diagnostic**, not theoretical.
 
 Go deep enough to:
 
-* Diagnose failures instead of cargo-culting fixes
-* Reason about uncertainty instead of trusting confidence
-* Design guardrails that align with model behavior, not hope
+* Diagnose failures instead of cargo-culting fixes;
+* Reason about uncertainty instead of trusting confidence;
+* Design guardrails that align with model behavior, not hope.
 
 Stop before:
 
-* Hand-deriving gradients for the sake of it
-* Obsessing over optimizer internals you will never touch
+* Hand-deriving gradients for the sake of it;
+* Obsessing over optimizer internals you will never touch;
 * Chasing theoretical purity divorced from the scale you actually
-  operate at
+  operate at.
 
 This is **not** about mastering ML.
 
 It is about knowing **which abstractions you can safely trust** and which
 ones **leak**.
+
+**Hint**: Any useful abstraction almost certainly **leaks**.
 
 ## A Practical Litmus Test
 
@@ -273,31 +273,32 @@ predictable**.
 
 Every design decision in `ctx` is downstream of this principle.
 
-The **attention budget** exists because the model's internal attention
+The **[attention budget](2026-02-03-the-attention-budget.md)** exists 
+because the model's internal attention
 mechanism has real limits: You do not need to understand the math of
 softmax to build around it. **But** you do need to understand that more
 context is not always better and that attention density degrades with
 scale.
 
-The **skill system** exists because the model's built-in behavior is already
+The **[skill system](2026-02-07-the-anatomy-of-a-skill-that-works.md)** exists 
+because the model's built-in behavior is already
 good: You **do not** need to understand RLHF to build effective skills. **But**
 you do need to understand that **the model already has judgment** and your
 skills should teach it things it does not know, not override how it
 thinks.
 
-**Defense in depth** exists because **soft instructions are probabilistic**:
+**[Defense in depth](2026-02-09-defense-in-depth-securing-ai-agents.md)** 
+exists because **soft instructions are probabilistic**:
 You **do not** need to understand the transformer architecture to know that a
 Markdown file is not a security boundary. **But** you do need to understand
 that the model follows instructions from context, and context can be
 poisoned.
 
 In each case, the useful depth was one or two layers below the
-abstraction I was working at.
+abstraction I was working at: **Not** at the bottom of the stack.
 
-Not at the bottom of the stack.
-
-The boundary between useful understanding and academic exercise is where
-your failure modes live.
+The **boundary** between *useful understanding* and *academic exercise* 
+**is** where your **failure modes** live.
 
 ## Closing Thought
 

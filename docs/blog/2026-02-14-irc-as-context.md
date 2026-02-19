@@ -38,8 +38,7 @@ Modern systems are not much different:
 
 **Resets externalize reconstruction cost onto humans.**
 
-Reconstruction is **tax**.
-Tax becomes **entropy**.
+Reconstruction is **tax**: Tax becomes **entropy**.
 
 ---
 
@@ -52,15 +51,15 @@ IRC is minimal:
 * A channel.
 * A stream of lines.
 
-When the connection drops, you literally ***disappear** from the graph.
+When the connection drops, you literally **disappear** from the graph.
 
 The protocol is **stateless**; human systems **are not**.
 
 So you:
 
-* Reconnect.
-* Ask what you missed.
-* Scroll.
+* Reconnect;
+* Ask what you missed;
+* Scroll;
 * Reconstruct.
 
 The machine forgets; **you** pay.
@@ -69,10 +68,10 @@ The machine forgets; **you** pay.
 
 ## The Bouncer Pattern
 
-A `bouncer` is a daemon that remains connected when you do not.
+A `bouncer` is a daemon that remains connected when you do not:
 
-* It holds your seat.
-* It buffers what you missed.
+* It holds your seat;
+* It buffers what you missed;
 * It keeps your identity online.
 
 [ZNC][znc] is one such bouncer.
@@ -81,11 +80,12 @@ A `bouncer` is a daemon that remains connected when you do not.
 
 With **ZNC**:
 
-* Your client does not connect to IRC.
-* It connects to ZNC.
-* ZNC connects upstream.
+* Your client does not connect to IRC;
+* It connects to `ZNC`;
+* `ZNC` connects upstream.
 
-Client sessions become **ephemeral**.  
+Client sessions become **ephemeral**.
+
 Presence becomes **infrastructural**.
 
 !!! tip "ZNC is tmux for IRC"
@@ -108,13 +108,13 @@ With a bouncer:
 
 You do not flap in and out of existence.
 
-From the channel’s perspective, you remain.
+From the channel's perspective, you remain.
 
 From your perspective, history accumulates.
 
-* Buffers persist.
-* Identity persists.
-* Context persists.
+* Buffers **persist**;
+* Identity **persists**;
+* **Context persists**.
 
 This pattern predates AI.
 
@@ -122,7 +122,7 @@ This pattern predates AI.
 
 ## Before LLM Context Windows
 
-An LLM session without memory is IRC without a bouncer.
+An LLM session without memory is IRC without a bouncer:
 
 * Close the window.
 * Start over.
@@ -164,10 +164,10 @@ Then:
 
 My client connects to my VPS, not the network.
 
-The commands do not matter: The **boundaries** do.
+The commands do not matter: The **boundaries** do:
 
-* Authentication in **infrastructure**, **not** in the client.
-* Memory **server-side**, **not** in scrollback.
+* Authentication in **infrastructure**, **not** in the client;
+* Memory **server-side**, **not** in scrollback;
 * Presence **decoupled** from activity.
 
 Everything else is configuration.
@@ -176,10 +176,10 @@ Everything else is configuration.
 
 ## Platform Memory
 
-Yes, it is 2026.
+Yes, I know, it is 2026:
 
-* Discord stores history.
-* Slack stores history.
+* Discord stores history;
+* Slack stores history;
 * The dumpster fire on gasoline called X, too, stores history.
 
 **HOWEVER**, they own your **substrate**.
@@ -207,10 +207,10 @@ Consistent presence in small rooms compounds reputation.
 ## Infrastructure as Cognition
 
 **ZNC** is not interesting because it is retro;
-it is interesting because it models a principle:
+it is interesting because it models a **principle**:
 
-* Stateless protocols **require** stateful wrappers.
-* Volatile interfaces **require** durable memory.
+* Stateless protocols **require** stateful wrappers;
+* Volatile interfaces **require** durable memory;
 * Human systems **require** continuity.
 
 Distilled:
@@ -218,6 +218,8 @@ Distilled:
 **Humans require context.**
 
 Before context windows, we had bouncers.  
+
+---
 
 Before AI memory files, we had buffers.
 
