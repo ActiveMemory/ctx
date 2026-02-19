@@ -57,7 +57,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 				return fmt.Errorf("failed to read input: %w", err)
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
-			if response != "y" && response != "yes" {
+			if response != "y" && response != "yes" { //nolint:goconst // trivial user input check
 				cmd.Println("Aborted.")
 				return nil
 			}
@@ -123,6 +123,17 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	if err := createTools(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
 		cmd.Printf("  %s Tools: %v\n", color.YellowString("⚠"), err)
+	}
+
+	// Create .context/sessions/ directory for session summaries
+	sessionsDir := filepath.Join(contextDir, config.DirSessions)
+	if err := os.MkdirAll(sessionsDir, config.PermExec); err != nil {
+		cmd.Println(fmt.Sprintf(
+			"  %s sessions/: %v", color.YellowString("⚠"), err,
+		))
+	} else {
+		green := color.New(color.FgGreen).SprintFunc()
+		cmd.Println(fmt.Sprintf("  %s sessions/", green("✓")))
 	}
 
 	// Set up scratchpad

@@ -340,20 +340,106 @@ ctx watch --log /tmp/aider.log
 
 ## GitHub Copilot
 
-Copilot reads open files for context. Keep context files open or reference 
-them in comments.
+GitHub Copilot integrates with `ctx` at three levels: an automated
+instructions file, a VS Code Chat extension, and manual patterns.
 
 ### Setup
 
 ```bash
-# Generate Copilot tips
-ctx hook copilot
-
 # Initialize context
-ctx init --minimal
+ctx init
+
+# Generate .github/copilot-instructions.md
+ctx hook copilot --write
 ```
 
-### Usage Patterns
+The `--write` flag creates `.github/copilot-instructions.md`, which
+Copilot reads automatically at the start of every session. This file
+contains your project's constitution rules, current tasks, conventions,
+and architecture — giving Copilot persistent context without manual
+copy-paste.
+
+Re-run `ctx hook copilot --write` after updating your `.context/` files
+to regenerate the instructions.
+
+### VS Code Chat Extension (`@ctx`)
+
+The **ctx VS Code extension** adds a `@ctx` chat participant to
+GitHub Copilot Chat, giving you direct access to all context commands
+from within the editor.
+
+#### Installation
+
+1. Build from source (requires Node.js 18+):
+
+```bash
+cd editors/vscode
+npm install
+npm run build
+npx @vscode/vsce package
+```
+
+2. Install the `.vsix` file:
+
+```bash
+code --install-extension ctx-context-0.7.0.vsix
+```
+
+3. Reload VS Code. Type `@ctx` in Copilot Chat to verify.
+
+#### Slash Commands
+
+| Command | Description |
+|---------|-------------|
+| `@ctx /init` | Initialize `.context/` directory with template files |
+| `@ctx /status` | Show context summary with token estimate |
+| `@ctx /agent` | Print AI-ready context packet |
+| `@ctx /drift` | Detect stale or invalid context |
+| `@ctx /recall` | Browse and search AI session history |
+| `@ctx /hook` | Generate AI tool integration configs |
+| `@ctx /add` | Add a task, decision, or learning |
+| `@ctx /load` | Output assembled context Markdown |
+| `@ctx /compact` | Archive completed tasks and clean up |
+| `@ctx /sync` | Reconcile context with codebase |
+
+#### Usage Examples
+
+```text
+@ctx /init
+@ctx /status
+@ctx /add task Implement user authentication
+@ctx /drift
+@ctx /hook copilot
+@ctx /recall
+```
+
+Typing `@ctx` without a command shows help with all available commands.
+The extension also supports natural language — asking `@ctx` about
+"status" or "drift" routes to the correct command automatically.
+
+#### Configuration
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `ctx.executablePath` | `ctx` | Path to the ctx binary. Set this if `ctx` is not in your `PATH`. |
+
+#### Follow-Up Suggestions
+
+After each command, the extension suggests relevant next steps. For
+example, after `/init` it suggests `/status` and `/hook`; after
+`/drift` it suggests `/sync`.
+
+### Session Persistence
+
+`ctx init` creates a `.context/sessions/` directory for storing
+session data from non-Claude tools. The Markdown session parser scans
+this directory during `ctx recall`, enabling session history for
+Copilot and other tools.
+
+### Manual Patterns
+
+These patterns work without the extension, using Copilot's built-in
+file awareness:
 
 **Pattern 1: Keep context files open**
 

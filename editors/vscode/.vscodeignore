@@ -1,0 +1,9 @@
+.vscode-test/
+node_modules/
+src/
+tsconfig.json
+vitest.config.ts
+package-lock.json
+**/*.map
+**/*.ts
+!dist/**
