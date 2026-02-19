@@ -193,6 +193,9 @@ Docs are feature-organized, not problem-organized. Key structural improvements:
       Skipped: Not enough content to warrant a page. The few troubleshooting
       items are already inline where they belong (Integrations, Autonomous Loop).
 
+- [ ] Investigate why this PR is closed, is there anything we can leverage
+      from it: https://github.com/ActiveMemory/ctx/pull/17
+
 - [ ] Use-case page: "My AI Keeps Making the Same Mistakes" — problem-first
       page showcasing DECISIONS.md and CONSTITUTION.md. Partially covered in
       about.md but deserves standalone treatment as the #2 pain point.
