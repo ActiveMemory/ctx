@@ -11,7 +11,7 @@ icon: lucide/message-circle
 
 ![ctx](images/ctx-banner.png)
 
-## Prompting Guide
+## Literature Matters
 
 Effective prompts for working with AI assistants in `ctx`-enabled projects.
 
