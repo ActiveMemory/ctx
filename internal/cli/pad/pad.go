@@ -40,7 +40,9 @@ Subcommands:
   rm       Remove an entry by number
   edit     Replace an entry by number
   mv       Move an entry to a different position
-  resolve  Show both sides of a merge conflict`,
+  resolve  Show both sides of a merge conflict
+  import   Bulk-import lines from a file
+  export   Export blob entries to a directory as files`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runList(cmd)
 		},
@@ -52,6 +54,8 @@ Subcommands:
 	cmd.AddCommand(editCmd())
 	cmd.AddCommand(mvCmd())
 	cmd.AddCommand(resolveCmd())
+	cmd.AddCommand(importCmd())
+	cmd.AddCommand(exportCmd())
 
 	return cmd
 }

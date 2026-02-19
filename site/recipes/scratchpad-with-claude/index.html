@@ -1416,6 +1416,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-9-bulk-import-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Bulk Import Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-export-blobs-to-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Export Blobs to Disk
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2328,6 +2350,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-9-bulk-import-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Bulk Import Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-10-export-blobs-to-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 10: Export Blobs to Disk
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2516,6 +2560,16 @@ polluting your structured context files?</strong></p>
 <td>Reorder entries</td>
 </tr>
 <tr>
+<td><code>ctx pad import</code></td>
+<td>CLI command</td>
+<td>Bulk-import lines from a file (or stdin)</td>
+</tr>
+<tr>
+<td><code>ctx pad export</code></td>
+<td>CLI command</td>
+<td>Export all blob entries to a directory</td>
+</tr>
+<tr>
 <td><code>/ctx-pad</code></td>
 <td>Skill</td>
 <td>Natural language interface to all pad commands</td>
@@ -2595,6 +2649,31 @@ The file is base64-encoded and stored alongside a label you provide:</p>
 <p>Blob entries are encrypted identically to text entries — they're just
 base64-encoded before encryption. The <code>--out</code> flag decodes and writes the
 raw bytes.</p>
+<h3 id="step-9-bulk-import-notes">Step 9: Bulk Import Notes<a class="headerlink" href="#step-9-bulk-import-notes" title="Permanent link">&para;</a></h3>
+<p>When you have a file with many notes (one per line), import them in bulk
+instead of adding one at a time:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Import from a file — each non-empty line becomes an entry</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Or pipe from stdin</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
+</span></code></pre></div>
+<p>All entries are written in a single encrypt/write cycle, regardless of
+how many lines the file contains.</p>
+<h3 id="step-10-export-blobs-to-disk">Step 10: Export Blobs to Disk<a class="headerlink" href="#step-10-export-blobs-to-disk" title="Permanent link">&para;</a></h3>
+<p>Export all blob entries to a directory as individual files. Each blob's
+label becomes the filename:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Export to a directory (created if needed)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Preview what would be exported</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run<span class="w"> </span>./ideas
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Force overwrite existing files</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
+</span></code></pre></div>
+<p>When a file already exists, a unix timestamp is prepended to the filename
+to avoid collisions. Use <code>--force</code> to overwrite instead.</p>
 <h2 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h2>
 <p>The <code>/ctx-pad</code> skill translates natural language into commands. You
 describe intent; the agent handles the mechanics.</p>
@@ -2649,6 +2728,14 @@ describe intent; the agent handles the mechanics.</p>
 <tr>
 <td>"move entry 1 to the bottom" / "deprioritize entry 1"</td>
 <td><code>ctx pad mv 1 N</code></td>
+</tr>
+<tr>
+<td>"import my notes from notes.txt" / "load these lines"</td>
+<td><code>ctx pad import notes.txt</code></td>
+</tr>
+<tr>
+<td>"export all blobs to ./ideas" / "dump the files"</td>
+<td><code>ctx pad export ./ideas</code></td>
 </tr>
 <tr>
 <td>"anything on my scratchpad?"</td>
@@ -2741,7 +2828,7 @@ convention, a hard-won insight becomes a learning.</p>
 encryption keys and scratchpad data across environments.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../scratchpad/">Scratchpad</a>: feature overview, all 9 commands,
+<li><a href="../../scratchpad/">Scratchpad</a>: feature overview, all commands,
   encryption details, plaintext override</li>
 <li><a href="../knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a>:
   for structured knowledge that outlives the scratchpad</li>

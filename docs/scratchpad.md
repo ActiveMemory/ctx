@@ -53,6 +53,8 @@ Because the key is `.gitignore`d and the data is committed, you get:
 | `ctx pad show N --out PATH`      | Write decoded blob content to a file                  |
 | `ctx pad mv N M`                  | Move entry from position N to position M              |
 | `ctx pad resolve`                 | Show both sides of a merge conflict for resolution    |
+| `ctx pad import FILE`             | Bulk-import lines from a file (or stdin with `-`)     |
+| `ctx pad export [DIR]`            | Export all blob entries to a directory as files        |
 
 All commands decrypt on read, operate on plaintext in memory, and
 re-encrypt on write. The key file is never printed to stdout.
@@ -80,6 +82,31 @@ ctx pad mv 2 1
 
 # Clean up
 ctx pad rm 2
+```
+
+## Bulk Import and Export
+
+Import lines from a file in bulk — each non-empty line becomes an entry:
+
+```bash
+# Import from a file
+ctx pad import notes.txt
+
+# Import from stdin
+grep TODO *.go | ctx pad import -
+```
+
+Export all blob entries to a directory as files:
+
+```bash
+# Export to a directory
+ctx pad export ./ideas
+
+# Preview without writing
+ctx pad export --dry-run
+
+# Overwrite existing files
+ctx pad export --force ./backup
 ```
 
 ## File Blobs
@@ -135,6 +162,8 @@ don't need to remember the syntax:
 | "delete the third entry"                     | `ctx pad rm 3`                         |
 | "update entry 2 to include the new endpoint" | `ctx pad edit 2 "..."`                 |
 | "move entry 4 to the top"                    | `ctx pad mv 4 1`                       |
+| "import my notes from notes.txt"             | `ctx pad import notes.txt`             |
+| "export all blobs to ./backup"               | `ctx pad export ./backup`              |
 
 The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.

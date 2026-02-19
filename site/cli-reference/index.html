@@ -2026,6 +2026,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-pad-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad import
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad export
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3139,6 +3161,28 @@
     <span class="md-ellipsis">
       
         ctx pad resolve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad import
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-pad-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx pad export
       
     </span>
   </a>
@@ -4465,20 +4509,57 @@ AI builds on its previous work.</p>
 <h4 id="ctx-pad-add"><code>ctx pad add</code><a class="headerlink" href="#ctx-pad-add" title="Permanent link">&para;</a></h4>
 <p>Append a new entry to the scratchpad.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span>&lt;text&gt;
+</span><span id="__span-66-2"><a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span>&lt;label&gt;<span class="w"> </span>--file<span class="w"> </span>&lt;path&gt;
 </span></code></pre></div>
-<p><strong>Example</strong>:</p>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Short</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--file</code></td>
+<td><code>-f</code></td>
+<td>Ingest a file as a blob entry (max 64 KB)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;DATABASE_URL=postgres://user:pass@host/db&quot;</span>
+</span><span id="__span-67-2"><a id="__codelineno-67-2" name="__codelineno-67-2" href="#__codelineno-67-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
 </span></code></pre></div>
 <h4 id="ctx-pad-show"><code>ctx pad show</code><a class="headerlink" href="#ctx-pad-show" title="Permanent link">&para;</a></h4>
-<p>Output the raw text of an entry by number.</p>
+<p>Output the raw text of an entry by number. For blob entries, prints
+decoded file content (or writes to disk with <code>--out</code>).</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span>&lt;n&gt;
+</span><span id="__span-68-2"><a id="__codelineno-68-2" name="__codelineno-68-2" href="#__codelineno-68-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span>&lt;n&gt;<span class="w"> </span>--out<span class="w"> </span>&lt;path&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>n</code>: 1-based entry number</li>
 </ul>
-<p><strong>Example</strong>:</p>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--out</code></td>
+<td>Write decoded blob content to a file (blobs only)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">3</span>
+</span><span id="__span-69-2"><a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
 </span></code></pre></div>
 <h4 id="ctx-pad-rm"><code>ctx pad rm</code><a class="headerlink" href="#ctx-pad-rm" title="Permanent link">&para;</a></h4>
 <p>Remove an entry by number.</p>
@@ -4514,12 +4595,22 @@ AI builds on its previous work.</p>
 <td><code>--prepend</code></td>
 <td>Prepend text to the beginning of entry</td>
 </tr>
+<tr>
+<td><code>--file</code></td>
+<td>Replace blob file content (preserves label)</td>
+</tr>
+<tr>
+<td><code>--label</code></td>
+<td>Replace blob label (preserves content)</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Example</strong>:</p>
+<p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;new text&quot;</span>
 </span><span id="__span-72-2"><a id="__codelineno-72-2" name="__codelineno-72-2" href="#__codelineno-72-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot; suffix&quot;</span>
 </span><span id="__span-72-3"><a id="__codelineno-72-3" name="__codelineno-72-3" href="#__codelineno-72-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">&quot;prefix &quot;</span>
+</span><span id="__span-72-4"><a id="__codelineno-72-4" name="__codelineno-72-4" href="#__codelineno-72-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--file<span class="w"> </span>./v2.yaml
+</span><span id="__span-72-5"><a id="__codelineno-72-5" name="__codelineno-72-5" href="#__codelineno-72-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--label<span class="w"> </span><span class="s2">&quot;new name&quot;</span>
 </span></code></pre></div>
 <h4 id="ctx-pad-mv"><code>ctx pad mv</code><a class="headerlink" href="#ctx-pad-mv" title="Permanent link">&para;</a></h4>
 <p>Move an entry from one position to another.</p>
@@ -4533,6 +4624,59 @@ AI builds on its previous work.</p>
 <h4 id="ctx-pad-resolve"><code>ctx pad resolve</code><a class="headerlink" href="#ctx-pad-resolve" title="Permanent link">&para;</a></h4>
 <p>Show both sides of a merge conflict in the encrypted scratchpad.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
+</span></code></pre></div>
+<h4 id="ctx-pad-import"><code>ctx pad import</code><a class="headerlink" href="#ctx-pad-import" title="Permanent link">&para;</a></h4>
+<p>Bulk-import lines from a file into the scratchpad. Each non-empty line
+becomes a separate entry. All entries are written in a single encrypt/write
+cycle.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>&lt;file&gt;
+</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">          </span><span class="c1"># read from stdin</span>
+</span></code></pre></div>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>file</code>: Path to a text file, or <code>-</code> for stdin</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
+</span><span id="__span-76-2"><a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
+</span></code></pre></div>
+<h4 id="ctx-pad-export"><code>ctx pad export</code><a class="headerlink" href="#ctx-pad-export" title="Permanent link">&para;</a></h4>
+<p>Export all blob entries from the scratchpad to a directory as files.
+Each blob's label becomes the filename. Non-blob entries are skipped.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>dir<span class="o">]</span>
+</span></code></pre></div>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>dir</code>: Target directory (default: current directory)</li>
+</ul>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Short</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--force</code></td>
+<td><code>-f</code></td>
+<td>Overwrite existing files instead of timestamping</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td></td>
+<td>Print what would be exported without writing</td>
+</tr>
+</tbody>
+</table>
+<p>When a file already exists, a unix timestamp is prepended to avoid
+collisions (e.g., <code>1739836200-label</code>). Use <code>--force</code> to overwrite instead.</p>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
+</span><span id="__span-78-2"><a id="__codelineno-78-2" name="__codelineno-78-2" href="#__codelineno-78-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run
+</span><span id="__span-78-3"><a id="__codelineno-78-3" name="__codelineno-78-3" href="#__codelineno-78-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
 </span></code></pre></div>
 <hr />
 <h2 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
@@ -4591,19 +4735,19 @@ AI builds on its previous work.</p>
 </table>
 <h2 id="configuration-file">Configuration File<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
 <p>Optional <code>.contextrc</code> (<em>YAML format</em>) at project root:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a><span class="c1"># .contextrc</span>
-</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context</span><span class="w">                </span><span class="c1"># Context directory name</span>
-</span><span id="__span-75-3"><a id="__codelineno-75-3" name="__codelineno-75-3" href="#__codelineno-75-3"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">                   </span><span class="c1"># Default token budget</span>
-</span><span id="__span-75-4"><a id="__codelineno-75-4" name="__codelineno-75-4" href="#__codelineno-75-4"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">                      </span><span class="c1"># File loading priority</span>
-</span><span id="__span-75-5"><a id="__codelineno-75-5" name="__codelineno-75-5" href="#__codelineno-75-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
-</span><span id="__span-75-6"><a id="__codelineno-75-6" name="__codelineno-75-6" href="#__codelineno-75-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
-</span><span id="__span-75-7"><a id="__codelineno-75-7" name="__codelineno-75-7" href="#__codelineno-75-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
-</span><span id="__span-75-8"><a id="__codelineno-75-8" name="__codelineno-75-8" href="#__codelineno-75-8"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                   </span><span class="c1"># Auto-archive old items</span>
-</span><span id="__span-75-9"><a id="__codelineno-75-9" name="__codelineno-75-9" href="#__codelineno-75-9"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">                </span><span class="c1"># Days before archiving tasks</span>
-</span><span id="__span-75-10"><a id="__codelineno-75-10" name="__codelineno-75-10" href="#__codelineno-75-10"></a><span class="nt">archive_knowledge_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">     </span><span class="c1"># Days before archiving decisions/learnings</span>
-</span><span id="__span-75-11"><a id="__codelineno-75-11" name="__codelineno-75-11" href="#__codelineno-75-11"></a><span class="nt">archive_keep_recent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">               </span><span class="c1"># Recent entries to keep when archiving</span>
-</span><span id="__span-75-12"><a id="__codelineno-75-12" name="__codelineno-75-12" href="#__codelineno-75-12"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">             </span><span class="c1"># Encrypt scratchpad (default: true)</span>
-</span><span id="__span-75-13"><a id="__codelineno-75-13" name="__codelineno-75-13" href="#__codelineno-75-13"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Skip boundary check (default: false)</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a><span class="c1"># .contextrc</span>
+</span><span id="__span-79-2"><a id="__codelineno-79-2" name="__codelineno-79-2" href="#__codelineno-79-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context</span><span class="w">                </span><span class="c1"># Context directory name</span>
+</span><span id="__span-79-3"><a id="__codelineno-79-3" name="__codelineno-79-3" href="#__codelineno-79-3"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">                   </span><span class="c1"># Default token budget</span>
+</span><span id="__span-79-4"><a id="__codelineno-79-4" name="__codelineno-79-4" href="#__codelineno-79-4"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">                      </span><span class="c1"># File loading priority</span>
+</span><span id="__span-79-5"><a id="__codelineno-79-5" name="__codelineno-79-5" href="#__codelineno-79-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
+</span><span id="__span-79-6"><a id="__codelineno-79-6" name="__codelineno-79-6" href="#__codelineno-79-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
+</span><span id="__span-79-7"><a id="__codelineno-79-7" name="__codelineno-79-7" href="#__codelineno-79-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
+</span><span id="__span-79-8"><a id="__codelineno-79-8" name="__codelineno-79-8" href="#__codelineno-79-8"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                   </span><span class="c1"># Auto-archive old items</span>
+</span><span id="__span-79-9"><a id="__codelineno-79-9" name="__codelineno-79-9" href="#__codelineno-79-9"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">                </span><span class="c1"># Days before archiving tasks</span>
+</span><span id="__span-79-10"><a id="__codelineno-79-10" name="__codelineno-79-10" href="#__codelineno-79-10"></a><span class="nt">archive_knowledge_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">     </span><span class="c1"># Days before archiving decisions/learnings</span>
+</span><span id="__span-79-11"><a id="__codelineno-79-11" name="__codelineno-79-11" href="#__codelineno-79-11"></a><span class="nt">archive_keep_recent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">               </span><span class="c1"># Recent entries to keep when archiving</span>
+</span><span id="__span-79-12"><a id="__codelineno-79-12" name="__codelineno-79-12" href="#__codelineno-79-12"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">             </span><span class="c1"># Encrypt scratchpad (default: true)</span>
+</span><span id="__span-79-13"><a id="__codelineno-79-13" name="__codelineno-79-13" href="#__codelineno-79-13"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Skip boundary check (default: false)</span>
 </span></code></pre></div>
 <table>
 <thead>

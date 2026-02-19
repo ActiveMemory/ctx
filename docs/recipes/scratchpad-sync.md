@@ -34,6 +34,8 @@ gitignored. Without the key on each machine, you cannot read or write entries.
 | `ctx pad rm` | CLI command | Remove a scratchpad entry |
 | `ctx pad edit` | CLI command | Edit a scratchpad entry |
 | `ctx pad resolve` | CLI command | Show both sides of a merge conflict |
+| `ctx pad import` | CLI command | Bulk-import lines from a file |
+| `ctx pad export` | CLI command | Export blob entries to a directory |
 | `scp` | Shell | Copy the key file between machines |
 | `git push` / `git pull` | Shell | Sync the encrypted file via git |
 | `/ctx-pad` | Skill | Natural language interface to pad commands |

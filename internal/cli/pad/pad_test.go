@@ -631,7 +631,7 @@ func TestCmd_HasSubcommands(t *testing.T) {
 	for _, sub := range cmd.Commands() {
 		names[sub.Use] = true
 	}
-	for _, expected := range []string{"show N", "add TEXT", "rm N", "edit N [TEXT]", "mv N M", "resolve"} {
+	for _, expected := range []string{"show N", "add TEXT", "rm N", "edit N [TEXT]", "mv N M", "resolve", "import FILE", "export [DIR]"} {
 		if !names[expected] {
 			t.Errorf("missing subcommand %q", expected)
 		}
@@ -1666,5 +1666,451 @@ func TestEdit_FileAndPositionalMutuallyExclusive(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "mutually exclusive") {
 		t.Errorf("error = %q, want 'mutually exclusive'", err.Error())
+	}
+}
+
+// --- Import tests ---
+
+func TestImport_FromFile(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	importFile := filepath.Join(dir, "notes.txt")
+	if err := os.WriteFile(importFile, []byte("alpha\nbeta\ngamma\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", importFile))
+	if err != nil {
+		t.Fatalf("import error: %v", err)
+	}
+	if !strings.Contains(out, "Imported 3 entries.") {
+		t.Errorf("output = %q, want 'Imported 3 entries.'", out)
+	}
+
+	// Verify entries
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range []string{"alpha", "beta", "gamma"} {
+		if !strings.Contains(out, e) {
+			t.Errorf("list missing entry %q", e)
+		}
+	}
+}
+
+func TestImport_SkipsEmpty(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	importFile := filepath.Join(dir, "notes.txt")
+	if err := os.WriteFile(importFile, []byte("alpha\n\n\nbeta\n\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", importFile))
+	if err != nil {
+		t.Fatalf("import error: %v", err)
+	}
+	if !strings.Contains(out, "Imported 2 entries.") {
+		t.Errorf("output = %q, want 'Imported 2 entries.'", out)
+	}
+}
+
+func TestImport_EmptyFile(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	importFile := filepath.Join(dir, "empty.txt")
+	if err := os.WriteFile(importFile, []byte(""), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", importFile))
+	if err != nil {
+		t.Fatalf("import error: %v", err)
+	}
+	if !strings.Contains(out, "No entries to import.") {
+		t.Errorf("output = %q, want 'No entries to import.'", out)
+	}
+}
+
+func TestImport_AppendsToExisting(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Add 2 entries first
+	for _, e := range []string{"existing1", "existing2"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	importFile := filepath.Join(dir, "notes.txt")
+	if err := os.WriteFile(importFile, []byte("new1\nnew2\nnew3\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", importFile))
+	if err != nil {
+		t.Fatalf("import error: %v", err)
+	}
+	if !strings.Contains(out, "Imported 3 entries.") {
+		t.Errorf("output = %q, want 'Imported 3 entries.'", out)
+	}
+
+	// Verify all 5 entries exist
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range []string{"existing1", "existing2", "new1", "new2", "new3"} {
+		if !strings.Contains(out, e) {
+			t.Errorf("list missing entry %q", e)
+		}
+	}
+}
+
+func TestImport_Stdin(t *testing.T) {
+	setupPlaintext(t)
+
+	// Create a pipe to simulate stdin
+	pr, pw, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Write data to the pipe
+	go func() {
+		_, _ = pw.WriteString("from stdin\nanother line\n")
+		pw.Close()
+	}()
+
+	// Temporarily replace stdin
+	origStdin := os.Stdin
+	os.Stdin = pr
+	t.Cleanup(func() { os.Stdin = origStdin })
+
+	out, runErr := runCmd(newPadCmd("import", "-"))
+	if runErr != nil {
+		t.Fatalf("import stdin error: %v", runErr)
+	}
+	if !strings.Contains(out, "Imported 2 entries.") {
+		t.Errorf("output = %q, want 'Imported 2 entries.'", out)
+	}
+}
+
+func TestImport_FileNotFound(t *testing.T) {
+	setupPlaintext(t)
+
+	_, err := runCmd(newPadCmd("import", "/nonexistent/file.txt"))
+	if err == nil {
+		t.Fatal("expected error for missing file")
+	}
+}
+
+func TestImport_Encrypted(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	importFile := filepath.Join(dir, "notes.txt")
+	if err := os.WriteFile(importFile, []byte("secret1\nsecret2\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", importFile))
+	if err != nil {
+		t.Fatalf("import error: %v", err)
+	}
+	if !strings.Contains(out, "Imported 2 entries.") {
+		t.Errorf("output = %q, want 'Imported 2 entries.'", out)
+	}
+
+	// Verify entries
+	out, err = runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "secret1") || !strings.Contains(out, "secret2") {
+		t.Errorf("list missing entries: %q", out)
+	}
+}
+
+func TestImport_WhitespaceOnly(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	importFile := filepath.Join(dir, "blanks.txt")
+	if err := os.WriteFile(importFile, []byte("   \n\t\n  \t  \n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", importFile))
+	if err != nil {
+		t.Fatalf("import error: %v", err)
+	}
+	if !strings.Contains(out, "No entries to import.") {
+		t.Errorf("output = %q, want 'No entries to import.'", out)
+	}
+}
+
+// --- Export tests ---
+
+func TestExport_Basic(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Add a plain entry and two blobs
+	if _, err := runCmd(newPadCmd("add", "plain note")); err != nil {
+		t.Fatal(err)
+	}
+	f1 := filepath.Join(dir, "file1.txt")
+	if err := os.WriteFile(f1, []byte("content one"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f1, "blob1.txt")); err != nil {
+		t.Fatal(err)
+	}
+	f2 := filepath.Join(dir, "file2.md")
+	if err := os.WriteFile(f2, []byte("content two"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f2, "blob2.md")); err != nil {
+		t.Fatal(err)
+	}
+
+	exportDir := filepath.Join(dir, "export")
+	out, err := runCmd(newPadCmd("export", exportDir))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "Exported 2 blobs.") {
+		t.Errorf("output = %q, want 'Exported 2 blobs.'", out)
+	}
+
+	// Verify files
+	data1, err := os.ReadFile(filepath.Join(exportDir, "blob1.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data1) != "content one" {
+		t.Errorf("blob1.txt = %q, want %q", string(data1), "content one")
+	}
+
+	data2, err := os.ReadFile(filepath.Join(exportDir, "blob2.md"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data2) != "content two" {
+		t.Errorf("blob2.md = %q, want %q", string(data2), "content two")
+	}
+}
+
+func TestExport_EmptyPad(t *testing.T) {
+	setupPlaintext(t)
+
+	out, err := runCmd(newPadCmd("export"))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "No blob entries to export.") {
+		t.Errorf("output = %q, want 'No blob entries to export.'", out)
+	}
+}
+
+func TestExport_NoBlobsOnly(t *testing.T) {
+	setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "plain one")); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "plain two")); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("export"))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "No blob entries to export.") {
+		t.Errorf("output = %q, want 'No blob entries to export.'", out)
+	}
+}
+
+func TestExport_CollisionTimestamp(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Add a blob
+	f := filepath.Join(dir, "file.txt")
+	if err := os.WriteFile(f, []byte("blob data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f, "existing.txt")); err != nil {
+		t.Fatal(err)
+	}
+
+	exportDir := filepath.Join(dir, "export")
+	if err := os.MkdirAll(exportDir, 0o750); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a file at the expected path to cause collision
+	if err := os.WriteFile(filepath.Join(exportDir, "existing.txt"), []byte("old"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("export", exportDir))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "! existing.txt exists, writing as") {
+		t.Errorf("output = %q, want collision warning", out)
+	}
+	if !strings.Contains(out, "Exported 1 blobs.") {
+		t.Errorf("output = %q, want 'Exported 1 blobs.'", out)
+	}
+
+	// Verify old file is untouched
+	oldData, _ := os.ReadFile(filepath.Join(exportDir, "existing.txt"))
+	if string(oldData) != "old" {
+		t.Errorf("existing file should not be overwritten, got %q", string(oldData))
+	}
+}
+
+func TestExport_Force(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	f := filepath.Join(dir, "file.txt")
+	if err := os.WriteFile(f, []byte("new data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f, "target.txt")); err != nil {
+		t.Fatal(err)
+	}
+
+	exportDir := filepath.Join(dir, "export")
+	if err := os.MkdirAll(exportDir, 0o750); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create existing file
+	if err := os.WriteFile(filepath.Join(exportDir, "target.txt"), []byte("old data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("export", "--force", exportDir))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "+ target.txt") {
+		t.Errorf("output = %q, want '+ target.txt'", out)
+	}
+
+	// Verify file was overwritten
+	data, _ := os.ReadFile(filepath.Join(exportDir, "target.txt"))
+	if string(data) != "new data" {
+		t.Errorf("target.txt = %q, want %q", string(data), "new data")
+	}
+}
+
+func TestExport_DryRun(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	f := filepath.Join(dir, "file.txt")
+	if err := os.WriteFile(f, []byte("content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f, "test.txt")); err != nil {
+		t.Fatal(err)
+	}
+
+	exportDir := filepath.Join(dir, "export")
+
+	out, err := runCmd(newPadCmd("export", "--dry-run", exportDir))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "Would export 1 blobs.") {
+		t.Errorf("output = %q, want 'Would export 1 blobs.'", out)
+	}
+
+	// Verify directory was NOT created
+	if _, err := os.Stat(exportDir); !os.IsNotExist(err) {
+		t.Error("export directory should not be created in dry-run mode")
+	}
+}
+
+func TestExport_DirCreated(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	f := filepath.Join(dir, "file.txt")
+	if err := os.WriteFile(f, []byte("data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f, "blob.txt")); err != nil {
+		t.Fatal(err)
+	}
+
+	exportDir := filepath.Join(dir, "nested", "export", "dir")
+	out, err := runCmd(newPadCmd("export", exportDir))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "Exported 1 blobs.") {
+		t.Errorf("output = %q, want 'Exported 1 blobs.'", out)
+	}
+
+	// Verify the directory was created
+	if _, err := os.Stat(exportDir); err != nil {
+		t.Errorf("export dir should exist: %v", err)
+	}
+}
+
+func TestExport_Encrypted(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	f := filepath.Join(dir, "secret.txt")
+	if err := os.WriteFile(f, []byte("secret content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f, "secret.txt")); err != nil {
+		t.Fatal(err)
+	}
+
+	exportDir := filepath.Join(dir, "export")
+	out, err := runCmd(newPadCmd("export", exportDir))
+	if err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+	if !strings.Contains(out, "Exported 1 blobs.") {
+		t.Errorf("output = %q, want 'Exported 1 blobs.'", out)
+	}
+
+	data, err := os.ReadFile(filepath.Join(exportDir, "secret.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "secret content" {
+		t.Errorf("exported = %q, want %q", string(data), "secret content")
+	}
+}
+
+func TestExport_FilePermissions(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	f := filepath.Join(dir, "file.txt")
+	if err := os.WriteFile(f, []byte("data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f, "blob.txt")); err != nil {
+		t.Fatal(err)
+	}
+
+	exportDir := filepath.Join(dir, "export")
+	if _, err := runCmd(newPadCmd("export", exportDir)); err != nil {
+		t.Fatal(err)
+	}
+
+	info, err := os.Stat(filepath.Join(exportDir, "blob.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	perm := info.Mode().Perm()
+	if perm != 0o600 {
+		t.Errorf("file perm = %o, want 600", perm)
 	}
 }

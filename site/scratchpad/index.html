@@ -1658,6 +1658,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bulk-import-and-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulk Import and Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#file-blobs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2191,6 +2202,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bulk-import-and-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulk Import and Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#file-blobs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2415,6 +2437,14 @@ No external dependencies: Go stdlib only.</p>
 <td><code>ctx pad resolve</code></td>
 <td>Show both sides of a merge conflict for resolution</td>
 </tr>
+<tr>
+<td><code>ctx pad import FILE</code></td>
+<td>Bulk-import lines from a file (or stdin with <code>-</code>)</td>
+</tr>
+<tr>
+<td><code>ctx pad export [DIR]</code></td>
+<td>Export all blob entries to a directory as files</td>
+</tr>
 </tbody>
 </table>
 <p>All commands decrypt on read, operate on plaintext in memory, and
@@ -2441,22 +2471,40 @@ re-encrypt on write. The key file is never printed to stdout.</p>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Clean up</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span><span class="m">2</span>
 </span></code></pre></div>
+<h2 id="bulk-import-and-export">Bulk Import and Export<a class="headerlink" href="#bulk-import-and-export" title="Permanent link">&para;</a></h2>
+<p>Import lines from a file in bulk — each non-empty line becomes an entry:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Import from a file</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Import from stdin</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
+</span></code></pre></div>
+<p>Export all blob entries to a directory as files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export to a directory</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Preview without writing</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Overwrite existing files</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
+</span></code></pre></div>
 <h2 id="file-blobs">File Blobs<a class="headerlink" href="#file-blobs" title="Permanent link">&para;</a></h2>
 <p>The scratchpad can store small files (up to 64 KB) as blob entries. Files
 are base64-encoded and stored with a human-readable label.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Ingest a file — first argument is the label</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Listing shows label with a [BLOB] marker</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ctx<span class="w"> </span>pad
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   1. check DNS propagation after deploy</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#   2. deploy config [BLOB]</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Extract to a file</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Or print decoded content to stdout</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ingest a file — first argument is the label</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Listing shows label with a [BLOB] marker</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>pad
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">#   1. check DNS propagation after deploy</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">#   2. deploy config [BLOB]</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Extract to a file</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Or print decoded content to stdout</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span>
 </span></code></pre></div>
 <p>Blob entries are encrypted identically to text entries. The internal format
 is <code>label:::base64data</code> — you never need to construct this manually.</p>
@@ -2525,6 +2573,14 @@ don't need to remember the syntax:</p>
 <td>"move entry 4 to the top"</td>
 <td><code>ctx pad mv 4 1</code></td>
 </tr>
+<tr>
+<td>"import my notes from notes.txt"</td>
+<td><code>ctx pad import notes.txt</code></td>
+</tr>
+<tr>
+<td>"export all blobs to ./backup"</td>
+<td><code>ctx pad export ./backup</code></td>
+</tr>
 </tbody>
 </table>
 <p>The skill handles the translation. You describe what you want in plain
@@ -2548,7 +2604,7 @@ repo access can decrypt your scratchpad. </p>
 recipe for a step-by-step walkthrough.</p>
 <h2 id="plaintext-override">Plaintext Override<a class="headerlink" href="#plaintext-override" title="Permanent link">&para;</a></h2>
 <p>For projects where encryption is unnecessary, disable it in <code>.contextrc</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
 <p>In plaintext mode:</p>
 <ul>

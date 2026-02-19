@@ -216,7 +216,7 @@ Manage the encrypted scratchpad — add, remove, edit, and reorder
 one-liner notes. Encrypted at rest with AES-256-GCM.
 
 **Wraps**: `ctx pad`, `ctx pad add`, `ctx pad rm`, `ctx pad edit`,
-`ctx pad mv`
+`ctx pad mv`, `ctx pad import`, `ctx pad export`
 
 **See also**: [Scratchpad](scratchpad.md),
 [Using the Scratchpad](recipes/scratchpad-with-claude.md)

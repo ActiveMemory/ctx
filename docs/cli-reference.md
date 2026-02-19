@@ -997,30 +997,47 @@ Append a new entry to the scratchpad.
 
 ```bash
 ctx pad add <text>
+ctx pad add <label> --file <path>
 ```
 
-**Example**:
+**Flags**:
+
+| Flag     | Short | Description                                |
+|----------|-------|--------------------------------------------|
+| `--file` | `-f`  | Ingest a file as a blob entry (max 64 KB)  |
+
+**Examples**:
 
 ```bash
 ctx pad add "DATABASE_URL=postgres://user:pass@host/db"
+ctx pad add "deploy config" --file ./deploy.yaml
 ```
 
 #### `ctx pad show`
 
-Output the raw text of an entry by number.
+Output the raw text of an entry by number. For blob entries, prints
+decoded file content (or writes to disk with `--out`).
 
 ```bash
 ctx pad show <n>
+ctx pad show <n> --out <path>
 ```
 
 **Arguments**:
 
 - `n`: 1-based entry number
 
-**Example**:
+**Flags**:
+
+| Flag    | Description                                      |
+|---------|--------------------------------------------------|
+| `--out` | Write decoded blob content to a file (blobs only)|
+
+**Examples**:
 
 ```bash
 ctx pad show 3
+ctx pad show 2 --out ./recovered.yaml
 ```
 
 #### `ctx pad rm`
@@ -1050,17 +1067,21 @@ ctx pad edit <n> [text]
 
 **Flags**:
 
-| Flag        | Description                             |
-|-------------|-----------------------------------------|
-| `--append`  | Append text to the end of the entry     |
-| `--prepend` | Prepend text to the beginning of entry  |
+| Flag        | Description                                      |
+|-------------|--------------------------------------------------|
+| `--append`  | Append text to the end of the entry              |
+| `--prepend` | Prepend text to the beginning of entry           |
+| `--file`    | Replace blob file content (preserves label)      |
+| `--label`   | Replace blob label (preserves content)           |
 
-**Example**:
+**Examples**:
 
 ```bash
 ctx pad edit 2 "new text"
 ctx pad edit 2 --append " suffix"
 ctx pad edit 2 --prepend "prefix "
+ctx pad edit 1 --file ./v2.yaml
+ctx pad edit 1 --label "new name"
 ```
 
 #### `ctx pad mv`
@@ -1082,6 +1103,59 @@ Show both sides of a merge conflict in the encrypted scratchpad.
 
 ```bash
 ctx pad resolve
+```
+
+#### `ctx pad import`
+
+Bulk-import lines from a file into the scratchpad. Each non-empty line
+becomes a separate entry. All entries are written in a single encrypt/write
+cycle.
+
+```bash
+ctx pad import <file>
+ctx pad import -          # read from stdin
+```
+
+**Arguments**:
+
+- `file`: Path to a text file, or `-` for stdin
+
+**Examples**:
+
+```bash
+ctx pad import notes.txt
+grep TODO *.go | ctx pad import -
+```
+
+#### `ctx pad export`
+
+Export all blob entries from the scratchpad to a directory as files.
+Each blob's label becomes the filename. Non-blob entries are skipped.
+
+```bash
+ctx pad export [dir]
+```
+
+**Arguments**:
+
+- `dir`: Target directory (default: current directory)
+
+**Flags**:
+
+| Flag        | Short | Description                                         |
+|-------------|-------|-----------------------------------------------------|
+| `--force`   | `-f`  | Overwrite existing files instead of timestamping     |
+| `--dry-run` |       | Print what would be exported without writing         |
+
+When a file already exists, a unix timestamp is prepended to avoid
+collisions (e.g., `1739836200-label`). Use `--force` to overwrite instead.
+
+**Examples**:
+
+```bash
+ctx pad export ./ideas
+ctx pad export --dry-run
+ctx pad export --force ./backup
 ```
 
 ---

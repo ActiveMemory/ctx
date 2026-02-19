@@ -29,6 +29,8 @@ polluting your structured context files?**
 | `ctx pad show N --out` | CLI command | Extract a blob entry to a file |
 | `ctx pad rm` | CLI command | Remove an entry |
 | `ctx pad mv` | CLI command | Reorder entries |
+| `ctx pad import` | CLI command | Bulk-import lines from a file (or stdin) |
+| `ctx pad export` | CLI command | Export all blob entries to a directory |
 | `/ctx-pad` | Skill | Natural language interface to all pad commands |
 
 ## The Workflow
@@ -138,6 +140,41 @@ Blob entries are encrypted identically to text entries — they're just
 base64-encoded before encryption. The `--out` flag decodes and writes the
 raw bytes.
 
+### Step 9: Bulk Import Notes
+
+When you have a file with many notes (one per line), import them in bulk
+instead of adding one at a time:
+
+```bash
+# Import from a file — each non-empty line becomes an entry
+ctx pad import notes.txt
+
+# Or pipe from stdin
+grep TODO *.go | ctx pad import -
+```
+
+All entries are written in a single encrypt/write cycle, regardless of
+how many lines the file contains.
+
+### Step 10: Export Blobs to Disk
+
+Export all blob entries to a directory as individual files. Each blob's
+label becomes the filename:
+
+```bash
+# Export to a directory (created if needed)
+ctx pad export ./ideas
+
+# Preview what would be exported
+ctx pad export --dry-run ./ideas
+
+# Force overwrite existing files
+ctx pad export --force ./backup
+```
+
+When a file already exists, a unix timestamp is prepended to the filename
+to avoid collisions. Use `--force` to overwrite instead.
+
 ## Conversational Approach
 
 The `/ctx-pad` skill translates natural language into commands. You
@@ -156,6 +193,8 @@ describe intent; the agent handles the mechanics.
 | "add the port to entry 2" | `ctx pad edit 2 --append ":8443"` |
 | "prioritize entry 4" / "move entry 4 to the top" | `ctx pad mv 4 1` |
 | "move entry 1 to the bottom" / "deprioritize entry 1" | `ctx pad mv 1 N` |
+| "import my notes from notes.txt" / "load these lines" | `ctx pad import notes.txt` |
+| "export all blobs to ./ideas" / "dump the files" | `ctx pad export ./ideas` |
 | "anything on my scratchpad?" | `ctx pad` |
 
 The skill recognizes variations: "scratchpad", "pad", "notes", "sticky
@@ -216,7 +255,7 @@ encryption keys and scratchpad data across environments.
 
 ## See Also
 
-* [Scratchpad](../scratchpad.md): feature overview, all 9 commands,
+* [Scratchpad](../scratchpad.md): feature overview, all commands,
   encryption details, plaintext override
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   for structured knowledge that outlives the scratchpad
