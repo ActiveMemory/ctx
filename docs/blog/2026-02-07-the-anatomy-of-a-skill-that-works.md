@@ -2,6 +2,7 @@
 title: "The Anatomy of a Skill That Works"
 date: 2026-02-07
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - skill design
   - context engineering
@@ -13,7 +14,7 @@ topics:
 # The Anatomy of a Skill That Works
 
 !!! note "Update (2026-02-11)"
-    As of v0.4.0, ctx consolidated sessions into the journal mechanism.
+    As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.
     References to `ctx-save`, `ctx session`, and `.context/sessions/`
     in this post reflect the architecture at the time of writing.
 
@@ -91,7 +92,7 @@ is like a manual for a tool nobody knows they have**.
 
 !!! warning "Anti-Pattern: The Perfect Execution Trap"
     A skill with detailed execution steps but no activation guidance
-    will fail more often than a vague skill—because it executes
+    will *fail* **more often** than a vague skill because it executes
     confidently at the wrong time.
 
 ## Lesson 1: Quality Gates Prevent Premature Execution
@@ -122,32 +123,33 @@ considered output.
     Pilots do not skip the pre-flight checklist because they have flown before.
 
     The checklist exists precisely because the stakes are high enough that
-    "I know what I'm doing" is not sufficient.
+    "*I know what I'm doing*" is not sufficient.
 
 ## Lesson 2: "*When NOT to Use*" Is **Not** Optional
 
 Every skill had a "*When to Use*" section. Almost none had "*When NOT
 to Use*". This is a problem.
 
-AI agents are biased toward action. Given a skill that says "use
-when journal entries need enrichment," the agent will find reasons
+AI agents are biased toward action. Given a skill that says "*use
+when journal entries need enrichment*", the agent will find reasons
 to enrich.
 
-Without explicit negative triggers, **over-activation is not a bug—it
+Without explicit negative triggers, **over-activation is not a bug; it
 is the default behavior**.
 
 Some examples of negative triggers that made a real difference:
 
-| Skill        | Negative Trigger                                         |
-|--------------|----------------------------------------------------------|
-| ctx-reflect  | "When the user is in flow; do not interrupt"             |
-| ctx-save     | "After trivial changes; a typo does not need a snapshot" |
-| prompt-audit | "Unsolicited; only when the user invokes it"             |
-| qa           | "Mid-development when code is intentionally incomplete"  |
+| Skill        | Negative Trigger                                           |
+|--------------|------------------------------------------------------------|
+| ctx-reflect  | "*When the user is in flow; do not interrupt*"             |
+| ctx-save     | "*After trivial changes; a typo does not need a snapshot*" |
+| prompt-audit | "*Unsolicited; only when the user invokes it*"             |
+| qa           | "*Mid-development when code is intentionally incomplete*"  |
 
-These are not just nice-to-have. They are load-bearing. Without
-them, the agent will trigger the skill at the wrong time, produce
-unwanted output, and erode the user's trust in the skill system.
+These are not just nice-to-have. They are **load-bearing**. 
+
+Withoutthem, the agent will trigger the skill at the *wrong* time, produce
+*unwanted* output, and **erode the user's trust** in the skill system.
 
 ## Lesson 3: Examples Set Boundaries Better Than Rules
 
@@ -200,19 +202,21 @@ to find one. This instruction, clearly written for a human
 audience, was *dead weight* in a skill consumed by an AI.
 
 !!! tip "Skills are for the Agents"
-    Every sentence in a skill should be actionable by the agent.
+    **Every sentence in a skill should be actionable by the agent**.
 
     If the guidance requires human judgment or human tools, it belongs in
-    documentation, not in a skill.
+    documentation, **not** in a skill.
 
-    The corollary: **command references must be exact.** A skill that
-    says "*save it somewhere*" is useless. A skill that says
-    `ctx add learning --context "..." --lesson "..." --application "..."`
-    is actionable.
+    The corollary: **command references must be exact**. 
+
+    A skill that says "*save it somewhere*" is useless. 
+
+    A skill that says `ctx add learning --context "..." --lesson "..." --application "..."`
+    is **actionable**.
 
     The agent can pattern-match and fill in the blanks.
 
-**Litmus test**: If a sentence starts with "*you could…*" or assumes
+**Litmus test**: If a sentence starts with "*you could...*" or assumes
 external tools, it does not belong in a skill.
 
 ## Lesson 5: The Description Field Is the Trigger
@@ -234,7 +238,7 @@ The description is not a title. It is the **activation condition**.
 
 The platform's skill matching reads this field to decide whether
 to surface the skill. A vague description means the skill either
-never triggers or triggers when it should not.
+*never* triggers or triggers when it **should not**.
 
 ## Lesson 6: Flag Tables Beat Prose
 
@@ -249,12 +253,16 @@ prose, if at all. The rewritten versions use tables:
 | `--full`    |       | false   | Show complete content    |
 ```
 
-Tables are scannable, complete, and unambiguous. The agent can
-read them faster than parsing prose, and they serve as both
-reference and validation: If the agent invokes a flag not in
-the table, something is wrong.
+Tables are **scannable**, **complete**, and **unambiguous**. 
+
+The agent can read them faster than parsing prose, and they serve as both
+reference and validation: If the agent invokes a flag not in the table, 
+something is wrong.
 
 ## Lesson 7: Template Drift Is a Real Maintenance Burden
+
+// TODO: this has changed; we deploy from the marketplace; update it.
+// at least add an admonition saying thing are different now.
 
 `ctx` deploys skills through templates (via `ctx init`). Every
 skill exists in two places: the live version (`.claude/skills/`)
@@ -305,9 +313,9 @@ knowledge, not personality; that they should complement the
 platform, not fight it; that they should grow from project
 history, not imported templates.
 
-This post adds the missing piece: **structure.**
+This post adds the missing piece: **structure**.
 
-**A skill without a structure is a wish.**
+**A skill without a structure is a wish**.
 
 A skill with quality gates, negative triggers, examples, and
 checklists is a **tool**: the difference is not the content; it
@@ -317,9 +325,9 @@ intervention**.
 !!! tip "Skills are Interfaces"
     **Good skills are not instructions. They are contracts.**:
 
-    * They specify preconditions, postconditions, and boundaries.
-    * They show what success looks like and what failure looks like.
-    * They trust the agent's intelligence but do not trust its assumptions.
+    * They **specify** preconditions, postconditions, and boundaries.
+    * They **show** what success looks like and what failure looks like.
+    * They **trust** the agent's intelligence but do not trust its assumptions.
 
 ---
 

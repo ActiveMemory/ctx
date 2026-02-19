@@ -17,11 +17,13 @@ package rc
 //   - ScratchpadEncrypt: Whether to encrypt the scratchpad (default true)
 //   - AllowOutsideCwd: Skip boundary validation for external context dirs (default false)
 type CtxRC struct {
-	ContextDir         string   `yaml:"context_dir"`
-	TokenBudget        int      `yaml:"token_budget"`
-	PriorityOrder      []string `yaml:"priority_order"`
-	AutoArchive        bool     `yaml:"auto_archive"`
-	ArchiveAfterDays   int      `yaml:"archive_after_days"`
-	ScratchpadEncrypt  *bool    `yaml:"scratchpad_encrypt"`
-	AllowOutsideCwd    bool     `yaml:"allow_outside_cwd"`
+	ContextDir                string   `yaml:"context_dir"`
+	TokenBudget               int      `yaml:"token_budget"`
+	PriorityOrder             []string `yaml:"priority_order"`
+	AutoArchive               bool     `yaml:"auto_archive"`
+	ArchiveAfterDays          int      `yaml:"archive_after_days"`
+	ArchiveKnowledgeAfterDays int      `yaml:"archive_knowledge_after_days"`
+	ArchiveKeepRecent         int      `yaml:"archive_keep_recent"`
+	ScratchpadEncrypt         *bool    `yaml:"scratchpad_encrypt"`
+	AllowOutsideCwd           bool     `yaml:"allow_outside_cwd"`
 }

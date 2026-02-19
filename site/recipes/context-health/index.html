@@ -2778,16 +2778,21 @@ clearing empty sections. Issues requiring judgment are flagged but left for you.
 checks for new dependencies worth documenting, and identifies context referring 
 to code that no longer exists.</p>
 <h3 id="ctx-compact"><code>ctx compact</code><a class="headerlink" href="#ctx-compact" title="Permanent link">&para;</a></h3>
-<p>Consolidate completed tasks and clean up empty sections:</p>
+<p>Consolidate completed tasks, archive old knowledge, and clean up empty sections:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>compact<span class="w">              </span><span class="c1"># move completed tasks to Completed section, remove empty sections</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">    </span><span class="c1"># also copy tasks older than 7 days to .context/archive/</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">    </span><span class="c1"># also archive old tasks, decisions, and learnings</span>
 </span></code></pre></div>
 <ul>
 <li>Tasks: moves completed items (with all subtasks done) into the Completed
   section of <code>TASKS.md</code></li>
+<li>Decisions and learnings: archives entries older than 90 days (configurable
+  via <code>archive_knowledge_after_days</code> in <code>.contextrc</code>), keeping the 5 most
+  recent entries (configurable via <code>archive_keep_recent</code>)</li>
 <li>All files: removes empty sections left behind</li>
-<li>With <code>--archive</code>: also writes tasks older than 7 days to
-  <code>.context/archive/tasks-YYYY-MM-DD.md</code></li>
+<li>With <code>--archive</code>: writes tasks older than 7 days to
+  <code>.context/archive/tasks-YYYY-MM-DD.md</code>, decisions to
+  <code>.context/archive/decisions-YYYY-MM-DD.md</code>, and learnings to
+  <code>.context/archive/learnings-YYYY-MM-DD.md</code></li>
 </ul>
 <p>Without <code>--archive</code>, nothing is deleted — tasks are reorganized in place.</p>
 <h3 id="ctx-status"><code>ctx status</code><a class="headerlink" href="#ctx-status" title="Permanent link">&para;</a></h3>

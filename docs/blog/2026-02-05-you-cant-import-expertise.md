@@ -2,6 +2,7 @@
 title: "You Can't Import Expertise"
 date: 2026-02-05
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - skill adaptation
   - E/A/R framework
@@ -18,13 +19,18 @@ topics:
 
 *Jose Alekhinne / 2026-02-05*
 
-!!! question "Have you ever dropped a well-crafted template into a project and had it do... nothing useful?"
-    The template was thorough. The structure was sound. The advice was correct.
+!!! question "Have You Ever Dropped a Well-Crafted Template Into a Project and Had It Do... Nothing Useful?"
+    * The template was **thorough**, 
+    * The structure was **sound**,
+    * The advice was **correct**...
 
-    And yet it sat there, inert, while the same old problems kept drifting in.
+    ...and yet it sat there, inert, while the same old problems kept drifting in.
 
-I found a consolidation skill online. It was well-organized: four files,
-ten refactoring patterns, eight analysis dimensions, six report templates.
+I found a consolidation skill online. 
+
+It was well-organized: four files, ten refactoring patterns, eight analysis 
+dimensions, six report templates.
+
 Professional. Comprehensive. Exactly the kind of thing you'd bookmark and
 think *"I'll use this."*
 
@@ -34,9 +40,10 @@ Then I stopped, and applied `ctx`'s own evaluation framework:
 
 This post is about **why**.
 
-> **Templates describe categories of problems.**
-> 
-> **Expertise encodes which problems actually happen, and how often.**
+!!! tip "It Is About Encoding Templates"
+    **Templates describe categories of problems.**
+ 
+    **Expertise encodes which problems actually happen, and how often.**
 
 ## The Skill Looked Great on Paper
 
@@ -49,9 +56,10 @@ Here is what the consolidation skill offered:
 | `consolidation-patterns.md` | 10 refactoring patterns with before/after code               |
 | `report-templates.md`       | 6 output templates: executive summary, roadmap, onboarding   |
 
-It had a scoring system (`0-10` per dimension, letter grades `A+` through `F`).
-It had severity classifications with color-coded emojis. It had bash commands
-for detection. It even had antipattern warnings.
+* It had a scoring system (`0-10` per dimension, letter grades `A+` through `F`).
+* It had severity classifications with color-coded emojis. It had bash commands
+for detection. 
+* It even had antipattern warnings.
 
 **By any standard template review, this skill passes.**
 
@@ -72,7 +80,7 @@ evaluating skills:
 
 Target: >70% Expert, <10% Redundant.
 
-This skill scored the inverse.
+This skill scored the **inverse**.
 
 ### What Was Redundant (~70%)
 
@@ -85,9 +93,10 @@ does when you ask it to review code.
 The skill restated them with more ceremony but no more insight.
 
 The six report templates were generic scaffolding: Executive Summary,
-Onboarding Document, Architecture Documentation. They are useful if you are
-writing a consulting deliverable, but not when you are trying to catch
-convention drift in a >15K-line Go CLI.
+Onboarding Document, Architecture Documentation... 
+
+They are useful if you are writing a consulting deliverable, but **not** 
+when you are trying to catch convention drift in a >15K-line Go CLI.
 
 ## What Does a `B+` in Code Organization *Actually* Mean?!
 
@@ -124,18 +133,18 @@ Three concepts survived:
    it compounds (security vulns = daily, missing tests = per-change,
    doc gaps = constant low cost). This changes prioritization.
 
-**Three ideas out of four files and 700+ lines.** The rest was filler
+**Three ideas out of four files and 700+ lines**. The rest was filler
 that competed with the AI's built-in capabilities.
 
 ## What the Skill Didn't Know
 
 !!! tip "AI Without Context is Just a Corpus"
-    LLMs are optimized on insanely large corpora.
-    And then they are passed through several layers of
-    human-assisted refinement.
-    The whole process costs millions of dollars.
+    * LLMs are optimized on insanely large **corpora**.
+    * And then they are passed through several layers of
+    human-assisted **refinement**.
+    * The whole process costs **millions** of dollars.
 
-    Yet, the uncomfortable truth is that no corpus can "*infer*"
+    Yet, the reality is that no corpus can "*infer*"
     your project's design, convetions, patterns, habits, history,
     vision, and deliverables.
 
@@ -147,9 +156,9 @@ Here is the part no template can provide:
 
 Before evaluating the skill, I did **archaeology**. I read through:
 
-* Blog posts from previous refactoring sessions
-* The project's learnings and decisions files
-* Session journals spanning **weeks of development**
+* **Blog posts** from previous refactoring sessions;
+* The project's **learnings** and **decisions** files;
+* **Session journals** spanning **weeks of development**.
 
 What I found was specific:
 
@@ -162,13 +171,13 @@ What I found was specific:
 | Duplicate code blocks               | Test and non-test code | When agent is task-focused |
 
 The generic skill had no check for any of these. It couldn't; because these
-patterns are specific to this project's conventions, its Go codebase, and
+patterns are **specific** to this project's conventions, its Go codebase, and
 its development rhythm.
 
 !!! tip "The Insight"
     The skill's analysis dimensions were about *categories of problems*.
 
-    What I needed was *my specific problems*.
+    What I needed was ***my** *specific* problems.
 
 ## The Adapted Skill
 
@@ -185,26 +194,27 @@ It has nine checks, each targeting a known drift pattern:
 8. **Duplicate blocks**: copy-paste drift, especially in tests
 9. **Dead exports**: unused public API
 
-**Every check** has a detection command. **Every check** maps to a specific
-convention or constitution rule. **Every check** was discovered through
-actual project history; **not** invented from a template.
+* **Every check** has a detection command. 
+* **Every check** maps to a specific convention or constitution rule. 
+* **Every check** was discovered through actual project history;
+  **not** invented from a template.
 
 The three expert concepts from the original survived:
 
 * The decision matrix gates when to consolidate vs. when to leave
-  duplication alone
-* The safe migration pattern guides public API changes
+  duplication alone;
+* The safe migration pattern guides public API changes;
 * The relationship to other skills (`/qa`, `/verify`, `/update-docs`,
-  `ctx drift`) prevents overlap
+  `ctx drift`) prevents overlap.
 
-Nothing else made it.
+**Nothing else** made it.
 
 ## The Deeper Pattern
 
 This experience crystallized something I've been circling for weeks:
 
 **You can't import expertise. You have to grow it from your project's
-own history.**
+own history**.
 
 A skill that says "*check for code duplication*" is **not** expertise: 
 It's a *category*. 
@@ -221,8 +231,8 @@ agent prioritizes getting the task done over keeping the code in shape.
 
 [ratio]: 2026-02-17-the-3-1-ratio.md
 
-    The same ratio applies to skills: you need experience *in* the project
-    before you can write effective guidance *for* the project.
+    The same ratio applies to skills: you need experience **in** the project
+    before you can write effective guidance **for** the project.
 
     Importing a skill on day one is like scheduling a consolidation session
     before you've written any code.

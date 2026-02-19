@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -61,6 +62,30 @@ func runCompact(cmd *cobra.Command, archive bool) error {
 		cmd.Println(fmt.Sprintf("%s Error processing TASKS.md: %v", yellow("⚠"), err))
 	} else {
 		changes += tasksChanges
+	}
+
+	// Archive old decisions and learnings when archiving is enabled
+	if archive {
+		days := rc.ArchiveKnowledgeAfterDays()
+		keep := rc.ArchiveKeepRecent()
+
+		decChanges, err := ArchiveKnowledgeFile(
+			cmd, config.FileDecision, "decisions",
+			config.HeadingArchivedDecisions, index.UpdateDecisions,
+			days, keep, false, false,
+		)
+		if err == nil {
+			changes += decChanges
+		}
+
+		lrnChanges, err := ArchiveKnowledgeFile(
+			cmd, config.FileLearning, "learnings",
+			config.HeadingArchivedLearnings, index.UpdateLearnings,
+			days, keep, false, false,
+		)
+		if err == nil {
+			changes += lrnChanges
+		}
 	}
 
 	// Process other files for empty sections

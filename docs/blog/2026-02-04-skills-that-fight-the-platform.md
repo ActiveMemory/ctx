@@ -2,6 +2,7 @@
 title: "Skills That Fight the Platform"
 date: 2026-02-04
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - context engineering
   - skill design
@@ -18,7 +19,7 @@ topics:
 
 *Jose Alekhinne / 2026-02-04*
 
-!!! question "Have you ever written a skill that made your AI worse?"
+!!! question "Have You Ever Written a Skill that Made Your AI Worse?"
     You craft detailed instructions. You add examples. You build elaborate
     guardrails...
 
@@ -26,23 +27,27 @@ topics:
 
 AI coding agents like *Claude Code* ship with carefully designed 
 **system prompts**. These prompts encode **default behaviors** that have been 
-tested and refined **at scale**. When you write custom skills that **conflict** 
-with those defaults, the AI has to reconcile contradictory instructions:
-The result is often nondeterministic and unpredictable.
+tested and refined **at scale**. 
+
+When you write custom skills that **conflict** with those defaults, the AI has
+to reconcile contradictory instructions:
+
+The result is often **nondeterministic** and **unpredictable**.
 
 !!! info "Platform?"
-    By *platform*, I mean the system prompt and runtime policies shipped with the
-    agent: the defaults that already encode **judgment**, **safety**, and 
+    By *platform*, I mean the system prompt and runtime policies shipped with 
+    the agent: the defaults that already encode **judgment**, **safety**, and 
     **scope control**.
 
-This post catalogues the conflict patterns I've encountered while building
+This post catalogues the conflict patterns I have encountered while building
 `ctx`, and offers guidance on what skills should (*and, more importantly, 
 should not*) do.
 
 ## The System Prompt You Don't See
 
 Claude Code's system prompt already provides substantial behavioral guidance.
-Here's a partial overview of what's built in:
+
+Here is a partial overview of what's built in:
 
 | Area                | Built-in Guidance                                         |
 |---------------------|-----------------------------------------------------------|
@@ -57,27 +62,27 @@ Here's a partial overview of what's built in:
 
 **Skills should complement this, not compete with it.**
 
-A useful mental model:
-
 !!! tip "You are the Guest, not the Host"
     Treat the system prompt like a kernel scheduler.
 
-    You don't re-implement it in user space: you configure around it.
+    You don't re-implement it in user space: 
 
-A skill that says *"always add comprehensive error handling"* fights the built-in
-*"only validate at system boundaries."*  
-A skill that says *"add docstrings to every function"* fights
-*"don't add docstrings to unchanged code."*
+    you configure **around** it.
 
-The AI won't crash.  
-It will **compromise**.
+A skill that says *"always add comprehensive error handling"* 
+fights the built-in "*only validate at system boundaries.*"
+  
+A skill that says "*add docstrings to every function*" fights
+"*don't add docstrings to unchanged code.*"
 
-And compromises between contradictory instructions produce inconsistent,
+The AI won't crash: It will **compromise**.
+
+Compromises between contradictory instructions produce inconsistent,
 confusing behavior.
 
 ## Conflict Pattern 1: Judgment Suppression
 
-The most dangerous pattern by far.
+This is the most dangerous pattern by far.
 
 These skills explicitly disable the AI's ability to reason about whether an
 action is appropriate.
@@ -92,22 +97,26 @@ action is appropriate.
 
 This is harmful, and **dangerous**:
 
-AI agents are designed to exercise **judgment**. The system prompt explicitly 
-says to consider blast radius, check with the user before risky actions, 
-and match scope to what was requested.
+AI agents are designed to exercise **judgment**: 
 
-Once judgment is suppressed, every other safeguard becomes optional.
+The system prompt explicitly says to:
+
+* consider blast radius;
+* check with the user before risky actions;
+* and match scope to what was requested.
+
+Once judgment is suppressed, every other safeguard becomes **optional**.
 
 **Example (bad):**
 
 ```markdown
 ## Rationalization Prevention
 
-| Excuse               | Reality                    |
-|----------------------|----------------------------|
-| "This seems overkill"| If a skill exists, use it  |
-| "I need context"     | Skills come BEFORE context |
-| "Just this once"     | No exceptions              |
+| Excuse                 | Reality                    |
+|------------------------|----------------------------|
+| "*This seems overkill*"| If a skill exists, use it  |
+| "*I need context*"     | Skills come BEFORE context |
+| "*Just this once*"     | No exceptions              |
 ```
 
 !!! danger "Judgment Suppression is Dangerous"
@@ -118,7 +127,7 @@ Once judgment is suppressed, every other safeguard becomes optional.
     It weakens or disables safeguard mechanisms, and it is
     **dangerous**.
 
-Trust the platform's built-in skill matching.
+**Trust** the platform's built-in skill matching.
 
 If skills aren't triggering often enough, improve their `description` fields:
 don't override the AI's reasoning.
@@ -144,16 +153,18 @@ When thresholds or wording differ, the AI has to choose.
 
 **Example (bad):**
 
-A skill that says..
+A skill that says...
 
-> "*Count lines before and after: if after > before, reject the change*"
+```markdown
+*Count lines before and after: if after > before, reject the change*"
+```
 
 ...will conflict with the system prompt's more nuanced guidance, because 
 sometimes adding lines is correct (*tests, boundary validation, migrations*).
 
 So, before writing a skill, ask:
 
-> *Does the platform already handle this?*
+**Does the platform already handle this?**
 
 Only create skills for guidance the platform does **not** provide:
 
@@ -174,7 +185,7 @@ Skills that frame mistakes as moral failures rather than process gaps.
 
 Guilt-tripping **anthropomorphizes** the AI in **unproductive** ways.
 
-The AI doesn't feel guilt; BUT it does adapt to avoid negative framing.
+The AI doesn't feel guilt; **BUT** it does adapt to avoid negative framing.
 
 The result is excessive hedging, over-verification, or refusal to commit.
 
@@ -230,7 +241,7 @@ The AI spends tokens on process overhead instead of the actual task.
 !!! tip "ctx preserves relevance"
     This is exactly the failure mode `ctx` exists to mitigate: 
 
-    wasting attention budget on irrelevant process instead of 
+    Wasting attention budget on irrelevant process instead of 
     task-specific state.
 
 Write specific trigger conditions in the skill's `description` field:
@@ -351,9 +362,9 @@ Use after modifying code that affects authentication or persistence.
 
 The system prompt is **infrastructure**:
 
-* tested, 
-* refined, 
-* and maintained 
+* tested,
+* refined,
+* and maintained
 
 by the platform team.
 
@@ -364,12 +375,13 @@ Custom skills are **configuration** layered on top.
 
 When your skills fight the platform, you get the worst of both worlds:
 
-Diluted system guidance and inconsistent custom behavior.
+**Diluted** system guidance and **inconsistent** custom behavior.
 
 **Write skills that teach the AI what it doesn't know.
 Don't rewrite how it thinks.**
 
 ---
 
-**Your AI already has good instincts.
-Give it knowledge, not therapy.**
+**Your AI already has good instincts.**
+
+**Give it knowledge, not therapy.**

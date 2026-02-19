@@ -24,7 +24,9 @@ icon: lucide/flame
 
     **Creation produces outcomes**.
 
-    Confusing the two is how teams ship motion instead of progress.
+    Confusing the two is how teams ship motion...
+
+    ...instead of progress.
 
 * It was **never** about the code.
 * Code has **zero** standalone value.
@@ -66,16 +68,16 @@ Creation is now limited by:
 !!! warning "Velocity Amplifies"
     Faster execution on broken context **compounds** error.
 
-    Speed multiplies whatever is already wrong.
+    **Speed multiplies whatever is already wrong**.
 
 ---
 
 ## Humans Author Meaning
 
 !!! important "Intent Is Authored"
-    Systems can optimize.
+    Systems can *optimize*.
 
-    Models can generalize.
+    Models can *generalize*.
 
     Meaning **must** be chosen.
 
@@ -83,7 +85,7 @@ Creation is now limited by:
 
 Vision, goals, and direction are **human responsibilities**.
 
-We decide:
+**We** decide:
 
 * **What** matters;
 * **What** success means;
@@ -95,9 +97,9 @@ We decide:
 * **survives** handoffs,
 * **survives** scale.
 
-Nothing important should live only in conversation.
+**Nothing** important should live only in conversation.
 
-Nothing critical should depend on recall.
+**Nothing** critical should depend on recall.
 
 !!! danger "Oral Tradition Does not Scale"
     If intent cannot be inspected, it cannot be enforced.
@@ -113,17 +115,18 @@ Nothing critical should depend on recall.
 
 **Never act without `ctx`.**
 
-Before execution, we must verify:
+**Before** execution, we must **verify**:
 
 * **Where** we are;
 * **Why** we are here;
 * **What** constraints apply;
 * **What** assumptions are active.
 
-Action without `ctx` is gambling.
-Speed without orientation is noise.
+*Action* without `ctx` is *gambling*.
 
-`ctx` is **not** overhead: It is the cost of correctness.
+*Speed* without *orientation* is *noise*.
+
+`ctx` is **not** overhead: It is the *cost* of correctness.
 
 ---
 
@@ -135,27 +138,30 @@ Speed without orientation is noise.
     * Memory heuristics **drift**.
 
 
-Prompts are transient.
+Prompts are **transient**.
 
-Chats are lossy.
+Chats are **lossy**.
 
-Memory heuristics drift.
+Memory heuristics **drift**.
 
-Context **must be**:
+`ctx` **must be**:
 
 * Durable;
 * Structured;
 * Explicit;
 * Queryable.
 
-Knowledge lives in the **artifacts**:
+!!! tip "Intent Must Be Intentional"
+    If **intent** exists only in a prompt... 
 
-* Decisions;
-* Documentation;
-* Dependency maps;
-* Evaluation history.
+    ...alignment is already *degrading*.
 
-If **intent** exists only in a prompt, alignment is already degrading.
+**Knowledge** lives in the **artifacts**:
+
+* **Decisions**;
+* **Documentation**;
+* **Dependency** maps;
+* **Evaluation** history.
 
 !!! warning "Artifacts Outlive Sessions"
     What is not written will be **re-learned**.
@@ -184,12 +190,14 @@ If **intent** exists only in a prompt, alignment is already degrading.
 ## Verified Reality Is the Scoreboard
 
 !!! danger "Activity is a False Proxy"
-    Output volume correlates poorly with impact.
+    Output volume correlates *poorly* with impact.
 
-    * Code is **not** progress.
-    * Activity is **not** impact.
+    * *Code* is **not** progress.
+    * *Activity* is **not** impact.
 
-The only truth that **compounds** is verified change in the real world.
+The only **truth** that **compounds** is **verified change**. 
+
+**Verified change** must exist **in the real world**.
 
 Hypotheses are cheap; outcomes are **not**.
 
@@ -201,7 +209,7 @@ Hypotheses are cheap; outcomes are **not**.
 
 If we cannot **predict**, **measure**, and **verify** the result...
 
-...it does not count.
+...it does **not** count.
 
 ---
 
@@ -231,9 +239,9 @@ We build to:
 ## Failures Are Assets
 
 !!! important "Failure Without Capture is Waste"
-    Pain that does not teach is pure loss.
+    **Pain** that does not teach is pure *loss*.
 
-    Failures are not erased: They are preserved.
+    **Failures** are *not* erased: They are **preserved**.
 
 Each failure becomes:
 
@@ -241,7 +249,7 @@ Each failure becomes:
 * An analyzed **deviation**;
 * A permanent **artifact**.
 
-Rollback fixes symptoms: `ctx` fixes systems.
+Rollback fixes *symptoms*: `ctx` fixes **systems**.
 
 A repeated mistake is a missing `ctx` artifact.
 
@@ -258,35 +266,35 @@ A repeated mistake is a missing `ctx` artifact.
 
 `ctx` defines:
 
-* Roles;
-* Boundaries;
-* Protocols;
-* Escalation paths;
-* Decision rights.
+* **Roles**;
+* **Boundaries**;
+* **Protocols**;
+* **Escalation** paths;
+* **Decision** rights.
 
 **Ambiguity is a system failure**.
 
-* Debates must be **structured**.
-* Decisions must be **explicit**.
-* History must be **retained**.
+* **Debates** *must be* **structured**.
+* **Decisions** *must be* **explicit**.
+* **History** *must be* **retained**.
 
 ---
 
 ## Encode Intent Into the Environment
 
 !!! danger "Goodwill Does not Belong to the Table"
-    Alignment that depends on memory will decay.
+    *Alignment* that depends on memory will *decay*.
 
-    Alignment cannot depend on memory or goodwill.
+    *Alignment* **cannot depend on** *memory* or *goodwill*.
 
     **Don't leave goodwill on the table**.
 
 **Intent** is encoded as:
 
-* Policies;
-* Schemas;
-* Constraints;
-* Evaluation harnesses.
+* **Policies**;
+* **Schemas**;
+* **Constraints**;
+* **Evaluation** harnesses.
 
 Rules **must** be machine-readable.
 
@@ -303,7 +311,9 @@ Laws **must** be enforceable.
 
     **Not** ambition.
 
-Ideas do not compete on time: They compete on cost and impact:
+Ideas **do not** compete on *time*:
+
+They compete on **cost** and **impact**:
 
 * **Attention** is **finite**.
 * **Compute** is **finite**.
@@ -336,7 +346,9 @@ We record:
 * **Assumptions** made;
 * **Evidence** used.
 
-Opaque systems erode trust: Transparent context compounds understanding.
+Opaque systems *erode* trust:
+
+Transparent `ctx` **compounds** understanding.
 
 ---
 
@@ -353,33 +365,37 @@ Opaque systems erode trust: Transparent context compounds understanding.
 
 **Trust is a spectrum**.
 
-Trust is continuously re-earned.
+**Trust** is *continuously* **re-earned**:
 
-**Benchmarks**, **regressions**, and **evaluations** are **safety rails**.
+* **Benchmarks**, 
+* **regressions**, 
+* and **evaluations**... 
+
+...are **safety rails**.
 
 ---
 
 ## `ctx` Is Leverage
 
 !!! note "Humans are Decision Engines"
-    Execution should not consume judgment.
+    *Execution* should **not** consume *judgment*.
 
     Humans are **not** typists.
 
     **We** are authors.
 
-Human effort is reserved for:
+**Human effort** is reserved for:
 
-* Judgment;
-* Design;
-* Taste;
-* Synthesis.
+* **Judgment**;
+* **Design**;
+* **Taste**;
+* **Synthesis**.
 
-Repetition is **delegated**.
+*Repetition* is **delegated**.
 
-Toil is **automated**.
+*Toil* is **automated**.
 
-`ctx` **preserves** leverage across time.
+`ctx` **preserves** *leverage* across **time**.
 
 ---
 

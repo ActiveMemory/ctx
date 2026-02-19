@@ -2155,21 +2155,27 @@
 <h2 id="why-good-skills-cant-be-copy-pasted">Why Good Skills Can't Be Copy-Pasted<a class="headerlink" href="#why-good-skills-cant-be-copy-pasted" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-05</em></p>
 <div class="admonition question">
-<p class="admonition-title">Have you ever dropped a well-crafted template into a project and had it do... nothing useful?</p>
-<p>The template was thorough. The structure was sound. The advice was correct.</p>
-<p>And yet it sat there, inert, while the same old problems kept drifting in.</p>
+<p class="admonition-title">Have You Ever Dropped a Well-Crafted Template Into a Project and Had It Do... Nothing Useful?</p>
+<ul>
+<li>The template was <strong>thorough</strong>, </li>
+<li>The structure was <strong>sound</strong>,</li>
+<li>The advice was <strong>correct</strong>...</li>
+</ul>
+<p>...and yet it sat there, inert, while the same old problems kept drifting in.</p>
 </div>
-<p>I found a consolidation skill online. It was well-organized: four files,
-ten refactoring patterns, eight analysis dimensions, six report templates.
-Professional. Comprehensive. Exactly the kind of thing you'd bookmark and
+<p>I found a consolidation skill online. </p>
+<p>It was well-organized: four files, ten refactoring patterns, eight analysis 
+dimensions, six report templates.</p>
+<p>Professional. Comprehensive. Exactly the kind of thing you'd bookmark and
 think <em>"I'll use this."</em></p>
 <p>Then I stopped, and applied <code>ctx</code>'s own evaluation framework: </p>
 <p><strong>70% of it was noise!</strong></p>
 <p>This post is about <strong>why</strong>.</p>
-<blockquote>
+<div class="admonition tip">
+<p class="admonition-title">It Is About Encoding Templates</p>
 <p><strong>Templates describe categories of problems.</strong></p>
 <p><strong>Expertise encodes which problems actually happen, and how often.</strong></p>
-</blockquote>
+</div>
 <h2 id="the-skill-looked-great-on-paper">The Skill Looked Great on Paper<a class="headerlink" href="#the-skill-looked-great-on-paper" title="Permanent link">&para;</a></h2>
 <p>Here is what the consolidation skill offered:</p>
 <table>
@@ -2198,9 +2204,12 @@ think <em>"I'll use this."</em></p>
 </tr>
 </tbody>
 </table>
-<p>It had a scoring system (<code>0-10</code> per dimension, letter grades <code>A+</code> through <code>F</code>).
-It had severity classifications with color-coded emojis. It had bash commands
-for detection. It even had antipattern warnings.</p>
+<ul>
+<li>It had a scoring system (<code>0-10</code> per dimension, letter grades <code>A+</code> through <code>F</code>).</li>
+<li>It had severity classifications with color-coded emojis. It had bash commands
+for detection. </li>
+<li>It even had antipattern warnings.</li>
+</ul>
 <p><strong>By any standard template review, this skill passes.</strong></p>
 <p>It looks like something an expert wrote. </p>
 <p>And that's <strong>exactly</strong> the trap.</p>
@@ -2213,7 +2222,7 @@ evaluating skills:</p>
 <li><strong>Redundant</strong>: Restates what the AI already knows. Delete.</li>
 </ul>
 <p>Target: &gt;70% Expert, &lt;10% Redundant.</p>
-<p>This skill scored the inverse.</p>
+<p>This skill scored the <strong>inverse</strong>.</p>
 <h3 id="what-was-redundant-70">What Was Redundant (~70%)<a class="headerlink" href="#what-was-redundant-70" title="Permanent link">&para;</a></h3>
 <p>Every code example was <strong>Rust</strong>. My project is <strong>Go</strong>.</p>
 <p>The analysis dimensions: duplication detection, architectural structure,
@@ -2221,9 +2230,9 @@ code organization, refactoring opportunities... These are things Claude already
 does when you ask it to review code. </p>
 <p>The skill restated them with more ceremony but no more insight.</p>
 <p>The six report templates were generic scaffolding: Executive Summary,
-Onboarding Document, Architecture Documentation. They are useful if you are
-writing a consulting deliverable, but not when you are trying to catch
-convention drift in a &gt;15K-line Go CLI.</p>
+Onboarding Document, Architecture Documentation... </p>
+<p>They are useful if you are writing a consulting deliverable, but <strong>not</strong> 
+when you are trying to catch convention drift in a &gt;15K-line Go CLI.</p>
 <h2 id="what-does-a-b-in-code-organization-actually-mean">What Does a <code>B+</code> in Code Organization <em>Actually</em> Mean?!<a class="headerlink" href="#what-does-a-b-in-code-organization-actually-mean" title="Permanent link">&para;</a></h2>
 <p>The scoring system (<em><code>0-10</code> per dimension, letter grades</em>) added ceremony
 without actionable insight. </p>
@@ -2255,16 +2264,18 @@ lines.</p>
    doc gaps = constant low cost). This changes prioritization.</p>
 </li>
 </ol>
-<p><strong>Three ideas out of four files and 700+ lines.</strong> The rest was filler
+<p><strong>Three ideas out of four files and 700+ lines</strong>. The rest was filler
 that competed with the AI's built-in capabilities.</p>
 <h2 id="what-the-skill-didnt-know">What the Skill Didn't Know<a class="headerlink" href="#what-the-skill-didnt-know" title="Permanent link">&para;</a></h2>
 <div class="admonition tip">
 <p class="admonition-title">AI Without Context is Just a Corpus</p>
-<p>LLMs are optimized on insanely large corpora.
-And then they are passed through several layers of
-human-assisted refinement.
-The whole process costs millions of dollars.</p>
-<p>Yet, the uncomfortable truth is that no corpus can "<em>infer</em>"
+<ul>
+<li>LLMs are optimized on insanely large <strong>corpora</strong>.</li>
+<li>And then they are passed through several layers of
+human-assisted <strong>refinement</strong>.</li>
+<li>The whole process costs <strong>millions</strong> of dollars.</li>
+</ul>
+<p>Yet, the reality is that no corpus can "<em>infer</em>"
 your project's design, convetions, patterns, habits, history,
 vision, and deliverables.</p>
 <p>Your project is unique: So should your skills be.</p>
@@ -2273,9 +2284,9 @@ vision, and deliverables.</p>
 <p><strong><code>ctx</code>'s actual drift patterns.</strong></p>
 <p>Before evaluating the skill, I did <strong>archaeology</strong>. I read through:</p>
 <ul>
-<li>Blog posts from previous refactoring sessions</li>
-<li>The project's learnings and decisions files</li>
-<li>Session journals spanning <strong>weeks of development</strong></li>
+<li><strong>Blog posts</strong> from previous refactoring sessions;</li>
+<li>The project's <strong>learnings</strong> and <strong>decisions</strong> files;</li>
+<li><strong>Session journals</strong> spanning <strong>weeks of development</strong>.</li>
 </ul>
 <p>What I found was specific:</p>
 <table>
@@ -2315,12 +2326,12 @@ vision, and deliverables.</p>
 </tbody>
 </table>
 <p>The generic skill had no check for any of these. It couldn't; because these
-patterns are specific to this project's conventions, its Go codebase, and
+patterns are <strong>specific</strong> to this project's conventions, its Go codebase, and
 its development rhythm.</p>
 <div class="admonition tip">
 <p class="admonition-title">The Insight</p>
 <p>The skill's analysis dimensions were about <em>categories of problems</em>.</p>
-<p>What I needed was <em>my specific problems</em>.</p>
+<p>What I needed was <em><strong>my</strong> *specific</em> problems.</p>
 </div>
 <h2 id="the-adapted-skill">The Adapted Skill<a class="headerlink" href="#the-adapted-skill" title="Permanent link">&para;</a></h2>
 <p>The adapted skill is roughly a quarter of the original's size.
@@ -2334,24 +2345,29 @@ It has nine checks, each targeting a known drift pattern:</p>
 <li><strong>Path construction</strong>: string concatenation instead of <code>filepath.Join</code></li>
 <li><strong>Line width</strong>: lines exceeding ~80 characters</li>
 <li><strong>Duplicate blocks</strong>: copy-paste drift, especially in tests</li>
-<li><strong>Dead exports</strong>: unused public API</li>
+<li>
+<p><strong>Dead exports</strong>: unused public API</p>
+</li>
+<li>
+<p><strong>Every check</strong> has a detection command. </p>
+</li>
+<li><strong>Every check</strong> maps to a specific convention or constitution rule. </li>
+<li><strong>Every check</strong> was discovered through actual project history;
+  <strong>not</strong> invented from a template.</li>
 </ol>
-<p><strong>Every check</strong> has a detection command. <strong>Every check</strong> maps to a specific
-convention or constitution rule. <strong>Every check</strong> was discovered through
-actual project history; <strong>not</strong> invented from a template.</p>
 <p>The three expert concepts from the original survived:</p>
 <ul>
 <li>The decision matrix gates when to consolidate vs. when to leave
-  duplication alone</li>
-<li>The safe migration pattern guides public API changes</li>
+  duplication alone;</li>
+<li>The safe migration pattern guides public API changes;</li>
 <li>The relationship to other skills (<code>/qa</code>, <code>/verify</code>, <code>/update-docs</code>,
-  <code>ctx drift</code>) prevents overlap</li>
+  <code>ctx drift</code>) prevents overlap.</li>
 </ul>
-<p>Nothing else made it.</p>
+<p><strong>Nothing else</strong> made it.</p>
 <h2 id="the-deeper-pattern">The Deeper Pattern<a class="headerlink" href="#the-deeper-pattern" title="Permanent link">&para;</a></h2>
 <p>This experience crystallized something I've been circling for weeks:</p>
 <p><strong>You can't import expertise. You have to grow it from your project's
-own history.</strong></p>
+own history</strong>.</p>
 <p>A skill that says "<em>check for code duplication</em>" is <strong>not</strong> expertise: 
 It's a <em>category</em>. </p>
 <p>Expertise is <strong>knowing</strong>, in the heart of your hearts, that <em>this</em> 
@@ -2363,8 +2379,8 @@ agent prioritizes getting the task done over keeping the code in shape.</p>
 <p class="admonition-title">The Parallel to the <a href="../2026-02-17-the-3-1-ratio/">3:1 Ratio</a></p>
 <p>In <a href="../2026-02-01-refactoring-with-intent/" title="Refactoring with Intent">Refactoring with Intent</a>, I described the 3:1
 ratio: three YOLO sessions followed by one consolidation session.</p>
-<p>The same ratio applies to skills: you need experience <em>in</em> the project
-before you can write effective guidance <em>for</em> the project.</p>
+<p>The same ratio applies to skills: you need experience <strong>in</strong> the project
+before you can write effective guidance <strong>for</strong> the project.</p>
 <p>Importing a skill on day one is like scheduling a consolidation session
 before you've written any code.</p>
 </div>

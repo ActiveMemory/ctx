@@ -23,8 +23,8 @@ topics:
 
 *Jose Alekhinne / 2026-02-08*
 
-!!! question "When you find a useful prompt, what do you do with it?"
-    My instinct was to make it a skill. 
+!!! question "When You Find a Useful Prompt, What Do You Do With It?"
+    My instinct was to make it a *skill*.
 
     I had just spent **three posts** explaining how to build skills that work. 
     Naturally, **the hammer wanted nails**.
@@ -36,9 +36,9 @@ topics:
 
 I wanted to understand how I use `ctx`: 
 
-* where the friction is, 
-* what works, what drifts, 
-* what I keep doing manually that could be automated. 
+* Where the friction is;
+* What works, what drifts; 
+* What I keep doing manually that could be automated. 
 
 So I wrote a prompt that spawned eight agents to analyze the codebase from 
 different angles:
@@ -65,7 +65,7 @@ It ran for about  20 minutes and produced **eight Markdown reports**.
 
 The reports were good: Not perfect, but actionable.
 
-What mattered was not the speed. It was that the work could be
+What mattered was **not** the speed. It was that the work could be
 explored without committing to any single outcome.
 
 They surfaced a stale `doc.go` referencing a subcommand that was
@@ -86,7 +86,10 @@ And then... **I stopped**.
 
 The natural next step was to wrap the audit prompt as `/ctx-audit`:
 a skill you invoke periodically to get a health check. It fits the
-pattern. It has a clear trigger. It produces structured output.
+pattern: 
+
+* It has a **clear trigger**.
+* It produces **structured output**.
 
 But I had just spent a week writing about what makes skills work,
 and the criteria I established argued against it.

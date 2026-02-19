@@ -155,7 +155,7 @@ func fixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		archiveContent += config.PrefixTaskDone + " " + t + nl
 	}
 
-	archiveFile, writeErr := compact.WriteArchive(archiveContent)
+	archiveFile, writeErr := compact.WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent)
 	if writeErr != nil {
 		return writeErr
 	}

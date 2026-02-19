@@ -24,16 +24,19 @@ func Cmd() *cobra.Command {
 		Long: `Manage the LEARNINGS.md file and its quick-reference index.
 
 The learnings file maintains an auto-generated index at the top for quick
-scanning. Use the subcommands to manage this index.
+scanning. Use the subcommands to manage this index and archive old entries.
 
 Subcommands:
   reindex    Regenerate the quick-reference index
+  archive    Archive old or superseded learnings
 
 Examples:
-  ctx learnings reindex`,
+  ctx learnings reindex
+  ctx learnings archive --dry-run`,
 	}
 
 	cmd.AddCommand(reindexCmd())
+	cmd.AddCommand(archiveCmd())
 
 	return cmd
 }

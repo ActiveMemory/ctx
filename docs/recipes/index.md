@@ -167,6 +167,17 @@ at session start to automatically drop session-accumulated permissions.
 
 ---
 
+### [Managing Knowledge at Scale](knowledge-scaling.md)
+
+Archive old decisions and learnings to keep knowledge files lean and
+token-efficient. Includes threshold configuration, supersede workflow,
+and auto-archive via compact.
+
+**Uses**: `ctx decisions archive`, `ctx learnings archive`,
+`ctx compact --archive`, `/ctx-archive`, `/ctx-drift`
+
+---
+
 ### [Detecting and Fixing Drift](context-health.md)
 
 Keep context files accurate by detecting structural drift

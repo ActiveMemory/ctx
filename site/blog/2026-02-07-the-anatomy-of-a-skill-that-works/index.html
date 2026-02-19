@@ -2130,7 +2130,7 @@
 <h1 id="the-anatomy-of-a-skill-that-works">The Anatomy of a Skill That Works<a class="headerlink" href="#the-anatomy-of-a-skill-that-works" title="Permanent link">&para;</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Update (2026-02-11)</p>
-<p>As of v0.4.0, ctx consolidated sessions into the journal mechanism.
+<p>As of <code>v0.4.0</code>, <code>ctx</code> consolidated sessions into the journal mechanism.
 References to <code>ctx-save</code>, <code>ctx session</code>, and <code>.context/sessions/</code>
 in this post reflect the architecture at the time of writing.</p>
 </div>
@@ -2219,7 +2219,7 @@ is like a manual for a tool nobody knows they have</strong>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Anti-Pattern: The Perfect Execution Trap</p>
 <p>A skill with detailed execution steps but no activation guidance
-will fail more often than a vague skill—because it executes
+will <em>fail</em> <strong>more often</strong> than a vague skill because it executes
 confidently at the wrong time.</p>
 </div>
 <h2 id="lesson-1-quality-gates-prevent-premature-execution">Lesson 1: Quality Gates Prevent Premature Execution<a class="headerlink" href="#lesson-1-quality-gates-prevent-premature-execution" title="Permanent link">&para;</a></h2>
@@ -2245,15 +2245,15 @@ considered output.</p>
 <p>For the astute readers, the aviation parallel is intentional:</p>
 <p>Pilots do not skip the pre-flight checklist because they have flown before.</p>
 <p>The checklist exists precisely because the stakes are high enough that
-"I know what I'm doing" is not sufficient.</p>
+"<em>I know what I'm doing</em>" is not sufficient.</p>
 </div>
 <h2 id="lesson-2-when-not-to-use-is-not-optional">Lesson 2: "<em>When NOT to Use</em>" Is <strong>Not</strong> Optional<a class="headerlink" href="#lesson-2-when-not-to-use-is-not-optional" title="Permanent link">&para;</a></h2>
 <p>Every skill had a "<em>When to Use</em>" section. Almost none had "<em>When NOT
 to Use</em>". This is a problem.</p>
-<p>AI agents are biased toward action. Given a skill that says "use
-when journal entries need enrichment," the agent will find reasons
+<p>AI agents are biased toward action. Given a skill that says "<em>use
+when journal entries need enrichment</em>", the agent will find reasons
 to enrich.</p>
-<p>Without explicit negative triggers, <strong>over-activation is not a bug—it
+<p>Without explicit negative triggers, <strong>over-activation is not a bug; it
 is the default behavior</strong>.</p>
 <p>Some examples of negative triggers that made a real difference:</p>
 <table>
@@ -2266,25 +2266,25 @@ is the default behavior</strong>.</p>
 <tbody>
 <tr>
 <td>ctx-reflect</td>
-<td>"When the user is in flow; do not interrupt"</td>
+<td>"<em>When the user is in flow; do not interrupt</em>"</td>
 </tr>
 <tr>
 <td>ctx-save</td>
-<td>"After trivial changes; a typo does not need a snapshot"</td>
+<td>"<em>After trivial changes; a typo does not need a snapshot</em>"</td>
 </tr>
 <tr>
 <td>prompt-audit</td>
-<td>"Unsolicited; only when the user invokes it"</td>
+<td>"<em>Unsolicited; only when the user invokes it</em>"</td>
 </tr>
 <tr>
 <td>qa</td>
-<td>"Mid-development when code is intentionally incomplete"</td>
+<td>"<em>Mid-development when code is intentionally incomplete</em>"</td>
 </tr>
 </tbody>
 </table>
-<p>These are not just nice-to-have. They are load-bearing. Without
-them, the agent will trigger the skill at the wrong time, produce
-unwanted output, and erode the user's trust in the skill system.</p>
+<p>These are not just nice-to-have. They are <strong>load-bearing</strong>. </p>
+<p>Withoutthem, the agent will trigger the skill at the <em>wrong</em> time, produce
+<em>unwanted</em> output, and <strong>erode the user's trust</strong> in the skill system.</p>
 <h2 id="lesson-3-examples-set-boundaries-better-than-rules">Lesson 3: Examples Set Boundaries Better Than Rules<a class="headerlink" href="#lesson-3-examples-set-boundaries-better-than-rules" title="Permanent link">&para;</a></h2>
 <p>The most common failure mode of thin skills was not wrong behavior
 but <em>vague</em> behavior. The agent would do roughly the right thing,
@@ -2325,16 +2325,16 @@ to find one. This instruction, clearly written for a human
 audience, was <em>dead weight</em> in a skill consumed by an AI.</p>
 <div class="admonition tip">
 <p class="admonition-title">Skills are for the Agents</p>
-<p>Every sentence in a skill should be actionable by the agent.</p>
+<p><strong>Every sentence in a skill should be actionable by the agent</strong>.</p>
 <p>If the guidance requires human judgment or human tools, it belongs in
-documentation, not in a skill.</p>
-<p>The corollary: <strong>command references must be exact.</strong> A skill that
-says "<em>save it somewhere</em>" is useless. A skill that says
-<code>ctx add learning --context "..." --lesson "..." --application "..."</code>
-is actionable.</p>
+documentation, <strong>not</strong> in a skill.</p>
+<p>The corollary: <strong>command references must be exact</strong>. </p>
+<p>A skill that says "<em>save it somewhere</em>" is useless. </p>
+<p>A skill that says <code>ctx add learning --context "..." --lesson "..." --application "..."</code>
+is <strong>actionable</strong>.</p>
 <p>The agent can pattern-match and fill in the blanks.</p>
 </div>
-<p><strong>Litmus test</strong>: If a sentence starts with "<em>you could…</em>" or assumes
+<p><strong>Litmus test</strong>: If a sentence starts with "<em>you could...</em>" or assumes
 external tools, it does not belong in a skill.</p>
 <h2 id="lesson-5-the-description-field-is-the-trigger">Lesson 5: The Description Field Is the Trigger<a class="headerlink" href="#lesson-5-the-description-field-is-the-trigger" title="Permanent link">&para;</a></h2>
 <p>This was covered in <a href="../2026-02-04-skills-that-fight-the-platform/">Skills That Fight the Platform</a>,
@@ -2350,7 +2350,7 @@ bodies but vague descriptions:</p>
 <p>The description is not a title. It is the <strong>activation condition</strong>.</p>
 <p>The platform's skill matching reads this field to decide whether
 to surface the skill. A vague description means the skill either
-never triggers or triggers when it should not.</p>
+<em>never</em> triggers or triggers when it <strong>should not</strong>.</p>
 <h2 id="lesson-6-flag-tables-beat-prose">Lesson 6: Flag Tables Beat Prose<a class="headerlink" href="#lesson-6-flag-tables-beat-prose" title="Permanent link">&para;</a></h2>
 <p>Most skills wrap CLI tools. The thin versions described flags in
 prose, if at all. The rewritten versions use tables:</p>
@@ -2360,11 +2360,13 @@ prose, if at all. The rewritten versions use tables:</p>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| <span class="sb">`--project`</span> | <span class="sb">`-p`</span>  | &quot;&quot;      | Filter by project name   |
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>| <span class="sb">`--full`</span>    |       | false   | Show complete content    |
 </span></code></pre></div>
-<p>Tables are scannable, complete, and unambiguous. The agent can
-read them faster than parsing prose, and they serve as both
-reference and validation: If the agent invokes a flag not in
-the table, something is wrong.</p>
+<p>Tables are <strong>scannable</strong>, <strong>complete</strong>, and <strong>unambiguous</strong>. </p>
+<p>The agent can read them faster than parsing prose, and they serve as both
+reference and validation: If the agent invokes a flag not in the table, 
+something is wrong.</p>
 <h2 id="lesson-7-template-drift-is-a-real-maintenance-burden">Lesson 7: Template Drift Is a Real Maintenance Burden<a class="headerlink" href="#lesson-7-template-drift-is-a-real-maintenance-burden" title="Permanent link">&para;</a></h2>
+<p>// TODO: this has changed; we deploy from the marketplace; update it.
+// at least add an admonition saying thing are different now.</p>
 <p><code>ctx</code> deploys skills through templates (via <code>ctx init</code>). Every
 skill exists in two places: the live version (<code>.claude/skills/</code>)
 and the template (<code>internal/assets/claude/skills/</code>).</p>
@@ -2434,8 +2436,8 @@ knowledge the platform does not have.</p>
 knowledge, not personality; that they should complement the
 platform, not fight it; that they should grow from project
 history, not imported templates.</p>
-<p>This post adds the missing piece: <strong>structure.</strong></p>
-<p><strong>A skill without a structure is a wish.</strong></p>
+<p>This post adds the missing piece: <strong>structure</strong>.</p>
+<p><strong>A skill without a structure is a wish</strong>.</p>
 <p>A skill with quality gates, negative triggers, examples, and
 checklists is a <strong>tool</strong>: the difference is not the content; it
 is <strong>whether the agent can reliably execute it without human
@@ -2444,9 +2446,9 @@ intervention</strong>.</p>
 <p class="admonition-title">Skills are Interfaces</p>
 <p><strong>Good skills are not instructions. They are contracts.</strong>:</p>
 <ul>
-<li>They specify preconditions, postconditions, and boundaries.</li>
-<li>They show what success looks like and what failure looks like.</li>
-<li>They trust the agent's intelligence but do not trust its assumptions.</li>
+<li>They <strong>specify</strong> preconditions, postconditions, and boundaries.</li>
+<li>They <strong>show</strong> what success looks like and what failure looks like.</li>
+<li>They <strong>trust</strong> the agent's intelligence but do not trust its assumptions.</li>
 </ul>
 </div>
 <hr />

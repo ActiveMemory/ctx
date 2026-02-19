@@ -172,7 +172,7 @@ func runTaskArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := compact.WriteArchive(archivedContent.String())
+	archiveFilePath, writeErr := compact.WriteArchive("tasks", config.HeadingArchivedTasks, archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}

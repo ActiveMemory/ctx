@@ -20,11 +20,13 @@ import (
 //     (8000 token budget, 7-day archive, etc.)
 func Default() *CtxRC {
 	return &CtxRC{
-		ContextDir:       config.DirContext,
-		TokenBudget:      DefaultTokenBudget,
-		PriorityOrder:    nil, // nil means use config.FileReadOrder
-		AutoArchive:      true,
-		ArchiveAfterDays: DefaultArchiveAfterDays,
+		ContextDir:                config.DirContext,
+		TokenBudget:               DefaultTokenBudget,
+		PriorityOrder:             nil, // nil means use config.FileReadOrder
+		AutoArchive:               true,
+		ArchiveAfterDays:          DefaultArchiveAfterDays,
+		ArchiveKnowledgeAfterDays: DefaultArchiveKnowledgeAfterDays,
+		ArchiveKeepRecent:         DefaultArchiveKeepRecent,
 	}
 }
 
@@ -90,6 +92,24 @@ func AutoArchive() bool {
 //   - int: Number of days after which completed tasks are archived (default 7)
 func ArchiveAfterDays() int {
 	return RC().ArchiveAfterDays
+}
+
+// ArchiveKnowledgeAfterDays returns the configured days before archiving
+// decisions and learnings.
+//
+// Returns:
+//   - int: Number of days after which knowledge entries are archived (default 90)
+func ArchiveKnowledgeAfterDays() int {
+	return RC().ArchiveKnowledgeAfterDays
+}
+
+// ArchiveKeepRecent returns the number of recent entries to keep when
+// archiving decisions and learnings.
+//
+// Returns:
+//   - int: Number of recent entries to preserve (default 5)
+func ArchiveKeepRecent() int {
+	return RC().ArchiveKeepRecent
 }
 
 // ScratchpadEncrypt returns whether the scratchpad should be encrypted.

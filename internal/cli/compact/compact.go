@@ -32,6 +32,7 @@ func Cmd() *cobra.Command {
 Actions performed:
   - Move completed tasks to "Completed (Recent)" section
   - Archive old completed tasks (with --archive)
+  - Archive old decisions and learnings (with --archive)
   - Remove empty sections from context files
   - Report on potential duplicates
 
@@ -39,7 +40,7 @@ Use --archive to create .context/archive/ for old content.
 
 Examples:
   ctx compact                  # Clean up context, move completed tasks
-  ctx compact --archive        # Also archive old tasks to .context/archive/
+  ctx compact --archive        # Also archive old tasks, decisions, and learnings
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runCompact(cmd, archive)

@@ -944,6 +944,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#archival" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archival
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -988,6 +999,17 @@
     <span class="md-ellipsis">
       
         Categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archival_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archival
       
     </span>
   </a>
@@ -2613,6 +2635,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#archival" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archival
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2657,6 +2690,17 @@
     <span class="md-ellipsis">
       
         Categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archival_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archival
       
     </span>
   </a>
@@ -3217,6 +3261,12 @@ get re-debated.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="archival">Archival<a class="headerlink" href="#archival" title="Permanent link">&para;</a></h3>
+<p>Over time, DECISIONS.md accumulates entries. Use <code>ctx decisions archive</code> to
+move old or superseded entries to <code>.context/archive/decisions-YYYY-MM-DD.md</code>.
+The <code>ctx compact --archive</code> command also archives decisions older than 90 days
+(configurable via <code>archive_knowledge_after_days</code> in <code>.contextrc</code>).</p>
+<p>See <a href="../recipes/knowledge-scaling/">Managing Knowledge at Scale</a> for a full workflow.</p>
 <hr />
 <h2 id="learningsmd"><code>LEARNINGS.md</code><a class="headerlink" href="#learningsmd" title="Permanent link">&para;</a></h2>
 <p><strong>Purpose:</strong> Capture lessons learned, gotchas, and tips that shouldn't
@@ -3261,6 +3311,12 @@ be forgotten.</p>
 <li>Third-Party Libraries</li>
 <li>Git &amp; Workflow</li>
 </ul>
+<h3 id="archival_1">Archival<a class="headerlink" href="#archival_1" title="Permanent link">&para;</a></h3>
+<p>Over time, LEARNINGS.md accumulates entries. Use <code>ctx learnings archive</code> to
+move old entries to <code>.context/archive/learnings-YYYY-MM-DD.md</code>. The
+<code>ctx compact --archive</code> command also archives learnings older than 90 days
+(configurable via <code>archive_knowledge_after_days</code> in <code>.contextrc</code>).</p>
+<p>See <a href="../recipes/knowledge-scaling/">Managing Knowledge at Scale</a> for a full workflow.</p>
 <hr />
 <h2 id="conventionsmd"><code>CONVENTIONS.md</code><a class="headerlink" href="#conventionsmd" title="Permanent link">&para;</a></h2>
 <p><strong>Purpose</strong>: Document project patterns, naming conventions, and standards.</p>

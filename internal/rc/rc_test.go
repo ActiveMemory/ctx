@@ -32,6 +32,12 @@ func TestDefaultRC(t *testing.T) {
 	if rc.ArchiveAfterDays != DefaultArchiveAfterDays {
 		t.Errorf("ArchiveAfterDays = %d, want %d", rc.ArchiveAfterDays, DefaultArchiveAfterDays)
 	}
+	if rc.ArchiveKnowledgeAfterDays != DefaultArchiveKnowledgeAfterDays {
+		t.Errorf("ArchiveKnowledgeAfterDays = %d, want %d", rc.ArchiveKnowledgeAfterDays, DefaultArchiveKnowledgeAfterDays)
+	}
+	if rc.ArchiveKeepRecent != DefaultArchiveKeepRecent {
+		t.Errorf("ArchiveKeepRecent = %d, want %d", rc.ArchiveKeepRecent, DefaultArchiveKeepRecent)
+	}
 }
 
 func TestGetRC_NoFile(t *testing.T) {
@@ -482,6 +488,68 @@ func TestAllowOutsideCwd_Enabled(t *testing.T) {
 
 	if !AllowOutsideCwd() {
 		t.Error("AllowOutsideCwd() = false, want true")
+	}
+}
+
+func TestArchiveKnowledgeAfterDays(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	days := ArchiveKnowledgeAfterDays()
+	if days != DefaultArchiveKnowledgeAfterDays {
+		t.Errorf("ArchiveKnowledgeAfterDays() = %d, want %d", days, DefaultArchiveKnowledgeAfterDays)
+	}
+}
+
+func TestArchiveKnowledgeAfterDays_Custom(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `archive_knowledge_after_days: 60`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	days := ArchiveKnowledgeAfterDays()
+	if days != 60 {
+		t.Errorf("ArchiveKnowledgeAfterDays() = %d, want %d", days, 60)
+	}
+}
+
+func TestArchiveKeepRecent(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	keep := ArchiveKeepRecent()
+	if keep != DefaultArchiveKeepRecent {
+		t.Errorf("ArchiveKeepRecent() = %d, want %d", keep, DefaultArchiveKeepRecent)
+	}
+}
+
+func TestArchiveKeepRecent_Custom(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `archive_keep_recent: 10`
+	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	keep := ArchiveKeepRecent()
+	if keep != 10 {
+		t.Errorf("ArchiveKeepRecent() = %d, want %d", keep, 10)
 	}
 }
 

@@ -2146,6 +2146,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#managing-knowledge-at-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Knowledge at Scale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#detecting-and-fixing-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2427,6 +2438,13 @@ up session debris.</p>
 at session start to automatically drop session-accumulated permissions.</p>
 <p><strong>Uses</strong>: <code>ctx permissions snapshot</code>, <code>ctx permissions restore</code>,
 <code>/sanitize-permissions</code></p>
+<hr />
+<h3 id="managing-knowledge-at-scale"><a href="knowledge-scaling/">Managing Knowledge at Scale</a><a class="headerlink" href="#managing-knowledge-at-scale" title="Permanent link">&para;</a></h3>
+<p>Archive old decisions and learnings to keep knowledge files lean and
+token-efficient. Includes threshold configuration, supersede workflow,
+and auto-archive via compact.</p>
+<p><strong>Uses</strong>: <code>ctx decisions archive</code>, <code>ctx learnings archive</code>,
+<code>ctx compact --archive</code>, <code>/ctx-archive</code>, <code>/ctx-drift</code></p>
 <hr />
 <h3 id="detecting-and-fixing-drift"><a href="context-health/">Detecting and Fixing Drift</a><a class="headerlink" href="#detecting-and-fixing-drift" title="Permanent link">&para;</a></h3>
 <p>Keep context files accurate by detecting structural drift

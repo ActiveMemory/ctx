@@ -16,13 +16,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// WriteArchive writes task content to a dated archive file in .context/archive/.
+// WriteArchive writes content to a dated archive file in .context/archive/.
 //
 // Creates the archive directory if needed. If a file for today already exists,
 // the new content is appended. Otherwise a new file is created with a header.
 //
+// Parameters:
+//   - prefix: File name prefix (e.g., "tasks", "decisions", "learnings")
+//   - heading: Markdown heading for new archive files (e.g., config.HeadingArchivedTasks)
+//   - content: The content to archive
+//
 // Returns the path to the written archive file.
-func WriteArchive(content string) (string, error) {
+func WriteArchive(prefix, heading, content string) (string, error) {
 	archiveDir := filepath.Join(rc.ContextDir(), config.DirArchive)
 	if err := os.MkdirAll(archiveDir, config.PermExec); err != nil {
 		return "", fmt.Errorf("failed to create archive directory: %w", err)
@@ -31,7 +36,7 @@ func WriteArchive(content string) (string, error) {
 	now := time.Now()
 	archiveFile := filepath.Join(
 		archiveDir,
-		fmt.Sprintf("tasks-%s.md", now.Format("2006-01-02")),
+		fmt.Sprintf("%s-%s.md", prefix, now.Format("2006-01-02")),
 	)
 
 	nl := config.NewlineLF
@@ -39,7 +44,7 @@ func WriteArchive(content string) (string, error) {
 	if existing, err := os.ReadFile(filepath.Clean(archiveFile)); err == nil {
 		finalContent = string(existing) + nl + content
 	} else {
-		finalContent = config.HeadingArchivedTasks + " - " +
+		finalContent = heading + " - " +
 			now.Format("2006-01-02") + nl + nl + content
 	}
 

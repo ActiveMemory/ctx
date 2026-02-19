@@ -44,8 +44,8 @@ All commands support these flags:
 | [`ctx compact`](#ctx-compact)     | Archive completed tasks, clean up files                   |
 | [`ctx tasks`](#ctx-tasks)         | Task archival and snapshots                               |
 | [`ctx permissions`](#ctx-permissions) | Permission snapshots (golden image)                   |
-| [`ctx decisions`](#ctx-decisions) | Reindex `DECISIONS.md`                                    |
-| [`ctx learnings`](#ctx-learnings) | Reindex `LEARNINGS.md`                                    |
+| [`ctx decisions`](#ctx-decisions) | Manage `DECISIONS.md` (reindex, archive)                  |
+| [`ctx learnings`](#ctx-learnings) | Manage `LEARNINGS.md` (reindex, archive)                  |
 | [`ctx recall`](#ctx-recall)       | Browse and export AI session history                      |
 | [`ctx journal`](#ctx-journal)     | Generate static site from journal entries                 |
 | [`ctx serve`](#ctx-serve)         | Serve static site locally                                 |
@@ -362,7 +362,7 @@ ctx sync --dry-run
 Consolidate and clean up context files.
 
 * Moves completed tasks older than 7 days to the archive
-* Deduplicates the "*learning*"s with similar content
+* Archives old decisions and learnings (older than 90 days by default)
 * Removes empty sections
 
 ```bash
@@ -374,6 +374,10 @@ ctx compact [flags]
 | Flag             | Description                                |
 |------------------|--------------------------------------------|
 | `--archive`      | Create `.context/archive/` for old content |
+
+When `--archive` is enabled (or `auto_archive: true` in `.contextrc`), compact
+also archives decisions and learnings older than `archive_knowledge_after_days`
+(default 90), keeping the most recent `archive_keep_recent` entries (default 5).
 
 **Example**:
 
@@ -566,6 +570,36 @@ ctx decisions reindex
 # ✓ Index regenerated with 12 entries
 ```
 
+#### `ctx decisions archive`
+
+Archive old or superseded decisions from DECISIONS.md to `.context/archive/`.
+
+```bash
+ctx decisions archive [flags]
+```
+
+**Flags**:
+
+| Flag        | Short | Default | Description                                   |
+|-------------|-------|---------|-----------------------------------------------|
+| `--days`    | `-d`  | 90      | Archive entries older than this many days      |
+| `--keep`    | `-k`  | 5       | Number of recent entries to always keep        |
+| `--all`     |       | false   | Archive all entries except the most recent `-k`|
+| `--dry-run` |       | false   | Preview changes without modifying files        |
+
+Entries are archived if they are older than `--days` or marked as superseded
+(body contains `~~Superseded`). The most recent `--keep` entries are always
+preserved regardless of age.
+
+**Example**:
+
+```bash
+ctx decisions archive                # Archive old decisions (90+ days)
+ctx decisions archive --dry-run      # Preview what would be archived
+ctx decisions archive --days 30      # Lower the threshold
+ctx decisions archive --all --keep 3 # Archive everything except 3 newest
+```
+
 ---
 
 ### `ctx learnings`
@@ -595,6 +629,36 @@ files to use the index format.
 ```bash
 ctx learnings reindex
 # ✓ Index regenerated with 8 entries
+```
+
+#### `ctx learnings archive`
+
+Archive old or superseded learnings from LEARNINGS.md to `.context/archive/`.
+
+```bash
+ctx learnings archive [flags]
+```
+
+**Flags**:
+
+| Flag        | Short | Default | Description                                   |
+|-------------|-------|---------|-----------------------------------------------|
+| `--days`    | `-d`  | 90      | Archive entries older than this many days      |
+| `--keep`    | `-k`  | 5       | Number of recent entries to always keep        |
+| `--all`     |       | false   | Archive all entries except the most recent `-k`|
+| `--dry-run` |       | false   | Preview changes without modifying files        |
+
+Entries are archived if they are older than `--days` or marked as superseded
+(body contains `~~Superseded`). The most recent `--keep` entries are always
+preserved regardless of age.
+
+**Example**:
+
+```bash
+ctx learnings archive                # Archive old learnings (90+ days)
+ctx learnings archive --dry-run      # Preview what would be archived
+ctx learnings archive --days 30      # Lower the threshold
+ctx learnings archive --all --keep 3 # Archive everything except 3 newest
 ```
 
 ---
@@ -1046,27 +1110,31 @@ Optional `.contextrc` (*YAML format*) at project root:
 
 ```yaml
 # .contextrc
-context_dir: .context    # Context directory name
-token_budget: 8000       # Default token budget
-priority_order:          # File loading priority
+context_dir: .context                # Context directory name
+token_budget: 8000                   # Default token budget
+priority_order:                      # File loading priority
   - TASKS.md
   - DECISIONS.md
   - CONVENTIONS.md
-auto_archive: true       # Auto-archive old items
-archive_after_days: 7    # Days before archiving
-scratchpad_encrypt: true # Encrypt scratchpad (default: true)
-allow_outside_cwd: false # Skip boundary check (default: false)
+auto_archive: true                   # Auto-archive old items
+archive_after_days: 7                # Days before archiving tasks
+archive_knowledge_after_days: 90     # Days before archiving decisions/learnings
+archive_keep_recent: 5               # Recent entries to keep when archiving
+scratchpad_encrypt: true             # Encrypt scratchpad (default: true)
+allow_outside_cwd: false             # Skip boundary check (default: false)
 ```
 
-| Field                | Type       | Default      | Description                                        |
-|----------------------|------------|--------------|----------------------------------------------------|
-| `context_dir`        | `string`   | `.context`   | Context directory name (relative to project root)  |
-| `token_budget`       | `int`      | `8000`       | Default token budget for `ctx agent`               |
-| `priority_order`     | `[]string` | *(all files)* | File loading priority for context packets         |
-| `auto_archive`       | `bool`     | `false`      | Auto-archive completed tasks                       |
-| `archive_after_days` | `int`      | `7`          | Days before completed tasks are archived           |
-| `scratchpad_encrypt` | `bool`     | `true`       | Encrypt scratchpad with AES-256-GCM                |
-| `allow_outside_cwd`  | `bool`     | `false`      | Skip boundary check for external context dirs      |
+| Field                           | Type       | Default      | Description                                          |
+|---------------------------------|------------|--------------|------------------------------------------------------|
+| `context_dir`                   | `string`   | `.context`   | Context directory name (relative to project root)    |
+| `token_budget`                  | `int`      | `8000`       | Default token budget for `ctx agent`                 |
+| `priority_order`                | `[]string` | *(all files)* | File loading priority for context packets           |
+| `auto_archive`                  | `bool`     | `false`      | Auto-archive completed tasks                         |
+| `archive_after_days`            | `int`      | `7`          | Days before completed tasks are archived             |
+| `archive_knowledge_after_days`  | `int`      | `90`         | Days before decisions/learnings are archived          |
+| `archive_keep_recent`           | `int`      | `5`          | Recent entries to keep when archiving knowledge       |
+| `scratchpad_encrypt`            | `bool`     | `true`       | Encrypt scratchpad with AES-256-GCM                  |
+| `allow_outside_cwd`             | `bool`     | `false`      | Skip boundary check for external context dirs        |
 
 **Priority order:** CLI flags > Environment variables > `.contextrc` > Defaults
 

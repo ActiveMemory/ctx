@@ -117,7 +117,7 @@ func compactTasks(
 			for _, block := range blocksToArchive {
 				archiveContent += block.BlockContent() + nl + nl
 			}
-			if archiveFile, err := WriteArchive(archiveContent); err == nil {
+			if archiveFile, err := WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent); err == nil {
 				cmd.Println(fmt.Sprintf(
 					"%s Archived %d tasks to %s (older than %d days)", green("✓"),
 					len(blocksToArchive), archiveFile, archiveDays,
