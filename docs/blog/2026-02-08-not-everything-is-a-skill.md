@@ -92,7 +92,7 @@ pattern:
 * It produces **structured output**.
 
 But I had just spent a week writing about what makes skills work,
-and the criteria I established argued against it.
+and the criteria I established argued **against** it.
 
 From [The Anatomy of a Skill That Works][anatomy-post]:
 
@@ -139,15 +139,17 @@ The distinction that emerged:
 | **Attention cost** | Loaded into context on match | Zero until needed            |
 
 Recipes can later graduate into skills, but only after repetition
-proves stability.
+**proves** stability.
 
 That last row matters. Skills consume the
 [attention budget][attention-post] every time the platform considers
-activating them. A skill that triggers quarterly but gets evaluated
-on every prompt is pure waste: attention spent on something that
+activating them.
+
+A skill that triggers quarterly but gets evaluated
+on every prompt is **pure waste**: attention spent on something that
 will say "When NOT to Use: now" 99% of the time.
 
-Recipes have **zero** attention cost. They sit in a Markdown file until
+Runbooks have **zero** attention cost. They sit in a Markdown file until
 a human decides to use them. The human provides the **judgment** about
 timing. The prompt provides the **structure**.
 
@@ -176,10 +178,11 @@ concrete tasks:
 | Stale `recall/doc.go` lists nonexistent `serve` | Task: fix the doc.go                                             |
 | 120 commit sequences disconnected from context  | Task: `/ctx-commit` workflow                                     |
 
-Some findings became skills. Some became `Makefile` targets. Some
-became one-line doc fixes. 
+* Some findings became skills;
+* Some became `Makefile` targets.
+* Some became one-line doc fixes. 
 
-The audit did not prescribe the artifact type. **The findings did**.
+The audit did not prescribe the artifact type: **The findings did**.
 
 **The audit is the input. Skills are one possible output. Not
 the only one.**
@@ -289,8 +292,9 @@ upcoming work sessions. For each, include:
 
 ## The Deeper Pattern
 
-This is part of a pattern I keep rediscovering: the **urge** to automate
-is **not** the same as the **need** to automate:
+This is part of a pattern I keep rediscovering: 
+
+The **urge** to automate is **not** the same as the **need** to automate:
 
 * The [3:1 ratio][refactor-post] taught me that not every session
 should be a YOLO sprint. 
@@ -300,12 +304,16 @@ should be a YOLO sprint.
 
 [refactor-post]: 2026-02-17-the-3-1-ratio.md
 
-The common thread is **restraint**: Knowing when to stop. Recognizing
-that the cost of automation is not just the effort to build it.
-It is the **ongoing attention tax** of maintaining it, the context
+The common thread is **restraint**: 
+
+* **Knowing** when to stop. 
+* **Recognizing** that the cost of automation is **not** just
+  the effort to build it.
+
+The **cost** is the **ongoing attention tax** of maintaining it, the context
 it consumes, and the false confidence it creates when it drifts.
 
-A recipe in `hack/runbooks/codebase-audit.md` is honest about what it is:
+An entry in `hack/runbooks/codebase-audit.md` is honest about what it is:
 
 A prompt I wrote once, improved once, and will adapt again next
 time: 
@@ -348,8 +356,9 @@ the right things and to make the rest easy to find when you need it.
 !!! quote "If you remember one thing from this post..."
     **The best automation decision is sometimes not to automate.**
 
-    A recipe in a Markdown file costs nothing until you use it.
-    A skill costs attention on every prompt, whether it fires or not.
+    A **runbook** in a Markdown file costs nothing until you use it.
+
+    A **skill** costs attention on every prompt, whether it fires or not.
 
     **Automate the daily. Document the periodic. Forget the rest.**
 

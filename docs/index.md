@@ -146,10 +146,10 @@ Memory heuristics **drift**.
 
 `ctx` **must be**:
 
-* Durable;
-* Structured;
-* Explicit;
-* Queryable.
+* **Durable**;
+* **Structured**;
+* **Explicit**;
+* **Queryable**.
 
 !!! tip "Intent Must Be Intentional"
     If **intent** exists only in a prompt... 
