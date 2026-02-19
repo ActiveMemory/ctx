@@ -2177,15 +2177,15 @@ they all share history, refs, and objects.</p>
 <p>Read <code>TASKS.md</code>. For each pending task, estimate which files and
 directories it touches. Group tasks that share files into the same
 track. Tasks with no overlap go into separate tracks.</p>
-<p>This is the part that requires human judgment. An agent can propose
-groupings, but you need to verify that the boundaries are real. A task
-that says "update docs" but actually touches Go code will poison a docs
-track.</p>
+<p>This is the part that requires <strong>human judgment</strong>: </p>
+<p>An agent can propose groupings, but you need to verify that the boundaries are 
+real. A task that says "<em>update docs</em>" but actually touches Go code will poison a
+docs track.</p>
 <p><strong>2. Create worktrees as sibling directories.</strong></p>
-<p>Not subdirectories. Siblings. If your main checkout is at
-<code>~/WORKSPACE/ctx</code>, worktrees go at <code>~/WORKSPACE/ctx-docs</code>,
-<code>~/WORKSPACE/ctx-pad</code>, etc.</p>
-<p>Why siblings? Because some tools (and some agents) walk up the directory
+<p>Not subdirectories: Siblings. </p>
+<p>If your main checkout is at <code>~/WORKSPACE/ctx</code>, worktrees go 
+at <code>~/WORKSPACE/ctx-docs</code>, <code>~/WORKSPACE/ctx-pad</code>, etc.</p>
+<p>Why siblings? Because some tools (<em>and some agents</em>) walk up the directory
 tree looking for <code>.git</code>. A worktree inside the main checkout confuses
 them.</p>
 <p><strong>3. Launch one agent per worktree.</strong></p>
@@ -2214,10 +2214,10 @@ index reorganization, IRC recipe moved from <code>docs/</code> to <code>hack/</c
 <p><strong><code>work/pad</code></strong>: <code>ctx pad show</code> subcommand, <code>--append</code> and <code>--prepend</code>
 flags on <code>ctx pad edit</code>, spec updates, 28 new test functions.</p>
 <p><strong><code>work/tests</code></strong>: Recall test coverage, edge case tests.</p>
-<p>Merging took about five minutes. Two of the three merges were clean.
-The third had a conflict in <code>TASKS.md</code> — both the docs track and the
+<p>Merging took about <strong>five</strong> minutes. Two of the three merges were clean.</p>
+<p>The third had a conflict in <code>TASKS.md</code> — both the docs track and the
 pad track had marked different tasks as <code>[x]</code>.</p>
-<h2 id="the-tasksmd-conflict">The TASKS.md Conflict<a class="headerlink" href="#the-tasksmd-conflict" title="Permanent link">&para;</a></h2>
+<h2 id="the-tasksmd-conflict">The <code>TASKS.md</code> Conflict<a class="headerlink" href="#the-tasksmd-conflict" title="Permanent link">&para;</a></h2>
 <p>This deserves its own section because it will happen <strong>every time</strong>.</p>
 <p>When two agents work in parallel, they both read <code>TASKS.md</code> at the
 start and mark tasks complete as they go. When you merge, git sees two
@@ -2226,32 +2226,40 @@ branches that modified the same file differently.</p>
 sides</strong>. No task should go from <code>[x]</code> back to <code>[ ]</code>. The merge is
 additive.</p>
 <p>This is one of those conflicts that sounds scary but is trivially
-mechanical. You're not arbitrating design decisions. You're combining
+mechanical: You are not arbitrating design decisions; you are combining
 two checklists.</p>
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
-<p><strong>3-4 worktrees, maximum.</strong> I tried four once. By the time I merged
-the third track, the fourth had drifted far enough that its changes
-needed rebasing. The merge complexity grows faster than the parallelism
-benefit.</p>
-<p>Three is the sweet spot. Two is conservative but safe. Four is possible
-if the tracks are truly independent.</p>
-<p><strong>Group by directory, not by priority.</strong> It is tempting to put all the
-high-priority tasks in one track. Don't. Two high-priority tasks that
-touch the same files must be in the same track, regardless of urgency.
-The constraint is file overlap, not importance.</p>
-<p><strong>Commit frequently.</strong> Smaller commits make merge conflicts easier
-to resolve. An agent that writes 500 lines in a single commit is harder
-to merge than one that commits every logical step.</p>
-<p><strong>Name tracks by concern.</strong> <code>work/docs</code> and <code>work/pad</code> tell you what's
-happening. <code>work/track-1</code> and <code>work/track-2</code> tell you nothing.</p>
+<p><strong>3-4 worktrees, maximum.</strong> </p>
+<p>I tried four once. By the time I merged the third track, the fourth had drifted
+far enough that its changes needed rebasing. </p>
+<p>The merge complexity grows faster than the parallelism benefit.</p>
+<p>Three is the sweet spot:</p>
+<ul>
+<li>Two is conservative but safe;</li>
+<li>Four is possible if the tracks are truly independent;</li>
+<li>Anything more than four, you are in the danger zone.</li>
+</ul>
+<p><strong>Group by directory, not by priority.</strong></p>
+<p>It is tempting to put all the high-priority tasks in one track: <strong>Don't</strong>. </p>
+<p>Two high-priority tasks that touch the same files <strong>must</strong> be in the same track, 
+regardless of urgency. The constraint is file overlap, not importance.</p>
+<p><strong>Commit frequently.</strong> </p>
+<p>Smaller commits make merge conflicts easier to resolve. An agent that writes 
+500 lines in a single commit is harder to merge than one that commits every 
+logical step.</p>
+<p><strong>Name tracks by concern.</strong> </p>
+<ul>
+<li><code>work/docs</code> and <code>work/pad</code> tell you what's happening;</li>
+<li><code>work/track-1</code> and <code>work/track-2</code> tell you nothing.</li>
+</ul>
 <h2 id="the-pattern">The Pattern<a class="headerlink" href="#the-pattern" title="Permanent link">&para;</a></h2>
 <p>This is the same pattern that shows up everywhere in <code>ctx</code>:</p>
 <p><a href="../2026-02-03-the-attention-budget/"><strong>The attention budget</strong></a> taught me that you can't dump
 everything into one context window. You have to partition, prioritize,
 and load selectively.</p>
-<p>Worktrees are the same principle applied to <strong>execution</strong>: you can't
-dump every task into one agent's workstream. You have to partition by
-blast radius, assign selectively, and merge deliberately.</p>
+<p>Worktrees are the same principle applied to <strong>execution</strong>: You can't
+dump every task into one agent's workstream. You have to <strong>partition by
+blast radius</strong>, assign <strong>selectively</strong>, and merge <strong>deliberately</strong>.</p>
 <p>The <a href="../2026-02-08-not-everything-is-a-skill/">codebase audit</a> that generated these 30 tasks used
 eight parallel agents for <em>analysis</em>. Worktrees let me use parallel
 agents for <em>implementation</em>. Same coordination pattern, different
@@ -2299,17 +2307,21 @@ every time and run quarterly — the worktree workflow is:</p>
 <p>The commands are mechanical: <code>git worktree add</code>, <code>git worktree remove</code>,
 branch naming, safety checks. This is exactly what skills are for:
 <strong>stable contracts</strong> for repetitive operations.</p>
-<p>So <code>/ctx-worktree</code> exists. It enforces the 4-worktree limit, creates
-sibling directories, uses <code>work/</code> branch prefixes, and reminds you
-not to run <code>ctx init</code> in worktrees.</p>
+<p>Ergo, <code>/ctx-worktree</code> exists. </p>
+<p>It enforces the 4-worktree limit, creates sibling directories, 
+uses <code>work/</code> branch prefixes, and reminds you not to run <code>ctx init</code>
+in worktrees.</p>
 <h2 id="the-takeaway">The Takeaway<a class="headerlink" href="#the-takeaway" title="Permanent link">&para;</a></h2>
 <p>Serial execution is the default. But serial is not always necessary.</p>
 <p>If your backlog partitions cleanly by file overlap, you can multiply
 your throughput with nothing more exotic than <code>git worktree</code> and
 a second terminal window.</p>
-<p>The hard part is not the git commands. It is the <strong>discipline</strong>:
-grouping by blast radius instead of priority, accepting that <code>TASKS.md</code>
-will conflict, and knowing when three tracks is enough.</p>
+<p>The hard part is not the <code>git</code> commands; it is the <strong>discipline</strong>:</p>
+<ul>
+<li>Grouping by blast radius instead of priority; </li>
+<li>Accepting that <code>TASKS.md</code> will conflict; </li>
+<li>And knowing when three tracks is enough.</li>
+</ul>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">If you remember one thing from this post...</p>

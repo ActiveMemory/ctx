@@ -88,18 +88,20 @@ Read `TASKS.md`. For each pending task, estimate which files and
 directories it touches. Group tasks that share files into the same
 track. Tasks with no overlap go into separate tracks.
 
-This is the part that requires human judgment. An agent can propose
-groupings, but you need to verify that the boundaries are real. A task
-that says "update docs" but actually touches Go code will poison a docs
-track.
+This is the part that requires **human judgment**: 
+
+An agent can propose groupings, but you need to verify that the boundaries are 
+real. A task that says "*update docs*" but actually touches Go code will poison a
+docs track.
 
 **2. Create worktrees as sibling directories.**
 
-Not subdirectories. Siblings. If your main checkout is at
-`~/WORKSPACE/ctx`, worktrees go at `~/WORKSPACE/ctx-docs`,
-`~/WORKSPACE/ctx-pad`, etc.
+Not subdirectories: Siblings. 
 
-Why siblings? Because some tools (and some agents) walk up the directory
+If your main checkout is at `~/WORKSPACE/ctx`, worktrees go 
+at `~/WORKSPACE/ctx-docs`, `~/WORKSPACE/ctx-pad`, etc.
+
+Why siblings? Because some tools (*and some agents*) walk up the directory
 tree looking for `.git`. A worktree inside the main checkout confuses
 them.
 
@@ -141,11 +143,12 @@ flags on `ctx pad edit`, spec updates, 28 new test functions.
 
 **`work/tests`**: Recall test coverage, edge case tests.
 
-Merging took about five minutes. Two of the three merges were clean.
+Merging took about **five** minutes. Two of the three merges were clean.
+
 The third had a conflict in `TASKS.md` — both the docs track and the
 pad track had marked different tasks as `[x]`.
 
-## The TASKS.md Conflict
+## The `TASKS.md` Conflict
 
 This deserves its own section because it will happen **every time**.
 
@@ -158,30 +161,41 @@ sides**. No task should go from `[x]` back to `[ ]`. The merge is
 additive.
 
 This is one of those conflicts that sounds scary but is trivially
-mechanical. You're not arbitrating design decisions. You're combining
+mechanical: You are not arbitrating design decisions; you are combining
 two checklists.
 
 ## Limits
 
-**3-4 worktrees, maximum.** I tried four once. By the time I merged
-the third track, the fourth had drifted far enough that its changes
-needed rebasing. The merge complexity grows faster than the parallelism
-benefit.
+**3-4 worktrees, maximum.** 
 
-Three is the sweet spot. Two is conservative but safe. Four is possible
-if the tracks are truly independent.
+I tried four once. By the time I merged the third track, the fourth had drifted
+far enough that its changes needed rebasing. 
 
-**Group by directory, not by priority.** It is tempting to put all the
-high-priority tasks in one track. Don't. Two high-priority tasks that
-touch the same files must be in the same track, regardless of urgency.
-The constraint is file overlap, not importance.
+The merge complexity grows faster than the parallelism benefit.
 
-**Commit frequently.** Smaller commits make merge conflicts easier
-to resolve. An agent that writes 500 lines in a single commit is harder
-to merge than one that commits every logical step.
+Three is the sweet spot:
+ 
+* Two is conservative but safe;
+* Four is possible if the tracks are truly independent;
+* Anything more than four, you are in the danger zone.
 
-**Name tracks by concern.** `work/docs` and `work/pad` tell you what's
-happening. `work/track-1` and `work/track-2` tell you nothing.
+**Group by directory, not by priority.**
+
+It is tempting to put all the high-priority tasks in one track: **Don't**. 
+
+Two high-priority tasks that touch the same files **must** be in the same track, 
+regardless of urgency. The constraint is file overlap, not importance.
+
+**Commit frequently.** 
+
+Smaller commits make merge conflicts easier to resolve. An agent that writes 
+500 lines in a single commit is harder to merge than one that commits every 
+logical step.
+
+**Name tracks by concern.** 
+
+* `work/docs` and `work/pad` tell you what's happening;
+* `work/track-1` and `work/track-2` tell you nothing.
 
 ## The Pattern
 
@@ -191,9 +205,9 @@ This is the same pattern that shows up everywhere in `ctx`:
 everything into one context window. You have to partition, prioritize,
 and load selectively.
 
-Worktrees are the same principle applied to **execution**: you can't
-dump every task into one agent's workstream. You have to partition by
-blast radius, assign selectively, and merge deliberately.
+Worktrees are the same principle applied to **execution**: You can't
+dump every task into one agent's workstream. You have to **partition by
+blast radius**, assign **selectively**, and merge **deliberately**.
 
 [attention-post]: 2026-02-03-the-attention-budget.md
 
@@ -222,7 +236,7 @@ every time and run quarterly — the worktree workflow is:
 | Criterion | Worktree workflow     | Codebase audit          |
 |-----------|-----------------------|-------------------------|
 | Frequency | Weekly                | Quarterly               |
-| Stability | Same steps every time | Tweaked every time       |
+| Stability | Same steps every time | Tweaked every time      |
 | Scope     | Mechanical, bounded   | Bespoke, 8 agents       |
 | Trigger   | Large backlog         | "I feel like auditing"  |
 
@@ -230,9 +244,11 @@ The commands are mechanical: `git worktree add`, `git worktree remove`,
 branch naming, safety checks. This is exactly what skills are for:
 **stable contracts** for repetitive operations.
 
-So `/ctx-worktree` exists. It enforces the 4-worktree limit, creates
-sibling directories, uses `work/` branch prefixes, and reminds you
-not to run `ctx init` in worktrees.
+Ergo, `/ctx-worktree` exists. 
+
+It enforces the 4-worktree limit, creates sibling directories, 
+uses `work/` branch prefixes, and reminds you not to run `ctx init`
+in worktrees.
 
 ## The Takeaway
 
@@ -242,9 +258,11 @@ If your backlog partitions cleanly by file overlap, you can multiply
 your throughput with nothing more exotic than `git worktree` and
 a second terminal window.
 
-The hard part is not the git commands. It is the **discipline**:
-grouping by blast radius instead of priority, accepting that `TASKS.md`
-will conflict, and knowing when three tracks is enough.
+The hard part is not the `git` commands; it is the **discipline**:
+
+* Grouping by blast radius instead of priority; 
+* Accepting that `TASKS.md` will conflict; 
+* And knowing when three tracks is enough.
 
 ---
 

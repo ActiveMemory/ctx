@@ -2481,7 +2481,13 @@ for automatic hooks and skills.</p>
 <p>Shows context summary: files present, token estimate, and recent activity.</p>
 <h3 id="3-start-using-with-ai">3. Start Using with AI<a class="headerlink" href="#3-start-using-with-ai" title="Permanent link">&para;</a></h3>
 <p>With Claude Code (and the ctx plugin installed), context loads automatically
-via hooks. For other tools, paste the output of:</p>
+via hooks.</p>
+<p>With <strong>VS Code Copilot Chat</strong>, install the
+<a href="../integrations/#vs-code-chat-extension-ctx">ctx extension</a> and use
+<code>@ctx /status</code>, <code>@ctx /agent</code>, and other slash commands directly in chat.
+Run <code>ctx hook copilot --write</code> to generate <code>.github/copilot-instructions.md</code>
+for automatic context loading.</p>
+<p>For other tools, paste the output of:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
 <h3 id="4-verify-it-works">4. Verify It Works<a class="headerlink" href="#4-verify-it-works" title="Permanent link">&para;</a></h3>

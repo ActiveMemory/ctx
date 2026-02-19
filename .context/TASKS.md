@@ -242,26 +242,29 @@ session parser, `ctx hook copilot --write`, and a VS Code chat participant
 extension. 7993 additions, touches recall parser, hook, init, and config.
 https://github.com/ActiveMemory/ctx/pull/16
 
-- [ ] PR-16.1: Baseline — verify current parser behavior is intact.
+- [x] PR-16.1: Baseline — verify current parser behavior is intact.
       Run full journal pipeline (export → normalize → enrich → site build)
       on main branch BEFORE applying PR changes. Back up the resulting
       journal-site output as the baseline artifact.
-      #priority:high #added:2026-02-17
+      #priority:high #added:2026-02-17 #done:2026-02-19
+      Done: 250 entries, 289 markdown files captured to /tmp/pr16-baseline/.
 
-- [ ] PR-16.2: Apply PR changes and re-run the full journal pipeline
+- [x] PR-16.2: Apply PR changes and re-run the full journal pipeline
       (export → normalize → enrich → site build) with the proposed code.
       Visually inspect the journal website for rendering issues, missing
       entries, or format changes.
-      #priority:high #added:2026-02-17
+      #priority:high #added:2026-02-17 #done:2026-02-19
+      Done: All tests pass (4.064s parser pkg). 250 entries, 289 files.
 
-- [ ] PR-16.3: Semantic diff — compare baseline journal output against
+- [x] PR-16.3: Semantic diff — compare baseline journal output against
       PR journal output. Check for: missing sessions, changed turn
       attribution (human vs assistant), lost metadata, format differences
       in exported Markdown. Any discrepancy in existing Claude Code
       sessions is a regression.
-      #priority:high #added:2026-02-17
+      #priority:high #added:2026-02-17 #done:2026-02-19
+      Done: Zero diff — normalized md5sum manifests are byte-identical.
 
-- [ ] PR-16.4: Code quality review. Assess:
+- [x] PR-16.4: Code quality review. Assess:
       (a) Does MarkdownSessionParser respect the existing parser interface
           (`parser.go`, `parse.go`)? (b) Are the hook/init changes backward
           compatible? (c) Does `config/dir.go` and `config/file.go` follow
@@ -270,12 +273,40 @@ https://github.com/ActiveMemory/ctx/pull/16
           VS Code extension follow reasonable practices (bundling, security,
           error handling)? (f) Are there any concerns about the `.context/sessions/`
           directory creation in init (given the journal consolidation)?
-      #priority:high #added:2026-02-17
+      #priority:high #added:2026-02-17 #done:2026-02-19
+      Done: Approve with 4 minor suggestions (see follow-up tasks below).
+      Parser interface compliance: pass. Backward compat: confirmed by PR-16.3.
+      Naming: consistent. Tests: solid (391 Go + 185 TS lines). VS Code: good
+      practices (cancellation, config, bundling). Sessions dir: appropriate.
 
-- [ ] PR-16.5: Post-review — leave structured feedback on the PR with
+- [x] PR-16.5: Post-review — leave structured feedback on the PR with
       findings from PR-16.1 through PR-16.4. Approve, request changes,
       or comment based on results.
-      #priority:high #added:2026-02-17
+      #priority:high #added:2026-02-17 #done:2026-02-19
+      Done: Structured review posted, PR approved on GitHub.
+
+**Follow-up suggestions from PR-16 review** (non-blocking, post-merge):
+
+- [ ] PR-16-S1: Fix map iteration non-determinism in `markdown.go:185`.
+      `extractSections` returns `map[string]string`; `parseMarkdownSession`
+      iterates it to build `bodyParts`, producing non-deterministic section
+      order in the assistant message. Sort keys or use an ordered slice.
+      #priority:low #added:2026-02-19
+
+- [ ] PR-16-S2: Add `--no-color` to VS Code extension's `handleAgent` and
+      `handleLoad` handlers for consistency with all other handlers.
+      #priority:low #added:2026-02-19
+
+- [ ] PR-16-S3: Guard against session double-counting in `query.go`.
+      If `.context/sessions/` is passed as both CWD-relative (auto-scan)
+      and as an `additionalDirs` argument, sessions could appear twice.
+      Add a seen-paths set or dedup by session ID.
+      #priority:low #added:2026-02-19
+
+- [ ] PR-16-S4: Make `--write` optional in VS Code extension's `handleHook`.
+      Currently always passes `--write`, so users can't preview hook output
+      via chat. Consider a dry-run mode or separate preview command.
+      #priority:low #added:2026-02-19
 
 ### Phase 3: Encrypted Scratchpad (`ctx pad`) `#priority:high`
 
@@ -285,16 +316,18 @@ Spec: `specs/scratchpad.md`
 
 **Features:**
 
-- [ ] P3.21: `ctx pad import FILE` — bulk-import lines from a file into
+- [x] P3.21: `ctx pad import FILE` — bulk-import lines from a file into
       the scratchpad. Each non-empty line becomes a separate entry. Supports
       stdin via `-`. Single write cycle. Spec: `specs/pad-import.md`
-      #priority:medium #added:2026-02-17
+      #priority:medium #added:2026-02-17 #done:2026-02-19
+      Done: `internal/cli/pad/import.go` — 83 lines, 8 tests. Docs updated.
 
-- [ ] P3.22: `ctx pad export [DIR]` — export all blob entries to a directory
+- [x] P3.22: `ctx pad export [DIR]` — export all blob entries to a directory
       as files. Label becomes filename, timestamp prefix on collision,
       --force to overwrite, --dry-run to preview. Counterpart to pad import.
       Replaces fragile bash script (hack/pad-export-blobs.sh).
-      Spec: `specs/pad-export.md` #priority:medium #added:2026-02-17
+      Spec: `specs/pad-export.md` #priority:medium #added:2026-02-17 #done:2026-02-19
+      Done: `internal/cli/pad/export.go` — 114 lines, 10 tests. Docs updated.
 
 **Documentation:**
 
