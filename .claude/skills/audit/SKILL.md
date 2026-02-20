@@ -1,5 +1,5 @@
 ---
-name: consolidate
+name: audit
 description: "Detect and fix code-level drift. Use after YOLO sprints, before releases, or when the 3:1 consolidation ratio is due."
 ---
 

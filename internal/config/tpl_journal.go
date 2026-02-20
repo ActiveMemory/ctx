@@ -164,4 +164,25 @@ link = "https://web.libera.chat/#ctx"
 [project.extra]
 generator = false
 `
+
+	// TplZensicalExtraCSS is the extra_css line for zensical.toml.
+	// Must appear under [project] (after nav, before [project.theme]).
+	TplZensicalExtraCSS = `extra_css = ["stylesheets/extra.css"]`
+
+	// JournalExtraCSS is the stylesheet for the journal site.
+	// Slightly reduces tool output text to visually distinguish it
+	// from conversation turns, with boosted contrast for readability.
+	JournalExtraCSS = `.md-typeset pre {
+  font-size: 1.1em;
+}
+
+[data-md-color-scheme="default"] .md-typeset pre code {
+  color: #1a1a1a;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code {
+  color: #AECB32;
+  background-color: #1D1F21;
+}
+`
 )

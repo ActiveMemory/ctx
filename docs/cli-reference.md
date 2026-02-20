@@ -866,6 +866,29 @@ ctx journal obsidian                          # Generate in .context/journal-obs
 ctx journal obsidian --output ~/vaults/ctx    # Custom output directory
 ```
 
+#### `ctx journal mark`
+
+Update processing state for a journal entry. Records the current date
+in `.context/journal/.state.json`.
+
+```bash
+ctx journal mark <filename> <stage>
+```
+
+**Stages**: `exported`, `enriched`, `normalized`, `fences_verified`
+
+| Flag      | Description                           |
+|-----------|---------------------------------------|
+| `--check` | Check if stage is set (exit 1 if not) |
+
+**Example**:
+
+```bash
+ctx journal mark 2026-01-21-session-abc12345.md enriched
+ctx journal mark 2026-01-21-session-abc12345.md normalized
+ctx journal mark --check 2026-01-21-session-abc12345.md fences_verified
+```
+
 ---
 
 ### `ctx serve`
@@ -1265,6 +1288,8 @@ archive_knowledge_after_days: 90     # Days before archiving decisions/learnings
 archive_keep_recent: 5               # Recent entries to keep when archiving
 scratchpad_encrypt: true             # Encrypt scratchpad (default: true)
 allow_outside_cwd: false             # Skip boundary check (default: false)
+entry_count_learnings: 30            # Drift warning threshold (0 = disable)
+entry_count_decisions: 20            # Drift warning threshold (0 = disable)
 ```
 
 | Field                           | Type       | Default      | Description                                          |
@@ -1278,6 +1303,8 @@ allow_outside_cwd: false             # Skip boundary check (default: false)
 | `archive_keep_recent`           | `int`      | `5`          | Recent entries to keep when archiving knowledge       |
 | `scratchpad_encrypt`            | `bool`     | `true`       | Encrypt scratchpad with AES-256-GCM                  |
 | `allow_outside_cwd`             | `bool`     | `false`      | Skip boundary check for external context dirs        |
+| `entry_count_learnings`         | `int`      | `30`         | Drift warning when LEARNINGS.md exceeds this count   |
+| `entry_count_decisions`         | `int`      | `20`         | Drift warning when DECISIONS.md exceeds this count   |
 
 **Priority order:** CLI flags > Environment variables > `.contextrc` > Defaults
 

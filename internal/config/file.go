@@ -152,6 +152,12 @@ const (
 	FileDependency = "DEPENDENCIES.md"
 )
 
+// Journal state file.
+const (
+	// FileJournalState is the processing state file in .context/journal/.
+	FileJournalState = ".state.json"
+)
+
 // Scratchpad file constants for .context/ directory.
 const (
 	// FileScratchpadEnc is the encrypted scratchpad file.
@@ -246,6 +252,7 @@ var DefaultClaudePermissions = []string{
 	"Skill(ctx-blog-changelog)",
 	"Skill(ctx-borrow)",
 	"Skill(ctx-commit)",
+	"Skill(ctx-consolidate)",
 	"Skill(ctx-context-monitor)",
 	"Skill(ctx-drift)",
 	"Skill(ctx-implement)",

@@ -39,6 +39,9 @@ var BinaryVersion = "dev"
 
 // Recall/export constants.
 const (
+	// RecallMaxTitleLen is the maximum character length for a journal title.
+	// Keeps H1 headings and link text on a single line (below wrap width).
+	RecallMaxTitleLen = 75
 	// RecallShortIDLen is the truncation length for session IDs in filenames.
 	RecallShortIDLen = 8
 	// RecallDetailsThreshold is the line count above which tool output is

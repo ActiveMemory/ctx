@@ -224,6 +224,8 @@ func generateZensicalToml(
 	sb.WriteString(config.TomlNavSectionClose + nl)
 	sb.WriteString(config.TomlNavClose + nl + nl)
 
+	sb.WriteString(config.TplZensicalExtraCSS + nl)
+
 	sb.WriteString(config.TplZensicalTheme)
 
 	return sb.String()

@@ -92,10 +92,13 @@ fi
 
 # Update plugin.json version to match VERSION
 PLUGIN_JSON="internal/assets/claude/.claude-plugin/plugin.json"
-echo "Updating plugin version in ${PLUGIN_JSON}..."
+MARKETPLACE_JSON=".claude-plugin/marketplace.json"
+echo "Updating plugin version in ${PLUGIN_JSON} and ${MARKETPLACE_JSON}..."
 VERSION_NUM="${VERSION#v}"  # Remove 'v' prefix
 sed -i.bak -E "s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"version\": \"${VERSION_NUM}\"/" "${PLUGIN_JSON}"
 rm -f "${PLUGIN_JSON}.bak"
+sed -i.bak -E "s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"version\": \"${VERSION_NUM}\"/" "${MARKETPLACE_JSON}"
+rm -f "${MARKETPLACE_JSON}.bak"
 
 # Update version references in documentation
 echo "Updating version references in docs/index.md..."

@@ -16,6 +16,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -66,6 +67,12 @@ func runJournalSite(
 		return errNoJournalDir(journalDir)
 	}
 
+	// Load journal state for per-file processing flags
+	jstate, err := state.Load(journalDir)
+	if err != nil {
+		return fmt.Errorf("load journal state: %w", err)
+	}
+
 	// Scan journal files
 	entries, err := scanJournalEntries(journalDir)
 	if err != nil {
@@ -82,6 +89,18 @@ func runJournalSite(
 	docsDir := filepath.Join(output, config.JournalDirDocs)
 	if err = os.MkdirAll(docsDir, config.PermExec); err != nil {
 		return errMkdir(docsDir, err)
+	}
+
+	// Write stylesheet for <pre> overflow control
+	stylesDir := filepath.Join(docsDir, "stylesheets")
+	if err = os.MkdirAll(stylesDir, config.PermExec); err != nil {
+		return errMkdir(stylesDir, err)
+	}
+	cssPath := filepath.Join(stylesDir, "extra.css")
+	if err = os.WriteFile(
+		cssPath, []byte(config.JournalExtraCSS), config.PermFile,
+	); err != nil {
+		return errFileWrite(cssPath, err)
 	}
 
 	// Write README
@@ -126,7 +145,8 @@ func runJournalSite(
 		}
 
 		// Generate site copy with Markdown fixes
-		siteContent := normalizeContent(injectSourceLink(normalized, src))
+		fv := jstate.IsFencesVerified(entry.Filename)
+		siteContent := normalizeContent(injectSourceLink(normalized, src), fv)
 		if err = os.WriteFile(
 			dst, []byte(siteContent), config.PermFile,
 		); err != nil {

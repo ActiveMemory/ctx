@@ -8,6 +8,19 @@ STRUCTURE RULES (see CONSTITUTION.md):
 - Never delete tasks, never remove Phase headers
 -->
 
+### Phase -1: Quality Verification
+
+- [ ] Move 'ctx journal mark' to 'ctx system mark-journal' #priority:medium #added:2026-02-20-015721
+
+- [ ] Human: Ensure the new journal creation /ctx-journal-normalize and
+      /ctx-journal-enrich-all works.
+- [ ] Human: Ensure the new ctx files consolidation /ctx-consolidate works.
+- [ ] AI: human renamed a skill as "audit" docs may need update
+- [ ] AI: ctx-borrow project skill is confusing as `ctx-` prefix implies a
+      ctx skill; needs rename.
+- [ ] AI: verify and archive completed tasks in TASK.md; the file has gotten
+      crowded. Verify each task individually before archiving.
+
 ### Phase 0: Ideas
 
 **Extractable Patterns** (from `ideas/REPORT-1-extractable-patterns.md`):
@@ -721,16 +734,21 @@ similarity and merges them with user approval. Originals archived, not deleted.
 Spec: `specs/context-consolidation.md`
 Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 
-- [ ] P9.1: Create `.claude/skills/ctx-consolidate/SKILL.md` — full skill
+- [x] P9.1: Create `.claude/skills/ctx-consolidate/SKILL.md` — full skill
       prompt covering: entry parsing, keyword-based grouping, candidate
       presentation, user approval, merge execution, archival, reindex.
-      #priority:medium #added:2026-02-19
+      #priority:medium #added:2026-02-19 #done:2026-02-19
+      Done: `internal/assets/claude/skills/ctx-consolidate/SKILL.md` — 6-step
+      workflow, archive format, quality checklist. Registered in
+      `DefaultClaudePermissions`.
 
 - [ ] P9.2: Test manually on this project's LEARNINGS.md (20+ entries).
       #priority:medium #added:2026-02-19
 
-- [ ] P9.3: Update docs/skills.md and docs/cli-reference.md with the new skill.
-      #priority:low #added:2026-02-19
+- [x] P9.3: Update docs/skills.md and docs/cli-reference.md with the new skill.
+      #priority:low #added:2026-02-19 #done:2026-02-19
+      Done: Added to skills table, description section in Auditing & Health,
+      and .contextrc config table in cli-reference.md.
 
 ### Phase 2: Export Preservation `#priority:medium`
 

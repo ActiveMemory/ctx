@@ -12,11 +12,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/journal/state"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -87,6 +88,12 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 		return fmt.Errorf("failed to create journal directory: %w", err)
 	}
 
+	// Load journal state for tracking export status.
+	jstate, err := state.Load(journalDir)
+	if err != nil {
+		return fmt.Errorf("load journal state: %w", err)
+	}
+
 	// Build session index for dedup (session_id → filename).
 	sessionIndex := buildSessionIndex(journalDir)
 
@@ -132,6 +139,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 			newBase := baseName
 			if oldBase != newBase {
 				renameJournalFiles(journalDir, oldBase, newBase, numParts)
+				jstate.Rename(oldBase+config.ExtMarkdown, newBase+config.ExtMarkdown)
 				renamed++
 			}
 		}
@@ -161,8 +169,12 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 				endIdx = totalMsgs
 			}
 
-			// Generate content for this part
-			content := formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName, title)
+			// Generate content for this part, sanitizing any invalid UTF-8
+			// from JSONL source (truncated multi-byte sequences, etc.)
+			content := strings.ToValidUTF8(
+				formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName, title),
+				"...",
+			)
 
 			// Preserve enriched YAML frontmatter from existing file
 			if fileExists {
@@ -185,12 +197,19 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 				continue
 			}
 
+			jstate.MarkExported(filename)
+
 			if fileExists && !force {
 				cmd.Printf("  %s %s (updated, frontmatter preserved)\n", green("✓"), filename)
 			} else {
 				cmd.Printf("  %s %s\n", green("✓"), filename)
 			}
 		}
+	}
+
+	// Persist journal state
+	if err := jstate.Save(journalDir); err != nil {
+		cmd.PrintErrf("warning: failed to save journal state: %v\n", err)
 	}
 
 	cmd.Println()

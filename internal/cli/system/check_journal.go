@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -72,8 +73,9 @@ func runCheckJournal(cmd *cobra.Command) error {
 		cmd.Println(fmt.Sprintf("│ You have %d new session(s) not yet exported.", unexported))
 		cmd.Println(fmt.Sprintf("│ %d existing entries need enrichment.", unenriched))
 		cmd.Println("│")
-		cmd.Println("│ Export & enrich:")
+		cmd.Println("│ Export, normalize, then enrich:")
 		cmd.Println("│   ctx recall export --all")
+		cmd.Println("│   /ctx-journal-normalize")
 		cmd.Println("│   /ctx-journal-enrich-all")
 	case unexported > 0:
 		cmd.Println(fmt.Sprintf("│ You have %d new session(s) not yet exported.", unexported))
@@ -83,7 +85,8 @@ func runCheckJournal(cmd *cobra.Command) error {
 	default:
 		cmd.Println(fmt.Sprintf("│ %d journal entries need enrichment.", unenriched))
 		cmd.Println("│")
-		cmd.Println("│ Enrich:")
+		cmd.Println("│ Normalize, then enrich:")
+		cmd.Println("│   /ctx-journal-normalize")
 		cmd.Println("│   /ctx-journal-enrich-all")
 	}
 
@@ -140,27 +143,12 @@ func countNewerFiles(dir, ext string, refTime int64) int {
 	return count
 }
 
-// countUnenriched counts journal .md files that lack YAML frontmatter
-// (don't start with "---").
+// countUnenriched counts journal .md files that lack an enriched date
+// in the journal state file.
 func countUnenriched(dir string) int {
-	entries, err := os.ReadDir(dir)
+	jstate, err := state.Load(dir)
 	if err != nil {
 		return 0
 	}
-
-	count := 0
-	for _, entry := range entries {
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".md") {
-			continue
-		}
-		data, err := os.ReadFile(filepath.Join(dir, entry.Name())) //nolint:gosec // journal path
-		if err != nil {
-			continue
-		}
-		content := strings.TrimSpace(string(data))
-		if !strings.HasPrefix(content, "---") {
-			count++
-		}
-	}
-	return count
+	return jstate.CountUnenriched(dir)
 }

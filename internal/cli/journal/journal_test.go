@@ -72,6 +72,34 @@ func TestCmd_HasSiteSubcommand(t *testing.T) {
 	}
 }
 
+func TestCmd_HasMarkSubcommand(t *testing.T) {
+	cmd := Cmd()
+
+	var found bool
+	for _, sub := range cmd.Commands() {
+		if sub.Use == "mark <filename> <stage>" {
+			found = true
+			if sub.Short == "" {
+				t.Error("mark subcommand has empty Short description")
+			}
+			if sub.RunE == nil {
+				t.Error("mark subcommand has no RunE function")
+			}
+
+			checkFlag := sub.Flags().Lookup("check")
+			if checkFlag == nil {
+				t.Error("mark subcommand missing --check flag")
+			}
+
+			break
+		}
+	}
+
+	if !found {
+		t.Error("mark subcommand not found")
+	}
+}
+
 func TestFormatSize(t *testing.T) {
 	tests := []struct {
 		bytes int64
@@ -267,12 +295,14 @@ func TestInjectSourceLink_NoFrontmatter(t *testing.T) {
 
 func TestNormalizeContent(t *testing.T) {
 	tests := []struct {
-		name, input string
-		check       func(t *testing.T, got string)
+		name, input    string
+		fencesVerified bool
+		check          func(t *testing.T, got string)
 	}{
 		{
 			"strips tool bold",
 			`🔧 **Glob: .context/journal/*.md**`,
+			false,
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "**Glob") {
 					t.Error("bold markers not stripped from tool line")
@@ -285,6 +315,7 @@ func TestNormalizeContent(t *testing.T) {
 		{
 			"escapes glob stars",
 			`pattern: src/*/main.go`,
+			false,
 			func(t *testing.T, got string) {
 				if !strings.Contains(got, `\*/`) {
 					t.Error("glob star not escaped")
@@ -294,6 +325,7 @@ func TestNormalizeContent(t *testing.T) {
 		{
 			"strips fences and escapes content",
 			"```\n*.md\n```",
+			false,
 			func(t *testing.T, got string) {
 				// Fences should be stripped
 				if strings.Contains(got, "```") {
@@ -305,6 +337,7 @@ func TestNormalizeContent(t *testing.T) {
 		{
 			"skips frontmatter",
 			"---\ntitle: test\n---\nsome text",
+			false,
 			func(t *testing.T, got string) {
 				if !strings.HasPrefix(got, "---\ntitle: test\n---\n") {
 					t.Errorf("frontmatter mangled: %q", got)
@@ -314,9 +347,130 @@ func TestNormalizeContent(t *testing.T) {
 		{
 			"does not wrap (site output is read-only)",
 			"This is a very long line that exceeds eighty characters and should not be wrapped since the site output is read-only.",
+			false,
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "\n") {
 					t.Error("normalizeContent should not wrap lines")
+				}
+			},
+		},
+		{
+			"inline code with angle brackets gets quoted",
+			"the link text contains `</com` which is broken",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "`</com`") {
+					t.Error("backtick code with angle bracket should be replaced")
+				}
+				if !strings.Contains(got, `"&lt;/com"`) {
+					t.Errorf("expected quoted entity, got: %s", got)
+				}
+			},
+		},
+		{
+			"inline code without angles is untouched",
+			"run `ctx status` to check",
+			false,
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "`ctx status`") {
+					t.Error("safe inline code should not be modified")
+				}
+			},
+		},
+		{
+			"inline code with both angles",
+			"found `<div>` tag in output",
+			false,
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, `"&lt;div&gt;"`) {
+					t.Errorf("expected quoted entities, got: %s", got)
+				}
+			},
+		},
+		{
+			"H1 with Claude tags gets sanitized",
+			"# <command-message>ctx:ctx-journal-normalize</command-message> more text",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "command-message") {
+					t.Error("Claude tags should be stripped from H1")
+				}
+				if !strings.HasPrefix(got, "# ctx:ctx-journal-normalize more text") {
+					t.Errorf("unexpected H1: %s", got)
+				}
+			},
+		},
+		{
+			"long H1 gets truncated",
+			"# " + strings.Repeat("word ", 20),
+			false,
+			func(t *testing.T, got string) {
+				heading := strings.TrimPrefix(got, "# ")
+				if len([]rune(heading)) > 75 {
+					t.Errorf("H1 not truncated: %d runes", len([]rune(heading)))
+				}
+			},
+		},
+		{
+			"tool output wrapped in fenced code block",
+			"### 5. Tool Output (10:30:00)\n\n# this is not a heading\n---\n<details>bad\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Count(got, "```") != 2 {
+					t.Errorf("expected 2 fence markers, got %d", strings.Count(got, "```"))
+				}
+				// Content preserved verbatim inside fence
+				fenceStart := strings.Index(got, "```")
+				fenceEnd := strings.LastIndex(got, "```")
+				if fenceStart < 0 || fenceEnd <= fenceStart {
+					t.Fatal("missing fence markers")
+				}
+				body := got[fenceStart+3 : fenceEnd]
+				if !strings.Contains(body, "---") {
+					t.Error("--- should be preserved inside fence")
+				}
+				if !strings.Contains(body, "# this is not a heading") {
+					t.Error("# line should be preserved inside fence")
+				}
+				if !strings.Contains(body, "<details>bad") {
+					t.Error("<details> should be preserved verbatim (no escaping)")
+				}
+				// Next turn header should survive
+				if !strings.Contains(got, "### 6. Assistant") {
+					t.Error("next turn header should not be consumed")
+				}
+			},
+		},
+		{
+			"tool output in details gets re-wrapped as fence",
+			"### 5. Tool Output (10:30:00)\n\n<details>\n<summary>79 lines</summary>\n<pre>\n# heading\n---\n&lt;div&gt;\n</pre>\n</details>\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				// Wrapped in fenced code block
+				if strings.Count(got, "```") != 2 {
+					t.Errorf("expected 2 fence markers, got %d", strings.Count(got, "```"))
+				}
+				// <details>/<summary>/<pre> wrappers stripped
+				if strings.Contains(got, "<details>") {
+					t.Error("<details> wrapper should be stripped")
+				}
+				if strings.Contains(got, "<summary>") {
+					t.Error("<summary> wrapper should be stripped")
+				}
+				// Entities from export should be unescaped (fences show raw text)
+				if !strings.Contains(got, "<div>") {
+					t.Error("&lt;div&gt; should be unescaped to <div>")
+				}
+				// Content inside fence
+				fenceStart := strings.Index(got, "```")
+				fenceEnd := strings.LastIndex(got, "```")
+				body := got[fenceStart+3 : fenceEnd]
+				if !strings.Contains(body, "# heading") {
+					t.Error("# heading should be inside fence")
+				}
+				// Next turn should survive
+				if !strings.Contains(got, "### 6. Assistant") {
+					t.Error("next turn header should not be consumed")
 				}
 			},
 		},
@@ -324,7 +478,7 @@ func TestNormalizeContent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := normalizeContent(tt.input)
+			got := normalizeContent(tt.input, tt.fencesVerified)
 			tt.check(t, got)
 		})
 	}
@@ -972,7 +1126,7 @@ func TestGenerateZensicalToml(t *testing.T) {
 
 func TestStripFences(t *testing.T) {
 	input := "# Heading\n\n```go\nfunc main() {}\n```\n\nMore text.\n"
-	got := stripFences(input)
+	got := stripFences(input, false)
 
 	// Fence markers removed
 	if strings.Contains(got, "```") {
@@ -989,7 +1143,7 @@ func TestStripFences(t *testing.T) {
 
 func TestStripFences_PreservesFrontmatter(t *testing.T) {
 	input := "---\ntitle: test\n---\n\n```\ncode\n```\n"
-	got := stripFences(input)
+	got := stripFences(input, false)
 
 	if !strings.HasPrefix(got, "---\ntitle: test\n---\n") {
 		t.Error("frontmatter damaged")
@@ -999,29 +1153,19 @@ func TestStripFences_PreservesFrontmatter(t *testing.T) {
 	}
 }
 
-func TestStripFences_SkipsFencesVerifiedFiles(t *testing.T) {
-	input := "<!-- fences-verified: 2026-02-06 -->\n\n```go\ncode\n```\n"
-	got := stripFences(input)
+func TestStripFences_SkipsFencesVerified(t *testing.T) {
+	input := "```go\ncode\n```\n"
+	got := stripFences(input, true)
 
-	// Should be unchanged — fences already verified
+	// Should be unchanged — fences verified via state
 	if got != input {
-		t.Error("should skip files with fences-verified marker")
-	}
-}
-
-func TestStripFences_DoesNotSkipNormalizedOnly(t *testing.T) {
-	input := "<!-- normalized: 2026-02-06 -->\n\n```go\ncode\n```\n"
-	got := stripFences(input)
-
-	// normalized marker alone should NOT skip fence stripping
-	if strings.Contains(got, "```") {
-		t.Error("fence markers not stripped — normalized marker should not prevent stripping")
+		t.Error("should skip files when fencesVerified is true")
 	}
 }
 
 func TestStripFences_NestedFences(t *testing.T) {
 	input := "````\n```python\nprint('hi')\n```\n````\n"
-	got := stripFences(input)
+	got := stripFences(input, false)
 
 	// All fence markers removed
 	if strings.Contains(got, "```") || strings.Contains(got, "````") {
@@ -1330,5 +1474,66 @@ date: "2026-01-15"
 
 	if entry.SessionID != "" {
 		t.Errorf("SessionID should be empty for legacy files, got %q", entry.SessionID)
+	}
+}
+
+func TestParseJournalEntry_TitleSanitization(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	tests := []struct {
+		name      string
+		h1        string
+		wantTitle string
+	}{
+		{
+			name:      "partial Claude tag in title",
+			h1:        "ctx-journal-enrich-all /ctx-journal-enrich-all</com",
+			wantTitle: "ctx-journal-enrich-all /ctx-journal-enrich-all&lt;/com",
+		},
+		{
+			name:      "full surviving angle brackets",
+			h1:        "debug <foo> issue",
+			wantTitle: "debug &lt;foo&gt; issue",
+		},
+		{
+			name:      "known Claude tags are stripped then angles sanitized",
+			h1:        "<command-message>run tests</command-message>",
+			wantTitle: "run tests",
+		},
+		{
+			name:      "backticks stripped from title",
+			h1:        "Error: ``Error: Command failed: go build``",
+			wantTitle: "Error: Error: Command failed: go build",
+		},
+		{
+			name:      "hash stripped from title",
+			h1:        "## Plan: Restructure layout",
+			wantTitle: "Plan: Restructure layout",
+		},
+		{
+			name:      "mixed sanitization",
+			h1:        "`make test` is <failing>",
+			wantTitle: "make test is &lt;failing&gt;",
+		},
+		{
+			name:      "no special chars unchanged",
+			h1:        "normal title here",
+			wantTitle: "normal title here",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			filename := "2026-01-15-test-abc12345.md"
+			content := "# " + tt.h1 + "\n\n**Time**: 10:00:00\n**Project**: ctx\n"
+			path := filepath.Join(tmpDir, filename)
+			if err := os.WriteFile(path, []byte(content), 0600); err != nil {
+				t.Fatalf("write: %v", err)
+			}
+			entry := parseJournalEntry(path, filename)
+			if entry.Title != tt.wantTitle {
+				t.Errorf("Title = %q, want %q", entry.Title, tt.wantTitle)
+			}
+		})
 	}
 }

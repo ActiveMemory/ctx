@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-20 | Inline code spans with angle brackets break markdown rendering |
+| 2026-02-20 | Journal title sanitization requires multiple passes |
+| 2026-02-20 | Python-Markdown HTML blocks end at blank lines unlike CommonMark |
 | 2026-02-19 | Trust the binary output over source code analysis |
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-02-19 | GCM authentication makes try-decrypt a reliable format discriminator |
@@ -85,6 +88,36 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-20-044412] Inline code spans with angle brackets break markdown rendering
+
+**Context**: Journal entry body content discussing XML fragments like backtick-less-than-slash-com introduced broken HTML into the rendered page because the angle brackets inside backticks were interpreted as raw HTML tags.
+
+**Lesson**: Single-line backtick spans containing angle brackets need special handling: replace backticks with double-quotes (preserves visual signal) and replace angle brackets with HTML entities. This is done via RegExInlineCodeAngle regex in the normalizeContent line-by-line pass. Multi-line or angle-bracket-free spans are left untouched.
+
+**Application**: The regex pattern matches single backtick on one line containing < or >. Applied after fence stripping but in the line-by-line pass, not in wrapToolOutputs (which handles entire Tool Output sections).
+
+---
+
+## [2026-02-20-044403] Journal title sanitization requires multiple passes
+
+**Context**: Link text in journal index.md broke rendering when titles contained angle brackets (from truncated XML tags like command-message), backticks, or hash characters. Titles over 75 chars wrapped to a second line and lost heading formatting.
+
+**Lesson**: Title sanitization pipeline: 1) Strip Claude Code XML tags (command-message, command-name, local-command-caveat) via RegExClaudeTag. 2) Replace angle brackets with HTML entities. 3) Strip backticks and hash (meaningless in link text). 4) Truncate to 75 chars on word boundary. This applies at both parse time (parseJournalEntry in parse.go) and export time (cleanTitle in recall/slug.go). The H1 heading in normalizeContent also strips Claude tags and truncates to 75 chars.
+
+**Application**: When adding new title sources or display contexts, ensure the full sanitization chain applies. RecallMaxTitleLen (75) is the single source of truth for title length. RegExClaudeTag lives in config/regex.go for sharing between journal and recall packages.
+
+---
+
+## [2026-02-20-044352] Python-Markdown HTML blocks end at blank lines unlike CommonMark
+
+**Context**: Debugging journal site rendering: tool output content with blank lines, headings, thematic breaks, and lists was being interpreted as markdown even inside pre/code and details/pre wrappers.
+
+**Lesson**: Python-Markdown (used by mkdocs/zensical) ends ALL HTML blocks at blank lines, regardless of tag type. CommonMark has Type 1 blocks (pre) that survive blank lines, but Python-Markdown does not. html.EscapeString only handles angle brackets, ampersand, quotes — markdown syntax (hash, dashes, asterisk, numbered lists) passes through untouched. The only reliable way to prevent markdown interpretation of arbitrary content is fenced code blocks, which survive blank lines and block all markdown/HTML parsing.
+
+**Application**: For journal site tool output wrapping: always use fenced code blocks. Run stripFences before wrapToolOutputs so content has no fence lines, making triple-backtick safe as a wrapper. For overflow control (replacing details collapsibility), use CSS max-height + overflow-y: auto on pre elements.
 
 ---
 

@@ -23,25 +23,35 @@ Batch-enrich all unenriched journal entries automatically.
 
 ### Step 1: Ensure Normalization
 
-Check whether `/ctx-journal-normalize` has been run. Look for
-entries missing the `<!-- normalized -->` marker:
+Check whether `/ctx-journal-normalize` has been run by reading the
+journal state file:
 
 ```bash
-grep -rL "normalized" .context/journal/*.md 2>/dev/null | wc -l
+ctx journal mark --check-unenriched
 ```
 
-If there are unnormalized entries, run normalization first.
-Clean markdown produces better metadata extraction.
+Or read `.context/journal/.state.json` and count entries without a
+`normalized` date. If many entries lack normalization, suggest running
+it first — clean markdown produces better metadata extraction. But do
+NOT block enrichment on normalization; enrichment works on raw entries
+too.
 
 ### Step 2: Find Unenriched Entries
 
-List all journal entries that lack YAML frontmatter:
+List all journal entries that lack enrichment using the state file:
 
 ```bash
-grep -rL "^---$" .context/journal/*.md 2>/dev/null
+# List .md files in journal dir and check state
+for f in .context/journal/*.md; do
+  name=$(basename "$f")
+  ctx journal mark --check "$name" enriched || echo "$f"
+done
 ```
 
-If all entries already have frontmatter, report that and stop.
+Or read `.context/journal/.state.json` directly and list entries
+without an `enriched` date set.
+
+If all entries already have enrichment recorded, report that and stop.
 
 ### Step 3: Filter Out Noise
 
@@ -88,7 +98,15 @@ technologies:
 ---
 ```
 
-### Step 5: Report
+### Step 5: Mark Enriched
+
+After writing frontmatter to each file, update the state file:
+
+```bash
+ctx journal mark <filename> enriched
+```
+
+### Step 6: Report
 
 After processing, report:
 
@@ -121,3 +139,4 @@ backlogs and avoids coordination overhead.
 - [ ] Each enriched entry has all required frontmatter fields
 - [ ] Summary is specific to the session, not generic
 - [ ] User was shown a summary before applying (unless unattended)
+- [ ] State file updated for each enriched entry

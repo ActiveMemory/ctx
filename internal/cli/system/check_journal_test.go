@@ -140,17 +140,22 @@ func TestCheckJournal_BothStages(t *testing.T) {
 func TestCountUnenriched(t *testing.T) {
 	dir := t.TempDir()
 
-	// Enriched file (starts with ---)
+	// Enriched file (has state entry)
 	_ = os.WriteFile(filepath.Join(dir, "enriched.md"),
 		[]byte("---\ntitle: test\n---\n# Content"), 0o600)
 
-	// Unenriched file
+	// Unenriched file (no state entry)
 	_ = os.WriteFile(filepath.Join(dir, "raw.md"),
 		[]byte("# Just content"), 0o600)
 
 	// Non-md file (should be ignored)
 	_ = os.WriteFile(filepath.Join(dir, "notes.txt"),
 		[]byte("not markdown"), 0o600)
+
+	// Create state file marking enriched.md
+	stateJSON := `{"version":1,"entries":{"enriched.md":{"enriched":"2026-01-21"}}}`
+	_ = os.WriteFile(filepath.Join(dir, ".state.json"),
+		[]byte(stateJSON), 0o600)
 
 	count := countUnenriched(dir)
 	if count != 1 {

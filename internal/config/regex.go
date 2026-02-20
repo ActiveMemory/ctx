@@ -127,6 +127,11 @@ var RegExTaskMultiline = regexp.MustCompile(`(?m)` + regExTaskPattern)
 //   - 1: timestamp (YYYY-MM-DD-HHMMSS)
 var RegExTaskDoneTimestamp = regexp.MustCompile(`#done:(\d{4}-\d{2}-\d{2}-\d{6})`)
 
+// RegExClaudeTag matches Claude Code internal markup tags that leak into
+// session titles via the first user message. This MUST remain an allowlist
+// of known Claude Code tags — do NOT replace with a blanket regex.
+var RegExClaudeTag = regexp.MustCompile(`</?(?:command-message|command-name|local-command-caveat)>`)
+
 // Journal site pipeline patterns.
 
 // RegExMultiPart matches session part files like "...-p2.md", "...-p3.md", etc.
@@ -137,6 +142,11 @@ var RegExGlobStar = regexp.MustCompile(`\*(\.\w+|[/)])`)
 
 // RegExToolBold matches tool-use lines like "🔧 **Glob: .context/journal/*.md**".
 var RegExToolBold = regexp.MustCompile(`🔧\s*\*\*(.+?)\*\*`)
+
+// RegExInlineCodeAngle matches single-line inline code spans containing
+// angle brackets (e.g., `</com`). Backticks are replaced with quotes and
+// angles with HTML entities to prevent broken HTML in rendered output.
+var RegExInlineCodeAngle = regexp.MustCompile("`([^`\n]*[<>][^`\n]*)`")
 
 // RegExTurnHeader matches conversation turn headers.
 //
@@ -150,12 +160,15 @@ var RegExTurnHeader = regexp.MustCompile(`^### (\d+)\. (.+?) \((\d{2}:\d{2}:\d{2
 // tildes, optionally followed by a language tag).
 var RegExFenceLine = regexp.MustCompile("^\\s*(`{3,}|~{3,})(.*)$")
 
-// RegExNormalizedMarker matches the metadata normalization marker (normalize.py).
-var RegExNormalizedMarker = regexp.MustCompile(`<!-- normalized: \d{4}-\d{2}-\d{2} -->`)
+// RegExMarkdownHeading matches Markdown heading lines (1-6 hashes + space).
+//
+// Groups:
+//   - 1: hash prefix (e.g., "##")
+//   - 2: heading text
+var RegExMarkdownHeading = regexp.MustCompile(`^(#{1,6}) (.+)$`)
 
-// RegExFencesVerified matches the marker left after AI fence reconstruction.
-// Only files with this marker skip fence stripping in the site pipeline.
-var RegExFencesVerified = regexp.MustCompile(`<!-- fences-verified: \d{4}-\d{2}-\d{2} -->`)
+// RegExListStart matches lines that begin an ordered or unordered list item.
+var RegExListStart = regexp.MustCompile(`^(\d+\.|[-*]) `)
 
 // RegExFromAttrName creates a regex to extract an XML attribute value by name.
 //

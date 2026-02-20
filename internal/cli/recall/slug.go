@@ -8,6 +8,7 @@ package recall
 
 import (
 	"strings"
+	"unicode/utf8"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
@@ -69,6 +70,7 @@ func slugifyTitle(title string) string {
 // parser.Session.FirstUserMsg may carry.
 func cleanTitle(s string) string {
 	s = strings.TrimSuffix(s, "...")
+	s = config.RegExClaudeTag.ReplaceAllString(s, "")
 	var sb strings.Builder
 	prevSpace := false
 	for _, r := range s {
@@ -85,7 +87,19 @@ func cleanTitle(s string) string {
 		sb.WriteRune(r)
 		prevSpace = false
 	}
-	return strings.TrimSpace(sb.String())
+	out := strings.TrimSpace(sb.String())
+
+	// Truncate to RecallMaxTitleLen on a word boundary.
+	if utf8.RuneCountInString(out) > config.RecallMaxTitleLen {
+		runes := []rune(out)
+		truncated := string(runes[:config.RecallMaxTitleLen])
+		if idx := strings.LastIndex(truncated, " "); idx > 0 {
+			truncated = truncated[:idx]
+		}
+		out = truncated
+	}
+
+	return out
 }
 
 // titleSlug returns the best available slug for a session, following a

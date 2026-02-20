@@ -55,6 +55,7 @@ opinionated behavior on top.
 | [`/ctx-journal-normalize`](#ctx-journal-normalize)   | Normalize journal markdown for clean rendering         | user-invocable |
 | [`/ctx-blog`](#ctx-blog)                             | Generate blog post draft from project activity         | user-invocable |
 | [`/ctx-blog-changelog`](#ctx-blog-changelog)         | Generate themed blog post from a commit range          | user-invocable |
+| [`/ctx-consolidate`](#ctx-consolidate)               | Consolidate redundant learnings or decisions            | user-invocable |
 | [`/ctx-drift`](#ctx-drift)                           | Detect and fix context drift                           | user-invocable |
 | [`/ctx-alignment-audit`](#ctx-alignment-audit)       | Audit docs claims against agent instructions           | user-invocable |
 | [`/ctx-prompt-audit`](#ctx-prompt-audit)             | Analyze prompting patterns for improvement             | user-invocable |
@@ -312,11 +313,27 @@ that period.
 Skills for detecting drift, auditing alignment, and improving
 prompt quality.
 
+### `/ctx-consolidate`
+
+Consolidate redundant entries in LEARNINGS.md or DECISIONS.md. Groups
+overlapping entries by keyword similarity, presents candidates, and —
+with user approval — merges groups into denser combined entries.
+Originals are archived, not deleted.
+
+**Wraps**: reads LEARNINGS.md and DECISIONS.md, writes consolidated
+entries, archives originals, runs `ctx reindex`
+
+**See also**:
+[Detecting and Fixing Drift](recipes/context-health.md)
+
+---
+
 ### `/ctx-drift`
 
 Detect and fix context drift: stale paths, missing files, file age
-staleness, task accumulation, and constitution violations via
-`ctx drift`. Also detects skill drift against canonical templates.
+staleness, task accumulation, entry count warnings, and constitution
+violations via `ctx drift`. Also detects skill drift against canonical
+templates.
 
 **Wraps**: `ctx drift [--fix]`
 

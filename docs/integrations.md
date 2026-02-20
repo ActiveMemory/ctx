@@ -153,12 +153,38 @@ The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
      * Recent **decisions** or **learnings**;
      * Recent **session history** from `ctx recall`.
 
+### Local Plugin Development
+
+When developing ctx locally (adding skills, hooks, or changing plugin
+behavior), Claude Code caches the plugin by version. You must bump
+the version in **both** files and update the marketplace for changes
+to take effect:
+
+1. **Bump version** in both:
+   - `internal/assets/claude/.claude-plugin/plugin.json` (plugin manifest)
+   - `.claude-plugin/marketplace.json` (marketplace listing)
+
+2. **Update the marketplace** in Claude Code:
+   - Open the Plugins UI (`/plugins` or Esc menu)
+   - Go to **Marketplaces** tab
+   - Select the `activememory-ctx` marketplace
+   - Choose **Update marketplace**
+
+3. **Start a new Claude Code session** — skill changes aren't
+   reflected in existing sessions.
+
+!!! warning "Both version files must match"
+    If you only bump `plugin.json` but not `marketplace.json` (or
+    vice versa), Claude Code may not detect the update. Always bump
+    both together.
+
 ### Troubleshooting
 
 | Issue                | Solution                                                   |
 |----------------------|------------------------------------------------------------|
 | Context not loading  | Check `ctx` is in PATH: `which ctx`                        |
 | Hook errors          | Verify plugin is installed: `claude /plugin list`          |
+| New skill not visible | Bump version in both `plugin.json` files, update marketplace |
 
 ### Manual Context Load
 
@@ -186,6 +212,7 @@ These are invoked in Claude Code with `/skill-name`.
 | `/ctx-status`          | Show context summary (tasks, decisions, learnings)   |
 | `/ctx-agent`           | Get AI-optimized context packet                      |
 | `/ctx-drift`           | Detect and fix context drift (structural + semantic) |
+| `/ctx-consolidate`     | Merge redundant learnings or decisions into denser entries |
 | `/ctx-alignment-audit` | Audit doc claims against playbook instructions       |
 | `/ctx-reflect`         | Review session and suggest what to persist           |
 

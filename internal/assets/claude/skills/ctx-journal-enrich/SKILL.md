@@ -9,8 +9,9 @@ Enrich a session journal entry with structured metadata.
 
 1. **Run `/ctx-journal-normalize` first** if the entry has rendering
    issues; clean markdown produces better metadata extraction
-2. **Check if already enriched**: entries with YAML frontmatter
-   (`---` at top) are likely already done; confirm before overwriting
+2. **Check if already enriched**: check the state file via
+   `ctx journal mark --check <filename> enriched` or read
+   `.context/journal/.state.json`; confirm before overwriting
 
 ## When to Use
 
@@ -38,10 +39,16 @@ ls .context/journal/*.md | grep -i "<pattern>"
 ```
 
 If multiple matches, show them and ask which one.
-If no argument given, show recent unenriched entries and ask:
+If no argument given, show recent unenriched entries by reading
+`.context/journal/.state.json` and listing entries without an
+`enriched` date:
+
 ```bash
-# List entries without frontmatter
-grep -rL "^---$" .context/journal/*.md | head -10
+# List unenriched entries using state file
+for f in .context/journal/*.md; do
+  name=$(basename "$f")
+  ctx journal mark --check "$name" enriched || echo "$f"
+done | head -10
 ```
 
 ## Usage Examples
@@ -137,4 +144,8 @@ Scan the conversation and extract:
 3. Propose enrichment (type, topics, outcome)
 4. Ask user for confirmation/adjustments
 5. Show diff and write if approved
-6. Remind user to rebuild: `ctx journal site --build` or `make journal`
+6. **Mark enriched** in the state file:
+   ```bash
+   ctx journal mark <filename> enriched
+   ```
+7. Remind user to rebuild: `ctx journal site --build` or `make journal`

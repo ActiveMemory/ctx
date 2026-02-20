@@ -70,6 +70,16 @@ func TestCleanTitle(t *testing.T) {
 		{"truncation suffix", "some long text...", "some long text"},
 		{"consecutive spaces", "hello    world", "hello world"},
 		{"empty", "", ""},
+		{
+			"long title truncated on word boundary",
+			"We are debugging the new journal enrichment and creation flow and the rendering still breaks around line 37",
+			"We are debugging the new journal enrichment and creation flow and the",
+		},
+		{
+			"title at exactly 75 chars is not truncated",
+			strings.Repeat("x ", 37) + "y",
+			strings.Repeat("x ", 37) + "y",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

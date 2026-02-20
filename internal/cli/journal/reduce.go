@@ -14,8 +14,8 @@ import (
 )
 
 // stripFences removes all code fence markers from content, leaving the inner
-// text as-is. This eliminates fence nesting conflicts entirely. Files with
-// <!-- fences-verified: YYYY-MM-DD --> are skipped (fences already correct).
+// text as-is. This eliminates fence nesting conflicts entirely. Files whose
+// fences have been verified (fencesVerified=true) are returned unchanged.
 //
 // The result is plain text with structural markers preserved (turn headers,
 // tool calls, section breaks). Serves as a readable baseline without AI
@@ -23,12 +23,13 @@ import (
 //
 // Parameters:
 //   - content: Raw Markdown content of a journal entry
+//   - fencesVerified: Whether the file's fences have been verified via state
 //
 // Returns:
 //   - string: Content with code fence markers removed
-func stripFences(content string) string {
+func stripFences(content string, fencesVerified bool) string {
 	// Skip files whose fences have been verified by the AI skill
-	if config.RegExFencesVerified.MatchString(content) {
+	if fencesVerified {
 		return content
 	}
 
