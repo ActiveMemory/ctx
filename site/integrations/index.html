@@ -1918,6 +1918,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#local-plugin-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Plugin Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2735,6 +2746,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#local-plugin-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Plugin Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3529,37 @@ The default cooldown is 10 minutes; use <code>--cooldown 0</code> to disable it.
 </ul>
 </li>
 </ol>
+<h3 id="local-plugin-development">Local Plugin Development<a class="headerlink" href="#local-plugin-development" title="Permanent link">&para;</a></h3>
+<p>When developing ctx locally (adding skills, hooks, or changing plugin
+behavior), Claude Code caches the plugin by version. You must bump
+the version in <strong>both</strong> files and update the marketplace for changes
+to take effect:</p>
+<ol>
+<li><strong>Bump version</strong> in both:</li>
+<li><code>internal/assets/claude/.claude-plugin/plugin.json</code> (plugin manifest)</li>
+<li>
+<p><code>.claude-plugin/marketplace.json</code> (marketplace listing)</p>
+</li>
+<li>
+<p><strong>Update the marketplace</strong> in Claude Code:</p>
+</li>
+<li>Open the Plugins UI (<code>/plugins</code> or Esc menu)</li>
+<li>Go to <strong>Marketplaces</strong> tab</li>
+<li>Select the <code>activememory-ctx</code> marketplace</li>
+<li>
+<p>Choose <strong>Update marketplace</strong></p>
+</li>
+<li>
+<p><strong>Start a new Claude Code session</strong> — skill changes aren't
+   reflected in existing sessions.</p>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Both version files must match</p>
+<p>If you only bump <code>plugin.json</code> but not <code>marketplace.json</code> (or
+vice versa), Claude Code may not detect the update. Always bump
+both together.</p>
+</div>
 <h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3523,6 +3576,10 @@ The default cooldown is 10 minutes; use <code>--cooldown 0</code> to disable it.
 <tr>
 <td>Hook errors</td>
 <td>Verify plugin is installed: <code>claude /plugin list</code></td>
+</tr>
+<tr>
+<td>New skill not visible</td>
+<td>Bump version in both <code>plugin.json</code> files, update marketplace</td>
 </tr>
 </tbody>
 </table>
@@ -3558,6 +3615,10 @@ The default cooldown is 10 minutes; use <code>--cooldown 0</code> to disable it.
 <tr>
 <td><code>/ctx-drift</code></td>
 <td>Detect and fix context drift (structural + semantic)</td>
+</tr>
+<tr>
+<td><code>/ctx-consolidate</code></td>
+<td>Merge redundant learnings or decisions into denser entries</td>
 </tr>
 <tr>
 <td><code>/ctx-alignment-audit</code></td>

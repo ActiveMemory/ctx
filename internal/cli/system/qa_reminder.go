@@ -31,7 +31,10 @@ func qaReminderCmd() *cobra.Command {
 				"IMPORTANT: Before declaring code complete," +
 					" lint and test the ENTIRE project —" +
 					" not just the files you changed." +
-					" You own the whole branch.",
+					" You own the whole branch." +
+					" When committing, leave a clean working tree —" +
+					" don't leave modified or untracked files behind." +
+					" If files shouldn't be committed, say why.",
 			)
 			return nil
 		},

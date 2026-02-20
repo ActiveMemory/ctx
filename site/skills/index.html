@@ -1835,6 +1835,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ctx-consolidate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-consolidate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2780,6 +2791,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ctx-consolidate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-consolidate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3088,6 +3110,11 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
+<td><a href="#ctx-consolidate"><code>/ctx-consolidate</code></a></td>
+<td>Consolidate redundant learnings or decisions</td>
+<td>user-invocable</td>
+</tr>
+<tr>
 <td><a href="#ctx-drift"><code>/ctx-drift</code></a></td>
 <td>Detect and fix context drift</td>
 <td>user-invocable</td>
@@ -3275,10 +3302,21 @@ that period.</p>
 <h2 id="auditing-health">Auditing &amp; Health<a class="headerlink" href="#auditing-health" title="Permanent link">&para;</a></h2>
 <p>Skills for detecting drift, auditing alignment, and improving
 prompt quality.</p>
+<h3 id="ctx-consolidate"><code>/ctx-consolidate</code><a class="headerlink" href="#ctx-consolidate" title="Permanent link">&para;</a></h3>
+<p>Consolidate redundant entries in LEARNINGS.md or DECISIONS.md. Groups
+overlapping entries by keyword similarity, presents candidates, and —
+with user approval — merges groups into denser combined entries.
+Originals are archived, not deleted.</p>
+<p><strong>Wraps</strong>: reads LEARNINGS.md and DECISIONS.md, writes consolidated
+entries, archives originals, runs <code>ctx reindex</code></p>
+<p><strong>See also</strong>:
+<a href="../recipes/context-health/">Detecting and Fixing Drift</a></p>
+<hr />
 <h3 id="ctx-drift"><code>/ctx-drift</code><a class="headerlink" href="#ctx-drift" title="Permanent link">&para;</a></h3>
 <p>Detect and fix context drift: stale paths, missing files, file age
-staleness, task accumulation, and constitution violations via
-<code>ctx drift</code>. Also detects skill drift against canonical templates.</p>
+staleness, task accumulation, entry count warnings, and constitution
+violations via <code>ctx drift</code>. Also detects skill drift against canonical
+templates.</p>
 <p><strong>Wraps</strong>: <code>ctx drift [--fix]</code></p>
 <p><strong>See also</strong>:
 <a href="../recipes/context-health/">Detecting and Fixing Drift</a></p>
