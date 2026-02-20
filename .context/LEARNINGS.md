@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-20 | details tag cannot wrap pre blocks with blank lines |
+| 2026-02-20 | pymdownx.highlight hijacks pre/code blocks |
 | 2026-02-20 | Journal site normalizeContent: three-layer tool output fix |
 | 2026-02-20 | Tool output boundary detection: pre-scan + last-match-wins |
 | 2026-02-20 | Pre-commit gate: build + lint + test, every time |
@@ -92,6 +94,26 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-20-121941] details tag cannot wrap pre blocks with blank lines
+
+**Context**: Considered making tool output collapsible using <details><summary>...</summary><pre><code>...</code></pre></details>. The content inside contains blank lines from tool output.
+
+**Lesson**: <details> is a CommonMark Type 6 HTML block — it ends at the first blank line, regardless of what is inside. A <pre> (Type 1) inside <details> does not override this because CommonMark does not nest HTML block types. Any blank line in the content terminates the <details> block, orphaning the closing tags.
+
+**Application**: Collapsible tool output in the journal site requires a CSS/JS approach (e.g., a toggle class on the <pre> block) rather than native <details> elements. This is a future feature, not a current blocker.
+
+---
+
+## [2026-02-20-121939] pymdownx.highlight hijacks pre/code blocks
+
+**Context**: After switching journal site Tool Output and User turns to <pre><code> with HTML escaping, the rendered output still swallowed subsequent turns. The pymdownx.highlight extension was intercepting <pre><code> patterns and transforming them into fancy code blocks with line numbers and copy buttons, changing block boundaries.
+
+**Lesson**: MkDocs/zensical's pymdownx.highlight extension pattern-matches on <pre><code> and transforms it into a widget with spans, nav buttons, and line numbers. This transformation changes the HTML block structure. Disable with use_pygments=false in markdown_extensions config. Bare <pre> (without <code>) also avoids the hijacking but loses semantic markup.
+
+**Application**: When generating <pre><code> blocks for any zensical/MkDocs site, always configure pymdownx.highlight with use_pygments=false. When overriding markdown_extensions in zensical, the entire default set must be replicated since providing the key replaces all defaults.
 
 ---
 

@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-20 | Defencify journal site: pre/code replaces fenced code blocks |
 | 2026-02-20 | Code-level normalize replaces AI source normalization |
 | 2026-02-20 | Title length limit of 75 characters for journal entries |
 | 2026-02-20 | CSS overflow instead of details collapsibility for journal tool outputs |
@@ -43,6 +44,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-20-121937] Defencify journal site: pre/code replaces fenced code blocks
+
+**Status**: Accepted
+
+**Context**: Fenced code blocks for Tool Output caused cascading bugs: nesting conflicts, fence depth calculation, stray fences in User turns swallowing subsequent content. Multiple fixes (isAlreadyFenced, fenceForContent, fence tracking) added complexity without fully solving the problem.
+
+**Decision**: Defencify journal site: pre/code replaces fenced code blocks
+
+**Rationale**: HTML-escaped content in <pre><code> eliminates ALL inner content conflicts in one shot — no fence depth, no nesting, no tracking. Requires use_pygments=false in zensical config to prevent pymdownx.highlight from hijacking the blocks. Trade-off: content is plain preformatted text (no rich markdown rendering inside tool output or user messages), which is acceptable.
+
+**Consequences**: Removed isAlreadyFenced, fenceForContent, codeFence. Line-by-line transforms track <pre> blocks instead of fences. Generated zensical.toml now includes full markdown_extensions config. Collapsible tool output (<details>) remains incompatible — needs CSS/JS approach.
+
+---
 
 ## [2026-02-20-062043] Code-level normalize replaces AI source normalization
 
