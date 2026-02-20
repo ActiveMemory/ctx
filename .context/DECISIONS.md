@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-20 | Code-level normalize replaces AI source normalization |
 | 2026-02-20 | Title length limit of 75 characters for journal entries |
 | 2026-02-20 | CSS overflow instead of details collapsibility for journal tool outputs |
 | 2026-02-20 | Use fenced code blocks for tool output wrapping in journal site |
@@ -42,6 +43,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-20-062043] Code-level normalize replaces AI source normalization
+
+**Status**: Accepted
+
+**Context**: Attempted AI normalization of 290 journal files (~1M lines). 10 agents found zero source edits needed — files were already well-formatted. Only finding: 12 files with broken fence language hints.
+
+**Decision**: Code-level normalize replaces AI source normalization
+
+**Rationale**: normalizeContent pipeline handles all rendering concerns at build time (fence stripping, tool output wrapping, heading demotion, list spacing). Source-level AI normalization adds no value beyond what the code pipeline provides.
+
+**Consequences**: Mark all entries as normalized+fences_verified programmatically. Reserve AI normalization for specific files with known issues. Enrichment proceeds without blocking on source normalization.
+
+---
 
 ## [2026-02-20-044438] Title length limit of 75 characters for journal entries
 

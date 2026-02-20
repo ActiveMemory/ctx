@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-20 | AI normalization at scale hits context limits |
 | 2026-02-20 | Inline code spans with angle brackets break markdown rendering |
 | 2026-02-20 | Journal title sanitization requires multiple passes |
 | 2026-02-20 | Python-Markdown HTML blocks end at blank lines unlike CommonMark |
@@ -88,6 +89,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-20-061907] AI normalization at scale hits context limits
+
+**Context**: Attempted AI-driven normalization of 290 journal files (~1M lines total). Agents hit context limits on files over ~500 lines (median file was 3.4K lines).
+
+**Lesson**: AI normalization is a poor fit for large files. The source files were already well-formatted — agents found almost no issues to fix. Code-level pipeline (normalizeContent) handles rendering concerns more reliably and consistently.
+
+**Application**: For bulk journal processing, use code-level transforms at render time. Reserve AI normalization for specific files with known issues. Mark all as normalized since the pipeline handles it.
 
 ---
 

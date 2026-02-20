@@ -10,6 +10,8 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 ### Phase -1: Quality Verification
 
+- [ ] Update enrich-all skill: remove normalize-first prerequisite #priority:medium #added:2026-02-20-062259
+
 - [ ] Move 'ctx journal mark' to 'ctx system mark-journal' #priority:medium #added:2026-02-20-015721
 
 - [ ] Human: Ensure the new journal creation /ctx-journal-normalize and
