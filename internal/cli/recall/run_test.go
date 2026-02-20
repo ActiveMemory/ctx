@@ -15,6 +15,8 @@ import (
 	"testing"
 
 	"github.com/fatih/color"
+
+	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
 // createTestSessionJSONL writes a minimal valid JSONL file for testing.
@@ -315,5 +317,240 @@ func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
 	}
 	if !found {
 		t.Errorf("expected title-based filename with short ID, got: %v", fileNames)
+	}
+}
+
+// exportHelper runs "recall export --all --all-projects" in a temp dir and
+// returns the journal directory and the name of the first exported .md file.
+func exportHelper(t *testing.T, tmpDir string, extraArgs ...string) (journalDir string, mdFile string) {
+	t.Helper()
+
+	cmd := Cmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	args := append([]string{"export", "--all", "--all-projects"}, extraArgs...)
+	cmd.SetArgs(args)
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("export: %v\noutput: %s", err, buf.String())
+	}
+
+	journalDir = filepath.Join(tmpDir, ".context", "journal")
+	entries, err := os.ReadDir(journalDir)
+	if err != nil {
+		t.Fatalf("read journal dir: %v", err)
+	}
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".md") {
+			return journalDir, e.Name()
+		}
+	}
+	t.Fatal("no .md file found after export")
+	return "", ""
+}
+
+func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-fmproj")
+	createTestSessionJSONL(t, projDir, "sess-fm-001", "fm-preserve", "/home/test/fmproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Read the original frontmatter to get the generated title
+	origData, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read original: %v", err)
+	}
+	origTitle := extractFrontmatterField(string(origData), "title")
+
+	// Inject enriched frontmatter — keep the same title to avoid rename
+	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
+	body := "# hello from test\n\nBody content\n"
+	if writeErr := os.WriteFile(path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export (default mode — should preserve frontmatter)
+	exportHelper(t, tmpDir)
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	content := string(data)
+
+	if !strings.Contains(content, "A curated summary") {
+		t.Error("enriched frontmatter summary should be preserved on re-export")
+	}
+	if !strings.Contains(content, "enriched") {
+		t.Error("enriched frontmatter tags should be preserved on re-export")
+	}
+}
+
+func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-forceproj")
+	createTestSessionJSONL(t, projDir, "sess-force-002", "force-discard", "/home/test/forceproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Read the original frontmatter to get the generated title
+	origData, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read original: %v", err)
+	}
+	origTitle := extractFrontmatterField(string(origData), "title")
+
+	// Inject enriched frontmatter — keep the same title to avoid rename
+	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
+	body := "# hello from test\n\nBody content\n"
+	if writeErr := os.WriteFile(path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export with --force — should discard enriched frontmatter
+	exportHelper(t, tmpDir, "--force")
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	content := string(data)
+
+	if strings.Contains(content, "A curated summary") {
+		t.Error("--force should discard enriched frontmatter summary")
+	}
+	if strings.Contains(content, "tags:") {
+		t.Error("--force should discard enriched frontmatter tags")
+	}
+	// File should still have session content
+	if !strings.Contains(content, "session_id:") {
+		t.Error("re-exported file should contain session_id in generated frontmatter")
+	}
+}
+
+func TestRunRecallExport_ForceResetsEnrichmentState(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-stateproj")
+	createTestSessionJSONL(t, projDir, "sess-state-003", "state-reset", "/home/test/stateproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export
+	journalDir, mdFile := exportHelper(t, tmpDir)
+
+	// Manually mark the file as enriched in state
+	jstate, err := state.Load(journalDir)
+	if err != nil {
+		t.Fatalf("load state: %v", err)
+	}
+	jstate.MarkEnriched(mdFile)
+	if saveErr := jstate.Save(journalDir); saveErr != nil {
+		t.Fatalf("save state: %v", saveErr)
+	}
+
+	// Verify it's marked enriched
+	jstate, _ = state.Load(journalDir)
+	if !jstate.IsEnriched(mdFile) {
+		t.Fatal("file should be marked enriched before --force re-export")
+	}
+
+	// Re-export with --force
+	exportHelper(t, tmpDir, "--force")
+
+	// Load state again and verify enriched was cleared
+	jstate, err = state.Load(journalDir)
+	if err != nil {
+		t.Fatalf("load state after force: %v", err)
+	}
+	if jstate.IsEnriched(mdFile) {
+		t.Error("--force re-export should clear enriched state")
+	}
+	// Exported state should still be set
+	if !jstate.IsExported(mdFile) {
+		t.Error("file should still be marked exported after --force re-export")
+	}
+}
+
+func TestRunRecallExport_SkipExistingLeavesFile(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-skipproj")
+	createTestSessionJSONL(t, projDir, "sess-skip-004", "skip-existing", "/home/test/skipproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	journalDir := filepath.Join(contextDir, "journal")
+	if err := os.MkdirAll(journalDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export to discover the filename
+	_, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Overwrite the file with custom content
+	customContent := "my custom notes - do not overwrite\n"
+	if err := os.WriteFile(path, []byte(customContent), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	// Re-export with --skip-existing
+	exportHelper(t, tmpDir, "--skip-existing")
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	if string(data) != customContent {
+		t.Errorf("--skip-existing should leave file unchanged\ngot:  %q\nwant: %q", string(data), customContent)
 	}
 }

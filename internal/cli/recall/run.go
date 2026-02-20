@@ -177,13 +177,16 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 			)
 
 			// Preserve enriched YAML frontmatter from existing file
-			if fileExists {
+			if fileExists && !force {
 				existing, readErr := os.ReadFile(filepath.Clean(path))
 				if readErr == nil {
 					if fm := extractFrontmatter(string(existing)); fm != "" {
 						content = fm + "\n" + stripFrontmatter(content)
 					}
 				}
+			}
+			if fileExists && force {
+				jstate.ClearEnriched(filename)
 			}
 			if fileExists && !force {
 				updated++
@@ -511,4 +514,3 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 
 	return nil
 }
-

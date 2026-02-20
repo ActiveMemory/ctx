@@ -177,6 +177,50 @@ func TestQueryHelpers(t *testing.T) {
 	}
 }
 
+func TestClearEnriched(t *testing.T) {
+	s := &JournalState{
+		Version: CurrentVersion,
+		Entries: map[string]FileState{
+			"test.md": {
+				Exported: "2026-01-21",
+				Enriched: "2026-01-22",
+			},
+		},
+	}
+
+	if !s.IsEnriched("test.md") {
+		t.Fatal("should be enriched before clear")
+	}
+
+	s.ClearEnriched("test.md")
+
+	if s.IsEnriched("test.md") {
+		t.Error("should not be enriched after ClearEnriched")
+	}
+	// Other fields should be untouched
+	if !s.IsExported("test.md") {
+		t.Error("exported should be preserved after ClearEnriched")
+	}
+}
+
+func TestClearEnriched_NoOp(t *testing.T) {
+	s := &JournalState{
+		Version: CurrentVersion,
+		Entries: map[string]FileState{
+			"test.md": {Exported: "2026-01-21"},
+		},
+	}
+
+	// Should not panic on file that isn't enriched
+	s.ClearEnriched("test.md")
+	if s.IsEnriched("test.md") {
+		t.Error("should remain unenriched")
+	}
+
+	// Should not panic on missing entry
+	s.ClearEnriched("nonexistent.md")
+}
+
 func TestMark(t *testing.T) {
 	s := &JournalState{
 		Version: CurrentVersion,

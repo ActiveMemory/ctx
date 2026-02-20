@@ -145,6 +145,14 @@ func (s *JournalState) Rename(oldName, newName string) {
 	delete(s.Entries, oldName)
 }
 
+// ClearEnriched removes the enriched date for a file, resetting it to
+// unenriched. This is used when --force re-export discards frontmatter.
+func (s *JournalState) ClearEnriched(filename string) {
+	fs := s.Entries[filename]
+	fs.Enriched = ""
+	s.Entries[filename] = fs
+}
+
 // IsEnriched reports whether the file has been enriched.
 func (s *JournalState) IsEnriched(filename string) bool {
 	return s.Entries[filename].Enriched != ""
