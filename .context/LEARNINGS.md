@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-20 | Default export already preserves enrichment — T2.1 was partially stale |
+| 2026-02-20 | Own the codebase: fix pre-existing lint issues |
 | 2026-02-20 | details tag cannot wrap pre blocks with blank lines |
 | 2026-02-20 | pymdownx.highlight hijacks pre/code blocks |
 | 2026-02-20 | Journal site normalizeContent: three-layer tool output fix |
@@ -94,6 +96,26 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-20-142442] Default export already preserves enrichment — T2.1 was partially stale
+
+**Context**: Investigated ctx recall export --update and found the default behavior already preserves YAML frontmatter during re-export. The --force flag has a bug where it claims to discard frontmatter but does not.
+
+**Lesson**: Always read the current code before speccing a feature — the need may already be met, and the real work may be a bug fix rather than a new feature.
+
+**Application**: When speccing tasks from the backlog, investigate current state first. Rewrite the task to reflect what is actually needed.
+
+---
+
+## [2026-02-20-142441] Own the codebase: fix pre-existing lint issues
+
+**Context**: make lint failed on pre-existing SA9003 and goconst violations. We initially committed without running make lint.
+
+**Lesson**: A good agent owns the full codebase — if lint is broken, fix it regardless of who introduced it. Always run make lint, not just targeted linting, before committing.
+
+**Application**: Run make lint as part of every pre-commit check and fix any issues found even if pre-existing.
 
 ---
 

@@ -2,6 +2,7 @@
 title: "Parallel Agents, Merge Debt, and the Myth of Overnight Progress"
 date: 2026-02-17
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - agent workflows
   - parallelism
@@ -191,10 +192,10 @@ You sleep. The machine produces thousands of lines.
 
 In the morning:
 
-- You read;
-- You untangle;
-- You reconstruct intent;
-- You spend a day making it shippable.
+* You read;
+* You untangle;
+* You reconstruct intent;
+* **You spend a day making it shippable**.
 
 In retrospect, **nothing** was accelerated. 
 
@@ -205,13 +206,15 @@ The bottleneck moved from typing to **comprehension**.
     the loop is a net loss.
 
     Progress is not measured in generated code.
+
     Progress is measured in **verified, mergeable change**.
 
 The [`ctx` Manifesto](../index.md) calls this out directly:
 
-> **Verified reality is the scoreboard.**
->
-> The only truth that compounds is verified change in the real world.
+!!! tip "The Scoreboard"
+    **Verified reality is the scoreboard.**
+
+    The only truth that compounds is verified change in the real world.
 
 An overnight run that produces 3,000 lines nobody reviewed is not
 3,000 lines of progress: It is 3,000 lines of **liability** until
@@ -266,7 +269,7 @@ The most valuable skills are not prompts:
 
 They are **constraints embedded in the toolchain**.
 
-For example: the agent cannot push.
+For example: The agent cannot push.
 
 `git push` becomes:
 
@@ -393,7 +396,7 @@ boundaries that make parallelism real.
 Otherwise, you are **not** scaling cognition; you are scaling
 **interference**.
 
-The Manifesto's thesis holds:
+[The `ctx` Manifesto](https://ctx.ist/)'s thesis holds:
 
 > **Without ctx, intelligence resets. With ctx, creation compounds.**
 

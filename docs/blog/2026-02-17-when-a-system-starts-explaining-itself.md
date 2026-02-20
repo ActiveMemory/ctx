@@ -8,6 +8,7 @@
 title: "When a System Starts Explaining Itself"
 date: 2026-02-17
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - field notes
   - adoption signals

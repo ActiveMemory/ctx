@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-20 | No --update flag needed for export — default is the update mode |
 | 2026-02-20 | Defencify journal site: pre/code replaces fenced code blocks |
 | 2026-02-20 | Code-level normalize replaces AI source normalization |
 | 2026-02-20 | Title length limit of 75 characters for journal entries |
@@ -44,6 +45,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-20-142444] No --update flag needed for export — default is the update mode
+
+**Status**: Accepted
+
+**Context**: T2.1 requested ctx recall export --update to preserve enrichments during re-export
+
+**Decision**: No --update flag needed for export — default is the update mode
+
+**Rationale**: The default behavior already preserves enriched YAML frontmatter. Adding a redundant flag increases API surface without value. The real fix is making --force work correctly.
+
+**Consequences**: T2.1 broken into 4 subtasks focused on the --force bug, state cleanup, tests, and docs. No new CLI flag added.
+
+---
 
 ## [2026-02-20-121937] Defencify journal site: pre/code replaces fenced code blocks
 
