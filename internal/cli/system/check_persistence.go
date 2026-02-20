@@ -166,6 +166,8 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 		cmd.Println("│ Have you discovered learnings, made decisions,")
 		cmd.Println("│ established conventions, or completed tasks")
 		cmd.Println("│ worth persisting?")
+		cmd.Println("│")
+		cmd.Println("│ Run /ctx-wrap-up to capture session context.")
 		cmd.Println("└──────────────────────────────────────────────────")
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", state.Count, sinceNudge))

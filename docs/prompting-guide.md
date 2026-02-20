@@ -191,7 +191,9 @@ Use it at the end of the session or before switching topics.
 
 * "*Let's persist what we did*"
 * "*Update the context files*"
-* `/ctx-reflect` (*Agent Skill in Claude Code*)
+* `/ctx-wrap-up` — the recommended end-of-session ceremony
+  (see [Session Ceremonies](recipes/session-ceremonies.md))
+* `/ctx-reflect` — mid-session reflection checkpoint
 
 ---
 
@@ -273,6 +275,7 @@ Skills are formalized prompts. Use them by name:
 | `/ctx-status`           | Quick context summary                          |
 | `/ctx-agent`            | Load full context packet                       |
 | `/ctx-remember`         | Recall project context and structured readback |
+| `/ctx-wrap-up`          | End-of-session context persistence             |
 | `/ctx-recall`           | Browse session history for past discussions    |
 | `/ctx-reflect`          | Structured reflection checkpoint               |
 | `/ctx-next`             | Suggest what to work on next                   |
@@ -284,8 +287,18 @@ Skills are formalized prompts. Use them by name:
 | `/ctx-archive`          | Archive completed tasks                        |
 | `/check-links`          | Audit docs for dead links                      |
 
+!!! note "Ceremony vs. Workflow Skills"
+    Most skills work **conversationally**: "what should we work on?"
+    triggers `/ctx-next`, "save that as a learning" triggers
+    `/ctx-add-learning`. Natural language is the recommended approach.
+
+    Two skills are the exception: `/ctx-remember` and `/ctx-wrap-up`
+    are **ceremony skills** for session boundaries. Invoke them as
+    **explicit slash commands** — conversational triggers risk partial
+    execution. See [Session Ceremonies](recipes/session-ceremonies.md).
+
 Skills combine a prompt, tool permissions, and domain knowledge
-into a single invocation. 
+into a single invocation.
 
 See [Integrations](integrations.md) for setup details.
 
@@ -320,6 +333,7 @@ so far, here are some prompts that tend to produce poor results:
 | Validate        | "*Is this consistent with our decisions?*" |
 | Impact analysis | "*What would break if we...*"              |
 | Reflect         | `/ctx-reflect`                             |
+| Wrap up         | `/ctx-wrap-up`                             |
 | Persist         | "*Add this as a learning*"                 |
 | Explore         | "*How does X work in this codebase?*"      |
 | Sanity check    | "*Is this the right approach?*"            |

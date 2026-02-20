@@ -18,12 +18,13 @@ This recipe walks through a complete session, from opening your editor to
 persisting context before you close it, so you can see how each piece connects.
 
 !!! tip "TL;DR"
-    1. **Load**: "Do you remember?" or `/ctx-remember`
+    1. **Load**: `/ctx-remember` — load context, get structured readback
     2. **Orient**: `/ctx-status` — check file health and token usage
     3. **Pick**: `/ctx-next` — choose what to work on
     4. **Work**: implement, test, iterate
     5. **Commit**: `/ctx-commit` — commit and capture decisions/learnings
-    6. **Reflect**: `/ctx-reflect` — identify what to persist
+    6. **Reflect**: `/ctx-reflect` — identify what to persist (at milestones)
+    7. **Wrap up**: `/ctx-wrap-up` — end-of-session ceremony
 
     Read on for the full walkthrough with examples.
 
@@ -280,25 +281,28 @@ root cause, that is worth a reflection checkpoint.
 
 ### Step 7: Persist Before Ending
 
-Before ending the session, make sure any outstanding learnings and decisions
-are captured:
+Before ending the session, run the wrap-up ceremony to capture outstanding
+learnings, decisions, conventions, and tasks:
 
 ```
-/ctx-reflect
+/ctx-wrap-up
 ```
 
-The agent will review what happened during the session and offer to persist
-any outstanding learnings, decisions, or task updates.
+The skill gathers signal from `git diff`, recent commits, and the
+conversation, then proposes structured candidates for your approval. After
+you select which to keep, it persists them via `ctx add` and offers
+`/ctx-commit` if uncommitted changes remain.
 
 Session transcripts are automatically captured by Claude Code and can be
 browsed later with `ctx recall list` and `ctx recall show`.
 
-!!! tip "Be Conversational"
-    Phrases like "*let's wrap up*", "*save our progress*", or
-    "*I'm done for today*" will trigger a **reflection and persist flow**.
+!!! tip "Ceremony Skills"
+    `/ctx-remember` at session start and `/ctx-wrap-up` at session end are
+    **ceremony skills** — invoke them as explicit slash commands for
+    completeness, not conversationally.
 
-    The agent will reflect on what happened and persist outstanding learnings
-    and decisions in one pass.
+    See [Session Ceremonies](session-ceremonies.md) for details on why
+    these two skills are the exception to the conversational rule.
 
 ---
 
@@ -406,12 +410,13 @@ of slash commands.
 
 Quick-reference checklist for a complete session:
 
-* [ ] **Load**: "Do you remember?" or `/ctx-remember`
-* [ ] **Orient**: `/ctx-status`: check file health and token usage
-* [ ] **Pick**: `/ctx-next`: choose what to work on
+* [ ] **Load**: `/ctx-remember` — load context and confirm readback
+* [ ] **Orient**: `/ctx-status` — check file health and token usage
+* [ ] **Pick**: `/ctx-next` — choose what to work on
 * [ ] **Work**: implement, test, iterate (scope with "only change X")
-* [ ] **Commit**: `/ctx-commit`: commit and capture decisions/learnings
-* [ ] **Reflect**: `/ctx-reflect`: identify what to persist (at milestones)
+* [ ] **Commit**: `/ctx-commit` — commit and capture decisions/learnings
+* [ ] **Reflect**: `/ctx-reflect` — identify what to persist (at milestones)
+* [ ] **Wrap up**: `/ctx-wrap-up` — end-of-session ceremony
 
 Conversational equivalents: you can drive the same lifecycle with plain language:
 
@@ -423,6 +428,7 @@ Conversational equivalents: you can drive the same lifecycle with plain language
 | Work    | --                  | "Only change files in internal/cache/"                  |
 | Commit  | `/ctx-commit`       | "Commit this" / "Ship it"                               |
 | Reflect | `/ctx-reflect`      | "What did we learn?" / *(agent offers at milestones)*   |
+| Wrap up | `/ctx-wrap-up`      | *(use the slash command for completeness)*               |
 
 The agent understands both columns.
 
@@ -474,6 +480,8 @@ complete, and archive tasks across sessions.
 
 ## See Also
 
+* [Session Ceremonies](session-ceremonies.md): why `/ctx-remember` and
+  `/ctx-wrap-up` are explicit slash commands, not conversational
 * [CLI Reference](../cli-reference.md): full documentation for all `ctx` commands
 * [Prompting Guide](../prompting-guide.md): effective prompts for ctx-enabled projects
 * [Tracking Work Across Sessions](task-management.md): deep dive on task management

@@ -115,8 +115,15 @@ it will fill in as you capture lessons during development.
 
 ## Step 4: Start an AI Session
 
-With **Claude Code** (and the ctx plugin), context loads automatically — just
-start a session and it's there.
+With **Claude Code** (and the ctx plugin), start every session with:
+
+```
+/ctx-remember
+```
+
+This loads your context and presents a structured readback so you can
+confirm the agent knows what is going on. Context also loads automatically
+via hooks, but the explicit ceremony gives you a readback to verify.
 
 With **VS Code Copilot Chat** (and the
 [ctx extension](integrations.md#vs-code-chat-extension-ctx)), type

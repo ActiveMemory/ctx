@@ -24,6 +24,7 @@
       {
         "hooks": [
           {"type": "command", "command": "ctx system check-context-size"},
+          {"type": "command", "command": "ctx system check-ceremonies"},
           {"type": "command", "command": "ctx system check-persistence"},
           {"type": "command", "command": "ctx system check-journal"},
           {"type": "command", "command": "ctx system check-version"}

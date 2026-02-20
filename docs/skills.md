@@ -38,6 +38,7 @@ opinionated behavior on top.
 | Skill                                                | Description                                            | Type           |
 |------------------------------------------------------|--------------------------------------------------------|----------------|
 | [`/ctx-remember`](#ctx-remember)                     | Recall project context and present structured readback | user-invocable |
+| [`/ctx-wrap-up`](#ctx-wrap-up)                       | End-of-session context persistence ceremony            | user-invocable |
 | [`/ctx-status`](#ctx-status)                         | Show context summary with interpretation               | user-invocable |
 | [`/ctx-agent`](#ctx-agent)                           | Load full context packet for AI consumption            | user-invocable |
 | [`/ctx-next`](#ctx-next)                             | Suggest 1-3 concrete next actions with rationale       | user-invocable |
@@ -71,14 +72,22 @@ opinionated behavior on top.
 
 Skills for starting, running, and ending a productive session.
 
+!!! note "Session Ceremonies"
+    Two skills in this group are **ceremony skills**: `/ctx-remember` (session
+    start) and `/ctx-wrap-up` (session end). Unlike other skills that work
+    conversationally, these should be invoked as **explicit slash commands**
+    for completeness. See [Session Ceremonies](recipes/session-ceremonies.md).
+
 ### `/ctx-remember`
 
 Recall project context and present a structured readback.
+**Ceremony skill** — invoke explicitly at session start.
 
 **Wraps**: `ctx agent --budget 4000`, `ctx recall list --limit 3`,
 reads TASKS.md, DECISIONS.md, LEARNINGS.md
 
-**See also**: [The Complete Session](recipes/session-lifecycle.md)
+**See also**: [Session Ceremonies](recipes/session-ceremonies.md),
+[The Complete Session](recipes/session-lifecycle.md)
 
 ---
 
@@ -141,6 +150,24 @@ manual TASKS.md updates
 
 **See also**: [The Complete Session](recipes/session-lifecycle.md),
 [Persisting Decisions, Learnings, and Conventions](recipes/knowledge-capture.md)
+
+---
+
+### `/ctx-wrap-up`
+
+End-of-session context persistence ceremony. Gathers signal from
+git diff, recent commits, and conversation themes. Proposes
+candidates (learnings, decisions, conventions, tasks) with complete
+structured fields for user approval, then persists via `ctx add`.
+Offers `/ctx-commit` if uncommitted changes remain.
+**Ceremony skill** — invoke explicitly at session end.
+
+**Wraps**: `git diff --stat`, `git log`, `ctx add learning`,
+`ctx add decision`, `ctx add convention`, `ctx add task`,
+chains to `/ctx-commit`
+
+**See also**: [Session Ceremonies](recipes/session-ceremonies.md),
+[The Complete Session](recipes/session-lifecycle.md)
 
 ---
 

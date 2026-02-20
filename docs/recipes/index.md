@@ -90,6 +90,17 @@ capture, reflecting, and saving a snapshot.
 
 ---
 
+### [Session Ceremonies](session-ceremonies.md)
+
+The two bookend rituals for every session: `/ctx-remember` at the
+start to load and confirm context, `/ctx-wrap-up` at the end to
+review the session and persist learnings, decisions, and tasks.
+
+**Uses**: `/ctx-remember`, `/ctx-wrap-up`, `/ctx-commit`, `ctx agent`,
+`ctx add`
+
+---
+
 ### [Tracking Work Across Sessions](task-management.md)
 
 Add, prioritize, complete, snapshot, and archive tasks. Keep
