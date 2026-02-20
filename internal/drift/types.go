@@ -14,6 +14,8 @@ const (
 	IssueMissing IssueType = "missing_file"
 	// IssueStaleAge indicates a context file that hasn't been modified recently.
 	IssueStaleAge IssueType = "stale_age"
+	// IssueEntryCount indicates a knowledge file has too many entries.
+	IssueEntryCount IssueType = "entry_count"
 )
 
 // StatusType represents the overall status of a drift report.
@@ -42,6 +44,8 @@ const (
 	CheckRequiredFiles CheckName = "required_files"
 	// CheckFileAge checks whether context files have been modified recently.
 	CheckFileAge CheckName = "file_age_check"
+	// CheckEntryCount checks whether knowledge files have excessive entries.
+	CheckEntryCount CheckName = "entry_count_check"
 )
 
 // Issue represents a detected drift issue.

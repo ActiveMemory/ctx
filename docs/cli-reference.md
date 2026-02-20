@@ -331,6 +331,12 @@ ctx drift [flags]
 - Task references are valid
 - Constitution rules aren't violated (*heuristic*)
 - Staleness indicators (*old files, many completed tasks*)
+- Entry count — warns when LEARNINGS.md or DECISIONS.md exceed configurable
+  thresholds (default: 30 learnings, 20 decisions). Configure via `.contextrc`:
+  ```yaml
+  entry_count_learnings: 30   # warn above this (0 = disable)
+  entry_count_decisions: 20   # warn above this (0 = disable)
+  ```
 
 **Example**:
 

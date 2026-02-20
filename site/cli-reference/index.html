@@ -3848,11 +3848,16 @@ their full body. Entries that don't fit get title-only summaries in an
 <li>Task references are valid</li>
 <li>Constitution rules aren't violated (<em>heuristic</em>)</li>
 <li>Staleness indicators (<em>old files, many completed tasks</em>)</li>
+<li>Entry count — warns when LEARNINGS.md or DECISIONS.md exceed configurable
+  thresholds (default: 30 learnings, 20 decisions). Configure via <code>.contextrc</code>:
+  <div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">   </span><span class="c1"># warn above this (0 = disable)</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">   </span><span class="c1"># warn above this (0 = disable)</span>
+</span></code></pre></div></li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>drift
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>drift
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
 </span></code></pre></div>
 <p><strong>Exit codes</strong>:</p>
 <table>
@@ -3880,7 +3885,7 @@ their full body. Entries that don't fit get title-only summaries in an
 <hr />
 <h3 id="ctx-sync"><code>ctx sync</code><a class="headerlink" href="#ctx-sync" title="Permanent link">&para;</a></h3>
 <p>Reconcile context with the current codebase state.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -3905,8 +3910,8 @@ their full body. Entries that don't fit get title-only summaries in an
 <li>Identifies stale or outdated context</li>
 </ul>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>sync
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>sync
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-compact"><code>ctx compact</code><a class="headerlink" href="#ctx-compact" title="Permanent link">&para;</a></h3>
@@ -3916,7 +3921,7 @@ their full body. Entries that don't fit get title-only summaries in an
 <li>Archives old decisions and learnings (older than 90 days by default)</li>
 <li>Removes empty sections</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>compact<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>compact<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -3937,13 +3942,13 @@ their full body. Entries that don't fit get title-only summaries in an
 also archives decisions and learnings older than <code>archive_knowledge_after_days</code>
 (default 90), keeping the most recent <code>archive_keep_recent</code> entries (default 5).</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>compact
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>compact
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-completion"><code>ctx completion</code><a class="headerlink" href="#ctx-completion" title="Permanent link">&para;</a></h3>
 <p>Generate shell autocompletion scripts.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
 </span></code></pre></div>
 <h4 id="subcommands">Subcommands<a class="headerlink" href="#subcommands" title="Permanent link">&para;</a></h4>
 <table>
@@ -3976,19 +3981,19 @@ also archives decisions and learnings older than <code>archive_knowledge_after_d
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Bash</label><label for="__tabbed_1_2">Zsh</label><label for="__tabbed_1_3">Fish</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Add to ~/.bashrc</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Add to ~/.bashrc</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Add to ~/.zshrc</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Add to ~/.zshrc</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>ctx<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nb">source</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># Or save to completions directory</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ctx.fish
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nb">source</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># Or save to completions directory</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>ctx<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ctx.fish
 </span></code></pre></div>
 </div>
 </div>
@@ -3996,11 +4001,11 @@ also archives decisions and learnings older than <code>archive_knowledge_after_d
 <hr />
 <h3 id="ctx-tasks"><code>ctx tasks</code><a class="headerlink" href="#ctx-tasks" title="Permanent link">&para;</a></h3>
 <p>Manage task archival and snapshots.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-tasks-archive"><code>ctx tasks archive</code><a class="headerlink" href="#ctx-tasks-archive" title="Permanent link">&para;</a></h4>
 <p>Move completed tasks from TASKS.md to a timestamped archive file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4021,12 +4026,12 @@ also archives decisions and learnings older than <code>archive_knowledge_after_d
 (<code>tasks-YYYY-MM-DD.md</code>). Completed tasks (marked with <code>[x]</code>) are moved;
 pending tasks (<code>[ ]</code>) remain in TASKS.md.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run
 </span></code></pre></div>
 <h4 id="ctx-tasks-snapshot"><code>ctx tasks snapshot</code><a class="headerlink" href="#ctx-tasks-snapshot" title="Permanent link">&para;</a></h4>
 <p>Create a point-in-time snapshot of TASKS.md without modifying the original.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="o">[</span>name<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="o">[</span>name<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4035,60 +4040,60 @@ pending tasks (<code>[ ]</code>) remain in TASKS.md.</p>
 <p>Snapshots are stored in <code>.context/archive/</code> with timestamped names
 (<code>tasks-&lt;name&gt;-YYYY-MM-DD-HHMM.md</code>).</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-permissions"><code>ctx permissions</code><a class="headerlink" href="#ctx-permissions" title="Permanent link">&para;</a></h3>
 <p>Manage Claude Code permission snapshots.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-permissions-snapshot"><code>ctx permissions snapshot</code><a class="headerlink" href="#ctx-permissions-snapshot" title="Permanent link">&para;</a></h4>
 <p>Save <code>.claude/settings.local.json</code> as the golden image.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
 </span></code></pre></div>
 <p>Creates <code>.claude/settings.golden.json</code> as a byte-for-byte copy of the
 current settings. Overwrites if the golden file already exists.</p>
 <p>The golden file is meant to be committed to version control and shared
 with the team.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1"># Saved golden image: .claude/settings.golden.json</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="c1"># Saved golden image: .claude/settings.golden.json</span>
 </span></code></pre></div>
 <h4 id="ctx-permissions-restore"><code>ctx permissions restore</code><a class="headerlink" href="#ctx-permissions-restore" title="Permanent link">&para;</a></h4>
 <p>Replace <code>settings.local.json</code> with the golden image.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>restore
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>restore
 </span></code></pre></div>
 <p>Prints a diff of dropped (session-accumulated) and restored permissions.
 No-op if the files already match.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>restore
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># Dropped 3 session permission(s):</span>
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="c1">#   - Bash(cat /tmp/debug.log:*)</span>
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1">#   - Bash(rm /tmp/test-*:*)</span>
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1">#   - Bash(curl https://example.com:*)</span>
-</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="c1"># Restored from golden image.</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>restore
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1"># Dropped 3 session permission(s):</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="c1">#   - Bash(cat /tmp/debug.log:*)</span>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1">#   - Bash(rm /tmp/test-*:*)</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1">#   - Bash(curl https://example.com:*)</span>
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="c1"># Restored from golden image.</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-decisions"><code>ctx decisions</code><a class="headerlink" href="#ctx-decisions" title="Permanent link">&para;</a></h3>
 <p>Manage the DECISIONS.md file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-decisions-reindex"><code>ctx decisions reindex</code><a class="headerlink" href="#ctx-decisions-reindex" title="Permanent link">&para;</a></h4>
 <p>Regenerate the quick-reference index at the top of DECISIONS.md.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>The index is a compact table showing the date and title for each decision,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to DECISIONS.md or when migrating existing
 files to use the index format.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
-</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
 </span></code></pre></div>
 <h4 id="ctx-decisions-archive"><code>ctx decisions archive</code><a class="headerlink" href="#ctx-decisions-archive" title="Permanent link">&para;</a></h4>
 <p>Archive old or superseded decisions from DECISIONS.md to <code>.context/archive/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4131,31 +4136,31 @@ files to use the index format.</p>
 (body contains <code>~~Superseded</code>). The most recent <code>--keep</code> entries are always
 preserved regardless of age.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w">                </span><span class="c1"># Archive old decisions (90+ days)</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">      </span><span class="c1"># Preview what would be archived</span>
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--days<span class="w"> </span><span class="m">30</span><span class="w">      </span><span class="c1"># Lower the threshold</span>
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--all<span class="w"> </span>--keep<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="c1"># Archive everything except 3 newest</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w">                </span><span class="c1"># Archive old decisions (90+ days)</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">      </span><span class="c1"># Preview what would be archived</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--days<span class="w"> </span><span class="m">30</span><span class="w">      </span><span class="c1"># Lower the threshold</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--all<span class="w"> </span>--keep<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="c1"># Archive everything except 3 newest</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-learnings"><code>ctx learnings</code><a class="headerlink" href="#ctx-learnings" title="Permanent link">&para;</a></h3>
 <p>Manage the LEARNINGS.md file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-learnings-reindex"><code>ctx learnings reindex</code><a class="headerlink" href="#ctx-learnings-reindex" title="Permanent link">&para;</a></h4>
 <p>Regenerate the quick-reference index at the top of LEARNINGS.md.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>The index is a compact table showing the date and title for each learning,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to LEARNINGS.md or when migrating existing
 files to use the index format.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
 </span></code></pre></div>
 <h4 id="ctx-learnings-archive"><code>ctx learnings archive</code><a class="headerlink" href="#ctx-learnings-archive" title="Permanent link">&para;</a></h4>
 <p>Archive old or superseded learnings from LEARNINGS.md to <code>.context/archive/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4198,19 +4203,19 @@ files to use the index format.</p>
 (body contains <code>~~Superseded</code>). The most recent <code>--keep</code> entries are always
 preserved regardless of age.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w">                </span><span class="c1"># Archive old learnings (90+ days)</span>
-</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">      </span><span class="c1"># Preview what would be archived</span>
-</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--days<span class="w"> </span><span class="m">30</span><span class="w">      </span><span class="c1"># Lower the threshold</span>
-</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--all<span class="w"> </span>--keep<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="c1"># Archive everything except 3 newest</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w">                </span><span class="c1"># Archive old learnings (90+ days)</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">      </span><span class="c1"># Preview what would be archived</span>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--days<span class="w"> </span><span class="m">30</span><span class="w">      </span><span class="c1"># Lower the threshold</span>
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--all<span class="w"> </span>--keep<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="c1"># Archive everything except 3 newest</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-recall"><code>ctx recall</code><a class="headerlink" href="#ctx-recall" title="Permanent link">&para;</a></h3>
 <p>Browse and search AI session history from Claude Code and other tools.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-recall-list"><code>ctx recall list</code><a class="headerlink" href="#ctx-recall-list" title="Permanent link">&para;</a></h4>
 <p>List all parsed sessions.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4247,14 +4252,14 @@ preserved regardless of age.</p>
 <p>Sessions are sorted by date (newest first) and display slug, project,
 start time, duration, turn count, and token usage.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list
-</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
-</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--project<span class="w"> </span>ctx
-</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--tool<span class="w"> </span>claude-code
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--project<span class="w"> </span>ctx
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span>list<span class="w"> </span>--tool<span class="w"> </span>claude-code
 </span></code></pre></div>
 <h4 id="ctx-recall-show"><code>ctx recall show</code><a class="headerlink" href="#ctx-recall-show" title="Permanent link">&para;</a></h4>
 <p>Show details of a specific session.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span><span class="o">[</span>session-id<span class="o">]</span><span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span><span class="o">[</span>session-id<span class="o">]</span><span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4281,14 +4286,14 @@ start time, duration, turn count, and token usage.</p>
 </table>
 <p>The session ID can be a full UUID, partial match, or session slug name.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>abc123
-</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>gleaming-wobbling-sutherland
-</span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest
-</span><span id="__span-46-4"><a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest<span class="w"> </span>--full
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>abc123
+</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>gleaming-wobbling-sutherland
+</span><span id="__span-47-3"><a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest
+</span><span id="__span-47-4"><a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>--latest<span class="w"> </span>--full
 </span></code></pre></div>
 <h4 id="ctx-recall-export"><code>ctx recall export</code><a class="headerlink" href="#ctx-recall-export" title="Permanent link">&para;</a></h4>
 <p>Export sessions to editable journal files in <code>.context/journal/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>session-id<span class="o">]</span><span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>session-id<span class="o">]</span><span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4324,19 +4329,19 @@ is regenerated.</p>
 <p>The <code>journal/</code> directory should be gitignored (like <code>sessions/</code>) since it
 contains raw conversation data.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">                </span><span class="c1"># Export one session</span>
-</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">                 </span><span class="c1"># Export/update all sessions</span>
-</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--skip-existing<span class="w"> </span><span class="c1"># Skip files that already exist</span>
-</span><span id="__span-48-4"><a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force<span class="w">         </span><span class="c1"># Overwrite completely (lose frontmatter)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">                </span><span class="c1"># Export one session</span>
+</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">                 </span><span class="c1"># Export/update all sessions</span>
+</span><span id="__span-49-3"><a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--skip-existing<span class="w"> </span><span class="c1"># Skip files that already exist</span>
+</span><span id="__span-49-4"><a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force<span class="w">         </span><span class="c1"># Overwrite completely (lose frontmatter)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-journal"><code>ctx journal</code><a class="headerlink" href="#ctx-journal" title="Permanent link">&para;</a></h3>
 <p>Analyze and synthesize exported session files.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-journal-site"><code>ctx journal site</code><a class="headerlink" href="#ctx-journal-site" title="Permanent link">&para;</a></h4>
 <p>Generate a static site from journal entries in <code>.context/journal/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4368,17 +4373,17 @@ contains raw conversation data.</p>
 <p>Creates a <code>zensical</code>-compatible site structure with an index page listing
 all sessions by date, and individual pages for each journal entry.</p>
 <p>Requires <code>zensical</code> to be installed for <code>--build</code> or <code>--serve</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w">                    </span><span class="c1"># Generate in .context/journal-site/</span>
-</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--output<span class="w"> </span>~/public<span class="w">  </span><span class="c1"># Custom output directory</span>
-</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--build<span class="w">            </span><span class="c1"># Generate and build HTML</span>
-</span><span id="__span-52-4"><a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve<span class="w">            </span><span class="c1"># Generate and serve locally</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w">                    </span><span class="c1"># Generate in .context/journal-site/</span>
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--output<span class="w"> </span>~/public<span class="w">  </span><span class="c1"># Custom output directory</span>
+</span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--build<span class="w">            </span><span class="c1"># Generate and build HTML</span>
+</span><span id="__span-53-4"><a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve<span class="w">            </span><span class="c1"># Generate and serve locally</span>
 </span></code></pre></div>
 <h4 id="ctx-journal-obsidian"><code>ctx journal obsidian</code><a class="headerlink" href="#ctx-journal-obsidian" title="Permanent link">&para;</a></h4>
 <p>Generate an Obsidian vault from journal entries in <code>.context/journal/</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4408,29 +4413,29 @@ all sessions by date, and individual pages for each journal entry.</p>
 <p>No external dependencies are required:
 Open the output directory as an Obsidian  vault directly.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w">                          </span><span class="c1"># Generate in .context/journal-obsidian/</span>
-</span><span id="__span-54-2"><a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx<span class="w">    </span><span class="c1"># Custom output directory</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w">                          </span><span class="c1"># Generate in .context/journal-obsidian/</span>
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx<span class="w">    </span><span class="c1"># Custom output directory</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-serve"><code>ctx serve</code><a class="headerlink" href="#ctx-serve" title="Permanent link">&para;</a></h3>
 <p>Serve a static site locally via <code>zensical</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>ctx<span class="w"> </span>serve<span class="w"> </span><span class="o">[</span>directory<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>ctx<span class="w"> </span>serve<span class="w"> </span><span class="o">[</span>directory<span class="o">]</span>
 </span></code></pre></div>
 <p>If no directory is specified, serves the journal site (<code>.context/journal-site</code>).</p>
 <p>Requires <code>zensical</code> to be installed:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>ctx<span class="w"> </span>serve<span class="w">                           </span><span class="c1"># Serve journal site</span>
-</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">     </span><span class="c1"># Serve specific directory</span>
-</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./docs<span class="w">                    </span><span class="c1"># Serve docs folder</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>ctx<span class="w"> </span>serve<span class="w">                           </span><span class="c1"># Serve journal site</span>
+</span><span id="__span-58-2"><a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">     </span><span class="c1"># Serve specific directory</span>
+</span><span id="__span-58-3"><a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./docs<span class="w">                    </span><span class="c1"># Serve docs folder</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-watch"><code>ctx watch</code><a class="headerlink" href="#ctx-watch" title="Permanent link">&para;</a></h3>
 <p>Watch for AI output and auto-apply context updates.</p>
 <p>Parses <code>&lt;context-update&gt;</code> XML commands from AI output and applies
 them to context files.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>ctx<span class="w"> </span>watch<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>ctx<span class="w"> </span>watch<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4452,19 +4457,19 @@ them to context files.</p>
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="c1"># Watch stdin</span>
-</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>ai-tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>watch
-</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a>
-</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a><span class="c1"># Watch a log file</span>
-</span><span id="__span-59-5"><a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/path/to/ai-output.log
-</span><span id="__span-59-6"><a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a>
-</span><span id="__span-59-7"><a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a><span class="c1"># Preview without applying</span>
-</span><span id="__span-59-8"><a id="__codelineno-59-8" name="__codelineno-59-8" href="#__codelineno-59-8"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--dry-run
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="c1"># Watch stdin</span>
+</span><span id="__span-60-2"><a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a>ai-tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>watch
+</span><span id="__span-60-3"><a id="__codelineno-60-3" name="__codelineno-60-3" href="#__codelineno-60-3"></a>
+</span><span id="__span-60-4"><a id="__codelineno-60-4" name="__codelineno-60-4" href="#__codelineno-60-4"></a><span class="c1"># Watch a log file</span>
+</span><span id="__span-60-5"><a id="__codelineno-60-5" name="__codelineno-60-5" href="#__codelineno-60-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/path/to/ai-output.log
+</span><span id="__span-60-6"><a id="__codelineno-60-6" name="__codelineno-60-6" href="#__codelineno-60-6"></a>
+</span><span id="__span-60-7"><a id="__codelineno-60-7" name="__codelineno-60-7" href="#__codelineno-60-7"></a><span class="c1"># Preview without applying</span>
+</span><span id="__span-60-8"><a id="__codelineno-60-8" name="__codelineno-60-8" href="#__codelineno-60-8"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--dry-run
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-hook"><code>ctx hook</code><a class="headerlink" href="#ctx-hook" title="Permanent link">&para;</a></h3>
 <p>Generate AI tool integration configuration.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>&lt;tool&gt;<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>ctx<span class="w"> </span>hook<span class="w"> </span>&lt;tool&gt;<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4520,12 +4525,12 @@ them to context files.</p>
 Running <code>ctx hook claude-code</code> prints plugin install instructions.</p>
 </div>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a><span class="c1"># Print hook instructions to stdout</span>
-</span><span id="__span-61-2"><a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>cursor
-</span><span id="__span-61-3"><a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>aider
-</span><span id="__span-61-4"><a id="__codelineno-61-4" name="__codelineno-61-4" href="#__codelineno-61-4"></a>
-</span><span id="__span-61-5"><a id="__codelineno-61-5" name="__codelineno-61-5" href="#__codelineno-61-5"></a><span class="c1"># Generate and write .github/copilot-instructions.md</span>
-</span><span id="__span-61-6"><a id="__codelineno-61-6" name="__codelineno-61-6" href="#__codelineno-61-6"></a>ctx<span class="w"> </span>hook<span class="w"> </span>copilot<span class="w"> </span>--write
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a><span class="c1"># Print hook instructions to stdout</span>
+</span><span id="__span-62-2"><a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>ctx<span class="w"> </span>hook<span class="w"> </span>cursor
+</span><span id="__span-62-3"><a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a>ctx<span class="w"> </span>hook<span class="w"> </span>aider
+</span><span id="__span-62-4"><a id="__codelineno-62-4" name="__codelineno-62-4" href="#__codelineno-62-4"></a>
+</span><span id="__span-62-5"><a id="__codelineno-62-5" name="__codelineno-62-5" href="#__codelineno-62-5"></a><span class="c1"># Generate and write .github/copilot-instructions.md</span>
+</span><span id="__span-62-6"><a id="__codelineno-62-6" name="__codelineno-62-6" href="#__codelineno-62-6"></a>ctx<span class="w"> </span>hook<span class="w"> </span>copilot<span class="w"> </span>--write
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-loop"><code>ctx loop</code><a class="headerlink" href="#ctx-loop" title="Permanent link">&para;</a></h3>
@@ -4533,7 +4538,7 @@ Running <code>ctx hook claude-code</code> prints plugin install instructions.</p
 <p>An autonomous loop continuously runs an AI assistant with the same prompt until
 a completion signal is detected, enabling iterative development where the
 AI builds on its previous work.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>ctx<span class="w"> </span>loop<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>ctx<span class="w"> </span>loop<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4579,36 +4584,36 @@ AI builds on its previous work.</p>
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a><span class="c1"># Generate loop.sh for Claude Code</span>
-</span><span id="__span-63-2"><a id="__codelineno-63-2" name="__codelineno-63-2" href="#__codelineno-63-2"></a>ctx<span class="w"> </span>loop
-</span><span id="__span-63-3"><a id="__codelineno-63-3" name="__codelineno-63-3" href="#__codelineno-63-3"></a>
-</span><span id="__span-63-4"><a id="__codelineno-63-4" name="__codelineno-63-4" href="#__codelineno-63-4"></a><span class="c1"># Generate for Aider with custom prompt</span>
-</span><span id="__span-63-5"><a id="__codelineno-63-5" name="__codelineno-63-5" href="#__codelineno-63-5"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>aider<span class="w"> </span>--prompt<span class="w"> </span>TASKS.md
-</span><span id="__span-63-6"><a id="__codelineno-63-6" name="__codelineno-63-6" href="#__codelineno-63-6"></a>
-</span><span id="__span-63-7"><a id="__codelineno-63-7" name="__codelineno-63-7" href="#__codelineno-63-7"></a><span class="c1"># Limit to 10 iterations</span>
-</span><span id="__span-63-8"><a id="__codelineno-63-8" name="__codelineno-63-8" href="#__codelineno-63-8"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-63-9"><a id="__codelineno-63-9" name="__codelineno-63-9" href="#__codelineno-63-9"></a>
-</span><span id="__span-63-10"><a id="__codelineno-63-10" name="__codelineno-63-10" href="#__codelineno-63-10"></a><span class="c1"># Output to custom file</span>
-</span><span id="__span-63-11"><a id="__codelineno-63-11" name="__codelineno-63-11" href="#__codelineno-63-11"></a>ctx<span class="w"> </span>loop<span class="w"> </span>-o<span class="w"> </span>my-loop.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="c1"># Generate loop.sh for Claude Code</span>
+</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>ctx<span class="w"> </span>loop
+</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a>
+</span><span id="__span-64-4"><a id="__codelineno-64-4" name="__codelineno-64-4" href="#__codelineno-64-4"></a><span class="c1"># Generate for Aider with custom prompt</span>
+</span><span id="__span-64-5"><a id="__codelineno-64-5" name="__codelineno-64-5" href="#__codelineno-64-5"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>aider<span class="w"> </span>--prompt<span class="w"> </span>TASKS.md
+</span><span id="__span-64-6"><a id="__codelineno-64-6" name="__codelineno-64-6" href="#__codelineno-64-6"></a>
+</span><span id="__span-64-7"><a id="__codelineno-64-7" name="__codelineno-64-7" href="#__codelineno-64-7"></a><span class="c1"># Limit to 10 iterations</span>
+</span><span id="__span-64-8"><a id="__codelineno-64-8" name="__codelineno-64-8" href="#__codelineno-64-8"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-64-9"><a id="__codelineno-64-9" name="__codelineno-64-9" href="#__codelineno-64-9"></a>
+</span><span id="__span-64-10"><a id="__codelineno-64-10" name="__codelineno-64-10" href="#__codelineno-64-10"></a><span class="c1"># Output to custom file</span>
+</span><span id="__span-64-11"><a id="__codelineno-64-11" name="__codelineno-64-11" href="#__codelineno-64-11"></a>ctx<span class="w"> </span>loop<span class="w"> </span>-o<span class="w"> </span>my-loop.sh
 </span></code></pre></div>
 <p><strong>Usage</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="c1"># Generate and run the loop</span>
-</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>ctx<span class="w"> </span>loop
-</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
-</span><span id="__span-64-4"><a id="__codelineno-64-4" name="__codelineno-64-4" href="#__codelineno-64-4"></a>./loop.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="c1"># Generate and run the loop</span>
+</span><span id="__span-65-2"><a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a>ctx<span class="w"> </span>loop
+</span><span id="__span-65-3"><a id="__codelineno-65-3" name="__codelineno-65-3" href="#__codelineno-65-3"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
+</span><span id="__span-65-4"><a id="__codelineno-65-4" name="__codelineno-65-4" href="#__codelineno-65-4"></a>./loop.sh
 </span></code></pre></div>
 <p>See <a href="../autonomous-loop/">Autonomous Loops</a> for detailed workflow documentation.</p>
 <hr />
 <h3 id="ctx-pad"><code>ctx pad</code><a class="headerlink" href="#ctx-pad" title="Permanent link">&para;</a></h3>
 <p>Encrypted scratchpad for sensitive one-liners that travel with the project.</p>
 <p>When invoked without a subcommand, lists all entries.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>ctx<span class="w"> </span>pad
-</span><span id="__span-65-2"><a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>ctx<span class="w"> </span>pad
+</span><span id="__span-66-2"><a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-pad-add"><code>ctx pad add</code><a class="headerlink" href="#ctx-pad-add" title="Permanent link">&para;</a></h4>
 <p>Append a new entry to the scratchpad.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span>&lt;text&gt;
-</span><span id="__span-66-2"><a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span>&lt;label&gt;<span class="w"> </span>--file<span class="w"> </span>&lt;path&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span>&lt;text&gt;
+</span><span id="__span-67-2"><a id="__codelineno-67-2" name="__codelineno-67-2" href="#__codelineno-67-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span>&lt;label&gt;<span class="w"> </span>--file<span class="w"> </span>&lt;path&gt;
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -4628,14 +4633,14 @@ AI builds on its previous work.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;DATABASE_URL=postgres://user:pass@host/db&quot;</span>
-</span><span id="__span-67-2"><a id="__codelineno-67-2" name="__codelineno-67-2" href="#__codelineno-67-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;DATABASE_URL=postgres://user:pass@host/db&quot;</span>
+</span><span id="__span-68-2"><a id="__codelineno-68-2" name="__codelineno-68-2" href="#__codelineno-68-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
 </span></code></pre></div>
 <h4 id="ctx-pad-show"><code>ctx pad show</code><a class="headerlink" href="#ctx-pad-show" title="Permanent link">&para;</a></h4>
 <p>Output the raw text of an entry by number. For blob entries, prints
 decoded file content (or writes to disk with <code>--out</code>).</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span>&lt;n&gt;
-</span><span id="__span-68-2"><a id="__codelineno-68-2" name="__codelineno-68-2" href="#__codelineno-68-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span>&lt;n&gt;<span class="w"> </span>--out<span class="w"> </span>&lt;path&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span>&lt;n&gt;
+</span><span id="__span-69-2"><a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span>&lt;n&gt;<span class="w"> </span>--out<span class="w"> </span>&lt;path&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4657,12 +4662,12 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">3</span>
-</span><span id="__span-69-2"><a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">3</span>
+</span><span id="__span-70-2"><a id="__codelineno-70-2" name="__codelineno-70-2" href="#__codelineno-70-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
 </span></code></pre></div>
 <h4 id="ctx-pad-rm"><code>ctx pad rm</code><a class="headerlink" href="#ctx-pad-rm" title="Permanent link">&para;</a></h4>
 <p>Remove an entry by number.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span>&lt;n&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>rm<span class="w"> </span>&lt;n&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4670,7 +4675,7 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 </ul>
 <h4 id="ctx-pad-edit"><code>ctx pad edit</code><a class="headerlink" href="#ctx-pad-edit" title="Permanent link">&para;</a></h4>
 <p>Replace, append to, or prepend to an entry.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span>&lt;n&gt;<span class="w"> </span><span class="o">[</span>text<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span>&lt;n&gt;<span class="w"> </span><span class="o">[</span>text<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4705,15 +4710,15 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;new text&quot;</span>
-</span><span id="__span-72-2"><a id="__codelineno-72-2" name="__codelineno-72-2" href="#__codelineno-72-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot; suffix&quot;</span>
-</span><span id="__span-72-3"><a id="__codelineno-72-3" name="__codelineno-72-3" href="#__codelineno-72-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">&quot;prefix &quot;</span>
-</span><span id="__span-72-4"><a id="__codelineno-72-4" name="__codelineno-72-4" href="#__codelineno-72-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--file<span class="w"> </span>./v2.yaml
-</span><span id="__span-72-5"><a id="__codelineno-72-5" name="__codelineno-72-5" href="#__codelineno-72-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--label<span class="w"> </span><span class="s2">&quot;new name&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;new text&quot;</span>
+</span><span id="__span-73-2"><a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--append<span class="w"> </span><span class="s2">&quot; suffix&quot;</span>
+</span><span id="__span-73-3"><a id="__codelineno-73-3" name="__codelineno-73-3" href="#__codelineno-73-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">2</span><span class="w"> </span>--prepend<span class="w"> </span><span class="s2">&quot;prefix &quot;</span>
+</span><span id="__span-73-4"><a id="__codelineno-73-4" name="__codelineno-73-4" href="#__codelineno-73-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--file<span class="w"> </span>./v2.yaml
+</span><span id="__span-73-5"><a id="__codelineno-73-5" name="__codelineno-73-5" href="#__codelineno-73-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="m">1</span><span class="w"> </span>--label<span class="w"> </span><span class="s2">&quot;new name&quot;</span>
 </span></code></pre></div>
 <h4 id="ctx-pad-mv"><code>ctx pad mv</code><a class="headerlink" href="#ctx-pad-mv" title="Permanent link">&para;</a></h4>
 <p>Move an entry from one position to another.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>mv<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>mv<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4722,27 +4727,27 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 </ul>
 <h4 id="ctx-pad-resolve"><code>ctx pad resolve</code><a class="headerlink" href="#ctx-pad-resolve" title="Permanent link">&para;</a></h4>
 <p>Show both sides of a merge conflict in the encrypted scratchpad.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>resolve
 </span></code></pre></div>
 <h4 id="ctx-pad-import"><code>ctx pad import</code><a class="headerlink" href="#ctx-pad-import" title="Permanent link">&para;</a></h4>
 <p>Bulk-import lines from a file into the scratchpad. Each non-empty line
 becomes a separate entry. All entries are written in a single encrypt/write
 cycle.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>&lt;file&gt;
-</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">          </span><span class="c1"># read from stdin</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>&lt;file&gt;
+</span><span id="__span-76-2"><a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">          </span><span class="c1"># read from stdin</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>file</code>: Path to a text file, or <code>-</code> for stdin</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
-</span><span id="__span-76-2"><a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
+</span><span id="__span-77-2"><a id="__codelineno-77-2" name="__codelineno-77-2" href="#__codelineno-77-2"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
 </span></code></pre></div>
 <h4 id="ctx-pad-export"><code>ctx pad export</code><a class="headerlink" href="#ctx-pad-export" title="Permanent link">&para;</a></h4>
 <p>Export all blob entries from the scratchpad to a directory as files.
 Each blob's label becomes the filename. Non-blob entries are skipped.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>dir<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>dir<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4773,15 +4778,15 @@ Each blob's label becomes the filename. Non-blob entries are skipped.</p>
 <p>When a file already exists, a unix timestamp is prepended to avoid
 collisions (e.g., <code>1739836200-label</code>). Use <code>--force</code> to overwrite instead.</p>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
-</span><span id="__span-78-2"><a id="__codelineno-78-2" name="__codelineno-78-2" href="#__codelineno-78-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run
-</span><span id="__span-78-3"><a id="__codelineno-78-3" name="__codelineno-78-3" href="#__codelineno-78-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
+</span><span id="__span-79-2"><a id="__codelineno-79-2" name="__codelineno-79-2" href="#__codelineno-79-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run
+</span><span id="__span-79-3"><a id="__codelineno-79-3" name="__codelineno-79-3" href="#__codelineno-79-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
 </span></code></pre></div>
 <h4 id="ctx-pad-merge"><code>ctx pad merge</code><a class="headerlink" href="#ctx-pad-merge" title="Permanent link">&para;</a></h4>
 <p>Merge entries from one or more scratchpad files into the current pad.
 Each input file is auto-detected as encrypted or plaintext. Entries are
 deduplicated by exact content.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>FILE...
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>FILE...
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -4810,10 +4815,10 @@ deduplicated by exact content.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
-</span><span id="__span-80-2"><a id="__codelineno-80-2" name="__codelineno-80-2" href="#__codelineno-80-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>notes.md<span class="w"> </span>backup.enc
-</span><span id="__span-80-3"><a id="__codelineno-80-3" name="__codelineno-80-3" href="#__codelineno-80-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.scratchpad.key<span class="w"> </span>foreign.enc
-</span><span id="__span-80-4"><a id="__codelineno-80-4" name="__codelineno-80-4" href="#__codelineno-80-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
+</span><span id="__span-81-2"><a id="__codelineno-81-2" name="__codelineno-81-2" href="#__codelineno-81-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>notes.md<span class="w"> </span>backup.enc
+</span><span id="__span-81-3"><a id="__codelineno-81-3" name="__codelineno-81-3" href="#__codelineno-81-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.scratchpad.key<span class="w"> </span>foreign.enc
+</span><span id="__span-81-4"><a id="__codelineno-81-4" name="__codelineno-81-4" href="#__codelineno-81-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
 </span></code></pre></div>
 <hr />
 <h2 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
@@ -4872,19 +4877,19 @@ deduplicated by exact content.</p>
 </table>
 <h2 id="configuration-file">Configuration File<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
 <p>Optional <code>.contextrc</code> (<em>YAML format</em>) at project root:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a><span class="c1"># .contextrc</span>
-</span><span id="__span-81-2"><a id="__codelineno-81-2" name="__codelineno-81-2" href="#__codelineno-81-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context</span><span class="w">                </span><span class="c1"># Context directory name</span>
-</span><span id="__span-81-3"><a id="__codelineno-81-3" name="__codelineno-81-3" href="#__codelineno-81-3"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">                   </span><span class="c1"># Default token budget</span>
-</span><span id="__span-81-4"><a id="__codelineno-81-4" name="__codelineno-81-4" href="#__codelineno-81-4"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">                      </span><span class="c1"># File loading priority</span>
-</span><span id="__span-81-5"><a id="__codelineno-81-5" name="__codelineno-81-5" href="#__codelineno-81-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
-</span><span id="__span-81-6"><a id="__codelineno-81-6" name="__codelineno-81-6" href="#__codelineno-81-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
-</span><span id="__span-81-7"><a id="__codelineno-81-7" name="__codelineno-81-7" href="#__codelineno-81-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
-</span><span id="__span-81-8"><a id="__codelineno-81-8" name="__codelineno-81-8" href="#__codelineno-81-8"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                   </span><span class="c1"># Auto-archive old items</span>
-</span><span id="__span-81-9"><a id="__codelineno-81-9" name="__codelineno-81-9" href="#__codelineno-81-9"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">                </span><span class="c1"># Days before archiving tasks</span>
-</span><span id="__span-81-10"><a id="__codelineno-81-10" name="__codelineno-81-10" href="#__codelineno-81-10"></a><span class="nt">archive_knowledge_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">     </span><span class="c1"># Days before archiving decisions/learnings</span>
-</span><span id="__span-81-11"><a id="__codelineno-81-11" name="__codelineno-81-11" href="#__codelineno-81-11"></a><span class="nt">archive_keep_recent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">               </span><span class="c1"># Recent entries to keep when archiving</span>
-</span><span id="__span-81-12"><a id="__codelineno-81-12" name="__codelineno-81-12" href="#__codelineno-81-12"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">             </span><span class="c1"># Encrypt scratchpad (default: true)</span>
-</span><span id="__span-81-13"><a id="__codelineno-81-13" name="__codelineno-81-13" href="#__codelineno-81-13"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Skip boundary check (default: false)</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a><span class="c1"># .contextrc</span>
+</span><span id="__span-82-2"><a id="__codelineno-82-2" name="__codelineno-82-2" href="#__codelineno-82-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.context</span><span class="w">                </span><span class="c1"># Context directory name</span>
+</span><span id="__span-82-3"><a id="__codelineno-82-3" name="__codelineno-82-3" href="#__codelineno-82-3"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span><span class="w">                   </span><span class="c1"># Default token budget</span>
+</span><span id="__span-82-4"><a id="__codelineno-82-4" name="__codelineno-82-4" href="#__codelineno-82-4"></a><span class="nt">priority_order</span><span class="p">:</span><span class="w">                      </span><span class="c1"># File loading priority</span>
+</span><span id="__span-82-5"><a id="__codelineno-82-5" name="__codelineno-82-5" href="#__codelineno-82-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
+</span><span id="__span-82-6"><a id="__codelineno-82-6" name="__codelineno-82-6" href="#__codelineno-82-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
+</span><span id="__span-82-7"><a id="__codelineno-82-7" name="__codelineno-82-7" href="#__codelineno-82-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
+</span><span id="__span-82-8"><a id="__codelineno-82-8" name="__codelineno-82-8" href="#__codelineno-82-8"></a><span class="nt">auto_archive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                   </span><span class="c1"># Auto-archive old items</span>
+</span><span id="__span-82-9"><a id="__codelineno-82-9" name="__codelineno-82-9" href="#__codelineno-82-9"></a><span class="nt">archive_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">                </span><span class="c1"># Days before archiving tasks</span>
+</span><span id="__span-82-10"><a id="__codelineno-82-10" name="__codelineno-82-10" href="#__codelineno-82-10"></a><span class="nt">archive_knowledge_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">     </span><span class="c1"># Days before archiving decisions/learnings</span>
+</span><span id="__span-82-11"><a id="__codelineno-82-11" name="__codelineno-82-11" href="#__codelineno-82-11"></a><span class="nt">archive_keep_recent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">               </span><span class="c1"># Recent entries to keep when archiving</span>
+</span><span id="__span-82-12"><a id="__codelineno-82-12" name="__codelineno-82-12" href="#__codelineno-82-12"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">             </span><span class="c1"># Encrypt scratchpad (default: true)</span>
+</span><span id="__span-82-13"><a id="__codelineno-82-13" name="__codelineno-82-13" href="#__codelineno-82-13"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Skip boundary check (default: false)</span>
 </span></code></pre></div>
 <table>
 <thead>

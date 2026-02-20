@@ -27,6 +27,8 @@ func Default() *CtxRC {
 		ArchiveAfterDays:          DefaultArchiveAfterDays,
 		ArchiveKnowledgeAfterDays: DefaultArchiveKnowledgeAfterDays,
 		ArchiveKeepRecent:         DefaultArchiveKeepRecent,
+		EntryCountLearnings:       DefaultEntryCountLearnings,
+		EntryCountDecisions:       DefaultEntryCountDecisions,
 	}
 }
 
@@ -124,6 +126,26 @@ func ScratchpadEncrypt() bool {
 		return true
 	}
 	return *v
+}
+
+// EntryCountLearnings returns the entry count threshold for LEARNINGS.md.
+//
+// Returns 0 if the check is disabled. Default: 30.
+//
+// Returns:
+//   - int: Threshold above which a drift warning is emitted
+func EntryCountLearnings() int {
+	return RC().EntryCountLearnings
+}
+
+// EntryCountDecisions returns the entry count threshold for DECISIONS.md.
+//
+// Returns 0 if the check is disabled. Default: 20.
+//
+// Returns:
+//   - int: Threshold above which a drift warning is emitted
+func EntryCountDecisions() int {
+	return RC().EntryCountDecisions
 }
 
 // AllowOutsideCwd returns whether boundary validation should be skipped.

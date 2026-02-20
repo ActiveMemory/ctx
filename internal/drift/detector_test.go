@@ -10,9 +10,11 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestReportStatus(t *testing.T) {
@@ -287,6 +289,160 @@ func TestCheckRequiredFiles(t *testing.T) {
 				t.Errorf("expected %d warnings, got %d", tt.wantWarnings, len(report.Warnings))
 			}
 		})
+	}
+}
+
+func TestCheckEntryCount(t *testing.T) {
+	// Helper to build N entries
+	buildEntries := func(n int) string {
+		var sb strings.Builder
+		sb.WriteString("# Learnings\n\n")
+		for i := 0; i < n; i++ {
+			sb.WriteString(fmt.Sprintf("## [2026-01-%02d-120000] Entry %d\n\nContent for entry %d.\n\n", (i%28)+1, i+1, i+1))
+		}
+		return sb.String()
+	}
+
+	tests := []struct {
+		name         string
+		files        []context.FileInfo
+		wantWarnings int
+		wantPassed   bool
+	}{
+		{
+			name:         "no knowledge files",
+			files:        nil,
+			wantWarnings: 0,
+			wantPassed:   true,
+		},
+		{
+			name: "zero entries",
+			files: []context.FileInfo{
+				{Name: "LEARNINGS.md", Content: []byte("# Learnings\n")},
+			},
+			wantWarnings: 0,
+			wantPassed:   true,
+		},
+		{
+			name: "at threshold (30 learnings)",
+			files: []context.FileInfo{
+				{Name: "LEARNINGS.md", Content: []byte(buildEntries(30))},
+			},
+			wantWarnings: 0,
+			wantPassed:   true,
+		},
+		{
+			name: "above threshold (31 learnings)",
+			files: []context.FileInfo{
+				{Name: "LEARNINGS.md", Content: []byte(buildEntries(31))},
+			},
+			wantWarnings: 1,
+			wantPassed:   false,
+		},
+		{
+			name: "decisions above threshold (21)",
+			files: []context.FileInfo{
+				{Name: "DECISIONS.md", Content: []byte(buildEntries(21))},
+			},
+			wantWarnings: 1,
+			wantPassed:   false,
+		},
+		{
+			name: "both files above threshold",
+			files: []context.FileInfo{
+				{Name: "LEARNINGS.md", Content: []byte(buildEntries(31))},
+				{Name: "DECISIONS.md", Content: []byte(buildEntries(21))},
+			},
+			wantWarnings: 2,
+			wantPassed:   false,
+		},
+		{
+			name: "warning message format",
+			files: []context.FileInfo{
+				{Name: "LEARNINGS.md", Content: []byte(buildEntries(35))},
+			},
+			wantWarnings: 1,
+			wantPassed:   false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := &context.Context{
+				Dir:   ".context",
+				Files: tt.files,
+			}
+
+			report := &Report{
+				Warnings:   []Issue{},
+				Violations: []Issue{},
+				Passed:     []CheckName{},
+			}
+
+			checkEntryCount(ctx, report)
+
+			if len(report.Warnings) != tt.wantWarnings {
+				t.Errorf("expected %d warnings, got %d", tt.wantWarnings, len(report.Warnings))
+			}
+
+			passedCheck := false
+			for _, p := range report.Passed {
+				if p == CheckEntryCount {
+					passedCheck = true
+					break
+				}
+			}
+			if passedCheck != tt.wantPassed {
+				t.Errorf("expected passed=%v, got passed=%v", tt.wantPassed, passedCheck)
+			}
+
+			// Verify warning type and message format
+			for _, w := range report.Warnings {
+				if w.Type != IssueEntryCount {
+					t.Errorf("expected issue type %q, got %q", IssueEntryCount, w.Type)
+				}
+				if !strings.Contains(w.Message, "entries (recommended:") {
+					t.Errorf("unexpected message format: %q", w.Message)
+				}
+			}
+		})
+	}
+}
+
+func TestCheckEntryCountDisabled(t *testing.T) {
+	// Helper to build N entries
+	buildEntries := func(n int) string {
+		var sb strings.Builder
+		sb.WriteString("# Learnings\n\n")
+		for i := 0; i < n; i++ {
+			sb.WriteString(fmt.Sprintf("## [2026-01-%02d-120000] Entry %d\n\nContent for entry %d.\n\n", (i%28)+1, i+1, i+1))
+		}
+		return sb.String()
+	}
+
+	// Override rc to set thresholds to 0 (disabled)
+	rc.Reset()
+	defer rc.Reset()
+
+	ctx := &context.Context{
+		Dir: ".context",
+		Files: []context.FileInfo{
+			{Name: "LEARNINGS.md", Content: []byte(buildEntries(100))},
+			{Name: "DECISIONS.md", Content: []byte(buildEntries(100))},
+		},
+	}
+
+	report := &Report{
+		Warnings:   []Issue{},
+		Violations: []Issue{},
+		Passed:     []CheckName{},
+	}
+
+	// With default thresholds (30/20), 100 entries should trigger warnings
+	checkEntryCount(ctx, report)
+
+	if len(report.Warnings) != 2 {
+		t.Errorf("expected 2 warnings with defaults, got %d", len(report.Warnings))
 	}
 }
 

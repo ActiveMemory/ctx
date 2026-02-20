@@ -2,6 +2,7 @@
 title: "Eight Ways a Hook Can Talk"
 date: 2026-02-15
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - hooks
   - agent communication
@@ -134,37 +135,38 @@ file management. The action is the entire point; no one needs to know.
 
 Three more patterns emerged from the gaps in the existing hooks.
 
-**Conditional relay** — "Relay this, but only if the user's question is
-about X." Avoids noise when the warning isn't relevant. More fragile
-(depends on agent judgment) but less annoying.
+**Conditional relay**: "*Relay this, but only if the user's question is
+about X.*" This pattern avoids noise when the warning isn't relevant. 
+It's more fragile (*depends on agent judgment*) but less annoying.
 
-**Suggested action** — "Here's a problem and here's the exact command to
-fix it. Ask the user before running it." Goes beyond a nudge by giving the
-agent a concrete proposal, but still requires human approval.
+**Suggested action**: "*Here's a problem, and here's the exact command to
+fix it. Ask the user before running it.*" This pattern goes beyond a nudge by 
+giving the agent a concrete proposal, but still requires human approval.
 
-**Escalating severity** — `INFO` gets absorbed silently. `WARN` gets
+**Escalating severity**: `INFO` gets absorbed silently. `WARN` gets
 mentioned at the next natural pause. `CRITICAL` gets the VERBATIM
-treatment. A protocol for hooks that produce output at different urgency
-levels, so they don't all compete for the user's attention.
+treatment. This pattern introduces a protocol for hooks that produce output 
+at different urgency levels, so they don't all compete for the user's attention.
 
 ## The Principle
 
-The reason this matters: **hooks are the boundary between your environment
-and the agent's reasoning**. A hook that detects a problem but can't
-communicate it effectively is the same as no hook at all.
+**Hooks are the boundary between your environment and the agent's reasoning**. 
+
+A hook that detects a problem but can't communicate it effectively is the same 
+as no hook at all.
 
 The format of your output is a design decision with real consequences:
 
-- Use a hard gate and the agent *can't* proceed (good for invariants,
-  frustrating for false positives)
-- Use VERBATIM relay and the user *will* see it (good for reminders,
-  noisy if overused)
-- Use an agent directive and the agent *might* act (good for nudges,
-  unreliable for critical warnings)
-- Use silent injection and nobody *knows* (good for enrichment,
-  invisible when it breaks)
+* Use a **hard gate** and the agent *can't* proceed (*good for invariants,
+  frustrating for false positives*)
+* Use **VERBATIM relay** and the user *will* see it (*good for reminders,
+  noisy if overused*)
+* Use an **agent directive** and the agent *might* act (*good for nudges,
+  unreliable for critical warnings*)
+* Use **silent injection** and nobody *knows* (*good for enrichment,
+  invisible when it breaks*)
 
-Choose deliberately. And when in doubt, write the word VERBATIM.
+Choose **deliberately**. And, when in doubt, write the word `VERBATIM`.
 
 ---
 

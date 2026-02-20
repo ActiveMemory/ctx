@@ -2127,32 +2127,41 @@
 <h2 id="why-ctxs-journal-site-runs-on-a-v0021-tool">Why ctx's Journal Site Runs on a v0.0.21 Tool<a class="headerlink" href="#why-ctxs-journal-site-runs-on-a-v0021-tool" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-15</em></p>
 <div class="admonition question">
-<p class="admonition-title">Would you ship production infrastructure on a v0.0.21 dependency?</p>
+<p class="admonition-title">Would You Ship Production Infrastructure on a v0.0.21 Dependency?</p>
 <p>Most engineers wouldn't. Version numbers signal maturity. Pre-1.0
 means unstable API, missing features, risk.</p>
 <p>But version numbers tell you where a project <strong>has been</strong>.
 They say nothing about where it's <strong>going</strong>.</p>
-<p>I just bet ctx's entire journal site on a tool that hasn't
-hit v0.1.0. Here's why I'd do it again.</p>
 </div>
+<p>I just bet <code>ctx</code>'s entire journal site on a tool that hasn't
+hit <code>v0.1.0</code>. </p>
+<p>Here's why I'd do it again.</p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>When <a href="../2026-02-01-ctx-v0.2.0-the-archaeology-release/">v0.2.0</a> shipped the journal system, the pipeline was clear:
-export sessions to Markdown, enrich them with YAML frontmatter, and
-render them into something browsable. The first two steps were solved.
-The third needed a tool.</p>
+<p>When <a href="../2026-02-01-ctx-v0.2.0-the-archaeology-release/">v0.2.0</a> shipped the journal system, the pipeline was clear:</p>
+<ul>
+<li><strong>Export</strong> sessions to Markdown; </li>
+<li><strong>Enrich</strong> them with YAML frontmatter; </li>
+<li>And render them into something <strong>browsable</strong>. </li>
+</ul>
+<p>The first two steps were solved; the third needed a tool.</p>
 <p>The journal entries are standard Markdown with YAML frontmatter, tables,
-and fenced code blocks. That is the entire format. No JSX. No shortcodes.
-No custom templating. Just Markdown rendered well.</p>
+and fenced code blocks. That is the entire format: </p>
+<ul>
+<li>No JSX;</li>
+<li>No shortcodes;</li>
+<li>No custom templating. </li>
+</ul>
+<p>Just Markdown rendered well.</p>
 <p>The requirements are modest:</p>
 <ul>
-<li>Read <code>mkdocs.yml</code></li>
-<li>Render Markdown with extensions (admonitions, tabs, tables)</li>
-<li>Search</li>
-<li>Handle 100+ files without choking on incremental rebuilds</li>
-<li>Look good out of the box</li>
-<li>Not lock me in</li>
+<li>Read a configuration file (<em>such as <code>mkdocs.yml</code></em>);</li>
+<li>Render Markdown with extensions (<em>admonitions, tabs, tables</em>);</li>
+<li>Search;</li>
+<li>Handle 100+ files without choking on incremental rebuilds;</li>
+<li>Look good out of the box;</li>
+<li><strong>Not lock me in</strong>.</li>
 </ul>
-<p>The obvious candidates:</p>
+<p>The obvious candidates were as follows:</p>
 <table>
 <thead>
 <tr>
@@ -2190,21 +2199,23 @@ No custom templating. Just Markdown rendered well.</p>
 </tbody>
 </table>
 <p>The instinct was Hugo. Same language as <code>ctx</code>. Fast. Well-established.</p>
-<p>But instinct is not analysis. I picked the one with the lowest version
+<p>But <strong>instinct is not analysis</strong>. I picked the one with the lowest version
 number.</p>
 <hr />
 <h2 id="the-evaluation">The Evaluation<a class="headerlink" href="#the-evaluation" title="Permanent link">&para;</a></h2>
 <p>Here is what I actually evaluated, in order:</p>
 <h3 id="1-the-team">1. The Team<a class="headerlink" href="#1-the-team" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/zensical/zensical">Zensical</a> is built by <a href="https://github.com/squidfunk">squidfunk</a> --
-the same person behind <a href="https://github.com/squidfunk/mkdocs-material">Material for MkDocs</a>, the most popular
+<p><a href="https://github.com/zensical/zensical">Zensical</a> is built by <a href="https://github.com/squidfunk">squidfunk</a>:
+The same person behind <a href="https://github.com/squidfunk/mkdocs-material">Material for MkDocs</a>, the most popular
 MkDocs theme with 22,000+ stars. It powers documentation sites for projects
 across every language and framework.</p>
-<p>This is not someone learning how to build static site generators.
-This is someone who spent years understanding exactly where MkDocs
-breaks and decided to fix it from the ground up.</p>
-<p>They did not build zensical because MkDocs was bad. They built it
-because MkDocs hit a ceiling:</p>
+<ul>
+<li>This is not someone learning how to build static site generators.</li>
+<li>This is someone who spent <strong>years</strong> understanding exactly where MkDocs
+  breaks and decided to fix it from the ground up.</li>
+</ul>
+<p>They did not build zensical because MkDocs was bad: 
+They built it because MkDocs hit a ceiling:</p>
 <ul>
 <li>
 <p><strong>Incremental rebuilds</strong>: 4-5x faster during serve. When you have
@@ -2223,25 +2234,36 @@ because MkDocs hit a ceiling:</p>
 unproven team at v3.0.</strong></p>
 <h3 id="2-the-architecture">2. The Architecture<a class="headerlink" href="#2-the-architecture" title="Permanent link">&para;</a></h3>
 <p>Zensical is investing in a Rust-based Markdown parser with CommonMark
-support. That signals something about the team's priorities:
-<strong>performance foundations first, features second</strong>.</p>
-<p>ctx's journal will grow. Every exported session adds files.
-Every enrichment pass adds metadata. Choosing a tool that
-gets <em>slower</em> as you add content means choosing to migrate later.
-Choosing one built for scale means the decision holds.</p>
+support. That signals something about the team's priorities:</p>
+<p><strong>Performance foundations first; features second</strong>.</p>
+<p><code>ctx</code>'s journal will grow: </p>
+<ul>
+<li>Every exported session adds files.</li>
+<li>Every enrichment pass adds metadata. </li>
+</ul>
+<p>Choosing a tool that gets <em>slower</em> as you add content means choosing to
+migrate later.</p>
+<p>Choosing one <strong>built for scale</strong> means the decision holds.</p>
 <h3 id="3-the-migration-path">3. The Migration Path<a class="headerlink" href="#3-the-migration-path" title="Permanent link">&para;</a></h3>
 <p>Zensical reads <code>mkdocs.yml</code> natively. If it doesn't work out,
-I can move back to MkDocs + Material with zero content changes.
-The Markdown is standard. The frontmatter is standard. The
-configuration is compatible.</p>
-<p>This is the <a href="../2026-02-14-irc-as-context/">infrastructure pattern</a> again. The same way ZNC
-decouples presence from the client, zensical decouples rendering from
-the generator. The Markdown is yours. The frontmatter is standard
-YAML. The configuration is MkDocs-compatible. You are not locked into
-anything except your own content.</p>
-<p><strong>No lock-in</strong> is not a feature. It's a design philosophy. It's
-the same reason ctx uses plain Markdown files in <code>.context/</code>
-instead of a database: the format should outlive the tool.</p>
+I can move back to MkDocs + Material with zero content changes:</p>
+<ul>
+<li>The Markdown is standard; </li>
+<li>The frontmatter is standard; </li>
+<li>The configuration is compatible.</li>
+</ul>
+<p>This is the <a href="../2026-02-14-irc-as-context/">infrastructure pattern</a> again: The same way <code>ZNC</code>
+decouples presence from the client, <code>zensical</code> decouples rendering from
+the generator: </p>
+<ul>
+<li>The Markdown is yours. </li>
+<li>The frontmatter is standard YAML. </li>
+<li>The configuration is MkDocs-compatible.</li>
+</ul>
+<p>You are not locked into anything except your own content.</p>
+<p><strong>No lock-in</strong> is <strong>not</strong> a feature: <strong>It's a design philosophy</strong>: </p>
+<p>It's the same reason <code>ctx</code> uses plain Markdown files in <code>.context/</code>
+instead of a database: <strong>the format should outlive the tool</strong>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Lock-in Is the Real Risk, Not Version Numbers</p>
 <p>A mature tool with a proprietary format is riskier than a
@@ -2257,48 +2279,56 @@ time invested. Portability measures respect for the user.</p>
 <li>pymdown-extensions</li>
 <li>PyYAML</li>
 </ul>
-<p>Five dependencies. All well-known. No framework bloat. No
-bundler. No transpiler. No node_modules black hole.</p>
-<p>3k GitHub stars at v0.0.21 is strong early traction for a pre-1.0
-project. The dependency tree is thin. No bloat.</p>
+<p>Only <strong>five</strong> dependencies. All well-known. No framework bloat. No
+bundler. No transpiler. No <code>node_modules</code> black hole.</p>
+<p>3k GitHub stars at <code>v0.0.21</code> is a strong early traction for a <code>pre-1.0</code>
+project. </p>
+<p>The dependency tree is thin: No bloat.</p>
 <h3 id="5-the-fit">5. The Fit<a class="headerlink" href="#5-the-fit" title="Permanent link">&para;</a></h3>
 <p>This is the same principle behind the <a href="../2026-02-03-the-attention-budget/">attention budget</a>:
 <strong>do not overfit the tool to hypothetical requirements</strong>. The right
 amount of capability is the minimum needed for the current task.</p>
 <p>Hugo is a powerful static site generator. It is also a powerful
 templating engine, a powerful asset pipeline, and a powerful taxonomy
-system. For rendering Markdown journals, that power is overhead:
-complexity you pay for but never use.</p>
-<p>ctx's journal files are standard Markdown with YAML frontmatter,
+system. For rendering Markdown journals, that power is overhead:</p>
+<p>It is the complexity you pay for but never use.</p>
+<p><code>ctx</code>'s journal files are standard Markdown with YAML frontmatter,
 tables, and fenced code blocks. That is exactly the sweet spot
-Zensical inherits from Material for MkDocs. No custom plugins
-needed. No special syntax. No templating gymnastics.</p>
-<p>The requirements match the capabilities. Not the capabilities
-that are promised -- the ones that exist today, at v0.0.21.</p>
+Zensical inherits from Material for MkDocs:</p>
+<ul>
+<li><strong>No</strong> custom plugins needed;</li>
+<li><strong>No</strong> special syntax; </li>
+<li><strong>No</strong> templating gymnastics.</li>
+</ul>
+<p>The requirements match the capabilities: <strong>Not</strong> the capabilities
+that are promised, <strong>but</strong> the ones that exist today, at <code>v0.0.21</code>.</p>
 <hr />
 <h2 id="the-caveat">The Caveat<a class="headerlink" href="#the-caveat" title="Permanent link">&para;</a></h2>
 <p>It would be dishonest not to mention what's missing.</p>
-<p>The module system for third-party extensions opens in early 2026.
-If ctx ever needs custom plugins -- auto-linking session IDs,
-rendering special journal metadata -- that infrastructure isn't
+<p>The module system for third-party extensions opens in early 2026.</p>
+<p>If <code>ctx</code> ever needs custom plugins (<em>for example, auto-linking session IDs,
+rendering special journal metadata, etc.</em>) that infrastructure isn't
 there yet.</p>
-<p>The install experience is rough. We discovered this firsthand:
-<code>pip install zensical</code> often fails on macOS (system Python stubs,
-Homebrew's PEP 668 restrictions). The answer is
+<p>The installation experience is rough: </p>
+<p>We discovered this firsthand: <code>pip install zensical</code> often fails on MacOS 
+(<em>system Python stubs, Homebrew's PEP 668 restrictions</em>). The answer is
 <a href="https://pipx.pypa.io/">pipx</a>, which creates an isolated environment
-with the correct Python version automatically. That friction is typical
-for young Python tooling, and it is documented in the
-<a href="../../getting-started/#journal-site">Getting Started guide</a>.</p>
-<p>And 3,000 stars at v0.0.21 is strong early traction, but it's
-still early. The community is small. Stack Overflow answers
-don't exist yet. When something breaks, you're reading source
-code, not documentation.</p>
+with the correct Python version automatically. </p>
+<p>That kind of friction is typical for young Python tooling, and it is documented
+in the <a href="../../getting-started/#journal-site">Getting Started guide</a>.</p>
+<p>And <code>3,000</code> stars at <code>v0.0.21</code> is <strong>strong</strong> early traction, but it's
+still <strong>early</strong>: The community is small. When something breaks, you're reading 
+source  code, <em>not</em> documentation.</p>
 <p><strong>These are real costs. I chose to pay them because the
 alternative costs are higher.</strong></p>
-<p>Hugo's templating pain would cost me time on every site change.
-Astro's JS ecosystem would add complexity I don't need. MkDocs
-would work today but hit scaling walls tomorrow. Zensical's costs
-are front-loaded and shrinking. The others compound.</p>
+<p>For example:</p>
+<ul>
+<li>Hugo's templating pain would cost me time on every site change.</li>
+<li>Astro's JS ecosystem would add complexity I don't need. </li>
+<li>MkDocs would work today but hit scaling walls tomorrow. </li>
+</ul>
+<p>Zensical's costs are <strong>front-loaded</strong> and <strong>shrinking</strong>. </p>
+<p>The others compound.</p>
 <hr />
 <h2 id="the-evaluation-framework">The Evaluation Framework<a class="headerlink" href="#the-evaluation-framework" title="Permanent link">&para;</a></h2>
 <p>For anyone facing a similar choice, here is the framework that
@@ -2349,13 +2379,14 @@ emerged:</p>
 </tr>
 </tbody>
 </table>
-<p>The bottom three are the metrics most engineers optimize for.
-The top four are the ones that predict whether you'll still be
+<p>The bottom three are the metrics most engineers optimize for.</p>
+<p>The top four are the ones that predict whether you'll still be
 happy with the choice in a year.</p>
 <div class="admonition warning">
 <p class="admonition-title">Features You Don't Need Are Not Free</p>
 <p>Every feature in a dependency is code you inherit but don't
-control. A tool with 200 features where you use 5 means
+control. </p>
+<p>A tool with 200 features where you use 5 means
 195 features worth of surface area for bugs, breaking changes,
 and security issues that have nothing to do with your use case.</p>
 <p><strong>Fit is the inverse of feature count.</strong></p>
@@ -2400,16 +2431,22 @@ and security issues that have nothing to do with your use case.</p>
 </tr>
 </tbody>
 </table>
-<p>Version numbers, star counts, coverage percentages, file counts --
-these are all measures of <em>effort expended</em>. They say nothing about
-<em>value delivered</em>.</p>
-<p>The question is never "how mature is this tool?" The question is
-"does this tool's trajectory intersect with my needs?"</p>
-<p>Zensical's trajectory: a proven team fixing known problems in a
-proven architecture, with a standard format and no lock-in.</p>
-<p>ctx's needs: render standard Markdown into a browsable site, at
-scale, without complexity.</p>
-<p>The intersection is clean. The version number is noise.</p>
+<p>Version numbers, star counts, coverage percentages, file counts...</p>
+<p>...these are all measures of <em>effort expended</em>. </p>
+<p>They say <strong>nothing</strong> about <em>value delivered</em>.</p>
+<p>The question is never "<em>how mature is this tool?</em>" </p>
+<p>The question is "<strong>does this tool's trajectory intersect with my needs?</strong>"</p>
+<p>Zensical's trajectory: </p>
+<ul>
+<li>A <strong>proven team</strong> fixing known problems, </li>
+<li>in a *<em>proven architecture</em>, </li>
+<li>with a <strong>standard format</strong>,</li>
+<li>and <strong>no lock-in</strong>.</li>
+</ul>
+<p><code>ctx</code>'s needs: </p>
+<p>Tender standard Markdown into a browsable site, <strong>at scale</strong>, 
+<strong>without complexity</strong>.</p>
+<p>The intersection is <strong>clean</strong>; the version number is <strong>noise</strong>.</p>
 <p>This is the same kind of decision that shows up throughout <code>ctx</code>:</p>
 <ul>
 <li><a href="../2026-02-04-skills-that-fight-the-platform/">Skills that fight the platform</a> taught that the best
@@ -2417,16 +2454,16 @@ scale, without complexity.</p>
 <li><a href="../2026-02-05-you-cant-import-expertise/">You can't import expertise</a> taught that tools should
   grow from your project's actual needs, not from feature checklists.</li>
 <li><a href="../2026-02-17-context-as-infrastructure/">Context as infrastructure</a> argues that the format should
-  outlive the tool -- and zensical honors that principle by reading
+  outlive the tool; and, <code>zensical</code> honors that principle by reading
   standard Markdown and standard MkDocs configuration.</li>
 </ul>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">If you remember one thing from this post...</p>
-<p><strong>Version numbers measure where a project has been.
-The team and the architecture tell you where it's going.</strong></p>
-<p>A v0.0.21 tool built by the right team on the right
-foundations is a safer bet than a v5.0 tool that doesn't
+<p><strong>Version numbers measure where a project has been.</strong></p>
+<p><strong>The team and the architecture tell you where it's going.</strong></p>
+<p>A <code>v0.0.21</code> tool built by the right team on the right
+foundations is a safer bet than a <code>v5.0</code> tool that doesn't
 fit your problem.</p>
 <p><strong>Bet on trajectories, not timestamps.</strong></p>
 </div>

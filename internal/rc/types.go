@@ -26,4 +26,6 @@ type CtxRC struct {
 	ArchiveKeepRecent         int      `yaml:"archive_keep_recent"`
 	ScratchpadEncrypt         *bool    `yaml:"scratchpad_encrypt"`
 	AllowOutsideCwd           bool     `yaml:"allow_outside_cwd"`
+	EntryCountLearnings       int      `yaml:"entry_count_learnings"`
+	EntryCountDecisions       int      `yaml:"entry_count_decisions"`
 }

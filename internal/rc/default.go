@@ -19,3 +19,11 @@ const DefaultArchiveKnowledgeAfterDays = 90
 // DefaultArchiveKeepRecent is the default number of recent entries to keep
 // when archiving decisions and learnings.
 const DefaultArchiveKeepRecent = 5
+
+// DefaultEntryCountLearnings is the entry count threshold for LEARNINGS.md.
+// Learnings are situational; many become stale. Warn above this count.
+const DefaultEntryCountLearnings = 30
+
+// DefaultEntryCountDecisions is the entry count threshold for DECISIONS.md.
+// Decisions are more durable but still compound. Warn above this count.
+const DefaultEntryCountDecisions = 20

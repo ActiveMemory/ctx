@@ -672,6 +672,66 @@ Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 1)
       Done: Tested at budgets 2000, 4000, 8000. Graceful degradation confirmed.
       JSON output includes new learnings/summaries fields.
 
+### Phase 8: Drift Nudges `#priority:high`
+
+**Context**: Context files grow without feedback. A project with 47 learnings
+gets the same `ctx drift` output as one with 5. Entry count warnings nudge
+users to consolidate or archive. Spec: `specs/drift-nudges.md`
+Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 2)
+
+- [x] P8.0: Read `specs/drift-nudges.md` before starting any P8 task.
+      #added:2026-02-19 #done:2026-02-19
+
+- [x] P8.1: Add `IssueEntryCount` and `CheckEntryCount` to
+      `internal/drift/types.go`. Follow existing naming pattern.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: Two new constants in types.go.
+
+- [x] P8.2: Add `EntryCountLearnings` and `EntryCountDecisions` fields to
+      `internal/rc/types.go`. Add defaults (30/20) to `internal/rc/default.go`.
+      Add accessor functions to `internal/rc/rc.go`.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: Fields in CtxRC, defaults 30/20, two accessor functions.
+
+- [x] P8.3: Implement `checkEntryCount` in `internal/drift/detector.go`.
+      Count entries using `index.ParseEntryBlocks`, compare to rc thresholds.
+      Warning format: "has N entries (recommended: ≤M)".
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: `checkEntryCount` function, wired into `Detect()`.
+
+- [x] P8.4: Tests for `checkEntryCount` in `internal/drift/detector_test.go`.
+      Cases: 0 entries, at threshold, above threshold, disabled (0), custom
+      threshold, both files above, file missing.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: `TestCheckEntryCount` (7 cases) + `TestCheckEntryCountDisabled`.
+
+- [x] P8.5: Run full test suite, verify no regressions.
+      #priority:medium #added:2026-02-19 #done:2026-02-19
+      Done: All 34 packages pass. Real project shows LEARNINGS 81/30, DECISIONS 35/20.
+
+- [x] P8.6: Update docs — cli-reference.md (drift section), context-files.md
+      if relevant. #priority:low #added:2026-02-19 #done:2026-02-19
+      Done: Added entry count check to cli-reference.md drift section with
+      .contextrc configuration example.
+
+### Phase 9: Context Consolidation Skill `#priority:medium`
+
+**Context**: `/ctx-consolidate` skill that groups overlapping entries by keyword
+similarity and merges them with user approval. Originals archived, not deleted.
+Spec: `specs/context-consolidation.md`
+Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
+
+- [ ] P9.1: Create `.claude/skills/ctx-consolidate/SKILL.md` — full skill
+      prompt covering: entry parsing, keyword-based grouping, candidate
+      presentation, user approval, merge execution, archival, reindex.
+      #priority:medium #added:2026-02-19
+
+- [ ] P9.2: Test manually on this project's LEARNINGS.md (20+ entries).
+      #priority:medium #added:2026-02-19
+
+- [ ] P9.3: Update docs/skills.md and docs/cli-reference.md with the new skill.
+      #priority:low #added:2026-02-19
+
 ### Phase 2: Export Preservation `#priority:medium`
 
 - [ ] T2.1: `ctx recall export --update` mode

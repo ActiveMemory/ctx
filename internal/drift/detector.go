@@ -15,6 +15,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 const staleAgeDays = 30
@@ -67,6 +69,9 @@ func Detect(ctx *context.Context) *Report {
 
 	// Check for files not modified recently
 	checkFileAge(ctx, report)
+
+	// Check for excessive entry counts in knowledge files
+	checkEntryCount(ctx, report)
 
 	return report
 }
@@ -278,6 +283,51 @@ func checkFileAge(ctx *context.Context, report *Report) {
 
 	if !foundStale {
 		report.Passed = append(report.Passed, CheckFileAge)
+	}
+}
+
+// checkEntryCount warns when LEARNINGS.md or DECISIONS.md have too many entries.
+//
+// Uses index.ParseEntryBlocks for counting and rc thresholds for limits.
+// A threshold of 0 disables the check for that file.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to check
+//   - report: Report to append warnings to (modified in place)
+func checkEntryCount(ctx *context.Context, report *Report) {
+	checks := []struct {
+		file      string
+		threshold int
+	}{
+		{config.FileLearning, rc.EntryCountLearnings()},
+		{config.FileDecision, rc.EntryCountDecisions()},
+	}
+
+	found := false
+	for _, c := range checks {
+		if c.threshold <= 0 {
+			continue // disabled
+		}
+		f := ctx.File(c.file)
+		if f == nil {
+			continue
+		}
+		blocks := index.ParseEntryBlocks(string(f.Content))
+		if len(blocks) > c.threshold {
+			report.Warnings = append(report.Warnings, Issue{
+				File: f.Name,
+				Type: IssueEntryCount,
+				Message: fmt.Sprintf(
+					"has %d entries (recommended: ≤%d)",
+					len(blocks), c.threshold,
+				),
+			})
+			found = true
+		}
+	}
+
+	if !found {
+		report.Passed = append(report.Passed, CheckEntryCount)
 	}
 }
 

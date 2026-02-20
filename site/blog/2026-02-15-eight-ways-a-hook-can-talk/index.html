@@ -2183,32 +2183,32 @@ decisions because of the context.</p>
 file management. The action is the entire point; no one needs to know.</p>
 <h2 id="the-patterns-we-dont-have-yet">The Patterns We Don't Have Yet<a class="headerlink" href="#the-patterns-we-dont-have-yet" title="Permanent link">&para;</a></h2>
 <p>Three more patterns emerged from the gaps in the existing hooks.</p>
-<p><strong>Conditional relay</strong> — "Relay this, but only if the user's question is
-about X." Avoids noise when the warning isn't relevant. More fragile
-(depends on agent judgment) but less annoying.</p>
-<p><strong>Suggested action</strong> — "Here's a problem and here's the exact command to
-fix it. Ask the user before running it." Goes beyond a nudge by giving the
-agent a concrete proposal, but still requires human approval.</p>
-<p><strong>Escalating severity</strong> — <code>INFO</code> gets absorbed silently. <code>WARN</code> gets
+<p><strong>Conditional relay</strong>: "<em>Relay this, but only if the user's question is
+about X.</em>" This pattern avoids noise when the warning isn't relevant. 
+It's more fragile (<em>depends on agent judgment</em>) but less annoying.</p>
+<p><strong>Suggested action</strong>: "<em>Here's a problem, and here's the exact command to
+fix it. Ask the user before running it.</em>" This pattern goes beyond a nudge by 
+giving the agent a concrete proposal, but still requires human approval.</p>
+<p><strong>Escalating severity</strong>: <code>INFO</code> gets absorbed silently. <code>WARN</code> gets
 mentioned at the next natural pause. <code>CRITICAL</code> gets the VERBATIM
-treatment. A protocol for hooks that produce output at different urgency
-levels, so they don't all compete for the user's attention.</p>
+treatment. This pattern introduces a protocol for hooks that produce output 
+at different urgency levels, so they don't all compete for the user's attention.</p>
 <h2 id="the-principle">The Principle<a class="headerlink" href="#the-principle" title="Permanent link">&para;</a></h2>
-<p>The reason this matters: <strong>hooks are the boundary between your environment
-and the agent's reasoning</strong>. A hook that detects a problem but can't
-communicate it effectively is the same as no hook at all.</p>
+<p><strong>Hooks are the boundary between your environment and the agent's reasoning</strong>. </p>
+<p>A hook that detects a problem but can't communicate it effectively is the same 
+as no hook at all.</p>
 <p>The format of your output is a design decision with real consequences:</p>
 <ul>
-<li>Use a hard gate and the agent <em>can't</em> proceed (good for invariants,
-  frustrating for false positives)</li>
-<li>Use VERBATIM relay and the user <em>will</em> see it (good for reminders,
-  noisy if overused)</li>
-<li>Use an agent directive and the agent <em>might</em> act (good for nudges,
-  unreliable for critical warnings)</li>
-<li>Use silent injection and nobody <em>knows</em> (good for enrichment,
-  invisible when it breaks)</li>
+<li>Use a <strong>hard gate</strong> and the agent <em>can't</em> proceed (<em>good for invariants,
+  frustrating for false positives</em>)</li>
+<li>Use <strong>VERBATIM relay</strong> and the user <em>will</em> see it (<em>good for reminders,
+  noisy if overused</em>)</li>
+<li>Use an <strong>agent directive</strong> and the agent <em>might</em> act (<em>good for nudges,
+  unreliable for critical warnings</em>)</li>
+<li>Use <strong>silent injection</strong> and nobody <em>knows</em> (<em>good for enrichment,
+  invisible when it breaks</em>)</li>
 </ul>
-<p>Choose deliberately. And when in doubt, write the word VERBATIM.</p>
+<p>Choose <strong>deliberately</strong>. And, when in doubt, write the word <code>VERBATIM</code>.</p>
 <hr />
 <p><em>The full pattern catalog with decision flowchart and implementation
 examples is in the <a href="../../recipes/hook-output-patterns/">Hook Output Patterns</a>
