@@ -80,20 +80,34 @@ func runRestore(cmd *cobra.Command) error {
 	}
 
 	restored, dropped := diffStringSlices(golden.Permissions.Allow, local.Permissions.Allow)
+	denyRestored, denyDropped := diffStringSlices(golden.Permissions.Deny, local.Permissions.Deny)
 
 	if len(dropped) > 0 {
-		cmd.Printf("Dropped %d session permission(s):\n", len(dropped))
+		cmd.Printf("Dropped %d session allow permission(s):\n", len(dropped))
 		for _, p := range dropped {
 			cmd.Printf("  - %s\n", p)
 		}
 	}
 	if len(restored) > 0 {
-		cmd.Printf("Restored %d permission(s):\n", len(restored))
+		cmd.Printf("Restored %d allow permission(s):\n", len(restored))
 		for _, p := range restored {
 			cmd.Printf("  + %s\n", p)
 		}
 	}
-	if len(dropped) == 0 && len(restored) == 0 {
+	if len(denyDropped) > 0 {
+		cmd.Printf("Dropped %d session deny rule(s):\n", len(denyDropped))
+		for _, p := range denyDropped {
+			cmd.Printf("  - %s\n", p)
+		}
+	}
+	if len(denyRestored) > 0 {
+		cmd.Printf("Restored %d deny rule(s):\n", len(denyRestored))
+		for _, p := range denyRestored {
+			cmd.Printf("  + %s\n", p)
+		}
+	}
+	allEmpty := len(dropped) == 0 && len(restored) == 0 && len(denyDropped) == 0 && len(denyRestored) == 0
+	if allEmpty {
 		cmd.Println("Permission lists match; other settings differ.")
 	}
 

@@ -2,6 +2,7 @@
 title: "Defense in Depth: Securing AI Agents"
 date: 2026-02-09
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - agent security
   - defense in depth
@@ -367,15 +368,13 @@ overnight.
 ---
 
 !!! quote "If you remember one thing from this post..."
-**Markdown is not a security boundary.**
+    **Markdown is not a security boundary.**
 
-```
-`CONSTITUTION.md` is a nudge. An allowlist is a gate.
-An unprivileged user in a network-isolated container is a wall.
+    `CONSTITUTION.md` is a nudge. An allowlist is a gate.
 
-Use all three. Trust only the wall.
-```
+    An unprivileged user in a network-isolated container is a wall.
 
+    Use all three. Trust only the wall.
 ---
 
 *This post was written during the session that added permissions,

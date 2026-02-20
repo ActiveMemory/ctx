@@ -304,6 +304,18 @@ func TestInitCreatesPermissions(t *testing.T) {
 			t.Errorf("missing required permission: %s", p)
 		}
 	}
+
+	// Check that deny rules include defaults
+	denySet := make(map[string]bool)
+	for _, d := range settings.Permissions.Deny {
+		denySet[d] = true
+	}
+	if !denySet["Bash(sudo *)"] {
+		t.Error("missing deny rule: Bash(sudo *)")
+	}
+	if !denySet["Bash(git push *)"] {
+		t.Error("missing deny rule: Bash(git push *)")
+	}
 }
 
 // TestInitMergesPermissions tests that init adds missing permissions without
@@ -332,6 +344,9 @@ func TestInitMergesPermissions(t *testing.T) {
 				"Bash(git status:*)",
 				"Bash(make build:*)",
 				"Bash(ctx:*)", // Already has the ctx wildcard
+			},
+			Deny: []string{
+				"Bash(custom-block *)", // Custom deny rule
 			},
 		},
 	}
@@ -384,6 +399,18 @@ func TestInitMergesPermissions(t *testing.T) {
 	}
 	if count != 1 {
 		t.Errorf("'Bash(ctx:*)' appears %d times, expected 1", count)
+	}
+
+	// Check existing deny rule was preserved and defaults were added
+	denySet := make(map[string]bool)
+	for _, d := range settings.Permissions.Deny {
+		denySet[d] = true
+	}
+	if !denySet["Bash(custom-block *)"] {
+		t.Error("existing deny rule 'Bash(custom-block *)' was removed")
+	}
+	if !denySet["Bash(sudo *)"] {
+		t.Error("missing default deny rule 'Bash(sudo *)'")
 	}
 }
 

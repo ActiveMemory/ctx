@@ -83,22 +83,23 @@ This means:
 
 ## Permission Hygiene
 
-Claude Code's `.claude/settings.local.json` accumulates pre-approved
-permissions over time. Some permissions can bypass safety hooks:
+Claude Code evaluates permissions in deny → ask → allow order. `ctx init`
+automatically populates `permissions.deny` with rules that block dangerous
+operations before the allow list is ever consulted.
 
-* `Bash(git push:*)` pre-approves pushes, skipping the confirmation
-  dialog where `block-git-push.sh` would intervene
-* Broad permissions like `Bash(echo:*)` or `Bash(cat:*)` could be
-  composed into writes to sensitive files (`CLAUDE.md`,
-  `settings.local.json`)
+**Default deny rules block:**
 
-Periodically review your permissions for:
+* `sudo`, `git push`, `rm -rf /`, `rm -rf ~`, `curl`, `wget`, `chmod 777`
+* `Read`/`Edit` of `.env`, credentials, secrets, `.pem`, `.key` files
 
-* **Hook bypass**: permissions that pre-approve commands safety hooks
-  are designed to intercept
-* **Destructive commands**: `rm -rf`, `git reset --hard`, etc.
+Even with deny rules in place, the allow list accumulates one-off permissions
+over time. Periodically review for:
+
+* **Destructive commands**: `git reset --hard`, `git clean -f`, etc.
 * **Config injection vectors**: permissions that allow modifying files
-  controlling agent behavior
+  controlling agent behavior (`CLAUDE.md`, `settings.local.json`)
+* **Broad wildcards**: overly permissive patterns that pre-approve
+  more than intended
 
 ## Temp File Cleanup
 

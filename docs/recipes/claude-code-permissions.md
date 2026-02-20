@@ -90,6 +90,24 @@ project using ctx:
       "Skill(ctx-status)",
       "Skill(ctx-worktree)",
       "WebSearch"
+    ],
+    "deny": [
+      "Bash(sudo *)",
+      "Bash(git push *)",
+      "Bash(git push)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(chmod 777 *)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*credentials*)",
+      "Read(**/*secret*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)"
     ]
   }
 }
@@ -118,24 +136,51 @@ pre-approving dangerous ones.
 safe to pre-approve — they are part of your project and you control their
 content. This prevents the agent from prompting on every skill invocation.
 
-**Never pre-approve these:**
+### Default Deny Rules
+
+`ctx init` automatically populates `permissions.deny` with rules that block
+dangerous operations. Deny rules are evaluated before allow rules: A denied
+pattern always prompts the user, even if it also matches an allow entry.
+
+The defaults block:
+
+| Pattern                  | Why                                          |
+|--------------------------|----------------------------------------------|
+| `Bash(sudo *)`           | Cannot enter password; will hang             |
+| `Bash(git push *)`       | Must be explicit user action                 |
+| `Bash(rm -rf /*)` etc.   | Recursive delete of system/home directories  |
+| `Bash(curl *)` / `wget`  | Arbitrary network requests                   |
+| `Bash(chmod 777 *)`      | World-writable permissions                   |
+| `Read/Edit(**/.env*)`    | Secrets and credentials                      |
+| `Read(**/*.pem, *.key)`  | Private keys                                 |
+
+!!! note "Read/Edit deny rules"
+    `Read()` and `Edit()` deny rules have known upstream enforcement issues
+    (claude-code#6631, #24846). They are included as defense-in-depth and
+    intent documentation.
+
+**Blocked by default deny rules** — no action needed, `ctx init` handles these:
 
 | Pattern                         | Risk                                           |
 |---------------------------------|------------------------------------------------|
-| `Bash(git push:*)`              | Bypasses `block-git-push` hook confirmation    |
+| `Bash(git push:*)`              | Must be explicit user action                   |
+| `Bash(sudo:*)`                  | Privilege escalation                           |
+| `Bash(rm -rf:*)`                | Recursive delete with no confirmation          |
+| `Bash(curl:*)` / `Bash(wget:*)` | Arbitrary network requests                     |
+
+**Requires manual discipline** — never add these to `allow`:
+
+| Pattern                         | Risk                                           |
+|---------------------------------|------------------------------------------------|
 | `Bash(git reset:*)`             | Can discard uncommitted work                   |
 | `Bash(git clean:*)`             | Deletes untracked files                        |
-| `Bash(rm -rf:*)`                | Recursive delete with no confirmation          |
-| `Bash(sudo:*)`                  | Privilege escalation (also blocked by hook)    |
-| `Bash(curl:*)` / `Bash(wget:*)` | Arbitrary network requests                     |
 | `Skill(sanitize-permissions)`   | Edits this file — self-modification vector     |
 | `Skill(release)`                | Runs release pipeline — high impact            |
 
-## Hooks: Your Safety Net
+## Hooks: Regex Safety Net
 
-Permissions and hooks work together. Even if a command is pre-approved, hooks
-still run. The difference is that pre-approved commands skip the user
-confirmation dialog: So if a hook blocks the command, the user never sees it.
+Deny rules handle prefix-based blocking natively. Hooks complement them by
+catching patterns that require regex matching — things deny rules can't express.
 
 The ctx plugin ships these blocking hooks:
 
@@ -143,17 +188,21 @@ The ctx plugin ships these blocking hooks:
 |-----------------------------------|----------------------------------|
 | `ctx system block-non-path-ctx`   | Running ctx from wrong path      |
 
-Project-local hooks (not part of the plugin) can add more:
+Project-local hooks (not part of the plugin) catch regex edge cases:
 
-| Hook                          | What it blocks                   |
-|-------------------------------|----------------------------------|
-| `block-git-push.sh`           | All `git push` commands          |
-| `block-dangerous-commands.sh` | `sudo`, copies to `~/.local/bin` |
+| Hook                          | What it blocks                              |
+|-------------------------------|---------------------------------------------|
+| `block-dangerous-commands.sh` | Mid-command `sudo`/`git push` (after `&&`), copies to bin dirs, absolute-path ctx |
+
+!!! note "`block-git-push.sh` retired"
+    The standalone `block-git-push.sh` hook has been replaced by the
+    `Bash(git push *)` and `Bash(git push)` deny rules. The mid-command
+    case (`cmd && git push`) is handled by `block-dangerous-commands.sh`.
 
 !!! warning "Pre-approved + hook-blocked = silent block"
-    If you pre-approve `Bash(git push:*)`, the hook still blocks it, but
-    the user never sees the confirmation dialog. The agent gets a block
-    response and must handle it, which is confusing.
+    If you pre-approve a command that a hook blocks, the user never sees
+    the confirmation dialog. The agent gets a block response and must
+    handle it, which is confusing.
 
     It's better not to pre-approve commands that hooks are designed to intercept.
 

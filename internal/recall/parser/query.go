@@ -32,32 +32,38 @@ func findSessionsWithFilter(
 	filter func(*Session) bool, additionalDirs ...string,
 ) ([]*Session, error) {
 	var allSessions []*Session
+	scannedDirs := make(map[string]bool)
+
+	// scanOnce scans a directory only if it hasn't been scanned yet.
+	scanOnce := func(dir string) {
+		resolved, err := filepath.EvalSymlinks(dir)
+		if err != nil {
+			resolved = filepath.Clean(dir)
+		}
+		if scannedDirs[resolved] {
+			return
+		}
+		if info, err := os.Stat(resolved); err == nil && info.IsDir() {
+			scannedDirs[resolved] = true
+			sessions, _ := ScanDirectory(resolved)
+			allSessions = append(allSessions, sessions...)
+		}
+	}
 
 	// Check Claude Code default location
 	home, err := os.UserHomeDir()
 	if err == nil {
-		claudeDir := filepath.Join(home, ".claude", "projects")
-		if info, err := os.Stat(claudeDir); err == nil && info.IsDir() {
-			sessions, _ := ScanDirectory(claudeDir)
-			allSessions = append(allSessions, sessions...)
-		}
+		scanOnce(filepath.Join(home, ".claude", "projects"))
 	}
 
 	// Check .context/sessions/ in the current working directory
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
-		sessionsDir := filepath.Join(cwd, config.DirContext, config.DirSessions)
-		if info, statErr := os.Stat(sessionsDir); statErr == nil && info.IsDir() {
-			sessions, _ := ScanDirectory(sessionsDir)
-			allSessions = append(allSessions, sessions...)
-		}
+		scanOnce(filepath.Join(cwd, config.DirContext, config.DirSessions))
 	}
 
 	// Check additional directories
 	for _, dir := range additionalDirs {
-		if info, err := os.Stat(dir); err == nil && info.IsDir() {
-			sessions, _ := ScanDirectory(dir)
-			allSessions = append(allSessions, sessions...)
-		}
+		scanOnce(dir)
 	}
 
 	// Apply filter if provided

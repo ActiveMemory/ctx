@@ -55,7 +55,7 @@ That is "*reset amnesia*", and it's not just annoying: it's **expensive**.
 Every session starts with: 
 
 * Re-explaining context;
-* Re-reading files, 
+* Re-reading files; 
 * Re-discovering decisions that were **already** made.
 
 !!! quote "I Needed Context"

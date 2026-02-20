@@ -59,8 +59,11 @@ type Hook struct {
 // Fields:
 //   - Allow: List of tool patterns that are pre-approved
 //     (e.g., "Bash(ctx status:*)")
+//   - Deny: List of tool patterns that are always blocked
+//     (e.g., "Bash(sudo *)")
 type PermissionsConfig struct {
 	Allow []string `json:"allow,omitempty"`
+	Deny  []string `json:"deny,omitempty"`
 }
 
 // Settings represents the full Claude Code settings.local.json structure.

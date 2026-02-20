@@ -9,6 +9,7 @@ package pad
 import (
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -1780,7 +1781,9 @@ func TestImport_Stdin(t *testing.T) {
 	// Write data to the pipe
 	go func() {
 		_, _ = pw.WriteString("from stdin\nanother line\n")
-		pw.Close()
+		if err := pw.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: close pipe writer: %v\n", err)
+		}
 	}()
 
 	// Temporarily replace stdin
@@ -2114,3 +2117,518 @@ func TestExport_FilePermissions(t *testing.T) {
 		t.Errorf("file perm = %o, want 600", perm)
 	}
 }
+
+// --- Merge tests ---
+
+// writePlaintextPad writes a plaintext scratchpad file at the given path.
+func writePlaintextPad(t *testing.T, path string, entries []string) {
+	t.Helper()
+	content := strings.Join(entries, "\n") + "\n"
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// writeEncryptedPad writes an encrypted scratchpad file at the given path
+// using the provided key.
+func writeEncryptedPad(t *testing.T, path string, key []byte, entries []string) {
+	t.Helper()
+	content := strings.Join(entries, "\n") + "\n"
+	ciphertext, encErr := crypto.Encrypt(key, []byte(content))
+	if encErr != nil {
+		t.Fatal(encErr)
+	}
+	if err := os.WriteFile(path, ciphertext, 0600); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestMerge_Basic(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Add existing entries to current pad.
+	for _, e := range []string{"existing1", "existing2"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	// Create a plaintext file with 3 entries (1 duplicate).
+	mergeFile := filepath.Join(dir, "other.md")
+	writePlaintextPad(t, mergeFile, []string{"existing1", "new1", "new2"})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 2 new entries (1 duplicate skipped).") {
+		t.Errorf("output = %q, want merge summary", out)
+	}
+
+	// Verify all 4 unique entries exist.
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range []string{"existing1", "existing2", "new1", "new2"} {
+		if !strings.Contains(listOut, e) {
+			t.Errorf("list missing entry %q", e)
+		}
+	}
+}
+
+func TestMerge_AllDuplicates(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	for _, e := range []string{"alpha", "beta"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	mergeFile := filepath.Join(dir, "dupes.md")
+	writePlaintextPad(t, mergeFile, []string{"alpha", "beta"})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "No new entries to merge (2 duplicates skipped).") {
+		t.Errorf("output = %q, want no-new summary", out)
+	}
+}
+
+func TestMerge_EmptyFile(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	mergeFile := filepath.Join(dir, "empty.md")
+	writePlaintextPad(t, mergeFile, []string{})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "No entries to merge.") {
+		t.Errorf("output = %q, want empty summary", out)
+	}
+}
+
+func TestMerge_MultipleFiles(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "existing")); err != nil {
+		t.Fatal(err)
+	}
+
+	fileA := filepath.Join(dir, "a.md")
+	writePlaintextPad(t, fileA, []string{"from-a", "shared"})
+
+	fileB := filepath.Join(dir, "b.md")
+	writePlaintextPad(t, fileB, []string{"from-b", "shared"})
+
+	out, err := runCmd(newPadCmd("merge", fileA, fileB))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	// "shared" appears in both files; second occurrence is a dupe.
+	if !strings.Contains(out, "Merged 3 new entries (1 duplicate skipped).") {
+		t.Errorf("output = %q, want multi-file summary", out)
+	}
+
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range []string{"existing", "from-a", "from-b", "shared"} {
+		if !strings.Contains(listOut, e) {
+			t.Errorf("list missing entry %q", e)
+		}
+	}
+}
+
+func TestMerge_EncryptedInput(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	if _, err := runCmd(newPadCmd("add", "current")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create encrypted file using the same project key.
+	key, loadErr := crypto.LoadKey(
+		filepath.Join(dir, config.DirContext, config.FileScratchpadKey),
+	)
+	if loadErr != nil {
+		t.Fatal(loadErr)
+	}
+
+	encFile := filepath.Join(dir, "other.enc")
+	writeEncryptedPad(t, encFile, key, []string{"encrypted-entry"})
+
+	out, err := runCmd(newPadCmd("merge", encFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 1 new entry") {
+		t.Errorf("output = %q, want encrypted merge", out)
+	}
+
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(listOut, "encrypted-entry") {
+		t.Errorf("list missing encrypted-entry: %q", listOut)
+	}
+}
+
+func TestMerge_PlaintextFallback(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Plaintext file will fail decryption (no key) and fall back.
+	mergeFile := filepath.Join(dir, "notes.md")
+	writePlaintextPad(t, mergeFile, []string{"fallback-entry"})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 1 new entry") {
+		t.Errorf("output = %q, want fallback merge", out)
+	}
+}
+
+func TestMerge_MixedEncPlain(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	key, loadErr := crypto.LoadKey(
+		filepath.Join(dir, config.DirContext, config.FileScratchpadKey),
+	)
+	if loadErr != nil {
+		t.Fatal(loadErr)
+	}
+
+	encFile := filepath.Join(dir, "enc.enc")
+	writeEncryptedPad(t, encFile, key, []string{"from-enc"})
+
+	plainFile := filepath.Join(dir, "plain.md")
+	writePlaintextPad(t, plainFile, []string{"from-plain"})
+
+	out, err := runCmd(newPadCmd("merge", encFile, plainFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 2 new entries") {
+		t.Errorf("output = %q, want mixed merge", out)
+	}
+}
+
+func TestMerge_DryRun(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "existing")); err != nil {
+		t.Fatal(err)
+	}
+
+	mergeFile := filepath.Join(dir, "notes.md")
+	writePlaintextPad(t, mergeFile, []string{"existing", "new-entry"})
+
+	out, err := runCmd(newPadCmd("merge", "--dry-run", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Would merge 1 new entry") {
+		t.Errorf("output = %q, want dry-run summary", out)
+	}
+
+	// Verify pad was NOT modified.
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(listOut, "new-entry") {
+		t.Error("dry-run should not write entries")
+	}
+}
+
+func TestMerge_CustomKey(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Generate a foreign key.
+	foreignKey, genErr := crypto.GenerateKey()
+	if genErr != nil {
+		t.Fatal(genErr)
+	}
+	foreignKeyFile := filepath.Join(dir, "foreign.key")
+	if err := crypto.SaveKey(foreignKeyFile, foreignKey); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create encrypted file with the foreign key.
+	encFile := filepath.Join(dir, "foreign.enc")
+	writeEncryptedPad(t, encFile, foreignKey, []string{"foreign-secret"})
+
+	out, err := runCmd(newPadCmd("merge", "--key", foreignKeyFile, encFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 1 new entry") {
+		t.Errorf("output = %q, want custom key merge", out)
+	}
+
+	listOut, err := runCmd(newPadCmd())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(listOut, "foreign-secret") {
+		t.Errorf("list missing foreign-secret: %q", listOut)
+	}
+}
+
+func TestMerge_BlobEntries(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	blobEntry := makeBlob("test.txt", []byte("hello world"))
+	if _, err := runCmd(newPadCmd("add", "text-entry")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Create file with same blob + a new blob.
+	newBlob := makeBlob("new.txt", []byte("new content"))
+	mergeFile := filepath.Join(dir, "blobs.md")
+	writePlaintextPad(t, mergeFile, []string{blobEntry, newBlob})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 2 new entries") {
+		t.Errorf("output = %q, want blob merge", out)
+	}
+	if !strings.Contains(out, "new.txt [BLOB]") {
+		t.Errorf("output missing blob display: %q", out)
+	}
+}
+
+func TestMerge_BlobConflict(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Add a blob with label "config.json".
+	blob1 := makeBlob("config.json", []byte(`{"v":1}`))
+	mergeFile1 := filepath.Join(dir, "first.md")
+	writePlaintextPad(t, mergeFile1, []string{blob1})
+	if _, err := runCmd(newPadCmd("merge", mergeFile1)); err != nil {
+		t.Fatal(err)
+	}
+
+	// Merge a different blob with the same label.
+	blob2 := makeBlob("config.json", []byte(`{"v":2}`))
+	mergeFile2 := filepath.Join(dir, "second.md")
+	writePlaintextPad(t, mergeFile2, []string{blob2})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile2))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "different content across sources") {
+		t.Errorf("output missing conflict warning: %q", out)
+	}
+	if !strings.Contains(out, "Merged 1 new entry") {
+		t.Errorf("conflicting blob should still be added: %q", out)
+	}
+}
+
+func TestMerge_BinaryWarning(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Write raw binary data (not valid UTF-8).
+	binFile := filepath.Join(dir, "garbage.bin")
+	if err := os.WriteFile(binFile, []byte{0xff, 0xfe, 0x00, 0x01, 0x80, 0x90}, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("merge", binFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "appears to contain binary data") {
+		t.Errorf("output missing binary warning: %q", out)
+	}
+}
+
+func TestMerge_FileNotFound(t *testing.T) {
+	setupPlaintext(t)
+
+	_, err := runCmd(newPadCmd("merge", "/nonexistent/file.md"))
+	if err == nil {
+		t.Fatal("expected error for missing file")
+	}
+}
+
+func TestMerge_EmptyPadMerge(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Current pad is empty; merge entries into it.
+	mergeFile := filepath.Join(dir, "fresh.md")
+	writePlaintextPad(t, mergeFile, []string{"alpha", "beta", "gamma"})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 3 new entries (0 duplicates skipped).") {
+		t.Errorf("output = %q, want empty pad merge", out)
+	}
+}
+
+func TestMerge_PlaintextMode(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	if _, err := runCmd(newPadCmd("add", "plaintext-existing")); err != nil {
+		t.Fatal(err)
+	}
+
+	mergeFile := filepath.Join(dir, "notes.md")
+	writePlaintextPad(t, mergeFile, []string{"plaintext-new"})
+
+	out, err := runCmd(newPadCmd("merge", mergeFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	if !strings.Contains(out, "Merged 1 new entry") {
+		t.Errorf("output = %q, want plaintext merge", out)
+	}
+
+	// Verify the scratchpad.md file is plaintext.
+	padPath := filepath.Join(dir, config.DirContext, config.FileScratchpadMd)
+	data, readErr := os.ReadFile(padPath)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	content := string(data)
+	if !strings.Contains(content, "plaintext-existing") ||
+		!strings.Contains(content, "plaintext-new") {
+		t.Errorf("pad content = %q, missing entries", content)
+	}
+}
+
+func TestMerge_PreservesOrder(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Add entries in specific order.
+	for _, e := range []string{"first", "second", "third"} {
+		if _, err := runCmd(newPadCmd("add", e)); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	mergeFile := filepath.Join(dir, "new.md")
+	writePlaintextPad(t, mergeFile, []string{"fourth", "fifth"})
+
+	if _, err := runCmd(newPadCmd("merge", mergeFile)); err != nil {
+		t.Fatal(err)
+	}
+
+	// Read the raw pad and verify order.
+	padPath := filepath.Join(dir, config.DirContext, config.FileScratchpadMd)
+	data, readErr := os.ReadFile(padPath)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+	expected := []string{"first", "second", "third", "fourth", "fifth"}
+	if len(lines) != len(expected) {
+		t.Fatalf("got %d lines, want %d: %v", len(lines), len(expected), lines)
+	}
+	for i, want := range expected {
+		if lines[i] != want {
+			t.Errorf("line %d = %q, want %q", i, lines[i], want)
+		}
+	}
+}
+
+func TestMerge_CrossFileDedup(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Merge two files where entries overlap across files AND with current pad.
+	if _, err := runCmd(newPadCmd("add", "base")); err != nil {
+		t.Fatal(err)
+	}
+
+	fileA := filepath.Join(dir, "a.md")
+	writePlaintextPad(t, fileA, []string{"base", "unique-a", "shared-ab"})
+
+	fileB := filepath.Join(dir, "b.md")
+	writePlaintextPad(t, fileB, []string{"shared-ab", "unique-b"})
+
+	out, err := runCmd(newPadCmd("merge", fileA, fileB))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	// base: dupe (in pad), shared-ab from A: new, shared-ab from B: dupe
+	// unique-a: new, unique-b: new
+	if !strings.Contains(out, "Merged 3 new entries (2 duplicates skipped).") {
+		t.Errorf("output = %q, want cross-file dedup summary", out)
+	}
+}
+
+func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	// Add a blob to the current pad.
+	blob := makeBlob("readme.md", []byte("# README"))
+	f := filepath.Join(dir, "tmp-readme.md")
+	if err := os.WriteFile(f, []byte("# README"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCmd(newPadCmd("add", "--file", f, "readme.md")); err != nil {
+		t.Fatal(err)
+	}
+
+	// Get the project key.
+	key, loadErr := crypto.LoadKey(
+		filepath.Join(dir, config.DirContext, config.FileScratchpadKey),
+	)
+	if loadErr != nil {
+		t.Fatal(loadErr)
+	}
+
+	// Create encrypted file with the same blob.
+	encFile := filepath.Join(dir, "merge.enc")
+	writeEncryptedPad(t, encFile, key, []string{blob, "new-text"})
+
+	out, err := runCmd(newPadCmd("merge", encFile))
+	if err != nil {
+		t.Fatalf("merge error: %v", err)
+	}
+	// blob is duplicate, "new-text" is new.
+	if !strings.Contains(out, "Merged 1 new entry (1 duplicate skipped).") {
+		t.Errorf("output = %q, want encrypted blob dedup", out)
+	}
+}
+
+func TestPluralize(t *testing.T) {
+	tests := []struct {
+		word  string
+		count int
+		want  string
+	}{
+		{"entry", 1, "entry"},
+		{"entry", 0, "entries"},
+		{"entry", 2, "entries"},
+		{"duplicate", 1, "duplicate"},
+		{"duplicate", 3, "duplicates"},
+	}
+
+	for _, tt := range tests {
+		got := pluralize(tt.word, tt.count)
+		if got != tt.want {
+			t.Errorf(
+				"pluralize(%q, %d) = %q, want %q",
+				tt.word, tt.count, got, tt.want,
+			)
+		}
+	}
+}
+
+// Verify unused import doesn't cause issues.
+var _ = base64.StdEncoding

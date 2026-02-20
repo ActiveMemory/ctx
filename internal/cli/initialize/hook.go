@@ -48,10 +48,10 @@ func mergeSettingsPermissions(cmd *cobra.Command) error {
 	}
 
 	// Merge permissions - always additive, never removes existing permissions
-	defaultPerms := config.DefaultClaudePermissions
-	permsModified := mergePermissions(&settings.Permissions, defaultPerms)
+	allowModified := mergePermissions(&settings.Permissions.Allow, config.DefaultClaudePermissions)
+	denyModified := mergePermissions(&settings.Permissions.Deny, config.DefaultClaudeDenyPermissions)
 
-	if !permsModified {
+	if !allowModified && !denyModified {
 		cmd.Printf(
 			"  %s %s (no changes needed)\n", yellow("○"), config.FileSettings,
 		)
@@ -77,7 +77,14 @@ func mergeSettingsPermissions(cmd *cobra.Command) error {
 	}
 
 	if fileExists {
-		cmd.Printf("  %s %s (added ctx permissions)\n", green("✓"), config.FileSettings)
+		switch {
+		case allowModified && denyModified:
+			cmd.Printf("  %s %s (added ctx allow + deny permissions)\n", green("✓"), config.FileSettings)
+		case denyModified:
+			cmd.Printf("  %s %s (added ctx deny permissions)\n", green("✓"), config.FileSettings)
+		default:
+			cmd.Printf("  %s %s (added ctx permissions)\n", green("✓"), config.FileSettings)
+		}
 	} else {
 		cmd.Printf("  %s %s\n", green("✓"), config.FileSettings)
 	}
@@ -85,29 +92,29 @@ func mergeSettingsPermissions(cmd *cobra.Command) error {
 	return nil
 }
 
-// mergePermissions adds missing permissions to the allow list.
+// mergePermissions adds missing entries to a string slice.
 //
-// Only adds permissions that don't already exist. Never removes existing
-// permissions to preserve user customizations.
+// Only adds entries that don't already exist. Never removes existing
+// entries to preserve user customizations. Works on both allow and deny lists.
 //
 // Parameters:
-//   - perms: Existing permissions config to modify
-//   - defaults: Default permissions to add if missing
+//   - slice: Pointer to existing string slice to modify
+//   - defaults: Default entries to add if missing
 //
 // Returns:
-//   - bool: True if any permissions were added
-func mergePermissions(perms *claude.PermissionsConfig, defaults []string) bool {
-	// Build a set of existing permissions for fast lookup
+//   - bool: True if any entries were added
+func mergePermissions(slice *[]string, defaults []string) bool {
+	// Build a set of existing entries for fast lookup
 	existing := make(map[string]bool)
-	for _, p := range perms.Allow {
+	for _, p := range *slice {
 		existing[p] = true
 	}
 
-	// Add missing permissions
+	// Add missing entries
 	added := false
 	for _, p := range defaults {
 		if !existing[p] {
-			perms.Allow = append(perms.Allow, p)
+			*slice = append(*slice, p)
 			added = true
 		}
 	}

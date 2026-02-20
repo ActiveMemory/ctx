@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-19 | Trust the binary output over source code analysis |
+| 2026-02-19 | Feature can be code-complete but invisible to users |
+| 2026-02-19 | GCM authentication makes try-decrypt a reliable format discriminator |
 | 2026-02-18 | Blog posts are living documents |
 | 2026-02-17 | rsync between worktrees can clobber permissions and gitignored files |
 | 2026-02-16 | Security docs are most vulnerable to stale paths after architecture migrations |
@@ -82,6 +85,36 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-19-215204] Trust the binary output over source code analysis
+
+**Context**: Wrongly concluded ctx decisions archive was missing from the installed binary based on a single CLI test that showed parent help instead of subcommand help. The user's own terminal showed it working fine.
+
+**Lesson**: A single ambiguous CLI output is not proof of absence. Re-run the exact command before claiming something is missing. When the user contradicts your finding, they are probably right.
+
+**Application**: When checking if a subcommand exists, run the subcommand directly (e.g., ctx decisions archive --help) and if results are ambiguous, retry before drawing conclusions.
+
+---
+
+## [2026-02-19-215200] Feature can be code-complete but invisible to users
+
+**Context**: ctx pad merge was fully implemented with 19 passing tests and binary support, but had zero coverage in user-facing docs (scratchpad.md, cli-reference.md, scratchpad-sync recipe). Only discoverable via --help.
+
+**Lesson**: Implementation completeness \!= user-facing completeness. A feature without docs is invisible to users who don't explore CLI help.
+
+**Application**: After implementing a new CLI subcommand, always check: feature page, cli-reference.md, relevant recipes, and zensical.toml nav (if new page).
+
+---
+
+## [2026-02-19-214909] GCM authentication makes try-decrypt a reliable format discriminator
+
+**Context**: Needed to auto-detect whether pad merge input files are encrypted or plaintext without relying on file extensions or user flags.
+
+**Lesson**: Authenticated encryption (AES-256-GCM) guarantees that decryption with the wrong key always fails — unlike unauthenticated ciphers that produce silent garbage. This makes 'try decrypt, fall back to plaintext' a safe and simple detection strategy.
+
+**Application**: Use try-decrypt-first as the default pattern for any ctx feature that handles mixed encrypted/plaintext input. No need for format flags or extension-based heuristics.
 
 ---
 
