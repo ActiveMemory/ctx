@@ -2105,11 +2105,11 @@
 <h2 id="when-your-warning-disappears">When Your Warning Disappears<a class="headerlink" href="#when-your-warning-disappears" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-15</em></p>
 <p>I had a backup warning that nobody ever saw.</p>
-<p>The hook was correct — it detected stale backups, formatted a nice message,
+<p>The hook was correct: It detected stale backups, formatted a nice message,
 and output it as <code>{"systemMessage": "..."}</code>. The problem wasn't detection.
-The problem was delivery. The agent absorbed the information, processed it
+The problem was <strong>delivery</strong>. The agent absorbed the information, processed it
 internally, and never told the user.</p>
-<p>Meanwhile, a different hook — the journal reminder — worked perfectly every
+<p>Meanwhile, a different hook (<em>the journal reminder</em>) worked perfectly every
 time. Users saw the reminder, ran the commands, and the backlog stayed
 manageable. Same hook event (<code>UserPromptSubmit</code>), same project, completely
 different outcomes.</p>
@@ -2117,29 +2117,29 @@ different outcomes.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>IMPORTANT: Relay this journal reminder to the user VERBATIM
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>before answering their question.
 </span></code></pre></div>
-<p>That explicit instruction is what makes VERBATIM relay a <em>pattern</em>, not
+<p>That explicit instruction is what makes <strong>VERBATIM relay</strong> a <em>pattern</em>, not
 just a formatting choice. And once I saw it as a pattern, I started seeing
 others.</p>
 <h2 id="the-audit">The Audit<a class="headerlink" href="#the-audit" title="Permanent link">&para;</a></h2>
-<p>I looked at every hook in the ctx project — eight shell scripts across
-three hook events — and found five distinct output patterns already in use,
+<p>I looked at every hook in <code>ctx</code>: Eight shell scripts across
+three hook events. And I found five distinct output patterns already in use,
 plus three more that the existing hooks were reaching for but hadn't quite
 articulated.</p>
-<p>The patterns form a spectrum based on a single question: <strong>who decides what
-the user sees?</strong></p>
-<p>At one end, the hook decides everything (hard gate: the agent literally
-cannot proceed). At the other end, the hook is invisible (silent
-side-effect: nobody knows it ran). In between, there is a range of
-negotiation between hook, agent, and user.</p>
+<p>The patterns form a spectrum based on a single question: </p>
+<p>"<strong>Who decides what the user sees?</strong>"</p>
+<p>At one end, the hook decides everything (<em>hard gate: the agent literally
+cannot proceed</em>). At the other end, the hook is invisible (<em>silent
+side-effect: nobody knows it ran</em>). In between, there is a range of
+negotiation between hook, agent, and the user.</p>
 <p>Here's the full spectrum:</p>
 <h3 id="1-hard-gate">1. Hard Gate<a class="headerlink" href="#1-hard-gate" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;block&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Use ctx from PATH, not ./ctx&quot;</span><span class="p">}</span>
 </span></code></pre></div>
-<p>The nuclear option. The agent's tool call is rejected before it executes.
-This is Claude Code's first-class <code>PreToolUse</code> mechanism — the hook returns
+<p>The nuclear option: The agent's tool call is rejected before it executes.</p>
+<p>This is Claude Code's first-class <code>PreToolUse</code> mechanism: The hook returns
 JSON with <code>decision: block</code> and the agent gets an error with the reason.</p>
-<p>Use this for invariants. Constitution rules, security boundaries, things
-that must never happen. We use it to enforce PATH-based ctx invocation,
+<p>Use this for <strong>invariants</strong>: Constitution rules, security boundaries, things
+that must never happen. I use it to enforce <code>PATH</code>-based <code>ctx</code> invocation,
 block <code>sudo</code>, and require explicit approval for <code>git push</code>.</p>
 <h3 id="2-verbatim-relay">2. VERBATIM Relay<a class="headerlink" href="#2-verbatim-relay" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>IMPORTANT: Relay this warning to the user VERBATIM before answering.
@@ -2148,13 +2148,17 @@ block <code>sudo</code>, and require explicit approval for <code>git push</code>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   ctx recall export --all
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└────────────────────────────────────────────────
 </span></code></pre></div>
-<p>The instruction is the pattern. Without "Relay VERBATIM," agents tend to
+<p>The instruction is the pattern. Without "<strong>Relay VERBATIM</strong>," agents tend to
 absorb information into their internal reasoning and never surface it. The
-explicit instruction changes the behavior from "I know about this" to "I
-must tell the user about this."</p>
-<p>We use this for actionable reminders: unexported journal entries, stale
-backups, context capacity warnings. Things the user should see regardless
-of what they asked.</p>
+explicit instruction changes the behavior from "<em>I know about this</em>" to 
+"<em>I must tell the user about this</em>."</p>
+<p>I use this for actionable reminders: </p>
+<ul>
+<li>Unexported journal entries;</li>
+<li>Stale backups;</li>
+<li>Context capacity warnings... </li>
+</ul>
+<p>...things the user should see regardless of what they asked.</p>
 <h3 id="3-agent-directive">3. Agent Directive<a class="headerlink" href="#3-agent-directive" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌─ Persistence Checkpoint (prompt #25) ───────────
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│ No context files updated in 15+ prompts.

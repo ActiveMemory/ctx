@@ -2701,7 +2701,7 @@ than "Consider..."), but ultimately the agent decides.</p>
 <h2 id="pattern-4-silent-context-injection">Pattern 4: Silent Context Injection<a class="headerlink" href="#pattern-4-silent-context-injection" title="Permanent link">&para;</a></h2>
 <p><strong>Load context with no visible output</strong>. The agent gets enriched without
 either party noticing.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 </span></code></pre></div>
 <p><strong>When to use:</strong> Background context loading that should be invisible.
 The agent benefits from the information, but neither it, nor the user needs

@@ -2110,7 +2110,7 @@
 <h2 id="the-backlog-problem">The Backlog Problem<a class="headerlink" href="#the-backlog-problem" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / 2026-02-14</em></p>
 <div class="admonition question">
-<p class="admonition-title">What do you do with 30 open tasks?</p>
+<p class="admonition-title">What Do You Do With 30 Open Tasks?</p>
 <p>You could work through them one at a time.</p>
 <p>One agent, one branch, one commit stream.</p>
 <p>Or you could ask: <strong>which of these don't touch each other?</strong></p>
@@ -2118,18 +2118,18 @@
 <p>I had 30 open tasks in <code>TASKS.md</code>. Some were docs. Some were a new
 encryption package. Some were test coverage for a stable module. Some
 were blog posts.</p>
-<p>They had almost zero file overlap.</p>
+<p>They had almost <em>zero</em> file overlap.</p>
 <p>Running one agent at a time meant serial execution on work that was
 fundamentally parallel:</p>
 <p>I was bottlenecking on <strong>me</strong>, not on the machine.</p>
 <h2 id="the-insight-file-overlap-is-the-constraint">The Insight: File Overlap Is the Constraint<a class="headerlink" href="#the-insight-file-overlap-is-the-constraint" title="Permanent link">&para;</a></h2>
-<p>This is not a scheduling problem. It is a <strong>conflict avoidance</strong> problem.</p>
-<p>Two agents can work simultaneously on the same codebase if and only if
+<p>This is <strong>not</strong> a scheduling problem: It's a <strong>conflict avoidance</strong> problem.</p>
+<p>Two agents can work simultaneously on the same codebase <strong>if and only if</strong>
 they don't touch the same files. The moment they do, you get merge
-conflicts: And merge conflicts on AI-generated code are expensive
+conflicts: And merge conflicts on AI-generated code are <strong>expensive</strong>
 because the human has to arbitrate choices they didn't make.</p>
-<p>So the question becomes: <strong>can you partition your backlog into
-non-overlapping tracks?</strong></p>
+<p>So the question becomes: </p>
+<p>"<strong>Can you partition your backlog into non-overlapping tracks?</strong>"</p>
 <p>For <code>ctx</code>, the answer was obvious:</p>
 <table>
 <thead>
@@ -2159,16 +2159,20 @@ non-overlapping tracks?</strong></p>
 </table>
 <p>Three tracks. Near-zero overlap. Three agents.</p>
 <h2 id="git-worktrees-the-mechanism">Git Worktrees: The Mechanism<a class="headerlink" href="#git-worktrees-the-mechanism" title="Permanent link">&para;</a></h2>
-<p>Git has a feature that most people don't use: <strong>worktrees</strong>.</p>
+<p><code>git</code> has a feature that most people don't use: <strong>worktrees</strong>.</p>
 <p>A <strong>worktree</strong> is a second (<em>or third, or fourth</em>) working directory that
-shares the same <code>.git</code> object database as your main checkout. Each
-worktree has its own branch, its own index, its own working tree. But
+shares the same <code>.git</code> object database as your main checkout. </p>
+<p>Each worktree has its own branch, its own index, its own working tree. But
 they all share history, refs, and objects.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../ctx-docs<span class="w"> </span>-b<span class="w"> </span>work/docs
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../ctx-pad<span class="w"> </span>-b<span class="w"> </span>work/pad
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../ctx-tests<span class="w"> </span>-b<span class="w"> </span>work/tests
 </span></code></pre></div>
-<p>Three directories. Three branches. One repository.</p>
+<ul>
+<li><strong>Three</strong> directories;</li>
+<li><strong>Three</strong> branches;</li>
+<li><strong>One</strong> repository.</li>
+</ul>
 <p>This is <strong>cheaper</strong> than three clones. And because they share objects,
 <code>git merge</code> afterwards is fast: It's a local operation on shared data.</p>
 <h2 id="the-setup">The Setup<a class="headerlink" href="#the-setup" title="Permanent link">&para;</a></h2>
@@ -2179,8 +2183,8 @@ directories it touches. Group tasks that share files into the same
 track. Tasks with no overlap go into separate tracks.</p>
 <p>This is the part that requires <strong>human judgment</strong>: </p>
 <p>An agent can propose groupings, but you need to verify that the boundaries are 
-real. A task that says "<em>update docs</em>" but actually touches Go code will poison a
-docs track.</p>
+real. A task that says "<em>update docs</em>" but actually touches Go code will poison
+a docs track.</p>
 <p><strong>2. Create worktrees as sibling directories.</strong></p>
 <p>Not subdirectories: Siblings. </p>
 <p>If your main checkout is at <code>~/WORKSPACE/ctx</code>, worktrees go 
@@ -2203,7 +2207,7 @@ the same <code>TASKS.md</code>, the same <code>DECISIONS.md</code>, the same <co
 It knows the full project state. It just works on a different slice.</p>
 <p><strong>4. Do NOT run <code>ctx init</code> in worktrees.</strong></p>
 <p>This is the gotcha. The <code>.context/</code> directory is tracked in git. Running
-<code>ctx init</code> in a worktree would overwrite shared context files — wiping
+<code>ctx init</code> in a worktree would overwrite shared context files: Wiping
 decisions, learnings, and tasks that belong to the whole project.</p>
 <p>The worktree already has everything it needs. Leave it alone.</p>
 <h2 id="what-actually-happened">What Actually Happened<a class="headerlink" href="#what-actually-happened" title="Permanent link">&para;</a></h2>
@@ -2214,9 +2218,9 @@ index reorganization, IRC recipe moved from <code>docs/</code> to <code>hack/</c
 <p><strong><code>work/pad</code></strong>: <code>ctx pad show</code> subcommand, <code>--append</code> and <code>--prepend</code>
 flags on <code>ctx pad edit</code>, spec updates, 28 new test functions.</p>
 <p><strong><code>work/tests</code></strong>: Recall test coverage, edge case tests.</p>
-<p>Merging took about <strong>five</strong> minutes. Two of the three merges were clean.</p>
-<p>The third had a conflict in <code>TASKS.md</code> — both the docs track and the
-pad track had marked different tasks as <code>[x]</code>.</p>
+<p>Merging took about <strong>five</strong> minutes. Two of the three merges were <strong>clean</strong>.</p>
+<p>The third had a conflict in <code>TASKS.md</code>: </p>
+<p>both the docs track and the pad track had marked different tasks as <code>[x]</code>.</p>
 <h2 id="the-tasksmd-conflict">The <code>TASKS.md</code> Conflict<a class="headerlink" href="#the-tasksmd-conflict" title="Permanent link">&para;</a></h2>
 <p>This deserves its own section because it will happen <strong>every time</strong>.</p>
 <p>When two agents work in parallel, they both read <code>TASKS.md</code> at the
@@ -2226,18 +2230,18 @@ branches that modified the same file differently.</p>
 sides</strong>. No task should go from <code>[x]</code> back to <code>[ ]</code>. The merge is
 additive.</p>
 <p>This is one of those conflicts that sounds scary but is trivially
-mechanical: You are not arbitrating design decisions; you are combining
-two checklists.</p>
+mechanical: You are not arbitrating design decisions; you are <strong>combining
+two checklists</strong>.</p>
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
 <p><strong>3-4 worktrees, maximum.</strong> </p>
-<p>I tried four once. By the time I merged the third track, the fourth had drifted
+<p>I tried four once: By the time I merged the third track, the fourth had drifted
 far enough that its changes needed rebasing. </p>
-<p>The merge complexity grows faster than the parallelism benefit.</p>
+<p><strong>The merge complexity grows faster than the parallelism benefit</strong>.</p>
 <p>Three is the sweet spot:</p>
 <ul>
-<li>Two is conservative but safe;</li>
-<li>Four is possible if the tracks are truly independent;</li>
-<li>Anything more than four, you are in the danger zone.</li>
+<li><strong>Two</strong> is conservative but safe;</li>
+<li><strong>Four</strong> is possible if the tracks are truly independent;</li>
+<li>Anything more than four, you are in the <strong>danger zone</strong>.</li>
 </ul>
 <p><strong>Group by directory, not by priority.</strong></p>
 <p>It is tempting to put all the high-priority tasks in one track: <strong>Don't</strong>. </p>
@@ -2255,8 +2259,8 @@ logical step.</p>
 <h2 id="the-pattern">The Pattern<a class="headerlink" href="#the-pattern" title="Permanent link">&para;</a></h2>
 <p>This is the same pattern that shows up everywhere in <code>ctx</code>:</p>
 <p><a href="../2026-02-03-the-attention-budget/"><strong>The attention budget</strong></a> taught me that you can't dump
-everything into one context window. You have to partition, prioritize,
-and load selectively.</p>
+everything into one context window. You have to <strong>partition</strong>, <strong>prioritize</strong>,
+and <strong>load</strong> <em>selectively</em>.</p>
 <p>Worktrees are the same principle applied to <strong>execution</strong>: You can't
 dump every task into one agent's workstream. You have to <strong>partition by
 blast radius</strong>, assign <strong>selectively</strong>, and merge <strong>deliberately</strong>.</p>
@@ -2271,8 +2275,9 @@ that gives each agent the project's full memory.</p>
 <h2 id="should-this-be-a-skill">Should This Be a Skill?<a class="headerlink" href="#should-this-be-a-skill" title="Permanent link">&para;</a></h2>
 <p>I asked myself the <a href="../2026-02-08-not-everything-is-a-skill/">same question I asked about the codebase
 audit</a>: should this be a <code>/ctx-worktree</code> skill?</p>
-<p>This time the answer is yes. Unlike the audit prompt — which I tweak
-every time and run quarterly — the worktree workflow is:</p>
+<p>This time the answer was a resounding "<strong>yes</strong>": </p>
+<p>Unlike the audit prompt (<em>which I tweak every time and run every other week</em>)
+the worktree workflow is:</p>
 <table>
 <thead>
 <tr>
@@ -2304,7 +2309,7 @@ every time and run quarterly — the worktree workflow is:</p>
 </tr>
 </tbody>
 </table>
-<p>The commands are mechanical: <code>git worktree add</code>, <code>git worktree remove</code>,
+<p>The commands are <strong>mechanical</strong>: <code>git worktree add</code>, <code>git worktree remove</code>,
 branch naming, safety checks. This is exactly what skills are for:
 <strong>stable contracts</strong> for repetitive operations.</p>
 <p>Ergo, <code>/ctx-worktree</code> exists. </p>
@@ -2318,9 +2323,9 @@ your throughput with nothing more exotic than <code>git worktree</code> and
 a second terminal window.</p>
 <p>The hard part is not the <code>git</code> commands; it is the <strong>discipline</strong>:</p>
 <ul>
-<li>Grouping by blast radius instead of priority; </li>
-<li>Accepting that <code>TASKS.md</code> will conflict; </li>
-<li>And knowing when three tracks is enough.</li>
+<li><strong>Grouping</strong> by blast radius instead of priority; </li>
+<li><strong>Accepting</strong> that <code>TASKS.md</code> will conflict; </li>
+<li>And <strong>knowing</strong> when three tracks is enough.</li>
 </ul>
 <hr />
 <div class="admonition quote">

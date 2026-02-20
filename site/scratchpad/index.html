@@ -1669,6 +1669,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#merging-scratchpads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merging Scratchpads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#file-blobs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2213,6 +2224,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#merging-scratchpads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merging Scratchpads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#file-blobs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2445,6 +2467,10 @@ No external dependencies: Go stdlib only.</p>
 <td><code>ctx pad export [DIR]</code></td>
 <td>Export all blob entries to a directory as files</td>
 </tr>
+<tr>
+<td><code>ctx pad merge FILE...</code></td>
+<td>Merge entries from other scratchpad files into current</td>
+</tr>
 </tbody>
 </table>
 <p>All commands decrypt on read, operate on plaintext in memory, and
@@ -2489,22 +2515,41 @@ re-encrypt on write. The key file is never printed to stdout.</p>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Overwrite existing files</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
 </span></code></pre></div>
+<h2 id="merging-scratchpads">Merging Scratchpads<a class="headerlink" href="#merging-scratchpads" title="Permanent link">&para;</a></h2>
+<p>Combine entries from other scratchpad files into your current pad. Useful
+when merging work from parallel worktrees, other machines, or teammates:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Merge from a worktree&#39;s encrypted scratchpad</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Merge from multiple sources (encrypted and plaintext)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>pad-a.enc<span class="w"> </span>notes.md
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Merge a foreign encrypted pad using its key</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.scratchpad.key<span class="w"> </span>foreign.enc
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Preview without writing</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
+</span></code></pre></div>
+<p>Each input file is auto-detected as encrypted or plaintext — decryption is
+attempted first, and on failure the file is parsed as plain text. Entries are
+deduplicated by exact content, so running merge twice with the same file is
+safe.</p>
 <h2 id="file-blobs">File Blobs<a class="headerlink" href="#file-blobs" title="Permanent link">&para;</a></h2>
 <p>The scratchpad can store small files (up to 64 KB) as blob entries. Files
 are base64-encoded and stored with a human-readable label.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ingest a file — first argument is the label</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Listing shows label with a [BLOB] marker</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>pad
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">#   1. check DNS propagation after deploy</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">#   2. deploy config [BLOB]</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Extract to a file</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Or print decoded content to stdout</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Ingest a file — first argument is the label</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Listing shows label with a [BLOB] marker</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>pad
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">#   1. check DNS propagation after deploy</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">#   2. deploy config [BLOB]</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Extract to a file</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered.yaml
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Or print decoded content to stdout</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span>
 </span></code></pre></div>
 <p>Blob entries are encrypted identically to text entries. The internal format
 is <code>label:::base64data</code> — you never need to construct this manually.</p>
@@ -2581,6 +2626,10 @@ don't need to remember the syntax:</p>
 <td>"export all blobs to ./backup"</td>
 <td><code>ctx pad export ./backup</code></td>
 </tr>
+<tr>
+<td>"merge the scratchpad from the worktree"</td>
+<td><code>ctx pad merge worktree/.context/scratchpad.enc</code></td>
+</tr>
 </tbody>
 </table>
 <p>The skill handles the translation. You describe what you want in plain
@@ -2604,7 +2653,7 @@ repo access can decrypt your scratchpad. </p>
 recipe for a step-by-step walkthrough.</p>
 <h2 id="plaintext-override">Plaintext Override<a class="headerlink" href="#plaintext-override" title="Permanent link">&para;</a></h2>
 <p>For projects where encryption is unnecessary, disable it in <code>.contextrc</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
 <p>In plaintext mode:</p>
 <ul>
