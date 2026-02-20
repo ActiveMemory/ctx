@@ -32,28 +32,9 @@ conventions, and learnings:
 
 ## Community
 
-**Open source is better together**.
+**[Join the ctx Community →](community.md)**
 
-<!-- the long line is required for zensical to render block quote -->
-
-!!! tip "Help `ctx` Change How AI Remembers"
-    **If the idea behind `ctx` resonates, a star helps it reach engineers
-    who run into context drift every day.**
-
-    → https://github.com/ActiveMemory/ctx
-
-    `ctx` is free and open source software, and **contributions are always
-    welcome** and appreciated.
-
-Join the community to ask questions, share feedback, and connect with
-other users:
-
-- [:fontawesome-brands-stack-exchange: **IRC**](https://web.libera.chat/#ctx):
-   join `#ctx` on `irc.libera.chat`
-- [:fontawesome-brands-github: **GitHub**](https://github.com/ActiveMemory/ctx):
-  Star the repo, report issues, contribute
-
-## Why? — I Keep Re-Explaining My Codebase
+## Why Do I Keep Re-Explaining My Codebase?!?!
 
 You open a new AI session. The first thing you do is re-explain your project.
 

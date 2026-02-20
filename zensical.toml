@@ -28,6 +28,8 @@ nav = [
   { "Home" = [
     "about.md",
     "is-ctx-right.md",
+    "community.md",
+    "contributing.md",
     "getting-started.md",
     "first-session.md",
     "common-workflows.md",
@@ -37,7 +39,9 @@ nav = [
   { "Recipes" = [
     "recipes/index.md",
     "recipes/session-lifecycle.md",
+    "recipes/session-ceremonies.md",
     "recipes/knowledge-capture.md",
+    "recipes/knowledge-scaling.md",
     "recipes/context-health.md",
     "recipes/task-management.md",
     "recipes/session-archaeology.md",
@@ -62,7 +66,6 @@ nav = [
     "versions.md",
   ]},
   { "Operations" = [
-    "contributing.md",
     "migration.md",
     "upgrading.md",
     "integrations.md",
