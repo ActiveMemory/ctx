@@ -375,7 +375,7 @@ The entire blog series has been circling this point:
 
 Every post has arrived (*and made me converge*) at the same answer so far: 
 
-**The metric is verified change, not generated output**.
+**The metric is a verified change, not generated output**.
 
 ---
 
@@ -430,7 +430,7 @@ This is *slower* to watch. **Faster** to ship.
 
 ---
 
-*See also: [Code Is Cheap. Judgment Is Not.][judgment] -- the argument
+*See also: [Code Is Cheap. Judgment Is Not.][judgment]: the argument
 that production capacity was never the bottleneck, and why multiplying
 agents amplifies the need for human judgment rather than replacing it.*
 
