@@ -122,18 +122,18 @@ project using ctx:
 
 ### Design Principles
 
-**Use wildcards for trusted binaries.** If you trust the binary (your own
+**Use wildcards for trusted binaries**: If you trust the binary (your own
 project's CLI, `make`, `go`), a single wildcard like `Bash(ctx:*)` beats
 twenty subcommand entries. It reduces noise and means new subcommands work
 without re-prompting.
 
-**Keep git commands granular.** Unlike `ctx` or `make`, git has both safe
+**Keep `git` commands granular**: Unlike `ctx` or `make`, git has both safe
 commands (`git log`, `git status`) and destructive ones (`git reset --hard`,
 `git clean -f`). Listing safe commands individually prevents accidentally
 pre-approving dangerous ones.
 
-**Pre-approve all ctx skills.** Skills shipped with ctx (`Skill(ctx-*)`) are
-safe to pre-approve — they are part of your project and you control their
+**Pre-approve all `ctx-` skills**: Skills shipped with ctx (`Skill(ctx-*)`) are
+safe to pre-approve. They are part of your project and you control their
 content. This prevents the agent from prompting on every skill invocation.
 
 ### Default Deny Rules
@@ -156,7 +156,7 @@ The defaults block:
 
 !!! note "Read/Edit deny rules"
     `Read()` and `Edit()` deny rules have known upstream enforcement issues
-    (claude-code#6631, #24846). They are included as defense-in-depth and
+    (`claude-code#6631,#24846`). They are included as defense-in-depth and
     intent documentation.
 
 **Blocked by default deny rules** — no action needed, `ctx init` handles these:
@@ -168,19 +168,19 @@ The defaults block:
 | `Bash(rm -rf:*)`                | Recursive delete with no confirmation          |
 | `Bash(curl:*)` / `Bash(wget:*)` | Arbitrary network requests                     |
 
-**Requires manual discipline** — never add these to `allow`:
+**Requires manual discipline**: **Never** add these to `allow`:
 
-| Pattern                         | Risk                                           |
-|---------------------------------|------------------------------------------------|
-| `Bash(git reset:*)`             | Can discard uncommitted work                   |
-| `Bash(git clean:*)`             | Deletes untracked files                        |
-| `Skill(sanitize-permissions)`   | Edits this file — self-modification vector     |
-| `Skill(release)`                | Runs release pipeline — high impact            |
+| Pattern                         | Risk                                      |
+|---------------------------------|-------------------------------------------|
+| `Bash(git reset:*)`             | Can discard uncommitted work              |
+| `Bash(git clean:*)`             | Deletes untracked files                   |
+| `Skill(sanitize-permissions)`   | Edits this file: self-modification vector |
+| `Skill(release)`                | Runs the release pipeline: high impact    |
 
 ## Hooks: Regex Safety Net
 
 Deny rules handle prefix-based blocking natively. Hooks complement them by
-catching patterns that require regex matching — things deny rules can't express.
+catching patterns that require regex matching: Things deny rules can't express.
 
 The ctx plugin ships these blocking hooks:
 
@@ -190,8 +190,8 @@ The ctx plugin ships these blocking hooks:
 
 Project-local hooks (not part of the plugin) catch regex edge cases:
 
-| Hook                          | What it blocks                              |
-|-------------------------------|---------------------------------------------|
+| Hook                          | What it blocks                                                                    |
+|-------------------------------|-----------------------------------------------------------------------------------|
 | `block-dangerous-commands.sh` | Mid-command `sudo`/`git push` (after `&&`), copies to bin dirs, absolute-path ctx |
 
 !!! note "`block-git-push.sh` retired"
@@ -248,9 +248,10 @@ allowlist manually.
 
 ### Golden image snapshots
 
-If manual cleanup is too tedious, use a golden image to automate it. Snapshot
-a curated permission set, then restore at session start to automatically drop
-session-accumulated permissions. See the
+If manual cleanup is too tedious, use a **golden image** to automate it: 
+
+Snapshot a curated permission set, then restore at session start to automatically 
+drop session-accumulated permissions. See the
 [Permission Snapshots](permission-snapshots.md) recipe for the full workflow.
 
 ## Adapting for Other Languages
@@ -259,6 +260,7 @@ The recommended defaults above are Go-specific. For other stacks, swap the
 build/test tooling:
 
 **Node.js / TypeScript:**
+
 ```json
 "Bash(npm run:*)",
 "Bash(npm test:*)",
@@ -267,6 +269,7 @@ build/test tooling:
 ```
 
 **Python:**
+
 ```json
 "Bash(pytest:*)",
 "Bash(python:*)",
@@ -275,6 +278,7 @@ build/test tooling:
 ```
 
 **Rust:**
+
 ```json
 "Bash(cargo build:*)",
 "Bash(cargo test:*)",

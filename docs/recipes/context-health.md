@@ -52,7 +52,7 @@ directory lean and accurate.
 
 ## The Workflow
 
-The best way to maintain context health is **conversational**: ask your agent,
+The best way to maintain context health is **conversational**: Ask your agent,
 guide it, and let it detect problems, explain them, and fix them with your
 approval. CLI commands exist for CI pipelines, scripting, and fine-grained
 control. 
@@ -62,12 +62,12 @@ For day-to-day maintenance, **talk to your agent**.
 !!! tip "Your Questions Reinforce the Pattern"
     Asking "is our context clean?" does two things:
 
-    * it triggers a drift check right now
-    * it reinforces the habit
+    * It triggers a drift check right now
+    * It reinforces the habit
 
-    This is reinforcement, not enforcement.
+    This is **reinforcement**, *not* enforcement.
 
-    Do not wait for the agent to be proactive on its own. Guide it, especially
+    Do not wait for the agent to be proactive on its own: **Guide it**, especially
     in early sessions. Over time, you will ask less and the agent will start
     offering more.
 
@@ -103,8 +103,15 @@ and offers to fix what it can.
 
 ### Step 2: Maintenance at Session Start
 
-You do not need to ask explicitly. A proactive agent can check context health
-as part of its startup routine and mention anything worth addressing:
+You do not need to ask explicitly. 
+
+!!! tip "Using Claude Code"
+    `ctx` ships with Claude Code hooks that remind the agent 
+    *at the right time* to take initiative. 
+
+Checking context health at the session start, offering to persist learnings 
+before you quit, and flagging drift when it matters. The agent stays 
+proactive without you having to prompt it:
 
 ```text
 Agent: Good morning. I've loaded the context files. A few things
@@ -118,6 +125,9 @@ Agent: Good morning. I've loaded the context files. A few things
        straight into today's work?
 ```
 
+☝ this is what persistent, initiative-driven sessions feel like when context is 
+treated as a system instead of a prompt.
+
 If the agent does not offer this on its own, a gentle nudge is enough:
 
 ```text
@@ -130,7 +140,7 @@ This turns maintenance from a scheduled chore into a conversation that happens
 
 ### Step 3: Real-Time Detection During Work
 
-Agents *can* notice drift while working — when a mismatch is directly in the
+Agents *can* notice drift while working: When a mismatch is directly in the
 path of their current task. If an agent reads `ARCHITECTURE.md` to find where
 to add a handler and `internal/handlers/` doesn't exist, it will notice because
 the stale reference blocks its work:
@@ -264,8 +274,9 @@ to code that no longer exists.
 Consolidate completed tasks, archive old knowledge, and clean up empty sections:
 
 ```bash
-ctx compact              # move completed tasks to Completed section, remove empty sections
-ctx compact --archive    # also archive old tasks, decisions, and learnings
+ctx compact            # move completed tasks to Completed section, 
+                       # remove empty sections
+ctx compact --archive  # also archive old tasks, decisions, and learnings
 ```
 
 * Tasks: moves completed items (with all subtasks done) into the Completed
@@ -312,13 +323,13 @@ Run them inside your AI assistant:
 Conversational approach (recommended):
 
 ```text
-Is our context clean?   -> agent runs structural plus semantic checks
-Fix what you can        -> agent auto-fixes and proposes edits
-Archive the done tasks  -> agent runs ctx compact --archive
-How's token usage?      -> agent checks ctx status
+Is our context clean?  -> agent runs structural plus semantic checks
+Fix what you can       -> agent auto-fixes and proposes edits
+Archive the done tasks -> agent runs ctx compact --archive
+How's token usage?     -> agent checks ctx status
 ```
 
-CLI approach (for CI, scripts, or direct control):
+CLI approach (*for CI, scripts, or direct control*):
 
 ```bash
 ctx drift                      # 1. Detect problems
@@ -349,7 +360,7 @@ drift warnings in a single glance. Good for a fast "is everything ok?" before
 diving into work.
 
 Drift detection in CI: add `ctx drift --json` to your CI pipeline and fail on
-exit code 3 (violations). This catches constitution-level problems before they
+exit code 3 (*violations*). This catches constitution-level problems before they
 reach upstream.
 
 Do not over-compact. Completed tasks have historical value. The `--archive`

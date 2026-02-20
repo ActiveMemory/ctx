@@ -2176,13 +2176,13 @@ structure.</p>
 <h2 id="the-observation">The Observation<a class="headerlink" href="#the-observation" title="Permanent link">&para;</a></h2>
 <p>During the first two weeks of building <code>ctx</code>, I noticed a rhythm in
 my own productivity. Feature sessions felt great: new commands,
-new capabilities, visible progress. But after three of them, things
-would start to feel <em>sticky</em>: variable names that almost made sense,
-files that had grown past their purpose, patterns that repeated without
-being formalized.</p>
-<p>The fourth session -- when I stopped adding and started cleaning -- was
-always the most painful to start and the most satisfying to finish.</p>
-<p>It was also the one that made the next three feature sessions faster.</p>
+new capabilities, visible progress...</p>
+<p>...but after three of them, things would start to feel <em>sticky</em>: variable
+names that almost made sense, files that had grown past their purpose,
+patterns that repeated without being formalized.</p>
+<p>The <strong>fourth session</strong> (<em>when I stopped adding and started cleaning</em>)
+was always the most <strong>painful</strong> to start and the most <strong>satisfying</strong> to finish.</p>
+<p>It was also the one that made the next three feature sessions <strong>faster</strong>.</p>
 <h2 id="the-evidence-git-history">The Evidence: Git History<a class="headerlink" href="#the-evidence-git-history" title="Permanent link">&para;</a></h2>
 <p>The <code>ctx</code> git history between January 20 and February 7 tells a clear
 story when you categorize commits:</p>
@@ -2216,39 +2216,40 @@ story when you categorize commits:</p>
 </tr>
 </tbody>
 </table>
-<p>The first week was pure YOLO. Almost four feature commits for every
+<p>The first week was <strong>pure YOLO</strong>: Almost four feature commits for every
 consolidation commit. The codebase grew fast.</p>
 <p>The second week started to self-correct. The ratio dropped as
-refactoring sessions became necessary -- not scheduled, but forced by
+refactoring sessions became necessary: Not scheduled, but forced by
 friction.</p>
-<p>The third week inverted entirely. <a href="../2026-02-15-ctx-v0.3.0-the-discipline-release/">v0.3.0</a> was almost entirely
+<p>The third week inverted entirely: <a href="../2026-02-15-ctx-v0.3.0-the-discipline-release/">v0.3.0</a> was almost entirely
 consolidation: the skill migration, the sweep, the documentation
 standardization. Thirty-five quality commits against fifteen features.</p>
 <p><strong>The debt from weeks one and two was paid in week three.</strong></p>
 <div class="admonition warning">
 <p class="admonition-title">The Compounding Problem</p>
-<p>Consolidation debt compounds. Week one's drift doesn't just persist
-into week two -- it <em>accelerates</em>, because new features are built on
+<p><strong>Consolidation debt compounds</strong>.</p>
+<p>Week one's drift doesn't just persist
+into week two: It <em>accelerates</em>, because new features are built on
 top of drifted patterns.</p>
 <p>By week three, the cost of consolidation was higher than it would
 have been if spread evenly.</p>
 </div>
 <hr />
 <h2 id="what-drift-actually-looks-like">What Drift Actually Looks Like<a class="headerlink" href="#what-drift-actually-looks-like" title="Permanent link">&para;</a></h2>
-<p>"Drift" sounds abstract. Here is what it looked like concretely in the
+<p>"<em>Drift</em>" sounds abstract. Here is what it looked like concretely in the
 <code>ctx</code> codebase after three weeks of feature-heavy development:</p>
 <h3 id="predicate-naming">Predicate Naming<a class="headerlink" href="#predicate-naming" title="Permanent link">&para;</a></h3>
 <p>Convention says boolean functions should be named <code>HasX</code>, <code>IsX</code>,
 <code>CanX</code>. After three feature sprints:</p>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// What accumulated:</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">CheckIfEnabled</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">    </span><span class="c1">// should be IsEnabled</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kd">func</span><span class="w"> </span><span class="nx">ValidateFormat</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">    </span><span class="c1">// should be HasValidFormat</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestConnection</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">    </span><span class="c1">// should be CanConnect</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kd">func</span><span class="w"> </span><span class="nx">VerifyExists</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">      </span><span class="c1">// should be Exists or HasFile</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kd">func</span><span class="w"> </span><span class="nx">EnsureReady</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">       </span><span class="c1">// should be IsReady</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">CheckIfEnabled</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">  </span><span class="c1">// should be Enabled</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kd">func</span><span class="w"> </span><span class="nx">ValidateFormat</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">  </span><span class="c1">// should be ValidFormat</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kd">func</span><span class="w"> </span><span class="nx">TestConnection</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">  </span><span class="c1">// should be Connects</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kd">func</span><span class="w"> </span><span class="nx">VerifyExists</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">    </span><span class="c1">// should be Exists or HasFile</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kd">func</span><span class="w"> </span><span class="nx">EnsureReady</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w">     </span><span class="c1">// should be Ready</span>
 </span></code></pre></div>
-<p>Five violations. Not bugs -- but friction that compounds every time
-someone (human or AI) reads the code and has to infer the naming
+<p>Five violations. Not bugs, but friction that compounds every time
+someone (<em>human or AI</em>) reads the code and has to infer the naming
 convention from inconsistent examples.</p>
 <h3 id="magic-strings">Magic Strings<a class="headerlink" href="#magic-strings" title="Permanent link">&para;</a></h3>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Week 1: acceptable prototype</span>
@@ -2261,18 +2262,18 @@ convention from inconsistent examples.</p>
 </span></code></pre></div>
 <p>When the same literal appears in seven files, changing it means finding
 all seven. Missing one means a silent runtime bug. Constants exist to
-prevent exactly this -- but during feature velocity, nobody stops to
+prevent exactly this. But during feature velocity, nobody stops to
 extract them.</p>
 <p><a href="../2026-02-01-refactoring-with-intent/">Refactoring with Intent</a> documented the constants
-consolidation that cleaned this up. The 3:1 ratio is the practice that
+consolidation that cleaned this up. The <strong>3:1 ratio</strong> is the practice that
 prevents it from accumulating again.</p>
 <h3 id="hardcoded-permissions">Hardcoded Permissions<a class="headerlink" href="#hardcoded-permissions" title="Permanent link">&para;</a></h3>
-<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">os</span><span class="p">.</span><span class="nx">WriteFile</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="mo">0644</span><span class="p">)</span><span class="w">  </span><span class="c1">// 80+ instances</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">os</span><span class="p">.</span><span class="nx">MkdirAll</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="mo">0755</span><span class="p">)</span><span class="w">         </span><span class="c1">// scattered across packages</span>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">os</span><span class="p">.</span><span class="nx">WriteFile</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="mo">0644</span><span class="p">)</span><span class="w"> </span><span class="c1">// 80+ instances</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">os</span><span class="p">.</span><span class="nx">MkdirAll</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="mo">0755</span><span class="p">)</span><span class="w">        </span><span class="c1">// scattered across packages</span>
 </span></code></pre></div>
-<p>Eighty-plus instances of hardcoded file permissions. Not wrong -- but
-if we ever need to change the default (and we did, for hook scripts
-that need execute permissions), it means a codebase-wide search.</p>
+<p>Eighty-plus instances of hardcoded file permissions. Not wrong, but
+if I ever need to change the default (<em>and I did, for hook scripts
+that need execute permissions</em>), it means a codebase-wide search.</p>
 <div class="admonition tip">
 <p class="admonition-title">Drift Is Not Bugs</p>
 <p>None of these are bugs. The code works. Tests pass.</p>
@@ -2285,27 +2286,27 @@ five different conventions exist for the same concept.</p>
 <p>The temptation is to front-load quality: write all the conventions,
 enforce all the checks, prevent all the drift before it happens.</p>
 <p>This fails for two reasons.</p>
-<p><strong>First, you do not know what will drift.</strong> Predicate naming violations
+<p><strong>First, you do not know what will drift</strong>: Predicate naming violations
 only become a convention check after you notice three different naming
 patterns competing. Magic strings only become a consolidation target
 after you change a literal and discover it exists in seven places.</p>
-<p>The conventions emerge from the work. They cannot precede it.</p>
+<p>The conventions <strong>emerge</strong> from the work; they <em>cannot</em> precede it.</p>
 <p>This is what <a href="../2026-02-05-you-cant-import-expertise/">You Can't Import Expertise</a> meant in
 practice: the consolidation checks grow from the project's own drift
 history. You cannot write them on day one because you do not yet know
 what will drift.</p>
-<p><strong>Second, premature consolidation slows discovery.</strong> During the
+<p><strong>Second, premature consolidation slows discovery</strong>: During the
 prototyping phase, the goal is to explore the design space. Enforcing
-strict conventions on code that might be deleted tomorrow is waste.
-YOLO mode has its place -- the problem is not YOLO itself, but YOLO
-without scheduled cleanup.</p>
+strict conventions on code that might be deleted tomorrow is waste.</p>
+<p><strong>YOLO mode has its place</strong>: The problem is not YOLO itself, but YOLO
+without a <strong>scheduled cleanup</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">The Consolidation Paradox</p>
-<p>You need drift history to know what to consolidate.</p>
-<p>You need consolidation to prevent drift from compounding.</p>
-<p>The 3:1 ratio resolves this paradox: let drift accumulate
-for three sessions (enough to see patterns), then consolidate
-in the fourth (before the patterns become entrenched).</p>
+<p>You need a <strong>drift history</strong> to know what to consolidate.</p>
+<p>You need <strong>consolidation</strong> to prevent drift from compounding.</p>
+<p><strong>The 3:1 ratio</strong> resolves this paradox:</p>
+<p>Let drift accumulate for three sessions (<em>enough to see patterns</em>),
+then <em><em>consolidate</em> in the fourth (</em>before the patterns become entrenched*).</p>
 </div>
 <hr />
 <h2 id="the-consolidation-skill">The Consolidation Skill<a class="headerlink" href="#the-consolidation-skill" title="Permanent link">&para;</a></h2>
@@ -2360,8 +2361,8 @@ project-specific checks:</p>
 <p>This is not a generic linter. These are <strong>project-specific conventions</strong>
 that emerged from <code>ctx</code>'s own development history. A generic code
 quality tool would catch some of them. Only a project-specific check
-catches all of them -- because some of them (predicate naming, template
-drift) are conventions that exist nowhere except in this project's
+catches all of them, because some of them (<em>predicate naming, template
+drift</em>) are conventions that exist nowhere except in this project's
 <code>CONVENTIONS.md</code>.</p>
 <hr />
 <h2 id="the-decision-matrix">The Decision Matrix<a class="headerlink" href="#the-decision-matrix" title="Permanent link">&para;</a></h2>
@@ -2404,10 +2405,11 @@ drift) are conventions that exist nowhere except in this project's
 </tr>
 </tbody>
 </table>
-<p>The last two rows matter. Consolidation is about <strong>reducing maintenance
-cost</strong>, not achieving aesthetic perfection. Code that works and exists
-in one place does not benefit from consolidation -- it benefits from
-being left alone until it earns its refactoring.</p>
+<p>The last two rows matter: </p>
+<p>Consolidation is about <strong>reducing maintenance cost</strong>, not achieving aesthetic 
+perfection. Code that works and exists in one place does not benefit 
+from consolidation; it benefits from being left alone until it earns its
+refactoring.</p>
 <hr />
 <h2 id="consolidation-as-context-hygiene">Consolidation as Context Hygiene<a class="headerlink" href="#consolidation-as-context-hygiene" title="Permanent link">&para;</a></h2>
 <p>There is a parallel between code consolidation and context management
@@ -2442,13 +2444,13 @@ that became clear during the <code>ctx</code> development:</p>
 </tr>
 </tbody>
 </table>
-<p><code>ctx compact</code> does for context what consolidation does for code: it
-moves completed work to cold storage, keeping the active context clean
-and focused. The <a href="../2026-02-03-the-attention-budget/">attention budget</a> applies to both
+<p><code>ctx compact</code> does for context what consolidation does for code: </p>
+<p>It moves completed work to <strong>cold storage</strong>, keeping the active context clean
+and <strong>focused</strong>. The <a href="../2026-02-03-the-attention-budget/">attention budget</a> applies to both
 the AI's context window and the developer's mental model of the codebase.</p>
 <p>When context files accumulate stale entries, the AI's attention is
 wasted on completed tasks and outdated conventions. When code
-accumulates drift, the developer's attention is wasted on
+accumulates drift, <strong>the developer's attention is wasted</strong> on
 inconsistencies that obscure the actual logic.</p>
 <p>Both are solved by the same discipline: <strong>periodic, scheduled cleanup</strong>.</p>
 <p>This is also why <a href="../2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress/">parallel agents</a> make the problem harder,
@@ -2460,33 +2462,35 @@ match the <em>output rate</em>, not the <em>calendar</em>.</p>
 <p>Here is how the 3:1 ratio works in practice for <code>ctx</code> development:</p>
 <p><strong>Sessions 1-3: Feature work</strong></p>
 <ul>
-<li>Add new capabilities</li>
-<li>Write tests for new code</li>
-<li>Do not stop for cleanup unless something is actively broken</li>
-<li>Note drift as you see it (a comment, a task, a mental note)</li>
+<li>Add new capabilities;</li>
+<li>Write tests for new code;</li>
+<li>Do not stop for cleanup unless something is actively broken;</li>
+<li>Note drift as you see it (<em>a comment, a task, a mental note</em>).</li>
 </ul>
 <p><strong>Session 4: Consolidation</strong></p>
 <ul>
-<li>Run <code>/consolidate</code> to surface accumulated drift</li>
-<li>Fix the highest-impact items first</li>
-<li>Update CONVENTIONS.md if new patterns emerged</li>
-<li>Archive completed tasks</li>
-<li>Review LEARNINGS.md for anything that became a convention</li>
+<li>Run <code>/consolidate</code> to surface accumulated drift;</li>
+<li>Fix the highest-impact items first;</li>
+<li>Update CONVENTIONS.md if new patterns emerged;</li>
+<li>Archive completed tasks;</li>
+<li>Review LEARNINGS.md for anything that became a convention.</li>
 </ul>
-<p>The key insight is that session 4 is not optional. It is not "if we
-have time." It is scheduled with the same priority as feature work.</p>
-<p>The cost of skipping it is not visible immediately. It becomes visible
+<p>The key insight is that <strong>session 4 is not optional</strong>. It is not "<em>if we
+have time</em>": It is scheduled with the same priority as feature work.</p>
+<p>The cost of skipping it is not visible immediately; it becomes visible
 three sessions later, when the next consolidation session takes twice
 as long because the drift compounded.</p>
 <hr />
 <h2 id="what-the-ratio-is-not">What the Ratio Is Not<a class="headerlink" href="#what-the-ratio-is-not" title="Permanent link">&para;</a></h2>
 <p>The 3:1 ratio is not a universal law. It is an empirical observation
 from one project with one developer working with AI assistance.</p>
-<p>Different projects will have different ratios. A mature codebase with
-strong conventions might sustain 5:1 or higher. A greenfield prototype
-might need 2:1. A team of multiple developers with different styles
-might need 1:1.</p>
-<p>The number is less important than the practice: <strong>consolidation is not
+<p>Different projects will have different ratios:</p>
+<ul>
+<li>A mature codebase with strong conventions might sustain 5:1 or higher; </li>
+<li>A greenfield prototype might need 2:1; </li>
+<li>A team of multiple developers with different styles might need 1:1.</li>
+</ul>
+<p>The number is <em>less</em> important than the practice: <strong>consolidation is not
 a reaction to problems. It is a scheduled activity.</strong></p>
 <p>If you wait for drift to cause pain before consolidating, you have
 already paid the compounding cost.</p>
@@ -2494,7 +2498,7 @@ already paid the compounding cost.</p>
 <div class="admonition quote">
 <p class="admonition-title">If you remember one thing from this post...</p>
 <p><strong>Three sessions of building. One session of cleaning.</strong></p>
-<p>Not because the code is dirty -- but because drift compounds
+<p><strong>Not</strong> because the code is dirty, <strong>but</strong> because drift compounds
 silently, and the only way to catch it is to <em>look for it</em>
 on a schedule.</p>
 <p>The ratio is the schedule.</p>
@@ -2520,7 +2524,7 @@ to documentation, and to the
 <a href="../2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress/">merge debt that parallel agents produce</a>. Drift is
 drift, whether it lives in code, in <code>.context/</code>, or in the gap
 between what your docs say and what your code does.</p>
-<p>The ratio is the schedule. The schedule is the discipline.</p>
+<p>The <strong>ratio</strong> is the <strong>schedule</strong> is the <strong>discipline</strong>.</p>
 <hr />
 <p><em>This post was drafted from git log analysis of the ctx repository,
 mapping every commit from January 20 to February 7 into feature vs

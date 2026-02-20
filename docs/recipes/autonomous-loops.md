@@ -11,7 +11,7 @@ You have a project with a clear list of tasks, and you want an AI agent to work
 through them autonomously: overnight, unattended, without you sitting at the
 keyboard.
 
-Each iteration needs to remember what the previous one did, mark tasks as
+Each iteration needs to **remember** what the previous one did, mark tasks as
 completed, and know when to stop.
 
 Without persistent memory, every iteration starts fresh and the loop collapses.
@@ -23,13 +23,13 @@ context persistence as a first-class deliverable, not an afterthought.
 
 !!! tip "TL;DR"
     ```bash
-    ctx init --ralph                                  # 1. init for unattended mode
+    ctx init --ralph                            # 1. init for unattended mode
     # Edit TASKS.md with phased work items
-    ctx loop --tool claude --max-iterations 10        # 2. generate loop.sh
-    ./loop.sh 2>&1 | tee /tmp/loop.log &              # 3. run the loop
-    ctx watch --log /tmp/loop.log                      # 4. process context updates
+    ctx loop --tool claude --max-iterations 10  # 2. generate loop.sh
+    ./loop.sh 2>&1 | tee /tmp/loop.log &        # 3. run the loop
+    ctx watch --log /tmp/loop.log               # 4. process context updates
     # Next morning:
-    ctx status && ctx load                             # 5. review results
+    ctx status && ctx load                      # 5. review the results
     ```
 
     Read on for permissions, isolation, and completion signals.
@@ -202,7 +202,7 @@ For unattended runs, enforce isolation at the infrastructure level:
 | Virtual machine   | Prefer a dedicated VM with no shared folders, no host passthrough, and no keys to other machines.                                                                                                                                                             |
 | Network           | If the agent does not need the internet, disable outbound access entirely. If it does, restrict to specific domains via firewall rules.                                                                                                                       |
 | Resource limits   | Apply CPU, memory, and disk limits (cgroups/container limits). A runaway loop should not fill disk or consume all RAM.                                                                                                                                        |
-| Self-modification | Make instruction files read-only. `CLAUDE.md`, `.claude/settings.local.json`, and `.context/CONSTITUTION.md` should not be writable by the agent user. If using project-local hooks, protect those too.                                                            |
+| Self-modification | Make instruction files read-only. `CLAUDE.md`, `.claude/settings.local.json`, and `.context/CONSTITUTION.md` should not be writable by the agent user. If using project-local hooks, protect those too.                                                       |
 
 A minimal Docker setup for overnight runs:
 
@@ -444,7 +444,7 @@ Break any part of this contract and the loop degrades.
 * Commit after context updates. Finish code, update `.context/`, commit including
   `.context/`, then signal.
 * Use `/ctx-context-monitor` for long runs. It can warn when context capacity is
-  running low so the agent saves before hitting limits.
+  running low, so the agent saves before hitting limits.
 
 ## Next Up
 

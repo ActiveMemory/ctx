@@ -2548,16 +2548,16 @@ project using ctx:</p>
 debugging.</p>
 </div>
 <h3 id="design-principles">Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h3>
-<p><strong>Use wildcards for trusted binaries.</strong> If you trust the binary (your own
+<p><strong>Use wildcards for trusted binaries</strong>: If you trust the binary (your own
 project's CLI, <code>make</code>, <code>go</code>), a single wildcard like <code>Bash(ctx:*)</code> beats
 twenty subcommand entries. It reduces noise and means new subcommands work
 without re-prompting.</p>
-<p><strong>Keep git commands granular.</strong> Unlike <code>ctx</code> or <code>make</code>, git has both safe
+<p><strong>Keep <code>git</code> commands granular</strong>: Unlike <code>ctx</code> or <code>make</code>, git has both safe
 commands (<code>git log</code>, <code>git status</code>) and destructive ones (<code>git reset --hard</code>,
 <code>git clean -f</code>). Listing safe commands individually prevents accidentally
 pre-approving dangerous ones.</p>
-<p><strong>Pre-approve all ctx skills.</strong> Skills shipped with ctx (<code>Skill(ctx-*)</code>) are
-safe to pre-approve — they are part of your project and you control their
+<p><strong>Pre-approve all <code>ctx-</code> skills</strong>: Skills shipped with ctx (<code>Skill(ctx-*)</code>) are
+safe to pre-approve. They are part of your project and you control their
 content. This prevents the agent from prompting on every skill invocation.</p>
 <h3 id="default-deny-rules">Default Deny Rules<a class="headerlink" href="#default-deny-rules" title="Permanent link">&para;</a></h3>
 <p><code>ctx init</code> automatically populates <code>permissions.deny</code> with rules that block
@@ -2605,7 +2605,7 @@ pattern always prompts the user, even if it also matches an allow entry.</p>
 <div class="admonition note">
 <p class="admonition-title">Read/Edit deny rules</p>
 <p><code>Read()</code> and <code>Edit()</code> deny rules have known upstream enforcement issues
-(claude-code#6631, #24846). They are included as defense-in-depth and
+(<code>claude-code#6631,#24846</code>). They are included as defense-in-depth and
 intent documentation.</p>
 </div>
 <p><strong>Blocked by default deny rules</strong> — no action needed, <code>ctx init</code> handles these:</p>
@@ -2635,7 +2635,7 @@ intent documentation.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Requires manual discipline</strong> — never add these to <code>allow</code>:</p>
+<p><strong>Requires manual discipline</strong>: <strong>Never</strong> add these to <code>allow</code>:</p>
 <table>
 <thead>
 <tr>
@@ -2654,17 +2654,17 @@ intent documentation.</p>
 </tr>
 <tr>
 <td><code>Skill(sanitize-permissions)</code></td>
-<td>Edits this file — self-modification vector</td>
+<td>Edits this file: self-modification vector</td>
 </tr>
 <tr>
 <td><code>Skill(release)</code></td>
-<td>Runs release pipeline — high impact</td>
+<td>Runs the release pipeline: high impact</td>
 </tr>
 </tbody>
 </table>
 <h2 id="hooks-regex-safety-net">Hooks: Regex Safety Net<a class="headerlink" href="#hooks-regex-safety-net" title="Permanent link">&para;</a></h2>
 <p>Deny rules handle prefix-based blocking natively. Hooks complement them by
-catching patterns that require regex matching — things deny rules can't express.</p>
+catching patterns that require regex matching: Things deny rules can't express.</p>
 <p>The ctx plugin ships these blocking hooks:</p>
 <table>
 <thead>
@@ -2742,31 +2742,31 @@ for a step-by-step runbook.</p>
 allowlist manually. </p>
 <p><code>ctx init</code> only populates the default permissions: It won't pick up custom skills.</p>
 <h3 id="golden-image-snapshots">Golden image snapshots<a class="headerlink" href="#golden-image-snapshots" title="Permanent link">&para;</a></h3>
-<p>If manual cleanup is too tedious, use a golden image to automate it. Snapshot
-a curated permission set, then restore at session start to automatically drop
-session-accumulated permissions. See the
+<p>If manual cleanup is too tedious, use a <strong>golden image</strong> to automate it: </p>
+<p>Snapshot a curated permission set, then restore at session start to automatically 
+drop session-accumulated permissions. See the
 <a href="../permission-snapshots/">Permission Snapshots</a> recipe for the full workflow.</p>
 <h2 id="adapting-for-other-languages">Adapting for Other Languages<a class="headerlink" href="#adapting-for-other-languages" title="Permanent link">&para;</a></h2>
 <p>The recommended defaults above are Go-specific. For other stacks, swap the
 build/test tooling:</p>
-<p><strong>Node.js / TypeScript:</strong>
+<p><strong>Node.js / TypeScript:</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="s2">&quot;Bash(npm run:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="s2">&quot;Bash(npm test:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s2">&quot;Bash(npx:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s2">&quot;Bash(node:*)&quot;</span>
-</span></code></pre></div></p>
-<p><strong>Python:</strong>
+</span></code></pre></div>
+<p><strong>Python:</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="s2">&quot;Bash(pytest:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s2">&quot;Bash(python:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">&quot;Bash(pip show:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">&quot;Bash(ruff:*)&quot;</span>
-</span></code></pre></div></p>
-<p><strong>Rust:</strong>
+</span></code></pre></div>
+<p><strong>Rust:</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="s2">&quot;Bash(cargo build:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="s2">&quot;Bash(cargo test:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">&quot;Bash(cargo clippy:*)&quot;</span><span class="p">,</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">&quot;Bash(cargo fmt:*)&quot;</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <p>The <code>ctx</code>, <code>git</code>, and skill entries remain the same across all stacks.</p>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../permission-snapshots/">Permission Snapshots →</a></strong>: Save and restore

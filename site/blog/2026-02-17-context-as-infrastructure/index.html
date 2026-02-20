@@ -2338,45 +2338,52 @@ optimized for signal density: </p>
   content survives truncation</em>).</li>
 </ul>
 <p>The full dump tier is for humans and for deep investigation. It
-contains everything: enriched journals, archived tasks. It is never
-auto-loaded because its volume would destroy attention density.</p>
+contains everything: <strong>Enriched</strong> journals, <strong>archived tasks</strong>... </p>
+<p>It is never autoloaded because its volume would destroy attention density.</p>
 <p>This two-tier model is analogous to how traditional systems separate
-hot and cold storage. The hot path (curated context) is optimized for
-read performance -- measured not in milliseconds, but in
-<strong>tokens consumed per unit of useful information</strong>. The cold path
-(journal) is optimized for completeness.</p>
+hot and cold storage: </p>
+<ul>
+<li>The <strong>hot path</strong> (<em>curated context</em>) is optimized for read performance
+  (measured not in milliseconds, but in
+    <strong>tokens consumed per unit of useful information</strong>). </li>
+<li>The <strong>cold path</strong> (<em>journal</em>) is optimized for <strong>completeness</strong>.</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Nothing Is Ever Truly Lost</p>
 <p>The full dump tier means that context does not need to be
-<em>perfect</em> -- it just needs to be <em>findable</em>.</p>
-<p>A decision that was not captured in DECISIONS.md can be recovered
-from the session transcript where it was discussed. A learning
-that was not formalized can be found in the journal entry from
-that day.</p>
-<p>The curated tier is the fast path. The full dump tier is the
-safety net.</p>
+<em>perfect</em>: It just needs to be <em>findable</em>.</p>
+<p>A <strong>decision</strong> that was not captured in <code>DECISIONS.md</code> can be recovered
+from the session transcript where it was discussed. </p>
+<p>A <strong>learning</strong> that was not formalized can be found in the <strong>journal entry</strong> 
+from that day.</p>
+<p>The <strong>curated tier</strong> is the <strong>fast path</strong>: The full dump tier is the
+<strong>safety net</strong>.</p>
 </div>
 <hr />
 <h2 id="decision-records-as-first-class-citizens">Decision Records as First-Class Citizens<a class="headerlink" href="#decision-records-as-first-class-citizens" title="Permanent link">&para;</a></h2>
 <p>One of the patterns that emerged from <code>ctx</code>'s own development is
 the power of <strong>structured decision records</strong>.</p>
-<p>v0.1.0 allowed adding decisions as one-liners:</p>
+<p><code>v0.1.0</code> allowed adding decisions as one-liners:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span>
 </span></code></pre></div>
-<p>v0.2.0 enforced structure:</p>
+<p><code>v0.2.0</code> enforced <strong>structure</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for user data&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;ACID compliance, team familiarity&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--consequences<span class="w"> </span><span class="s2">&quot;Need connection pooling, team training&quot;</span>
 </span></code></pre></div>
-<p>The difference is not cosmetic. A one-liner decision teaches the AI
-<em>what</em> was decided. A structured decision teaches it <em>why</em> -- and
-<em>why</em> is what prevents the AI from unknowingly reversing the decision
-in a future session.</p>
-<p>This is infrastructure thinking: decisions are not notes. They are
-<strong>records</strong> with required fields, just like database rows have schemas.
-The enforcement exists because incomplete records are worse than no
-records -- they create false confidence that the context is captured
+<p>The difference is <strong>not</strong> cosmetic:</p>
+<ul>
+<li>A one-liner decision teaches the AI <em>what</em> was decided. </li>
+<li>A structured decision teaches it <em>why</em>; and
+  <strong>why</strong> is what prevents the AI from unknowingly reversing the decision
+  in a future session.</li>
+</ul>
+<p>This is <strong>infrastructure thinking</strong>: </p>
+<p>Decisions are not notes. They are <strong>records</strong> with required fields, just like 
+database rows have schemas.</p>
+<p>The enforcement exists because incomplete records are worse than no
+records: They create false confidence that the context is captured
 when it is not.</p>
 <hr />
 <h2 id="the-ide-is-the-interface-decision">The "IDE Is the Interface" Decision<a class="headerlink" href="#the-ide-is-the-interface-decision" title="Permanent link">&para;</a></h2>
@@ -2388,7 +2395,7 @@ analytics.</p>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>code .context/
 </span></code></pre></div>
 <p>This decision was not about minimalism for its own sake. It was about
-recognizing that <code>.context/</code> files are <strong>just files</strong> -- and files have
+recognizing that <code>.context/</code> files are <strong>just files</strong>; and files have
 a mature, well-understood infrastructure:</p>
 <ul>
 <li><strong>Version control</strong>: <code>git diff .context/DECISIONS.md</code> shows exactly
@@ -2400,16 +2407,17 @@ a mature, well-understood infrastructure:</p>
   pull requests on code.</li>
 </ul>
 <p>Building a custom UI would have meant maintaining a parallel
-infrastructure that duplicates what every IDE already provides. It
-would have introduced its own bugs, its own update cycle, and its
+infrastructure that duplicates what every IDE already provides:</p>
+<p>It would have introduced its own bugs, its own update cycle, and its
 own learning curve.</p>
-<p>The filesystem is not a limitation. It is <strong>the most mature, most
+<p>The filesystem is <strong>not</strong> a limitation: It is <strong>the most mature, most
 composable, most portable infrastructure available</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">Context Files in Git</p>
 <p>Because <code>.context/</code> lives in the repository, context changes are
-part of the commit history. A decision made in commit <code>abc123</code> is
-as traceable as a code change in the same commit.</p>
+part of the commit history. </p>
+<p>A decision made in commit <code>abc123</code> is as traceable as a code change in 
+the same commit.</p>
 <p>This is not possible with prompt-based context, which exists
 outside version control entirely.</p>
 </div>
@@ -2455,23 +2463,23 @@ option to drill deeper.</p>
 </tr>
 </tbody>
 </table>
-<p>Each level trades tokens for depth. Level 1 is sufficient for most
+<p>Each level trades tokens for depth. <strong>Level 1</strong> is sufficient for most
 work: the AI knows the active tasks, the key conventions, and the
-recent decisions. Level 3 is for archaeology: understanding why a
+recent decisions. <strong>Level 3 is for archaeology</strong>: understanding why a
 decision was made three weeks ago, or finding a pattern in the session
 history.</p>
-<p>The explicit <code>--budget</code> flag is the mechanism that makes this work.
-Without it, the default behavior would be to load everything (because
+<p>The explicit <code>--budget</code> flag is the mechanism that makes this work:</p>
+<p>Without it, the default behavior would be to load everything (because
 more context <em>feels</em> safer), which destroys the attention density that
 makes the loaded context useful.</p>
-<p><strong>The constraint is the feature.</strong> A budget of 4,000 tokens forces
-<code>ctx</code> to prioritize ruthlessly: constitution first (always full), then
-tasks and conventions (budget-capped), then decisions and learnings
+<p><strong>The constraint is the feature</strong>: A budget of 4,000 tokens forces
+<code>ctx</code> to prioritize ruthlessly: constitution first (<em>always full</em>), then
+tasks and conventions (<em>budget-capped</em>), then decisions and learnings
 scored by recency and relevance to active tasks. Entries that don't
 fit get title-only summaries rather than being silently dropped.</p>
 <hr />
 <h2 id="the-philosophical-shift">The Philosophical Shift<a class="headerlink" href="#the-philosophical-shift" title="Permanent link">&para;</a></h2>
-<p>The shift from "context as prompt" to "context as infrastructure"
+<p>The shift from "<em>context as prompt</em>" to "<em>context as infrastructure</em>"
 changes how you think about AI-assisted development:</p>
 <table>
 <thead>
@@ -2482,78 +2490,66 @@ changes how you think about AI-assisted development:</p>
 </thead>
 <tbody>
 <tr>
-<td>"What do I paste today?"</td>
-<td>"What has changed since yesterday?"</td>
+<td>"<em>What do I paste today?</em>"</td>
+<td>"<em>What has changed since yesterday?</em>"</td>
 </tr>
 <tr>
-<td>"How do I fit everything in?"</td>
-<td>"What's the minimum that matters?"</td>
+<td>"<em>How do I fit everything in?</em>"</td>
+<td>"<em>What's the minimum that matters?</em>"</td>
 </tr>
 <tr>
-<td>"The AI forgot my conventions"</td>
-<td>"The conventions are in a file"</td>
+<td>"<em>The AI forgot my conventions</em>"</td>
+<td>"<em>The conventions are in a file</em>"</td>
 </tr>
 <tr>
-<td>"I need to re-explain"</td>
-<td>"I need to update the record"</td>
+<td>"<em>I need to re-explain</em>"</td>
+<td>"<em>I need to update the record</em>"</td>
 </tr>
 <tr>
-<td>"This session is getting slow"</td>
-<td>"Time to compact and archive"</td>
+<td>"<em>This session is getting slow</em>"</td>
+<td>"<em>Time to compact and archive</em>"</td>
 </tr>
 </tbody>
 </table>
-<p>The first column treats AI interaction as a conversation. The second
-treats it as a <strong>system</strong> -- one that can be maintained, optimized,
-and debugged.</p>
+<p>The first column treats AI interaction as a <em>conversation</em>. The second
+treats it as a <strong>system</strong>: One that can be <strong>maintained</strong>, <strong>optimized</strong>,
+and <strong>debugged</strong>.</p>
 <p>Context is not something you <em>give</em> the AI. It is something you
-<strong>maintain</strong> -- like a database, like a config file, like any other
-piece of infrastructure that a running system depends on.</p>
+<strong>maintain</strong>: Like a database, like a config file, like any other
+piece of <strong>infrastructure</strong> that a running system depends on.</p>
 <hr />
-<h2 id="beyond-ctx-the-principles">Beyond ctx: The Principles<a class="headerlink" href="#beyond-ctx-the-principles" title="Permanent link">&para;</a></h2>
+<h2 id="beyond-ctx-the-principles">Beyond <code>ctx</code>: The Principles<a class="headerlink" href="#beyond-ctx-the-principles" title="Permanent link">&para;</a></h2>
 <p>The patterns that <code>ctx</code> implements are not specific to <code>ctx</code>. They are
 applicable to any project that uses AI-assisted development:</p>
 <ol>
-<li>
-<p><strong>Separate context by purpose.</strong> Do not put everything in one file.
+<li><strong>Separate context by purpose</strong>: Do not put everything in one file.
    Different types of information have different lifecycles and
-   different relevance windows.</p>
-</li>
-<li>
-<p><strong>Make context persistent.</strong> If a decision matters, write it down
+   different relevance windows.</li>
+<li><strong>Make context persistent</strong>: If a decision matters, write it down
    in a file that survives the session. If a learning matters, capture
-   it with structure.</p>
-</li>
-<li>
-<p><strong>Budget explicitly.</strong> Know how much context you are loading and
-   whether it is worth the attention cost.</p>
-</li>
-<li>
-<p><strong>Use the filesystem.</strong> File names, directory structure, and
+   it with structure.</li>
+<li><strong>Budget explicitly</strong>: Know how much context you are loading and
+   whether it is worth the attention cost.</li>
+<li><strong>Use the filesystem</strong>: File names, directory structure, and
    timestamps are metadata that the AI can navigate. A well-organized
-   directory is an index that costs zero tokens to maintain.</p>
-</li>
-<li>
-<p><strong>Version your context.</strong> Put context files in git. Changes to
-   decisions are as important as changes to code.</p>
-</li>
-<li>
-<p><strong>Design for degradation.</strong> Sessions will get long. Attention will
-   dilute. Build mechanisms (compaction, archiving, cooldowns) that
-   make degradation visible and manageable.</p>
-</li>
+   directory is an index that costs zero tokens to maintain.</li>
+<li><strong>Version your context</strong>: Put context files in <code>git</code>. Changes to
+   decisions are as important as changes to code.</li>
+<li><strong>Design for degradation</strong>: Sessions will get long. Attention will
+   dilute. Build mechanisms (<em>compaction, archiving, cooldowns</em>) that
+   make degradation visible and manageable.</li>
 </ol>
 <p>These are not <code>ctx</code> features. They are <strong>infrastructure principles</strong>
 that happen to be implemented as a CLI tool. Any team could implement
 them with nothing more than a directory convention and a few shell
 scripts.</p>
-<p>The tool is a convenience. The principles are what matter.</p>
+<p>The tool is a convenience: <strong>The principles are what matter</strong>.</p>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">If you remember one thing from this post...</p>
 <p><strong>Prompts are conversations. Infrastructure persists.</strong></p>
-<p>Your AI does not need a better prompt. It needs a filesystem:
-versioned, structured, budgeted, and maintained.</p>
+<p>Your AI does not need a better prompt. It needs a filesystem:</p>
+<p><em>versioned, structured, budgeted, and maintained</em>.</p>
 <p><strong>The best context is the context that was there before
 you started the session.</strong></p>
 </div>
@@ -2561,8 +2557,8 @@ you started the session.</strong></p>
 <h2 id="the-arc">The Arc<a class="headerlink" href="#the-arc" title="Permanent link">&para;</a></h2>
 <p>This post is the architectural companion to the
 <a href="../2026-02-03-the-attention-budget/">Attention Budget</a>. That post explained <em>why</em> context
-must be curated (token economics). This one explains <em>how</em> to
-structure it (filesystem, separation of concerns, persistence tiers).</p>
+must be curated (<em>token economics</em>). This one explains <em>how</em> to
+structure it (<em>filesystem, separation of concerns, persistence tiers</em>).</p>
 <p>Together with <a href="../2026-02-17-code-is-cheap-judgment-is-not/">Code Is Cheap, Judgment Is Not</a>, they
 form a trilogy about what matters in AI-assisted development:</p>
 <ul>
@@ -2570,22 +2566,21 @@ form a trilogy about what matters in AI-assisted development:</p>
 <li><strong>Context as Infrastructure</strong>: the system you build to manage it</li>
 <li><strong>Code Is Cheap</strong>: the human skill that no system replaces</li>
 </ul>
-<p>And the practices that keep it all honest:</p>
+<p>And the practices that keep it all <strong>honest</strong>:</p>
 <ul>
 <li><a href="../2026-02-17-the-3-1-ratio/">The 3:1 Ratio</a>: the cadence for maintaining both
   code and context</li>
-<li><a href="../2026-02-14-irc-as-context/">IRC as Context</a>: the historical precedent -- stateless
+<li><a href="../2026-02-14-irc-as-context/">IRC as Context</a>: the historical precedent: stateless
   protocols have always needed stateful wrappers</li>
 </ul>
 <hr />
-<p><em>This post synthesizes ideas from across the ctx blog series: the
+<p><em>This post synthesizes ideas from across the <code>ctx</code> blog series: the
 attention budget primitive, the two-tier persistence model, the IDE
 decision, and the progressive disclosure pattern. The principles are
 drawn from three weeks of building ctx and 70+ sessions of treating
 context as infrastructure rather than conversation.</em></p>
-<p><em>See also: <a href="../2026-02-17-when-a-system-starts-explaining-itself/">When a System Starts Explaining Itself</a>
--- what happens when this infrastructure starts compounding in someone
-else's environment.</em></p>
+<p><em>See also: <a href="../2026-02-17-when-a-system-starts-explaining-itself/">When a System Starts Explaining Itself</a>:
+what happens when this infrastructure starts compounding in someone else's environment.</em></p>
 
 
 

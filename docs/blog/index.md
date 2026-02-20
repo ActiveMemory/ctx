@@ -16,10 +16,11 @@ Stories, insights, and lessons learned from building and using ctx.
 *Jose Alekhinne / February 17, 2026*
 
 Every new substrate begins as a private advantage. Reality begins when
-other people start describing it in their own language -- not accurately,
-not consistently, but involuntarily. "Better than Adderall" is not praise;
-it is a diagnostic: executive function has been externalized. This post
-collects the first external signals from real users, and asks what it
+other people start describing it in their own language: Not accurately,
+not consistently, but **involuntarily**.
+"*Better than Adderall*" is not praise; it is a **diagnostic**:
+Executive function has been externalized.
+This post collects the first external signals from real users and asks what it
 means when a system starts explaining itself without its creator present.
 
 **Topics**: field notes, adoption signals, infrastructure vs tools,
@@ -31,12 +32,12 @@ context engineering, substrates
 
 *Jose Alekhinne / February 17, 2026*
 
-AI does not replace workers. It replaces unstructured effort. Three weeks
+AI does not replace workers. It replaces **unstructured effort**. Three weeks
 of building ctx with an AI agent proved it: YOLO mode showed production
 is cheap, the 3:1 ratio showed judgment has a cadence, the attention
 budget showed framing is scarce, and the skill trilogy showed taste is
 load-bearing. This post threads every previous blog entry into one
-argument -- and ends with a personal note on why that's empowering,
+argument, and ends with a personal note on why that's empowering,
 not threatening.
 
 **Topics**: AI and expertise, context engineering, judgment vs production,
@@ -49,12 +50,12 @@ human-AI collaboration, automation discipline
 *Jose Alekhinne / February 17, 2026*
 
 Where does your AI's knowledge live between sessions? If the answer is
-"in a prompt I paste at the start," you are treating context as a consumable.
+"*in a prompt I paste at the start*," you are treating context as a consumable.
 This post argues for treating it as infrastructure instead: persistent files,
 separation of concerns, two-tier storage, progressive disclosure, and the
 filesystem as the most mature interface available. The architectural companion
-to The Attention Budget and the second piece of the trilogy completed by
-Code Is Cheap.
+to **The Attention Budget** and the second piece of the trilogy completed by
+**Code Is Cheap**.
 
 **Topics**: context engineering, infrastructure, progressive disclosure,
 persistence, design philosophy
@@ -65,8 +66,8 @@ persistence, design philosophy
 
 *Jose Alekhinne / February 17, 2026*
 
-AI-assisted development makes technical debt worse -- not because the AI
-writes bad code, but because it writes code so fast that drift accumulates
+AI-assisted development makes technical debt worse: **Not** because the AI
+writes bad code, **but** because it writes code so fast that drift accumulates
 before you notice. Three weeks of git history prove a rhythm: three feature
 sessions, one consolidation session. This post shows the evidence, the
 concrete drift that accumulated, and the decision matrix for when to clean
@@ -83,7 +84,7 @@ drift, code quality
 
 You discover agents can run in parallel. So you open ten terminals.
 Then twenty. The fans spin, tokens burn, the screen looks like progress.
-It is not progress — it is merge debt being manufactured in real time.
+It is **not** progress: It is merge debt being manufactured in real time.
 This post is about the five-agent ceiling, why role separation beats
 file locking, why overnight loops are an illusion, and why the only
 metric that matters is time from idea to verified, mergeable change.
@@ -97,11 +98,11 @@ engineering, engineering practice
 
 *Jose Alekhinne / February 16, 2026*
 
-ctx is now a Claude Marketplace plugin. Two commands, no build step,
-no shell scripts. v0.6.0 replaces six Bash hook scripts with compiled
+`ctx` is now a Claude Marketplace plugin. Two commands, no build step,
+no shell scripts. `v0.6.0` replaces six Bash hook scripts with compiled
 Go subcommands, ships 25 skills as a plugin served directly from
 source, and closes three medium-severity security findings. The version
-jumped from 0.3.0 to 0.6.0 because this is the release that turns a
+jumped from `0.3.0` to `0.6.0` because this is the release that turns a
 developer tool into a distributable product.
 
 **Topics**: release, plugin system, Claude Marketplace, distribution,
@@ -114,7 +115,7 @@ security hardening
 *Jose Alekhinne / February 15, 2026*
 
 No new headline feature. No architectural pivot. No rewrite. Just 35+
-documentation and quality commits against ~15 feature commits — and
+documentation and quality commits against ~15 feature commits: And
 somehow, the tool feels like it grew up overnight. This post is about
 what a release looks like when the ratio of polish to features is 3:1.
 
@@ -127,12 +128,12 @@ E/A/R framework
 
 *Jose Alekhinne / February 15, 2026*
 
-I needed a static site generator for the journal system and the instinct
-was Hugo — same language as ctx, fast, well-established. But instinct is
+I needed a static site generator for the journal system, and the instinct
+was Hugo:  same language as ctx, fast, well-established. But instinct is
 not analysis. The journal entries are standard Markdown with YAML
 frontmatter. That is it. No JSX, no shortcodes, no custom templating.
-This post is about why zensical — a pre-1.0 tool from the Material for
-MkDocs team — was the right choice: thin dependencies, MkDocs-compatible
+This post is about why zensical (*a pre-1.0 tool from the Material for
+MkDocs team*) was the right choice: thin dependencies, MkDocs-compatible
 config, 4-5x faster incremental rebuilds, and zero lock-in.
 
 **Topics**: tooling, static site generators, journal system,
@@ -144,10 +145,10 @@ infrastructure decisions, context engineering
 
 *Jose Alekhinne / February 14, 2026*
 
-I had 30 open tasks and most of them didn't touch the same files. Running
+I had 30 open tasks, and most of them didn't touch the same files. Running
 one agent at a time meant serial execution on work that was fundamentally
 parallel. This post is about using git worktrees to partition a backlog by
-file overlap, run 3-4 agents simultaneously, and merge the results — the
+file overlap, run 3-4 agents simultaneously, and merge the results: The
 same attention budget principle applied to execution instead of context.
 
 **Topics**: agent teams, parallelism, git worktrees, context engineering,
@@ -159,11 +160,11 @@ task management
 
 *Jose Alekhinne / February 14, 2026*
 
-IRC is stateless. You disconnect, you vanish. Modern systems are not much
+IRC is **stateless**. You disconnect, you vanish. Modern systems are not much
 different: close the tab, lose the scrollback, open a new LLM session, start
 from zero. This post traces the line from IRC bouncers like ZNC to context
 engineering: stateless protocols require stateful wrappers, volatile interfaces
-require durable memory. Before context windows, we had bouncers. Before AI
+require durable memory. Before context windows, we had **bouncers**. Before AI
 memory files, we had buffers.
 
 **Topics**: context engineering, infrastructure, IRC, persistence,
@@ -175,7 +176,7 @@ state continuity
 
 *Jose Alekhinne / February 12, 2026*
 
-I kept feeling like I should go deeper into ML theory. Then I spent a week
+I kept feeling like I should go deeper into **ML theory**. Then I spent a week
 debugging an agent failure that had nothing to do with model architecture and
 everything to do with knowing which abstraction was leaking. This post is
 about when depth compounds and when it doesn't: why the useful understanding
@@ -191,8 +192,8 @@ context engineering, failure modes
 *Jose Alekhinne / February 9, 2026*
 
 I was writing the autonomous loops recipe and realized the security
-advice was "use CONSTITUTION.md for guardrails." Then I read that
-sentence back and realized: that is wishful thinking. This post
+advice was "*use `CONSTITUTION.md` for guardrails*." Then I read that
+sentence back and realized: That is **wishful thinking**. This post
 traces five defense layers for unattended AI agents, each with a
 bypass, and shows why the strength is in the combination, not any
 single layer.

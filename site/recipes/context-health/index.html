@@ -2612,7 +2612,7 @@ directory lean and accurate.</p>
 </tbody>
 </table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
-<p>The best way to maintain context health is <strong>conversational</strong>: ask your agent,
+<p>The best way to maintain context health is <strong>conversational</strong>: Ask your agent,
 guide it, and let it detect problems, explain them, and fix them with your
 approval. CLI commands exist for CI pipelines, scripting, and fine-grained
 control. </p>
@@ -2621,11 +2621,11 @@ control. </p>
 <p class="admonition-title">Your Questions Reinforce the Pattern</p>
 <p>Asking "is our context clean?" does two things:</p>
 <ul>
-<li>it triggers a drift check right now</li>
-<li>it reinforces the habit</li>
+<li>It triggers a drift check right now</li>
+<li>It reinforces the habit</li>
 </ul>
-<p>This is reinforcement, not enforcement.</p>
-<p>Do not wait for the agent to be proactive on its own. Guide it, especially
+<p>This is <strong>reinforcement</strong>, <em>not</em> enforcement.</p>
+<p>Do not wait for the agent to be proactive on its own: <strong>Guide it</strong>, especially
 in early sessions. Over time, you will ask less and the agent will start
 offering more.</p>
 </div>
@@ -2649,8 +2649,15 @@ and source code and compares them.</p>
 <p>The agent reports both layers together, explains each finding in plain language,
 and offers to fix what it can.</p>
 <h3 id="step-2-maintenance-at-session-start">Step 2: Maintenance at Session Start<a class="headerlink" href="#step-2-maintenance-at-session-start" title="Permanent link">&para;</a></h3>
-<p>You do not need to ask explicitly. A proactive agent can check context health
-as part of its startup routine and mention anything worth addressing:</p>
+<p>You do not need to ask explicitly. </p>
+<div class="admonition tip">
+<p class="admonition-title">Using Claude Code</p>
+<p><code>ctx</code> ships with Claude Code hooks that remind the agent 
+<em>at the right time</em> to take initiative. </p>
+</div>
+<p>Checking context health at the session start, offering to persist learnings 
+before you quit, and flagging drift when it matters. The agent stays 
+proactive without you having to prompt it:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Agent: Good morning. I&#39;ve loaded the context files. A few things
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       before we start:
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
@@ -2661,6 +2668,8 @@ as part of its startup routine and mention anything worth addressing:</p>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       Want me to run a quick maintenance pass, or should we jump
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>       straight into today&#39;s work?
 </span></code></pre></div>
+<p>☝ this is what persistent, initiative-driven sessions feel like when context is 
+treated as a system instead of a prompt.</p>
 <p>If the agent does not offer this on its own, a gentle nudge is enough:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Anything stale before we start?
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>How&#39;s the context looking?
@@ -2668,7 +2677,7 @@ as part of its startup routine and mention anything worth addressing:</p>
 <p>This turns maintenance from a scheduled chore into a conversation that happens
 <strong>when</strong> it matters.</p>
 <h3 id="step-3-real-time-detection-during-work">Step 3: Real-Time Detection During Work<a class="headerlink" href="#step-3-real-time-detection-during-work" title="Permanent link">&para;</a></h3>
-<p>Agents <em>can</em> notice drift while working — when a mismatch is directly in the
+<p>Agents <em>can</em> notice drift while working: When a mismatch is directly in the
 path of their current task. If an agent reads <code>ARCHITECTURE.md</code> to find where
 to add a handler and <code>internal/handlers/</code> doesn't exist, it will notice because
 the stale reference blocks its work:</p>
@@ -2779,8 +2788,9 @@ checks for new dependencies worth documenting, and identifies context referring
 to code that no longer exists.</p>
 <h3 id="ctx-compact"><code>ctx compact</code><a class="headerlink" href="#ctx-compact" title="Permanent link">&para;</a></h3>
 <p>Consolidate completed tasks, archive old knowledge, and clean up empty sections:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>compact<span class="w">              </span><span class="c1"># move completed tasks to Completed section, remove empty sections</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">    </span><span class="c1"># also archive old tasks, decisions, and learnings</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>compact<span class="w">            </span><span class="c1"># move completed tasks to Completed section, </span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">                       </span><span class="c1"># remove empty sections</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">  </span><span class="c1"># also archive old tasks, decisions, and learnings</span>
 </span></code></pre></div>
 <ul>
 <li>Tasks: moves completed items (with all subtasks done) into the Completed
@@ -2814,12 +2824,12 @@ single glance.</p>
 </span></code></pre></div>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>Conversational approach (recommended):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Is our context clean?   -&gt; agent runs structural plus semantic checks
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Fix what you can        -&gt; agent auto-fixes and proposes edits
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Archive the done tasks  -&gt; agent runs ctx compact --archive
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>How&#39;s token usage?      -&gt; agent checks ctx status
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Is our context clean?  -&gt; agent runs structural plus semantic checks
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Fix what you can       -&gt; agent auto-fixes and proposes edits
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Archive the done tasks -&gt; agent runs ctx compact --archive
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>How&#39;s token usage?     -&gt; agent checks ctx status
 </span></code></pre></div>
-<p>CLI approach (for CI, scripts, or direct control):</p>
+<p>CLI approach (<em>for CI, scripts, or direct control</em>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># 2. Auto-fix the easy ones</span>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># 3. Reconcile after refactors</span>
@@ -2842,7 +2852,7 @@ do both checks.</p>
 drift warnings in a single glance. Good for a fast "is everything ok?" before
 diving into work.</p>
 <p>Drift detection in CI: add <code>ctx drift --json</code> to your CI pipeline and fail on
-exit code 3 (violations). This catches constitution-level problems before they
+exit code 3 (<em>violations</em>). This catches constitution-level problems before they
 reach upstream.</p>
 <p>Do not over-compact. Completed tasks have historical value. The <code>--archive</code>
 flag preserves them in <code>.context/archive/</code> so you can search past work without
