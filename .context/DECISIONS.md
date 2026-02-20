@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-19 | Smart retrieval: budget-aware ctx agent |
+| 2026-02-19 | Try-decrypt-first for pad merge format auto-detection |
 | 2026-02-18 | Knowledge scaling: archive path for decisions and learnings |
 | 2026-02-16 | Permission docs match DefaultClaudePermissions exactly |
 | 2026-02-16 | No symlinks for cross-directory skill sharing |
@@ -37,6 +39,34 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-19-192630] Smart retrieval: budget-aware ctx agent
+
+**Status**: Accepted
+
+**Context**: Issue #19 identified that ctx agent --budget is cosmetic — LEARNINGS.md excluded, decisions title-only, no relevance filtering, no graceful degradation
+
+**Decision**: Smart retrieval: budget-aware ctx agent
+
+**Rationale**: Phase 1 (smart retrieval) has the highest impact with no file format changes. Scoring entries by recency and task relevance, with tier-based budget allocation, solves the scaling problem at the presentation layer
+
+**Consequences**: ctx agent output becomes richer (learnings, decision bodies) and budget-aware. Packet struct gains new fields (additive, backward compatible). New files: score.go, budget.go in internal/cli/agent/
+
+---
+
+## [2026-02-19-214858] Try-decrypt-first for pad merge format auto-detection
+
+**Status**: Accepted
+
+**Context**: Pad merge needs to handle both encrypted (.enc) and plaintext (.md) scratchpad files without requiring the user to specify format. Considered file extension matching, UTF-8 heuristics, and try-decrypt-first.
+
+**Decision**: Try-decrypt-first for pad merge format auto-detection
+
+**Rationale**: AES-256-GCM is self-authenticating — wrong key always fails cleanly. This makes try-decrypt a reliable discriminator with zero ambiguity. Fall back to plaintext on failure, with a UTF-8 validity warning to catch encrypted files mistakenly parsed as text.
+
+**Consequences**: No --format flag needed. Users can mix encrypted and plaintext files in a single merge call. Foreign encrypted files with wrong key fall back gracefully instead of aborting.
+
+---
 
 ## [2026-02-18-071514] Knowledge scaling: archive path for decisions and learnings
 

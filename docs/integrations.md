@@ -99,7 +99,7 @@ configuration in `settings.local.json` needed:
       {
         "matcher": ".*",
         "hooks": [
-          { "type": "command", "command": "ctx agent --budget 4000 2>/dev/null || true" }
+          { "type": "command", "command": "ctx agent --budget 4000 >/dev/null || true" }
         ]
       }
     ],
@@ -136,8 +136,8 @@ configuration in `settings.local.json` needed:
 Edit the `PreToolUse` command to change the token budget or cooldown:
 
 ```text
-"command": "ctx agent --budget 8000 --session $PPID 2>/dev/null || true"
-"command": "ctx agent --budget 4000 --cooldown 5m --session $PPID 2>/dev/null || true"
+"command": "ctx agent --budget 8000 --session $PPID >/dev/null || true"
+"command": "ctx agent --budget 4000 --cooldown 5m --session $PPID >/dev/null || true"
 ```
 
 The `--session $PPID` flag isolates the cooldown per session — `$PPID` resolves

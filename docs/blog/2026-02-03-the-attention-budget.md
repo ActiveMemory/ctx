@@ -157,10 +157,11 @@ Here is a sample allocation:
 
 ```
 Constitution: ~200 tokens (never truncated)
-Tasks: ~500 tokens (current phase)
-Conventions: ~800 tokens (key patterns)
-Recent decisions: ~400 tokens (last 3)
-…budget exhausted, stop loading
+Tasks: ~500 tokens (current phase, up to 40% of budget)
+Conventions: ~800 tokens (all items, up to 20% of budget)
+Decisions: ~400 tokens (scored by recency and task relevance)
+Learnings: ~300 tokens (scored by recency and task relevance)
+Also noted: ~100 tokens (title-only summaries for overflow)
 ```
 
 The constraint is the feature: It enforces ruthless prioritization.

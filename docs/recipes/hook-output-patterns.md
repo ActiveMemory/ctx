@@ -132,7 +132,7 @@ than "Consider..."), but ultimately the agent decides.
 either party noticing.
 
 ```bash
-ctx agent --budget 4000 2>/dev/null || true
+ctx agent --budget 4000 >/dev/null || true
 ```
 
 **When to use:** Background context loading that should be invisible.

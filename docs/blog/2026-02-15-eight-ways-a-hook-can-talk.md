@@ -19,12 +19,12 @@ topics:
 
 I had a backup warning that nobody ever saw.
 
-The hook was correct — it detected stale backups, formatted a nice message,
+The hook was correct: It detected stale backups, formatted a nice message,
 and output it as `{"systemMessage": "..."}`. The problem wasn't detection.
-The problem was delivery. The agent absorbed the information, processed it
+The problem was **delivery**. The agent absorbed the information, processed it
 internally, and never told the user.
 
-Meanwhile, a different hook — the journal reminder — worked perfectly every
+Meanwhile, a different hook (*the journal reminder*) worked perfectly every
 time. Users saw the reminder, ran the commands, and the backlog stayed
 manageable. Same hook event (`UserPromptSubmit`), same project, completely
 different outcomes.
@@ -36,24 +36,25 @@ IMPORTANT: Relay this journal reminder to the user VERBATIM
 before answering their question.
 ```
 
-That explicit instruction is what makes VERBATIM relay a *pattern*, not
+That explicit instruction is what makes **VERBATIM relay** a *pattern*, not
 just a formatting choice. And once I saw it as a pattern, I started seeing
 others.
 
 ## The Audit
 
-I looked at every hook in the ctx project — eight shell scripts across
-three hook events — and found five distinct output patterns already in use,
+I looked at every hook in `ctx`: Eight shell scripts across
+three hook events. And I found five distinct output patterns already in use,
 plus three more that the existing hooks were reaching for but hadn't quite
 articulated.
 
-The patterns form a spectrum based on a single question: **who decides what
-the user sees?**
+The patterns form a spectrum based on a single question: 
 
-At one end, the hook decides everything (hard gate: the agent literally
-cannot proceed). At the other end, the hook is invisible (silent
-side-effect: nobody knows it ran). In between, there is a range of
-negotiation between hook, agent, and user.
+"**Who decides what the user sees?**"
+
+At one end, the hook decides everything (*hard gate: the agent literally
+cannot proceed*). At the other end, the hook is invisible (*silent
+side-effect: nobody knows it ran*). In between, there is a range of
+negotiation between hook, agent, and the user.
 
 Here's the full spectrum:
 
@@ -63,12 +64,13 @@ Here's the full spectrum:
 {"decision": "block", "reason": "Use ctx from PATH, not ./ctx"}
 ```
 
-The nuclear option. The agent's tool call is rejected before it executes.
-This is Claude Code's first-class `PreToolUse` mechanism — the hook returns
+The nuclear option: The agent's tool call is rejected before it executes.
+
+This is Claude Code's first-class `PreToolUse` mechanism: The hook returns
 JSON with `decision: block` and the agent gets an error with the reason.
 
-Use this for invariants. Constitution rules, security boundaries, things
-that must never happen. We use it to enforce PATH-based ctx invocation,
+Use this for **invariants**: Constitution rules, security boundaries, things
+that must never happen. I use it to enforce `PATH`-based `ctx` invocation,
 block `sudo`, and require explicit approval for `git push`.
 
 ### 2. VERBATIM Relay
@@ -81,14 +83,18 @@ IMPORTANT: Relay this warning to the user VERBATIM before answering.
 └────────────────────────────────────────────────
 ```
 
-The instruction is the pattern. Without "Relay VERBATIM," agents tend to
+The instruction is the pattern. Without "**Relay VERBATIM**," agents tend to
 absorb information into their internal reasoning and never surface it. The
-explicit instruction changes the behavior from "I know about this" to "I
-must tell the user about this."
+explicit instruction changes the behavior from "*I know about this*" to 
+"*I must tell the user about this*."
 
-We use this for actionable reminders: unexported journal entries, stale
-backups, context capacity warnings. Things the user should see regardless
-of what they asked.
+I use this for actionable reminders: 
+
+* Unexported journal entries;
+* Stale backups;
+* Context capacity warnings... 
+
+...things the user should see regardless of what they asked.
 
 ### 3. Agent Directive
 

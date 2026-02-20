@@ -132,20 +132,37 @@ ctx agent --budget 8000
 
 ```markdown
 # Context Packet
-Generated: 2026-02-14T15:30:45Z | Budget: 8000 tokens | Used: 1247
+Generated: 2026-02-14T15:30:45Z | Budget: 8000 tokens | Used: ~2450
 
 ## Read These Files (in order)
 1. .context/CONSTITUTION.md
 2. .context/TASKS.md
-3. .context/DECISIONS.md
+3. .context/CONVENTIONS.md
 ...
 
 ## Current Tasks
 - [ ] Implement user authentication
+- [ ] Add rate limiting to API endpoints
+
+## Key Conventions
+- Use gofmt for formatting
+- Path construction uses filepath.Join
 
 ## Recent Decisions
-- Use PostgreSQL for the primary database
-...
+## [2026-02-14-120000] Use PostgreSQL for the primary database
+
+**Context**: Evaluated PostgreSQL, MySQL, and SQLite...
+**Rationale**: PostgreSQL offers better JSON support...
+
+## Key Learnings
+## [2026-02-14-100000] Connection pool sizing matters
+
+**Context**: Hit connection limits under load...
+**Lesson**: Default pool size of 10 is too low for concurrent requests...
+
+## Also Noted
+- Use JWT for session management
+- Always validate input at API boundary
 ```
 
 Paste this output into your AI tool's system prompt or conversation start.

@@ -74,6 +74,11 @@ func RootCmd() *cobra.Command {
 		},
 	}
 
+	// Cobra's cmd.Print() defaults to stderr (OutOrStderr). Set stdout
+	// explicitly so all subcommands inherit correct output and shell
+	// redirection (>) works as expected.
+	cmd.SetOut(os.Stdout)
+
 	// Global flags available to all subcommands
 	cmd.PersistentFlags().StringVar(
 		&contextDir,
