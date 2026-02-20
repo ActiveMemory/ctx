@@ -47,6 +47,15 @@ ctx journal site --serve  # generate and preview
 	// Args: timeStr, title, link, project, size.
 	TplJournalIndexEntry = "- %s[%s](%s.md)%s `%s`"
 
+	// TplJournalIndexSummary formats the summary line below an index entry.
+	// Args: summary text. Indented to nest visually under the parent bullet.
+	TplJournalIndexSummary = "    *%s*"
+
+	// TplJournalSummaryAdmonition formats the summary as an abstract admonition
+	// on individual journal entry pages.
+	// Args: summary text.
+	TplJournalSummaryAdmonition = "!!! abstract \"Summary\"\n    %s"
+
 	// TplJournalSourceLink formats the "View source" link injected into entries.
 	// Args: absPath, relPath, relPath.
 	TplJournalSourceLink = `*[View source](file://%s) · <code>%s</code>*` +
@@ -169,20 +178,8 @@ generator = false
 	// Must appear under [project] (after nav, before [project.theme]).
 	TplZensicalExtraCSS = `extra_css = ["stylesheets/extra.css"]`
 
-	// JournalExtraCSS is the stylesheet for the journal site.
-	// Slightly reduces tool output text to visually distinguish it
-	// from conversation turns, with boosted contrast for readability.
-	JournalExtraCSS = `.md-typeset pre {
-  font-size: 1.1em;
-}
-
-[data-md-color-scheme="default"] .md-typeset pre code {
-  color: #1a1a1a;
-}
-
-[data-md-color-scheme="slate"] .md-typeset pre code {
-  color: #AECB32;
-  background-color: #1D1F21;
-}
-`
+	// JournalExtraCSS is deprecated — the stylesheet is now embedded
+	// from internal/cli/journal/extra.css via go:embed.
+	// This constant is kept only as a fallback reference.
+	JournalExtraCSS = ""
 )

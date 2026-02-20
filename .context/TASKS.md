@@ -10,6 +10,9 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 ### Phase -1: Quality Verification
 
+- [ ] Human: there are still minor render issues in journal site.
+      Collaborate with AI to sort them out.
+
 - [ ] Update enrich-all skill: remove normalize-first prerequisite #priority:medium #added:2026-02-20-062259
 
 - [ ] Move 'ctx journal mark' to 'ctx system mark-journal' #priority:medium #added:2026-02-20-015721

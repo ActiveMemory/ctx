@@ -32,6 +32,7 @@ func Cmd() *cobra.Command {
 		blockNonPathCtxCmd(),
 		postCommitCmd(),
 		cleanupTmpCmd(),
+		qaReminderCmd(),
 	)
 
 	return cmd

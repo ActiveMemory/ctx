@@ -106,9 +106,45 @@ func formatIndexEntry(e journalEntry, nl string) string {
 
 	size := formatSize(e.Size)
 
-	return fmt.Sprintf(
+	line := fmt.Sprintf(
 		config.TplJournalIndexEntry+nl, timeStr, e.Title, link, project, size,
 	)
+	if e.Summary != "" {
+		line += fmt.Sprintf(config.TplJournalIndexSummary+nl, e.Summary)
+	}
+	return line
+}
+
+// injectSummary inserts the session summary as an admonition after the
+// frontmatter (and any source link). Placed before the first heading.
+//
+// Parameters:
+//   - content: Markdown content (may already have source link injected)
+//   - summary: Summary text from frontmatter
+//
+// Returns:
+//   - string: Content with the summary admonition injected
+func injectSummary(content, summary string) string {
+	nl := config.NewlineLF
+	admonition := fmt.Sprintf(
+		config.TplJournalSummaryAdmonition+nl+nl, summary,
+	)
+
+	// Insert after frontmatter closing delimiter
+	fmOpen := len(config.Separator + nl)
+	fmClose := len(nl + config.Separator + nl)
+	if strings.HasPrefix(content, config.Separator+nl) {
+		if end := strings.Index(content[fmOpen:], nl+
+			config.Separator+nl); end >= 0 {
+			insertAt := fmOpen + end + fmClose
+			// Skip past any existing blank lines + source link after frontmatter
+			rest := content[insertAt:]
+			return content[:insertAt] + nl + admonition + rest
+		}
+	}
+
+	// No frontmatter — prepend
+	return admonition + content
 }
 
 // injectSourceLink inserts a "View source" link into a journal entry's

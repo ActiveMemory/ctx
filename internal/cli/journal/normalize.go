@@ -197,6 +197,13 @@ func wrapToolOutputs(content string) string {
 		// and unescape HTML entities from the export pipeline.
 		raw := stripPreWrapper(body)
 
+		// Drop empty or boilerplate tool outputs entirely (header + body).
+		// The header was already appended to out — remove it.
+		if isBoilerplateToolOutput(raw) {
+			out = out[:len(out)-1]
+			continue
+		}
+
 		// Wrap in a fenced code block. Content is emitted verbatim —
 		// fenced blocks prevent all markdown/HTML interpretation.
 		out = append(out, "")
@@ -247,6 +254,46 @@ func stripPreWrapper(body []string) []string {
 	}
 
 	return inner
+}
+
+// isBoilerplateToolOutput returns true if the tool output body contains only
+// empty lines or low-value confirmation messages that add no information to
+// the rendered journal page. Both the Tool Output header and body are dropped.
+//
+// Detected patterns:
+//   - Empty body (no non-blank lines)
+//   - "No matches found" (grep/glob with zero results)
+//   - Edit confirmations ("The file ... has been updated successfully.")
+//   - Hook denials ("Hook PreToolUse:... denied this tool")
+func isBoilerplateToolOutput(raw []string) bool {
+	// Collect non-blank lines.
+	var nonBlank []string
+	for _, line := range raw {
+		if strings.TrimSpace(line) != "" {
+			nonBlank = append(nonBlank, strings.TrimSpace(line))
+		}
+	}
+
+	// Empty body — no content at all.
+	if len(nonBlank) == 0 {
+		return true
+	}
+
+	// Single-line boilerplate patterns.
+	if len(nonBlank) == 1 {
+		line := nonBlank[0]
+		switch {
+		case line == "No matches found":
+			return true
+		case strings.HasPrefix(line, "The file ") &&
+			strings.HasSuffix(line, "has been updated successfully."):
+			return true
+		case strings.Contains(line, "denied this tool"):
+			return true
+		}
+	}
+
+	return false
 }
 
 // splitTrailingFooter splits a multipart navigation footer from the end of

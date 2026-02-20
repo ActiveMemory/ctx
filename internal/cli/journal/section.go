@@ -72,6 +72,9 @@ func writeMonthSections(
 			fmt.Fprintf(sb,
 				config.TplJournalSubpageEntry+nl,
 				timeStr, e.Title, linkPrefix, link)
+			if e.Summary != "" {
+				fmt.Fprintf(sb, config.TplJournalIndexSummary+nl, e.Summary)
+			}
 		}
 		sb.WriteString(nl)
 	}

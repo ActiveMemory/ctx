@@ -138,7 +138,8 @@ func extractTaskKeywords(tasks []string) []string {
 	for _, t := range tasks {
 		// Split on whitespace and common punctuation
 		words := strings.FieldsFunc(strings.ToLower(t), func(r rune) bool {
-			return !((r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '-' || r == '_')
+			isAlnum := (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')
+			return !isAlnum && r != '-' && r != '_'
 		})
 		for _, w := range words {
 			if len(w) < 3 || stopWords[w] || seen[w] {

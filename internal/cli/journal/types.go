@@ -25,6 +25,7 @@ type journalFrontmatter struct {
 	Outcome   string   `yaml:"outcome"`
 	Topics    []string `yaml:"topics"`
 	KeyFiles  []string `yaml:"key_files"`
+	Summary   string   `yaml:"summary,omitempty"`
 }
 
 // journalEntry represents a parsed journal file.
@@ -42,6 +43,7 @@ type journalEntry struct {
 	Type       string
 	Outcome    string
 	KeyFiles   []string
+	Summary    string
 }
 
 // topicData holds aggregated data for a single topic.

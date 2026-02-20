@@ -15,7 +15,9 @@
 //   - check-context-size: Adaptive prompt counter with checkpoint messages
 //   - check-persistence: Context file mtime watcher with persistence nudges
 //   - check-journal: Unexported sessions + unenriched entries reminder
+//   - check-version: Version update nudge
 //   - block-non-path-ctx: Blocks non-PATH ctx invocations
 //   - post-commit: Post-commit context capture nudge
 //   - cleanup-tmp: Removes stale temp files on session end
+//   - qa-reminder: Reminds agent to lint/test full project before declaring done
 package system

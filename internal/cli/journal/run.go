@@ -7,6 +7,7 @@
 package journal
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
 	"os/exec"
@@ -19,6 +20,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
+
+//go:embed extra.css
+var extraCSS []byte
 
 // runZensical executes zensical build or serve in the output directory.
 //
@@ -98,7 +102,7 @@ func runJournalSite(
 	}
 	cssPath := filepath.Join(stylesDir, "extra.css")
 	if err = os.WriteFile(
-		cssPath, []byte(config.JournalExtraCSS), config.PermFile,
+		cssPath, extraCSS, config.PermFile,
 	); err != nil {
 		return errFileWrite(cssPath, err)
 	}
@@ -146,7 +150,11 @@ func runJournalSite(
 
 		// Generate site copy with Markdown fixes
 		fv := jstate.IsFencesVerified(entry.Filename)
-		siteContent := normalizeContent(injectSourceLink(normalized, src), fv)
+		withLinks := injectSourceLink(normalized, src)
+		if entry.Summary != "" {
+			withLinks = injectSummary(withLinks, entry.Summary)
+		}
+		siteContent := normalizeContent(withLinks, fv)
 		if err = os.WriteFile(
 			dst, []byte(siteContent), config.PermFile,
 		); err != nil {

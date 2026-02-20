@@ -474,6 +474,65 @@ func TestNormalizeContent(t *testing.T) {
 				}
 			},
 		},
+		{
+			"boilerplate tool output stripped — empty body",
+			"### 5. Tool Output (10:30:00)\n\n\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "Tool Output") {
+					t.Error("empty tool output header should be stripped")
+				}
+				if !strings.Contains(got, "### 6. Assistant") {
+					t.Error("next turn should survive")
+				}
+			},
+		},
+		{
+			"boilerplate tool output stripped — no matches found",
+			"### 5. Tool Output (10:30:00)\n\nNo matches found\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "Tool Output") {
+					t.Error("'No matches found' tool output should be stripped")
+				}
+				if strings.Contains(got, "No matches found") {
+					t.Error("boilerplate line should not appear")
+				}
+			},
+		},
+		{
+			"boilerplate tool output stripped — edit confirmation",
+			"### 5. Tool Output (10:30:00)\n\nThe file /home/jose/foo.go has been updated successfully.\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "Tool Output") {
+					t.Error("edit confirmation tool output should be stripped")
+				}
+			},
+		},
+		{
+			"boilerplate tool output stripped — hook denial",
+			"### 5. Tool Output (10:30:00)\n\nHook PreToolUse:Bash denied this tool\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "Tool Output") {
+					t.Error("hook denial tool output should be stripped")
+				}
+			},
+		},
+		{
+			"non-boilerplate tool output preserved",
+			"### 5. Tool Output (10:30:00)\n\nactual useful content here\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "actual useful content here") {
+					t.Error("non-boilerplate content should be preserved")
+				}
+				if strings.Count(got, "```") != 2 {
+					t.Errorf("expected fence wrapping, got %d markers", strings.Count(got, "```"))
+				}
+			},
+		},
 	}
 
 	for _, tt := range tests {

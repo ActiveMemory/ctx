@@ -84,8 +84,8 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 
 	// Ensure journal directory exists
 	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create journal directory: %w", err)
+	if mkErr := os.MkdirAll(journalDir, config.PermExec); mkErr != nil {
+		return fmt.Errorf("failed to create journal directory: %w", mkErr)
 	}
 
 	// Load journal state for tracking export status.

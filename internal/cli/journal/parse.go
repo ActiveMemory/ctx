@@ -110,6 +110,7 @@ func parseJournalEntry(path, filename string) journalEntry {
 				entry.Type = fm.Type
 				entry.Outcome = fm.Outcome
 				entry.KeyFiles = fm.KeyFiles
+				entry.Summary = fm.Summary
 			}
 		}
 	}

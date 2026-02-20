@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-20 | Pre-commit gate: build + lint + test, every time |
 | 2026-02-20 | AI normalization at scale hits context limits |
 | 2026-02-20 | Inline code spans with angle brackets break markdown rendering |
 | 2026-02-20 | Journal title sanitization requires multiple passes |
@@ -89,6 +90,16 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-20-070902] Pre-commit gate: build + lint + test, every time
+
+**Context**: Repeatedly shipped code that passed tests but would have bounced from CI due to linter violations. User had to explicitly remind me to run golangci-lint.
+
+**Lesson**: Tests verify behavior; the linter enforces style, security (gosec), and static analysis that CI gates on. Running only 'go test' is an incomplete check. The full pre-commit gate is: go build, golangci-lint run, go test — all three, every time, before calling code done.
+
+**Application**: Before any code is considered commit-ready, always run: (1) CGO_ENABLED=0 go build ./cmd/ctx (2) golangci-lint run ./path/to/package/ (3) CGO_ENABLED=0 go test ./path/to/package/. Never skip the linter. Never assume tests alone are sufficient.
 
 ---
 
