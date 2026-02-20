@@ -17,6 +17,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
+// journalDir is the path to the journal directory within .context/.
+const journalDir = ".context/journal"
+
 // secureTempDir returns a user-specific temp directory for ctx state files.
 // Uses $XDG_RUNTIME_DIR when available (tmpfs, user-owned, 0700 on Linux),
 // otherwise creates a user-specific subdirectory under os.TempDir().
