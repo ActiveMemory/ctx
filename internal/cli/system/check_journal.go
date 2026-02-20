@@ -37,7 +37,6 @@ func runCheckJournal(cmd *cobra.Command) error {
 	}
 	tmpDir := secureTempDir()
 	remindedFile := filepath.Join(tmpDir, "journal-reminded")
-	journalDir := ".context/journal"
 	claudeProjectsDir := filepath.Join(os.Getenv("HOME"), ".claude", "projects")
 
 	// Only remind once per day

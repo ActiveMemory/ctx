@@ -43,7 +43,6 @@ func runCheckCeremonies(cmd *cobra.Command) error {
 		return nil
 	}
 
-	journalDir := ".context/journal"
 	files := recentJournalFiles(journalDir, 3)
 
 	if len(files) == 0 {
