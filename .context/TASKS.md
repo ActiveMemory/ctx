@@ -10,6 +10,8 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 ### Phase -1: Quality Verification
 
+- [ ] Investigate PreToolUse:Edit hook not firing — qa-reminder (hooks.json:10) should fire on every Edit call but zero PreToolUse:Edit entries appeared in session JSONL despite 6+ Edit calls. Installed ctx v0.6.4 matches assets. Check: hooks sync to active config, matcher dispatch for Edit, session 8b80f8e6. #priority:high #added:2026-02-20-150011
+
 - [ ] Human: there are still minor render issues in journal site.
       Collaborate with AI to sort them out.
 
