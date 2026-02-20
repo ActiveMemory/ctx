@@ -2739,8 +2739,20 @@ never distributed to users.</p>
 You must rebuild for Go changes to take effect.</p>
 <h3 id="skill-or-hook-changes">Skill or Hook Changes<a class="headerlink" href="#skill-or-hook-changes" title="Permanent link">&para;</a></h3>
 <p>Edit files under <code>internal/assets/claude/skills/</code> or
-<code>internal/assets/claude/hooks/</code>. Changes are picked up by Claude Code
-automatically (no rebuild needed).</p>
+<code>internal/assets/claude/hooks/</code>.</p>
+<p>After making changes, update the plugin version and refresh the marketplace:</p>
+<ol>
+<li>Bump the version in <code>.claude-plugin/marketplace.json</code>
+   (the <code>plugins[0].version</code> field)</li>
+<li>Bump the version in <code>internal/assets/claude/.claude-plugin/plugin.json</code>
+   (the top-level <code>version</code> field)</li>
+<li><em>(Optional but recommended)</em> Update <code>VERSION</code> to match —
+   keeping all three in sync avoids confusion</li>
+<li>In Claude Code, type <code>/plugin</code> and press Enter</li>
+<li>Select <strong>Marketplaces</strong> → <strong>activememory-ctx</strong></li>
+<li>Select <strong>Update marketplace</strong></li>
+<li>Restart Claude Code for the changes to take effect</li>
+</ol>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">            </span><span class="c1"># fast: all tests</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>make<span class="w"> </span>audit<span class="w">           </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>

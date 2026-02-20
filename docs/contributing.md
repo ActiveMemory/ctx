@@ -123,8 +123,20 @@ You must rebuild for Go changes to take effect.
 ### Skill or Hook Changes
 
 Edit files under `internal/assets/claude/skills/` or
-`internal/assets/claude/hooks/`. Changes are picked up by Claude Code
-automatically (no rebuild needed).
+`internal/assets/claude/hooks/`.
+
+After making changes, update the plugin version and refresh the marketplace:
+
+1. Bump the version in `.claude-plugin/marketplace.json`
+   (the `plugins[0].version` field)
+2. Bump the version in `internal/assets/claude/.claude-plugin/plugin.json`
+   (the top-level `version` field)
+3. *(Optional but recommended)* Update `VERSION` to match —
+   keeping all three in sync avoids confusion
+4. In Claude Code, type `/plugin` and press Enter
+5. Select **Marketplaces** → **activememory-ctx**
+6. Select **Update marketplace**
+7. Restart Claude Code for the changes to take effect
 
 ### Running Tests
 
