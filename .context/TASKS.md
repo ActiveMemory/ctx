@@ -145,31 +145,31 @@ use, these should be explicitly invoked as slash commands for precision and
 completeness. `/ctx-remember` already exists; `/ctx-wrap-up` is new.
 Spec: `specs/session-wrap-up.md`
 
-- [ ] P6.1: Create `/ctx-wrap-up` skill file at
+- [x] P6.1: Create `/ctx-wrap-up` skill file at
       `.claude/skills/ctx-wrap-up/SKILL.md`. Skill should: gather signal
       (git diff, git log, conversation themes), propose candidates grouped
       by type, persist approved candidates via `ctx add`, optionally offer
-      `/ctx-commit`. #priority:medium #added:2026-02-18
+      `/ctx-commit`. #priority:medium #added:2026-02-18 #done:2026-02-20
 
-- [ ] P6.2: Update `check-persistence` hook to suggest `/ctx-wrap-up`
+- [x] P6.2: Update `check-persistence` hook to suggest `/ctx-wrap-up`
       instead of generic persistence advice.
-      #priority:low #added:2026-02-18
+      #priority:low #added:2026-02-18 #done:2026-02-20
 
-- [ ] P6.3: Create `docs/recipes/session-ceremonies.md` recipe — covers the
+- [x] P6.3: Create `docs/recipes/session-ceremonies.md` recipe — covers the
       two bookend skills as explicit rituals. Why explicit invocation (not
       conversational) for these two. Session start: `/ctx-remember`. Session
       end: `/ctx-wrap-up`. Quick reference card. When to skip.
-      #priority:medium #added:2026-02-18
+      #priority:medium #added:2026-02-18 #done:2026-02-20
 
-- [ ] P6.4: Update docs to reflect ceremony pattern — add "Session
+- [x] P6.4: Update docs to reflect ceremony pattern — add "Session
       Ceremonies" grouping in docs/skills.md, cross-link from
       recipes/session-lifecycle.md, add callout in docs/prompting-guide.md
       distinguishing ceremony skills (explicit) from workflow skills
       (conversational), mention `/ctx-remember` in docs/first-session.md
       as recommended session start.
-      #priority:low #added:2026-02-18
+      #priority:low #added:2026-02-18 #done:2026-02-20
 
-- [ ] P6.5: `ctx system check-ceremonies` hook — scans recent journal
+- [x] P6.5: `ctx system check-ceremonies` hook — scans recent journal
       entries for `/ctx-remember` and `/ctx-wrap-up` usage. If missing from
       last 3 sessions, emits a VERBATIM relay nudge explaining the benefit.
       Journal-first detection (cheap string scan); if journals are stale or
@@ -177,17 +177,17 @@ Spec: `specs/session-wrap-up.md`
       JSONL (avoids expensive large-file scanning that eats context budget).
       Daily throttle, self-silencing when habits form.
       Spec: `specs/ceremony-nudge.md`
-      #priority:medium #added:2026-02-18
+      #priority:medium #added:2026-02-18 #done:2026-02-20
 
-- [ ] P6.6: Register `check-ceremonies` in hooks.json under
+- [x] P6.6: Register `check-ceremonies` in hooks.json under
       UserPromptSubmit. Add to `system.go` command tree. Update doc.go
       package comment.
-      #priority:medium #added:2026-02-18
+      #priority:medium #added:2026-02-18 #done:2026-02-20
 
-- [ ] P6.7: Tests for check-ceremonies — unit tests for journal scanning,
+- [x] P6.7: Tests for check-ceremonies — unit tests for journal scanning,
       throttling, output variants (both missing, one missing, neither).
       Integration test with sample journal directory.
-      #priority:medium #added:2026-02-18
+      #priority:medium #added:2026-02-18 #done:2026-02-20
 
 ### Phase 7: Smart Retrieval `#priority:high`
 
