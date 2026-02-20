@@ -16,8 +16,6 @@ topics:
   - design philosophy
 ---
 
-<!-- //////////////////////// I WAS LEFT HERE /////////////////////// -->
-
 # Context as Infrastructure
 
 ![ctx](../images/ctx-banner.png)
@@ -55,37 +53,40 @@ Most AI-assisted development treats context as ephemeral:
 4. Session ends. Everything evaporates.
 5. Next session: paste again.
 
-This works for short interactions. For sustained development -- where
-decisions compound over days and weeks -- it fails in three ways:
+This works for short interactions. For sustained development (*where
+decisions compound over days and weeks*) it fails in three ways:
 
-**It does not persist.** A decision made on Tuesday must be re-explained
-on Wednesday. A learning captured in one session is invisible to the
+**It does not persist**: A *decision* made on Tuesday must be re-explained
+on Wednesday. A *learning* captured in one session is invisible to the
 next.
 
-**It does not scale.** As the project grows, the "paste everything"
+**It does not scale**: As the project grows, the "*paste everything*"
 approach hits the context window ceiling. You start triaging what to
 include, often cutting exactly the context that would have prevented
 the next mistake.
 
-**It does not compose.** A system prompt is a monolith. You cannot
+**It does not compose**: A system prompt is a monolith. You cannot
 load part of it, update one section, or share a subset with a different
 workflow. It is all or nothing.
 
 !!! warning "The Copy-Paste Tax"
     Every session that starts with pasting a prompt is paying a tax:
-    the human time to assemble the context, the risk of forgetting
+
+    The human time to assemble the context, the risk of forgetting
     something, and the silent assumption that yesterday's prompt is
     still accurate today.
 
     Over 70+ sessions, that tax compounds into a significant
-    maintenance burden -- one that most developers absorb without
+    maintenance burden: One that most developers absorb without
     questioning it.
 
 ---
 
 ## The Infrastructure Paradigm
 
-`ctx` takes a different approach. Context is not assembled per-session;
+`ctx` takes a different approach:
+
+Context is not assembled per-session;
 it is **maintained as persistent files** in a `.context/` directory:
 
 ```
@@ -102,8 +103,9 @@ it is **maintained as persistent files** in a `.context/` directory:
   archive/            # Completed work, cold storage
 ```
 
-Each file has a single purpose. Each can be loaded independently.
-Each persists across sessions, tools, and team members.
+* Each file has a single purpose;
+* Each can be loaded independently;
+* Each persists across **sessions**, **tools**, and **team members**.
 
 This is not a novel idea. It is the same idea behind every piece of
 infrastructure software engineers already use:
@@ -118,10 +120,11 @@ infrastructure software engineers already use:
 | Deployment manifests       | `AGENT_PLAYBOOK.md`         |
 
 The parallel is not metaphorical. Context files **are** infrastructure:
-they are versioned (git tracks them), they are structured (Markdown
-with conventions), they have schemas (required fields for decisions
-and learnings), and they have lifecycle management (archiving, compaction,
-indexing).
+
+* They are versioned (*`git` tracks them*); 
+* They are structured (*Markdown with conventions*); 
+* They have schemas (*required fields for decisions and learnings*); 
+* And they have lifecycle management (*archiving, compaction, indexing*).
 
 ---
 
@@ -136,22 +139,23 @@ also be impossible to maintain.
 
 Why? Because different types of context have different lifecycles:
 
-| Context Type  | Changes         | Read By           | Load When            |
-|---------------|-----------------|-------------------|----------------------|
-| Constitution  | Rarely          | Every session     | Always               |
-| Tasks         | Every session   | Session start     | Always               |
-| Conventions   | Weekly          | Before coding     | When writing code    |
-| Decisions     | When decided    | When questioning   | When revisiting      |
-| Learnings     | When learned    | When stuck         | When debugging       |
-| Journal       | Every session   | Rarely            | When investigating   |
+| Context Type | Changes       | Read By          | Load When          |
+|--------------|---------------|------------------|--------------------|
+| Constitution | Rarely        | Every session    | Always             |
+| Tasks        | Every session | Session start    | Always             |
+| Conventions  | Weekly        | Before coding    | When writing code  |
+| Decisions    | When decided  | When questioning | When revisiting    |
+| Learnings    | When learned  | When stuck       | When debugging     |
+| Journal      | Every session | Rarely           | When investigating |
 
 Loading everything into every session wastes the
 [attention budget][attention-post] on context that is irrelevant to
 the current task. Loading nothing forces the AI to operate blind.
 
-Separation of concerns allows **progressive disclosure**: load the
-minimum that matters for this moment, with the option to load more
-when needed.
+Separation of concerns allows **progressive disclosure**: 
+
+Load the **minimum** that matters for **this moment**, with the 
+**option** to load more when **needed**.
 
 ```bash
 # Session start: load the essentials
@@ -179,9 +183,12 @@ architectural:
 | **Full dump** | Safety net, archaeology | `.context/journal/*.md`  | Zero (not auto-loaded) |
 
 The curated tier is what the AI sees at session start. It is
-optimized for signal density: structured entries, indexed tables,
-reverse-chronological order (newest first, so the most relevant
-content survives truncation).
+optimized for signal density: 
+
+* Structured entries, 
+* Indexed tables,
+* Reverse-chronological order (*newest first, so the most relevant
+  content survives truncation*).
 
 The full dump tier is for humans and for deep investigation. It
 contains everything: enriched journals, archived tasks. It is never

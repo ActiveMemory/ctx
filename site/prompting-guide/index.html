@@ -3162,7 +3162,9 @@ and often offer to persist them.</p>
 <ul>
 <li>"<em>Let's persist what we did</em>"</li>
 <li>"<em>Update the context files</em>"</li>
-<li><code>/ctx-reflect</code> (<em>Agent Skill in Claude Code</em>)</li>
+<li><code>/ctx-wrap-up</code> — the recommended end-of-session ceremony
+  (see <a href="../recipes/session-ceremonies/">Session Ceremonies</a>)</li>
+<li><code>/ctx-reflect</code> — mid-session reflection checkpoint</li>
 </ul>
 <hr />
 <h2 id="exploration-and-research">Exploration and Research<a class="headerlink" href="#exploration-and-research" title="Permanent link">&para;</a></h2>
@@ -3244,6 +3246,10 @@ load context or trigger specific behaviors:</p>
 <td>Recall project context and structured readback</td>
 </tr>
 <tr>
+<td><code>/ctx-wrap-up</code></td>
+<td>End-of-session context persistence</td>
+</tr>
+<tr>
 <td><code>/ctx-recall</code></td>
 <td>Browse session history for past discussions</td>
 </tr>
@@ -3285,8 +3291,18 @@ load context or trigger specific behaviors:</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Ceremony vs. Workflow Skills</p>
+<p>Most skills work <strong>conversationally</strong>: "what should we work on?"
+triggers <code>/ctx-next</code>, "save that as a learning" triggers
+<code>/ctx-add-learning</code>. Natural language is the recommended approach.</p>
+<p>Two skills are the exception: <code>/ctx-remember</code> and <code>/ctx-wrap-up</code>
+are <strong>ceremony skills</strong> for session boundaries. Invoke them as
+<strong>explicit slash commands</strong> — conversational triggers risk partial
+execution. See <a href="../recipes/session-ceremonies/">Session Ceremonies</a>.</p>
+</div>
 <p>Skills combine a prompt, tool permissions, and domain knowledge
-into a single invocation. </p>
+into a single invocation.</p>
 <p>See <a href="../integrations/">Integrations</a> for setup details.</p>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
@@ -3380,6 +3396,10 @@ so far, here are some prompts that tend to produce poor results:</p>
 <tr>
 <td>Reflect</td>
 <td><code>/ctx-reflect</code></td>
+</tr>
+<tr>
+<td>Wrap up</td>
+<td><code>/ctx-wrap-up</code></td>
 </tr>
 <tr>
 <td>Persist</td>

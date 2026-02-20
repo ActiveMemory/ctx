@@ -8,6 +8,7 @@
 title: "Code Is Cheap. Judgment Is Not."
 date: 2026-02-17
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - AI and expertise
   - context engineering

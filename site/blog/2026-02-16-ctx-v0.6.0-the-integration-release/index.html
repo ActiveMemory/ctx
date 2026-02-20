@@ -2086,10 +2086,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-v060-means" class="md-nav__link">
+  <a href="#what-does-v060-mean-for-ctx" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What v0.6.0 Means
+        What Does v0.6.0 Mean for ctx?
       
     </span>
   </a>
@@ -2138,35 +2138,43 @@
 <h2 id="two-commands-to-persistent-memory">Two Commands to Persistent Memory<a class="headerlink" href="#two-commands-to-persistent-memory" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne / February 16, 2026</em></p>
 <div class="admonition question">
-<p class="admonition-title">What changed?</p>
-<p>ctx is now a Claude Code plugin. Two commands, no build step:</p>
+<p class="admonition-title">What Changed?</p>
+<p><code>ctx</code> is now a Claude Code plugin. Two commands, no build step:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/plugin<span class="w"> </span>marketplace<span class="w"> </span>add<span class="w"> </span>ActiveMemory/ctx
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/plugin<span class="w"> </span>install<span class="w"> </span>ctx@activememory-ctx
 </span></code></pre></div>
 <p>Six hooks. Twenty-five skills. Installed.</p>
 </div>
-<p>For three releases, ctx required assembly. Clone the repo. Build the
-binary. Copy hook scripts into <code>.claude/hooks/</code>. Symlink skill files.
-Understand which shell scripts called which Go commands. Hope nothing
-broke when Claude Code updated its hook format.</p>
-<p>v0.6.0 ends that era. ctx ships as a <strong>Claude Marketplace plugin</strong>:
-hooks and skills served directly from source, installed with a single
+<p>For three releases, <code>ctx</code> required assembly: </p>
+<ul>
+<li>Clone the repo; </li>
+<li>Build the binary; </li>
+<li>Copy hook scripts into <code>.claude/hooks/</code>; </li>
+<li>Symlink skill files.</li>
+<li>Understand which shell scripts called which Go commands;</li>
+<li>Hope nothing broke when Claude Code updated its hook format.</li>
+</ul>
+<p><code>v0.6.0</code> ends that era: <code>ctx</code> ships as a <strong>Claude Marketplace plugin</strong>:</p>
+<p>Hooks and skills served directly from source, installed with a single
 command, updated by pulling the repo. The tool that gives AI persistent
 memory is now as easy to install as the AI itself.</p>
-<p>But the plugin conversion was not just a packaging change. It was the
+<p>But the plugin conversion was not just a packaging change: It was the
 forcing function that rewrote every shell hook in Go, eliminated the
-jq dependency, enabled <code>go test</code> coverage for hook logic, and made
-distribution a solved problem. When you fix how something ships, you
-end up fixing how it is built.</p>
+<code>jq</code> dependency, enabled <code>go test</code> coverage for hook logic, and made
+distribution a <strong>solved</strong> problem. </p>
+<p><strong>When you fix how something ships, you end up fixing how it is built</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">The Release Window</p>
-<p><strong>February 15 -- February 16, 2026</strong></p>
-<p>From the v0.3.0 tag to commit <code>a3178bc</code>.
-109 commits. 334 files changed. Version jumped from 0.3.0 to 0.6.0
-to signal the magnitude.</p>
+<p><strong>February 15–February 16, 2026</strong></p>
+<p>From the v0.3.0 tag to commit <code>a3178bc</code>:</p>
+<ul>
+<li>109 commits. </li>
+<li>334 files changed. </li>
+<li>Version jumped from 0.3.0 to 0.6.0 to signal the magnitude.</li>
+</ul>
 </div>
 <h2 id="before-six-shell-scripts-and-a-prayer">Before: Six Shell Scripts and a Prayer<a class="headerlink" href="#before-six-shell-scripts-and-a-prayer" title="Permanent link">&para;</a></h2>
-<p>v0.3.0 had six hook scripts. Each was a Bash file that shelled out to
+<p><code>v0.3.0</code> had six hook scripts. Each was a Bash file that shelled out to
 <code>ctx</code> subcommands, parsed JSON with <code>jq</code>, and wired itself into Claude
 Code's hook system via <code>.claude/hooks/</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.claude/hooks/
@@ -2177,19 +2185,19 @@ Code's hook system via <code>.claude/hooks/</code>:</p>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>├── block-non-path-ctx.sh
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>└── cleanup-tmp.sh
 </span></code></pre></div>
-<p>This worked. It also meant:</p>
+<p>This worked, but it also meant:</p>
 <ul>
-<li><strong>jq was a hard dependency.</strong> No jq, no hooks. macOS ships without it.</li>
-<li><strong>No test coverage.</strong> Shell scripts were tested manually or not at all.</li>
-<li><strong>Fragile deployment.</strong> <code>ctx init</code> had to scaffold <code>.claude/hooks/</code>
+<li><strong>jq was a hard dependency</strong>: No <code>jq</code>, no hooks. macOS ships without it.</li>
+<li><strong>No test coverage</strong>: Shell scripts were tested manually or not at all.</li>
+<li><strong>Fragile deployment</strong>: <code>ctx init</code> had to scaffold <code>.claude/hooks/</code>
   and <code>.claude/skills/</code> with the right paths, permissions, and structure.</li>
-<li><strong>Version drift.</strong> Users who installed once never got hook updates
-  unless they re-ran init.</li>
+<li><strong>Version drift</strong>: Users who installed once never got hook updates
+  unless they re-ran <code>ctx init</code>.</li>
 </ul>
 <p>The shell scripts were the right choice for prototyping. They were the
 wrong choice for distribution.</p>
 <h2 id="after-one-plugin-zero-shell-scripts">After: One Plugin, Zero Shell Scripts<a class="headerlink" href="#after-one-plugin-zero-shell-scripts" title="Permanent link">&para;</a></h2>
-<p>v0.6.0 replaces all six scripts with <code>ctx system</code> subcommands compiled
+<p><code>v0.6.0</code> replaces all six scripts with <code>ctx system</code> subcommands compiled
 into the binary:</p>
 <table>
 <thead>
@@ -2244,29 +2252,29 @@ into the binary:</p>
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="p">]</span>
 </span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>No jq. No shell scripts. No <code>.claude/hooks/</code> directory to manage.
-The hooks are Go functions with tests, compiled into the same binary
+<p>No jq. No shell scripts. No <code>.claude/hooks/</code> directory to manage.</p>
+<p>The hooks are Go functions with tests, compiled into the same binary
 you already have.</p>
 <h2 id="the-plugin-model">The Plugin Model<a class="headerlink" href="#the-plugin-model" title="Permanent link">&para;</a></h2>
-<p>The ctx plugin lives at <code>.claude-plugin/marketplace.json</code> in the repo.
-Claude Code's marketplace system handles discovery and installation.
-Skills are served directly from <code>internal/assets/claude/skills/</code>; there
+<p>The <code>ctx</code> plugin lives at <code>.claude-plugin/marketplace.json</code> in the repo.</p>
+<p>Claude Code's marketplace system handles discovery and installation:</p>
+<p>Skills are served directly from <code>internal/assets/claude/skills/</code>; there
 is no build step, no <code>make plugin</code>, no generated artifacts.</p>
 <p>This means:</p>
 <ol>
-<li><strong>Install is two commands.</strong> Not "clone, build, copy, configure."</li>
-<li><strong>Updates are automatic.</strong> Pull the repo; the plugin reads from source.</li>
-<li><strong>Skills and hooks are versioned together.</strong> No drift between what
+<li><strong>Install is two commands</strong>: Not "clone, build, copy, configure."</li>
+<li><strong>Updates are automatic</strong>: Pull the repo; the plugin reads from source.</li>
+<li><strong>Skills and hooks are versioned together</strong>: No drift between what
    the CLI expects and what the plugin provides.</li>
-<li><strong><code>ctx init</code> is tool-agnostic.</strong> It creates <code>.context/</code> and nothing
+<li><strong><code>ctx init</code> is tool-agnostic</strong>: It creates <code>.context/</code> and nothing
    else. No <code>.claude/</code> scaffolding, no assumptions about which AI tool
    you use.</li>
 </ol>
-<p>That last point matters. Before v0.6.0, <code>ctx init</code> tried to set up
-Claude Code integration as part of initialization. That coupled the
-context system to a specific tool. Now, <code>ctx init</code> gives you persistent
-context. The plugin gives you Claude Code integration. They compose;
-they don't depend.</p>
+<p>That last point matters: </p>
+<p>Before <code>v0.6.0</code>, <code>ctx init</code> tried to set up Claude Code integration as part of 
+initialization. That coupled the context system to a specific tool. </p>
+<p>Now, <code>ctx init</code> gives you persistent context. The plugin gives you Claude Code 
+integration. They compose; they don't depend.</p>
 <h2 id="beyond-the-plugin-what-else-shipped">Beyond the Plugin: What Else Shipped<a class="headerlink" href="#beyond-the-plugin-what-else-shipped" title="Permanent link">&para;</a></h2>
 <p>The plugin conversion dominated the release, but 109 commits covered
 more ground.</p>
@@ -2274,19 +2282,19 @@ more ground.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
 </span></code></pre></div>
 <p>Generates a full Obsidian vault from enriched journal entries:
-wikilinks, MOC (Map of Content) pages, and graph-optimized
+wikilinks, MOC (<em>Map of Content</em>) pages, and graph-optimized
 cross-linking. If you already use Obsidian for notes, your AI session
 history now lives alongside everything else.</p>
 <h3 id="encrypted-scratchpad">Encrypted Scratchpad<a class="headerlink" href="#encrypted-scratchpad" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>edit<span class="w"> </span><span class="s2">&quot;DATABASE_URL=postgres://...&quot;</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show
 </span></code></pre></div>
-<p>AES-256-GCM encrypted storage for sensitive one-liners. The encrypted
-blob commits to git; the key stays in <code>.gitignore</code>. Useful for
-connection strings, API keys, and other values that need to travel
-with the project without appearing in plaintext.</p>
+<p><code>AES-256-GCM</code> encrypted storage for sensitive one-liners. </p>
+<p>The encrypted blob commits to <code>git</code>; the key stays in <code>.gitignore</code>. </p>
+<p>This is useful for connection strings, API keys, and other values that need to
+travel with the project without appearing in plaintext.</p>
 <h3 id="security-hardening">Security Hardening<a class="headerlink" href="#security-hardening" title="Permanent link">&para;</a></h3>
-<p>Three medium-severity findings from a security audit, now closed:</p>
+<p>Three medium-severity findings from a security audit are now closed:</p>
 <table>
 <thead>
 <tr>
@@ -2312,11 +2320,11 @@ with the project without appearing in plaintext.</p>
 <p>Plus a new <code>/sanitize-permissions</code> skill that audits
 <code>settings.local.json</code> for overly broad Bash permissions.</p>
 <h3 id="hooks-that-know-when-to-be-quiet">Hooks That Know When to Be Quiet<a class="headerlink" href="#hooks-that-know-when-to-be-quiet" title="Permanent link">&para;</a></h3>
-<p>A subtle but important fix: hooks now no-op before <code>ctx init</code> has run.
-Previously, a fresh clone with no <code>.context/</code> would trigger hook errors
+<p>A subtle but important fix: hooks now no-op before <code>ctx init</code> has run.</p>
+<p>Previously, a fresh clone with no <code>.context/</code> would trigger hook errors
 on every prompt. Now, hooks detect the absence of a context directory
 and exit silently. Similarly, <code>ctx init</code> treats a <code>.context/</code> directory
-containing only logs as uninitialized and skips the overwrite prompt.</p>
+containing only logs as uninitialized and <em>skips</em> the <code>--overwrite</code> prompt.</p>
 <p>Small changes. Large reduction in friction for new users.</p>
 <h2 id="the-numbers">The Numbers<a class="headerlink" href="#the-numbers" title="Permanent link">&para;</a></h2>
 <table>
@@ -2371,29 +2379,31 @@ containing only logs as uninitialized and skips the overwrite prompt.</p>
 </tbody>
 </table>
 <p>The line count tripled. Most of that is documentation site HTML,
-Obsidian export logic, and the scratchpad encryption module. The core
-CLI grew modestly; the ecosystem around it grew substantially.</p>
-<h2 id="what-v060-means">What v0.6.0 Means<a class="headerlink" href="#what-v060-means" title="Permanent link">&para;</a></h2>
-<p>v0.1.0 asked: "Can we give AI persistent memory?"</p>
-<p>v0.2.0 asked: "Can we make that memory accessible to humans too?"</p>
-<p>v0.3.0 asked: "Can we make the quality self-enforcing?"</p>
+Obsidian export logic, and the scratchpad encryption module. </p>
+<p>The core CLI grew modestly; the ecosystem around it grew <strong>substantially</strong>.</p>
+<h2 id="what-does-v060-mean-for-ctx">What Does <code>v0.6.0</code> Mean for <code>ctx</code>?<a class="headerlink" href="#what-does-v060-mean-for-ctx" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>v0.1.0</code> asked: "<em>Can we give AI persistent memory?</em>"</li>
+<li><code>v0.2.0</code> asked: "<em>Can we make that memory accessible to humans too?</em>"</li>
+<li><code>v0.3.0</code> asked: "<em>Can we make the quality self-enforcing?</em>"</li>
+</ul>
 <p>v0.6.0 asks: <strong>"Can someone else actually use this?"</strong></p>
 <p>A tool that requires cloning a repo, building from source, and manually
-wiring hooks into the right directories is a tool for its author.
-A tool that installs with two commands from a marketplace is a tool
+wiring hooks into the right directories is a tool for its author.</p>
+<p>A tool that installs with two commands from a marketplace is a tool
 for everyone.</p>
-<p>The version jumped from 0.3.0 to 0.6.0 because the delta is not
-incremental. The shell-to-Go rewrite, the plugin model, the security
-hardening, and the tool-agnostic init: together, they change what ctx
-<em>is</em>. Not a different tool, but a tool that is finally ready to leave
+<p>The version jumped from <code>0.3.0</code> to <code>0.6.0</code> because the delta is not
+incremental: The shell-to-Go rewrite, the plugin model, the security
+hardening, and the tool-agnostic init: Together, they change what ctx
+<strong>is</strong>: Not a different tool, but a tool that is finally ready to leave
 the workshop.</p>
 <h2 id="what-comes-next">What Comes Next<a class="headerlink" href="#what-comes-next" title="Permanent link">&para;</a></h2>
 <p>The plugin model opens the door to distribution patterns that were
 not possible before. Marketplace discovery means new users find ctx
-without reading a README. Plugin updates mean existing users get
+without reading a <code>README</code>. Plugin updates mean existing users get
 improvements without rebuilding.</p>
 <p>The next chapter is about what happens when persistent context is easy
-to install: adoption patterns, multi-project workflows, and whether
+to install: Adoption patterns, multi-project workflows, and whether
 the <code>.context/</code> convention can become infrastructure that other tools
 build on.</p>
 <p>But those are future posts.</p>
@@ -2403,8 +2413,8 @@ presence on the Claude Marketplace.</p>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">The Integration Release</p>
-<p>v0.1.0 shipped features. v0.2.0 shipped archaeology.
-v0.3.0 shipped discipline. v0.6.0 shipped <strong>the front door</strong>.</p>
+<p><code>v0.1.0</code> shipped features. <code>v0.2.0</code> shipped archaeology.</p>
+<p><code>v0.3.0</code> shipped discipline. <code>v0.6.0</code> shipped <strong>the front door</strong>.</p>
 <p>The most important code in this release is the code you
 <strong>never have to copy</strong>.</p>
 </div>

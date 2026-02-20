@@ -1617,6 +1617,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-wrap-up
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2573,6 +2584,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-wrap-up
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3025,6 +3047,11 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
+<td><a href="#ctx-wrap-up"><code>/ctx-wrap-up</code></a></td>
+<td>End-of-session context persistence ceremony</td>
+<td>user-invocable</td>
+</tr>
+<tr>
 <td><a href="#ctx-status"><code>/ctx-status</code></a></td>
 <td>Show context summary with interpretation</td>
 <td>user-invocable</td>
@@ -3159,11 +3186,20 @@ to invoke the relevant skills directly.</p>
 <hr />
 <h2 id="session-lifecycle">Session Lifecycle<a class="headerlink" href="#session-lifecycle" title="Permanent link">&para;</a></h2>
 <p>Skills for starting, running, and ending a productive session.</p>
+<div class="admonition note">
+<p class="admonition-title">Session Ceremonies</p>
+<p>Two skills in this group are <strong>ceremony skills</strong>: <code>/ctx-remember</code> (session
+start) and <code>/ctx-wrap-up</code> (session end). Unlike other skills that work
+conversationally, these should be invoked as <strong>explicit slash commands</strong>
+for completeness. See <a href="../recipes/session-ceremonies/">Session Ceremonies</a>.</p>
+</div>
 <h3 id="ctx-remember"><code>/ctx-remember</code><a class="headerlink" href="#ctx-remember" title="Permanent link">&para;</a></h3>
-<p>Recall project context and present a structured readback.</p>
+<p>Recall project context and present a structured readback.
+<strong>Ceremony skill</strong> — invoke explicitly at session start.</p>
 <p><strong>Wraps</strong>: <code>ctx agent --budget 4000</code>, <code>ctx recall list --limit 3</code>,
 reads TASKS.md, DECISIONS.md, LEARNINGS.md</p>
-<p><strong>See also</strong>: <a href="../recipes/session-lifecycle/">The Complete Session</a></p>
+<p><strong>See also</strong>: <a href="../recipes/session-ceremonies/">Session Ceremonies</a>,
+<a href="../recipes/session-lifecycle/">The Complete Session</a></p>
 <hr />
 <h3 id="ctx-status"><code>/ctx-status</code><a class="headerlink" href="#ctx-status" title="Permanent link">&para;</a></h3>
 <p>Show context summary — files, token budget, tasks, recent activity —
@@ -3201,6 +3237,19 @@ learnings, decisions, task completions, and session notes to persist.</p>
 manual TASKS.md updates</p>
 <p><strong>See also</strong>: <a href="../recipes/session-lifecycle/">The Complete Session</a>,
 <a href="../recipes/knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a></p>
+<hr />
+<h3 id="ctx-wrap-up"><code>/ctx-wrap-up</code><a class="headerlink" href="#ctx-wrap-up" title="Permanent link">&para;</a></h3>
+<p>End-of-session context persistence ceremony. Gathers signal from
+git diff, recent commits, and conversation themes. Proposes
+candidates (learnings, decisions, conventions, tasks) with complete
+structured fields for user approval, then persists via <code>ctx add</code>.
+Offers <code>/ctx-commit</code> if uncommitted changes remain.
+<strong>Ceremony skill</strong> — invoke explicitly at session end.</p>
+<p><strong>Wraps</strong>: <code>git diff --stat</code>, <code>git log</code>, <code>ctx add learning</code>,
+<code>ctx add decision</code>, <code>ctx add convention</code>, <code>ctx add task</code>,
+chains to <code>/ctx-commit</code></p>
+<p><strong>See also</strong>: <a href="../recipes/session-ceremonies/">Session Ceremonies</a>,
+<a href="../recipes/session-lifecycle/">The Complete Session</a></p>
 <hr />
 <h2 id="context-persistence">Context Persistence<a class="headerlink" href="#context-persistence" title="Permanent link">&para;</a></h2>
 <p>Skills for recording work artifacts — tasks, decisions, learnings,
