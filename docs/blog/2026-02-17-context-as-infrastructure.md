@@ -8,6 +8,7 @@
 title: "Context as Infrastructure"
 date: 2026-02-17
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - context engineering
   - infrastructure
@@ -191,26 +192,30 @@ optimized for signal density:
   content survives truncation*).
 
 The full dump tier is for humans and for deep investigation. It
-contains everything: enriched journals, archived tasks. It is never
-auto-loaded because its volume would destroy attention density.
+contains everything: **Enriched** journals, **archived tasks**... 
+
+It is never autoloaded because its volume would destroy attention density.
 
 This two-tier model is analogous to how traditional systems separate
-hot and cold storage. The hot path (curated context) is optimized for
-read performance -- measured not in milliseconds, but in
-**tokens consumed per unit of useful information**. The cold path
-(journal) is optimized for completeness.
+hot and cold storage: 
+
+* The **hot path** (*curated context*) is optimized for read performance
+  (measured not in milliseconds, but in
+    **tokens consumed per unit of useful information**). 
+* The **cold path** (*journal*) is optimized for **completeness**.
 
 !!! tip "Nothing Is Ever Truly Lost"
     The full dump tier means that context does not need to be
-    *perfect* -- it just needs to be *findable*.
+    *perfect*: It just needs to be *findable*.
 
-    A decision that was not captured in DECISIONS.md can be recovered
-    from the session transcript where it was discussed. A learning
-    that was not formalized can be found in the journal entry from
-    that day.
+    A **decision** that was not captured in `DECISIONS.md` can be recovered
+    from the session transcript where it was discussed. 
 
-    The curated tier is the fast path. The full dump tier is the
-    safety net.
+    A **learning** that was not formalized can be found in the **journal entry** 
+    from that day.
+
+    The **curated tier** is the **fast path**: The full dump tier is the
+    **safety net**.
 
 ---
 
@@ -219,13 +224,13 @@ read performance -- measured not in milliseconds, but in
 One of the patterns that emerged from `ctx`'s own development is
 the power of **structured decision records**.
 
-v0.1.0 allowed adding decisions as one-liners:
+`v0.1.0` allowed adding decisions as one-liners:
 
 ```bash
 ctx add decision "Use PostgreSQL"
 ```
 
-v0.2.0 enforced structure:
+`v0.2.0` enforced **structure**:
 
 ```bash
 ctx add decision "Use PostgreSQL" \
@@ -234,15 +239,20 @@ ctx add decision "Use PostgreSQL" \
   --consequences "Need connection pooling, team training"
 ```
 
-The difference is not cosmetic. A one-liner decision teaches the AI
-*what* was decided. A structured decision teaches it *why* -- and
-*why* is what prevents the AI from unknowingly reversing the decision
-in a future session.
+The difference is **not** cosmetic:
 
-This is infrastructure thinking: decisions are not notes. They are
-**records** with required fields, just like database rows have schemas.
+* A one-liner decision teaches the AI *what* was decided. 
+* A structured decision teaches it *why*; and
+  **why** is what prevents the AI from unknowingly reversing the decision
+  in a future session.
+
+This is **infrastructure thinking**: 
+
+Decisions are not notes. They are **records** with required fields, just like 
+database rows have schemas.
+
 The enforcement exists because incomplete records are worse than no
-records -- they create false confidence that the context is captured
+records: They create false confidence that the context is captured
 when it is not.
 
 ---
@@ -261,7 +271,7 @@ code .context/
 ```
 
 This decision was not about minimalism for its own sake. It was about
-recognizing that `.context/` files are **just files** -- and files have
+recognizing that `.context/` files are **just files**; and files have
 a mature, well-understood infrastructure:
 
 - **Version control**: `git diff .context/DECISIONS.md` shows exactly
@@ -273,17 +283,20 @@ a mature, well-understood infrastructure:
   pull requests on code.
 
 Building a custom UI would have meant maintaining a parallel
-infrastructure that duplicates what every IDE already provides. It
-would have introduced its own bugs, its own update cycle, and its
+infrastructure that duplicates what every IDE already provides:
+
+It would have introduced its own bugs, its own update cycle, and its
 own learning curve.
 
-The filesystem is not a limitation. It is **the most mature, most
+The filesystem is **not** a limitation: It is **the most mature, most
 composable, most portable infrastructure available**.
 
 !!! info "Context Files in Git"
     Because `.context/` lives in the repository, context changes are
-    part of the commit history. A decision made in commit `abc123` is
-    as traceable as a code change in the same commit.
+    part of the commit history. 
+
+    A decision made in commit `abc123` is as traceable as a code change in 
+    the same commit.
 
     This is not possible with prompt-based context, which exists
     outside version control entirely.
@@ -298,27 +311,28 @@ option to drill deeper.
 
 `ctx` applies the same principle to AI context:
 
-| Level   | What the AI Sees              | Token Cost | When             |
-|---------|-------------------------------|------------|------------------|
-| Level 0 | `ctx status` (one-line summary)| ~100      | Quick check      |
-| Level 1 | `ctx agent --budget 4000`     | ~4,000     | Normal work      |
-| Level 2 | `ctx agent --budget 8000`     | ~8,000     | Complex tasks    |
-| Level 3 | Direct file reads             | 10,000+    | Deep investigation|
+| Level   | What the AI Sees                | Token Cost | When               |
+|---------|---------------------------------|------------|--------------------|
+| Level 0 | `ctx status` (one-line summary) | ~100       | Quick check        |
+| Level 1 | `ctx agent --budget 4000`       | ~4,000     | Normal work        |
+| Level 2 | `ctx agent --budget 8000`       | ~8,000     | Complex tasks      |
+| Level 3 | Direct file reads               | 10,000+    | Deep investigation |
 
-Each level trades tokens for depth. Level 1 is sufficient for most
+Each level trades tokens for depth. **Level 1** is sufficient for most
 work: the AI knows the active tasks, the key conventions, and the
-recent decisions. Level 3 is for archaeology: understanding why a
+recent decisions. **Level 3 is for archaeology**: understanding why a
 decision was made three weeks ago, or finding a pattern in the session
 history.
 
-The explicit `--budget` flag is the mechanism that makes this work.
+The explicit `--budget` flag is the mechanism that makes this work:
+
 Without it, the default behavior would be to load everything (because
 more context *feels* safer), which destroys the attention density that
 makes the loaded context useful.
 
-**The constraint is the feature.** A budget of 4,000 tokens forces
-`ctx` to prioritize ruthlessly: constitution first (always full), then
-tasks and conventions (budget-capped), then decisions and learnings
+**The constraint is the feature**: A budget of 4,000 tokens forces
+`ctx` to prioritize ruthlessly: constitution first (*always full*), then
+tasks and conventions (*budget-capped*), then decisions and learnings
 scored by recency and relevance to active tasks. Entries that don't
 fit get title-only summaries rather than being silently dropped.
 
@@ -326,52 +340,47 @@ fit get title-only summaries rather than being silently dropped.
 
 ## The Philosophical Shift
 
-The shift from "context as prompt" to "context as infrastructure"
+The shift from "*context as prompt*" to "*context as infrastructure*"
 changes how you think about AI-assisted development:
 
-| Prompt Thinking                  | Infrastructure Thinking              |
-|----------------------------------|--------------------------------------|
-| "What do I paste today?"         | "What has changed since yesterday?"  |
-| "How do I fit everything in?"    | "What's the minimum that matters?"   |
-| "The AI forgot my conventions"   | "The conventions are in a file"      |
-| "I need to re-explain"           | "I need to update the record"        |
-| "This session is getting slow"   | "Time to compact and archive"        |
+| Prompt Thinking                  | Infrastructure Thinking               |
+|----------------------------------|---------------------------------------|
+| "*What do I paste today?*"       | "*What has changed since yesterday?*" |
+| "*How do I fit everything in?*"  | "*What's the minimum that matters?*"  |
+| "*The AI forgot my conventions*" | "*The conventions are in a file*"     |
+| "*I need to re-explain*"         | "*I need to update the record*"       |
+| "*This session is getting slow*" | "*Time to compact and archive*"       |
 
-The first column treats AI interaction as a conversation. The second
-treats it as a **system** -- one that can be maintained, optimized,
-and debugged.
+The first column treats AI interaction as a *conversation*. The second
+treats it as a **system**: One that can be **maintained**, **optimized**,
+and **debugged**.
 
 Context is not something you *give* the AI. It is something you
-**maintain** -- like a database, like a config file, like any other
-piece of infrastructure that a running system depends on.
+**maintain**: Like a database, like a config file, like any other
+piece of **infrastructure** that a running system depends on.
 
 ---
 
-## Beyond ctx: The Principles
+## Beyond `ctx`: The Principles
 
 The patterns that `ctx` implements are not specific to `ctx`. They are
 applicable to any project that uses AI-assisted development:
 
-1. **Separate context by purpose.** Do not put everything in one file.
+1. **Separate context by purpose**: Do not put everything in one file.
    Different types of information have different lifecycles and
    different relevance windows.
-
-2. **Make context persistent.** If a decision matters, write it down
+2. **Make context persistent**: If a decision matters, write it down
    in a file that survives the session. If a learning matters, capture
    it with structure.
-
-3. **Budget explicitly.** Know how much context you are loading and
+3. **Budget explicitly**: Know how much context you are loading and
    whether it is worth the attention cost.
-
-4. **Use the filesystem.** File names, directory structure, and
+4. **Use the filesystem**: File names, directory structure, and
    timestamps are metadata that the AI can navigate. A well-organized
    directory is an index that costs zero tokens to maintain.
-
-5. **Version your context.** Put context files in git. Changes to
+5. **Version your context**: Put context files in `git`. Changes to
    decisions are as important as changes to code.
-
-6. **Design for degradation.** Sessions will get long. Attention will
-   dilute. Build mechanisms (compaction, archiving, cooldowns) that
+6. **Design for degradation**: Sessions will get long. Attention will
+   dilute. Build mechanisms (*compaction, archiving, cooldowns*) that
    make degradation visible and manageable.
 
 These are not `ctx` features. They are **infrastructure principles**
@@ -379,7 +388,7 @@ that happen to be implemented as a CLI tool. Any team could implement
 them with nothing more than a directory convention and a few shell
 scripts.
 
-The tool is a convenience. The principles are what matter.
+The tool is a convenience: **The principles are what matter**.
 
 ---
 
@@ -387,7 +396,8 @@ The tool is a convenience. The principles are what matter.
     **Prompts are conversations. Infrastructure persists.**
 
     Your AI does not need a better prompt. It needs a filesystem:
-    versioned, structured, budgeted, and maintained.
+
+    *versioned, structured, budgeted, and maintained*.
 
     **The best context is the context that was there before
     you started the session.**
@@ -398,21 +408,21 @@ The tool is a convenience. The principles are what matter.
 
 This post is the architectural companion to the
 [Attention Budget][attention-post]. That post explained *why* context
-must be curated (token economics). This one explains *how* to
-structure it (filesystem, separation of concerns, persistence tiers).
+must be curated (*token economics*). This one explains *how* to
+structure it (*filesystem, separation of concerns, persistence tiers*).
 
 Together with [Code Is Cheap, Judgment Is Not][judgment-post], they
 form a trilogy about what matters in AI-assisted development:
 
-- **Attention Budget**: the resource you're managing
-- **Context as Infrastructure**: the system you build to manage it
-- **Code Is Cheap**: the human skill that no system replaces
+* **Attention Budget**: the resource you're managing
+* **Context as Infrastructure**: the system you build to manage it
+* **Code Is Cheap**: the human skill that no system replaces
 
-And the practices that keep it all honest:
+And the practices that keep it all **honest**:
 
-- [The 3:1 Ratio][ratio-post]: the cadence for maintaining both
+* [The 3:1 Ratio][ratio-post]: the cadence for maintaining both
   code and context
-- [IRC as Context][irc-post]: the historical precedent -- stateless
+* [IRC as Context][irc-post]: the historical precedent: stateless
   protocols have always needed stateful wrappers
 
 [judgment-post]: 2026-02-17-code-is-cheap-judgment-is-not.md
@@ -421,12 +431,11 @@ And the practices that keep it all honest:
 
 ---
 
-*This post synthesizes ideas from across the ctx blog series: the
+*This post synthesizes ideas from across the `ctx` blog series: the
 attention budget primitive, the two-tier persistence model, the IDE
 decision, and the progressive disclosure pattern. The principles are
 drawn from three weeks of building ctx and 70+ sessions of treating
 context as infrastructure rather than conversation.*
 
-*See also: [When a System Starts Explaining Itself](2026-02-17-when-a-system-starts-explaining-itself.md)
--- what happens when this infrastructure starts compounding in someone
-else's environment.*
+*See also: [When a System Starts Explaining Itself](2026-02-17-when-a-system-starts-explaining-itself.md):
+what happens when this infrastructure starts compounding in someone else's environment.*
