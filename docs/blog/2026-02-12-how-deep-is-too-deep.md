@@ -2,6 +2,7 @@
 title: "How Deep Is Too Deep?"
 date: 2026-02-12
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - AI foundations
   - abstraction boundaries

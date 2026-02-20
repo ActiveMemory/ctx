@@ -147,3 +147,5 @@
 - **Blog index order**: Newest post first, with topic tags and 3-4 line summary
 
 - Update admonitions for historical blog content: Use MkDocs admonitions (\!\!\! note "Update") at the top of blog post sections where features have been superseded or installation has changed. Link to current documentation. Keep original content intact below for historical context.
+
+- New CLI subcommand documentation checklist: When adding a new CLI subcommand, update docs in at least three places: (1) Feature page (e.g., docs/scratchpad.md) — commands table, usage section, skill/NL table. (2) CLI reference (docs/cli-reference.md) — full reference entry with args, flags, examples. (3) Relevant recipes — any recipe that covers the feature area. (4) zensical.toml — only if adding a new page.

@@ -182,9 +182,9 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 
 	// The session summary itself is treated as an assistant message
 	var bodyParts []string
-	for heading, body := range sections {
-		if body != "" {
-			bodyParts = append(bodyParts, "## "+heading+config.NewlineLF+body)
+	for _, sec := range sections {
+		if sec.body != "" {
+			bodyParts = append(bodyParts, "## "+sec.heading+config.NewlineLF+sec.body)
 		}
 	}
 
@@ -320,15 +320,23 @@ func parseSessionDate(dateStr string) time.Time {
 	return t
 }
 
+// section holds a heading and its body content in document order.
+type section struct {
+	heading string
+	body    string
+}
+
 // extractSections extracts H2 sections from Markdown lines.
+//
+// Sections are returned in document order to ensure deterministic output.
 //
 // Parameters:
 //   - lines: All lines of the Markdown file
 //
 // Returns:
-//   - map[string]string: Section heading to content mapping
-func extractSections(lines []string) map[string]string {
-	sections := make(map[string]string)
+//   - []section: Sections in document order
+func extractSections(lines []string) []section {
+	var sections []section
 	var currentHeading string
 	var currentBody []string
 
@@ -337,9 +345,12 @@ func extractSections(lines []string) map[string]string {
 		if strings.HasPrefix(trimmed, "## ") {
 			// Save previous section
 			if currentHeading != "" {
-				sections[currentHeading] = strings.TrimSpace(
-					strings.Join(currentBody, config.NewlineLF),
-				)
+				sections = append(sections, section{
+					heading: currentHeading,
+					body: strings.TrimSpace(
+						strings.Join(currentBody, config.NewlineLF),
+					),
+				})
 			}
 			currentHeading = strings.TrimPrefix(trimmed, "## ")
 			currentBody = nil
@@ -353,9 +364,12 @@ func extractSections(lines []string) map[string]string {
 
 	// Save last section
 	if currentHeading != "" {
-		sections[currentHeading] = strings.TrimSpace(
-			strings.Join(currentBody, config.NewlineLF),
-		)
+		sections = append(sections, section{
+			heading: currentHeading,
+			body: strings.TrimSpace(
+				strings.Join(currentBody, config.NewlineLF),
+			),
+		})
 	}
 
 	return sections

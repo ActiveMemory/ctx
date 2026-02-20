@@ -322,6 +322,53 @@ func settingsJSON(t *testing.T, allow []string) string {
 	return string(b)
 }
 
+// settingsJSONWithDeny builds a settings JSON string with both allow and deny.
+func settingsJSONWithDeny(t *testing.T, allow, deny []string) string {
+	t.Helper()
+	type perms struct {
+		Allow []string `json:"allow"`
+		Deny  []string `json:"deny"`
+	}
+	type settings struct {
+		Permissions perms `json:"permissions"`
+	}
+	b, err := json.Marshal(settings{Permissions: perms{Allow: allow, Deny: deny}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	return string(b)
+}
+
+func TestRestoreShowsDenyDiff(t *testing.T) {
+	setupDir(t)
+
+	goldenJSON := settingsJSONWithDeny(t, []string{"A"}, []string{"Bash(sudo *)", "Bash(git push *)"})
+	localJSON := settingsJSONWithDeny(t, []string{"A"}, []string{"Bash(sudo *)", "Bash(rm -rf *)"})
+	writeGolden(t, goldenJSON)
+	writeSettings(t, localJSON)
+
+	out, err := runCmd("restore")
+	if err != nil {
+		t.Fatalf("restore error: %v", err)
+	}
+
+	// Should drop "Bash(rm -rf *)" (in local deny but not golden deny)
+	if !strings.Contains(out, "Dropped 1 session deny") {
+		t.Errorf("expected 'Dropped 1 session deny', got: %q", out)
+	}
+	if !strings.Contains(out, "Bash(rm -rf *)") {
+		t.Errorf("expected dropped deny rule in output: %q", out)
+	}
+
+	// Should restore "Bash(git push *)" (in golden deny but not local deny)
+	if !strings.Contains(out, "Restored 1 deny") {
+		t.Errorf("expected 'Restored 1 deny', got: %q", out)
+	}
+	if !strings.Contains(out, "Bash(git push *)") {
+		t.Errorf("expected restored deny rule in output: %q", out)
+	}
+}
+
 func TestSnapshotPreservesExactBytes(t *testing.T) {
 	setupDir(t)
 

@@ -70,26 +70,24 @@ func TestCheckCtxInPath_NotFound(t *testing.T) {
 // --- mergePermissions tests ---
 
 func TestMergePermissions_Empty(t *testing.T) {
-	perms := &claude.PermissionsConfig{}
-	added := mergePermissions(perms, []string{"Bash(ctx:*)", "Skill(ctx-agent)"})
+	var slice []string
+	added := mergePermissions(&slice, []string{"Bash(ctx:*)", "Skill(ctx-agent)"})
 	if !added {
 		t.Error("expected permissions to be added")
 	}
-	if len(perms.Allow) != 2 {
-		t.Errorf("expected 2 permissions, got %d", len(perms.Allow))
+	if len(slice) != 2 {
+		t.Errorf("expected 2 permissions, got %d", len(slice))
 	}
 }
 
 func TestMergePermissions_NoDuplicates(t *testing.T) {
-	perms := &claude.PermissionsConfig{
-		Allow: []string{"Bash(ctx:*)", "Bash(git:*)"},
-	}
-	added := mergePermissions(perms, []string{"Bash(ctx:*)", "Skill(ctx-agent)"})
+	slice := []string{"Bash(ctx:*)", "Bash(git:*)"}
+	added := mergePermissions(&slice, []string{"Bash(ctx:*)", "Skill(ctx-agent)"})
 	if !added {
 		t.Error("expected new permissions to be added")
 	}
 	count := 0
-	for _, p := range perms.Allow {
+	for _, p := range slice {
 		if p == "Bash(ctx:*)" {
 			count++
 		}
@@ -100,10 +98,8 @@ func TestMergePermissions_NoDuplicates(t *testing.T) {
 }
 
 func TestMergePermissions_AllExist(t *testing.T) {
-	perms := &claude.PermissionsConfig{
-		Allow: []string{"Bash(ctx:*)", "Skill(ctx-agent)"},
-	}
-	added := mergePermissions(perms, []string{"Bash(ctx:*)", "Skill(ctx-agent)"})
+	slice := []string{"Bash(ctx:*)", "Skill(ctx-agent)"}
+	added := mergePermissions(&slice, []string{"Bash(ctx:*)", "Skill(ctx-agent)"})
 	if added {
 		t.Error("expected no new permissions added")
 	}
@@ -991,7 +987,19 @@ func TestMergeSettingsPermissions_NewSettings(t *testing.T) {
 	}
 
 	if len(settings.Permissions.Allow) == 0 {
-		t.Error("no permissions created")
+		t.Error("no allow permissions created")
+	}
+	if len(settings.Permissions.Deny) == 0 {
+		t.Error("no deny permissions created")
+	}
+
+	// Verify specific deny rules
+	denySet := make(map[string]bool)
+	for _, d := range settings.Permissions.Deny {
+		denySet[d] = true
+	}
+	if !denySet["Bash(sudo *)"] {
+		t.Error("missing deny rule: Bash(sudo *)")
 	}
 }
 
@@ -1006,6 +1014,7 @@ func TestMergeSettingsPermissions_ExistingWithAllPerms(t *testing.T) {
 	settings := claude.Settings{
 		Permissions: claude.PermissionsConfig{
 			Allow: config.DefaultClaudePermissions,
+			Deny:  config.DefaultClaudeDenyPermissions,
 		},
 	}
 	data, _ := json.MarshalIndent(settings, "", "  ")
@@ -1016,6 +1025,55 @@ func TestMergeSettingsPermissions_ExistingWithAllPerms(t *testing.T) {
 	cmd := newTestCmd()
 	if err := mergeSettingsPermissions(cmd); err != nil {
 		t.Fatalf("mergeSettingsPermissions failed: %v", err)
+	}
+}
+
+func TestMergeSettingsPermissions_DenyPreservesExisting(t *testing.T) {
+	_, cleanup := helper(t)
+	defer cleanup()
+
+	if err := os.MkdirAll(config.DirClaude, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	// Start with a custom deny rule plus some defaults
+	settings := claude.Settings{
+		Permissions: claude.PermissionsConfig{
+			Allow: config.DefaultClaudePermissions,
+			Deny:  []string{"Bash(custom-block *)", "Bash(sudo *)"},
+		},
+	}
+	data, _ := json.MarshalIndent(settings, "", "  ")
+	if err := os.WriteFile(config.FileSettings, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := newTestCmd()
+	if err := mergeSettingsPermissions(cmd); err != nil {
+		t.Fatalf("mergeSettingsPermissions failed: %v", err)
+	}
+
+	content, err := os.ReadFile(config.FileSettings)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var updated claude.Settings
+	if err := json.Unmarshal(content, &updated); err != nil {
+		t.Fatalf("failed to parse settings: %v", err)
+	}
+
+	// Custom deny rule must survive
+	denySet := make(map[string]bool)
+	for _, d := range updated.Permissions.Deny {
+		denySet[d] = true
+	}
+	if !denySet["Bash(custom-block *)"] {
+		t.Error("custom deny rule was removed during merge")
+	}
+	// Default deny rules must also be present
+	if !denySet["Bash(git push *)"] {
+		t.Error("default deny rule 'Bash(git push *)' missing after merge")
 	}
 }
 

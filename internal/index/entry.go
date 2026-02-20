@@ -122,7 +122,7 @@ func (eb *EntryBlock) IsSuperseded() bool {
 //   - bool: True if the entry is older than the threshold
 func (eb *EntryBlock) OlderThan(days int) bool {
 	// Parse the date portion of the timestamp (YYYY-MM-DD)
-	entryDate, err := time.Parse("2006-01-02", eb.Entry.Date)
+	entryDate, err := time.ParseInLocation("2006-01-02", eb.Entry.Date, time.Local)
 	if err != nil {
 		return false
 	}

@@ -139,7 +139,7 @@ async function handleAgent(
 ): Promise<CtxResult> {
   stream.progress("Generating AI-ready context packet...");
   try {
-    const { stdout, stderr } = await runCtx(["agent"], cwd, token);
+    const { stdout, stderr } = await runCtx(["agent", "--no-color"], cwd, token);
     const output = (stdout + stderr).trim();
     stream.markdown(output);
   } catch (err: unknown) {
@@ -201,15 +201,32 @@ async function handleHook(
   cwd: string,
   token: vscode.CancellationToken
 ): Promise<CtxResult> {
-  const tool = prompt.trim() || "copilot";
-  stream.progress(`Generating ${tool} integration config...`);
+  const parts = prompt.trim().split(/\s+/);
+  const tool = parts[0] || "copilot";
+  const preview = parts.includes("preview") || parts.includes("--preview");
+
+  const args = ["hook", tool];
+  if (!preview) {
+    args.push("--write");
+  }
+  args.push("--no-color");
+
+  stream.progress(
+    preview
+      ? `Previewing ${tool} integration config...`
+      : `Generating ${tool} integration config...`
+  );
   try {
-    const { stdout, stderr } = await runCtx(["hook", tool, "--write", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(args, cwd, token);
     const output = (stdout + stderr).trim();
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
-      stream.markdown(`Integration config for **${tool}** generated.`);
+      stream.markdown(
+        preview
+          ? `No output for **${tool}** preview.`
+          : `Integration config for **${tool}** generated.`
+      );
     }
   } catch (err: unknown) {
     stream.markdown(
@@ -266,7 +283,7 @@ async function handleLoad(
 ): Promise<CtxResult> {
   stream.progress("Loading assembled context...");
   try {
-    const { stdout, stderr } = await runCtx(["load"], cwd, token);
+    const { stdout, stderr } = await runCtx(["load", "--no-color"], cwd, token);
     const output = (stdout + stderr).trim();
     stream.markdown(output);
   } catch (err: unknown) {

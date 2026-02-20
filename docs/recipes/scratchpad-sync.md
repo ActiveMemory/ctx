@@ -34,6 +34,7 @@ gitignored. Without the key on each machine, you cannot read or write entries.
 | `ctx pad rm` | CLI command | Remove a scratchpad entry |
 | `ctx pad edit` | CLI command | Edit a scratchpad entry |
 | `ctx pad resolve` | CLI command | Show both sides of a merge conflict |
+| `ctx pad merge` | CLI command | Merge entries from other scratchpad files |
 | `ctx pad import` | CLI command | Bulk-import lines from a file |
 | `ctx pad export` | CLI command | Export blob entries to a directory |
 | `scp` | Shell | Copy the key file between machines |
@@ -108,7 +109,21 @@ If both machines add entries between syncs, pulling will create a merge
 conflict on `.context/scratchpad.enc`. Git cannot merge binary (encrypted)
 content automatically.
 
-Use `ctx pad resolve` to see both sides:
+The fastest approach is `ctx pad merge` — it reads both conflict sides,
+deduplicates, and writes the union:
+
+```bash
+# Extract theirs to a temp file, then merge it in
+git show :3:.context/scratchpad.enc > /tmp/theirs.enc
+git checkout --ours .context/scratchpad.enc
+ctx pad merge /tmp/theirs.enc
+
+# Done — commit the resolved scratchpad
+git add .context/scratchpad.enc
+git commit -m "Resolve scratchpad merge conflict"
+```
+
+Alternatively, use `ctx pad resolve` to inspect both sides manually:
 
 ```bash
 ctx pad resolve
@@ -191,11 +206,12 @@ When working with an AI assistant, you can resolve conflicts naturally:
 ```text
 You: "I have a scratchpad merge conflict. Can you resolve it?"
 
-Agent: "Let me check both sides."
-       [runs ctx pad resolve]
-       "Ours has 2 entries, theirs has 2 entries. Entry 1 is the
-       same on both sides. I'll merge the unique entries from each.
-       Done — 3 entries total. Want me to commit the resolution?"
+Agent: "Let me extract theirs and merge it in."
+       [runs git show :3:.context/scratchpad.enc > /tmp/theirs.enc]
+       [runs git checkout --ours .context/scratchpad.enc]
+       [runs ctx pad merge /tmp/theirs.enc]
+       "Merged 2 new entries (1 duplicate skipped). Want me to
+       commit the resolution?"
 ```
 
 ## Tips

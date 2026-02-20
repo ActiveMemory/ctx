@@ -262,3 +262,31 @@ var DefaultClaudePermissions = []string{
 	"Skill(ctx-status)",
 	"Skill(ctx-worktree)",
 }
+
+// DefaultClaudeDenyPermissions lists the default deny rules for Claude Code.
+//
+// These rules block dangerous operations that should never be auto-approved.
+// The deny list is evaluated before the allow list: A denied pattern always
+// prompts the user, even if it also matches an allow entry.
+//
+// Note: Read()/Edit() deny rules have known upstream enforcement issues
+// (claude-code#6631, #24846). They are included as defense-in-depth and
+// intent documentation.
+var DefaultClaudeDenyPermissions = []string{
+	"Bash(sudo *)",
+	"Bash(git push *)",
+	"Bash(git push)",
+	"Bash(rm -rf /*)",
+	"Bash(rm -rf ~*)",
+	"Bash(curl *)",
+	"Bash(wget *)",
+	"Bash(chmod 777 *)",
+	"Read(**/.env)",
+	"Read(**/.env.*)",
+	"Read(**/*credentials*)",
+	"Read(**/*secret*)",
+	"Read(**/*.pem)",
+	"Read(**/*.key)",
+	"Edit(**/.env)",
+	"Edit(**/.env.*)",
+}

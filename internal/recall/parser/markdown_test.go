@@ -308,14 +308,12 @@ func TestExtractSections(t *testing.T) {
 		t.Fatalf("expected 3 sections, got %d", len(sections))
 	}
 
-	if _, ok := sections["What Was Done"]; !ok {
-		t.Error("missing 'What Was Done' section")
-	}
-	if _, ok := sections["Decisions"]; !ok {
-		t.Error("missing 'Decisions' section")
-	}
-	if _, ok := sections["Learnings"]; !ok {
-		t.Error("missing 'Learnings' section")
+	// Verify document order is preserved
+	wantHeadings := []string{"What Was Done", "Decisions", "Learnings"}
+	for i, want := range wantHeadings {
+		if sections[i].heading != want {
+			t.Errorf("section[%d].heading = %q, want %q", i, sections[i].heading, want)
+		}
 	}
 }
 

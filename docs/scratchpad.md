@@ -55,6 +55,7 @@ Because the key is `.gitignore`d and the data is committed, you get:
 | `ctx pad resolve`                 | Show both sides of a merge conflict for resolution    |
 | `ctx pad import FILE`             | Bulk-import lines from a file (or stdin with `-`)     |
 | `ctx pad export [DIR]`            | Export all blob entries to a directory as files        |
+| `ctx pad merge FILE...`           | Merge entries from other scratchpad files into current |
 
 All commands decrypt on read, operate on plaintext in memory, and
 re-encrypt on write. The key file is never printed to stdout.
@@ -108,6 +109,30 @@ ctx pad export --dry-run
 # Overwrite existing files
 ctx pad export --force ./backup
 ```
+
+## Merging Scratchpads
+
+Combine entries from other scratchpad files into your current pad. Useful
+when merging work from parallel worktrees, other machines, or teammates:
+
+```bash
+# Merge from a worktree's encrypted scratchpad
+ctx pad merge worktree/.context/scratchpad.enc
+
+# Merge from multiple sources (encrypted and plaintext)
+ctx pad merge pad-a.enc notes.md
+
+# Merge a foreign encrypted pad using its key
+ctx pad merge --key /other/.scratchpad.key foreign.enc
+
+# Preview without writing
+ctx pad merge --dry-run pad-a.enc pad-b.md
+```
+
+Each input file is auto-detected as encrypted or plaintext — decryption is
+attempted first, and on failure the file is parsed as plain text. Entries are
+deduplicated by exact content, so running merge twice with the same file is
+safe.
 
 ## File Blobs
 
@@ -164,6 +189,7 @@ don't need to remember the syntax:
 | "move entry 4 to the top"                    | `ctx pad mv 4 1`                       |
 | "import my notes from notes.txt"             | `ctx pad import notes.txt`             |
 | "export all blobs to ./backup"               | `ctx pad export ./backup`              |
+| "merge the scratchpad from the worktree"     | `ctx pad merge worktree/.context/scratchpad.enc` |
 
 The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.

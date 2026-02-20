@@ -46,7 +46,11 @@ func runImport(cmd *cobra.Command, file string) error {
 		if err != nil {
 			return fmt.Errorf("open %s: %w", file, err)
 		}
-		defer f.Close()
+		defer func() {
+			if cerr := f.Close(); cerr != nil {
+				fmt.Fprintf(os.Stderr, "warning: close %s: %v\n", file, cerr)
+			}
+		}()
 		r = f
 	}
 

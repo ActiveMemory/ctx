@@ -2,6 +2,7 @@
 title: "Parallel Agents with Git Worktrees"
 date: 2026-02-14
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - agent teams
   - parallelism
@@ -18,7 +19,7 @@ topics:
 
 *Jose Alekhinne / 2026-02-14*
 
-!!! question "What do you do with 30 open tasks?"
+!!! question "What Do You Do With 30 Open Tasks?"
     You could work through them one at a time.
 
     One agent, one branch, one commit stream.
@@ -29,7 +30,7 @@ I had 30 open tasks in `TASKS.md`. Some were docs. Some were a new
 encryption package. Some were test coverage for a stable module. Some
 were blog posts.
 
-They had almost zero file overlap.
+They had almost *zero* file overlap.
 
 Running one agent at a time meant serial execution on work that was
 fundamentally parallel:
@@ -38,15 +39,16 @@ I was bottlenecking on **me**, not on the machine.
 
 ## The Insight: File Overlap Is the Constraint
 
-This is not a scheduling problem. It is a **conflict avoidance** problem.
+This is **not** a scheduling problem: It's a **conflict avoidance** problem.
 
-Two agents can work simultaneously on the same codebase if and only if
+Two agents can work simultaneously on the same codebase **if and only if**
 they don't touch the same files. The moment they do, you get merge
-conflicts: And merge conflicts on AI-generated code are expensive
+conflicts: And merge conflicts on AI-generated code are **expensive**
 because the human has to arbitrate choices they didn't make.
 
-So the question becomes: **can you partition your backlog into
-non-overlapping tracks?**
+So the question becomes: 
+
+"**Can you partition your backlog into non-overlapping tracks?**"
 
 For `ctx`, the answer was obvious:
 
@@ -60,11 +62,12 @@ Three tracks. Near-zero overlap. Three agents.
 
 ## Git Worktrees: The Mechanism
 
-Git has a feature that most people don't use: **worktrees**.
+`git` has a feature that most people don't use: **worktrees**.
 
 A **worktree** is a second (*or third, or fourth*) working directory that
-shares the same `.git` object database as your main checkout. Each
-worktree has its own branch, its own index, its own working tree. But
+shares the same `.git` object database as your main checkout. 
+
+Each worktree has its own branch, its own index, its own working tree. But
 they all share history, refs, and objects.
 
 ```bash
@@ -73,7 +76,9 @@ git worktree add ../ctx-pad -b work/pad
 git worktree add ../ctx-tests -b work/tests
 ```
 
-Three directories. Three branches. One repository.
+* **Three** directories;
+* **Three** branches;
+* **One** repository.
 
 This is **cheaper** than three clones. And because they share objects,
 `git merge` afterwards is fast: It's a local operation on shared data.
@@ -91,8 +96,8 @@ track. Tasks with no overlap go into separate tracks.
 This is the part that requires **human judgment**: 
 
 An agent can propose groupings, but you need to verify that the boundaries are 
-real. A task that says "*update docs*" but actually touches Go code will poison a
-docs track.
+real. A task that says "*update docs*" but actually touches Go code will poison
+a docs track.
 
 **2. Create worktrees as sibling directories.**
 
@@ -125,7 +130,7 @@ It knows the full project state. It just works on a different slice.
 **4. Do NOT run `ctx init` in worktrees.**
 
 This is the gotcha. The `.context/` directory is tracked in git. Running
-`ctx init` in a worktree would overwrite shared context files — wiping
+`ctx init` in a worktree would overwrite shared context files: Wiping
 decisions, learnings, and tasks that belong to the whole project.
 
 The worktree already has everything it needs. Leave it alone.
@@ -143,10 +148,11 @@ flags on `ctx pad edit`, spec updates, 28 new test functions.
 
 **`work/tests`**: Recall test coverage, edge case tests.
 
-Merging took about **five** minutes. Two of the three merges were clean.
+Merging took about **five** minutes. Two of the three merges were **clean**.
 
-The third had a conflict in `TASKS.md` — both the docs track and the
-pad track had marked different tasks as `[x]`.
+The third had a conflict in `TASKS.md`: 
+
+both the docs track and the pad track had marked different tasks as `[x]`.
 
 ## The `TASKS.md` Conflict
 
@@ -161,23 +167,23 @@ sides**. No task should go from `[x]` back to `[ ]`. The merge is
 additive.
 
 This is one of those conflicts that sounds scary but is trivially
-mechanical: You are not arbitrating design decisions; you are combining
-two checklists.
+mechanical: You are not arbitrating design decisions; you are **combining
+two checklists**.
 
 ## Limits
 
 **3-4 worktrees, maximum.** 
 
-I tried four once. By the time I merged the third track, the fourth had drifted
+I tried four once: By the time I merged the third track, the fourth had drifted
 far enough that its changes needed rebasing. 
 
-The merge complexity grows faster than the parallelism benefit.
+**The merge complexity grows faster than the parallelism benefit**.
 
 Three is the sweet spot:
  
-* Two is conservative but safe;
-* Four is possible if the tracks are truly independent;
-* Anything more than four, you are in the danger zone.
+* **Two** is conservative but safe;
+* **Four** is possible if the tracks are truly independent;
+* Anything more than four, you are in the **danger zone**.
 
 **Group by directory, not by priority.**
 
@@ -202,8 +208,8 @@ logical step.
 This is the same pattern that shows up everywhere in `ctx`:
 
 [**The attention budget**][attention-post] taught me that you can't dump
-everything into one context window. You have to partition, prioritize,
-and load selectively.
+everything into one context window. You have to **partition**, **prioritize**,
+and **load** *selectively*.
 
 Worktrees are the same principle applied to **execution**: You can't
 dump every task into one agent's workstream. You have to **partition by
@@ -230,8 +236,10 @@ that gives each agent the project's full memory.
 I asked myself the [same question I asked about the codebase
 audit][audit-post]: should this be a `/ctx-worktree` skill?
 
-This time the answer is yes. Unlike the audit prompt — which I tweak
-every time and run quarterly — the worktree workflow is:
+This time the answer was a resounding "**yes**": 
+
+Unlike the audit prompt (*which I tweak every time and run every other week*)
+the worktree workflow is:
 
 | Criterion | Worktree workflow     | Codebase audit          |
 |-----------|-----------------------|-------------------------|
@@ -240,7 +248,7 @@ every time and run quarterly — the worktree workflow is:
 | Scope     | Mechanical, bounded   | Bespoke, 8 agents       |
 | Trigger   | Large backlog         | "I feel like auditing"  |
 
-The commands are mechanical: `git worktree add`, `git worktree remove`,
+The commands are **mechanical**: `git worktree add`, `git worktree remove`,
 branch naming, safety checks. This is exactly what skills are for:
 **stable contracts** for repetitive operations.
 
@@ -260,9 +268,9 @@ a second terminal window.
 
 The hard part is not the `git` commands; it is the **discipline**:
 
-* Grouping by blast radius instead of priority; 
-* Accepting that `TASKS.md` will conflict; 
-* And knowing when three tracks is enough.
+* **Grouping** by blast radius instead of priority; 
+* **Accepting** that `TASKS.md` will conflict; 
+* And **knowing** when three tracks is enough.
 
 ---
 
