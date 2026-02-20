@@ -371,6 +371,59 @@ func TestAppendEntry(t *testing.T) {
 	})
 }
 
+// TestInsertDecisionNotInsideComment is a regression test for the bug where
+// ctx add decision inserts the entry inside the <!-- DECISION FORMATS -->
+// HTML comment block on a fresh DECISIONS.md, making it invisible when rendered.
+func TestInsertDecisionNotInsideComment(t *testing.T) {
+	// This is the exact structure of a freshly scaffolded DECISIONS.md.
+	freshDecisions := "# Decisions\n\n" +
+		"<!-- INDEX:START -->\n" +
+		"<!-- INDEX:END -->\n\n" +
+		"<!-- DECISION FORMATS\n\n" +
+		"## Quick Format (Y-Statement)\n\n" +
+		"For lightweight decisions, a single statement suffices.\n\n" +
+		"## Full Format\n\n" +
+		"For significant decisions:\n\n" +
+		"## [YYYY-MM-DD] Decision Title\n\n" +
+		"**Status**: Accepted\n\n" +
+		"-->\n"
+
+	entry := "## [2026-02-18] My Important Decision\n\n" +
+		"**Status**: Accepted\n\n" +
+		"**Context**: What prompted it\n\n" +
+		"**Rationale**: Why this choice\n\n" +
+		"**Consequences**: What changes\n"
+
+	result := AppendEntry([]byte(freshDecisions), entry, "decision", "")
+	resultStr := string(result)
+
+	// The entry must appear in the output.
+	if !strings.Contains(resultStr, "My Important Decision") {
+		t.Fatalf("decision not found in result:\n%s", resultStr)
+	}
+
+	// The closing --> of the DECISION FORMATS comment block must appear BEFORE
+	// the new entry. Use LastIndex because the INDEX:START/END markers also
+	// contain --> on the same line; the last --> in the original template is
+	// the one that closes the multi-line DECISION FORMATS block.
+	//
+	// We search in the original template content (before the entry was added)
+	// to find where the DECISION FORMATS block closes, then verify the new
+	// entry appears after that position.
+	formatBlockCloseIdx := strings.LastIndex(freshDecisions, "-->")
+	entryIdx := strings.Index(resultStr, "My Important Decision")
+	if formatBlockCloseIdx == -1 {
+		t.Fatal("closing --> not found in template")
+	}
+	if entryIdx <= formatBlockCloseIdx {
+		t.Errorf(
+			"decision was inserted inside the HTML comment block: "+
+				"entry at index %d, DECISION FORMATS block closes at index %d\n\nFull result:\n%s",
+			entryIdx, formatBlockCloseIdx, resultStr,
+		)
+	}
+}
+
 // TestInsertTaskDefaultPlacement tests task insertion without --section.
 func TestInsertTaskDefaultPlacement(t *testing.T) {
 	t.Run("inserts before first unchecked task", func(t *testing.T) {
@@ -499,5 +552,74 @@ func TestAddFromFile(t *testing.T) {
 	}
 	if !strings.Contains(string(content), "Content from file test") {
 		t.Error("content from file was not added to LEARNINGS.md")
+	}
+}
+
+// TestIsInsideHTMLComment unit-tests the isInsideHTMLComment helper directly.
+func TestIsInsideHTMLComment(t *testing.T) {
+	cases := []struct {
+		name    string
+		content string
+		idx     int
+		want    bool
+	}{
+		{
+			name:    "position before any comment",
+			content: "hello <!-- comment --> world",
+			idx:     3, // inside "hello"
+			want:    false,
+		},
+		{
+			name:    "position inside comment",
+			content: "hello <!-- comment --> world",
+			idx:     10, // inside " comment "
+			want:    true,
+		},
+		{
+			name:    "position after comment close",
+			content: "hello <!-- comment --> world",
+			idx:     23, // inside " world"
+			want:    false,
+		},
+		{
+			name:    "inline single-line comment: position after close",
+			content: "<!-- INDEX:START -->\n## [real entry]",
+			idx:     20, // start of "## ["
+			want:    false,
+		},
+		{
+			name:    "multi-line comment: heading inside",
+			content: "<!-- FORMATS\n## [YYYY-MM-DD] Template\n-->\n## [real]",
+			idx:     13, // start of "## [YYYY"
+			want:    true,
+		},
+		{
+			name:    "multi-line comment: heading after close",
+			content: "<!-- FORMATS\n## [YYYY-MM-DD] Template\n-->\n## [real]",
+			idx:     41, // start of "## [real]"
+			want:    false,
+		},
+		{
+			name:    "unclosed comment treated as inside",
+			content: "<!-- unclosed\n## [heading]",
+			idx:     14,
+			want:    true,
+		},
+		{
+			name:    "no comment at all",
+			content: "# Decisions\n\n## [2026-01-01] Entry\n",
+			idx:     13, // start of "## ["
+			want:    false,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := isInsideHTMLComment(tc.content, tc.idx)
+			if got != tc.want {
+				t.Errorf("isInsideHTMLComment(%q, %d) = %v, want %v",
+					tc.content, tc.idx, got, tc.want)
+			}
+		})
 	}
 }
