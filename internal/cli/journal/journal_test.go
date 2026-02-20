@@ -629,12 +629,9 @@ func TestNormalizeContent(t *testing.T) {
 				if !strings.Contains(got, "<pre><code>") {
 					t.Error("user body should be wrapped in <pre><code>")
 				}
-				// The ``` must not appear as a raw fence marker
-				if !strings.Contains(got, "&#96;&#96;&#96;") &&
-					!strings.Contains(got, "```") {
-					// backticks aren't HTML-escaped by html.EscapeString,
-					// but inside <pre><code> they're inert to markdown parsing
-				}
+				// The ``` inside <pre><code> is inert to markdown parsing.
+				// Backticks aren't HTML-escaped by html.EscapeString,
+				// so we accept either raw ``` or &#96;&#96;&#96; here.
 				// Critical: next turn must NOT be swallowed
 				if !strings.Contains(got, "### 2. Assistant") {
 					t.Error("stray fence must not swallow subsequent turns")
