@@ -34,7 +34,9 @@ func qaReminderCmd() *cobra.Command {
 					" You own the whole branch." +
 					" When committing, leave a clean working tree —" +
 					" don't leave modified or untracked files behind." +
-					" If files shouldn't be committed, say why.",
+					" If unrelated modified files remain," +
+					" offer to commit them separately, stash them," +
+					" or get explicit confirmation to leave them.",
 			)
 			return nil
 		},
