@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-20 | Journal site normalizeContent: three-layer tool output fix |
+| 2026-02-20 | Tool output boundary detection: pre-scan + last-match-wins |
 | 2026-02-20 | Pre-commit gate: build + lint + test, every time |
 | 2026-02-20 | AI normalization at scale hits context limits |
 | 2026-02-20 | Inline code spans with angle brackets break markdown rendering |
@@ -90,6 +92,26 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-20-110254] Journal site normalizeContent: three-layer tool output fix
+
+**Context**: Journal site rendering broke for fencesVerified files: (1) <details>/<pre> wrappers from old export passed through unchanged, (2) inner fence markers from embedded content caused nesting conflicts, (3) HTML unescaping ran incorrectly on collapseToolOutputs format which never HTML-escapes
+
+**Lesson**: Three fixes work together: (a) always run wrapToolOutputs regardless of fencesVerified — use isAlreadyFenced to detect content already in a fenced block and skip re-wrapping; (b) fenceForContent picks a fence depth exceeding any inner fences (4 backticks if content has 3); (c) stripPreWrapper only unescapes HTML when <pre> was specifically found, not just when <details> wrapper was stripped. normalizeContent fence tracking upgraded to CommonMark-compliant variable-length matching.
+
+**Application**: When generating site copies, tool output always needs conversion from source format (details/pre or raw) to fenced code blocks. The fencesVerified flag only affects stripFences, never wrapToolOutputs. If adding new wrapper formats, ensure stripPreWrapper and isAlreadyFenced handle them.
+
+---
+
+## [2026-02-20-110243] Tool output boundary detection: pre-scan + last-match-wins
+
+**Context**: wrapToolOutputs boundary detection was fooled by embedded turn headers from other journal files inside tool output content (e.g., reading Part 5 of another session showed ### 802. Assistant inside turn 41's body, causing the real ### 42. to be swallowed)
+
+**Lesson**: Pre-scan all turn numbers, sort+dedup, find min > N as the expected next turn, then use the LAST positional occurrence of that number as the boundary. Last-match-wins handles duplicate turn numbers (embedded copy appears first, real one appears after closing tags). No magic constants or wrapper tracking needed — just the sorted sequence and positional ordering.
+
+**Application**: Apply this pattern whenever parsing structured content that may contain recursive/embedded copies of itself. The boundary target should be derived from the document's global structure (sorted turn set), not local heuristics (gap limits, wrapper tracking). collapseToolOutputs in collapse.go has similar boundary detection that may benefit from the same approach.
 
 ---
 

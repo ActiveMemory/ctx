@@ -8,6 +8,7 @@ package journal
 
 import (
 	"html"
+	"sort"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -15,13 +16,9 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// codeFence wraps tool output in a fenced code block. Safe because
-// stripFences runs first and removes all fence lines from content.
-const codeFence = "```"
-
 // normalizeContent sanitizes journal Markdown for static site rendering:
 //   - Strips code fence markers (eliminates nesting conflicts)
-//   - Wraps Tool Output sections in <pre> with HTML-escaped content
+//   - Wraps Tool Output and User sections in <pre><code> with HTML-escaped content
 //   - Sanitizes H1 headings (strips Claude tags, truncates to 75 chars)
 //   - Demotes non-turn-header headings to bold (prevents broken page structure)
 //   - Inserts blank lines before list items when missing (Python-Markdown requires them)
@@ -42,14 +39,18 @@ func normalizeContent(content string, fencesVerified bool) string {
 	// Strip fences first — eliminates all nesting conflicts
 	content = stripFences(content, fencesVerified)
 
-	// Wrap tool output sections in <pre> to prevent ---/# from
-	// breaking markdown rendering.
+	// Wrap Tool Output and User turn bodies in <pre><code> with
+	// HTML-escaped content. Eliminates all markdown interpretation —
+	// headings, separators, fence markers, HTML tags become inert.
+	// Strips <details>/<pre> wrappers from the source pipeline and
+	// re-wraps uniformly.
 	content = wrapToolOutputs(content)
+	content = wrapUserTurns(content)
 
 	lines := strings.Split(content, config.NewlineLF)
 	var out []string
 	inFrontmatter := false
-	inFence := false
+	inPreBlock := false // inside <pre>...</pre> from wrapToolOutputs/wrapUserTurns
 
 	for i, line := range lines {
 		// Skip frontmatter
@@ -66,14 +67,18 @@ func normalizeContent(content string, fencesVerified bool) string {
 			continue
 		}
 
-		// Track fenced code blocks (from wrapToolOutputs).
-		// Skip all transforms inside fences.
-		if strings.TrimSpace(line) == codeFence {
-			inFence = !inFence
+		// Track <pre> blocks from wrapToolOutputs/wrapUserTurns.
+		// Content inside is HTML-escaped — skip all transforms.
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "<pre><code>" || trimmed == "<pre>" {
+			inPreBlock = true
 			out = append(out, line)
 			continue
 		}
-		if inFence {
+		if inPreBlock {
+			if trimmed == "</code></pre>" || trimmed == "</pre>" {
+				inPreBlock = false
+			}
 			out = append(out, line)
 			continue
 		}
@@ -135,21 +140,26 @@ func normalizeContent(content string, fencesVerified bool) string {
 }
 
 // wrapToolOutputs finds Tool Output sections and wraps their body in
-// fenced code blocks. This is safe because stripFences runs first and
-// removes all fence lines from the content. Fenced code blocks
-// correctly survive blank lines and prevent all markdown interpretation.
+// <pre><code> with HTML-escaped content. This prevents all markdown
+// interpretation — headings, separators, HTML tags, fence markers all
+// become inert entities.
+//
+// Requires pymdownx.highlight with use_pygments=false in the zensical
+// config (set in TplZensicalTheme) to prevent the highlight extension
+// from hijacking <pre><code> blocks.
 //
 // Tool outputs already wrapped in <details><pre> by the export pipeline
-// are unwrapped, unescaped, and re-wrapped uniformly.
+// are unwrapped and unescaped before re-escaping uniformly.
 //
-// Boundary detection: a Tool Output section starts at a turn header
-// matching "### N. Tool Output (HH:MM:SS)" and ends at the next turn
-// header "### M. Role (HH:MM:SS)" where M > N and the timestamp is
-// >= the tool output's timestamp. This prevents false matches from tool
-// output content that happens to contain turn-header-like text, while
-// tolerating gaps in turn numbering.
+// Boundary detection: all turn numbers are pre-scanned and sorted. For
+// turn N, the boundary target is the minimum turn number > N across the
+// entire document. This correctly skips embedded turn headers from other
+// journal files (e.g., ### 802. Assistant inside a tool output that read
+// another session's file) because the real next turn (### 42.) is always
+// the smallest number > N.
 func wrapToolOutputs(content string) string {
 	lines := strings.Split(content, config.NewlineLF)
+	turnSeq := collectTurnNumbers(lines)
 	var out []string
 	i := 0
 
@@ -169,25 +179,33 @@ func wrapToolOutputs(content string) string {
 		out = append(out, lines[i])
 		i++
 
-		// Collect body lines until the next valid turn header
-		var body []string
-		for i < len(lines) {
+		// The boundary target is the minimum turn number > turnNum.
+		// If the same number appears multiple times (e.g., an embedded
+		// ### 42. inside <pre> AND the real ### 42. after </details>),
+		// use the LAST occurrence — the real turn is always positionally
+		// after any embedded duplicates.
+		expectedNext := nextInSequence(turnSeq, turnNum)
+
+		// Scan ahead to find the last occurrence of expectedNext.
+		boundary := len(lines) // default: EOF
+		for j := i; j < len(lines); j++ {
 			nm := config.RegExTurnHeader.FindStringSubmatch(
-				strings.TrimSpace(lines[i]),
+				strings.TrimSpace(lines[j]),
 			)
 			if nm != nil {
 				nextNum, _ := strconv.Atoi(nm[1])
 				nextTime := nm[3]
-				if nextNum > turnNum && nextTime >= turnTime {
-					break
+				if nextNum == expectedNext && nextTime >= turnTime {
+					boundary = j
 				}
 			}
-			body = append(body, lines[i])
-			i++
 		}
 
+		body := lines[i:boundary]
+		i = boundary
+
 		// If we hit EOF, split off any trailing multipart navigation
-		// footer (--- + **Part N of M**) so it's not swallowed by the fence.
+		// footer (--- + **Part N of M**) so it's not swallowed.
 		var footer []string
 		if i >= len(lines) {
 			body, footer = splitTrailingFooter(body)
@@ -204,15 +222,27 @@ func wrapToolOutputs(content string) string {
 			continue
 		}
 
-		// Wrap in a fenced code block. Content is emitted verbatim —
-		// fenced blocks prevent all markdown/HTML interpretation.
+		// Trim leading/trailing blank lines.
+		start, end := 0, len(raw)-1
+		for start <= end && strings.TrimSpace(raw[start]) == "" {
+			start++
+		}
+		for end >= start && strings.TrimSpace(raw[end]) == "" {
+			end--
+		}
+
+		trimmed := raw[start : end+1]
+
+		// HTML-escape and wrap in <pre><code>...</code></pre>.
 		out = append(out, "")
-		out = append(out, codeFence)
-		out = append(out, raw...)
-		out = append(out, codeFence)
+		out = append(out, "<pre><code>")
+		for _, line := range trimmed {
+			out = append(out, html.EscapeString(line))
+		}
+		out = append(out, "</code></pre>")
 		out = append(out, "")
 
-		// Emit footer after the fence if present.
+		// Emit footer after the block if present.
 		if len(footer) > 0 {
 			out = append(out, footer...)
 		}
@@ -221,33 +251,128 @@ func wrapToolOutputs(content string) string {
 	return strings.Join(out, config.NewlineLF)
 }
 
+// wrapUserTurns finds User turn bodies and wraps them in <pre><code>
+// with HTML-escaped content. This is the "defencify" strategy: user input
+// is treated as plain preformatted text, which eliminates an entire class
+// of rendering bugs caused by stray/unclosed fence markers in user messages.
+//
+// Requires pymdownx.highlight with use_pygments=false in the zensical
+// config (set in TplZensicalTheme). With Pygments enabled, the highlight
+// extension hijacks <pre><code> and transforms block boundaries.
+//
+// Type 1 HTML block (<pre>) survives blank lines (ends at </pre>, not at a
+// blank line). HTML escaping prevents ALL inner content conflicts — fence
+// markers, headings, HTML tags, etc. all become inert entities.
+//
+// Trade-off: markdown formatting in user messages (bold, links, lists) is
+// flattened to plain text. This is acceptable — preserving user input
+// verbatim is more valuable than rendering decorative formatting.
+//
+// Boundary detection reuses the same pre-scan + last-match-wins approach
+// as wrapToolOutputs.
+func wrapUserTurns(content string) string {
+	lines := strings.Split(content, config.NewlineLF)
+	turnSeq := collectTurnNumbers(lines)
+	var out []string
+	i := 0
+
+	for i < len(lines) {
+		m := config.RegExTurnHeader.FindStringSubmatch(
+			strings.TrimSpace(lines[i]),
+		)
+		if m == nil || m[2] != config.LabelRoleUser {
+			out = append(out, lines[i])
+			i++
+			continue
+		}
+
+		// User turn header — emit it, then collect body
+		turnNum, _ := strconv.Atoi(m[1])
+		turnTime := m[3]
+		out = append(out, lines[i])
+		i++
+
+		expectedNext := nextInSequence(turnSeq, turnNum)
+
+		// Scan ahead to find the last occurrence of expectedNext.
+		boundary := len(lines) // default: EOF
+		for j := i; j < len(lines); j++ {
+			nm := config.RegExTurnHeader.FindStringSubmatch(
+				strings.TrimSpace(lines[j]),
+			)
+			if nm != nil {
+				nextNum, _ := strconv.Atoi(nm[1])
+				nextTime := nm[3]
+				if nextNum == expectedNext && nextTime >= turnTime {
+					boundary = j
+				}
+			}
+		}
+
+		body := lines[i:boundary]
+		i = boundary
+
+		// Trim leading/trailing blank lines from user body.
+		start, end := 0, len(body)-1
+		for start <= end && strings.TrimSpace(body[start]) == "" {
+			start++
+		}
+		for end >= start && strings.TrimSpace(body[end]) == "" {
+			end--
+		}
+
+		if start > end {
+			// Empty user turn — emit blank lines as-is
+			out = append(out, body...)
+			continue
+		}
+
+		trimmed := body[start : end+1]
+
+		// HTML-escape the content and wrap in <pre><code>...</code></pre>.
+		out = append(out, "")
+		out = append(out, "<pre><code>")
+		for _, line := range trimmed {
+			out = append(out, html.EscapeString(line))
+		}
+		out = append(out, "</code></pre>")
+		out = append(out, "")
+	}
+
+	return strings.Join(out, config.NewlineLF)
+}
+
 // stripPreWrapper removes <details>, <summary>, <pre>, </pre>, </details>
-// wrapper lines from tool output body and unescapes HTML entities in the
-// inner content. Returns raw content lines ready for wrapping.
+// wrapper lines from tool output body. When <pre> tags are found (the old
+// export format that HTML-escapes content), entities are unescaped. When
+// only <details>/<summary> are found (collapseToolOutputs format), inner
+// content is returned as-is since it was never HTML-escaped.
+//
+// Returns raw content lines ready for wrapping.
 func stripPreWrapper(body []string) []string {
 	var inner []string
-	wasWrapped := false
+	hadPre := false
 
 	for _, line := range body {
 		trimmed := strings.TrimSpace(line)
 		switch {
-		case trimmed == "<details>" || trimmed == "</details>" ||
-			trimmed == "<pre>" || trimmed == "</pre>":
-			wasWrapped = true
+		case trimmed == "<details>" || trimmed == "</details>":
+			continue
+		case trimmed == "<pre>" || trimmed == "</pre>":
+			hadPre = true
 			continue
 		case strings.HasPrefix(trimmed, "<summary>") &&
 			strings.HasSuffix(trimmed, "</summary>"):
-			wasWrapped = true
 			continue
 		default:
 			inner = append(inner, line)
 		}
 	}
 
-	// If the body had export-pipeline wrapping, the content has
-	// HTML entities from html.EscapeString — decode them so the
-	// fenced block shows the original text.
-	if wasWrapped {
+	// Only unescape when <pre> was found — the old export format
+	// HTML-escapes content inside <pre> blocks. The collapseToolOutputs
+	// format (just <details>/<summary>) does not escape content.
+	if hadPre {
 		for j, line := range inner {
 			inner[j] = html.UnescapeString(line)
 		}
@@ -279,21 +404,51 @@ func isBoilerplateToolOutput(raw []string) bool {
 		return true
 	}
 
-	// Single-line boilerplate patterns.
-	if len(nonBlank) == 1 {
-		line := nonBlank[0]
-		switch {
-		case line == "No matches found":
-			return true
-		case strings.HasPrefix(line, "The file ") &&
-			strings.HasSuffix(line, "has been updated successfully."):
-			return true
-		case strings.Contains(line, "denied this tool"):
-			return true
-		}
+	// Join all non-blank lines for multi-line pattern matching.
+	// softWrapContent can split single messages across lines.
+	joined := strings.Join(nonBlank, " ")
+
+	switch {
+	case joined == "No matches found":
+		return true
+	case strings.HasPrefix(joined, "The file ") &&
+		strings.HasSuffix(joined, "has been updated successfully."):
+		return true
+	case strings.Contains(joined, "denied this tool"):
+		return true
 	}
 
 	return false
+}
+
+// collectTurnNumbers extracts all turn numbers from turn headers in the
+// document, returning them sorted and deduplicated.
+func collectTurnNumbers(lines []string) []int {
+	seen := make(map[int]bool)
+	for _, line := range lines {
+		if m := config.RegExTurnHeader.FindStringSubmatch(
+			strings.TrimSpace(line),
+		); m != nil {
+			num, _ := strconv.Atoi(m[1])
+			seen[num] = true
+		}
+	}
+	nums := make([]int, 0, len(seen))
+	for n := range seen {
+		nums = append(nums, n)
+	}
+	sort.Ints(nums)
+	return nums
+}
+
+// nextInSequence returns the smallest number in the sorted slice that is
+// strictly greater than n. Returns -1 if no such number exists.
+func nextInSequence(sorted []int, n int) int {
+	idx := sort.SearchInts(sorted, n+1)
+	if idx < len(sorted) {
+		return sorted[idx]
+	}
+	return -1
 }
 
 // splitTrailingFooter splits a multipart navigation footer from the end of

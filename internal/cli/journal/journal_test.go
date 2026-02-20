@@ -412,28 +412,19 @@ func TestNormalizeContent(t *testing.T) {
 			},
 		},
 		{
-			"tool output wrapped in fenced code block",
+			"tool output wrapped in pre/code",
 			"### 5. Tool Output (10:30:00)\n\n# this is not a heading\n---\n<details>bad\n\n### 6. Assistant (10:30:01)\n\nhi",
 			false,
 			func(t *testing.T, got string) {
-				if strings.Count(got, "```") != 2 {
-					t.Errorf("expected 2 fence markers, got %d", strings.Count(got, "```"))
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("tool output should be wrapped in <pre><code>")
 				}
-				// Content preserved verbatim inside fence
-				fenceStart := strings.Index(got, "```")
-				fenceEnd := strings.LastIndex(got, "```")
-				if fenceStart < 0 || fenceEnd <= fenceStart {
-					t.Fatal("missing fence markers")
+				// Content should be HTML-escaped inside <pre><code>
+				if !strings.Contains(got, "# this is not a heading") {
+					t.Error("# line should be preserved")
 				}
-				body := got[fenceStart+3 : fenceEnd]
-				if !strings.Contains(body, "---") {
-					t.Error("--- should be preserved inside fence")
-				}
-				if !strings.Contains(body, "# this is not a heading") {
-					t.Error("# line should be preserved inside fence")
-				}
-				if !strings.Contains(body, "<details>bad") {
-					t.Error("<details> should be preserved verbatim (no escaping)")
+				if !strings.Contains(got, "&lt;details&gt;bad") {
+					t.Error("<details> should be HTML-escaped")
 				}
 				// Next turn header should survive
 				if !strings.Contains(got, "### 6. Assistant") {
@@ -442,31 +433,24 @@ func TestNormalizeContent(t *testing.T) {
 			},
 		},
 		{
-			"tool output in details gets re-wrapped as fence",
+			"tool output in details gets re-wrapped as pre/code",
 			"### 5. Tool Output (10:30:00)\n\n<details>\n<summary>79 lines</summary>\n<pre>\n# heading\n---\n&lt;div&gt;\n</pre>\n</details>\n\n### 6. Assistant (10:30:01)\n\nhi",
 			false,
 			func(t *testing.T, got string) {
-				// Wrapped in fenced code block
-				if strings.Count(got, "```") != 2 {
-					t.Errorf("expected 2 fence markers, got %d", strings.Count(got, "```"))
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("tool output should be wrapped in <pre><code>")
 				}
 				// <details>/<summary>/<pre> wrappers stripped
-				if strings.Contains(got, "<details>") {
-					t.Error("<details> wrapper should be stripped")
-				}
 				if strings.Contains(got, "<summary>") {
 					t.Error("<summary> wrapper should be stripped")
 				}
-				// Entities from export should be unescaped (fences show raw text)
-				if !strings.Contains(got, "<div>") {
-					t.Error("&lt;div&gt; should be unescaped to <div>")
+				// Content unescaped from export then re-escaped for <pre><code>:
+				// &lt;div&gt; -> <div> -> &lt;div&gt;
+				if !strings.Contains(got, "&lt;div&gt;") {
+					t.Error("HTML entities should be re-escaped in <pre><code>")
 				}
-				// Content inside fence
-				fenceStart := strings.Index(got, "```")
-				fenceEnd := strings.LastIndex(got, "```")
-				body := got[fenceStart+3 : fenceEnd]
-				if !strings.Contains(body, "# heading") {
-					t.Error("# heading should be inside fence")
+				if !strings.Contains(got, "# heading") {
+					t.Error("# heading should be preserved")
 				}
 				// Next turn should survive
 				if !strings.Contains(got, "### 6. Assistant") {
@@ -528,8 +512,161 @@ func TestNormalizeContent(t *testing.T) {
 				if !strings.Contains(got, "actual useful content here") {
 					t.Error("non-boilerplate content should be preserved")
 				}
-				if strings.Count(got, "```") != 2 {
-					t.Errorf("expected fence wrapping, got %d markers", strings.Count(got, "```"))
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("tool output should be wrapped in <pre><code>")
+				}
+			},
+		},
+		{
+			"boilerplate stripped — multi-line edit confirmation",
+			"### 5. Tool Output (10:30:00)\n\nThe file /home/jose/WORKSPACE/ctx/internal/config/limit.go has been updated\nsuccessfully.\n\n### 6. Assistant (10:30:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "Tool Output") {
+					t.Error("multi-line edit confirmation should be stripped")
+				}
+				if strings.Contains(got, "has been updated") {
+					t.Error("boilerplate content should not appear")
+				}
+				if !strings.Contains(got, "### 6. Assistant") {
+					t.Error("next turn should survive")
+				}
+			},
+		},
+		{
+			"fencesVerified wraps already-fenced tool output in pre/code",
+			"### 5. Tool Output (10:30:00)\n\n```\nactual output\n```\n\n### 6. Assistant (10:30:01)\n\nhi",
+			true,
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("tool output should be wrapped in <pre><code>")
+				}
+				if !strings.Contains(got, "actual output") {
+					t.Error("content should be preserved")
+				}
+			},
+		},
+		{
+			"fencesVerified converts details/pre to pre/code",
+			"### 5. Tool Output (10:30:00)\n\n<details>\n<summary>3 lines</summary>\n\n<pre>\nfoo\n&lt;bar&gt;\n</pre>\n</details>\n\n### 6. Assistant (10:30:01)\n\nhi",
+			true,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "<summary>") {
+					t.Error("<summary> wrapper should be stripped")
+				}
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("should wrap in <pre><code>")
+				}
+				// Unescaped from export then re-escaped
+				if !strings.Contains(got, "&lt;bar&gt;") {
+					t.Error("HTML entities should be re-escaped")
+				}
+			},
+		},
+		{
+			"inner fences become literal text in pre/code",
+			"### 5. Tool Output (10:30:00)\n\n<details>\n<summary>5 lines</summary>\n\n<pre>\n## Heading\n\n```\ncode block\n```\n</pre>\n</details>\n\n### 6. Assistant (10:30:01)\n\nhi",
+			true,
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("should wrap in <pre><code>")
+				}
+				// Inner fences are just literal text (HTML-escaped has no effect on backticks)
+				if !strings.Contains(got, "```") {
+					t.Error("inner fence markers should be preserved as literal text")
+				}
+				if !strings.Contains(got, "## Heading") {
+					t.Error("content should be preserved")
+				}
+			},
+		},
+		{
+			"embedded turn headers inside pre are not boundaries",
+			"### 5. Tool Output (10:30:00)\n\n<details>\n<summary>3 lines</summary>\n\n<pre>\n### 800. Assistant (15:00:00)\n\nembedded content\n</pre>\n</details>\n\n### 6. Assistant (10:30:01)\n\nreal next turn",
+			true,
+			func(t *testing.T, got string) {
+				// Embedded turn header should be inside the pre/code block
+				if !strings.Contains(got, "### 800. Assistant") {
+					t.Error("embedded turn header should be preserved in output")
+				}
+				if !strings.Contains(got, "embedded content") {
+					t.Error("embedded content should be in the pre/code block")
+				}
+				// Real next turn must survive
+				if !strings.Contains(got, "### 6. Assistant") {
+					t.Error("real next turn should not be swallowed")
+				}
+				if !strings.Contains(got, "real next turn") {
+					t.Error("real next turn content should survive")
+				}
+			},
+		},
+		{
+			"user turn wrapped in pre/code",
+			"### 1. User (10:00:00)\n\nHello world\n\n### 2. Assistant (10:00:01)\n\nHi there",
+			false,
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("user body should be wrapped in <pre><code>")
+				}
+				if !strings.Contains(got, "</code></pre>") {
+					t.Error("user body should have closing </code></pre>")
+				}
+				if !strings.Contains(got, "Hello world") {
+					t.Error("user content should be preserved")
+				}
+				if !strings.Contains(got, "### 2. Assistant") {
+					t.Error("next turn should survive")
+				}
+			},
+		},
+		{
+			"user turn with stray fence does not swallow subsequent turns",
+			"### 1. User (10:00:00)\n\nsome text\n```\nmore text\n\n### 2. Assistant (10:00:01)\n\nresponse here",
+			true, // fencesVerified — the dangerous case
+			func(t *testing.T, got string) {
+				// Stray fence should be HTML-escaped inside <pre><code>
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("user body should be wrapped in <pre><code>")
+				}
+				// The ``` must not appear as a raw fence marker
+				if !strings.Contains(got, "&#96;&#96;&#96;") &&
+					!strings.Contains(got, "```") {
+					// backticks aren't HTML-escaped by html.EscapeString,
+					// but inside <pre><code> they're inert to markdown parsing
+				}
+				// Critical: next turn must NOT be swallowed
+				if !strings.Contains(got, "### 2. Assistant") {
+					t.Error("stray fence must not swallow subsequent turns")
+				}
+				if !strings.Contains(got, "response here") {
+					t.Error("assistant content should survive")
+				}
+			},
+		},
+		{
+			"user turn with HTML is escaped",
+			"### 1. User (10:00:00)\n\n<script>alert('xss')</script>\n\n### 2. Assistant (10:00:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "<script>") {
+					t.Error("HTML in user body should be escaped")
+				}
+				if !strings.Contains(got, "&lt;script&gt;") {
+					t.Error("HTML should be entity-escaped")
+				}
+			},
+		},
+		{
+			"empty user turn not wrapped",
+			"### 1. User (10:00:00)\n\n\n\n### 2. Assistant (10:00:01)\n\nhi",
+			false,
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "<pre><code>") {
+					t.Error("empty user turn should not get pre/code wrapper")
+				}
+				if !strings.Contains(got, "### 2. Assistant") {
+					t.Error("next turn should survive")
 				}
 			},
 		},
@@ -538,6 +675,89 @@ func TestNormalizeContent(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := normalizeContent(tt.input, tt.fencesVerified)
+			tt.check(t, got)
+		})
+	}
+}
+
+func TestWrapUserTurns(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		check func(t *testing.T, got string)
+	}{
+		{
+			"basic user turn",
+			"### 1. User (10:00:00)\n\nHello\n\n### 2. Assistant (10:00:01)\n\nHi",
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "<pre><code>\nHello\n</code></pre>") {
+					t.Errorf("unexpected wrapping:\n%s", got)
+				}
+				if !strings.Contains(got, "### 2. Assistant") {
+					t.Error("next turn lost")
+				}
+			},
+		},
+		{
+			"user turn with angle brackets escaped",
+			"### 1. User (10:00:00)\n\ncheck <div> tag\n\n### 2. Assistant (10:00:01)\n\nok",
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "check &lt;div&gt; tag") {
+					t.Errorf("HTML not escaped:\n%s", got)
+				}
+			},
+		},
+		{
+			"user turn with ampersand escaped",
+			"### 1. User (10:00:00)\n\nfoo & bar\n\n### 2. Assistant (10:00:01)\n\nok",
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "foo &amp; bar") {
+					t.Errorf("ampersand not escaped:\n%s", got)
+				}
+			},
+		},
+		{
+			"user turn at EOF",
+			"### 1. User (10:00:00)\n\nlast message",
+			func(t *testing.T, got string) {
+				if !strings.Contains(got, "<pre><code>") {
+					t.Error("user turn at EOF should still be wrapped")
+				}
+				if !strings.Contains(got, "last message") {
+					t.Error("content should be preserved")
+				}
+			},
+		},
+		{
+			"multiple user turns",
+			"### 1. User (10:00:00)\n\nfirst\n\n### 2. Assistant (10:00:01)\n\nhi\n\n### 3. User (10:00:02)\n\nsecond\n\n### 4. Assistant (10:00:03)\n\nbye",
+			func(t *testing.T, got string) {
+				if strings.Count(got, "<pre><code>") != 2 {
+					t.Errorf("expected 2 pre/code blocks, got %d",
+						strings.Count(got, "<pre><code>"))
+				}
+				if !strings.Contains(got, "first") {
+					t.Error("first user message lost")
+				}
+				if !strings.Contains(got, "second") {
+					t.Error("second user message lost")
+				}
+			},
+		},
+		{
+			"non-user turns untouched",
+			"### 1. Assistant (10:00:00)\n\nI'll help\n\n### 2. Tool Output (10:00:01)\n\nresult",
+			func(t *testing.T, got string) {
+				if strings.Contains(got, "<pre><code>") {
+					t.Error("non-user turns should not be wrapped")
+				}
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := wrapUserTurns(tt.input)
 			tt.check(t, got)
 		})
 	}
@@ -1302,6 +1522,69 @@ func TestStripSystemReminders_BoldStyle(t *testing.T) {
 	}
 	if !strings.Contains(got, "Let me check the file.") {
 		t.Error("following content lost")
+	}
+}
+
+func TestStripSystemReminders_CompactionSummary(t *testing.T) {
+	input := strings.Join([]string{
+		"### 373. User (03:50:32)",
+		"",
+		"done, regenerate",
+		"",
+		"<summary>",
+		"1. Primary Request and Intent:",
+		"   The user is debugging the journal site rendering pipeline.",
+		"",
+		"2. Key Technical Concepts:",
+		"   - CommonMark HTML block types",
+		"</summary>",
+		"",
+		"If you need specific details from before compaction (like exact code snippets,",
+		"error messages, or content you generated), read the full transcript at:",
+		"/home/jose/.claude/projects/foo/bar.jsonl",
+		"Please continue the conversation from where we left off.",
+		"",
+		"### 374. Assistant (03:50:34)",
+		"",
+		"Continuing where we left off.",
+	}, "\n")
+
+	got := stripSystemReminders(input)
+
+	if strings.Contains(got, "Primary Request") {
+		t.Error("compaction summary not stripped")
+	}
+	if strings.Contains(got, "If you need specific details from before compaction") {
+		t.Error("compaction boilerplate not stripped")
+	}
+	if !strings.Contains(got, "done, regenerate") {
+		t.Error("user message before compaction lost")
+	}
+	if !strings.Contains(got, "### 374. Assistant") {
+		t.Error("following turn lost")
+	}
+	if !strings.Contains(got, "Continuing where we left off.") {
+		t.Error("following content lost")
+	}
+}
+
+func TestStripSystemReminders_SingleLineSummaryPreserved(t *testing.T) {
+	// Our <summary>N lines</summary> must NOT be stripped.
+	input := strings.Join([]string{
+		"### 5. Tool Output (10:30:00)",
+		"",
+		"<details>",
+		"<summary>79 lines</summary>",
+		"<pre>",
+		"some content",
+		"</pre>",
+		"</details>",
+	}, "\n")
+
+	got := stripSystemReminders(input)
+
+	if !strings.Contains(got, "<summary>79 lines</summary>") {
+		t.Error("single-line <summary> should be preserved")
 	}
 }
 

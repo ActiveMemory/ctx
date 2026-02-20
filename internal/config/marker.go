@@ -66,3 +66,28 @@ const (
 	// TagSystemReminderClose is the closing tag for system reminders.
 	TagSystemReminderClose = "</system-reminder>"
 )
+
+// Context compaction artifacts injected by Claude Code when the conversation
+// exceeds the context window. The compaction injects two blocks as a user
+// message in the JSONL transcript:
+//
+//  1. A multi-line <summary>...</summary> block containing a structured
+//     conversation summary (sections: Request/Intent, Technical Concepts,
+//     Files, Current State).
+//  2. A boilerplate continuation prompt ("If you need specific details
+//     from before compaction...read the full transcript at...").
+//
+// INVARIANT: Claude Code's <summary> tag always appears alone on its own
+// line (the content is inherently multi-line). Our <summary> tags are always
+// single-line (<summary>N lines</summary>, see TplRecallDetailsOpen).
+// This invariant makes disambiguation safe: a line that is exactly "<summary>"
+// is a compaction artifact; a line containing "<summary>...</summary>" is ours.
+const (
+	// TagCompactionSummaryOpen is a standalone <summary> on its own line.
+	TagCompactionSummaryOpen = "<summary>"
+	// TagCompactionSummaryClose is the closing </summary> tag.
+	TagCompactionSummaryClose = "</summary>"
+	// CompactionBoilerplatePrefix starts the continuation prompt after
+	// a compaction summary.
+	CompactionBoilerplatePrefix = "If you need specific details from before compaction"
+)

@@ -50,7 +50,11 @@ const (
 	TplRecallDetailsSummary = "%d lines"
 
 	// TplRecallDetailsOpen formats the opening HTML for collapsible content.
-	// Args: summary text.
+	// Args: summary text. INVARIANT: the <summary> tag is always single-line
+	// (<summary>N lines</summary>). Multi-line <summary> blocks (standalone
+	// <summary> on its own line) are Claude Code context compaction artifacts
+	// and are stripped by stripSystemReminders. This distinction is the basis
+	// for safe disambiguation.
 	TplRecallDetailsOpen = "<details>\n<summary>%s</summary>"
 
 	// TplRecallDetailsClose is the closing HTML for collapsible content.

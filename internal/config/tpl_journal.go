@@ -172,6 +172,42 @@ link = "https://web.libera.chat/#ctx"
 
 [project.extra]
 generator = false
+
+# Markdown extensions — mirrors zensical defaults but disables Pygments
+# code highlighting. Journal entries use <pre><code> for user turns and
+# fenced blocks for tool output; pymdownx.highlight with Pygments on
+# hijacks <pre><code> patterns, transforming block boundaries and
+# swallowing subsequent content.
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+toc = { permalink = true }
+
+[project.markdown_extensions.pymdownx]
+betterem = {}
+caret = {}
+details = {}
+inlinehilite = {}
+keys = {}
+magiclink = {}
+mark = {}
+smartsymbols = {}
+tasklist = { custom_checkbox = true }
+tilde = {}
+
+[project.markdown_extensions.pymdownx.highlight]
+use_pygments = false
+
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [{ name = "mermaid", class = "mermaid" }]
+
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+combine_header_slug = true
 `
 
 	// TplZensicalExtraCSS is the extra_css line for zensical.toml.

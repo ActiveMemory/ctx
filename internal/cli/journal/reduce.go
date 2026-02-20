@@ -63,46 +63,81 @@ func stripFences(content string, fencesVerified bool) string {
 	return strings.Join(out, config.NewlineLF)
 }
 
-// stripSystemReminders removes system reminder blocks from journal content.
-// Handles two formats:
-//   - XML-style: <system-reminder>...</system-reminder>
-//   - Bold-style: **System Reminder**: ... (paragraph until blank line)
+// stripSystemReminders removes internal Claude Code blocks from journal content.
+// Handles:
+//   - XML-style system reminders: <system-reminder>...</system-reminder>
+//   - Bold-style system reminders: **System Reminder**: ... (paragraph until blank line)
+//   - Context compaction summaries: multi-line <summary>...</summary> blocks
+//     (standalone <summary> on its own line — see config.TagCompactionSummaryOpen)
+//   - Compaction continuation boilerplate: "If you need specific details from
+//     before compaction..." paragraph
 //
 // The authoritative JSONL transcripts retain them; the exported Markdown
 // doesn't need them.
 //
 // Parameters:
-//   - content: Journal entry content with potential system reminders
+//   - content: Journal entry content with potential internal blocks
 //
 // Returns:
-//   - string: Content with all system reminder blocks removed
+//   - string: Content with all internal blocks removed
 func stripSystemReminders(content string) string {
 	lines := strings.Split(content, config.NewlineLF)
 	var out []string
 	inTagReminder := false
 	inBoldReminder := false
+	inCompaction := false
+	inBoilerplate := false
 
 	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+
 		// XML-style: <system-reminder>...</system-reminder>
-		if strings.TrimSpace(line) == config.TagSystemReminderOpen {
+		if trimmed == config.TagSystemReminderOpen {
 			inTagReminder = true
 			continue
 		}
 		if inTagReminder {
-			if strings.TrimSpace(line) == config.TagSystemReminderClose {
+			if trimmed == config.TagSystemReminderClose {
 				inTagReminder = false
 			}
 			continue
 		}
 
 		// Bold-style: **System Reminder**: ... (runs until blank line)
-		if strings.HasPrefix(strings.TrimSpace(line), config.LabelBoldReminder) {
+		if strings.HasPrefix(trimmed, config.LabelBoldReminder) {
 			inBoldReminder = true
 			continue
 		}
 		if inBoldReminder {
-			if strings.TrimSpace(line) == "" {
+			if trimmed == "" {
 				inBoldReminder = false
+			}
+			continue
+		}
+
+		// Context compaction: standalone <summary> on its own line.
+		// Single-line <summary>N lines</summary> (ours) won't match
+		// because trimmed != "<summary>" when there's inline content.
+		if trimmed == config.TagCompactionSummaryOpen {
+			inCompaction = true
+			continue
+		}
+		if inCompaction {
+			if trimmed == config.TagCompactionSummaryClose {
+				inCompaction = false
+			}
+			continue
+		}
+
+		// Compaction boilerplate: "If you need specific details from
+		// before compaction..." paragraph (runs until blank line)
+		if strings.HasPrefix(trimmed, config.CompactionBoilerplatePrefix) {
+			inBoilerplate = true
+			continue
+		}
+		if inBoilerplate {
+			if trimmed == "" {
+				inBoilerplate = false
 			}
 			continue
 		}
