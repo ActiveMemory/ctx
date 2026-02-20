@@ -290,26 +290,35 @@ https://github.com/ActiveMemory/ctx/pull/16
 
 **Follow-up suggestions from PR-16 review** (non-blocking, post-merge):
 
-- [ ] PR-16-S1: Fix map iteration non-determinism in `markdown.go:185`.
+- [x] PR-16-S1: Fix map iteration non-determinism in `markdown.go:185`.
       `extractSections` returns `map[string]string`; `parseMarkdownSession`
       iterates it to build `bodyParts`, producing non-deterministic section
       order in the assistant message. Sort keys or use an ordered slice.
-      #priority:low #added:2026-02-19
+      #priority:low #added:2026-02-19 #done:2026-02-19
+      Done: Changed `extractSections` to return `[]section` (ordered slice)
+      preserving document order. Updated caller and test.
 
-- [ ] PR-16-S2: Add `--no-color` to VS Code extension's `handleAgent` and
+- [x] PR-16-S2: Add `--no-color` to VS Code extension's `handleAgent` and
       `handleLoad` handlers for consistency with all other handlers.
-      #priority:low #added:2026-02-19
+      #priority:low #added:2026-02-19 #done:2026-02-19
+      Done: Added `"--no-color"` to both `runCtx` calls in extension.ts.
 
-- [ ] PR-16-S3: Guard against session double-counting in `query.go`.
+- [x] PR-16-S3: Guard against session double-counting in `query.go`.
       If `.context/sessions/` is passed as both CWD-relative (auto-scan)
       and as an `additionalDirs` argument, sessions could appear twice.
       Add a seen-paths set or dedup by session ID.
-      #priority:low #added:2026-02-19
+      #priority:low #added:2026-02-19 #done:2026-02-19
+      Done: Added `scanOnce` helper with `scannedDirs` set using
+      `filepath.EvalSymlinks` for path normalization. Directory-level
+      dedup complements existing session-ID dedup.
 
-- [ ] PR-16-S4: Make `--write` optional in VS Code extension's `handleHook`.
+- [x] PR-16-S4: Make `--write` optional in VS Code extension's `handleHook`.
       Currently always passes `--write`, so users can't preview hook output
       via chat. Consider a dry-run mode or separate preview command.
-      #priority:low #added:2026-02-19
+      #priority:low #added:2026-02-19 #done:2026-02-19
+      Done: Parse prompt for `preview`/`--preview` keyword. Default
+      behavior unchanged (writes). `@ctx /hook copilot preview` shows
+      output without writing files.
 
 ### Phase 3: Encrypted Scratchpad (`ctx pad`) `#priority:high`
 
@@ -331,6 +340,38 @@ Spec: `specs/scratchpad.md`
       Replaces fragile bash script (hack/pad-export-blobs.sh).
       Spec: `specs/pad-export.md` #priority:medium #added:2026-02-17 #done:2026-02-19
       Done: `internal/cli/pad/export.go` — 114 lines, 10 tests. Docs updated.
+
+- [x] P3.23: `ctx pad merge FILE...` — merge entries from one or more
+      scratchpad files into the current pad. Auto-detects encrypted vs
+      plaintext inputs (try-decrypt-first). Content-based deduplication
+      (position/line number irrelevant). `--key` for foreign encrypted files,
+      `--dry-run` for preview. Warns on same-label-different-data blobs and
+      non-UTF-8 content in plaintext fallback.
+      Spec: `specs/pad-merge.md` #priority:medium #added:2026-02-19 #done:2026-02-19
+      Done: `internal/cli/pad/merge.go` — 265 lines, 19 tests. All pass.
+
+  - [x] P3.23a: Implement `readFileEntries()` helper — reads a file, tries
+        decryption with available key, falls back to plaintext. Returns
+        parsed entries. #added:2026-02-19 #done:2026-02-19
+
+  - [x] P3.23b: Implement `runMerge()` and `mergeCmd()` — core merge logic
+        with dedup, blob conflict detection, dry-run, and output formatting.
+        Register in `pad.go`. #added:2026-02-19 #done:2026-02-19
+
+  - [x] P3.23c: Tests for merge — 19 test cases covering: basic merge,
+        all-duplicates, empty input, multiple files, encrypted input,
+        plaintext fallback, mixed formats, dry-run, custom key, blobs,
+        blob conflicts, binary warning, file not found, empty pad, plaintext
+        mode, order preservation, cross-file dedup, encrypted blob dedup,
+        pluralize. #added:2026-02-19 #done:2026-02-19
+
+  - [x] P3.23d: Update pad command long description in `pad.go` to list
+        `merge` subcommand. #added:2026-02-19 #done:2026-02-19
+
+  - [x] P3.23e: Add `pad merge` to user-facing docs: scratchpad.md (commands
+        table, usage section, skill table), cli-reference.md (reference entry),
+        recipes/scratchpad-sync.md (merge as preferred conflict resolution,
+        commands table, conversational example). #added:2026-02-19 #done:2026-02-19
 
 **Documentation:**
 
@@ -572,6 +613,64 @@ Spec: `specs/session-wrap-up.md`
       throttling, output variants (both missing, one missing, neither).
       Integration test with sample journal directory.
       #priority:medium #added:2026-02-18
+
+### Phase 7: Smart Retrieval `#priority:high`
+
+**Context**: `ctx agent --budget` is cosmetic — the budget value is displayed
+but never used for content selection. LEARNINGS.md is entirely excluded.
+Decisions are title-only. No relevance filtering. This is the highest-impact
+improvement for agent context quality. Spec: `specs/smart-retrieval.md`
+Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 1)
+
+- [x] P7.0: Read `specs/smart-retrieval.md` before starting any P7 task.
+      #added:2026-02-19 #done:2026-02-19
+
+- [x] P7.1: Add `score.go` — entry scoring functions. Recency scoring by
+      age bracket (7d/30d/90d/90d+), task keyword extraction (stop words,
+      dedup), relevance scoring by keyword overlap, superseded penalty.
+      Tests in `score_test.go`.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: `score.go` (165 lines) + `score_test.go` (185 lines), 12 test cases.
+
+- [x] P7.2: Add `budget.go` — budget allocation and section assembly.
+      Tier-based allocation: constitution/readorder/instruction (always),
+      tasks (40%), conventions (20%), decisions+learnings (remaining).
+      Graceful degradation: full entries → title summaries → drop.
+      Tests in `budget_test.go`.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: `budget.go` (290 lines) + `budget_test.go` (210 lines), 12 test cases.
+
+- [x] P7.3: Update `extract.go` — add `extractDecisionBlocks`,
+      `extractLearningBlocks`, `extractTaskKeywords`. Use
+      `index.ParseEntryBlocks` for parsing, return `ScoredEntry` slices.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: `extractAllConventions`, `parseEntryBlocks` in budget.go.
+      `extractTaskKeywords` in score.go. Reuses `index.ParseEntryBlocks`.
+
+- [x] P7.4: Update `types.go` — add `Learnings` and `Summaries` fields
+      to `Packet`. Add `ScoredEntry` and `SectionBudget` types.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: `ScoredEntry` in score.go. `Learnings` and `Summaries` fields
+      added to `Packet` (omitempty for backward compat).
+
+- [x] P7.5: Update `out.go` — replace hardcoded assembly with budget-aware
+      assembly. Both Markdown and JSON output use the new budget system.
+      Learnings section, decision bodies, "Also noted:" summaries.
+      #priority:high #added:2026-02-19 #done:2026-02-19
+      Done: `out.go` now delegates to `assembleBudgetPacket` + `renderMarkdownPacket`.
+
+- [x] P7.6: Update existing agent tests to reflect new output format.
+      Add integration test with fixture `.context/` containing large
+      DECISIONS.md and LEARNINGS.md, verify budget is respected.
+      #priority:medium #added:2026-02-19 #done:2026-02-19
+      Done: Existing TestAgentCommand and TestAgentJSONOutput pass. 28 total tests.
+
+- [x] P7.7: Manual verification — run `ctx agent --budget 4000` and
+      `ctx agent --budget 8000` on real project, verify output quality
+      and budget compliance.
+      #priority:medium #added:2026-02-19 #done:2026-02-19
+      Done: Tested at budgets 2000, 4000, 8000. Graceful degradation confirmed.
+      JSON output includes new learnings/summaries fields.
 
 ### Phase 2: Export Preservation `#priority:medium`
 

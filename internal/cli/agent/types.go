@@ -14,12 +14,14 @@ package agent
 // Fields:
 //   - Generated: RFC3339 timestamp of when the packet was created
 //   - Budget: Token budget specified by the user
-//   - TokensUsed: Actual token count of loaded context files
+//   - TokensUsed: Estimated token count consumed by the packet
 //   - ReadOrder: File paths in recommended reading order
 //   - Constitution: Rules from CONSTITUTION.md
 //   - Tasks: Active (unchecked) tasks from TASKS.md
 //   - Conventions: Key conventions from CONVENTIONS.md
-//   - Decisions: Recent decision titles from DECISIONS.md
+//   - Decisions: Decision entries from DECISIONS.md (full body, scored)
+//   - Learnings: Learning entries from LEARNINGS.md (full body, scored)
+//   - Summaries: Title-only summaries for entries that exceeded budget
 //   - Instruction: Behavioral instruction for the agent
 type Packet struct {
 	Generated    string   `json:"generated"`
@@ -30,5 +32,7 @@ type Packet struct {
 	Tasks        []string `json:"tasks"`
 	Conventions  []string `json:"conventions"`
 	Decisions    []string `json:"decisions"`
+	Learnings    []string `json:"learnings,omitempty"`
+	Summaries    []string `json:"summaries,omitempty"`
 	Instruction  string   `json:"instruction"`
 }

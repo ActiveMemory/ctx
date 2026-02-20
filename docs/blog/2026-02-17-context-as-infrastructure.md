@@ -16,6 +16,8 @@ topics:
   - design philosophy
 ---
 
+<!-- //////////////////////// I WAS LEFT HERE /////////////////////// -->
+
 # Context as Infrastructure
 
 ![ctx](../images/ctx-banner.png)
@@ -308,9 +310,10 @@ more context *feels* safer), which destroys the attention density that
 makes the loaded context useful.
 
 **The constraint is the feature.** A budget of 4,000 tokens forces
-`ctx` to prioritize ruthlessly: constitution first, then tasks, then
-conventions, then decisions, then learnings -- in that order, cutting
-off when the budget is exhausted.
+`ctx` to prioritize ruthlessly: constitution first (always full), then
+tasks and conventions (budget-capped), then decisions and learnings
+scored by recency and relevance to active tasks. Entries that don't
+fit get title-only summaries rather than being silently dropped.
 
 ---
 
