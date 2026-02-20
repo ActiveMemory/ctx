@@ -13,6 +13,12 @@
         <loc>https://ctx.ist/is-ctx-right/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/community/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/contributing/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/getting-started/</loc>
       </url>
       <url>
@@ -34,7 +40,13 @@
         <loc>https://ctx.ist/recipes/session-lifecycle/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/session-ceremonies/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/knowledge-capture/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/knowledge-scaling/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/context-health/</loc>
@@ -95,9 +107,6 @@
       </url>
       <url>
         <loc>https://ctx.ist/versions/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/contributing/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/migration/</loc>

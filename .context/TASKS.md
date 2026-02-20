@@ -189,6 +189,7 @@ Spec: `specs/export-update-mode.md`
 - [ ] Add ctx help command; use-case-oriented cheat sheet for lazy CLI users. 
       Should cover: (1) core CLI commands grouped by workflow (getting started, tracking decisions, browsing history, AI context), (2) available slash-command skills with one-line descriptions, (3) common workflow recipes showing how commands and skills combine. One screen, no scrolling. Not a skill; a real CLI command. #added:2026-02-06-184257
 - [ ] Add topic-based navigation to blog when post count reaches 15+ #priority:low #added:2026-02-07-015054
+- [ ] Revisit Recipes nav structure when count reaches ~25 — consider grouping into sub-sections (Sessions, Knowledge, Security, Advanced) to reduce sidebar crowding. Currently at 18. #priority:low #added:2026-02-20
 - [ ] Review hook diagnostic logs after a long session. Check `.context/logs/check-persistence.log` and `.context/logs/check-context-size.log` to verify hooks fire correctly. Tune nudge frequency if needed. #priority:medium #added:2026-02-09
 - [ ] Run `/consolidate` to address codebase drift. Considerable drift has
       accumulated (predicate naming, magic strings, hardcoded permissions,
