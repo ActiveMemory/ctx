@@ -60,18 +60,18 @@ func TestRunRecallExport_ArgValidation(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	// Neither --all nor session ID should error
-	cmd2 := Cmd()
-	buf2 := new(bytes.Buffer)
-	cmd2.SetOut(buf2)
-	cmd2.SetErr(buf2)
-	cmd2.SetArgs([]string{"export"})
-	err2 := cmd2.Execute()
-	if err2 == nil {
-		t.Fatal("expected error with neither --all nor session ID")
+	// --regenerate without --all should error
+	cmd3 := Cmd()
+	buf3 := new(bytes.Buffer)
+	cmd3.SetOut(buf3)
+	cmd3.SetErr(buf3)
+	cmd3.SetArgs([]string{"export", "--regenerate", "some-session"})
+	err3 := cmd3.Execute()
+	if err3 == nil {
+		t.Fatal("expected error with --regenerate without --all")
 	}
-	if !strings.Contains(err2.Error(), "please provide a session ID or use --all") {
-		t.Errorf("unexpected error: %v", err2)
+	if !strings.Contains(err3.Error(), "--regenerate requires --all") {
+		t.Errorf("unexpected error: %v", err3)
 	}
 }
 
@@ -279,7 +279,7 @@ func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
-	cmd.SetArgs([]string{"export", "--all", "--all-projects"})
+	cmd.SetArgs([]string{"export", "--all", "--all-projects", "--regenerate", "--yes"})
 
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -386,8 +386,8 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 		t.Fatal(writeErr)
 	}
 
-	// Re-export (default mode — should preserve frontmatter)
-	exportHelper(t, tmpDir)
+	// Re-export with --regenerate (safe default skips existing; we need regenerate to trigger re-export)
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -440,7 +440,7 @@ func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
 	}
 
 	// Re-export with --force — should discard enriched frontmatter
-	exportHelper(t, tmpDir, "--force")
+	exportHelper(t, tmpDir, "--force", "--yes")
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
@@ -498,7 +498,7 @@ func TestRunRecallExport_ForceResetsEnrichmentState(t *testing.T) {
 	}
 
 	// Re-export with --force
-	exportHelper(t, tmpDir, "--force")
+	exportHelper(t, tmpDir, "--force", "--yes")
 
 	// Load state again and verify enriched was cleared
 	jstate, err = state.Load(journalDir)
@@ -543,7 +543,7 @@ func TestRunRecallExport_SkipExistingLeavesFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Re-export with --skip-existing
+	// Re-export with --skip-existing (deprecated but still accepted)
 	exportHelper(t, tmpDir, "--skip-existing")
 
 	data, err := os.ReadFile(filepath.Clean(path))
@@ -552,5 +552,316 @@ func TestRunRecallExport_SkipExistingLeavesFile(t *testing.T) {
 	}
 	if string(data) != customContent {
 		t.Errorf("--skip-existing should leave file unchanged\ngot:  %q\nwant: %q", string(data), customContent)
+	}
+}
+
+func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-safeskip")
+	createTestSessionJSONL(t, projDir, "sess-safe-010", "safe-skip", "/home/test/safeskip")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Overwrite file body with custom content
+	customContent := "my custom notes - safe default\n"
+	if err := os.WriteFile(path, []byte(customContent), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	// Re-export with --all (no --regenerate) — should skip existing
+	exportHelper(t, tmpDir)
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	if string(data) != customContent {
+		t.Errorf("--all should skip existing by default\ngot:  %q\nwant: %q", string(data), customContent)
+	}
+}
+
+func TestRunRecallExport_RegenerateReExports(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-regenproj")
+	createTestSessionJSONL(t, projDir, "sess-regen-011", "regen-test", "/home/test/regenproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Overwrite body
+	if err := os.WriteFile(path, []byte("overwritten\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	// Re-export with --regenerate --yes
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	if !strings.Contains(string(data), "hello from test") {
+		t.Error("--regenerate should regenerate file content")
+	}
+}
+
+func TestRunRecallExport_RegenerateRequiresAll(t *testing.T) {
+	cmd := Cmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs([]string{"export", "--regenerate", "some-session"})
+
+	err := cmd.Execute()
+	if err == nil {
+		t.Fatal("expected error with --regenerate without --all")
+	}
+	if !strings.Contains(err.Error(), "--regenerate requires --all") {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
+func TestRunRecallExport_DryRun(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dryproj")
+	createTestSessionJSONL(t, projDir, "sess-dry-012", "dry-run-test", "/home/test/dryproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	cmd := Cmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs([]string{"export", "--all", "--all-projects", "--dry-run"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	output := buf.String()
+	if !strings.Contains(output, "Would") {
+		t.Errorf("--dry-run should print 'Would' summary, got:\n%s", output)
+	}
+
+	// Verify no files were written
+	journalDir := filepath.Join(contextDir, "journal")
+	entries, err := os.ReadDir(journalDir)
+	if err != nil {
+		// Directory may not have any .md files, that's fine
+		return
+	}
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".md") {
+			t.Errorf("--dry-run should not write files, found: %s", e.Name())
+		}
+	}
+}
+
+func TestRunRecallExport_DryRunRegenerate(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dryregen")
+	createTestSessionJSONL(t, projDir, "sess-dryregen-013", "dryregen-test", "/home/test/dryregen")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export to create the file
+	exportHelper(t, tmpDir)
+
+	// Dry-run with --regenerate
+	cmd := Cmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs([]string{"export", "--all", "--all-projects", "--regenerate", "--dry-run"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	output := buf.String()
+	if !strings.Contains(output, "Would") {
+		t.Errorf("--dry-run should print 'Would' summary, got:\n%s", output)
+	}
+	if !strings.Contains(output, "regenerate") {
+		t.Errorf("--dry-run --regenerate should mention regenerate in summary, got:\n%s", output)
+	}
+}
+
+func TestRunRecallExport_BareExportPrintsHelp(t *testing.T) {
+	cmd := Cmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs([]string{"export"})
+
+	// Bare export should print help, not error
+	err := cmd.Execute()
+	if err != nil {
+		t.Fatalf("bare export should not error, got: %v", err)
+	}
+
+	output := buf.String()
+	if !strings.Contains(output, "Export AI sessions") {
+		t.Errorf("bare export should print help text, got:\n%s", output)
+	}
+}
+
+func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-singleproj")
+	createTestSessionJSONL(t, projDir, "sess-single-014", "single-write", "/home/test/singleproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export via single session
+	cmd1 := Cmd()
+	buf1 := new(bytes.Buffer)
+	cmd1.SetOut(buf1)
+	cmd1.SetErr(buf1)
+	cmd1.SetArgs([]string{"export", "single-write", "--all-projects"})
+	if err := cmd1.Execute(); err != nil {
+		t.Fatalf("first export: %v", err)
+	}
+
+	// Find the exported file
+	journalDir := filepath.Join(contextDir, "journal")
+	entries, err := os.ReadDir(journalDir)
+	if err != nil {
+		t.Fatalf("read journal dir: %v", err)
+	}
+	var mdFile string
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".md") {
+			mdFile = e.Name()
+			break
+		}
+	}
+	if mdFile == "" {
+		t.Fatal("no .md file found after first export")
+	}
+	path := filepath.Join(journalDir, mdFile)
+
+	// Overwrite with custom content
+	if writeErr := os.WriteFile(path, []byte("custom\n"), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export same session by ID — should always regenerate without prompting
+	cmd2 := Cmd()
+	buf2 := new(bytes.Buffer)
+	cmd2.SetOut(buf2)
+	cmd2.SetErr(buf2)
+	cmd2.SetArgs([]string{"export", "single-write", "--all-projects"})
+	if execErr := cmd2.Execute(); execErr != nil {
+		t.Fatalf("second export: %v", execErr)
+	}
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	if !strings.Contains(string(data), "hello from test") {
+		t.Error("single-session export should always regenerate content")
+	}
+}
+
+func TestRunRecallExport_YesBypasses(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-yesproj")
+	createTestSessionJSONL(t, projDir, "sess-yes-015", "yes-bypass", "/home/test/yesproj")
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Overwrite body
+	if err := os.WriteFile(path, []byte("overwritten\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	// Re-export with --regenerate --yes (no stdin prompt)
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	if !strings.Contains(string(data), "hello from test") {
+		t.Error("--yes should bypass confirmation and regenerate files")
 	}
 }

@@ -4424,33 +4424,45 @@ start time, duration, turn count, and token usage.</p>
 <tbody>
 <tr>
 <td><code>--all</code></td>
-<td>Export all sessions</td>
+<td>Export all sessions (only new files by default)</td>
 </tr>
 <tr>
 <td><code>--all-projects</code></td>
 <td>Export from all projects</td>
 </tr>
 <tr>
+<td><code>--regenerate</code></td>
+<td>Re-export existing files (preserves YAML frontmatter)</td>
+</tr>
+<tr>
 <td><code>--force</code></td>
 <td>Overwrite existing files completely (discard frontmatter)</td>
 </tr>
 <tr>
-<td><code>--skip-existing</code></td>
-<td>Skip files that already exist</td>
+<td><code>--yes</code>, <code>-y</code></td>
+<td>Skip confirmation prompt</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td>Show what would be exported without writing files</td>
 </tr>
 </tbody>
 </table>
-<p>Exported files include session metadata, tool usage summary, and the full
-conversation. When re-exporting, YAML frontmatter from enrichment (<em>topics,
-type, outcome, etc.</em>) is preserved by default; only the conversation content
-is regenerated.</p>
+<p><strong>Safe by default</strong>: <code>--all</code> only exports new sessions. Existing files are
+skipped. Use <code>--regenerate</code> to re-export existing files (conversation content
+is regenerated, YAML frontmatter from enrichment is preserved). Use <code>--force</code>
+to overwrite completely (frontmatter will be lost).</p>
+<p>Single-session export (<code>ctx recall export &lt;id&gt;</code>) always writes without
+prompting, since you are explicitly targeting one session.</p>
 <p>The <code>journal/</code> directory should be gitignored (like <code>sessions/</code>) since it
 contains raw conversation data.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">                </span><span class="c1"># Export one session</span>
-</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">                 </span><span class="c1"># Export/update all sessions</span>
-</span><span id="__span-49-3"><a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--skip-existing<span class="w"> </span><span class="c1"># Skip files that already exist</span>
-</span><span id="__span-49-4"><a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force<span class="w">         </span><span class="c1"># Overwrite completely (lose frontmatter)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">                  </span><span class="c1"># Export one session (always writes)</span>
+</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">                   </span><span class="c1"># Export only new sessions</span>
+</span><span id="__span-49-3"><a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--dry-run<span class="w">         </span><span class="c1"># Preview what would be exported</span>
+</span><span id="__span-49-4"><a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w">      </span><span class="c1"># Re-export existing (prompts first)</span>
+</span><span id="__span-49-5"><a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>-y<span class="w">   </span><span class="c1"># Re-export without prompting</span>
+</span><span id="__span-49-6"><a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force<span class="w"> </span>-y<span class="w">        </span><span class="c1"># Overwrite completely (lose frontmatter)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-journal"><code>ctx journal</code><a class="headerlink" href="#ctx-journal" title="Permanent link">&para;</a></h3>

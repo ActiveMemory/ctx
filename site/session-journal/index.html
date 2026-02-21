@@ -2916,20 +2916,23 @@ journal site with:</p>
 </table>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="1-export-sessions">1. Export Sessions<a class="headerlink" href="#1-export-sessions" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Export all sessions from current project</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Export all sessions from current project (only new files)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Export sessions from all projects</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--all-projects
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export a specific session by ID</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export a specific session by ID (always writes)</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Re-export (updates conversation, preserves YAML frontmatter)</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Preview what would be exported</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--dry-run
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Full overwrite (discards frontmatter enrichments)</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Re-export existing (regenerates conversation, preserves YAML frontmatter)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Full overwrite (discards frontmatter enrichments)</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--force<span class="w"> </span>-y
 </span></code></pre></div>
 <p>Exported sessions go to <code>.context/journal/</code> as editable Markdown files.</p>
 <h3 id="2-generate-the-site">2. Generate the Site<a class="headerlink" href="#2-generate-the-site" title="Permanent link">&para;</a></h3>
@@ -2965,12 +2968,14 @@ journal site with:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <div class="admonition info">
-<p class="admonition-title">Re-Exporting Preserves Your Enrichments</p>
-<p>Running <code>ctx recall export --all</code> <strong>updates existing files</strong> by default:</p>
-<p>YAML frontmatter (<em>topics, type, outcome, etc.</em>) is preserved, and only
-the conversation content is regenerated.</p>
-<p>Use <code>--skip-existing</code> to leave existing files completely untouched, or
-<code>--force</code> to overwrite everything (<em>frontmatter will be lost</em>).</p>
+<p class="admonition-title">Safe by Default</p>
+<p>Running <code>ctx recall export --all</code> <strong>only exports new sessions</strong>. Existing
+files are skipped entirely — your edits and enrichments are never touched.</p>
+<p>Use <code>--regenerate</code> to re-export existing files. Conversation content is
+regenerated, but YAML frontmatter (<em>topics, type, outcome, etc.</em>) is
+preserved. You'll be prompted before any existing files are overwritten;
+add <code>-y</code> to skip the prompt.</p>
+<p>Use <code>--force -y</code> to overwrite everything (<em>frontmatter will be lost</em>).</p>
 </div>
 <h2 id="large-sessions">Large Sessions<a class="headerlink" href="#large-sessions" title="Permanent link">&para;</a></h2>
 <p>Sessions with many messages (200+) are automatically split into multiple parts 
@@ -3335,7 +3340,7 @@ re-run, and stages skip already-processed entries.</p>
 <td><strong>Export</strong></td>
 <td><code>ctx recall export --all</code></td>
 <td>Converts session JSONL to Markdown</td>
-<td><code>--skip-existing</code> flag</td>
+<td>File already exists (safe default)</td>
 </tr>
 <tr>
 <td><strong>Normalize</strong></td>

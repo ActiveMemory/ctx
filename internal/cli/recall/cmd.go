@@ -20,12 +20,7 @@ const maxMessagesPerPart = 200
 // Returns:
 //   - *cobra.Command: Command for exporting sessions to journal files
 func recallExportCmd() *cobra.Command {
-	var (
-		all          bool
-		allProjects  bool
-		force        bool
-		skipExisting bool
-	)
+	var opts exportOpts
 
 	cmd := &cobra.Command{
 		Use:   "export [session-id]",
@@ -39,34 +34,53 @@ or clean up the transcript.
 By default, only sessions from the current project are exported. Use
 --all-projects to include sessions from all projects.
 
-By default, existing files are updated: YAML frontmatter from enrichment is
-preserved, conversation content is regenerated. Use --skip-existing to leave
-existing files untouched, or --force to overwrite completely.
+Safe by default: --all only exports new sessions. Existing files are
+skipped. Use --regenerate to re-export existing files (preserves YAML
+frontmatter). Use --force to overwrite completely (discards frontmatter).
 
 Examples:
-  ctx recall export abc123              # Export one session
-  ctx recall export --all               # Export/update all sessions
-  ctx recall export --all --skip-existing # Skip files that already exist
-  ctx recall export --all --force       # Overwrite existing exports completely`,
+  ctx recall export abc123                  # Export one session (always writes)
+  ctx recall export --all                   # Export only new sessions
+  ctx recall export --all --dry-run         # Preview what would be exported
+  ctx recall export --all --regenerate      # Re-export existing (prompts)
+  ctx recall export --all --regenerate -y   # Re-export without prompting
+  ctx recall export --all --force -y        # Overwrite completely`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRecallExport(cmd, args, all, allProjects, force, skipExisting)
+			return runRecallExport(cmd, args, opts)
 		},
 	}
 
 	cmd.Flags().BoolVar(
-		&all, "all", false, "Export all sessions from current project",
+		&opts.all, "all", false, "Export all sessions from current project",
 	)
 	cmd.Flags().BoolVar(
-		&allProjects, "all-projects", false, "Include sessions from all projects",
+		&opts.allProjects, "all-projects", false, "Include sessions from all projects",
 	)
 	cmd.Flags().BoolVar(
-		&force,
+		&opts.force,
 		"force", false,
 		"Overwrite existing files completely (discard frontmatter)",
 	)
 	cmd.Flags().BoolVar(
-		&skipExisting, "skip-existing", false, "Skip files that already exist",
+		&opts.regenerate,
+		"regenerate", false,
+		"Re-export existing files (preserves YAML frontmatter)",
 	)
+	cmd.Flags().BoolVarP(
+		&opts.yes,
+		"yes", "y", false,
+		"Skip confirmation prompt",
+	)
+	cmd.Flags().BoolVar(
+		&opts.dryRun,
+		"dry-run", false,
+		"Show what would be exported without writing files",
+	)
+
+	// Deprecated: --skip-existing is now the default behavior for --all.
+	var skipExisting bool
+	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, "Skip files that already exist")
+	_ = cmd.Flags().MarkDeprecated("skip-existing", "this is now the default behavior for --all")
 
 	return cmd
 }

@@ -72,7 +72,7 @@ export -> normalize -> enrich -> rebuild
 
 | Stage     | Tool                       | What it does                                | Skips if                     | Where        |
 |-----------|----------------------------|---------------------------------------------|------------------------------|--------------|
-| Export    | `ctx recall export --all`  | Converts session JSONL to Markdown          | `--skip-existing` flag       | CLI or agent |
+| Export    | `ctx recall export --all`  | Converts session JSONL to Markdown          | File already exists (safe default) | CLI or agent |
 | Normalize | `/ctx-journal-normalize`   | Fixes nested fences and metadata formatting | `<!-- normalized -->` marker | Agent only   |
 | Enrich    | `/ctx-journal-enrich-all`  | Adds frontmatter, summaries, topic tags     | Frontmatter already present  | Agent only   |
 | Rebuild   | `ctx journal site --build` | Generates browsable static HTML             | N/A                          | CLI only     |
@@ -171,17 +171,18 @@ ctx recall export --all --all-projects
 Each exported file contains session metadata (*date, time, duration, model,
 project, git branch*), a tool usage summary, and the full conversation transcript.
 
-Re-exporting is safe. By default, re-running `ctx recall export --all`
-regenerates conversation content while preserving any YAML frontmatter you
-or the enrichment skill have added.
+Re-exporting is safe. Running `ctx recall export --all` only exports **new**
+sessions — existing files are never touched. Use `--dry-run` to preview what
+would be exported without writing anything.
 
-You can also use `--skip-existing` to leave exported files completely untouched.
+To re-export existing files (e.g., after a format improvement), use
+`--regenerate`. Conversation content is regenerated while preserving any
+YAML frontmatter you or the enrichment skill have added. You'll be prompted
+before any files are overwritten.
 
 !!! warning "--force Overwrites Journal Files"
-    If you want to overwrite existing files, use `--force`.
+    `--force -y` triggers a **full overwrite** — frontmatter will be lost.
 
-    This triggers a **full overwrite** and frontmatter will be lost.
-    
     **Back up your journal before using this flag**.
 
 ### Step 4: Normalize Rendering

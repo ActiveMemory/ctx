@@ -2611,11 +2611,11 @@ first step is converting these into readable, editable markdown.</p>
 </span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="sb">````</span>
 </span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Exported<span class="w"> </span>files<span class="w"> </span>land<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="sb">`</span>.context/journal/<span class="sb">`</span><span class="w"> </span>as<span class="w"> </span>individual<span class="w"> </span>Markdown<span class="w"> </span>files<span class="w"> </span>with
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>session<span class="w"> </span>metadata<span class="w"> </span>and<span class="w"> </span>the<span class="w"> </span>full<span class="w"> </span>conversation<span class="w"> </span>transcript.<span class="w"> </span>Re-exporting<span class="w"> </span>preserves
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>any<span class="w"> </span>YAML<span class="w"> </span>frontmatter<span class="w"> </span>added<span class="w"> </span>by<span class="w"> </span>enrichment.
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>Use<span class="w"> </span><span class="sb">`</span>--skip-existing<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>leave<span class="w"> </span>existing<span class="w"> </span>files<span class="w"> </span>untouched,<span class="w"> </span>or<span class="w"> </span><span class="sb">`</span>--force<span class="sb">`</span><span class="w"> </span>to
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>overwrite<span class="w"> </span>everything.
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>session<span class="w"> </span>metadata<span class="w"> </span>and<span class="w"> </span>the<span class="w"> </span>full<span class="w"> </span>conversation<span class="w"> </span>transcript.
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="sb">`</span>--all<span class="sb">`</span><span class="w"> </span>is<span class="w"> </span>safe<span class="w"> </span>by<span class="w"> </span>default<span class="w"> </span>—<span class="w"> </span>only<span class="w"> </span>new<span class="w"> </span>sessions<span class="w"> </span>are<span class="w"> </span>exported.<span class="w"> </span>Existing<span class="w"> </span>files
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>are<span class="w"> </span>skipped.<span class="w"> </span>Use<span class="w"> </span><span class="sb">`</span>--regenerate<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>re-export<span class="w"> </span>existing<span class="w"> </span>files<span class="w"> </span><span class="o">(</span>YAML<span class="w"> </span>frontmatter
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>is<span class="w"> </span>preserved<span class="o">)</span>.<span class="w"> </span>Use<span class="w"> </span><span class="sb">`</span>--force<span class="w"> </span>-y<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>overwrite<span class="w"> </span>everything.
 </span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
 </span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1">### Step 2: Normalize Exported Entries</span>
 </span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
@@ -2778,8 +2778,9 @@ and it skips already-normalized files. You can rebuild the site as many times
 as you want.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Export regularly. Run <code>ctx recall export --all --skip-existing</code> after each
-  session to keep your journal current without reprocessing old entries.</li>
+<li>Export regularly. Run <code>ctx recall export --all</code> after each session to keep
+  your journal current. Only new sessions are exported — existing files are
+  skipped by default.</li>
 <li>Normalize before enriching. The enrichment skill reads conversation content to
   extract metadata. Clean Markdown produces better results than raw exports with
   broken fences.</li>

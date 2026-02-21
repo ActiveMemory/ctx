@@ -68,16 +68,19 @@ Use `--full` for the complete conversation.
 
 Export sessions to `.context/journal/` as markdown.
 
-| Flag              | Default | Purpose                          |
-|-------------------|---------|----------------------------------|
-| `--all`           | false   | Export all sessions              |
-| `--all-projects`  | false   | Include all projects             |
-| `--force`         | false   | Overwrite existing files         |
-| `--skip-existing` | false   | Skip files that already exist    |
+| Flag             | Default | Purpose                                           |
+|------------------|---------|---------------------------------------------------|
+| `--all`          | false   | Export all sessions (only new files by default)     |
+| `--all-projects` | false   | Include all projects                                |
+| `--regenerate`   | false   | Re-export existing files (preserves frontmatter)    |
+| `--force`        | false   | Overwrite existing files completely                 |
+| `--yes`, `-y`    | false   | Skip confirmation prompt                            |
+| `--dry-run`      | false   | Preview what would be exported                      |
 
-Accepts a session ID, or use `--all` to export everything.
-Default behavior preserves YAML frontmatter from previous
-exports (enrichment data is not lost).
+Accepts a session ID (always writes), or `--all` to export
+everything (safe by default — only new sessions, existing
+files skipped). Use `--regenerate` with `--all` to re-export
+existing files; YAML frontmatter is preserved.
 
 Large sessions (>200 messages) are automatically split into
 parts with navigation links between them.
@@ -113,10 +116,16 @@ ctx recall show <slug>
 
 **"Export everything to the journal"**
 ```bash
-ctx recall export --all --skip-existing
+ctx recall export --all
 ```
+This only exports new sessions — existing files are skipped.
 Then suggest: normalize (`/ctx-journal-normalize`) and enrich
 (`/ctx-journal-enrich`) as next steps.
+
+**"Re-export sessions after a format improvement"**
+```bash
+ctx recall export --all --regenerate -y
+```
 
 ## Quality Checklist
 
@@ -126,5 +135,6 @@ Before reporting results, verify:
       or topic
 - [ ] For export, reminded the user about the normalize/enrich
       pipeline as next steps
-- [ ] Did not re-export sessions the user already has (use
-      `--skip-existing` by default unless asked otherwise)
+- [ ] Used `--all` for bulk export (safe — only new sessions)
+- [ ] Suggested `--dry-run` when user seems uncertain
+- [ ] Only used `--regenerate` when explicitly needed

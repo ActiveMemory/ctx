@@ -7,6 +7,7 @@
 package recall
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -21,6 +22,54 @@ import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
+// exportOpts holds all flag values for the export command.
+type exportOpts struct {
+	all, allProjects, force, regenerate, yes, dryRun bool
+}
+
+// exportAction describes what will happen to a given file.
+type exportAction int
+
+const (
+	actionNew        exportAction = iota // file does not exist yet
+	actionRegenerate                     // file exists and will be rewritten
+	actionSkip                           // file exists and will be left alone
+)
+
+// fileAction describes the planned action for a single export file (one part
+// of one session).
+type fileAction struct {
+	session    *parser.Session
+	filename   string
+	path       string
+	part       int
+	totalParts int
+	startIdx   int
+	endIdx     int
+	action     exportAction
+	messages   []parser.Message
+	slug       string
+	title      string
+	baseName   string
+}
+
+// exportPlan is the result of planExport: a list of per-file actions plus
+// aggregate counters and any renames that need to happen first.
+type exportPlan struct {
+	actions    []fileAction
+	newCount   int
+	regenCount int
+	skipCount  int
+	renameOps  []renameOp
+}
+
+// renameOp describes a dedup rename (old slug → new slug).
+type renameOp struct {
+	oldBase  string
+	newBase  string
+	numParts int
+}
+
 // findSessions returns sessions for the current project, or all projects if
 // allProjects is true.
 func findSessions(allProjects bool) ([]*parser.Session, error) {
@@ -34,77 +83,30 @@ func findSessions(allProjects bool) ([]*parser.Session, error) {
 	return parser.FindSessionsForCWD(cwd)
 }
 
-// runRecallExport handles the recall export command.
-func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force, skipExisting bool) error {
-	if len(args) > 0 && all {
+// validateExportFlags checks for invalid flag combinations.
+func validateExportFlags(args []string, opts exportOpts) error {
+	if len(args) > 0 && opts.all {
 		return fmt.Errorf("cannot use --all with a session ID; use one or the other")
 	}
-	if len(args) == 0 && !all {
-		return fmt.Errorf("please provide a session ID or use --all")
+	if opts.regenerate && !opts.all {
+		return fmt.Errorf("--regenerate requires --all (single-session export always writes)")
 	}
+	return nil
+}
 
-	sessions, err := findSessions(allProjects)
-	if err != nil {
-		return fmt.Errorf("failed to find sessions: %w", err)
-	}
+// planExport builds an exportPlan without writing any files.
+func planExport(
+	sessions []*parser.Session,
+	journalDir string,
+	sessionIndex map[string]string,
+	jstate *state.JournalState,
+	opts exportOpts,
+	singleSession bool,
+) exportPlan {
+	var plan exportPlan
 
-	if len(sessions) == 0 {
-		if allProjects {
-			cmd.Println("No sessions found.")
-		} else {
-			cmd.Println("No sessions found for this project. Use --all-projects to see all.")
-		}
-		return nil
-	}
-
-	// Determine which sessions to export
-	var toExport []*parser.Session
-	if all {
-		toExport = sessions
-	} else {
-		query := strings.ToLower(args[0])
-		for _, s := range sessions {
-			if strings.HasPrefix(strings.ToLower(s.ID), query) ||
-				strings.Contains(strings.ToLower(s.Slug), query) {
-				toExport = append(toExport, s)
-			}
-		}
-		if len(toExport) == 0 {
-			return fmt.Errorf("session not found: %s", args[0])
-		}
-		if len(toExport) > 1 && !all {
-			cmd.PrintErrf("Multiple sessions match '%s':\n", args[0])
-			for _, m := range toExport {
-				cmd.PrintErrf("  %s (%s) - %s\n",
-					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04"))
-			}
-			return fmt.Errorf("ambiguous query, use a more specific ID")
-		}
-	}
-
-	// Ensure journal directory exists
-	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
-	if mkErr := os.MkdirAll(journalDir, config.PermExec); mkErr != nil {
-		return fmt.Errorf("failed to create journal directory: %w", mkErr)
-	}
-
-	// Load journal state for tracking export status.
-	jstate, err := state.Load(journalDir)
-	if err != nil {
-		return fmt.Errorf("load journal state: %w", err)
-	}
-
-	// Build session index for dedup (session_id → filename).
-	sessionIndex := buildSessionIndex(journalDir)
-
-	// Export each session
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-	dim := color.New(color.FgHiBlack)
-
-	var exported, updated, skipped, renamed int
-	for _, s := range toExport {
-		// Count non-empty messages to determine if splitting is needed
+	for _, s := range sessions {
+		// Collect non-empty messages.
 		var nonEmptyMsgs []parser.Message
 		for _, msg := range s.Messages {
 			if !emptyMessage(msg) {
@@ -112,15 +114,13 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 			}
 		}
 
-		// Calculate number of parts needed
 		totalMsgs := len(nonEmptyMsgs)
 		numParts := (totalMsgs + maxMessagesPerPart - 1) / maxMessagesPerPart
 		if numParts < 1 {
 			numParts = 1
 		}
 
-		// Determine title-based slug. Check existing frontmatter for
-		// an enriched title first (preserves human-curated titles).
+		// Determine title-based slug.
 		var existingTitle string
 		if oldFile := lookupSessionFile(sessionIndex, s.ID); oldFile != "" {
 			oldPath := filepath.Join(journalDir, oldFile)
@@ -133,18 +133,19 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 		baseFilename := formatJournalFilename(s, slug)
 		baseName := strings.TrimSuffix(baseFilename, ".md")
 
-		// Handle dedup: rename old file(s) if the slug changed.
+		// Detect renames (dedup: old slug → new slug).
 		if oldFile := lookupSessionFile(sessionIndex, s.ID); oldFile != "" {
 			oldBase := strings.TrimSuffix(oldFile, config.ExtMarkdown)
-			newBase := baseName
-			if oldBase != newBase {
-				renameJournalFiles(journalDir, oldBase, newBase, numParts)
-				jstate.Rename(oldBase+config.ExtMarkdown, newBase+config.ExtMarkdown)
-				renamed++
+			if oldBase != baseName {
+				plan.renameOps = append(plan.renameOps, renameOp{
+					oldBase:  oldBase,
+					newBase:  baseName,
+					numParts: numParts,
+				})
 			}
 		}
 
-		// Export each part
+		// Plan each part.
 		for part := 1; part <= numParts; part++ {
 			filename := baseFilename
 			if numParts > 1 && part > 1 {
@@ -152,69 +153,255 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 			}
 			path := filepath.Join(journalDir, filename)
 
-			// Check if file exists
-			_, statErr := os.Stat(path)
-			fileExists := statErr == nil
-
-			if fileExists && skipExisting {
-				skipped++
-				_, _ = dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", filename)
-				continue
-			}
-
-			// Calculate message range for this part
 			startIdx := (part - 1) * maxMessagesPerPart
 			endIdx := startIdx + maxMessagesPerPart
 			if endIdx > totalMsgs {
 				endIdx = totalMsgs
 			}
 
-			// Generate content for this part, sanitizing any invalid UTF-8
-			// from JSONL source (truncated multi-byte sequences, etc.)
-			content := strings.ToValidUTF8(
-				formatJournalEntryPart(s, nonEmptyMsgs[startIdx:endIdx], startIdx, part, numParts, baseName, title),
-				"...",
-			)
+			_, statErr := os.Stat(path)
+			fileExists := statErr == nil
 
-			// Preserve enriched YAML frontmatter from existing file
-			if fileExists && !force {
-				existing, readErr := os.ReadFile(filepath.Clean(path))
-				if readErr == nil {
-					if fm := extractFrontmatter(string(existing)); fm != "" {
-						content = fm + "\n" + stripFrontmatter(content)
-					}
-				}
-			}
-			if fileExists && force {
-				jstate.ClearEnriched(filename)
-			}
-			if fileExists && !force {
-				updated++
-			} else {
-				exported++
+			var action exportAction
+			switch {
+			case !fileExists:
+				action = actionNew
+				plan.newCount++
+			case singleSession || opts.regenerate || opts.force:
+				action = actionRegenerate
+				plan.regenCount++
+			default:
+				action = actionSkip
+				plan.skipCount++
 			}
 
-			// Write file
-			if err := os.WriteFile(path, []byte(content), config.PermFile); err != nil {
-				cmd.PrintErrf("  %s failed to write %s: %v\n", yellow("!"), filename, err)
-				continue
-			}
-
-			jstate.MarkExported(filename)
-
-			if fileExists && !force {
-				cmd.Printf("  %s %s (updated, frontmatter preserved)\n", green("✓"), filename)
-			} else {
-				cmd.Printf("  %s %s\n", green("✓"), filename)
-			}
+			plan.actions = append(plan.actions, fileAction{
+				session:    s,
+				filename:   filename,
+				path:       path,
+				part:       part,
+				totalParts: numParts,
+				startIdx:   startIdx,
+				endIdx:     endIdx,
+				action:     action,
+				messages:   nonEmptyMsgs,
+				slug:       slug,
+				title:      title,
+				baseName:   baseName,
+			})
 		}
 	}
 
-	// Persist journal state
+	return plan
+}
+
+// printExportSummary prints what the export will (or would) do.
+func printExportSummary(cmd *cobra.Command, plan exportPlan, isDryRun bool) {
+	verb := "Will"
+	if isDryRun {
+		verb = "Would"
+	}
+	parts := []string{}
+	if plan.newCount > 0 {
+		parts = append(parts, fmt.Sprintf("export %d new", plan.newCount))
+	}
+	if plan.regenCount > 0 {
+		parts = append(parts, fmt.Sprintf("regenerate %d existing", plan.regenCount))
+	}
+	if plan.skipCount > 0 {
+		parts = append(parts, fmt.Sprintf("skip %d existing", plan.skipCount))
+	}
+	if len(parts) == 0 {
+		cmd.Println("Nothing to export.")
+		return
+	}
+	cmd.Printf("%s %s.\n", verb, strings.Join(parts, ", "))
+}
+
+// confirmExport prints the plan summary and prompts for confirmation.
+// Returns true if the user confirms (or if there's nothing to confirm).
+func confirmExport(cmd *cobra.Command, plan exportPlan) (bool, error) {
+	printExportSummary(cmd, plan, false)
+	cmd.Print("Proceed? [y/N] ")
+	reader := bufio.NewReader(os.Stdin)
+	response, err := reader.ReadString('\n')
+	if err != nil {
+		return false, fmt.Errorf("failed to read input: %w", err)
+	}
+	response = strings.TrimSpace(strings.ToLower(response))
+	return response == "y" || response == "yes", nil //nolint:goconst // trivial user input check
+}
+
+// executeExport writes files according to the plan. It returns counters for
+// the final summary.
+func executeExport(
+	cmd *cobra.Command,
+	plan exportPlan,
+	jstate *state.JournalState,
+	opts exportOpts,
+) (exported, updated, skipped int) {
+	green := color.New(color.FgGreen).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+	dim := color.New(color.FgHiBlack)
+
+	for _, fa := range plan.actions {
+		if fa.action == actionSkip {
+			skipped++
+			_, _ = dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", fa.filename)
+			continue
+		}
+
+		// Generate content, sanitizing any invalid UTF-8.
+		content := strings.ToValidUTF8(
+			formatJournalEntryPart(
+				fa.session, fa.messages[fa.startIdx:fa.endIdx],
+				fa.startIdx, fa.part, fa.totalParts, fa.baseName, fa.title,
+			),
+			"...",
+		)
+
+		fileExists := fa.action == actionRegenerate
+
+		// Preserve enriched YAML frontmatter from existing file.
+		if fileExists && !opts.force {
+			existing, readErr := os.ReadFile(filepath.Clean(fa.path))
+			if readErr == nil {
+				if fm := extractFrontmatter(string(existing)); fm != "" {
+					content = fm + "\n" + stripFrontmatter(content)
+				}
+			}
+		}
+		if fileExists && opts.force {
+			jstate.ClearEnriched(fa.filename)
+		}
+		if fileExists && !opts.force {
+			updated++
+		} else {
+			exported++
+		}
+
+		// Write file.
+		if err := os.WriteFile(fa.path, []byte(content), config.PermFile); err != nil {
+			cmd.PrintErrf("  %s failed to write %s: %v\n", yellow("!"), fa.filename, err)
+			continue
+		}
+
+		jstate.MarkExported(fa.filename)
+
+		if fileExists && !opts.force {
+			cmd.Printf("  %s %s (updated, frontmatter preserved)\n", green("✓"), fa.filename)
+		} else {
+			cmd.Printf("  %s %s\n", green("✓"), fa.filename)
+		}
+	}
+
+	return exported, updated, skipped
+}
+
+// runRecallExport handles the recall export command.
+func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
+	// 1. Validate flags.
+	if err := validateExportFlags(args, opts); err != nil {
+		return err
+	}
+
+	// 2. Bare export (no args, no --all) → show help (T2.8).
+	if len(args) == 0 && !opts.all {
+		return cmd.Help()
+	}
+
+	// 3. Resolve sessions.
+	sessions, err := findSessions(opts.allProjects)
+	if err != nil {
+		return fmt.Errorf("failed to find sessions: %w", err)
+	}
+
+	if len(sessions) == 0 {
+		if opts.allProjects {
+			cmd.Println("No sessions found.")
+		} else {
+			cmd.Println("No sessions found for this project. Use --all-projects to see all.")
+		}
+		return nil
+	}
+
+	var toExport []*parser.Session
+	singleSession := false
+	if opts.all {
+		toExport = sessions
+	} else {
+		query := strings.ToLower(args[0])
+		for _, s := range sessions {
+			if strings.HasPrefix(strings.ToLower(s.ID), query) ||
+				strings.Contains(strings.ToLower(s.Slug), query) {
+				toExport = append(toExport, s)
+			}
+		}
+		if len(toExport) == 0 {
+			return fmt.Errorf("session not found: %s", args[0])
+		}
+		if len(toExport) > 1 {
+			cmd.PrintErrf("Multiple sessions match '%s':\n", args[0])
+			for _, m := range toExport {
+				cmd.PrintErrf("  %s (%s) - %s\n",
+					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04"))
+			}
+			return fmt.Errorf("ambiguous query, use a more specific ID")
+		}
+		singleSession = true
+	}
+
+	// 4. Ensure journal directory exists.
+	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
+	if mkErr := os.MkdirAll(journalDir, config.PermExec); mkErr != nil {
+		return fmt.Errorf("failed to create journal directory: %w", mkErr)
+	}
+
+	// 5. Load state + build index.
+	jstate, err := state.Load(journalDir)
+	if err != nil {
+		return fmt.Errorf("load journal state: %w", err)
+	}
+	sessionIndex := buildSessionIndex(journalDir)
+
+	// 6. Build the plan.
+	plan := planExport(toExport, journalDir, sessionIndex, jstate, opts, singleSession)
+
+	// 7. Execute renames.
+	renamed := 0
+	for _, rop := range plan.renameOps {
+		renameJournalFiles(journalDir, rop.oldBase, rop.newBase, rop.numParts)
+		jstate.Rename(rop.oldBase+config.ExtMarkdown, rop.newBase+config.ExtMarkdown)
+		renamed++
+	}
+
+	// 8. Dry-run → print summary and return.
+	if opts.dryRun {
+		printExportSummary(cmd, plan, true)
+		return nil
+	}
+
+	// 9. Confirmation prompt for regeneration.
+	if plan.regenCount > 0 && !opts.yes && !singleSession {
+		ok, promptErr := confirmExport(cmd, plan)
+		if promptErr != nil {
+			return promptErr
+		}
+		if !ok {
+			cmd.Println("Aborted.")
+			return nil
+		}
+	}
+
+	// 10. Execute the export.
+	exported, updated, skipped := executeExport(cmd, plan, jstate, opts)
+
+	// 11. Persist journal state.
 	if err := jstate.Save(journalDir); err != nil {
 		cmd.PrintErrf("warning: failed to save journal state: %v\n", err)
 	}
 
+	// 12. Print final summary.
 	cmd.Println()
 	if exported > 0 {
 		cmd.Printf("Exported %d new session(s) to %s\n", exported, journalDir)
@@ -225,6 +412,7 @@ func runRecallExport(cmd *cobra.Command, args []string, all, allProjects, force,
 	if renamed > 0 {
 		cmd.Printf("Renamed %d session(s) to title-based filenames\n", renamed)
 	}
+	dim := color.New(color.FgHiBlack)
 	if skipped > 0 {
 		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s).\n", skipped)
 	}

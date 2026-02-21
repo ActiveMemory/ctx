@@ -67,20 +67,23 @@ Each session page includes the following sections:
 ### 1. Export Sessions
 
 ```bash
-# Export all sessions from current project
+# Export all sessions from current project (only new files)
 ctx recall export --all
 
 # Export sessions from all projects
 ctx recall export --all --all-projects
 
-# Export a specific session by ID
+# Export a specific session by ID (always writes)
 ctx recall export abc123
 
-# Re-export (updates conversation, preserves YAML frontmatter)
-ctx recall export --all
+# Preview what would be exported
+ctx recall export --all --dry-run
+
+# Re-export existing (regenerates conversation, preserves YAML frontmatter)
+ctx recall export --all --regenerate
 
 # Full overwrite (discards frontmatter enrichments)
-ctx recall export --all --force
+ctx recall export --all --force -y
 ```
 
 Exported sessions go to `.context/journal/` as editable Markdown files.
@@ -126,14 +129,16 @@ After editing, regenerate the site:
 ctx journal site --serve
 ```
 
-!!! info "Re-Exporting Preserves Your Enrichments"
-    Running `ctx recall export --all` **updates existing files** by default:
+!!! info "Safe by Default"
+    Running `ctx recall export --all` **only exports new sessions**. Existing
+    files are skipped entirely — your edits and enrichments are never touched.
 
-    YAML frontmatter (*topics, type, outcome, etc.*) is preserved, and only
-    the conversation content is regenerated.
+    Use `--regenerate` to re-export existing files. Conversation content is
+    regenerated, but YAML frontmatter (*topics, type, outcome, etc.*) is
+    preserved. You'll be prompted before any existing files are overwritten;
+    add `-y` to skip the prompt.
 
-    Use `--skip-existing` to leave existing files completely untouched, or
-    `--force` to overwrite everything (*frontmatter will be lost*).
+    Use `--force -y` to overwrite everything (*frontmatter will be lost*).
 
 ## Large Sessions
 
@@ -436,7 +441,7 @@ export → normalize → enrich → rebuild
 
 | Stage         | Command / Skill            | What it does                            | Skips if                     |
 |---------------|----------------------------|-----------------------------------------|------------------------------|
-| **Export**    | `ctx recall export --all`  | Converts session JSONL to Markdown      | `--skip-existing` flag       |
+| **Export**    | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
 | **Normalize** | `/ctx-journal-normalize`   | Fixes fence nesting and metadata tables | `<!-- normalized -->` marker |
 | **Enrich**    | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present  |
 | **Rebuild**   | `ctx journal site --build` | Generates static HTML site              | —                            |

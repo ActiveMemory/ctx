@@ -72,11 +72,11 @@ ctx recall export gleaming-wobbling-sutherland
 ````
 
 Exported files land in `.context/journal/` as individual Markdown files with
-session metadata and the full conversation transcript. Re-exporting preserves
-any YAML frontmatter added by enrichment.
+session metadata and the full conversation transcript.
 
-Use `--skip-existing` to leave existing files untouched, or `--force` to
-overwrite everything.
+`--all` is safe by default — only new sessions are exported. Existing files
+are skipped. Use `--regenerate` to re-export existing files (YAML frontmatter
+is preserved). Use `--force -y` to overwrite everything.
 
 ### Step 2: Normalize Exported Entries
 
@@ -290,8 +290,9 @@ as you want.
 
 ## Tips
 
-* Export regularly. Run `ctx recall export --all --skip-existing` after each
-  session to keep your journal current without reprocessing old entries.
+* Export regularly. Run `ctx recall export --all` after each session to keep
+  your journal current. Only new sessions are exported — existing files are
+  skipped by default.
 * Normalize before enriching. The enrichment skill reads conversation content to
   extract metadata. Clean Markdown produces better results than raw exports with
   broken fences.

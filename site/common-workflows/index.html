@@ -2387,16 +2387,17 @@ Homebrew Python blocks system-wide installs (<code>PEP 668</code>).</p>
 <strong>correct Python version</strong> automatically.</p>
 </div>
 <p>Then, <strong>export and serve</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export all sessions to .context/journal/</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export all sessions to .context/journal/ (only new files)</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Generate and serve the journal site</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <p>Open <a href="http://localhost:8000">http://localhost:8000</a> to browse.</p>
-<p>To update after new sessions, run the same two commands again;
-<code>ctx recall export</code> preserves existing YAML frontmatter and only
-updates conversation content.</p>
+<p>To update after new sessions, run the same two commands again.
+<code>ctx recall export --all</code> is safe by default — it only exports new
+sessions and skips existing files. Use <code>--regenerate</code> if you need to
+re-export existing files (YAML frontmatter is preserved).</p>
 <p>See <a href="../session-journal/">Session Journal</a> for the full pipeline
 including <strong>normalization</strong> and <strong>enrichment</strong>.</p>
 <h2 id="scratchpad">Scratchpad<a class="headerlink" href="#scratchpad" title="Permanent link">&para;</a></h2>

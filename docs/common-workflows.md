@@ -84,7 +84,7 @@ pipx install zensical
 Then, **export and serve**:
 
 ```bash
-# Export all sessions to .context/journal/
+# Export all sessions to .context/journal/ (only new files)
 ctx recall export --all
 
 # Generate and serve the journal site
@@ -93,9 +93,10 @@ ctx journal site --serve
 
 Open [http://localhost:8000](http://localhost:8000) to browse.
 
-To update after new sessions, run the same two commands again;
-`ctx recall export` preserves existing YAML frontmatter and only
-updates conversation content.
+To update after new sessions, run the same two commands again.
+`ctx recall export --all` is safe by default — it only exports new
+sessions and skips existing files. Use `--regenerate` if you need to
+re-export existing files (YAML frontmatter is preserved).
 
 See [Session Journal](session-journal.md) for the full pipeline
 including **normalization** and **enrichment**.

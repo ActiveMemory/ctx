@@ -766,17 +766,22 @@ ctx recall export [session-id] [flags]
 
 **Flags**:
 
-| Flag              | Description                                               |
-|-------------------|-----------------------------------------------------------|
-| `--all`           | Export all sessions                                       |
-| `--all-projects`  | Export from all projects                                  |
-| `--force`         | Overwrite existing files completely (discard frontmatter) |
-| `--skip-existing` | Skip files that already exist                             |
+| Flag             | Description                                               |
+|------------------|-----------------------------------------------------------|
+| `--all`          | Export all sessions (only new files by default)            |
+| `--all-projects` | Export from all projects                                   |
+| `--regenerate`   | Re-export existing files (preserves YAML frontmatter)      |
+| `--force`        | Overwrite existing files completely (discard frontmatter)  |
+| `--yes`, `-y`    | Skip confirmation prompt                                   |
+| `--dry-run`      | Show what would be exported without writing files           |
 
-Exported files include session metadata, tool usage summary, and the full
-conversation. When re-exporting, YAML frontmatter from enrichment (*topics,
-type, outcome, etc.*) is preserved by default; only the conversation content
-is regenerated.
+**Safe by default**: `--all` only exports new sessions. Existing files are
+skipped. Use `--regenerate` to re-export existing files (conversation content
+is regenerated, YAML frontmatter from enrichment is preserved). Use `--force`
+to overwrite completely (frontmatter will be lost).
+
+Single-session export (`ctx recall export <id>`) always writes without
+prompting, since you are explicitly targeting one session.
 
 The `journal/` directory should be gitignored (like `sessions/`) since it
 contains raw conversation data.
@@ -784,10 +789,12 @@ contains raw conversation data.
 **Example**:
 
 ```bash
-ctx recall export abc123                # Export one session
-ctx recall export --all                 # Export/update all sessions
-ctx recall export --all --skip-existing # Skip files that already exist
-ctx recall export --all --force         # Overwrite completely (lose frontmatter)
+ctx recall export abc123                  # Export one session (always writes)
+ctx recall export --all                   # Export only new sessions
+ctx recall export --all --dry-run         # Preview what would be exported
+ctx recall export --all --regenerate      # Re-export existing (prompts first)
+ctx recall export --all --regenerate -y   # Re-export without prompting
+ctx recall export --all --force -y        # Overwrite completely (lose frontmatter)
 ```
 
 ---

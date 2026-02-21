@@ -151,19 +151,38 @@ Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 
 ### Phase 2: Recall Export Safety `#priority:medium`
 
-**Context**: `ctx recall export` regenerates journal markdown from JSONL
-session data. Body is always regenerated (manual edits lost). `--force`
-additionally discards enriched YAML frontmatter. Users need lock protection,
-clearer flag names, and better ergonomics.
+**Context**: `ctx recall export --all` silently regenerates every existing
+journal body — destructive by default with no confirmation. Users need:
+safe-by-default export (new sessions only), explicit `--regenerate` opt-in,
+confirmation prompts, lock protection, and clearer flag names.
 Spec: `specs/recall-export-safety.md` (supersedes `specs/export-update-mode.md`)
 
-- [ ] T2.1: Lock/unlock state layer — add `Locked` field to `FileState`,
+- [x] T2.1: Safe-by-default export — change `--all` to only export new
+      sessions (skip existing files). Deprecate `--skip-existing` (now the
+      default). Single-session `export <id>` always writes (explicit intent).
+      Files: `internal/cli/recall/cmd.go`, `run.go`
+      #priority:high #added:2026-02-21 #done:2026-02-21
+
+- [x] T2.2: `--regenerate` flag — add flag to opt in to re-exporting
+      existing sessions. `--regenerate` without `--all` is an error.
+      `--keep-frontmatter=false` implies `--regenerate`.
+      Files: `internal/cli/recall/cmd.go`, `run.go`
+      #priority:high #added:2026-02-21 #done:2026-02-21
+
+- [x] T2.3: Confirmation prompt — before destructive writes, compute plan
+      (new/regenerate/locked counts), print summary, prompt `proceed? [y/N]`.
+      Add `--yes`/`-y` flag to bypass. New-only exports skip confirmation.
+      `--dry-run` prints summary and exits (no prompt, no writes).
+      Files: `internal/cli/recall/run.go`, `cmd.go`
+      #priority:high #added:2026-02-21 #done:2026-02-21
+
+- [ ] T2.4: Lock/unlock state layer — add `Locked` field to `FileState`,
       `MarkLocked()`, `ClearLocked()`, `IsLocked()`, add `"locked"` to
       `Mark()` and `ValidStages`. Tests: mark/clear/round-trip/no-op.
       Files: `internal/journal/state/state.go`, `state_test.go`
       #priority:medium #added:2026-02-20
 
-- [ ] T2.2: Lock/unlock CLI commands — `ctx recall lock <pattern>` and
+- [ ] T2.5: Lock/unlock CLI commands — `ctx recall lock <pattern>` and
       `ctx recall unlock <pattern>` with `--all`. Reuse slug/date/id
       matching from export. Multi-part: locking base locks all `-pN` parts.
       Frontmatter: insert/remove `locked: true  # managed by ctx`.
@@ -171,38 +190,37 @@ Spec: `specs/recall-export-safety.md` (supersedes `specs/export-update-mode.md`)
       File: new `internal/cli/recall/lock.go`, register in `recall.go`
       #priority:medium #added:2026-02-20
 
-- [ ] T2.3: Export respects locks — skip locked files with log line and
-      counter. `--force` does NOT override locks (require explicit unlock).
-      Add `locked` counter to summary output.
+- [ ] T2.6: Export respects locks — skip locked files with log line and
+      counter. Neither `--regenerate` nor `--force` overrides locks (require
+      explicit unlock). Add `locked` counter to confirmation summary.
       File: `internal/cli/recall/run.go`
       #priority:medium #added:2026-02-20
 
-- [ ] T2.4: Replace `--force` with `--keep-frontmatter` — add
+- [ ] T2.7: Replace `--force` with `--keep-frontmatter` — add
       `--keep-frontmatter` flag (bool, default `true`). Keep `--force` as
       deprecated alias via `cmd.Flags().MarkDeprecated`. Logic:
-      `discardFrontmatter := !keepFrontmatter || force`. Update help text.
+      `discardFrontmatter := !keepFrontmatter || force`.
+      `--keep-frontmatter=false` implies `--regenerate`.
       Files: `internal/cli/recall/cmd.go`, `run.go`
       #priority:medium #added:2026-02-20
 
-- [ ] T2.5: Ergonomics — bare `ctx recall export` prints help (not error).
-      Add `--dry-run` flag: same logic but skip writes, output summary
-      "would export N new, update M existing, skip K locked".
+- [x] T2.8: Ergonomics — bare `ctx recall export` prints help (not error).
       Files: `internal/cli/recall/cmd.go`, `run.go`
-      #priority:medium #added:2026-02-20
+      #priority:medium #added:2026-02-20 #done:2026-02-21
 
-- [ ] T2.6: Tests for lock/export integration — lock single session (verify
-      state + frontmatter), unlock (verify cleanup), lock `--all`, lock
-      multi-part entry, export skips locked, export `--force` still skips
-      locked, `--keep-frontmatter=false` behaves like old `--force`,
-      `--dry-run` produces correct summary.
-      Files: `internal/cli/recall/lock_test.go`, `run_test.go`
-      #priority:medium #added:2026-02-20
+- [x] T2.9: Tests — safe-default (--all skips existing), --regenerate
+      re-exports, confirmation prompt fires on regenerate, --yes bypasses,
+      --dry-run shows summary without writing. 8 new tests, 6 updated.
+      Lock/export and --keep-frontmatter tests deferred to Phase 2.
+      Files: `internal/cli/recall/run_test.go`
+      #priority:medium #added:2026-02-21 #done:2026-02-21
 
-- [ ] T2.7: Documentation updates — replace `--force` → `--keep-frontmatter=false`
-      in cli-reference, session-journal, session-archaeology recipe, recall
-      skill. Add lock/unlock + `--dry-run` docs. Clarify body is always
-      regenerated. Update common-workflows, publishing recipe.
-      #priority:low #added:2026-02-20
+- [x] T2.10: Documentation — updated cli-reference, session-journal,
+      session-archaeology recipe, recall skill, common-workflows, publishing
+      recipe. Documented new flags (--regenerate, --yes, --dry-run),
+      deprecation of --skip-existing. Lock/unlock and --keep-frontmatter
+      docs deferred to Phase 2.
+      #priority:low #added:2026-02-21 #done:2026-02-21
 
 ### Maintenance
 

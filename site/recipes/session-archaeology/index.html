@@ -2616,7 +2616,7 @@ Each stage skips entries that have already been processed.</p>
 <td>Export</td>
 <td><code>ctx recall export --all</code></td>
 <td>Converts session JSONL to Markdown</td>
-<td><code>--skip-existing</code> flag</td>
+<td>File already exists (safe default)</td>
 <td>CLI or agent</td>
 </tr>
 <tr>
@@ -2715,14 +2715,16 @@ enrich it.</p>
 </span></code></pre></div>
 <p>Each exported file contains session metadata (<em>date, time, duration, model,
 project, git branch</em>), a tool usage summary, and the full conversation transcript.</p>
-<p>Re-exporting is safe. By default, re-running <code>ctx recall export --all</code>
-regenerates conversation content while preserving any YAML frontmatter you
-or the enrichment skill have added.</p>
-<p>You can also use <code>--skip-existing</code> to leave exported files completely untouched.</p>
+<p>Re-exporting is safe. Running <code>ctx recall export --all</code> only exports <strong>new</strong>
+sessions — existing files are never touched. Use <code>--dry-run</code> to preview what
+would be exported without writing anything.</p>
+<p>To re-export existing files (e.g., after a format improvement), use
+<code>--regenerate</code>. Conversation content is regenerated while preserving any
+YAML frontmatter you or the enrichment skill have added. You'll be prompted
+before any files are overwritten.</p>
 <div class="admonition warning">
 <p class="admonition-title">--force Overwrites Journal Files</p>
-<p>If you want to overwrite existing files, use <code>--force</code>.</p>
-<p>This triggers a <strong>full overwrite</strong> and frontmatter will be lost.</p>
+<p><code>--force -y</code> triggers a <strong>full overwrite</strong> — frontmatter will be lost.</p>
 <p><strong>Back up your journal before using this flag</strong>.</p>
 </div>
 <h3 id="step-4-normalize-rendering">Step 4: Normalize Rendering<a class="headerlink" href="#step-4-normalize-rendering" title="Permanent link">&para;</a></h3>
