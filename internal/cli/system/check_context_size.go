@@ -26,8 +26,18 @@ import (
 //	Prompts   30+: every 3rd prompt
 func checkContextSizeCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "check-context-size",
-		Short:  "Context size checkpoint hook",
+		Use:   "check-context-size",
+		Short: "Context size checkpoint hook",
+		Long: `Counts prompts per session and emits VERBATIM relay reminders at
+adaptive intervals, prompting the user to consider wrapping up.
+
+  Prompts  1-15: silent
+  Prompts 16-30: every 5th prompt
+  Prompts   30+: every 3rd prompt
+
+Hook event: UserPromptSubmit
+Output: VERBATIM relay (when triggered), silent otherwise
+Silent when: early in session or between checkpoints`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runCheckContextSize(cmd, os.Stdin)

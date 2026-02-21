@@ -2764,6 +2764,7 @@ what they asked: Stale backups, unexported sessions, resource warnings.</p>
 <ul>
 <li><code>ctx system check-journal</code>: Unexported sessions and unenriched entries</li>
 <li><code>ctx system check-context-size</code>: Context capacity warning</li>
+<li><code>ctx system check-resources</code>: Resource pressure (memory, swap, disk, load) — DANGER only</li>
 <li><code>check-backup-age.sh</code>: Stale backup warning (<em>project-local</em>)</li>
 </ul>
 <p><strong>Trade-off</strong>: Noisy if overused. Every VERBATIM relay adds a preamble
@@ -2865,6 +2866,12 @@ user before proceeding</em>" part is critical.</p>
 <p><strong>When to use:</strong> When you have multiple hooks producing output and need
 to avoid overwhelming the user. INFO gets absorbed, WARN gets mentioned,
 CRITICAL interrupts.</p>
+<p><strong>Examples in <code>ctx</code></strong>:</p>
+<ul>
+<li><code>ctx system check-resources</code>: Uses two tiers (WARNING/DANGER) internally
+  but only fires the VERBATIM relay at DANGER level — WARNING is silent.
+  See <code>ctx system</code> for the user-facing command that shows both tiers.</li>
+</ul>
 <p><strong>Trade-off:</strong> Requires agent training or convention to recognize the
 tiers. Without a shared protocol, the prefixes are just text.</p>
 <hr />

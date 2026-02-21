@@ -13,8 +13,7 @@ import (
 
 func TestCheckResources_SilentWhenOK(t *testing.T) {
 	cmd := newTestCmd()
-	stdin := createTempStdin(t, `{"session_id":"test-res"}`)
-	if err := runCheckResources(cmd, stdin); err != nil {
+	if err := runCheckResources(cmd); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	out := cmdOutput(cmd)
@@ -24,23 +23,13 @@ func TestCheckResources_SilentWhenOK(t *testing.T) {
 	_ = out
 }
 
-func TestCheckResources_EmptyStdin(t *testing.T) {
-	cmd := newTestCmd()
-	stdin := createTempStdin(t, "")
-	if err := runCheckResources(cmd, stdin); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-}
-
 func TestCheckResources_OutputFormat(t *testing.T) {
 	// This is a structural test — if the hook fires, the output should
 	// contain the VERBATIM relay preamble and the box-drawing frame.
 	// We can't force DANGER conditions in a unit test without mocking
-	// the collector, so we just verify the function signature and
-	// error-free execution.
+	// the collector, so we just verify error-free execution.
 	cmd := newTestCmd()
-	stdin := createTempStdin(t, `{"session_id":"test-format"}`)
-	if err := runCheckResources(cmd, stdin); err != nil {
+	if err := runCheckResources(cmd); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	out := cmdOutput(cmd)

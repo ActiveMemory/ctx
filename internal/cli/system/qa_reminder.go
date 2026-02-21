@@ -20,8 +20,15 @@ import (
 //   - *cobra.Command: Hidden subcommand for the QA reminder hook
 func qaReminderCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "qa-reminder",
-		Short:  "QA reminder hook",
+		Use:   "qa-reminder",
+		Short: "QA reminder hook",
+		Long: `Emits a hard reminder to lint and test the entire project before
+every commit. Fires on every Edit tool use — the repetition is
+intentional reinforcement at the point of action.
+
+Hook event: PreToolUse (Edit)
+Output: agent directive (always, when .context/ is initialized)
+Silent when: .context/ not initialized`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if !isInitialized() {

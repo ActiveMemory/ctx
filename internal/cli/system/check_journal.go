@@ -22,8 +22,14 @@ import (
 // actionable commands. Runs once per day (throttled by marker file).
 func checkJournalCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "check-journal",
-		Short:  "Journal export/enrich reminder hook",
+		Use:   "check-journal",
+		Short: "Journal export/enrich reminder hook",
+		Long: `Detects unexported Claude Code sessions and unenriched journal entries,
+then prints actionable commands. Throttled to once per day.
+
+Hook event: UserPromptSubmit
+Output: VERBATIM relay with export/enrich commands, silent otherwise
+Silent when: no unexported sessions and no unenriched entries`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runCheckJournal(cmd)

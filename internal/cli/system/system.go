@@ -10,28 +10,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Cmd returns the "ctx system" command.
+// Cmd returns the "ctx system" parent command.
 //
-// When invoked without a subcommand, it displays system resource usage
-// (memory, swap, disk, load) with threshold-based alerts.
+// Visible subcommands:
+//   - resources: Display system resource usage with threshold alerts
 //
 // Hidden subcommands implement Claude Code hook logic as native Go binaries
 // and are not intended for direct user invocation.
 //
 // Returns:
-//   - *cobra.Command: Parent command with RunE for resource display and all hook subcommands
+//   - *cobra.Command: Parent command with resource display and all hook subcommands
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "system",
-		Short: "Show system resource usage",
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runResources(cmd)
-		},
+		Short: "System diagnostics and hook commands",
+		Long: `System diagnostics and hook commands.
+
+Subcommands:
+  resources            Show system resource usage (memory, swap, disk, load)
+
+Hook subcommands (Claude Code plugin — safe to run manually):
+  check-context-size   Context size checkpoint
+  check-ceremonies     Session ceremony adoption nudge
+  check-persistence    Context persistence nudge
+  check-journal        Journal maintenance reminder
+  check-resources      Resource pressure warning (DANGER only)
+  check-version        Version update nudge
+  block-non-path-ctx   Block non-PATH ctx invocations
+  post-commit          Post-commit context capture nudge
+  cleanup-tmp          Remove stale temp files
+  qa-reminder          QA reminder before completion`,
 	}
 
-	cmd.Flags().Bool("json", false, "Output in JSON format")
-
 	cmd.AddCommand(
+		resourcesCmd(),
 		checkContextSizeCmd(),
 		checkPersistenceCmd(),
 		checkJournalCmd(),
