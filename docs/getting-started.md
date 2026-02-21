@@ -13,35 +13,35 @@ icon: lucide/rocket
 
 ## Prerequisites
 
-`ctx` does not require git, but using version control with your `.context/`
-directory is strongly recommended.
+`ctx` does not require `git`, but using version control with your `.context/`
+directory is strongly recommended:
 
 AI sessions occasionally modify or overwrite context files inadvertently.
-
 With `git`, the AI can check history and restore lost content:
 Without it, the data is gone.
 
-Also, several `ctx` features (journal changelog, blog generation) also use
+Also, several `ctx` features (*journal changelog, blog generation*) also use
 `git` history directly.
 
 ## Installation
 
 A full ctx installation has two parts:
 
-1. **The `ctx` binary** — the CLI tool itself
-2. **The Claude Code plugin** — hooks and skills that make Claude Code
+1. **The `ctx` binary**: the CLI tool itself
+2. **The Claude Code plugin**: hooks and skills that make Claude Code
    context-aware
 
 You need **both**. The binary alone gives you the CLI but Claude Code
 won't autoload context, nudge you to persist decisions, or provide
 the `/ctx-*` skills.
 
-Pick one of the options below — each is a complete path from zero to
+Pick one of the options below. Each is a complete path from zero to
 a working setup.
 
 ### Option 1: Build from Source (*Recommended*)
 
-Requires [Go 1.25+](https://go.dev/) and
+Requires [Go](https://go.dev/) (*version defined in 
+[`go.mod`](https://github.com/ActiveMemory/ctx/blob/main/go.mod)*) and
 [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview).
 
 ```bash
@@ -58,12 +58,12 @@ sudo make install
 3. Select **Marketplaces** → **Add Marketplace**
 4. Enter the path to the **root of your clone**,
    e.g. `~/WORKSPACE/ctx`
-   (this is where `.claude-plugin/marketplace.json` lives — it points
+   (this is where `.claude-plugin/marketplace.json` lives: It points
    Claude Code to the actual plugin in `internal/assets/claude`)
 5. Back in `/plugin`, select **Install** and choose `ctx`
 
 This points Claude Code at the plugin source on disk. Changes you make
-to hooks or skills take effect immediately — no reinstall needed.
+to hooks or skills take effect immediately: No reinstall is needed.
 
 **Verify:**
 
@@ -72,10 +72,14 @@ ctx --version       # binary is in PATH
 claude /plugin list # plugin is installed
 ```
 
-Building from source gives you the latest features and bug fixes.
-Since `ctx` is predominantly a developer tool, this is the
-**recommended approach**: you get the freshest code, can inspect what
-you are installing, and the plugin stays in sync with the binary.
+!!! tip "Use the Source, Luke"
+    Building from source gives you the latest features and bug fixes.
+
+    Since `ctx` is predominantly a developer tool, this is the
+    **recommended approach**: 
+
+    You get the freshest code, can inspect what
+    you are installing, and the plugin stays in sync with the binary.
 
 ### Option 2: Binary Download + Marketplace
 
@@ -149,15 +153,14 @@ On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
 
 ----
 
-??? note "What the Plugin Provides"
-
+??? note "Plugin Details"
     After installation (either option) you get:
 
-    - **Context autoloading** — `ctx agent` runs on every tool use (with cooldown)
-    - **Persistence nudges** — reminders to capture learnings and decisions
-    - **Post-commit hooks** — nudge context capture after `git commit`
-    - **Context size monitoring** — alerts as sessions grow large
-    - **25+ skills** — `/ctx-status`, `/ctx-add-task`, `/ctx-recall`, and more
+    * **Context autoloading**: `ctx agent` runs on every tool use (with cooldown)
+    * **Persistence nudges**: reminders to capture learnings and decisions
+    * **Post-commit hooks**: nudge context capture after `git commit`
+    * **Context size monitoring**: alerts as sessions grow large
+    * **25+ skills**: `/ctx-status`, `/ctx-add-task`, `/ctx-recall`, and more
 
     See [Integrations](integrations.md#claude-code-full-integration) for the
     full hook and skill reference.

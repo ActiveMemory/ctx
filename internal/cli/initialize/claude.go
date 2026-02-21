@@ -16,8 +16,8 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // handleClaudeMd creates or merges CLAUDE.md in the project root.

@@ -15,13 +15,13 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
-	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // applyFixes attempts to auto-fix issues in the drift report.

@@ -107,4 +107,3 @@ func extractActiveTasks(ctx *context.Context) []string {
 	}
 	return nil
 }
-

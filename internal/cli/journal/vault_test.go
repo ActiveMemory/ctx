@@ -308,9 +308,9 @@ Just a plain session without enrichment.
 `
 
 	entries := map[string]string{
-		"2026-02-14-add-caching-abc12345.md":       entry1,
-		"2026-02-13-fix-cache-def67890.md":         entry2,
-		"2026-02-12-plain-session-ghi11111.md":     entry3,
+		"2026-02-14-add-caching-abc12345.md":   entry1,
+		"2026-02-13-fix-cache-def67890.md":     entry2,
+		"2026-02-12-plain-session-ghi11111.md": entry3,
 	}
 
 	for name, content := range entries {

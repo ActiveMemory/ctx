@@ -17,26 +17,10 @@ Batch-enrich all unenriched journal entries automatically.
 
 - For a single specific session (use `/ctx-journal-enrich` instead)
 - Before exporting (nothing to enrich yet)
-- Before normalizing (run `/ctx-journal-normalize` first)
 
 ## Process
 
-### Step 1: Ensure Normalization
-
-Check whether `/ctx-journal-normalize` has been run by reading the
-journal state file:
-
-```bash
-ctx journal mark --check-unenriched
-```
-
-Or read `.context/journal/.state.json` and count entries without a
-`normalized` date. If many entries lack normalization, suggest running
-it first — clean markdown produces better metadata extraction. But do
-NOT block enrichment on normalization; enrichment works on raw entries
-too.
-
-### Step 2: Find Unenriched Entries
+### Step 1: Find Unenriched Entries
 
 List all journal entries that lack enrichment using the state file:
 
@@ -53,7 +37,7 @@ without an `enriched` date set.
 
 If all entries already have enrichment recorded, report that and stop.
 
-### Step 3: Filter Out Noise
+### Step 2: Filter Out Noise
 
 Skip entries that are not worth enriching:
 
@@ -69,7 +53,7 @@ Skip entries that are not worth enriching:
 Report how many entries will be processed and how many were
 filtered out.
 
-### Step 4: Process Each Entry
+### Step 3: Process Each Entry
 
 For each entry, read the conversation and extract:
 
@@ -98,7 +82,7 @@ technologies:
 ---
 ```
 
-### Step 5: Mark Enriched
+### Step 4: Mark Enriched
 
 After writing frontmatter to each file, update the state file:
 
@@ -106,7 +90,7 @@ After writing frontmatter to each file, update the state file:
 ctx journal mark <filename> enriched
 ```
 
-### Step 6: Report
+### Step 5: Report
 
 After processing, report:
 
@@ -134,7 +118,6 @@ backlogs and avoids coordination overhead.
 
 ## Quality Checklist
 
-- [ ] Normalization was run before enrichment
 - [ ] Suggestion sessions and multi-part continuations filtered
 - [ ] Each enriched entry has all required frontmatter fields
 - [ ] Summary is specific to the session, not generic

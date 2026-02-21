@@ -22,8 +22,8 @@ func TestTransformFrontmatter(t *testing.T) {
 		wantUnmod  bool // expect content unchanged
 	}{
 		{
-			name: "topics renamed to tags",
-			content: "---\ntitle: Test Session\ndate: 2026-01-23\ntopics:\n  - caching\n  - auth\n---\nBody content\n",
+			name:       "topics renamed to tags",
+			content:    "---\ntitle: Test Session\ndate: 2026-01-23\ntopics:\n  - caching\n  - auth\n---\nBody content\n",
 			sourcePath: ".context/journal/2026-01-23-test.md",
 			wantTags:   true,
 			wantAlias:  true,

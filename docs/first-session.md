@@ -50,8 +50,9 @@ Next steps:
   3. Run 'ctx agent' to get AI-ready context packet
 ```
 
-This created your `.context/` directory with template files. For Claude Code,
-install the ctx plugin to get automatic hooks and skills.
+This created your `.context/` directory with template files. 
+
+For Claude Code, [install the ctx plugin](getting-started.md#installation) to get automatic hooks and skills.
 
 ## Step 2: Populate Your Context
 
@@ -77,7 +78,7 @@ ctx add decision "Use PostgreSQL for primary database" \
 ```
 
 These entries are what the AI will recall in future sessions. You don't need
-to populate everything now — context grows naturally as you work.
+to populate everything now: Context grows **naturally** as you work.
 
 ## Step 3: Check Your Context
 
@@ -121,7 +122,8 @@ With **Claude Code** (and the ctx plugin), start every session with:
 /ctx-remember
 ```
 
-This loads your context and presents a structured readback so you can
+This loads your context and presents a structured 
+[**readback**](prompting-guide.md#do-you-remember) so you can
 confirm the agent knows what is going on. Context also loads automatically
 via hooks, but the explicit ceremony gives you a readback to verify.
 
@@ -241,6 +243,7 @@ See [Context Files](context-files.md) for detailed documentation of each file.
 ```
 
 `ctx init` automatically adds these entries to your `.gitignore`.
+
 Review the additions with `cat .gitignore` after init.
 
 !!! tip "Rule of Thumb"
@@ -250,8 +253,8 @@ Review the additions with `cat .gitignore` after init.
 
 *See also*:
 
-* [Security considerations](security.md),
-* [Scratchpad encryption](scratchpad.md),
+* [Security considerations](security.md)
+* [Scratchpad encryption](scratchpad.md)
 * [Session Journal](session-journal.md)
 
 ----

@@ -29,7 +29,7 @@
     
     
       
-        <title>Contributing to ctx - ctx: do you remember?</title>
+        <title>Contributing - ctx: do you remember?</title>
       
     
     
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Contributing to ctx
+              Contributing
             
           </span>
         </div>
@@ -569,7 +569,7 @@
   <span class="md-ellipsis">
     
   
-    About ctx
+    About
   
 
     
@@ -599,7 +599,7 @@
   <span class="md-ellipsis">
     
   
-    Is ctx Right for Me?
+    Is It Right for Me?
   
 
     
@@ -629,7 +629,7 @@
   <span class="md-ellipsis">
     
   
-    Join the ctx Community
+    #ctx
   
 
     
@@ -666,7 +666,7 @@
   <span class="md-ellipsis">
     
   
-    Contributing to ctx
+    Contributing
   
 
     
@@ -686,7 +686,7 @@
   <span class="md-ellipsis">
     
   
-    Contributing to ctx
+    Contributing
   
 
     
@@ -933,15 +933,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#legal" class="md-nav__link">
+  <a href="#code-of-conduct" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Legal
+        Code of Conduct
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Legal">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boring-legal-stuff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boring Legal Stuff
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Boring Legal Stuff">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -960,17 +971,6 @@
     <span class="md-ellipsis">
       
         License
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-of-conduct" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code of Conduct
       
     </span>
   </a>
@@ -2615,15 +2615,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#legal" class="md-nav__link">
+  <a href="#code-of-conduct" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Legal
+        Code of Conduct
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Legal">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boring-legal-stuff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boring Legal Stuff
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Boring Legal Stuff">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2642,17 +2653,6 @@
     <span class="md-ellipsis">
       
         License
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-of-conduct" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code of Conduct
       
     </span>
   </a>
@@ -2730,14 +2730,17 @@
   
 
 
-  <h1>Contributing to ctx</h1>
+  <h1>Contributing</h1>
 
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="development-setup">Development Setup<a class="headerlink" href="#development-setup" title="Permanent link">&para;</a></h2>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="https://go.dev/">Go 1.25+</a></li>
+<li><a href="https://go.dev/">Go</a> (<em>version defined in <a href="https://github.com/ActiveMemory/ctx/blob/main/go.mod"><code>go.mod</code></a></em>)</li>
 <li><a href="https://docs.anthropic.com/en/docs/claude-code/overview">Claude Code</a></li>
-<li>Git</li>
+<li><a href="https://git-scm.com/">Git</a></li>
+<li><a href="https://www.gnu.org/software/make/">GNU Make</a></li>
+<li><a href="https://github.com/zensical/zensical">Zensical</a></li>
 </ul>
 <h3 id="1-fork-or-clone-the-repository">1. Fork (or Clone) the Repository<a class="headerlink" href="#1-fork-or-clone-the-repository" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Fork on GitHub, then:</span>
@@ -2763,16 +2766,18 @@ your working tree — no reinstall needed after edits:</p>
 <li>Select <strong>Marketplaces</strong> → <strong>Add Marketplace</strong></li>
 <li>Enter the <strong>absolute path</strong> to the root of your clone,
    e.g. <code>~/WORKSPACE/ctx</code>
-   (this is where <code>.claude-plugin/marketplace.json</code> lives — it points
+   (this is where <code>.claude-plugin/marketplace.json</code> lives: it points
    Claude Code to the actual plugin in <code>internal/assets/claude</code>)</li>
 <li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code></li>
 </ol>
-<div class="admonition tip">
-<p class="admonition-title">Local Plugin = Live Edits</p>
-<p>Because the marketplace points at a directory on disk, any change
-you make to a skill or hook under <code>internal/assets/claude/</code> takes
-effect the next time Claude Code loads it. No rebuild, no
-reinstall.</p>
+<div class="admonition warning">
+<p class="admonition-title">Claude Code Caches Plugin Files</p>
+<p>Even though the marketplace points at a directory on disk, Claude Code
+caches skills and hooks. </p>
+<p>After editing files under
+<code>internal/assets/claude/</code>, you must bump the plugin version and
+refresh the marketplace. </p>
+<p>See <a href="#skill-or-hook-changes">Skill or Hook Changes</a> for the steps.</p>
 </div>
 <h3 id="4-verify">4. Verify<a class="headerlink" href="#4-verify" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>--version<span class="w">       </span><span class="c1"># binary is in PATH</span>
@@ -2782,20 +2787,29 @@ reinstall.</p>
 <hr />
 <h2 id="project-layout">Project Layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx/
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── cmd/ctx/                  # CLI entry point
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── cmd/ctx/            # CLI entry point
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── internal/
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── cli/                  # Command implementations
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ├── context/              # Core context logic
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ├── drift/                # Drift detection
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   ├── claude/               # Claude Code integration helpers
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   └── tpl/                  # Embedded templates and plugin
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│       └── claude/           # ← Claude Code plugin (skills, hooks)
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│           └── skills/       #   Source of truth for distributed skills
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>├── .claude/
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   └── skills/               # Dev-only skills (not distributed)
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>├── specs/                    # Feature specifications
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>├── docs/                     # Documentation site source
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>└── .context/                 # ctx&#39;s own context (dogfooding)
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── assets/claude/  # ← Claude Code plugin (skills, hooks)
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ├── bootstrap/      # Project initialization templates
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ├── claude/         # Claude Code integration helpers
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   ├── cli/            # Command implementations
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   ├── config/         # Configuration loading
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   ├── context/        # Core context logic
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   ├── crypto/         # Scratchpad encryption
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│   ├── drift/          # Drift detection
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   ├── index/          # Context file indexing
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│   ├── journal/        # Journal site generation
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│   ├── rc/             # .contextrc parsing
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│   ├── recall/         # Session history and parsers
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│   ├── task/           # Task management
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>│   └── validation/     # Input validation
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>├── .claude/
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│   └── skills/         # Dev-only skills (not distributed)
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>├── docs/               # Documentation site source
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>├── editors/            # Editor extensions (VS Code)
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>├── hack/               # Build scripts and runbooks
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>├── specs/              # Feature specifications
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>└── .context/           # ctx&#39;s own context (dogfooding)
 </span></code></pre></div>
 <h3 id="skills-two-directories-one-rule">Skills: Two Directories, One Rule<a class="headerlink" href="#skills-two-directories-one-rule" title="Permanent link">&para;</a></h3>
 <table>
@@ -2809,7 +2823,7 @@ reinstall.</p>
 <tbody>
 <tr>
 <td><code>internal/assets/claude/skills/</code></td>
-<td>The 25 <code>ctx-*</code> skills that ship with the plugin</td>
+<td>The 27 <code>ctx-*</code> skills that ship with the plugin</td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -2831,7 +2845,7 @@ never distributed to users.</p>
 <p>After modifying Go source files, rebuild and reinstall:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>make<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
 </span></code></pre></div>
-<p>The <code>ctx</code> binary is statically compiled — there is no hot reload.
+<p>The <code>ctx</code> binary is statically compiled. There is no hot reload.
 You must rebuild for Go changes to take effect.</p>
 <h3 id="skill-or-hook-changes">Skill or Hook Changes<a class="headerlink" href="#skill-or-hook-changes" title="Permanent link">&para;</a></h3>
 <p>Edit files under <code>internal/assets/claude/skills/</code> or
@@ -2839,15 +2853,15 @@ You must rebuild for Go changes to take effect.</p>
 <p>After making changes, update the plugin version and refresh the marketplace:</p>
 <ol>
 <li>Bump the version in <code>.claude-plugin/marketplace.json</code>
-   (the <code>plugins[0].version</code> field)</li>
+   (<em>the <code>plugins[0].version</code> field</em>).</li>
 <li>Bump the version in <code>internal/assets/claude/.claude-plugin/plugin.json</code>
-   (the top-level <code>version</code> field)</li>
-<li><em>(Optional but recommended)</em> Update <code>VERSION</code> to match —
-   keeping all three in sync avoids confusion</li>
-<li>In Claude Code, type <code>/plugin</code> and press Enter</li>
-<li>Select <strong>Marketplaces</strong> → <strong>activememory-ctx</strong></li>
-<li>Select <strong>Update marketplace</strong></li>
-<li>Restart Claude Code for the changes to take effect</li>
+   (<em>the top-level <code>version</code> field</em>)</li>
+<li><em>(Optional but recommended)</em> Update <code>VERSION</code> to match:
+   keeping all three in sync avoids confusion.</li>
+<li>In Claude Code, type <code>/plugin</code> and press Enter.</li>
+<li>Select <strong>Marketplaces</strong> → <strong>activememory-ctx</strong>.</li>
+<li>Select <strong>Update marketplace</strong>.</li>
+<li>Restart Claude Code for the changes to take effect.</li>
 </ol>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">            </span><span class="c1"># fast: all tests</span>
@@ -2862,26 +2876,26 @@ You must rebuild for Go changes to take effect.</p>
 <h2 id="submitting-changes">Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
 <h3 id="before-you-start">Before You Start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Check existing issues to avoid duplicating effort</li>
-<li>For large changes, open an issue first to discuss the approach</li>
-<li>Read the specs in <code>specs/</code> for design context</li>
+<li>Check existing issues to avoid duplicating effort.</li>
+<li>For large changes, open an issue first to discuss the approach.</li>
+<li>Read the specs in <code>specs/</code> for design context.</li>
 </ol>
 <h3 id="pull-request-process">Pull Request Process<a class="headerlink" href="#pull-request-process" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Create a feature branch: <code>git checkout -b feature/my-feature</code></li>
-<li>Make your changes</li>
-<li>Run <code>make audit</code> to catch issues early</li>
-<li>Commit with a clear message (see below)</li>
-<li>Push and open a pull request</li>
+<li>Create a feature branch: <code>git checkout -b feature/my-feature</code>.</li>
+<li>Make your changes.</li>
+<li>Run <code>make audit</code> to catch issues early.</li>
+<li>Commit with a <strong>clear message</strong>.</li>
+<li>Push and open a pull request.</li>
 </ol>
+<div class="admonition tip">
+<p class="admonition-title">Audit Your Code Before Submitting</p>
+<p>Run <code>make audit</code> before submitting: 
+it covers formatting, vetting, linting, drift checks, 
+doc consistency, and tests in one pass.</p>
+</div>
 <h3 id="commit-messages">Commit Messages<a class="headerlink" href="#commit-messages" title="Permanent link">&para;</a></h3>
-<p>Follow conventional commits:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>type(scope): description
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>[optional body]
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>[optional footer]
-</span></code></pre></div>
+<p>Following conventional commits is recommended but not required:</p>
 <p>Types: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>test</code>, <code>refactor</code>, <code>chore</code></p>
 <p>Examples:</p>
 <ul>
@@ -2897,19 +2911,21 @@ You must rebuild for Go changes to take effect.</p>
 <li>Handle errors explicitly</li>
 </ul>
 <hr />
-<h2 id="legal">Legal<a class="headerlink" href="#legal" title="Permanent link">&para;</a></h2>
+<h2 id="code-of-conduct">Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Permanent link">&para;</a></h2>
+<p>Clear context requires respectful collaboration.</p>
+<p><code>ctx</code> follows the
+<a href="https://github.com/ActiveMemory/ctx/blob/main/CODE_OF_CONDUCT.md">Contributor Covenant</a>.</p>
+<hr />
+<h2 id="boring-legal-stuff">Boring Legal Stuff<a class="headerlink" href="#boring-legal-stuff" title="Permanent link">&para;</a></h2>
 <h3 id="developer-certificate-of-origin-dco">Developer Certificate of Origin (DCO)<a class="headerlink" href="#developer-certificate-of-origin-dco" title="Permanent link">&para;</a></h3>
 <p>By contributing, you agree to the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
 <p>All commits must be signed off:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </span></code></pre></div>
 <h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
 <p>Contributions are licensed under the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE">Apache 2.0 License</a>.</p>
-<h3 id="code-of-conduct">Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Permanent link">&para;</a></h3>
-<p>This project follows the
-<a href="https://github.com/ActiveMemory/ctx/blob/main/CODE_OF_CONDUCT.md">Contributor Covenant Code of Conduct</a>.</p>
 
 
 
@@ -2952,7 +2968,7 @@ You must rebuild for Go changes to take effect.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../community/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Join the ctx Community">
+          <a href="../community/" class="md-footer__link md-footer__link--prev" aria-label="Previous: #ctx">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2962,7 +2978,7 @@ You must rebuild for Go changes to take effect.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Join the ctx Community
+                #ctx
               </div>
             </div>
           </a>

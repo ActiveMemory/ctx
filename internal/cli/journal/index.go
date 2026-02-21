@@ -157,8 +157,8 @@ func generateKeyFilesIndex(keyFiles []keyFileData) string {
 		len(popular), config.JournalHeadingFrequentlyTouched,
 		func(i int) (string, string, int) {
 			return "`" + popular[i].Path + "`",
-			keyFileSlug(popular[i].Path),
-			len(popular[i].Entries)
+				keyFileSlug(popular[i].Path),
+				len(popular[i].Entries)
 		},
 		len(longtail), config.JournalHeadingSingleSession,
 		config.TplJournalLongtailCodeEntry,

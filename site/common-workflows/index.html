@@ -569,7 +569,7 @@
   <span class="md-ellipsis">
     
   
-    About ctx
+    About
   
 
     
@@ -599,7 +599,7 @@
   <span class="md-ellipsis">
     
   
-    Is ctx Right for Me?
+    Is It Right for Me?
   
 
     
@@ -629,7 +629,7 @@
   <span class="md-ellipsis">
     
   
-    Join the ctx Community
+    #ctx
   
 
     
@@ -659,7 +659,7 @@
   <span class="md-ellipsis">
     
   
-    Contributing to ctx
+    Contributing
   
 
     
@@ -847,6 +847,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scratchpad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scratchpad
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2232,6 +2243,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#scratchpad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scratchpad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-an-autonomous-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2373,16 +2395,30 @@ Homebrew Python blocks system-wide installs (<code>PEP 668</code>).</p>
 </span></code></pre></div>
 <p>Open <a href="http://localhost:8000">http://localhost:8000</a> to browse.</p>
 <p>To update after new sessions, run the same two commands again;
-<code>recall export</code> preserves existing YAML frontmatter and only
+<code>ctx recall export</code> preserves existing YAML frontmatter and only
 updates conversation content.</p>
 <p>See <a href="../session-journal/">Session Journal</a> for the full pipeline
 including <strong>normalization</strong> and <strong>enrichment</strong>.</p>
+<h2 id="scratchpad">Scratchpad<a class="headerlink" href="#scratchpad" title="Permanent link">&para;</a></h2>
+<p>Store short, sensitive one-liners in an encrypted scratchpad
+that travels with the project:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Write a note</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">set</span><span class="w"> </span>db-password<span class="w"> </span><span class="s2">&quot;postgres://user:pass@localhost/mydb&quot;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Read it back</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>get<span class="w"> </span>db-password
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># List all keys</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span>list
+</span></code></pre></div>
+<p>The scratchpad is encrypted with a key stored in <code>.context/.scratchpad.key</code>
+(git-ignored by default). See <a href="../scratchpad/">Scratchpad</a> for details.</p>
 <h2 id="run-an-autonomous-loop">Run an Autonomous Loop<a class="headerlink" href="#run-an-autonomous-loop" title="Permanent link">&para;</a></h2>
 <p>Generate a script that iterates an AI agent until a completion
 signal is detected:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>loop
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>./loop.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>loop
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>loop.sh
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>./loop.sh
 </span></code></pre></div>
 <p>See <a href="../autonomous-loop/">Autonomous Loops</a> for configuration
 and advanced usage.</p>

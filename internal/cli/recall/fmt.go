@@ -39,7 +39,7 @@ const (
 //   - content: The content to be fenced
 //
 // Returns:
-//   - string: A fence string (e.g., "```", "````", "`````")
+//   - string: A fence string (e.g., "```", "````", "```“")
 func fenceForContent(content string) string {
 	fence := config.CodeFence
 	for strings.Contains(content, fence) {
@@ -448,6 +448,7 @@ func normalizeCodeFences(content string) string {
 //
 // Returns:
 //   - string: Formatted string like "Read: /path/to/file" or just tool name
+//
 // toolDisplayKey maps tool names to the JSON input key that best
 // describes each invocation.
 var toolDisplayKey = map[string]string{

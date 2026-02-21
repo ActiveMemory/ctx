@@ -286,10 +286,10 @@ func TestRecentJournalFiles_NonexistentDir(t *testing.T) {
 
 func TestScanJournalsForCeremonies(t *testing.T) {
 	tests := []struct {
-		name           string
-		contents       []string
-		wantRemember   bool
-		wantWrapup     bool
+		name         string
+		contents     []string
+		wantRemember bool
+		wantWrapup   bool
 	}{
 		{
 			name:         "both present",

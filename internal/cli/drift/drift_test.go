@@ -460,7 +460,7 @@ func TestApplyFixes_Secret(t *testing.T) {
 	cmd, buf := newTestCmd()
 	ctx := &context.Context{}
 	report := &drift.Report{
-		Warnings:   []drift.Issue{},
+		Warnings: []drift.Issue{},
 		Violations: []drift.Issue{
 			{File: "SECRETS.md", Type: drift.IssueSecret, Message: "potential secret"},
 		},

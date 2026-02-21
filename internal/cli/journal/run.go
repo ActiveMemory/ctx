@@ -188,19 +188,19 @@ func runJournalSite(
 			docsDir, config.JournalDirTopics,
 			generateTopicsIndex(topics),
 			func(dir string) {
-			for _, t := range topics {
-				if !t.Popular {
-					continue
+				for _, t := range topics {
+					if !t.Popular {
+						continue
+					}
+					pagePath := filepath.Join(dir, t.Name+config.ExtMarkdown)
+					if writeErr := os.WriteFile(
+						pagePath, []byte(generateTopicPage(t)),
+						config.PermFile,
+					); writeErr != nil {
+						warnFileErr(cmd, pagePath, writeErr)
+					}
 				}
-				pagePath := filepath.Join(dir, t.Name+config.ExtMarkdown)
-				if writeErr := os.WriteFile(
-					pagePath, []byte(generateTopicPage(t)),
-					config.PermFile,
-				); writeErr != nil {
-					warnFileErr(cmd, pagePath, writeErr)
-				}
-			}
-		}); err != nil {
+			}); err != nil {
 			return err
 		}
 	}
