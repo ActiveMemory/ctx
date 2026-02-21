@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-20 | Spec supersedes old Phase 2 export-preservation tasks |
 | 2026-02-20 | No --update flag needed for export — default is the update mode |
 | 2026-02-20 | Defencify journal site: pre/code replaces fenced code blocks |
 | 2026-02-20 | Code-level normalize replaces AI source normalization |
@@ -45,6 +46,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-20-224112] Spec supersedes old Phase 2 export-preservation tasks
+
+**Status**: Accepted
+
+**Context**: The recall-export-safety spec covers a broader scope (locks, --keep-frontmatter, --dry-run, ergonomics) than the original 4 tasks (T2.1.1-T2.1.4) which only addressed --force behavior
+
+**Decision**: Spec supersedes old Phase 2 export-preservation tasks
+
+**Rationale**: Replaced narrow bug-fix tasks with 7 spec-aligned tasks (T2.1-T2.7) that cover the full design
+
+**Consequences**: Old specs/export-update-mode.md is superseded by specs/recall-export-safety.md; TASKS.md Phase 2 section rewritten with 7 tasks mapping to spec phases
+
+---
 
 ## [2026-02-20-142444] No --update flag needed for export — default is the update mode
 

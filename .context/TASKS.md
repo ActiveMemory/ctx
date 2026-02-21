@@ -10,12 +10,12 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 ### Phase -1: Quality Verification
 
-- [ ] Investigate PreToolUse:Edit hook not firing — qa-reminder (hooks.json:10) should fire on every Edit call but zero PreToolUse:Edit entries appeared in session JSONL despite 6+ Edit calls. Installed ctx v0.6.4 matches assets. Check: hooks sync to active config, matcher dispatch for Edit, session 8b80f8e6. #priority:high #added:2026-02-20-150011
+- [x] Investigate PreToolUse:Edit hook not firing — qa-reminder (hooks.json:10) should fire on every Edit call but zero PreToolUse:Edit entries appeared in session JSONL despite 6+ Edit calls. Installed ctx v0.6.4 matches assets. Check: hooks sync to active config, matcher dispatch for Edit, session 8b80f8e6. #priority:high #added:2026-02-20-150011
 
 - [ ] Human: there are still minor render issues in journal site.
       Collaborate with AI to sort them out.
 
-- [ ] Update enrich-all skill: remove normalize-first prerequisite #priority:medium #added:2026-02-20-062259
+- [x] Update enrich-all skill: remove normalize-first prerequisite #priority:medium #added:2026-02-20-062259
 
 - [ ] Move 'ctx journal mark' to 'ctx system mark-journal' #priority:medium #added:2026-02-20-015721
 
@@ -149,29 +149,59 @@ Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 - [ ] P9.2: Test manually on this project's LEARNINGS.md (20+ entries).
       #priority:medium #added:2026-02-19
 
-### Phase 2: Export Preservation `#priority:medium`
+### Phase 2: Recall Export Safety `#priority:medium`
 
-**Context**: Default re-export already preserves enriched YAML frontmatter.
-The `--force` flag claims to discard it but doesn't (bug). No `--update`
-flag needed — the default behavior is the update mode.
-Spec: `specs/export-update-mode.md`
+**Context**: `ctx recall export` regenerates journal markdown from JSONL
+session data. Body is always regenerated (manual edits lost). `--force`
+additionally discards enriched YAML frontmatter. Users need lock protection,
+clearer flag names, and better ergonomics.
+Spec: `specs/recall-export-safety.md` (supersedes `specs/export-update-mode.md`)
 
-- [ ] T2.1.1: Fix `--force` to actually discard frontmatter — add `!force`
-      guard around frontmatter preservation in `run.go:179-187`.
+- [ ] T2.1: Lock/unlock state layer — add `Locked` field to `FileState`,
+      `MarkLocked()`, `ClearLocked()`, `IsLocked()`, add `"locked"` to
+      `Mark()` and `ValidStages`. Tests: mark/clear/round-trip/no-op.
+      Files: `internal/journal/state/state.go`, `state_test.go`
       #priority:medium #added:2026-02-20
 
-- [ ] T2.1.2: Add `ClearEnriched()` method to journal state — when
-      `--force` overwrites an enriched file, clear the enrichment date
-      so it reappears in `countUnenriched()`.
+- [ ] T2.2: Lock/unlock CLI commands — `ctx recall lock <pattern>` and
+      `ctx recall unlock <pattern>` with `--all`. Reuse slug/date/id
+      matching from export. Multi-part: locking base locks all `-pN` parts.
+      Frontmatter: insert/remove `locked: true  # managed by ctx`.
+      `.state.json` is source of truth; frontmatter for human visibility.
+      File: new `internal/cli/recall/lock.go`, register in `recall.go`
       #priority:medium #added:2026-02-20
 
-- [ ] T2.1.3: Add tests for export merge behavior — default preserves
-      frontmatter, `--force` discards, `--skip-existing` skips, multipart
-      preservation, malformed frontmatter graceful degradation.
+- [ ] T2.3: Export respects locks — skip locked files with log line and
+      counter. `--force` does NOT override locks (require explicit unlock).
+      Add `locked` counter to summary output.
+      File: `internal/cli/recall/run.go`
       #priority:medium #added:2026-02-20
 
-- [ ] T2.1.4: Update help text and docs — clarify default update behavior
-      in `cmd.go`, update session-journal docs if they reference export flags.
+- [ ] T2.4: Replace `--force` with `--keep-frontmatter` — add
+      `--keep-frontmatter` flag (bool, default `true`). Keep `--force` as
+      deprecated alias via `cmd.Flags().MarkDeprecated`. Logic:
+      `discardFrontmatter := !keepFrontmatter || force`. Update help text.
+      Files: `internal/cli/recall/cmd.go`, `run.go`
+      #priority:medium #added:2026-02-20
+
+- [ ] T2.5: Ergonomics — bare `ctx recall export` prints help (not error).
+      Add `--dry-run` flag: same logic but skip writes, output summary
+      "would export N new, update M existing, skip K locked".
+      Files: `internal/cli/recall/cmd.go`, `run.go`
+      #priority:medium #added:2026-02-20
+
+- [ ] T2.6: Tests for lock/export integration — lock single session (verify
+      state + frontmatter), unlock (verify cleanup), lock `--all`, lock
+      multi-part entry, export skips locked, export `--force` still skips
+      locked, `--keep-frontmatter=false` behaves like old `--force`,
+      `--dry-run` produces correct summary.
+      Files: `internal/cli/recall/lock_test.go`, `run_test.go`
+      #priority:medium #added:2026-02-20
+
+- [ ] T2.7: Documentation updates — replace `--force` → `--keep-frontmatter=false`
+      in cli-reference, session-journal, session-archaeology recipe, recall
+      skill. Add lock/unlock + `--dry-run` docs. Clarify body is always
+      regenerated. Update common-workflows, publishing recipe.
       #priority:low #added:2026-02-20
 
 ### Maintenance
