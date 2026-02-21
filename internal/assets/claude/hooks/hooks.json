@@ -27,7 +27,8 @@
           {"type": "command", "command": "ctx system check-ceremonies"},
           {"type": "command", "command": "ctx system check-persistence"},
           {"type": "command", "command": "ctx system check-journal"},
-          {"type": "command", "command": "ctx system check-version"}
+          {"type": "command", "command": "ctx system check-version"},
+          {"type": "command", "command": "ctx system check-resources"}
         ]
       }
     ],
