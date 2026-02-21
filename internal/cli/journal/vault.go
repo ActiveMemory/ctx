@@ -348,4 +348,3 @@ func buildTopicLookup(entries []journalEntry) map[string][]journalEntry {
 	}
 	return lookup
 }
-

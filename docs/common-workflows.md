@@ -94,11 +94,30 @@ ctx journal site --serve
 Open [http://localhost:8000](http://localhost:8000) to browse.
 
 To update after new sessions, run the same two commands again;
-`recall export` preserves existing YAML frontmatter and only
+`ctx recall export` preserves existing YAML frontmatter and only
 updates conversation content.
 
 See [Session Journal](session-journal.md) for the full pipeline
 including **normalization** and **enrichment**.
+
+## Scratchpad
+
+Store short, sensitive one-liners in an encrypted scratchpad
+that travels with the project:
+
+```bash
+# Write a note
+ctx pad set db-password "postgres://user:pass@localhost/mydb"
+
+# Read it back
+ctx pad get db-password
+
+# List all keys
+ctx pad list
+```
+
+The scratchpad is encrypted with a key stored in `.context/.scratchpad.key`
+(git-ignored by default). See [Scratchpad](scratchpad.md) for details.
 
 ## Run an Autonomous Loop
 

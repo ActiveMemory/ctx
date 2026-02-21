@@ -147,13 +147,13 @@ func TestParseLine(t *testing.T) {
 	p := NewClaudeCodeParser()
 
 	tests := []struct {
-		name      string
-		line      string
-		wantMsg   bool
-		wantSess  string
-		wantErr   bool
-		wantRole  string
-		wantText  string
+		name     string
+		line     string
+		wantMsg  bool
+		wantSess string
+		wantErr  bool
+		wantRole string
+		wantText string
 	}{
 		{
 			name: "empty line",

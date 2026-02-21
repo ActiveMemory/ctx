@@ -59,5 +59,3 @@ const (
 	// LabelToolOutput is the turn role label for tool output turns.
 	LabelToolOutput = "Tool Output"
 )
-
-

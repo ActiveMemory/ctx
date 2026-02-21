@@ -569,7 +569,7 @@
   <span class="md-ellipsis">
     
   
-    About ctx
+    About
   
 
     
@@ -599,7 +599,7 @@
   <span class="md-ellipsis">
     
   
-    Is ctx Right for Me?
+    Is It Right for Me?
   
 
     
@@ -629,7 +629,7 @@
   <span class="md-ellipsis">
     
   
-    Join the ctx Community
+    #ctx
   
 
     
@@ -659,7 +659,7 @@
   <span class="md-ellipsis">
     
   
-    Contributing to ctx
+    Contributing
   
 
     
@@ -2376,8 +2376,8 @@ the moment your AI cites your project context back to you.</p>
 </span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  2. Run &#39;ctx status&#39; to see context summary
 </span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  3. Run &#39;ctx agent&#39; to get AI-ready context packet
 </span></code></pre></div>
-<p>This created your <code>.context/</code> directory with template files. For Claude Code,
-install the ctx plugin to get automatic hooks and skills.</p>
+<p>This created your <code>.context/</code> directory with template files. </p>
+<p>For Claude Code, <a href="../getting-started/#installation">install the ctx plugin</a> to get automatic hooks and skills.</p>
 <h2 id="step-2-populate-your-context">Step 2: Populate Your Context<a class="headerlink" href="#step-2-populate-your-context" title="Permanent link">&para;</a></h2>
 <p>Add a task and a decision — these are the entries your AI will remember:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
@@ -2392,7 +2392,7 @@ install the ctx plugin to get automatic hooks and skills.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>✓ Added to DECISIONS.md
 </span></code></pre></div>
 <p>These entries are what the AI will recall in future sessions. You don't need
-to populate everything now — context grows naturally as you work.</p>
+to populate everything now: Context grows <strong>naturally</strong> as you work.</p>
 <h2 id="step-3-check-your-context">Step 3: Check Your Context<a class="headerlink" href="#step-3-check-your-context" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
@@ -2424,7 +2424,8 @@ it will fill in as you capture lessons during development.</p>
 <p>With <strong>Claude Code</strong> (and the ctx plugin), start every session with:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-remember
 </span></code></pre></div>
-<p>This loads your context and presents a structured readback so you can
+<p>This loads your context and presents a structured 
+<a href="../prompting-guide/#do-you-remember"><strong>readback</strong></a> so you can
 confirm the agent knows what is going on. Context also loads automatically
 via hooks, but the explicit ceremony gives you a readback to verify.</p>
 <p>With <strong>VS Code Copilot Chat</strong> (and the
@@ -2517,8 +2518,8 @@ asking you to re-explain.</p>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a># Claude Code local settings (machine-specific)
 </span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>.claude/settings.local.json
 </span></code></pre></div>
-<p><code>ctx init</code> automatically adds these entries to your <code>.gitignore</code>.
-Review the additions with <code>cat .gitignore</code> after init.</p>
+<p><code>ctx init</code> automatically adds these entries to your <code>.gitignore</code>.</p>
+<p>Review the additions with <code>cat .gitignore</code> after init.</p>
 <div class="admonition tip">
 <p class="admonition-title">Rule of Thumb</p>
 <ul>
@@ -2529,8 +2530,8 @@ Review the additions with <code>cat .gitignore</code> after init.</p>
 </div>
 <p><em>See also</em>:</p>
 <ul>
-<li><a href="../security/">Security considerations</a>,</li>
-<li><a href="../scratchpad/">Scratchpad encryption</a>,</li>
+<li><a href="../security/">Security considerations</a></li>
+<li><a href="../scratchpad/">Scratchpad encryption</a></li>
 <li><a href="../session-journal/">Session Journal</a></li>
 </ul>
 <hr />

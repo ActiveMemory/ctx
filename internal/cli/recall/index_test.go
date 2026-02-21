@@ -89,8 +89,8 @@ func TestBuildSessionIndex_NonexistentDir(t *testing.T) {
 
 func TestLookupSessionFile(t *testing.T) {
 	idx := map[string]string{
-		"abc12345-full-uuid":  "2026-01-15-fix-auth-abc12345.md",
-		"def67890":            "2026-01-16-old-slug-def67890.md",
+		"abc12345-full-uuid": "2026-01-15-fix-auth-abc12345.md",
+		"def67890":           "2026-01-16-old-slug-def67890.md",
 	}
 
 	tests := []struct {
@@ -209,9 +209,9 @@ func TestRenameJournalFiles_Multipart(t *testing.T) {
 	p3Content := "# old p3\n[← Previous](" + oldBase + "-p2.md)\n"
 
 	for fname, content := range map[string]string{
-		oldBase + ".md":       baseContent,
-		oldBase + "-p2.md":    p2Content,
-		oldBase + "-p3.md":    p3Content,
+		oldBase + ".md":    baseContent,
+		oldBase + "-p2.md": p2Content,
+		oldBase + "-p3.md": p3Content,
 	} {
 		if err := os.WriteFile(filepath.Join(dir, fname), []byte(content), 0600); err != nil {
 			t.Fatal(err)

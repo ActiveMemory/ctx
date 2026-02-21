@@ -29,9 +29,9 @@ type fixResult struct {
 //   - Violations: Constitution violations that must be fixed
 //   - Passed: Names of checks that passed successfully
 type JsonOutput struct {
-	Timestamp  string        `json:"timestamp"`
-	Status     drift.StatusType `json:"status"`
-	Warnings   []drift.Issue `json:"warnings"`
-	Violations []drift.Issue `json:"violations"`
+	Timestamp  string            `json:"timestamp"`
+	Status     drift.StatusType  `json:"status"`
+	Warnings   []drift.Issue     `json:"warnings"`
+	Violations []drift.Issue     `json:"violations"`
 	Passed     []drift.CheckName `json:"passed"`
 }

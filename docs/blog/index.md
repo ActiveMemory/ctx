@@ -5,7 +5,7 @@ icon: lucide/newspaper
 
 ![ctx](../images/ctx-banner.png)
 
-Stories, insights, and lessons learned from building and using ctx.
+Stories, insights, and lessons learned from **building** and **using** `ctx`.
 
 ---
 

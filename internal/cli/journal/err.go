@@ -21,7 +21,7 @@ import (
 //   - error: Includes a hint to run 'ctx recall export --all'
 func errNoJournalDir(path string) error {
 	return fmt.Errorf(
-		"no journal directory found at %s" + config.NewlineLF +
+		"no journal directory found at %s"+config.NewlineLF+
 			"Run 'ctx recall export --all' first", path)
 }
 

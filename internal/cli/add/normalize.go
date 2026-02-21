@@ -24,6 +24,7 @@ import (
 //
 // Returns:
 //   - string: Normalized section heading (e.g., "## Phase 1")
+//
 // checkRequired returns the names of any fields whose values are empty.
 func checkRequired(fields [][2]string) []string {
 	var missing []string

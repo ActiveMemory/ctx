@@ -569,7 +569,7 @@
   <span class="md-ellipsis">
     
   
-    About ctx
+    About
   
 
     
@@ -599,7 +599,7 @@
   <span class="md-ellipsis">
     
   
-    Is ctx Right for Me?
+    Is It Right for Me?
   
 
     
@@ -629,7 +629,7 @@
   <span class="md-ellipsis">
     
   
-    Join the ctx Community
+    #ctx
   
 
     
@@ -659,7 +659,7 @@
   <span class="md-ellipsis">
     
   
-    Contributing to ctx
+    Contributing
   
 
     
@@ -2446,27 +2446,28 @@
 
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<p><code>ctx</code> does not require git, but using version control with your <code>.context/</code>
-directory is strongly recommended.</p>
-<p>AI sessions occasionally modify or overwrite context files inadvertently.</p>
-<p>With <code>git</code>, the AI can check history and restore lost content:
+<p><code>ctx</code> does not require <code>git</code>, but using version control with your <code>.context/</code>
+directory is strongly recommended:</p>
+<p>AI sessions occasionally modify or overwrite context files inadvertently.
+With <code>git</code>, the AI can check history and restore lost content:
 Without it, the data is gone.</p>
-<p>Also, several <code>ctx</code> features (journal changelog, blog generation) also use
+<p>Also, several <code>ctx</code> features (<em>journal changelog, blog generation</em>) also use
 <code>git</code> history directly.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>A full ctx installation has two parts:</p>
 <ol>
-<li><strong>The <code>ctx</code> binary</strong> — the CLI tool itself</li>
-<li><strong>The Claude Code plugin</strong> — hooks and skills that make Claude Code
+<li><strong>The <code>ctx</code> binary</strong>: the CLI tool itself</li>
+<li><strong>The Claude Code plugin</strong>: hooks and skills that make Claude Code
    context-aware</li>
 </ol>
 <p>You need <strong>both</strong>. The binary alone gives you the CLI but Claude Code
 won't autoload context, nudge you to persist decisions, or provide
 the <code>/ctx-*</code> skills.</p>
-<p>Pick one of the options below — each is a complete path from zero to
+<p>Pick one of the options below. Each is a complete path from zero to
 a working setup.</p>
 <h3 id="option-1-build-from-source-recommended">Option 1: Build from Source (<em>Recommended</em>)<a class="headerlink" href="#option-1-build-from-source-recommended" title="Permanent link">&para;</a></h3>
-<p>Requires <a href="https://go.dev/">Go 1.25+</a> and
+<p>Requires <a href="https://go.dev/">Go</a> (<em>version defined in 
+<a href="https://github.com/ActiveMemory/ctx/blob/main/go.mod"><code>go.mod</code></a></em>) and
 <a href="https://docs.anthropic.com/en/docs/claude-code/overview">Claude Code</a>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ActiveMemory/ctx.git
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>ctx
@@ -2480,20 +2481,24 @@ a working setup.</p>
 <li>Select <strong>Marketplaces</strong> → <strong>Add Marketplace</strong></li>
 <li>Enter the path to the <strong>root of your clone</strong>,
    e.g. <code>~/WORKSPACE/ctx</code>
-   (this is where <code>.claude-plugin/marketplace.json</code> lives — it points
+   (this is where <code>.claude-plugin/marketplace.json</code> lives: It points
    Claude Code to the actual plugin in <code>internal/assets/claude</code>)</li>
 <li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code></li>
 </ol>
 <p>This points Claude Code at the plugin source on disk. Changes you make
-to hooks or skills take effect immediately — no reinstall needed.</p>
+to hooks or skills take effect immediately: No reinstall is needed.</p>
 <p><strong>Verify:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>--version<span class="w">       </span><span class="c1"># binary is in PATH</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>list<span class="w"> </span><span class="c1"># plugin is installed</span>
 </span></code></pre></div>
-<p>Building from source gives you the latest features and bug fixes.
-Since <code>ctx</code> is predominantly a developer tool, this is the
-<strong>recommended approach</strong>: you get the freshest code, can inspect what
+<div class="admonition tip">
+<p class="admonition-title">Use the Source, Luke</p>
+<p>Building from source gives you the latest features and bug fixes.</p>
+<p>Since <code>ctx</code> is predominantly a developer tool, this is the
+<strong>recommended approach</strong>: </p>
+<p>You get the freshest code, can inspect what
 you are installing, and the plugin stays in sync with the binary.</p>
+</div>
 <h3 id="option-2-binary-download-marketplace">Option 2: Binary Download + Marketplace<a class="headerlink" href="#option-2-binary-download-marketplace" title="Permanent link">&para;</a></h3>
 <p>Pre-built binaries are available from the
 <a href="https://github.com/ActiveMemory/ctx/releases">releases page</a>.</p>
@@ -2551,14 +2556,14 @@ you are installing, and the plugin stays in sync with the binary.</p>
 <p>On macOS, use <code>shasum -a 256 -c</code> instead of <code>sha256sum -c</code>.</p>
 <hr />
 <details class="note">
-<summary>What the Plugin Provides</summary>
+<summary>Plugin Details</summary>
 <p>After installation (either option) you get:</p>
 <ul>
-<li><strong>Context autoloading</strong> — <code>ctx agent</code> runs on every tool use (with cooldown)</li>
-<li><strong>Persistence nudges</strong> — reminders to capture learnings and decisions</li>
-<li><strong>Post-commit hooks</strong> — nudge context capture after <code>git commit</code></li>
-<li><strong>Context size monitoring</strong> — alerts as sessions grow large</li>
-<li><strong>25+ skills</strong> — <code>/ctx-status</code>, <code>/ctx-add-task</code>, <code>/ctx-recall</code>, and more</li>
+<li><strong>Context autoloading</strong>: <code>ctx agent</code> runs on every tool use (with cooldown)</li>
+<li><strong>Persistence nudges</strong>: reminders to capture learnings and decisions</li>
+<li><strong>Post-commit hooks</strong>: nudge context capture after <code>git commit</code></li>
+<li><strong>Context size monitoring</strong>: alerts as sessions grow large</li>
+<li><strong>25+ skills</strong>: <code>/ctx-status</code>, <code>/ctx-add-task</code>, <code>/ctx-recall</code>, and more</li>
 </ul>
 <p>See <a href="../integrations/#claude-code-full-integration">Integrations</a> for the
 full hook and skill reference.</p>
@@ -2639,7 +2644,7 @@ or previous session topics.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing to ctx">
+          <a href="../contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2649,7 +2654,7 @@ or previous session topics.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Contributing to ctx
+                Contributing
               </div>
             </div>
           </a>
