@@ -28,8 +28,18 @@ import (
 //	Prompts   25+: every 15th prompt since last modification
 func checkPersistenceCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "check-persistence",
-		Short:  "Persistence nudge hook",
+		Use:   "check-persistence",
+		Short: "Persistence nudge hook",
+		Long: `Tracks prompts since the last .context/ file modification and nudges
+the agent to persist learnings, decisions, or task updates.
+
+  Prompts  1-10: silent (too early)
+  Prompts 11-25: nudge once at prompt 20 since last modification
+  Prompts   25+: every 15th prompt since last modification
+
+Hook event: UserPromptSubmit
+Output: agent directive (when triggered), silent otherwise
+Silent when: context files were recently modified`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runCheckPersistence(cmd, os.Stdin)

@@ -85,6 +85,7 @@ what they asked: Stale backups, unexported sessions, resource warnings.
 
 - `ctx system check-journal`: Unexported sessions and unenriched entries
 - `ctx system check-context-size`: Context capacity warning
+- `ctx system check-resources`: Resource pressure (memory, swap, disk, load) — DANGER only
 - `check-backup-age.sh`: Stale backup warning (*project-local*)
 
 **Trade-off**: Noisy if overused. Every VERBATIM relay adds a preamble
@@ -228,6 +229,12 @@ echo "CRITICAL: Relay VERBATIM before answering. Disk usage at 95%."
 **When to use:** When you have multiple hooks producing output and need
 to avoid overwhelming the user. INFO gets absorbed, WARN gets mentioned,
 CRITICAL interrupts.
+
+**Examples in `ctx`**:
+
+* `ctx system check-resources`: Uses two tiers (WARNING/DANGER) internally
+  but only fires the VERBATIM relay at DANGER level — WARNING is silent.
+  See `ctx system` for the user-facing command that shows both tiers.
 
 **Trade-off:** Requires agent training or convention to recognize the
 tiers. Without a shared protocol, the prefixes are just text.

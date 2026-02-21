@@ -15,6 +15,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// resourcesCmd returns the "ctx system resources" subcommand.
+func resourcesCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "resources",
+		Short: "Show system resource usage (memory, swap, disk, load)",
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return runResources(cmd)
+		},
+	}
+	cmd.Flags().Bool("json", false, "Output in JSON format")
+	return cmd
+}
+
 // statusCol is the column where the status indicator starts.
 const statusCol = 52
 

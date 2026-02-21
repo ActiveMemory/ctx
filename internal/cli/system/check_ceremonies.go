@@ -22,8 +22,15 @@ import (
 // nudge once per day encouraging adoption.
 func checkCeremoniesCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "check-ceremonies",
-		Short:  "Session ceremony nudge hook",
+		Use:   "check-ceremonies",
+		Short: "Session ceremony nudge hook",
+		Long: `Scans the last 3 journal entries for /ctx-remember and /ctx-wrap-up
+usage. If either is missing, emits a VERBATIM relay nudge encouraging
+adoption. Throttled to once per day.
+
+Hook event: UserPromptSubmit
+Output: VERBATIM relay (when ceremonies missing), silent otherwise
+Silent when: both ceremonies found in recent sessions`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runCheckCeremonies(cmd)

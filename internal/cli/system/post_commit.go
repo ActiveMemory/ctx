@@ -20,8 +20,15 @@ import (
 // running lints/tests before the user pushes.
 func postCommitCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "post-commit",
-		Short:  "Post-commit context capture nudge",
+		Use:   "post-commit",
+		Short: "Post-commit context capture nudge",
+		Long: `Detects git commit commands and nudges the agent to offer context
+capture (decision or learning) and suggest running lints/tests.
+Skips amend commits.
+
+Hook event: PostToolUse (Bash)
+Output: agent directive after git commits, silent otherwise
+Silent when: command is not a git commit, or is an amend`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runPostCommit(cmd, os.Stdin)

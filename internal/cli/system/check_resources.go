@@ -7,8 +7,6 @@
 package system
 
 import (
-	"os"
-
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
 	"github.com/spf13/cobra"
 )
@@ -17,20 +15,34 @@ import (
 //
 // Collects system resource metrics and outputs a VERBATIM relay message when
 // any resource is at DANGER severity. Silent otherwise.
+//
+// Unlike other hook commands, this does not read stdin — the hook input
+// (session_id, tool_input) is not needed for resource checks, and blocking
+// on io.ReadAll would hang if stdin is a terminal.
 func checkResourcesCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "check-resources",
-		Short:  "Resource pressure hook",
+		Use:   "check-resources",
+		Short: "Resource pressure hook",
+		Long: `Collects system resource metrics (memory, swap, disk, load) and outputs
+a VERBATIM relay warning when any resource hits DANGER severity.
+Silent at WARNING level and below.
+
+  Memory DANGER: >= 90% used    Swap DANGER: >= 75% used
+  Disk DANGER:   >= 95% full    Load DANGER: >= 1.5x CPUs
+
+For full resource stats at any severity, use: ctx system resources
+
+Hook event: UserPromptSubmit
+Output: VERBATIM relay (DANGER only), silent otherwise
+Silent when: all resources below DANGER thresholds`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckResources(cmd, os.Stdin)
+			return runCheckResources(cmd)
 		},
 	}
 }
 
-func runCheckResources(cmd *cobra.Command, stdin *os.File) error {
-	_ = readInput(stdin) // consume stdin per hook contract
-
+func runCheckResources(cmd *cobra.Command) error {
 	snap := sysinfo.Collect(".")
 	alerts := sysinfo.Evaluate(snap)
 

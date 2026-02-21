@@ -9,6 +9,8 @@ package system
 import (
 	"encoding/json"
 	"io"
+	"os"
+	"time"
 )
 
 // HookInput represents the JSON payload that Claude Code sends to hook
@@ -26,12 +28,36 @@ type ToolInput struct {
 
 // readInput reads and parses the JSON hook input from r.
 // Returns a zero-value HookInput on any error (graceful degradation).
+//
+// Guards against blocking forever on stdin:
+//   - Terminal (character device): returns immediately
+//   - Pipe/file with no EOF within 2s: times out and returns zero value
+//
+// Both cases are harmless — hooks degrade gracefully with zero input.
 func readInput(r io.Reader) HookInput {
-	var input HookInput
-	data, err := io.ReadAll(r)
-	if err != nil {
-		return input
+	if f, ok := r.(*os.File); ok {
+		if fi, err := f.Stat(); err == nil && fi.Mode()&os.ModeCharDevice != 0 {
+			return HookInput{}
+		}
 	}
-	_ = json.Unmarshal(data, &input)
+
+	type readResult struct {
+		data []byte
+		err  error
+	}
+	ch := make(chan readResult, 1)
+	go func() {
+		data, err := io.ReadAll(r)
+		ch <- readResult{data, err}
+	}()
+
+	var input HookInput
+	select {
+	case res := <-ch:
+		if res.err == nil {
+			_ = json.Unmarshal(res.data, &input)
+		}
+	case <-time.After(2 * time.Second):
+	}
 	return input
 }

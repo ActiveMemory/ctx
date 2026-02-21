@@ -72,9 +72,13 @@ The ctx plugin provides lifecycle hooks implemented as Go subcommands
 | Hook                             | Event              | Purpose                                          |
 |----------------------------------|--------------------|--------------------------------------------------|
 | `ctx system block-non-path-ctx`  | PreToolUse (Bash)  | Block `./ctx` or `go run`: force `$PATH` install |
+| `ctx system qa-reminder`         | PreToolUse (Edit)  | Remind agent to lint/test before committing      |
 | `ctx system check-context-size`  | UserPromptSubmit   | Nudge context assessment as sessions grow        |
-| `ctx system check-journal`       | UserPromptSubmit   | Remind to export/enrich journal entries          |
+| `ctx system check-ceremonies`    | UserPromptSubmit   | Nudge /ctx-remember and /ctx-wrap-up adoption    |
 | `ctx system check-persistence`   | UserPromptSubmit   | Remind to persist learnings/decisions            |
+| `ctx system check-journal`       | UserPromptSubmit   | Remind to export/enrich journal entries          |
+| `ctx system check-version`       | UserPromptSubmit   | Warn when binary/plugin versions diverge         |
+| `ctx system check-resources`     | UserPromptSubmit   | Warn when memory/swap/disk/load hit DANGER level |
 | `ctx system post-commit`         | PostToolUse (Bash) | Nudge context capture and QA after git commits   |
 | `ctx system cleanup-tmp`         | SessionEnd         | Remove stale temp files (older than 15 days)     |
 
@@ -97,9 +101,15 @@ configuration in `settings.local.json` needed:
         ]
       },
       {
+        "matcher": "Edit",
+        "hooks": [
+          { "type": "command", "command": "ctx system qa-reminder" }
+        ]
+      },
+      {
         "matcher": ".*",
         "hooks": [
-          { "type": "command", "command": "ctx agent --budget 4000 >/dev/null || true" }
+          { "type": "command", "command": "ctx agent --budget 4000 2>/dev/null || true" }
         ]
       }
     ],
@@ -115,8 +125,11 @@ configuration in `settings.local.json` needed:
       {
         "hooks": [
           { "type": "command", "command": "ctx system check-context-size" },
+          { "type": "command", "command": "ctx system check-ceremonies" },
           { "type": "command", "command": "ctx system check-persistence" },
-          { "type": "command", "command": "ctx system check-journal" }
+          { "type": "command", "command": "ctx system check-journal" },
+          { "type": "command", "command": "ctx system check-version" },
+          { "type": "command", "command": "ctx system check-resources" }
         ]
       }
     ],

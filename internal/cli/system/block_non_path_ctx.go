@@ -21,8 +21,15 @@ import (
 // to enforce the CONSTITUTION.md rule: "ALWAYS use ctx from PATH".
 func blockNonPathCtxCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "block-non-path-ctx",
-		Short:  "Block non-PATH ctx invocations",
+		Use:   "block-non-path-ctx",
+		Short: "Block non-PATH ctx invocations",
+		Long: `Blocks ./ctx, go run ./cmd/ctx, and absolute-path ctx invocations.
+Enforces the CONSTITUTION.md rule: always use ctx from PATH.
+Outputs a JSON block decision that prevents the tool call.
+
+Hook event: PreToolUse (Bash)
+Output: {"decision":"block","reason":"..."} or silent
+Silent when: command doesn't invoke ctx via a non-PATH route`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runBlockNonPathCtx(cmd, os.Stdin)

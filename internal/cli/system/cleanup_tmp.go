@@ -23,8 +23,14 @@ const cleanupMaxAge = 15 * 24 * time.Hour
 // temp directory on session end.
 func cleanupTmpCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:    "cleanup-tmp",
-		Short:  "Clean up stale ctx temp files",
+		Use:   "cleanup-tmp",
+		Short: "Clean up stale ctx temp files",
+		Long: `Removes files older than 15 days from the user-specific ctx temp
+directory ($XDG_RUNTIME_DIR/ctx or /tmp/ctx-<uid>). Runs silently
+on session end — no output produced.
+
+Hook event: SessionEnd
+Output: none (silent side-effect)`,
 		Hidden: true,
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return runCleanupTmp()
