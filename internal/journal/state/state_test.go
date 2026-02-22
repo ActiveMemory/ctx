@@ -252,7 +252,111 @@ func TestMark_AllStages(t *testing.T) {
 	}
 
 	fs := s.Entries["test.md"]
-	if fs.Exported == "" || fs.Enriched == "" || fs.Normalized == "" || fs.FencesVerified == "" {
+	if fs.Exported == "" || fs.Enriched == "" || fs.Normalized == "" ||
+		fs.FencesVerified == "" || fs.Locked == "" {
 		t.Error("all stages should be set")
+	}
+}
+
+func TestClear(t *testing.T) {
+	s := &JournalState{
+		Version: CurrentVersion,
+		Entries: map[string]FileState{
+			"test.md": {
+				Exported: "2026-01-21",
+				Enriched: "2026-01-22",
+				Locked:   "2026-01-23",
+			},
+		},
+	}
+
+	if ok := s.Clear("test.md", "locked"); !ok {
+		t.Error("Clear locked should succeed")
+	}
+	if s.Locked("test.md") {
+		t.Error("should not be locked after Clear")
+	}
+	// Other fields preserved.
+	if !s.IsExported("test.md") {
+		t.Error("exported should be preserved after Clear locked")
+	}
+	if !s.IsEnriched("test.md") {
+		t.Error("enriched should be preserved after Clear locked")
+	}
+
+	if ok := s.Clear("test.md", "invalid"); ok {
+		t.Error("Clear invalid stage should fail")
+	}
+}
+
+func TestClear_AllStages(t *testing.T) {
+	s := &JournalState{
+		Version: CurrentVersion,
+		Entries: make(map[string]FileState),
+	}
+
+	// Set all stages, then clear all.
+	for _, stage := range ValidStages {
+		s.Mark("test.md", stage)
+	}
+	for _, stage := range ValidStages {
+		if ok := s.Clear("test.md", stage); !ok {
+			t.Errorf("Clear %q should succeed", stage)
+		}
+	}
+
+	fs := s.Entries["test.md"]
+	if fs.Exported != "" || fs.Enriched != "" || fs.Normalized != "" ||
+		fs.FencesVerified != "" || fs.Locked != "" {
+		t.Error("all stages should be empty after Clear")
+	}
+}
+
+func TestLocked(t *testing.T) {
+	s := &JournalState{
+		Version: CurrentVersion,
+		Entries: make(map[string]FileState),
+	}
+
+	if s.Locked("test.md") {
+		t.Error("should not be locked initially")
+	}
+
+	s.Mark("test.md", "locked")
+	if !s.Locked("test.md") {
+		t.Error("should be locked after Mark")
+	}
+
+	s.Clear("test.md", "locked")
+	if s.Locked("test.md") {
+		t.Error("should not be locked after Clear")
+	}
+}
+
+func TestLocked_RoundTrip(t *testing.T) {
+	dir := t.TempDir()
+
+	s := &JournalState{
+		Version: CurrentVersion,
+		Entries: map[string]FileState{
+			"locked.md":   {Exported: "2026-01-21", Locked: "2026-01-22"},
+			"unlocked.md": {Exported: "2026-01-21"},
+		},
+	}
+
+	if err := s.Save(dir); err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+
+	loaded, err := Load(dir)
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	if !loaded.Locked("locked.md") {
+		t.Error("locked.md should be locked after round-trip")
+	}
+	if loaded.Locked("unlocked.md") {
+		t.Error("unlocked.md should not be locked after round-trip")
 	}
 }

@@ -36,15 +36,19 @@ By default, only sessions from the current project are exported. Use
 
 Safe by default: --all only exports new sessions. Existing files are
 skipped. Use --regenerate to re-export existing files (preserves YAML
-frontmatter). Use --force to overwrite completely (discards frontmatter).
+frontmatter by default). Use --keep-frontmatter=false to discard
+enriched frontmatter during regeneration.
+
+Locked entries (via "ctx recall lock") are always skipped, regardless
+of flags.
 
 Examples:
-  ctx recall export abc123                  # Export one session (always writes)
-  ctx recall export --all                   # Export only new sessions
-  ctx recall export --all --dry-run         # Preview what would be exported
-  ctx recall export --all --regenerate      # Re-export existing (prompts)
-  ctx recall export --all --regenerate -y   # Re-export without prompting
-  ctx recall export --all --force -y        # Overwrite completely`,
+  ctx recall export abc123                              # Export one session
+  ctx recall export --all                               # Export only new
+  ctx recall export --all --dry-run                     # Preview changes
+  ctx recall export --all --regenerate                  # Re-export (prompts)
+  ctx recall export --all --regenerate -y               # Re-export, no prompt
+  ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRecallExport(cmd, args, opts)
 		},
@@ -57,15 +61,23 @@ Examples:
 		&opts.allProjects, "all-projects", false, "Include sessions from all projects",
 	)
 	cmd.Flags().BoolVar(
+		&opts.regenerate,
+		"regenerate", false,
+		"Re-export existing files (preserves YAML frontmatter by default)",
+	)
+	cmd.Flags().BoolVar(
+		&opts.keepFrontmatter,
+		"keep-frontmatter", true,
+		"Preserve enriched YAML frontmatter during regeneration",
+	)
+
+	// Deprecated: --force is replaced by --keep-frontmatter=false.
+	cmd.Flags().BoolVar(
 		&opts.force,
 		"force", false,
 		"Overwrite existing files completely (discard frontmatter)",
 	)
-	cmd.Flags().BoolVar(
-		&opts.regenerate,
-		"regenerate", false,
-		"Re-export existing files (preserves YAML frontmatter)",
-	)
+	_ = cmd.Flags().MarkDeprecated("force", "use --keep-frontmatter=false instead")
 	cmd.Flags().BoolVarP(
 		&opts.yes,
 		"yes", "y", false,

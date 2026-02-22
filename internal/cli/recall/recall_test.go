@@ -39,7 +39,7 @@ func TestCmd(t *testing.T) {
 func TestCmd_HasSubcommands(t *testing.T) {
 	cmd := Cmd()
 
-	expectedSubs := []string{"list", "show", "export"}
+	expectedSubs := []string{"list", "show", "export", "lock", "unlock"}
 	subs := make(map[string]bool)
 
 	for _, sub := range cmd.Commands() {
@@ -116,8 +116,11 @@ func TestRecallExportCmd_Flags(t *testing.T) {
 		t.Fatal("export subcommand not found")
 	}
 
-	// Check flags
-	flags := []string{"all", "all-projects", "force", "skip-existing"}
+	// Check flags (includes deprecated flags for backward compatibility).
+	flags := []string{
+		"all", "all-projects", "regenerate", "keep-frontmatter",
+		"yes", "dry-run", "force", "skip-existing",
+	}
 	for _, f := range flags {
 		if exportCmd.Flags().Lookup(f) == nil {
 			t.Errorf("export subcommand missing --%s flag", f)

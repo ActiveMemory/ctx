@@ -30,18 +30,24 @@ Subcommands:
   list    List all parsed sessions
   show    Show details of a specific session
   export  Export sessions to editable journal files
+  lock    Protect journal entries from export regeneration
+  unlock  Remove lock protection from journal entries
 
 Examples:
   ctx recall list
   ctx recall list --limit 5
   ctx recall show abc123
   ctx recall show --latest
-  ctx recall export --all`,
+  ctx recall export --all
+  ctx recall lock 2026-01-21-session-abc12345.md
+  ctx recall unlock --all`,
 	}
 
 	cmd.AddCommand(recallListCmd())
 	cmd.AddCommand(recallShowCmd())
 	cmd.AddCommand(recallExportCmd())
+	cmd.AddCommand(recallLockCmd())
+	cmd.AddCommand(recallUnlockCmd())
 
 	return cmd
 }

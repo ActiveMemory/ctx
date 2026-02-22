@@ -64,7 +64,7 @@ Date strings (not booleans) — provides audit trail at zero extra cost.
 
 ### Phase 8: CLI helper (optional but recommended)
 
-14. **Add `ctx journal mark <filename> <stage>`** subcommand — makes state updates from skills trivial and atomic. Skills call `ctx journal mark session.md enriched` instead of editing JSON.
+14. **Add `ctx system mark-journal <filename> <stage>`** subcommand — makes state updates from skills trivial and atomic. Skills call `ctx system mark-journal session.md enriched` instead of editing JSON.
 
 ## Files changed
 

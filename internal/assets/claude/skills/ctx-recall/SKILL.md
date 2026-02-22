@@ -68,22 +68,43 @@ Use `--full` for the complete conversation.
 
 Export sessions to `.context/journal/` as markdown.
 
-| Flag             | Default | Purpose                                           |
-|------------------|---------|---------------------------------------------------|
-| `--all`          | false   | Export all sessions (only new files by default)     |
-| `--all-projects` | false   | Include all projects                                |
-| `--regenerate`   | false   | Re-export existing files (preserves frontmatter)    |
-| `--force`        | false   | Overwrite existing files completely                 |
-| `--yes`, `-y`    | false   | Skip confirmation prompt                            |
-| `--dry-run`      | false   | Preview what would be exported                      |
+| Flag                  | Default | Purpose                                           |
+|-----------------------|---------|---------------------------------------------------|
+| `--all`               | false   | Export all sessions (only new files by default)     |
+| `--all-projects`      | false   | Include all projects                                |
+| `--regenerate`        | false   | Re-export existing files (preserves frontmatter)    |
+| `--keep-frontmatter`  | true    | Preserve enriched YAML frontmatter during regen     |
+| `--yes`, `-y`         | false   | Skip confirmation prompt                            |
+| `--dry-run`           | false   | Preview what would be exported                      |
 
 Accepts a session ID (always writes), or `--all` to export
 everything (safe by default — only new sessions, existing
 files skipped). Use `--regenerate` with `--all` to re-export
-existing files; YAML frontmatter is preserved.
+existing files; YAML frontmatter is preserved by default.
+Use `--keep-frontmatter=false` to discard enriched frontmatter.
+
+Locked entries (via `ctx recall lock`) are always skipped.
 
 Large sessions (>200 messages) are automatically split into
 parts with navigation links between them.
+
+### `ctx recall lock`
+
+Protect journal entries from export regeneration.
+
+```bash
+ctx recall lock <pattern>     # Lock matching entries
+ctx recall lock --all         # Lock all entries
+```
+
+### `ctx recall unlock`
+
+Remove lock protection from journal entries.
+
+```bash
+ctx recall unlock <pattern>   # Unlock matching entries
+ctx recall unlock --all       # Unlock all entries
+```
 
 ## Data Source
 

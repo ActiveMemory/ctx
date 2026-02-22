@@ -180,10 +180,12 @@ To re-export existing files (e.g., after a format improvement), use
 YAML frontmatter you or the enrichment skill have added. You'll be prompted
 before any files are overwritten.
 
-!!! warning "--force Overwrites Journal Files"
-    `--force -y` triggers a **full overwrite** — frontmatter will be lost.
+!!! warning "--keep-frontmatter=false Discards Enrichments"
+    `--keep-frontmatter=false` discards enriched YAML frontmatter during
+    regeneration. **Back up your journal before using this flag**.
 
-    **Back up your journal before using this flag**.
+    To protect specific entries from regeneration entirely, use
+    `ctx recall lock <pattern>`.
 
 ### Step 4: Normalize Rendering
 

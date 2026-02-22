@@ -865,3 +865,368 @@ func TestRunRecallExport_YesBypasses(t *testing.T) {
 		t.Error("--yes should bypass confirmation and regenerate files")
 	}
 }
+
+func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-lockskip",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-lock-016", "lock-skip", "/home/test/lockskip",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export to create the file.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Lock the entry in state.
+	jstate, loadErr := state.Load(journalDir)
+	if loadErr != nil {
+		t.Fatalf("load state: %v", loadErr)
+	}
+	jstate.Mark(mdFile, "locked")
+	if saveErr := jstate.Save(journalDir); saveErr != nil {
+		t.Fatalf("save state: %v", saveErr)
+	}
+
+	// Overwrite with custom content.
+	custom := "locked content — do not touch\n"
+	if writeErr := os.WriteFile(path, []byte(custom), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export with --regenerate --yes — locked file should be skipped.
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
+
+	data, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read: %v", readErr)
+	}
+	if string(data) != custom {
+		t.Error("locked file should not be regenerated")
+	}
+}
+
+func TestRunRecallExport_LockedSkippedByForce(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-lockforce",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-lock-017", "lock-force", "/home/test/lockforce",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Lock the entry.
+	jstate, loadErr := state.Load(journalDir)
+	if loadErr != nil {
+		t.Fatalf("load state: %v", loadErr)
+	}
+	jstate.Mark(mdFile, "locked")
+	if saveErr := jstate.Save(journalDir); saveErr != nil {
+		t.Fatalf("save state: %v", saveErr)
+	}
+
+	// Overwrite.
+	custom := "locked content — force cannot override\n"
+	if writeErr := os.WriteFile(path, []byte(custom), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Even --force --yes should not overwrite a locked file.
+	exportHelper(t, tmpDir, "--force", "--yes")
+
+	data, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read: %v", readErr)
+	}
+	if string(data) != custom {
+		t.Error("locked file should not be overwritten even with --force")
+	}
+}
+
+func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-keepfm",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-keepfm-018", "keepfm-test", "/home/test/keepfm",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Read generated title to keep filename stable.
+	origData, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read original: %v", readErr)
+	}
+	origTitle := extractFrontmatterField(string(origData), "title")
+
+	// Inject enriched frontmatter.
+	enrichedFM := fmt.Sprintf(
+		"---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"Curated\"\n"+
+			"tags:\n  - enriched\n---\n",
+		origTitle,
+	)
+	body := "# hello from test\n\nBody content\n"
+	if writeErr := os.WriteFile(
+		path, []byte(enrichedFM+"\n"+body), 0600,
+	); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export with --keep-frontmatter=false — discards frontmatter.
+	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
+
+	data, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read: %v", readErr)
+	}
+	content := string(data)
+
+	if strings.Contains(content, "Curated") {
+		t.Error("--keep-frontmatter=false should discard enriched summary")
+	}
+	if strings.Contains(content, "tags:") {
+		t.Error("--keep-frontmatter=false should discard enriched tags")
+	}
+	if !strings.Contains(content, "session_id:") {
+		t.Error("regenerated file should contain session_id")
+	}
+}
+
+func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-keepdef",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-keepdef-019", "keepdef-test", "/home/test/keepdef",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	origData, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read original: %v", readErr)
+	}
+	origTitle := extractFrontmatterField(string(origData), "title")
+
+	// Inject enriched frontmatter.
+	enrichedFM := fmt.Sprintf(
+		"---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"Preserved\"\n---\n",
+		origTitle,
+	)
+	body := "# hello from test\n\nBody content\n"
+	if writeErr := os.WriteFile(
+		path, []byte(enrichedFM+"\n"+body), 0600,
+	); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export with --regenerate (--keep-frontmatter defaults to true).
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
+
+	data, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read: %v", readErr)
+	}
+	if !strings.Contains(string(data), "Preserved") {
+		t.Error("--keep-frontmatter=true (default) should preserve frontmatter")
+	}
+}
+
+func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-drylocked",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-drylk-020", "drylk-test", "/home/test/drylocked",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// Export, then lock.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+
+	jstate, loadErr := state.Load(journalDir)
+	if loadErr != nil {
+		t.Fatalf("load state: %v", loadErr)
+	}
+	jstate.Mark(mdFile, "locked")
+	if saveErr := jstate.Save(journalDir); saveErr != nil {
+		t.Fatalf("save state: %v", saveErr)
+	}
+
+	// Dry-run with --regenerate should mention locked.
+	cmd := Cmd()
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs([]string{
+		"export", "--all", "--all-projects",
+		"--regenerate", "--dry-run",
+	})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("dry-run: %v", err)
+	}
+
+	output := buf.String()
+	if !strings.Contains(output, "locked") {
+		t.Errorf("dry-run should mention locked entries, got:\n%s", output)
+	}
+}
+
+func TestDiscardFrontmatter(t *testing.T) {
+	tests := []struct {
+		name string
+		opts exportOpts
+		want bool
+	}{
+		{
+			name: "defaults",
+			opts: exportOpts{keepFrontmatter: true},
+			want: false,
+		},
+		{
+			name: "keep-frontmatter=false",
+			opts: exportOpts{keepFrontmatter: false},
+			want: true,
+		},
+		{
+			name: "force overrides keep-frontmatter",
+			opts: exportOpts{keepFrontmatter: true, force: true},
+			want: true,
+		},
+		{
+			name: "both false and force",
+			opts: exportOpts{keepFrontmatter: false, force: true},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.opts.discardFrontmatter()
+			if got != tt.want {
+				t.Errorf("discardFrontmatter() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-implyregen",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-implyregen-021", "implyregen-test", "/home/test/implyregen",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Overwrite body with custom content.
+	if err := os.WriteFile(path, []byte("overwritten\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	// Re-export with --keep-frontmatter=false (no explicit --regenerate).
+	// The implication should cause regeneration.
+	exportHelper(t, tmpDir, "--keep-frontmatter=false", "--yes")
+
+	data, err := os.ReadFile(filepath.Clean(path))
+	if err != nil {
+		t.Fatalf("read: %v", err)
+	}
+	if !strings.Contains(string(data), "hello from test") {
+		t.Error("--keep-frontmatter=false should imply --regenerate")
+	}
+}

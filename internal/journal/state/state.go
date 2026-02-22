@@ -36,6 +36,7 @@ type FileState struct {
 	Enriched       string `json:"enriched,omitempty"`
 	Normalized     string `json:"normalized,omitempty"`
 	FencesVerified string `json:"fences_verified,omitempty"`
+	Locked         string `json:"locked,omitempty"`
 }
 
 // Load reads the state file from the journal directory. If the file does
@@ -116,6 +117,14 @@ func (s *JournalState) MarkFencesVerified(filename string) {
 }
 
 // Mark sets an arbitrary stage to today's date.
+//
+// Parameters:
+//   - filename: Journal entry filename (e.g. "2026-01-21-session.md")
+//   - stage: One of ValidStages (exported, enriched, normalized,
+//     fences_verified, locked)
+//
+// Returns:
+//   - bool: False if stage is not recognized
 func (s *JournalState) Mark(filename, stage string) bool {
 	fs := s.Entries[filename]
 	switch stage {
@@ -127,11 +136,52 @@ func (s *JournalState) Mark(filename, stage string) bool {
 		fs.Normalized = today()
 	case "fences_verified":
 		fs.FencesVerified = today()
+	case "locked":
+		fs.Locked = today()
 	default:
 		return false
 	}
 	s.Entries[filename] = fs
 	return true
+}
+
+// Clear removes a stage value, resetting it to empty.
+//
+// Parameters:
+//   - filename: Journal entry filename
+//   - stage: One of ValidStages
+//
+// Returns:
+//   - bool: False if stage is not recognized
+func (s *JournalState) Clear(filename, stage string) bool {
+	fs := s.Entries[filename]
+	switch stage {
+	case "exported":
+		fs.Exported = ""
+	case "enriched":
+		fs.Enriched = ""
+	case "normalized":
+		fs.Normalized = ""
+	case "fences_verified":
+		fs.FencesVerified = ""
+	case "locked":
+		fs.Locked = ""
+	default:
+		return false
+	}
+	s.Entries[filename] = fs
+	return true
+}
+
+// Locked reports whether the file is protected from export regeneration.
+//
+// Parameters:
+//   - filename: Journal entry filename
+//
+// Returns:
+//   - bool: True if the file has a lock date recorded
+func (s *JournalState) Locked(filename string) bool {
+	return s.Entries[filename].Locked != ""
 }
 
 // Rename moves state from an old filename to a new one, preserving all
@@ -193,5 +243,7 @@ func (s *JournalState) CountUnenriched(journalDir string) int {
 	return count
 }
 
-// ValidStages lists the recognized stage names for Mark().
-var ValidStages = []string{"exported", "enriched", "normalized", "fences_verified"}
+// ValidStages lists the recognized stage names for Mark() and Clear().
+var ValidStages = []string{
+	"exported", "enriched", "normalized", "fences_verified", "locked",
+}

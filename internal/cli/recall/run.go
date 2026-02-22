@@ -25,6 +25,14 @@ import (
 // exportOpts holds all flag values for the export command.
 type exportOpts struct {
 	all, allProjects, force, regenerate, yes, dryRun bool
+	keepFrontmatter                                  bool
+}
+
+// discardFrontmatter reports whether frontmatter should be discarded
+// during regeneration, based on the combination of --keep-frontmatter
+// and the deprecated --force flag.
+func (o exportOpts) discardFrontmatter() bool {
+	return !o.keepFrontmatter || o.force
 }
 
 // exportAction describes what will happen to a given file.
@@ -34,6 +42,7 @@ const (
 	actionNew        exportAction = iota // file does not exist yet
 	actionRegenerate                     // file exists and will be rewritten
 	actionSkip                           // file exists and will be left alone
+	actionLocked                         // file is locked — never overwritten
 )
 
 // fileAction describes the planned action for a single export file (one part
@@ -56,11 +65,12 @@ type fileAction struct {
 // exportPlan is the result of planExport: a list of per-file actions plus
 // aggregate counters and any renames that need to happen first.
 type exportPlan struct {
-	actions    []fileAction
-	newCount   int
-	regenCount int
-	skipCount  int
-	renameOps  []renameOp
+	actions     []fileAction
+	newCount    int
+	regenCount  int
+	skipCount   int
+	lockedCount int
+	renameOps   []renameOp
 }
 
 // renameOp describes a dedup rename (old slug → new slug).
@@ -167,7 +177,10 @@ func planExport(
 			case !fileExists:
 				action = actionNew
 				plan.newCount++
-			case singleSession || opts.regenerate || opts.force:
+			case jstate.Locked(filename):
+				action = actionLocked
+				plan.lockedCount++
+			case singleSession || opts.regenerate || opts.discardFrontmatter():
 				action = actionRegenerate
 				plan.regenCount++
 			default:
@@ -211,6 +224,9 @@ func printExportSummary(cmd *cobra.Command, plan exportPlan, isDryRun bool) {
 	if plan.skipCount > 0 {
 		parts = append(parts, fmt.Sprintf("skip %d existing", plan.skipCount))
 	}
+	if plan.lockedCount > 0 {
+		parts = append(parts, fmt.Sprintf("skip %d locked", plan.lockedCount))
+	}
 	if len(parts) == 0 {
 		cmd.Println("Nothing to export.")
 		return
@@ -245,9 +261,16 @@ func executeExport(
 	dim := color.New(color.FgHiBlack)
 
 	for _, fa := range plan.actions {
+		if fa.action == actionLocked {
+			skipped++
+			_, _ = dim.Fprintf(cmd.OutOrStdout(),
+				"  skip %s (locked)\n", fa.filename)
+			continue
+		}
 		if fa.action == actionSkip {
 			skipped++
-			_, _ = dim.Fprintf(cmd.OutOrStdout(), "  skip %s (exists)\n", fa.filename)
+			_, _ = dim.Fprintf(cmd.OutOrStdout(),
+				"  skip %s (exists)\n", fa.filename)
 			continue
 		}
 
@@ -263,7 +286,8 @@ func executeExport(
 		fileExists := fa.action == actionRegenerate
 
 		// Preserve enriched YAML frontmatter from existing file.
-		if fileExists && !opts.force {
+		discard := opts.discardFrontmatter()
+		if fileExists && !discard {
 			existing, readErr := os.ReadFile(filepath.Clean(fa.path))
 			if readErr == nil {
 				if fm := extractFrontmatter(string(existing)); fm != "" {
@@ -271,10 +295,10 @@ func executeExport(
 				}
 			}
 		}
-		if fileExists && opts.force {
+		if fileExists && discard {
 			jstate.ClearEnriched(fa.filename)
 		}
-		if fileExists && !opts.force {
+		if fileExists && !discard {
 			updated++
 		} else {
 			exported++
@@ -288,7 +312,7 @@ func executeExport(
 
 		jstate.MarkExported(fa.filename)
 
-		if fileExists && !opts.force {
+		if fileExists && !discard {
 			cmd.Printf("  %s %s (updated, frontmatter preserved)\n", green("✓"), fa.filename)
 		} else {
 			cmd.Printf("  %s %s\n", green("✓"), fa.filename)
@@ -300,6 +324,11 @@ func executeExport(
 
 // runRecallExport handles the recall export command.
 func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
+	// --keep-frontmatter=false implies --regenerate (can't discard without regenerating).
+	if !opts.keepFrontmatter {
+		opts.regenerate = true
+	}
+
 	// 1. Validate flags.
 	if err := validateExportFlags(args, opts); err != nil {
 		return err

@@ -5,7 +5,7 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: ctx CLI
+title: CLI
 icon: lucide/terminal
 ---
 
@@ -44,8 +44,8 @@ All commands support these flags:
 | [`ctx compact`](#ctx-compact)     | Archive completed tasks, clean up files                   |
 | [`ctx tasks`](#ctx-tasks)         | Task archival and snapshots                               |
 | [`ctx permissions`](#ctx-permissions) | Permission snapshots (golden image)                   |
-| [`ctx decisions`](#ctx-decisions) | Manage `DECISIONS.md` (reindex, archive)                  |
-| [`ctx learnings`](#ctx-learnings) | Manage `LEARNINGS.md` (reindex, archive)                  |
+| [`ctx decisions`](#ctx-decisions) | Manage `DECISIONS.md` (reindex)                           |
+| [`ctx learnings`](#ctx-learnings) | Manage `LEARNINGS.md` (reindex)                           |
 | [`ctx recall`](#ctx-recall)       | Browse and export AI session history                      |
 | [`ctx journal`](#ctx-journal)     | Generate static site from journal entries                 |
 | [`ctx serve`](#ctx-serve)         | Serve static site locally                                 |
@@ -333,10 +333,12 @@ ctx drift [flags]
 - Constitution rules aren't violated (*heuristic*)
 - Staleness indicators (*old files, many completed tasks*)
 - Entry count — warns when LEARNINGS.md or DECISIONS.md exceed configurable
-  thresholds (default: 30 learnings, 20 decisions). Configure via `.contextrc`:
+  thresholds (default: 30 learnings, 20 decisions), or when CONVENTIONS.md
+  exceeds a line count threshold (default: 200). Configure via `.ctxrc`:
   ```yaml
-  entry_count_learnings: 30   # warn above this (0 = disable)
-  entry_count_decisions: 20   # warn above this (0 = disable)
+  entry_count_learnings: 30      # warn above this (0 = disable)
+  entry_count_decisions: 20      # warn above this (0 = disable)
+  convention_line_count: 200     # warn above this (0 = disable)
   ```
 
 **Example**:
@@ -392,7 +394,6 @@ ctx sync --dry-run
 Consolidate and clean up context files.
 
 * Moves completed tasks older than 7 days to the archive
-* Archives old decisions and learnings (older than 90 days by default)
 * Removes empty sections
 
 ```bash
@@ -404,10 +405,6 @@ ctx compact [flags]
 | Flag             | Description                                |
 |------------------|--------------------------------------------|
 | `--archive`      | Create `.context/archive/` for old content |
-
-When `--archive` is enabled (or `auto_archive: true` in `.contextrc`), compact
-also archives decisions and learnings older than `archive_knowledge_after_days`
-(default 90), keeping the most recent `archive_keep_recent` entries (default 5).
 
 **Example**:
 
@@ -600,36 +597,6 @@ ctx decisions reindex
 # ✓ Index regenerated with 12 entries
 ```
 
-#### `ctx decisions archive`
-
-Archive old or superseded decisions from DECISIONS.md to `.context/archive/`.
-
-```bash
-ctx decisions archive [flags]
-```
-
-**Flags**:
-
-| Flag        | Short | Default | Description                                   |
-|-------------|-------|---------|-----------------------------------------------|
-| `--days`    | `-d`  | 90      | Archive entries older than this many days      |
-| `--keep`    | `-k`  | 5       | Number of recent entries to always keep        |
-| `--all`     |       | false   | Archive all entries except the most recent `-k`|
-| `--dry-run` |       | false   | Preview changes without modifying files        |
-
-Entries are archived if they are older than `--days` or marked as superseded
-(body contains `~~Superseded`). The most recent `--keep` entries are always
-preserved regardless of age.
-
-**Example**:
-
-```bash
-ctx decisions archive                # Archive old decisions (90+ days)
-ctx decisions archive --dry-run      # Preview what would be archived
-ctx decisions archive --days 30      # Lower the threshold
-ctx decisions archive --all --keep 3 # Archive everything except 3 newest
-```
-
 ---
 
 ### `ctx learnings`
@@ -659,36 +626,6 @@ files to use the index format.
 ```bash
 ctx learnings reindex
 # ✓ Index regenerated with 8 entries
-```
-
-#### `ctx learnings archive`
-
-Archive old or superseded learnings from LEARNINGS.md to `.context/archive/`.
-
-```bash
-ctx learnings archive [flags]
-```
-
-**Flags**:
-
-| Flag        | Short | Default | Description                                   |
-|-------------|-------|---------|-----------------------------------------------|
-| `--days`    | `-d`  | 90      | Archive entries older than this many days      |
-| `--keep`    | `-k`  | 5       | Number of recent entries to always keep        |
-| `--all`     |       | false   | Archive all entries except the most recent `-k`|
-| `--dry-run` |       | false   | Preview changes without modifying files        |
-
-Entries are archived if they are older than `--days` or marked as superseded
-(body contains `~~Superseded`). The most recent `--keep` entries are always
-preserved regardless of age.
-
-**Example**:
-
-```bash
-ctx learnings archive                # Archive old learnings (90+ days)
-ctx learnings archive --dry-run      # Preview what would be archived
-ctx learnings archive --days 30      # Lower the threshold
-ctx learnings archive --all --keep 3 # Archive everything except 3 newest
 ```
 
 ---
@@ -771,15 +708,18 @@ ctx recall export [session-id] [flags]
 |------------------|-----------------------------------------------------------|
 | `--all`          | Export all sessions (only new files by default)            |
 | `--all-projects` | Export from all projects                                   |
-| `--regenerate`   | Re-export existing files (preserves YAML frontmatter)      |
-| `--force`        | Overwrite existing files completely (discard frontmatter)  |
-| `--yes`, `-y`    | Skip confirmation prompt                                   |
-| `--dry-run`      | Show what would be exported without writing files           |
+| `--regenerate`        | Re-export existing files (preserves YAML frontmatter by default) |
+| `--keep-frontmatter` | Preserve enriched YAML frontmatter during regeneration (default: true) |
+| `--yes`, `-y`         | Skip confirmation prompt                                   |
+| `--dry-run`           | Show what would be exported without writing files           |
 
 **Safe by default**: `--all` only exports new sessions. Existing files are
 skipped. Use `--regenerate` to re-export existing files (conversation content
-is regenerated, YAML frontmatter from enrichment is preserved). Use `--force`
-to overwrite completely (frontmatter will be lost).
+is regenerated, YAML frontmatter from enrichment is preserved by default).
+Use `--keep-frontmatter=false` to discard enriched frontmatter during
+regeneration.
+
+Locked entries (via `ctx recall lock`) are always skipped, regardless of flags.
 
 Single-session export (`ctx recall export <id>`) always writes without
 prompting, since you are explicitly targeting one session.
@@ -790,12 +730,60 @@ contains raw conversation data.
 **Example**:
 
 ```bash
-ctx recall export abc123                  # Export one session (always writes)
-ctx recall export --all                   # Export only new sessions
-ctx recall export --all --dry-run         # Preview what would be exported
-ctx recall export --all --regenerate      # Re-export existing (prompts first)
-ctx recall export --all --regenerate -y   # Re-export without prompting
-ctx recall export --all --force -y        # Overwrite completely (lose frontmatter)
+ctx recall export abc123                              # Export one session
+ctx recall export --all                               # Export only new sessions
+ctx recall export --all --dry-run                     # Preview what would be exported
+ctx recall export --all --regenerate                  # Re-export existing (prompts)
+ctx recall export --all --regenerate -y               # Re-export without prompting
+ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
+```
+
+#### `ctx recall lock`
+
+Protect journal entries from being overwritten by `export --regenerate`.
+
+```bash
+ctx recall lock <pattern> [flags]
+```
+
+**Flags**:
+
+| Flag    | Description                      |
+|---------|----------------------------------|
+| `--all` | Lock all journal entries          |
+
+The pattern matches filenames by slug, date, or short ID. Locking a
+multi-part entry locks all parts. The lock is recorded in
+`.context/journal/.state.json` and a `locked: true` line is added to the
+file's YAML frontmatter for visibility.
+
+**Example**:
+
+```bash
+ctx recall lock abc12345
+ctx recall lock 2026-01-21-session-abc12345.md
+ctx recall lock --all
+```
+
+#### `ctx recall unlock`
+
+Remove lock protection from journal entries.
+
+```bash
+ctx recall unlock <pattern> [flags]
+```
+
+**Flags**:
+
+| Flag    | Description                        |
+|---------|------------------------------------|
+| `--all` | Unlock all journal entries          |
+
+**Example**:
+
+```bash
+ctx recall unlock abc12345
+ctx recall unlock --all
 ```
 
 ---
@@ -872,29 +860,6 @@ Open the output directory as an Obsidian  vault directly.
 ```bash
 ctx journal obsidian                          # Generate in .context/journal-obsidian/
 ctx journal obsidian --output ~/vaults/ctx    # Custom output directory
-```
-
-#### `ctx journal mark`
-
-Update processing state for a journal entry. Records the current date
-in `.context/journal/.state.json`.
-
-```bash
-ctx journal mark <filename> <stage>
-```
-
-**Stages**: `exported`, `enriched`, `normalized`, `fences_verified`
-
-| Flag      | Description                           |
-|-----------|---------------------------------------|
-| `--check` | Check if stage is set (exit 1 if not) |
-
-**Example**:
-
-```bash
-ctx journal mark 2026-01-21-session-abc12345.md enriched
-ctx journal mark 2026-01-21-session-abc12345.md normalized
-ctx journal mark --check 2026-01-21-session-abc12345.md fences_verified
 ```
 
 ---
@@ -1268,8 +1233,9 @@ System diagnostics and hook commands.
 ctx system <subcommand>
 ```
 
-The parent command shows available subcommands. Hidden hook subcommands
-(`ctx system check-*`) are used by the Claude Code plugin — see
+The parent command shows available subcommands. Hidden plumbing subcommands
+(`ctx system mark-journal`) are used by skills and automation. Hidden hook
+subcommands (`ctx system check-*`) are used by the Claude Code plugin — see
 [AI Tool Integrations](integrations.md#plugin-hooks) for details.
 
 #### `ctx system resources`
@@ -1329,6 +1295,30 @@ Alerts:
 **Platform support**: Full metrics on Linux and macOS. Windows shows
 disk only; memory and load report as unsupported.
 
+#### `ctx system mark-journal`
+
+Update processing state for a journal entry. Records the current date
+in `.context/journal/.state.json`. Used by journal skills to record
+pipeline progress.
+
+```bash
+ctx system mark-journal <filename> <stage>
+```
+
+**Stages**: `exported`, `enriched`, `normalized`, `fences_verified`
+
+| Flag      | Description                           |
+|-----------|---------------------------------------|
+| `--check` | Check if stage is set (exit 1 if not) |
+
+**Example**:
+
+```bash
+ctx system mark-journal 2026-01-21-session-abc12345.md enriched
+ctx system mark-journal 2026-01-21-session-abc12345.md normalized
+ctx system mark-journal --check 2026-01-21-session-abc12345.md fences_verified
+```
+
 ---
 
 ## Exit Codes
@@ -1351,10 +1341,10 @@ disk only; memory and load report as unsupported.
 
 ## Configuration File
 
-Optional `.contextrc` (*YAML format*) at project root:
+Optional `.ctxrc` (*YAML format*) at project root:
 
 ```yaml
-# .contextrc
+# .ctxrc
 context_dir: .context                # Context directory name
 token_budget: 8000                   # Default token budget
 priority_order:                      # File loading priority
@@ -1363,12 +1353,11 @@ priority_order:                      # File loading priority
   - CONVENTIONS.md
 auto_archive: true                   # Auto-archive old items
 archive_after_days: 7                # Days before archiving tasks
-archive_knowledge_after_days: 90     # Days before archiving decisions/learnings
-archive_keep_recent: 5               # Recent entries to keep when archiving
 scratchpad_encrypt: true             # Encrypt scratchpad (default: true)
 allow_outside_cwd: false             # Skip boundary check (default: false)
 entry_count_learnings: 30            # Drift warning threshold (0 = disable)
 entry_count_decisions: 20            # Drift warning threshold (0 = disable)
+convention_line_count: 200           # Line count warning for CONVENTIONS.md (0 = disable)
 ```
 
 | Field                           | Type       | Default      | Description                                          |
@@ -1378,13 +1367,12 @@ entry_count_decisions: 20            # Drift warning threshold (0 = disable)
 | `priority_order`                | `[]string` | *(all files)* | File loading priority for context packets           |
 | `auto_archive`                  | `bool`     | `false`      | Auto-archive completed tasks                         |
 | `archive_after_days`            | `int`      | `7`          | Days before completed tasks are archived             |
-| `archive_knowledge_after_days`  | `int`      | `90`         | Days before decisions/learnings are archived          |
-| `archive_keep_recent`           | `int`      | `5`          | Recent entries to keep when archiving knowledge       |
 | `scratchpad_encrypt`            | `bool`     | `true`       | Encrypt scratchpad with AES-256-GCM                  |
 | `allow_outside_cwd`             | `bool`     | `false`      | Skip boundary check for external context dirs        |
 | `entry_count_learnings`         | `int`      | `30`         | Drift warning when LEARNINGS.md exceeds this count   |
 | `entry_count_decisions`         | `int`      | `20`         | Drift warning when DECISIONS.md exceeds this count   |
+| `convention_line_count`         | `int`      | `200`        | Line count warning for CONVENTIONS.md                |
 
-**Priority order:** CLI flags > Environment variables > `.contextrc` > Defaults
+**Priority order:** CLI flags > Environment variables > `.ctxrc` > Defaults
 
 All settings are optional. Missing values use defaults.

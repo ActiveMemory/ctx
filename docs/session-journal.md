@@ -82,8 +82,8 @@ ctx recall export --all --dry-run
 # Re-export existing (regenerates conversation, preserves YAML frontmatter)
 ctx recall export --all --regenerate
 
-# Full overwrite (discards frontmatter enrichments)
-ctx recall export --all --force -y
+# Discard frontmatter during regeneration
+ctx recall export --all --regenerate --keep-frontmatter=false -y
 ```
 
 Exported sessions go to `.context/journal/` as editable Markdown files.
@@ -138,7 +138,11 @@ ctx journal site --serve
     preserved. You'll be prompted before any existing files are overwritten;
     add `-y` to skip the prompt.
 
-    Use `--force -y` to overwrite everything (*frontmatter will be lost*).
+    Use `--keep-frontmatter=false` to discard enriched frontmatter during
+    regeneration.
+
+    Locked entries (via `ctx recall lock`) are always skipped, regardless
+    of flags.
 
 ## Large Sessions
 
