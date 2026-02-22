@@ -1,18 +1,18 @@
 ---
-name: ctx-borrow
+name: absorb
 description: "Extract and apply deltas between two directories of the same project. Use when merging results from a parallel worktree or separate checkout where git push/pull isn't practical."
 allowed-tools: Bash(git:*), Bash(diff:*), Bash(ls:*), Bash(patch:*), Read
 ---
 
 Extract changes from a "future" directory and apply them to the "present"
 working tree. Complement to `ctx-worktree`: worktree splits work apart,
-borrow merges results back.
+absorb merges results back.
 
 ## When to Use
 
 - Merging results from a parallel worktree back into the main checkout
 - Applying changes from a separate checkout (different machine, USB copy)
-- User says "borrow", "bring changes from", "merge from folder"
+- User says "absorb", "bring changes from", "merge from folder"
 - Two copies of the same project need their deltas reconciled
 
 ## When NOT to Use
@@ -146,7 +146,7 @@ User can pick specific files. Regenerate the diff scoped to those files:
 Remind the user:
 - Review changes with `git diff`
 - Changes are unstaged — commit when satisfied
-- If borrowing from a worktree, consider `ctx-worktree teardown` to clean up
+- If absorbing from a worktree, consider `ctx-worktree teardown` to clean up
 
 ## Guardrails
 

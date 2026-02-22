@@ -72,7 +72,7 @@ project using ctx:
       "Skill(ctx-archive)",
       "Skill(ctx-blog)",
       "Skill(ctx-blog-changelog)",
-      "Skill(ctx-borrow)",
+      "Skill(absorb)",
       "Skill(ctx-commit)",
       "Skill(ctx-context-monitor)",
       "Skill(ctx-drift)",

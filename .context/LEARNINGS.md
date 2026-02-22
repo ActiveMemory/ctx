@@ -295,7 +295,7 @@
 
 **Lesson**: rsync -av preserves source permissions, not destination. Gitignored files have no git safety net. Use --no-perms or --chmod=+x for scripts, and --exclude gitignored paths explicitly.
 
-**Application**: When borrowing between worktrees: 1) exclude gitignored paths (.claude/settings.local.json, ideas/, .context/logs/) 2) restore +x on hook scripts after sync 3) consider the ctx-borrow skill which handles these edge cases
+**Application**: When borrowing between worktrees: 1) exclude gitignored paths (.claude/settings.local.json, ideas/, .context/logs/) 2) restore +x on hook scripts after sync 3) consider the /absorb skill which handles these edge cases
 
 ---
 
@@ -511,7 +511,7 @@
 
 ## [2026-02-14-163855] Skills can replace CLI commands for interactive workflows
 
-**Context**: Evaluating whether /ctx-borrow needed a full CLI command or if the skill was sufficient
+**Context**: Evaluating whether /absorb (formerly /ctx-borrow) needed a full CLI command or if the skill was sufficient
 
 **Lesson**: A well-structured skill recipe is a guide, not a rigid script. The agent improvises beyond literal instructions and adapts to edge cases using its available tools.
 

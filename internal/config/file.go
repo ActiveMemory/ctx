@@ -50,7 +50,7 @@ const (
 // Runtime configuration constants.
 const (
 	// FileContextRC is the optional runtime configuration file.
-	FileContextRC = ".contextrc"
+	FileContextRC = ".ctxrc"
 )
 
 // Environment configuration.
@@ -250,7 +250,7 @@ var DefaultClaudePermissions = []string{
 	"Skill(ctx-archive)",
 	"Skill(ctx-blog)",
 	"Skill(ctx-blog-changelog)",
-	"Skill(ctx-borrow)",
+	"Skill(absorb)",
 	"Skill(ctx-commit)",
 	"Skill(ctx-consolidate)",
 	"Skill(ctx-context-monitor)",

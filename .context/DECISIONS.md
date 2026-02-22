@@ -345,13 +345,13 @@
 
 **Status**: Accepted
 
-**Context**: Task proposed either /ctx-borrow skill or ctx borrow CLI command for merging deltas between two directories
+**Context**: Task proposed either /absorb skill or ctx borrow CLI command for merging deltas between two directories
 
 **Decision**: Borrow-from-the-future implemented as skill, not CLI command
 
 **Rationale**: The workflow requires interactive judgment: conflict resolution, selective file application, strategy selection between 3 tiers. An agent adapts to edge cases; CLI flags cannot.
 
-**Consequences**: No ctx borrow subcommand. Users invoke /ctx-borrow in their AI tool. Non-AI users would need to manually run git diff/patch commands.
+**Consequences**: No ctx borrow subcommand. Users invoke /absorb in their AI tool. Non-AI users would need to manually run git diff/patch commands.
 
 ---
 
