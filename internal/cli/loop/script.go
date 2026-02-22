@@ -46,11 +46,11 @@ func generateLoopScript(
 	maxIterCheck := ""
 	if maxIterations > 0 {
 		maxIterCheck = fmt.Sprintf(
-			config.TplLoopMaxIter, maxIterations, maxIterations)
+			config.TplLoopMaxIter, maxIterations, maxIterations, config.TplLoopNotify)
 	}
 
 	script := fmt.Sprintf(config.TplLoopScript,
-		absPrompt, completionMsg, maxIterCheck, aiCommand, config.LoopComplete)
+		absPrompt, completionMsg, maxIterCheck, aiCommand, config.LoopComplete, config.TplLoopNotify)
 
 	return script
 }

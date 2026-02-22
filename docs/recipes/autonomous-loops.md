@@ -255,7 +255,7 @@ You can also use the `/ctx-loop` skill from inside Claude Code.
     reliable for unattended loops. 
 
     See [Shell Loop vs Built-in
-    Loop](../autonomous-loop.md#quick-start-shell-while-loop-recommended)
+    Loop](../operations/autonomous-loop.md#quick-start-shell-while-loop-recommended)
     for details.
 
 ### Step 6: Run with Watch Mode
@@ -445,6 +445,9 @@ Break any part of this contract and the loop degrades.
   `.context/`, then signal.
 * Use `/ctx-context-monitor` for long runs. It can warn when context capacity is
   running low, so the agent saves before hitting limits.
+* Set up [webhook notifications](webhook-notifications.md) to get notified
+  when the loop completes, hits max iterations, or when hooks fire nudges.
+  The generated loop script includes `ctx notify` calls automatically.
 
 ## Next Up
 
@@ -453,9 +456,9 @@ Generate blog posts and changelogs from your project activity.
 
 ## See Also
 
-* [Autonomous Loops](../autonomous-loop.md): loop pattern, PROMPT.md templates, troubleshooting
-* [CLI Reference: ctx loop](../cli-reference.md#ctx-loop): flags and options
-* [CLI Reference: ctx watch](../cli-reference.md#ctx-watch): watch mode details
-* [CLI Reference: ctx init](../cli-reference.md#ctx-init): init flags including `--ralph`
+* [Autonomous Loops](../operations/autonomous-loop.md): loop pattern, PROMPT.md templates, troubleshooting
+* [CLI Reference: ctx loop](../reference/cli-reference.md#ctx-loop): flags and options
+* [CLI Reference: ctx watch](../reference/cli-reference.md#ctx-watch): watch mode details
+* [CLI Reference: ctx init](../reference/cli-reference.md#ctx-init): init flags including `--ralph`
 * [The Complete Session](session-lifecycle.md): interactive workflow
 * [Tracking Work Across Sessions](task-management.md): structuring TASKS.md

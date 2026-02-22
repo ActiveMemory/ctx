@@ -342,7 +342,7 @@ This checklist lives in the [Agent Security][security-doc]
 reference alongside the full threat model and detailed guidance
 for each layer.
 
-[security-doc]: ../agent-security.md
+[security-doc]: ../security/agent-security.md
 
 ## What Changed in ctx
 

@@ -9,7 +9,7 @@ title: Context Files
 icon: lucide/files
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## `.context/`
 
@@ -439,7 +439,7 @@ and update context.
 >Use Redis for caching</context-update>
 ```
 
-See [Integrations](integrations.md#context-update-commands) for full documentation.
+See [Integrations](../operations/integrations.md#context-update-commands) for full documentation.
 
 ---
 
@@ -456,7 +456,7 @@ All context files follow these conventions:
 
 ## Further Reading
 
-* [Refactoring with Intent](blog/2026-02-01-refactoring-with-intent.md):
+* [Refactoring with Intent](../blog/2026-02-01-refactoring-with-intent.md):
   How persistent context prevents drift during refactoring sessions.
 
 ## Token Efficiency

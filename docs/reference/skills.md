@@ -9,7 +9,7 @@ title: Skills
 icon: lucide/sparkles
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Skills
 
@@ -27,7 +27,7 @@ opinionated behavior on top.
     naturally. That's why you don't have to memorize many of
     these skills.
 
-    See the [**Prompting Guide**](prompting-guide.md) for natural-language 
+    See the [**Prompting Guide**](../home/prompting-guide.md) for natural-language 
     triggers that invoke these skills conversationally.
 
     However, when you need a more precise control, you have the option
@@ -76,7 +76,7 @@ Skills for starting, running, and ending a productive session.
     Two skills in this group are **ceremony skills**: `/ctx-remember` (session
     start) and `/ctx-wrap-up` (session end). Unlike other skills that work
     conversationally, these should be invoked as **explicit slash commands**
-    for completeness. See [Session Ceremonies](recipes/session-ceremonies.md).
+    for completeness. See [Session Ceremonies](../recipes/session-ceremonies.md).
 
 ### `/ctx-remember`
 
@@ -86,8 +86,8 @@ Recall project context and present a structured readback.
 **Wraps**: `ctx agent --budget 4000`, `ctx recall list --limit 3`,
 reads TASKS.md, DECISIONS.md, LEARNINGS.md
 
-**See also**: [Session Ceremonies](recipes/session-ceremonies.md),
-[The Complete Session](recipes/session-lifecycle.md)
+**See also**: [Session Ceremonies](../recipes/session-ceremonies.md),
+[The Complete Session](../recipes/session-lifecycle.md)
 
 ---
 
@@ -98,7 +98,7 @@ with interpreted suggestions.
 
 **Wraps**: `ctx status [--verbose] [--json]`
 
-**See also**: [The Complete Session](recipes/session-lifecycle.md),
+**See also**: [The Complete Session](../recipes/session-lifecycle.md),
 [`ctx status` CLI](cli-reference.md#ctx-status)
 
 ---
@@ -110,7 +110,7 @@ Also runs automatically via the PreToolUse hook with cooldown.
 
 **Wraps**: `ctx agent [--budget] [--format] [--cooldown] [--session]`
 
-**See also**: [The Complete Session](recipes/session-lifecycle.md),
+**See also**: [The Complete Session](../recipes/session-lifecycle.md),
 [`ctx agent` CLI](cli-reference.md#ctx-agent)
 
 ---
@@ -122,8 +122,8 @@ and unblocked status.
 
 **Wraps**: reads TASKS.md, `ctx recall list --limit 3`
 
-**See also**: [The Complete Session](recipes/session-lifecycle.md),
-[Tracking Work Across Sessions](recipes/task-management.md)
+**See also**: [The Complete Session](../recipes/session-lifecycle.md),
+[Tracking Work Across Sessions](../recipes/task-management.md)
 
 ---
 
@@ -136,7 +136,7 @@ capture decisions and learnings.
 **Wraps**: `git add`, `git commit`, optionally chains to
 `/ctx-add-decision` and `/ctx-add-learning`
 
-**See also**: [The Complete Session](recipes/session-lifecycle.md)
+**See also**: [The Complete Session](../recipes/session-lifecycle.md)
 
 ---
 
@@ -148,8 +148,8 @@ learnings, decisions, task completions, and session notes to persist.
 **Wraps**: chains to `ctx add learning`, `ctx add decision`,
 manual TASKS.md updates
 
-**See also**: [The Complete Session](recipes/session-lifecycle.md),
-[Persisting Decisions, Learnings, and Conventions](recipes/knowledge-capture.md)
+**See also**: [The Complete Session](../recipes/session-lifecycle.md),
+[Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)
 
 ---
 
@@ -166,8 +166,8 @@ Offers `/ctx-commit` if uncommitted changes remain.
 `ctx add decision`, `ctx add convention`, `ctx add task`,
 chains to `/ctx-commit`
 
-**See also**: [Session Ceremonies](recipes/session-ceremonies.md),
-[The Complete Session](recipes/session-lifecycle.md)
+**See also**: [Session Ceremonies](../recipes/session-ceremonies.md),
+[The Complete Session](../recipes/session-lifecycle.md)
 
 ---
 
@@ -182,7 +182,7 @@ Add an actionable task with optional priority and phase section.
 
 **Wraps**: `ctx add task "description" [--priority high|medium|low]`
 
-**See also**: [Tracking Work Across Sessions](recipes/task-management.md)
+**See also**: [Tracking Work Across Sessions](../recipes/task-management.md)
 
 ---
 
@@ -195,7 +195,7 @@ consequences. Supports Y-statement (lightweight) and full ADR formats.
 --consequences "..."`
 
 **See also**:
-[Persisting Decisions, Learnings, and Conventions](recipes/knowledge-capture.md)
+[Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)
 
 ---
 
@@ -209,7 +209,7 @@ required real effort to discover.
 --application "..."`
 
 **See also**:
-[Persisting Decisions, Learnings, and Conventions](recipes/knowledge-capture.md)
+[Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)
 
 ---
 
@@ -221,7 +221,7 @@ Targets patterns seen 2-3+ times.
 **Wraps**: `ctx add convention "rule" --section "Name"`
 
 **See also**:
-[Persisting Decisions, Learnings, and Conventions](recipes/knowledge-capture.md)
+[Persisting Decisions, Learnings, and Conventions](../recipes/knowledge-capture.md)
 
 ---
 
@@ -232,7 +232,7 @@ Archive completed tasks from TASKS.md to a timestamped file in
 
 **Wraps**: `ctx tasks archive [--dry-run]`
 
-**See also**: [Tracking Work Across Sessions](recipes/task-management.md)
+**See also**: [Tracking Work Across Sessions](../recipes/task-management.md)
 
 ---
 
@@ -247,7 +247,7 @@ one-liner notes. Encrypted at rest with AES-256-GCM.
 `ctx pad mv`, `ctx pad import`, `ctx pad export`
 
 **See also**: [Scratchpad](scratchpad.md),
-[Using the Scratchpad](recipes/scratchpad-with-claude.md)
+[Using the Scratchpad](../recipes/scratchpad-with-claude.md)
 
 ---
 
@@ -264,7 +264,7 @@ show details by slug or ID, and export to `.context/journal/`.
 **Wraps**: `ctx recall list`, `ctx recall show`, `ctx recall export`
 
 **See also**:
-[Browsing and Enriching Past Sessions](recipes/session-archaeology.md)
+[Browsing and Enriching Past Sessions](../recipes/session-archaeology.md)
 
 ---
 
@@ -276,8 +276,8 @@ outcome, topics, technologies, and summary. Shows diff before writing.
 **Wraps**: reads and edits `.context/journal/*.md` files
 
 **See also**:
-[Browsing and Enriching Past Sessions](recipes/session-archaeology.md),
-[Turning Activity into Content](recipes/publishing.md)
+[Browsing and Enriching Past Sessions](../recipes/session-archaeology.md),
+[Turning Activity into Content](../recipes/publishing.md)
 
 ---
 
@@ -289,7 +289,7 @@ and continuations. Can spawn subagents for large backlogs.
 **Wraps**: iterates `/ctx-journal-enrich` across all entries
 
 **See also**:
-[Browsing and Enriching Past Sessions](recipes/session-archaeology.md)
+[Browsing and Enriching Past Sessions](../recipes/session-archaeology.md)
 
 ---
 
@@ -301,8 +301,8 @@ metadata formatting, list indentation, and collapse large tool outputs.
 **Wraps**: reads and edits `.context/journal/*.md` files
 
 **See also**:
-[Browsing and Enriching Past Sessions](recipes/session-archaeology.md),
-[Turning Activity into Content](recipes/publishing.md)
+[Browsing and Enriching Past Sessions](../recipes/session-archaeology.md),
+[Turning Activity into Content](../recipes/publishing.md)
 
 ---
 
@@ -319,7 +319,7 @@ arc (problem, approach, outcome).
 **Wraps**: reads `git log`, DECISIONS.md, LEARNINGS.md, TASKS.md,
 journal entries; writes to `docs/blog/`
 
-**See also**: [Turning Activity into Content](recipes/publishing.md)
+**See also**: [Turning Activity into Content](../recipes/publishing.md)
 
 ---
 
@@ -331,7 +331,7 @@ that period.
 
 **Wraps**: `git log`, `git diff --stat`; writes to `docs/blog/`
 
-**See also**: [Turning Activity into Content](recipes/publishing.md)
+**See also**: [Turning Activity into Content](../recipes/publishing.md)
 
 ---
 
@@ -351,7 +351,7 @@ Originals are archived, not deleted.
 entries, archives originals, runs `ctx reindex`
 
 **See also**:
-[Detecting and Fixing Drift](recipes/context-health.md)
+[Detecting and Fixing Drift](../recipes/context-health.md)
 
 ---
 
@@ -365,7 +365,7 @@ templates.
 **Wraps**: `ctx drift [--fix]`
 
 **See also**:
-[Detecting and Fixing Drift](recipes/context-health.md)
+[Detecting and Fixing Drift](../recipes/context-health.md)
 
 ---
 
@@ -379,7 +379,7 @@ coverage as Covered, Partial, or Gap.
 and docs/recipes
 
 **See also**:
-[Detecting and Fixing Drift](recipes/context-health.md)
+[Detecting and Fixing Drift](../recipes/context-health.md)
 
 ---
 
@@ -392,7 +392,7 @@ positive observations.
 **Wraps**: reads `.context/journal/` entries
 
 **See also**:
-[Detecting and Fixing Drift](recipes/context-health.md)
+[Detecting and Fixing Drift](../recipes/context-health.md)
 
 ---
 
@@ -424,7 +424,7 @@ not user-invocable
 **Wraps**: hook-driven; suggests `/ctx-reflect`
 
 **See also**:
-[Running an Unattended AI Agent](recipes/autonomous-loops.md)
+[Running an Unattended AI Agent](../recipes/autonomous-loops.md)
 
 ---
 
@@ -442,7 +442,7 @@ into atomic steps, and checkpoints after every 3-5 steps.
 (`go build`, `go test`, etc.)
 
 **See also**:
-[Running an Unattended AI Agent](recipes/autonomous-loops.md)
+[Running an Unattended AI Agent](../recipes/autonomous-loops.md)
 
 ---
 
@@ -455,8 +455,8 @@ configurable completion signals.
 **Wraps**: `ctx loop [--tool] [--prompt] [--max-iterations]
 [--completion] [--output]`
 
-**See also**: [Autonomous Loops](autonomous-loop.md),
-[Running an Unattended AI Agent](recipes/autonomous-loops.md)
+**See also**: [Autonomous Loops](../operations/autonomous-loop.md),
+[Running an Unattended AI Agent](../recipes/autonomous-loops.md)
 
 ---
 
@@ -470,7 +470,7 @@ grouping, and tear down with merge.
 `git worktree remove`, `git merge`
 
 **See also**:
-[Parallel Agent Development with Git Worktrees](recipes/parallel-worktrees.md)
+[Parallel Agent Development with Git Worktrees](../recipes/parallel-worktrees.md)
 
 ---
 

@@ -12,8 +12,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/journal/state"
+	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // checkJournalCmd returns the "ctx system check-journal" command.
@@ -96,6 +98,9 @@ func runCheckJournal(cmd *cobra.Command) error {
 	}
 
 	cmd.Println("└────────────────────────────────────────────────")
+
+	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "")
+	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "")
 
 	touchFile(remindedFile)
 	return nil

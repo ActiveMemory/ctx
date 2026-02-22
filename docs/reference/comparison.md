@@ -9,7 +9,7 @@ title: Tool Ecosystem
 icon: lucide/git-compare
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## High-Level Mental Model
 
@@ -153,7 +153,7 @@ Without persistent context, agents tend to:
 * repeat mistakes
 * lose architectural intent
 
-This is why `ctx` pairs well with [autonomous loop workflows](autonomous-loop.md):
+This is why `ctx` pairs well with [autonomous loop workflows](../operations/autonomous-loop.md):
 
 * The loop provides iteration
 * `ctx` provides continuity
@@ -252,4 +252,4 @@ These are valid goals; just different ones.
 
 ## Further Reading
 
-- [You Can't Import Expertise](blog/2026-02-05-you-cant-import-expertise.md) — Why project-specific context matters more than generic best practices
+- [You Can't Import Expertise](../blog/2026-02-05-you-cant-import-expertise.md) — Why project-specific context matters more than generic best practices

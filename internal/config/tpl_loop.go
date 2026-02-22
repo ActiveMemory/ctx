@@ -21,7 +21,7 @@ const (
 	TplLoadSectionHeading = "## %s"
 
 	// TplLoopScript is the bash script template for the Ralph Loop.
-	// Args: promptFile, completionMsg, maxIterCheck, aiCommand, loopComplete.
+	// Args: promptFile, completionMsg, maxIterCheck, aiCommand, loopComplete, notifyCmd.
 	TplLoopScript = `#!/bin/bash
 #
 # Context: Ralph Loop Script
@@ -67,6 +67,7 @@ while true; do
         echo "%s"
         echo "Detected completion signal: $COMPLETION_SIGNAL"
         echo "Total iterations: $ITERATION"
+        %s
         break
     fi
 
@@ -76,11 +77,15 @@ done
 `
 
 	// TplLoopMaxIter is the iteration-limit check block for the loop script.
-	// Args: maxIterations, maxIterations.
+	// Args: maxIterations, maxIterations, notifyCmd.
 	TplLoopMaxIter = `
     # Check iteration limit
     if [ $ITERATION -ge %d ]; then
         echo "Reached maximum iterations (%d)"
+        %s
         break
     fi`
+
+	// TplLoopNotify is the ctx notify call appended to loop completion points.
+	TplLoopNotify = `ctx notify --event loop "Loop completed after $ITERATION iterations" 2>/dev/null || true`
 )

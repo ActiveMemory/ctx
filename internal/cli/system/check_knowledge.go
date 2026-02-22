@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/index"
+	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -132,6 +133,9 @@ func runCheckKnowledge(cmd *cobra.Command) error {
 	cmd.Println("\u2502  \u2022 Use /ctx-drift for semantic drift (stale patterns)")
 	cmd.Println("\u2502  \u2022 Move stale entries to .context/archive/ manually")
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+
+	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", "")
+	_ = notify.Send("relay", "check-knowledge: Knowledge file growth detected", "")
 
 	touchFile(markerPath)
 

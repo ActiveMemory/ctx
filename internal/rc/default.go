@@ -23,3 +23,6 @@ const DefaultEntryCountDecisions = 20
 // DefaultConventionLineCount is the line count threshold for CONVENTIONS.md.
 // Conventions lack dated entry headers, so line count is used instead.
 const DefaultConventionLineCount = 200
+
+// DefaultKeyRotationDays is the number of days before a key rotation nudge.
+const DefaultKeyRotationDays = 90

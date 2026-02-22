@@ -7,34 +7,37 @@
         <loc>https://ctx.ist/blog/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/about/</loc>
+        <loc>https://ctx.ist/home/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/is-ctx-right/</loc>
+        <loc>https://ctx.ist/home/about/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/community/</loc>
+        <loc>https://ctx.ist/home/is-ctx-right/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/contributing/</loc>
+        <loc>https://ctx.ist/home/community/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/getting-started/</loc>
+        <loc>https://ctx.ist/home/contributing/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/first-session/</loc>
+        <loc>https://ctx.ist/home/getting-started/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/common-workflows/</loc>
+        <loc>https://ctx.ist/home/first-session/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/context-files/</loc>
+        <loc>https://ctx.ist/home/common-workflows/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/configuration/</loc>
+        <loc>https://ctx.ist/home/context-files/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/prompting-guide/</loc>
+        <loc>https://ctx.ist/home/configuration/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/home/prompting-guide/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/</loc>
@@ -94,43 +97,43 @@
         <loc>https://ctx.ist/reference/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/cli-reference/</loc>
+        <loc>https://ctx.ist/reference/cli-reference/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/skills/</loc>
+        <loc>https://ctx.ist/reference/skills/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/comparison/</loc>
+        <loc>https://ctx.ist/reference/comparison/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/session-journal/</loc>
+        <loc>https://ctx.ist/reference/session-journal/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/scratchpad/</loc>
+        <loc>https://ctx.ist/reference/scratchpad/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/versions/</loc>
+        <loc>https://ctx.ist/reference/versions/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/operations/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/migration/</loc>
+        <loc>https://ctx.ist/operations/migration/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/upgrading/</loc>
+        <loc>https://ctx.ist/operations/upgrading/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/integrations/</loc>
+        <loc>https://ctx.ist/operations/integrations/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/autonomous-loop/</loc>
+        <loc>https://ctx.ist/operations/autonomous-loop/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/agent-security/</loc>
+        <loc>https://ctx.ist/security/agent-security/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/security/reporting/</loc>

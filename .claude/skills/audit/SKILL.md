@@ -227,6 +227,132 @@ Invoke the `/check-links` skill to scan all `docs/` markdown files for:
 Internal broken links count as findings to fix. External failures are
 informational — network partitions happen.
 
+### 13. ctxrc Schema Drift
+
+Three sources of truth define `.ctxrc` options and must stay in sync:
+
+- **`internal/rc/types.go`** — the `CtxRC` struct (yaml tags are the keys)
+- **`.ctxrc`** — the sample config in the project root
+- **`docs/configuration.md`** — the "Full Reference" yaml block and the
+  "Option Reference" table
+
+Drift patterns:
+- A new field is added to the struct but not to the sample or docs
+- A field is removed from the struct but lingers in the sample or docs
+- A yaml tag is renamed but the sample/docs still use the old key
+- Default values diverge between the struct defaults (`rc.go:Default()`)
+  and the commented values in the sample / docs table
+
+```bash
+# Extract yaml tags from the struct
+rg 'yaml:"(\w+)"' internal/rc/types.go -o --replace '$1'
+
+# Extract commented keys from the sample .ctxrc (top-level scalars)
+rg '^#?\s*(\w+):' .ctxrc -o --replace '$1' | grep -v '^#'
+
+# Extract keys from the docs Full Reference block
+rg '^#?\s*(\w+):' docs/configuration.md -o --replace '$1' | grep -v '^#'
+```
+
+**Fix**: Add missing keys to the sample and docs, or remove stale ones.
+Ensure default values in the sample comments match `rc.Default()` and the
+docs Option Reference table.
+
+### 14. Makefile Target Drift
+
+Skills and docs reference Makefile targets (e.g., `make audit`, `make lint-docs`,
+`make smoke`). Targets get renamed or removed without updating references.
+
+```bash
+# Extract all .PHONY targets from the Makefile
+rg '\.PHONY:' Makefile | tr ' ' '\n' | grep -v '\.PHONY' | sort -u
+
+# Find Makefile target references in skills and docs
+rg 'make \w+' .claude/skills/ docs/ --type md -o | sort -u
+```
+
+Compare the two lists. Any referenced target that doesn't exist in the
+Makefile is a finding.
+
+**Fix**: Update the reference to the current target name, or restore
+the target if it was removed accidentally.
+
+### 15. Skill Metadata Drift
+
+Skill directories under `.claude/skills/` and skill entries in
+`internal/config/file.go` (`DefaultClaudePermissions`) must stay aligned.
+Skills get renamed (e.g., `ctx-borrow` → `absorb`) but stale references
+linger in permission lists, docs, or other skills.
+
+```bash
+# List skill directories
+ls .claude/skills/
+
+# List ctx-plugin skill directories
+ls .claude/ctx-skills/ 2>/dev/null
+
+# Extract Skill() entries from DefaultClaudePermissions
+rg 'Skill\(' internal/config/file.go -o | sort -u
+
+# Find cross-references to skill names in other skills
+rg '/\w[-\w]+' .claude/skills/ --type md -o | sort -u
+```
+
+Check:
+- Every skill directory has a matching `Skill()` permission entry (or is
+  intentionally unpermissioned)
+- No `Skill()` entry references a skill that no longer exists
+- Cross-references between skills use current names
+
+**Fix**: Update stale names in permission lists and cross-references.
+
+### 16. Config Constant Drift
+
+`internal/config/` defines constants (`DirContext`, `FileReadOrder`,
+`DefaultTokenBudget`, etc.) that docs and the sample `.ctxrc` cite as
+defaults. When constants change, docs lag behind.
+
+```bash
+# Extract key constants and their values
+rg 'const|var' internal/config/file.go internal/config/dir.go \
+  internal/rc/types.go internal/rc/rc.go --type go -A1
+
+# Check docs claim the same defaults
+rg 'default|Default' docs/configuration.md -n
+```
+
+Cross-check:
+- `config.DirContext` value matches the `context_dir` default in docs
+  and sample `.ctxrc`
+- `FileReadOrder` entries match the `priority_order` list in sample
+  `.ctxrc` and the docs "Default priority order" section
+- `DefaultTokenBudget`, `DefaultArchiveAfterDays`, etc. in `rc.go`
+  match the commented values in `.ctxrc` and docs Option Reference table
+
+**Fix**: Align the docs/sample values to match the code constants.
+
+### 17. CLI Subcommand Drift
+
+`docs/cli-reference.md` documents commands and flags. When commands are
+added, renamed, or removed, the docs drift.
+
+```bash
+# Extract registered cobra commands (Use: field)
+rg 'Use:\s+"(\w+)' internal/cli/ --type go -o --replace '$1' | sort -u
+
+# Extract commands documented in cli-reference.md
+rg '^## `ctx (\w+)' docs/cli-reference.md -o --replace '$1' | sort -u
+
+# Compare
+diff <(rg 'Use:\s+"(\w+)' internal/cli/ --type go -o --replace '$1' | sort -u) \
+     <(rg '^## `ctx (\w+)' docs/cli-reference.md -o --replace '$1' | sort -u)
+```
+
+Also check that global flags documented in `docs/configuration.md`
+match the flags actually registered in `internal/bootstrap/cmd.go`.
+
+**Fix**: Add missing commands/flags to the docs, or remove stale entries.
+
 ## Consolidation Decision Matrix
 
 Use this to prioritize what to fix:
@@ -281,7 +407,7 @@ After running checks, report:
 ## Quality Checklist
 
 Before reporting the consolidation results:
-- [ ] All 12 checks were run (not skipped)
+- [ ] All 17 checks were run (not skipped)
 - [ ] Accepted exceptions were respected (e.g., `IsUser()`)
 - [ ] Findings are prioritized (highest impact first)
 - [ ] Each finding has a concrete fix suggestion with file path

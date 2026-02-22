@@ -482,8 +482,8 @@ complete, and archive tasks across sessions.
 
 * [Session Ceremonies](session-ceremonies.md): why `/ctx-remember` and
   `/ctx-wrap-up` are explicit slash commands, not conversational
-* [CLI Reference](../cli-reference.md): full documentation for all `ctx` commands
-* [Prompting Guide](../prompting-guide.md): effective prompts for ctx-enabled projects
+* [CLI Reference](../reference/cli-reference.md): full documentation for all `ctx` commands
+* [Prompting Guide](../home/prompting-guide.md): effective prompts for ctx-enabled projects
 * [Tracking Work Across Sessions](task-management.md): deep dive on task management
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   deep dive on knowledge capture

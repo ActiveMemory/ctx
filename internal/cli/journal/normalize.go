@@ -16,6 +16,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
+// HTML tag constants for pre-formatted blocks.
+const (
+	tagPre      = "<pre>"
+	tagPreClose = "</pre>"
+)
+
 // normalizeContent sanitizes journal Markdown for static site rendering:
 //   - Strips code fence markers (eliminates nesting conflicts)
 //   - Wraps Tool Output and User sections in <pre><code> with HTML-escaped content
@@ -70,13 +76,13 @@ func normalizeContent(content string, fencesVerified bool) string {
 		// Track <pre> blocks from wrapToolOutputs/wrapUserTurns.
 		// Content inside is HTML-escaped — skip all transforms.
 		trimmed := strings.TrimSpace(line)
-		if trimmed == "<pre><code>" || trimmed == "<pre>" {
+		if trimmed == "<pre><code>" || trimmed == tagPre {
 			inPreBlock = true
 			out = append(out, line)
 			continue
 		}
 		if inPreBlock {
-			if trimmed == "</code></pre>" || trimmed == "</pre>" {
+			if trimmed == "</code></pre>" || trimmed == tagPreClose {
 				inPreBlock = false
 			}
 			out = append(out, line)
@@ -159,11 +165,18 @@ func normalizeContent(content string, fencesVerified bool) string {
 // the smallest number > N.
 func wrapToolOutputs(content string) string {
 	lines := strings.Split(content, config.NewlineLF)
+	mask := preBlockMask(lines)
 	turnSeq := collectTurnNumbers(lines)
 	var out []string
 	i := 0
 
 	for i < len(lines) {
+		// Skip lines inside <pre> blocks — they are not real turn headers.
+		if mask[i] {
+			out = append(out, lines[i])
+			i++
+			continue
+		}
 		m := config.RegExTurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
@@ -186,9 +199,13 @@ func wrapToolOutputs(content string) string {
 		// after any embedded duplicates.
 		expectedNext := nextInSequence(turnSeq, turnNum)
 
-		// Scan ahead to find the last occurrence of expectedNext.
+		// Scan ahead to find the last occurrence of expectedNext,
+		// skipping lines inside <pre> blocks (embedded content).
 		boundary := len(lines) // default: EOF
 		for j := i; j < len(lines); j++ {
+			if mask[j] {
+				continue
+			}
 			nm := config.RegExTurnHeader.FindStringSubmatch(
 				strings.TrimSpace(lines[j]),
 			)
@@ -272,11 +289,18 @@ func wrapToolOutputs(content string) string {
 // as wrapToolOutputs.
 func wrapUserTurns(content string) string {
 	lines := strings.Split(content, config.NewlineLF)
+	mask := preBlockMask(lines)
 	turnSeq := collectTurnNumbers(lines)
 	var out []string
 	i := 0
 
 	for i < len(lines) {
+		// Skip lines inside <pre> blocks — they are not real turn headers.
+		if mask[i] {
+			out = append(out, lines[i])
+			i++
+			continue
+		}
 		m := config.RegExTurnHeader.FindStringSubmatch(
 			strings.TrimSpace(lines[i]),
 		)
@@ -294,9 +318,13 @@ func wrapUserTurns(content string) string {
 
 		expectedNext := nextInSequence(turnSeq, turnNum)
 
-		// Scan ahead to find the last occurrence of expectedNext.
+		// Scan ahead to find the last occurrence of expectedNext,
+		// skipping lines inside <pre> blocks (embedded content).
 		boundary := len(lines) // default: EOF
 		for j := i; j < len(lines); j++ {
+			if mask[j] {
+				continue
+			}
 			nm := config.RegExTurnHeader.FindStringSubmatch(
 				strings.TrimSpace(lines[j]),
 			)
@@ -358,7 +386,7 @@ func stripPreWrapper(body []string) []string {
 		switch {
 		case trimmed == "<details>" || trimmed == "</details>":
 			continue
-		case trimmed == "<pre>" || trimmed == "</pre>":
+		case trimmed == tagPre || trimmed == tagPreClose:
 			hadPre = true
 			continue
 		case strings.HasPrefix(trimmed, "<summary>") &&
@@ -421,11 +449,42 @@ func isBoilerplateToolOutput(raw []string) bool {
 	return false
 }
 
+// preBlockMask returns a boolean slice where mask[i] is true if line i is
+// inside a <pre> block (between <pre>/<pre><code> and </pre>/</code></pre>).
+// This allows turn-header scanning to skip embedded headers from tool outputs
+// that quote other journal files.
+func preBlockMask(lines []string) []bool {
+	mask := make([]bool, len(lines))
+	inPre := false
+	for i, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if !inPre && (trimmed == tagPre || trimmed == "<pre><code>") {
+			inPre = true
+			continue
+		}
+		if inPre {
+			if trimmed == tagPreClose || trimmed == "</code></pre>" ||
+				trimmed == "</details>" {
+				inPre = false
+				continue
+			}
+			mask[i] = true
+		}
+	}
+	return mask
+}
+
 // collectTurnNumbers extracts all turn numbers from turn headers in the
-// document, returning them sorted and deduplicated.
+// document, returning them sorted and deduplicated. Headers inside <pre>
+// blocks are skipped — they are embedded content from tool outputs that
+// read other journal files.
 func collectTurnNumbers(lines []string) []int {
+	mask := preBlockMask(lines)
 	seen := make(map[int]bool)
-	for _, line := range lines {
+	for i, line := range lines {
+		if mask[i] {
+			continue
+		}
 		if m := config.RegExTurnHeader.FindStringSubmatch(
 			strings.TrimSpace(line),
 		); m != nil {

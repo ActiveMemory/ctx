@@ -8,13 +8,17 @@ package system
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // checkVersionCmd returns the "ctx system check-version" command.
@@ -90,8 +94,44 @@ func runCheckVersion(cmd *cobra.Command) error {
 	cmd.Println("│   go install github.com/ActiveMemory/ctx/cmd/ctx@latest")
 	cmd.Println("└────────────────────────────────────────────────")
 
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "")
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "")
+
 	touchFile(markerFile)
+
+	// Key age check — piggyback on the daily version check
+	checkKeyAge(cmd)
+
 	return nil
+}
+
+// checkKeyAge emits a nudge when the scratchpad key is older than the
+// configured rotation threshold. Runs at most once per day (shares the
+// daily throttle from the version check's marker file).
+func checkKeyAge(cmd *cobra.Command) {
+	keyPath := filepath.Join(rc.ContextDir(), config.FileScratchpadKey)
+	info, err := os.Stat(keyPath)
+	if err != nil {
+		return // no key — nothing to check
+	}
+
+	ageDays := int(time.Since(info.ModTime()).Hours() / 24)
+	threshold := rc.KeyRotationDays()
+
+	if ageDays < threshold {
+		return
+	}
+
+	cmd.Println()
+	cmd.Println("IMPORTANT: Relay this security reminder to the user VERBATIM.")
+	cmd.Println()
+	cmd.Println("┌─ Key Rotation ──────────────────────────────────┐")
+	cmd.Println(fmt.Sprintf("│ Your scratchpad key is %d days old.                 ", ageDays))
+	cmd.Println("│ Consider rotating: ctx pad rotate-key                │")
+	cmd.Println("└──────────────────────────────────────────────────┘")
+
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Scratchpad key is %d days old", ageDays), "")
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Scratchpad key is %d days old", ageDays), "")
 }
 
 // parseMajorMinor extracts major and minor version numbers from a semver

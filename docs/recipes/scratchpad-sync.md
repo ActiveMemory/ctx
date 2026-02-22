@@ -233,7 +233,7 @@ Run multiple agents on independent task tracks using git worktrees.
 
 ## See Also
 
-* [Scratchpad](../scratchpad.md): feature overview, all commands, when
+* [Scratchpad](../reference/scratchpad.md): feature overview, all commands, when
   to use scratchpad vs context files
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   for structured knowledge that outlives the scratchpad

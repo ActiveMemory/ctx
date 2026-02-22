@@ -166,6 +166,8 @@ const (
 	FileScratchpadMd = "scratchpad.md"
 	// FileScratchpadKey is the scratchpad encryption key file.
 	FileScratchpadKey = ".scratchpad.key"
+	// FileNotifyEnc is the encrypted webhook URL file.
+	FileNotifyEnc = ".notify.enc"
 )
 
 // FileType maps short names to actual file names.

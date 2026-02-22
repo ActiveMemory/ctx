@@ -389,7 +389,7 @@ Keep context files accurate as your codebase evolves.
   reflection and context persistence
 * [Detecting and Fixing Drift](context-health.md): keeping knowledge files
   accurate as the codebase evolves
-* [CLI Reference](../cli-reference.md): full documentation for `ctx add`,
+* [CLI Reference](../reference/cli-reference.md): full documentation for `ctx add`,
   `ctx decisions`, `ctx learnings`
-* [Context Files](../context-files.md): format and conventions for `DECISIONS.md`,
+* [Context Files](../home/context-files.md): format and conventions for `DECISIONS.md`,
   `LEARNINGS.md`, and `CONVENTIONS.md`

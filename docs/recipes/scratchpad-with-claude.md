@@ -255,7 +255,7 @@ encryption keys and scratchpad data across environments.
 
 ## See Also
 
-* [Scratchpad](../scratchpad.md): feature overview, all commands,
+* [Scratchpad](../reference/scratchpad.md): feature overview, all commands,
   encryption details, plaintext override
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   for structured knowledge that outlives the scratchpad

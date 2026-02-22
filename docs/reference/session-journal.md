@@ -9,7 +9,7 @@ title: Session Journal
 icon: lucide/book-open
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 !!! danger "Important Security Note"
 
@@ -376,9 +376,9 @@ The monitor displays:
 * **Session info**: file size, message count, last update time
 * **Remaining tokens**: how much usable context is left
 
-![`ctx watch`: Healthy](images/watch-green.png)
+![`ctx watch`: Healthy](../images/watch-green.png)
 
-![`ctx watch`: Unhealthy](images/watch-red.png)
+![`ctx watch`: Unhealthy](../images/watch-red.png)
 
 ### How It Works
 
@@ -531,4 +531,4 @@ pipx install zensical
 * [`ctx recall`](cli-reference.md#ctx-recall): Session discovery and listing
 * [`ctx journal site`](cli-reference.md#ctx-journal-site): Static site generation
 * [`ctx journal obsidian`](cli-reference.md#ctx-journal-obsidian): Obsidian vault export
-* [Context Files](context-files.md): The `.context/` directory structure
+* [Context Files](../home/context-files.md): The `.context/` directory structure

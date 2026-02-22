@@ -9,7 +9,7 @@ Security model, agent hardening, and vulnerability reporting.
 
 ---
 
-### [Securing AI Agents](../agent-security.md)
+### [Securing AI Agents](agent-security.md)
 
 Defense in depth for unattended AI agents: five layers of
 protection, each with a known bypass, strength in combination.

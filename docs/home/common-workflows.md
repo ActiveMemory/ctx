@@ -9,7 +9,7 @@ title: Common Workflows
 icon: lucide/repeat
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Track Context
 
@@ -63,7 +63,7 @@ navigation, and topic indices.
     `zensical` is a Python-based static site generator from the
     *Material* for *MkDocs* team.
 
-    (*[why zensical?](blog/2026-02-15-why-zensical.md)*).
+    (*[why zensical?](../blog/2026-02-15-why-zensical.md)*).
 
 If you don't have it on your system,
 install `zensical` once with [pipx](https://pipx.pypa.io/):
@@ -98,7 +98,7 @@ To update after new sessions, run the same two commands again.
 sessions and skips existing files. Use `--regenerate` if you need to
 re-export existing files (YAML frontmatter is preserved).
 
-See [Session Journal](session-journal.md) for the full pipeline
+See [Session Journal](../reference/session-journal.md) for the full pipeline
 including **normalization** and **enrichment**.
 
 ## Scratchpad
@@ -118,7 +118,7 @@ ctx pad list
 ```
 
 The scratchpad is encrypted with a key stored in `.context/.scratchpad.key`
-(git-ignored by default). See [Scratchpad](scratchpad.md) for details.
+(git-ignored by default). See [Scratchpad](../reference/scratchpad.md) for details.
 
 ## Run an Autonomous Loop
 
@@ -131,7 +131,7 @@ chmod +x loop.sh
 ./loop.sh
 ```
 
-See [Autonomous Loops](autonomous-loop.md) for configuration
+See [Autonomous Loops](../operations/autonomous-loop.md) for configuration
 and advanced usage.
 
 ----
@@ -140,8 +140,8 @@ and advanced usage.
 
 **See Also**:
 
-* [Recipes](recipes/index.md) — targeted how-to guides for specific tasks
-* [Knowledge Capture](recipes/knowledge-capture.md) — patterns for recording decisions, learnings, and conventions
-* [Context Health](recipes/context-health.md) — keeping your `.context/` accurate and drift-free
-* [Session Archaeology](recipes/session-archaeology.md) — digging into past sessions
-* [Task Management](recipes/task-management.md) — tracking and completing work items
+* [Recipes](../recipes/index.md) — targeted how-to guides for specific tasks
+* [Knowledge Capture](../recipes/knowledge-capture.md) — patterns for recording decisions, learnings, and conventions
+* [Context Health](../recipes/context-health.md) — keeping your `.context/` accurate and drift-free
+* [Session Archaeology](../recipes/session-archaeology.md) — digging into past sessions
+* [Task Management](../recipes/task-management.md) — tracking and completing work items

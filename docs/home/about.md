@@ -9,7 +9,7 @@ title: About
 icon: lucide/info
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 "**Creation, not code**;
 **Context, not prompts**;

@@ -9,7 +9,7 @@ title: Integrating ctx
 icon: lucide/package-plus
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Adopting ctx in Existing Projects
 
@@ -17,7 +17,7 @@ icon: lucide/package-plus
     You probably want the plugin instead of this page.
     Install ctx from the marketplace (`/plugin` → search "ctx" → Install) and
     you're done — hooks, skills, and updates are handled for you.
-    See [Getting Started](getting-started.md) for the full walkthrough.
+    See [Getting Started](../home/getting-started.md) for the full walkthrough.
 
 This guide covers adopting `ctx` in existing projects — regardless of
 which tools your team uses.
@@ -300,7 +300,7 @@ grep -c "ctx:end" CLAUDE.md      # Should print 1
 
 ## Further Reading
 
-* [Getting Started](getting-started.md): Full setup walkthrough
-* [Context Files](context-files.md): What each `.context/` file does
+* [Getting Started](../home/getting-started.md): Full setup walkthrough
+* [Context Files](../home/context-files.md): What each `.context/` file does
 * [Integrations](integrations.md): Per-tool setup (*Claude Code, Cursor, Aider, Copilot*)
-* [CLI Reference](cli-reference.md): All `ctx` commands and flags
+* [CLI Reference](../reference/cli-reference.md): All `ctx` commands and flags

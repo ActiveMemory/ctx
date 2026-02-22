@@ -9,7 +9,7 @@ title: Getting Started
 icon: lucide/rocket
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Prerequisites
 
@@ -162,7 +162,7 @@ On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
     * **Context size monitoring**: alerts as sessions grow large
     * **25+ skills**: `/ctx-status`, `/ctx-add-task`, `/ctx-recall`, and more
 
-    See [Integrations](integrations.md#claude-code-full-integration) for the
+    See [Integrations](../operations/integrations.md#claude-code-full-integration) for the
     full hook and skill reference.
 
 ## Quick Start
@@ -175,8 +175,8 @@ ctx init
 ```
 
 This creates a `.context/` directory with template files and a
-`.scratchpad.key` for the [encrypted scratchpad](scratchpad.md).
-For Claude Code, install the [ctx plugin](integrations.md#claude-code-full-integration)
+`.scratchpad.key` for the [encrypted scratchpad](../reference/scratchpad.md).
+For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
 
 ### 2. Check Status
@@ -193,7 +193,7 @@ With Claude Code (and the ctx plugin installed), context loads automatically
 via hooks.
 
 With **VS Code Copilot Chat**, install the
-[ctx extension](integrations.md#vs-code-chat-extension-ctx) and use
+[ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx) and use
 `@ctx /status`, `@ctx /agent`, and other slash commands directly in chat.
 Run `ctx hook copilot --write` to generate `.github/copilot-instructions.md`
 for automatic context loading.

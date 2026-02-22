@@ -285,5 +285,5 @@ output for ctx hooks.
 * [Setting Up ctx Across AI Tools](multi-tool-setup.md): initial setup recipe
 * [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md): distribute
   encryption keys when context is shared
-* [CLI Reference](../cli-reference.md): all global flags including
+* [CLI Reference](../reference/cli-reference.md): all global flags including
   `--context-dir` and `--allow-outside-cwd`

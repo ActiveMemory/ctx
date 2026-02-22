@@ -485,6 +485,75 @@ func TestAllowOutsideCwd_Enabled(t *testing.T) {
 	}
 }
 
+func TestNotifyEvents_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	// Default (nil Notify) returns nil
+	events := NotifyEvents()
+	if events != nil {
+		t.Errorf("NotifyEvents() = %v, want nil", events)
+	}
+}
+
+func TestNotifyEvents_Configured(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `notify:
+  events:
+    - loop
+    - nudge
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	events := NotifyEvents()
+	if len(events) != 2 || events[0] != "loop" || events[1] != "nudge" {
+		t.Errorf("NotifyEvents() = %v, want [loop nudge]", events)
+	}
+}
+
+func TestKeyRotationDays_Default(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	Reset()
+
+	days := KeyRotationDays()
+	if days != DefaultKeyRotationDays {
+		t.Errorf("KeyRotationDays() = %d, want %d", days, DefaultKeyRotationDays)
+	}
+}
+
+func TestKeyRotationDays_Custom(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `notify:
+  key_rotation_days: 30
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	days := KeyRotationDays()
+	if days != 30 {
+		t.Errorf("KeyRotationDays() = %d, want %d", days, 30)
+	}
+}
+
 func TestGetRC_NegativeEnvBudget(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()

@@ -9,7 +9,7 @@ title: Your First Session
 icon: lucide/play
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 Here's what a complete first session looks like, from initialization to
 the moment your AI cites your project context back to you.
@@ -128,7 +128,7 @@ confirm the agent knows what is going on. Context also loads automatically
 via hooks, but the explicit ceremony gives you a readback to verify.
 
 With **VS Code Copilot Chat** (and the
-[ctx extension](integrations.md#vs-code-chat-extension-ctx)), type
+[ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)), type
 `@ctx /agent` in chat to load your context packet, or `@ctx /status`
 to check your project context. Run `ctx hook copilot --write` once
 to generate `.github/copilot-instructions.md` for automatic context loading.
@@ -213,10 +213,10 @@ asking you to re-explain.
 ```
 
 Claude Code integration (hooks + skills) is provided by the
-**ctx plugin** — see [Integrations](integrations.md#claude-code-full-integration).
+**ctx plugin** — see [Integrations](../operations/integrations.md#claude-code-full-integration).
 
 VS Code Copilot Chat integration is provided by the
-**ctx extension** — see [Integrations](integrations.md#vs-code-chat-extension-ctx).
+**ctx extension** — see [Integrations](../operations/integrations.md#vs-code-chat-extension-ctx).
 
 See [Context Files](context-files.md) for detailed documentation of each file.
 
@@ -253,9 +253,9 @@ Review the additions with `cat .gitignore` after init.
 
 *See also*:
 
-* [Security considerations](security/reporting.md)
-* [Scratchpad encryption](scratchpad.md)
-* [Session Journal](session-journal.md)
+* [Security considerations](../security/reporting.md)
+* [Scratchpad encryption](../reference/scratchpad.md)
+* [Session Journal](../reference/session-journal.md)
 
 ----
 

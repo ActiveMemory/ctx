@@ -108,5 +108,5 @@ work with agents trained on the ctx playbook:
 
 * [Permission Hygiene](claude-code-permissions.md): recommended defaults and
   maintenance workflow
-* [CLI Reference: ctx permissions](../cli-reference.md#ctx-permissions):
+* [CLI Reference: ctx permissions](../reference/cli-reference.md#ctx-permissions):
   full command documentation

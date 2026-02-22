@@ -26,8 +26,8 @@ func TestPostCommit_GitCommit(t *testing.T) {
 	}
 
 	out := cmdOutput(cmd)
-	if !strings.Contains(out, "Post-Commit") {
-		t.Errorf("expected post-commit message, got: %s", out)
+	if !strings.Contains(out, "hookSpecificOutput") {
+		t.Errorf("expected JSON hook response, got: %s", out)
 	}
 	if !strings.Contains(out, "Offer context capture") {
 		t.Errorf("expected context capture prompt, got: %s", out)
@@ -48,7 +48,7 @@ func TestPostCommit_AmendSkipped(t *testing.T) {
 	}
 
 	out := cmdOutput(cmd)
-	if strings.Contains(out, "Post-Commit") {
+	if strings.Contains(out, "hookSpecificOutput") {
 		t.Errorf("expected silence for amend, got: %s", out)
 	}
 }
@@ -67,7 +67,7 @@ func TestPostCommit_NonGitCommand(t *testing.T) {
 	}
 
 	out := cmdOutput(cmd)
-	if strings.Contains(out, "Post-Commit") {
+	if strings.Contains(out, "hookSpecificOutput") {
 		t.Errorf("expected silence for non-git command, got: %s", out)
 	}
 }
@@ -86,7 +86,7 @@ func TestPostCommit_EmptyCommand(t *testing.T) {
 	}
 
 	out := cmdOutput(cmd)
-	if strings.Contains(out, "Post-Commit") {
+	if strings.Contains(out, "hookSpecificOutput") {
 		t.Errorf("expected silence for empty command, got: %s", out)
 	}
 }
@@ -105,8 +105,8 @@ func TestPostCommit_GitCommitWithHeredoc(t *testing.T) {
 	}
 
 	out := cmdOutput(cmd)
-	if !strings.Contains(out, "Post-Commit") {
-		t.Errorf("expected post-commit for heredoc commit, got: %s", out)
+	if !strings.Contains(out, "hookSpecificOutput") {
+		t.Errorf("expected JSON hook response for heredoc commit, got: %s", out)
 	}
 }
 
@@ -124,7 +124,7 @@ func TestPostCommit_NoContextDir(t *testing.T) {
 	}
 
 	out := cmdOutput(cmd)
-	if strings.Contains(out, "Post-Commit") {
+	if strings.Contains(out, "hookSpecificOutput") {
 		t.Errorf("expected silence when .context/ not initialized, got: %s", out)
 	}
 }

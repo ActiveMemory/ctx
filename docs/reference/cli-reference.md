@@ -9,7 +9,7 @@ title: CLI
 icon: lucide/terminal
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## `ctx` CLI
 
@@ -52,6 +52,7 @@ All commands support these flags:
 | [`ctx watch`](#ctx-watch)         | Auto-apply context updates from AI output                 |
 | [`ctx hook`](#ctx-hook)           | Generate AI tool integration configs                      |
 | [`ctx loop`](#ctx-loop)           | Generate autonomous loop script                           |
+| [`ctx notify`](#ctx-notify)       | Send webhook notifications                                |
 | [`ctx pad`](#ctx-pad)             | Encrypted scratchpad for sensitive one-liners             |
 | [`ctx system`](#ctx-system)       | System diagnostics and hook commands                     |
 
@@ -83,7 +84,7 @@ ctx init [flags]
 - `CLAUDE.md` with bootstrap instructions (or merges into existing)
 
 Claude Code hooks and skills are provided by the **ctx plugin**
-(see [Integrations](integrations.md#claude-code-full-integration)).
+(see [Integrations](../operations/integrations.md#claude-code-full-integration)).
 
 **Example**:
 
@@ -1011,7 +1012,78 @@ chmod +x loop.sh
 ./loop.sh
 ```
 
-See [Autonomous Loops](autonomous-loop.md) for detailed workflow documentation.
+See [Autonomous Loops](../operations/autonomous-loop.md) for detailed workflow documentation.
+
+---
+
+### `ctx notify`
+
+Send fire-and-forget webhook notifications from skills, loops, and hooks.
+
+```bash
+ctx notify --event <name> [--session-id <id>] "message"
+```
+
+**Flags**:
+
+| Flag           | Short | Description                    |
+|----------------|-------|--------------------------------|
+| `--event`      | `-e`  | Event name (required)          |
+| `--session-id` | `-s`  | Session ID (optional)          |
+
+**Behavior**:
+
+- No webhook configured: silent noop (exit 0)
+- Webhook set but event not in `events` list: silent noop (exit 0)
+- Webhook set and event matches: fire-and-forget HTTP POST
+- HTTP errors silently ignored (no retry)
+
+**Example**:
+
+```bash
+ctx notify --event loop "Loop completed after 5 iterations"
+ctx notify -e nudge -s session-abc "Context checkpoint at prompt #20"
+```
+
+#### `ctx notify setup`
+
+Configure the webhook URL interactively. The URL is encrypted with AES-256-GCM
+using the scratchpad key and stored in `.context/.notify.enc`.
+
+```bash
+ctx notify setup
+```
+
+The encrypted file is safe to commit. The key (`.context/.scratchpad.key`) is
+gitignored and never committed.
+
+#### `ctx notify test`
+
+Send a test notification and report the HTTP response status.
+
+```bash
+ctx notify test
+```
+
+**Payload format** (JSON POST):
+
+```json
+{
+  "event": "loop",
+  "message": "Loop completed after 5 iterations",
+  "session_id": "abc123-...",
+  "timestamp": "2026-02-22T14:30:00Z",
+  "project": "ctx"
+}
+```
+
+| Field        | Type   | Description                           |
+|--------------|--------|---------------------------------------|
+| `event`      | string | Event name from `--event` flag        |
+| `message`    | string | Notification message                  |
+| `session_id` | string | Session ID (omitted if empty)         |
+| `timestamp`  | string | UTC RFC3339 timestamp                 |
+| `project`    | string | Project directory name                |
 
 ---
 
@@ -1236,7 +1308,7 @@ ctx system <subcommand>
 The parent command shows available subcommands. Hidden plumbing subcommands
 (`ctx system mark-journal`) are used by skills and automation. Hidden hook
 subcommands (`ctx system check-*`) are used by the Claude Code plugin — see
-[AI Tool Integrations](integrations.md#plugin-hooks) for details.
+[AI Tool Integrations](../operations/integrations.md#plugin-hooks) for details.
 
 #### `ctx system resources`
 
@@ -1358,6 +1430,12 @@ allow_outside_cwd: false             # Skip boundary check (default: false)
 entry_count_learnings: 30            # Drift warning threshold (0 = disable)
 entry_count_decisions: 20            # Drift warning threshold (0 = disable)
 convention_line_count: 200           # Line count warning for CONVENTIONS.md (0 = disable)
+notify:                              # Webhook notification settings
+  events:                            # Event filter (absent = all events)
+    - loop
+    - nudge
+    - relay
+  key_rotation_days: 90              # Days before key rotation nudge
 ```
 
 | Field                           | Type       | Default      | Description                                          |
@@ -1372,6 +1450,8 @@ convention_line_count: 200           # Line count warning for CONVENTIONS.md (0 
 | `entry_count_learnings`         | `int`      | `30`         | Drift warning when LEARNINGS.md exceeds this count   |
 | `entry_count_decisions`         | `int`      | `20`         | Drift warning when DECISIONS.md exceeds this count   |
 | `convention_line_count`         | `int`      | `200`        | Line count warning for CONVENTIONS.md                |
+| `notify.events`                 | `[]string` | *(all)*      | Event filter for webhook notifications (empty = all) |
+| `notify.key_rotation_days`      | `int`      | `90`         | Days before encryption key rotation nudge            |
 
 **Priority order:** CLI flags > Environment variables > `.ctxrc` > Defaults
 

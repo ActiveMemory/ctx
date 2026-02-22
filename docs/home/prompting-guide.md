@@ -9,7 +9,7 @@ title: Prompting Guide
 icon: lucide/message-circle
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Literature Matters
 
@@ -192,7 +192,7 @@ Use it at the end of the session or before switching topics.
 * "*Let's persist what we did*"
 * "*Update the context files*"
 * `/ctx-wrap-up` — the recommended end-of-session ceremony
-  (see [Session Ceremonies](recipes/session-ceremonies.md))
+  (see [Session Ceremonies](../recipes/session-ceremonies.md))
 * `/ctx-reflect` — mid-session reflection checkpoint
 
 ---
@@ -295,12 +295,12 @@ Skills are formalized prompts. Use them by name:
     Two skills are the exception: `/ctx-remember` and `/ctx-wrap-up`
     are **ceremony skills** for session boundaries. Invoke them as
     **explicit slash commands** — conversational triggers risk partial
-    execution. See [Session Ceremonies](recipes/session-ceremonies.md).
+    execution. See [Session Ceremonies](../recipes/session-ceremonies.md).
 
 Skills combine a prompt, tool permissions, and domain knowledge
 into a single invocation.
 
-See [Integrations](integrations.md) for setup details.
+See [Integrations](../operations/integrations.md) for setup details.
 
 ---
 
@@ -463,7 +463,7 @@ Verify the stated deliverable exists and works.
 
 ## Further Reading
 
-- [The Attention Budget](blog/2026-02-03-the-attention-budget.md): 
+- [The Attention Budget](../blog/2026-02-03-the-attention-budget.md): 
   Why your AI forgets what you just told it, and how token budgets shape 
   context strategy
 
@@ -481,6 +481,6 @@ Found a prompt that works well?
 
 **Go Deeper**:
 
-* [Recipes](recipes/index.md) — targeted how-to guides for specific tasks
-* [CLI Reference](cli-reference.md) — all commands and flags
-* [Integrations](integrations.md) — setup for Claude Code, Cursor, Aider
+* [Recipes](../recipes/index.md) — targeted how-to guides for specific tasks
+* [CLI Reference](../reference/cli-reference.md) — all commands and flags
+* [Integrations](../operations/integrations.md) — setup for Claude Code, Cursor, Aider

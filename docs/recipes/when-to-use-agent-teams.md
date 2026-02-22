@@ -182,9 +182,9 @@ before anyone does any work. For small tasks, that overhead dominates.
 
 ## Go Deeper
 
-* [CLI Reference](../cli-reference.md) — all commands and flags
-* [Integrations](../integrations.md) — setup for Claude Code, Cursor, Aider
-* [Session Journal](../session-journal.md) — browse and search session history
+* [CLI Reference](../reference/cli-reference.md) — all commands and flags
+* [Integrations](../operations/integrations.md) — setup for Claude Code, Cursor, Aider
+* [Session Journal](../reference/session-journal.md) — browse and search session history
 
 ## See Also
 

@@ -14,6 +14,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // checkPersistenceCmd returns the "ctx system check-persistence" command.
@@ -181,6 +183,8 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 		cmd.Println("└──────────────────────────────────────────────────")
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", state.Count, sinceNudge))
+		_ = notify.Send("nudge", fmt.Sprintf("check-persistence: Persistence Checkpoint at prompt #%d", state.Count), sessionID)
+		_ = notify.Send("relay", fmt.Sprintf("check-persistence: No context updated in %d+ prompts", sinceNudge), sessionID)
 		state.LastNudge = state.Count
 	} else {
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silent since_nudge=%d", state.Count, sinceNudge))

@@ -13,6 +13,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // checkCeremoniesCmd returns the "ctx system check-ceremonies" command.
@@ -65,6 +67,8 @@ func runCheckCeremonies(cmd *cobra.Command) error {
 	}
 
 	emitCeremonyNudge(cmd, remember, wrapup)
+	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", "")
+	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", "")
 	touchFile(remindedFile)
 	return nil
 }

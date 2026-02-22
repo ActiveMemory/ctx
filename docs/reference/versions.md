@@ -9,7 +9,7 @@ title: Version History
 icon: lucide/history
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Version History
 
@@ -29,7 +29,7 @@ docs as they were at that release.
 
 ## Latest
 
-The [main documentation](index.md) always reflects the latest development version.
+The [main documentation](../index.md) always reflects the latest development version.
 
 For the most recent stable release, see
 [v0.6.0](https://github.com/ActiveMemory/ctx/tree/v0.6.0/docs).

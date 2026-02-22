@@ -460,5 +460,5 @@ Capture the "*why*" behind your work so it survives across sessions.
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   capturing the "why" behind your work
 * [Detecting and Fixing Drift](context-health.md): keeping TASKS.md accurate over time
-* [CLI Reference](../cli-reference.md): full documentation for `ctx add`, `ctx complete`, `ctx tasks`
-* [Context Files: TASKS.md](../context-files.md#tasksmd): format and conventions for TASKS.md
+* [CLI Reference](../reference/cli-reference.md): full documentation for `ctx add`, `ctx complete`, `ctx tasks`
+* [Context Files: TASKS.md](../home/context-files.md#tasksmd): format and conventions for TASKS.md

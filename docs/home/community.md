@@ -9,7 +9,7 @@ title: "#ctx"
 icon: lucide/heart-handshake
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 **Open source is better together**.
 

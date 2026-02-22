@@ -255,7 +255,7 @@ So I added:
 * **Integration tests** for all commands;
 * **Coverage targets** (*60-80% per package*)
 * **Smoke** tests in CI
-* A **[constitution](../context-files.md#constitutionmd)** rule: 
+* A **[constitution](../home/context-files.md#constitutionmd)** rule: 
   "**All code must pass tests before commit**"
 
 ## The Constitution versus Conventions
@@ -344,7 +344,7 @@ They are not part of the source code due to security, privacy, and size concerns
     `ctx pad` stores encrypted one-liners in git, and
     `ctx pad add "label" --file PATH` can ingest small files.
 
-    See [Scratchpad](../scratchpad.md) for details.
+    See [Scratchpad](../reference/scratchpad.md) for details.
 
 However, they are invaluable for the project's progress.
 

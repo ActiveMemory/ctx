@@ -9,7 +9,7 @@ title: Autonomous Loops
 icon: lucide/repeat
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Autonomous AI Development
 
@@ -102,7 +102,7 @@ chmod +x loop.sh
 ./loop.sh
 ```
 
-You can also generate this script with `ctx loop` (see [CLI Reference](cli-reference.md#ctx-loop)).
+You can also generate this script with `ctx loop` (see [CLI Reference](../reference/cli-reference.md#ctx-loop)).
 
 ### Why a Shell Loop?
 
@@ -399,10 +399,10 @@ BEFORE any work:
 
 ## Further Reading
 
-- [Building ctx Using ctx](blog/2026-01-27-building-ctx-using-ctx.md) — The dogfooding story: how autonomous loops built the tool that powers them
+- [Building ctx Using ctx](../blog/2026-01-27-building-ctx-using-ctx.md) — The dogfooding story: how autonomous loops built the tool that powers them
 
 ## Resources
 
 - [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/) — Original inspiration
-- [Context CLI](cli-reference.md) — Command reference
+- [Context CLI](../reference/cli-reference.md) — Command reference
 - [Integrations](integrations.md) — Tool-specific setup

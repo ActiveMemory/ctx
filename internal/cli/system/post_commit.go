@@ -11,6 +11,8 @@ import (
 	"regexp"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // postCommitCmd returns the "ctx system post-commit" command.
@@ -58,19 +60,15 @@ func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	cmd.Println()
-	cmd.Println("┌─ Post-Commit ──────────────────────────────────────────")
-	cmd.Println("│ Commit succeeded.")
-	cmd.Println("│")
-	cmd.Println("│ 1. Offer context capture to the user:")
-	cmd.Println("│    Decision (design choice?), Learning (gotcha?), or Neither.")
-	cmd.Println("│")
-	cmd.Println("│ 2. Ask the user:")
-	cmd.Println("│    \"Want me to run lints and tests before you push?\"")
-	cmd.Println("│")
-	cmd.Println("│ Do NOT push. The user pushes manually.")
-	cmd.Println("└────────────────────────────────────────────────────────")
-	cmd.Println()
+	printHookContext(cmd, "PostToolUse",
+		"Commit succeeded."+
+			" 1. Offer context capture to the user:"+
+			" Decision (design choice?), Learning (gotcha?), or Neither."+
+			" 2. Ask the user: \"Want me to run lints and tests before you push?\""+
+			" Do NOT push. The user pushes manually.",
+	)
+
+	_ = notify.Send("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID)
 
 	return nil
 }

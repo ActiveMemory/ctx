@@ -390,8 +390,8 @@ keyboard.
 
 * [The Complete Session](session-lifecycle.md): where session saving fits in the daily workflow
 * [Turning Activity into Content](publishing.md): generating blog posts from session history
-* [Session Journal](../session-journal.md): full documentation of the journal system
-* [CLI Reference: ctx recall](../cli-reference.md#ctx-recall): all recall subcommands and flags
-* [CLI Reference: ctx journal](../cli-reference.md#ctx-journal): site generation options
-* [CLI Reference: ctx serve](../cli-reference.md#ctx-serve): local serving options
-* [Context Files](../context-files.md): the `.context/` directory structure
+* [Session Journal](../reference/session-journal.md): full documentation of the journal system
+* [CLI Reference: ctx recall](../reference/cli-reference.md#ctx-recall): all recall subcommands and flags
+* [CLI Reference: ctx journal](../reference/cli-reference.md#ctx-journal): site generation options
+* [CLI Reference: ctx serve](../reference/cli-reference.md#ctx-serve): local serving options
+* [Context Files](../home/context-files.md): the `.context/` directory structure

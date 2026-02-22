@@ -163,6 +163,24 @@ func runJournalSite(
 		}
 	}
 
+	// Remove orphan site files — entries whose source was renamed or deleted.
+	knownFiles := make(map[string]bool, len(entries)+1)
+	knownFiles[config.FilenameIndex] = true
+	for _, e := range entries {
+		knownFiles[e.Filename] = true
+	}
+	if siteFiles, readErr := os.ReadDir(docsDir); readErr == nil {
+		for _, f := range siteFiles {
+			if f.IsDir() || knownFiles[f.Name()] {
+				continue
+			}
+			orphanPath := filepath.Join(docsDir, f.Name())
+			if rmErr := os.Remove(orphanPath); rmErr == nil {
+				cmd.Println(fmt.Sprintf("  removed orphan: %s", f.Name()))
+			}
+		}
+	}
+
 	// Generate index.md
 	indexContent := generateIndex(entries)
 	indexPath := filepath.Join(docsDir, config.FilenameIndex)

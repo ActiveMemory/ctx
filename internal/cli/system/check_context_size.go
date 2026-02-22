@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // checkContextSizeCmd returns the "ctx system check-context-size" command.
@@ -85,6 +87,8 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 		cmd.Println("└──────────────────────────────────────────────────")
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d CHECKPOINT", count))
+		_ = notify.Send("nudge", fmt.Sprintf("check-context-size: Context Checkpoint at prompt #%d", count), sessionID)
+		_ = notify.Send("relay", fmt.Sprintf("check-context-size: Context Checkpoint at prompt #%d", count), sessionID)
 	} else {
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silent", count))
 	}

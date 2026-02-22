@@ -211,6 +211,17 @@ across months of work.
 
 ## Advanced
 
+### [Webhook Notifications](webhook-notifications.md)
+
+Get **push notifications** when loops complete, hooks fire, or agents hit
+milestones. Webhook URL is **encrypted** — never stored in plaintext.
+Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
+
+**Uses**: `ctx notify setup`, `ctx notify test`, `ctx notify --event`,
+`.ctxrc` `notify.events`
+
+---
+
 ### [Running an Unattended AI Agent](autonomous-loops.md)
 
 Set up a **loop** where an AI agent works through tasks overnight

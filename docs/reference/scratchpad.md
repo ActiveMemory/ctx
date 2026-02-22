@@ -9,7 +9,7 @@ title: Scratchpad
 icon: lucide/sticky-note
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## What It Is
 
@@ -211,7 +211,7 @@ To share the scratchpad across machines:
 
     Treat the key like an SSH private key.
 
-See the [Syncing Scratchpad Notes Across Machines](recipes/scratchpad-sync.md)
+See the [Syncing Scratchpad Notes Across Machines](../recipes/scratchpad-sync.md)
 recipe for a step-by-step walkthrough.
 
 ## Plaintext Override
@@ -258,10 +258,10 @@ In plaintext mode:
 
 ## See Also
 
-* [Syncing Scratchpad Notes Across Machines](recipes/scratchpad-sync.md):
+* [Syncing Scratchpad Notes Across Machines](../recipes/scratchpad-sync.md):
   Key distribution, push/pull workflow, merge conflict resolution
-* [Using the Scratchpad](recipes/scratchpad-with-claude.md):
+* [Using the Scratchpad](../recipes/scratchpad-with-claude.md):
   Natural language examples, blob workflow, when to use scratchpad vs context files
-* [Context Files](context-files.md): Format and conventions for all
+* [Context Files](../home/context-files.md): Format and conventions for all
   `.context/` files
-* [Security](security/reporting.md): Trust model and permission hygiene
+* [Security](../security/reporting.md): Trust model and permission hygiene

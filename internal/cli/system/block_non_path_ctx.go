@@ -13,6 +13,8 @@ import (
 	"regexp"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // blockNonPathCtxCmd returns the "ctx system block-non-path-ctx" command.
@@ -93,6 +95,7 @@ func runBlockNonPathCtx(cmd *cobra.Command, stdin *os.File) error {
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
+		_ = notify.Send("relay", "block-non-path-ctx: Blocked non-PATH ctx invocation", "")
 	}
 
 	return nil

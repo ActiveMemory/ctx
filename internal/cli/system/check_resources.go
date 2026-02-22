@@ -7,8 +7,10 @@
 package system
 
 import (
-	"github.com/ActiveMemory/ctx/internal/sysinfo"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
 
 // checkResourcesCmd returns the "ctx system check-resources" hook command.
@@ -63,6 +65,9 @@ func runCheckResources(cmd *cobra.Command) error {
 	cmd.Println("\u2502 Persist unsaved context NOW with /ctx-wrap-up")
 	cmd.Println("\u2502 and consider ending this session.")
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+
+	_ = notify.Send("nudge", "check-resources: System resources critically low", "")
+	_ = notify.Send("relay", "check-resources: System resources critically low", "")
 
 	return nil
 }

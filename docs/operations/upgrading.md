@@ -9,7 +9,7 @@ title: Upgrading ctx
 icon: lucide/arrow-up-circle
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Upgrading ctx
 
@@ -21,7 +21,7 @@ or plugin hooks and skills.
     `/plugin` → select **ctx** → **Update now** (or enable auto-update).
 
     The `ctx` **binary** is separate —
-    [rebuild from source or download a new release](getting-started.md#installation)
+    [rebuild from source or download a new release](../home/getting-started.md#installation)
     when one is available, then run `ctx init --force --merge`.
     Knowledge files are preserved automatically.
 

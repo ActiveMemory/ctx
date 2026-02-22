@@ -9,7 +9,7 @@ title: Is It Right for Me?
 icon: lucide/compass
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Good Fit
 
@@ -51,7 +51,7 @@ when to skip it:
   centralized context services, `ctx` may duplicate that layer.
 
 For a deeper technical comparison with RAG, prompt management tools, and
-agent frameworks, see [ctx and Similar Tools](comparison.md).
+agent frameworks, see [ctx and Similar Tools](../reference/comparison.md).
 
 ---
 
@@ -140,4 +140,4 @@ No dependencies to uninstall. No configuration to revert. **Just files**.
 
 * [Join the Community→](community.md): Open Source is better together.
 * [Getting Started →](getting-started.md): Full installation and setup.
-* [`ctx` and Similar Tools →](comparison.md): Detailed comparison with other approaches.
+* [`ctx` and Similar Tools →](../reference/comparison.md): Detailed comparison with other approaches.

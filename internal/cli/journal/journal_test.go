@@ -639,6 +639,38 @@ func TestNormalizeContent(t *testing.T) {
 				}
 			},
 		},
+		{
+			"tool output with embedded journal does not break user turn boundaries",
+			// Tool output 3 reads a journal file containing ### 1. User and
+			// ### 2. Assistant headers inside <details><pre>...</pre></details>.
+			// Without pre-block awareness, the "last-match-wins" boundary
+			// strategy makes user turn 1's body swallow thousands of lines.
+			"### 1. User (10:00:00)\n\nmy question\n\n" +
+				"### 2. Assistant (10:00:01)\n\nlet me read the file\n\n" +
+				"### 3. Tool Output (10:00:02)\n\n<details>\n<summary>50 lines</summary>\n\n<pre>\n" +
+				"### 1. User (10:00:00)\n\nembedded user msg\n\n" +
+				"### 2. Assistant (10:00:01)\n\nembedded assistant reply\n" +
+				"</pre>\n</details>\n\n" +
+				"### 4. Assistant (10:00:03)\n\nall done",
+			false,
+			func(t *testing.T, got string) {
+				// User turn 1 should be tightly wrapped
+				if !strings.Contains(got, "<pre><code>\nmy question\n</code></pre>") {
+					t.Errorf("user turn 1 not properly wrapped:\n%s", got)
+				}
+				// The real ### 2. Assistant should exist outside any pre block
+				if !strings.Contains(got, "### 2. Assistant (10:00:01)") {
+					t.Error("real assistant turn 2 header lost")
+				}
+				// ### 4. Assistant should survive
+				if !strings.Contains(got, "### 4. Assistant (10:00:03)") {
+					t.Error("assistant turn 4 lost")
+				}
+				if !strings.Contains(got, "all done") {
+					t.Error("assistant turn 4 content lost")
+				}
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -646,6 +678,29 @@ func TestNormalizeContent(t *testing.T) {
 			got := normalizeContent(tt.input, tt.fencesVerified)
 			tt.check(t, got)
 		})
+	}
+}
+
+func TestCollectTurnNumbersSkipsPreBlocks(t *testing.T) {
+	input := strings.Split(
+		"### 1. User (10:00:00)\n\nHello\n\n### 2. Assistant (10:00:01)\n\nReading file\n\n"+
+			"### 3. Tool Output (10:00:02)\n\n<pre>\n### 50. User (09:00:00)\n\n### 51. Assistant (09:00:01)\n</pre>\n\n"+
+			"### 4. Assistant (10:00:03)\n\nDone",
+		"\n",
+	)
+	got := collectTurnNumbers(input)
+	for _, n := range got {
+		if n == 50 || n == 51 {
+			t.Errorf("collectTurnNumbers should skip embedded turn %d inside <pre>", n)
+		}
+	}
+	// Real turns 1-4 should be present
+	want := map[int]bool{1: true, 2: true, 3: true, 4: true}
+	for _, n := range got {
+		delete(want, n)
+	}
+	if len(want) > 0 {
+		t.Errorf("missing real turn numbers: %v", want)
 	}
 }
 
@@ -719,6 +774,28 @@ func TestWrapUserTurns(t *testing.T) {
 			func(t *testing.T, got string) {
 				if strings.Contains(got, "<pre><code>") {
 					t.Error("non-user turns should not be wrapped")
+				}
+			},
+		},
+		{
+			"embedded turn headers inside pre blocks ignored",
+			// Simulates wrapToolOutputs output where a tool read another
+			// journal file containing ### 1. User and ### 2. Assistant headers.
+			"### 1. User (10:00:00)\n\nHello\n\n### 2. Assistant (10:00:01)\n\nI'll read the file\n\n" +
+				"### 3. Tool Output (10:00:02)\n\n<pre><code>\n### 1. User (10:00:00)\n\nembedded user msg\n\n### 2. Assistant (10:00:01)\n\nembedded reply\n</code></pre>\n\n" +
+				"### 4. Assistant (10:00:03)\n\nDone",
+			func(t *testing.T, got string) {
+				// User turn 1 should be wrapped and end before ### 2. Assistant
+				if !strings.Contains(got, "<pre><code>\nHello\n</code></pre>") {
+					t.Errorf("user turn 1 not properly wrapped:\n%s", got)
+				}
+				// The real ### 2. Assistant should appear as a heading, not inside pre
+				if strings.Count(got, "### 2. Assistant (10:00:01)") < 2 {
+					t.Error("real assistant turn header lost")
+				}
+				// The embedded headers should still exist inside the pre block
+				if !strings.Contains(got, "<pre><code>\n### 1. User (10:00:00)") {
+					t.Error("embedded pre block content was modified")
 				}
 			},
 		},

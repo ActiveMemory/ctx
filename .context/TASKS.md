@@ -12,6 +12,10 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 - [x] AI: ctx-borrow project skill is confusing as `ctx-` prefix implies a
       ctx skill; needs rename. Renamed to /absorb. #done:2026-02-21
+- [ ] Rename .scratchpad.key to .context.key #priority:medium #added:2026-02-22-101118
+
+- [ ] Regenerate site HTML after .ctxrc rename #added:2026-02-21-200039
+
 - [ ] Fix mark-journal --check to handle locked stage #added:2026-02-21-191851
 
 - [ ] AI: verify and archive completed tasks in TASK.md; the file has gotten

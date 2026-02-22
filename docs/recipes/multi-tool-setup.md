@@ -321,5 +321,5 @@ permission defaults and maintenance workflow for Claude Code.
 ## See Also
 
 * [The Complete Session](session-lifecycle.md): full session lifecycle recipe
-* [CLI Reference](../cli-reference.md): all commands and flags
-* [Integrations](../integrations.md): detailed per-tool integration docs
+* [CLI Reference](../reference/cli-reference.md): all commands and flags
+* [Integrations](../operations/integrations.md): detailed per-tool integration docs

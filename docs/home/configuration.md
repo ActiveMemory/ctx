@@ -9,7 +9,7 @@ title: Configuration
 icon: lucide/settings
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Configuration
 
@@ -67,6 +67,12 @@ A commented `.ctxrc` showing all options and their defaults:
 # entry_count_learnings: 30
 # entry_count_decisions: 20
 # convention_line_count: 200
+# notify:
+#   events:             # absent/empty = all events pass
+#     - loop
+#     - nudge
+#     - relay
+#   key_rotation_days: 90
 # priority_order:
 #   - CONSTITUTION.md
 #   - TASKS.md
@@ -91,6 +97,8 @@ A commented `.ctxrc` showing all options and their defaults:
 | `entry_count_learnings` | `int`      | `30`           | Drift warning when LEARNINGS.md exceeds this entry count (0 = disable) |
 | `entry_count_decisions` | `int`      | `20`           | Drift warning when DECISIONS.md exceeds this entry count (0 = disable) |
 | `convention_line_count` | `int`      | `200`          | Drift warning when CONVENTIONS.md exceeds this line count (0 = disable) |
+| `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
+| `notify.key_rotation_days` | `int`   | `90`           | Days before encryption key rotation nudge               |
 | `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
 
 **Default priority order** (used when `priority_order` is not set):
@@ -263,6 +271,34 @@ convention_line_count: 300  # warn above 300 lines (default: 200)
 
 Set any threshold to `0` to disable that specific check.
 
+### Webhook notifications
+
+Get notified when loops complete, hooks fire, or agents reach milestones:
+
+```bash
+# Configure the webhook URL (encrypted, safe to commit)
+ctx notify setup
+
+# Test delivery
+ctx notify test
+```
+
+Filter which events reach your webhook:
+
+```yaml
+# .ctxrc
+notify:
+  events:
+    - loop      # loop completion/max-iteration
+    - nudge     # VERBATIM relay hooks fired
+    # - relay   # all hook output (verbose, for debugging)
+```
+
+With no `events` list (or an empty one), all events are sent.
+
+See [Webhook Notifications](../recipes/webhook-notifications.md) for a
+step-by-step recipe.
+
 ---
 
-**See also**: [CLI Reference](cli-reference.md) | [Context Files](context-files.md) | [Scratchpad](scratchpad.md)
+**See also**: [CLI Reference](../reference/cli-reference.md) | [Context Files](context-files.md) | [Scratchpad](../reference/scratchpad.md)

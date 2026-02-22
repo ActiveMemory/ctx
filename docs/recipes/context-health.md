@@ -375,5 +375,5 @@ Export session history to a browsable journal and enrich entries with metadata.
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md): 
   keeping knowledge files current
 * [The Complete Session](session-lifecycle.md): where maintenance fits in the daily workflow
-* [CLI Reference](../cli-reference.md): full flag documentation for all commands
-* [Context Files](../context-files.md): structure and purpose of each `.context/` file
+* [CLI Reference](../reference/cli-reference.md): full flag documentation for all commands
+* [Context Files](../home/context-files.md): structure and purpose of each `.context/` file

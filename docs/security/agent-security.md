@@ -3,7 +3,7 @@ title: Securing AI Agents
 icon: lucide/shield-check
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 # Defense in Depth: Securing AI Agents
 
@@ -252,10 +252,10 @@ Before running an unattended AI agent:
 
 ## Further Reading
 
-* [Running an Unattended AI Agent](recipes/autonomous-loops.md): the
+* [Running an Unattended AI Agent](../recipes/autonomous-loops.md): the
   ctx recipe for autonomous loops, including step-by-step permissions
   and isolation setup
-* [Security](security/reporting.md): `ctx`'s own trust model and vulnerability
+* [Security](reporting.md): `ctx`'s own trust model and vulnerability
   reporting
-* [Autonomous Loops](autonomous-loop.md): full documentation of the
+* [Autonomous Loops](../operations/autonomous-loop.md): full documentation of the
   loop pattern, `PROMPT.md` templates, and troubleshooting

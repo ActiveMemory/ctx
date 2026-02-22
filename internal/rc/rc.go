@@ -139,6 +139,34 @@ func ConventionLineCount() int {
 	return RC().ConventionLineCount
 }
 
+// NotifyEvents returns the configured event filter list for notifications.
+//
+// Returns nil if Notify is nil (no filtering — all events pass).
+//
+// Returns:
+//   - []string: Event names to allow, or nil for all
+func NotifyEvents() []string {
+	n := RC().Notify
+	if n == nil {
+		return nil
+	}
+	return n.Events
+}
+
+// KeyRotationDays returns the configured key rotation threshold in days.
+//
+// Returns 90 if Notify is nil or the field is 0.
+//
+// Returns:
+//   - int: Number of days before a key rotation nudge
+func KeyRotationDays() int {
+	n := RC().Notify
+	if n == nil || n.KeyRotationDays == 0 {
+		return DefaultKeyRotationDays
+	}
+	return n.KeyRotationDays
+}
+
 // AllowOutsideCwd returns whether boundary validation should be skipped.
 //
 // Returns false (default) when the field is not set in .ctxrc.

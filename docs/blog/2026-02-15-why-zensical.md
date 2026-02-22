@@ -222,7 +222,7 @@ We discovered this firsthand: `pip install zensical` often fails on MacOS
 with the correct Python version automatically. 
 
 That kind of friction is typical for young Python tooling, and it is documented
-in the [Getting Started guide](../getting-started.md#journal-site).
+in the [Getting Started guide](../home/getting-started.md#journal-site).
 
 And `3,000` stars at `v0.0.21` is **strong** early traction, but it's
 still **early**: The community is small. When something breaks, you're reading 

@@ -26,5 +26,12 @@ type CtxRC struct {
 	AllowOutsideCwd     bool     `yaml:"allow_outside_cwd"`
 	EntryCountLearnings int      `yaml:"entry_count_learnings"`
 	EntryCountDecisions int      `yaml:"entry_count_decisions"`
-	ConventionLineCount int      `yaml:"convention_line_count"`
+	ConventionLineCount int           `yaml:"convention_line_count"`
+	Notify              *NotifyConfig `yaml:"notify"`
+}
+
+// NotifyConfig holds webhook notification settings.
+type NotifyConfig struct {
+	Events          []string `yaml:"events"`
+	KeyRotationDays int      `yaml:"key_rotation_days"`
 }
