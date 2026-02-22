@@ -138,9 +138,9 @@ For each approved group:
 4. **Rebuild the index**:
 
 ```bash
-ctx reindex learnings
+ctx learnings reindex
 # or
-ctx reindex decisions
+ctx decisions reindex
 ```
 
 ### Step 6: Report Results

@@ -5,7 +5,7 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: ctx Skills
+title: Skills
 icon: lucide/sparkles
 ---
 
@@ -403,12 +403,12 @@ internal links (verify file targets exist on disk) and external links
 (HTTP HEAD with timeout, report failures as warnings). Also checks
 image references.
 
-Invoked automatically as check #12 during `/consolidate`.
+Invoked automatically as check #12 during `/audit`.
 
 **Wraps**: Glob + Grep to scan, `curl` for external checks
 
 **See also**:
-[`/consolidate`](#consolidate-related-skills)
+[`/audit`](#audit-related-skills)
 
 ---
 

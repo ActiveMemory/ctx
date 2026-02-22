@@ -1,6 +1,6 @@
 ---
 name: check-links
-description: "Audit docs for dead links. Use before releases, after restructuring docs, or when /consolidate runs."
+description: "Audit docs for dead links. Use before releases, after restructuring docs, or when /audit runs."
 allowed-tools: Bash(curl:*), Read, Grep, Glob
 ---
 
@@ -12,7 +12,7 @@ internal (file targets) and external (HTTP URLs).
 - Before releases or doc deployments
 - After renaming, moving, or deleting doc pages
 - After restructuring the `docs/` directory or nav
-- When `/consolidate` runs (check #12)
+- When `/audit` runs (check #12)
 - When a user reports a 404 on the site
 
 ## When NOT to Use
@@ -112,9 +112,9 @@ For broken internal links, offer specific fixes:
 For external links, just report. The user decides whether to
 update, remove, or ignore.
 
-## Integration with /consolidate
+## Integration with /audit
 
-When invoked as check #12 from `/consolidate`:
+When invoked as check #12 from `/audit`:
 
 - Run the full check (all 3 passes)
 - Report findings in the same format as other consolidation checks

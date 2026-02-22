@@ -35,9 +35,9 @@ checking **source code** against project conventions.
 ## Usage Examples
 
 ```text
-/consolidate
-/consolidate (before v0.3.0 release)
-/consolidate (after the YOLO sprint this week)
+/audit
+/audit (before v0.3.0 release)
+/audit (after the YOLO sprint this week)
 ```
 
 ## Checks

@@ -69,8 +69,8 @@ persistence, design philosophy
 AI-assisted development makes technical debt worse: **Not** because the AI
 writes bad code, **but** because it writes code so fast that drift accumulates
 before you notice. Three weeks of git history prove a rhythm: three feature
-sessions, one consolidation session. This post shows the evidence, the
-concrete drift that accumulated, and the decision matrix for when to clean
+sessions, one consolidation session. This post shows the **evidence**, the
+concrete **drift** that accumulated, and the **decision matrix** for when to clean
 up versus leave things alone.
 
 **Topics**: consolidation, technical debt, development workflow, convention
@@ -87,7 +87,7 @@ Then twenty. The fans spin, tokens burn, the screen looks like progress.
 It is **not** progress: It is merge debt being manufactured in real time.
 This post is about the five-agent ceiling, why role separation beats
 file locking, why overnight loops are an illusion, and why the only
-metric that matters is time from idea to verified, mergeable change.
+metric that matters is time from **idea to verified**, mergeable change.
 
 **Topics**: agent workflows, parallelism, verification, context
 engineering, engineering practice
@@ -98,12 +98,12 @@ engineering, engineering practice
 
 *Jose Alekhinne / February 16, 2026*
 
-`ctx` is now a Claude Marketplace plugin. Two commands, no build step,
+`ctx` is now a **Claude Marketplace** plugin. Two commands, no build step,
 no shell scripts. `v0.6.0` replaces six Bash hook scripts with compiled
-Go subcommands, ships 25 skills as a plugin served directly from
+Go subcommands, ships **25+ Skills** as a plugin served directly from
 source, and closes three medium-severity security findings. The version
 jumped from `0.3.0` to `0.6.0` because this is the release that turns a
-developer tool into a distributable product.
+developer tool into a **distributable product**.
 
 **Topics**: release, plugin system, Claude Marketplace, distribution,
 security hardening
@@ -114,8 +114,8 @@ security hardening
 
 *Jose Alekhinne / February 15, 2026*
 
-No new headline feature. No architectural pivot. No rewrite. Just 35+
-documentation and quality commits against ~15 feature commits: And
+No new headline feature. No architectural pivot. No rewrite. Just **35+
+documentation and quality commits against ~15 feature commits**: And
 somehow, the tool feels like it grew up overnight. This post is about
 what a release looks like when the ratio of polish to features is 3:1.
 
@@ -131,8 +131,8 @@ E/A/R framework
 I needed a static site generator for the journal system, and the instinct
 was Hugo:  same language as ctx, fast, well-established. But instinct is
 not analysis. The journal entries are standard Markdown with YAML
-frontmatter. That is it. No JSX, no shortcodes, no custom templating.
-This post is about why zensical (*a pre-1.0 tool from the Material for
+frontmatter. That is it. **No JSX, no shortcodes, no custom templating**.
+This post is about why `zensical` (*a pre-1.0 tool from the Material for
 MkDocs team*) was the right choice: thin dependencies, MkDocs-compatible
 config, 4-5x faster incremental rebuilds, and zero lock-in.
 
@@ -147,9 +147,9 @@ infrastructure decisions, context engineering
 
 I had 30 open tasks, and most of them didn't touch the same files. Running
 one agent at a time meant serial execution on work that was fundamentally
-parallel. This post is about using git worktrees to partition a backlog by
+parallel. This post is about using **git worktrees** to **partition** a backlog by
 file overlap, run 3-4 agents simultaneously, and merge the results: The
-same attention budget principle applied to execution instead of context.
+same **attention budget** principle applied to **execution** instead of context.
 
 **Topics**: agent teams, parallelism, git worktrees, context engineering,
 task management
@@ -179,8 +179,8 @@ state continuity
 I kept feeling like I should go deeper into **ML theory**. Then I spent a week
 debugging an agent failure that had nothing to do with model architecture and
 everything to do with knowing which abstraction was leaking. This post is
-about when depth compounds and when it doesn't: why the useful understanding
-lives one or two layers below where you work, not at the bottom of the stack.
+about when depth **compounds** and when it doesn't: why the useful understanding
+lives one or two layers below where you work, **not** at the bottom of the stack.
 
 **Topics**: AI foundations, abstraction boundaries, agentic systems,
 context engineering, failure modes
