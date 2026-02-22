@@ -31,7 +31,7 @@ to set them up and how to tell your AI assistant where to find the context.
     cd ~/repos/myproject
     ctx --context-dir ~/repos/myproject-context --allow-outside-cwd init
     ```
-    Then create `.contextrc` in the project root:
+    Then create `.ctxrc` in the project root:
     ```yaml
     context_dir: ~/repos/myproject-context
     allow_outside_cwd: true
@@ -45,7 +45,7 @@ to set them up and how to tell your AI assistant where to find the context.
 | `ctx init`            | CLI command  | Initialize context directory            |
 | `--context-dir`       | Global flag  | Point ctx at a non-default directory    |
 | `--allow-outside-cwd` | Global flag  | Permit context outside the project root |
-| `.contextrc`          | Config file  | Persist the context directory setting   |
+| `.ctxrc`          | Config file  | Persist the context directory setting   |
 | `CTX_DIR`             | Env variable | Override context directory per-session  |
 | `/ctx-status`         | Skill        | Verify context is loading correctly     |
 
@@ -86,24 +86,24 @@ This creates the full `.context/`-style file set inside
     If your external directory is truly outside the project root:
 
     * Either every `ctx` command needs `--allow-outside-cwd`, 
-    * or you can persist the setting in `.contextrc` (*next step*).
+    * or you can persist the setting in `.ctxrc` (*next step*).
 
 ### Step 3: Make It Stick
 
 Typing `--context-dir` and `--allow-outside-cwd` on every command is tedious.
 Pick one of these methods to make the configuration permanent.
 
-#### Option A: `.contextrc` (*Recommended*)
+#### Option A: `.ctxrc` (*Recommended*)
 
-Create a `.contextrc` file in your project root:
+Create a `.ctxrc` file in your project root:
 
 ```yaml
-# .contextrc — committed to the project repo
+# .ctxrc — committed to the project repo
 context_dir: ~/repos/myproject-context
 allow_outside_cwd: true
 ```
 
-ctx reads `.contextrc` automatically. Every command now uses the external
+ctx reads `.ctxrc` automatically. Every command now uses the external
 directory without extra flags:
 
 ```bash
@@ -111,14 +111,14 @@ ctx status          # reads from ~/repos/myproject-context
 ctx add learning "Redis MULTI doesn't roll back on error"
 ```
 
-!!! tip "Commit `.contextrc`"
-    `.contextrc` belongs in the project repo. It contains no secrets — just a
+!!! tip "Commit `.ctxrc`"
+    `.ctxrc` belongs in the project repo. It contains no secrets — just a
     path and a boundary override. It lets teammates share the same configuration.
 
 #### Option B: `CTX_DIR` Environment Variable
 
 Good for CI pipelines, temporary overrides, or when you don't want to commit
-a `.contextrc`:
+a `.ctxrc`:
 
 ```bash
 # In your shell profile (~/.bashrc, ~/.zshrc)
@@ -133,7 +133,7 @@ CTX_DIR=~/repos/myproject-context ctx status
 
 #### Option C: Shell Alias
 
-If you prefer a shell alias over `.contextrc`:
+If you prefer a shell alias over `.ctxrc`:
 
 ```bash
 # ~/.bashrc or ~/.zshrc
@@ -147,7 +147,7 @@ order (*highest priority first*):
 
 1. `--context-dir` flag
 2. `CTX_DIR` environment variable
-3. `context_dir` in `.contextrc`
+3. `context_dir` in `.ctxrc`
 4. Default: `.context/`
 
 ### Step 4: Configure `CLAUDE.md` to Reference the External Context
@@ -164,7 +164,7 @@ a pointer there:
 This project's context files live in a separate repository:
 **~/repos/myproject-context/**
 
-When using ctx commands, the `.contextrc` in this project root handles
+When using ctx commands, the `.ctxrc` in this project root handles
 the path automatically. To load context manually:
 
 ```bash
@@ -179,11 +179,11 @@ Read the context files from that directory:
 ```
 
 The ctx plugin's PreToolUse hook runs `ctx agent` automatically. To make it
-use the external path, create a `.contextrc` in the project root (Step 3
+use the external path, create a `.ctxrc` in the project root (Step 3
 above) — the hook inherits the same configuration. No manual hook
 editing is needed.
 
-If you use `CTX_DIR` instead of `.contextrc`, export it in your shell
+If you use `CTX_DIR` instead of `.ctxrc`, export it in your shell
 profile so the hook process inherits it:
 
 ```bash
@@ -192,7 +192,7 @@ export CTX_DIR=~/repos/myproject-context
 
 ### Step 5: Share with Teammates
 
-Teammates clone both repos and set up `.contextrc`:
+Teammates clone both repos and set up `.ctxrc`:
 
 ```bash
 # Clone the project
@@ -203,7 +203,7 @@ cd myproject
 git clone git@github.com:org/myproject-context.git ~/repos/myproject-context
 ```
 
-If `.contextrc` is already committed to the project, they're done — ctx
+If `.ctxrc` is already committed to the project, they're done — ctx
 commands will find the external context automatically.
 
 If teammates use different paths, each developer sets their own `CTX_DIR`:
@@ -247,7 +247,7 @@ You don't need to remember the flags. Ask your assistant:
 ```text
 You: "Set up ctx to use ~/repos/myproject-context as the context directory."
 
-Agent: "I'll create a .contextrc in the project root pointing to that path.
+Agent: "I'll create a .ctxrc in the project root pointing to that path.
        I'll also update CLAUDE.md so future sessions know where to find
        context. Want me to initialize the context files there too?"
 ```
@@ -255,7 +255,7 @@ Agent: "I'll create a .contextrc in the project root pointing to that path.
 ```text
 You: "My context is in a separate repo. Can you load it?"
 
-Agent: [reads .contextrc, finds the path, loads context from the external dir]
+Agent: [reads .ctxrc, finds the path, loads context from the external dir]
        "Loaded. You have 3 pending tasks, last session was about the auth
        refactor."
 ```
@@ -267,11 +267,11 @@ Agent: [reads .contextrc, finds the path, loads context from the external dir]
   repo when you have a concrete reason.
 * **One context repo per project**. Sharing a single context directory across
   multiple projects creates confusion. Keep the mapping 1:1.
-* **Use `.contextrc` over env vars** when the path is stable. It's committed,
+* **Use `.ctxrc` over env vars** when the path is stable. It's committed,
   documented, and works for the whole team without per-developer shell setup.
 * **Don't forget the boundary flag**. The most common error is
   `Error: context directory is outside the project root`. Set
-  `allow_outside_cwd: true` in `.contextrc` or pass `--allow-outside-cwd`.
+  `allow_outside_cwd: true` in `.ctxrc` or pass `--allow-outside-cwd`.
 * **Commit both repos at session boundaries**. Context without code history
   (or code without context history) loses half the value.
 

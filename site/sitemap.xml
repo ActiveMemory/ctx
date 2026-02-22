@@ -31,6 +31,9 @@
         <loc>https://ctx.ist/context-files/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/configuration/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/prompting-guide/</loc>
       </url>
       <url>
@@ -44,9 +47,6 @@
       </url>
       <url>
         <loc>https://ctx.ist/recipes/knowledge-capture/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/knowledge-scaling/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/context-health/</loc>
@@ -91,6 +91,9 @@
         <loc>https://ctx.ist/recipes/when-to-use-agent-teams/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/reference/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/cli-reference/</loc>
       </url>
       <url>
@@ -109,6 +112,9 @@
         <loc>https://ctx.ist/versions/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/operations/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/migration/</loc>
       </url>
       <url>
@@ -121,9 +127,12 @@
         <loc>https://ctx.ist/autonomous-loop/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/security/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/agent-security/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/security/</loc>
+        <loc>https://ctx.ist/security/reporting/</loc>
       </url>
 </urlset>

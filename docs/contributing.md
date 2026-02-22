@@ -94,7 +94,7 @@ ctx/
 │   ├── drift/          # Drift detection
 │   ├── index/          # Context file indexing
 │   ├── journal/        # Journal site generation
-│   ├── rc/             # .contextrc parsing
+│   ├── rc/             # .ctxrc parsing
 │   ├── recall/         # Session history and parsers
 │   ├── task/           # Task management
 │   └── validation/     # Input validation

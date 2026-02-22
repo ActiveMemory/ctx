@@ -222,7 +222,7 @@ Agent: "Let me extract theirs and merge it in."
   Don't reuse keys across projects.
 * **Plaintext fallback for non-sensitive projects**. If encryption adds
   friction and you have nothing sensitive, set `scratchpad_encrypt: false`
-  in `.contextrc`. Merge conflicts become trivial text merges.
+  in `.ctxrc`. Merge conflicts become trivial text merges.
 * **Never commit the key**. It's gitignored by default. Don't override
   this.
 

@@ -216,7 +216,7 @@ recipe for a step-by-step walkthrough.
 
 ## Plaintext Override
 
-For projects where encryption is unnecessary, disable it in `.contextrc`:
+For projects where encryption is unnecessary, disable it in `.ctxrc`:
 
 ```yaml
 scratchpad_encrypt: false
@@ -264,4 +264,4 @@ In plaintext mode:
   Natural language examples, blob workflow, when to use scratchpad vs context files
 * [Context Files](context-files.md): Format and conventions for all
   `.context/` files
-* [Security](security.md): Trust model and permission hygiene
+* [Security](security/reporting.md): Trust model and permission hygiene

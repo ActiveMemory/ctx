@@ -19,7 +19,7 @@ Design philosophy:
   (rules before tasks, conventions before architecture) so agents
   internalize constraints before acting.
 - **Convention over configuration**: sensible defaults with optional
-  `.contextrc` overrides. No config file required to get started.
+  `.ctxrc` overrides. No config file required to get started.
 
 ## Package Dependency Graph
 
@@ -70,7 +70,7 @@ dependencies. Everything else builds upward from them.
 
 | Package                  | Purpose                                                                                                                                       | Depends On                            |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
-| `internal/rc`            | Runtime configuration from `.contextrc`, env vars, and CLI flags; singleton with sync.Once caching                                            | `internal/config`                     |
+| `internal/rc`            | Runtime configuration from `.ctxrc`, env vars, and CLI flags; singleton with sync.Once caching                                            | `internal/config`                     |
 | `internal/context`       | Load `.context/` directory: read .md files, estimate tokens, generate summaries, detect empty files                                           | `internal/rc`, `internal/config`      |
 | `internal/drift`         | Detect stale or invalid context: dead path references, completed-task buildup, potential secrets, missing required files                      | `internal/config`, `internal/context` |
 | `internal/index`         | Generate and update markdown index tables in DECISIONS.md and LEARNINGS.md                                                                    | `internal/config`                     |
@@ -256,14 +256,14 @@ Files load in a deliberate sequence defined by `config.FileReadOrder`:
 7. GLOSSARY (domain terms)
 8. AGENT_PLAYBOOK (how to use this system)
 
-Overridable via `priority_order` in `.contextrc`.
+Overridable via `priority_order` in `.ctxrc`.
 
 ### Token Budgeting
 
 Token estimation uses a 4-characters-per-token heuristic
 (see the context package). When the total context exceeds the
 budget (default 8000, configurable via `CTX_TOKEN_BUDGET` or
-`.contextrc`), lower-priority files are truncated or omitted.
+`.ctxrc`), lower-priority files are truncated or omitted.
 Higher-priority files always get included first.
 
 ### Structured Entry Headers
@@ -283,7 +283,7 @@ Configuration resolution (highest priority wins):
 
 1. CLI flags (`--context-dir`)
 2. Environment variables (`CTX_DIR`, `CTX_TOKEN_BUDGET`)
-3. `.contextrc` file (YAML)
+3. `.ctxrc` file (YAML)
 4. Hardcoded defaults in `internal/rc`
 
 Managed by `internal/rc` with sync.Once singleton caching.
@@ -340,7 +340,7 @@ ctx/
 │   ├── context/                 # Context loading, token estimation
 │   ├── drift/                   # Drift detection engine
 │   ├── index/                   # Index table generation for DECISIONS/LEARNINGS
-│   ├── rc/                      # Runtime config (.contextrc, env, CLI flags)
+│   ├── rc/                      # Runtime config (.ctxrc, env, CLI flags)
 │   ├── recall/
 │   │   └── parser/              # Session transcript parsing
 │   ├── task/                    # Task checkbox parsing

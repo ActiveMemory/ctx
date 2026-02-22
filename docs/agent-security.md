@@ -255,7 +255,7 @@ Before running an unattended AI agent:
 * [Running an Unattended AI Agent](recipes/autonomous-loops.md): the
   ctx recipe for autonomous loops, including step-by-step permissions
   and isolation setup
-* [Security](security.md): `ctx`'s own trust model and vulnerability
+* [Security](security/reporting.md): `ctx`'s own trust model and vulnerability
   reporting
 * [Autonomous Loops](autonomous-loop.md): full documentation of the
   loop pattern, `PROMPT.md` templates, and troubleshooting

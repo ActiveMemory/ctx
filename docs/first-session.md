@@ -253,7 +253,7 @@ Review the additions with `cat .gitignore` after init.
 
 *See also*:
 
-* [Security considerations](security.md)
+* [Security considerations](security/reporting.md)
 * [Scratchpad encryption](scratchpad.md)
 * [Session Journal](session-journal.md)
 
