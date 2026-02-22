@@ -25,7 +25,7 @@ func qaReminderCmd() *cobra.Command {
 		Use:   "qa-reminder",
 		Short: "QA reminder hook",
 		Long: `Emits a hard reminder to lint and test the entire project before
-every commit. Fires on every Edit tool use — the repetition is
+every commit. Fires on every Edit tool use. The repetition is
 intentional reinforcement at the point of action.
 
 Hook event: PreToolUse (Edit)
