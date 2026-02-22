@@ -195,12 +195,12 @@ Add to `internal/assets/claude/hooks.json`:
 
 ## Configuration
 
-No `.contextrc` keys needed for v1. The behavior is:
+No `.ctxrc` keys needed for v1. The behavior is:
 - Look back 3 sessions (hardcoded, reasonable default).
 - Throttle to once per day.
 - Self-silencing when ceremonies are detected.
 
-Future: `ceremony_nudge: false` in `.contextrc` to disable entirely.
+Future: `ceremony_nudge: false` in `.ctxrc` to disable entirely.
 
 ## Testing
 

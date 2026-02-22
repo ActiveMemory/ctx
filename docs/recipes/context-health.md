@@ -43,7 +43,7 @@ directory lean and accurate.
 | `ctx drift`            | Command | Detect stale paths, missing files, violations  |
 | `ctx drift --fix`      | Command | Auto-fix simple issues                         |
 | `ctx sync`             | Command | Reconcile context with codebase structure      |
-| `ctx compact`          | Command | Archive completed tasks, deduplicate learnings |
+| `ctx compact`          | Command | Archive completed tasks, clean up empty sections |
 | `ctx status`           | Command | Quick health overview                          |
 | `/ctx-drift`           | Skill   | Structural plus semantic drift detection       |
 | `/ctx-alignment-audit` | Skill   | Audit doc claims against agent instructions    |
@@ -271,24 +271,19 @@ to code that no longer exists.
 
 ### `ctx compact`
 
-Consolidate completed tasks, archive old knowledge, and clean up empty sections:
+Consolidate completed tasks and clean up empty sections:
 
 ```bash
-ctx compact            # move completed tasks to Completed section, 
+ctx compact            # move completed tasks to Completed section,
                        # remove empty sections
-ctx compact --archive  # also archive old tasks, decisions, and learnings
+ctx compact --archive  # also archive old tasks to .context/archive/
 ```
 
 * Tasks: moves completed items (with all subtasks done) into the Completed
   section of `TASKS.md`
-* Decisions and learnings: archives entries older than 90 days (configurable
-  via `archive_knowledge_after_days` in `.contextrc`), keeping the 5 most
-  recent entries (configurable via `archive_keep_recent`)
 * All files: removes empty sections left behind
 * With `--archive`: writes tasks older than 7 days to
-  `.context/archive/tasks-YYYY-MM-DD.md`, decisions to
-  `.context/archive/decisions-YYYY-MM-DD.md`, and learnings to
-  `.context/archive/learnings-YYYY-MM-DD.md`
+  `.context/archive/tasks-YYYY-MM-DD.md`
 
 Without `--archive`, nothing is deleted — tasks are reorganized in place.
 

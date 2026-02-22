@@ -276,7 +276,7 @@ After completing, update .context/audit-state.json with:
 
 ## Configuration
 
-`.contextrc`:
+`.ctxrc`:
 
 ```yaml
 monitor:

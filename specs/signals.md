@@ -141,7 +141,7 @@ Default: inject `warning` and above only.
 | `warning` | Injected into context |
 | `critical` | Injected + optional terminal notification |
 
-Configurable in `.contextrc`:
+Configurable in `.ctxrc`:
 
 ```yaml
 monitor:

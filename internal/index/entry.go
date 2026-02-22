@@ -8,7 +8,6 @@ package index
 
 import (
 	"strings"
-	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -112,87 +111,10 @@ func (eb *EntryBlock) IsSuperseded() bool {
 	return false
 }
 
-// OlderThan checks whether this entry's timestamp is older than the given
-// number of days from now.
-//
-// Parameters:
-//   - days: Number of days threshold
-//
-// Returns:
-//   - bool: True if the entry is older than the threshold
-func (eb *EntryBlock) OlderThan(days int) bool {
-	// Parse the date portion of the timestamp (YYYY-MM-DD)
-	entryDate, err := time.ParseInLocation("2006-01-02", eb.Entry.Date, time.Local)
-	if err != nil {
-		return false
-	}
-	threshold := time.Now().AddDate(0, 0, -days)
-	return entryDate.Before(threshold)
-}
-
 // BlockContent joins the entry's lines into a single string.
 //
 // Returns:
 //   - string: The full entry content with lines joined by newlines
 func (eb *EntryBlock) BlockContent() string {
 	return strings.Join(eb.Lines, config.NewlineLF)
-}
-
-// RemoveEntryBlocks removes the specified entry blocks from file content
-// and cleans up excess blank lines.
-//
-// Parameters:
-//   - content: The full file content
-//   - blocks: Entry blocks to remove (must have valid StartIndex/EndIndex)
-//
-// Returns:
-//   - string: Content with the specified blocks removed
-func RemoveEntryBlocks(content string, blocks []EntryBlock) string {
-	if len(blocks) == 0 {
-		return content
-	}
-
-	lines := strings.Split(content, config.NewlineLF)
-
-	// Build a set of line indices to remove
-	removeSet := make(map[int]bool)
-	for _, b := range blocks {
-		for i := b.StartIndex; i < b.EndIndex; i++ {
-			removeSet[i] = true
-		}
-	}
-
-	// Build new lines, skipping removed indices
-	var newLines []string
-	for i, line := range lines {
-		if !removeSet[i] {
-			newLines = append(newLines, line)
-		}
-	}
-
-	// Clean up excess blank lines (collapse 3+ consecutive blanks to 2)
-	var cleaned []string
-	blankCount := 0
-	for _, line := range newLines {
-		if strings.TrimSpace(line) == "" {
-			blankCount++
-			if blankCount <= 2 {
-				cleaned = append(cleaned, line)
-			}
-		} else {
-			blankCount = 0
-			cleaned = append(cleaned, line)
-		}
-	}
-
-	// Trim trailing blank lines
-	for len(cleaned) > 0 && strings.TrimSpace(cleaned[len(cleaned)-1]) == "" {
-		cleaned = cleaned[:len(cleaned)-1]
-	}
-
-	if len(cleaned) == 0 {
-		return ""
-	}
-
-	return strings.Join(cleaned, config.NewlineLF) + config.NewlineLF
 }

@@ -57,7 +57,7 @@ func setupEncrypted(t *testing.T) string {
 }
 
 // setupPlaintext creates a temp dir with a .context/ directory and
-// scratchpad_encrypt: false in .contextrc.
+// scratchpad_encrypt: false in .ctxrc.
 func setupPlaintext(t *testing.T) string {
 	t.Helper()
 	dir := t.TempDir()
@@ -70,9 +70,9 @@ func setupPlaintext(t *testing.T) string {
 		rc.Reset()
 	})
 
-	// Write .contextrc with encryption disabled
+	// Write .ctxrc with encryption disabled
 	rcContent := "scratchpad_encrypt: false\n"
-	if err := os.WriteFile(filepath.Join(dir, ".contextrc"), []byte(rcContent), 0600); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, ".ctxrc"), []byte(rcContent), 0600); err != nil {
 		t.Fatal(err)
 	}
 

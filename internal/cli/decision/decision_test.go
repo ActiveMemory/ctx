@@ -57,41 +57,6 @@ func TestCmd_HasReindexSubcommand(t *testing.T) {
 	}
 }
 
-func TestCmd_HasArchiveSubcommand(t *testing.T) {
-	cmd := Cmd()
-
-	var found bool
-	for _, sub := range cmd.Commands() {
-		if sub.Use == "archive" {
-			found = true
-			if sub.Short == "" {
-				t.Error("archive subcommand has empty Short description")
-			}
-			if sub.RunE == nil {
-				t.Error("archive subcommand has no RunE function")
-			}
-			// Verify flags exist
-			if sub.Flags().Lookup("days") == nil {
-				t.Error("archive subcommand missing --days flag")
-			}
-			if sub.Flags().Lookup("keep") == nil {
-				t.Error("archive subcommand missing --keep flag")
-			}
-			if sub.Flags().Lookup("all") == nil {
-				t.Error("archive subcommand missing --all flag")
-			}
-			if sub.Flags().Lookup("dry-run") == nil {
-				t.Error("archive subcommand missing --dry-run flag")
-			}
-			break
-		}
-	}
-
-	if !found {
-		t.Error("archive subcommand not found")
-	}
-}
-
 func TestRunReindex_NoFile(t *testing.T) {
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()

@@ -16,7 +16,7 @@
 // Blobs are subject to a 64KB pre-encoding size limit.
 //
 // A plaintext fallback (.context/scratchpad.md) is available via the
-// scratchpad_encrypt config option in .contextrc.
+// scratchpad_encrypt config option in .ctxrc.
 //
 // Subcommands:
 //

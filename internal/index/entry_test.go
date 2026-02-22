@@ -9,7 +9,6 @@ package index
 import (
 	"strings"
 	"testing"
-	"time"
 )
 
 func TestParseEntryBlocks_Empty(t *testing.T) {
@@ -134,39 +133,6 @@ func TestEntryBlock_IsSuperseded(t *testing.T) {
 	}
 }
 
-func TestEntryBlock_OlderThan(t *testing.T) {
-	// An entry from 100 days ago
-	oldDate := time.Now().AddDate(0, 0, -100).Format("2006-01-02")
-	oldBlock := &EntryBlock{
-		Entry: Entry{Date: oldDate},
-	}
-
-	if !oldBlock.OlderThan(90) {
-		t.Error("100-day-old entry should be older than 90 days")
-	}
-	if oldBlock.OlderThan(110) {
-		t.Error("100-day-old entry should not be older than 110 days")
-	}
-
-	// An entry from today
-	todayBlock := &EntryBlock{
-		Entry: Entry{Date: time.Now().Format("2006-01-02")},
-	}
-
-	if todayBlock.OlderThan(1) {
-		t.Error("today's entry should not be older than 1 day")
-	}
-}
-
-func TestEntryBlock_OlderThan_InvalidDate(t *testing.T) {
-	eb := &EntryBlock{
-		Entry: Entry{Date: "invalid"},
-	}
-	if eb.OlderThan(1) {
-		t.Error("invalid date should return false")
-	}
-}
-
 func TestEntryBlock_BlockContent(t *testing.T) {
 	eb := &EntryBlock{
 		Lines: []string{
@@ -182,83 +148,5 @@ func TestEntryBlock_BlockContent(t *testing.T) {
 	}
 	if !strings.Contains(content, "Body text here.") {
 		t.Error("BlockContent should contain the body")
-	}
-}
-
-func TestRemoveEntryBlocks_Empty(t *testing.T) {
-	content := "# Decisions\n\nSome text.\n"
-	result := RemoveEntryBlocks(content, nil)
-	if result != content {
-		t.Errorf("RemoveEntryBlocks with nil blocks should return original content")
-	}
-}
-
-func TestRemoveEntryBlocks_RemoveOne(t *testing.T) {
-	content := `# Decisions
-
-## [2026-01-15-120000] First
-
-Body of first.
-
-## [2026-02-01-090000] Second
-
-Body of second.
-`
-	blocks := ParseEntryBlocks(content)
-	if len(blocks) != 2 {
-		t.Fatalf("expected 2 blocks, got %d", len(blocks))
-	}
-
-	// Remove the first block
-	result := RemoveEntryBlocks(content, blocks[:1])
-	if strings.Contains(result, "First") {
-		t.Error("removed block should not appear in result")
-	}
-	if !strings.Contains(result, "Second") {
-		t.Error("remaining block should appear in result")
-	}
-}
-
-func TestRemoveEntryBlocks_RemoveAll(t *testing.T) {
-	content := `# Decisions
-
-## [2026-01-15-120000] First
-
-Body of first.
-
-## [2026-02-01-090000] Second
-
-Body of second.
-`
-	blocks := ParseEntryBlocks(content)
-
-	result := RemoveEntryBlocks(content, blocks)
-	if strings.Contains(result, "First") || strings.Contains(result, "Second") {
-		t.Error("all blocks should be removed")
-	}
-	if !strings.Contains(result, "# Decisions") {
-		t.Error("file header should be preserved")
-	}
-}
-
-func TestRemoveEntryBlocks_CleansBlankLines(t *testing.T) {
-	content := `# Decisions
-
-## [2026-01-15-120000] First
-
-Body.
-
-
-
-## [2026-02-01-090000] Second
-
-Body.
-`
-	blocks := ParseEntryBlocks(content)
-	result := RemoveEntryBlocks(content, blocks[:1])
-
-	// Should not have 3+ consecutive blank lines
-	if strings.Contains(result, "\n\n\n\n") {
-		t.Error("result should not have 4+ consecutive blank lines")
 	}
 }

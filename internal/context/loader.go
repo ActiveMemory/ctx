@@ -18,7 +18,7 @@ import (
 
 // Load reads all context files from the specified directory.
 //
-// If dir is empty, it uses the configured context directory from .contextrc,
+// If dir is empty, it uses the configured context directory from .ctxrc,
 // CTX_DIR environment variable, or the default ".context".
 //
 // Parameters:

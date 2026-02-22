@@ -28,7 +28,8 @@
           {"type": "command", "command": "ctx system check-persistence"},
           {"type": "command", "command": "ctx system check-journal"},
           {"type": "command", "command": "ctx system check-version"},
-          {"type": "command", "command": "ctx system check-resources"}
+          {"type": "command", "command": "ctx system check-resources"},
+          {"type": "command", "command": "ctx system check-knowledge"}
         ]
       }
     ],

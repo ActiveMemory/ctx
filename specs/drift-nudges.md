@@ -38,7 +38,7 @@ Count entries in DECISIONS.md and LEARNINGS.md using the existing
 
 ### Configuration
 
-New `.contextrc` keys:
+New `.ctxrc` keys:
 
 ```yaml
 entry_count_learnings: 30    # warn above this (0 = disable)
@@ -107,6 +107,6 @@ func checkEntryCount(ctx *context.Context, report *Report) {
 - Count check at threshold (no warning)
 - Count check above threshold (warning with correct count)
 - Disabled threshold (0 = no check)
-- Custom threshold from `.contextrc`
+- Custom threshold from `.ctxrc`
 - Both files above threshold (two warnings)
 - File missing (no error)

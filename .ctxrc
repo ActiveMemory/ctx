@@ -1,0 +1,24 @@
+# .ctxrc — ctx runtime configuration
+# https://ctx.ist/configuration/
+#
+# All settings are optional. Missing values use defaults.
+# Priority: CLI flags > environment variables > .ctxrc > defaults
+
+# context_dir: .context
+# token_budget: 8000
+# auto_archive: true
+# archive_after_days: 7
+# scratchpad_encrypt: true
+# allow_outside_cwd: false
+# entry_count_learnings: 30
+# entry_count_decisions: 20
+# convention_line_count: 200
+# priority_order:
+#   - CONSTITUTION.md
+#   - TASKS.md
+#   - CONVENTIONS.md
+#   - ARCHITECTURE.md
+#   - DECISIONS.md
+#   - LEARNINGS.md
+#   - GLOSSARY.md
+#   - AGENT_PLAYBOOK.md

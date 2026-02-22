@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package rc provides runtime configuration loading from .contextrc files.
+// Package rc provides runtime configuration loading from .ctxrc files.
 package rc
 
 import (
@@ -20,21 +20,20 @@ import (
 //     (8000 token budget, 7-day archive, etc.)
 func Default() *CtxRC {
 	return &CtxRC{
-		ContextDir:                config.DirContext,
-		TokenBudget:               DefaultTokenBudget,
-		PriorityOrder:             nil, // nil means use config.FileReadOrder
-		AutoArchive:               true,
-		ArchiveAfterDays:          DefaultArchiveAfterDays,
-		ArchiveKnowledgeAfterDays: DefaultArchiveKnowledgeAfterDays,
-		ArchiveKeepRecent:         DefaultArchiveKeepRecent,
-		EntryCountLearnings:       DefaultEntryCountLearnings,
-		EntryCountDecisions:       DefaultEntryCountDecisions,
+		ContextDir:          config.DirContext,
+		TokenBudget:         DefaultTokenBudget,
+		PriorityOrder:       nil, // nil means use config.FileReadOrder
+		AutoArchive:         true,
+		ArchiveAfterDays:    DefaultArchiveAfterDays,
+		EntryCountLearnings: DefaultEntryCountLearnings,
+		EntryCountDecisions: DefaultEntryCountDecisions,
+		ConventionLineCount: DefaultConventionLineCount,
 	}
 }
 
 // RC returns the loaded configuration, initializing it on the first call.
 //
-// It loads from .contextrc if present, then applies environment overrides.
+// It loads from .ctxrc if present, then applies environment overrides.
 // The result is cached for subsequent calls.
 //
 // Returns:
@@ -48,7 +47,7 @@ func RC() *CtxRC {
 
 // ContextDir returns the configured context directory.
 //
-// Priority: CLI override > env var > .contextrc > default.
+// Priority: CLI override > env var > .ctxrc > default.
 //
 // Returns:
 //   - string: The context directory path (e.g., ".context")
@@ -63,7 +62,7 @@ func ContextDir() string {
 
 // TokenBudget returns the configured default token budget.
 //
-// Priority: env var > .contextrc > default (8000).
+// Priority: env var > .ctxrc > default (8000).
 //
 // Returns:
 //   - int: The token budget for context assembly
@@ -96,27 +95,9 @@ func ArchiveAfterDays() int {
 	return RC().ArchiveAfterDays
 }
 
-// ArchiveKnowledgeAfterDays returns the configured days before archiving
-// decisions and learnings.
-//
-// Returns:
-//   - int: Number of days after which knowledge entries are archived (default 90)
-func ArchiveKnowledgeAfterDays() int {
-	return RC().ArchiveKnowledgeAfterDays
-}
-
-// ArchiveKeepRecent returns the number of recent entries to keep when
-// archiving decisions and learnings.
-//
-// Returns:
-//   - int: Number of recent entries to preserve (default 5)
-func ArchiveKeepRecent() int {
-	return RC().ArchiveKeepRecent
-}
-
 // ScratchpadEncrypt returns whether the scratchpad should be encrypted.
 //
-// Returns true (default) when the field is not set in .contextrc.
+// Returns true (default) when the field is not set in .ctxrc.
 //
 // Returns:
 //   - bool: True if scratchpad encryption is enabled (default true)
@@ -148,9 +129,19 @@ func EntryCountDecisions() int {
 	return RC().EntryCountDecisions
 }
 
+// ConventionLineCount returns the line count threshold for CONVENTIONS.md.
+//
+// Returns 0 if the check is disabled. Default: 200.
+//
+// Returns:
+//   - int: Threshold above which a drift warning is emitted
+func ConventionLineCount() int {
+	return RC().ConventionLineCount
+}
+
 // AllowOutsideCwd returns whether boundary validation should be skipped.
 //
-// Returns false (default) when the field is not set in .contextrc.
+// Returns false (default) when the field is not set in .ctxrc.
 //
 // Returns:
 //   - bool: True if context directory is allowed outside the project root
@@ -182,7 +173,7 @@ func Reset() {
 
 // FilePriority returns the priority of a context file.
 //
-// If a priority_order is configured in .contextrc, that order is used.
+// If a priority_order is configured in .ctxrc, that order is used.
 // Otherwise, the default config.FileReadOrder is used.
 //
 // Lower numbers indicate higher priority (1 = highest).
@@ -194,7 +185,7 @@ func Reset() {
 // Returns:
 //   - int: Priority value (1-9 for known files, 100 for unknown)
 func FilePriority(name string) int {
-	// Check for .contextrc override first
+	// Check for .ctxrc override first
 	if order := PriorityOrder(); order != nil {
 		for i, fName := range order {
 			if fName == name {

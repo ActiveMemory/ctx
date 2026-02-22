@@ -46,7 +46,7 @@ The context files are assembled in the recommended read order:
   8. AGENT_PLAYBOOK.md
 
 Use --raw to output raw file contents without headers or assembly.
-Use --budget to limit output to a specific token count (default from .contextrc or 8000).`,
+Use --budget to limit output to a specific token count (default from .ctxrc or 8000).`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Use configured budget if flag not explicitly set
 			if !cmd.Flags().Changed("budget") {

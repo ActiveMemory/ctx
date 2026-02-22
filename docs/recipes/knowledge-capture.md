@@ -188,27 +188,7 @@ ctx learnings reindex
 Run reindex after any manual edit. The index lets AI tools scan all entries
 without reading the full file, which matters when token budgets are tight.
 
-### Step 6: Archive Old Entries
-
-As `DECISIONS.md` and `LEARNINGS.md` grow, archive old entries to keep
-active context lean:
-
-```bash
-ctx decisions archive --dry-run    # Preview what would be archived
-ctx decisions archive              # Archive decisions older than 90 days
-ctx learnings archive --dry-run    # Preview what would be archived
-ctx learnings archive              # Archive learnings older than 90 days
-```
-
-Or archive everything in one pass with compact:
-
-```bash
-ctx compact --archive
-```
-
-See [Managing Knowledge at Scale](knowledge-scaling.md) for the full workflow.
-
-### Step 7: Use /ctx-reflect to Surface What to Capture
+### Step 6: Use /ctx-reflect to Surface What to Capture
 
 At natural breakpoints (after completing a feature, fixing a bug, or before
 ending a session) use `/ctx-reflect` to identify items worth persisting.
@@ -248,7 +228,7 @@ The skill always asks before persisting.
     The skill provides a structured checklist, but the behavior is available
     through natural conversation.
 
-### Step 8: The Conversational Approach
+### Step 7: The Conversational Approach
 
 The commands shown in Steps 2 to 4 are precise, but you rarely need to type
 them yourself. When working with an agent that has loaded the ctx playbook,
