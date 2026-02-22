@@ -96,10 +96,10 @@ func SaveWebhook(url string) error {
 
 // EventAllowed reports whether the given event passes the filter.
 //
-// A nil or empty allowed list means all events pass.
+// A nil or empty allowed list means no events pass (opt-in only).
 func EventAllowed(event string, allowed []string) bool {
 	if len(allowed) == 0 {
-		return true
+		return false
 	}
 	for _, e := range allowed {
 		if e == event {

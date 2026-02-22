@@ -68,7 +68,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # entry_count_decisions: 20
 # convention_line_count: 200
 # notify:
-#   events:             # absent/empty = all events pass
+#   events:             # required — no events sent unless listed
 #     - loop
 #     - nudge
 #     - relay
@@ -294,7 +294,7 @@ notify:
     # - relay   # all hook output (verbose, for debugging)
 ```
 
-With no `events` list (or an empty one), all events are sent.
+Notifications are opt-in: no events are sent unless explicitly listed.
 
 See [Webhook Notifications](../recipes/webhook-notifications.md) for a
 step-by-step recipe.

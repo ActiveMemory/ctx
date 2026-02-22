@@ -61,10 +61,10 @@ ctx notify test
 
 If you see `No webhook configured`, run `ctx notify setup` first.
 
-### Step 4: Filter Events (Optional)
+### Step 4: Configure Events
 
-By default, all events are sent. To receive only specific events, add an
-event filter to `.ctxrc`:
+Notifications are opt-in: no events are sent unless you configure an event
+list in `.ctxrc`:
 
 ```yaml
 # .ctxrc
@@ -72,9 +72,10 @@ notify:
   events:
     - loop       # loop completion or max-iteration hit
     - nudge      # VERBATIM relay hooks (context checkpoint, persistence, etc.)
+    - relay      # all hook output (verbose, for debugging)
 ```
 
-With this config, `relay` and other events are silently dropped.
+Only listed events fire. Omitting an event silently drops it.
 
 ### Step 5: Use in Your Own Skills
 
