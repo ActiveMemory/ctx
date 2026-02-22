@@ -178,13 +178,14 @@ journal:
 	@echo ""
 	@echo "Then re-run: make journal"
 
-## journal-serve: Serve the journal site.
+## journal-serve: Serve the journal site (port 8001; docs uses 8000)
 journal-serve:
-	@ctx journal site --serve
+	@ctx journal site
+	cd .context/journal-site && zensical serve -a localhost:8001
 
-## journal-serve-lan: Serve journal site on all interfaces (LAN-accessible)
+## journal-serve-lan: Serve journal site on all interfaces (LAN-accessible, port 8001)
 journal-serve-lan:
-	cd .context/journal-site && zensical serve -a 0.0.0.0:8000
+	cd .context/journal-site && zensical serve -a 0.0.0.0:8001
 
 ## backup: Backup project context (.context/ and .claude/) to SMB share
 backup:
