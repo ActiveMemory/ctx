@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// loadRC loads configuration from the .contextrc file and applies env
+// loadRC loads configuration from the .ctxrc file and applies env
 // overrides.
 //
 // Returns:
@@ -24,7 +24,7 @@ import (
 func loadRC() *CtxRC {
 	cfg := Default()
 
-	// Try to load .contextrc from the current directory
+	// Try to load .ctxrc from the current directory
 	data, err := os.ReadFile(config.FileContextRC)
 	if err == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {

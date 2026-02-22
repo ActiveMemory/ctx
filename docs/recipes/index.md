@@ -55,8 +55,8 @@ showing these natural-language patterns.
 ### [Setting Up ctx Across AI Tools](multi-tool-setup.md)
 
 Initialize `ctx` and configure hooks for Claude Code, Cursor,
-Aider, Copilot, or Windsurf. Includes shell completion,
-watch mode for non-native tools, and verification.
+Aider, Copilot, or Windsurf. Includes **shell completion**,
+**watch mode** for non-native tools, and **verification**.
 
 **Uses**: `ctx init`, `ctx hook`, `ctx agent`, `ctx completion`,
 `ctx watch`
@@ -65,12 +65,12 @@ watch mode for non-native tools, and verification.
 
 ### [Keeping Context in a Separate Repo](external-context.md)
 
-Store context files outside the project tree: in a private repo,
+Store context files **outside** the project tree: in a private repo,
 shared directory, or anywhere else. Useful for open source projects
-with private context or multi-repo setups.
+with private context or **multi-repo** setups.
 
 **Uses**: `ctx init`, `--context-dir`, `--allow-outside-cwd`,
-`.contextrc`, `/ctx-status`
+`.ctxrc`, `/ctx-status`
 
 ---
 
@@ -81,9 +81,12 @@ working with ctx.
 
 ### [The Complete Session](session-lifecycle.md)
 
-Walk through a full `ctx` session from start to finish: loading
-context, picking what to work on, committing with context
-capture, reflecting, and saving a snapshot.
+Walk through a full `ctx` session from **start to finish**: 
+
+* **Loading** context,
+* **Picking** what to work on, 
+* **Committing** with context,
+* **Capturing**, reflecting, and saving a snapshot.
 
 **Uses**: `ctx status`, `ctx agent`,
 `/ctx-remember`, `/ctx-next`, `/ctx-commit`, `/ctx-reflect`
@@ -92,9 +95,9 @@ capture, reflecting, and saving a snapshot.
 
 ### [Session Ceremonies](session-ceremonies.md)
 
-The two bookend rituals for every session: `/ctx-remember` at the
+The two bookend **rituals** for every session: `/ctx-remember` at the
 start to load and confirm context, `/ctx-wrap-up` at the end to
-review the session and persist learnings, decisions, and tasks.
+review the session and persist **learnings**, **decisions**, and **tasks**.
 
 **Uses**: `/ctx-remember`, `/ctx-wrap-up`, `/ctx-commit`, `ctx agent`,
 `ctx add`
@@ -103,7 +106,7 @@ review the session and persist learnings, decisions, and tasks.
 
 ### [Tracking Work Across Sessions](task-management.md)
 
-Add, prioritize, complete, snapshot, and archive tasks. Keep
+**Add**, **prioritize**, **complete**, **snapshot**, and **archive** tasks. Keep
 `TASKS.md` focused as your project evolves across dozens of
 sessions.
 
@@ -114,8 +117,8 @@ sessions.
 
 ### [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md)
 
-Record architectural decisions with rationale, capture gotchas
-and lessons learned, and codify coding conventions so they
+Record **architectural decisions** with **rationale**, capture **gotchas**
+and lessons learned, and **codify** conventions so they
 survive across sessions and team members.
 
 **Uses**: `ctx add decision`, `ctx add learning`,
@@ -159,8 +162,8 @@ directives for nudges, and five more patterns across the spectrum.
 
 ### [Claude Code Permission Hygiene](claude-code-permissions.md)
 
-Keep `.claude/settings.local.json` clean: recommended safe defaults,
-what to never pre-approve, and a maintenance workflow for cleaning
+Keep `.claude/settings.local.json` clean: recommended **safe defaults**,
+what to **never** pre-approve, and a **maintenance workflow** for cleaning
 up session debris.
 
 **Uses**: `ctx init`, `/ctx-drift`, `/sanitize-permissions`,
@@ -170,7 +173,7 @@ up session debris.
 
 ### [Permission Snapshots](permission-snapshots.md)
 
-Capture a known-good permission baseline as a golden image, then restore
+Capture a known-good permission **baseline** as a **golden image**, then restore
 at session start to automatically drop session-accumulated permissions.
 
 **Uses**: `ctx permissions snapshot`, `ctx permissions restore`,
@@ -178,20 +181,9 @@ at session start to automatically drop session-accumulated permissions.
 
 ---
 
-### [Managing Knowledge at Scale](knowledge-scaling.md)
-
-Archive old decisions and learnings to keep knowledge files lean and
-token-efficient. Includes threshold configuration, supersede workflow,
-and auto-archive via compact.
-
-**Uses**: `ctx decisions archive`, `ctx learnings archive`,
-`ctx compact --archive`, `/ctx-archive`, `/ctx-drift`
-
----
-
 ### [Detecting and Fixing Drift](context-health.md)
 
-Keep context files accurate by detecting structural drift
+Keep context files accurate by detecting **structural drift**
 (*stale paths, missing files, stale file ages*) and task
 staleness. Includes alignment audits to verify documentation
 claims match agent instructions.
@@ -206,8 +198,8 @@ claims match agent instructions.
 
 ### [Browsing and Enriching Past Sessions](session-archaeology.md)
 
-Export your AI session history to a browsable journal site.
-Normalize rendering, enrich entries with metadata, and search
+Export your AI session history to a **browsable journal site**.
+**Normalize** rendering, **enrich** entries with metadata, and **search**
 across months of work.
 
 **Uses**: `ctx recall list/show/export`, `ctx journal site`,
@@ -221,8 +213,8 @@ across months of work.
 
 ### [Running an Unattended AI Agent](autonomous-loops.md)
 
-Set up a loop where an AI agent works through tasks overnight
-without you at the keyboard, using ctx for persistent memory
+Set up a **loop** where an AI agent works through tasks overnight
+without you at the keyboard, using `ctx` for **persistent memory**
 between iterations.
 
 This recipe shows how `ctx` supports long-running agent loops
@@ -235,7 +227,7 @@ without losing context or intent.
 
 ### [When to Use a Team of Agents](when-to-use-agent-teams.md)
 
-Decision framework for choosing between a single agent, parallel
+**Decision framework** for choosing between a single agent, parallel
 worktrees, and a full agent team. 
 
 This recipe covers the file overlap test, when teams make things worse, and 
@@ -258,9 +250,9 @@ file overlap, work in parallel, merge back.
 
 ### [Turning Activity into Content](publishing.md)
 
-Generate blog posts from project activity, write changelog
-posts from commit ranges, and publish a browsable journal
-site from your session history. 
+Generate **blog posts** from project activity, write **changelog
+posts** from commit ranges, and publish a browsable journal
+site from your **session history**.
 
 The output is generic Markdown, but the skills are tuned for the `ctx`-style 
 blog artifacts you see on this website.

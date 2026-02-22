@@ -28,10 +28,6 @@ const (
 	HeadingCompleted = "## Completed"
 	// HeadingArchivedTasks is the heading for archived task files.
 	HeadingArchivedTasks = "# Archived Tasks"
-	// HeadingArchivedDecisions is the heading for archived decision files.
-	HeadingArchivedDecisions = "# Archived Decisions"
-	// HeadingArchivedLearnings is the heading for archived learning files.
-	HeadingArchivedLearnings = "# Archived Learnings"
 )
 
 // Decisions

@@ -1083,8 +1083,8 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	// Set scratchpad_encrypt to false via .contextrc
-	if err := os.WriteFile(".contextrc", []byte(`scratchpad_encrypt = false`+"\n"), 0600); err != nil {
+	// Set scratchpad_encrypt to false via .ctxrc
+	if err := os.WriteFile(".ctxrc", []byte(`scratchpad_encrypt = false`+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	// Reset rc cache to pick up new config
@@ -1092,7 +1092,7 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 	// Actually we can't directly control rc.ScratchpadEncrypt in a test
 	// without modifying source. Let's just test the encrypted path
 	// since that's the default.
-	_ = os.Remove(".contextrc")
+	_ = os.Remove(".ctxrc")
 
 	contextDir := ".context"
 	if err := os.MkdirAll(contextDir, 0750); err != nil {

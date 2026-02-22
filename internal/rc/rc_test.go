@@ -32,16 +32,10 @@ func TestDefaultRC(t *testing.T) {
 	if rc.ArchiveAfterDays != DefaultArchiveAfterDays {
 		t.Errorf("ArchiveAfterDays = %d, want %d", rc.ArchiveAfterDays, DefaultArchiveAfterDays)
 	}
-	if rc.ArchiveKnowledgeAfterDays != DefaultArchiveKnowledgeAfterDays {
-		t.Errorf("ArchiveKnowledgeAfterDays = %d, want %d", rc.ArchiveKnowledgeAfterDays, DefaultArchiveKnowledgeAfterDays)
-	}
-	if rc.ArchiveKeepRecent != DefaultArchiveKeepRecent {
-		t.Errorf("ArchiveKeepRecent = %d, want %d", rc.ArchiveKeepRecent, DefaultArchiveKeepRecent)
-	}
 }
 
 func TestGetRC_NoFile(t *testing.T) {
-	// Change to temp directory with no .contextrc
+	// Change to temp directory with no .ctxrc
 	tempDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(tempDir)
@@ -65,7 +59,7 @@ func TestGetRC_WithFile(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create .contextrc file
+	// Create .ctxrc file
 	rcContent := `context_dir: custom-context
 token_budget: 4000
 priority_order:
@@ -74,7 +68,7 @@ priority_order:
 auto_archive: false
 archive_after_days: 14
 `
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -103,11 +97,11 @@ func TestGetRC_EnvOverrides(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create .contextrc file
+	// Create .ctxrc file
 	rcContent := `context_dir: file-context
 token_budget: 4000
 `
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	// Set environment variables (t.Setenv auto-restores after test)
 	t.Setenv(config.EnvCtxDir, "env-context")
@@ -132,9 +126,9 @@ func TestGetContextDir_CLIOverride(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create .contextrc file
+	// Create .ctxrc file
 	rcContent := `context_dir: file-context`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	// Set env override (t.Setenv auto-restores after test)
 	t.Setenv(config.EnvCtxDir, "env-context")
@@ -172,8 +166,8 @@ func TestGetRC_InvalidYAML(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create invalid .contextrc file
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte("invalid: [yaml: content"), 0600)
+	// Create invalid .ctxrc file
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte("invalid: [yaml: content"), 0600)
 
 	Reset()
 
@@ -190,9 +184,9 @@ func TestGetRC_PartialConfig(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create .contextrc with only some fields
+	// Create .ctxrc with only some fields
 	rcContent := `token_budget: 5000`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -267,7 +261,7 @@ func TestPriorityOrder_Custom(t *testing.T) {
   - DECISIONS.md
   - LEARNINGS.md
 `
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -301,7 +295,7 @@ func TestAutoArchive_Disabled(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	rcContent := `auto_archive: false`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -331,7 +325,7 @@ func TestArchiveAfterDays_Custom(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	rcContent := `archive_after_days: 30`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -362,7 +356,7 @@ func TestScratchpadEncrypt_Explicit(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	rcContent := `scratchpad_encrypt: false`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -378,7 +372,7 @@ func TestScratchpadEncrypt_ExplicitTrue(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	rcContent := `scratchpad_encrypt: true`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -424,7 +418,7 @@ func TestFilePriority_CustomOrder(t *testing.T) {
   - DECISIONS.md
   - TASKS.md
 `
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
@@ -482,74 +476,12 @@ func TestAllowOutsideCwd_Enabled(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	rcContent := `allow_outside_cwd: true`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
 	Reset()
 
 	if !AllowOutsideCwd() {
 		t.Error("AllowOutsideCwd() = false, want true")
-	}
-}
-
-func TestArchiveKnowledgeAfterDays(t *testing.T) {
-	tempDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	_ = os.Chdir(tempDir)
-	defer func() { _ = os.Chdir(origDir) }()
-
-	Reset()
-
-	days := ArchiveKnowledgeAfterDays()
-	if days != DefaultArchiveKnowledgeAfterDays {
-		t.Errorf("ArchiveKnowledgeAfterDays() = %d, want %d", days, DefaultArchiveKnowledgeAfterDays)
-	}
-}
-
-func TestArchiveKnowledgeAfterDays_Custom(t *testing.T) {
-	tempDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	_ = os.Chdir(tempDir)
-	defer func() { _ = os.Chdir(origDir) }()
-
-	rcContent := `archive_knowledge_after_days: 60`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
-
-	Reset()
-
-	days := ArchiveKnowledgeAfterDays()
-	if days != 60 {
-		t.Errorf("ArchiveKnowledgeAfterDays() = %d, want %d", days, 60)
-	}
-}
-
-func TestArchiveKeepRecent(t *testing.T) {
-	tempDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	_ = os.Chdir(tempDir)
-	defer func() { _ = os.Chdir(origDir) }()
-
-	Reset()
-
-	keep := ArchiveKeepRecent()
-	if keep != DefaultArchiveKeepRecent {
-		t.Errorf("ArchiveKeepRecent() = %d, want %d", keep, DefaultArchiveKeepRecent)
-	}
-}
-
-func TestArchiveKeepRecent_Custom(t *testing.T) {
-	tempDir := t.TempDir()
-	origDir, _ := os.Getwd()
-	_ = os.Chdir(tempDir)
-	defer func() { _ = os.Chdir(origDir) }()
-
-	rcContent := `archive_keep_recent: 10`
-	_ = os.WriteFile(filepath.Join(tempDir, ".contextrc"), []byte(rcContent), 0600)
-
-	Reset()
-
-	keep := ArchiveKeepRecent()
-	if keep != 10 {
-		t.Errorf("ArchiveKeepRecent() = %d, want %d", keep, 10)
 	}
 }
 

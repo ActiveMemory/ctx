@@ -232,15 +232,6 @@ third-party libraries need type assertions.
 | Superseded | Replaced by newer decision (link to it) |
 | Deprecated | No longer relevant                      |
 
-### Archival
-
-Over time, DECISIONS.md accumulates entries. Use `ctx decisions archive` to
-move old or superseded entries to `.context/archive/decisions-YYYY-MM-DD.md`.
-The `ctx compact --archive` command also archives decisions older than 90 days
-(configurable via `archive_knowledge_after_days` in `.contextrc`).
-
-See [Managing Knowledge at Scale](recipes/knowledge-scaling.md) for a full workflow.
-
 ---
 
 ## `LEARNINGS.md`
@@ -294,15 +285,6 @@ Organize learnings by topic:
 * Security
 * Third-Party Libraries
 * Git & Workflow
-
-### Archival
-
-Over time, LEARNINGS.md accumulates entries. Use `ctx learnings archive` to
-move old entries to `.context/archive/learnings-YYYY-MM-DD.md`. The
-`ctx compact --archive` command also archives learnings older than 90 days
-(configurable via `archive_knowledge_after_days` in `.contextrc`).
-
-See [Managing Knowledge at Scale](recipes/knowledge-scaling.md) for a full workflow.
 
 ---
 

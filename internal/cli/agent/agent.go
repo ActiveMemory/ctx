@@ -55,7 +55,7 @@ recency and relevance to active tasks, then included in priority order
 until the budget is consumed. Entries that don't fit get title-only
 summaries in an "Also Noted" section.
 
-Use --budget to set token budget (default from .contextrc or 8000).
+Use --budget to set token budget (default from .ctxrc or 8000).
 Use --format to choose between Markdown (md) or JSON output.
 
 Cooldown (for hooks and automation):

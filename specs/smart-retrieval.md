@@ -200,7 +200,7 @@ contain full body. New `summaries` field for entries that were title-only.
 - **Cross-file references**: Scoring entries based on which files they mention
   is interesting but adds complexity. Revisit later.
 - **User-tunable weights**: Hardcode sensible defaults. If users need
-  different weights, `.contextrc` extension is a future enhancement.
+  different weights, `.ctxrc` extension is a future enhancement.
 - **Architecture/Glossary inclusion**: These files are reference material,
   not session-specific. Keep them in the "read these files" list without
   extracting content. Revisit if users request it.
@@ -250,7 +250,7 @@ contain full body. New `summaries` field for entries that were title-only.
 > Should `ctx agent` budget allocation weights be configurable?
 
 Not in v1. Hardcode sensible defaults. If the issue comes up, add
-`.contextrc` keys later.
+`.ctxrc` keys later.
 
 > Is 30 the right soft cap for learnings?
 
