@@ -12,6 +12,8 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 - [x] AI: ctx-borrow project skill is confusing as `ctx-` prefix implies a
       ctx skill; needs rename. Renamed to /absorb. #done:2026-02-21
+- [ ] Add version-bump relay hook: create a system hook that reminds the agent to bump VERSION, plugin.json, and marketplace.json whenever a feature warrants a version change. The hook should fire during commit or wrap-up to prevent version drift across the three files. #added:2026-02-22-102530
+
 - [ ] Rename .scratchpad.key to .context.key #priority:medium #added:2026-02-22-101118
 
 - [ ] Regenerate site HTML after .ctxrc rename #added:2026-02-21-200039
