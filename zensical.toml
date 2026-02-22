@@ -40,10 +40,10 @@ nav = [
   ]},
   { "Recipes" = [
     "recipes/index.md",
+    "recipes/guide-your-agent.md",
     "recipes/session-lifecycle.md",
     "recipes/session-ceremonies.md",
     "recipes/knowledge-capture.md",
-    "recipes/knowledge-scaling.md",
     "recipes/context-health.md",
     "recipes/task-management.md",
     "recipes/session-archaeology.md",
