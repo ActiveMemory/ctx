@@ -11,15 +11,19 @@
 // The parent command (ctx system) displays memory, swap, disk, and load
 // metrics with WARNING/DANGER threshold alerts.
 //
-// Hidden subcommands read JSON from stdin (Claude Code hook contract), perform
+// Plumbing subcommands (hidden, used by skills and automation):
+//   - mark-journal: Update journal processing state (.state.json)
+//
+// Hook subcommands read JSON from stdin (Claude Code hook contract), perform
 // their logic, and exit 0. Block commands output JSON with a "decision" field.
 //
-// Subcommands (hidden):
+// Hook subcommands (hidden):
 //   - check-context-size: Adaptive prompt counter with checkpoint messages
 //   - check-persistence: Context file mtime watcher with persistence nudges
 //   - check-journal: Unexported sessions + unenriched entries reminder
 //   - check-version: Version update nudge
 //   - check-resources: Resource pressure monitor (DANGER-only VERBATIM relay)
+//   - check-knowledge: Knowledge file growth nudge (daily throttle)
 //   - block-non-path-ctx: Blocks non-PATH ctx invocations
 //   - post-commit: Post-commit context capture nudge
 //   - cleanup-tmp: Removes stale temp files on session end

@@ -81,7 +81,7 @@ summarize tool outputs > 50 lines; keep first/last 5 lines with
    - Otherwise, scan `.context/journal/*.md`
    - **Skip already-normalized files** by checking the state file:
      ```bash
-     ctx journal mark --check <filename> normalized
+     ctx system mark-journal --check <filename> normalized
      ```
      Or read `.context/journal/.state.json` directly and skip entries
      with a `normalized` date set.
@@ -91,11 +91,11 @@ summarize tool outputs > 50 lines; keep first/last 5 lines with
 4. Write back the fixed files
 5. **Mark normalized** in the state file:
    ```bash
-   ctx journal mark <filename> normalized
+   ctx system mark-journal <filename> normalized
    ```
    After verifying fence nesting is correct, also mark fences:
    ```bash
-   ctx journal mark <filename> fences_verified
+   ctx system mark-journal <filename> fences_verified
    ```
 6. Regenerate site: `ctx journal site --build`
 7. Report what changed and remind user of backup location

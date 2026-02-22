@@ -72,34 +72,6 @@ func TestCmd_HasSiteSubcommand(t *testing.T) {
 	}
 }
 
-func TestCmd_HasMarkSubcommand(t *testing.T) {
-	cmd := Cmd()
-
-	var found bool
-	for _, sub := range cmd.Commands() {
-		if sub.Use == "mark <filename> <stage>" {
-			found = true
-			if sub.Short == "" {
-				t.Error("mark subcommand has empty Short description")
-			}
-			if sub.RunE == nil {
-				t.Error("mark subcommand has no RunE function")
-			}
-
-			checkFlag := sub.Flags().Lookup("check")
-			if checkFlag == nil {
-				t.Error("mark subcommand missing --check flag")
-			}
-
-			break
-		}
-	}
-
-	if !found {
-		t.Error("mark subcommand not found")
-	}
-}
-
 func TestFormatSize(t *testing.T) {
 	tests := []struct {
 		bytes int64

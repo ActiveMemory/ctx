@@ -10,7 +10,7 @@ Enrich a session journal entry with structured metadata.
 1. **Run `/ctx-journal-normalize` first** if the entry has rendering
    issues; clean markdown produces better metadata extraction
 2. **Check if already enriched**: check the state file via
-   `ctx journal mark --check <filename> enriched` or read
+   `ctx system mark-journal --check <filename> enriched` or read
    `.context/journal/.state.json`; confirm before overwriting
 
 ## When to Use
@@ -47,7 +47,7 @@ If no argument given, show recent unenriched entries by reading
 # List unenriched entries using state file
 for f in .context/journal/*.md; do
   name=$(basename "$f")
-  ctx journal mark --check "$name" enriched || echo "$f"
+  ctx system mark-journal --check "$name" enriched || echo "$f"
 done | head -10
 ```
 
@@ -146,6 +146,6 @@ Scan the conversation and extract:
 5. Show diff and write if approved
 6. **Mark enriched** in the state file:
    ```bash
-   ctx journal mark <filename> enriched
+   ctx system mark-journal <filename> enriched
    ```
 7. Remind user to rebuild: `ctx journal site --build` or `make journal`

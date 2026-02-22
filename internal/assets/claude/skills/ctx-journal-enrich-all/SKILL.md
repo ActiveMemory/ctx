@@ -28,7 +28,7 @@ List all journal entries that lack enrichment using the state file:
 # List .md files in journal dir and check state
 for f in .context/journal/*.md; do
   name=$(basename "$f")
-  ctx journal mark --check "$name" enriched || echo "$f"
+  ctx system mark-journal --check "$name" enriched || echo "$f"
 done
 ```
 
@@ -87,7 +87,7 @@ technologies:
 After writing frontmatter to each file, update the state file:
 
 ```bash
-ctx journal mark <filename> enriched
+ctx system mark-journal <filename> enriched
 ```
 
 ### Step 5: Report
