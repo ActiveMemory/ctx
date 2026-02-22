@@ -1431,7 +1431,7 @@ entry_count_learnings: 30            # Drift warning threshold (0 = disable)
 entry_count_decisions: 20            # Drift warning threshold (0 = disable)
 convention_line_count: 200           # Line count warning for CONVENTIONS.md (0 = disable)
 notify:                              # Webhook notification settings
-  events:                            # Event filter (absent = all events)
+  events:                            # Required — only listed events fire
     - loop
     - nudge
     - relay

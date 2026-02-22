@@ -84,14 +84,14 @@ func TestLoadWebhook_RoundTrip(t *testing.T) {
 }
 
 func TestEventAllowed_Nil(t *testing.T) {
-	if !EventAllowed("anything", nil) {
-		t.Error("EventAllowed(anything, nil) = false, want true")
+	if EventAllowed("anything", nil) {
+		t.Error("EventAllowed(anything, nil) = true, want false (opt-in only)")
 	}
 }
 
 func TestEventAllowed_Empty(t *testing.T) {
-	if !EventAllowed("anything", []string{}) {
-		t.Error("EventAllowed(anything, []) = false, want true")
+	if EventAllowed("anything", []string{}) {
+		t.Error("EventAllowed(anything, []) = true, want false (opt-in only)")
 	}
 }
 
@@ -151,7 +151,7 @@ func TestSend_EventFiltered(t *testing.T) {
 }
 
 func TestSend_Payload(t *testing.T) {
-	_, cleanup := setupTestDir(t)
+	tempDir, cleanup := setupTestDir(t)
 	defer cleanup()
 
 	var received Payload
@@ -163,6 +163,11 @@ func TestSend_Payload(t *testing.T) {
 	if err := SaveWebhook(ts.URL); err != nil {
 		t.Fatalf("SaveWebhook() error = %v", err)
 	}
+
+	// Configure events to allow "loop"
+	rcContent := "notify:\n  events:\n    - loop\n"
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600)
+	rc.Reset()
 
 	err := Send("loop", "Loop completed after 5 iterations", "abc123")
 	if err != nil {
@@ -187,7 +192,7 @@ func TestSend_Payload(t *testing.T) {
 }
 
 func TestSend_HTTPErrorIgnored(t *testing.T) {
-	_, cleanup := setupTestDir(t)
+	tempDir, cleanup := setupTestDir(t)
 	defer cleanup()
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
@@ -198,6 +203,11 @@ func TestSend_HTTPErrorIgnored(t *testing.T) {
 	if err := SaveWebhook(ts.URL); err != nil {
 		t.Fatalf("SaveWebhook() error = %v", err)
 	}
+
+	// Configure events to allow "test"
+	rcContent := "notify:\n  events:\n    - test\n"
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600)
+	rc.Reset()
 
 	// Should not return error even on HTTP 500
 	err := Send("test", "hello", "session-1")
