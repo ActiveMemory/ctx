@@ -5,11 +5,11 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Security
+title: Security Policy
 icon: lucide/shield
 ---
 
-![ctx](images/ctx-banner.png)
+![ctx](../images/ctx-banner.png)
 
 ## Reporting Vulnerabilities
 

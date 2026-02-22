@@ -12,36 +12,36 @@
         <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/recipes/knowledge-scaling/">
+        <link rel="canonical" href="https://ctx.ist/configuration/">
       
       
-        <link rel="prev" href="../knowledge-capture/">
+        <link rel="prev" href="../context-files/">
       
       
-        <link rel="next" href="../context-health/">
+        <link rel="next" href="../prompting-guide/">
       
       
         
       
       
-      <link rel="icon" href="../../images/favicon-32.png">
+      <link rel="icon" href="../images/favicon-32.png">
       <meta name="generator" content="zensical-0.0.20">
     
     
       
-        <title>Managing Knowledge at Scale - ctx: do you remember?</title>
+        <title>Configuration - ctx: do you remember?</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.d4922b3c.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -60,9 +60,9 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#problem" class="md-skip">
+        <a href="#configuration" class="md-skip">
           Skip to content
         </a>
       
@@ -103,9 +103,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href=".." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../../images/ctx-favicon-32.png" alt="logo">
+  <img src="../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Managing Knowledge at Scale
+              Configuration
             
           </span>
         </div>
@@ -200,7 +200,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   ctx Manifesto
@@ -218,29 +218,10 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../blog/" class="md-tabs__link">
+        <a href="../blog/" class="md-tabs__link">
           
   
   ctx Blog
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../about/" class="md-tabs__link">
-          
-  
-  Home
 
         </a>
       </li>
@@ -258,7 +239,26 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+        <a href="../about/" class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../recipes/" class="md-tabs__link">
           
   
   Recipes
@@ -277,7 +277,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../cli-reference/" class="md-tabs__link">
+        <a href="../reference/" class="md-tabs__link">
           
   
   Reference
@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../migration/" class="md-tabs__link">
+        <a href="../operations/" class="md-tabs__link">
           
   
   Operations
@@ -315,7 +315,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../agent-security/" class="md-tabs__link">
+        <a href="../security/" class="md-tabs__link">
           
   
   Security
@@ -354,9 +354,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href=".." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../../images/ctx-favicon-32.png" alt="logo">
+  <img src="../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     ctx: do you remember?
@@ -383,7 +383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -435,7 +435,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../blog/" class="md-nav__link ">
+            <a href="../blog/" class="md-nav__link ">
               
   
   
@@ -480,381 +480,12 @@
       
   
   
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Home
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../is-ctx-right/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Is It Right for Me?
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../community/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-heart-handshake" viewBox="0 0 24 24"><path d="M19.414 14.414C21 12.828 22 11.5 22 9.5a5.5 5.5 0 0 0-9.591-3.676.6.6 0 0 1-.818.001A5.5 5.5 0 0 0 2 9.5c0 2.3 1.5 4 3 5.5l5.535 5.362a2 2 0 0 0 2.879.052 2.12 2.12 0 0 0-.004-3 2.124 2.124 0 1 0 3-3 2.124 2.124 0 0 0 3.004 0 2 2 0 0 0 0-2.828l-1.881-1.882a2.41 2.41 0 0 0-3.409 0l-1.71 1.71a2 2 0 0 1-2.828 0 2 2 0 0 1 0-2.828l2.823-2.762"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    #ctx
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../contributing/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-git-pull-request" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M6 9v12"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Contributing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting-started/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Getting Started
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../first-session/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Your First Session
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../common-workflows/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Common Workflows
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../context-files/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-files" viewBox="0 0 24 24"><path d="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/><path d="M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706zM5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Context Files
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../prompting-guide/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Prompting Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
   
     
     
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
       
         
       
@@ -892,20 +523,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Recipes
+    Home
   
 
     
@@ -913,26 +541,48 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Recipes
+    Home
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -942,7 +592,127 @@
   
   
     <li class="md-nav__item">
-      <a href="../session-lifecycle/" class="md-nav__link">
+      <a href="../is-ctx-right/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Is It Right for Me?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-heart-handshake" viewBox="0 0 24 24"><path d="M19.414 14.414C21 12.828 22 11.5 22 9.5a5.5 5.5 0 0 0-9.591-3.676.6.6 0 0 1-.818.001A5.5 5.5 0 0 0 2 9.5c0 2.3 1.5 4 3 5.5l5.535 5.362a2 2 0 0 0 2.879.052 2.12 2.12 0 0 0-.004-3 2.124 2.124 0 1 0 3-3 2.124 2.124 0 0 0 3.004 0 2 2 0 0 0 0-2.828l-1.881-1.882a2.41 2.41 0 0 0-3.409 0l-1.71 1.71a2 2 0 0 1-2.828 0 2 2 0 0 1 0-2.828l2.823-2.762"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    #ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-git-pull-request" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M6 9v12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-session/" class="md-nav__link">
         
   
   
@@ -951,7 +721,7 @@
   <span class="md-ellipsis">
     
   
-    The Complete Session
+    Your First Session
   
 
     
@@ -972,16 +742,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../session-ceremonies/" class="md-nav__link">
+      <a href="../common-workflows/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Session Ceremonies
+    Common Workflows
   
 
     
@@ -1002,16 +772,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../knowledge-capture/" class="md-nav__link">
+      <a href="../context-files/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-brain" viewBox="0 0 24 24"><path d="M12 18V5M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-files" viewBox="0 0 24 24"><path d="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/><path d="M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706zM5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Persisting Decisions, Learnings, and Conventions
+    Context Files
   
 
     
@@ -1043,12 +813,12 @@
           
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Managing Knowledge at Scale
+    Configuration
   
 
     
@@ -1063,12 +833,12 @@
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Managing Knowledge at Scale
+    Configuration
   
 
     
@@ -1093,10 +863,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        Configuration
       
     </span>
   </a>
@@ -1104,33 +874,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-and-skills-used" class="md-nav__link">
+  <a href="#the-ctxrc-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands and Skills Used
+        The .ctxrc File
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Workflow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The Workflow">
+    <nav class="md-nav" aria-label="The .ctxrc File">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-check-file-size" class="md-nav__link">
+  <a href="#location" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Check File Size
+        Location
       
     </span>
   </a>
@@ -1138,10 +897,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-preview-with-dry-run" class="md-nav__link">
+  <a href="#full-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Preview with Dry-Run
+        Full Reference
       
     </span>
   </a>
@@ -1149,43 +908,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-archive" class="md-nav__link">
+  <a href="#option-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Archive
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-configure-thresholds" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Configure Thresholds
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-supersede-decisions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Supersede Decisions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-6-auto-archive-via-compact" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Auto-Archive via Compact
+        Option Reference
       
     </span>
   </a>
@@ -1198,10 +924,66 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-conversational-approach" class="md-nav__link">
+  <a href="#environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Conversational Approach
+        Environment Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-global-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Global Flags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Global Flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Order
       
     </span>
   </a>
@@ -1209,46 +991,74 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli-reference" class="md-nav__link">
+  <a href="#examples_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI Reference
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#external-context-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External context directory
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#tips" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#custom-token-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tips
+        Custom token budget
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#next-up" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#disabled-scratchpad-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Up
+        Disabled scratchpad encryption
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#custom-priority-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        See Also
+        Custom priority order
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjusted-drift-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjusted drift thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1268,7 +1078,267 @@
   
   
     <li class="md-nav__item">
-      <a href="../context-health/" class="md-nav__link">
+      <a href="../prompting-guide/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../recipes/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1ZM6 17h12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Recipes
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Recipes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/session-lifecycle/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    The Complete Session
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/session-ceremonies/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Ceremonies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/knowledge-capture/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-brain" viewBox="0 0 24 24"><path d="M12 18V5M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Persisting Decisions, Learnings, and Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/knowledge-scaling.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    none
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/context-health/" class="md-nav__link">
         
   
   
@@ -1298,7 +1368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../task-management/" class="md-nav__link">
+      <a href="../recipes/task-management/" class="md-nav__link">
         
   
   
@@ -1328,7 +1398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../session-archaeology/" class="md-nav__link">
+      <a href="../recipes/session-archaeology/" class="md-nav__link">
         
   
   
@@ -1358,7 +1428,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../autonomous-loops/" class="md-nav__link">
+      <a href="../recipes/autonomous-loops/" class="md-nav__link">
         
   
   
@@ -1388,7 +1458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../publishing/" class="md-nav__link">
+      <a href="../recipes/publishing/" class="md-nav__link">
         
   
   
@@ -1418,7 +1488,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../multi-tool-setup/" class="md-nav__link">
+      <a href="../recipes/multi-tool-setup/" class="md-nav__link">
         
   
   
@@ -1448,7 +1518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../claude-code-permissions/" class="md-nav__link">
+      <a href="../recipes/claude-code-permissions/" class="md-nav__link">
         
   
   
@@ -1478,7 +1548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../permission-snapshots/" class="md-nav__link">
+      <a href="../recipes/permission-snapshots/" class="md-nav__link">
         
   
   
@@ -1508,7 +1578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../external-context/" class="md-nav__link">
+      <a href="../recipes/external-context/" class="md-nav__link">
         
   
   
@@ -1538,7 +1608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hook-output-patterns/" class="md-nav__link">
+      <a href="../recipes/hook-output-patterns/" class="md-nav__link">
         
   
   
@@ -1568,7 +1638,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scratchpad-with-claude/" class="md-nav__link">
+      <a href="../recipes/scratchpad-with-claude/" class="md-nav__link">
         
   
   
@@ -1598,7 +1668,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scratchpad-sync/" class="md-nav__link">
+      <a href="../recipes/scratchpad-sync/" class="md-nav__link">
         
   
   
@@ -1628,7 +1698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../parallel-worktrees/" class="md-nav__link">
+      <a href="../recipes/parallel-worktrees/" class="md-nav__link">
         
   
   
@@ -1658,7 +1728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../when-to-use-agent-teams/" class="md-nav__link">
+      <a href="../recipes/when-to-use-agent-teams/" class="md-nav__link">
         
   
   
@@ -1698,6 +1768,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -1725,9 +1799,12 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/" class="md-nav__link ">
+              
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
   
   <span class="md-ellipsis">
     
@@ -1740,8 +1817,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
@@ -1755,13 +1838,15 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
+            
+              
                 
   
   
   
   
     <li class="md-nav__item">
-      <a href="../../cli-reference/" class="md-nav__link">
+      <a href="../cli-reference/" class="md-nav__link">
         
   
   
@@ -1770,7 +1855,7 @@
   <span class="md-ellipsis">
     
   
-    ctx CLI
+    CLI
   
 
     
@@ -1791,7 +1876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../skills/" class="md-nav__link">
+      <a href="../skills/" class="md-nav__link">
         
   
   
@@ -1800,7 +1885,7 @@
   <span class="md-ellipsis">
     
   
-    ctx Skills
+    Skills
   
 
     
@@ -1821,7 +1906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../comparison/" class="md-nav__link">
+      <a href="../comparison/" class="md-nav__link">
         
   
   
@@ -1830,7 +1915,7 @@
   <span class="md-ellipsis">
     
   
-    ctx and Similar Tools
+    Tool Ecosystem
   
 
     
@@ -1851,7 +1936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../session-journal/" class="md-nav__link">
+      <a href="../session-journal/" class="md-nav__link">
         
   
   
@@ -1881,7 +1966,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scratchpad/" class="md-nav__link">
+      <a href="../scratchpad/" class="md-nav__link">
         
   
   
@@ -1911,7 +1996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../versions/" class="md-nav__link">
+      <a href="../versions/" class="md-nav__link">
         
   
   
@@ -1951,6 +2036,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -1974,9 +2063,12 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../operations/" class="md-nav__link ">
+              
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
   
   <span class="md-ellipsis">
     
@@ -1989,8 +2081,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
@@ -2004,13 +2102,15 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
+            
+              
                 
   
   
   
   
     <li class="md-nav__item">
-      <a href="../../migration/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
@@ -2040,7 +2140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../upgrading/" class="md-nav__link">
+      <a href="../upgrading/" class="md-nav__link">
         
   
   
@@ -2070,7 +2170,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/" class="md-nav__link">
+      <a href="../integrations/" class="md-nav__link">
         
   
   
@@ -2100,7 +2200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../autonomous-loop/" class="md-nav__link">
+      <a href="../autonomous-loop/" class="md-nav__link">
         
   
   
@@ -2140,6 +2240,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -2159,9 +2263,12 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../security/" class="md-nav__link ">
+              
   
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
@@ -2174,8 +2281,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
@@ -2189,13 +2302,15 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
+            
+              
                 
   
   
   
   
     <li class="md-nav__item">
-      <a href="../../agent-security/" class="md-nav__link">
+      <a href="../agent-security/" class="md-nav__link">
         
   
   
@@ -2225,7 +2340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../security/" class="md-nav__link">
+      <a href="../security/reporting/" class="md-nav__link">
         
   
   
@@ -2234,7 +2349,7 @@
   <span class="md-ellipsis">
     
   
-    Security
+    Security Policy
   
 
     
@@ -2281,10 +2396,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        Configuration
       
     </span>
   </a>
@@ -2292,33 +2407,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-and-skills-used" class="md-nav__link">
+  <a href="#the-ctxrc-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands and Skills Used
+        The .ctxrc File
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Workflow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The Workflow">
+    <nav class="md-nav" aria-label="The .ctxrc File">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-check-file-size" class="md-nav__link">
+  <a href="#location" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Check File Size
+        Location
       
     </span>
   </a>
@@ -2326,10 +2430,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-preview-with-dry-run" class="md-nav__link">
+  <a href="#full-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Preview with Dry-Run
+        Full Reference
       
     </span>
   </a>
@@ -2337,43 +2441,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-archive" class="md-nav__link">
+  <a href="#option-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Archive
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-configure-thresholds" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Configure Thresholds
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-supersede-decisions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Supersede Decisions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-6-auto-archive-via-compact" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Auto-Archive via Compact
+        Option Reference
       
     </span>
   </a>
@@ -2386,10 +2457,66 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-conversational-approach" class="md-nav__link">
+  <a href="#environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Conversational Approach
+        Environment Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-global-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Global Flags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Global Flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Order
       
     </span>
   </a>
@@ -2397,46 +2524,74 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli-reference" class="md-nav__link">
+  <a href="#examples_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI Reference
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#external-context-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External context directory
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#tips" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#custom-token-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tips
+        Custom token budget
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#next-up" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#disabled-scratchpad-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Up
+        Disabled scratchpad encryption
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#custom-priority-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        See Also
+        Custom priority order
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adjusted-drift-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjusted drift thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2465,7 +2620,7 @@
   
   
     <li class="md-path__item">
-      <a href="../.." class="md-path__link">
+      <a href=".." class="md-path__link">
         
   <span class="md-ellipsis">
     ctx Manifesto
@@ -2483,10 +2638,10 @@
     
     
       <li class="md-path__item">
-        <a href="../" class="md-path__link">
+        <a href="../about/" class="md-path__link">
           
   <span class="md-ellipsis">
-    Recipes
+    Home
   </span>
 
         </a>
@@ -2506,175 +2661,330 @@
   
 
 
-  <h1>Managing Knowledge at Scale</h1>
+  <h1>Configuration</h1>
 
-<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p><code>DECISIONS.md</code> and <code>LEARNINGS.md</code> grow monotonically. Every session can add
-entries, but nothing removes them. After months of active development, these
-files consume significant token budget, and AI tools spend attention on
-decisions that were superseded weeks ago or learnings about bugs that have
-long been fixed.</p>
-<p><strong>How do you keep knowledge files lean without losing history?</strong></p>
-<h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
+<p><img alt="ctx" src="../images/ctx-banner.png" /></p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>ctx uses three layers of configuration. Each layer overrides the one below it:</p>
+<ol>
+<li><strong>CLI flags</strong> — per-invocation overrides (highest priority)</li>
+<li><strong>Environment variables</strong> — shell or CI/CD overrides</li>
+<li><strong><code>.ctxrc</code> file</strong> — project-level defaults (YAML)</li>
+<li><strong>Built-in defaults</strong> — hardcoded fallbacks (lowest priority)</li>
+</ol>
+<p>All settings are optional. If nothing is configured, ctx works out of the box
+with sensible defaults.</p>
+<hr />
+<h2 id="the-ctxrc-file">The <code>.ctxrc</code> File<a class="headerlink" href="#the-ctxrc-file" title="Permanent link">&para;</a></h2>
+<p>The <code>.ctxrc</code> file is an optional YAML file placed in the <strong>project root</strong>
+(next to your <code>.context/</code> directory). It lets you set project-level defaults
+that apply to every <code>ctx</code> command.</p>
+<h3 id="location">Location<a class="headerlink" href="#location" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>my-project/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── .ctxrc              ← configuration file
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── .context/
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── TASKS.md
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── DECISIONS.md
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └── ...
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── src/
+</span></code></pre></div>
+<p>ctx looks for <code>.ctxrc</code> in the current working directory when any command runs.
+There is no global or user-level config file — configuration is always
+per-project.</p>
+<h3 id="full-reference">Full Reference<a class="headerlink" href="#full-reference" title="Permanent link">&para;</a></h3>
+<p>A commented <code>.ctxrc</code> showing all options and their defaults:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .ctxrc — ctx runtime configuration</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># https://ctx.ist/configuration/</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">#</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># All settings are optional. Missing values use defaults.</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Priority: CLI flags &gt; environment variables &gt; .ctxrc &gt; defaults</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># context_dir: .context</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># token_budget: 8000</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># auto_archive: true</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># archive_after_days: 7</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># scratchpad_encrypt: true</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># allow_outside_cwd: false</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># entry_count_learnings: 30</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># entry_count_decisions: 20</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># convention_line_count: 200</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># priority_order:</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1">#   - CONSTITUTION.md</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">#   - TASKS.md</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1">#   - CONVENTIONS.md</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">#   - ARCHITECTURE.md</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1">#   - DECISIONS.md</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1">#   - LEARNINGS.md</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">#   - GLOSSARY.md</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
+</span></code></pre></div>
+<h3 id="option-reference">Option Reference<a class="headerlink" href="#option-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Tool</th>
+<th>Option</th>
 <th>Type</th>
-<th>Purpose</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>ctx decisions archive</code></td>
-<td>Command</td>
-<td>Archive old or superseded decisions</td>
+<td><code>context_dir</code></td>
+<td><code>string</code></td>
+<td><code>.context</code></td>
+<td>Context directory name (relative to project root)</td>
 </tr>
 <tr>
-<td><code>ctx learnings archive</code></td>
-<td>Command</td>
-<td>Archive old or superseded learnings</td>
+<td><code>token_budget</code></td>
+<td><code>int</code></td>
+<td><code>8000</code></td>
+<td>Default token budget for <code>ctx agent</code> and <code>ctx load</code></td>
 </tr>
 <tr>
-<td><code>ctx compact --archive</code></td>
-<td>Command</td>
-<td>Archive tasks, decisions, and learnings</td>
+<td><code>auto_archive</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Auto-archive completed tasks during <code>ctx compact</code></td>
 </tr>
 <tr>
-<td><code>ctx decisions reindex</code></td>
-<td>Command</td>
-<td>Rebuild the quick-reference index</td>
+<td><code>archive_after_days</code></td>
+<td><code>int</code></td>
+<td><code>7</code></td>
+<td>Days before completed tasks are archived</td>
 </tr>
 <tr>
-<td><code>ctx learnings reindex</code></td>
-<td>Command</td>
-<td>Rebuild the quick-reference index</td>
+<td><code>scratchpad_encrypt</code></td>
+<td><code>bool</code></td>
+<td><code>true</code></td>
+<td>Encrypt scratchpad with AES-256-GCM</td>
 </tr>
 <tr>
-<td><code>/ctx-archive</code></td>
-<td>Skill</td>
-<td>AI-guided archival</td>
+<td><code>allow_outside_cwd</code></td>
+<td><code>bool</code></td>
+<td><code>false</code></td>
+<td>Allow context directory outside the current working directory</td>
 </tr>
 <tr>
-<td><code>/ctx-drift</code></td>
-<td>Skill</td>
-<td>Detect staleness and bloat</td>
+<td><code>entry_count_learnings</code></td>
+<td><code>int</code></td>
+<td><code>30</code></td>
+<td>Drift warning when LEARNINGS.md exceeds this entry count (0 = disable)</td>
+</tr>
+<tr>
+<td><code>entry_count_decisions</code></td>
+<td><code>int</code></td>
+<td><code>20</code></td>
+<td>Drift warning when DECISIONS.md exceeds this entry count (0 = disable)</td>
+</tr>
+<tr>
+<td><code>convention_line_count</code></td>
+<td><code>int</code></td>
+<td><code>200</code></td>
+<td>Drift warning when CONVENTIONS.md exceeds this line count (0 = disable)</td>
+</tr>
+<tr>
+<td><code>priority_order</code></td>
+<td><code>[]string</code></td>
+<td><em>(see below)</em></td>
+<td>Custom file loading priority for context assembly</td>
 </tr>
 </tbody>
 </table>
-<h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
-<h3 id="step-1-check-file-size">Step 1: Check File Size<a class="headerlink" href="#step-1-check-file-size" title="Permanent link">&para;</a></h3>
-<p>Start by understanding how large your knowledge files have grown:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
+<p><strong>Default priority order</strong> (used when <code>priority_order</code> is not set):</p>
+<ol>
+<li><code>CONSTITUTION.md</code></li>
+<li><code>TASKS.md</code></li>
+<li><code>CONVENTIONS.md</code></li>
+<li><code>ARCHITECTURE.md</code></li>
+<li><code>DECISIONS.md</code></li>
+<li><code>LEARNINGS.md</code></li>
+<li><code>GLOSSARY.md</code></li>
+<li><code>AGENT_PLAYBOOK.md</code></li>
+</ol>
+<p>See <a href="../context-files/#read-order-rationale">Context Files</a> for the rationale
+behind this ordering.</p>
+<hr />
+<h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
+<p>Environment variables override <code>.ctxrc</code> values but are overridden by CLI flags.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Equivalent <code>.ctxrc</code> key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CTX_DIR</code></td>
+<td>Override the context directory path</td>
+<td><code>context_dir</code></td>
+</tr>
+<tr>
+<td><code>CTX_TOKEN_BUDGET</code></td>
+<td>Override the default token budget</td>
+<td><code>token_budget</code></td>
+</tr>
+<tr>
+<td><code>NO_COLOR</code></td>
+<td>Disable colored output when set (any value)</td>
+<td><em>(CLI flag only)</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Use a shared context directory</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">CTX_DIR</span><span class="o">=</span>/shared/team-context<span class="w"> </span>ctx<span class="w"> </span>status
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Increase token budget for a single run</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">CTX_TOKEN_BUDGET</span><span class="o">=</span><span class="m">16000</span><span class="w"> </span>ctx<span class="w"> </span>agent
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Disable color in CI pipelines</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">NO_COLOR</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ctx<span class="w"> </span>drift<span class="w"> </span>--json
 </span></code></pre></div>
-<p>Or ask your agent:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>How many decisions and learnings do we have? Are any stale?
+<div class="admonition note">
+<p class="admonition-title"><code>NO_COLOR</code> follows the <a href="https://no-color.org">no-color.org</a> convention</p>
+<p>Setting <code>NO_COLOR</code> to any non-empty value disables colored terminal output.
+This is equivalent to the <code>--no-color</code> CLI flag.</p>
+</div>
+<hr />
+<h2 id="cli-global-flags">CLI Global Flags<a class="headerlink" href="#cli-global-flags" title="Permanent link">&para;</a></h2>
+<p>CLI flags have the highest priority and override both environment variables and
+<code>.ctxrc</code> settings. These flags are available on every <code>ctx</code> command.</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--context-dir &lt;path&gt;</code></td>
+<td>Override context directory (default: <code>.context/</code>)</td>
+</tr>
+<tr>
+<td><code>--allow-outside-cwd</code></td>
+<td>Allow context directory outside current working directory</td>
+</tr>
+<tr>
+<td><code>--no-color</code></td>
+<td>Disable colored output</td>
+</tr>
+<tr>
+<td><code>--version</code></td>
+<td>Show version and exit</td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>Show command help and exit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Point to a different context directory</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>status<span class="w"> </span>--context-dir<span class="w"> </span>/path/to/shared/.context
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Allow external context directory (skips boundary check)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>status<span class="w"> </span>--context-dir<span class="w"> </span>/mnt/nas/project-context<span class="w"> </span>--allow-outside-cwd
 </span></code></pre></div>
-<h3 id="step-2-preview-with-dry-run">Step 2: Preview with Dry-Run<a class="headerlink" href="#step-2-preview-with-dry-run" title="Permanent link">&para;</a></h3>
-<p>Always preview before archiving:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--dry-run
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--dry-run
+<hr />
+<h2 id="priority-order">Priority Order<a class="headerlink" href="#priority-order" title="Permanent link">&para;</a></h2>
+<p>When the same setting is configured in multiple layers, the highest-priority
+layer wins:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>CLI flags  &gt;  Environment variables  &gt;  .ctxrc  &gt;  Built-in defaults
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>(highest)                                           (lowest)
 </span></code></pre></div>
-<p>This shows which entries would be archived and why (old or superseded),
-without modifying any files.</p>
-<h3 id="step-3-archive">Step 3: Archive<a class="headerlink" href="#step-3-archive" title="Permanent link">&para;</a></h3>
-<p>Archive entries older than the threshold (default 90 days):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive
+<p><strong>Example resolution for <code>context_dir</code>:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Value</th>
+<th>Wins?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--context-dir</code></td>
+<td><code>/tmp/ctx</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>CTX_DIR</code></td>
+<td><code>/shared/context</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>.ctxrc</code></td>
+<td><code>.my-context</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Default</td>
+<td><code>.context</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>The CLI flag <code>/tmp/ctx</code> is used because it has the highest priority.</p>
+<p>If the CLI flag were absent, <code>CTX_DIR=/shared/context</code> would win. If neither
+the flag nor the env var were set, the <code>.ctxrc</code> value <code>.my-context</code> would be
+used. With nothing configured, the default <code>.context</code> applies.</p>
+<hr />
+<h2 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h2>
+<h3 id="external-context-directory">External context directory<a class="headerlink" href="#external-context-directory" title="Permanent link">&para;</a></h3>
+<p>Store context outside the project tree (useful for monorepos or shared context):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/team/shared-context</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
-<p>Or archive everything in one pass:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
+<h3 id="custom-token-budget">Custom token budget<a class="headerlink" href="#custom-token-budget" title="Permanent link">&para;</a></h3>
+<p>Increase the token budget for projects with large context:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16000</span>
 </span></code></pre></div>
-<p>Archived entries are written to <code>.context/archive/decisions-YYYY-MM-DD.md</code>
-and <code>.context/archive/learnings-YYYY-MM-DD.md</code>. The source files are
-cleaned up and reindexed automatically.</p>
-<h3 id="step-4-configure-thresholds">Step 4: Configure Thresholds<a class="headerlink" href="#step-4-configure-thresholds" title="Permanent link">&para;</a></h3>
-<p>Adjust the defaults in <code>.contextrc</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">archive_knowledge_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w">   </span><span class="c1"># Days before archiving (default: 90)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">archive_keep_recent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">             </span><span class="c1"># Recent entries to always keep (default: 5)</span>
+<p>This affects the default budget for <code>ctx agent</code> and <code>ctx load</code>. You can still
+override per-invocation with <code>ctx agent --budget 4000</code>.</p>
+<h3 id="disabled-scratchpad-encryption">Disabled scratchpad encryption<a class="headerlink" href="#disabled-scratchpad-encryption" title="Permanent link">&para;</a></h3>
+<p>Turn off encryption for the scratchpad (useful in ephemeral environments
+where key management is unnecessary):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
-<p>For fast-moving projects, lower the threshold:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">archive_knowledge_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">archive_keep_recent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<div class="admonition warning">
+<p class="admonition-title">Unencrypted scratchpads store secrets in plaintext</p>
+<p>Only disable encryption if you understand the security implications.
+The scratchpad may contain sensitive data such as API keys, database
+URLs, or deployment credentials.</p>
+</div>
+<h3 id="custom-priority-order">Custom priority order<a class="headerlink" href="#custom-priority-order" title="Permanent link">&para;</a></h3>
+<p>Reorder context files to prioritize architecture over conventions:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">priority_order</span><span class="p">:</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONSTITUTION.md</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TASKS.md</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ARCHITECTURE.md</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DECISIONS.md</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONVENTIONS.md</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEARNINGS.md</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GLOSSARY.md</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AGENT_PLAYBOOK.md</span>
 </span></code></pre></div>
-<p>For stable projects with long-lived decisions, raise it:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">archive_knowledge_after_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">archive_keep_recent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<p>Files not listed in <code>priority_order</code> receive the lowest priority (100).
+The order affects <code>ctx agent</code>, <code>ctx load</code>, and drift's file-priority
+calculations.</p>
+<h3 id="adjusted-drift-thresholds">Adjusted drift thresholds<a class="headerlink" href="#adjusted-drift-thresholds" title="Permanent link">&para;</a></h3>
+<p>Raise or lower the entry-count thresholds that trigger drift warnings:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w">   </span><span class="c1"># warn above 50 learnings (default: 30)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">   </span><span class="c1"># warn above 10 decisions (default: 20)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w">  </span><span class="c1"># warn above 300 lines (default: 200)</span>
 </span></code></pre></div>
-<h3 id="step-5-supersede-decisions">Step 5: Supersede Decisions<a class="headerlink" href="#step-5-supersede-decisions" title="Permanent link">&para;</a></h3>
-<p>When a decision is replaced by a newer one, mark the old entry as
-superseded by adding a line to its body:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gd">~~Superseded by [2026-02-15-120000] Use Redis instead of Memcached~~</span>
-</span></code></pre></div>
-<p>Superseded entries are archived regardless of age, even if they are
-within the <code>--days</code> threshold.</p>
-<h3 id="step-6-auto-archive-via-compact">Step 6: Auto-Archive via Compact<a class="headerlink" href="#step-6-auto-archive-via-compact" title="Permanent link">&para;</a></h3>
-<p>If <code>auto_archive: true</code> is set in <code>.contextrc</code>, running <code>ctx compact</code>
-automatically archives old decisions and learnings alongside tasks:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>compact
-</span></code></pre></div>
-<p>This is the easiest way to keep all context files lean as part of
-regular maintenance.</p>
-<h2 id="the-conversational-approach">The Conversational Approach<a class="headerlink" href="#the-conversational-approach" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>You: &quot;Our DECISIONS.md is getting long. Archive the old ones.&quot;
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Agent: &quot;I&#39;ll preview first... 8 decisions are older than 90 days and
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>       2 are marked as superseded. The 5 most recent will be kept.
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>       Want me to proceed?&quot;
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>You: &quot;Yes, go ahead.&quot;
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Agent: &quot;Done. Archived 10 entries to .context/archive/decisions-2026-02-19.md.
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>       DECISIONS.md now has 5 entries. Index regenerated.&quot;
-</span></code></pre></div>
-<h2 id="cli-reference">CLI Reference<a class="headerlink" href="#cli-reference" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Preview what would be archived</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--dry-run
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--dry-run
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Archive with defaults (90 days, keep 5)</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Custom thresholds</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--days<span class="w"> </span><span class="m">30</span><span class="w"> </span>--keep<span class="w"> </span><span class="m">3</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--days<span class="w"> </span><span class="m">60</span><span class="w"> </span>--keep<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Archive all except most recent</span>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>archive<span class="w"> </span>--all<span class="w"> </span>--keep<span class="w"> </span><span class="m">3</span>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>archive<span class="w"> </span>--all<span class="w"> </span>--keep<span class="w"> </span><span class="m">5</span>
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># One-pass archival via compact</span>
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive
-</span></code></pre></div>
-<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Preview first.</strong> Always use <code>--dry-run</code> before a large archive operation.
-  It costs nothing and prevents surprises.</li>
-<li><strong>Supersede, don't delete.</strong> When a decision is replaced, mark it as
-  superseded. The archive command picks it up automatically.</li>
-<li><strong>Keep recent entries generous.</strong> The <code>--keep</code> flag protects the most recent
-  entries. When in doubt, keep more than you think you need.</li>
-<li><strong>Archive files are searchable.</strong> Everything moves to <code>.context/archive/</code>,
-  not oblivion. Use <code>grep</code> or your editor to search archived entries.</li>
-<li><strong>Reindex happens automatically.</strong> After archival, the quick-reference index
-  in the source file is regenerated. No need to run <code>reindex</code> separately.</li>
-<li><strong>Compact is the simplest path.</strong> If you just want everything clean,
-  <code>ctx compact --archive</code> handles tasks, decisions, and learnings in one pass.</li>
-</ul>
-<h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
-<p><strong><a href="../context-health/">Detecting and Fixing Drift</a></strong>:
-Keep context files accurate as your codebase evolves.</p>
-<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a>:
-  how to create the entries that this recipe archives</li>
-<li><a href="../task-management/">Tracking Work Across Sessions</a>: task archival with
-  <code>ctx tasks archive</code></li>
-<li><a href="../../cli-reference/">CLI Reference</a>: full flag documentation for
-  <code>ctx decisions archive</code>, <code>ctx learnings archive</code>, and <code>ctx compact</code></li>
-</ul>
+<p>Set any threshold to <code>0</code> to disable that specific check.</p>
+<hr />
+<p><strong>See also</strong>: <a href="../cli-reference/">CLI Reference</a> | <a href="../context-files/">Context Files</a> | <a href="../scratchpad/">Scratchpad</a></p>
 
 
 
@@ -2717,7 +3027,7 @@ Keep context files accurate as your codebase evolves.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../knowledge-capture/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Persisting Decisions, Learnings, and Conventions">
+          <a href="../context-files/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Context Files">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -2727,20 +3037,20 @@ Keep context files accurate as your codebase evolves.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Persisting Decisions, Learnings, and Conventions
+                Context Files
               </div>
             </div>
           </a>
         
         
           
-          <a href="../context-health/" class="md-footer__link md-footer__link--next" aria-label="Next: Detecting and Fixing Drift">
+          <a href="../prompting-guide/" class="md-footer__link md-footer__link--next" aria-label="Next: Prompting Guide">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Detecting and Fixing Drift
+                Prompting Guide
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2809,10 +3119,10 @@ The documentation on this website is distributed under
       
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      <script src="../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
       
     
   </body>

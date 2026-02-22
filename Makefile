@@ -3,8 +3,8 @@
 # Common targets for Go developers
 
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
-test-coverage smoke site site-serve site-setup audit check \
-journal journal-serve watch-session backup backup-global backup-all gpg-fix gpg-test
+test-coverage smoke site site-serve site-serve-lan site-setup audit check \
+journal journal-serve journal-serve-lan watch-session backup backup-global backup-all gpg-fix gpg-test
 
 # Default binary name and output
 BINARY := ctx
@@ -159,6 +159,10 @@ site:
 site-serve:
 	zensical serve
 
+## site-serve-lan: Serve docs site on all interfaces (LAN-accessible)
+site-serve-lan:
+	zensical serve -a 0.0.0.0:8000
+
 ## journal: Export sessions and regenerate journal site
 journal:
 	@echo "==> Exporting sessions to journal..."
@@ -177,6 +181,10 @@ journal:
 ## journal-serve: Serve the journal site.
 journal-serve:
 	@ctx journal site --serve
+
+## journal-serve-lan: Serve journal site on all interfaces (LAN-accessible)
+journal-serve-lan:
+	cd .context/journal-site && zensical serve -a 0.0.0.0:8000
 
 ## backup: Backup project context (.context/ and .claude/) to SMB share
 backup:

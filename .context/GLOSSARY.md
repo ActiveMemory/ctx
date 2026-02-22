@@ -13,7 +13,7 @@
 | Dead path              | A backtick-enclosed file path in ARCHITECTURE.md or CONVENTIONS.md that references a file no longer on disk. A drift warning type.                                                                          |
 | Staleness              | When context files have not been updated to reflect recent code changes. Specific indicator: >10 completed tasks in TASKS.md signals the file needs compaction.                                             |
 | Read order             | The priority sequence in which context files are loaded and presented to agents. Defined by `config.FileReadOrder`. Higher priority files are loaded first and survive token budget cuts.                   |
-| Token budget           | Maximum estimated token count for assembled context. Default 8000. Configurable via `CTX_TOKEN_BUDGET`, `.contextrc`, or `--budget` flag. Uses 4-chars-per-token heuristic.                                 |
+| Token budget           | Maximum estimated token count for assembled context. Default 8000. Configurable via `CTX_TOKEN_BUDGET`, `.ctxrc`, or `--budget` flag. Uses 4-chars-per-token heuristic.                                 |
 | Curated tier           | The `.context/*.md` files: manually maintained, token-budgeted, loaded by `ctx agent`. Contrast with full-dump tier.                                                                                        |
 | Full-dump tier         | The `.context/journal/` directory: exported session transcripts. Not auto-loaded; used for archaeology when curated context is insufficient. Browse with `ctx recall`.                                       |
 | Compaction             | The process of archiving completed tasks and cleaning up context files. Run via `ctx compact`. Moves completed tasks to archive; preserves phase structure.                                                 |
@@ -35,7 +35,7 @@
 | Abbreviation | Expansion                                                                                                   |
 |--------------|-------------------------------------------------------------------------------------------------------------|
 | ctx          | Context (the CLI tool and the system it manages)                                                            |
-| rc           | Runtime configuration (from Unix `.xxxrc` convention); refers to `.contextrc` and the `internal/rc` package |
+| rc           | Runtime configuration (from Unix `.xxxrc` convention); refers to `.ctxrc` and the `internal/rc` package |
 | assets       | Embedded assets; the `internal/assets` package containing go:embed templates and plugin files                  |
 | CWD          | Current working directory; used in session matching to correlate sessions with projects                     |
 | JSONL        | JSON Lines; the format Claude Code uses for session transcripts (one JSON object per line)                  |

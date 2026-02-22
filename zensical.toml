@@ -34,6 +34,7 @@ nav = [
     "first-session.md",
     "common-workflows.md",
     "context-files.md",
+    "configuration.md",
     "prompting-guide.md",
   ]},
   { "Recipes" = [
@@ -58,6 +59,7 @@ nav = [
     "recipes/when-to-use-agent-teams.md",
   ]},
   { "Reference" = [
+    "reference/index.md",
     "cli-reference.md",
     "skills.md",
     "comparison.md",
@@ -66,14 +68,16 @@ nav = [
     "versions.md",
   ]},
   { "Operations" = [
+    "operations/index.md",
     "migration.md",
     "upgrading.md",
     "integrations.md",
     "autonomous-loop.md",
   ]},
   { "Security" = [
+    "security/index.md",
     "agent-security.md",
-    "security.md",
+    "security/reporting.md",
   ]},
 ]
 
