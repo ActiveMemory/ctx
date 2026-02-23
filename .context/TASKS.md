@@ -12,6 +12,10 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 - [x] AI: ctx-borrow project skill is confusing as `ctx-` prefix implies a
       ctx skill; needs rename. Renamed to /absorb. #done:2026-02-21
+- [-] Session pattern analysis skill — rejected. Automated pattern capture from sessions risks training the agent to please rather than push back. Existing mechanisms (learnings, hooks, constitution) already capture process preferences explicitly. See LEARNINGS.md. #added:2026-02-22-212143
+
+- [ ] Investigate converting UserPromptSubmit hooks to JSON output — check-persistence, check-ceremonies, check-context-size, check-version, check-resources, and check-knowledge all use plain text with VERBATIM relay. These work differently (prepended to prompt) but may benefit from structured JSON too. #added:2026-02-22-194446
+
 - [ ] Add version-bump relay hook: create a system hook that reminds the agent to bump VERSION, plugin.json, and marketplace.json whenever a feature warrants a version change. The hook should fire during commit or wrap-up to prevent version drift across the three files. #added:2026-02-22-102530
 
 - [ ] Rename .scratchpad.key to .context.key #priority:medium #added:2026-02-22-101118
@@ -26,6 +30,14 @@ STRUCTURE RULES (see CONSTITUTION.md):
       - [x] Wire into recall.go + help text
       - [x] Tests (`sync_test.go`)
       - [x] Docs: cli-reference.md, session-journal.md, session-archaeology.md
+
+- [ ] Enable webhook notifications in worktrees. Currently `ctx notify`
+      silently fails because `.scratchpad.key` is gitignored and absent in
+      worktrees. For autonomous runs with opaque worktree agents, notifications
+      are the one feature that would genuinely be useful. Possible approaches:
+      resolve the key via `git rev-parse --git-common-dir` to find the main
+      checkout, or copy the key into worktrees at creation time (ctx-worktree
+      skill). #priority:medium #added:2026-02-22
 
 - [ ] AI: verify and archive completed tasks in TASK.md; the file has gotten
       crowded. Verify each task individually before archiving.

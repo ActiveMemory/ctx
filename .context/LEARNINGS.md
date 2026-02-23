@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-22 | Interaction pattern capture risks softening agent rigor |
+| 2026-02-22 | No reliable agent-side before-session-end event exists |
+| 2026-02-22 | Plain-text hook output is silently ignored by the agent |
 | 2026-02-22 | Loop script templates use positional format verbs — adding a verb requires updating all callers |
 | 2026-02-22 | Hook behavior and patterns (consolidated) |
 | 2026-02-22 | UserPromptSubmit hook output channels (consolidated) |
@@ -65,6 +68,36 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-22-212342] Interaction pattern capture risks softening agent rigor
+
+**Context**: Considered a skill to analyze session history and extract user interaction patterns into .context/
+
+**Lesson**: Automated pattern capture from sessions risks training the agent to please rather than push back. Scoping to 'process only' is insufficient — the agent doing the analysis has an incentive to learn the wrong lessons. Existing mechanisms (learnings, hooks, constitution) already capture process preferences explicitly and with human review.
+
+**Application**: Do not build implicit user-modeling from session history. Rely on explicit, human-reviewed context (learnings, conventions, hooks) for behavioral shaping. If interaction patterns are ever revisited, require a CONSTITUTION clause preventing compliance-oriented learning.
+
+---
+
+## [2026-02-22-194443] No reliable agent-side before-session-end event exists
+
+**Context**: Investigated whether SessionEnd hooks could trigger context persistence automatically
+
+**Lesson**: SessionEnd fires after the agent is gone — it can only run fire-and-forget shell commands (cleanup), not LLM reasoning. CTRL+C terminates immediately. The playbook already encodes the correct strategy: persist as you go.
+
+**Application**: Mid-session nudges (check-persistence) and explicit /ctx-wrap-up are the only reliable persistence mechanisms; do not design hooks that assume the agent gets a final turn
+
+---
+
+## [2026-02-22-194441] Plain-text hook output is silently ignored by the agent
+
+**Context**: The qa-reminder PreToolUse:Edit hook was firing successfully (confirmed in debug log) but producing no visible effect on agent behavior
+
+**Lesson**: Claude Code parses hook stdout that starts with { as JSON directives; plain text is injected as context but the agent treats it as disposable. Structured JSON with hookSpecificOutput.additionalContext is reliably processed.
+
+**Application**: All non-blocking PreToolUse/PostToolUse hooks should return JSON via printHookContext(), not cmd.Println() plain text
 
 ---
 

@@ -147,6 +147,17 @@ notify:
   key_rotation_days: 30   # nudge sooner (default: 90)
 ```
 
+## Worktrees
+
+The webhook URL is encrypted with the same key as the scratchpad
+(`.context/.scratchpad.key`), which is gitignored. In a git worktree,
+the key is absent — notifications silently do nothing.
+
+This means **agents running in worktrees cannot send webhook alerts**.
+For autonomous runs where worktree agents are opaque, monitor them from
+the terminal rather than relying on webhooks. Enrich journals and review
+results on the main branch after merging.
+
 ## Tips
 
 * **Fire-and-forget**: Notifications never block. HTTP errors are silently

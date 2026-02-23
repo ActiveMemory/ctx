@@ -1098,6 +1098,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#agent-bootstrapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Bootstrapping
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3077,6 +3088,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#agent-bootstrapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Bootstrapping
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3502,6 +3524,21 @@ calculations.</p>
 <p>Notifications are opt-in: no events are sent unless explicitly listed.</p>
 <p>See <a href="../../recipes/webhook-notifications/">Webhook Notifications</a> for a
 step-by-step recipe.</p>
+<hr />
+<h2 id="agent-bootstrapping">Agent Bootstrapping<a class="headerlink" href="#agent-bootstrapping" title="Permanent link">&para;</a></h2>
+<p>AI agents need to know the resolved context directory at session start.
+The <code>ctx system bootstrap</code> command prints the context path, file list, and
+operating rules in both text and JSON formats:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">          </span><span class="c1"># text output for agents</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
+</span></code></pre></div>
+<p>The CLAUDE.md template instructs the agent to run this as its first action.
+Every nudge (context checkpoint, persistence reminder, etc.) also includes a
+<code>Context: &lt;dir&gt;</code> footer that re-anchors the agent to the correct directory
+throughout the session.</p>
+<p>This replaces the previous approach of hardcoding <code>.context/</code> paths in agent
+instructions. See <a href="../../reference/cli-reference/#ctx-system-bootstrap">CLI Reference: bootstrap</a>
+for full details.</p>
 <hr />
 <p><strong>See also</strong>: <a href="../../reference/cli-reference/">CLI Reference</a> | <a href="../context-files/">Context Files</a> | <a href="../../reference/scratchpad/">Scratchpad</a></p>
 

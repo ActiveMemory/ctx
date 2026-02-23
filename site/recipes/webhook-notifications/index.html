@@ -1801,6 +1801,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#worktrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worktrees
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2987,6 +2998,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#worktrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worktrees
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3315,6 +3337,14 @@ is emitted suggesting rotation.</p>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">notify</span><span class="p">:</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">key_rotation_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">   </span><span class="c1"># nudge sooner (default: 90)</span>
 </span></code></pre></div>
+<h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
+<p>The webhook URL is encrypted with the same key as the scratchpad
+(<code>.context/.scratchpad.key</code>), which is gitignored. In a git worktree,
+the key is absent — notifications silently do nothing.</p>
+<p>This means <strong>agents running in worktrees cannot send webhook alerts</strong>.
+For autonomous runs where worktree agents are opaque, monitor them from
+the terminal rather than relying on webhooks. Enrich journals and review
+results on the main branch after merging.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Fire-and-forget</strong>: Notifications never block. HTTP errors are silently

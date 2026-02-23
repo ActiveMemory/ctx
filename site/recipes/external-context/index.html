@@ -1265,10 +1265,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-configure-claudemd-to-reference-the-external-context" class="md-nav__link">
+  <a href="#step-4-agent-auto-discovery-via-bootstrap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Configure CLAUDE.md to Reference the External Context
+        Step 4: Agent Auto-Discovery via Bootstrap
       
     </span>
   </a>
@@ -2994,10 +2994,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-configure-claudemd-to-reference-the-external-context" class="md-nav__link">
+  <a href="#step-4-agent-auto-discovery-via-bootstrap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Configure CLAUDE.md to Reference the External Context
+        Step 4: Agent Auto-Discovery via Bootstrap
       
     </span>
   </a>
@@ -3313,39 +3313,30 @@ order (<em>highest priority first</em>):</p>
 <li><code>context_dir</code> in <code>.ctxrc</code></li>
 <li>Default: <code>.context/</code></li>
 </ol>
-<h3 id="step-4-configure-claudemd-to-reference-the-external-context">Step 4: Configure <code>CLAUDE.md</code> to Reference the External Context<a class="headerlink" href="#step-4-configure-claudemd-to-reference-the-external-context" title="Permanent link">&para;</a></h3>
+<h3 id="step-4-agent-auto-discovery-via-bootstrap">Step 4: Agent Auto-Discovery via Bootstrap<a class="headerlink" href="#step-4-agent-auto-discovery-via-bootstrap" title="Permanent link">&para;</a></h3>
 <p>When context lives outside the project tree, your AI assistant needs to know
-where to find it. Claude Code reads <code>CLAUDE.md</code> from the project root, so add
-a pointer there:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gh"># CLAUDE.md</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gu">## Context Location</span>
+where to find it. The <code>ctx system bootstrap</code> command resolves the configured
+context directory and communicates it to the agent automatically:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span><span class="nv">bootstrap</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="o">=============</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>This project&#39;s context files live in a separate repository:
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="gs">**~/repos/myproject-context/**</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>When using ctx commands, the <span class="sb">`.ctxrc`</span> in this project root handles
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>the path automatically. To load context manually:
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>```bash
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>ctx agent --budget 4000 --context-dir ~/repos/myproject-context --allow-outside-cwd
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>context_dir:<span class="w"> </span>/home/user/repos/myproject-context
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Files:
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>CONSTITUTION.md,<span class="w"> </span>TASKS.md,<span class="w"> </span>DECISIONS.md,<span class="w"> </span>...
 </span></code></pre></div>
-<p>Read the context files from that directory:
-- <code>~/repos/myproject-context/TASKS.md</code>: current work items
-- <code>~/repos/myproject-context/DECISIONS.md</code>: architectural decisions
-- <code>~/repos/myproject-context/CONVENTIONS.md</code>: code patterns
-- <code>~/repos/myproject-context/CONSTITUTION.md</code>: hard rules
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>The ctx plugin&#39;s PreToolUse hook runs `ctx agent` automatically. To make it
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>use the external path, create a `.ctxrc` in the project root (Step 3
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>above) — the hook inherits the same configuration. No manual hook
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>editing is needed.
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>If you use `CTX_DIR` instead of `.ctxrc`, export it in your shell
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>profile so the hook process inherits it:
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>```bash
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>export CTX_DIR=~/repos/myproject-context
-</span></code></pre></div></p>
+<p>The CLAUDE.md template generated by <code>ctx init</code> already instructs the agent to
+run <code>ctx system bootstrap</code> at session start. Because <code>.ctxrc</code> is in the
+project root, the bootstrap command inherits the external path automatically —
+no manual CLAUDE.md editing needed.</p>
+<p>Every nudge (context checkpoint, persistence reminder, etc.) also includes a
+<code>Context: /home/user/repos/myproject-context</code> footer, so the agent stays
+anchored to the correct directory even in long sessions.</p>
+<p>If you use <code>CTX_DIR</code> instead of <code>.ctxrc</code>, export it in your shell
+profile so the hook process inherits it:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CTX_DIR</span><span class="o">=</span>~/repos/myproject-context
+</span></code></pre></div>
 <h3 id="step-5-share-with-teammates">Step 5: Share with Teammates<a class="headerlink" href="#step-5-share-with-teammates" title="Permanent link">&para;</a></h3>
 <p>Teammates clone both repos and set up <code>.ctxrc</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Clone the project</span>

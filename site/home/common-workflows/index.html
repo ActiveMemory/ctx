@@ -933,6 +933,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#agent-session-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Session Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-skills-you-should-always-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Two Skills You Should Always Use
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cli-commands-vs-ai-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2916,6 +2938,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#agent-session-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Session Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-skills-you-should-always-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Two Skills You Should Always Use
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cli-commands-vs-ai-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3174,6 +3218,42 @@ signal is detected:</p>
 </span></code></pre></div>
 <p>See <a href="../../operations/autonomous-loop/">Autonomous Loops</a> for configuration
 and advanced usage.</p>
+<h2 id="agent-session-start">Agent Session Start<a class="headerlink" href="#agent-session-start" title="Permanent link">&para;</a></h2>
+<p>The first thing an AI agent should do at session start is discover where
+context lives:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap
+</span></code></pre></div>
+<p>This prints the resolved context directory, the files in it, and the
+operating rules. The CLAUDE.md template instructs the agent to run this
+automatically. See <a href="../../reference/cli-reference/#ctx-system-bootstrap">CLI Reference: bootstrap</a>.</p>
+<h2 id="the-two-skills-you-should-always-use">The Two Skills You Should Always Use<a class="headerlink" href="#the-two-skills-you-should-always-use" title="Permanent link">&para;</a></h2>
+<p>Using <strong><code>/ctx-remember</code></strong> at session start and <strong><code>/ctx-wrap-up</code></strong> at
+session end are the <strong>highest-value skills</strong> in the entire catalog:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># session begins:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/ctx-remember
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>...<span class="w"> </span><span class="k">do</span><span class="w"> </span>work<span class="w"> </span>...
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># before closing the session:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/ctx-wrap-up
+</span></code></pre></div>
+<p>Let's provide some <strong>context</strong>, because this is <strong>important</strong>:</p>
+<p>Although the agent <em>will</em> <strong>eventually</strong> discover your context through
+<code>CLAUDE.md → AGENT_PLAYBOOK.md</code>, <code>/ctx-remember</code>
+<strong>hydrates the full context up front</strong> (<em>tasks, decisions,
+recent sessions</em>) so the agent <strong>starts informed</strong> rather than
+piecing things together over several turns.</p>
+<p><code>/ctx-wrap-up</code> is the other half: A structured review that
+captures learnings, decisions, and tasks before you close the
+window.</p>
+<p>Hooks like <code>check-persistence</code> remind <em>you</em> (<em>the user</em>) mid-session
+that context hasn't been saved in a while, but they don't
+trigger persistence automatically: You still have to act.
+Also, a <code>CTRL+C</code> can end things at any moment with no reliable
+"<em>before session end</em>" event. </p>
+<p>In short, <code>/ctx-wrap-up</code> is the <strong>deliberate checkpoint</strong> that makes 
+sure <strong>nothing slips through</strong>. And <code>/ctx-remember</code> it its mirror skill
+to be used at session start.</p>
+<p>See <a href="../../recipes/session-ceremonies/">Session Ceremonies</a> for
+the full workflow.</p>
 <h2 id="cli-commands-vs-ai-skills">CLI Commands vs. AI Skills<a class="headerlink" href="#cli-commands-vs-ai-skills" title="Permanent link">&para;</a></h2>
 <p>Most <code>ctx</code> operations come in two flavors: a <strong>CLI command</strong> you run
 in your terminal and an <strong>AI skill</strong> (slash command) you invoke
@@ -3349,28 +3429,6 @@ agent's judgment.</p>
 </tr>
 </tbody>
 </table>
-<div class="admonition tip">
-<p class="admonition-title">The Two Skills You Should Always Use</p>
-<p><strong><code>/ctx-remember</code></strong> at session start and <strong><code>/ctx-wrap-up</code></strong> at
-session end are the <strong>highest-value skills</strong> in the entire catalog.</p>
-<p>The agent <em>will</em> <strong>eventually</strong> discover your context through
-<code>CLAUDE.md</code> → <code>AGENT_PLAYBOOK.md</code>, but <code>/ctx-remember</code>
-<strong>hydrates the full context up front</strong> (<em>tasks, decisions,
-recent sessions</em>) so the agent <strong>starts informed</strong> rather than
-piecing things together over several turns.</p>
-<p><code>/ctx-wrap-up</code> is the other half: A structured review that
-captures learnings, decisions, and tasks before you close the
-window.</p>
-<p>Hooks like <code>check-persistence</code> remind <em>you</em> (<em>the user</em>) mid-session
-that context hasn't been saved in a while, but they don't
-trigger persistence automatically: You still have to act.</p>
-<p>And a <code>CTRL+C</code> can end things at any moment with no reliable
-"<em>before session end</em>" event. </p>
-<p><code>/ctx-wrap-up</code> is the <strong>deliberate checkpoint</strong> that makes sure nothing
-slips through.</p>
-<p>See <a href="../../recipes/session-ceremonies/">Session Ceremonies</a> for
-the full workflow.</p>
-</div>
 <h3 id="cli-only-commands">CLI-Only Commands<a class="headerlink" href="#cli-only-commands" title="Permanent link">&para;</a></h3>
 <p>These are infrastructure: The are used used in scripts, CI, or one-time setup.</p>
 <table>

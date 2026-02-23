@@ -7,7 +7,7 @@ icon: lucide/git-branch
 
 ## Problem
 
-You have a large backlog — 10, 20, 30 open tasks — and many of them are
+You have a large backlog (*10, 20, 30 open tasks*) and many of them are
 independent: docs work that doesn't touch Go code, a new package that
 doesn't overlap with existing ones, test coverage for a stable module.
 
@@ -15,24 +15,22 @@ Running one agent at a time means serial execution. You want 3-4 agents
 working in parallel, each on its own track, without stepping on each
 other's files.
 
-Git worktrees solve this. Each worktree is a separate working directory
-with its own branch, but they share the same `.git` object database.
-Combined with ctx's persistent context, each agent session picks up the
-full project state and works independently.
+**Git worktrees** solve this. 
 
-!!! tip "TL;DR"
-    ```text
-    /ctx-worktree                                     # 1. group tasks by file overlap
-    ```
-    ```bash
-    git worktree add ../myproject-docs -b work/docs   # 2. create worktrees
-    cd ../myproject-docs && claude                     # 3. launch agents (one per track)
-    ```
-    ```text
-    /ctx-worktree teardown docs                        # 4. merge back and clean up
-    ```
+Each worktree is a separate working directory with its own branch, but they 
+share the same `.git` object database. Combined with ctx's persistent context, 
+each agent session picks up the full project state and works independently.
 
-    TASKS.md will conflict on merge — accept all `[x]` completions from both sides.
+## TL;DR
+
+```text
+/ctx-worktree                                   # 1. group tasks by file overlap
+git worktree add ../myproject-docs -b work/docs # 2. create worktrees
+cd ../myproject-docs && claude                  # 3. launch agents (one per track)
+/ctx-worktree teardown docs                     # 4. merge back and clean up
+```
+
+`TASKS.md` will conflict on merge: Accept all `[x]` completions from both sides.
 
 ## Commands and Skills Used
 
@@ -107,8 +105,8 @@ claude
 ```
 
 Each agent sees the full project, including `.context/`, and can work
-independently. Do **not** run `ctx init` in worktrees — the context
-directory is already tracked in git.
+independently. Do **not** run `ctx init` in worktrees: The context
+directory is already tracked in `git`.
 
 ### Step 4: Work
 
@@ -160,6 +158,26 @@ prompts work:
 - *"Which of these tasks can run in parallel without conflicts?"*
 - *"Merge the docs track back in."*
 - *"Clean up all the worktrees, we're done."*
+
+## What Does NOT Work in Worktrees
+
+The encryption key (`.context/.scratchpad.key`) is gitignored — it only
+exists in the main checkout. This affects key-dependent features:
+
+- **`ctx pad`** — the scratchpad is inaccessible. Commands fail
+  gracefully (no key found). Use the pad from the main checkout only.
+- **`ctx notify`** — webhook notifications silently do nothing. Agents
+  in worktrees cannot send alerts for loop completions, nudges, or
+  custom events. If you need visibility into worktree agents, monitor
+  them from the terminal rather than relying on webhooks.
+- **Journal enrichment** — `ctx recall export` and `ctx journal enrich`
+  write files relative to the current working directory. Enrichments
+  created in a worktree stay there and are discarded on teardown.
+  Enrich journals on the main branch after merging — the JSONL session
+  logs are always intact.
+
+Tracked context files (TASKS.md, DECISIONS.md, LEARNINGS.md,
+CONVENTIONS.md) work normally — git handles them.
 
 ## Tips
 

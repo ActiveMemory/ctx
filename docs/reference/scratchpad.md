@@ -194,6 +194,16 @@ don't need to remember the syntax:
 The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.
 
+## Worktrees
+
+The encryption key (`.context/.scratchpad.key`) is gitignored. It only
+exists in the main checkout. In a git worktree, `ctx pad` commands fail
+gracefully — no key is found, no crash, but the pad is inaccessible.
+
+Use the scratchpad from the main checkout only. This is by design: the
+key never leaves the machine where it was generated, and worktrees are
+ephemeral working copies.
+
 ## Key Distribution
 
 The encryption key (`.context/.scratchpad.key`) stays on the machine

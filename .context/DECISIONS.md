@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-22 | De-emphasize /ctx-journal-normalize from default journal pipeline |
+| 2026-02-22 | Hook commands use structured JSON output instead of plain text |
 | 2026-02-22 | Webhook URL encrypted with shared scratchpad key, not a dedicated key |
 | 2026-02-22 | Journal site rendering architecture (consolidated) |
 | 2026-02-22 | Plugin and skill distribution architecture (consolidated) |
@@ -37,6 +39,34 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-22-221724] De-emphasize /ctx-journal-normalize from default journal pipeline
+
+**Status**: Accepted
+
+**Context**: The journal pipeline previously prescribed normalize → enrich as the default workflow. With improved programmatic normalization during export and simplified markdown generation (no code fences), the AI-based normalize skill is rarely needed.
+
+**Decision**: De-emphasize /ctx-journal-normalize from default journal pipeline
+
+**Rationale**: The normalize skill is expensive (reads entire journal files through LLM), nondeterministic on large inputs, and blows up subagent context windows on non-ctx projects with millions of lines of session JSON. Programmatic normalization handles most cases.
+
+**Consequences**: Normalize removed from relay nudge, make journal, skill prerequisites, and all docs. Skill remains available for targeted per-file use via /ctx-journal-normalize when rendering issues occur.
+
+---
+
+## [2026-02-22-194444] Hook commands use structured JSON output instead of plain text
+
+**Status**: Accepted
+
+**Context**: qa-reminder and post-commit hooks were being ignored despite firing correctly
+
+**Decision**: Hook commands use structured JSON output instead of plain text
+
+**Rationale**: JSON with hookSpecificOutput.additionalContext is parsed as a directive by Claude Code, while plain text is treated as ambient context the agent can ignore
+
+**Consequences**: Added HookResponse/HookSpecificOutput types and printHookContext() helper to internal/cli/system/input.go; converted qa_reminder.go and post_commit.go; future hooks should use printHookContext() for non-blocking directives
+
+---
 
 ## [2026-02-22-101958] Webhook URL encrypted with shared scratchpad key, not a dedicated key
 

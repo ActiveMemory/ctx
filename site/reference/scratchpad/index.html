@@ -2335,6 +2335,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#worktrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worktrees
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2888,6 +2899,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#worktrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worktrees
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3265,6 +3287,13 @@ don't need to remember the syntax:</p>
 </table>
 <p>The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.</p>
+<h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
+<p>The encryption key (<code>.context/.scratchpad.key</code>) is gitignored. It only
+exists in the main checkout. In a git worktree, <code>ctx pad</code> commands fail
+gracefully — no key is found, no crash, but the pad is inaccessible.</p>
+<p>Use the scratchpad from the main checkout only. This is by design: the
+key never leaves the machine where it was generated, and worktrees are
+ephemeral working copies.</p>
 <h2 id="key-distribution">Key Distribution<a class="headerlink" href="#key-distribution" title="Permanent link">&para;</a></h2>
 <p>The encryption key (<code>.context/.scratchpad.key</code>) stays on the machine
 where it was generated. <code>ctx</code> <strong>never</strong> transmits it.</p>
