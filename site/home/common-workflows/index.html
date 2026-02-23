@@ -872,6 +872,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#export-and-serve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export and Serve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe By Default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-exporting-existing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-Exporting Existing Files
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -896,6 +929,56 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-commands-vs-ai-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Commands vs. AI Skills
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Commands vs. AI Skills">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paired-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paired Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-only-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI-Only Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-only-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI-Only Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2772,6 +2855,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#export-and-serve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export and Serve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe By Default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-exporting-existing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-Exporting Existing Files
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2796,6 +2912,56 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-commands-vs-ai-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Commands vs. AI Skills
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Commands vs. AI Skills">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paired-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paired Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-only-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI-Only Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-only-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI-Only Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2868,6 +3034,15 @@
   <h1>Common Workflows</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<p>The commands below cover what you'll use most often: </p>
+<ul>
+<li>recording context, </li>
+<li>checking health, </li>
+<li>browsing history, </li>
+<li>and running loops.</li>
+</ul>
+<p>Each section is a self-contained snippet you can copy into your terminal.</p>
+<p>For deeper, step-by-step guides, see <a href="../../recipes/">Recipes</a>.</p>
 <h2 id="track-context">Track Context<a class="headerlink" href="#track-context" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Add a task</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement user authentication&quot;</span>
@@ -2921,6 +3096,7 @@ Homebrew Python blocks system-wide installs (<code>PEP 668</code>).</p>
 <p><code>pipx</code> creates an <strong>isolated environment</strong> with the
 <strong>correct Python version</strong> automatically.</p>
 </div>
+<h3 id="export-and-serve">Export and Serve<a class="headerlink" href="#export-and-serve" title="Permanent link">&para;</a></h3>
 <p>Then, <strong>export and serve</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export all sessions to .context/journal/ (only new files)</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
@@ -2929,10 +3105,49 @@ Homebrew Python blocks system-wide installs (<code>PEP 668</code>).</p>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
 </span></code></pre></div>
 <p>Open <a href="http://localhost:8000">http://localhost:8000</a> to browse.</p>
-<p>To update after new sessions, run the same two commands again.
-<code>ctx recall export --all</code> is safe by default — it only exports new
-sessions and skips existing files. Use <code>--regenerate</code> if you need to
-re-export existing files (YAML frontmatter is preserved).</p>
+<p>To update after new sessions, run the same two commands again.</p>
+<h3 id="safe-by-default">Safe By Default<a class="headerlink" href="#safe-by-default" title="Permanent link">&para;</a></h3>
+<p><code>ctx recall export --all</code> is <strong>safe by default</strong>: </p>
+<ul>
+<li>It only exports new sessions and <strong>skips existing files</strong>. </li>
+<li>Locked entries (<em>via <code>ctx recall lock</code></em>) are <strong>always skipped</strong> 
+  regardless of flags.</li>
+</ul>
+<h3 id="re-exporting-existing-files">Re-Exporting Existing Files<a class="headerlink" href="#re-exporting-existing-files" title="Permanent link">&para;</a></h3>
+<p>Here is how you regenerate existing files. </p>
+<p><strong>Backup your <code>.context</code> folder</strong> before regeneration, as this is a 
+potentially destructive action.</p>
+<p>To re-export journal files, you need to explicitly opt-in using the 
+<code>--regenerate</code> flag:</p>
+<table>
+<thead>
+<tr>
+<th>Flag combination</th>
+<th>Frontmatter</th>
+<th>Body</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--regenerate</code></td>
+<td>Preserved</td>
+<td><strong>Overwritten</strong> from source</td>
+</tr>
+<tr>
+<td><code>--regenerate --keep-frontmatter=false</code></td>
+<td><strong>Overwritten</strong></td>
+<td><strong>Overwritten</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title">Regeneration Overwrites Body Edits</p>
+<p><code>--regenerate</code> preserves your YAML frontmatter (<em>tags, summary,
+enrichment metadata</em>) but it <strong>replaces the Markdown body</strong> with a
+fresh export. </p>
+<p><strong>Any manual edits you made to the transcript will be lost</strong>.</p>
+<p><strong>Lock entries you want to protect first</strong>: <code>ctx recall lock &lt;session-id&gt;</code>.</p>
+</div>
 <p>See <a href="../../reference/session-journal/">Session Journal</a> for the full pipeline
 including <strong>normalization</strong> and <strong>enrichment</strong>.</p>
 <h2 id="scratchpad">Scratchpad<a class="headerlink" href="#scratchpad" title="Permanent link">&para;</a></h2>
@@ -2948,7 +3163,8 @@ that travels with the project:</p>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span>list
 </span></code></pre></div>
 <p>The scratchpad is encrypted with a key stored in <code>.context/.scratchpad.key</code>
-(git-ignored by default). See <a href="../../reference/scratchpad/">Scratchpad</a> for details.</p>
+(<em><code>.gitignore</code>d by default</em>). </p>
+<p>See <a href="../../reference/scratchpad/">Scratchpad</a> for details.</p>
 <h2 id="run-an-autonomous-loop">Run an Autonomous Loop<a class="headerlink" href="#run-an-autonomous-loop" title="Permanent link">&para;</a></h2>
 <p>Generate a script that iterates an AI agent until a completion
 signal is detected:</p>
@@ -2958,15 +3174,279 @@ signal is detected:</p>
 </span></code></pre></div>
 <p>See <a href="../../operations/autonomous-loop/">Autonomous Loops</a> for configuration
 and advanced usage.</p>
+<h2 id="cli-commands-vs-ai-skills">CLI Commands vs. AI Skills<a class="headerlink" href="#cli-commands-vs-ai-skills" title="Permanent link">&para;</a></h2>
+<p>Most <code>ctx</code> operations come in two flavors: a <strong>CLI command</strong> you run
+in your terminal and an <strong>AI skill</strong> (slash command) you invoke
+inside your coding assistant.</p>
+<p>Commands and skills are <strong>not interchangeable</strong>: Each has a distinct role.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ctx CLI command</th>
+<th>ctx AI skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Runs where</strong></td>
+<td>Your terminal</td>
+<td>Inside the AI assistant</td>
+</tr>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Fast (<em>milliseconds</em>)</td>
+<td>Slower (<em>LLM round-trip</em>)</td>
+</tr>
+<tr>
+<td><strong>Cost</strong></td>
+<td>Free</td>
+<td>Consumes tokens and context</td>
+</tr>
+<tr>
+<td><strong>Analysis</strong></td>
+<td>Deterministic heuristics</td>
+<td>Semantic / judgment-based</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Quick checks, scripting, CI</td>
+<td>Deep analysis, generation, workflow orchestration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paired-commands">Paired Commands<a class="headerlink" href="#paired-commands" title="Permanent link">&para;</a></h3>
+<p>These have both a CLI and a skill counterpart. Use the CLI for
+quick, deterministic checks; use the skill when you need the
+agent's judgment.</p>
+<table>
+<thead>
+<tr>
+<th>CLI</th>
+<th>Skill</th>
+<th>When to prefer the skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx drift</code></td>
+<td><code>/ctx-drift</code></td>
+<td>Semantic analysis: catches meaning drift the CLI misses</td>
+</tr>
+<tr>
+<td><code>ctx status</code></td>
+<td><code>/ctx-status</code></td>
+<td>Interpreted summary with recommendations</td>
+</tr>
+<tr>
+<td><code>ctx add task</code></td>
+<td><code>/ctx-add-task</code></td>
+<td>Agent decomposes vague goals into concrete tasks</td>
+</tr>
+<tr>
+<td><code>ctx add decision</code></td>
+<td><code>/ctx-add-decision</code></td>
+<td>Agent drafts rationale and consequences from discussion</td>
+</tr>
+<tr>
+<td><code>ctx add learning</code></td>
+<td><code>/ctx-add-learning</code></td>
+<td>Agent extracts the lesson from a debugging session</td>
+</tr>
+<tr>
+<td><code>ctx add convention</code></td>
+<td><code>/ctx-add-convention</code></td>
+<td>Agent observes a repeated pattern and codifies it</td>
+</tr>
+<tr>
+<td><code>ctx tasks archive</code></td>
+<td><code>/ctx-archive</code></td>
+<td>Agent reviews which tasks are truly done</td>
+</tr>
+<tr>
+<td><code>ctx pad</code></td>
+<td><code>/ctx-pad</code></td>
+<td>Agent reads/writes scratchpad entries in conversation flow</td>
+</tr>
+<tr>
+<td><code>ctx recall</code></td>
+<td><code>/ctx-recall</code></td>
+<td>Agent searches session history with semantic understanding</td>
+</tr>
+<tr>
+<td><code>ctx agent</code></td>
+<td><code>/ctx-agent</code></td>
+<td>Agent loads and acts on the context packet</td>
+</tr>
+<tr>
+<td><code>ctx loop</code></td>
+<td><code>/ctx-loop</code></td>
+<td>Agent tailors the loop script to your project</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-only-skills">AI-Only Skills<a class="headerlink" href="#ai-only-skills" title="Permanent link">&para;</a></h3>
+<p>These have no CLI equivalent. They require the agent's reasoning.</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/ctx-remember</code></td>
+<td>Load context and present structured readback at session start</td>
+</tr>
+<tr>
+<td><code>/ctx-wrap-up</code></td>
+<td>End-of-session ceremony: persist learnings, decisions, tasks</td>
+</tr>
+<tr>
+<td><code>/ctx-next</code></td>
+<td>Suggest 1–3 concrete next actions from context</td>
+</tr>
+<tr>
+<td><code>/ctx-commit</code></td>
+<td>Commit with integrated context capture</td>
+</tr>
+<tr>
+<td><code>/ctx-reflect</code></td>
+<td>Pause and assess session progress</td>
+</tr>
+<tr>
+<td><code>/ctx-consolidate</code></td>
+<td>Merge overlapping learnings or decisions</td>
+</tr>
+<tr>
+<td><code>/ctx-alignment-audit</code></td>
+<td>Verify docs claims match agent instructions</td>
+</tr>
+<tr>
+<td><code>/ctx-prompt-audit</code></td>
+<td>Analyze prompting patterns for improvement</td>
+</tr>
+<tr>
+<td><code>/ctx-implement</code></td>
+<td>Execute a plan step-by-step with verification</td>
+</tr>
+<tr>
+<td><code>/ctx-worktree</code></td>
+<td>Manage parallel agent worktrees</td>
+</tr>
+<tr>
+<td><code>/ctx-journal-normalize</code></td>
+<td>Fix markdown rendering issues in journal entries</td>
+</tr>
+<tr>
+<td><code>/ctx-journal-enrich</code></td>
+<td>Add metadata, tags, and summaries to journal entries</td>
+</tr>
+<tr>
+<td><code>/ctx-blog</code></td>
+<td>Generate a blog post (<a href="https://pypi.org/project/zensical/">zensical</a>-flavored Markdown)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">The Two Skills You Should Always Use</p>
+<p><strong><code>/ctx-remember</code></strong> at session start and <strong><code>/ctx-wrap-up</code></strong> at
+session end are the <strong>highest-value skills</strong> in the entire catalog.</p>
+<p>The agent <em>will</em> <strong>eventually</strong> discover your context through
+<code>CLAUDE.md</code> → <code>AGENT_PLAYBOOK.md</code>, but <code>/ctx-remember</code>
+<strong>hydrates the full context up front</strong> (<em>tasks, decisions,
+recent sessions</em>) so the agent <strong>starts informed</strong> rather than
+piecing things together over several turns.</p>
+<p><code>/ctx-wrap-up</code> is the other half: A structured review that
+captures learnings, decisions, and tasks before you close the
+window.</p>
+<p>Hooks like <code>check-persistence</code> remind <em>you</em> (<em>the user</em>) mid-session
+that context hasn't been saved in a while, but they don't
+trigger persistence automatically: You still have to act.</p>
+<p>And a <code>CTRL+C</code> can end things at any moment with no reliable
+"<em>before session end</em>" event. </p>
+<p><code>/ctx-wrap-up</code> is the <strong>deliberate checkpoint</strong> that makes sure nothing
+slips through.</p>
+<p>See <a href="../../recipes/session-ceremonies/">Session Ceremonies</a> for
+the full workflow.</p>
+</div>
+<h3 id="cli-only-commands">CLI-Only Commands<a class="headerlink" href="#cli-only-commands" title="Permanent link">&para;</a></h3>
+<p>These are infrastructure: The are used used in scripts, CI, or one-time setup.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx init</code></td>
+<td>Initialize <code>.context/</code> directory</td>
+</tr>
+<tr>
+<td><code>ctx load</code></td>
+<td>Output assembled context for piping</td>
+</tr>
+<tr>
+<td><code>ctx complete</code></td>
+<td>Mark a task done by substring match</td>
+</tr>
+<tr>
+<td><code>ctx sync</code></td>
+<td>Reconcile context with codebase state</td>
+</tr>
+<tr>
+<td><code>ctx compact</code></td>
+<td>Consolidate and clean up context files</td>
+</tr>
+<tr>
+<td><code>ctx hook</code></td>
+<td>Generate AI tool integration config</td>
+</tr>
+<tr>
+<td><code>ctx watch</code></td>
+<td>Watch AI output and auto-apply context updates</td>
+</tr>
+<tr>
+<td><code>ctx serve</code></td>
+<td>Serve any zensical directory (default: journal)</td>
+</tr>
+<tr>
+<td><code>ctx permissions snapshot</code></td>
+<td>Save settings as a golden image</td>
+</tr>
+<tr>
+<td><code>ctx permissions restore</code></td>
+<td>Restore settings from golden image</td>
+</tr>
+<tr>
+<td><code>ctx journal site</code></td>
+<td>Generate browsable journal from exports</td>
+</tr>
+<tr>
+<td><code>ctx notify setup</code></td>
+<td>Configure webhook notifications</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Rule of Thumb</p>
+<p><strong>Quick check?</strong> Use the CLI. </p>
+<p><strong>Need judgment?</strong> Use the skill.</p>
+<p>When in doubt, start with the CLI: It's free and instant.</p>
+<p>Escalate to the skill when heuristics aren't enough.</p>
+</div>
 <hr />
-<p><strong>Next Up</strong>: <a href="../context-files/">Context Files →</a> — what each <code>.context/</code> file does and how to use it.</p>
+<p><strong>Next Up</strong>: <a href="../context-files/">Context Files →</a>: what each <code>.context/</code> file does and how to use it</p>
 <p><strong>See Also</strong>:</p>
 <ul>
-<li><a href="../../recipes/">Recipes</a> — targeted how-to guides for specific tasks</li>
-<li><a href="../../recipes/knowledge-capture/">Knowledge Capture</a> — patterns for recording decisions, learnings, and conventions</li>
-<li><a href="../../recipes/context-health/">Context Health</a> — keeping your <code>.context/</code> accurate and drift-free</li>
-<li><a href="../../recipes/session-archaeology/">Session Archaeology</a> — digging into past sessions</li>
-<li><a href="../../recipes/task-management/">Task Management</a> — tracking and completing work items</li>
+<li><a href="../../recipes/">Recipes</a>: targeted how-to guides for specific tasks</li>
+<li><a href="../../recipes/knowledge-capture/">Knowledge Capture</a>: patterns for recording decisions, learnings, and conventions</li>
+<li><a href="../../recipes/context-health/">Context Health</a>: keeping your <code>.context/</code> accurate and drift-free</li>
+<li><a href="../../recipes/session-archaeology/">Session Archaeology</a>: digging into past sessions</li>
+<li><a href="../../recipes/task-management/">Task Management</a>: tracking and completing work items</li>
 </ul>
 
 

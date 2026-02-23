@@ -3154,7 +3154,7 @@ caching strategy three Tuesdays ago, often means grepping raw JSON.</p>
 <tr>
 <td><code>ctx serve</code></td>
 <td>Command</td>
-<td>Serve the journal site locally</td>
+<td>Serve any zensical directory (default: journal)</td>
 </tr>
 <tr>
 <td><code>/ctx-recall</code></td>
@@ -3387,7 +3387,8 @@ generate the static site:</p>
 <p>The site includes a date-sorted index, individual session pages with full
 conversations, search (press <code>/</code>), dark mode, and enriched titles in the
 navigation when frontmatter exists.</p>
-<p>You can also serve an existing site without regenerating using <code>ctx serve</code>.</p>
+<p>You can also serve an already-generated site without regenerating using
+<code>ctx serve</code> (serve-only, no regeneration).</p>
 <p>The site generator requires <code>zensical</code> (<code>pipx install zensical</code>).</p>
 <h2 id="where-the-agent-adds-value">Where the Agent Adds Value<a class="headerlink" href="#where-the-agent-adds-value" title="Permanent link">&para;</a></h2>
 <p>Export, list, and show are mechanical. The agent runs the same CLI commands you
@@ -3466,7 +3467,7 @@ sessions.</p>
 <li><a href="../../reference/session-journal/">Session Journal</a>: full documentation of the journal system</li>
 <li><a href="../../reference/cli-reference/#ctx-recall">CLI Reference: ctx recall</a>: all recall subcommands and flags</li>
 <li><a href="../../reference/cli-reference/#ctx-journal">CLI Reference: ctx journal</a>: site generation options</li>
-<li><a href="../../reference/cli-reference/#ctx-serve">CLI Reference: ctx serve</a>: local serving options</li>
+<li><a href="../../reference/cli-reference/#ctx-serve">CLI Reference: ctx serve</a>: serve-only (no regeneration)</li>
 <li><a href="../../home/context-files/">Context Files</a>: the <code>.context/</code> directory structure</li>
 </ul>
 

@@ -3144,7 +3144,7 @@
 <tr>
 <td><code>ctx serve</code></td>
 <td>Command</td>
-<td>Serve the journal site locally</td>
+<td>Serve any zensical directory (default: journal)</td>
 </tr>
 <tr>
 <td><code>make journal</code></td>
@@ -3279,7 +3279,7 @@ parallel.</p>
 </span></code></pre></div>
 <p>This runs <code>ctx recall export --all</code> followed by <code>ctx journal site --build</code>, then
 reminds you to normalize and enrich before rebuilding. To serve the built site,
-use <code>make journal-serve</code> or <code>ctx serve</code>.</p>
+use <code>make journal-serve</code> or <code>ctx serve</code> (serve-only, no regeneration).</p>
 <h3 id="alternative-export-to-obsidian-vault">Alternative: Export to Obsidian Vault<a class="headerlink" href="#alternative-export-to-obsidian-vault" title="Permanent link">&para;</a></h3>
 <p>If you use <a href="https://obsidian.md/">Obsidian</a> for knowledge management, generate
 a vault instead of (or alongside) the static site:</p>
@@ -3305,6 +3305,15 @@ narrative arc; drafts an outline for approval; writes the full post; and saves
 it to <code>docs/blog/YYYY-MM-DD-slug.md</code>.</p>
 <p>Posts are written in first person with code snippets, commit references, and an
 honest discussion of what went wrong.</p>
+<div class="admonition info">
+<p class="admonition-title">Output is zensical-flavored Markdown</p>
+<p>The blog skills produce Markdown tuned for a
+<a href="https://pypi.org/project/zensical/">zensical</a> site: <code>topics:</code>
+frontmatter (zensical's tag field), a <code>docs/blog/</code> output path,
+and a banner image reference. The content is still standard
+Markdown and can be adapted to other static site generators,
+but the defaults assume a zensical project structure.</p>
+</div>
 <h3 id="step-6-write-changelog-posts-from-commit-ranges">Step 6: Write Changelog Posts from Commit Ranges<a class="headerlink" href="#step-6-write-changelog-posts-from-commit-ranges" title="Permanent link">&para;</a></h3>
 <p>For release notes or "what changed" posts, <code>/ctx-blog-changelog</code> takes a
 starting commit and a theme, then analyzes everything that changed:</p>
@@ -3394,7 +3403,7 @@ keyboard.</p>
 <li><a href="../../reference/cli-reference/#ctx-recall">CLI Reference: ctx recall</a>: export, list, show session history</li>
 <li><a href="../../reference/cli-reference/#ctx-journal-site">CLI Reference: ctx journal site</a>: static site generation</li>
 <li><a href="../../reference/cli-reference/#ctx-journal-obsidian">CLI Reference: ctx journal obsidian</a>: Obsidian vault export</li>
-<li><a href="../../reference/cli-reference/#ctx-serve">CLI Reference: ctx serve</a>: local site serving</li>
+<li><a href="../../reference/cli-reference/#ctx-serve">CLI Reference: ctx serve</a>: serve-only (no regeneration)</li>
 <li><a href="../session-archaeology/">Browsing and Enriching Past Sessions</a>: journal browsing workflow</li>
 <li><a href="../session-lifecycle/">The Complete Session</a>: capturing context during a session</li>
 </ul>

@@ -2962,13 +2962,17 @@ it will fill in as you capture lessons during development.</p>
 <p>This loads your context and presents a structured 
 <a href="../prompting-guide/#do-you-remember"><strong>readback</strong></a> so you can
 confirm the agent knows what is going on. Context also loads automatically
-via hooks, but the explicit ceremony gives you a readback to verify.</p>
+via hooks, but the explicit ceremony gives you a <strong>readback</strong> to verify.</p>
+<div class="admonition info">
+<p class="admonition-title">Using VS Code?</p>
 <p>With <strong>VS Code Copilot Chat</strong> (and the
-<a href="../../operations/integrations/#vs-code-chat-extension-ctx">ctx extension</a>), type
-<code>@ctx /agent</code> in chat to load your context packet, or <code>@ctx /status</code>
+<a href="../../operations/integrations/#vs-code-chat-extension-ctx">ctx extension</a>), 
+type <code>@ctx /agent</code> in chat to load your context packet, or <code>@ctx /status</code>
 to check your project context. Run <code>ctx hook copilot --write</code> once
 to generate <code>.github/copilot-instructions.md</code> for automatic context loading.</p>
-<p>For other tools, generate a context packet:</p>
+</div>
+<p>If you are not using Claude Code, generate a 
+<strong>context packet</strong> for your AI tool:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="gh"># Context Packet</span>
@@ -3032,13 +3036,23 @@ asking you to re-explain.</p>
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>└── AGENT_PLAYBOOK.md   # How AI tools should use this
 </span></code></pre></div>
 <p>Claude Code integration (hooks + skills) is provided by the
-<strong>ctx plugin</strong> — see <a href="../../operations/integrations/#claude-code-full-integration">Integrations</a>.</p>
+<strong><code>ctx</code> plugin</strong>:<br />
+See <a href="../../operations/integrations/#claude-code-full-integration">Integrations/Claude Code</a>.</p>
 <p>VS Code Copilot Chat integration is provided by the
-<strong>ctx extension</strong> — see <a href="../../operations/integrations/#vs-code-chat-extension-ctx">Integrations</a>.</p>
+<strong><code>ctx</code> extension</strong>:<br />
+See <a href="../../operations/integrations/#vs-code-chat-extension-ctx">Integrations/VS Code</a>.</p>
 <p>See <a href="../context-files/">Context Files</a> for detailed documentation of each file.</p>
 <h2 id="what-to-gitignore">What to <code>.gitignore</code><a class="headerlink" href="#what-to-gitignore" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Rule of Thumb</p>
+<ul>
+<li>If it's knowledge (<em>decisions, tasks, learnings,
+  conventions</em>), <strong>commit it</strong>.</li>
+<li>If it's generated output, raw session data, or a secret, <code>.gitignore</code> it.</li>
+</ul>
+</div>
 <p><strong>Commit</strong> your <code>.context/</code> knowledge files: <strong>that's the whole point</strong>.</p>
-<p><strong><code>.gitignore</code></strong> generated and sensitive paths:</p>
+<p>You should <strong><code>.gitignore</code></strong> the generated and sensitive paths:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Journal data (large, potentially sensitive)
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>.context/journal/
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>.context/journal-site/
@@ -3053,15 +3067,10 @@ asking you to re-explain.</p>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a># Claude Code local settings (machine-specific)
 </span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>.claude/settings.local.json
 </span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">ctx init Patches Your .gitignore for You</p>
 <p><code>ctx init</code> automatically adds these entries to your <code>.gitignore</code>.</p>
 <p>Review the additions with <code>cat .gitignore</code> after init.</p>
-<div class="admonition tip">
-<p class="admonition-title">Rule of Thumb</p>
-<ul>
-<li>If it's knowledge (<em>decisions, tasks, learnings,
-  conventions</em>), <strong>commit it</strong>.</li>
-<li>If it's generated output, raw session data, or a secret, <code>.gitignore</code> it.</li>
-</ul>
 </div>
 <p><em>See also</em>:</p>
 <ul>

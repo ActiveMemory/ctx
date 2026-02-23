@@ -48,7 +48,7 @@ All commands support these flags:
 | [`ctx learnings`](#ctx-learnings) | Manage `LEARNINGS.md` (reindex)                           |
 | [`ctx recall`](#ctx-recall)       | Browse and export AI session history                      |
 | [`ctx journal`](#ctx-journal)     | Generate static site from journal entries                 |
-| [`ctx serve`](#ctx-serve)         | Serve static site locally                                 |
+| [`ctx serve`](#ctx-serve)         | Serve any zensical directory (default: journal site)      |
 | [`ctx watch`](#ctx-watch)         | Auto-apply context updates from AI output                 |
 | [`ctx hook`](#ctx-hook)           | Generate AI tool integration configs                      |
 | [`ctx loop`](#ctx-loop)           | Generate autonomous loop script                           |
@@ -890,13 +890,14 @@ ctx journal obsidian --output ~/vaults/ctx    # Custom output directory
 
 ### `ctx serve`
 
-Serve a static site locally via `zensical`.
+Serve any zensical directory locally. This is a **serve-only** command — it
+does not generate or regenerate site content.
 
 ```bash
 ctx serve [directory]
 ```
 
-If no directory is specified, serves the journal site (`.context/journal-site`).
+If no directory is specified, defaults to the journal site (`.context/journal-site`).
 
 Requires `zensical` to be installed:
 
@@ -904,12 +905,17 @@ Requires `zensical` to be installed:
 pipx install zensical
 ```
 
+!!! tip "ctx serve vs. ctx journal site --serve"
+    `ctx journal site --serve` **generates** the journal site *then* serves
+    it — an all-in-one command. `ctx serve` only **serves** an existing
+    directory, and works with any zensical site (journal, docs, etc.).
+
 **Example**:
 
 ```bash
-ctx serve                           # Serve journal site
-ctx serve .context/journal-site     # Serve specific directory
-ctx serve ./docs                    # Serve docs folder
+ctx serve                           # Serve journal site (no regeneration)
+ctx serve .context/journal-site     # Same, explicit path
+ctx serve ./site                    # Serve the docs site
 ```
 
 ---
