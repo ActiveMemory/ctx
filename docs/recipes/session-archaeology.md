@@ -53,7 +53,7 @@ This recipe shows how to turn that raw session history into a **browsable**,
 | `ctx recall export`       | Command | Export sessions to editable journal Markdown    |
 | `ctx journal site`        | Command | Generate a static site from journal entries     |
 | `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries |
-| `ctx serve`               | Command | Serve the journal site locally                  |
+| `ctx serve`               | Command | Serve any zensical directory (default: journal) |
 | `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant        |
 | `/ctx-journal-normalize`  | Skill   | Fix rendering issues in exported Markdown       |
 | `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry      |
@@ -290,7 +290,8 @@ The site includes a date-sorted index, individual session pages with full
 conversations, search (press `/`), dark mode, and enriched titles in the
 navigation when frontmatter exists.
 
-You can also serve an existing site without regenerating using `ctx serve`.
+You can also serve an already-generated site without regenerating using
+`ctx serve` (serve-only, no regeneration).
 
 The site generator requires `zensical` (`pipx install zensical`).
 
@@ -395,5 +396,5 @@ sessions.
 * [Session Journal](../reference/session-journal.md): full documentation of the journal system
 * [CLI Reference: ctx recall](../reference/cli-reference.md#ctx-recall): all recall subcommands and flags
 * [CLI Reference: ctx journal](../reference/cli-reference.md#ctx-journal): site generation options
-* [CLI Reference: ctx serve](../reference/cli-reference.md#ctx-serve): local serving options
+* [CLI Reference: ctx serve](../reference/cli-reference.md#ctx-serve): serve-only (no regeneration)
 * [Context Files](../home/context-files.md): the `.context/` directory structure

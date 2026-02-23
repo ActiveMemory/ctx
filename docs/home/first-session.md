@@ -125,15 +125,17 @@ With **Claude Code** (and the ctx plugin), start every session with:
 This loads your context and presents a structured 
 [**readback**](prompting-guide.md#do-you-remember) so you can
 confirm the agent knows what is going on. Context also loads automatically
-via hooks, but the explicit ceremony gives you a readback to verify.
+via hooks, but the explicit ceremony gives you a **readback** to verify.
 
-With **VS Code Copilot Chat** (and the
-[ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)), type
-`@ctx /agent` in chat to load your context packet, or `@ctx /status`
-to check your project context. Run `ctx hook copilot --write` once
-to generate `.github/copilot-instructions.md` for automatic context loading.
+!!! info "Using VS Code?"
+    With **VS Code Copilot Chat** (and the
+    [ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)), 
+    type `@ctx /agent` in chat to load your context packet, or `@ctx /status`
+    to check your project context. Run `ctx hook copilot --write` once
+    to generate `.github/copilot-instructions.md` for automatic context loading.
 
-For other tools, generate a context packet:
+If you are not using Claude Code, generate a 
+**context packet** for your AI tool:
 
 ```bash
 ctx agent --budget 8000
@@ -213,18 +215,25 @@ asking you to re-explain.
 ```
 
 Claude Code integration (hooks + skills) is provided by the
-**ctx plugin** — see [Integrations](../operations/integrations.md#claude-code-full-integration).
+**`ctx` plugin**:<br />
+See [Integrations/Claude Code](../operations/integrations.md#claude-code-full-integration).
 
 VS Code Copilot Chat integration is provided by the
-**ctx extension** — see [Integrations](../operations/integrations.md#vs-code-chat-extension-ctx).
+**`ctx` extension**:<br />
+See [Integrations/VS Code](../operations/integrations.md#vs-code-chat-extension-ctx).
 
 See [Context Files](context-files.md) for detailed documentation of each file.
 
 ## What to `.gitignore`
 
+!!! tip "Rule of Thumb"
+    * If it's knowledge (*decisions, tasks, learnings,
+      conventions*), **commit it**.
+    * If it's generated output, raw session data, or a secret, `.gitignore` it.
+
 **Commit** your `.context/` knowledge files: **that's the whole point**.
 
-**`.gitignore`** generated and sensitive paths:
+You should **`.gitignore`** the generated and sensitive paths:
 
 ```gitignore
 # Journal data (large, potentially sensitive)
@@ -242,14 +251,10 @@ See [Context Files](context-files.md) for detailed documentation of each file.
 .claude/settings.local.json
 ```
 
-`ctx init` automatically adds these entries to your `.gitignore`.
+!!! tip "ctx init Patches Your .gitignore for You"
+    `ctx init` automatically adds these entries to your `.gitignore`.
 
-Review the additions with `cat .gitignore` after init.
-
-!!! tip "Rule of Thumb"
-    * If it's knowledge (*decisions, tasks, learnings,
-      conventions*), **commit it**.
-    * If it's generated output, raw session data, or a secret, `.gitignore` it.
+     Review the additions with `cat .gitignore` after init.
 
 *See also*:
 

@@ -4240,7 +4240,7 @@
 </tr>
 <tr>
 <td><a href="#ctx-serve"><code>ctx serve</code></a></td>
-<td>Serve static site locally</td>
+<td>Serve any zensical directory (default: journal site)</td>
 </tr>
 <tr>
 <td><a href="#ctx-watch"><code>ctx watch</code></a></td>
@@ -5212,17 +5212,24 @@ Open the output directory as an Obsidian  vault directly.</p>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-serve"><code>ctx serve</code><a class="headerlink" href="#ctx-serve" title="Permanent link">&para;</a></h3>
-<p>Serve a static site locally via <code>zensical</code>.</p>
+<p>Serve any zensical directory locally. This is a <strong>serve-only</strong> command — it
+does not generate or regenerate site content.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>ctx<span class="w"> </span>serve<span class="w"> </span><span class="o">[</span>directory<span class="o">]</span>
 </span></code></pre></div>
-<p>If no directory is specified, serves the journal site (<code>.context/journal-site</code>).</p>
+<p>If no directory is specified, defaults to the journal site (<code>.context/journal-site</code>).</p>
 <p>Requires <code>zensical</code> to be installed:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>zensical
 </span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">ctx serve vs. ctx journal site --serve</p>
+<p><code>ctx journal site --serve</code> <strong>generates</strong> the journal site <em>then</em> serves
+it — an all-in-one command. <code>ctx serve</code> only <strong>serves</strong> an existing
+directory, and works with any zensical site (journal, docs, etc.).</p>
+</div>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>ctx<span class="w"> </span>serve<span class="w">                           </span><span class="c1"># Serve journal site</span>
-</span><span id="__span-60-2"><a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">     </span><span class="c1"># Serve specific directory</span>
-</span><span id="__span-60-3"><a id="__codelineno-60-3" name="__codelineno-60-3" href="#__codelineno-60-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./docs<span class="w">                    </span><span class="c1"># Serve docs folder</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>ctx<span class="w"> </span>serve<span class="w">                           </span><span class="c1"># Serve journal site (no regeneration)</span>
+</span><span id="__span-60-2"><a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">     </span><span class="c1"># Same, explicit path</span>
+</span><span id="__span-60-3"><a id="__codelineno-60-3" name="__codelineno-60-3" href="#__codelineno-60-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./site<span class="w">                    </span><span class="c1"># Serve the docs site</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-watch"><code>ctx watch</code><a class="headerlink" href="#ctx-watch" title="Permanent link">&para;</a></h3>

@@ -44,7 +44,7 @@ You want to turn this raw activity into:
 | `ctx recall export`       | Command  | Export session JSONL to editable markdown           |
 | `ctx journal site`        | Command  | Generate a static site from journal entries         |
 | `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries     |
-| `ctx serve`               | Command  | Serve the journal site locally                      |
+| `ctx serve`               | Command  | Serve any zensical directory (default: journal)     |
 | `make journal`            | Makefile | Shortcut for export + site rebuild                  |
 | `/ctx-journal-normalize`  | Skill    | Fix markdown rendering in exported entries          |
 | `/ctx-journal-enrich-all` | Skill    | Batch-enrich all unenriched entries (recommended)   |
@@ -179,7 +179,7 @@ make journal
 
 This runs `ctx recall export --all` followed by `ctx journal site --build`, then
 reminds you to normalize and enrich before rebuilding. To serve the built site,
-use `make journal-serve` or `ctx serve`.
+use `make journal-serve` or `ctx serve` (serve-only, no regeneration).
 
 ### Alternative: Export to Obsidian Vault
 
@@ -217,6 +217,14 @@ it to `docs/blog/YYYY-MM-DD-slug.md`.
 
 Posts are written in first person with code snippets, commit references, and an
 honest discussion of what went wrong.
+
+!!! info "Output is zensical-flavored Markdown"
+    The blog skills produce Markdown tuned for a
+    [zensical](https://pypi.org/project/zensical/) site: `topics:`
+    frontmatter (zensical's tag field), a `docs/blog/` output path,
+    and a banner image reference. The content is still standard
+    Markdown and can be adapted to other static site generators,
+    but the defaults assume a zensical project structure.
 
 ### Step 6: Write Changelog Posts from Commit Ranges
 
@@ -325,6 +333,6 @@ keyboard.
 * [CLI Reference: ctx recall](../reference/cli-reference.md#ctx-recall): export, list, show session history
 * [CLI Reference: ctx journal site](../reference/cli-reference.md#ctx-journal-site): static site generation
 * [CLI Reference: ctx journal obsidian](../reference/cli-reference.md#ctx-journal-obsidian): Obsidian vault export
-* [CLI Reference: ctx serve](../reference/cli-reference.md#ctx-serve): local site serving
+* [CLI Reference: ctx serve](../reference/cli-reference.md#ctx-serve): serve-only (no regeneration)
 * [Browsing and Enriching Past Sessions](session-archaeology.md): journal browsing workflow
 * [The Complete Session](session-lifecycle.md): capturing context during a session
