@@ -64,6 +64,9 @@ func runCheckResources(cmd *cobra.Command) error {
 	cmd.Println("\u2502 System resources are critically low.")
 	cmd.Println("\u2502 Persist unsaved context NOW with /ctx-wrap-up")
 	cmd.Println("\u2502 and consider ending this session.")
+	if line := contextDirLine(); line != "" {
+		cmd.Println("\u2502 " + line)
+	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
 	_ = notify.Send("nudge", "check-resources: System resources critically low", "")

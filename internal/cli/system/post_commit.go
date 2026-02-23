@@ -60,13 +60,15 @@ func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	printHookContext(cmd, "PostToolUse",
-		"Commit succeeded."+
-			" 1. Offer context capture to the user:"+
-			" Decision (design choice?), Learning (gotcha?), or Neither."+
-			" 2. Ask the user: \"Want me to run lints and tests before you push?\""+
-			" Do NOT push. The user pushes manually.",
-	)
+	msg := "Commit succeeded." +
+		" 1. Offer context capture to the user:" +
+		" Decision (design choice?), Learning (gotcha?), or Neither." +
+		" 2. Ask the user: \"Want me to run lints and tests before you push?\"" +
+		" Do NOT push. The user pushes manually."
+	if line := contextDirLine(); line != "" {
+		msg += " [" + line + "]"
+	}
+	printHookContext(cmd, "PostToolUse", msg)
 
 	_ = notify.Send("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID)
 

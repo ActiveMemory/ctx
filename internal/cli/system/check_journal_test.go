@@ -45,7 +45,7 @@ func TestCheckJournal_DailyThrottle(t *testing.T) {
 
 	setupContextDir(t)
 	// Create journal dir and projects dir
-	_ = os.MkdirAll(".context/journal", 0o750)
+	_ = os.MkdirAll(resolvedJournalDir(), 0o750)
 	fakeProjectsDir := filepath.Join(tmpDir, "claude-projects")
 	_ = os.MkdirAll(fakeProjectsDir, 0o750)
 	t.Setenv("HOME", tmpDir)
@@ -78,8 +78,8 @@ func TestCheckJournal_Unenriched(t *testing.T) {
 
 	setupContextDir(t)
 	// Create journal dir with unenriched entry
-	_ = os.MkdirAll(".context/journal", 0o750)
-	_ = os.WriteFile(".context/journal/2026-01-01-test.md",
+	_ = os.MkdirAll(resolvedJournalDir(), 0o750)
+	_ = os.WriteFile(filepath.Join(resolvedJournalDir(), "2026-01-01-test.md"),
 		[]byte("# No frontmatter here"), 0o600)
 
 	// Create Claude projects dir
@@ -97,6 +97,9 @@ func TestCheckJournal_Unenriched(t *testing.T) {
 	if !strings.Contains(out, "entries need enrichment") {
 		t.Errorf("expected unenriched message, got: %s", out)
 	}
+	if !strings.Contains(out, "Context:") {
+		t.Errorf("expected context dir footer, got: %s", out)
+	}
 }
 
 func TestCheckJournal_BothStages(t *testing.T) {
@@ -111,11 +114,12 @@ func TestCheckJournal_BothStages(t *testing.T) {
 
 	setupContextDir(t)
 	// Create old journal entry (unenriched) with old mtime
-	_ = os.MkdirAll(".context/journal", 0o750)
-	_ = os.WriteFile(".context/journal/2025-01-01-test.md",
+	_ = os.MkdirAll(resolvedJournalDir(), 0o750)
+	jDir := resolvedJournalDir()
+	_ = os.WriteFile(filepath.Join(jDir, "2025-01-01-test.md"),
 		[]byte("# Old entry"), 0o600)
 	oldTime := time.Now().Add(-48 * time.Hour)
-	_ = os.Chtimes(".context/journal/2025-01-01-test.md", oldTime, oldTime)
+	_ = os.Chtimes(filepath.Join(jDir, "2025-01-01-test.md"), oldTime, oldTime)
 
 	// Create newer JSONL file (unexported session)
 	projectsDir := filepath.Join(tmpDir, ".claude", "projects", "test")

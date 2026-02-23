@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/spf13/cobra"
 )
 
@@ -79,6 +80,9 @@ func TestCheckContextSize_CheckpointAt18(t *testing.T) {
 	if !strings.Contains(out, "prompt #20") {
 		t.Errorf("expected 'prompt #20' in output, got: %s", out)
 	}
+	if !strings.Contains(out, "Context:") {
+		t.Errorf("expected context dir footer, got: %s", out)
+	}
 }
 
 func TestCheckContextSize_CheckpointAt33(t *testing.T) {
@@ -126,11 +130,13 @@ func TestCheckContextSize_EmptyStdin(t *testing.T) {
 	// Should not panic or error with empty input
 }
 
-// setupContextDir creates a minimal .context/ with essential files so that
-// isInitialized() returns true. Must be called after chdir to the work dir.
+// setupContextDir creates a minimal context directory with essential files so
+// that isInitialized() returns true. Must be called after chdir to the work dir.
+// Resets rc state so rc.ContextDir() returns the default ".context".
 func setupContextDir(t *testing.T) {
 	t.Helper()
-	dir := ".context"
+	rc.Reset()
+	dir := rc.ContextDir()
 	if err := os.MkdirAll(dir, 0o750); err != nil {
 		t.Fatal(err)
 	}

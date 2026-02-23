@@ -34,7 +34,7 @@ These are inviolable:
 - **Archival is allowed, deletion is not** — never delete context history
 - **Archive preserves structure** — Phase headers are kept for traceability
 - **Never move tasks** — tasks stay in their Phase section; archiving is
-  the only sanctioned "move" and it's to `.context/archive/`
+  the only sanctioned "move" and it's to the archive directory
 
 ## Execution
 
@@ -52,7 +52,7 @@ ctx tasks archive --dry-run
 ctx tasks archive
 ```
 
-Archived tasks go to `.context/archive/tasks-YYYY-MM-DD.md`, preserving
-Phase headers for traceability.
+Archived tasks go to `archive/tasks-YYYY-MM-DD.md` in the context directory,
+preserving Phase headers for traceability.
 
 Report how many tasks were archived and where the archive file was written.

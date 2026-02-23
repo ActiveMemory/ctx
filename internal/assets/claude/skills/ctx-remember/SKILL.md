@@ -9,8 +9,8 @@ remembering, not searching.
 
 ## Before Recalling
 
-Check that `.context/` exists. If it does not, tell the user:
-"No context directory found. Run `ctx init` to set up context
+Check that the context directory exists. If it does not, tell the
+user: "No context directory found. Run `ctx init` to set up context
 tracking, then there will be something to remember."
 
 ## When to Use
@@ -72,7 +72,8 @@ tasks, or ask the user for direction if priorities are unclear.
 - **Present findings as recall**, not discovery — you are
   *remembering*, not *searching*
 - Be honest about the mechanism only if the user explicitly asks
-  *how* you remember (e.g., "It's stored in .context/ files")
+  *how* you remember (e.g., "It's stored in context files managed
+  by ctx")
 
 ## Examples
 
@@ -101,7 +102,7 @@ tasks, or ask the user for direction if priorities are unclear.
 > "I don't have persistent memory, but let me check if there
 > are any context files..."
 
-> "Let me look at the files in .context/ to see what's there.
+> "Let me look at the context files to see what's there.
 > I found TASKS.md, let me read it..."
 
 > "I found some session files. Here's what they contain..."

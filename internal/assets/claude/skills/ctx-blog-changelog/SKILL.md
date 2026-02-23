@@ -59,7 +59,7 @@ git log --format="%s" <commit>..HEAD | head -50
 git diff --stat <commit>..HEAD | sort -t'|' -k2 -rn | head -20
 
 # Journal entries from this period
-ls .context/journal/*.md
+ctx recall list
 ```
 
 3. **Draft the narrative** following the theme

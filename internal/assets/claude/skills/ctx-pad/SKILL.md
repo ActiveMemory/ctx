@@ -98,10 +98,10 @@ When the user says "add" — check context:
 
 ## Important Notes
 
-- The scratchpad key (.context/.scratchpad.key) must NEVER be
-  printed to stdout or shown to the user
-- Do not attempt to read .context/scratchpad.enc directly;
-  always use `ctx pad`
+- The scratchpad key (`.scratchpad.key` in the context directory)
+  must NEVER be printed to stdout or shown to the user
+- Do not attempt to read `scratchpad.enc` in the context directory
+  directly; always use `ctx pad`
 - If the user gets a "no key" error, tell them to obtain the
   key file from a teammate
 - Entries are one-liners; do not add multi-line content

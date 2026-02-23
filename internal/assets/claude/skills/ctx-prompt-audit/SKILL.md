@@ -8,7 +8,7 @@ unnecessary clarification back-and-forth.
 
 ## Before Auditing
 
-1. **Check for session data**: look in `.context/journal/` for
+1. **Check for session data**: look in the journal directory for
    transcripts to analyze
 2. **Need at least 3 sessions**: fewer than that gives too small a
    sample; tell the user to try again later
@@ -44,7 +44,7 @@ Session transcripts are stored in the journal:
 
 | Source                  | Format                             |
 |-------------------------|------------------------------------|
-| `.context/journal/`     | Exported session journals (richer) |
+| Journal directory       | Exported session journals (richer) |
 
 Journal entries contain full turn-by-turn conversation and are
 the best source for pattern detection.

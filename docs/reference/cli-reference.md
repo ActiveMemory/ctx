@@ -1339,6 +1339,67 @@ The parent command shows available subcommands. Hidden plumbing subcommands
 subcommands (`ctx system check-*`) are used by the Claude Code plugin — see
 [AI Tool Integrations](../operations/integrations.md#plugin-hooks) for details.
 
+#### `ctx system bootstrap`
+
+Print context location and rules for AI agents. This is the recommended first
+command for AI agents to run at session start — it tells them where the context
+directory is and how to use it.
+
+```bash
+ctx system bootstrap [flags]
+```
+
+**Flags**:
+
+| Flag     | Description           |
+|----------|-----------------------|
+| `--json` | Output in JSON format |
+
+**Text output**:
+
+```
+ctx bootstrap
+=============
+
+context_dir: .context
+
+Files:
+  CONSTITUTION.md, TASKS.md, DECISIONS.md, LEARNINGS.md,
+  CONVENTIONS.md, ARCHITECTURE.md, GLOSSARY.md
+
+Rules:
+  1. Use context_dir above for ALL file reads/writes
+  2. Never say "I don't have memory" — context IS your memory
+  3. Read files silently, present as recall (not search)
+  4. Persist learnings/decisions before session ends
+  5. Run `ctx agent` for content summaries
+  6. Run `ctx status` for context health
+```
+
+**JSON output**:
+
+```json
+{
+  "context_dir": ".context",
+  "files": ["CONSTITUTION.md", "TASKS.md", ...],
+  "rules": ["Use context_dir above for ALL file reads/writes", ...]
+}
+```
+
+**Examples**:
+
+```bash
+ctx system bootstrap                          # Text output
+ctx system bootstrap --json                   # JSON output
+ctx system bootstrap --json | jq .context_dir # Extract context path
+```
+
+**Why it exists**: When users configure an external context directory via
+`.ctxrc` (`context_dir: /mnt/nas/.context`), the AI agent needs to know where
+context lives. Bootstrap resolves the configured path and communicates it to
+the agent at session start. Every nudge also includes a context directory
+footer for reinforcement.
+
 #### `ctx system resources`
 
 Show system resource usage with threshold-based alerts.

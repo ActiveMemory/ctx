@@ -26,14 +26,15 @@ List all journal entries that lack enrichment using the state file:
 
 ```bash
 # List .md files in journal dir and check state
-for f in .context/journal/*.md; do
+CTX_DIR=$(ctx system bootstrap -q)
+for f in "$CTX_DIR/journal/"*.md; do
   name=$(basename "$f")
   ctx system mark-journal --check "$name" enriched || echo "$f"
 done
 ```
 
-Or read `.context/journal/.state.json` directly and list entries
-without an `enriched` date set.
+Or read `.state.json` in the journal directory directly and list
+entries without an `enriched` date set.
 
 If all entries already have enrichment recorded, report that and stop.
 

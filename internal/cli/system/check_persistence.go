@@ -16,6 +16,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // checkPersistenceCmd returns the "ctx system check-persistence" command.
@@ -131,7 +132,7 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 
 	tmpDir := secureTempDir()
 	stateFile := filepath.Join(tmpDir, "persistence-nudge-"+sessionID)
-	contextDir := ".context"
+	contextDir := rc.ContextDir()
 	logFile := filepath.Join(contextDir, "logs", "check-persistence.log")
 
 	// Initialize state if needed
@@ -180,6 +181,9 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 		cmd.Println("│ worth persisting?")
 		cmd.Println("│")
 		cmd.Println("│ Run /ctx-wrap-up to capture session context.")
+		if line := contextDirLine(); line != "" {
+			cmd.Println("│ " + line)
+		}
 		cmd.Println("└──────────────────────────────────────────────────")
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", state.Count, sinceNudge))

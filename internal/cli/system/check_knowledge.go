@@ -132,6 +132,9 @@ func runCheckKnowledge(cmd *cobra.Command) error {
 	cmd.Println("\u2502  \u2022 Use /ctx-consolidate to merge overlapping entries")
 	cmd.Println("\u2502  \u2022 Use /ctx-drift for semantic drift (stale patterns)")
 	cmd.Println("\u2502  \u2022 Move stale entries to .context/archive/ manually")
+	if line := contextDirLine(); line != "" {
+		cmd.Println("\u2502 " + line)
+	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
 	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", "")

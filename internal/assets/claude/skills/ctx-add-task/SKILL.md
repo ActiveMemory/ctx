@@ -53,7 +53,7 @@ ctx add task "Add --cooldown flag to ctx agent to suppress repeated output withi
 
 **Example — with context for why:**
 ```bash
-ctx add task "Investigate ctx init overwriting user-generated content in .context/ files. Commit a9df9dd wiped 18 decisions from DECISIONS.md. Need guard to prevent reinit from destroying user data." --priority high
+ctx add task "Investigate ctx init overwriting user-generated content in context files. Commit a9df9dd wiped 18 decisions from DECISIONS.md. Need guard to prevent reinit from destroying user data." --priority high
 ```
 
 **Example — scoped subtask:**

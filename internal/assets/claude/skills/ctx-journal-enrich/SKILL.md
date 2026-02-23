@@ -11,7 +11,7 @@ Enrich a session journal entry with structured metadata.
    issues; clean markdown produces better metadata extraction
 2. **Check if already enriched**: check the state file via
    `ctx system mark-journal --check <filename> enriched` or read
-   `.context/journal/.state.json`; confirm before overwriting
+   `.state.json` in the journal directory; confirm before overwriting
 
 ## When to Use
 
@@ -33,19 +33,20 @@ The user specifies a journal entry by partial match:
 - `2026-01-24` (date)
 - `76fe2ab9` (short ID)
 
-Find matching files:
+Find matching files in the journal directory:
 ```bash
-ls .context/journal/*.md | grep -i "<pattern>"
+ls "$(ctx system bootstrap -q)/journal/"*.md | grep -i "<pattern>"
 ```
 
 If multiple matches, show them and ask which one.
 If no argument given, show recent unenriched entries by reading
-`.context/journal/.state.json` and listing entries without an
-`enriched` date:
+`.state.json` in the journal directory and listing entries without
+an `enriched` date:
 
 ```bash
 # List unenriched entries using state file
-for f in .context/journal/*.md; do
+CTX_DIR=$(ctx system bootstrap -q)
+for f in "$CTX_DIR/journal/"*.md; do
   name=$(basename "$f")
   ctx system mark-journal --check "$name" enriched || echo "$f"
 done | head -10

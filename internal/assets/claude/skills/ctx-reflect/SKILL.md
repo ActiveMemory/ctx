@@ -108,7 +108,7 @@ After reflecting, provide:
 |------------------|-----------------------------------------------------------------------|
 | Learning         | `ctx add learning --context "..." --lesson "..." --application "..."` |
 | Decision         | `ctx add decision "..."`                                              |
-| Task completed   | Edit `.context/TASKS.md` directly                                     |
+| Task completed   | Edit TASKS.md directly                                                |
 | New task         | `ctx add task "..."`                                                  |
 
 ## Quality Checklist

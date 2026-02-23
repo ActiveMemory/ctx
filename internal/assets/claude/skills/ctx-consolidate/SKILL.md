@@ -11,7 +11,7 @@ consolidated entries. Originals are archived, not deleted.
 ## Key Distinction
 
 **Consolidation != archival.** Archival moves old entries to
-`.context/archive/`. Consolidation *replaces* verbose entries with
+the archive directory. Consolidation *replaces* verbose entries with
 tighter ones — the file stays useful, just denser. The originals move
 to archive as a paper trail.
 
@@ -43,8 +43,8 @@ ctx drift --json
 ```
 
 Then read the files directly:
-- `.context/LEARNINGS.md`
-- `.context/DECISIONS.md`
+- LEARNINGS.md (in the context directory)
+- DECISIONS.md (in the context directory)
 
 Parse entries by their `## [YYYY-MM-DD-HHMMSS] Title` headers. Each
 entry extends from its header to the line before the next header or
@@ -133,8 +133,8 @@ For each approved group:
    the `# Learnings` or `# Decisions` header)
 2. **Remove the original entries** from the source file
 3. **Append originals to archive** at
-   `.context/archive/learnings-consolidated-YYYY-MM-DD.md`
-   (or `decisions-consolidated-YYYY-MM-DD.md`)
+   `archive/learnings-consolidated-YYYY-MM-DD.md` in the context
+   directory (or `decisions-consolidated-YYYY-MM-DD.md`)
 4. **Rebuild the index**:
 
 ```bash
@@ -150,7 +150,7 @@ Consolidated LEARNINGS.md:
   - Group "Hook behavior": 5 entries -> 1 (originals archived)
   - Group "Path handling": 3 entries -> 1 (originals archived)
   Total: 8 entries consolidated into 2. File reduced from 47 to 41 entries.
-  Archive: .context/archive/learnings-consolidated-2026-02-19.md
+  Archive: archive/learnings-consolidated-2026-02-19.md (in context dir)
 ```
 
 ## Archive Format

@@ -36,18 +36,20 @@ Silent when: .context/ not initialized`,
 			if !isInitialized() {
 				return nil
 			}
-			printHookContext(cmd, "PreToolUse",
-				"HARD GATE — DO NOT COMMIT without completing ALL of these steps first:"+
-					" (1) lint the ENTIRE project,"+
-					" (2) test the ENTIRE project,"+
-					" (3) verify a clean working tree (no modified or untracked files left behind)."+
-					" Not just the files you changed — the whole branch."+
-					" If unrelated modified files remain,"+
-					" offer to commit them separately, stash them,"+
-					" or get explicit confirmation to leave them."+
-					" Do NOT say 'I'll do that at the end' or 'I'll handle that after committing.'"+
-					" Run lint and tests BEFORE every git commit, every time, no exceptions.",
-			)
+			msg := "HARD GATE — DO NOT COMMIT without completing ALL of these steps first:" +
+				" (1) lint the ENTIRE project," +
+				" (2) test the ENTIRE project," +
+				" (3) verify a clean working tree (no modified or untracked files left behind)." +
+				" Not just the files you changed — the whole branch." +
+				" If unrelated modified files remain," +
+				" offer to commit them separately, stash them," +
+				" or get explicit confirmation to leave them." +
+				" Do NOT say 'I'll do that at the end' or 'I'll handle that after committing.'" +
+				" Run lint and tests BEFORE every git commit, every time, no exceptions."
+			if line := contextDirLine(); line != "" {
+				msg += " [" + line + "]"
+			}
+			printHookContext(cmd, "PreToolUse", msg)
 			_ = notify.Send("relay", "qa-reminder: QA gate reminder emitted", "")
 			return nil
 		},

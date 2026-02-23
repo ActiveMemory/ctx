@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // checkContextSizeCmd returns the "ctx system check-context-size" command.
@@ -59,7 +60,7 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 
 	tmpDir := secureTempDir()
 	counterFile := filepath.Join(tmpDir, "context-check-"+sessionID)
-	logFile := filepath.Join(".context", "logs", "check-context-size.log")
+	logFile := filepath.Join(rc.ContextDir(), "logs", "check-context-size.log")
 
 	// Increment counter
 	count := readCounter(counterFile) + 1
@@ -84,6 +85,9 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 		cmd.Println("│ This session is getting deep. Consider wrapping up")
 		cmd.Println("│ soon. If there are unsaved learnings, decisions, or")
 		cmd.Println("│ conventions, now is a good time to persist them.")
+		if line := contextDirLine(); line != "" {
+			cmd.Println("│ " + line)
+		}
 		cmd.Println("└──────────────────────────────────────────────────")
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d CHECKPOINT", count))

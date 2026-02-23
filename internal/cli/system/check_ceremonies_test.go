@@ -142,6 +142,9 @@ func TestCheckCeremonies_BothMissing(t *testing.T) {
 	if !strings.Contains(out, "/ctx-wrap-up") {
 		t.Errorf("expected /ctx-wrap-up mention, got: %s", out)
 	}
+	if !strings.Contains(out, "Context:") {
+		t.Errorf("expected context dir footer, got: %s", out)
+	}
 }
 
 func TestCheckCeremonies_OnlyRememberMissing(t *testing.T) {
@@ -344,10 +347,10 @@ func TestScanJournalsForCeremonies(t *testing.T) {
 	}
 }
 
-// setupJournalDir creates .context/journal/ with the given files.
+// setupJournalDir creates the journal directory with the given files.
 func setupJournalDir(t *testing.T, files map[string]string) {
 	t.Helper()
-	dir := ".context/journal"
+	dir := resolvedJournalDir()
 	if err := os.MkdirAll(dir, 0o750); err != nil {
 		t.Fatal(err)
 	}

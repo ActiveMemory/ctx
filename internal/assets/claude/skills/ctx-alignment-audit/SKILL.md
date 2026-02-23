@@ -50,8 +50,8 @@ should expect. Record:
 
 For each claim, search for matching instructions in:
 
-1. **`.context/AGENT_PLAYBOOK.md`** — the primary behavioral
-   source; the agent reads this at session start
+1. **AGENT_PLAYBOOK.md** (in the context directory) — the primary
+   behavioral source; the agent reads this at session start
 2. **`.claude/skills/*/SKILL.md`** — skill-specific instructions
    loaded when a skill is invoked
 3. **`CLAUDE.md`** — project-level instructions always in context
@@ -85,8 +85,8 @@ For each gap, propose a fix:
 - **Doc correction**: if the claim overpromises and should be
   toned down
 
-Always update both the live copy (`.context/AGENT_PLAYBOOK.md`
-or `.claude/skills/`) AND the template copy
+Always update both the live copy (AGENT_PLAYBOOK.md in the
+context directory, or `.claude/skills/`) AND the template copy
 (`internal/assets/AGENT_PLAYBOOK.md` or
 `internal/assets/claude/skills/`) to keep them in sync.
 
@@ -132,7 +132,7 @@ documents.
 | AGENT_PLAYBOOK.md | < 5k tokens | 5-8k tokens | > 8k tokens |
 | Individual SKILL.md | < 2k tokens | 2-3k tokens | > 3k tokens |
 | CLAUDE.md | < 2k tokens | 2-3k tokens | > 3k tokens |
-| Total `.context/` | < 25k tokens | 25-40k tokens | > 40k tokens |
+| Total context dir  | < 25k tokens | 25-40k tokens | > 40k tokens |
 
 ### How to Measure
 
@@ -141,7 +141,7 @@ documents.
 ctx status | grep "Token Estimate"
 
 # Rough per-file estimate (~4 chars per token)
-wc -c .context/AGENT_PLAYBOOK.md  # divide by 4
+wc -c AGENT_PLAYBOOK.md  # divide by 4 (run from context dir)
 wc -c .claude/skills/*/SKILL.md   # divide by 4
 ```
 

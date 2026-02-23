@@ -14,7 +14,7 @@ at session start.
 
 ## Before Starting
 
-Check that `.context/` exists. If it does not, tell the user:
+Check that the context directory exists. If it does not, tell the user:
 "No context directory found. Run `ctx init` to set up context
 tracking, then there will be something to wrap up."
 
@@ -103,7 +103,7 @@ For each approved candidate, run the appropriate command:
 | Decision   | `ctx add decision "Title" --context "..." --rationale "..." --consequences "..."`     |
 | Convention | `ctx add convention "Description"`                                                    |
 | Task (new) | `ctx add task "Description"`                                                          |
-| Task (done)| Edit `.context/TASKS.md` to mark complete                                             |
+| Task (done)| Edit TASKS.md to mark complete                                                        |
 
 Report the result of each command. If any fail, report the error
 and continue with the remaining items.

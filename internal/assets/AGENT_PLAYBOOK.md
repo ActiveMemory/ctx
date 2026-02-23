@@ -60,6 +60,8 @@ common source of wasted work.
 
 ## Read Order
 
+Read these files from the context directory (provided by `ctx system bootstrap`):
+
 1. CONSTITUTION.md — Hard rules, NEVER violate
 2. TASKS.md — What to work on next
 3. CONVENTIONS.md — How to write code
@@ -72,8 +74,9 @@ common source of wasted work.
 
 When asked "Do you remember?" or similar:
 
-1. **Read silently first**: TASKS.md, DECISIONS.md, LEARNINGS.md, and
-   run `ctx recall list --limit 5` for recent history. Do this BEFORE composing a response.
+1. **Read silently first**: Read TASKS.md, DECISIONS.md, LEARNINGS.md
+   from the context directory, and run `ctx recall list --limit 5` for
+   recent history. Do this BEFORE composing a response.
 2. **Respond with a structured readback**:
    - **Last session**: most recent session topic and date
    - **Active work**: pending or in-progress tasks
