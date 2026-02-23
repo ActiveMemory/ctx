@@ -44,11 +44,11 @@ The output has three sections:
 
 - Context directory path
 - Total file count
-- Token estimate (sum across all `.context/*.md` files)
+- Token estimate (sum across all `.md` files in the context directory)
 
 ### 2. Files
 
-Each `.md` file in `.context/` with:
+Each `.md` file in the context directory with:
 
 | Indicator | Meaning                                 |
 |-----------|-----------------------------------------|

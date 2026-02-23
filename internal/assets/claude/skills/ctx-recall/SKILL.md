@@ -66,7 +66,7 @@ Use `--full` for the complete conversation.
 
 ### `ctx recall export`
 
-Export sessions to `.context/journal/` as markdown.
+Export sessions to the journal directory as markdown.
 
 | Flag                  | Default | Purpose                                           |
 |-----------------------|---------|---------------------------------------------------|

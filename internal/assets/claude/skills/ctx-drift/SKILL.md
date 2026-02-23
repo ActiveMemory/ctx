@@ -1,6 +1,6 @@
 ---
 name: ctx-drift
-description: "Detect and fix context drift. Use to find stale paths, broken references, and constitution violations in .context/ files."
+description: "Detect and fix context drift. Use to find stale paths, broken references, and constitution violations in context files."
 allowed-tools: Bash(ctx:*), Bash(diff:*), Bash(mktemp:*), Bash(rm:cleanup temp), Read
 ---
 

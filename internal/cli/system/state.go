@@ -15,10 +15,15 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// journalDir is the path to the journal directory within .context/.
-const journalDir = ".context/journal"
+// resolvedJournalDir returns the path to the journal directory within the
+// configured context directory. Uses rc.ContextDir() so it respects .ctxrc
+// and CLI overrides.
+func resolvedJournalDir() string {
+	return filepath.Join(rc.ContextDir(), config.DirJournal)
+}
 
 // secureTempDir returns a user-specific temp directory for ctx state files.
 // Uses $XDG_RUNTIME_DIR when available (tmpfs, user-owned, 0700 on Linux),
@@ -91,14 +96,25 @@ func touchFile(path string) {
 	_ = os.WriteFile(path, nil, 0o600)
 }
 
-// isInitialized reports whether .context/ has been properly set up via
-// "ctx init". Hooks should no-op when this returns false to avoid
-// creating partial state (e.g. .context/logs/) before initialization.
+// isInitialized reports whether the context directory has been properly set up
+// via "ctx init". Hooks should no-op when this returns false to avoid
+// creating partial state (e.g. logs/) before initialization.
 func isInitialized() bool {
+	dir := rc.ContextDir()
 	for _, f := range config.FilesRequired {
-		if _, err := os.Stat(filepath.Join(".context", f)); err != nil {
+		if _, err := os.Stat(filepath.Join(dir, f)); err != nil {
 			return false
 		}
 	}
 	return true
+}
+
+// contextDirLine returns a one-line context directory identifier.
+// Returns empty string if directory cannot be resolved (callers omit footer).
+func contextDirLine() string {
+	dir := rc.ContextDir()
+	if dir == "" {
+		return ""
+	}
+	return "Context: " + dir
 }

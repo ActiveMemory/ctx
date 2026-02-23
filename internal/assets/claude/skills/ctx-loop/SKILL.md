@@ -13,8 +13,8 @@ Generate a ready-to-use autonomous loop shell script.
 2. **Verify PROMPT.md exists**: the generated script defaults to
    reading `PROMPT.md`; if missing, ask the user what prompt file
    to use
-3. **Verify `.context/` exists**: the loop pattern depends on
-   persistent context; run `ctx init` first if needed
+3. **Verify the context directory exists**: the loop pattern depends
+   on persistent context; run `ctx init` first if needed
 
 ## When to Use
 
@@ -31,8 +31,8 @@ Generate a ready-to-use autonomous loop shell script.
   tool directly)
 - When the user already has a working loop script and has not
   asked for changes
-- When the project lacks `.context/` and `PROMPT.md` (set those
-  up first with `ctx init --ralph`)
+- When the project lacks a context directory and `PROMPT.md` (set
+  those up first with `ctx init --ralph`)
 
 ## Usage Examples
 

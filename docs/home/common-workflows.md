@@ -179,6 +179,57 @@ chmod +x loop.sh
 See [Autonomous Loops](../operations/autonomous-loop.md) for configuration
 and advanced usage.
 
+## Agent Session Start
+
+The first thing an AI agent should do at session start is discover where
+context lives:
+
+```bash
+ctx system bootstrap
+```
+
+This prints the resolved context directory, the files in it, and the
+operating rules. The CLAUDE.md template instructs the agent to run this
+automatically. See [CLI Reference: bootstrap](../reference/cli-reference.md#ctx-system-bootstrap).
+
+## The Two Skills You Should Always Use
+
+Using **`/ctx-remember`** at session start and **`/ctx-wrap-up`** at
+session end are the **highest-value skills** in the entire catalog:
+
+```bash
+# session begins:
+/ctx-remember
+... do work ...
+# before closing the session:
+/ctx-wrap-up
+```
+
+Let's provide some **context**, because this is **important**:
+
+Although the agent *will* **eventually** discover your context through
+`CLAUDE.md → AGENT_PLAYBOOK.md`, `/ctx-remember`
+**hydrates the full context up front** (*tasks, decisions,
+recent sessions*) so the agent **starts informed** rather than
+piecing things together over several turns.
+
+`/ctx-wrap-up` is the other half: A structured review that
+captures learnings, decisions, and tasks before you close the
+window.
+
+Hooks like `check-persistence` remind *you* (*the user*) mid-session
+that context hasn't been saved in a while, but they don't
+trigger persistence automatically: You still have to act.
+Also, a `CTRL+C` can end things at any moment with no reliable
+"*before session end*" event. 
+
+In short, `/ctx-wrap-up` is the **deliberate checkpoint** that makes 
+sure **nothing slips through**. And `/ctx-remember` it its mirror skill
+to be used at session start.
+
+See [Session Ceremonies](../recipes/session-ceremonies.md) for
+the full workflow.
+
 ## CLI Commands vs. AI Skills
 
 Most `ctx` operations come in two flavors: a **CLI command** you run
@@ -234,33 +285,6 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-journal-normalize` | Fix markdown rendering issues in journal entries              |
 | `/ctx-journal-enrich`    | Add metadata, tags, and summaries to journal entries          |
 | `/ctx-blog`              | Generate a blog post ([zensical](https://pypi.org/project/zensical/)-flavored Markdown) |
-
-!!! tip "The Two Skills You Should Always Use"
-    **`/ctx-remember`** at session start and **`/ctx-wrap-up`** at
-    session end are the **highest-value skills** in the entire catalog.
-
-    The agent *will* **eventually** discover your context through
-    `CLAUDE.md` → `AGENT_PLAYBOOK.md`, but `/ctx-remember`
-    **hydrates the full context up front** (*tasks, decisions,
-    recent sessions*) so the agent **starts informed** rather than
-    piecing things together over several turns.
-
-    `/ctx-wrap-up` is the other half: A structured review that
-    captures learnings, decisions, and tasks before you close the
-    window.
-
-    Hooks like `check-persistence` remind *you* (*the user*) mid-session
-    that context hasn't been saved in a while, but they don't
-    trigger persistence automatically: You still have to act.
-
-    And a `CTRL+C` can end things at any moment with no reliable
-    "*before session end*" event. 
-
-    `/ctx-wrap-up` is the **deliberate checkpoint** that makes sure nothing
-    slips through.
-
-    See [Session Ceremonies](../recipes/session-ceremonies.md) for
-    the full workflow.
 
 ### CLI-Only Commands
 

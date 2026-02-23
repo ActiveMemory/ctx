@@ -53,7 +53,8 @@ func runCheckJournal(cmd *cobra.Command) error {
 	}
 
 	// Bail out if journal or Claude projects directories don't exist
-	if _, err := os.Stat(journalDir); os.IsNotExist(err) {
+	jDir := resolvedJournalDir()
+	if _, err := os.Stat(jDir); os.IsNotExist(err) {
 		return nil
 	}
 	if _, err := os.Stat(claudeProjectsDir); os.IsNotExist(err) {
@@ -61,11 +62,11 @@ func runCheckJournal(cmd *cobra.Command) error {
 	}
 
 	// Stage 1: Unexported sessions
-	newestJournal := newestMtime(journalDir, ".md")
+	newestJournal := newestMtime(jDir, ".md")
 	unexported := countNewerFiles(claudeProjectsDir, ".jsonl", newestJournal)
 
 	// Stage 2: Unenriched entries
-	unenriched := countUnenriched(journalDir)
+	unenriched := countUnenriched(jDir)
 
 	if unexported == 0 && unenriched == 0 {
 		return nil
@@ -97,6 +98,9 @@ func runCheckJournal(cmd *cobra.Command) error {
 		cmd.Println("│   /ctx-journal-enrich-all")
 	}
 
+	if line := contextDirLine(); line != "" {
+		cmd.Println("│ " + line)
+	}
 	cmd.Println("└────────────────────────────────────────────────")
 
 	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "")

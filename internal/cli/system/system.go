@@ -31,6 +31,7 @@ func Cmd() *cobra.Command {
 
 Subcommands:
   resources            Show system resource usage (memory, swap, disk, load)
+  bootstrap            Print context location for AI agents
 
 Plumbing subcommands (used by skills and automation):
   mark-journal         Update journal processing state
@@ -51,6 +52,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 
 	cmd.AddCommand(
 		resourcesCmd(),
+		bootstrapCmd(),
 		markJournalCmd(),
 		checkContextSizeCmd(),
 		checkPersistenceCmd(),

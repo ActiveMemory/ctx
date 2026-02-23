@@ -73,18 +73,18 @@ summarize tool outputs > 50 lines; keep first/last 5 lines with
 
 ## Process
 
-1. **Backup first**: `cp -r .context/journal/ .context/journal.bak/`
-   - Always back up before modifying; files may contain user edits
-   - Tell the user where the backup is
+1. **Backup first**: back up the journal directory before modifying
+   (e.g., copy it to a `.bak` sibling); files may contain user edits.
+   Tell the user where the backup is.
 2. Identify files to normalize:
    - If user specifies a file/pattern, use that
-   - Otherwise, scan `.context/journal/*.md`
+   - Otherwise, scan the journal directory for `*.md` files
    - **Skip already-normalized files** by checking the state file:
      ```bash
      ctx system mark-journal --check <filename> normalized
      ```
-     Or read `.context/journal/.state.json` directly and skip entries
-     with a `normalized` date set.
+     Or read `.state.json` in the journal directory directly and skip
+     entries with a `normalized` date set.
 3. Process files turn-by-turn (not whole file at once;
    large files blow context):
    - Fix fence nesting, metadata, lists per output rules
@@ -102,8 +102,8 @@ summarize tool outputs > 50 lines; keep first/last 5 lines with
 
 ## Idempotency
 
-Processing state is tracked in `.context/journal/.state.json` (not
-in-band HTML comment markers). Two stages:
+Processing state is tracked in `.state.json` within the journal
+directory (not in-band HTML comment markers). Two stages:
 
 - **normalized**: metadata tables done. Skip metadata conversion
   on re-run.
@@ -117,6 +117,6 @@ fence nesting is correct.
 
 ## Scope
 
-- Operate on **source files** (`.context/journal/`)
+- Operate on **source files** in the journal directory
 - Changes persist; no repeated normalization needed
 - Preserve all substantive content; only fix formatting

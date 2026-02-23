@@ -42,16 +42,16 @@ Gather context from multiple sources:
 git log --oneline -30
 
 # Recent decisions
-head -100 .context/DECISIONS.md
+ctx status --verbose  # or read DECISIONS.md directly
 
 # Recent learnings
-head -100 .context/LEARNINGS.md
+ctx status --verbose  # or read LEARNINGS.md directly
 
 # Recent tasks completed
-grep -A2 "\[x\]" .context/TASKS.md | head -50
+ctx status  # shows active and completed task counts
 
 # Journal entries (if available)
-ls -la .context/journal/*.md 2>/dev/null | tail -10
+ctx recall list --limit 10
 ```
 
 ## Blog Post Structure

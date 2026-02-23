@@ -18,7 +18,7 @@ Analyze current tasks and recent session activity, then suggest
 
 - When the user has already stated what they want to work on
 - When actively mid-task (don't interrupt flow with suggestions)
-- When no `.context/` directory exists (nothing to analyze)
+- When no context directory exists (nothing to analyze)
 
 ## Usage Examples
 

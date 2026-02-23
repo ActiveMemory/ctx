@@ -301,4 +301,26 @@ step-by-step recipe.
 
 ---
 
+## Agent Bootstrapping
+
+AI agents need to know the resolved context directory at session start.
+The `ctx system bootstrap` command prints the context path, file list, and
+operating rules in both text and JSON formats:
+
+```bash
+ctx system bootstrap          # text output for agents
+ctx system bootstrap --json   # structured output for automation
+```
+
+The CLAUDE.md template instructs the agent to run this as its first action.
+Every nudge (context checkpoint, persistence reminder, etc.) also includes a
+`Context: <dir>` footer that re-anchors the agent to the correct directory
+throughout the session.
+
+This replaces the previous approach of hardcoding `.context/` paths in agent
+instructions. See [CLI Reference: bootstrap](../reference/cli-reference.md#ctx-system-bootstrap)
+for full details.
+
+---
+
 **See also**: [CLI Reference](../reference/cli-reference.md) | [Context Files](context-files.md) | [Scratchpad](../reference/scratchpad.md)

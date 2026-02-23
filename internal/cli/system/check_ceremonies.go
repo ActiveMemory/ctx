@@ -52,7 +52,7 @@ func runCheckCeremonies(cmd *cobra.Command) error {
 		return nil
 	}
 
-	files := recentJournalFiles(journalDir, 3)
+	files := recentJournalFiles(resolvedJournalDir(), 3)
 
 	if len(files) == 0 {
 		// No journal entries — skip ceremony check entirely.
@@ -130,6 +130,8 @@ func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) {
 	cmd.Println("IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.")
 	cmd.Println()
 
+	dirFooter := contextDirLine()
+
 	switch {
 	case !remember && !wrapup:
 		cmd.Println("┌─ Session Ceremonies ──────────────────────────────")
@@ -145,6 +147,9 @@ func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) {
 		cmd.Println("│     session starts informed, not from scratch.")
 		cmd.Println("│")
 		cmd.Println("│ These take seconds and save minutes.")
+		if dirFooter != "" {
+			cmd.Println("│ " + dirFooter)
+		}
 		cmd.Println("└───────────────────────────────────────────────────")
 
 	case !remember:
@@ -153,6 +158,9 @@ func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) {
 		cmd.Println("│")
 		cmd.Println("│ It loads your context, shows active tasks, and")
 		cmd.Println("│ picks up where you left off — no re-explaining.")
+		if dirFooter != "" {
+			cmd.Println("│ " + dirFooter)
+		}
 		cmd.Println("└───────────────────────────────────────────────────")
 
 	case !wrapup:
@@ -161,6 +169,9 @@ func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) {
 		cmd.Println("│")
 		cmd.Println("│ It captures learnings and decisions so the next")
 		cmd.Println("│ session starts informed, not from scratch.")
+		if dirFooter != "" {
+			cmd.Println("│ " + dirFooter)
+		}
 		cmd.Println("└───────────────────────────────────────────────────")
 	}
 }

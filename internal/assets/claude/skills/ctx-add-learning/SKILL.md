@@ -62,7 +62,7 @@ ctx add learning "go:embed only works with files in same or child directories" \
 ```bash
 ctx add learning "ctx init overwrites user content without guard" \
   --context "Commit a9df9dd wiped 18 decisions from DECISIONS.md, replacing with empty template" \
-  --lesson "Init treats all .context/ files as templates, but after first use they contain user data" \
+  --lesson "Init treats all context files as templates, but after first use they contain user data" \
   --application "Skip existing files by default, only overwrite with --force"
 ```
 

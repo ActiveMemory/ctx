@@ -54,7 +54,7 @@ Create a new worktree as a sibling directory with a `work/` branch.
    ```
 
 5. **Remind the user**:
-   > Do NOT run `ctx init` in the worktree. The `.context/`
+   > Do NOT run `ctx init` in the worktree. The context
    > directory is already tracked in git and will be present.
    > Launch a separate Claude Code session there and work
    > normally.
@@ -111,14 +111,32 @@ Merge a completed worktree back and clean up.
   never inside the project tree
 - **`work/` branch prefix** — all worktree branches use `work/<name>`
   for easy identification and cleanup
-- **No `ctx init` in worktrees** — `.context/` is tracked in git;
-  running init would overwrite shared context files
+- **No `ctx init` in worktrees** — the context directory is tracked
+  in git; running init would overwrite shared context files
 - **Manage from main checkout only** — create and teardown worktrees
   from the main working tree, not from inside a worktree
 - **TASKS.md conflict resolution** — when merging, TASKS.md will
   often conflict because multiple agents marked different tasks as
   complete. Resolution: accept all `[x]` completions from both sides.
   No task should go from `[x]` back to `[ ]`.
+
+## What Does NOT Work in Worktrees
+
+The scratchpad key (`.scratchpad.key` in the context directory) is
+gitignored. It exists only in the main checkout. This means
+key-dependent features silently fail in worktrees:
+
+- **`ctx pad`** — cannot decrypt the scratchpad. Commands fail
+  gracefully (no key found), but the pad is inaccessible. Use the
+  pad from the main checkout only.
+- **`ctx notify`** — cannot decrypt the webhook URL. Notifications
+  silently do nothing. Agents in worktrees are opaque: no webhook
+  alerts for loop completions, nudges, or custom events.
+- **Journal enrichment** — `ctx recall export` and `ctx journal enrich`
+  resolve paths relative to the current working directory. Files
+  created in a worktree stay in that worktree and are discarded on
+  teardown. Enrich journals on the main branch after merging — the
+  JSONL session logs are intact regardless.
 
 ## Task Grouping Guidance
 

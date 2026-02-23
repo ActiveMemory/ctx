@@ -92,6 +92,9 @@ func runCheckVersion(cmd *cobra.Command) error {
 	cmd.Println("│")
 	cmd.Println("│ Reinstall the binary to get the best out of ctx:")
 	cmd.Println("│   go install github.com/ActiveMemory/ctx/cmd/ctx@latest")
+	if line := contextDirLine(); line != "" {
+		cmd.Println("│ " + line)
+	}
 	cmd.Println("└────────────────────────────────────────────────")
 
 	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "")
@@ -128,6 +131,9 @@ func checkKeyAge(cmd *cobra.Command) {
 	cmd.Println("┌─ Key Rotation ──────────────────────────────────┐")
 	cmd.Println(fmt.Sprintf("│ Your scratchpad key is %d days old.                 ", ageDays))
 	cmd.Println("│ Consider rotating: ctx pad rotate-key                │")
+	if line := contextDirLine(); line != "" {
+		cmd.Println("│ " + line)
+	}
 	cmd.Println("└──────────────────────────────────────────────────┘")
 
 	_ = notify.Send("nudge", fmt.Sprintf("check-version: Scratchpad key is %d days old", ageDays), "")

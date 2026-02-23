@@ -107,6 +107,9 @@ func TestCheckPersistence_NudgeAt20(t *testing.T) {
 	if !strings.Contains(out, "Persistence Checkpoint") {
 		t.Errorf("expected nudge at prompt 20, got: %s", out)
 	}
+	if !strings.Contains(out, "Context:") {
+		t.Errorf("expected context dir footer, got: %s", out)
+	}
 }
 
 func TestCheckPersistence_Every15AfterPrompt25(t *testing.T) {
