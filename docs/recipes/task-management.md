@@ -450,8 +450,8 @@ ctx tasks archive               # then archive
 
 ## Next Up
 
-**[Persisting Decisions, Learnings, and Conventions](knowledge-capture.md)**: 
-Capture the "*why*" behind your work so it survives across sessions.
+**[Using the Scratchpad →](scratchpad-with-claude.md)**:
+Store short-lived sensitive notes in an encrypted scratchpad.
 
 ## See Also
 

@@ -185,7 +185,9 @@ before any files are overwritten.
     regeneration. **Back up your journal before using this flag**.
 
     To protect specific entries from regeneration entirely, use
-    `ctx recall lock <pattern>`.
+    `ctx recall lock <pattern>`. If you add `locked: true` to frontmatter
+    during enrichment instead, run `ctx recall sync` to propagate lock
+    state to `.state.json`.
 
 ### Step 4: Normalize Rendering
 
@@ -382,9 +384,9 @@ and it can map the question to recall commands.
 
 ## Next Up
 
-**[Running an Unattended AI Agent](autonomous-loops.md)**:
-Set up an AI agent that works through tasks overnight without you at the
-keyboard.
+**[Persisting Decisions, Learnings, and Conventions →](knowledge-capture.md)**:
+Record decisions, learnings, and conventions so they survive across
+sessions.
 
 ## See Also
 

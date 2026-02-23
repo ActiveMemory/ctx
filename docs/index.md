@@ -164,7 +164,7 @@ Memory heuristics **drift**.
 * **Evaluation** history.
 
 !!! warning "Artifacts Outlive Sessions"
-    What is not written will be **re-learned**.
+    What is **not** written will be **re-learned**.
 
      **At full cost**.
 
@@ -175,13 +175,13 @@ Memory heuristics **drift**.
 !!! note "Avoid Category Errors"
     Mislabeling `ctx` guarantees misuse.
 
-`ctx` is not a memory feature.
+`ctx` is **not** a memory feature.
 
 * `ctx` is **not** prompt engineering.
 * `ctx` is **not** a productivity hack.
 * `ctx` is **not** automation theater.
 
-`ctx` is a **system** for preserving intent under scale.
+`ctx` is a **system** for **preserving intent** under scale.
 
 `ctx` is **infrastructure**.
 
@@ -216,7 +216,7 @@ If we cannot **predict**, **measure**, and **verify** the result...
 ## Build to Learn, Not to Accumulate
 
 !!! note "Prototypes Have an Expiration Date"
-    A prototype's value is **information**, not longevity.
+    A prototype's value is **information**, *not* longevity.
 
 Prototypes exist to **reduce** uncertainty.
 
@@ -272,7 +272,7 @@ A repeated mistake is a missing `ctx` artifact.
 * **Escalation** paths;
 * **Decision** rights.
 
-**Ambiguity is a system failure**.
+**Ambiguity is a system failure**:
 
 * **Debates** *must be* **structured**.
 * **Decisions** *must be* **explicit**.
@@ -283,11 +283,13 @@ A repeated mistake is a missing `ctx` artifact.
 ## Encode Intent Into the Environment
 
 !!! danger "Goodwill Does not Belong to the Table"
-    *Alignment* that depends on memory will *decay*.
+    *Alignment* that depends on memory will **drift**.
 
     *Alignment* **cannot depend on** *memory* or *goodwill*.
 
-    **Don't leave goodwill on the table**.
+    *Do not rely on people to remember.*
+
+    **Encode the behavior**, so it happens **by default**.
 
 **Intent** is encoded as:
 
@@ -321,10 +323,10 @@ They compete on **cost** and **impact**:
 
 We continuously ask:
 
-* **What** is the most valuable next action
-* **What** outcome justifies the cost
+* **What** the most valuable next action is.
+* **What** outcome justifies the cost.
 
-`ctx` guides allocation.
+`ctx` **guides** allocation.
 
 **Learning reshapes priority**.
 
@@ -332,12 +334,20 @@ We continuously ask:
 
 ## Show the Why
 
-!!! important "Traceability Builds Trust"
-    Systems that cannot explain themselves will not be trusted.
+`{}` (*code, artifacts, apps, binaries*) produce outputs; 
+they **do not** preserve reasoning.
 
-    `{}` is the **what**.
+Systems that cannot explain themselves **will not** be trusted.
 
-    `ctx` is the **why**.
+**Traceability builds trust**.
+
+```text
+
+     {} --> what
+
+    ctx --> why
+
+```
 
 We record:
 
@@ -355,7 +365,7 @@ Transparent `ctx` **compounds** understanding.
 ## Continuously Verify the System
 
 !!! warning "Stability is Temporary"
-    Every assumption has a half-life.
+    Every assumption has a half-life:
 
     * Models drift.
     * Tools change.
@@ -380,9 +390,9 @@ Transparent `ctx` **compounds** understanding.
 !!! note "Humans are Decision Engines"
     *Execution* should **not** consume *judgment*.
 
-    Humans are **not** typists.
+    Humans **must not be** typists.
 
-    **We** are authors.
+    **We** are the authors.
 
 **Human effort** is reserved for:
 
@@ -412,6 +422,5 @@ Code executes → Models reason → Agents amplify.
 
 **`ctx` lives on.**
 
-Without `ctx`, intelligence resets.
-
-With `ctx`, **creation compounds**.
+* Without `ctx`, intelligence *resets*.
+* With `ctx`, **creation compounds**.

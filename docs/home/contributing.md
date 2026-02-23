@@ -158,16 +158,16 @@ After making changes, update the plugin version and refresh the marketplace:
 ### Running Tests
 
 ```bash
-make test            # fast: all tests
-make audit           # full: fmt + vet + lint + drift + docs + test
-make smoke           # build + run basic commands end-to-end
+make test   # fast: all tests
+make audit  # full: fmt + vet + lint + drift + docs + test
+make smoke  # build + run basic commands end-to-end
 ```
 
 ### Running the Docs Site Locally
 
 ```bash
-make site-setup      # one-time: install zensical via pipx
-make site-serve      # serve at localhost
+make site-setup  # one-time: install zensical via pipx
+make site-serve  # serve at localhost
 ```
 
 ----
@@ -182,6 +182,12 @@ make site-serve      # serve at localhost
 
 ### Pull Request Process
 
+Respect the maintainers' time and energy:
+Keep your pull requests **isolated** and strive to minimze code changes.
+
+If you Pull Request solves more than one distinct issues, it's better to create
+separate pull requests instead of sending them in one large bundle.
+
 1. Create a feature branch: `git checkout -b feature/my-feature`.
 2. Make your changes.
 3. Run `make audit` to catch issues early.
@@ -189,8 +195,9 @@ make site-serve      # serve at localhost
 5. Push and open a pull request.
 
 !!! tip "Audit Your Code Before Submitting"
-    Run `make audit` before submitting: 
-    it covers formatting, vetting, linting, drift checks, 
+    Run `make audit` before submitting:
+
+    `make audit` covers formatting, vetting, linting, drift checks, 
     doc consistency, and tests in one pass.
 
 ### Commit Messages
@@ -207,10 +214,10 @@ Examples:
 
 ### Code Style
 
-* Follow Go conventions (`gofmt`, `go vet`)
-* Keep functions focused and small
-* Add tests for new functionality
-* Handle errors explicitly
+* Follow Go conventions (`gofmt`, `go vet`).
+* Keep functions **focused** and **small**.
+* Add tests for new functionality.
+* Handle errors explicitly.
 
 ----
 

@@ -43,9 +43,9 @@ showing these natural-language patterns.
 
 ## Next Up
 
-**[Session Ceremonies →](session-ceremonies.md)**: The two bookend
-rituals for every session — `/ctx-remember` at the start,
-`/ctx-wrap-up` at the end.
+**[Setup Across AI Tools →](multi-tool-setup.md)**: Initialize ctx
+and configure hooks for Claude Code, Cursor, Aider, Copilot, or
+Windsurf.
 
 ## See Also
 

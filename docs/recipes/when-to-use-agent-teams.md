@@ -180,6 +180,11 @@ before anyone does any work. For small tasks, that overhead dominates.
   tasks will conflict on merge. The resolution is always additive: accept
   all `[x]` completions from both sides.
 
+## Next Up
+
+**[Parallel Agent Development with Git Worktrees →](parallel-worktrees.md)**:
+Run multiple agents on independent task tracks using git worktrees.
+
 ## Go Deeper
 
 * [CLI Reference](../reference/cli-reference.md) — all commands and flags

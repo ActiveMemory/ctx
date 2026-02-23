@@ -43,8 +43,8 @@ when to skip it:
   there's nothing to remember.
 - **RAG-only workflows**: If retrieval from an external knowledge base already
   gives the agent everything it needs for each session, adding `ctx` may be
-  unnecessary. RAG retrieves information; `ctx` defines the project's
-  working memory.
+  unnecessary. RAG retrieves *information*; `ctx` defines the project's
+  *working memory*: They are *complementary*.
 - **No AI involvement**: `ctx` is designed for human–AI workflows; without
   an AI consumer, the files are just documentation.
 - **Enterprise-managed context platforms**: If your organization provides

@@ -315,9 +315,9 @@ as you want.
 
 ## Next Up
 
-Back to the beginning: **[Setting Up ctx Across AI Tools](multi-tool-setup.md)**
-
-Or explore the [full recipe list](index.md).
+**[Running an Unattended AI Agent →](autonomous-loops.md)**: Set up
+an AI agent that works through tasks overnight without you at the
+keyboard.
 
 ## See Also
 

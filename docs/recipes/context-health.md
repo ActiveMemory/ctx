@@ -366,8 +366,8 @@ Sync is cautious by default. Use `--dry-run` after large refactors, then apply.
 
 ## Next Up
 
-**[Browsing and Enriching Past Sessions](session-archaeology.md)**:
-Export session history to a browsable journal and enrich entries with metadata.
+**[Claude Code Permission Hygiene →](claude-code-permissions.md)**:
+Recommended permission defaults and maintenance workflow for Claude Code.
 
 ## See Also
 

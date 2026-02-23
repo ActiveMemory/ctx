@@ -228,8 +228,8 @@ Agent: "Let me extract theirs and merge it in."
 
 ## Next Up
 
-**[Parallel Agent Development with Git Worktrees →](parallel-worktrees.md)**:
-Run multiple agents on independent task tracks using git worktrees.
+**[Hook Output Patterns →](hook-output-patterns.md)**:
+Choose the right output pattern for your Claude Code hooks.
 
 ## See Also
 

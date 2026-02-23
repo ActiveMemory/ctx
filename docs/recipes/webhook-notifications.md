@@ -158,6 +158,11 @@ notify:
 * **Event filter is per-project**: Configure `notify.events` in each project's
   `.ctxrc` independently.
 
+## Next Up
+
+**[Detecting and Fixing Drift →](context-health.md)**: Keep context
+files accurate as your codebase evolves.
+
 ## See Also
 
 * [CLI Reference: ctx notify](../reference/cli-reference.md#ctx-notify):

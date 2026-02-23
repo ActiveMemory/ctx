@@ -40,10 +40,13 @@
         <loc>https://ctx.ist/home/prompting-guide/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/</loc>
+        <loc>https://ctx.ist/recipes/guide-your-agent/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/guide-your-agent/</loc>
+        <loc>https://ctx.ist/recipes/multi-tool-setup/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/external-context/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/session-lifecycle/</loc>
@@ -52,37 +55,13 @@
         <loc>https://ctx.ist/recipes/session-ceremonies/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/knowledge-capture/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/context-health/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/task-management/</loc>
-      </url>
-      <url>
         <loc>https://ctx.ist/recipes/session-archaeology/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/autonomous-loops/</loc>
+        <loc>https://ctx.ist/recipes/knowledge-capture/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/publishing/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/multi-tool-setup/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/claude-code-permissions/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/permission-snapshots/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/external-context/</loc>
-      </url>
-      <url>
-        <loc>https://ctx.ist/recipes/hook-output-patterns/</loc>
+        <loc>https://ctx.ist/recipes/task-management/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/scratchpad-with-claude/</loc>
@@ -91,10 +70,34 @@
         <loc>https://ctx.ist/recipes/scratchpad-sync/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
+        <loc>https://ctx.ist/recipes/hook-output-patterns/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/system-hooks-audit/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/webhook-notifications/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/context-health/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/claude-code-permissions/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/permission-snapshots/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/publishing/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/autonomous-loops/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/when-to-use-agent-teams/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/reference/</loc>

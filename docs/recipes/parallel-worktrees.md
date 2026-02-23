@@ -178,8 +178,9 @@ prompts work:
 
 ## Next Up
 
-**[When to Use a Team of Agents →](when-to-use-agent-teams.md)**: Decide
-when multi-agent coordination is worth the overhead.
+Back to the beginning: **[Guide Your Agent →](guide-your-agent.md)**
+
+Or explore the [full recipe list](index.md).
 
 ## See Also
 

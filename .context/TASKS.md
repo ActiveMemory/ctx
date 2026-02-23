@@ -20,6 +20,13 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 - [ ] Fix mark-journal --check to handle locked stage #added:2026-02-21-191851
 
+- [x] `ctx recall sync` — frontmatter-to-state lock sync #done:2026-02-22
+      Spec: `specs/recall-sync.md`. Subtasks:
+      - [x] Core command (`sync.go`)
+      - [x] Wire into recall.go + help text
+      - [x] Tests (`sync_test.go`)
+      - [x] Docs: cli-reference.md, session-journal.md, session-archaeology.md
+
 - [ ] AI: verify and archive completed tasks in TASK.md; the file has gotten
       crowded. Verify each task individually before archiving.
 

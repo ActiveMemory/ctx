@@ -378,8 +378,8 @@ Both approaches produce the same structured entries in the same context files.
 
 ## Next Up
 
-**[Detecting and Fixing Drift](context-health.md)**:
-Keep context files accurate as your codebase evolves.
+**[Tracking Work Across Sessions →](task-management.md)**:
+Add, prioritize, complete, and archive tasks across sessions.
 
 ## See Also
 
