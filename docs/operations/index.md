@@ -5,7 +5,8 @@ icon: lucide/settings
 
 ![ctx](../images/ctx-banner.png)
 
-Guides for installing, upgrading, integrating, and running `ctx`.
+Guides for **installing**, **upgrading**, **integrating**, and **running** 
+`ctx`.
 
 ---
 

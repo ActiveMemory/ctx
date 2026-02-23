@@ -32,6 +32,7 @@ Subcommands:
   export  Export sessions to editable journal files
   lock    Protect journal entries from export regeneration
   unlock  Remove lock protection from journal entries
+  sync    Sync lock state from journal frontmatter to state file
 
 Examples:
   ctx recall list
@@ -40,7 +41,8 @@ Examples:
   ctx recall show --latest
   ctx recall export --all
   ctx recall lock 2026-01-21-session-abc12345.md
-  ctx recall unlock --all`,
+  ctx recall unlock --all
+  ctx recall sync`,
 	}
 
 	cmd.AddCommand(recallListCmd())
@@ -48,6 +50,7 @@ Examples:
 	cmd.AddCommand(recallExportCmd())
 	cmd.AddCommand(recallLockCmd())
 	cmd.AddCommand(recallUnlockCmd())
+	cmd.AddCommand(recallSyncCmd())
 
 	return cmd
 }

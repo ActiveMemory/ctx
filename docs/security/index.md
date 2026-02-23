@@ -5,7 +5,7 @@ icon: lucide/shield-check
 
 ![ctx](../images/ctx-banner.png)
 
-Security model, agent hardening, and vulnerability reporting.
+Security model, **agent hardening**, and **vulnerability reporting**.
 
 ---
 

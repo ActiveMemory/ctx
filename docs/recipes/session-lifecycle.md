@@ -475,8 +475,9 @@ by design.
 
 ## Next Up
 
-**[Tracking Work Across Sessions](task-management.md)**: Add, prioritize,
-complete, and archive tasks across sessions.
+**[Session Ceremonies →](session-ceremonies.md)**: The two bookend
+rituals for every session — `/ctx-remember` at the start,
+`/ctx-wrap-up` at the end.
 
 ## See Also
 

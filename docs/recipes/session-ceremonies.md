@@ -219,9 +219,9 @@ answered questions does not need artificial learnings.
 
 ## Next Up
 
-**[The Complete Session](session-lifecycle.md)**: Full session
-lifecycle from start to finish, including the work and commit phases
-between the ceremonies.
+**[Browsing and Enriching Past Sessions →](session-archaeology.md)**:
+Export session history to a browsable journal and enrich entries with
+metadata.
 
 ## See Also
 

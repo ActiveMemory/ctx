@@ -277,8 +277,8 @@ Agent: [reads .ctxrc, finds the path, loads context from the external dir]
 
 ## Next Up
 
-**[Hook Output Patterns →](hook-output-patterns.md)**: Design clear, consistent
-output for ctx hooks.
+**[The Complete Session →](session-lifecycle.md)**: Walk through a
+full ctx session from start to finish.
 
 ## See Also
 

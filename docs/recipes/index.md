@@ -5,9 +5,12 @@ icon: lucide/chef-hat
 
 ![ctx](../images/ctx-banner.png)
 
-Workflow recipes combining `ctx` commands and skills to solve specific problems.
+Workflow recipes *combining* `ctx` **commands** and **skills** to solve
+*specific* problems.
 
 ---
+
+## Getting Started
 
 ### [Guide Your Agent](guide-your-agent.md)
 
@@ -16,9 +19,7 @@ Train your agent to be proactive through **ask, guide, reinforce**.
 
 ---
 
-## Getting Started
-
-### [Setting Up ctx Across AI Tools](multi-tool-setup.md)
+### [Setup Across AI Tools](multi-tool-setup.md)
 
 Initialize `ctx` and configure hooks for Claude Code, Cursor,
 Aider, Copilot, or Windsurf. Includes **shell completion**,
@@ -40,17 +41,14 @@ with private context or **multi-repo** setups.
 
 ---
 
-## Daily Workflow
-
-These recipes cover the workflows you will use every day when
-working with ctx.
+## Sessions
 
 ### [The Complete Session](session-lifecycle.md)
 
-Walk through a full `ctx` session from **start to finish**: 
+Walk through a full `ctx` session from **start to finish**:
 
 * **Loading** context,
-* **Picking** what to work on, 
+* **Picking** what to work on,
 * **Committing** with context,
 * **Capturing**, reflecting, and saving a snapshot.
 
@@ -70,16 +68,20 @@ review the session and persist **learnings**, **decisions**, and **tasks**.
 
 ---
 
-### [Tracking Work Across Sessions](task-management.md)
+### [Browsing and Enriching Past Sessions](session-archaeology.md)
 
-**Add**, **prioritize**, **complete**, **snapshot**, and **archive** tasks. Keep
-`TASKS.md` focused as your project evolves across dozens of
-sessions.
+Export your AI session history to a **browsable journal site**.
+**Normalize** rendering, **enrich** entries with metadata, and **search**
+across months of work.
 
-**Uses**: `ctx add task`, `ctx complete`, `ctx tasks archive`,
-`ctx tasks snapshot`, `/ctx-add-task`, `/ctx-archive`, `/ctx-next`
+**Uses**: `ctx recall list/show/export`, `ctx journal site`,
+`ctx journal obsidian`, `ctx serve`, `/ctx-recall`,
+`/ctx-journal-normalize`, `/ctx-journal-enrich`,
+`/ctx-journal-enrich-all`
 
 ---
+
+## Knowledge & Tasks
 
 ### [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md)
 
@@ -94,13 +96,14 @@ survive across sessions and team members.
 
 ---
 
-### [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md)
+### [Tracking Work Across Sessions](task-management.md)
 
-Distribute your **scratchpad** encryption key, push and pull encrypted
-notes via git, and resolve merge conflicts when two machines edit
-simultaneously.
+**Add**, **prioritize**, **complete**, **snapshot**, and **archive** tasks. Keep
+`TASKS.md` focused as your project evolves across dozens of
+sessions.
 
-**Uses**: `ctx init`, `ctx pad`, `ctx pad resolve`, `scp`
+**Uses**: `ctx add task`, `ctx complete`, `ctx tasks archive`,
+`ctx tasks snapshot`, `/ctx-add-task`, `/ctx-archive`, `/ctx-next`
 
 ---
 
@@ -114,7 +117,17 @@ storage out.
 
 ---
 
-## Maintenance
+### [Syncing Scratchpad Notes Across Machines](scratchpad-sync.md)
+
+Distribute your **scratchpad** encryption key, push and pull encrypted
+notes via git, and resolve merge conflicts when two machines edit
+simultaneously.
+
+**Uses**: `ctx init`, `ctx pad`, `ctx pad resolve`, `scp`
+
+---
+
+## Hooks & Notifications
 
 ### [Hook Output Patterns](hook-output-patterns.md)
 
@@ -123,6 +136,44 @@ relay for user-facing reminders, **hard gates** for invariants, agent
 directives for nudges, and five more patterns across the spectrum.
 
 **Uses**: ctx plugin hooks, `settings.local.json`
+
+---
+
+### [Auditing System Hooks](system-hooks-audit.md)
+
+The 12 system hooks that run **invisibly** during every session — what each
+one does, why it exists, and how to **verify** they're actually firing.
+Covers webhook-based audit trails, log inspection, and detecting silent
+hook failures.
+
+**Uses**: `ctx system`, `ctx notify`, `.context/logs/`, `.ctxrc`
+`notify.events`
+
+---
+
+### [Webhook Notifications](webhook-notifications.md)
+
+Get **push notifications** when loops complete, hooks fire, or agents hit
+milestones. Webhook URL is **encrypted** — never stored in plaintext.
+Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
+
+**Uses**: `ctx notify setup`, `ctx notify test`, `ctx notify --event`,
+`.ctxrc` `notify.events`
+
+---
+
+## Maintenance
+
+### [Detecting and Fixing Drift](context-health.md)
+
+Keep context files accurate by detecting **structural drift**
+(*stale paths, missing files, stale file ages*) and task
+staleness. Includes alignment audits to verify documentation
+claims match agent instructions.
+
+**Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
+`/ctx-drift`, `/ctx-alignment-audit`, `/ctx-status`,
+`/ctx-prompt-audit`
 
 ---
 
@@ -147,46 +198,22 @@ at session start to automatically drop session-accumulated permissions.
 
 ---
 
-### [Detecting and Fixing Drift](context-health.md)
+### [Turning Activity into Content](publishing.md)
 
-Keep context files accurate by detecting **structural drift**
-(*stale paths, missing files, stale file ages*) and task
-staleness. Includes alignment audits to verify documentation
-claims match agent instructions.
+Generate **blog posts** from project activity, write **changelog
+posts** from commit ranges, and publish a browsable journal
+site from your **session history**.
 
-**Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
-`/ctx-drift`, `/ctx-alignment-audit`, `/ctx-status`,
-`/ctx-prompt-audit`
+The output is generic Markdown, but the skills are tuned for the `ctx`-style
+blog artifacts you see on this website.
 
----
-
-## History and Discovery
-
-### [Browsing and Enriching Past Sessions](session-archaeology.md)
-
-Export your AI session history to a **browsable journal site**.
-**Normalize** rendering, **enrich** entries with metadata, and **search**
-across months of work.
-
-**Uses**: `ctx recall list/show/export`, `ctx journal site`,
-`ctx journal obsidian`, `ctx serve`, `/ctx-recall`,
-`/ctx-journal-normalize`, `/ctx-journal-enrich`,
-`/ctx-journal-enrich-all`
+**Uses**: `ctx journal site`, `ctx journal obsidian`, `ctx serve`,
+`ctx recall export`, `/ctx-blog`, `/ctx-blog-changelog`,
+`/ctx-journal-enrich`, `/ctx-journal-normalize`
 
 ---
 
-## Advanced
-
-### [Webhook Notifications](webhook-notifications.md)
-
-Get **push notifications** when loops complete, hooks fire, or agents hit
-milestones. Webhook URL is **encrypted** — never stored in plaintext.
-Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
-
-**Uses**: `ctx notify setup`, `ctx notify test`, `ctx notify --event`,
-`.ctxrc` `notify.events`
-
----
+## Agents & Automation
 
 ### [Running an Unattended AI Agent](autonomous-loops.md)
 
@@ -205,9 +232,9 @@ without losing context or intent.
 ### [When to Use a Team of Agents](when-to-use-agent-teams.md)
 
 **Decision framework** for choosing between a single agent, parallel
-worktrees, and a full agent team. 
+worktrees, and a full agent team.
 
-This recipe covers the file overlap test, when teams make things worse, and 
+This recipe covers the file overlap test, when teams make things worse, and
 what ctx provides at each level.
 
 **Uses**: `/ctx-worktree`, `/ctx-next`, `ctx status`
@@ -222,18 +249,3 @@ file overlap, work in parallel, merge back.
 
 **Uses**: `/ctx-worktree`, `/ctx-next`, `git worktree`,
 `git merge`
-
----
-
-### [Turning Activity into Content](publishing.md)
-
-Generate **blog posts** from project activity, write **changelog
-posts** from commit ranges, and publish a browsable journal
-site from your **session history**.
-
-The output is generic Markdown, but the skills are tuned for the `ctx`-style 
-blog artifacts you see on this website.
-
-**Uses**: `ctx journal site`, `ctx journal obsidian`, `ctx serve`,
-`ctx recall export`, `/ctx-blog`, `/ctx-blog-changelog`,
-`/ctx-journal-enrich`, `/ctx-journal-normalize`

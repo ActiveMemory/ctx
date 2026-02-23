@@ -1,5 +1,5 @@
 ---
-title: "Setting Up ctx Across AI Tools"
+title: "Setup Across AI Tools"
 icon: lucide/wrench
 ---
 
@@ -315,8 +315,9 @@ ctx hook aider
 
 ## Next Up
 
-**[Claude Code Permission Hygiene →](claude-code-permissions.md)**: Recommended
-permission defaults and maintenance workflow for Claude Code.
+**[Keeping Context in a Separate Repo →](external-context.md)**: Store
+context files outside the project tree for multi-repo or open source
+setups.
 
 ## See Also
 

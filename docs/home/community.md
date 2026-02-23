@@ -28,17 +28,17 @@ human–AI workflows that **compound** over time.
 Join the community to ask questions, share feedback, and connect with
 other users:
 
-* [:fontawesome-brands-stack-exchange: **IRC**](https://web.libera.chat/#ctx)<br>
-  [join `#ctx` on `irc.libera.chat`](https://web.libera.chat/#ctx)<br>
+* [:fontawesome-brands-stack-exchange: **IRC**](https://web.libera.chat/#ctx)<br />
+  [join `#ctx` on  **irc.libera.chat**](https://web.libera.chat/#ctx):<br />
   Real-time discussion, field notes, and early ideas.
-* [:fontawesome-brands-github: Read the `ctx` Source on GitHub](https://github.com/ActiveMemory/ctx)<br>
+* [:fontawesome-brands-github: Read the `ctx` Source on **GitHub**](https://github.com/ActiveMemory/ctx):<br />
   Issues, discussions, and contributions.
 
 ----
 
 Early adopters shape the conventions.
 
-**Want to contribute?** See [Contributing to ctx →](contributing.md)
+**Want to contribute?** See the [**contributioun guide** →](contributing.md)
 
 ----
 

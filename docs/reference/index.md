@@ -5,7 +5,7 @@ icon: lucide/book-open
 
 ![ctx](../images/ctx-banner.png)
 
-Technical reference for `ctx` commands, skills, and internals.
+Technical reference for `ctx` **commands**, **skills**, and **internals**.
 
 ---
 

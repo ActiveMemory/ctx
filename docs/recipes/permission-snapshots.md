@@ -101,8 +101,8 @@ work with agents trained on the ctx playbook:
 
 ## Next Up
 
-**[Keeping Context in a Separate Repo →](external-context.md)**: Share
-`.context/` across projects or keep it in a dedicated repository.
+**[Turning Activity into Content →](publishing.md)**: Generate blog
+posts, changelogs, and journal sites from your project activity.
 
 ## See Also
 

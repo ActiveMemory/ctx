@@ -787,6 +787,29 @@ ctx recall unlock abc12345
 ctx recall unlock --all
 ```
 
+#### `ctx recall sync`
+
+Sync lock state from journal frontmatter to `.state.json`.
+
+```bash
+ctx recall sync
+```
+
+Scans all journal markdowns and updates `.state.json` to match each file's
+frontmatter. Files with `locked: true` in frontmatter are marked locked in
+state; files without a `locked:` line have their lock cleared.
+
+This is the inverse of `ctx recall lock`: instead of state driving
+frontmatter, frontmatter drives state. Useful after batch enrichment where
+you add `locked: true` to frontmatter manually.
+
+**Example**:
+
+```bash
+# After enriching entries and adding locked: true to frontmatter
+ctx recall sync
+```
+
 ---
 
 ### `ctx journal`

@@ -366,8 +366,8 @@ If the platform provides a runtime variable for paths, always use it.
 
 ## Next Up
 
-**[Using the Scratchpad →](scratchpad-with-claude.md)**: Store
-short-lived sensitive notes in an encrypted scratchpad.
+**[Auditing System Hooks →](system-hooks-audit.md)**: Verify
+system hooks are firing and audit their behavior.
 
 ## See Also
 

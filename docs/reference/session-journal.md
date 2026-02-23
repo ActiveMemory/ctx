@@ -142,7 +142,9 @@ ctx journal site --serve
     regeneration.
 
     Locked entries (via `ctx recall lock`) are always skipped, regardless
-    of flags.
+    of flags. If you prefer to add `locked: true` to frontmatter during
+    enrichment, run `ctx recall sync` to propagate the lock state to
+    `.state.json`.
 
 ## Large Sessions
 

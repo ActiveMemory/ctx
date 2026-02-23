@@ -451,8 +451,9 @@ Break any part of this contract and the loop degrades.
 
 ## Next Up
 
-**[Turning Activity into Content](publishing.md)**:
-Generate blog posts and changelogs from your project activity.
+**[When to Use a Team of Agents →](when-to-use-agent-teams.md)**:
+Decision framework for choosing between a single agent, parallel
+worktrees, and a full agent team.
 
 ## See Also
 

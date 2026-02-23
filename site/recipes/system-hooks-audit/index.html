@@ -12,13 +12,13 @@
         <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/recipes/hook-output-patterns/">
+        <link rel="canonical" href="https://ctx.ist/recipes/system-hooks-audit/">
       
       
-        <link rel="prev" href="../scratchpad-sync/">
+        <link rel="prev" href="../hook-output-patterns/">
       
       
-        <link rel="next" href="../system-hooks-audit/">
+        <link rel="next" href="../webhook-notifications/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Hook Output Patterns - ctx: do you remember?</title>
+        <title>Auditing System Hooks - ctx: do you remember?</title>
       
     
     
@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#the-problem" class="md-skip">
+        <a href="#problem" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Hook Output Patterns
+              Auditing System Hooks
             
           </span>
         </div>
@@ -1539,18 +1539,11 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
+    <li class="md-nav__item">
+      <a href="../hook-output-patterns/" class="md-nav__link">
+        
   
   
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-megaphone" viewBox="0 0 24 24"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14M8 6v8"/></svg>
@@ -1566,6 +1559,43 @@
   
   
 
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Auditing System Hooks
+  
+
+    
+  </span>
+  
+  
+
           <span class="md-nav__icon md-icon"></span>
         </label>
       
@@ -1573,12 +1603,12 @@
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-megaphone" viewBox="0 0 24 24"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14M8 6v8"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Hook Output Patterns
+    Auditing System Hooks
   
 
     
@@ -1603,10 +1633,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-problem" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Problem
+        Problem
       
     </span>
   </a>
@@ -1614,10 +1644,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-spectrum" class="md-nav__link">
+  <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Spectrum
+        Commands and Skills Used
       
     </span>
   </a>
@@ -1625,10 +1655,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pattern-1-hard-gate" class="md-nav__link">
+  <a href="#what-system-hooks-are" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 1: Hard Gate
+        What System Hooks Are
       
     </span>
   </a>
@@ -1636,55 +1666,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pattern-2-verbatim-relay" class="md-nav__link">
+  <a href="#the-complete-hook-catalog" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 2: VERBATIM Relay
+        The Complete Hook Catalog
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pattern-3-agent-directive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pattern 3: Agent Directive
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pattern-4-silent-context-injection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pattern 4: Silent Context Injection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pattern-5-silent-side-effect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pattern 5: Silent Side-Effect
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pattern 5: Silent Side-Effect">
+    <nav class="md-nav" aria-label="The Complete Hook Catalog">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pattern-6-conditional-relay" class="md-nav__link">
+  <a href="#prompt-time-checks-userpromptsubmit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 6: Conditional Relay
+        Prompt-Time Checks (UserPromptSubmit)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prompt-Time Checks (UserPromptSubmit)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-context-size-context-capacity-warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-context-size — Context Capacity Warning
       
     </span>
   </a>
@@ -1692,10 +1701,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pattern-7-suggested-action" class="md-nav__link">
+  <a href="#check-persistence-context-staleness-nudge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 7: Suggested Action
+        check-persistence — Context Staleness Nudge
       
     </span>
   </a>
@@ -1703,10 +1712,187 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pattern-8-escalating-severity" class="md-nav__link">
+  <a href="#check-ceremonies-session-ritual-adoption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 8: Escalating Severity
+        check-ceremonies — Session Ritual Adoption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-journal-unexported-session-reminder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-journal — Unexported Session Reminder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-resources-system-resource-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-resources — System Resource Pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-knowledge-knowledge-file-growth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-knowledge — Knowledge File Growth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-version-binaryplugin-version-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-version — Binary/Plugin Version Drift
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-time-hooks-pretooluse-posttooluse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool-Time Hooks (PreToolUse / PostToolUse)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tool-Time Hooks (PreToolUse &#x2f; PostToolUse)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-non-path-ctx-path-enforcement-hard-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        block-non-path-ctx — PATH Enforcement (Hard Gate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qa-reminder-pre-commit-qa-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        qa-reminder — Pre-Commit QA Gate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-commit-context-capture-after-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        post-commit — Context Capture After Commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-lifecycle-sessionend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Lifecycle (SessionEnd)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Session Lifecycle (SessionEnd)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cleanup-tmp-temp-file-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cleanup-tmp — Temp File Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auditing-hooks-via-webhooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditing Hooks via Webhooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Auditing Hooks via Webhooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-the-webhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set Up the Webhook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-subscribe-to-relay-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Subscribe to relay Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-cross-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Cross-Reference
       
     </span>
   </a>
@@ -1719,44 +1905,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#choosing-a-pattern" class="md-nav__link">
+  <a href="#verifying-hooks-actually-fire" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing a Pattern
+        Verifying Hooks Actually Fire
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#design-tips" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Design Tips
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-pitfalls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Pitfalls
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Pitfalls">
+    <nav class="md-nav" aria-label="Verifying Hooks Actually Fire">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#silent-misfire-wrong-key-name" class="md-nav__link">
+  <a href="#method-1-ask-the-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Silent misfire: wrong key name
+        Method 1: Ask the Agent
       
     </span>
   </a>
@@ -1764,10 +1928,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#json-escaping-breaks-shell-commands" class="md-nav__link">
+  <a href="#method-2-check-the-webhook-trail" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JSON escaping breaks shell commands
+        Method 2: Check the Webhook Trail
       
     </span>
   </a>
@@ -1775,43 +1939,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stdin-not-environment-variables" class="md-nav__link">
+  <a href="#method-3-read-the-local-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stdin, not environment variables
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#regex-overfitting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regex overfitting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repetition-fatigue" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Repetition fatigue
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hardcoded-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardcoded paths
+        Method 3: Read the Local Logs
       
     </span>
   </a>
@@ -1820,6 +1951,67 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detecting-silent-hook-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detecting Silent Hook Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detecting Silent Hook Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-staleness-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Staleness Signal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#false-positive-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        False Positive Protection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1849,36 +2041,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../system-hooks-audit/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-    Auditing System Hooks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2921,10 +3083,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-problem" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Problem
+        Problem
       
     </span>
   </a>
@@ -2932,10 +3094,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-spectrum" class="md-nav__link">
+  <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Spectrum
+        Commands and Skills Used
       
     </span>
   </a>
@@ -2943,10 +3105,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pattern-1-hard-gate" class="md-nav__link">
+  <a href="#what-system-hooks-are" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 1: Hard Gate
+        What System Hooks Are
       
     </span>
   </a>
@@ -2954,55 +3116,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pattern-2-verbatim-relay" class="md-nav__link">
+  <a href="#the-complete-hook-catalog" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 2: VERBATIM Relay
+        The Complete Hook Catalog
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pattern-3-agent-directive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pattern 3: Agent Directive
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pattern-4-silent-context-injection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pattern 4: Silent Context Injection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pattern-5-silent-side-effect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pattern 5: Silent Side-Effect
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pattern 5: Silent Side-Effect">
+    <nav class="md-nav" aria-label="The Complete Hook Catalog">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pattern-6-conditional-relay" class="md-nav__link">
+  <a href="#prompt-time-checks-userpromptsubmit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 6: Conditional Relay
+        Prompt-Time Checks (UserPromptSubmit)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prompt-Time Checks (UserPromptSubmit)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-context-size-context-capacity-warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-context-size — Context Capacity Warning
       
     </span>
   </a>
@@ -3010,10 +3151,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pattern-7-suggested-action" class="md-nav__link">
+  <a href="#check-persistence-context-staleness-nudge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 7: Suggested Action
+        check-persistence — Context Staleness Nudge
       
     </span>
   </a>
@@ -3021,10 +3162,187 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pattern-8-escalating-severity" class="md-nav__link">
+  <a href="#check-ceremonies-session-ritual-adoption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pattern 8: Escalating Severity
+        check-ceremonies — Session Ritual Adoption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-journal-unexported-session-reminder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-journal — Unexported Session Reminder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-resources-system-resource-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-resources — System Resource Pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-knowledge-knowledge-file-growth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-knowledge — Knowledge File Growth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-version-binaryplugin-version-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        check-version — Binary/Plugin Version Drift
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-time-hooks-pretooluse-posttooluse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool-Time Hooks (PreToolUse / PostToolUse)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tool-Time Hooks (PreToolUse &#x2f; PostToolUse)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-non-path-ctx-path-enforcement-hard-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        block-non-path-ctx — PATH Enforcement (Hard Gate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qa-reminder-pre-commit-qa-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        qa-reminder — Pre-Commit QA Gate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-commit-context-capture-after-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        post-commit — Context Capture After Commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-lifecycle-sessionend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Lifecycle (SessionEnd)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Session Lifecycle (SessionEnd)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cleanup-tmp-temp-file-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cleanup-tmp — Temp File Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auditing-hooks-via-webhooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditing Hooks via Webhooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Auditing Hooks via Webhooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-the-webhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set Up the Webhook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-subscribe-to-relay-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Subscribe to relay Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-cross-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Cross-Reference
       
     </span>
   </a>
@@ -3037,44 +3355,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#choosing-a-pattern" class="md-nav__link">
+  <a href="#verifying-hooks-actually-fire" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing a Pattern
+        Verifying Hooks Actually Fire
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#design-tips" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Design Tips
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-pitfalls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Pitfalls
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Pitfalls">
+    <nav class="md-nav" aria-label="Verifying Hooks Actually Fire">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#silent-misfire-wrong-key-name" class="md-nav__link">
+  <a href="#method-1-ask-the-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Silent misfire: wrong key name
+        Method 1: Ask the Agent
       
     </span>
   </a>
@@ -3082,10 +3378,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#json-escaping-breaks-shell-commands" class="md-nav__link">
+  <a href="#method-2-check-the-webhook-trail" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JSON escaping breaks shell commands
+        Method 2: Check the Webhook Trail
       
     </span>
   </a>
@@ -3093,43 +3389,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stdin-not-environment-variables" class="md-nav__link">
+  <a href="#method-3-read-the-local-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stdin, not environment variables
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#regex-overfitting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regex overfitting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#repetition-fatigue" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Repetition fatigue
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hardcoded-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardcoded paths
+        Method 3: Read the Local Logs
       
     </span>
   </a>
@@ -3138,6 +3401,67 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detecting-silent-hook-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detecting Silent Hook Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detecting Silent Hook Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-staleness-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Staleness Signal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#false-positive-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        False Positive Protection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
   
 </li>
       
@@ -3232,7 +3556,7 @@
     
     
       <li class="md-path__item">
-        <a href="./" class="md-path__link">
+        <a href="../hook-output-patterns/" class="md-path__link">
           
   <span class="md-ellipsis">
     Hooks and Notifications
@@ -3255,304 +3579,433 @@
   
 
 
-  <h1>Hook Output Patterns</h1>
+  <h1>Auditing System Hooks</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>Claude Code hooks can output text, JSON, or nothing at all. But the <em>format</em>
-of that output determines <strong>who sees it</strong> and <strong>who acts on it</strong>. </p>
-<p>Choose the wrong pattern, and your carefully crafted warning gets silently 
-absorbed by the agent, or your agent-directed nudge gets dumped on the user 
-as noise.</p>
-<p>This recipe catalogs the known hook output patterns and explains when to 
-use each one.</p>
-<h2 id="the-spectrum">The Spectrum<a class="headerlink" href="#the-spectrum" title="Permanent link">&para;</a></h2>
-<p>These patterns form a spectrum based on <strong>who decides</strong> what the user sees:</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>ctx runs 12 system hooks behind the scenes — nudging your agent to persist
+context, warning about resource pressure, gating commits on QA. But these
+hooks are <strong>invisible by design</strong>. You never see them fire. You never know
+if they stopped working.</p>
+<p><strong>How do you verify your hooks are actually running, audit what they do,
+and get alerted when they go silent?</strong></p>
+<h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Pattern</th>
-<th>Who decides?</th>
+<th>Tool</th>
+<th>Type</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Hard gate</td>
-<td>Hook decides (agent can't proceed)</td>
+<td><code>ctx system &lt;hook&gt;</code></td>
+<td>CLI command</td>
+<td>Run a system hook manually</td>
 </tr>
 <tr>
-<td>VERBATIM relay</td>
-<td>Hook decides (agent must show)</td>
+<td><code>ctx system resources</code></td>
+<td>CLI command</td>
+<td>Show system resource status</td>
 </tr>
 <tr>
-<td>Escalating severity</td>
-<td>Hook suggests, agent judges urgency</td>
+<td><code>ctx notify setup</code></td>
+<td>CLI command</td>
+<td>Configure webhook for audit trail</td>
 </tr>
 <tr>
-<td>Conditional relay</td>
-<td>Hook sets criteria, agent evaluates</td>
+<td><code>ctx notify test</code></td>
+<td>CLI command</td>
+<td>Verify webhook delivery</td>
 </tr>
 <tr>
-<td>Suggested action</td>
-<td>Hook proposes, agent + user decide</td>
+<td><code>.ctxrc</code> <code>notify.events</code></td>
+<td>Configuration</td>
+<td>Subscribe to <code>relay</code> for full hook audit</td>
 </tr>
 <tr>
-<td>Agent directive</td>
-<td>Agent decides entirely</td>
-</tr>
-<tr>
-<td>Silent injection</td>
-<td>Nobody — invisible background context</td>
-</tr>
-<tr>
-<td>Silent side-effect</td>
-<td>Nobody — invisible background work</td>
+<td><code>.context/logs/</code></td>
+<td>Log files</td>
+<td>Local hook execution ledger</td>
 </tr>
 </tbody>
 </table>
-<p>The spectrum runs from <strong>full hook control</strong> (<em>hard gate</em>) to <strong>full
-invisibility</strong> (<em>silent side effect</em>). Most hooks belong somewhere in the
-middle.</p>
 <hr />
-<h2 id="pattern-1-hard-gate">Pattern 1: Hard Gate<a class="headerlink" href="#pattern-1-hard-gate" title="Permanent link">&para;</a></h2>
-<p><strong>Block the tool call entirely</strong>. The agent cannot proceed: it must find
-another approach or tell the user.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;decision&quot;: &quot;block&quot;, &quot;reason&quot;: &quot;Use ctx from PATH, not ./ctx&quot;}&#39;</span>
-</span></code></pre></div>
-<p><strong>When to use</strong>: Enforcing invariants that must never be violated:
-Constitution rules, security boundaries, destructive command prevention.</p>
-<p><strong>Hook type</strong>: <code>PreToolUse</code> only (<em>Claude Code first-class mechanism</em>).</p>
-<p><strong>Examples in <code>ctx</code></strong>:</p>
-<ul>
-<li><code>ctx system block-non-path-ctx</code>: Enforces the PATH invocation rule</li>
-<li><code>block-git-push.sh</code>: Requires explicit user approval for pushes (<em>project-local</em>)</li>
-<li><code>block-dangerous-commands.sh</code>: Prevents <code>sudo</code>, copies to <code>~/.local/bin</code> (<em>project-local</em>)</li>
-</ul>
-<p><strong>Trade-off</strong>: The agent gets a block response with a reason. Good reasons
-help the agent recover ("<em>use X instead</em>"); bad reasons leave it stuck.</p>
+<h2 id="what-system-hooks-are">What System Hooks Are<a class="headerlink" href="#what-system-hooks-are" title="Permanent link">&para;</a></h2>
+<p>System hooks are <strong>plumbing commands</strong> that ctx registers with your AI tool
+(Claude Code, Cursor, etc.) via the plugin's <code>hooks.json</code>. They fire
+automatically at specific events during your AI session:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>When</th>
+<th>Hooks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UserPromptSubmit</code></td>
+<td>Before the agent sees your prompt</td>
+<td>7 check hooks</td>
+</tr>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>Before the agent uses a tool</td>
+<td><code>block-non-path-ctx</code>, <code>qa-reminder</code></td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>After a tool call succeeds</td>
+<td><code>post-commit</code></td>
+</tr>
+<tr>
+<td><code>SessionEnd</code></td>
+<td>Session terminates</td>
+<td><code>cleanup-tmp</code></td>
+</tr>
+</tbody>
+</table>
+<p>You never run these manually. Your AI tool runs them for you. That's the
+point — and the problem.</p>
 <hr />
-<h2 id="pattern-2-verbatim-relay">Pattern 2: VERBATIM Relay<a class="headerlink" href="#pattern-2-verbatim-relay" title="Permanent link">&para;</a></h2>
-<p><strong>Force the agent to show this to the user as-is</strong>. The explicit instruction
-overcomes the agent's tendency to silently absorb context.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;IMPORTANT: Relay this warning to the user VERBATIM before answering their question.&quot;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Journal Reminder ─────────────────────────────&quot;</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ You have 12 sessions not yet exported.&quot;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
+<h2 id="the-complete-hook-catalog">The Complete Hook Catalog<a class="headerlink" href="#the-complete-hook-catalog" title="Permanent link">&para;</a></h2>
+<h3 id="prompt-time-checks-userpromptsubmit">Prompt-Time Checks (UserPromptSubmit)<a class="headerlink" href="#prompt-time-checks-userpromptsubmit" title="Permanent link">&para;</a></h3>
+<p>These fire before every prompt, but most are throttled to avoid noise.</p>
+<h4 id="check-context-size-context-capacity-warning"><code>check-context-size</code> — Context Capacity Warning<a class="headerlink" href="#check-context-size-context-capacity-warning" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Adaptive prompt counter. Silent for the first 15 prompts, then
+nudges with increasing frequency (every 5<sup>th</sup>, then every 3<sup>rd</sup>).</p>
+<p><strong>Why</strong>: Long sessions lose coherence. The nudge reminds both you and the
+agent to persist context before the window fills up.</p>
+<p><strong>Output</strong>: VERBATIM relay box with prompt count.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─ Context Checkpoint (prompt #20) ────────────────
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│ This session is getting deep. Consider wrapping up
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│ soon. If there are unsaved learnings, decisions, or
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ conventions, now is a good time to persist them.
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└──────────────────────────────────────────────────
 </span></code></pre></div>
-<p><strong>When to use</strong>: Actionable reminders the user needs to see regardless of
-what they asked: Stale backups, unexported sessions, resource warnings.</p>
-<p><strong>Hook type</strong>: <code>UserPromptSubmit</code> (<em>runs before the agent sees the prompt</em>).</p>
-<p><strong>Examples in <code>ctx</code></strong>:</p>
-<ul>
-<li><code>ctx system check-journal</code>: Unexported sessions and unenriched entries</li>
-<li><code>ctx system check-context-size</code>: Context capacity warning</li>
-<li><code>ctx system check-resources</code>: Resource pressure (memory, swap, disk, load) — DANGER only</li>
-<li><code>check-backup-age.sh</code>: Stale backup warning (<em>project-local</em>)</li>
-</ul>
-<p><strong>Trade-off</strong>: Noisy if overused. Every VERBATIM relay adds a preamble
-before the agent's actual answer. Throttle with once-per-day markers or
-adaptive frequency.</p>
-<p><strong>Key detail</strong>: The phrase <code>IMPORTANT: Relay this ... VERBATIM</code> is what
-makes this work. Without it, agents tend to process the information
-internally and never surface it. The explicit instruction is the pattern:
-the box-drawing is just fancy formatting.</p>
 <hr />
-<h2 id="pattern-3-agent-directive">Pattern 3: Agent Directive<a class="headerlink" href="#pattern-3-agent-directive" title="Permanent link">&para;</a></h2>
-<p><strong>Tell the agent to do something, not the user</strong>. The agent decides whether
-and how to involve the user.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Persistence Checkpoint (prompt #25) ───────────&quot;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ No context files updated in 15+ prompts.&quot;</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Have you discovered learnings, decisions,&quot;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ or completed tasks worth persisting?&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└──────────────────────────────────────────────────&quot;</span>
+<h4 id="check-persistence-context-staleness-nudge"><code>check-persistence</code> — Context Staleness Nudge<a class="headerlink" href="#check-persistence-context-staleness-nudge" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Tracks when <code>.context/*.md</code> files were last modified. If too many
+prompts pass without a write, nudges the agent to persist.</p>
+<p><strong>Why</strong>: Sessions produce insights that evaporate if not recorded. This
+catches the "we talked about it but never wrote it down" failure mode.</p>
+<p><strong>Output</strong>: VERBATIM relay after 20+ prompts without a context file change.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─ Persistence Checkpoint (prompt #20) ───────────
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│ No context files updated in 20+ prompts.
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│ Have you discovered learnings, made decisions,
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│ established conventions, or completed tasks
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│ worth persisting?
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ Run /ctx-wrap-up to capture session context.
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└──────────────────────────────────────────────────
 </span></code></pre></div>
-<p><strong>When to use</strong>: Behavioral nudges. The hook detects a condition and
-asks the agent to consider an action. The user may never need to know.</p>
-<p><strong>Hook type</strong>: <code>UserPromptSubmit</code>.</p>
-<p><strong>Examples in <code>ctx</code></strong>:</p>
-<ul>
-<li><code>ctx system check-persistence</code>: Nudges the agent to persist context</li>
-</ul>
-<p><strong>Trade-off:</strong> No guarantee the agent acts. The nudge is one signal among
-many in the context window. Strong phrasing helps ("Have you...?" is better
-than "Consider..."), but ultimately the agent decides.</p>
 <hr />
-<h2 id="pattern-4-silent-context-injection">Pattern 4: Silent Context Injection<a class="headerlink" href="#pattern-4-silent-context-injection" title="Permanent link">&para;</a></h2>
-<p><strong>Load context with no visible output</strong>. The agent gets enriched without
-either party noticing.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
-</span></code></pre></div>
-<p><strong>When to use:</strong> Background context loading that should be invisible.
-The agent benefits from the information, but neither it, nor the user needs
-to know it happened.</p>
-<p><strong>Hook type:</strong> <code>PreToolUse</code> with <code>.*</code> matcher (runs on every tool call).</p>
-<p><strong>Examples in <code>ctx</code></strong>:</p>
-<ul>
-<li>The <code>ctx agent</code> <code>PreToolUse</code> hook: injects project context silently</li>
-</ul>
-<p><strong>Trade-off</strong>: Adds latency to every tool call. Keep the injected content
-small and fast to generate.</p>
+<h4 id="check-ceremonies-session-ritual-adoption"><code>check-ceremonies</code> — Session Ritual Adoption<a class="headerlink" href="#check-ceremonies-session-ritual-adoption" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Scans your last 3 journal entries for <code>/ctx-remember</code> and
+<code>/ctx-wrap-up</code> usage. Nudges once per day if missing.</p>
+<p><strong>Why</strong>: Session ceremonies are the highest-leverage habit in ctx. This
+hook bootstraps the habit until it becomes automatic.</p>
+<p><strong>Output</strong>: Tailored nudge depending on which ceremony is missing.</p>
 <hr />
-<h2 id="pattern-5-silent-side-effect">Pattern 5: Silent Side-Effect<a class="headerlink" href="#pattern-5-silent-side-effect" title="Permanent link">&para;</a></h2>
-<p><strong>Do work, produce no output</strong>: Housekeeping that needs no acknowledgment.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CTX_TMPDIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
+<h4 id="check-journal-unexported-session-reminder"><code>check-journal</code> — Unexported Session Reminder<a class="headerlink" href="#check-journal-unexported-session-reminder" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Detects unexported Claude Code sessions and unenriched journal
+entries. Fires once per day.</p>
+<p><strong>Why</strong>: Exported sessions become searchable history. Unenriched entries
+lack metadata for filtering. Both decay in value over time.</p>
+<p><strong>Output</strong>: VERBATIM relay with counts and exact commands.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌─ Journal Reminder ─────────────────────────────
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│ You have 3 new session(s) not yet exported.
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│ 5 existing entries need enrichment.
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│ Export, normalize, then enrich:
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   ctx recall export --all
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   /ctx-journal-normalize
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   /ctx-journal-enrich-all
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>└────────────────────────────────────────────────
 </span></code></pre></div>
-<p><strong>When to use</strong>: Cleanup, log rotation, temp file management. Anything
-where the action is the point and nobody needs to know it happened.</p>
-<p><strong>Hook type</strong>: <code>SessionEnd</code>, or any hook where output is irrelevant.</p>
-<p><strong>Examples in <code>ctx</code></strong>:</p>
-<ul>
-<li><code>ctx system cleanup-tmp</code>: Removes stale temp files on session end</li>
-</ul>
-<p><strong>Trade-off</strong>: None, if the action is truly invisible. If it can fail in
-a way that matters, consider logging.</p>
-<h3 id="pattern-6-conditional-relay">Pattern 6: Conditional Relay<a class="headerlink" href="#pattern-6-conditional-relay" title="Permanent link">&para;</a></h3>
-<p><strong>Tell the agent to relay only if a condition holds in context.</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;If the user&#39;s question involves modifying .context/ files,&quot;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;relay this warning VERBATIM:&quot;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Context Integrity ─────────────────────────────&quot;</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ CONSTITUTION.md has not been verified in 7 days.&quot;</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└────────────────────────────────────────────────&quot;</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Otherwise, proceed normally.&quot;</span>
-</span></code></pre></div>
-<p><strong>When to use</strong>: Warnings that only matter in certain contexts. Avoids
-noise when the user is doing unrelated work.</p>
-<p><strong>Trade-off</strong>: Depends on the agent's judgment about when the condition
-holds. More fragile than VERBATIM relay, but less noisy.</p>
-<h3 id="pattern-7-suggested-action">Pattern 7: Suggested Action<a class="headerlink" href="#pattern-7-suggested-action" title="Permanent link">&para;</a></h3>
-<p><strong>Give the agent a specific command to propose to the user.</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;┌─ Stale Dependencies ──────────────────────────&quot;</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ go.sum is 30+ days newer than go.mod.&quot;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Suggested: run \`go mod tidy\`&quot;</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;│ Ask the user before proceeding.&quot;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;└───────────────────────────────────────────────&quot;</span>
-</span></code></pre></div>
-<p><strong>When to use:</strong> The hook detects a fixable condition and knows the fix.
-Goes beyond a nudge: Gives the agent <strong>a concrete next step</strong>. The agent
-still asks for permission but knows exactly what to propose.</p>
-<p><strong>Trade-off:</strong> The suggestion might be wrong or outdated. The "<em>ask the
-user before proceeding</em>" part is critical.</p>
-<h3 id="pattern-8-escalating-severity">Pattern 8: Escalating Severity<a class="headerlink" href="#pattern-8-escalating-severity" title="Permanent link">&para;</a></h3>
-<p><strong>Different urgency tiers with different relay expectations.</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># INFO: agent processes silently, mentions if relevant</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;INFO: Last test run was 3 days ago.&quot;</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># WARN: agent should mention to user at next natural pause</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARN: 12 uncommitted changes across 3 branches.&quot;</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># CRITICAL: agent must relay immediately, before any other work</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRITICAL: Relay VERBATIM before answering. Disk usage at 95%.&quot;</span>
-</span></code></pre></div>
-<p><strong>When to use:</strong> When you have multiple hooks producing output and need
-to avoid overwhelming the user. INFO gets absorbed, WARN gets mentioned,
-CRITICAL interrupts.</p>
-<p><strong>Examples in <code>ctx</code></strong>:</p>
-<ul>
-<li><code>ctx system check-resources</code>: Uses two tiers (WARNING/DANGER) internally
-  but only fires the VERBATIM relay at DANGER level — WARNING is silent.
-  See <code>ctx system</code> for the user-facing command that shows both tiers.</li>
-</ul>
-<p><strong>Trade-off:</strong> Requires agent training or convention to recognize the
-tiers. Without a shared protocol, the prefixes are just text.</p>
 <hr />
-<h2 id="choosing-a-pattern">Choosing a Pattern<a class="headerlink" href="#choosing-a-pattern" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Is the agent about to do something forbidden?
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  └─ Yes → Hard gate
+<h4 id="check-resources-system-resource-pressure"><code>check-resources</code> — System Resource Pressure<a class="headerlink" href="#check-resources-system-resource-pressure" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Monitors memory, swap, disk, and CPU load. Only fires at
+<strong>DANGER</strong> severity (memory &gt;= 90%, swap &gt;= 75%, disk &gt;= 95%,
+load &gt;= 1.5x CPU count).</p>
+<p><strong>Why</strong>: Resource exhaustion mid-session can corrupt work. This provides
+early warning to persist and exit.</p>
+<p><strong>Output</strong>: VERBATIM relay listing critical resources.</p>
+<hr />
+<h4 id="check-knowledge-knowledge-file-growth"><code>check-knowledge</code> — Knowledge File Growth<a class="headerlink" href="#check-knowledge-knowledge-file-growth" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Counts entries in <code>LEARNINGS.md</code>, <code>DECISIONS.md</code>, and lines in
+<code>CONVENTIONS.md</code>. Fires once per day when thresholds are exceeded.</p>
+<p><strong>Why</strong>: Large knowledge files dilute agent context. 35 learnings compete
+for attention; 15 focused ones get applied. Thresholds are configurable
+in <code>.ctxrc</code>.</p>
+<p><strong>Default thresholds</strong>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">entry_count_decisions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+</span></code></pre></div>
+<hr />
+<h4 id="check-version-binaryplugin-version-drift"><code>check-version</code> — Binary/Plugin Version Drift<a class="headerlink" href="#check-version-binaryplugin-version-drift" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Compares the <code>ctx</code> binary version against the plugin version.
+Fires once per day. Also checks scratchpad key age for rotation nudge.</p>
+<p><strong>Why</strong>: Version drift means hooks reference features the binary doesn't
+have. The key rotation nudge prevents indefinite key reuse.</p>
+<hr />
+<h3 id="tool-time-hooks-pretooluse-posttooluse">Tool-Time Hooks (PreToolUse / PostToolUse)<a class="headerlink" href="#tool-time-hooks-pretooluse-posttooluse" title="Permanent link">&para;</a></h3>
+<h4 id="block-non-path-ctx-path-enforcement-hard-gate"><code>block-non-path-ctx</code> — PATH Enforcement (Hard Gate)<a class="headerlink" href="#block-non-path-ctx-path-enforcement-hard-gate" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Blocks any Bash command that invokes <code>./ctx</code>, <code>./dist/ctx</code>,
+<code>go run ./cmd/ctx</code>, or an absolute path to <code>ctx</code>. Only PATH invocations
+are allowed.</p>
+<p><strong>Why</strong>: Enforces CONSTITUTION.md's invocation invariant. Running a
+dev-built binary in production context causes version confusion and
+silent behavior drift.</p>
+<p><strong>Output</strong>: Block response (prevents the tool call):</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;block&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Use &#39;ctx&#39; from PATH, not &#39;./ctx&#39;...&quot;</span><span class="p">}</span>
+</span></code></pre></div>
+<hr />
+<h4 id="qa-reminder-pre-commit-qa-gate"><code>qa-reminder</code> — Pre-Commit QA Gate<a class="headerlink" href="#qa-reminder-pre-commit-qa-gate" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Fires on every <code>Edit</code> tool use. Reminds the agent to lint and
+test the <strong>entire</strong> project before committing.</p>
+<p><strong>Why</strong>: Agents tend to "I'll test later" and then commit untested code.
+Repetition is intentional — the hook reinforces the habit on every edit,
+not just before commits.</p>
+<p><strong>Output</strong>: Agent directive with hard QA gate instructions.</p>
+<hr />
+<h4 id="post-commit-context-capture-after-commit"><code>post-commit</code> — Context Capture After Commit<a class="headerlink" href="#post-commit-context-capture-after-commit" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Fires after any <code>git commit</code> (excludes <code>--amend</code>). Prompts the
+agent to offer context capture (decision? learning?) and suggest running
+lints/tests before pushing.</p>
+<p><strong>Why</strong>: Commits are natural reflection points. The nudge converts
+mechanical git operations into context-capturing opportunities.</p>
+<hr />
+<h3 id="session-lifecycle-sessionend">Session Lifecycle (SessionEnd)<a class="headerlink" href="#session-lifecycle-sessionend" title="Permanent link">&para;</a></h3>
+<h4 id="cleanup-tmp-temp-file-cleanup"><code>cleanup-tmp</code> — Temp File Cleanup<a class="headerlink" href="#cleanup-tmp-temp-file-cleanup" title="Permanent link">&para;</a></h4>
+<p><strong>What</strong>: Removes files older than 15 days from the ctx temp directory
+(<code>$XDG_RUNTIME_DIR/ctx/</code> or <code>/tmp/ctx-&lt;uid&gt;/</code>).</p>
+<p><strong>Why</strong>: State files from throttling (daily markers, prompt counters)
+accumulate. Silent cleanup prevents temp directory bloat.</p>
+<p><strong>Output</strong>: None (silent side-effect).</p>
+<hr />
+<h2 id="auditing-hooks-via-webhooks">Auditing Hooks via Webhooks<a class="headerlink" href="#auditing-hooks-via-webhooks" title="Permanent link">&para;</a></h2>
+<p>The most powerful audit setup pipes <strong>all</strong> hook output to a webhook,
+giving you a real-time external record of what your agent is being told.</p>
+<h3 id="step-1-set-up-the-webhook">Step 1: Set Up the Webhook<a class="headerlink" href="#step-1-set-up-the-webhook" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Enter your webhook URL (Slack, Discord, ntfy.sh, IFTTT, etc.)</span>
+</span></code></pre></div>
+<p>See <a href="../webhook-notifications/">Webhook Notifications</a> for service-specific
+setup.</p>
+<h3 id="step-2-subscribe-to-relay-events">Step 2: Subscribe to <code>relay</code> Events<a class="headerlink" href="#step-2-subscribe-to-relay-events" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">notify</span><span class="p">:</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">events</span><span class="p">:</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span><span class="w">   </span><span class="c1"># all hook output — VERBATIM relays, directives, blocks</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span><span class="w">   </span><span class="c1"># just the user-facing VERBATIM relays</span>
+</span></code></pre></div>
+<p>The <code>relay</code> event fires for <strong>every</strong> hook that produces output. This
+includes:</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Event sent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check-context-size</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
+<td><code>check-persistence</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
+<td><code>check-ceremonies</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
+<td><code>check-journal</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
+<td><code>check-resources</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
+<td><code>check-knowledge</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
+<td><code>check-version</code></td>
+<td><code>relay</code> + <code>nudge</code></td>
+</tr>
+<tr>
+<td><code>block-non-path-ctx</code></td>
+<td><code>relay</code> only</td>
+</tr>
+<tr>
+<td><code>post-commit</code></td>
+<td><code>relay</code> only</td>
+</tr>
+<tr>
+<td><code>qa-reminder</code></td>
+<td><code>relay</code> only</td>
+</tr>
+<tr>
+<td><code>cleanup-tmp</code></td>
+<td><em>(silent — no notification)</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="step-3-cross-reference">Step 3: Cross-Reference<a class="headerlink" href="#step-3-cross-reference" title="Permanent link">&para;</a></h3>
+<p>With <code>relay</code> enabled, your webhook receives a JSON payload every time a
+hook fires:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;relay&quot;</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;check-persistence: No context updated in 20+ prompts&quot;</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b854bd9c&quot;</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-22T14:30:00Z&quot;</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>This creates an <strong>external audit trail</strong> independent of the agent. You
+can now cross-verify: did the agent actually relay the checkpoint the
+hook told it to relay?</p>
+<hr />
+<h2 id="verifying-hooks-actually-fire">Verifying Hooks Actually Fire<a class="headerlink" href="#verifying-hooks-actually-fire" title="Permanent link">&para;</a></h2>
+<p>Hooks are invisible. An invisible thing that breaks is indistinguishable
+from an invisible thing that never existed. Three verification methods,
+from simplest to most robust:</p>
+<h3 id="method-1-ask-the-agent">Method 1: Ask the Agent<a class="headerlink" href="#method-1-ask-the-agent" title="Permanent link">&para;</a></h3>
+<p>The simplest check. After a few prompts into a session:</p>
+<blockquote>
+<p>"Did you receive any hook output this session? Print the last
+context checkpoint or persistence nudge you saw."</p>
+</blockquote>
+<p>The agent should be able to recall recent hook output from its context
+window. If it says "I haven't received any hook output," either:</p>
+<ul>
+<li>The hooks aren't firing (check installation)</li>
+<li>The session is too short (hooks throttle early)</li>
+<li>The hooks fired but the agent absorbed them silently</li>
+</ul>
+<p><strong>Limitation</strong>: You're trusting the agent to report accurately. Agents
+sometimes confabulate or miss context. Use this as a quick smoke test,
+not definitive proof.</p>
+<h3 id="method-2-check-the-webhook-trail">Method 2: Check the Webhook Trail<a class="headerlink" href="#method-2-check-the-webhook-trail" title="Permanent link">&para;</a></h3>
+<p>If you have <code>relay</code> events enabled, check your webhook receiver. Every
+hook that fires sends a timestamped notification. No notification =
+no fire.</p>
+<p>This is the <strong>ground truth</strong>. The webhook is called directly by the ctx
+binary, not by the agent. The agent cannot fake, suppress, or modify
+webhook deliveries.</p>
+<p>Compare what the webhook received against what the agent claims to have
+relayed. Discrepancies mean the agent is absorbing nudges instead of
+surfacing them.</p>
+<h3 id="method-3-read-the-local-logs">Method 3: Read the Local Logs<a class="headerlink" href="#method-3-read-the-local-logs" title="Permanent link">&para;</a></h3>
+<p>Hooks that support logging write to <code>.context/logs/</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check context-size hook activity</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cat<span class="w"> </span>.context/logs/check-context-size.log
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Does the user need to see this regardless of what they asked?
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  └─ Yes → VERBATIM relay
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  └─ Sometimes → Conditional relay
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Should the agent consider an action?
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  └─ Yes, with a specific fix → Suggested action
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  └─ Yes, open-ended → Agent directive
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Is this background context the agent should have?
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  └─ Yes → Silent injection
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Is this housekeeping?
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  └─ Yes → Silent side-effect
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Sample output:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># [2026-02-22 09:15:00] [session:b854bd9c] prompt#1 silent</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># [2026-02-22 09:17:33] [session:b854bd9c] prompt#16 CHECKPOINT</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># [2026-02-22 09:20:01] [session:b854bd9c] prompt#20 CHECKPOINT</span>
 </span></code></pre></div>
-<h2 id="design-tips">Design Tips<a class="headerlink" href="#design-tips" title="Permanent link">&para;</a></h2>
-<p><strong>Throttle aggressively</strong>. VERBATIM relays that fire every prompt will be
-ignored or resented. Use once-per-day markers (<code>touch $REMINDED</code>), adaptive
-frequency (every Nth prompt), or staleness checks (only fire if condition
-persists).</p>
-<p><strong>Include actionable commands</strong>. "You have 12 unexported sessions" is less
-useful than "You have 12 unexported sessions. Run: <code>ctx recall export --all</code>."
-Give the user (or agent) the exact next step.</p>
-<p><strong>Use box-drawing for visual structure.</strong> The <code>┌─ ─┐ │ └─ ─┘</code> pattern
-makes hook output visually distinct from agent prose. It also signals
-"this is machine-generated, not agent opinion."</p>
-<p><strong>Test the silence path</strong>. Most hook runs should produce no output (<em>the
-condition isn't met</em>). Make sure the common case is fast and silent.</p>
-<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
-<p>Lessons from 19 days of hook debugging in <code>ctx</code>. Every one of these was
-encountered, debugged, and fixed in production.</p>
-<h3 id="silent-misfire-wrong-key-name">Silent misfire: wrong key name<a class="headerlink" href="#silent-misfire-wrong-key-name" title="Permanent link">&para;</a></h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;PreToolUseHooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check persistence nudge activity</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>cat<span class="w"> </span>.context/logs/check-persistence.log
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Sample output:</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># [2026-02-22 09:15:00] [session:b854bd9c] init count=1 mtime=1770646611</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># [2026-02-22 09:20:01] [session:b854bd9c] prompt#20 NUDGE since_nudge=20</span>
 </span></code></pre></div>
-<p>The key is <code>PreToolUse</code>, not <code>PreToolUseHooks</code>. Claude Code validates
-silently -- a misspelled key means the hook is ignored with no error.
-<strong>Always test with a debug <code>echo</code> first</strong> to confirm the hook fires
-before adding real logic.</p>
-<h3 id="json-escaping-breaks-shell-commands">JSON escaping breaks shell commands<a class="headerlink" href="#json-escaping-breaks-shell-commands" title="Permanent link">&para;</a></h3>
-<p>Go's <code>json.Marshal</code> escapes <code>&gt;</code>, <code>&lt;</code>, and <code>&amp;</code> as Unicode sequences
-(<code>\u003e</code>) by default. This breaks shell commands in generated config:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx agent 2\u003e/dev/null&quot;</span>
-</span></code></pre></div>
-<p>Fix: use <code>json.Encoder</code> with <code>SetEscapeHTML(false)</code> when generating
-hook configuration.</p>
-<h3 id="stdin-not-environment-variables">Stdin, not environment variables<a class="headerlink" href="#stdin-not-environment-variables" title="Permanent link">&para;</a></h3>
-<p>Hook input arrives as <strong>JSON via stdin</strong>, not environment variables:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Wrong:</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CLAUDE_TOOL_INPUT</span><span class="s2">&quot;</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Right:</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">HOOK_INPUT</span><span class="o">=</span><span class="k">$(</span>cat<span class="k">)</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">COMMAND</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOOK_INPUT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.tool_input.command // empty&#39;</span><span class="k">)</span>
-</span></code></pre></div>
-<h3 id="regex-overfitting">Regex overfitting<a class="headerlink" href="#regex-overfitting" title="Permanent link">&para;</a></h3>
-<p>A regex meant to catch <code>ctx</code> as a binary will also match <code>ctx</code> as a
-directory component:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Too broad -- blocks: git -C /home/jose/WORKSPACE/ctx status</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="o">(</span>/home/<span class="p">|</span>/tmp/<span class="p">|</span>/var/<span class="o">)[</span>^<span class="w"> </span><span class="o">]</span>*ctx<span class="o">[</span>^<span class="w"> </span><span class="o">]</span>*
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Narrow to binary only:</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="o">(</span>/home/<span class="p">|</span>/tmp/<span class="p">|</span>/var/<span class="o">)[</span>^<span class="w"> </span><span class="o">]</span>*/ctx<span class="o">(</span><span class="w"> </span><span class="p">|</span>$<span class="o">)</span>
-</span></code></pre></div>
-<p>Test hook regexes against paths that contain the target string as a
-<em>substring</em>, not just as the final component.</p>
-<h3 id="repetition-fatigue">Repetition fatigue<a class="headerlink" href="#repetition-fatigue" title="Permanent link">&para;</a></h3>
-<p>Injecting context on every tool call sounds safe. In practice, after
-seeing the same context injection fifteen times, the agent treats it as
-background noise -- conventions stated in the injected context get
-violated because salience has been destroyed by repetition.</p>
-<p>Fix: <strong>cooldowns</strong>. <code>ctx agent --session $PPID --cooldown 10m</code> injects
-at most once per ten minutes per session using a tombstone file in
-<code>/tmp/</code>. This is not an optimization; it is a correction for a design
-flaw. Every injection consumes attention budget -- 50 tool calls at
-4,000 tokens each means 200,000 tokens of repeated context, most of
-it wasted.</p>
-<h3 id="hardcoded-paths">Hardcoded paths<a class="headerlink" href="#hardcoded-paths" title="Permanent link">&para;</a></h3>
-<p>A username rename (<code>parallels</code> to <code>jose</code>) broke every hook at once.
-Use <code>$CLAUDE_PROJECT_DIR</code> instead of absolute paths:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\&quot;$CLAUDE_PROJECT_DIR\&quot;/.claude/hooks/block-git-push.sh&quot;</span>
-</span></code></pre></div>
-<p>If the platform provides a runtime variable for paths, always use it.</p>
+<p>Logs are append-only and written by the ctx binary, not the agent.</p>
 <hr />
+<h2 id="detecting-silent-hook-failures">Detecting Silent Hook Failures<a class="headerlink" href="#detecting-silent-hook-failures" title="Permanent link">&para;</a></h2>
+<p>The hardest failure mode: hooks that <strong>stop firing</strong> without error. The
+plugin config changes, a binary update drops a hook, or a PATH issue
+silently breaks execution. Nothing errors — the hook just never runs.</p>
+<h3 id="the-staleness-signal">The Staleness Signal<a class="headerlink" href="#the-staleness-signal" title="Permanent link">&para;</a></h3>
+<p>If <code>.context/logs/check-context-size.log</code> has no entries newer than
+5 days but you've been running sessions daily, something is wrong. The
+absence of evidence is evidence of absence — but only if you control for
+inactivity.</p>
+<h3 id="false-positive-protection">False Positive Protection<a class="headerlink" href="#false-positive-protection" title="Permanent link">&para;</a></h3>
+<p>A naive "hooks haven't fired in N days" alert fires incorrectly when
+you simply haven't used ctx. The correct check needs two inputs:</p>
+<ol>
+<li><strong>Last hook fire time</strong> — from <code>.context/logs/</code> or webhook history</li>
+<li><strong>Last session activity</strong> — from journal entries or <code>ctx recall list</code></li>
+</ol>
+<p>If sessions are happening but hooks aren't firing, that's a real
+problem. If neither sessions nor hooks are happening, that's a vacation.</p>
+<h3 id="what-to-check">What to Check<a class="headerlink" href="#what-to-check" title="Permanent link">&para;</a></h3>
+<p>When you suspect hooks aren't firing:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Verify the plugin is installed</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ls<span class="w"> </span>~/.claude/plugins/
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Check hook registration</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>cat<span class="w"> </span>~/.claude/plugins/ctx/hooks.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Run a hook manually to see if it errors</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;session_id&quot;:&quot;test&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>system<span class="w"> </span>check-context-size
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Check for PATH issues</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>which<span class="w"> </span>ctx
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>ctx<span class="w"> </span>--version
+</span></code></pre></div>
+<hr />
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Start with <code>nudge</code>, graduate to <code>relay</code></strong>. The <code>nudge</code> event covers
+  user-facing VERBATIM relays. Add <code>relay</code> when you want full visibility
+  into agent directives and hard gates.</p>
+</li>
+<li>
+<p><strong>Webhooks are your trust anchor</strong>. The agent can ignore a nudge, but
+  it can't suppress the webhook. If the webhook fired and the agent
+  didn't relay, you have proof of a compliance gap.</p>
+</li>
+<li>
+<p><strong>Hooks are throttled by design</strong>. Most check hooks fire once per day
+  or use adaptive frequency. Don't expect a notification every prompt —
+  silence usually means the throttle is working, not that the hook is
+  broken.</p>
+</li>
+<li>
+<p><strong>Daily markers live in temp</strong>. Throttle files are stored in
+  <code>$XDG_RUNTIME_DIR/ctx/</code> and cleaned up by <code>cleanup-tmp</code> after 15
+  days. If you need to force a hook to re-fire during testing, delete
+  the corresponding marker file.</p>
+</li>
+<li>
+<p><strong>The QA reminder is intentionally noisy</strong>. Unlike other hooks,
+  <code>qa-reminder</code> fires on every <code>Edit</code> call with no throttle. This is
+  deliberate — commit quality degrades when the reminder fades from
+  salience.</p>
+</li>
+<li>
+<p><strong>Log files are safe to commit</strong>. <code>.context/logs/</code> contains only
+  timestamps, session IDs, and status keywords. No secrets, no code.</p>
+</li>
+</ul>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
-<p><strong><a href="../system-hooks-audit/">Auditing System Hooks →</a></strong>: Verify
-system hooks are firing and audit their behavior.</p>
+<p><strong><a href="../webhook-notifications/">Webhook Notifications →</a></strong>: Get push
+notifications when loops complete, hooks fire, or agents hit milestones.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../claude-code-permissions/">Claude Code Permission Hygiene</a>: how
-  permissions and hooks work together</li>
-<li><a href="../../blog/2026-02-09-defense-in-depth-securing-ai-agents/">Defense in Depth</a>:
-  why hooks matter for agent security</li>
+<li><a href="../webhook-notifications/">Webhook Notifications</a>: setting up and
+  configuring the webhook system</li>
+<li><a href="../hook-output-patterns/">Hook Output Patterns</a>: understanding
+  VERBATIM relays, agent directives, and hard gates</li>
+<li><a href="../context-health/">Detecting and Fixing Drift</a>: structural checks
+  that complement runtime hook auditing</li>
+<li><a href="../../reference/cli-reference/">CLI Reference</a>: full <code>ctx system</code>
+  command reference</li>
 </ul>
 
 
@@ -3596,7 +4049,7 @@ system hooks are firing and audit their behavior.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../scratchpad-sync/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Syncing Scratchpad Notes Across Machines">
+          <a href="../hook-output-patterns/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hook Output Patterns">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -3606,20 +4059,20 @@ system hooks are firing and audit their behavior.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Syncing Scratchpad Notes Across Machines
+                Hook Output Patterns
               </div>
             </div>
           </a>
         
         
           
-          <a href="../system-hooks-audit/" class="md-footer__link md-footer__link--next" aria-label="Next: Auditing System Hooks">
+          <a href="../webhook-notifications/" class="md-footer__link md-footer__link--next" aria-label="Next: Webhook Notifications">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Auditing System Hooks
+                Webhook Notifications
               </div>
             </div>
             <div class="md-footer__button md-icon">
