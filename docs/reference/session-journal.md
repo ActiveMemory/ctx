@@ -442,13 +442,12 @@ The complete journal workflow has four stages. Each is idempotent — safe to
 re-run, and stages skip already-processed entries.
 
 ```
-export → normalize → enrich → rebuild
+export → enrich → rebuild
 ```
 
 | Stage         | Command / Skill            | What it does                            | Skips if                     |
 |---------------|----------------------------|-----------------------------------------|------------------------------|
 | **Export**    | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
-| **Normalize** | `/ctx-journal-normalize`   | Fixes fence nesting and metadata tables | `<!-- normalized -->` marker |
 | **Enrich**    | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present  |
 | **Rebuild**   | `ctx journal site --build` | Generates static HTML site              | —                            |
 | **Obsidian**  | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | —                            |
@@ -462,31 +461,19 @@ and last stages are combined:
 make journal           # export + rebuild
 ```
 
-After it runs, it reminds you to normalize and enrich in Claude Code:
+After it runs, it reminds you to enrich in Claude Code:
 
 ```
 Next steps (in Claude Code):
-  1. /ctx-journal-normalize  — fix markdown rendering (skips already normalized)
-  2. /ctx-journal-enrich     — add metadata per entry (skips if frontmatter exists)
+  /ctx-journal-enrich-all  — add metadata per entry (skips if frontmatter exists)
 
 Then re-run: make journal
 ```
 
-### Normalizing Journal Entries
-
-Raw exported sessions may have rendering issues: nested code fences,
-malformed metadata blocks, or broken lists. The `/ctx-journal-normalize`
-skill fixes these in the **source files** so the site renders correctly.
-
-```
-/ctx-journal-normalize
-```
-
-It backs up `.context/journal/` before modifying anything, and marks processed
-files with `<!-- normalized: YYYY-MM-DD -->` so re-runs skip them.
-
-**Run normalize before enrich** — the enrichment skill reads conversation
-content, and clean markdown produces better metadata extraction.
+!!! tip "Rendering issues?"
+    If individual entries have rendering problems (broken fences, malformed
+    lists), use `/ctx-journal-normalize` on the affected file. This is rarely
+    needed — programmatic normalization during export handles most cases.
 
 ## Tips
 

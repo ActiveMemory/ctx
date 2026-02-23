@@ -81,9 +81,8 @@ func runCheckJournal(cmd *cobra.Command) error {
 		cmd.Println(fmt.Sprintf("│ You have %d new session(s) not yet exported.", unexported))
 		cmd.Println(fmt.Sprintf("│ %d existing entries need enrichment.", unenriched))
 		cmd.Println("│")
-		cmd.Println("│ Export, normalize, then enrich:")
+		cmd.Println("│ Export and enrich:")
 		cmd.Println("│   ctx recall export --all")
-		cmd.Println("│   /ctx-journal-normalize")
 		cmd.Println("│   /ctx-journal-enrich-all")
 	case unexported > 0:
 		cmd.Println(fmt.Sprintf("│ You have %d new session(s) not yet exported.", unexported))
@@ -93,8 +92,7 @@ func runCheckJournal(cmd *cobra.Command) error {
 	default:
 		cmd.Println(fmt.Sprintf("│ %d journal entries need enrichment.", unenriched))
 		cmd.Println("│")
-		cmd.Println("│ Normalize, then enrich:")
-		cmd.Println("│   /ctx-journal-normalize")
+		cmd.Println("│ Enrich:")
 		cmd.Println("│   /ctx-journal-enrich-all")
 	}
 

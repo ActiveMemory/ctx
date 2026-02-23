@@ -32,8 +32,7 @@ This recipe shows how to turn that raw session history into a **browsable**,
     ```
 
     ```text
-    # AI assistant: normalize and enrich
-    /ctx-journal-normalize
+    # AI assistant: enrich
     /ctx-journal-enrich-all
     ```
 
@@ -55,7 +54,6 @@ This recipe shows how to turn that raw session history into a **browsable**,
 | `ctx journal obsidian`    | Command | Generate an Obsidian vault from journal entries |
 | `ctx serve`               | Command | Serve any zensical directory (default: journal) |
 | `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant        |
-| `/ctx-journal-normalize`  | Skill   | Fix rendering issues in exported Markdown       |
 | `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry      |
 | `/ctx-journal-enrich-all` | Skill   | Batch-enrich all unenriched entries             |
 
@@ -67,13 +65,12 @@ Each stage is idempotent and safe to re-run.
 Each stage skips entries that have already been processed.
 
 ```text
-export -> normalize -> enrich -> rebuild
+export -> enrich -> rebuild
 ```
 
 | Stage     | Tool                       | What it does                                | Skips if                     | Where        |
 |-----------|----------------------------|---------------------------------------------|------------------------------|--------------|
 | Export    | `ctx recall export --all`  | Converts session JSONL to Markdown          | File already exists (safe default) | CLI or agent |
-| Normalize | `/ctx-journal-normalize`   | Fixes nested fences and metadata formatting | `<!-- normalized -->` marker | Agent only   |
 | Enrich    | `/ctx-journal-enrich-all`  | Adds frontmatter, summaries, topic tags     | Frontmatter already present  | Agent only   |
 | Rebuild   | `ctx journal site --build` | Generates browsable static HTML             | N/A                          | CLI only     |
 | Obsidian  | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks     | N/A                          | CLI only     |
@@ -82,11 +79,11 @@ export -> normalize -> enrich -> rebuild
     Export (*Steps 1 to 3*) works equally well from the terminal or inside your
     AI assistant via `/ctx-recall`. The CLI is fine here: the agent adds no
     special intelligence, it just runs the same command.
-    
-    Normalize and enrich (Steps 4 to 5) require the agent: they need it to read,
-    analyze, and edit Markdown.
-    
-    Rebuild and serve (Step 6) is a terminal operation that starts a
+
+    Enrich (Step 4) requires the agent: it reads conversation content and
+    produces structured metadata.
+
+    Rebuild and serve (Step 5) is a terminal operation that starts a
     long-running server.
 
 ### Step 1: List Your Sessions
@@ -189,31 +186,7 @@ before any files are overwritten.
     during enrichment instead, run `ctx recall sync` to propagate lock
     state to `.state.json`.
 
-### Step 4: Normalize Rendering
-
-Raw exported sessions often have rendering problems: nested code fences that
-break Markdown parsers, malformed metadata tables, or broken list formatting.
-
-The `/ctx-journal-normalize` skill fixes these issues in the source files
-before site generation.
-
-Inside your AI assistant:
-
-```text
-/ctx-journal-normalize
-```
-
-The skill backs up `.context/journal/` before modifying anything and marks each
-processed file with a `<!-- normalized: YYYY-MM-DD -->` comment so subsequent
-runs skip already-normalized entries.
-
-!!! tip "Normalize Before Enrich"
-    Run **normalize** before **enrich**. 
-
-    The enrichment skill reads conversation content to
-    extract metadata, and clean Markdown produces better results.
-
-### Step 5: Enrich with Metadata
+### Step 4: Enrich with Metadata
 
 Raw exports have timestamps and transcripts but lack the semantic metadata that
 makes sessions searchable: topics, technology tags, outcome status, and
@@ -268,10 +241,9 @@ key_files:
 The skill also generates a summary and can extract **decisions**, 
 **learnings**, and **tasks** mentioned during the session.
 
-### Step 6: Generate and Serve the Site
+### Step 5: Generate and Serve the Site
 
-With **exported**, **normalized**, and **enriched** journal files, 
-generate the static site:
+With exported and enriched journal files, generate the static site:
 
 ```bash
 # Generate site structure only
@@ -300,10 +272,9 @@ The site generator requires `zensical` (`pipx install zensical`).
 Export, list, and show are mechanical. The agent runs the same CLI commands you
 would, so you can stay in your terminal for those.
 
-The agent earns its keep in **normalize** and **enrich**. 
-
-These require reading conversation content, understanding what happened, 
-and producing structured metadata. **That is agent work, not CLI work**.
+The agent earns its keep in **enrich**. It reads conversation content,
+understands what happened, and produces structured metadata.
+**That is agent work, not CLI work**.
 
 You can also ask your agent to browse sessions conversationally instead of
 remembering flags:
@@ -328,11 +299,11 @@ Agent: Last Tuesday you worked on two sessions:
          in the config loader
        Want me to export and enrich them?
 You:   Yes, do it.
-Agent: Exports both, normalizes, enriches, then proposes frontmatter.
+Agent: Exports both, enriches, then proposes frontmatter.
 ```
 
-The value is staying in one context while the agent runs export -> normalize ->
-enrich without you manually switching tools.
+The value is staying in one context while the agent runs export -> enrich
+without you manually switching tools.
 
 ## Putting It All Together
 
@@ -345,8 +316,7 @@ ctx journal site --serve
 ```
 
 ```text
-# AI assistant: normalize and enrich
-/ctx-journal-normalize
+# AI assistant: enrich
 /ctx-journal-enrich-all
 ```
 
@@ -356,8 +326,8 @@ ctx journal site --serve
 ```
 
 If your project includes `Makefile.ctx` (deployed by `ctx init`), use
-`make journal` to combine export and rebuild stages. Then normalize and enrich
-inside Claude Code, then `make journal` again to pick up enrichments.
+`make journal` to combine export and rebuild stages. Then enrich inside
+Claude Code, then `make journal` again to pick up enrichments.
 
 ## Tips
 

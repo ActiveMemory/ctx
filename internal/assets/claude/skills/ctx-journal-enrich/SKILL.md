@@ -7,9 +7,7 @@ Enrich a session journal entry with structured metadata.
 
 ## Before Enriching
 
-1. **Run `/ctx-journal-normalize` first** if the entry has rendering
-   issues; clean markdown produces better metadata extraction
-2. **Check if already enriched**: check the state file via
+1. **Check if already enriched**: check the state file via
    `ctx system mark-journal --check <filename> enriched` or read
    `.state.json` in the journal directory; confirm before overwriting
 

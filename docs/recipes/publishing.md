@@ -24,15 +24,14 @@ You want to turn this raw activity into:
     ctx recall export --all             # 1. export sessions to markdown
     ```
     ```text
-    /ctx-journal-normalize              # 2. fix rendering issues
-    /ctx-journal-enrich-all             # 3. add metadata and tags
+    /ctx-journal-enrich-all             # 2. add metadata and tags
     ```
     ```bash
-    ctx journal site --serve            # 4. build and serve the journal
+    ctx journal site --serve            # 3. build and serve the journal
     ```
     ```text
-    /ctx-blog about the caching layer   # 5. draft a blog post
-    /ctx-blog-changelog v0.1.0 "v0.2"   # 6. write a changelog post
+    /ctx-blog about the caching layer   # 4. draft a blog post
+    /ctx-blog-changelog v0.1.0 "v0.2"   # 5. write a changelog post
     ```
 
     Read on for details on each stage.
@@ -46,7 +45,6 @@ You want to turn this raw activity into:
 | `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries     |
 | `ctx serve`               | Command  | Serve any zensical directory (default: journal)     |
 | `make journal`            | Makefile | Shortcut for export + site rebuild                  |
-| `/ctx-journal-normalize`  | Skill    | Fix markdown rendering in exported entries          |
 | `/ctx-journal-enrich-all` | Skill    | Batch-enrich all unenriched entries (recommended)   |
 | `/ctx-journal-enrich`     | Skill    | Add metadata, summaries, and tags to one entry      |
 | `/ctx-blog`               | Skill    | Draft a blog post from recent project activity      |
@@ -78,28 +76,7 @@ session metadata and the full conversation transcript.
 are skipped. Use `--regenerate` to re-export existing files (YAML frontmatter
 is preserved). Use `--force -y` to overwrite everything.
 
-### Step 2: Normalize Exported Entries
-
-Raw exports can have rendering issues: nested code fences that break syntax
-highlighting, metadata blocks that render poorly, and malformed lists. The
-`/ctx-journal-normalize` skill fixes these in the source files before site
-generation.
-
-```text
-/ctx-journal-normalize
-```
-
-The skill:
-
-1. Backs up `.context/journal/` before modifying anything
-2. Converts `**Key**: value` metadata blocks into collapsible HTML tables
-3. Fixes fence nesting so code blocks render with proper highlighting
-4. Marks processed files with `<!-- normalized -->` so reruns skip them
-
-Run normalize before enrich. Clean Markdown produces better metadata extraction
-in the next step.
-
-### Step 3: Enrich Entries with Metadata
+### Step 2: Enrich Entries with Metadata
 
 Raw entries have timestamps and conversations but lack the structured metadata
 that makes a journal searchable. Use `/ctx-journal-enrich-all` to process your
@@ -149,9 +126,9 @@ This metadata powers better navigation in the journal site:
 * summaries appear in the index, 
 * and search covers topics and technologies.
 
-### Step 4: Generate the Journal Site
+### Step 3: Generate the Journal Site
 
-With entries exported, normalized, and enriched, generate the static site:
+With entries exported and enriched, generate the static site:
 
 ```bash
 # Generate site files
@@ -178,8 +155,8 @@ make journal
 ```
 
 This runs `ctx recall export --all` followed by `ctx journal site --build`, then
-reminds you to normalize and enrich before rebuilding. To serve the built site,
-use `make journal-serve` or `ctx serve` (serve-only, no regeneration).
+reminds you to enrich before rebuilding. To serve the built site, use
+`make journal-serve` or `ctx serve` (serve-only, no regeneration).
 
 ### Alternative: Export to Obsidian Vault
 
@@ -199,7 +176,7 @@ The vault uses the same enriched source entries as the static site. Both outputs
 can coexist — the static site goes to `.context/journal-site/`, the vault to
 `.context/journal-obsidian/`.
 
-### Step 5: Draft Blog Posts from Activity
+### Step 4: Draft Blog Posts from Activity
 
 When your project reaches a milestone worth sharing, use `/ctx-blog` to draft a
 post from recent activity. The skill gathers context from multiple sources:
@@ -226,7 +203,7 @@ honest discussion of what went wrong.
     Markdown and can be adapted to other static site generators,
     but the defaults assume a zensical project structure.
 
-### Step 6: Write Changelog Posts from Commit Ranges
+### Step 5: Write Changelog Posts from Commit Ranges
 
 For release notes or "what changed" posts, `/ctx-blog-changelog` takes a
 starting commit and a theme, then analyzes everything that changed:
@@ -248,7 +225,7 @@ your agent can suggest content at natural moments:
 
 > "We just shipped the caching layer and closed 3 tasks. Want me to draft a blog post about it?"
 
-> "Your journal has 6 new entries since the last rebuild. Want me to normalize, enrich, and regenerate the site?"
+> "Your journal has 6 new entries since the last rebuild. Want me to enrich and regenerate the site?"
 
 You can also drive it with natural language:
 
@@ -271,29 +248,25 @@ The full pipeline from raw transcripts to published content:
 # 1. Export all sessions
 ctx recall export --all
 
-# 2. In Claude Code: normalize rendering
-/ctx-journal-normalize
-
-# 3. In Claude Code: enrich all entries with metadata
+# 2. In Claude Code: enrich all entries with metadata
 /ctx-journal-enrich-all
 
-# 4. Build and serve the journal site
+# 3. Build and serve the journal site
 make journal
 make journal-serve
 
-# 4b. Or generate an Obsidian vault
+# 3b. Or generate an Obsidian vault
 ctx journal obsidian
 
-# 5. In Claude Code: draft a blog post
+# 4. In Claude Code: draft a blog post
 /ctx-blog about the features we shipped this week
 
-# 6. In Claude Code: write a changelog post
+# 5. In Claude Code: write a changelog post
 /ctx-blog-changelog v0.1.0 "what's new in v0.2.0"
 ```
 
 The journal pipeline is idempotent at every stage. You can rerun `ctx recall
-export --all` without losing enrichment. You can rerun `/ctx-journal-normalize`
-and it skips already-normalized files. You can rebuild the site as many times
+export --all` without losing enrichment. You can rebuild the site as many times
 as you want.
 
 ## Tips
@@ -301,9 +274,6 @@ as you want.
 * Export regularly. Run `ctx recall export --all` after each session to keep
   your journal current. Only new sessions are exported — existing files are
   skipped by default.
-* Normalize before enriching. The enrichment skill reads conversation content to
-  extract metadata. Clean Markdown produces better results than raw exports with
-  broken fences.
 * Use batch enrichment. `/ctx-journal-enrich-all` filters noise (suggestion
   sessions, trivial sessions, multipart continuations) so you do not have to
   decide what is worth enriching.

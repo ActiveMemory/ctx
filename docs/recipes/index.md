@@ -71,8 +71,7 @@ review the session and persist **learnings**, **decisions**, and **tasks**.
 ### [Browsing and Enriching Past Sessions](session-archaeology.md)
 
 Export your AI session history to a **browsable journal site**.
-**Normalize** rendering, **enrich** entries with metadata, and **search**
-across months of work.
+**Enrich** entries with metadata and **search** across months of work.
 
 **Uses**: `ctx recall list/show/export`, `ctx journal site`,
 `ctx journal obsidian`, `ctx serve`, `/ctx-recall`,

@@ -122,9 +122,8 @@ lack metadata for filtering. Both decay in value over time.
 │ You have 3 new session(s) not yet exported.
 │ 5 existing entries need enrichment.
 │
-│ Export, normalize, then enrich:
+│ Export and enrich:
 │   ctx recall export --all
-│   /ctx-journal-normalize
 │   /ctx-journal-enrich-all
 └────────────────────────────────────────────────
 ```
