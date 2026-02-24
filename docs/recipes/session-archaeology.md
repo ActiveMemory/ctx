@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -24,24 +24,28 @@ This recipe shows how to turn that raw session history into a **browsable**,
 **searchable**, and **enriched** **journal site** you can navigate
 **in your browser**.
 
-!!! tip "TL;DR"
-    ```bash
-    # Terminal: export and generate
-    ctx recall export --all
-    ctx journal site --serve
-    ```
+## TL;DR
 
-    ```text
-    # AI assistant: enrich
-    /ctx-journal-enrich-all
-    ```
+**Export and Generate**
 
-    ```bash
-    # Terminal: rebuild with enrichments
-    ctx journal site --serve
-    ```
+```bash
+ctx recall export --all
+ctx journal site --serve
+```
 
-    Read on for what each stage does and why.
+**Enrich**
+
+```text
+/ctx-journal-enrich-all
+```
+
+**Rebuild**
+
+```bash
+ctx journal site --serve
+```
+
+Read on for what each stage does and why.
 
 ## Commands and Skills Used
 

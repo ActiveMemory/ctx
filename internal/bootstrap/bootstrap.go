@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -34,6 +34,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
+	"github.com/ActiveMemory/ctx/internal/cli/remind"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
@@ -75,6 +76,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		pad.Cmd,
 		permissions.Cmd,
 		recall.Cmd,
+		remind.Cmd,
 		journal.Cmd,
 		serve.Cmd,
 		system.Cmd,

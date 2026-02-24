@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -52,7 +52,7 @@ func TestLoadWebhook_NoFile(t *testing.T) {
 	defer cleanup()
 
 	// Create key but no encrypted file
-	keyPath := filepath.Join(tempDir, ".context", config.FileScratchpadKey)
+	keyPath := filepath.Join(tempDir, ".context", config.FileContextKey)
 	_ = os.WriteFile(keyPath, make([]byte, 32), 0o600)
 
 	url, err := LoadWebhook()

@@ -14,7 +14,7 @@ ctx pad merge FILE...
 ctx pad merge scratchpad.enc               # single encrypted file
 ctx pad merge scratchpad.md                 # single plaintext file
 ctx pad merge pad-a.enc pad-b.md           # mixed inputs
-ctx pad merge --key /other/.scratchpad.key foreign.enc
+ctx pad merge --key /other/.context.key foreign.enc
 ctx pad merge --dry-run pad-a.enc
 ```
 
@@ -235,7 +235,7 @@ func loadMergeKey(keyFile string) []byte {
         return key
     }
 
-    // Try the project's scratchpad key.
+    // Try the project's encryption key.
     key, err := crypto.LoadKey(keyPath())
     if err != nil {
         return nil  // no key available, will fall back to plaintext

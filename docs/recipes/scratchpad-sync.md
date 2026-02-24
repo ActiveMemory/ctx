@@ -5,41 +5,51 @@ icon: lucide/key-round
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
-You work from multiple machines — a desktop and a laptop, or a local
+You work from multiple machines: a desktop and a laptop, or a local
 machine and a remote dev server.
 
 The scratchpad entries are encrypted. The ciphertext (`.context/scratchpad.enc`)
-travels with git, but the encryption key (`.context/.scratchpad.key`) is
+travels with git, but the encryption key (`.context/.context.key`) is
 gitignored. Without the key on each machine, you cannot read or write entries.
 
 **How do you distribute the key and keep the scratchpad in sync?**
 
-!!! tip "TL;DR"
-    ```bash
-    ctx init                                                 # 1. generates .scratchpad.key
-    scp .context/.scratchpad.key user@machine-b:project/.context/  # 2. copy key
-    chmod 600 project/.context/.scratchpad.key                # 3. secure it
-    # Normal git push/pull syncs the encrypted scratchpad.enc
-    # On conflict: ctx pad resolve → rebuild → git add + commit
-    ```
+## TL;DR
+
+```bash
+ctx init                                                    # 1. generates .context.key
+scp .context/.context.key user@machine-b:project/.context/  # 2. copy key
+chmod 600 project/.context/.context.key                     # 3. secure it
+# Normal git push/pull syncs the encrypted scratchpad.enc
+# On conflict: ctx pad resolve → rebuild → git add + commit
+```
+
+!!! danger "Treat `.context.key` Like a Password"
+    The scratchpad key is the only thing protecting your **encrypted** entries.
+
+    Store a backup in a secure enclave such as a password manager, and treat
+    it with the same care you would give passwords, certificates, or API
+    tokens. 
+
+    **Anyone with the key can decrypt every scratchpad entry**.
 
 ## Commands and Skills Used
 
-| Tool | Type | Purpose |
-|------|------|---------|
-| `ctx init` | CLI command | Initialize context (generates key automatically) |
-| `ctx pad add` | CLI command | Add a scratchpad entry |
-| `ctx pad rm` | CLI command | Remove a scratchpad entry |
-| `ctx pad edit` | CLI command | Edit a scratchpad entry |
-| `ctx pad resolve` | CLI command | Show both sides of a merge conflict |
-| `ctx pad merge` | CLI command | Merge entries from other scratchpad files |
-| `ctx pad import` | CLI command | Bulk-import lines from a file |
-| `ctx pad export` | CLI command | Export blob entries to a directory |
-| `scp` | Shell | Copy the key file between machines |
-| `git push` / `git pull` | Shell | Sync the encrypted file via git |
-| `/ctx-pad` | Skill | Natural language interface to pad commands |
+| Tool                    | Type        | Purpose                                                |
+|-------------------------|-------------|--------------------------------------------------------|
+| `ctx init`              | CLI command | Initialize context (*generates the key automatically*) |
+| `ctx pad add`           | CLI command | Add a scratchpad entry                                 |
+| `ctx pad rm`            | CLI command | Remove a scratchpad entry                              |
+| `ctx pad edit`          | CLI command | Edit a scratchpad entry                                |
+| `ctx pad resolve`       | CLI command | Show both sides of a merge conflict                    |
+| `ctx pad merge`         | CLI command | Merge entries from other scratchpad files              |
+| `ctx pad import`        | CLI command | Bulk-import lines from a file                          |
+| `ctx pad export`        | CLI command | Export blob entries to a directory                     |
+| `scp`                   | Shell       | Copy the key file between machines                     |
+| `git push` / `git pull` | Shell       | Sync the encrypted file via `git`                      |
+| `/ctx-pad`              | Skill       | Natural language interface to pad commands             |
 
 ## The Workflow
 
@@ -50,7 +60,7 @@ Run `ctx init` on your first machine. The key is created automatically:
 ```bash
 ctx init
 # ...
-# Created .context/.scratchpad.key (0600)
+# Created .context/.context.key (0600)
 # Created .context/scratchpad.enc
 ```
 
@@ -62,7 +72,7 @@ Use any secure transfer method:
 
 ```bash
 # scp
-scp .context/.scratchpad.key user@machine-b:project/.context/
+scp .context/.context.key user@machine-b:project/.context/
 
 # Or use a password manager, USB drive, etc.
 ```
@@ -70,13 +80,15 @@ scp .context/.scratchpad.key user@machine-b:project/.context/
 Set permissions on Machine B:
 
 ```bash
-chmod 600 project/.context/.scratchpad.key
+chmod 600 project/.context/.context.key
 ```
 
-!!! warning "Secure the Transfer"
+!!! danger "Secure the Transfer"
     The key is a raw 256-bit AES key. Anyone with the key can decrypt
-    the scratchpad. Use an encrypted channel (SSH, password manager
-    vault) — never paste it in plaintext over email or chat.
+    the scratchpad. Use an encrypted channel (*SSH, password manager,
+    vault*). 
+
+    **Never paste it in plaintext over email or chat**.
 
 ### Step 3: Normal Push/Pull Workflow
 

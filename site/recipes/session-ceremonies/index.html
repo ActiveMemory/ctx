@@ -1290,10 +1290,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-and-skills-used" class="md-nav__link">
+  <a href="#tldr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands and Skills Used
+        TL;DR
       
     </span>
   </a>
@@ -1301,10 +1301,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-explicit-invocation" class="md-nav__link">
+  <a href="#explicit-invocation-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Explicit Invocation
+        Explicit Invocation Matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands-and-skills-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands and Skills Used
       
     </span>
   </a>
@@ -1338,7 +1349,7 @@
   <a href="#phase-1-gather-signal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: Gather signal
+        Phase 1: Gather Signal
       
     </span>
   </a>
@@ -1349,7 +1360,7 @@
   <a href="#phase-2-propose-candidates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: Propose candidates
+        Phase 2: Propose Candidates
       
     </span>
   </a>
@@ -1371,7 +1382,7 @@
   <a href="#phase-4-commit-offer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 4: Commit offer
+        Phase 4: Commit Offer
       
     </span>
   </a>
@@ -2860,10 +2871,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-and-skills-used" class="md-nav__link">
+  <a href="#tldr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands and Skills Used
+        TL;DR
       
     </span>
   </a>
@@ -2871,10 +2882,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-explicit-invocation" class="md-nav__link">
+  <a href="#explicit-invocation-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Explicit Invocation
+        Explicit Invocation Matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands-and-skills-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands and Skills Used
       
     </span>
   </a>
@@ -2908,7 +2930,7 @@
   <a href="#phase-1-gather-signal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: Gather signal
+        Phase 1: Gather Signal
       
     </span>
   </a>
@@ -2919,7 +2941,7 @@
   <a href="#phase-2-propose-candidates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: Propose candidates
+        Phase 2: Propose Candidates
       
     </span>
   </a>
@@ -2941,7 +2963,7 @@
   <a href="#phase-4-commit-offer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 4: Commit offer
+        Phase 4: Commit Offer
       
     </span>
   </a>
@@ -3116,25 +3138,44 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>Sessions have two critical moments: the <strong>start</strong> and the <strong>end</strong>.</p>
-<p>At the start, you need the agent to load context and confirm it knows what
-is going on. At the end, you need to capture whatever the session produced
-before the conversation disappears.</p>
-<p>Most ctx skills work conversationally: "jot down: check DNS after deploy"
+<ul>
+<li><strong>At the start</strong>, you need the agent to load context and confirm it knows what
+is going on. </li>
+<li><strong>At the end</strong>, you need to capture whatever the session produced
+before the conversation disappears.</li>
+</ul>
+<p>Most <code>ctx</code> skills work <strong>conversationally</strong>: "<em>jot down: check DNS after deploy</em>"
 is as good as <code>/ctx-pad add "check DNS after deploy"</code>. But session
 boundaries are different. They are well-defined moments with specific
 requirements, and partial execution is costly.</p>
 <p>If the agent only half-loads context at the start, it works from stale
 assumptions. If it only half-persists at the end, learnings and decisions
 are lost.</p>
-<p><strong>Session ceremonies</strong> are the two bookend skills that mark these
-boundaries. They are the exception to the conversational rule:
-invoke them explicitly as slash commands.</p>
 <div class="admonition tip">
-<p class="admonition-title">TL;DR</p>
-<p><strong>Start</strong>: <code>/ctx-remember</code> — load context, get a structured readback.</p>
-<p><strong>End</strong>: <code>/ctx-wrap-up</code> — review session, propose candidates, persist approved items.</p>
-<p>Use the slash commands, not conversational triggers, for completeness.</p>
+<p class="admonition-title">This Is One of the Few Times Being Explicit Matters</p>
+<p><strong>Session ceremonies</strong> are the two bookend skills that mark these
+boundaries. </p>
+<p>They are the <strong>exception</strong> to the conversational rule:</p>
+<p><strong>Invoke <code>/ctx-remember</code> and <code>/ctx-wrap-up</code>  explicitly as slash commands</strong>.</p>
 </div>
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<p><strong>Start</strong>: <code>/ctx-remember</code>: load context, get a structured readback.</p>
+<p><strong>End</strong>: <code>/ctx-wrap-up</code>: review session, propose candidates, persist approved items.</p>
+<p>Use the slash commands, <strong>not</strong> conversational triggers, for completeness.</p>
+<h2 id="explicit-invocation-matters">Explicit Invocation Matters<a class="headerlink" href="#explicit-invocation-matters" title="Permanent link">&para;</a></h2>
+<p>Most <code>ctx</code> skills encourage natural language. These two are different:</p>
+<p><strong>Well-defined moments</strong>: Sessions have clear boundaries. A slash command
+marks the boundary unambiguously.</p>
+<p><strong>Ambiguity risk</strong>: "<em>Do you remember?</em>" could mean many things.
+<code>/ctx-remember</code> means exactly one thing: load context and present a
+structured readback.</p>
+<p><strong>Completeness</strong>: Conversational triggers risk partial execution. The
+agent might load some files but skip the session history, or persist one
+learning but forget to check for uncommitted changes. The slash command
+runs the full ceremony.</p>
+<p><strong>Muscle memory</strong>: Typing <code>/ctx-remember</code> at session start and
+<code>/ctx-wrap-up</code> at session end becomes a habit, like opening and closing
+braces.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3177,20 +3218,6 @@ invoke them explicitly as slash commands.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="why-explicit-invocation">Why Explicit Invocation<a class="headerlink" href="#why-explicit-invocation" title="Permanent link">&para;</a></h2>
-<p>Most ctx skills encourage natural language. These two are different:</p>
-<p><strong>Well-defined moments.</strong> Sessions have clear boundaries. A slash command
-marks the boundary unambiguously.</p>
-<p><strong>Ambiguity risk.</strong> "Do you remember?" could mean many things.
-<code>/ctx-remember</code> means exactly one thing: load context and present a
-structured readback.</p>
-<p><strong>Completeness.</strong> Conversational triggers risk partial execution. The
-agent might load some files but skip the session history, or persist one
-learning but forget to check for uncommitted changes. The slash command
-runs the full ceremony.</p>
-<p><strong>Muscle memory.</strong> Typing <code>/ctx-remember</code> at session start and
-<code>/ctx-wrap-up</code> at session end becomes a habit, like opening and closing
-braces.</p>
 <h2 id="session-start-ctx-remember">Session Start: /ctx-remember<a class="headerlink" href="#session-start-ctx-remember" title="Permanent link">&para;</a></h2>
 <p>Invoke at the beginning of every session:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-remember
@@ -3212,22 +3239,27 @@ braces.</p>
 agent says "Let me check if there are files..." instead of a confident
 summary, the skill is not working correctly.</p>
 <div class="admonition note">
-<p class="admonition-title">What about 'Do you remember?'</p>
+<p class="admonition-title">What About 'do you remember?'</p>
 <p>The conversational trigger still works. But <code>/ctx-remember</code> guarantees
-the full ceremony runs: context packet, file reads, session history,
-and all four readback sections. The conversational version may cut
-corners.</p>
+the full ceremony runs: </p>
+<ul>
+<li>context packet, </li>
+<li>file reads, </li>
+<li>session history,</li>
+<li>and all four readback sections. </li>
+</ul>
+<p>The conversational version <em>may</em> cut corners.</p>
 </div>
 <h2 id="session-end-ctx-wrap-up">Session End: /ctx-wrap-up<a class="headerlink" href="#session-end-ctx-wrap-up" title="Permanent link">&para;</a></h2>
 <p>Invoke before ending a session where meaningful work happened:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-wrap-up
 </span></code></pre></div>
 <p>The skill runs four phases:</p>
-<h3 id="phase-1-gather-signal">Phase 1: Gather signal<a class="headerlink" href="#phase-1-gather-signal" title="Permanent link">&para;</a></h3>
+<h3 id="phase-1-gather-signal">Phase 1: Gather Signal<a class="headerlink" href="#phase-1-gather-signal" title="Permanent link">&para;</a></h3>
 <p>Silently checks <code>git diff --stat</code>, recent commits, and scans the
 conversation for themes: architectural choices, gotchas, patterns
 established, follow-up work identified.</p>
-<h3 id="phase-2-propose-candidates">Phase 2: Propose candidates<a class="headerlink" href="#phase-2-propose-candidates" title="Permanent link">&para;</a></h3>
+<h3 id="phase-2-propose-candidates">Phase 2: Propose Candidates<a class="headerlink" href="#phase-2-propose-candidates" title="Permanent link">&para;</a></h3>
 <p>Presents a structured list grouped by type:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gu">## Session Wrap-Up</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
@@ -3257,25 +3289,25 @@ Empty categories are omitted.</p>
 <h3 id="phase-3-persist">Phase 3: Persist<a class="headerlink" href="#phase-3-persist" title="Permanent link">&para;</a></h3>
 <p>After you approve (all, some, or modified), the skill runs the
 appropriate <code>ctx add</code> commands and reports results.</p>
-<h3 id="phase-4-commit-offer">Phase 4: Commit offer<a class="headerlink" href="#phase-4-commit-offer" title="Permanent link">&para;</a></h3>
+<h3 id="phase-4-commit-offer">Phase 4: Commit Offer<a class="headerlink" href="#phase-4-commit-offer" title="Permanent link">&para;</a></h3>
 <p>If there are uncommitted changes, offers to run <code>/ctx-commit</code>.
 Does not auto-commit.</p>
 <h2 id="when-to-skip">When to Skip<a class="headerlink" href="#when-to-skip" title="Permanent link">&para;</a></h2>
 <p>Not every session needs ceremonies.</p>
 <p><strong>Skip <code>/ctx-remember</code></strong> when:</p>
 <ul>
-<li>You are doing a quick one-off lookup (reading a file, checking a value)</li>
+<li>You are doing a quick one-off lookup (<em>reading a file, checking a value</em>)</li>
 <li>Context was already loaded this session via <code>/ctx-agent</code></li>
 <li>You are continuing immediately after a previous session and context is
   still fresh</li>
 </ul>
 <p><strong>Skip <code>/ctx-wrap-up</code></strong> when:</p>
 <ul>
-<li>Nothing meaningful happened (only read files, answered a question)</li>
+<li>Nothing meaningful happened (<em>only read files, answered a question</em>)</li>
 <li>You already persisted everything manually during the session</li>
-<li>The session was trivial (typo fix, quick config change)</li>
+<li>The session was trivial (<em>typo fix, quick config change</em>)</li>
 </ul>
-<p>A good heuristic: if the session produced something a future session
+<p><strong>A good heuristic</strong>: if the session produced something a future session
 should know about, run <code>/ctx-wrap-up</code>. If not, just close.</p>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Session start
@@ -3324,16 +3356,18 @@ end-of-session: it is more thorough, covers the full session arc, and
 includes the commit offer. If you already ran <code>/ctx-reflect</code> recently,
 <code>/ctx-wrap-up</code> avoids proposing the same candidates again.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
-<p><strong>Make it a habit.</strong> The value of ceremonies compounds over sessions.
-Each <code>/ctx-wrap-up</code> makes the next <code>/ctx-remember</code> richer.</p>
-<p><strong>Trust the candidates.</strong> The agent scans the full conversation. It
-often catches learnings you forgot about.</p>
-<p><strong>Edit before approving.</strong> If a proposed candidate is close but not
+<ul>
+<li><strong>Make it a habit</strong>: The value of ceremonies compounds over sessions.
+Each <code>/ctx-wrap-up</code> makes the next <code>/ctx-remember</code> richer.</li>
+<li><strong>Trust the candidates</strong>: The agent scans the full conversation. It
+often catches learnings you forgot about.</li>
+<li><strong>Edit before approving</strong>: If a proposed candidate is close but not
 quite right, tell the agent what to change. Do not settle for a vague
-learning when a precise one is possible.</p>
-<p><strong>Do not force empty ceremonies.</strong> If <code>/ctx-wrap-up</code> finds nothing
+learning when a precise one is possible.</li>
+<li><strong>Do not force empty ceremonies</strong>: If <code>/ctx-wrap-up</code> finds nothing
 worth persisting, that is fine. A session that only read files and
-answered questions does not need artificial learnings.</p>
+answered questions does not need artificial learnings.</li>
+</ul>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../session-archaeology/">Browsing and Enriching Past Sessions →</a></strong>:
 Export session history to a browsable journal and enrich entries with

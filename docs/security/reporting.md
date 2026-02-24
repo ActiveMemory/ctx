@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -21,28 +21,47 @@ If you discover a security vulnerability in `ctx`, please report it responsibly.
 
 ### Email
 
-Send details to **security@ctx.ist**
+Send details to **security@ctx.ist**.
 
 ### GitHub Private Reporting
 
-1. Go to the [Security tab](https://github.com/ActiveMemory/ctx/security)
-2. Click "Report a vulnerability"
-3. Provide a detailed description
+1. Go to the [Security tab](https://github.com/ActiveMemory/ctx/security);
+2. Click "*Report a Vulnerability*";
+3. Provide a detailed description.
 
 ### What to Include
 
 * Description of the vulnerability
 * Steps to reproduce
 * Potential impact
-* Suggested fix (if any)
+* Suggested fix (*if any*)
+
+## Attribution
+
+We appreciate responsible disclosure and will acknowledge security researchers
+who report valid vulnerabilities (*unless they prefer to remain anonymous*).
+
+----
 
 ### Response Timeline
+
+!!! note "Open source, Best-Effort Timelines"
+    `ctx` is a volunteer-maintained open source project. 
+
+    The timelines below are **guidelines**, not guarantees, and depend on 
+    contributor availability.
+    
+    We will address security reports on a best-effort basis and prioritize
+    them by severity.
+
 
 | Stage              | Timeframe                                |
 |--------------------|------------------------------------------|
 | Acknowledgment     | Within 48 hours                          |
 | Initial assessment | Within 7 days                            |
 | Resolution target  | Within 30 days (*depending on severity*) |
+
+----
 
 ## Trust Model
 
@@ -120,8 +139,3 @@ or cron scheduling, use:
    add them to `.gitignore`
 3. **Drift detection**: Run `ctx drift` to check for potential issues
 4. **Permission audit**: Review `.claude/settings.local.json` after busy sessions
-
-## Attribution
-
-We appreciate responsible disclosure and will acknowledge security researchers
-who report valid vulnerabilities (*unless they prefer to remain anonymous*).

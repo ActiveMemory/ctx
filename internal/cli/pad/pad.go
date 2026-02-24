@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 		Long: `Manage an encrypted scratchpad stored in .context/.
 
 Entries are short one-liners encrypted with AES-256-GCM. The key is
-stored at .context/.scratchpad.key (gitignored). The encrypted file
+stored at .context/.context.key (gitignored). The encrypted file
 (.context/scratchpad.enc) is committed to git.
 
 File blobs can be stored as entries using "add --file". Blob entries use

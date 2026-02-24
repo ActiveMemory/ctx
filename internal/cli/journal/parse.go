@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -106,6 +106,11 @@ func parseJournalEntry(path, filename string) journalEntry {
 				if fm.SessionID != "" {
 					entry.SessionID = fm.SessionID
 				}
+				if fm.Model != "" {
+					entry.Model = fm.Model
+				}
+				entry.TokensIn = fm.TokensIn
+				entry.TokensOut = fm.TokensOut
 				entry.Topics = fm.Topics
 				entry.Type = fm.Type
 				entry.Outcome = fm.Outcome

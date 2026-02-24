@@ -2,7 +2,7 @@
 
 ## `ctx` (*Context*)
 
-> **Context is a system, not a prompt.**
+> **`ctx` is a system, not a prompt.**
 
 A lightweight, file-based system that enables AI coding assistants to persist,
 structure, and rehydrate project context across sessions.

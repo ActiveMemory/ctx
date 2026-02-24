@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -25,16 +25,17 @@ An AI tool that trusts outdated references will **hallucinate confidently**.
 This recipe shows how to detect drift, fix it, and keep your `.context/`
 directory lean and accurate.
 
-!!! tip "TL;DR"
-    ```bash
-    ctx drift                      # detect problems
-    ctx drift --fix                # auto-fix the easy ones
-    ctx sync --dry-run && ctx sync # reconcile after refactors
-    ctx compact --archive          # archive old completed tasks
-    ctx status                     # verify
-    ```
+## TL;DR
 
-    Or just ask your agent: *"Is our context clean?"*
+```bash
+ctx drift                      # detect problems
+ctx drift --fix                # auto-fix the easy ones
+ctx sync --dry-run && ctx sync # reconcile after refactors
+ctx compact --archive          # archive old completed tasks
+ctx status                     # verify
+```
+
+Or just ask your agent: *"Is our context clean?"*
 
 ## Commands and Skills Used
 
@@ -46,6 +47,7 @@ directory lean and accurate.
 | `ctx compact`          | Command | Archive completed tasks, clean up empty sections |
 | `ctx status`           | Command | Quick health overview                          |
 | `/ctx-drift`           | Skill   | Structural plus semantic drift detection       |
+| `/ctx-map`             | Skill   | Refresh ARCHITECTURE.md from actual codebase   |
 | `/ctx-alignment-audit` | Skill   | Audit doc claims against agent instructions    |
 | `/ctx-status`          | Skill   | In-session context summary                     |
 | `/ctx-prompt-audit`    | Skill   | Audit prompt quality and token efficiency      |

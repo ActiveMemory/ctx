@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -15,18 +15,19 @@ icon: lucide/repeat
 
 *Iterate until done.*
 
-An autonomous loop is an iterative AI development workflow where an agent works
+An **autonomous loop** is an iterative AI development workflow where an agent works
 on tasks until completion—without constant human intervention. Context (`ctx`)
 provides the memory that makes this possible:
 
-- **`ctx`** provides the *memory*: persistent context that survives across iterations
-- **The loop** provides the *automation*: continuous execution until done
+* **`ctx`** provides the *memory*: persistent context that survives across iterations
+* **The loop** provides the *automation*: continuous execution until done
 
 Together, they enable fully autonomous AI development where the agent remembers
 everything across iterations.
 
 !!! note "Origin"
     This pattern is inspired by [Geoffrey Huntley's Ralph Wiggum technique](https://ghuntley.com/ralph/).
+
     We use generic terminology here so the concepts remain clear regardless of trends.
 
 ## How It Works
@@ -53,11 +54,12 @@ graph TD
 6. Loop checks for completion signals
 7. Repeat until converged or blocked
 
-## Quick Start: Shell While Loop (Recommended)
+## Quick Start: Shell While Loop (*Recommended*)
 
 The best way to run an autonomous loop is a plain shell script that invokes
-your AI tool in a fresh process on each iteration. This is "pure ralph":
-the **only** state that carries between iterations is what lives in
+your AI tool in a fresh process on each iteration. This is "*pure ralph*":
+
+The **only** state that carries between iterations is what lives in
 `.context/` and the git history. No context window bleed, no accumulated
 tokens, no hidden state.
 
@@ -104,12 +106,13 @@ chmod +x loop.sh
 
 You can also generate this script with `ctx loop` (see [CLI Reference](../reference/cli-reference.md#ctx-loop)).
 
-### Why a Shell Loop?
+### Why Do We Use a Shell Loop?
 
 Each iteration starts a **fresh AI process** with zero context window history.
-The agent knows only what it reads from `.context/` files — exactly the
-information you chose to persist. This is the core Ralph principle: memory is
-explicit, not accidental.
+The agent knows only what it reads from `.context/` files: Exactly the
+information you chose to persist. 
+
+This is the core loop principle: memory is **explicit**, not accidental.
 
 ## Alternative: Claude Code's Built-in Loop
 
@@ -125,23 +128,23 @@ Claude Code has built-in loop support:
 
 This is convenient for quick iterations, but be aware of important caveats:
 
-!!! warning "Not Pure Ralph"
+!!! warning "This Loop Is not Pure"
     Claude Code's `/loop` runs all iterations **within the same session**.
     This means:
 
-    - **State leaks between iterations.** The context window accumulates
+    - **State leaks between iterations**: The context window accumulates
       output from every previous iteration. The agent "remembers" things
-      it saw earlier — even if they were never persisted to `.context/`.
-    - **Token budget degrades.** Each iteration adds to the context window,
+      it saw earlier (*even if they were never persisted to `.context/`*).
+    - **Token budget degrades**: Each iteration adds to the context window,
       leaving less room for actual work in later iterations.
-    - **Not ergonomic for long runs.** Users report that the built-in loop
+    - **Not ergonomic for long runs**: Users report that the built-in loop
       is less predictable for 10+ iteration runs compared to a shell loop.
 
-    For short explorations (2-5 iterations) or interactive use, `/loop`
+    For short explorations (*2-5 iterations*) or interactive use, `/loop`
     works fine. For overnight unattended runs or anything where iteration
     independence matters, use the shell while loop instead.
 
-## The PROMPT.md File
+## The `PROMPT.md` File
 
 The prompt file instructs the AI on how to work autonomously. Here's a template:
 
@@ -210,6 +213,8 @@ The loop watches for these signals in AI output:
 
 ### Example Usage
 
+**converged state**
+
 ```markdown
 I've completed all tasks in TASKS.md:
 - [x] Set up project structure
@@ -222,6 +227,8 @@ No pending tasks remain.
 SYSTEM_CONVERGED
 ```
 
+**blocked state**
+
 ```markdown
 I cannot proceed with the "Deploy to production" task because:
 - Missing AWS credentials
@@ -232,14 +239,14 @@ Please provide credentials and confirm deployment region.
 SYSTEM_BLOCKED
 ```
 
-## Why Context + Loops Work Well Together
+## Why `ctx` and  Loops Work Well Together
 
-| Without ctx                 | With ctx                             |
-|-----------------------------|--------------------------------------|
-| Each iteration starts fresh | Each iteration has full history      |
-| Decisions get re-made       | Decisions persist in DECISIONS.md    |
-| Learnings are lost          | Learnings accumulate in LEARNINGS.md |
-| Tasks can be forgotten      | Tasks tracked in TASKS.md            |
+| Without `ctx`               | With `ctx`                             |
+|-----------------------------|----------------------------------------|
+| Each iteration starts fresh | Each iteration has full history        |
+| Decisions get re-made       | Decisions persist in `DECISIONS.md`    |
+| Learnings are lost          | Learnings accumulate in `LEARNINGS.md` |
+| Tasks can be forgotten      | Tasks tracked in `TASKS.md`            |
 
 ### Automatic Context Updates
 
@@ -300,12 +307,12 @@ ctx init --ralph
 
 The `--ralph` flag creates a `PROMPT.md` where the agent:
 
-- Works autonomously without asking clarifying questions
-- Follows one-task-per-iteration discipline
-- Uses `SYSTEM_CONVERGED` / `SYSTEM_BLOCKED` signals
+* Works autonomously without asking clarifying questions;
+* Follows one-task-per-iteration discipline;
+* Uses `SYSTEM_CONVERGED` / `SYSTEM_BLOCKED` signals;
 
 Without `--ralph`, the agent is encouraged to ask questions when requirements
-are unclear — better for collaborative human-agent sessions.
+are unclear: Better for collaborative human-agent sessions.
 
 ## Example Project Structure
 
@@ -377,11 +384,12 @@ After completing a task, you MUST:
 **Cause**: Task not marked complete before next iteration
 
 **Fix**: Ensure commit happens after context update:
+
 ```markdown
 Order of operations:
 1. Complete coding work
-2. Update context files (ctx complete, ctx add)
-3. Commit ALL changes including .context/
+2. Update context files (*`ctx complete`, `ctx add`*)
+3. Commit **ALL** changes including `.context/`
 4. Then signal status
 ```
 
@@ -389,7 +397,8 @@ Order of operations:
 
 **Cause**: Constitution not read first
 
-**Fix**: Make constitution check explicit in PROMPT.md:
+**Fix**: Make constitution check explicit in `PROMPT.md`:
+
 ```markdown
 BEFORE any work:
 1. Read .context/CONSTITUTION.md
@@ -399,10 +408,11 @@ BEFORE any work:
 
 ## Further Reading
 
-- [Building ctx Using ctx](../blog/2026-01-27-building-ctx-using-ctx.md) — The dogfooding story: how autonomous loops built the tool that powers them
+- [Building ctx Using ctx](../blog/2026-01-27-building-ctx-using-ctx.md): 
+  The dogfooding story: how autonomous loops built the tool that powers them
 
 ## Resources
 
-- [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/) — Original inspiration
-- [Context CLI](../reference/cli-reference.md) — Command reference
-- [Integrations](integrations.md) — Tool-specific setup
+- [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/): The original inspiration
+- [Context CLI](../reference/cli-reference.md): Command reference
+- [Integrations](integrations.md): Tool-specific setup

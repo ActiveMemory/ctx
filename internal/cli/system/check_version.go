@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -108,11 +108,12 @@ func runCheckVersion(cmd *cobra.Command) error {
 	return nil
 }
 
-// checkKeyAge emits a nudge when the scratchpad key is older than the
+// checkKeyAge emits a nudge when the encryption key is older than the
 // configured rotation threshold. Runs at most once per day (shares the
 // daily throttle from the version check's marker file).
 func checkKeyAge(cmd *cobra.Command) {
-	keyPath := filepath.Join(rc.ContextDir(), config.FileScratchpadKey)
+	config.MigrateKeyFile(rc.ContextDir())
+	keyPath := filepath.Join(rc.ContextDir(), config.FileContextKey)
 	info, err := os.Stat(keyPath)
 	if err != nil {
 		return // no key — nothing to check
@@ -129,15 +130,15 @@ func checkKeyAge(cmd *cobra.Command) {
 	cmd.Println("IMPORTANT: Relay this security reminder to the user VERBATIM.")
 	cmd.Println()
 	cmd.Println("┌─ Key Rotation ──────────────────────────────────┐")
-	cmd.Println(fmt.Sprintf("│ Your scratchpad key is %d days old.                 ", ageDays))
+	cmd.Println(fmt.Sprintf("│ Your encryption key is %d days old.                 ", ageDays))
 	cmd.Println("│ Consider rotating: ctx pad rotate-key                │")
 	if line := contextDirLine(); line != "" {
 		cmd.Println("│ " + line)
 	}
 	cmd.Println("└──────────────────────────────────────────────────┘")
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Scratchpad key is %d days old", ageDays), "")
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Scratchpad key is %d days old", ageDays), "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "")
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "")
 }
 
 // parseMajorMinor extracts major and minor version numbers from a semver

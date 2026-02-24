@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -20,7 +20,7 @@ import (
 
 // Error messages matching the spec.
 const (
-	errNoKey       = "encrypted scratchpad found but no key; place your key at .context/.scratchpad.key"
+	errNoKey       = "encrypted scratchpad found but no key; place your key at .context/.context.key"
 	errDecryptFail = "decryption failed: wrong key?"
 	msgEmpty       = "Scratchpad is empty."
 	msgKeyCreated  = "Scratchpad key created at %s\nCopy this file to your other machines at the same path.\n"
@@ -39,9 +39,10 @@ func scratchpadPath() string {
 	return filepath.Join(rc.ContextDir(), config.FileScratchpadMd)
 }
 
-// keyPath returns the full path to the scratchpad key file.
+// keyPath returns the full path to the encryption key file.
 func keyPath() string {
-	return filepath.Join(rc.ContextDir(), config.FileScratchpadKey)
+	config.MigrateKeyFile(rc.ContextDir())
+	return filepath.Join(rc.ContextDir(), config.FileContextKey)
 }
 
 // ensureKey generates a scratchpad key if one doesn't exist and there is no
@@ -77,7 +78,7 @@ func ensureKey() error {
 	}
 
 	// Best-effort: add key to .gitignore.
-	_ = ensureGitignore(rc.ContextDir(), config.FileScratchpadKey)
+	_ = ensureGitignore(rc.ContextDir(), config.FileContextKey)
 
 	fmt.Fprintf(os.Stderr, msgKeyCreated, kp)
 	return nil

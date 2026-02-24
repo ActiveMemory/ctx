@@ -3040,7 +3040,7 @@ Entries are numbered, reorderable, and persist across sessions.</p>
 <tbody>
 <tr>
 <td>Encryption key</td>
-<td><code>.context/.scratchpad.key</code></td>
+<td><code>.context/.context.key</code></td>
 <td>Gitignored, <code>0600</code> permissions</td>
 </tr>
 <tr>
@@ -3178,7 +3178,7 @@ when merging work from parallel worktrees, other machines, or teammates:</p>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>pad-a.enc<span class="w"> </span>notes.md
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Merge a foreign encrypted pad using its key</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.scratchpad.key<span class="w"> </span>foreign.enc
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.context.key<span class="w"> </span>foreign.enc
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Preview without writing</span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
@@ -3288,14 +3288,14 @@ don't need to remember the syntax:</p>
 <p>The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.</p>
 <h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
-<p>The encryption key (<code>.context/.scratchpad.key</code>) is gitignored. It only
+<p>The encryption key (<code>.context/.context.key</code>) is gitignored. It only
 exists in the main checkout. In a git worktree, <code>ctx pad</code> commands fail
 gracefully — no key is found, no crash, but the pad is inaccessible.</p>
 <p>Use the scratchpad from the main checkout only. This is by design: the
 key never leaves the machine where it was generated, and worktrees are
 ephemeral working copies.</p>
 <h2 id="key-distribution">Key Distribution<a class="headerlink" href="#key-distribution" title="Permanent link">&para;</a></h2>
-<p>The encryption key (<code>.context/.scratchpad.key</code>) stays on the machine
+<p>The encryption key (<code>.context/.context.key</code>) stays on the machine
 where it was generated. <code>ctx</code> <strong>never</strong> transmits it.</p>
 <p>To share the scratchpad across machines:</p>
 <ol>

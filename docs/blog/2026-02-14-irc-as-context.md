@@ -242,7 +242,7 @@ a step-by-step runbook:
 When my client connects to my bouncer, it prints:
 
 ```text
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.

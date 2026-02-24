@@ -11,24 +11,33 @@ You have installed `ctx` and want to set it up with your AI coding assistant so
 that context persists across sessions. Different tools have different
 integration depths. For example: 
 
-* Claude Code supports native hooks that load and save context automatically
-* Cursor injects context via its system prompt
-* Aider reads context files through its `--read` flag
+* Claude Code supports native hooks that load and save context automatically.
+* Cursor injects context via its system prompt.
+* Aider reads context files through its `--read` flag.
 
 This recipe walks through the complete setup for each tool, from initialization
 through verification, so you end up with a working memory layer regardless of
 which AI tool you use.
 
-!!! tip "TL;DR"
-    ```bash
-    cd your-project
-    ctx init                              # creates .context/ and seeds permissions
-    source <(ctx completion zsh)          # shell completion (or bash/fish)
-    # For other tools:
-    ctx hook cursor                       # or: aider, copilot, windsurf
-    ```
+## TL;DR
 
-    Then start your AI tool and ask: *"Do you remember?"*
+```bash
+cd your-project
+ctx init                      # creates .context/
+source <(ctx completion zsh)  # shell completion (or bash/fish)
+
+# -- Claude Code (automatic after plugin install) --
+claude /plugin marketplace add ActiveMemory/ctx
+claude /plugin install ctx@activememory-ctx
+
+# -- Cursor / Aider / Copilot / Windsurf --
+ctx hook cursor # or: aider, copilot, windsurf
+```
+
+Create a [`.ctxrc`](../home/configuration.md) in your project root to configure
+token budgets, context directory, drift thresholds, and more.
+
+Then start your AI tool and ask: "**Do you remember?**"
 
 ## Commands and Skills Used
 
@@ -40,7 +49,7 @@ which AI tool you use.
 | `ctx load`          | Output assembled context in read order (for manual pasting)  |
 | `ctx watch`         | Auto-apply context updates from AI output (non-native tools) |
 | `ctx completion`    | Generate shell autocompletion for bash, zsh, or fish         |
-| `ctx recall export` | Export sessions to editable journal Markdown                  |
+| `ctx recall export` | Export sessions to editable journal Markdown                 |
 
 ## The Workflow
 
@@ -68,6 +77,16 @@ This produces the following structure:
   AGENT_PLAYBOOK.md   # How AI tools should use this system
 ```
 
+!!! tip "Using a Different `.context` Directory"
+    The `.context/` directory doesn't have to live inside your project. You can
+    point `ctx` to an external folder via `.ctxrc`, the `CTX_DIR` environment
+    variable, or the `--context-dir` CLI flag. 
+
+    This is useful for monorepos or shared context across repositories.
+
+    See [Configuration](../home/configuration.md#environment-variables) for
+    details and [External Context](external-context.md) for a full recipe.
+
 For Claude Code, install the **ctx plugin** to get hooks and skills:
 
 ```bash
@@ -75,8 +94,8 @@ claude /plugin marketplace add ActiveMemory/ctx
 claude /plugin install ctx@activememory-ctx
 ```
 
-If you only need the core files (*useful for lightweight setups with Cursor or
-Copilot*), use the `--minimal` flag:
+If you only need the core files (*useful for lightweight setups*),
+use the `--minimal` flag:
 
 ```bash
 ctx init --minimal
@@ -106,13 +125,20 @@ ctx hook windsurf
 Each command prints the configuration you need. How you apply it depends on the
 tool.
 
-!!! tip "Claude is a First-Class Citizen"
-    With the ctx plugin installed, Claude Code gets hooks and skills
+#### Claude Code
+
+No action needed. Just install `ctx` from the Marketplace
+as `ActiveMemory/ctx`.
+
+!!! tip "Claude Code is a First-Class Citizen"
+    With the `ctx` plugin installed, Claude Code gets hooks and skills
     automatically. The `PreToolUse` hook runs
     `ctx agent --budget 4000` on every tool call
     (*with a 10-minute cooldown so it only fires once per window*).
 
-**Cursor**: Add the system prompt snippet to `.cursor/settings.json`:
+#### Cursor 
+
+Add the system prompt snippet to `.cursor/settings.json`:
 
 ```json
 {
@@ -128,7 +154,9 @@ ctx agent --budget 4000 | xclip    # Linux
 ctx agent --budget 4000 | pbcopy   # macOS
 ```
 
-**Aider**: Create `.aider.conf.yml` so context files are loaded on every
+#### Aider
+
+Create `.aider.conf.yml` so context files are loaded on every
 session:
 
 ```yaml
@@ -174,26 +202,29 @@ After sourcing, typing `ctx a<TAB>` completes to `ctx agent`, and
 
 Start a fresh session in your AI tool and ask:
 
-> **"Do you remember?"**
+**"Do you remember?"**
+
 
 A correctly configured tool responds with specific context: current tasks from
 `TASKS.md`, recent decisions, and previous session topics. It should **not** say
 "*I don't have memory*" or "*Let me search for files.*"
 
 This question checks the *passive* side of memory. A properly set-up agent is
-also **proactive**: it treats context maintenance as part of its job.
+also **proactive**: it treats context maintenance as part of its job:
 
-* After a debugging session, it offers to save a **learning**
-* After a trade-off discussion, it asks whether to record the decision
-* After completing a task, it suggests follow-up items
+* After a debugging session, it offers to save a **learning**.
+* After a trade-off discussion, it asks whether to record the **decision**.
+* After completing a task, it suggests **follow-up items**.
 
-The "*do you remember?*" check verifies both halves: recall **and**
+The "**do you remember?**" check verifies both halves: recall **and**
 responsibility.
 
 For example, after resolving a tricky bug, a proactive agent might say:
 
-> That Redis timeout issue was subtle. Want me to save this as a learning so
-> we don't hit it again?
+```text
+That Redis timeout issue was subtle. Want me to save this as a *learning*
+so we don't hit it again?
+```
 
 If you see behavior like this, the setup is working end to end.
 
@@ -253,7 +284,7 @@ To preview changes without modifying files:
 ctx watch --dry-run --log /tmp/ai.log
 ```
 
-### Step 6: Export Session Transcripts (Optional)
+### Step 6: Export Session Transcripts (*Optional*)
 
 If you want to browse past session transcripts, export them to the journal:
 
@@ -265,7 +296,7 @@ This converts raw session data into editable Markdown files in
 `.context/journal/`. You can then enrich them with metadata using
 `/ctx-journal-enrich-all` inside your AI assistant.
 
-## Putting It Together
+## Putting It All Together
 
 Here is the condensed setup for all three tools:
 

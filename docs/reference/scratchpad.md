@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -25,7 +25,7 @@ Scratchpad entries are encrypted with `AES-256-GCM` before touching the disk.
 
 | Component      | Path                       | Git status                     |
 |----------------|----------------------------|--------------------------------|
-| Encryption key | `.context/.scratchpad.key` | Gitignored, `0600` permissions |
+| Encryption key | `.context/.context.key` | Gitignored, `0600` permissions |
 | Encrypted data | `.context/scratchpad.enc`  | Committed                      |
 
 The key is generated automatically during `ctx init` (256-bit via
@@ -123,7 +123,7 @@ ctx pad merge worktree/.context/scratchpad.enc
 ctx pad merge pad-a.enc notes.md
 
 # Merge a foreign encrypted pad using its key
-ctx pad merge --key /other/.scratchpad.key foreign.enc
+ctx pad merge --key /other/.context.key foreign.enc
 
 # Preview without writing
 ctx pad merge --dry-run pad-a.enc pad-b.md
@@ -196,7 +196,7 @@ English; the agent picks the right command.
 
 ## Worktrees
 
-The encryption key (`.context/.scratchpad.key`) is gitignored. It only
+The encryption key (`.context/.context.key`) is gitignored. It only
 exists in the main checkout. In a git worktree, `ctx pad` commands fail
 gracefully — no key is found, no crash, but the pad is inaccessible.
 
@@ -206,7 +206,7 @@ ephemeral working copies.
 
 ## Key Distribution
 
-The encryption key (`.context/.scratchpad.key`) stays on the machine
+The encryption key (`.context/.context.key`) stays on the machine
 where it was generated. `ctx` **never** transmits it.
 
 To share the scratchpad across machines:

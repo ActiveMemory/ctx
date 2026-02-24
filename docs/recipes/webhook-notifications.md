@@ -5,13 +5,21 @@ icon: lucide/bell
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 Your agent runs autonomously — loops, implements, releases — while you're away
 from the terminal. You have no way to know when it finishes, hits a limit, or
 when a hook fires a nudge.
 
 **How do you get notified about agent activity without watching the terminal?**
+
+## TL;DR
+
+```bash
+ctx notify setup                    # configure webhook URL (encrypted)
+ctx notify test                     # verify delivery
+# Hooks auto-notify on: session-end, loop-iteration, resource-danger
+```
 
 ## Commands and Skills Used
 
@@ -49,7 +57,7 @@ ctx notify setup
 ```
 
 This encrypts the URL with AES-256-GCM using the same key as the scratchpad
-(`.context/.scratchpad.key`). The encrypted file (`.context/.notify.enc`) is
+(`.context/.context.key`). The encrypted file (`.context/.notify.enc`) is
 safe to commit. The key is gitignored.
 
 ### Step 3: Test It
@@ -128,16 +136,16 @@ Every notification sends a JSON POST:
 
 | Component | Location | Committed? | Permissions |
 |-----------|----------|------------|-------------|
-| Encryption key | `.context/.scratchpad.key` | No (gitignored) | `0600` |
+| Encryption key | `.context/.context.key` | No (gitignored) | `0600` |
 | Encrypted URL | `.context/.notify.enc` | Yes (safe) | `0600` |
 | Webhook URL | Never on disk in plaintext | N/A | N/A |
 
-The key is shared with the scratchpad. If you rotate the scratchpad key,
+The key is shared with the scratchpad. If you rotate the encryption key,
 re-run `ctx notify setup` to re-encrypt the webhook URL with the new key.
 
 ## Key Rotation
 
-ctx checks the age of `.context/.scratchpad.key` once per day. If it's older
+ctx checks the age of `.context/.context.key` once per day. If it's older
 than 90 days (configurable via `notify.key_rotation_days`), a VERBATIM nudge
 is emitted suggesting rotation.
 
@@ -149,8 +157,8 @@ notify:
 
 ## Worktrees
 
-The webhook URL is encrypted with the same key as the scratchpad
-(`.context/.scratchpad.key`), which is gitignored. In a git worktree,
+The webhook URL is encrypted with the same encryption key
+(`.context/.context.key`), which is gitignored. In a git worktree,
 the key is absent — notifications silently do nothing.
 
 This means **agents running in worktrees cannot send webhook alerts**.

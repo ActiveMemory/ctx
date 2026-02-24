@@ -1837,6 +1837,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2827,6 +2838,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3055,6 +3077,12 @@ session-specific entries that expand the agent's surface area beyond intent.</p>
 <p>Since <code>settings.local.json</code> is <code>.gitignore</code>d, there is no PR review or CI
 check. The file drifts independently on every machine, and there is no
 built-in way to reset to a known-good state.</p>
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/sanitize-permissions<span class="w">               </span><span class="c1"># audit for dangerous patterns</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot<span class="w">            </span><span class="c1"># save golden image</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># ... sessions accumulate cruft ...</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>restore<span class="w">             </span><span class="c1"># reset to golden state</span>
+</span></code></pre></div>
 <h2 id="the-solution">The Solution<a class="headerlink" href="#the-solution" title="Permanent link">&para;</a></h2>
 <p>Save a curated <code>settings.local.json</code> as a <strong>golden image</strong>, then restore
 from it to drop session-accumulated permissions. The golden file
@@ -3092,31 +3120,31 @@ it belongs, not because you clicked "Allow" once during debugging.</p>
 <p>See the <a href="../claude-code-permissions/">Permission Hygiene</a> recipe for
 recommended defaults.</p>
 <h3 id="2-take-a-snapshot">2. Take a snapshot<a class="headerlink" href="#2-take-a-snapshot" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Saved golden image: .claude/settings.golden.json</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Saved golden image: .claude/settings.golden.json</span>
 </span></code></pre></div>
 <p>This creates a byte-for-byte copy. No re-encoding, no indent changes.</p>
 <h3 id="3-commit-the-golden-file">3. Commit the golden file<a class="headerlink" href="#3-commit-the-golden-file" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>add<span class="w"> </span>.claude/settings.golden.json
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add permission golden image&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>.claude/settings.golden.json
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add permission golden image&quot;</span>
 </span></code></pre></div>
 <p>The golden file is <strong>not</strong> gitignored (unlike <code>settings.local.json</code>). This
 is intentional: it becomes a team-shared baseline.</p>
 <h3 id="4-auto-restore-at-session-start">4. Auto-restore at session start<a class="headerlink" href="#4-auto-restore-at-session-start" title="Permanent link">&para;</a></h3>
 <p>Add this instruction to your <code>CLAUDE.md</code>:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gu">## On Session Start</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Run <span class="sb">`ctx permissions restore`</span> to reset permissions to the golden image.
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## On Session Start</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Run <span class="sb">`ctx permissions restore`</span> to reset permissions to the golden image.
 </span></code></pre></div>
 <p>The agent will restore the golden image at the start of every session,
 automatically dropping any permissions accumulated during previous sessions.</p>
 <h3 id="5-update-when-intentional-changes-are-made">5. Update when intentional changes are made<a class="headerlink" href="#5-update-when-intentional-changes-are-made" title="Permanent link">&para;</a></h3>
 <p>When you add a new permanent permission (not a one-off debugging entry):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Edit settings.local.json with the new permission</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Then update the golden image:</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>git<span class="w"> </span>add<span class="w"> </span>.claude/settings.golden.json
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update permission golden image: add cargo test&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Edit settings.local.json with the new permission</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Then update the golden image:</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>git<span class="w"> </span>add<span class="w"> </span>.claude/settings.golden.json
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update permission golden image: add cargo test&quot;</span>
 </span></code></pre></div>
 <h2 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h2>
 <p>You don't need to remember exact commands. These natural-language prompts

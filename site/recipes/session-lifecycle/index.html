@@ -1260,6 +1260,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2860,6 +2871,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3115,24 +3137,44 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>"<strong>What does a full ctx session look like start to finish?</strong>"</p>
+<p>"<strong>What does a full <code>ctx</code> session look like from start to finish?</strong>"</p>
 <p>You have <code>ctx</code> installed and your <code>.context/</code> directory initialized, but the
 individual commands and skills feel disconnected.</p>
 <p>How do they fit together into a coherent workflow?</p>
 <p>This recipe walks through a complete session, from opening your editor to
 persisting context before you close it, so you can see how each piece connects.</p>
-<div class="admonition tip">
-<p class="admonition-title">TL;DR</p>
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Load</strong>: <code>/ctx-remember</code> — load context, get structured readback</li>
-<li><strong>Orient</strong>: <code>/ctx-status</code> — check file health and token usage</li>
-<li><strong>Pick</strong>: <code>/ctx-next</code> — choose what to work on</li>
-<li><strong>Work</strong>: implement, test, iterate</li>
-<li><strong>Commit</strong>: <code>/ctx-commit</code> — commit and capture decisions/learnings</li>
-<li><strong>Reflect</strong>: <code>/ctx-reflect</code> — identify what to persist (at milestones)</li>
-<li><strong>Wrap up</strong>: <code>/ctx-wrap-up</code> — end-of-session ceremony</li>
+<li><strong>Load</strong>: <code>/ctx-remember</code>: load context, get structured <strong>readback</strong>.</li>
+<li><strong>Orient</strong>: <code>/ctx-status</code>: check file health and token usage.</li>
+<li><strong>Pick</strong>: <code>/ctx-next</code>: choose what to work on.</li>
+<li><strong>Work</strong>: implement, test, iterate.</li>
+<li><strong>Commit</strong>: <code>/ctx-commit</code>: commit and capture decisions/learnings.</li>
+<li><strong>Reflect</strong>: <code>/ctx-reflect</code>: identify what to persist (<em>at milestones</em>)</li>
+<li><strong>Wrap up</strong>: <code>/ctx-wrap-up</code>: end-of-session ceremony.</li>
 </ol>
 <p>Read on for the full walkthrough with examples.</p>
+<div class="admonition note">
+<p class="admonition-title">What is a Readback?</p>
+<p>A <strong>readback</strong> is a <strong>structured summary</strong> where the agent plays back what
+it knows:</p>
+<ul>
+<li>last session,</li>
+<li>active tasks,</li>
+<li>recent decisions.</li>
+</ul>
+<p>This way, you can confirm it loaded the right context.</p>
+<p>The term "<em>readback</em>" comes from aviation, where pilots repeat instructions
+back to air traffic control to confirm they heard correctly.</p>
+<p>Same idea in <code>ctx</code>: The agent tells you what it
+"<em>thinks</em>" is going on, and you correct anything that's off before the work
+begins.</p>
+<ul>
+<li><strong>Last session</strong>: topic, date, what was accomplished</li>
+<li><strong>Active work</strong>: pending and in-progress tasks</li>
+<li><strong>Recent context</strong>: 1-2 decisions or learnings that matter now</li>
+<li><strong>Next step</strong>: suggestion or question about what to focus on</li>
+</ul>
 </div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
@@ -3221,29 +3263,7 @@ might skip committing</em>) but the full arc looks like this:</p>
 runs <code>ctx agent --budget 4000</code>, reads the files listed in the context packet
 (<code>TASKS.md</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, <code>CONVENTIONS.md</code>), checks
 <code>ctx recall list --limit 3</code> for recent sessions, and then presents a
-structured <strong>readback</strong>:</p>
-<div class="admonition note">
-<p class="admonition-title">What is a Readback?</p>
-<p>A <strong>readback</strong> is a <strong>structured summary</strong> where the agent plays back what
-it knows:</p>
-<ul>
-<li>last session</li>
-<li>active tasks</li>
-<li>recent decisions</li>
-</ul>
-<p>This way, you can confirm it loaded the right context.</p>
-<p>The term "<em>readback</em>" comes from aviation, where pilots repeat instructions
-back to air traffic control to confirm they heard correctly.</p>
-<p>Same idea in <code>ctx</code>: The agent tells you what it
-"<em>thinks</em>" is going on, and you correct anything that's off before the work
-begins.</p>
-<ul>
-<li><strong>Last session</strong>: topic, date, what was accomplished</li>
-<li><strong>Active work</strong>: pending and in-progress tasks</li>
-<li><strong>Recent context</strong>: 1-2 decisions or learnings that matter now</li>
-<li><strong>Next step</strong>: suggestion or question about what to focus on</li>
-</ul>
-</div>
+structured <strong>readback</strong>.</p>
 <p>The <strong>readback</strong> should feel like a <strong>recall</strong>, not a file system tour.
 If you see "<em>Let me check if there are files...</em>" instead of a confident
 summary, the context system is not loaded properly.</p>
@@ -3307,6 +3327,14 @@ unsaved work. You typically do not need to invoke this skill manually.</p>
 <p>When the work is ready, use the context-aware commit instead of raw <code>git commit</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/ctx-commit
 </span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">The Agent May Recommend Committing</p>
+<p>You do not always need to invoke <code>/ctx-commit</code> explicitly.</p>
+<p>After a commit, the agent may proactively offer to capture context:</p>
+<p>"<em>We just made a trade-off there. Want me to record it as a decision?</em>"</p>
+<p>This is normal: The Agent Playbook encourages persisting at milestones,
+and a commit is a natural milestone.</p>
+</div>
 <p>As an alternative, you can ask the assistant "can we commit this?" and it will
 pick up the <code>/ctx-commit</code> skill for you.</p>
 <p>The skill runs a pre-commit build check (<em>for Go projects, <code>go build</code></em>),
@@ -3325,39 +3353,12 @@ lesson, and application fields. This is the bridge between committing code and
 remembering why the code looks the way it does.</p>
 <p>If source code changed in areas that affect documentation, the skill also
 offers to check for doc drift.</p>
-<div class="admonition tip">
-<p class="admonition-title">The Agent May Recommend Committing</p>
-<p>You do not always need to invoke <code>/ctx-commit</code> explicitly.</p>
-<p>After a commit, the agent may proactively offer to capture context:</p>
-<p>"<em>We just made a trade-off there. Want me to record it as a decision?</em>"</p>
-<p>This is normal: The Agent Playbook encourages persisting at milestones,
-and a commit is a natural milestone.</p>
-</div>
 <hr />
 <h3 id="step-6-reflect">Step 6: Reflect<a class="headerlink" href="#step-6-reflect" title="Permanent link">&para;</a></h3>
 <p>At natural breakpoints (<em>after finishing a feature, resolving a complex bug,
 or before switching tasks</em>) pause to reflect:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-reflect
 </span></code></pre></div>
-<p>The skill works through a checklist: learnings discovered, decisions made, tasks
-completed or created, and whether there are items worth persisting. It then
-presents a summary with specific items to persist, each with the exact command
-to run:</p>
-<blockquote>
-<p>I would suggest persisting:</p>
-<ul>
-<li><strong>Learning</strong>: <code>$PPID</code> in PreToolUse hooks resolves to the Claude Code PID
-  <code>ctx add learning --context "..." --lesson "..." --application "..."</code></li>
-<li><strong>Task</strong>: mark "Add cooldown to ctx agent" as done</li>
-<li><strong>Decision</strong>: tombstone-based cooldown with 10m default
-  <code>ctx add decision "..."</code></li>
-</ul>
-<p>Want me to persist any of these?</p>
-</blockquote>
-<p>The skill asks before persisting anything. You choose what to keep.</p>
-<p>Not every commit needs reflection. A typo fix does not.
-But when you have been debugging for an hour and finally understand the
-root cause, that is worth a reflection checkpoint.</p>
 <div class="admonition info">
 <p class="admonition-title">Agents Reflect at Milestones</p>
 <p>Agents often reflect without explicit invocation.</p>
@@ -3370,18 +3371,30 @@ save that as a learning?</em>"</p>
 <p>You do not need to say <code>/ctx-reflect</code> for this to happen; the agent treats
 milestones as reflection triggers on its own.</p>
 </div>
+<p>The skill works through a checklist: learnings discovered, decisions made, tasks
+completed or created, and whether there are items worth persisting. It then
+presents a summary with specific items to persist, each with the exact command
+to run:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>I would suggest persisting:
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>- **Learning**: `$PPID` in PreToolUse hooks resolves to the Claude Code PID
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  `ctx add learning --context &quot;...&quot; --lesson &quot;...&quot; --application &quot;...&quot;`
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>- **Task**: mark &quot;Add cooldown to ctx agent&quot; as done
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>- **Decision**: tombstone-based cooldown with 10m default
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  `ctx add decision &quot;...&quot;`
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Want me to persist any of these?
+</span></code></pre></div>
+<p>The skill asks before persisting anything. You choose what to keep.</p>
+<p>Not every commit needs reflection. A typo fix does not.
+But when you have been debugging for an hour and finally understand the
+root cause, that is worth a reflection checkpoint.</p>
 <hr />
 <h3 id="step-7-persist-before-ending">Step 7: Persist Before Ending<a class="headerlink" href="#step-7-persist-before-ending" title="Permanent link">&para;</a></h3>
 <p>Before ending the session, run the wrap-up ceremony to capture outstanding
 learnings, decisions, conventions, and tasks:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/ctx-wrap-up
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>/ctx-wrap-up
 </span></code></pre></div>
-<p>The skill gathers signal from <code>git diff</code>, recent commits, and the
-conversation, then proposes structured candidates for your approval. After
-you select which to keep, it persists them via <code>ctx add</code> and offers
-<code>/ctx-commit</code> if uncommitted changes remain.</p>
-<p>Session transcripts are automatically captured by Claude Code and can be
-browsed later with <code>ctx recall list</code> and <code>ctx recall show</code>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Ceremony Skills</p>
 <p><code>/ctx-remember</code> at session start and <code>/ctx-wrap-up</code> at session end are
@@ -3390,71 +3403,75 @@ completeness, not conversationally.</p>
 <p>See <a href="../session-ceremonies/">Session Ceremonies</a> for details on why
 these two skills are the exception to the conversational rule.</p>
 </div>
+<p>The skill gathers signal from <code>git diff</code>, recent commits, and the
+conversation, then proposes structured candidates for your approval. After
+you select which to keep, it persists them via <code>ctx add</code> and offers
+<code>/ctx-commit</code> if uncommitted changes remain.</p>
+<p>Session transcripts are automatically captured by Claude Code and can be
+browsed later with <code>ctx recall list</code> and <code>ctx recall show</code>.</p>
 <hr />
 <h2 id="conversational-session-flow">Conversational Session Flow<a class="headerlink" href="#conversational-session-flow" title="Permanent link">&para;</a></h2>
 <p>The steps above describe the mechanics. In practice, a session with a
 <code>ctx</code>-aware agent feels more like a conversation than a command sequence.</p>
 <p>The agent knows the lifecycle and moves through it naturally, often without
 explicit invocation. Here is a realistic example:</p>
-<hr />
 <p><strong>You</strong>: Do you remember what we were working on?</p>
 <p><strong>Agent</strong> <em>(loads context silently, presents structured readback)</em>:</p>
-<blockquote>
-<p>Last session (Feb 7, caching-layer): we implemented the in-memory cache with
-TTL expiration and wrote tests for the eviction policy. </p>
-<p>You have 3 pending tasks; the biggest one is adding Redis as a backend.</p>
-<p>Recent decision:<br>
-we chose LRU over LFU because the access pattern is mostly recency-based.</p>
-<p>Want to continue with the Redis backend, or tackle something else?</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Last session (Feb 7, caching-layer): we implemented the in-memory cache with
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>TTL expiration and wrote tests for the eviction policy. 
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>You have 3 pending tasks; the biggest one is adding Redis as a backend.
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Recent decision:&lt;br&gt;
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>we chose LRU over LFU because the access pattern is mostly recency-based.
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Want to continue with the Redis backend, or tackle something else?
+</span></code></pre></div>
 <p><strong>You</strong>: Let's work on the Redis caching backend.</p>
 <p><strong>Agent</strong> <em>(picks up the task, begins implementation)</em>:</p>
-<blockquote>
-<p>Got it. I see the task in TASKS.md: "Add Redis backend for cache layer."</p>
-<p>I will start with the connection pool setup. Only touching
-<code>internal/cache/redis/</code> for now.</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Got it. I see the task in TASKS.md: &quot;Add Redis backend for cache layer.&quot;
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>I will start with the connection pool setup. Only touching
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>`internal/cache/redis/` for now.
+</span></code></pre></div>
 <p><em>(The agent works... writes code, runs tests, iterates.)</em></p>
 <p><strong>Agent</strong> <em>(after implementing the connection pool and choosing a retry strategy)</em>:</p>
-<blockquote>
-<p>The connection pool is working. I went with exponential backoff with jitter
-for retries instead of fixed intervals; it handles thundering herd better
-under reconnection storms. That is a design choice worth recording. </p>
-<p>Want me to save it as a decision?</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>The connection pool is working. I went with exponential backoff with jitter
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>for retries instead of fixed intervals; it handles thundering herd better
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>under reconnection storms. That is a design choice worth recording. 
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Want me to save it as a decision?
+</span></code></pre></div>
 <p><strong>You</strong>: Yes, go ahead.</p>
 <p><strong>Agent</strong>:</p>
-<blockquote>
-<p>Done. Added to DECISIONS.md: "Exponential backoff with jitter for Redis
-reconnection, to avoid thundering herd on pool recovery."</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Done. Added to DECISIONS.md: &quot;Exponential backoff with jitter for Redis
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>reconnection, to avoid thundering herd on pool recovery.&quot;
+</span></code></pre></div>
 <p><em>(More work happens... the agent implements the cache read/write paths.)</em></p>
 <p><strong>You</strong>: What else did we learn during this session?</p>
 <p><strong>Agent</strong>:</p>
-<blockquote>
-<p>A few things worth capturing:</p>
-<ul>
-<li><strong>Learning</strong>: Redis <code>SET</code> with <code>NX</code> and <code>PX</code> flags handles atomic
-  set-if-not-exists with TTL in a single call. No need for a separate
-  <code>EXPIRE</code> command. We initially did it in two calls and hit a race condition.</li>
-<li><strong>Learning</strong>: The <code>go-redis</code> library's <code>PoolSize</code> default is 10 per CPU.
-  For our workload, explicit sizing at 20 was more predictable.</li>
-<li><strong>Task update</strong>: The connection pool subtask is done; the read/write path
-  is implemented but needs integration tests.</li>
-</ul>
-<p>Want me to persist these?</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>A few things worth capturing:
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>* **Learning**: Redis `SET` with `NX` and `PX` flags handles atomic
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  set-if-not-exists with TTL in a single call. No need for a separate
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  `EXPIRE` command. We initially did it in two calls and hit a race condition.
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>* **Learning**: The `go-redis` library&#39;s `PoolSize` default is 10 per CPU.
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  For our workload, explicit sizing at 20 was more predictable.
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>* **Task update**: The connection pool subtask is done; the read/write path
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  is implemented but needs integration tests.
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Want me to persist these?
+</span></code></pre></div>
 <p><strong>You</strong>: Yes. And let's wrap up.</p>
 <p><strong>Agent</strong> <em>(reflects and persists... all in one flow)</em>:</p>
-<blockquote>
-<p>Persisted:</p>
-<ul>
-<li>2 learnings added to LEARNINGS.md</li>
-<li>Marked "connection pool setup" done in TASKS.md</li>
-<li>Added "write integration tests for Redis cache" as a new task</li>
-</ul>
-<p>Context is up to date. You are good to close.</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Persisted:
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>* 2 learnings added to LEARNINGS.md
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>* Marked &quot;connection pool setup&quot; done in TASKS.md
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>* Added &quot;write integration tests for Redis cache&quot; as a new task
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>Context is up to date. You are good to close.
+</span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Notice What Happened</p>
 <p>In the above workflow, the user never typed <code>/ctx-reflect</code> or
@@ -3465,7 +3482,7 @@ reconnection, to avoid thundering herd on pool recovery."</p>
 <p>The agent surfaced persist-worthy items at milestones: after a design
 choice, after discovering a gotcha—without waiting to be asked.</p>
 </div>
-<p>This is the intended experience. </p>
+<p>This is the <em>intended</em> experience. </p>
 <p>The commands and skills still exist for when you want precise control, but 
 <strong>the agent is a proactive partner</strong> in the lifecycle, not a passive executor 
 of slash commands.</p>
@@ -3473,13 +3490,13 @@ of slash commands.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>Quick-reference checklist for a complete session:</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Load</strong>: <code>/ctx-remember</code> — load context and confirm readback</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Orient</strong>: <code>/ctx-status</code> — check file health and token usage</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Pick</strong>: <code>/ctx-next</code> — choose what to work on</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Load</strong>: <code>/ctx-remember</code>: load context and confirm readback</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Orient</strong>: <code>/ctx-status</code>: check file health and token usage</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Pick</strong>: <code>/ctx-next</code>: choose what to work on</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Work</strong>: implement, test, iterate (scope with "only change X")</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Commit</strong>: <code>/ctx-commit</code> — commit and capture decisions/learnings</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Reflect</strong>: <code>/ctx-reflect</code> — identify what to persist (at milestones)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Wrap up</strong>: <code>/ctx-wrap-up</code> — end-of-session ceremony</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Commit</strong>: <code>/ctx-commit</code>: commit and capture decisions/learnings</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Reflect</strong>: <code>/ctx-reflect</code>: identify what to persist (at milestones)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Wrap up</strong>: <code>/ctx-wrap-up</code>: end-of-session ceremony</li>
 </ul>
 <p>Conversational equivalents: you can drive the same lifecycle with plain language:</p>
 <table>
@@ -3528,11 +3545,11 @@ of slash commands.</p>
 </tr>
 </tbody>
 </table>
-<p>The agent understands both columns.</p>
+<p>The agent <strong>understands</strong> both columns.</p>
 <p>In practice, most sessions use a mix:</p>
 <ul>
-<li>explicit commands when you want precision</li>
-<li>natural language when you want flow and agentic autonomy</li>
+<li><strong>Explicit Commands</strong> when you want <strong>precision</strong>;</li>
+<li><strong>Natural Language</strong> when you want flow and <strong>agentic autonomy</strong>.</li>
 </ul>
 <p>The agent will also initiate steps on its own (<em>particularly "Reflect"</em>)
 when it recognizes a milestone.</p>
@@ -3541,20 +3558,21 @@ when it recognizes a milestone.</p>
 learnings and decisions before ending.</p>
 <hr />
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
-<p><strong>Persist early if context is running low.</strong> The <code>/ctx-context-monitor</code> skill will
-warn you when capacity is high, but do not wait for the warning. If you have
-been working for a while and have unpersisted learnings, persist proactively.</p>
-<p><strong>Browse previous sessions by topic.</strong> If you need context from a prior session,
+<p><strong>Persist early if context is running low</strong>. A hook monitors context capacity
+and notifies you when it gets high, but do not wait for the notification. If
+you have been working for a while and have unpersisted learnings, persist
+proactively.</p>
+<p><strong>Browse previous sessions by topic</strong>. If you need context from a prior session,
 <code>ctx recall show auth</code> will match by keyword. You do not need to remember the
 exact date or slug.</p>
-<p><strong>Reflection is optional but valuable.</strong> You can skip <code>/ctx-reflect</code> for small
+<p><strong>Reflection is optional but valuable</strong>. You can skip <code>/ctx-reflect</code> for small
 changes, but always persist learnings and decisions before ending a session
 where you did meaningful work. These are what the next session loads.</p>
-<p><strong>Let the hook handle context loading.</strong> The <code>PreToolUse</code> hook runs <code>ctx agent</code>
+<p><strong>Let the hook handle context loading</strong>. The <code>PreToolUse</code> hook runs <code>ctx agent</code>
 automatically with a cooldown, so context loads on first tool use without you
-asking. The <code>/ctx-remember</code> prompt at session start is for your benefit (to get
-a readback you can verify), not because the assistant needs it.</p>
-<p><strong>The agent is a proactive partner, not a passive tool.</strong> A <code>ctx</code>-aware agent
+asking. The <code>/ctx-remember</code> prompt at session start is for your benefit (<em>to get
+a readback</em>), not because the assistant needs it.</p>
+<p><strong>The agent is a proactive partner, not a passive tool</strong>. A <code>ctx</code>-aware agent
 follows the Agent Playbook: it watches for milestones (completed tasks, design
 decisions, discovered gotchas) and offers to persist them without being asked.
 If you finish a tricky debugging session, it may say "That root cause is worth
@@ -3562,7 +3580,7 @@ saving as a learning. Want me to record it?" before you think to ask. This is
 by design.</p>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../session-ceremonies/">Session Ceremonies →</a></strong>: The two bookend
-rituals for every session — <code>/ctx-remember</code> at the start,
+rituals for every session: <code>/ctx-remember</code> at the start,
 <code>/ctx-wrap-up</code> at the end.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

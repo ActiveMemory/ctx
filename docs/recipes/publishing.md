@@ -5,7 +5,7 @@ icon: lucide/pen-line
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 Your `.context/` directory is full of decisions, learnings, and session history.
 
@@ -19,22 +19,23 @@ You want to turn this raw activity into:
 - blog posts
 - changelog posts
 
-!!! tip "TL;DR"
-    ```bash
-    ctx recall export --all             # 1. export sessions to markdown
-    ```
-    ```text
-    /ctx-journal-enrich-all             # 2. add metadata and tags
-    ```
-    ```bash
-    ctx journal site --serve            # 3. build and serve the journal
-    ```
-    ```text
-    /ctx-blog about the caching layer   # 4. draft a blog post
-    /ctx-blog-changelog v0.1.0 "v0.2"   # 5. write a changelog post
-    ```
+## TL;DR
 
-    Read on for details on each stage.
+```bash
+ctx recall export --all             # 1. export sessions to markdown
+```
+```text
+/ctx-journal-enrich-all             # 2. add metadata and tags
+```
+```bash
+ctx journal site --serve            # 3. build and serve the journal
+```
+```text
+/ctx-blog about the caching layer   # 4. draft a blog post
+/ctx-blog-changelog v0.1.0 "v0.2"   # 5. write a changelog post
+```
+
+Read on for details on each stage.
 
 ## Commands and Skills Used
 

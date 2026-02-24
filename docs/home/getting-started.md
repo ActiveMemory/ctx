@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -175,7 +175,7 @@ ctx init
 ```
 
 This creates a `.context/` directory with template files and a
-`.scratchpad.key` for the [encrypted scratchpad](../reference/scratchpad.md).
+`.context.key` for the [encrypted scratchpad](../reference/scratchpad.md).
 For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
 

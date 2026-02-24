@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -22,13 +22,13 @@ Claude Code has the deepest integration via the **ctx plugin**.
 
 ### Setup
 
-1. Install ctx and initialize your project:
+First, install `ctx` and initialize your project:
 
 ```bash
 ctx init
 ```
 
-2. Install the ctx plugin in Claude Code:
+Then, install the `ctx` plugin in Claude Code:
 
 ```bash
 # From the ctx repository
@@ -186,7 +186,7 @@ to take effect:
 3. **Start a new Claude Code session** — skill changes aren't
    reflected in existing sessions.
 
-!!! warning "Both version files must match"
+!!! warning "Both Version Files Must Match"
     If you only bump `plugin.json` but not `marketplace.json` (or
     vice versa), Claude Code may not detect the update. Always bump
     both together.
@@ -623,7 +623,7 @@ The `ctx watch` command parses update commands from AI output. Use this format:
 <context-update type="complete">rate limiting</context-update>
 ```
 
-### Structured Format (learnings, decisions)
+### Structured Format (*learnings, decisions*)
 
 Learnings and decisions support structured attributes for better documentation:
 
@@ -655,16 +655,3 @@ Updates missing required attributes are rejected with an error.
 
 - [Skills That Fight the Platform](../blog/2026-02-04-skills-that-fight-the-platform.md) — Common pitfalls in skill design that work against the host tool
 - [The Anatomy of a Skill That Works](../blog/2026-02-07-the-anatomy-of-a-skill-that-works.md) — What makes a skill reliable: the E/A/R framework and quality gates
-
-### Usage with ctx watch
-
-```bash
-# Pipe AI output through watch
-your-ai-tool | ctx watch
-
-# Or watch a log file
-ctx watch --log /tmp/ai-output.log
-
-# Preview without applying
-ctx watch --dry-run
-```

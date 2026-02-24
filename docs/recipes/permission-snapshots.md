@@ -15,6 +15,15 @@ Since `settings.local.json` is `.gitignore`d, there is no PR review or CI
 check. The file drifts independently on every machine, and there is no
 built-in way to reset to a known-good state.
 
+## TL;DR
+
+```bash
+/sanitize-permissions               # audit for dangerous patterns
+ctx permissions snapshot            # save golden image
+# ... sessions accumulate cruft ...
+ctx permissions restore             # reset to golden state
+```
+
 ## The Solution
 
 Save a curated `settings.local.json` as a **golden image**, then restore

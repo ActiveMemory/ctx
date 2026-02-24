@@ -14,15 +14,27 @@ STRUCTURE RULES (see CONSTITUTION.md):
       ctx skill; needs rename. Renamed to /absorb. #done:2026-02-21
 - [-] Session pattern analysis skill — rejected. Automated pattern capture from sessions risks training the agent to please rather than push back. Existing mechanisms (learnings, hooks, constitution) already capture process preferences explicitly. See LEARNINGS.md. #added:2026-02-22-212143
 
+- [ ] Implement RSS/Atom feed generation for ctx.ist blog (see specs/rss-feed.md) #added:2026-02-24-025015
+
+- [ ] Install golangci-lint on the integration server #for-human #priority:medium #added:2026-02-23 #added:2026-02-23-170213
+
+- [x] Convert shell hook scripts to `ctx system` subcommands #done:2026-02-24
+      Spec: `specs/shell-hooks-to-go.md`. Subtasks:
+      - [x] `block-dangerous-commands.go` + tests
+      - [x] `check-backup-age.go` + tests
+      - [x] Wire into system.go + doc.go
+      - [x] Update settings.local.json
+      - [x] Delete .claude/hooks/ shell scripts
+
 - [ ] Investigate converting UserPromptSubmit hooks to JSON output — check-persistence, check-ceremonies, check-context-size, check-version, check-resources, and check-knowledge all use plain text with VERBATIM relay. These work differently (prepended to prompt) but may benefit from structured JSON too. #added:2026-02-22-194446
 
 - [ ] Add version-bump relay hook: create a system hook that reminds the agent to bump VERSION, plugin.json, and marketplace.json whenever a feature warrants a version change. The hook should fire during commit or wrap-up to prevent version drift across the three files. #added:2026-02-22-102530
 
-- [ ] Rename .scratchpad.key to .context.key #priority:medium #added:2026-02-22-101118
+- [x] Rename .scratchpad.key to .context.key #priority:medium #added:2026-02-22-101118
 
 - [ ] Regenerate site HTML after .ctxrc rename #added:2026-02-21-200039
 
-- [ ] Fix mark-journal --check to handle locked stage #added:2026-02-21-191851
+- [x] Fix mark-journal --check to handle locked stage #added:2026-02-21-191851
 
 - [x] `ctx recall sync` — frontmatter-to-state lock sync #done:2026-02-22
       Spec: `specs/recall-sync.md`. Subtasks:
@@ -32,7 +44,7 @@ STRUCTURE RULES (see CONSTITUTION.md):
       - [x] Docs: cli-reference.md, session-journal.md, session-archaeology.md
 
 - [ ] Enable webhook notifications in worktrees. Currently `ctx notify`
-      silently fails because `.scratchpad.key` is gitignored and absent in
+      silently fails because `.context.key` is gitignored and absent in
       worktrees. For autonomous runs with opaque worktree agents, notifications
       are the one feature that would genuinely be useful. Possible approaches:
       resolve the key via `git rev-parse --git-common-dir` to find the main
@@ -108,6 +120,34 @@ Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 
 - [ ] P9.2: Test manually on this project's LEARNINGS.md (20+ entries).
       #priority:medium #added:2026-02-19
+
+### Phase 10: Architecture Mapping Skill (`/ctx-map`)
+
+**Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
+and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
+Spec: `specs/ctx-map.md`
+
+- [x] P10.1: Write spec `specs/ctx-map.md`
+      DOD: Covers overview, behavior (first/subsequent/opt-out/nudge),
+      tracking.json schema, confidence rubric, staleness detection,
+      document constraints, file manifest, non-goals #priority:high
+      #done:2026-02-23
+- [x] P10.2: Create skill `internal/assets/claude/skills/ctx-map/SKILL.md`
+      DOD: Standard template (frontmatter, When to Use, When NOT to Use,
+      Execution phases, Quality Checklist). Covers first-run, subsequent-run,
+      opt-out, nudge. References confidence rubric. #priority:high
+      #done:2026-02-23
+- [x] P10.3: Register skill in `internal/config/file.go`
+      DOD: `FileDetailedDesign`, `FileMapTracking` constants added.
+      `Skill(ctx-map)` in DefaultClaudePermissions. `make build` passes.
+      #priority:high #done:2026-02-23
+- [x] P10.4: Verify build and tests
+      DOD: `make build` and `make test` pass. Skill is embedded (verify
+      via `ctx init --force` in temp dir). #priority:high #done:2026-02-23
+- [x] P10.5: Run first mapping session on ctx codebase
+      DOD: DETAILED_DESIGN.md created with per-module sections.
+      map-tracking.json created with coverage data. ARCHITECTURE.md
+      reviewed and updated if needed. #priority:medium #done:2026-02-23
 
 ### Maintenance
 

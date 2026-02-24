@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -10,6 +10,7 @@ package drift
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -72,6 +73,9 @@ func Detect(ctx *context.Context) *Report {
 
 	// Check for excessive entry counts in knowledge files
 	checkEntryCount(ctx, report)
+
+	// Check for undocumented internal packages
+	checkMissingPackages(ctx, report)
 
 	return report
 }
@@ -329,6 +333,73 @@ func checkEntryCount(ctx *context.Context, report *Report) {
 	if !found {
 		report.Passed = append(report.Passed, CheckEntryCount)
 	}
+}
+
+// reInternalPkg matches backtick-quoted paths starting with "internal/".
+var reInternalPkg = regexp.MustCompile("`(internal/[^`]+)`")
+
+// checkMissingPackages warns about internal/ directories not referenced in ARCHITECTURE.md.
+//
+// Extracts backtick-quoted internal/ paths from ARCHITECTURE.md, normalizes
+// them to top-level packages (e.g., internal/cli/pad → internal/cli), then
+// compares against actual internal/ subdirectories. Missing coverage is
+// reported as a warning.
+//
+// Parameters:
+//   - ctx: Loaded context containing files to scan
+//   - report: Report to append warnings to (modified in place)
+func checkMissingPackages(ctx *context.Context, report *Report) {
+	f := ctx.File(config.FileArchitecture)
+	if f == nil {
+		return
+	}
+
+	// Extract referenced internal/ paths and normalize to top-level packages.
+	referenced := make(map[string]bool)
+	matches := reInternalPkg.FindAllStringSubmatch(string(f.Content), -1)
+	for _, m := range matches {
+		pkg := normalizeInternalPkg(m[1])
+		referenced[pkg] = true
+	}
+
+	// Scan actual internal/ subdirectories (one level deep, directories only).
+	entries, err := os.ReadDir("internal")
+	if err != nil {
+		return
+	}
+
+	found := false
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		pkg := "internal/" + entry.Name()
+		if !referenced[pkg] {
+			report.Warnings = append(report.Warnings, Issue{
+				File:    f.Name,
+				Type:    IssueMissingPackage,
+				Message: fmt.Sprintf("package %s is not documented", pkg),
+				Path:    pkg,
+			})
+			found = true
+		}
+	}
+
+	if !found {
+		report.Passed = append(report.Passed, CheckMissingPackages)
+	}
+}
+
+// normalizeInternalPkg normalizes an internal package path to its top-level
+// directory. For example, "internal/cli/pad" becomes "internal/cli" and
+// "internal/recall/parser" becomes "internal/recall".
+func normalizeInternalPkg(path string) string {
+	// Split: ["internal", "cli", "pad"] → join first two: "internal/cli"
+	parts := strings.SplitN(path, "/", 3)
+	if len(parts) < 2 {
+		return path
+	}
+	return parts[0] + "/" + parts[1]
 }
 
 // isTemplateFile checks if file content appears to be a template.

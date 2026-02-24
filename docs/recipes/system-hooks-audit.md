@@ -5,7 +5,7 @@ icon: lucide/shield-check
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 ctx runs 12 system hooks behind the scenes — nudging your agent to persist
 context, warning about resource pressure, gating commits on QA. But these
@@ -14,6 +14,16 @@ if they stopped working.
 
 **How do you verify your hooks are actually running, audit what they do,
 and get alerted when they go silent?**
+
+## TL;DR
+
+```bash
+ctx system check-resources          # run a hook manually
+ls -la .context/logs/               # check hook execution logs
+ctx notify setup                    # get notified when hooks fire
+```
+
+Or ask your agent: *"Are our hooks running?"*
 
 ## Commands and Skills Used
 
@@ -166,7 +176,7 @@ convention_line_count: 200
 #### `check-version` — Binary/Plugin Version Drift
 
 **What**: Compares the `ctx` binary version against the plugin version.
-Fires once per day. Also checks scratchpad key age for rotation nudge.
+Fires once per day. Also checks encryption key age for rotation nudge.
 
 **Why**: Version drift means hooks reference features the binary doesn't
 have. The key rotation nudge prevents indefinite key reuse.

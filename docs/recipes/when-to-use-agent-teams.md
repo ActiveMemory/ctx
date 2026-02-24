@@ -19,6 +19,12 @@ This recipe is a **decision framework**: It helps you choose between a single
 agent, parallel worktrees, and a full agent team, and explains what `ctx`
 provides at each level.
 
+## TL;DR
+
+**Single agent** for most work. **Parallel worktrees** when tasks touch
+disjoint file sets. **Agent teams** only when tasks need real-time
+coordination. When in doubt, start with one agent.
+
 ## The Spectrum
 
 There are three modes, ordered by complexity:

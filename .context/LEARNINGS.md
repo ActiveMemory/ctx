@@ -3,6 +3,12 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-24 | CLI tools don't benefit from in-memory caching of context files |
+| 2026-02-24 | Worktree agents lack key-dependent features by design |
+| 2026-02-24 | /ctx-journal-normalize is dangerous at scale on non-ctx projects |
+| 2026-02-24 | ARCHITECTURE.md had significant drift — 4 core packages and 4 CLI commands missing |
+| 2026-02-24 | All runCmd() returns must be consumed in tests |
+| 2026-02-24 | url.Parse works for SMB URLs |
 | 2026-02-22 | Interaction pattern capture risks softening agent rigor |
 | 2026-02-22 | No reliable agent-side before-session-end event exists |
 | 2026-02-22 | Plain-text hook output is silently ignored by the agent |
@@ -68,6 +74,66 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-24-032945] CLI tools don't benefit from in-memory caching of context files
+
+**Context**: Discussed whether ctx should read and cache LEARNINGS.md, DECISIONS.md etc. in memory
+
+**Lesson**: ctx is a short-lived CLI process, not a daemon. Context files are tiny (few KB), sub-millisecond to read. Cache invalidation complexity exceeds the read cost. Caching only makes sense if ctx becomes a long-lived process (MCP server, watch daemon).
+
+**Application**: Don't add caching layers to ctx's file reads. If an MCP server mode is ever added, revisit then.
+
+---
+
+## [2026-02-24-030252] Worktree agents lack key-dependent features by design
+
+**Context**: Investigated whether hooks/notify/pad would break in git worktrees when .context.key is gitignored
+
+**Lesson**: ctx pad fails gracefully (no key), ctx notify silently no-ops, journal enrichment writes to the worktree and is orphaned on teardown. All path resolution is cwd-relative with no git-root awareness. The only real gap is notify — pad and journal are naturally avoided by workflow.
+
+**Application**: Document worktree limitations in skill docs, recipes, and reference pages. File a task to enable notify in worktrees (the one feature that would genuinely help autonomous opaque agents).
+
+---
+
+## [2026-02-24-022214] /ctx-journal-normalize is dangerous at scale on non-ctx projects
+
+**Context**: Discussed whether to keep normalize in the default journal pipeline
+
+**Lesson**: On projects with large session JSONL files (millions of lines), the normalize skill blows up subagent context windows, consumes excessive tokens, and produces nondeterministic half-baked outputs
+
+**Application**: Keep expensive AI skills out of batch pipelines; offer them as targeted per-file tools instead
+
+---
+
+## [2026-02-24-015941] ARCHITECTURE.md had significant drift — 4 core packages and 4 CLI commands missing
+
+**Context**: During the first /ctx-map run, analysis revealed crypto, sysinfo, notify, journal/state were missing from the core packages table, and notify, pad, permissions, system CLI commands were absent. The doc claimed 19 commands (actually 22) and 16 skill templates (actually 28).
+
+**Lesson**: ARCHITECTURE.md drifts silently when new packages are added without updating the doc. The existing /ctx-drift skill catches stale paths but not missing packages — it cannot detect what is absent from a table.
+
+**Application**: Run /ctx-map after adding new packages or CLI commands. The tracking file staleness detection catches modules with new commits, but new modules need the first-run survey to be discovered.
+
+---
+
+## [2026-02-24-015827] All runCmd() returns must be consumed in tests
+
+**Context**: golangci-lint errcheck flagged every runCmd(...) call in remind_test.go that didn't capture the return
+
+**Lesson**: Even setup calls in tests that run commands as preconditions need '_, _ = runCmd(...)' to satisfy errcheck
+
+**Application**: When writing test helpers that call cobra commands as setup, always capture both returns
+
+---
+
+## [2026-02-24-015713] url.Parse works for SMB URLs
+
+**Context**: Shell script used sed to extract host/share from smb://host/share. Needed a Go equivalent.
+
+**Lesson**: Go net/url.Parse handles smb:// scheme correctly — u.Host gives hostname, u.Path gives share path with leading slash.
+
+**Application**: Use url.Parse for any custom-scheme URL parsing instead of hand-rolled regex.
 
 ---
 

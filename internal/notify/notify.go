@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -7,7 +7,7 @@
 // Package notify provides fire-and-forget webhook notifications.
 //
 // The webhook URL is stored encrypted in .context/.notify.enc using the
-// same AES-256-GCM key as the scratchpad (.context/.scratchpad.key).
+// same AES-256-GCM key as the scratchpad (.context/.context.key).
 // When no webhook is configured, all operations are silent noops.
 package notify
 
@@ -39,7 +39,8 @@ type Payload struct {
 // (silent noop — webhook not configured).
 func LoadWebhook() (string, error) {
 	contextDir := rc.ContextDir()
-	keyPath := filepath.Join(contextDir, config.FileScratchpadKey)
+	config.MigrateKeyFile(contextDir)
+	keyPath := filepath.Join(contextDir, config.FileContextKey)
 	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
 
 	key, err := crypto.LoadKey(keyPath)
@@ -71,7 +72,8 @@ func LoadWebhook() (string, error) {
 // If the scratchpad key does not exist, it is generated and saved first.
 func SaveWebhook(url string) error {
 	contextDir := rc.ContextDir()
-	keyPath := filepath.Join(contextDir, config.FileScratchpadKey)
+	config.MigrateKeyFile(contextDir)
+	keyPath := filepath.Join(contextDir, config.FileContextKey)
 	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
 
 	key, err := crypto.LoadKey(keyPath)

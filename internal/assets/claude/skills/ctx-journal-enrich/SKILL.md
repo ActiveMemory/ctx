@@ -69,6 +69,9 @@ Read the journal entry and extract:
 ---
 title: "Session title"
 date: 2026-01-27
+model: claude-opus-4-6        # auto-populated at export
+tokens_in: 234000             # auto-populated at export
+tokens_out: 89000             # auto-populated at export
 type: feature
 outcome: completed
 topics:
@@ -85,6 +88,9 @@ key_files:
   - internal/db/cache.go
 ---
 ```
+
+**Auto-populated fields** (set during `ctx journal export`, do NOT overwrite):
+`date`, `time`, `project`, `session_id`, `model`, `tokens_in`, `tokens_out`, `branch`
 
 **Type values:**
 

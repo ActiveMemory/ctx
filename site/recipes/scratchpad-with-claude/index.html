@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#problem" class="md-skip">
+        <a href="#the-problem" class="md-skip">
           Skip to content
         </a>
       
@@ -1472,10 +1472,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
       
     </span>
   </a>
@@ -1621,10 +1632,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#conversational-approach" class="md-nav__link">
+  <a href="#using-ctx-pad-in-a-session" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Conversational Approach
+        Using /ctx-pad in a Session
       
     </span>
   </a>
@@ -2882,10 +2893,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
       
     </span>
   </a>
@@ -3031,10 +3053,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#conversational-approach" class="md-nav__link">
+  <a href="#using-ctx-pad-in-a-session" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Conversational Approach
+        Using /ctx-pad in a Session
       
     </span>
   </a>
@@ -3180,14 +3202,21 @@
   <h1>Using the Scratchpad</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>During a session you accumulate quick notes, reminders, intermediate values,
-and sometimes sensitive tokens. They don't fit <code>TASKS.md</code> (not work items) or
-<code>DECISIONS.md</code> (not decisions). They don't have the structured fields that
+and sometimes sensitive tokens. They don't fit <code>TASKS.md</code> (<em>not work items</em>) or
+<code>DECISIONS.md</code> (<em>not decisions</em>). They don't have the structured fields that
 <code>LEARNINGS.md</code> requires.</p>
 <p>Without somewhere to put them, they get lost between sessions.</p>
 <p><strong>How do you capture working memory that persists across sessions without
 polluting your structured context files?</strong></p>
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check DNS propagation after deploy&quot;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>pad<span class="w">         </span><span class="c1"># list entries</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># print entry (pipe-friendly)</span>
+</span></code></pre></div>
+<p>Entries are <strong>encrypted at rest</strong> and travel with <code>git</code>. </p>
+<p>Use the <code>/ctx-pad</code> skill to manage entries from inside your AI session.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3241,7 +3270,7 @@ polluting your structured context files?</strong></p>
 <tr>
 <td><code>ctx pad import</code></td>
 <td>CLI command</td>
-<td>Bulk-import lines from a file (or stdin)</td>
+<td>Bulk-import lines from a file (<em>or stdin</em>)</td>
 </tr>
 <tr>
 <td><code>ctx pad export</code></td>
@@ -3259,71 +3288,71 @@ polluting your structured context files?</strong></p>
 <h3 id="step-1-add-a-note-naturally">Step 1: Add a Note Naturally<a class="headerlink" href="#step-1-add-a-note-naturally" title="Permanent link">&para;</a></h3>
 <p>You don't need to remember any syntax. Just tell your assistant what to
 jot down:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>You: &quot;jot down: check DNS propagation after deploy&quot;
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Agent: &quot;Added to scratchpad:
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  1. check DNS propagation after deploy&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;jot down: check DNS propagation after deploy&quot;
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: &quot;Added to scratchpad:
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  1. check DNS propagation after deploy&quot;
 </span></code></pre></div>
 <p>Behind the scenes, the agent runs <code>ctx pad add "check DNS propagation after deploy"</code>.</p>
 <h3 id="step-2-view-your-scratchpad">Step 2: View Your Scratchpad<a class="headerlink" href="#step-2-view-your-scratchpad" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;show my scratchpad&quot;
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: &quot;Your scratchpad has 3 entries:
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  1. check DNS propagation after deploy
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  2. staging API endpoint: api.staging.example.com/v2
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  3. retry limit should be 5, not 3&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>You: &quot;show my scratchpad&quot;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Agent: &quot;Your scratchpad has 3 entries:
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  1. check DNS propagation after deploy
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  2. staging API endpoint: api.staging.example.com/v2
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  3. retry limit should be 5, not 3&quot;
 </span></code></pre></div>
 <h3 id="step-3-edit-an-entry">Step 3: Edit an Entry<a class="headerlink" href="#step-3-edit-an-entry" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>You: &quot;update entry 2 to include the new endpoint&quot;
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Agent: &quot;Updated entry 2:
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  was: staging API endpoint: api.staging.example.com/v2
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  now: staging API endpoint: api.prod.example.com/v2&quot;
-</span></code></pre></div>
-<p>For partial edits, the agent can use <code>--append</code> or <code>--prepend</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: &quot;append the port number to entry 2&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You: &quot;update entry 2 to include the new endpoint&quot;
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Agent: &quot;Updated entry 2:
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  staging API endpoint: api.prod.example.com/v2 :8443&quot;
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  was: staging API endpoint: api.staging.example.com/v2
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  now: staging API endpoint: api.prod.example.com/v2&quot;
+</span></code></pre></div>
+<p>For partial edits, the agent can use <code>--append</code> or <code>--prepend</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You: &quot;append the port number to entry 2&quot;
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Agent: &quot;Updated entry 2:
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  staging API endpoint: api.prod.example.com/v2 :8443&quot;
 </span></code></pre></div>
 <h3 id="step-4-compose-entries">Step 4: Compose Entries<a class="headerlink" href="#step-4-compose-entries" title="Permanent link">&para;</a></h3>
 <p>Use <code>ctx pad show N</code> to pipe entry content into other operations:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You: &quot;append the content of entry 3 to entry 1&quot;
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Agent: [runs ctx pad edit 1 --append &quot;$(ctx pad show 3)&quot;]
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>       &quot;Done. Entry 1 is now:
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        check DNS propagation after deploy retry limit should be 5, not 3&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: &quot;append the content of entry 3 to entry 1&quot;
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Agent: [runs ctx pad edit 1 --append &quot;$(ctx pad show 3)&quot;]
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       &quot;Done. Entry 1 is now:
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        check DNS propagation after deploy retry limit should be 5, not 3&quot;
 </span></code></pre></div>
 <h3 id="step-5-reorder-by-priority">Step 5: Reorder by Priority<a class="headerlink" href="#step-5-reorder-by-priority" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You: &quot;move entry 4 to the top&quot;
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Agent: [runs ctx pad mv 4 1]
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       &quot;Moved entry 4 to position 1. Scratchpad reordered.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>You: &quot;move entry 4 to the top&quot;
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Agent: [runs ctx pad mv 4 1]
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>       &quot;Moved entry 4 to position 1. Scratchpad reordered.&quot;
 </span></code></pre></div>
 <h3 id="step-6-clean-up">Step 6: Clean Up<a class="headerlink" href="#step-6-clean-up" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>You: &quot;remove entry 2, it&#39;s done&quot;
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Agent: [runs ctx pad rm 2]
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>       &quot;Removed entry 2. 3 entries remaining.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>You: &quot;remove entry 2, it&#39;s done&quot;
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Agent: [runs ctx pad rm 2]
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>       &quot;Removed entry 2. 3 entries remaining.&quot;
 </span></code></pre></div>
 <h3 id="step-7-store-a-file-as-a-blob">Step 7: Store a File as a Blob<a class="headerlink" href="#step-7-store-a-file-as-a-blob" title="Permanent link">&para;</a></h3>
 <p>The scratchpad can hold small files (up to 64 KB) as encrypted blob entries.
 The file is base64-encoded and stored alongside a label you provide:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Ingest a file — the first argument is the label</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List shows the label with a [BLOB] marker</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>pad
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">#   1. check DNS propagation after deploy</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">#   2. deploy config [BLOB]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ingest a file — the first argument is the label</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List shows the label with a [BLOB] marker</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>pad
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">#   1. check DNS propagation after deploy</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">#   2. deploy config [BLOB]</span>
 </span></code></pre></div>
 <h3 id="step-8-extract-a-blob">Step 8: Extract a Blob<a class="headerlink" href="#step-8-extract-a-blob" title="Permanent link">&para;</a></h3>
 <p>Use <code>show --out</code> to write the decoded file back to disk:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Write blob entry to a file</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered-deploy.yaml
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Or print to stdout (for piping)</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Write blob entry to a file</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span>--out<span class="w"> </span>./recovered-deploy.yaml
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Or print to stdout (for piping)</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
 </span></code></pre></div>
 <p>Blob entries are encrypted identically to text entries — they're just
 base64-encoded before encryption. The <code>--out</code> flag decodes and writes the
@@ -3331,35 +3360,41 @@ raw bytes.</p>
 <h3 id="step-9-bulk-import-notes">Step 9: Bulk Import Notes<a class="headerlink" href="#step-9-bulk-import-notes" title="Permanent link">&para;</a></h3>
 <p>When you have a file with many notes (one per line), import them in bulk
 instead of adding one at a time:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Import from a file — each non-empty line becomes an entry</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Or pipe from stdin</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Import from a file — each non-empty line becomes an entry</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Or pipe from stdin</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
 </span></code></pre></div>
 <p>All entries are written in a single encrypt/write cycle, regardless of
 how many lines the file contains.</p>
 <h3 id="step-10-export-blobs-to-disk">Step 10: Export Blobs to Disk<a class="headerlink" href="#step-10-export-blobs-to-disk" title="Permanent link">&para;</a></h3>
 <p>Export all blob entries to a directory as individual files. Each blob's
 label becomes the filename:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Export to a directory (created if needed)</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Preview what would be exported</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run<span class="w"> </span>./ideas
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Force overwrite existing files</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Export to a directory (created if needed)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./ideas
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Preview what would be exported</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dry-run<span class="w"> </span>./ideas
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Force overwrite existing files</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--force<span class="w"> </span>./backup
 </span></code></pre></div>
 <p>When a file already exists, a unix timestamp is prepended to the filename
 to avoid collisions. Use <code>--force</code> to overwrite instead.</p>
-<h2 id="conversational-approach">Conversational Approach<a class="headerlink" href="#conversational-approach" title="Permanent link">&para;</a></h2>
-<p>The <code>/ctx-pad</code> skill translates natural language into commands. You
-describe intent; the agent handles the mechanics.</p>
+<h2 id="using-ctx-pad-in-a-session">Using <code>/ctx-pad</code> in a Session<a class="headerlink" href="#using-ctx-pad-in-a-session" title="Permanent link">&para;</a></h2>
+<p>Invoke the <code>/ctx-pad</code> skill first, then describe what you want in natural
+language. Without the skill prefix, the agent may route your request to
+<code>TASKS.md</code> or another context file instead of the scratchpad.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: /ctx-pad jot down: check DNS after deploy
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>You: /ctx-pad show my scratchpad
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>You: /ctx-pad delete entry 3
+</span></code></pre></div>
+<p>Once the skill is active, it translates intent into commands:</p>
 <table>
 <thead>
 <tr>
-<th>You say</th>
+<th>You say (after <code>/ctx-pad</code>)</th>
 <th>What the agent does</th>
 </tr>
 </thead>
@@ -3377,7 +3412,7 @@ describe intent; the agent handles the mechanics.</p>
 <td><code>ctx pad</code></td>
 </tr>
 <tr>
-<td>"show me entry 3" / "what's in entry 3"</td>
+<td>"show me entry 3"</td>
 <td><code>ctx pad show 3</code></td>
 </tr>
 <tr>
@@ -3385,11 +3420,11 @@ describe intent; the agent handles the mechanics.</p>
 <td><code>ctx pad rm 3</code></td>
 </tr>
 <tr>
-<td>"change entry 2 to ..." / "replace entry 2 with ..."</td>
+<td>"change entry 2 to ..."</td>
 <td><code>ctx pad edit 2 "new text"</code></td>
 </tr>
 <tr>
-<td>"append '-- important' to entry 3" / "add to entry 3: ..."</td>
+<td>"append '-- important' to entry 3"</td>
 <td><code>ctx pad edit 3 --append " -- important"</code></td>
 </tr>
 <tr>
@@ -3397,37 +3432,26 @@ describe intent; the agent handles the mechanics.</p>
 <td><code>ctx pad edit 1 --prepend "URGENT: "</code></td>
 </tr>
 <tr>
-<td>"add the port to entry 2"</td>
-<td><code>ctx pad edit 2 --append ":8443"</code></td>
-</tr>
-<tr>
-<td>"prioritize entry 4" / "move entry 4 to the top"</td>
+<td>"prioritize entry 4" / "move to the top"</td>
 <td><code>ctx pad mv 4 1</code></td>
 </tr>
 <tr>
-<td>"move entry 1 to the bottom" / "deprioritize entry 1"</td>
-<td><code>ctx pad mv 1 N</code></td>
-</tr>
-<tr>
-<td>"import my notes from notes.txt" / "load these lines"</td>
+<td>"import my notes from notes.txt"</td>
 <td><code>ctx pad import notes.txt</code></td>
 </tr>
 <tr>
-<td>"export all blobs to ./ideas" / "dump the files"</td>
+<td>"export all blobs to ./ideas"</td>
 <td><code>ctx pad export ./ideas</code></td>
-</tr>
-<tr>
-<td>"anything on my scratchpad?"</td>
-<td><code>ctx pad</code></td>
 </tr>
 </tbody>
 </table>
-<p>The skill recognizes variations: "scratchpad", "pad", "notes", "sticky
-notes", "jot down", "remember this", "note to self". You don't need to use
-exact trigger phrases.</p>
-<p>The key insight is <strong>ambiguity around "add"</strong>: "add a note" creates a new
-entry, while "add to entry 3" appends to an existing one. The skill
-distinguishes these from context.</p>
+<div class="admonition tip">
+<p class="admonition-title">When in Doubt, Use the CLI Directly</p>
+<p>The <code>ctx pad</code> commands work the same whether you run them yourself
+or let the skill invoke them. </p>
+<p>If the agent misroutes a request,
+fall back to <code>ctx pad add "..."</code> in your terminal.</p>
+</div>
 <h2 id="when-to-use-scratchpad-vs-context-files">When to Use Scratchpad vs Context Files<a class="headerlink" href="#when-to-use-scratchpad-vs-context-files" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3438,8 +3462,12 @@ distinguishes these from context.</p>
 </thead>
 <tbody>
 <tr>
-<td>Temporary reminders ("check X after deploy")</td>
+<td>Temporary reminders ("<em>check X after deploy</em>")</td>
 <td><strong>Scratchpad</strong></td>
+</tr>
+<tr>
+<td>Session-start reminders ("<em>remind me next session</em>")</td>
+<td><strong><code>ctx remind</code></strong></td>
 </tr>
 <tr>
 <td>Working values during debugging (ports, endpoints, counts)</td>
@@ -3473,17 +3501,19 @@ distinguishes these from context.</p>
 </table>
 <p><strong>Decision guide:</strong></p>
 <ul>
-<li>If it has structured fields (context, rationale, lesson, application),
+<li>If it has structured fields (<em>context, rationale, lesson, application</em>),
   it belongs in a context file.</li>
 <li>If it's a work item you'll mark done, it belongs in <code>TASKS.md</code>.</li>
-<li>If it's a quick note, reminder, or working value — especially if it's
-  sensitive or ephemeral — it belongs on the scratchpad.</li>
+<li>If you want a message relayed verbatim at the next session start,
+  it belongs in <code>ctx remind</code>.</li>
+<li>If it's a quick note, reminder, or working value  (<em>especially if it's
+  sensitive or ephemeral</em>) it belongs on the scratchpad.</li>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Scratchpad Is Not a Junk Drawer</p>
-<p>The scratchpad is for working memory, not long-term storage.
-If a note is still relevant after several sessions, promote it:
-a persistent reminder becomes a task, a recurring value becomes a
+<p>The scratchpad is for working memory, not long-term storage.</p>
+<p>If a note is still relevant after several sessions, promote it:</p>
+<p>A persistent reminder becomes a task, a recurring value becomes a
 convention, a hard-won insight becomes a learning.</p>
 </div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
@@ -3498,7 +3528,7 @@ convention, a hard-won insight becomes a learning.</p>
   other shell tools.</li>
 <li><strong>Never mention the key file contents to the AI.</strong> The agent knows
   how to use <code>ctx pad</code> commands but should never read or print
-  <code>.context/.scratchpad.key</code> directly.</li>
+  <code>.context/.context.key</code> directly.</li>
 <li><strong>Encryption is transparent.</strong> You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.</li>
 </ul>

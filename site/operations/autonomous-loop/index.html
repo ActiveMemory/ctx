@@ -2509,10 +2509,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#why-a-shell-loop" class="md-nav__link">
+  <a href="#why-do-we-use-a-shell-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why a Shell Loop?
+        Why Do We Use a Shell Loop?
       
     </span>
   </a>
@@ -2575,15 +2575,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-context-loops-work-well-together" class="md-nav__link">
+  <a href="#why-ctx-and-loops-work-well-together" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Context + Loops Work Well Together
+        Why ctx and Loops Work Well Together
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Why Context + Loops Work Well Together">
+    <nav class="md-nav" aria-label="Why ctx and Loops Work Well Together">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2951,10 +2951,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#why-a-shell-loop" class="md-nav__link">
+  <a href="#why-do-we-use-a-shell-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why a Shell Loop?
+        Why Do We Use a Shell Loop?
       
     </span>
   </a>
@@ -3017,15 +3017,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-context-loops-work-well-together" class="md-nav__link">
+  <a href="#why-ctx-and-loops-work-well-together" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Context + Loops Work Well Together
+        Why ctx and Loops Work Well Together
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Why Context + Loops Work Well Together">
+    <nav class="md-nav" aria-label="Why ctx and Loops Work Well Together">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3248,7 +3248,7 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="autonomous-ai-development">Autonomous AI Development<a class="headerlink" href="#autonomous-ai-development" title="Permanent link">&para;</a></h2>
 <p><em>Iterate until done.</em></p>
-<p>An autonomous loop is an iterative AI development workflow where an agent works
+<p>An <strong>autonomous loop</strong> is an iterative AI development workflow where an agent works
 on tasks until completion—without constant human intervention. Context (<code>ctx</code>)
 provides the memory that makes this possible:</p>
 <ul>
@@ -3259,8 +3259,8 @@ provides the memory that makes this possible:</p>
 everything across iterations.</p>
 <div class="admonition note">
 <p class="admonition-title">Origin</p>
-<p>This pattern is inspired by <a href="https://ghuntley.com/ralph/">Geoffrey Huntley's Ralph Wiggum technique</a>.
-We use generic terminology here so the concepts remain clear regardless of trends.</p>
+<p>This pattern is inspired by <a href="https://ghuntley.com/ralph/">Geoffrey Huntley's Ralph Wiggum technique</a>.</p>
+<p>We use generic terminology here so the concepts remain clear regardless of trends.</p>
 </div>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TD
@@ -3283,10 +3283,10 @@ We use generic terminology here so the concepts remain clear regardless of trend
 <li>Loop checks for completion signals</li>
 <li>Repeat until converged or blocked</li>
 </ol>
-<h2 id="quick-start-shell-while-loop-recommended">Quick Start: Shell While Loop (Recommended)<a class="headerlink" href="#quick-start-shell-while-loop-recommended" title="Permanent link">&para;</a></h2>
+<h2 id="quick-start-shell-while-loop-recommended">Quick Start: Shell While Loop (<em>Recommended</em>)<a class="headerlink" href="#quick-start-shell-while-loop-recommended" title="Permanent link">&para;</a></h2>
 <p>The best way to run an autonomous loop is a plain shell script that invokes
-your AI tool in a fresh process on each iteration. This is "pure ralph":
-the <strong>only</strong> state that carries between iterations is what lives in
+your AI tool in a fresh process on each iteration. This is "<em>pure ralph</em>":</p>
+<p>The <strong>only</strong> state that carries between iterations is what lives in
 <code>.context/</code> and the git history. No context window bleed, no accumulated
 tokens, no hidden state.</p>
 <p>Create a <code>loop.sh</code>:</p>
@@ -3325,11 +3325,11 @@ tokens, no hidden state.</p>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>./loop.sh
 </span></code></pre></div>
 <p>You can also generate this script with <code>ctx loop</code> (see <a href="../../reference/cli-reference/#ctx-loop">CLI Reference</a>).</p>
-<h3 id="why-a-shell-loop">Why a Shell Loop?<a class="headerlink" href="#why-a-shell-loop" title="Permanent link">&para;</a></h3>
+<h3 id="why-do-we-use-a-shell-loop">Why Do We Use a Shell Loop?<a class="headerlink" href="#why-do-we-use-a-shell-loop" title="Permanent link">&para;</a></h3>
 <p>Each iteration starts a <strong>fresh AI process</strong> with zero context window history.
-The agent knows only what it reads from <code>.context/</code> files — exactly the
-information you chose to persist. This is the core Ralph principle: memory is
-explicit, not accidental.</p>
+The agent knows only what it reads from <code>.context/</code> files: Exactly the
+information you chose to persist. </p>
+<p>This is the core loop principle: memory is <strong>explicit</strong>, not accidental.</p>
 <h2 id="alternative-claude-codes-built-in-loop">Alternative: Claude Code's Built-in Loop<a class="headerlink" href="#alternative-claude-codes-built-in-loop" title="Permanent link">&para;</a></h2>
 <p>Claude Code has built-in loop support:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Start autonomous loop</span>
@@ -3340,23 +3340,23 @@ explicit, not accidental.</p>
 </span></code></pre></div>
 <p>This is convenient for quick iterations, but be aware of important caveats:</p>
 <div class="admonition warning">
-<p class="admonition-title">Not Pure Ralph</p>
+<p class="admonition-title">This Loop Is not Pure</p>
 <p>Claude Code's <code>/loop</code> runs all iterations <strong>within the same session</strong>.
 This means:</p>
 <ul>
-<li><strong>State leaks between iterations.</strong> The context window accumulates
+<li><strong>State leaks between iterations</strong>: The context window accumulates
   output from every previous iteration. The agent "remembers" things
-  it saw earlier — even if they were never persisted to <code>.context/</code>.</li>
-<li><strong>Token budget degrades.</strong> Each iteration adds to the context window,
+  it saw earlier (<em>even if they were never persisted to <code>.context/</code></em>).</li>
+<li><strong>Token budget degrades</strong>: Each iteration adds to the context window,
   leaving less room for actual work in later iterations.</li>
-<li><strong>Not ergonomic for long runs.</strong> Users report that the built-in loop
+<li><strong>Not ergonomic for long runs</strong>: Users report that the built-in loop
   is less predictable for 10+ iteration runs compared to a shell loop.</li>
 </ul>
-<p>For short explorations (2-5 iterations) or interactive use, <code>/loop</code>
+<p>For short explorations (<em>2-5 iterations</em>) or interactive use, <code>/loop</code>
 works fine. For overnight unattended runs or anything where iteration
 independence matters, use the shell while loop instead.</p>
 </div>
-<h2 id="the-promptmd-file">The PROMPT.md File<a class="headerlink" href="#the-promptmd-file" title="Permanent link">&para;</a></h2>
+<h2 id="the-promptmd-file">The <code>PROMPT.md</code> File<a class="headerlink" href="#the-promptmd-file" title="Permanent link">&para;</a></h2>
 <p>The prompt file instructs the AI on how to work autonomously. Here's a template:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gh"># Autonomous Development Prompt</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
@@ -3438,6 +3438,7 @@ independence matters, use the shell while loop instead.</p>
 </tbody>
 </table>
 <h3 id="example-usage">Example Usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h3>
+<p><strong>converged state</strong></p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>I&#39;ve completed all tasks in TASKS.md:
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">- [x]</span> Set up project structure
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">- [x]</span> Implement core API
@@ -3448,6 +3449,7 @@ independence matters, use the shell while loop instead.</p>
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>SYSTEM_CONVERGED
 </span></code></pre></div>
+<p><strong>blocked state</strong></p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>I cannot proceed with the &quot;Deploy to production&quot; task because:
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">-</span><span class="w"> </span>Missing AWS credentials
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">-</span><span class="w"> </span>Need confirmation on region selection
@@ -3456,12 +3458,12 @@ independence matters, use the shell while loop instead.</p>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>SYSTEM_BLOCKED
 </span></code></pre></div>
-<h2 id="why-context-loops-work-well-together">Why Context + Loops Work Well Together<a class="headerlink" href="#why-context-loops-work-well-together" title="Permanent link">&para;</a></h2>
+<h2 id="why-ctx-and-loops-work-well-together">Why <code>ctx</code> and  Loops Work Well Together<a class="headerlink" href="#why-ctx-and-loops-work-well-together" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Without ctx</th>
-<th>With ctx</th>
+<th>Without <code>ctx</code></th>
+<th>With <code>ctx</code></th>
 </tr>
 </thead>
 <tbody>
@@ -3471,15 +3473,15 @@ independence matters, use the shell while loop instead.</p>
 </tr>
 <tr>
 <td>Decisions get re-made</td>
-<td>Decisions persist in DECISIONS.md</td>
+<td>Decisions persist in <code>DECISIONS.md</code></td>
 </tr>
 <tr>
 <td>Learnings are lost</td>
-<td>Learnings accumulate in LEARNINGS.md</td>
+<td>Learnings accumulate in <code>LEARNINGS.md</code></td>
 </tr>
 <tr>
 <td>Tasks can be forgotten</td>
-<td>Tasks tracked in TASKS.md</td>
+<td>Tasks tracked in <code>TASKS.md</code></td>
 </tr>
 </tbody>
 </table>
@@ -3521,12 +3523,12 @@ real time.</p>
 </span></code></pre></div>
 <p>The <code>--ralph</code> flag creates a <code>PROMPT.md</code> where the agent:</p>
 <ul>
-<li>Works autonomously without asking clarifying questions</li>
-<li>Follows one-task-per-iteration discipline</li>
-<li>Uses <code>SYSTEM_CONVERGED</code> / <code>SYSTEM_BLOCKED</code> signals</li>
+<li>Works autonomously without asking clarifying questions;</li>
+<li>Follows one-task-per-iteration discipline;</li>
+<li>Uses <code>SYSTEM_CONVERGED</code> / <code>SYSTEM_BLOCKED</code> signals;</li>
 </ul>
 <p>Without <code>--ralph</code>, the agent is encouraged to ask questions when requirements
-are unclear — better for collaborative human-agent sessions.</p>
+are unclear: Better for collaborative human-agent sessions.</p>
 <h2 id="example-project-structure">Example Project Structure<a class="headerlink" href="#example-project-structure" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>my-project/
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>├── .context/
@@ -3578,30 +3580,31 @@ are unclear — better for collaborative human-agent sessions.</p>
 </span></code></pre></div></p>
 <h3 id="tasks-getting-repeated">Tasks Getting Repeated<a class="headerlink" href="#tasks-getting-repeated" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: Task not marked complete before next iteration</p>
-<p><strong>Fix</strong>: Ensure commit happens after context update:
+<p><strong>Fix</strong>: Ensure commit happens after context update:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Order of operations:
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">1.</span> Complete coding work
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">2.</span> Update context files (ctx complete, ctx add)
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">3.</span> Commit ALL changes including .context/
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">2.</span> Update context files (<span class="ge">*`ctx complete`, `ctx add`*</span>)
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">3.</span> Commit <span class="gs">**ALL**</span> changes including <span class="sb">`.context/`</span>
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">4.</span> Then signal status
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="ai-violating-constitution">AI Violating Constitution<a class="headerlink" href="#ai-violating-constitution" title="Permanent link">&para;</a></h3>
 <p><strong>Cause</strong>: Constitution not read first</p>
-<p><strong>Fix</strong>: Make constitution check explicit in PROMPT.md:
+<p><strong>Fix</strong>: Make constitution check explicit in <code>PROMPT.md</code>:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>BEFORE any work:
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">1.</span> Read .context/CONSTITUTION.md
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">2.</span> If task would violate ANY rule, emit SYSTEM_BLOCKED
 </span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">3.</span> Explain which rule prevents the work
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../blog/2026-01-27-building-ctx-using-ctx/">Building ctx Using ctx</a> — The dogfooding story: how autonomous loops built the tool that powers them</li>
+<li><a href="../../blog/2026-01-27-building-ctx-using-ctx/">Building ctx Using ctx</a>: 
+  The dogfooding story: how autonomous loops built the tool that powers them</li>
 </ul>
 <h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://ghuntley.com/ralph/">Geoffrey Huntley's Ralph Wiggum Technique</a> — Original inspiration</li>
-<li><a href="../../reference/cli-reference/">Context CLI</a> — Command reference</li>
-<li><a href="../integrations/">Integrations</a> — Tool-specific setup</li>
+<li><a href="https://ghuntley.com/ralph/">Geoffrey Huntley's Ralph Wiggum Technique</a>: The original inspiration</li>
+<li><a href="../../reference/cli-reference/">Context CLI</a>: Command reference</li>
+<li><a href="../integrations/">Integrations</a>: Tool-specific setup</li>
 </ul>
 
 

@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -217,7 +217,7 @@ func TestAddToGitignore_New(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := addToGitignore(".context", ".scratchpad.key"); err != nil {
+	if err := addToGitignore(".context", ".context.key"); err != nil {
 		t.Fatalf("addToGitignore failed: %v", err)
 	}
 
@@ -225,7 +225,7 @@ func TestAddToGitignore_New(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(content), ".context/.scratchpad.key") {
+	if !strings.Contains(string(content), ".context/.context.key") {
 		t.Error("entry not added to .gitignore")
 	}
 }
@@ -234,12 +234,12 @@ func TestAddToGitignore_AlreadyPresent(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	entry := ".context/.scratchpad.key"
+	entry := ".context/.context.key"
 	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := addToGitignore(".context", ".scratchpad.key"); err != nil {
+	if err := addToGitignore(".context", ".context.key"); err != nil {
 		t.Fatalf("addToGitignore failed: %v", err)
 	}
 
@@ -261,7 +261,7 @@ func TestAddToGitignore_AppendNoTrailingNewline(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := addToGitignore(".context", ".scratchpad.key"); err != nil {
+	if err := addToGitignore(".context", ".context.key"); err != nil {
 		t.Fatalf("addToGitignore failed: %v", err)
 	}
 
@@ -269,7 +269,7 @@ func TestAddToGitignore_AppendNoTrailingNewline(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(content), "node_modules\n.context/.scratchpad.key") {
+	if !strings.Contains(string(content), "node_modules\n.context/.context.key") {
 		t.Errorf("unexpected content: %q", string(content))
 	}
 }
@@ -1106,7 +1106,7 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 	}
 
 	// Either a key file or scratchpad.md should have been created
-	keyPath := filepath.Join(contextDir, config.FileScratchpadKey)
+	keyPath := filepath.Join(contextDir, config.FileContextKey)
 	mdPath := filepath.Join(contextDir, config.FileScratchpadMd)
 	_, keyErr := os.Stat(keyPath)
 	_, mdErr := os.Stat(mdPath)
@@ -1125,7 +1125,7 @@ func TestInitScratchpad_KeyExists(t *testing.T) {
 	}
 
 	// Create existing key file
-	keyPath := filepath.Join(contextDir, config.FileScratchpadKey)
+	keyPath := filepath.Join(contextDir, config.FileContextKey)
 	if err := os.WriteFile(keyPath, []byte("existing-key"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -1163,7 +1163,7 @@ func TestInitScratchpad_EncExistsNoKey(t *testing.T) {
 	}
 
 	// Key should NOT have been generated (warning path)
-	keyPath := filepath.Join(contextDir, config.FileScratchpadKey)
+	keyPath := filepath.Join(contextDir, config.FileContextKey)
 	if _, err := os.Stat(keyPath); err == nil {
 		t.Error("key was generated even though enc exists without key (should just warn)")
 	}

@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -21,6 +21,9 @@ type journalFrontmatter struct {
 	Time      string   `yaml:"time,omitempty"`
 	Project   string   `yaml:"project,omitempty"`
 	SessionID string   `yaml:"session_id,omitempty"`
+	Model     string   `yaml:"model,omitempty"`
+	TokensIn  int      `yaml:"tokens_in,omitempty"`
+	TokensOut int      `yaml:"tokens_out,omitempty"`
 	Type      string   `yaml:"type"`
 	Outcome   string   `yaml:"outcome"`
 	Topics    []string `yaml:"topics"`
@@ -36,6 +39,9 @@ type journalEntry struct {
 	Time       string
 	Project    string
 	SessionID  string
+	Model      string
+	TokensIn   int
+	TokensOut  int
 	Path       string
 	Size       int64
 	Suggestive bool
