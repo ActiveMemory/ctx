@@ -38,12 +38,12 @@
 #               #   check-resources     — system resources critically low
 #               #   check-knowledge     — knowledge file growth detected
 #               #   check-version       — binary/plugin version mismatch
-#               #   check-version       — scratchpad key age rotation nudge
+#               #   check-version       — encryption key age rotation nudge
 #     - relay   # All hook output (verbose — includes nudges plus):
 #               #   post-commit         — commit succeeded, context capture offered
 #               #   qa-reminder         — QA gate reminder emitted
 #               #   block-non-path-ctx  — blocked non-PATH ctx invocation
-#   key_rotation_days: 90  # Days before scratchpad key rotation nudge
+#   key_rotation_days: 90  # Days before encryption key rotation nudge
 #
 # Note: `ctx notify test` always bypasses the event filter — no need to
 # list "test" here. It warns if filtered but sends anyway.

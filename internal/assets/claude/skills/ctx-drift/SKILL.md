@@ -106,6 +106,7 @@ After both layers, do **not** dump raw output. Instead:
 | Many completed tasks           | TASKS.md is cluttered                  | Run `ctx compact --archive`            |
 | File not modified in 30+ days  | Content may be outdated                | Review and update or confirm current   |
 | Constitution violation         | A hard rule may be broken              | Fix immediately                        |
+| Missing packages               | An `internal/` package is not in ARCHITECTURE.md | Add it with `/ctx-map` or document manually |
 | Required file missing          | A core context file does not exist     | Create it with `ctx init` or manually  |
 
 ## Auto-Fix

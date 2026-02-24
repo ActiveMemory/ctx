@@ -11,7 +11,7 @@ those who hold the key.
 ## Solution
 
 A scratchpad stored in `.context/scratchpad.enc`, encrypted with AES-256-GCM
-using a symmetric key at `.context/.scratchpad.key`. The key is gitignored;
+using a symmetric key at `.context/.context.key`. The key is gitignored;
 the encrypted file is committed. Only machines with the key can read or write.
 
 A plaintext fallback (`.context/scratchpad.md`) is available via config for
@@ -31,7 +31,7 @@ users who don't need encryption.
 ```
 .context/scratchpad.enc      # committed to git (encrypted, default)
 .context/scratchpad.md       # committed to git (plaintext, config override)
-.context/.scratchpad.key     # gitignored, 0600, created at ctx init
+.context/.context.key     # gitignored, 0600, created at ctx init
 ```
 
 Only one of `.enc` / `.md` exists at a time, depending on config.
@@ -39,7 +39,7 @@ Only one of `.enc` / `.md` exists at a time, depending on config.
 ## Encryption
 
 - Algorithm: AES-256-GCM (Go stdlib `crypto/aes`, `crypto/cipher`)
-- Key: 256-bit random (`crypto/rand`), stored raw in `.scratchpad.key`
+- Key: 256-bit random (`crypto/rand`), stored raw in `.context.key`
 - Nonce: 12-byte random, prepended to ciphertext
 - File format: `[12-byte nonce][ciphertext + 16-byte GCM tag]`
 - Plaintext format: newline-delimited UTF-8 lines (entries)
@@ -132,7 +132,7 @@ Removed entry 2.
 
 ### Error Cases
 
-- No key, encrypted file exists: `Encrypted scratchpad found but no key. Place your key at .context/.scratchpad.key`
+- No key, encrypted file exists: `Encrypted scratchpad found but no key. Place your key at .context/.context.key`
 - No scratchpad file exists: `Scratchpad is empty.` (or create on first add)
 - Index out of range: `Entry N does not exist. Scratchpad has M entries.`
 - Decryption failure (wrong key): `Decryption failed. Wrong key?`
@@ -140,9 +140,9 @@ Removed entry 2.
 ## ctx init Behavior
 
 When `scratchpad_encrypt: true` (default):
-1. Generate 256-bit random key → `.context/.scratchpad.key` (mode 0600)
-2. Add `.context/.scratchpad.key` to `.gitignore` if not present
-3. Print: `Scratchpad key created at .context/.scratchpad.key`
+1. Generate 256-bit random key → `.context/.context.key` (mode 0600)
+2. Add `.context/.context.key` to `.gitignore` if not present
+3. Print: `Scratchpad key created at .context/.context.key`
 4. Print: `Copy this file to your other machines at the same path.`
 5. If key already exists: skip generation (idempotent)
 6. If `scratchpad.enc` exists but no key: warn, don't overwrite
@@ -158,7 +158,7 @@ or import the key. The key never appears in stdout, session transcripts,
 journal entries, or any AI-visible output.
 
 Suggested methods (documented, not enforced):
-- `scp .context/.scratchpad.key user@host:project/.context/`
+- `scp .context/.context.key user@host:project/.context/`
 - Copy via password manager
 - Any secure file transfer
 
@@ -206,7 +206,7 @@ internal/tpl/claude/skills/ctx-pad/SKILL.md
 New constants in `internal/config/`:
 - `FileScratchpadEnc = "scratchpad.enc"`
 - `FileScratchpadMd = "scratchpad.md"`
-- `FileScratchpadKey = ".scratchpad.key"`
+- `FileContextKey = ".context.key"`
 - `PermSecret = 0600` (for key file)
 
 New field in `internal/rc/types.go`:

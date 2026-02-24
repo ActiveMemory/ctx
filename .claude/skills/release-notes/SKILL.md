@@ -79,6 +79,10 @@ gh release view <tag> --json body -q '.body' | head -60
 
 <Summary paragraph>
 
+## Canonical Release Narrative
+
+(coming soon) https://ctx.ist/blog/
+
 ## Highlights
 
 - **Bold label**: 1-2 sentence description

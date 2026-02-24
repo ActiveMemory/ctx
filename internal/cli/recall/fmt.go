@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\\
 //   \    Copyright 2026-present Context contributors.
@@ -119,6 +119,12 @@ func formatJournalEntryPart(
 		}
 		if s.Model != "" {
 			sb.WriteString(fmt.Sprintf("model: %s"+nl, s.Model))
+		}
+		if s.TotalTokensIn > 0 {
+			sb.WriteString(fmt.Sprintf("tokens_in: %d"+nl, s.TotalTokensIn))
+		}
+		if s.TotalTokensOut > 0 {
+			sb.WriteString(fmt.Sprintf("tokens_out: %d"+nl, s.TotalTokensOut))
 		}
 		sb.WriteString(fmt.Sprintf("session_id: %q"+nl, s.ID))
 		if title != "" {

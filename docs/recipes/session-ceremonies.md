@@ -9,11 +9,12 @@ icon: lucide/bookmark
 
 Sessions have two critical moments: the **start** and the **end**.
 
-At the start, you need the agent to load context and confirm it knows what
-is going on. At the end, you need to capture whatever the session produced
+* **At the start**, you need the agent to load context and confirm it knows what
+is going on. 
+* **At the end**, you need to capture whatever the session produced
 before the conversation disappears.
 
-Most ctx skills work conversationally: "jot down: check DNS after deploy"
+Most `ctx` skills work **conversationally**: "*jot down: check DNS after deploy*"
 is as good as `/ctx-pad add "check DNS after deploy"`. But session
 boundaries are different. They are well-defined moments with specific
 requirements, and partial execution is costly.
@@ -22,16 +23,42 @@ If the agent only half-loads context at the start, it works from stale
 assumptions. If it only half-persists at the end, learnings and decisions
 are lost.
 
-**Session ceremonies** are the two bookend skills that mark these
-boundaries. They are the exception to the conversational rule:
-invoke them explicitly as slash commands.
+!!! tip "This Is One of the Few Times Being Explicit Matters"
+    **Session ceremonies** are the two bookend skills that mark these
+    boundaries. 
 
-!!! tip "TL;DR"
-    **Start**: `/ctx-remember` — load context, get a structured readback.
+    They are the **exception** to the conversational rule:
+    
+    **Invoke `/ctx-remember` and `/ctx-wrap-up`  explicitly as slash commands**.
 
-    **End**: `/ctx-wrap-up` — review session, propose candidates, persist approved items.
+## TL;DR
 
-    Use the slash commands, not conversational triggers, for completeness.
+**Start**: `/ctx-remember`: load context, get a structured readback.
+
+**End**: `/ctx-wrap-up`: review session, propose candidates, persist approved items.
+
+Use the slash commands, **not** conversational triggers, for completeness.
+
+## Explicit Invocation Matters
+
+Most `ctx` skills encourage natural language. These two are different:
+
+**Well-defined moments**: Sessions have clear boundaries. A slash command
+marks the boundary unambiguously.
+
+**Ambiguity risk**: "*Do you remember?*" could mean many things.
+`/ctx-remember` means exactly one thing: load context and present a
+structured readback.
+
+**Completeness**: Conversational triggers risk partial execution. The
+agent might load some files but skip the session history, or persist one
+learning but forget to check for uncommitted changes. The slash command
+runs the full ceremony.
+
+**Muscle memory**: Typing `/ctx-remember` at session start and
+`/ctx-wrap-up` at session end becomes a habit, like opening and closing
+braces.
+
 
 ## Commands and Skills Used
 
@@ -43,26 +70,6 @@ invoke them explicitly as slash commands.
 | `ctx agent`      | CLI   | Load token-budgeted context packet               |
 | `ctx recall list`| CLI   | List recent sessions                             |
 | `ctx add`        | CLI   | Persist learnings, decisions, conventions, tasks  |
-
-## Why Explicit Invocation
-
-Most ctx skills encourage natural language. These two are different:
-
-**Well-defined moments.** Sessions have clear boundaries. A slash command
-marks the boundary unambiguously.
-
-**Ambiguity risk.** "Do you remember?" could mean many things.
-`/ctx-remember` means exactly one thing: load context and present a
-structured readback.
-
-**Completeness.** Conversational triggers risk partial execution. The
-agent might load some files but skip the session history, or persist one
-learning but forget to check for uncommitted changes. The slash command
-runs the full ceremony.
-
-**Muscle memory.** Typing `/ctx-remember` at session start and
-`/ctx-wrap-up` at session end becomes a habit, like opening and closing
-braces.
 
 ## Session Start: /ctx-remember
 
@@ -89,11 +96,16 @@ The readback should feel like recall, not a file system tour. If the
 agent says "Let me check if there are files..." instead of a confident
 summary, the skill is not working correctly.
 
-!!! note "What about 'Do you remember?'"
+!!! note "What About 'do you remember?'"
     The conversational trigger still works. But `/ctx-remember` guarantees
-    the full ceremony runs: context packet, file reads, session history,
-    and all four readback sections. The conversational version may cut
-    corners.
+    the full ceremony runs: 
+    
+    * context packet, 
+    * file reads, 
+    * session history,
+    * and all four readback sections. 
+
+    The conversational version *may* cut corners.
 
 ## Session End: /ctx-wrap-up
 
@@ -105,13 +117,13 @@ Invoke before ending a session where meaningful work happened:
 
 The skill runs four phases:
 
-### Phase 1: Gather signal
+### Phase 1: Gather Signal
 
 Silently checks `git diff --stat`, recent commits, and scans the
 conversation for themes: architectural choices, gotchas, patterns
 established, follow-up work identified.
 
-### Phase 2: Propose candidates
+### Phase 2: Propose Candidates
 
 Presents a structured list grouped by type:
 
@@ -148,7 +160,7 @@ Empty categories are omitted.
 After you approve (all, some, or modified), the skill runs the
 appropriate `ctx add` commands and reports results.
 
-### Phase 4: Commit offer
+### Phase 4: Commit Offer
 
 If there are uncommitted changes, offers to run `/ctx-commit`.
 Does not auto-commit.
@@ -159,18 +171,18 @@ Not every session needs ceremonies.
 
 **Skip `/ctx-remember`** when:
 
-- You are doing a quick one-off lookup (reading a file, checking a value)
-- Context was already loaded this session via `/ctx-agent`
-- You are continuing immediately after a previous session and context is
+* You are doing a quick one-off lookup (*reading a file, checking a value*)
+* Context was already loaded this session via `/ctx-agent`
+* You are continuing immediately after a previous session and context is
   still fresh
 
 **Skip `/ctx-wrap-up`** when:
 
-- Nothing meaningful happened (only read files, answered a question)
-- You already persisted everything manually during the session
-- The session was trivial (typo fix, quick config change)
+* Nothing meaningful happened (*only read files, answered a question*)
+* You already persisted everything manually during the session
+* The session was trivial (*typo fix, quick config change*)
 
-A good heuristic: if the session produced something a future session
+**A good heuristic**: if the session produced something a future session
 should know about, run `/ctx-wrap-up`. If not, just close.
 
 ## Quick Reference
@@ -203,17 +215,14 @@ includes the commit offer. If you already ran `/ctx-reflect` recently,
 
 ## Tips
 
-**Make it a habit.** The value of ceremonies compounds over sessions.
+* **Make it a habit**: The value of ceremonies compounds over sessions.
 Each `/ctx-wrap-up` makes the next `/ctx-remember` richer.
-
-**Trust the candidates.** The agent scans the full conversation. It
+* **Trust the candidates**: The agent scans the full conversation. It
 often catches learnings you forgot about.
-
-**Edit before approving.** If a proposed candidate is close but not
+* **Edit before approving**: If a proposed candidate is close but not
 quite right, tell the agent what to change. Do not settle for a vague
 learning when a precise one is possible.
-
-**Do not force empty ceremonies.** If `/ctx-wrap-up` finds nothing
+* **Do not force empty ceremonies**: If `/ctx-wrap-up` finds nothing
 worth persisting, that is fine. A session that only read files and
 answered questions does not need artificial learnings.
 

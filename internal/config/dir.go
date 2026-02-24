@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -32,6 +32,7 @@ var GitignoreEntries = []string{
 	".context/journal-site/",
 	".context/journal-obsidian/",
 	".context/logs/",
+	".context/.context.key",
 	".context/.scratchpad.key",
 	".claude/settings.local.json",
 }

@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -24,7 +24,10 @@
 //   - check-version: Version update nudge
 //   - check-resources: Resource pressure monitor (DANGER-only VERBATIM relay)
 //   - check-knowledge: Knowledge file growth nudge (daily throttle)
+//   - check-map-staleness: Architecture map staleness nudge (daily throttle)
 //   - block-non-path-ctx: Blocks non-PATH ctx invocations
+//   - block-dangerous-commands: Blocks dangerous command patterns (project-local)
+//   - check-backup-age: Backup staleness check (project-local)
 //   - post-commit: Post-commit context capture nudge
 //   - cleanup-tmp: Removes stale temp files on session end
 //   - qa-reminder: Reminds agent to lint/test full project before declaring done

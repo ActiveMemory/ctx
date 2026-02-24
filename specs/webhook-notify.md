@@ -32,31 +32,31 @@ The webhook URL is sensitive (contains auth tokens). It MUST NOT be stored
 in plaintext in `.ctxrc` or environment variables.
 
 **Solution:** Reuse the existing `internal/crypto/` AES-256-GCM encryption
-and the project's scratchpad key (`.context/.scratchpad.key`).
+and the project's encryption key (`.context/.context.key`).
 
 ```
-.context/.scratchpad.key   ← existing, gitignored, mode 0600
+.context/.context.key   ← existing, gitignored, mode 0600
 .context/.notify.enc       ← NEW, committed (encrypted), safe to share
 ```
 
 **Setup flow:**
 1. User runs `ctx notify setup`
 2. Command prompts for webhook URL (stdin)
-3. Encrypts URL using existing scratchpad key (auto-generates if needed)
+3. Encrypts URL using existing encryption key (auto-generates if needed)
 4. Writes to `.context/.notify.enc`
 5. Prints confirmation
 
 **Runtime flow:**
 1. `ctx notify` reads `.context/.notify.enc`
-2. Decrypts with `.context/.scratchpad.key`
+2. Decrypts with `.context/.context.key`
 3. Uses decrypted URL for HTTP POST
 4. If key or encrypted file missing → silent noop
 
 ### Encryption Key Rotation
 
-The scratchpad key has no built-in age tracking. We add a lightweight check:
+The encryption key has no built-in age tracking. We add a lightweight check:
 
-- **Detection:** `os.Stat(".context/.scratchpad.key").ModTime()` gives creation
+- **Detection:** `os.Stat(".context/.context.key").ModTime()` gives creation
   time (key is never modified after generation).
 - **Threshold:** 90 days (configurable in `.ctxrc` as `key_rotation_days`).
 - **Nudge:** Existing `check-version` or new system hook emits a VERBATIM relay:
@@ -64,7 +64,7 @@ The scratchpad key has no built-in age tracking. We add a lightweight check:
   IMPORTANT: Relay this security reminder to the user VERBATIM.
 
   ┌─ Key Rotation ──────────────────────────────────────┐
-  │ Your scratchpad key is N days old.                   │
+  │ Your encryption key is N days old.                   │
   │ Consider rotating: ctx pad rotate-key                │
   └──────────────────────────────────────────────────────┘
   ```

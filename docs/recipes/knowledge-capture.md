@@ -5,7 +5,7 @@ icon: lucide/brain
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 You debug a subtle issue, discover the root cause, and move on.
 
@@ -18,6 +18,16 @@ approach, and six sessions later the AI suggests the alternative you already
 rejected.
 
 **How do you make sure important context survives across sessions?**
+
+## TL;DR
+
+```text
+/ctx-reflect               # surface items worth persisting
+/ctx-add-decision "Title"  # record with context/rationale/consequences
+/ctx-add-learning "Title"  # record with context/lesson/application
+```
+
+Or just tell your agent: *"What have we learned this session?"*
 
 ## Commands and Skills Used
 
@@ -34,6 +44,11 @@ rejected.
 | `/ctx-reflect`          | Skill   | Surface items worth persisting at breakpoints |
 
 ## The Workflow
+
+!!! tip "Decision, Learning, or Convention?"
+    * If you chose between alternatives, it is a **decision**.
+    * If you discovered something surprising, it is a **learning**.
+    * If you are codifying a repeated pattern, it is a **convention**.
 
 ### Step 1: Understand What to Persist
 
@@ -52,11 +67,6 @@ structured fields: context, lesson, and application.
 **Conventions** (`CONVENTIONS.md`) answer "*how do we do things here?*" They
 record patterns and standards. No structured fields required: just a name,
 a rule, and an example. Conventions keep code consistent across sessions.
-
-!!! tip "Decision, Learning, or Convention?"
-    * If you chose between alternatives, it is a **decision**.
-    * If you discovered something surprising, it is a **learning**.
-    * If you are codifying a repeated pattern, it is a **convention**.
 
 ### Step 2: Record Decisions
 
@@ -134,9 +144,9 @@ expressive than what you would type at a command prompt.
 
 The `/ctx-add-learning` skill applies three quality filters:
 
-* (1) Could someone Google this in 5 minutes?
-* (2) Is it specific to this codebase?
-* (3) Did it take real effort to discover?
+1. Could someone Google this in 5 minutes?
+2. Is it specific to this codebase?
+3. Did it take real effort to discover?
 
 **All three must pass**.
 
@@ -190,8 +200,21 @@ without reading the full file, which matters when token budgets are tight.
 
 ### Step 6: Use /ctx-reflect to Surface What to Capture
 
-At natural breakpoints (after completing a feature, fixing a bug, or before
-ending a session) use `/ctx-reflect` to identify items worth persisting.
+!!! tip "Keep It Conversational"
+    `/ctx-reflect` is not the only way to trigger reflection.
+
+    Agents trained on the ctx playbook naturally surface persist-worthy items at
+    breakpoints, even without invoking the skill explicitly.
+
+    A conversational prompt like "anything worth saving?" or "let's wrap up"
+    can trigger the same review.
+
+    The skill provides a structured checklist, but the behavior is available
+    through natural conversation.
+
+
+At natural breakpoints (*after completing a feature, fixing a bug, or before
+ending a session*) use `/ctx-reflect` to identify items worth persisting.
 
 ```text
 /ctx-reflect
@@ -201,7 +224,7 @@ The skill walks through learnings, decisions, tasks, and session notes, skipping
 categories with nothing to report. The output includes specific commands for
 each suggested persist:
 
-```markdown
+```text
 This session implemented file-based cooldown for `ctx agent` and
 discovered that hook subprocesses cannot set env vars in the parent.
 
@@ -215,18 +238,6 @@ Want me to persist any of these?
 ```
 
 The skill always asks before persisting.
-
-!!! tip "Keep It Conversational"
-    `/ctx-reflect` is not the only way to trigger reflection.
-
-    Agents trained on the ctx playbook naturally surface persist-worthy items at
-    breakpoints, even without invoking the skill explicitly.
-
-    A conversational prompt like "anything worth saving?" or "let's wrap up"
-    can trigger the same review.
-
-    The skill provides a structured checklist, but the behavior is available
-    through natural conversation.
 
 ### Step 7: The Conversational Approach
 
@@ -352,20 +363,20 @@ Both approaches produce the same structured entries in the same context files.
 
 ## Tips
 
-* Record decisions at the moment of choice. The alternatives you considered and
+* Record decisions **at the moment of choice**. The alternatives you considered and
   the reasons you rejected them fade quickly. Capture trade-offs while they are
   fresh.
-* Learnings should fail the Google test. If someone could find it in a 5-minute
-  search, it does not belong in LEARNINGS.md.
-* Conventions earn their place through repetition. Add a convention the third
+* Learnings should fail the Gemini test. If someone could find it in a 5-minute
+  Gemini search, it does **not** belong in `LEARNINGS.md`.
+* **Conventions** earn their place through **repetition**. Add a convention the third
   time you see a pattern, not the first.
 * Use `/ctx-reflect` at natural breakpoints. The checklist catches items you
   might otherwise lose.
-* **Keep the entries self-contained^^. Each entry should make sense on its own. A
+* **Keep the entries self-contained**. Each entry should make sense on its own. A
   future session may load only one due to token budget constraints.
-* Reindex after every hand edit. It takes less than a second. A stale index
+* **Reindex** after every hand edit. It takes less than a second. A stale index
   causes AI tools to miss entries.
-* Prefer the structured fields. The verbosity forces clarity. A decision without
+* Prefer the **structured fields**. The verbosity forces clarity. A decision without
   a rationale is just a fact. A learning without an application is just a story.
 * **Talk to your agent**, do not type commands. In interactive sessions, the
   conversational approach is the recommended way to capture knowledge. Say

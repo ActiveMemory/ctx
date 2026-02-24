@@ -2,6 +2,8 @@
 title: Guide Your Agent
 icon: lucide/sparkles
 ---
+  
+![ctx](../images/ctx-banner.png)
 
 !!! tip "Commands vs. Skills"
     **Commands** (`ctx status`, `ctx add task`) run in your
@@ -25,7 +27,7 @@ suggest what to work on next.
 **Your questions train the agent.** Asking "*what have we
 learned?*" or "*is our context clean?*" does two things:
 
-* It triggers the workflow right now,
+* It triggers the workflow **right now**,
 * **and** it **reinforces** the pattern.
 
 The more you guide, the more the agent **habituates** the behavior and begins

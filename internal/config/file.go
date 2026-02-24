@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -158,16 +158,30 @@ const (
 	FileJournalState = ".state.json"
 )
 
+// Architecture mapping file constants for .context/ directory.
+const (
+	// FileDetailedDesign is the deep per-module architecture reference.
+	FileDetailedDesign = "DETAILED_DESIGN.md"
+	// FileMapTracking is the architecture mapping coverage state file.
+	FileMapTracking = "map-tracking.json"
+)
+
 // Scratchpad file constants for .context/ directory.
 const (
 	// FileScratchpadEnc is the encrypted scratchpad file.
 	FileScratchpadEnc = "scratchpad.enc"
 	// FileScratchpadMd is the plaintext scratchpad file.
 	FileScratchpadMd = "scratchpad.md"
-	// FileScratchpadKey is the scratchpad encryption key file.
-	FileScratchpadKey = ".scratchpad.key"
+	// FileContextKey is the context encryption key file.
+	FileContextKey = ".context.key"
 	// FileNotifyEnc is the encrypted webhook URL file.
 	FileNotifyEnc = ".notify.enc"
+)
+
+// Reminder file constants for .context/ directory.
+const (
+	// FileReminders is the session-scoped reminders file.
+	FileReminders = "reminders.json"
 )
 
 // FileType maps short names to actual file names.
@@ -262,11 +276,13 @@ var DefaultClaudePermissions = []string{
 	"Skill(ctx-journal-enrich-all)",
 	"Skill(ctx-journal-normalize)",
 	"Skill(ctx-loop)",
+	"Skill(ctx-map)",
 	"Skill(ctx-next)",
 	"Skill(ctx-pad)",
 	"Skill(ctx-prompt-audit)",
 	"Skill(ctx-recall)",
 	"Skill(ctx-reflect)",
+	"Skill(ctx-remind)",
 	"Skill(ctx-remember)",
 	"Skill(ctx-status)",
 	"Skill(ctx-worktree)",

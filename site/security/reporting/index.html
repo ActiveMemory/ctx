@@ -2657,6 +2657,23 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attribution">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#response-timeline" class="md-nav__link">
     <span class="md-ellipsis">
@@ -2722,17 +2739,6 @@
     <span class="md-ellipsis">
       
         Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#attribution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Attribution
       
     </span>
   </a>
@@ -2825,6 +2831,23 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attribution">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#response-timeline" class="md-nav__link">
     <span class="md-ellipsis">
@@ -2890,17 +2913,6 @@
     <span class="md-ellipsis">
       
         Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#attribution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Attribution
       
     </span>
   </a>
@@ -2981,21 +2993,33 @@
 <p>If you discover a security vulnerability in <code>ctx</code>, please report it responsibly.</p>
 <p><strong>Do NOT open a public issue for security vulnerabilities.</strong></p>
 <h3 id="email">Email<a class="headerlink" href="#email" title="Permanent link">&para;</a></h3>
-<p>Send details to <strong><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#101;&#99;&#117;&#114;&#105;&#116;&#121;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;">&#115;&#101;&#99;&#117;&#114;&#105;&#116;&#121;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;</a></strong></p>
+<p>Send details to <strong><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#101;&#99;&#117;&#114;&#105;&#116;&#121;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;">&#115;&#101;&#99;&#117;&#114;&#105;&#116;&#121;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;</a></strong>.</p>
 <h3 id="github-private-reporting">GitHub Private Reporting<a class="headerlink" href="#github-private-reporting" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Go to the <a href="https://github.com/ActiveMemory/ctx/security">Security tab</a></li>
-<li>Click "Report a vulnerability"</li>
-<li>Provide a detailed description</li>
+<li>Go to the <a href="https://github.com/ActiveMemory/ctx/security">Security tab</a>;</li>
+<li>Click "<em>Report a Vulnerability</em>";</li>
+<li>Provide a detailed description.</li>
 </ol>
 <h3 id="what-to-include">What to Include<a class="headerlink" href="#what-to-include" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Description of the vulnerability</li>
 <li>Steps to reproduce</li>
 <li>Potential impact</li>
-<li>Suggested fix (if any)</li>
+<li>Suggested fix (<em>if any</em>)</li>
 </ul>
+<h2 id="attribution">Attribution<a class="headerlink" href="#attribution" title="Permanent link">&para;</a></h2>
+<p>We appreciate responsible disclosure and will acknowledge security researchers
+who report valid vulnerabilities (<em>unless they prefer to remain anonymous</em>).</p>
+<hr />
 <h3 id="response-timeline">Response Timeline<a class="headerlink" href="#response-timeline" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Open source, Best-Effort Timelines</p>
+<p><code>ctx</code> is a volunteer-maintained open source project. </p>
+<p>The timelines below are <strong>guidelines</strong>, not guarantees, and depend on 
+contributor availability.</p>
+<p>We will address security reports on a best-effort basis and prioritize
+them by severity.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -3018,6 +3042,7 @@
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="trust-model">Trust Model<a class="headerlink" href="#trust-model" title="Permanent link">&para;</a></h2>
 <p><code>ctx</code> operates within a single trust boundary: <strong>the local filesystem</strong>.</p>
 <p>The person who authors <code>.context/</code> files is the same person who runs the
@@ -3086,9 +3111,6 @@ or cron scheduling, use:</p>
 <li><strong>Drift detection</strong>: Run <code>ctx drift</code> to check for potential issues</li>
 <li><strong>Permission audit</strong>: Review <code>.claude/settings.local.json</code> after busy sessions</li>
 </ol>
-<h2 id="attribution">Attribution<a class="headerlink" href="#attribution" title="Permanent link">&para;</a></h2>
-<p>We appreciate responsible disclosure and will acknowledge security researchers
-who report valid vulnerabilities (<em>unless they prefer to remain anonymous</em>).</p>
 
 
 

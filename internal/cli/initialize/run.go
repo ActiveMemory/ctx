@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -136,6 +136,9 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Println(fmt.Sprintf("  %s sessions/", green("✓")))
 	}
 
+	// Migrate legacy .scratchpad.key → .context.key
+	config.MigrateKeyFile(contextDir)
+
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
 		// Non-fatal: warn but continue
@@ -198,7 +201,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 // initScratchpad sets up the scratchpad key or plaintext file.
 //
 // When encryption is enabled (default):
-//   - Generates a 256-bit key at .context/.scratchpad.key if not present
+//   - Generates a 256-bit key at .context/.context.key if not present
 //   - Adds the key file to .gitignore
 //   - Warns if .enc exists but no key
 //
@@ -230,7 +233,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	}
 
 	// Encrypted mode
-	kPath := filepath.Join(contextDir, config.FileScratchpadKey)
+	kPath := filepath.Join(contextDir, config.FileContextKey)
 	encPath := filepath.Join(contextDir, config.FileScratchpadEnc)
 
 	// Check if key already exists (idempotent)
@@ -259,7 +262,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	cmd.Println("  Copy this file to your other machines at the same path.")
 
 	// Add key to .gitignore
-	if err := addToGitignore(contextDir, config.FileScratchpadKey); err != nil {
+	if err := addToGitignore(contextDir, config.FileContextKey); err != nil {
 		cmd.Printf("  %s Could not update .gitignore: %v\n", yellow("⚠"), err)
 	}
 
@@ -334,7 +337,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 //
 // Parameters:
 //   - contextDir: The .context/ directory (entry is relative to this)
-//   - filename: The filename to add (e.g., ".scratchpad.key")
+//   - filename: The filename to add (e.g., ".context.key")
 func addToGitignore(contextDir, filename string) error {
 	entry := filepath.Join(contextDir, filename)
 	gitignorePath := ".gitignore"

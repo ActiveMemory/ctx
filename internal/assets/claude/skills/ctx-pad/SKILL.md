@@ -98,7 +98,7 @@ When the user says "add" — check context:
 
 ## Important Notes
 
-- The scratchpad key (`.scratchpad.key` in the context directory)
+- The encryption key (`.context.key` in the context directory)
   must NEVER be printed to stdout or shown to the user
 - Do not attempt to read `scratchpad.enc` in the context directory
   directly; always use `ctx pad`

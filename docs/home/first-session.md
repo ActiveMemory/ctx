@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -38,7 +38,7 @@ Creating project root files...
   ✓ IMPLEMENTATION_PLAN.md
 
 Setting up Claude Code permissions...
-  ✓ .scratchpad.key
+  ✓ .context.key
 
 Claude Code plugin (hooks + skills):
   Install: claude /plugin marketplace add ActiveMemory/ctx
@@ -245,7 +245,7 @@ You should **`.gitignore`** the generated and sensitive paths:
 .context/logs/
 
 # Encryption key (NEVER commit)
-.context/.scratchpad.key
+.context/.context.key
 
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json

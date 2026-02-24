@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#problem" class="md-skip">
+        <a href="#the-problem" class="md-skip">
           Skip to content
         </a>
       
@@ -1442,10 +1442,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
       
     </span>
   </a>
@@ -1630,10 +1641,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#putting-it-together" class="md-nav__link">
+  <a href="#putting-it-all-together" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Putting It Together
+        Putting It All Together
       
     </span>
   </a>
@@ -2910,10 +2921,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
       
     </span>
   </a>
@@ -3098,10 +3120,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#putting-it-together" class="md-nav__link">
+  <a href="#putting-it-all-together" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Putting It Together
+        Putting It All Together
       
     </span>
   </a>
@@ -3236,25 +3258,25 @@
   <h1>Tracking Work Across Sessions</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>You have work that spans multiple sessions. Tasks get added during one session,
 partially finished in another, and completed days later.</p>
 <p>Without a <strong>system</strong>, follow-up items fall through the cracks, priorities drift,
 and you lose track of what was done versus what still needs doing. <code>TASKS.md</code>
 grows cluttered with completed checkboxes that obscure the remaining work.</p>
 <p>How do you manage work items that span multiple sessions without losing context?</p>
-<div class="admonition tip">
-<p class="admonition-title">TL;DR</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Fix race condition&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high<span class="w">   </span><span class="c1"># add</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Write tests&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Phase 2&quot;</span><span class="w">      </span><span class="c1"># add to phase</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;race condition&quot;</span><span class="w">                        </span><span class="c1"># mark done</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span><span class="w">                 </span><span class="c1"># backup</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">                                    </span><span class="c1"># clean up</span>
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<p><strong>Manage Tasks</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Fix race condition&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high<span class="w">  </span><span class="c1"># add</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Write tests&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Phase 2&quot;</span><span class="w">     </span><span class="c1"># add to phase</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;race condition&quot;</span><span class="w">                      </span><span class="c1"># mark done</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-refactor&quot;</span><span class="w">               </span><span class="c1"># backup</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">                                  </span><span class="c1"># clean up</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-next                                            # pick what&#39;s next
-</span></code></pre></div></p>
+<p><strong>Pick Up the Next Task</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-next # pick what&#39;s next
+</span></code></pre></div>
 <p>Read on for the full workflow and conversational patterns.</p>
-</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3476,17 +3498,16 @@ marked <code>[x]</code> prematurely.</p>
 <h3 id="the-agent-creates-tasks-proactively">The Agent Creates Tasks Proactively<a class="headerlink" href="#the-agent-creates-tasks-proactively" title="Permanent link">&para;</a></h3>
 <p>After completing a piece of work, the agent does not wait for you to dictate
 follow-up items. It identifies them from the work context and offers:</p>
-<blockquote>
-<p><strong>Agent</strong>: "I've finished implementing the rate limiter middleware. I noticed
-three follow-up items:</p>
-<ol>
-<li>Write integration tests for the rate limiter (the unit tests pass but
-   there's no end-to-end coverage)</li>
-<li>Add rate limit headers to API responses (X-RateLimit-Remaining, etc.)</li>
-<li>Document the rate limit configuration in the ops runbook</li>
-</ol>
-<p>Want me to add these as tasks?"</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>**Agent**: &quot;I&#39;ve finished implementing the rate limiter middleware. I noticed
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>three follow-up items:
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>1. Write integration tests for the rate limiter (the unit tests pass but
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>   there&#39;s no end-to-end coverage)
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>2. Add rate limit headers to API responses (X-RateLimit-Remaining, etc.)
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>3. Document the rate limit configuration in the ops runbook
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Want me to add these as tasks?&quot;
+</span></code></pre></div>
 <p>This is how an agent behaves once it has read the Agent Playbook.</p>
 <p>The playbook's "<strong>Work, Reflect, Persist</strong>" cycle means the agent asks itself
 after every milestone: Did I just complete a task? Did new work emerge?</p>
@@ -3525,27 +3546,27 @@ agent to do the thinking:</p>
 threads were touched. </p>
 <p>The agent has the full conversation in context and can spot follow-ups you 
 might miss:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>You:   &quot;Are there any tasks, learnings, or decisions worth adding
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>        from this session?&quot;
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Agent: &quot;Yes—here&#39;s what I&#39;d suggest:
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Tasks:
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  - Add retry logic to the webhook delivery (we discussed it when
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    the timeout test failed but never tracked it)
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  - Update the API docs to reflect the new rate limit headers
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  Learnings:
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  - net/http&#39;s default client has no timeout—we burned 15 minutes
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    on that before adding an explicit 30s timeout
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  Decisions:
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  - We chose token-bucket over sliding-window for rate limiting
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    because it handles bursts better and the library is simpler
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
-</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  Want me to add all of these?&quot;
-</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>
-</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>You:   &quot;All of them.&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You:   &quot;Are there any tasks, learnings, or decisions worth adding
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>        from this session?&quot;
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Agent: &quot;Yes—here&#39;s what I&#39;d suggest:
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  Tasks:
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  - Add retry logic to the webhook delivery (we discussed it when
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    the timeout test failed but never tracked it)
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  - Update the API docs to reflect the new rate limit headers
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  Learnings:
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  - net/http&#39;s default client has no timeout—we burned 15 minutes
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    on that before adding an explicit 30s timeout
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>  Decisions:
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>  - We chose token-bucket over sliding-window for rate limiting
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    because it handles bursts better and the library is simpler
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>  Want me to add all of these?&quot;
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>You:   &quot;All of them.&quot;
 </span></code></pre></div>
 <p>The agent fills in structured fields from what it observed during the session.
 You get the same quality entries as if you typed verbose commands, without
@@ -3553,27 +3574,27 @@ needing to remember what happened or how to format it.</p>
 <h3 id="the-agent-completes-tasks-and-moves-on">The Agent Completes Tasks and Moves On<a class="headerlink" href="#the-agent-completes-tasks-and-moves-on" title="Permanent link">&para;</a></h3>
 <p>When you confirm that work is finished, or when the agent can see that it is,
 it marks the task done and suggests the next step:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: 
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>&quot;The cooldown logic is working now.&quot;
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Agent: 
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>&quot;Marked &#39;Implement ctx agent cooldown&#39; as done. Your highest-
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>priority remaining task is &#39;Add --section flag to ctx add task&#39;.
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>It&#39;s the last item in Phase 1 and a quick win. Want to start on that?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>You: 
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>&quot;The cooldown logic is working now.&quot;
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Agent: 
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>&quot;Marked &#39;Implement ctx agent cooldown&#39; as done. Your highest-
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>priority remaining task is &#39;Add --section flag to ctx add task&#39;.
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>It&#39;s the last item in Phase 1 and a quick win. Want to start on that?&quot;
 </span></code></pre></div>
 <p>The agent chains completion into next-task selection.</p>
 <p>One sentence from you triggers two operations.</p>
 <h3 id="end-of-session-capture">End-of-Session Capture<a class="headerlink" href="#end-of-session-capture" title="Permanent link">&para;</a></h3>
 <p>At the end of a session, the agent reviews what happened and catches loose ends:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>You: 
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>&quot;I think we&#39;re good for today.&quot;
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Agent: 
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>&quot;Before we wrap up: during the middleware work you mentioned
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>wanting to add metrics for rate limit hits. That never made it into TASKS.md.
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Want me to add it as a task so it&#39;s there next session?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>You: 
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>&quot;I think we&#39;re good for today.&quot;
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Agent: 
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>&quot;Before we wrap up: during the middleware work you mentioned
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>wanting to add metrics for rate limit hits. That never made it into TASKS.md.
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Want me to add it as a task so it&#39;s there next session?&quot;
 </span></code></pre></div>
 <p>This is the proactive persistence model at work.</p>
 <p>The agent monitors the conversation for mentioned-but-not-tracked work and
@@ -3581,27 +3602,27 @@ surfaces it before context is lost.</p>
 <h3 id="a-conversational-session-example">A Conversational Session Example<a class="headerlink" href="#a-conversational-session-example" title="Permanent link">&para;</a></h3>
 <p>Here is what task management looks like in a real session when the agent is
 driving:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>You:   What&#39;s left to do?
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Agent: You have 5 pending tasks across 2 phases. The highest priority is
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>       &quot;Implement ctx agent cooldown&quot;—it&#39;s marked in-progress from
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>       yesterday and half-built. Want to pick that up?
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>You:   Yeah, let&#39;s finish it.
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>       [... 20 minutes of implementation work ...]
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>You:   That&#39;s working. Tests pass.
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>Agent: Nice. I&#39;ll mark &quot;Implement ctx agent cooldown&quot; as done.
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>       I noticed two things from the implementation:
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>       1. The tombstone file cleanup should happen on a timer, not just
-</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>          at startup—want me to add that as a task?
-</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>       2. We learned that file locks don&#39;t work reliably on NFS. I&#39;ll
-</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>          add that to LEARNINGS.md.
-</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
-</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>You:   Yes to both. What&#39;s next?
-</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>Agent: Added the cleanup task as high priority. Next up is &quot;Add --section
-</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>       flag to ctx add task&quot;—last item in Phase 1. It should be
-</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>       straightforward since the flag parsing pattern already exists
-</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>       in the codebase. Ready?
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>You:   What&#39;s left to do?
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Agent: You have 5 pending tasks across 2 phases. The highest priority is
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>       &quot;Implement ctx agent cooldown&quot;—it&#39;s marked in-progress from
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>       yesterday and half-built. Want to pick that up?
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>You:   Yeah, let&#39;s finish it.
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>       [... 20 minutes of implementation work ...]
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>You:   That&#39;s working. Tests pass.
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Agent: Nice. I&#39;ll mark &quot;Implement ctx agent cooldown&quot; as done.
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>       I noticed two things from the implementation:
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>       1. The tombstone file cleanup should happen on a timer, not just
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>          at startup—want me to add that as a task?
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>       2. We learned that file locks don&#39;t work reliably on NFS. I&#39;ll
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>          add that to LEARNINGS.md.
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>You:   Yes to both. What&#39;s next?
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Agent: Added the cleanup task as high priority. Next up is &quot;Add --section
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>       flag to ctx add task&quot;—last item in Phase 1. It should be
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>       straightforward since the flag parsing pattern already exists
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>       in the codebase. Ready?
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">It's All Conversational</p>
@@ -3610,28 +3631,28 @@ The user never typed a <code>ctx</code> command.</p>
 <p>The agent handled task completion, follow-up creation, learning capture,
 and next-task selection—all from natural conversation.</p>
 </div>
-<h2 id="putting-it-together">Putting It Together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Add a task</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement rate limiting for API endpoints&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Add to a specific phase</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Write integration tests for rate limiter&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Phase 2&quot;</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># See what to work on</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># (from AI assistant) /ctx-next</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Mark done by text</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;rate limiting&quot;</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Mark done by number</span>
-</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">5</span>
-</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
-</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="c1"># Snapshot before a risky refactor</span>
-</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-middleware-rewrite&quot;</span>
-</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
-</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="c1"># Archive completed tasks when the list gets long</span>
-</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview first</span>
-</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">               </span><span class="c1"># then archive</span>
+<h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Add a task</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Implement rate limiting for API endpoints&quot;</span><span class="w"> </span>--priority<span class="w"> </span>high
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Add to a specific phase</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>ctx<span class="w"> </span>add<span class="w"> </span>task<span class="w"> </span><span class="s2">&quot;Write integration tests for rate limiter&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;Phase 2&quot;</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># See what to work on</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># (from AI assistant) /ctx-next</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Mark done by text</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="s2">&quot;rate limiting&quot;</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Mark done by number</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>ctx<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">5</span>
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Snapshot before a risky refactor</span>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;before-middleware-rewrite&quot;</span>
+</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
+</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="c1"># Archive completed tasks when the list gets long</span>
+</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w"> </span>--dry-run<span class="w">     </span><span class="c1"># preview first</span>
+</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>ctx<span class="w"> </span>tasks<span class="w"> </span>archive<span class="w">               </span><span class="c1"># then archive</span>
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
@@ -3640,13 +3661,13 @@ and next-task selection—all from natural conversation.</p>
 <li>Include the <strong>why</strong> in the task description. Future sessions lack the context of
   why you added the task. "Add rate limiting" is worse than "Add rate limiting
   to prevent abuse on the public API after the load test showed 10x traffic spikes."</li>
-<li>Use <code>#in-progress</code> sparingly. Only one or two tasks should carry this tag at
+<li>Use <code>#in-progress</code> <strong>sparingly</strong>. Only one or two tasks should carry this tag at
   a time. If everything is in-progress, nothing is.</li>
 <li>Snapshot <strong>before</strong>, not after. The point of a snapshot is to capture the 
   state before a change, not to celebrate what you just finished.</li>
-<li>Archive regularly. Once completed tasks outnumber pending ones, it is time
-  to archive. A clean TASKS.md helps both you and your AI assistant focus.</li>
-<li>Never delete tasks. Mark them <code>[x]</code> (completed) or <code>[-]</code> (skipped with a
+<li><strong>Archive regularly</strong>. Once completed tasks outnumber pending ones, it is time
+  to archive. A clean <code>TASKS.md</code> helps both you and your AI assistant focus.</li>
+<li><strong>Never delete tasks</strong>. Mark them <code>[x]</code> (completed) or <code>[-]</code> (skipped with a
   reason). Deletion breaks the audit trail.</li>
 <li><strong>Trust the agent's task instincts</strong>. When the agent suggests follow-up items
   after completing work, it is drawing on the full context of what just happened.</li>
@@ -3656,7 +3677,7 @@ and next-task selection—all from natural conversation.</p>
 <li><strong>Let the agent chain operations</strong>. A single statement like "that's done, what's
   next?" can trigger completion, follow-up identification, and next-task
   selection in one flow.</li>
-<li>Review proactive task suggestions before moving on. The best follow-ups come
+<li><strong>Review</strong> proactive task suggestions before moving on. The best follow-ups come
   from items spotted in-context right after the work completes.</li>
 </ul>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>

@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -48,7 +48,7 @@ func setupEncrypted(t *testing.T) string {
 	if err != nil {
 		t.Fatal(err)
 	}
-	keyFile := filepath.Join(ctxDir, config.FileScratchpadKey)
+	keyFile := filepath.Join(ctxDir, config.FileContextKey)
 	if err := crypto.SaveKey(keyFile, key); err != nil {
 		t.Fatal(err)
 	}
@@ -514,7 +514,7 @@ func TestDecryptionFailure_WrongKey(t *testing.T) {
 
 	// Replace the key with a different one
 	newKey, _ := crypto.GenerateKey()
-	keyFile := filepath.Join(config.DirContext, config.FileScratchpadKey)
+	keyFile := filepath.Join(config.DirContext, config.FileContextKey)
 	if err := crypto.SaveKey(keyFile, newKey); err != nil {
 		t.Fatal(err)
 	}
@@ -699,7 +699,7 @@ func TestEnsureGitignore_NewFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	err := ensureGitignore(".context", ".scratchpad.key")
+	err := ensureGitignore(".context", ".context.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -708,7 +708,7 @@ func TestEnsureGitignore_NewFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(data), filepath.Join(".context", ".scratchpad.key")) {
+	if !strings.Contains(string(data), filepath.Join(".context", ".context.key")) {
 		t.Errorf(".gitignore = %q, want key entry", string(data))
 	}
 }
@@ -721,12 +721,12 @@ func TestEnsureGitignore_AlreadyPresent(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	entry := filepath.Join(".context", ".scratchpad.key")
+	entry := filepath.Join(".context", ".context.key")
 	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
-	err := ensureGitignore(".context", ".scratchpad.key")
+	err := ensureGitignore(".context", ".context.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -752,7 +752,7 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := ensureGitignore(".context", ".scratchpad.key")
+	err := ensureGitignore(".context", ".context.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -761,7 +761,7 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 	if !strings.Contains(string(data), "node_modules\n") {
 		t.Error("existing content should be preserved with newline")
 	}
-	if !strings.Contains(string(data), filepath.Join(".context", ".scratchpad.key")) {
+	if !strings.Contains(string(data), filepath.Join(".context", ".context.key")) {
 		t.Error("new entry should be present")
 	}
 }
@@ -788,8 +788,8 @@ func TestKeyPath(t *testing.T) {
 	setupEncrypted(t)
 
 	path := keyPath()
-	if !strings.HasSuffix(path, config.FileScratchpadKey) {
-		t.Errorf("keyPath() = %q, want suffix %q", path, config.FileScratchpadKey)
+	if !strings.HasSuffix(path, config.FileContextKey) {
+		t.Errorf("keyPath() = %q, want suffix %q", path, config.FileContextKey)
 	}
 }
 
@@ -862,7 +862,7 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 		t.Fatalf("ensureKey error: %v", err)
 	}
 
-	kp := filepath.Join(ctxDir, config.FileScratchpadKey)
+	kp := filepath.Join(ctxDir, config.FileContextKey)
 	if _, err := os.Stat(kp); err != nil {
 		t.Error("key file should have been created")
 	}
@@ -943,7 +943,7 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 	setupEncrypted(t)
 
 	// Load the key
-	kp := filepath.Join(config.DirContext, config.FileScratchpadKey)
+	kp := filepath.Join(config.DirContext, config.FileContextKey)
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		t.Fatal(err)
@@ -994,7 +994,7 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 func TestResolve_OnlyOursFile(t *testing.T) {
 	setupEncrypted(t)
 
-	kp := filepath.Join(config.DirContext, config.FileScratchpadKey)
+	kp := filepath.Join(config.DirContext, config.FileContextKey)
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		t.Fatal(err)
@@ -2255,7 +2255,7 @@ func TestMerge_EncryptedInput(t *testing.T) {
 
 	// Create encrypted file using the same project key.
 	key, loadErr := crypto.LoadKey(
-		filepath.Join(dir, config.DirContext, config.FileScratchpadKey),
+		filepath.Join(dir, config.DirContext, config.FileContextKey),
 	)
 	if loadErr != nil {
 		t.Fatal(loadErr)
@@ -2301,7 +2301,7 @@ func TestMerge_MixedEncPlain(t *testing.T) {
 	dir := setupEncrypted(t)
 
 	key, loadErr := crypto.LoadKey(
-		filepath.Join(dir, config.DirContext, config.FileScratchpadKey),
+		filepath.Join(dir, config.DirContext, config.FileContextKey),
 	)
 	if loadErr != nil {
 		t.Fatal(loadErr)
@@ -2586,7 +2586,7 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 
 	// Get the project key.
 	key, loadErr := crypto.LoadKey(
-		filepath.Join(dir, config.DirContext, config.FileScratchpadKey),
+		filepath.Join(dir, config.DirContext, config.FileContextKey),
 	)
 	if loadErr != nil {
 		t.Fatal(loadErr)

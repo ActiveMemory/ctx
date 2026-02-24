@@ -1031,7 +1031,7 @@
   <a href="#external-context-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        External context directory
+        External .context Directory
       
     </span>
   </a>
@@ -1042,7 +1042,7 @@
   <a href="#custom-token-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom token budget
+        Custom Token Budget
       
     </span>
   </a>
@@ -1053,7 +1053,7 @@
   <a href="#disabled-scratchpad-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Disabled scratchpad encryption
+        Disabled Scratchpad Encryption
       
     </span>
   </a>
@@ -1064,7 +1064,7 @@
   <a href="#custom-priority-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom priority order
+        Custom Priority Order
       
     </span>
   </a>
@@ -1075,7 +1075,7 @@
   <a href="#adjusted-drift-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adjusted drift thresholds
+        Adjusted Drift Thresholds
       
     </span>
   </a>
@@ -1086,7 +1086,7 @@
   <a href="#webhook-notifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Webhook notifications
+        Webhook Notifications
       
     </span>
   </a>
@@ -3021,7 +3021,7 @@
   <a href="#external-context-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        External context directory
+        External .context Directory
       
     </span>
   </a>
@@ -3032,7 +3032,7 @@
   <a href="#custom-token-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom token budget
+        Custom Token Budget
       
     </span>
   </a>
@@ -3043,7 +3043,7 @@
   <a href="#disabled-scratchpad-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Disabled scratchpad encryption
+        Disabled Scratchpad Encryption
       
     </span>
   </a>
@@ -3054,7 +3054,7 @@
   <a href="#custom-priority-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom priority order
+        Custom Priority Order
       
     </span>
   </a>
@@ -3065,7 +3065,7 @@
   <a href="#adjusted-drift-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adjusted drift thresholds
+        Adjusted Drift Thresholds
       
     </span>
   </a>
@@ -3076,7 +3076,7 @@
   <a href="#webhook-notifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Webhook notifications
+        Webhook Notifications
       
     </span>
   </a>
@@ -3171,12 +3171,12 @@
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>ctx uses three layers of configuration. Each layer overrides the one below it:</p>
 <ol>
-<li><strong>CLI flags</strong> — per-invocation overrides (highest priority)</li>
-<li><strong>Environment variables</strong> — shell or CI/CD overrides</li>
-<li><strong><code>.ctxrc</code> file</strong> — project-level defaults (YAML)</li>
-<li><strong>Built-in defaults</strong> — hardcoded fallbacks (lowest priority)</li>
+<li><strong>CLI flags</strong>: Per-invocation overrides (<em>highest priority</em>)</li>
+<li><strong>Environment variables</strong>: Shell or CI/CD overrides</li>
+<li><strong>The <code>.ctxrc</code> file</strong>: Project-level defaults (<em>YAML</em>)</li>
+<li><strong>Built-in defaults</strong>: Hardcoded fallbacks (<em>lowest priority</em>)</li>
 </ol>
-<p>All settings are optional. If nothing is configured, ctx works out of the box
+<p>All settings are optional: If nothing is configured, <code>ctx</code> works out of the box
 with sensible defaults.</p>
 <hr />
 <h2 id="the-ctxrc-file">The <code>.ctxrc</code> File<a class="headerlink" href="#the-ctxrc-file" title="Permanent link">&para;</a></h2>
@@ -3192,17 +3192,25 @@ that apply to every <code>ctx</code> command.</p>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └── ...
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── src/
 </span></code></pre></div>
-<p>ctx looks for <code>.ctxrc</code> in the current working directory when any command runs.
+<p><code>ctx</code> looks for <code>.ctxrc</code> in the current working directory when any command runs.
 There is no global or user-level config file — configuration is always
 per-project.</p>
+<div class="admonition tip">
+<p class="admonition-title">Using a Different .context Directory</p>
+<p>The default <code>.context/</code> directory can be changed per-project via the
+<code>context_dir</code> key in <code>.ctxrc</code>, the <code>CTX_DIR</code> environment variable, or the
+<code>--context-dir</code> CLI flag.</p>
+<p>See <a href="#environment-variables">Environment Variables</a>
+and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
+</div>
 <h3 id="full-reference">Full Reference<a class="headerlink" href="#full-reference" title="Permanent link">&para;</a></h3>
 <p>A commented <code>.ctxrc</code> showing all options and their defaults:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .ctxrc — ctx runtime configuration</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .ctxrc: ctx runtime configuration</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># https://ctx.ist/configuration/</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">#</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># All settings are optional. Missing values use defaults.</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Priority: CLI flags &gt; environment variables &gt; .ctxrc &gt; defaults</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># context_dir: .context</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># token_budget: 8000</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># auto_archive: true</span>
@@ -3212,21 +3220,23 @@ per-project.</p>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># entry_count_learnings: 30</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># entry_count_decisions: 20</span>
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># convention_line_count: 200</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># notify:</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1">#   events:             # required — no events sent unless listed</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">#     - loop</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1">#     - nudge</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">#     - relay</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1">#   key_rotation_days: 90</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># priority_order:</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">#   - CONSTITUTION.md</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1">#   - TASKS.md</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1">#   - CONVENTIONS.md</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   - ARCHITECTURE.md</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#   - DECISIONS.md</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#   - LEARNINGS.md</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#   - GLOSSARY.md</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1">#</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># notify:               # requires: ctx notify setup</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">#   events:             # required: no events sent unless listed</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1">#     - loop</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">#     - nudge</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1">#     - relay</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1">#   key_rotation_days: 90</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">#</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># priority_order:</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1">#   - CONSTITUTION.md</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   - TASKS.md</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#   - CONVENTIONS.md</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#   - ARCHITECTURE.md</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#   - DECISIONS.md</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1">#   - LEARNINGS.md</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1">#   - GLOSSARY.md</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
 </span></code></pre></div>
 <h3 id="option-reference">Option Reference<a class="headerlink" href="#option-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -3366,9 +3376,9 @@ behind this ordering.</p>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">NO_COLOR</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ctx<span class="w"> </span>drift<span class="w"> </span>--json
 </span></code></pre></div>
 <div class="admonition note">
-<p class="admonition-title"><code>NO_COLOR</code> follows the <a href="https://no-color.org">no-color.org</a> convention</p>
-<p>Setting <code>NO_COLOR</code> to any non-empty value disables colored terminal output.
-This is equivalent to the <code>--no-color</code> CLI flag.</p>
+<p class="admonition-title"><code>NO_COLOR</code> Follows the <a href="https://no-color.org">no-color.org</a> Convention</p>
+<p>Setting <code>NO_COLOR</code> to any non-empty value disables colored terminal output.</p>
+<p>This is equivalent to the <code>--no-color</code> CLI flag.</p>
 </div>
 <hr />
 <h2 id="cli-global-flags">CLI Global Flags<a class="headerlink" href="#cli-global-flags" title="Permanent link">&para;</a></h2>
@@ -3405,10 +3415,10 @@ This is equivalent to the <code>--no-color</code> CLI flag.</p>
 </tbody>
 </table>
 <h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Point to a different context directory</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Point to a different context directory:</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>status<span class="w"> </span>--context-dir<span class="w"> </span>/path/to/shared/.context
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Allow external context directory (skips boundary check)</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Allow external context directory (skips boundary check):</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ctx<span class="w"> </span>status<span class="w"> </span>--context-dir<span class="w"> </span>/mnt/nas/project-context<span class="w"> </span>--allow-outside-cwd
 </span></code></pre></div>
 <hr />
@@ -3416,7 +3426,7 @@ This is equivalent to the <code>--no-color</code> CLI flag.</p>
 <p>When the same setting is configured in multiple layers, the highest-priority
 layer wins:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>CLI flags  &gt;  Environment variables  &gt;  .ctxrc  &gt;  Built-in defaults
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>(highest)                                           (lowest)
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>(highest)                                          (lowest)
 </span></code></pre></div>
 <p><strong>Example resolution for <code>context_dir</code>:</strong></p>
 <table>
@@ -3456,32 +3466,32 @@ the flag nor the env var were set, the <code>.ctxrc</code> value <code>.my-conte
 used. With nothing configured, the default <code>.context</code> applies.</p>
 <hr />
 <h2 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h2>
-<h3 id="external-context-directory">External context directory<a class="headerlink" href="#external-context-directory" title="Permanent link">&para;</a></h3>
+<h3 id="external-context-directory">External <code>.context</code> Directory<a class="headerlink" href="#external-context-directory" title="Permanent link">&para;</a></h3>
 <p>Store context outside the project tree (useful for monorepos or shared context):</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># .ctxrc</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/team/shared-context</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
-<h3 id="custom-token-budget">Custom token budget<a class="headerlink" href="#custom-token-budget" title="Permanent link">&para;</a></h3>
+<h3 id="custom-token-budget">Custom Token Budget<a class="headerlink" href="#custom-token-budget" title="Permanent link">&para;</a></h3>
 <p>Increase the token budget for projects with large context:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># .ctxrc</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">token_budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16000</span>
 </span></code></pre></div>
 <p>This affects the default budget for <code>ctx agent</code> and <code>ctx load</code>. You can still
 override per-invocation with <code>ctx agent --budget 4000</code>.</p>
-<h3 id="disabled-scratchpad-encryption">Disabled scratchpad encryption<a class="headerlink" href="#disabled-scratchpad-encryption" title="Permanent link">&para;</a></h3>
-<p>Turn off encryption for the scratchpad (useful in ephemeral environments
-where key management is unnecessary):</p>
+<h3 id="disabled-scratchpad-encryption">Disabled Scratchpad Encryption<a class="headerlink" href="#disabled-scratchpad-encryption" title="Permanent link">&para;</a></h3>
+<p>Turn off encryption for the scratchpad (<em>useful in ephemeral environments
+where key management is unnecessary</em>):</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># .ctxrc</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Unencrypted scratchpads store secrets in plaintext</p>
-<p>Only disable encryption if you understand the security implications.
-The scratchpad may contain sensitive data such as API keys, database
+<p>Only disable encryption if you understand the security implications.</p>
+<p>The scratchpad may contain sensitive data such as API keys, database
 URLs, or deployment credentials.</p>
 </div>
-<h3 id="custom-priority-order">Custom priority order<a class="headerlink" href="#custom-priority-order" title="Permanent link">&para;</a></h3>
+<h3 id="custom-priority-order">Custom Priority Order<a class="headerlink" href="#custom-priority-order" title="Permanent link">&para;</a></h3>
 <p>Reorder context files to prioritize architecture over conventions:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># .ctxrc</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">priority_order</span><span class="p">:</span>
@@ -3497,7 +3507,7 @@ URLs, or deployment credentials.</p>
 <p>Files not listed in <code>priority_order</code> receive the lowest priority (100).
 The order affects <code>ctx agent</code>, <code>ctx load</code>, and drift's file-priority
 calculations.</p>
-<h3 id="adjusted-drift-thresholds">Adjusted drift thresholds<a class="headerlink" href="#adjusted-drift-thresholds" title="Permanent link">&para;</a></h3>
+<h3 id="adjusted-drift-thresholds">Adjusted Drift Thresholds<a class="headerlink" href="#adjusted-drift-thresholds" title="Permanent link">&para;</a></h3>
 <p>Raise or lower the entry-count thresholds that trigger drift warnings:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># .ctxrc</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">entry_count_learnings</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w">   </span><span class="c1"># warn above 50 learnings (default: 30)</span>
@@ -3505,7 +3515,7 @@ calculations.</p>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nt">convention_line_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w">  </span><span class="c1"># warn above 300 lines (default: 200)</span>
 </span></code></pre></div>
 <p>Set any threshold to <code>0</code> to disable that specific check.</p>
-<h3 id="webhook-notifications">Webhook notifications<a class="headerlink" href="#webhook-notifications" title="Permanent link">&para;</a></h3>
+<h3 id="webhook-notifications">Webhook Notifications<a class="headerlink" href="#webhook-notifications" title="Permanent link">&para;</a></h3>
 <p>Get notified when loops complete, hooks fire, or agents reach milestones:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure the webhook URL (encrypted, safe to commit)</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
@@ -3521,7 +3531,7 @@ calculations.</p>
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span><span class="w">     </span><span class="c1"># VERBATIM relay hooks fired</span>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="c1"># - relay   # all hook output (verbose, for debugging)</span>
 </span></code></pre></div>
-<p>Notifications are opt-in: no events are sent unless explicitly listed.</p>
+<p>Notifications are <strong>opt-in</strong>: No events are sent unless explicitly listed.</p>
 <p>See <a href="../../recipes/webhook-notifications/">Webhook Notifications</a> for a
 step-by-step recipe.</p>
 <hr />

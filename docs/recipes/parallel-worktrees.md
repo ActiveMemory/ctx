@@ -5,7 +5,7 @@ icon: lucide/git-branch
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 You have a large backlog (*10, 20, 30 open tasks*) and many of them are
 independent: docs work that doesn't touch Go code, a new package that
@@ -161,37 +161,37 @@ prompts work:
 
 ## What Does NOT Work in Worktrees
 
-The encryption key (`.context/.scratchpad.key`) is gitignored — it only
+The encryption key (`.context/.context.key`) is gitignored: It only
 exists in the main checkout. This affects key-dependent features:
 
-- **`ctx pad`** — the scratchpad is inaccessible. Commands fail
-  gracefully (no key found). Use the pad from the main checkout only.
-- **`ctx notify`** — webhook notifications silently do nothing. Agents
+* **`ctx pad`**: The scratchpad is inaccessible. Commands fail
+  gracefully (*no key found*). Use the pad from the main checkout only.
+* **`ctx notify`**: Webhook notifications silently do nothing. Agents
   in worktrees cannot send alerts for loop completions, nudges, or
   custom events. If you need visibility into worktree agents, monitor
   them from the terminal rather than relying on webhooks.
-- **Journal enrichment** — `ctx recall export` and `ctx journal enrich`
+* **Journal enrichment**: `ctx recall export` and `ctx journal enrich`
   write files relative to the current working directory. Enrichments
   created in a worktree stay there and are discarded on teardown.
-  Enrich journals on the main branch after merging — the JSONL session
-  logs are always intact.
+  **Enrich journals on the main branch after merging**: the JSONL session
+  logs are always intact, and you don't lose any data.
 
-Tracked context files (TASKS.md, DECISIONS.md, LEARNINGS.md,
-CONVENTIONS.md) work normally — git handles them.
+Tracked context files (*TASKS.md, DECISIONS.md, LEARNINGS.md,
+CONVENTIONS.md*) work normally; `git` handles them.
 
 ## Tips
 
-- **3-4 worktrees max.** Beyond that, merge complexity outweighs the
+* **3-4 worktrees max.** Beyond that, merge complexity outweighs the
   parallelism benefit. The skill enforces this limit.
-- **Group by package or directory**, not by priority. Two high-priority
+* **Group by package or directory**, not by priority. Two high-priority
   tasks that touch the same files must be in the same track.
-- **TASKS.md will conflict** on merge. This is normal. Accept all `[x]`
-  completions — the resolution is always additive.
-- **Don't run `ctx init` in worktrees.** The `.context/` directory is
+* **`TASKS.md` will conflict** on merge. This is normal. Accept all `[x]`
+  completions: The resolution is always additive.
+* **Don't run `ctx init` in worktrees**. The `.context/` directory is
   tracked in git. Running init overwrites shared context files.
-- **Name worktrees by concern**, not by number. `work/docs` and
+* **Name worktrees by concern**, not by number. `work/docs` and
   `work/crypto` are more useful than `work/track-1` and `work/track-2`.
-- **Commit frequently** in each worktree. Smaller commits make merge
+* **Commit frequently** in each worktree. Smaller commits make merge
   conflicts easier to resolve.
 
 ## Next Up
@@ -202,9 +202,9 @@ Or explore the [full recipe list](index.md).
 
 ## See Also
 
-- [Running an Unattended AI Agent](autonomous-loops.md) — for serial
+* [Running an Unattended AI Agent](autonomous-loops.md): for serial
   autonomous loops instead of parallel tracks
-- [Tracking Work Across Sessions](task-management.md) — managing the
+* [Tracking Work Across Sessions](task-management.md): managing the
   task backlog that feeds into parallelization
-- [The Complete Session](session-lifecycle.md) — the session workflow
-  each agent follows inside its worktree
+* [The Complete Session](session-lifecycle.md): the complete session workflow
+  end-to-end, with examples

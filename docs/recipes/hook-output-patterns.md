@@ -14,8 +14,19 @@ Choose the wrong pattern, and your carefully crafted warning gets silently
 absorbed by the agent, or your agent-directed nudge gets dumped on the user 
 as noise.
 
-This recipe catalogs the known hook output patterns and explains when to 
+This recipe catalogs the known hook output patterns and explains when to
 use each one.
+
+## TL;DR
+
+Eight patterns from full control to full invisibility: 
+
+* **hard gate** (`exit 2`), 
+* **VERBATIM relay** (*agent MUST show*), 
+* **agent directive** (*context injection*), 
+* and **silent side-effect** (*background work*).
+
+Most hooks belong in the middle.
 
 ## The Spectrum
 
@@ -29,12 +40,13 @@ These patterns form a spectrum based on **who decides** what the user sees:
 | Conditional relay    | Hook sets criteria, agent evaluates   |
 | Suggested action     | Hook proposes, agent + user decide    |
 | Agent directive      | Agent decides entirely                |
-| Silent injection     | Nobody — invisible background context |
-| Silent side-effect   | Nobody — invisible background work    |
+| Silent injection     | Nobody: invisible background context  |
+| Silent side-effect   | Nobody: invisible background work     |
 
 The spectrum runs from **full hook control** (*hard gate*) to **full
-invisibility** (*silent side effect*). Most hooks belong somewhere in the
-middle.
+invisibility** (*silent side effect*). 
+
+Most hooks belong somewhere in the middle.
 
 ---
 
@@ -94,7 +106,7 @@ adaptive frequency.
 
 **Key detail**: The phrase `IMPORTANT: Relay this ... VERBATIM` is what
 makes this work. Without it, agents tend to process the information
-internally and never surface it. The explicit instruction is the pattern:
+internally and never surface it. The explicit instruction **is** the pattern:
 the box-drawing is just fancy formatting.
 
 ---
@@ -122,8 +134,8 @@ asks the agent to consider an action. The user may never need to know.
 * `ctx system check-persistence`: Nudges the agent to persist context
 
 **Trade-off:** No guarantee the agent acts. The nudge is one signal among
-many in the context window. Strong phrasing helps ("Have you...?" is better
-than "Consider..."), but ultimately the agent decides.
+many in the context window. Strong phrasing helps ("*Have you...?*" is better
+than "*Consider...*"), but ultimately the agent decides.
 
 ---
 
@@ -140,7 +152,7 @@ ctx agent --budget 4000 >/dev/null || true
 The agent benefits from the information, but neither it, nor the user needs
 to know it happened.
 
-**Hook type:** `PreToolUse` with `.*` matcher (runs on every tool call).
+**Hook type:** `PreToolUse` with `.*` matcher (*runs on every tool call*).
 
 **Examples in `ctx`**:
 

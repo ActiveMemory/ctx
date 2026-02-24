@@ -26,7 +26,7 @@ Design philosophy:
 ```mermaid
 graph TD
     config["config<br/>(constants, regex, file names)"]
-    tpl["tpl<br/>(embedded templates)"]
+    assets["assets<br/>(embedded templates)"]
 
     rc["rc<br/>(runtime config)"] --> config
     context["context<br/>(loader)"] --> rc
@@ -38,10 +38,16 @@ graph TD
     validation["validation<br/>(sanitize)"] --> config
     recall_parser["recall/parser<br/>(session parsing)"] --> config
     claude["claude<br/>(hooks, skills)"] --> config
-    claude --> tpl
+    claude --> assets
+    crypto["crypto<br/>(AES-256-GCM)"]
+    sysinfo["sysinfo<br/>(OS metrics)"]
+    notify["notify<br/>(webhooks)"] --> config
+    notify --> crypto
+    notify --> rc
+    journal_state["journal/state<br/>(pipeline state)"] --> config
 
     bootstrap["bootstrap<br/>(CLI entry)"] --> rc
-    bootstrap --> cli_all["cli/* (19 commands)"]
+    bootstrap --> cli_all["cli/* (22 commands)"]
     cli_all --> config
     cli_all --> rc
     cli_all --> context
@@ -51,11 +57,15 @@ graph TD
     cli_all --> validation
     cli_all --> recall_parser
     cli_all --> claude
-    cli_all --> tpl
+    cli_all --> assets
+    cli_all --> crypto
+    cli_all --> sysinfo
+    cli_all --> notify
+    cli_all --> journal_state
 ```
 
-`config` and `tpl` are the two foundation packages with zero internal
-dependencies. Everything else builds upward from them.
+`config`, `assets`, `crypto`, and `sysinfo` are foundation packages
+with zero internal dependencies. Everything else builds upward from them.
 
 ## Component Map
 
@@ -78,12 +88,16 @@ dependencies. Everything else builds upward from them.
 | `internal/validation`    | Input sanitization (filenames)                                                                                                                | `internal/config`                     |
 | `internal/recall/parser` | Parse AI session transcripts (JSONL) into structured data; extensible parser registry supporting Claude Code (and designed for Aider, Cursor) | `internal/config`                     |
 | `internal/claude`        | Generate Claude Code integration: hooks, skills, settings, permissions                                                                        | `internal/config`, `internal/assets`     |
+| `internal/crypto`        | AES-256-GCM encryption for scratchpad and webhook URL storage; key generation, load, save                                                     | (none — stdlib only)                  |
+| `internal/sysinfo`       | OS resource metrics (memory, swap, disk, load) with threshold alerting; platform-specific via build tags                                      | (none — stdlib only)                  |
+| `internal/notify`        | Fire-and-forget webhook notifications with encrypted URL storage and event filtering                                                          | `internal/config`, `internal/crypto`, `internal/rc` |
+| `internal/journal/state` | Journal processing pipeline state (exported/enriched/normalized/locked) via external JSON file                                                | `internal/config`                     |
 
 ### Entry Point
 
 | Package              | Purpose                                                                     | Depends On                                   |
 |----------------------|-----------------------------------------------------------------------------|----------------------------------------------|
-| `internal/bootstrap` | Create root Cobra command, register global flags, attach all 19 subcommands | `internal/rc`, all `internal/cli/*` packages |
+| `internal/bootstrap` | Create root Cobra command, register global flags, attach all 22 subcommands | `internal/rc`, all `internal/cli/*` packages |
 
 ### CLI Commands (`internal/cli/*`)
 
@@ -103,10 +117,13 @@ dependencies. Everything else builds upward from them.
 | `loop`       | Generate Ralph loop scripts for iterative AI workflows                          | `config`                                                             |
 | `recall`     | Browse AI session history (list, show, export)                                  | `config`, `rc`, `recall/parser`                                      |
 | `serve`      | Serve static journal site locally                                               | `rc`                                                                 |
-| `session`    | Manage session snapshots (save, list, load, parse)                              | `config`, `rc`, `validation`, `initialize`                           |
 | `status`     | Show context summary: file list, tokens, summaries                              | `config`, `rc`, `context`, `initialize`                              |
 | `sync`       | Sync project files with context; detect deps, suggest updates                   | `config`, `context`, `initialize`                                    |
 | `task`       | Task management utilities; archive completed tasks                              | `config`, `rc`, `task`, `validation`, `add`, `compact`, `initialize` |
+| `notify`     | Send fire-and-forget webhook notifications                                      | `notify`                                                             |
+| `pad`        | Encrypted scratchpad CRUD with file blob support and merge                      | `config`, `rc`, `crypto`                                             |
+| `permissions`| Permission snapshot/restore (golden images) for Claude Code settings             | `config`                                                             |
+| `system`     | System diagnostics, resource monitoring, and Claude Code hook plumbing commands  | `config`, `rc`, `sysinfo`, `notify`, `journal/state`                 |
 | `watch`      | Monitor stdin for context updates; auto-save sessions                           | `config`, `rc`, `context`, `task`, `add`, `initialize`               |
 
 ## Data Flow
@@ -316,7 +333,7 @@ ctx/
 ├── internal/
 │   ├── bootstrap/               # CLI initialization, command registration
 │   ├── claude/                  # Claude Code hooks, skills, settings
-│   ├── cli/                     # 19 command packages
+│   ├── cli/                     # 22 command packages
 │   │   ├── add/                 #   ctx add
 │   │   ├── agent/               #   ctx agent
 │   │   ├── compact/             #   ctx compact
@@ -329,25 +346,33 @@ ctx/
 │   │   ├── learnings/           #   ctx learnings
 │   │   ├── load/                #   ctx load
 │   │   ├── loop/                #   ctx loop
+│   │   ├── notify/              #   ctx notify
+│   │   ├── pad/                 #   ctx pad
+│   │   ├── permissions/         #   ctx permissions
 │   │   ├── recall/              #   ctx recall
 │   │   ├── serve/               #   ctx serve
-│   │   ├── session/             #   ctx session
 │   │   ├── status/              #   ctx status
 │   │   ├── sync/                #   ctx sync
+│   │   ├── system/              #   ctx system
 │   │   ├── task/                #   ctx task
 │   │   └── watch/               #   ctx watch
 │   ├── config/                  # Constants, regex, file names, read order
 │   ├── context/                 # Context loading, token estimation
+│   ├── crypto/                  # AES-256-GCM encryption, key management
 │   ├── drift/                   # Drift detection engine
 │   ├── index/                   # Index table generation for DECISIONS/LEARNINGS
+│   ├── journal/
+│   │   └── state/               # Journal processing pipeline state
+│   ├── notify/                  # Webhook notifications, encrypted URL storage
 │   ├── rc/                      # Runtime config (.ctxrc, env, CLI flags)
 │   ├── recall/
 │   │   └── parser/              # Session transcript parsing
+│   ├── sysinfo/                 # OS resource metrics (memory, disk, load)
 │   ├── task/                    # Task checkbox parsing
-│   ├── tpl/                     # Embedded templates (go:embed)
+│   ├── assets/                  # Embedded templates (go:embed)
 │   │   ├── claude/
-│   │   │   ├── hooks/           #   Hook scripts (4 .sh files)
-│   │   │   └── skills/          #   Skill templates (16 directories)
+│   │   │   ├── hooks/           #   Hook scripts
+│   │   │   └── skills/          #   Skill templates (28 directories)
 │   │   ├── entry-templates/     #   Decision/learning entry templates
 │   │   ├── ralph/               #   Ralph loop PROMPT.md
 │   │   └── tools/               #   context-watch.sh, cleanup-ctx-tmp.sh

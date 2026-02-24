@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -39,7 +39,7 @@ Use --key to provide a key file for encrypted pads from other projects.
 Examples:
   ctx pad merge worktree/.context/scratchpad.enc
   ctx pad merge notes.md backup.enc
-  ctx pad merge --key /other/.scratchpad.key foreign.enc
+  ctx pad merge --key /other/.context.key foreign.enc
   ctx pad merge --dry-run pad-a.enc pad-b.md`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

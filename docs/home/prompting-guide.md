@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -266,9 +266,17 @@ load context or trigger specific behaviors:
 | "Run `ctx agent`"  | Loads token-budgeted context packet              |
 | "Run `ctx drift`"  | Detects dead paths, stale files, missing context |
 
-### Agent Skills (Claude Code)
+### `ctx` Skills
 
-Skills are formalized prompts. Use them by name:
+!!! tip "The `SKILS.md` Standard"
+    Skills are formalized prompts stored as
+    [`SKILL.md` files](https://github.com/anthropics/skills).
+
+    The `/slash-command` syntax below is Claude Code specific. 
+
+    Other agents can use the same skill files, but invocation may differ. 
+
+Use `ctx` skills  by name:
 
 | Skill                   | When to use                                    |
 |-------------------------|------------------------------------------------|
@@ -299,6 +307,12 @@ Skills are formalized prompts. Use them by name:
 
 Skills combine a prompt, tool permissions, and domain knowledge
 into a single invocation.
+
+!!! info "Skills beyond Claude Code"
+    The `/slash-command` syntax above is Claude Code native, but the
+    underlying `SKILL.md` files are a standard markdown format that any
+    agent can consume. If you use a different coding agent, consult its
+    documentation for how to load skill files as prompt templates.
 
 See [Integrations](../operations/integrations.md) for setup details.
 
@@ -479,8 +493,8 @@ Found a prompt that works well?
 
 ----
 
-**Go Deeper**:
+**Dive Deeper**:
 
-* [Recipes](../recipes/index.md) — targeted how-to guides for specific tasks
-* [CLI Reference](../reference/cli-reference.md) — all commands and flags
-* [Integrations](../operations/integrations.md) — setup for Claude Code, Cursor, Aider
+* [Recipes](../recipes/index.md): targeted how-to guides for specific tasks
+* [CLI Reference](../reference/cli-reference.md): all commands and flags
+* [Integrations](../operations/integrations.md): setup for Claude Code, Cursor, Aider

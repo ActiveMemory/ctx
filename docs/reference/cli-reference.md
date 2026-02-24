@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -333,6 +333,8 @@ ctx drift [flags]
 - Task references are valid
 - Constitution rules aren't violated (*heuristic*)
 - Staleness indicators (*old files, many completed tasks*)
+- Missing packages — warns when `internal/` directories exist on disk but are
+  not referenced in ARCHITECTURE.md (suggests running `/ctx-map`)
 - Entry count — warns when LEARNINGS.md or DECISIONS.md exceed configurable
   thresholds (default: 30 learnings, 20 decisions), or when CONVENTIONS.md
   exceeds a line count threshold (default: 200). Configure via `.ctxrc`:
@@ -1077,13 +1079,13 @@ ctx notify -e nudge -s session-abc "Context checkpoint at prompt #20"
 #### `ctx notify setup`
 
 Configure the webhook URL interactively. The URL is encrypted with AES-256-GCM
-using the scratchpad key and stored in `.context/.notify.enc`.
+using the encryption key and stored in `.context/.notify.enc`.
 
 ```bash
 ctx notify setup
 ```
 
-The encrypted file is safe to commit. The key (`.context/.scratchpad.key`) is
+The encrypted file is safe to commit. The key (`.context/.context.key`) is
 gitignored and never committed.
 
 #### `ctx notify test`
@@ -1320,8 +1322,88 @@ ctx pad merge FILE...
 ```bash
 ctx pad merge worktree/.context/scratchpad.enc
 ctx pad merge notes.md backup.enc
-ctx pad merge --key /other/.scratchpad.key foreign.enc
+ctx pad merge --key /other/.context.key foreign.enc
 ctx pad merge --dry-run pad-a.enc pad-b.md
+```
+
+---
+
+### `ctx remind`
+
+Session-scoped reminders that surface at session start. Reminders are
+stored verbatim and relayed verbatim — no summarization, no categories.
+
+When invoked with a text argument and no subcommand, adds a reminder.
+
+```bash
+ctx remind "text"
+ctx remind <subcommand>
+```
+
+#### `ctx remind add`
+
+Add a reminder. This is the default action — `ctx remind "text"` and
+`ctx remind add "text"` are equivalent.
+
+```bash
+ctx remind "refactor the swagger definitions"
+ctx remind add "check CI after the deploy" --after 2026-02-25
+```
+
+**Arguments**:
+
+- `text`: The reminder message (verbatim)
+
+**Flags**:
+
+| Flag      | Short | Description                                |
+|-----------|-------|--------------------------------------------|
+| `--after` | `-a`  | Don't surface until this date (YYYY-MM-DD) |
+
+**Examples**:
+
+```bash
+ctx remind "refactor the swagger definitions"
+ctx remind "check CI after the deploy" --after 2026-02-25
+```
+
+#### `ctx remind list`
+
+List all pending reminders. Date-gated reminders that aren't yet due
+are annotated with `(after DATE, not yet due)`.
+
+```bash
+ctx remind list
+```
+
+**Aliases**: `ls`
+
+#### `ctx remind dismiss`
+
+Remove a reminder by ID, or remove all reminders with `--all`.
+
+```bash
+ctx remind dismiss <id>
+ctx remind dismiss --all
+```
+
+**Arguments**:
+
+- `id`: Reminder ID (shown in `list` output)
+
+**Flags**:
+
+| Flag    | Description              |
+|---------|--------------------------|
+| `--all` | Dismiss all reminders    |
+
+**Aliases**: `rm`
+
+**Examples**:
+
+```bash
+ctx remind dismiss 3
+ctx remind dismiss --all
 ```
 
 ---

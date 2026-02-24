@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -127,6 +127,13 @@ Every decision you record, every lesson you capture,
 makes the *next* session **smarter**.
 
 `ctx` **accumulates**.
+
+----
+
+**Connect with ctx**
+
+* [Join the Community →](community.md): ask questions, share workflows, and help shape what comes next
+* [Read the Blog →](../../blog/): real-world patterns, ponderings, and lessons learned from building `ctx` using `ctx`
 
 ----
 

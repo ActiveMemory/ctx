@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -37,17 +37,21 @@ Plumbing subcommands (used by skills and automation):
   mark-journal         Update journal processing state
 
 Hook subcommands (Claude Code plugin — safe to run manually):
-  check-context-size   Context size checkpoint
-  check-ceremonies     Session ceremony adoption nudge
-  check-persistence    Context persistence nudge
-  check-journal        Journal maintenance reminder
-  check-resources      Resource pressure warning (DANGER only)
-  check-knowledge      Knowledge file growth nudge
-  check-version        Version update nudge
-  block-non-path-ctx   Block non-PATH ctx invocations
-  post-commit          Post-commit context capture nudge
-  cleanup-tmp          Remove stale temp files
-  qa-reminder          QA reminder before completion`,
+  check-context-size          Context size checkpoint
+  check-ceremonies            Session ceremony adoption nudge
+  check-persistence           Context persistence nudge
+  check-journal               Journal maintenance reminder
+  check-resources             Resource pressure warning (DANGER only)
+  check-knowledge             Knowledge file growth nudge
+  check-reminders             Pending reminders relay
+  check-version               Version update nudge
+  check-map-staleness         Architecture map staleness nudge
+  block-non-path-ctx          Block non-PATH ctx invocations
+  block-dangerous-commands    Block dangerous command patterns (project-local)
+  check-backup-age            Backup staleness check (project-local)
+  post-commit                 Post-commit context capture nudge
+  cleanup-tmp                 Remove stale temp files
+  qa-reminder                 QA reminder before completion`,
 	}
 
 	cmd.AddCommand(
@@ -58,6 +62,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		checkPersistenceCmd(),
 		checkJournalCmd(),
 		checkCeremoniesCmd(),
+		checkRemindersCmd(),
 		checkVersionCmd(),
 		blockNonPathCtxCmd(),
 		postCommitCmd(),
@@ -65,6 +70,9 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		qaReminderCmd(),
 		checkResourcesCmd(),
 		checkKnowledgeCmd(),
+		checkMapStalenessCmd(),
+		blockDangerousCommandsCmd(),
+		checkBackupAgeCmd(),
 	)
 
 	return cmd

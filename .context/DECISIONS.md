@@ -3,9 +3,16 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-24 | Notify events are opt-in, not opt-out |
+| 2026-02-24 | Document worktree limitations rather than reroute paths |
+| 2026-02-24 | RSS/Atom feed is infrastructure, not a user feature |
+| 2026-02-24 | DETAILED_DESIGN.md lives outside FileReadOrder |
+| 2026-02-24 | Use lowercase error strings in ctx remind for Go conventions |
+| 2026-02-24 | Drop absolute-path-to-ctx regex from block-dangerous-commands |
+| 2026-02-24 | Add token usage to journal frontmatter, not build a usage dashboard |
 | 2026-02-22 | De-emphasize /ctx-journal-normalize from default journal pipeline |
 | 2026-02-22 | Hook commands use structured JSON output instead of plain text |
-| 2026-02-22 | Webhook URL encrypted with shared scratchpad key, not a dedicated key |
+| 2026-02-22 | Webhook URL encrypted with shared encryption key, not a dedicated key |
 | 2026-02-22 | Journal site rendering architecture (consolidated) |
 | 2026-02-22 | Plugin and skill distribution architecture (consolidated) |
 | 2026-02-22 | Recall system design (consolidated) |
@@ -40,6 +47,104 @@
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
 
+## [2026-02-24-032946] Notify events are opt-in, not opt-out
+
+**Status**: Accepted
+
+**Context**: Bug found where relay messages fired without any .ctxrc configuration — EventAllowed treated nil/empty as allow all
+
+**Decision**: Notify events are opt-in, not opt-out
+
+**Rationale**: The correct default for notifications is silence. Users must explicitly list events in notify.events to receive them. This matches the principle that new features should not change behavior for existing users.
+
+**Consequences**: EventAllowed returns false for nil/empty lists. All docs updated to reflect opt-in. ctx notify test bypasses the filter as a special case for connectivity checks.
+
+---
+
+## [2026-02-24-030254] Document worktree limitations rather than reroute paths
+
+**Status**: Accepted
+
+**Context**: Considered 3 engineering fixes (git toplevel, git-common-dir, worktree-aware split) to make untracked files resolve to the main checkout
+
+**Decision**: Document worktree limitations rather than reroute paths
+
+**Rationale**: All three add complexity for edge cases that workflow naturally avoids. Pad is key-gated already. Journal enrichment belongs on main after merge. Only notify is a real gap, and it deserves its own targeted fix.
+
+**Consequences**: Worktree limitations documented in skill doc, parallel-worktrees recipe, scratchpad reference, and webhook-notifications recipe. Separate task filed for enabling notify in worktrees.
+
+---
+
+## [2026-02-24-025505] RSS/Atom feed is infrastructure, not a user feature
+
+**Status**: Accepted
+
+**Context**: Researched zensical RSS support (none found), discussed whether RSS matters for ctx.ist
+
+**Decision**: RSS/Atom feed is infrastructure, not a user feature
+
+**Rationale**: RSS serves as a replication protocol, zero-auth public API, and automation glue — targeting power users and future machine consumers, not casual readers
+
+**Consequences**: Will implement as static Atom 1.0 feed generated at build time; spec captured at specs/rss-feed.md
+
+---
+
+## [2026-02-24-015939] DETAILED_DESIGN.md lives outside FileReadOrder
+
+**Status**: Accepted
+
+**Context**: Designing the /ctx-map skill output documents — needed to decide where DETAILED_DESIGN.md fits in the context loading pipeline
+
+**Decision**: DETAILED_DESIGN.md lives outside FileReadOrder
+
+**Rationale**: DETAILED_DESIGN.md is a deep per-module reference that can grow large. Loading it at session start would waste token budget. Agents consult specific sections on-demand when working on a module.
+
+**Consequences**: ARCHITECTURE.md remains the session-start overview (~4000 tokens). DETAILED_DESIGN.md is never auto-loaded — agents must explicitly Read relevant sections. Two-tier documentation: succinct map vs. deep reference.
+
+---
+
+## [2026-02-24-015825] Use lowercase error strings in ctx remind for Go conventions
+
+**Status**: Accepted
+
+**Context**: The spec used 'No reminder with ID %d.' but golangci-lint flags capitalized error strings (ST1005) and trailing punctuation
+
+**Decision**: Use lowercase error strings in ctx remind for Go conventions
+
+**Rationale**: Go convention is lowercase, no-punctuation error strings; the CLI can format user-facing messages differently from returned errors
+
+**Consequences**: Error messages match the rest of the codebase; the spec's exact wording is adjusted for Go idiom
+
+---
+
+## [2026-02-24-015709] Drop absolute-path-to-ctx regex from block-dangerous-commands
+
+**Status**: Accepted
+
+**Context**: Shell script had a regex blocking absolute paths to ctx binary. The block-non-path-ctx Go subcommand already covers this with better patterns (start-of-command, after-separator positions, test exception).
+
+**Decision**: Drop absolute-path-to-ctx regex from block-dangerous-commands
+
+**Rationale**: Duplicating it would create two sources of truth for the same rule.
+
+**Consequences**: Only block-non-path-ctx owns absolute-path blocking; block-dangerous-commands focuses on sudo, git push, and bin-directory installs.
+
+---
+
+## [2026-02-24-013829] Add token usage to journal frontmatter, not build a usage dashboard
+
+**Status**: Accepted
+
+**Context**: Discussed whether to build token analytics features or keep it minimal
+
+**Decision**: Add token usage to journal frontmatter, not build a usage dashboard
+
+**Rationale**: ccusage and cmonitor already solve the dashboard problem; ctx's core value is persistent context, not usage analytics. Token metadata in journal entries serves session archaeology without scope creep.
+
+**Consequences**: Token/model fields are auto-populated at export time; enrichment skill is documented not to overwrite them. Users wanting dashboards are pointed to ccusage.
+
+---
+
 ## [2026-02-22-221724] De-emphasize /ctx-journal-normalize from default journal pipeline
 
 **Status**: Accepted
@@ -68,17 +173,17 @@
 
 ---
 
-## [2026-02-22-101958] Webhook URL encrypted with shared scratchpad key, not a dedicated key
+## [2026-02-22-101958] Webhook URL encrypted with shared encryption key, not a dedicated key
 
 **Status**: Accepted
 
 **Context**: ctx notify needs to encrypt webhook URLs. A new key per feature adds complexity.
 
-**Decision**: Webhook URL encrypted with shared scratchpad key, not a dedicated key
+**Decision**: Webhook URL encrypted with shared encryption key, not a dedicated key
 
-**Rationale**: Reusing .scratchpad.key keeps the key management surface area minimal — one key, one gitignore entry, one rotation cycle. The notify feature is a peer of the scratchpad (both store user secrets encrypted at rest).
+**Rationale**: Reusing .context.key keeps the key management surface area minimal -- one key, one gitignore entry, one rotation cycle. The notify feature is a peer of the scratchpad (both store user secrets encrypted at rest).
 
-**Consequences**: Key rename from .scratchpad.key to .context.key is now a follow-up task. Rotating the scratchpad key requires re-running ctx notify setup.
+**Consequences**: Key rename from .scratchpad.key to .context.key is now a follow-up task. Rotating the encryption key requires re-running ctx notify setup.
 
 ---
 

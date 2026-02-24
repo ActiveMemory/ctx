@@ -1614,6 +1614,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-spectrum" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2932,6 +2943,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-spectrum" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3264,8 +3286,17 @@ of that output determines <strong>who sees it</strong> and <strong>who acts on i
 <p>Choose the wrong pattern, and your carefully crafted warning gets silently 
 absorbed by the agent, or your agent-directed nudge gets dumped on the user 
 as noise.</p>
-<p>This recipe catalogs the known hook output patterns and explains when to 
+<p>This recipe catalogs the known hook output patterns and explains when to
 use each one.</p>
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<p>Eight patterns from full control to full invisibility: </p>
+<ul>
+<li><strong>hard gate</strong> (<code>exit 2</code>), </li>
+<li><strong>VERBATIM relay</strong> (<em>agent MUST show</em>), </li>
+<li><strong>agent directive</strong> (<em>context injection</em>), </li>
+<li>and <strong>silent side-effect</strong> (<em>background work</em>).</li>
+</ul>
+<p>Most hooks belong in the middle.</p>
 <h2 id="the-spectrum">The Spectrum<a class="headerlink" href="#the-spectrum" title="Permanent link">&para;</a></h2>
 <p>These patterns form a spectrum based on <strong>who decides</strong> what the user sees:</p>
 <table>
@@ -3302,17 +3333,17 @@ use each one.</p>
 </tr>
 <tr>
 <td>Silent injection</td>
-<td>Nobody — invisible background context</td>
+<td>Nobody: invisible background context</td>
 </tr>
 <tr>
 <td>Silent side-effect</td>
-<td>Nobody — invisible background work</td>
+<td>Nobody: invisible background work</td>
 </tr>
 </tbody>
 </table>
 <p>The spectrum runs from <strong>full hook control</strong> (<em>hard gate</em>) to <strong>full
-invisibility</strong> (<em>silent side effect</em>). Most hooks belong somewhere in the
-middle.</p>
+invisibility</strong> (<em>silent side effect</em>). </p>
+<p>Most hooks belong somewhere in the middle.</p>
 <hr />
 <h2 id="pattern-1-hard-gate">Pattern 1: Hard Gate<a class="headerlink" href="#pattern-1-hard-gate" title="Permanent link">&para;</a></h2>
 <p><strong>Block the tool call entirely</strong>. The agent cannot proceed: it must find
@@ -3355,7 +3386,7 @@ before the agent's actual answer. Throttle with once-per-day markers or
 adaptive frequency.</p>
 <p><strong>Key detail</strong>: The phrase <code>IMPORTANT: Relay this ... VERBATIM</code> is what
 makes this work. Without it, agents tend to process the information
-internally and never surface it. The explicit instruction is the pattern:
+internally and never surface it. The explicit instruction <strong>is</strong> the pattern:
 the box-drawing is just fancy formatting.</p>
 <hr />
 <h2 id="pattern-3-agent-directive">Pattern 3: Agent Directive<a class="headerlink" href="#pattern-3-agent-directive" title="Permanent link">&para;</a></h2>
@@ -3375,8 +3406,8 @@ asks the agent to consider an action. The user may never need to know.</p>
 <li><code>ctx system check-persistence</code>: Nudges the agent to persist context</li>
 </ul>
 <p><strong>Trade-off:</strong> No guarantee the agent acts. The nudge is one signal among
-many in the context window. Strong phrasing helps ("Have you...?" is better
-than "Consider..."), but ultimately the agent decides.</p>
+many in the context window. Strong phrasing helps ("<em>Have you...?</em>" is better
+than "<em>Consider...</em>"), but ultimately the agent decides.</p>
 <hr />
 <h2 id="pattern-4-silent-context-injection">Pattern 4: Silent Context Injection<a class="headerlink" href="#pattern-4-silent-context-injection" title="Permanent link">&para;</a></h2>
 <p><strong>Load context with no visible output</strong>. The agent gets enriched without
@@ -3386,7 +3417,7 @@ either party noticing.</p>
 <p><strong>When to use:</strong> Background context loading that should be invisible.
 The agent benefits from the information, but neither it, nor the user needs
 to know it happened.</p>
-<p><strong>Hook type:</strong> <code>PreToolUse</code> with <code>.*</code> matcher (runs on every tool call).</p>
+<p><strong>Hook type:</strong> <code>PreToolUse</code> with <code>.*</code> matcher (<em>runs on every tool call</em>).</p>
 <p><strong>Examples in <code>ctx</code></strong>:</p>
 <ul>
 <li>The <code>ctx agent</code> <code>PreToolUse</code> hook: injects project context silently</li>

@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -75,6 +75,8 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 			val = fs.Normalized
 		case "fences_verified":
 			val = fs.FencesVerified
+		case "locked":
+			val = fs.Locked
 		default:
 			return fmt.Errorf("unknown stage %q; valid: %s", stage, strings.Join(state.ValidStages, ", "))
 		}

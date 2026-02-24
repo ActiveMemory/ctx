@@ -5,7 +5,7 @@ icon: lucide/list-checks
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 You have work that spans multiple sessions. Tasks get added during one session,
 partially finished in another, and completed days later.
@@ -16,19 +16,25 @@ grows cluttered with completed checkboxes that obscure the remaining work.
 
 How do you manage work items that span multiple sessions without losing context?
 
-!!! tip "TL;DR"
-    ```bash
-    ctx add task "Fix race condition" --priority high   # add
-    ctx add task "Write tests" --section "Phase 2"      # add to phase
-    ctx complete "race condition"                        # mark done
-    ctx tasks snapshot "before-refactor"                 # backup
-    ctx tasks archive                                    # clean up
-    ```
-    ```text
-    /ctx-next                                            # pick what's next
-    ```
+## TL;DR
 
-    Read on for the full workflow and conversational patterns.
+**Manage Tasks**:
+
+```bash
+ctx add task "Fix race condition" --priority high  # add
+ctx add task "Write tests" --section "Phase 2"     # add to phase
+ctx complete "race condition"                      # mark done
+ctx tasks snapshot "before-refactor"               # backup
+ctx tasks archive                                  # clean up
+```
+
+**Pick Up the Next Task**:
+
+```text
+/ctx-next # pick what's next
+```
+
+Read on for the full workflow and conversational patterns.
 
 ## Commands and Skills Used
 
@@ -255,15 +261,17 @@ The agent translates these into the right `ctx` operations behind the scenes.
 After completing a piece of work, the agent does not wait for you to dictate
 follow-up items. It identifies them from the work context and offers:
 
-> **Agent**: "I've finished implementing the rate limiter middleware. I noticed
-> three follow-up items:
->
-> 1. Write integration tests for the rate limiter (the unit tests pass but
->    there's no end-to-end coverage)
-> 2. Add rate limit headers to API responses (X-RateLimit-Remaining, etc.)
-> 3. Document the rate limit configuration in the ops runbook
->
-> Want me to add these as tasks?"
+```text
+**Agent**: "I've finished implementing the rate limiter middleware. I noticed
+three follow-up items:
+
+1. Write integration tests for the rate limiter (the unit tests pass but
+   there's no end-to-end coverage)
+2. Add rate limit headers to API responses (X-RateLimit-Remaining, etc.)
+3. Document the rate limit configuration in the ops runbook
+
+Want me to add these as tasks?"
+```
 
 This is how an agent behaves once it has read the Agent Playbook.
 
@@ -396,7 +404,7 @@ Agent: Added the cleanup task as high priority. Next up is "Add --section
     The agent handled task completion, follow-up creation, learning capture,
     and next-task selection—all from natural conversation.
 
-## Putting It Together
+## Putting It All Together
 
 ```bash
 # Add a task
@@ -429,13 +437,13 @@ ctx tasks archive               # then archive
 * Include the **why** in the task description. Future sessions lack the context of
   why you added the task. "Add rate limiting" is worse than "Add rate limiting
   to prevent abuse on the public API after the load test showed 10x traffic spikes."
-* Use `#in-progress` sparingly. Only one or two tasks should carry this tag at
+* Use `#in-progress` **sparingly**. Only one or two tasks should carry this tag at
   a time. If everything is in-progress, nothing is.
 * Snapshot **before**, not after. The point of a snapshot is to capture the 
   state before a change, not to celebrate what you just finished.
-* Archive regularly. Once completed tasks outnumber pending ones, it is time
-  to archive. A clean TASKS.md helps both you and your AI assistant focus.
-* Never delete tasks. Mark them `[x]` (completed) or `[-]` (skipped with a
+* **Archive regularly**. Once completed tasks outnumber pending ones, it is time
+  to archive. A clean `TASKS.md` helps both you and your AI assistant focus.
+* **Never delete tasks**. Mark them `[x]` (completed) or `[-]` (skipped with a
   reason). Deletion breaks the audit trail.
 * **Trust the agent's task instincts**. When the agent suggests follow-up items
   after completing work, it is drawing on the full context of what just happened.
@@ -445,7 +453,7 @@ ctx tasks archive               # then archive
 * **Let the agent chain operations**. A single statement like "that's done, what's
   next?" can trigger completion, follow-up identification, and next-task
   selection in one flow.
-* Review proactive task suggestions before moving on. The best follow-ups come
+* **Review** proactive task suggestions before moving on. The best follow-ups come
   from items spotted in-context right after the work completes.
 
 ## Next Up

@@ -5,11 +5,11 @@ icon: lucide/sticky-note
 
 ![ctx](../images/ctx-banner.png)
 
-## Problem
+## The Problem
 
 During a session you accumulate quick notes, reminders, intermediate values,
-and sometimes sensitive tokens. They don't fit `TASKS.md` (not work items) or
-`DECISIONS.md` (not decisions). They don't have the structured fields that
+and sometimes sensitive tokens. They don't fit `TASKS.md` (*not work items*) or
+`DECISIONS.md` (*not decisions*). They don't have the structured fields that
 `LEARNINGS.md` requires.
 
 Without somewhere to put them, they get lost between sessions.
@@ -17,21 +17,33 @@ Without somewhere to put them, they get lost between sessions.
 **How do you capture working memory that persists across sessions without
 polluting your structured context files?**
 
+## TL;DR
+
+```bash
+ctx pad add "check DNS propagation after deploy"
+ctx pad         # list entries
+ctx pad show 1  # print entry (pipe-friendly)
+```
+
+Entries are **encrypted at rest** and travel with `git`. 
+
+Use the `/ctx-pad` skill to manage entries from inside your AI session.
+
 ## Commands and Skills Used
 
-| Tool | Type | Purpose |
-|------|------|---------|
-| `ctx pad` | CLI command | List all scratchpad entries |
-| `ctx pad show N` | CLI command | Output raw text of entry N (pipe-friendly) |
-| `ctx pad add` | CLI command | Add a new entry |
-| `ctx pad edit` | CLI command | Replace, append to, or prepend to an entry |
-| `ctx pad add --file` | CLI command | Ingest a file as a blob entry |
-| `ctx pad show N --out` | CLI command | Extract a blob entry to a file |
-| `ctx pad rm` | CLI command | Remove an entry |
-| `ctx pad mv` | CLI command | Reorder entries |
-| `ctx pad import` | CLI command | Bulk-import lines from a file (or stdin) |
-| `ctx pad export` | CLI command | Export all blob entries to a directory |
-| `/ctx-pad` | Skill | Natural language interface to all pad commands |
+| Tool                   | Type        | Purpose                                        |
+|------------------------|-------------|------------------------------------------------|
+| `ctx pad`              | CLI command | List all scratchpad entries                    |
+| `ctx pad show N`       | CLI command | Output raw text of entry N (pipe-friendly)     |
+| `ctx pad add`          | CLI command | Add a new entry                                |
+| `ctx pad edit`         | CLI command | Replace, append to, or prepend to an entry     |
+| `ctx pad add --file`   | CLI command | Ingest a file as a blob entry                  |
+| `ctx pad show N --out` | CLI command | Extract a blob entry to a file                 |
+| `ctx pad rm`           | CLI command | Remove an entry                                |
+| `ctx pad mv`           | CLI command | Reorder entries                                |
+| `ctx pad import`       | CLI command | Bulk-import lines from a file (*or stdin*)     |
+| `ctx pad export`       | CLI command | Export all blob entries to a directory         |
+| `/ctx-pad`             | Skill       | Natural language interface to all pad commands |
 
 ## The Workflow
 
@@ -175,61 +187,71 @@ ctx pad export --force ./backup
 When a file already exists, a unix timestamp is prepended to the filename
 to avoid collisions. Use `--force` to overwrite instead.
 
-## Conversational Approach
+## Using `/ctx-pad` in a Session
 
-The `/ctx-pad` skill translates natural language into commands. You
-describe intent; the agent handles the mechanics.
+Invoke the `/ctx-pad` skill first, then describe what you want in natural
+language. Without the skill prefix, the agent may route your request to
+`TASKS.md` or another context file instead of the scratchpad.
 
-| You say | What the agent does |
-|---------|---------------------|
-| "jot down: check DNS after deploy" | `ctx pad add "check DNS after deploy"` |
-| "remember this: retry limit is 5" | `ctx pad add "retry limit is 5"` |
-| "show my scratchpad" / "what's on my pad" | `ctx pad` |
-| "show me entry 3" / "what's in entry 3" | `ctx pad show 3` |
-| "delete the third one" / "remove entry 3" | `ctx pad rm 3` |
-| "change entry 2 to ..." / "replace entry 2 with ..." | `ctx pad edit 2 "new text"` |
-| "append '-- important' to entry 3" / "add to entry 3: ..." | `ctx pad edit 3 --append " -- important"` |
-| "prepend 'URGENT:' to entry 1" | `ctx pad edit 1 --prepend "URGENT: "` |
-| "add the port to entry 2" | `ctx pad edit 2 --append ":8443"` |
-| "prioritize entry 4" / "move entry 4 to the top" | `ctx pad mv 4 1` |
-| "move entry 1 to the bottom" / "deprioritize entry 1" | `ctx pad mv 1 N` |
-| "import my notes from notes.txt" / "load these lines" | `ctx pad import notes.txt` |
-| "export all blobs to ./ideas" / "dump the files" | `ctx pad export ./ideas` |
-| "anything on my scratchpad?" | `ctx pad` |
+```text
+You: /ctx-pad jot down: check DNS after deploy
+You: /ctx-pad show my scratchpad
+You: /ctx-pad delete entry 3
+```
 
-The skill recognizes variations: "scratchpad", "pad", "notes", "sticky
-notes", "jot down", "remember this", "note to self". You don't need to use
-exact trigger phrases.
+Once the skill is active, it translates intent into commands:
 
-The key insight is **ambiguity around "add"**: "add a note" creates a new
-entry, while "add to entry 3" appends to an existing one. The skill
-distinguishes these from context.
+| You say (after `/ctx-pad`)                | What the agent does                       |
+|-------------------------------------------|-------------------------------------------|
+| "jot down: check DNS after deploy"        | `ctx pad add "check DNS after deploy"`    |
+| "remember this: retry limit is 5"         | `ctx pad add "retry limit is 5"`          |
+| "show my scratchpad" / "what's on my pad" | `ctx pad`                                 |
+| "show me entry 3"                         | `ctx pad show 3`                          |
+| "delete the third one" / "remove entry 3" | `ctx pad rm 3`                            |
+| "change entry 2 to ..."                   | `ctx pad edit 2 "new text"`               |
+| "append '-- important' to entry 3"        | `ctx pad edit 3 --append " -- important"` |
+| "prepend 'URGENT:' to entry 1"            | `ctx pad edit 1 --prepend "URGENT: "`     |
+| "prioritize entry 4" / "move to the top"  | `ctx pad mv 4 1`                          |
+| "import my notes from notes.txt"          | `ctx pad import notes.txt`                |
+| "export all blobs to ./ideas"             | `ctx pad export ./ideas`                  |
+
+!!! tip "When in Doubt, Use the CLI Directly"
+    The `ctx pad` commands work the same whether you run them yourself
+    or let the skill invoke them. 
+
+    If the agent misroutes a request,
+    fall back to `ctx pad add "..."` in your terminal.
 
 ## When to Use Scratchpad vs Context Files
 
-| Situation | Use |
-|-----------|-----|
-| Temporary reminders ("check X after deploy") | **Scratchpad** |
-| Working values during debugging (ports, endpoints, counts) | **Scratchpad** |
-| Sensitive tokens or API keys (short-term storage) | **Scratchpad** |
-| Quick notes that don't fit anywhere else | **Scratchpad** |
-| Work items with completion tracking | **TASKS.md** |
-| Trade-offs between alternatives with rationale | **DECISIONS.md** |
-| Reusable lessons with context/lesson/application | **LEARNINGS.md** |
-| Codified patterns and standards | **CONVENTIONS.md** |
+| Situation                                                  | Use                |
+|------------------------------------------------------------|--------------------|
+| Temporary reminders ("*check X after deploy*")             | **Scratchpad**     |
+| Session-start reminders ("*remind me next session*")       | **`ctx remind`**   |
+| Working values during debugging (ports, endpoints, counts) | **Scratchpad**     |
+| Sensitive tokens or API keys (short-term storage)          | **Scratchpad**     |
+| Quick notes that don't fit anywhere else                   | **Scratchpad**     |
+| Work items with completion tracking                        | **TASKS.md**       |
+| Trade-offs between alternatives with rationale             | **DECISIONS.md**   |
+| Reusable lessons with context/lesson/application           | **LEARNINGS.md**   |
+| Codified patterns and standards                            | **CONVENTIONS.md** |
 
 **Decision guide:**
 
-* If it has structured fields (context, rationale, lesson, application),
+* If it has structured fields (*context, rationale, lesson, application*),
   it belongs in a context file.
 * If it's a work item you'll mark done, it belongs in `TASKS.md`.
-* If it's a quick note, reminder, or working value — especially if it's
-  sensitive or ephemeral — it belongs on the scratchpad.
+* If you want a message relayed verbatim at the next session start,
+  it belongs in `ctx remind`.
+* If it's a quick note, reminder, or working value  (*especially if it's
+  sensitive or ephemeral*) it belongs on the scratchpad.
 
 !!! tip "Scratchpad Is Not a Junk Drawer"
     The scratchpad is for working memory, not long-term storage.
+
     If a note is still relevant after several sessions, promote it:
-    a persistent reminder becomes a task, a recurring value becomes a
+
+    A persistent reminder becomes a task, a recurring value becomes a
     convention, a hard-won insight becomes a learning.
 
 ## Tips
@@ -244,7 +266,7 @@ distinguishes these from context.
   other shell tools.
 * **Never mention the key file contents to the AI.** The agent knows
   how to use `ctx pad` commands but should never read or print
-  `.context/.scratchpad.key` directly.
+  `.context/.context.key` directly.
 * **Encryption is transparent.** You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.
 

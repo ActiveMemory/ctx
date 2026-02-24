@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -15,12 +15,12 @@ icon: lucide/settings
 
 ctx uses three layers of configuration. Each layer overrides the one below it:
 
-1. **CLI flags** — per-invocation overrides (highest priority)
-2. **Environment variables** — shell or CI/CD overrides
-3. **`.ctxrc` file** — project-level defaults (YAML)
-4. **Built-in defaults** — hardcoded fallbacks (lowest priority)
+1. **CLI flags**: Per-invocation overrides (*highest priority*)
+2. **Environment variables**: Shell or CI/CD overrides
+3. **The `.ctxrc` file**: Project-level defaults (*YAML*)
+4. **Built-in defaults**: Hardcoded fallbacks (*lowest priority*)
 
-All settings are optional. If nothing is configured, ctx works out of the box
+All settings are optional: If nothing is configured, `ctx` works out of the box
 with sensible defaults.
 
 ---
@@ -43,21 +43,29 @@ my-project/
 └── src/
 ```
 
-ctx looks for `.ctxrc` in the current working directory when any command runs.
+`ctx` looks for `.ctxrc` in the current working directory when any command runs.
 There is no global or user-level config file — configuration is always
 per-project.
+
+!!! tip "Using a Different .context Directory"
+    The default `.context/` directory can be changed per-project via the
+    `context_dir` key in `.ctxrc`, the `CTX_DIR` environment variable, or the
+    `--context-dir` CLI flag.
+
+    See [Environment Variables](#environment-variables)
+    and [CLI Global Flags](#cli-global-flags) below for details.
 
 ### Full Reference
 
 A commented `.ctxrc` showing all options and their defaults:
 
 ```yaml
-# .ctxrc — ctx runtime configuration
+# .ctxrc: ctx runtime configuration
 # https://ctx.ist/configuration/
 #
 # All settings are optional. Missing values use defaults.
 # Priority: CLI flags > environment variables > .ctxrc > defaults
-
+#
 # context_dir: .context
 # token_budget: 8000
 # auto_archive: true
@@ -67,12 +75,14 @@ A commented `.ctxrc` showing all options and their defaults:
 # entry_count_learnings: 30
 # entry_count_decisions: 20
 # convention_line_count: 200
-# notify:
-#   events:             # required — no events sent unless listed
+#
+# notify:               # requires: ctx notify setup
+#   events:             # required: no events sent unless listed
 #     - loop
 #     - nudge
 #     - relay
 #   key_rotation_days: 90
+#
 # priority_order:
 #   - CONSTITUTION.md
 #   - TASKS.md
@@ -121,11 +131,11 @@ behind this ordering.
 
 Environment variables override `.ctxrc` values but are overridden by CLI flags.
 
-| Variable           | Description                              | Equivalent `.ctxrc` key |
-|--------------------|------------------------------------------|-------------------------|
-| `CTX_DIR`          | Override the context directory path       | `context_dir`           |
-| `CTX_TOKEN_BUDGET` | Override the default token budget         | `token_budget`          |
-| `NO_COLOR`         | Disable colored output when set (any value) | *(CLI flag only)*    |
+| Variable           | Description                                 | Equivalent `.ctxrc` key |
+|--------------------|---------------------------------------------|-------------------------|
+| `CTX_DIR`          | Override the context directory path         | `context_dir`           |
+| `CTX_TOKEN_BUDGET` | Override the default token budget           | `token_budget`          |
+| `NO_COLOR`         | Disable colored output when set (any value) | *(CLI flag only)*       |
 
 ### Examples
 
@@ -140,8 +150,9 @@ CTX_TOKEN_BUDGET=16000 ctx agent
 NO_COLOR=1 ctx drift --json
 ```
 
-!!! note "`NO_COLOR` follows the [no-color.org](https://no-color.org) convention"
+!!! note "`NO_COLOR` Follows the [no-color.org](https://no-color.org) Convention"
     Setting `NO_COLOR` to any non-empty value disables colored terminal output.
+
     This is equivalent to the `--no-color` CLI flag.
 
 ---
@@ -151,21 +162,21 @@ NO_COLOR=1 ctx drift --json
 CLI flags have the highest priority and override both environment variables and
 `.ctxrc` settings. These flags are available on every `ctx` command.
 
-| Flag                   | Description                                              |
-|------------------------|----------------------------------------------------------|
-| `--context-dir <path>` | Override context directory (default: `.context/`)        |
+| Flag                   | Description                                               |
+|------------------------|-----------------------------------------------------------|
+| `--context-dir <path>` | Override context directory (default: `.context/`)         |
 | `--allow-outside-cwd`  | Allow context directory outside current working directory |
-| `--no-color`           | Disable colored output                                   |
-| `--version`            | Show version and exit                                    |
-| `--help`               | Show command help and exit                               |
+| `--no-color`           | Disable colored output                                    |
+| `--version`            | Show version and exit                                     |
+| `--help`               | Show command help and exit                                |
 
 ### Examples
 
 ```bash
-# Point to a different context directory
+# Point to a different context directory:
 ctx status --context-dir /path/to/shared/.context
 
-# Allow external context directory (skips boundary check)
+# Allow external context directory (skips boundary check):
 ctx status --context-dir /mnt/nas/project-context --allow-outside-cwd
 ```
 
@@ -178,7 +189,7 @@ layer wins:
 
 ```
 CLI flags  >  Environment variables  >  .ctxrc  >  Built-in defaults
-(highest)                                           (lowest)
+(highest)                                          (lowest)
 ```
 
 **Example resolution for `context_dir`:**
@@ -200,7 +211,7 @@ used. With nothing configured, the default `.context` applies.
 
 ## Examples
 
-### External context directory
+### External `.context` Directory
 
 Store context outside the project tree (useful for monorepos or shared context):
 
@@ -210,7 +221,7 @@ context_dir: /home/team/shared-context
 allow_outside_cwd: true
 ```
 
-### Custom token budget
+### Custom Token Budget
 
 Increase the token budget for projects with large context:
 
@@ -222,10 +233,10 @@ token_budget: 16000
 This affects the default budget for `ctx agent` and `ctx load`. You can still
 override per-invocation with `ctx agent --budget 4000`.
 
-### Disabled scratchpad encryption
+### Disabled Scratchpad Encryption
 
-Turn off encryption for the scratchpad (useful in ephemeral environments
-where key management is unnecessary):
+Turn off encryption for the scratchpad (*useful in ephemeral environments
+where key management is unnecessary*):
 
 ```yaml
 # .ctxrc
@@ -234,10 +245,11 @@ scratchpad_encrypt: false
 
 !!! warning "Unencrypted scratchpads store secrets in plaintext"
     Only disable encryption if you understand the security implications.
+
     The scratchpad may contain sensitive data such as API keys, database
     URLs, or deployment credentials.
 
-### Custom priority order
+### Custom Priority Order
 
 Reorder context files to prioritize architecture over conventions:
 
@@ -258,7 +270,7 @@ Files not listed in `priority_order` receive the lowest priority (100).
 The order affects `ctx agent`, `ctx load`, and drift's file-priority
 calculations.
 
-### Adjusted drift thresholds
+### Adjusted Drift Thresholds
 
 Raise or lower the entry-count thresholds that trigger drift warnings:
 
@@ -271,7 +283,7 @@ convention_line_count: 300  # warn above 300 lines (default: 200)
 
 Set any threshold to `0` to disable that specific check.
 
-### Webhook notifications
+### Webhook Notifications
 
 Get notified when loops complete, hooks fire, or agents reach milestones:
 
@@ -294,7 +306,7 @@ notify:
     # - relay   # all hook output (verbose, for debugging)
 ```
 
-Notifications are opt-in: no events are sent unless explicitly listed.
+Notifications are **opt-in**: No events are sent unless explicitly listed.
 
 See [Webhook Notifications](../recipes/webhook-notifications.md) for a
 step-by-step recipe.

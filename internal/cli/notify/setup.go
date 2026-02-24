@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -25,7 +25,7 @@ func setupCmd() *cobra.Command {
 		Long: `Prompts for a webhook URL and encrypts it using the scratchpad key.
 
 The URL is stored in .context/.notify.enc (encrypted, safe to commit).
-The key lives at .context/.scratchpad.key (gitignored, never committed).`,
+The key lives at .context/.context.key (gitignored, never committed).`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runSetup(cmd, os.Stdin)
 		},

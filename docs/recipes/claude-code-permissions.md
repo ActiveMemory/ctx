@@ -20,6 +20,16 @@ codebase. There is no PR review, no CI check: just whatever you clicked
 This recipe shows what a well-maintained permission file looks like and how to
 keep it clean.
 
+## TL;DR
+
+```bash
+ctx init                            # seeds safe defaults
+/ctx-drift                          # detects missing/stale permissions
+/sanitize-permissions               # audits for dangerous patterns
+```
+
+See [Recommended Defaults](#recommended-defaults) for the full list.
+
 ## Commands and Skills Used
 
 | Command/Skill           | Role in this workflow                            |

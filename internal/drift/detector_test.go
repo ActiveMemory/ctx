@@ -1,4 +1,4 @@
-//   /    Context:                     https://ctx.ist
+//   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
 // `.,'\
 //   \    Copyright 2026-present Context contributors.
@@ -443,6 +443,154 @@ func TestCheckEntryCountDisabled(t *testing.T) {
 
 	if len(report.Warnings) != 2 {
 		t.Errorf("expected 2 warnings with defaults, got %d", len(report.Warnings))
+	}
+}
+
+func TestCheckMissingPackages(t *testing.T) {
+	// Create a temp directory with an internal/ tree
+	tmpDir, err := os.MkdirTemp("", "drift-pkg-test-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func(path string) {
+		rmErr := os.RemoveAll(path)
+		if rmErr != nil {
+			fmt.Printf("failed to remove temp dir %q: %v", path, rmErr)
+		}
+	}(tmpDir)
+
+	origDir, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("failed to get current dir: %v", err)
+	}
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func(dir string) {
+		chdirErr := os.Chdir(dir)
+		if chdirErr != nil {
+			fmt.Printf("failed to chdir: %v", chdirErr)
+		}
+	}(origDir)
+
+	// Create internal/ subdirectories
+	for _, d := range []string{"internal/config", "internal/cli", "internal/drift", "internal/newpkg"} {
+		if mkErr := os.MkdirAll(filepath.Join(tmpDir, d), 0750); mkErr != nil {
+			t.Fatalf("failed to create dir %s: %v", d, mkErr)
+		}
+	}
+
+	tests := []struct {
+		name         string
+		archContent  string
+		wantWarnings int
+		wantPassed   bool
+		wantPaths    []string
+	}{
+		{
+			name:         "all packages documented",
+			archContent:  "# Arch\n\n| `internal/config` | ... |\n| `internal/cli` | ... |\n| `internal/drift` | ... |\n| `internal/newpkg` | ... |\n",
+			wantWarnings: 0,
+			wantPassed:   true,
+		},
+		{
+			name:         "one package missing",
+			archContent:  "# Arch\n\n| `internal/config` | ... |\n| `internal/cli` | ... |\n| `internal/drift` | ... |\n",
+			wantWarnings: 1,
+			wantPassed:   false,
+			wantPaths:    []string{"internal/newpkg"},
+		},
+		{
+			name:         "nested path normalizes to parent",
+			archContent:  "# Arch\n\n| `internal/config` | ... |\n| `internal/cli/pad` | ... |\n| `internal/drift` | ... |\n| `internal/newpkg` | ... |\n",
+			wantWarnings: 0,
+			wantPassed:   true,
+		},
+		{
+			name:         "no ARCHITECTURE.md — skip silently",
+			archContent:  "",
+			wantWarnings: 0,
+			wantPassed:   false, // not passed because check was skipped
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var files []context.FileInfo
+			if tt.archContent != "" {
+				files = append(files, context.FileInfo{
+					Name:    "ARCHITECTURE.md",
+					Content: []byte(tt.archContent),
+				})
+			}
+
+			ctx := &context.Context{Dir: ".context", Files: files}
+			report := &Report{
+				Warnings:   []Issue{},
+				Violations: []Issue{},
+				Passed:     []CheckName{},
+			}
+
+			checkMissingPackages(ctx, report)
+
+			if len(report.Warnings) != tt.wantWarnings {
+				t.Errorf("expected %d warnings, got %d", tt.wantWarnings, len(report.Warnings))
+				for _, w := range report.Warnings {
+					t.Logf("  warning: %s (path=%s)", w.Message, w.Path)
+				}
+			}
+
+			passedCheck := false
+			for _, p := range report.Passed {
+				if p == CheckMissingPackages {
+					passedCheck = true
+					break
+				}
+			}
+			if passedCheck != tt.wantPassed {
+				t.Errorf("expected passed=%v, got passed=%v", tt.wantPassed, passedCheck)
+			}
+
+			for _, w := range report.Warnings {
+				if w.Type != IssueMissingPackage {
+					t.Errorf("expected issue type %q, got %q", IssueMissingPackage, w.Type)
+				}
+			}
+
+			if tt.wantPaths != nil {
+				gotPaths := make(map[string]bool)
+				for _, w := range report.Warnings {
+					gotPaths[w.Path] = true
+				}
+				for _, p := range tt.wantPaths {
+					if !gotPaths[p] {
+						t.Errorf("expected warning for path %q, not found", p)
+					}
+				}
+			}
+		})
+	}
+}
+
+func TestNormalizeInternalPkg(t *testing.T) {
+	tests := []struct {
+		input string
+		want  string
+	}{
+		{"internal/config", "internal/config"},
+		{"internal/cli/pad", "internal/cli"},
+		{"internal/recall/parser", "internal/recall"},
+		{"internal/journal/state", "internal/journal"},
+		{"internal", "internal"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			got := normalizeInternalPkg(tt.input)
+			if got != tt.want {
+				t.Errorf("normalizeInternalPkg(%q) = %q, want %q", tt.input, got, tt.want)
+			}
+		})
 	}
 }
 

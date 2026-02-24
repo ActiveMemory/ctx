@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#problem" class="md-skip">
+        <a href="#the-problem" class="md-skip">
           Skip to content
         </a>
       
@@ -2017,10 +2017,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
       
     </span>
   </a>
@@ -2860,10 +2860,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem
+        The Problem
       
     </span>
   </a>
@@ -3136,7 +3136,7 @@
   <h1>Parallel Agent Development with Git Worktrees</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
-<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>You have a large backlog (<em>10, 20, 30 open tasks</em>) and many of them are
 independent: docs work that doesn't touch Go code, a new package that
 doesn't overlap with existing ones, test coverage for a stable module.</p>
@@ -3266,32 +3266,32 @@ prompts work:</p>
 <li><em>"Clean up all the worktrees, we're done."</em></li>
 </ul>
 <h2 id="what-does-not-work-in-worktrees">What Does NOT Work in Worktrees<a class="headerlink" href="#what-does-not-work-in-worktrees" title="Permanent link">&para;</a></h2>
-<p>The encryption key (<code>.context/.scratchpad.key</code>) is gitignored — it only
+<p>The encryption key (<code>.context/.context.key</code>) is gitignored: It only
 exists in the main checkout. This affects key-dependent features:</p>
 <ul>
-<li><strong><code>ctx pad</code></strong> — the scratchpad is inaccessible. Commands fail
-  gracefully (no key found). Use the pad from the main checkout only.</li>
-<li><strong><code>ctx notify</code></strong> — webhook notifications silently do nothing. Agents
+<li><strong><code>ctx pad</code></strong>: The scratchpad is inaccessible. Commands fail
+  gracefully (<em>no key found</em>). Use the pad from the main checkout only.</li>
+<li><strong><code>ctx notify</code></strong>: Webhook notifications silently do nothing. Agents
   in worktrees cannot send alerts for loop completions, nudges, or
   custom events. If you need visibility into worktree agents, monitor
   them from the terminal rather than relying on webhooks.</li>
-<li><strong>Journal enrichment</strong> — <code>ctx recall export</code> and <code>ctx journal enrich</code>
+<li><strong>Journal enrichment</strong>: <code>ctx recall export</code> and <code>ctx journal enrich</code>
   write files relative to the current working directory. Enrichments
   created in a worktree stay there and are discarded on teardown.
-  Enrich journals on the main branch after merging — the JSONL session
-  logs are always intact.</li>
+  <strong>Enrich journals on the main branch after merging</strong>: the JSONL session
+  logs are always intact, and you don't lose any data.</li>
 </ul>
-<p>Tracked context files (TASKS.md, DECISIONS.md, LEARNINGS.md,
-CONVENTIONS.md) work normally — git handles them.</p>
+<p>Tracked context files (<em>TASKS.md, DECISIONS.md, LEARNINGS.md,
+CONVENTIONS.md</em>) work normally; <code>git</code> handles them.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>3-4 worktrees max.</strong> Beyond that, merge complexity outweighs the
   parallelism benefit. The skill enforces this limit.</li>
 <li><strong>Group by package or directory</strong>, not by priority. Two high-priority
   tasks that touch the same files must be in the same track.</li>
-<li><strong>TASKS.md will conflict</strong> on merge. This is normal. Accept all <code>[x]</code>
-  completions — the resolution is always additive.</li>
-<li><strong>Don't run <code>ctx init</code> in worktrees.</strong> The <code>.context/</code> directory is
+<li><strong><code>TASKS.md</code> will conflict</strong> on merge. This is normal. Accept all <code>[x]</code>
+  completions: The resolution is always additive.</li>
+<li><strong>Don't run <code>ctx init</code> in worktrees</strong>. The <code>.context/</code> directory is
   tracked in git. Running init overwrites shared context files.</li>
 <li><strong>Name worktrees by concern</strong>, not by number. <code>work/docs</code> and
   <code>work/crypto</code> are more useful than <code>work/track-1</code> and <code>work/track-2</code>.</li>
@@ -3303,12 +3303,12 @@ CONVENTIONS.md) work normally — git handles them.</p>
 <p>Or explore the <a href="../">full recipe list</a>.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../autonomous-loops/">Running an Unattended AI Agent</a> — for serial
+<li><a href="../autonomous-loops/">Running an Unattended AI Agent</a>: for serial
   autonomous loops instead of parallel tracks</li>
-<li><a href="../task-management/">Tracking Work Across Sessions</a> — managing the
+<li><a href="../task-management/">Tracking Work Across Sessions</a>: managing the
   task backlog that feeds into parallelization</li>
-<li><a href="../session-lifecycle/">The Complete Session</a> — the session workflow
-  each agent follows inside its worktree</li>
+<li><a href="../session-lifecycle/">The Complete Session</a>: the complete session workflow
+  end-to-end, with examples</li>
 </ul>
 
 

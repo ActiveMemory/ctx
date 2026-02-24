@@ -1777,6 +1777,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2910,6 +2921,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#commands-and-skills-used" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3223,8 +3245,7 @@ patterns you stopped using two months ago.</p>
 <p>An AI tool that trusts outdated references will <strong>hallucinate confidently</strong>.</p>
 <p>This recipe shows how to detect drift, fix it, and keep your <code>.context/</code>
 directory lean and accurate.</p>
-<div class="admonition tip">
-<p class="admonition-title">TL;DR</p>
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># detect problems</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># auto-fix the easy ones</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># reconcile after refactors</span>
@@ -3232,7 +3253,6 @@ directory lean and accurate.</p>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># verify</span>
 </span></code></pre></div>
 <p>Or just ask your agent: <em>"Is our context clean?"</em></p>
-</div>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3272,6 +3292,11 @@ directory lean and accurate.</p>
 <td><code>/ctx-drift</code></td>
 <td>Skill</td>
 <td>Structural plus semantic drift detection</td>
+</tr>
+<tr>
+<td><code>/ctx-map</code></td>
+<td>Skill</td>
+<td>Refresh ARCHITECTURE.md from actual codebase</td>
 </tr>
 <tr>
 <td><code>/ctx-alignment-audit</code></td>

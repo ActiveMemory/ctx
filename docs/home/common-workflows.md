@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -160,7 +160,7 @@ ctx pad get db-password
 ctx pad list
 ```
 
-The scratchpad is encrypted with a key stored in `.context/.scratchpad.key`
+The scratchpad is encrypted with a key stored in `.context/.context.key`
 (*`.gitignore`d by default*). 
 
 See [Scratchpad](../reference/scratchpad.md) for details.

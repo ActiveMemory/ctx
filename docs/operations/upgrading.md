@@ -1,5 +1,5 @@
 ---
-#   /    Context:                     https://ctx.ist
+#   /    ctx:                         https://ctx.ist
 # ,'`./    do you remember?
 # `.,'\
 #   \    Copyright 2026-present Context contributors.
@@ -64,7 +64,7 @@ ctx init --force --merge
 Knowledge files (`.context/TASKS.md`, `DECISIONS.md`, etc.) are **preserved
 automatically** — `ctx init` only overwrites infrastructure, never your data.
 
-> **Scratchpad key**: If you use `ctx pad`, verify that `.context/.scratchpad.key`
+> **Encryption key**: If you use `ctx pad`, verify that `.context/.context.key`
 > is still present after reinit. It should be preserved, but losing it means
 > losing access to encrypted scratchpad data.
 
