@@ -11,6 +11,20 @@ icon: lucide/message-circle
 
 ![ctx](../images/ctx-banner.png)
 
+!!! note "New to `ctx`?"
+    This guide references context files like `TASKS.md`, `DECISIONS.md`,
+    and `LEARNINGS.md`:
+
+    These are plain Markdown files that `ctx`
+    maintains in your project's `.context/` directory.
+
+    If terms like "*context packet*" or "*session ceremony*" are unfamiliar,
+    
+    * start with the [`ctx` Manifesto](../index.md) for the **why**,
+    * [About](../home/about.md) for the **big picture**,
+    * then [Getting Started](../home/getting-started.md) to set up **your first
+      project**.
+
 ## Literature Matters
 
 Effective prompts for working with AI assistants in `ctx`-enabled projects.
@@ -45,10 +59,10 @@ Do you remember what we were working on?
 
 This question **implies** prior context exists. The AI checks files
 rather than admitting ignorance. The expected response cites specific
-context (session names, task counts, decisions), not vague summaries.
+context (*session names, task counts, decisions*), not vague summaries.
 
-If the AI instead narrates its discovery process ("Let me check if
-there are files..."), it has not loaded `CLAUDE.md` or
+If the AI instead narrates its discovery process ("*Let me check if
+there are files...*"), it has not loaded `CLAUDE.md` or
 `AGENT_PLAYBOOK.md` properly.
 
 ### "*What's the current state?*"

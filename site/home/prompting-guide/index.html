@@ -3920,6 +3920,20 @@
   <h1>Prompting Guide</h1>
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">New to <code>ctx</code>?</p>
+<p>This guide references context files like <code>TASKS.md</code>, <code>DECISIONS.md</code>,
+and <code>LEARNINGS.md</code>:</p>
+<p>These are plain Markdown files that <code>ctx</code>
+maintains in your project's <code>.context/</code> directory.</p>
+<p>If terms like "<em>context packet</em>" or "<em>session ceremony</em>" are unfamiliar,</p>
+<ul>
+<li>start with the <a href="../../"><code>ctx</code> Manifesto</a> for the <strong>why</strong>,</li>
+<li><a href="../../home/about/">About</a> for the <strong>big picture</strong>,</li>
+<li>then <a href="../../home/getting-started/">Getting Started</a> to set up <strong>your first
+  project</strong>.</li>
+</ul>
+</div>
 <h2 id="literature-matters">Literature Matters<a class="headerlink" href="#literature-matters" title="Permanent link">&para;</a></h2>
 <p>Effective prompts for working with AI assistants in <code>ctx</code>-enabled projects.</p>
 <div class="admonition tip help your ai sidekick">
@@ -3945,9 +3959,9 @@ responding with a <strong>structured readback</strong>:</p>
 </span></code></pre></div>
 <p>This question <strong>implies</strong> prior context exists. The AI checks files
 rather than admitting ignorance. The expected response cites specific
-context (session names, task counts, decisions), not vague summaries.</p>
-<p>If the AI instead narrates its discovery process ("Let me check if
-there are files..."), it has not loaded <code>CLAUDE.md</code> or
+context (<em>session names, task counts, decisions</em>), not vague summaries.</p>
+<p>If the AI instead narrates its discovery process ("<em>Let me check if
+there are files...</em>"), it has not loaded <code>CLAUDE.md</code> or
 <code>AGENT_PLAYBOOK.md</code> properly.</p>
 <h3 id="whats-the-current-state">"<em>What's the current state?</em>"<a class="headerlink" href="#whats-the-current-state" title="Permanent link">&para;</a></h3>
 <p>Prompts reading of <code>TASKS.md</code>, recent sessions, and status overview.</p>
