@@ -1,5 +1,5 @@
 ---
-name: release-notes
+name: _ctx-release-notes
 description: "Generate release notes for dist/RELEASE_NOTES.md. Use when preparing a release or when hack/release.sh needs release notes."
 ---
 

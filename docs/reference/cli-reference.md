@@ -29,6 +29,7 @@ All commands support these flags:
 
 > The `NO_COLOR=1` environment variable also disables colored output.
 
+<!-- drift-check: ctx --help | grep -c '  [a-z]' -->
 ## Commands
 
 | Command                           | Description                                               |
@@ -54,6 +55,8 @@ All commands support these flags:
 | [`ctx loop`](#ctx-loop)           | Generate autonomous loop script                           |
 | [`ctx notify`](#ctx-notify)       | Send webhook notifications                                |
 | [`ctx pad`](#ctx-pad)             | Encrypted scratchpad for sensitive one-liners             |
+| [`ctx remind`](#ctx-remind)       | Session-scoped reminders that surface at session start    |
+| [`ctx completion`](#ctx-completion) | Generate shell autocompletion scripts                   |
 | [`ctx system`](#ctx-system)       | System diagnostics and hook commands                     |
 
 ---
@@ -71,8 +74,8 @@ ctx init [flags]
 | Flag        | Short | Description                                                           |
 |-------------|-------|-----------------------------------------------------------------------|
 | `--force`   | `-f`  | Overwrite existing context files                                      |
-| `--minimal` | `-m`  | Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md) |
-| `--merge`   |       | Auto-merge ctx content into existing CLAUDE.md and PROMPT.md          |
+| `--minimal` | `-m`  | Only create essential files (`TASKS.md`, `DECISIONS.md`, `CONSTITUTION.md`) |
+| `--merge`   |       | Auto-merge `ctx` content into existing `CLAUDE.md` and `PROMPT.md`          |
 | `--ralph`   |       | Agent works autonomously without asking questions                     |
 
 **Creates**:
@@ -178,11 +181,11 @@ their full body. Entries that don't fit get title-only summaries in an
 | Section              | Source           | Selection                          |
 |----------------------|------------------|------------------------------------|
 | Read These Files     | all `.context/`  | Non-empty files in priority order  |
-| Constitution         | CONSTITUTION.md  | All rules (never truncated)        |
-| Current Tasks        | TASKS.md         | All unchecked tasks (budget-capped)|
-| Key Conventions      | CONVENTIONS.md   | All items (budget-capped)          |
-| Recent Decisions     | DECISIONS.md     | Full body, scored by relevance     |
-| Key Learnings        | LEARNINGS.md     | Full body, scored by relevance     |
+| Constitution         | `CONSTITUTION.md`| All rules (*never truncated*)      |
+| Current Tasks        | `TASKS.md`       | All unchecked tasks (*budget-capped*)|
+| Key Conventions      | `CONVENTIONS.md` | All items (*budget-capped*)        |
+| Recent Decisions     | `DECISIONS.md`   | Full body, scored by relevance     |
+| Key Learnings        | `LEARNINGS.md`   | Full body, scored by relevance     |
 | Also Noted           | overflow         | Title-only summaries               |
 
 **Example**:
@@ -245,10 +248,10 @@ ctx add <type> <content> [flags]
 
 | Type         | Target File    |
 |--------------|----------------|
-| `task`       | TASKS.md       |
-| `decision`   | DECISIONS.md   |
-| `learning`   | LEARNINGS.md   |
-| `convention` | CONVENTIONS.md |
+| `task`       | `TASKS.md`       |
+| `decision`   | `DECISIONS.md`   |
+| `learning`   | `LEARNINGS.md`   |
+| `convention` | `CONVENTIONS.md` |
 
 **Flags**:
 
@@ -329,14 +332,14 @@ ctx drift [flags]
 
 **Checks**:
 
-- Path references in ARCHITECTURE.md and CONVENTIONS.md exist
+- Path references in `ARCHITECTURE.md` and `CONVENTIONS.md` exist
 - Task references are valid
 - Constitution rules aren't violated (*heuristic*)
 - Staleness indicators (*old files, many completed tasks*)
 - Missing packages — warns when `internal/` directories exist on disk but are
-  not referenced in ARCHITECTURE.md (suggests running `/ctx-map`)
-- Entry count — warns when LEARNINGS.md or DECISIONS.md exceed configurable
-  thresholds (default: 30 learnings, 20 decisions), or when CONVENTIONS.md
+  not referenced in `ARCHITECTURE.md` (*suggests running `/ctx-map`*)
+- Entry count — warns when `LEARNINGS.md` or `DECISIONS.md` exceed configurable
+  thresholds (*default: 30 learnings, 20 decisions*), or when `CONVENTIONS.md`
   exceeds a line count threshold (default: 200). Configure via `.ctxrc`:
   ```yaml
   entry_count_learnings: 30      # warn above this (0 = disable)
@@ -471,7 +474,7 @@ ctx tasks <subcommand>
 
 #### `ctx tasks archive`
 
-Move completed tasks from TASKS.md to a timestamped archive file.
+Move completed tasks from `TASKS.md` to a timestamped archive file.
 
 ```bash
 ctx tasks archive [flags]
@@ -485,7 +488,7 @@ ctx tasks archive [flags]
 
 Archive files are stored in `.context/archive/` with timestamped names
 (`tasks-YYYY-MM-DD.md`). Completed tasks (marked with `[x]`) are moved;
-pending tasks (`[ ]`) remain in TASKS.md.
+pending tasks (`[ ]`) remain in `TASKS.md`.
 
 **Example**:
 
@@ -496,7 +499,7 @@ ctx tasks archive --dry-run
 
 #### `ctx tasks snapshot`
 
-Create a point-in-time snapshot of TASKS.md without modifying the original.
+Create a point-in-time snapshot of `TASKS.md` without modifying the original.
 
 ```bash
 ctx tasks snapshot [name]
@@ -573,7 +576,7 @@ ctx permissions restore
 
 ### `ctx decisions`
 
-Manage the DECISIONS.md file.
+Manage the `DECISIONS.md` file.
 
 ```bash
 ctx decisions <subcommand>
@@ -581,7 +584,7 @@ ctx decisions <subcommand>
 
 #### `ctx decisions reindex`
 
-Regenerate the quick-reference index at the top of DECISIONS.md.
+Regenerate the quick-reference index at the top of `DECISIONS.md`.
 
 ```bash
 ctx decisions reindex
@@ -590,7 +593,7 @@ ctx decisions reindex
 The index is a compact table showing the date and title for each decision,
 allowing AI tools to quickly scan entries without reading the full file.
 
-Use this after manual edits to DECISIONS.md or when migrating existing
+Use this after manual edits to `DECISIONS.md` or when migrating existing
 files to use the index format.
 
 **Example**:
@@ -604,7 +607,7 @@ ctx decisions reindex
 
 ### `ctx learnings`
 
-Manage the LEARNINGS.md file.
+Manage the `LEARNINGS.md` file.
 
 ```bash
 ctx learnings <subcommand>
@@ -612,7 +615,7 @@ ctx learnings <subcommand>
 
 #### `ctx learnings reindex`
 
-Regenerate the quick-reference index at the top of LEARNINGS.md.
+Regenerate the quick-reference index at the top of `LEARNINGS.md`.
 
 ```bash
 ctx learnings reindex
@@ -621,7 +624,7 @@ ctx learnings reindex
 The index is a compact table showing the date and title for each learning,
 allowing AI tools to quickly scan entries without reading the full file.
 
-Use this after manual edits to LEARNINGS.md or when migrating existing
+Use this after manual edits to `LEARNINGS.md` or when migrating existing
 files to use the index format.
 
 **Example**:
@@ -907,7 +910,7 @@ Requires `zensical` to be installed:
 pipx install zensical
 ```
 
-!!! tip "ctx serve vs. ctx journal site --serve"
+!!! tip "`ctx serve` vs. `ctx journal site --serve`"
     `ctx journal site --serve` **generates** the journal site *then* serves
     it — an all-in-one command. `ctx serve` only **serves** an existing
     directory, and works with any zensical site (journal, docs, etc.).
@@ -980,7 +983,7 @@ ctx hook <tool> [flags]
 | `windsurf`    | Windsurf IDE                                 |
 
 !!! note "Claude Code uses the plugin system"
-    Claude Code integration is now provided via the ctx plugin.
+    Claude Code integration is now provided via the `ctx` plugin.
     Running `ctx hook claude-code` prints plugin install instructions.
 
 **Example**:
@@ -1419,7 +1422,7 @@ ctx system <subcommand>
 The parent command shows available subcommands. Hidden plumbing subcommands
 (`ctx system mark-journal`) are used by skills and automation. Hidden hook
 subcommands (`ctx system check-*`) are used by the Claude Code plugin — see
-[AI Tool Integrations](../operations/integrations.md#plugin-hooks) for details.
+[AI Tools](../operations/integrations.md#plugin-hooks) for details.
 
 #### `ctx system bootstrap`
 
@@ -1619,9 +1622,9 @@ notify:                              # Webhook notification settings
 | `archive_after_days`            | `int`      | `7`          | Days before completed tasks are archived             |
 | `scratchpad_encrypt`            | `bool`     | `true`       | Encrypt scratchpad with AES-256-GCM                  |
 | `allow_outside_cwd`             | `bool`     | `false`      | Skip boundary check for external context dirs        |
-| `entry_count_learnings`         | `int`      | `30`         | Drift warning when LEARNINGS.md exceeds this count   |
-| `entry_count_decisions`         | `int`      | `20`         | Drift warning when DECISIONS.md exceeds this count   |
-| `convention_line_count`         | `int`      | `200`        | Line count warning for CONVENTIONS.md                |
+| `entry_count_learnings`         | `int`      | `30`         | Drift warning when `LEARNINGS.md` exceeds this count   |
+| `entry_count_decisions`         | `int`      | `20`         | Drift warning when `DECISIONS.md` exceeds this count   |
+| `convention_line_count`         | `int`      | `200`        | Line count warning for `CONVENTIONS.md`                |
 | `notify.events`                 | `[]string` | *(all)*      | Event filter for webhook notifications (empty = all) |
 | `notify.key_rotation_days`      | `int`      | `90`         | Days before encryption key rotation nudge            |
 

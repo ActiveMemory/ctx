@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-24 | CLI reference docs can outpace implementation — always verify against Cobra registration |
+| 2026-02-24 | Drift-check comments prevent documentation staleness |
+| 2026-02-24 | Documentation style audits require multiple targeted passes |
 | 2026-02-24 | CLI tools don't benefit from in-memory caching of context files |
 | 2026-02-24 | Worktree agents lack key-dependent features by design |
 | 2026-02-24 | /ctx-journal-normalize is dangerous at scale on non-ctx projects |
@@ -74,6 +77,36 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-24-204548] CLI reference docs can outpace implementation — always verify against Cobra registration
+
+**Context**: Found 3 commands fully documented in cli-reference.md (ctx remind, ctx recall sync, key file naming) that don't match the binary. Documentation was written speculatively before Cobra subcommands were registered.
+
+**Lesson**: ctx remind has no CLI at all, ctx recall sync has Go code but no Cobra wiring, and key file naming diverged between docs (.context.key) and code (.scratchpad.key). Docs can describe commands that are unreachable.
+
+**Application**: Before releasing docs for new commands, verify with ctx <cmd> --help that the command is actually reachable. Add a drift check to the QA gate.
+
+---
+
+## [2026-02-24-171233] Drift-check comments prevent documentation staleness
+
+**Context**: Contributing.md project layout was stale: missing 2 internal packages (notify, sysinfo), 2 top-level dirs (assets, examples), wrong skill count (27 vs 29)
+
+**Lesson**: Structural documentation sections (project layouts, command tables, skill counts) drift silently after code changes. HTML comment markers like drift-check give agents a verification command to run
+
+**Application**: Add drift-check markers above any doc section that mirrors codebase structure. Format: <!-- drift-check: <shell command> -->
+
+---
+
+## [2026-02-24-171231] Documentation style audits require multiple targeted passes
+
+**Context**: Initial agent sweep for filename backticks found only 8 violations; manual re-check found 48+. Same pattern repeated for parenthetical emphasis and quoted terms.
+
+**Lesson**: Automated/agent searches for style violations are unreliable for prose rules with many exception categories (code blocks, table cells, admonitions). Multiple verification passes with direct grep patterns catch what agents miss.
+
+**Application**: When auditing prose style rules, always follow agent results with a targeted grep and manual classification of the results
 
 ---
 

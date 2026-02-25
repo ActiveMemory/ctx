@@ -130,8 +130,8 @@ Three concepts survived:
    forgettable under pressure.
 
 3. **Debt Interest Rate framing**: Categorizing technical debt by how fast
-   it compounds (security vulns = daily, missing tests = per-change,
-   doc gaps = constant low cost). This changes prioritization.
+   it compounds (*security vulns = daily, missing tests = per-change,
+   doc gaps = constant low cost*). This changes prioritization.
 
 **Three ideas out of four files and 700+ lines**. The rest was filler
 that competed with the AI's built-in capabilities.

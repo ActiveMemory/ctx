@@ -48,6 +48,7 @@ nav = [
       "recipes/session-lifecycle.md",
       "recipes/session-ceremonies.md",
       "recipes/session-archaeology.md",
+      "recipes/session-reminders.md",
     ]},
     { "Knowledge and Tasks" = [
       "recipes/knowledge-capture.md",
@@ -57,8 +58,8 @@ nav = [
     ]},
     { "Hooks and Notifications" = [
       "recipes/hook-output-patterns.md",
-      "recipes/system-hooks-audit.md",
       "recipes/webhook-notifications.md",
+      "recipes/system-hooks-audit.md",
     ]},
     { "Maintenance" = [
       "recipes/context-health.md",

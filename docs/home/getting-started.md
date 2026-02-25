@@ -27,11 +27,11 @@ Also, several `ctx` features (*journal changelog, blog generation*) also use
 
 A full ctx installation has two parts:
 
-1. **The `ctx` binary**: the CLI tool itself
+1. **The `ctx` binary**: the CLI tool itself;
 2. **The Claude Code plugin**: hooks and skills that make Claude Code
-   context-aware
+   context-aware.
 
-You need **both**. The binary alone gives you the CLI but Claude Code
+You need **both**. The binary alone gives you the CLI, but Claude Code
 won't autoload context, nudge you to persist decisions, or provide
 the `/ctx-*` skills.
 
@@ -53,13 +53,13 @@ sudo make install
 
 **Install the Claude Code plugin** from your local clone:
 
-1. Launch `claude`
-2. Type `/plugin` and press Enter
+1. Launch `claude`;
+2. Type `/plugin` and press Enter;
 3. Select **Marketplaces** → **Add Marketplace**
 4. Enter the path to the **root of your clone**,
    e.g. `~/WORKSPACE/ctx`
-   (this is where `.claude-plugin/marketplace.json` lives: It points
-   Claude Code to the actual plugin in `internal/assets/claude`)
+   (*this is where `.claude-plugin/marketplace.json` lives: It points
+   Claude Code to the actual plugin in `internal/assets/claude`*)
 5. Back in `/plugin`, select **Install** and choose `ctx`
 
 This points Claude Code at the plugin source on disk. Changes you make
@@ -124,11 +124,11 @@ Pre-built binaries are available from the
 
 **Install the Claude Code plugin** from the marketplace:
 
-1. Launch `claude`
-2. Type `/plugin` and press Enter
-3. Select **Marketplaces** → **Add Marketplace**
-4. Enter `ActiveMemory/ctx`
-5. Back in `/plugin`, select **Install** and choose `ctx`
+1. Launch `claude`;
+2. Type `/plugin` and press Enter;
+3. Select **Marketplaces** → **Add Marketplace**;
+4. Enter `ActiveMemory/ctx`;
+5. Back in `/plugin`, select **Install** and choose `ctx`.
 
 **Verify:**
 
@@ -154,9 +154,9 @@ On macOS, use `shasum -a 256 -c` instead of `sha256sum -c`.
 ----
 
 ??? note "Plugin Details"
-    After installation (either option) you get:
+    After installation (*either option*) you get:
 
-    * **Context autoloading**: `ctx agent` runs on every tool use (with cooldown)
+    * **Context autoloading**: `ctx agent` runs on every tool use (*with cooldown*)
     * **Persistence nudges**: reminders to capture learnings and decisions
     * **Post-commit hooks**: nudge context capture after `git commit`
     * **Context size monitoring**: alerts as sessions grow large
@@ -189,7 +189,7 @@ Shows context summary: files present, token estimate, and recent activity.
 
 ### 3. Start Using with AI
 
-With Claude Code (and the ctx plugin installed), context loads automatically
+With Claude Code (*and the `ctx` plugin installed*), context loads automatically
 via hooks.
 
 With **VS Code Copilot Chat**, install the
@@ -215,5 +215,5 @@ or previous session topics.
 
 **Next Up**:
 
-* [Your First Session →](first-session.md) — a step-by-step walkthrough from `ctx init` to verified recall
-* [Common Workflows →](common-workflows.md) — day-to-day commands for tracking context, checking health, and browsing history
+* [Your First Session →](first-session.md): a step-by-step walkthrough from `ctx init` to verified recall
+* [Common Workflows →](common-workflows.md): day-to-day commands for tracking context, checking health, and browsing history

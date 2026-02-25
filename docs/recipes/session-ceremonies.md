@@ -82,21 +82,21 @@ Invoke at the beginning of every session:
 The skill silently:
 
 1. Loads the context packet via `ctx agent --budget 4000`
-2. Reads TASKS.md, DECISIONS.md, LEARNINGS.md
+2. Reads `TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`
 3. Checks recent sessions via `ctx recall list --limit 3`
 
 Then presents a **structured readback** with four sections:
 
-- **Last session**: topic, date, what was accomplished
-- **Active work**: pending and in-progress tasks
-- **Recent context**: 1-2 relevant decisions or learnings
-- **Next step**: suggestion or question about what to focus on
+* **Last session**: topic, date, what was accomplished
+* **Active work**: pending and in-progress tasks
+* **Recent context**: 1-2 relevant decisions or learnings
+* **Next step**: suggestion or question about what to focus on
 
 The readback should feel like recall, not a file system tour. If the
 agent says "Let me check if there are files..." instead of a confident
 summary, the skill is not working correctly.
 
-!!! note "What About 'do you remember?'"
+!!! note "What About '*do you remember?*'"
     The conversational trigger still works. But `/ctx-remember` guarantees
     the full ceremony runs: 
     

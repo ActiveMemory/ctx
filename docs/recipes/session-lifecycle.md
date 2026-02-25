@@ -109,10 +109,8 @@ health check showing file counts, token usage, and recent activity.
 
 After loading context, verify you understand the current state.
 
-```
-
+```text
 /ctx-status
-
 ```
 
 The status output shows which context files are populated, how many tokens they
@@ -192,7 +190,7 @@ unsaved work. You typically do not need to invoke this skill manually.
 
 When the work is ready, use the context-aware commit instead of raw `git commit`:
 
-```
+```text
 /ctx-commit
 ```
 

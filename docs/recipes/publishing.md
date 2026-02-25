@@ -15,22 +15,19 @@ But none of this is visible to anyone outside your terminal.
 
 You want to turn this raw activity into:
 
-- a browsable journal site
-- blog posts
-- changelog posts
+* a browsable journal site
+* blog posts
+* changelog posts
 
 ## TL;DR
 
 ```bash
 ctx recall export --all             # 1. export sessions to markdown
-```
-```text
+
 /ctx-journal-enrich-all             # 2. add metadata and tags
-```
-```bash
+
 ctx journal site --serve            # 3. build and serve the journal
-```
-```text
+
 /ctx-blog about the caching layer   # 4. draft a blog post
 /ctx-blog-changelog v0.1.0 "v0.2"   # 5. write a changelog post
 ```
@@ -162,7 +159,7 @@ reminds you to enrich before rebuilding. To serve the built site, use
 ### Alternative: Export to Obsidian Vault
 
 If you use [Obsidian](https://obsidian.md/) for knowledge management, generate
-a vault instead of (or alongside) the static site:
+a vault instead of (*or alongside*) the static site:
 
 ```bash
 ctx journal obsidian
@@ -196,17 +193,19 @@ it to `docs/blog/YYYY-MM-DD-slug.md`.
 Posts are written in first person with code snippets, commit references, and an
 honest discussion of what went wrong.
 
-!!! info "Output is zensical-flavored Markdown"
+!!! info "The Output is `zensical`-Flavored Markdown"
     The blog skills produce Markdown tuned for a
     [zensical](https://pypi.org/project/zensical/) site: `topics:`
     frontmatter (zensical's tag field), a `docs/blog/` output path,
-    and a banner image reference. The content is still standard
-    Markdown and can be adapted to other static site generators,
-    but the defaults assume a zensical project structure.
+    and a banner image reference. 
+
+    The content is still standard Markdown and can be adapted to other 
+    static site generators, but the defaults assume a `zensical` 
+    project structure.
 
 ### Step 5: Write Changelog Posts from Commit Ranges
 
-For release notes or "what changed" posts, `/ctx-blog-changelog` takes a
+For release notes or "*what changed*" posts, `/ctx-blog-changelog` takes a
 starting commit and a theme, then analyzes everything that changed:
 
 ```text
@@ -221,14 +220,7 @@ key commits table and before/after comparisons.
 
 ## The Conversational Approach
 
-You do not need to remember any commands. When the Agent Playbook is active,
-your agent can suggest content at natural moments:
-
-> "We just shipped the caching layer and closed 3 tasks. Want me to draft a blog post about it?"
-
-> "Your journal has 6 new entries since the last rebuild. Want me to enrich and regenerate the site?"
-
-You can also drive it with natural language:
+You can also drive your publishing anytime with **natural language**:
 
 ```text
 "write about what we did this week"
@@ -237,11 +229,11 @@ You can also drive it with natural language:
 "enrich the last few journal entries"
 ```
 
-The agent has full visibility into your `.context/` state (tasks completed,
-decisions recorded, learnings captured), so its suggestions are grounded in what
+The agent has full visibility into your `.context/` state (*tasks completed,
+decisions recorded, learnings captured*), so its suggestions are grounded in what
 actually happened.
 
-## Putting It Together
+## Putting It All Together
 
 The full pipeline from raw transcripts to published content:
 
@@ -285,9 +277,6 @@ as you want.
 * Use `/ctx-blog` for narrative posts and `/ctx-blog-changelog` for release
   posts. One finds a story in recent activity, the other explains a commit
   range by theme.
-* Let the agent remind you. A proactive agent can suggest content generation
-  after milestones: shipping a feature, closing tasks, or finishing a long
-  debugging session.
 * Edit the drafts. These skills produce drafts, not final posts. Review the
   narrative, add your perspective, and remove anything that does not serve the
   reader.

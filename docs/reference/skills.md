@@ -33,6 +33,7 @@ opinionated behavior on top.
     However, when you need a more precise control, you have the option
     to invoke the relevant skills directly.
 
+<!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
 ## All Skills
 
 | Skill                                                | Description                                            | Type           |
@@ -65,6 +66,8 @@ opinionated behavior on top.
 | [`/ctx-implement`](#ctx-implement)                   | Execute a plan step-by-step with verification          | user-invocable |
 | [`/ctx-loop`](#ctx-loop)                             | Generate autonomous loop script                        | user-invocable |
 | [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents               | user-invocable |
+| [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                   | user-invocable |
+| [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                        | user-invocable |
 
 ---
 
@@ -471,6 +474,35 @@ grouping, and tear down with merge.
 
 **See also**:
 [Parallel Agent Development with Git Worktrees](../recipes/parallel-worktrees.md)
+
+---
+
+### `/ctx-map`
+
+Build and maintain architecture maps incrementally. Creates or refreshes
+`ARCHITECTURE.md` (*succinct project map, loaded at session start*) and
+`DETAILED_DESIGN.md` (*deep per-module reference, consulted on-demand*).
+Coverage is tracked in `map-tracking.json` so each run extends the map
+rather than re-analyzing everything.
+
+**Wraps**: `ctx status`, `git log`, reads source files; writes
+`ARCHITECTURE.md`, `DETAILED_DESIGN.md`, `map-tracking.json`
+
+**See also**:
+[Detecting and Fixing Drift](../recipes/context-health.md)
+
+---
+
+### `/ctx-remind`
+
+Manage session-scoped reminders via natural language. Translates user
+intent (*"remind me to refactor swagger"*) into the corresponding
+`ctx remind` command. Handles date conversion for `--after` flags.
+
+**Wraps**: `ctx remind`, `ctx remind list`, `ctx remind dismiss`
+
+**See also**:
+[Session Reminders](../recipes/session-reminders.md)
 
 ---
 

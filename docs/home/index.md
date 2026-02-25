@@ -5,7 +5,9 @@ icon: lucide/home
 
 ![ctx](../images/ctx-banner.png)
 
-**Start here**. Learn what `ctx` does, set it up, and run your first session.
+**Start here**. 
+
+Learn what `ctx` does, set it up, and run your first session.
 
 ---
 

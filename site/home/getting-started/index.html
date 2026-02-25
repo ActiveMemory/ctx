@@ -1300,6 +1300,8 @@
       
         
       
+        
+      
     
     
     
@@ -1422,6 +1424,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1730,16 +1762,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/system-hooks-audit/" class="md-nav__link">
+      <a href="../../recipes/webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1760,16 +1792,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/webhook-notifications/" class="md-nav__link">
+      <a href="../../recipes/system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2507,7 +2539,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2537,7 +2569,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2567,7 +2599,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -2991,11 +3023,11 @@ Without it, the data is gone.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>A full ctx installation has two parts:</p>
 <ol>
-<li><strong>The <code>ctx</code> binary</strong>: the CLI tool itself</li>
+<li><strong>The <code>ctx</code> binary</strong>: the CLI tool itself;</li>
 <li><strong>The Claude Code plugin</strong>: hooks and skills that make Claude Code
-   context-aware</li>
+   context-aware.</li>
 </ol>
-<p>You need <strong>both</strong>. The binary alone gives you the CLI but Claude Code
+<p>You need <strong>both</strong>. The binary alone gives you the CLI, but Claude Code
 won't autoload context, nudge you to persist decisions, or provide
 the <code>/ctx-*</code> skills.</p>
 <p>Pick one of the options below. Each is a complete path from zero to
@@ -3011,13 +3043,13 @@ a working setup.</p>
 </span></code></pre></div>
 <p><strong>Install the Claude Code plugin</strong> from your local clone:</p>
 <ol>
-<li>Launch <code>claude</code></li>
-<li>Type <code>/plugin</code> and press Enter</li>
+<li>Launch <code>claude</code>;</li>
+<li>Type <code>/plugin</code> and press Enter;</li>
 <li>Select <strong>Marketplaces</strong> → <strong>Add Marketplace</strong></li>
 <li>Enter the path to the <strong>root of your clone</strong>,
    e.g. <code>~/WORKSPACE/ctx</code>
-   (this is where <code>.claude-plugin/marketplace.json</code> lives: It points
-   Claude Code to the actual plugin in <code>internal/assets/claude</code>)</li>
+   (<em>this is where <code>.claude-plugin/marketplace.json</code> lives: It points
+   Claude Code to the actual plugin in <code>internal/assets/claude</code></em>)</li>
 <li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code></li>
 </ol>
 <p>This points Claude Code at the plugin source on disk. Changes you make
@@ -3070,11 +3102,11 @@ you are installing, and the plugin stays in sync with the binary.</p>
 </div>
 <p><strong>Install the Claude Code plugin</strong> from the marketplace:</p>
 <ol>
-<li>Launch <code>claude</code></li>
-<li>Type <code>/plugin</code> and press Enter</li>
-<li>Select <strong>Marketplaces</strong> → <strong>Add Marketplace</strong></li>
-<li>Enter <code>ActiveMemory/ctx</code></li>
-<li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code></li>
+<li>Launch <code>claude</code>;</li>
+<li>Type <code>/plugin</code> and press Enter;</li>
+<li>Select <strong>Marketplaces</strong> → <strong>Add Marketplace</strong>;</li>
+<li>Enter <code>ActiveMemory/ctx</code>;</li>
+<li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code>.</li>
 </ol>
 <p><strong>Verify:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>--version<span class="w">       </span><span class="c1"># binary is in PATH</span>
@@ -3092,9 +3124,9 @@ you are installing, and the plugin stays in sync with the binary.</p>
 <hr />
 <details class="note">
 <summary>Plugin Details</summary>
-<p>After installation (either option) you get:</p>
+<p>After installation (<em>either option</em>) you get:</p>
 <ul>
-<li><strong>Context autoloading</strong>: <code>ctx agent</code> runs on every tool use (with cooldown)</li>
+<li><strong>Context autoloading</strong>: <code>ctx agent</code> runs on every tool use (<em>with cooldown</em>)</li>
 <li><strong>Persistence nudges</strong>: reminders to capture learnings and decisions</li>
 <li><strong>Post-commit hooks</strong>: nudge context capture after <code>git commit</code></li>
 <li><strong>Context size monitoring</strong>: alerts as sessions grow large</li>
@@ -3117,7 +3149,7 @@ for automatic hooks and skills.</p>
 </span></code></pre></div>
 <p>Shows context summary: files present, token estimate, and recent activity.</p>
 <h3 id="3-start-using-with-ai">3. Start Using with AI<a class="headerlink" href="#3-start-using-with-ai" title="Permanent link">&para;</a></h3>
-<p>With Claude Code (and the ctx plugin installed), context loads automatically
+<p>With Claude Code (<em>and the <code>ctx</code> plugin installed</em>), context loads automatically
 via hooks.</p>
 <p>With <strong>VS Code Copilot Chat</strong>, install the
 <a href="../../operations/integrations/#vs-code-chat-extension-ctx">ctx extension</a> and use
@@ -3134,8 +3166,8 @@ or previous session topics.</p>
 <hr />
 <p><strong>Next Up</strong>:</p>
 <ul>
-<li><a href="../first-session/">Your First Session →</a> — a step-by-step walkthrough from <code>ctx init</code> to verified recall</li>
-<li><a href="../common-workflows/">Common Workflows →</a> — day-to-day commands for tracking context, checking health, and browsing history</li>
+<li><a href="../first-session/">Your First Session →</a>: a step-by-step walkthrough from <code>ctx init</code> to verified recall</li>
+<li><a href="../common-workflows/">Common Workflows →</a>: day-to-day commands for tracking context, checking health, and browsing history</li>
 </ul>
 
 

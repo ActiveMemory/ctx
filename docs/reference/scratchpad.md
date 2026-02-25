@@ -11,9 +11,9 @@ icon: lucide/sticky-note
 
 ![ctx](../images/ctx-banner.png)
 
-## What It Is
+## What Is `ctx` Scratchpad?
 
-A one-liner scratchpad, encrypted at rest, synced via git.
+A one-liner scratchpad, encrypted at rest, synced via `git`.
 
 Quick notes that don't fit decisions, learnings, or tasks: reminders,
 intermediate values, sensitive tokens, working memory during debugging.
@@ -23,10 +23,10 @@ Entries are numbered, reorderable, and persist across sessions.
 
 Scratchpad entries are encrypted with `AES-256-GCM` before touching the disk.
 
-| Component      | Path                       | Git status                     |
-|----------------|----------------------------|--------------------------------|
-| Encryption key | `.context/.context.key` | Gitignored, `0600` permissions |
-| Encrypted data | `.context/scratchpad.enc`  | Committed                      |
+| Component      | Path                      | Git status                     |
+|----------------|---------------------------|--------------------------------|
+| Encryption key | `.context/.context.key`   | Gitignored, `0600` permissions |
+| Encrypted data | `.context/scratchpad.enc` | Committed                      |
 
 The key is generated automatically during `ctx init` (256-bit via
 `crypto/rand`). The ciphertext format is `[12-byte nonce][ciphertext+tag]`.
@@ -40,20 +40,20 @@ Because the key is `.gitignore`d and the data is committed, you get:
 
 ## Commands
 
-| Command                           | Purpose                                               |
-|-----------------------------------|-------------------------------------------------------|
-| `ctx pad`                         | List all entries (numbered 1-based)                   |
-| `ctx pad show N`                  | Output raw text of entry N (no prefix, pipe-friendly) |
-| `ctx pad add "text"`              | Append a new entry                                    |
-| `ctx pad rm N`                    | Remove entry at position N                            |
-| `ctx pad edit N "text"`           | Replace entry N with new text                         |
-| `ctx pad edit N --append "text"`  | Append text to the end of entry N                     |
-| `ctx pad edit N --prepend "text"` | Prepend text to the beginning of entry N              |
-| `ctx pad add TEXT --file PATH`    | Ingest a file as a blob entry (TEXT is the label)     |
-| `ctx pad show N --out PATH`      | Write decoded blob content to a file                  |
-| `ctx pad mv N M`                  | Move entry from position N to position M              |
-| `ctx pad resolve`                 | Show both sides of a merge conflict for resolution    |
-| `ctx pad import FILE`             | Bulk-import lines from a file (or stdin with `-`)     |
+| Command                           | Purpose                                                |
+|-----------------------------------|--------------------------------------------------------|
+| `ctx pad`                         | List all entries (numbered 1-based)                    |
+| `ctx pad show N`                  | Output raw text of entry N (no prefix, pipe-friendly)  |
+| `ctx pad add "text"`              | Append a new entry                                     |
+| `ctx pad rm N`                    | Remove entry at position N                             |
+| `ctx pad edit N "text"`           | Replace entry N with new text                          |
+| `ctx pad edit N --append "text"`  | Append text to the end of entry N                      |
+| `ctx pad edit N --prepend "text"` | Prepend text to the beginning of entry N               |
+| `ctx pad add TEXT --file PATH`    | Ingest a file as a blob entry (TEXT is the label)      |
+| `ctx pad show N --out PATH`       | Write decoded blob content to a file                   |
+| `ctx pad mv N M`                  | Move entry from position N to position M               |
+| `ctx pad resolve`                 | Show both sides of a merge conflict for resolution     |
+| `ctx pad import FILE`             | Bulk-import lines from a file (or stdin with `-`)      |
 | `ctx pad export [DIR]`            | Export all blob entries to a directory as files        |
 | `ctx pad merge FILE...`           | Merge entries from other scratchpad files into current |
 
@@ -136,7 +136,7 @@ safe.
 
 ## File Blobs
 
-The scratchpad can store small files (up to 64 KB) as blob entries. Files
+The scratchpad can store small files (*up to 64 KB*) as blob entries. Files
 are base64-encoded and stored with a human-readable label.
 
 ```bash
@@ -156,15 +156,15 @@ ctx pad show 2
 ```
 
 Blob entries are encrypted identically to text entries. The internal format
-is `label:::base64data` — you never need to construct this manually.
+is `label:::base64data`: You **never** need to construct this manually.
 
-| Constraint | Value |
-|---|---|
-| Max file size (pre-encoding) | 64 KB |
-| Storage format | `label:::base64(content)` |
-| Display | `label [BLOB]` in listings |
+| Constraint                   | Value                      |
+|------------------------------|----------------------------|
+| Max file size (pre-encoding) | 64 KB                      |
+| Storage format               | `label:::base64(content)`  |
+| Display                      | `label [BLOB]` in listings |
 
-!!! tip "When to Use Blobs"
+!!! tip "When Should You Use Blobs"
     Blobs are for small files you want encrypted and portable: config
     snippets, key fragments, deployment manifests, test fixtures. For
     anything larger than 64 KB, use the filesystem directly.
@@ -180,16 +180,16 @@ is `label:::base64data` — you never need to construct this manually.
 The `/ctx-pad` skill maps natural language to `ctx pad` commands. You
 don't need to remember the syntax:
 
-| You say                                      | What happens                           |
-|----------------------------------------------|----------------------------------------|
-| "jot down: check DNS after deploy"           | `ctx pad add "check DNS after deploy"` |
-| "show my scratchpad"                         | `ctx pad`                              |
-| "delete the third entry"                     | `ctx pad rm 3`                         |
-| "update entry 2 to include the new endpoint" | `ctx pad edit 2 "..."`                 |
-| "move entry 4 to the top"                    | `ctx pad mv 4 1`                       |
-| "import my notes from notes.txt"             | `ctx pad import notes.txt`             |
-| "export all blobs to ./backup"               | `ctx pad export ./backup`              |
-| "merge the scratchpad from the worktree"     | `ctx pad merge worktree/.context/scratchpad.enc` |
+| You say                                        | What happens                                     |
+|------------------------------------------------|--------------------------------------------------|
+| "*jot down: check DNS after deploy*"           | `ctx pad add "check DNS after deploy"`           |
+| "*show my scratchpad*"                         | `ctx pad`                                        |
+| "*delete the third entry*"                     | `ctx pad rm 3`                                   |
+| "*update entry 2 to include the new endpoint*" | `ctx pad edit 2 "..."`                           |
+| "*move entry 4 to the top*"                    | `ctx pad mv 4 1`                                 |
+| "*import my notes from notes.txt*"             | `ctx pad import notes.txt`                       |
+| "*export all blobs to ./backup*"               | `ctx pad export ./backup`                        |
+| "*merge the scratchpad from the worktree*"     | `ctx pad merge worktree/.context/scratchpad.enc` |
 
 The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.

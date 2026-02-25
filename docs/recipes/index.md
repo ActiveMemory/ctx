@@ -80,6 +80,17 @@ Export your AI session history to a **browsable journal site**.
 
 ---
 
+### [Session Reminders](session-reminders.md)
+
+Leave a **message for your next session**. Reminders surface
+**automatically at session start** and repeat until dismissed.
+Date-gate reminders to surface only after a specific date.
+
+**Uses**: `ctx remind`, `ctx remind list`, `ctx remind dismiss`,
+`ctx system check-reminders`
+
+---
+
 ## Knowledge & Tasks
 
 ### [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md)

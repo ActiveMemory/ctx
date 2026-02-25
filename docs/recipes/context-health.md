@@ -47,7 +47,7 @@ Or just ask your agent: *"Is our context clean?"*
 | `ctx compact`          | Command | Archive completed tasks, clean up empty sections |
 | `ctx status`           | Command | Quick health overview                          |
 | `/ctx-drift`           | Skill   | Structural plus semantic drift detection       |
-| `/ctx-map`             | Skill   | Refresh ARCHITECTURE.md from actual codebase   |
+| `/ctx-map`             | Skill   | Refresh `ARCHITECTURE.md` from actual codebase |
 | `/ctx-alignment-audit` | Skill   | Audit doc claims against agent instructions    |
 | `/ctx-status`          | Skill   | In-session context summary                     |
 | `/ctx-prompt-audit`    | Skill   | Audit prompt quality and token efficiency      |
@@ -69,9 +69,11 @@ For day-to-day maintenance, **talk to your agent**.
 
     This is **reinforcement**, *not* enforcement.
 
-    Do not wait for the agent to be proactive on its own: **Guide it**, especially
-    in early sessions. Over time, you will ask less and the agent will start
-    offering more.
+    **Do not wait** for the agent to be proactive on its own: 
+
+    **Guide your agent**, especially in early sessions.
+
+    Over time, you will ask less and the agent will start offering more.
 
 ### Step 1: Ask Your Agent
 
@@ -127,7 +129,7 @@ Agent: Good morning. I've loaded the context files. A few things
        straight into today's work?
 ```
 
-☝ this is what persistent, initiative-driven sessions feel like when context is 
+☝️️ this is what persistent, initiative-driven sessions feel like when context is 
 treated as a system instead of a prompt.
 
 If the agent does not offer this on its own, a gentle nudge is enough:
@@ -347,24 +349,24 @@ offering.
 
 When an agent says "*this reference looks stale,*" it is **usually right**.
 
-Semantic drift is more damaging than structural drift. `ctx drift` catches dead
-paths. But `CONVENTIONS.md` describing a pattern your code stopped following
-three weeks ago is worse. When you ask "*is our context clean?*", the agent can 
-do both checks.
+**Semantic drift is more damaging than structural drift**: 
+`ctx drift` catches dead paths. But `CONVENTIONS.md` describing a pattern your 
+code stopped following three weeks ago is worse. When you ask 
+"*is our context clean?*", the agent can do both checks.
 
-Use `ctx status` as a quick check. It shows file counts, token estimates, and
+**Use `ctx status` as a quick check**: It shows file counts, token estimates, and
 drift warnings in a single glance. Good for a fast "is everything ok?" before
 diving into work.
 
-Drift detection in CI: add `ctx drift --json` to your CI pipeline and fail on
+**Drift detection in CI**: add `ctx drift --json` to your CI pipeline and fail on
 exit code 3 (*violations*). This catches constitution-level problems before they
 reach upstream.
 
-Do not over-compact. Completed tasks have historical value. The `--archive`
+**Do not over-compact**: Completed tasks have historical value. The `--archive`
 flag preserves them in `.context/archive/` so you can search past work without
 cluttering active context.
 
-Sync is cautious by default. Use `--dry-run` after large refactors, then apply.
+**Sync is cautious by default**: Use `--dry-run` after large refactors, then apply.
 
 ## Next Up
 

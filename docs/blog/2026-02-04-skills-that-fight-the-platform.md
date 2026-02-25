@@ -238,7 +238,7 @@ Skills designed to activate on every interaction regardless of relevance.
 Universal triggers override the platform's **relevance matching**: 
 The AI spends tokens on process overhead instead of the actual task.
 
-!!! tip "ctx preserves relevance"
+!!! tip "`ctx` preserves relevance"
     This is exactly the failure mode `ctx` exists to mitigate: 
 
     Wasting attention budget on irrelevant process instead of 

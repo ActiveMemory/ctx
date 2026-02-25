@@ -10,8 +10,10 @@ icon: lucide/shield
 Claude Code's `.claude/settings.local.json` controls what the agent can do
 without asking. Over time, this file accumulates one-off permissions from
 individual sessions: Exact commands with hardcoded paths, duplicate entries,
-and stale skill references. A noisy "*allowlist*" makes it harder to spot
-dangerous permissions and increases the surface area for unintended behavior.
+and stale skill references. 
+
+A noisy "*allowlist*" makes it harder to spot dangerous permissions and 
+increases the surface area for unintended behavior.
 
 Since `settings.local.json` is `.gitignore`d, it drifts independently of your
 codebase. There is no PR review, no CI check: just whatever you clicked
@@ -40,7 +42,7 @@ See [Recommended Defaults](#recommended-defaults) for the full list.
 
 ## Recommended Defaults
 
-After running `ctx init`, your `settings.local.json` will have the ctx
+After running `ctx init`, your `settings.local.json` will have the `ctx`
 defaults pre-populated. Here is an opinionated safe starting point for a Go
 project using ctx:
 
@@ -164,10 +166,11 @@ The defaults block:
 | `Read/Edit(**/.env*)`    | Secrets and credentials                      |
 | `Read(**/*.pem, *.key)`  | Private keys                                 |
 
-!!! note "Read/Edit deny rules"
+!!! note "Read/Edit Deny Rules"
     `Read()` and `Edit()` deny rules have known upstream enforcement issues
-    (`claude-code#6631,#24846`). They are included as defense-in-depth and
-    intent documentation.
+    (`claude-code#6631,#24846`). 
+
+    They are included as defense-in-depth and intent documentation.
 
 **Blocked by default deny rules** — no action needed, `ctx init` handles these:
 
@@ -204,12 +207,8 @@ Project-local hooks (not part of the plugin) catch regex edge cases:
 |-------------------------------|-----------------------------------------------------------------------------------|
 | `block-dangerous-commands.sh` | Mid-command `sudo`/`git push` (after `&&`), copies to bin dirs, absolute-path ctx |
 
-!!! note "`block-git-push.sh` retired"
-    The standalone `block-git-push.sh` hook has been replaced by the
-    `Bash(git push *)` and `Bash(git push)` deny rules. The mid-command
-    case (`cmd && git push`) is handled by `block-dangerous-commands.sh`.
 
-!!! warning "Pre-approved + hook-blocked = silent block"
+!!! warning "Pre-Approved + Hook-Blocked = Silent Block"
     If you pre-approve a command that a hook blocks, the user never sees
     the confirmation dialog. The agent gets a block response and must
     handle it, which is confusing.
@@ -221,14 +220,14 @@ Project-local hooks (not part of the plugin) catch regex edge cases:
 ### After busy sessions
 
 Permissions accumulate fastest during debugging and exploration sessions.
-After a session where you clicked "Allow" many times:
+After a session where you clicked "*Allow*" many times:
 
-1. Open `.claude/settings.local.json` in your editor
-2. Look for entries at the bottom of the allowlist (*new entries append there*)
+1. Open `.claude/settings.local.json` in your editor;
+2. Look for entries at the bottom of the allowlist (*new entries append there*);
 3. Delete anything that looks session-specific:
-   * Exact commands with hardcoded paths
-   * Commands with literal string arguments
-   * Entries that duplicate an existing wildcard
+     * Exact commands with hardcoded paths,
+     * Commands with literal string arguments,
+     * Entries that duplicate an existing wildcard.
 
 See [`hack/runbooks/sanitize-permissions.md`](https://github.com/ActiveMemory/ctx/blob/main/hack/runbooks/sanitize-permissions.md)
 for a step-by-step runbook.
@@ -237,10 +236,10 @@ for a step-by-step runbook.
 
 Run `/ctx-drift` to catch permission drift:
 
-* Missing `Bash(ctx:*)` wildcard
-* Missing `Skill(ctx-*)` entries for installed skills
-* Stale `Skill(ctx-*)` entries for removed skills
-* Granular `Bash(ctx <subcommand>:*)` entries that should be consolidated
+* Missing `Bash(ctx:*)` wildcard;
+* Missing `Skill(ctx-*)` entries for installed skills;
+* Stale `Skill(ctx-*)` entries for removed skills;
+* Granular `Bash(ctx <subcommand>:*)` entries that should be consolidated.
 
 Run `/sanitize-permissions` to catch security issues:
 

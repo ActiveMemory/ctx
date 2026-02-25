@@ -10,7 +10,7 @@
 # Release script for Context CLI
 #
 # This script prepares and creates a new release. It:
-# 1. Verifies release notes exist (generate with /release-notes in Claude Code)
+# 1. Verifies release notes exist (generate with /_ctx-release-notes in Claude Code)
 # 2. Builds binaries for all platforms
 # 3. Creates and pushes a signed git tag
 # 4. Updates the "latest" tag
@@ -24,7 +24,7 @@
 # 1. UPDATE THE VERSION in the VERSION file at the repository root
 #
 # 2. GENERATE RELEASE NOTES using Claude Code:
-#    /release-notes
+#    /_ctx-release-notes
 #
 # 3. UPDATE DOCUMENTATION with new version:
 #    - docs/index.md: Update download URLs to new version
@@ -74,7 +74,7 @@ if [ ! -f "${RELEASE_NOTES}" ]; then
   echo "ERROR: ${RELEASE_NOTES} not found."
   echo ""
   echo "Generate release notes first using Claude Code:"
-  echo "  /release-notes"
+  echo "  /_ctx-release-notes"
   echo ""
   exit 1
 fi

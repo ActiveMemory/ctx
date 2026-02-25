@@ -13,19 +13,20 @@ icon: lucide/history
 
 ## Version History
 
-Documentation snapshots for each release. Click a version to view the 
-docs as they were at that release.
+Documentation snapshots for each release. 
+
+Tap the corresponding **view docs** to view the docs as they were at that release.
 
 ## Releases
 
-| Version | Release Date | Documentation                                                     | Notes |
-|---------|--------------|-------------------------------------------------------------------|-------|
-| v0.6.0  | 2026-02-16   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.6.0/docs) | Plugin conversion: hooks are Go subcommands, skills ship as plugin |
-| v0.3.0  | 2026-02-07   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.3.0/docs) | Journal site, skill sweep, consolidation pass, golangci-lint v2 |
-| v0.2.0  | 2026-02-01   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.2.0/docs) | Journal system, recall export, constants refactor, CRLF handling |
-| v0.1.2  | 2026-01-27   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.1.2/docs) | Default permissions in `ctx init`, prompting guide |
-| v0.1.1  | 2026-01-26   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.1.1/docs) | Fix hook schema keys, fix JSON unicode escaping |
-| v0.1.0  | 2026-01-25   | [View docs](https://github.com/ActiveMemory/ctx/tree/v0.1.0/docs) | Initial release: CLI, context files, build system |
+| Version | Release Date | Documentation                                                     | Notes                                                              |
+|---------|--------------|-------------------------------------------------------------------|--------------------------------------------------------------------|
+| v0.6.0  | 2026-02-16   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.6.0/docs) | Plugin conversion: hooks are Go subcommands, skills ship as plugin |
+| v0.3.0  | 2026-02-07   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.3.0/docs) | Journal site, skill sweep, consolidation pass, golangci-lint v2    |
+| v0.2.0  | 2026-02-01   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.2.0/docs) | Journal system, recall export, constants refactor, CRLF handling   |
+| v0.1.2  | 2026-01-27   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.2/docs) | Default permissions in `ctx init`, prompting guide                 |
+| v0.1.1  | 2026-01-26   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.1/docs) | Fix hook schema keys, fix JSON unicode escaping                    |
+| v0.1.0  | 2026-01-25   | [view docs](https://github.com/ActiveMemory/ctx/tree/v0.1.0/docs) | Initial release: CLI, context files, build system                  |
 
 ## Latest
 

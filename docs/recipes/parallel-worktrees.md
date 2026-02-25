@@ -18,7 +18,7 @@ other's files.
 **Git worktrees** solve this. 
 
 Each worktree is a separate working directory with its own branch, but they 
-share the same `.git` object database. Combined with ctx's persistent context, 
+share the same `.git` object database. Combined with `ctx`'s persistent context, 
 each agent session picks up the full project state and works independently.
 
 ## TL;DR
@@ -56,7 +56,7 @@ tracks based on which files they'd touch. Show me the grouping
 before creating anything.
 ```
 
-The agent reads TASKS.md, estimates file overlap, and proposes groups:
+The agent reads `TASKS.md`, estimates file overlap, and proposes groups:
 
 ```text
 Proposed worktree groups:
@@ -87,7 +87,7 @@ Each worktree is a full working copy on its own branch.
 
 ### Step 3: Launch Agents
 
-Open a separate terminal (or editor window) for each worktree and
+Open a separate terminal (*or editor window*) for each worktree and
 start a Claude Code session:
 
 ```bash
@@ -105,12 +105,15 @@ claude
 ```
 
 Each agent sees the full project, including `.context/`, and can work
-independently. Do **not** run `ctx init` in worktrees: The context
-directory is already tracked in `git`.
+independently. 
+
+!!! warning "Do Not Initialize Context in Worktrees" 
+    **Do not** run `ctx init` in worktrees: The `.context`
+    directory is already tracked in `git`.
 
 ### Step 4: Work
 
-Each agent works through its assigned tasks. They can read TASKS.md to
+Each agent works through its assigned tasks. They can read `TASKS.md` to
 know what's assigned to their track, use `/ctx-next` to pick the next
 item, and commit normally on their `work/*` branch.
 
@@ -125,18 +128,13 @@ As each track finishes, return to the main checkout and merge:
 The agent checks for uncommitted changes, merges `work/docs` into your
 current branch, removes the worktree, and deletes the branch.
 
-### Step 6: Handle TASKS.md Conflicts
+### Step 6: Handle `TASKS.md` Conflicts
 
-TASKS.md will almost always conflict when merging — multiple agents
-marked different tasks as `[x]`. This is expected and easy to resolve:
+`TASKS.md` will almost always conflict when merging: Multiple agents
+will mark different tasks as `[x]`. This is expected and easy to resolve:
 
 **Accept all completions from both sides.** No task should go from
 `[x]` back to `[ ]`. The merge resolution is always additive.
-
-```text
-The merge has a conflict in TASKS.md. Both branches completed
-different tasks. Accept all [x] completions from both sides.
-```
 
 ### Step 7: Cleanup
 
@@ -176,8 +174,9 @@ exists in the main checkout. This affects key-dependent features:
   **Enrich journals on the main branch after merging**: the JSONL session
   logs are always intact, and you don't lose any data.
 
-Tracked context files (*TASKS.md, DECISIONS.md, LEARNINGS.md,
-CONVENTIONS.md*) work normally; `git` handles them.
+!!! info "Context Files Will Merge Just Fine"
+    Tracked context files (*`TASKS.md`, `DECISIONS.md`, `LEARNINGS.md`,
+    `CONVENTIONS.md`*) work normally; `git` handles them.
 
 ## Tips
 

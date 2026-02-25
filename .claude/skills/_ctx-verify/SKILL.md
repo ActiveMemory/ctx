@@ -1,5 +1,5 @@
 ---
-name: verify
+name: _ctx-verify
 description: "Verify before claiming completion. Use before saying work is done, tests pass, or builds succeed."
 ---
 
@@ -22,8 +22,8 @@ Run the relevant verification command before claiming a result.
 ## Usage Examples
 
 ```text
-/verify
-/verify (before claiming the refactor is done)
+/_ctx-verify
+/_ctx-verify (before claiming the refactor is done)
 ```
 
 ## Workflow
@@ -86,9 +86,9 @@ Weak criteria ("make it work") require constant clarification.
 - "Tests passed earlier" (stale result; code changed since)
 - "The build works" (did you actually run it?)
 
-## Relationship to /qa
+## Relationship to /_ctx-qa
 
-`/qa` tells you *what to run*. `/verify` reminds you to
+`/_ctx-qa` tells you *what to run*. `/_ctx-verify` reminds you to
 *actually run it* before claiming the result.
 
 ## Quality Checklist

@@ -78,7 +78,7 @@ is wrong.
 
 - [ ] All code must pass tests before commit
 - [ ] No `any` types in TypeScript without documented reason
-- [ ] No TODO comments in main branch (move to TASKS.md)
+- [ ] No TODO comments in main branch (*move to `TASKS.md`*)
 
 ## Process Invariants
 
@@ -147,7 +147,7 @@ Use inline backtick-wrapped tags for metadata:
 | `#estimate`    | `1h`, `4h`, `1d`               | Time estimate (optional)  |
 | `#in-progress` | (none)                         | Currently being worked on |
 
-**Lifecycle tags** (for session correlation):
+**Lifecycle tags** (*for session correlation*):
 
 | Tag        | Format               | When to add                        |
 |------------|----------------------|------------------------------------|
@@ -284,7 +284,7 @@ Organize learnings by topic:
 * Performance
 * Security
 * Third-Party Libraries
-* Git & Workflow
+* Git and Workflow
 
 ---
 
@@ -417,7 +417,7 @@ and update context.
 **How to Avoid Hallucinating Memory:** Critical rules:
 
 1. Never assume—if not in files, you don't know it
-2. Never invent history—don't claim "we discussed" without evidence
+2. Never invent history—don't claim "*we discussed*" without evidence
 3. Verify before referencing—search files before citing
 4. When uncertain, say so
 5. Trust files over intuition

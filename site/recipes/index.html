@@ -1115,6 +1115,8 @@
       
         
       
+        
+      
     
     
     
@@ -1237,6 +1239,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1545,16 +1577,16 @@
   
   
     <li class="md-nav__item">
-      <a href="system-hooks-audit/" class="md-nav__link">
+      <a href="webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1575,16 +1607,16 @@
   
   
     <li class="md-nav__item">
-      <a href="webhook-notifications/" class="md-nav__link">
+      <a href="system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2322,7 +2354,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2352,7 +2384,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2382,7 +2414,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -2693,6 +2725,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#session-reminders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Reminders
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2997,6 +3040,13 @@ review the session and persist <strong>learnings</strong>, <strong>decisions</st
 <code>ctx journal obsidian</code>, <code>ctx serve</code>, <code>/ctx-recall</code>,
 <code>/ctx-journal-normalize</code>, <code>/ctx-journal-enrich</code>,
 <code>/ctx-journal-enrich-all</code></p>
+<hr />
+<h3 id="session-reminders"><a href="session-reminders/">Session Reminders</a><a class="headerlink" href="#session-reminders" title="Permanent link">&para;</a></h3>
+<p>Leave a <strong>message for your next session</strong>. Reminders surface
+<strong>automatically at session start</strong> and repeat until dismissed.
+Date-gate reminders to surface only after a specific date.</p>
+<p><strong>Uses</strong>: <code>ctx remind</code>, <code>ctx remind list</code>, <code>ctx remind dismiss</code>,
+<code>ctx system check-reminders</code></p>
 <hr />
 <h2 id="knowledge-tasks">Knowledge &amp; Tasks<a class="headerlink" href="#knowledge-tasks" title="Permanent link">&para;</a></h2>
 <h3 id="persisting-decisions-learnings-and-conventions"><a href="knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a><a class="headerlink" href="#persisting-decisions-learnings-and-conventions" title="Permanent link">&para;</a></h3>

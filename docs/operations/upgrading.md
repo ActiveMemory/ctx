@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: Upgrading ctx
+title: Upgrade
 icon: lucide/arrow-up-circle
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-## Upgrading ctx
+## Upgrade
 
 New versions of `ctx` may ship updated permissions, `CLAUDE.md` directives,
 or plugin hooks and skills.
@@ -59,7 +59,7 @@ ctx init --force --merge
 
 * `--force` regenerates infrastructure files (permissions, ctx-managed
   sections in `CLAUDE.md` and `PROMPT.md`).
-* `--merge` preserves your content outside ctx markers.
+* `--merge` preserves your content outside `ctx` markers.
 
 Knowledge files (`.context/TASKS.md`, `DECISIONS.md`, etc.) are **preserved
 automatically** — `ctx init` only overwrites infrastructure, never your data.
@@ -68,7 +68,7 @@ automatically** — `ctx init` only overwrites infrastructure, never your data.
 > is still present after reinit. It should be preserved, but losing it means
 > losing access to encrypted scratchpad data.
 
-### 3. Update the ctx Plugin
+### 3. Update the `ctx` Plugin
 
 If you use Claude Code, update the plugin to get new hooks and skills:
 

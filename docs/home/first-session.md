@@ -16,10 +16,14 @@ the moment your AI cites your project context back to you.
 
 ## Step 1: Initialize Your Project
 
+Run `ctx init` in your project root:
+
 ```bash
 cd your-project
 ctx init
 ```
+
+Sample output:
 
 ```
 Context initialized in .context/
@@ -56,25 +60,19 @@ For Claude Code, [install the ctx plugin](getting-started.md#installation) to ge
 
 ## Step 2: Populate Your Context
 
-Add a task and a decision — these are the entries your AI will remember:
+Add a **task** and a **decision**: These are the entries your AI will remember:
 
 ```bash
 ctx add task "Implement user authentication"
-```
 
-```
-✓ Added to TASKS.md
-```
+# Output: ✓ Added to TASKS.md
 
-```bash
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
   --consequences "Team needs PostgreSQL training"
-```
 
-```
-✓ Added to DECISIONS.md
+# Output: ✓ Added to DECISIONS.md
 ```
 
 These entries are what the AI will recall in future sessions. You don't need
@@ -85,6 +83,8 @@ to populate everything now: Context grows **naturally** as you work.
 ```bash
 ctx status
 ```
+
+Sample output:
 
 ```
 Context Status
@@ -116,7 +116,7 @@ it will fill in as you capture lessons during development.
 
 ## Step 4: Start an AI Session
 
-With **Claude Code** (and the ctx plugin), start every session with:
+With **Claude Code** (*and the `ctx` plugin*), start every session with:
 
 ```
 /ctx-remember
@@ -128,8 +128,8 @@ confirm the agent knows what is going on. Context also loads automatically
 via hooks, but the explicit ceremony gives you a **readback** to verify.
 
 !!! info "Using VS Code?"
-    With **VS Code Copilot Chat** (and the
-    [ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)), 
+    With **VS Code Copilot Chat** (*and the
+    [ctx extension]*(../operations/integrations.md#vs-code-chat-extension-ctx)), 
     type `@ctx /agent` in chat to load your context packet, or `@ctx /status`
     to check your project context. Run `ctx hook copilot --write` once
     to generate `.github/copilot-instructions.md` for automatic context loading.
@@ -140,6 +140,8 @@ If you are not using Claude Code, generate a
 ```bash
 ctx agent --budget 8000
 ```
+
+Sample output:
 
 ```markdown
 # Context Packet
@@ -251,17 +253,20 @@ You should **`.gitignore`** the generated and sensitive paths:
 .claude/settings.local.json
 ```
 
-!!! tip "ctx init Patches Your .gitignore for You"
+!!! tip "`ctx init` Patches Your .gitignore for You"
     `ctx init` automatically adds these entries to your `.gitignore`.
 
      Review the additions with `cat .gitignore` after init.
 
-*See also*:
+----
 
-* [Security considerations](../security/reporting.md)
-* [Scratchpad encryption](../reference/scratchpad.md)
+**See also**:
+
+* [Security Considerations](../security/reporting.md)
+* [Scratchpad Encryption](../reference/scratchpad.md)
 * [Session Journal](../reference/session-journal.md)
 
 ----
 
-**Next Up**: [Common Workflows →](common-workflows.md) — day-to-day commands for tracking context, checking health, and browsing history.
+**Next Up**: [Common Workflows →](common-workflows.md): 
+day-to-day commands for tracking context, checking health, and browsing history.

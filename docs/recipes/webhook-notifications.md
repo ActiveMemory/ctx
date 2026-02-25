@@ -7,7 +7,7 @@ icon: lucide/bell
 
 ## The Problem
 
-Your agent runs autonomously — loops, implements, releases — while you're away
+Your agent runs autonomously (*loops, implements, releases*) while you are away
 from the terminal. You have no way to know when it finishes, hits a limit, or
 when a hook fires a nudge.
 
@@ -16,19 +16,19 @@ when a hook fires a nudge.
 ## TL;DR
 
 ```bash
-ctx notify setup                    # configure webhook URL (encrypted)
-ctx notify test                     # verify delivery
+ctx notify setup  # configure webhook URL (encrypted)
+ctx notify test   # verify delivery
 # Hooks auto-notify on: session-end, loop-iteration, resource-danger
 ```
 
 ## Commands and Skills Used
 
-| Tool | Type | Purpose |
-|------|------|---------|
-| `ctx notify setup` | CLI command | Configure and encrypt webhook URL |
-| `ctx notify test` | CLI command | Send a test notification |
-| `ctx notify --event <name> "msg"` | CLI command | Send a notification from scripts/skills |
-| `.ctxrc` `notify.events` | Configuration | Filter which events reach your webhook |
+| Tool                              | Type          | Purpose                                 |
+|-----------------------------------|---------------|-----------------------------------------|
+| `ctx notify setup`                | CLI command   | Configure and encrypt webhook URL       |
+| `ctx notify test`                 | CLI command   | Send a test notification                |
+| `ctx notify --event <name> "msg"` | CLI command   | Send a notification from scripts/skills |
+| `.ctxrc` `notify.events`          | Configuration | Filter which events reach your webhook  |
 
 ## The Workflow
 
@@ -36,15 +36,15 @@ ctx notify test                     # verify delivery
 
 Any service that accepts HTTP POST with JSON works. Common options:
 
-| Service | How to get a URL |
-|---------|------------------|
-| **IFTTT** | Create an applet with the "Webhooks" trigger |
-| **Slack** | Create an [Incoming Webhook](https://api.slack.com/messaging/webhooks) |
-| **Discord** | Channel Settings > Integrations > Webhooks |
-| **ntfy.sh** | Use `https://ntfy.sh/your-topic` (no signup) |
-| **Pushover** | Use API endpoint with your user key |
+| Service      | How to get a URL                                                       |
+|--------------|------------------------------------------------------------------------|
+| **IFTTT**    | Create an applet with the "*Webhooks*" trigger                         |
+| **Slack**    | Create an [Incoming Webhook](https://api.slack.com/messaging/webhooks) |
+| **Discord**  | Channel Settings > Integrations > Webhooks                             |
+| **ntfy.sh**  | Use `https://ntfy.sh/your-topic` (no signup)                           |
+| **Pushover** | Use API endpoint with your user key                                    |
 
-The URL contains auth tokens. ctx encrypts it — it never appears in plaintext
+**The URL contains auth tokens**. `ctx` encrypts it; it never appears in plaintext
 in your repo.
 
 ### Step 2: Configure the Webhook
@@ -58,7 +58,7 @@ ctx notify setup
 
 This encrypts the URL with AES-256-GCM using the same key as the scratchpad
 (`.context/.context.key`). The encrypted file (`.context/.notify.enc`) is
-safe to commit. The key is gitignored.
+safe to commit. The key is `.gitignore`d.
 
 ### Step 3: Test It
 
@@ -98,25 +98,34 @@ ctx notify --event backup "Nightly backup completed" 2>/dev/null || true
 ```
 
 The `2>/dev/null || true` suffix ensures the notification never breaks your
-script — if there's no webhook or the HTTP call fails, it's a silent noop.
+script: If there's no webhook or the HTTP call fails, it's a silent noop.
 
 ## Event Types
 
-ctx fires these events automatically:
+`ctx` fires these events automatically:
 
-| Event | Source | When |
-|-------|--------|------|
-| `loop` | Loop script | Loop completes or hits max iterations |
-| `nudge` | System hooks | VERBATIM relay nudge is emitted (context checkpoint, persistence, ceremonies, journal, resources, knowledge, version) |
-| `relay` | System hooks | Any hook output (VERBATIM relays, agent directives, block responses) |
-| `test` | `ctx notify test` | Manual test notification |
-| *(custom)* | Your skills | You wire `ctx notify --event <name>` in your own scripts |
+| Event      | Source            | When                                                                                                                  |
+|------------|-------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `loop`     | Loop script       | Loop completes or hits max iterations                                                                                 |
+| `nudge`    | System hooks      | VERBATIM relay nudge is emitted (context checkpoint, persistence, ceremonies, journal, resources, knowledge, version) |
+| `relay`    | System hooks      | Any hook output (VERBATIM relays, agent directives, block responses)                                                  |
+| `test`     | `ctx notify test` | Manual test notification                                                                                              |
+| *(custom)* | Your skills       | You wire `ctx notify --event <name>` in your own scripts                                                              |
 
 **`nudge` vs `relay`**: The `nudge` event fires only for VERBATIM relay hooks
-(the ones the agent is instructed to show verbatim). The `relay` event fires
+(*the ones the agent is instructed to show verbatim*). The `relay` event fires
 for *all* hook output — VERBATIM relays, agent directives, and hard gates.
-Subscribe to `relay` for debugging ("did the agent get the post-commit nudge?"),
-`nudge` for user-facing assurance ("was the checkpoint emitted?").
+Subscribe to `relay` for debugging (*"did the agent get the post-commit nudge?"*),
+`nudge` for user-facing assurance (*"was the checkpoint emitted?"*).
+
+!!! tip "Webhooks as a Hook Audit Trail"
+    Subscribe to `relay` events and you get an external record of every
+    hook that fires, independent of the agent. 
+
+    This lets you verify hooks are running and catch cases where the agent 
+    absorbs a nudge instead of surfacing it. 
+
+    See [Auditing System Hooks](system-hooks-audit.md) for the full workflow.
 
 ## Payload Format
 
@@ -134,19 +143,19 @@ Every notification sends a JSON POST:
 
 ## Security Model
 
-| Component | Location | Committed? | Permissions |
-|-----------|----------|------------|-------------|
-| Encryption key | `.context/.context.key` | No (gitignored) | `0600` |
-| Encrypted URL | `.context/.notify.enc` | Yes (safe) | `0600` |
-| Webhook URL | Never on disk in plaintext | N/A | N/A |
+| Component      | Location                   | Committed?      | Permissions |
+|----------------|----------------------------|-----------------|-------------|
+| Encryption key | `.context/.context.key`    | No (gitignored) | `0600`      |
+| Encrypted URL  | `.context/.notify.enc`     | Yes (safe)      | `0600`      |
+| Webhook URL    | Never on disk in plaintext | N/A             | N/A         |
 
 The key is shared with the scratchpad. If you rotate the encryption key,
 re-run `ctx notify setup` to re-encrypt the webhook URL with the new key.
 
 ## Key Rotation
 
-ctx checks the age of `.context/.context.key` once per day. If it's older
-than 90 days (configurable via `notify.key_rotation_days`), a VERBATIM nudge
+`ctx` checks the age of `.context/.context.key` once per day. If it's older
+than 90 days (*configurable via `notify.key_rotation_days`*), a VERBATIM nudge
 is emitted suggesting rotation.
 
 ```yaml
@@ -158,8 +167,8 @@ notify:
 ## Worktrees
 
 The webhook URL is encrypted with the same encryption key
-(`.context/.context.key`), which is gitignored. In a git worktree,
-the key is absent — notifications silently do nothing.
+(`.context/.context.key`), which is `.gitignore`d. In a git worktree,
+the key is absent: Notifications silently do nothing.
 
 This means **agents running in worktrees cannot send webhook alerts**.
 For autonomous runs where worktree agents are opaque, monitor them from
@@ -179,8 +188,8 @@ results on the main branch after merging.
 
 ## Next Up
 
-**[Detecting and Fixing Drift →](context-health.md)**: Keep context
-files accurate as your codebase evolves.
+**[Auditing System Hooks →](system-hooks-audit.md)**: Verify your hooks
+are running, audit what they do, and get alerted when they go silent.
 
 ## See Also
 
@@ -192,3 +201,5 @@ files accurate as your codebase evolves.
   and how notifications fit in
 * [Hook Output Patterns](hook-output-patterns.md): understanding VERBATIM
   relays, agent directives, and hard gates
+* [Auditing System Hooks](system-hooks-audit.md): using webhooks as an
+  external audit trail for hook execution

@@ -10,21 +10,21 @@ Guides for **installing**, **upgrading**, **integrating**, and **running**
 
 ---
 
-### [Integrating ctx](migration.md)
+### [Integration](migration.md)
 
 Adopt `ctx` in an existing project: initialize context files,
 migrate from other tools, and onboard team members.
 
 ---
 
-### [Upgrading ctx](upgrading.md)
+### [Upgrade](upgrading.md)
 
 Upgrade between versions with step-by-step migration notes
 and breaking-change guidance.
 
 ---
 
-### [AI Tool Integrations](integrations.md)
+### [AI Tools](integrations.md)
 
 Configure `ctx` with Claude Code, Cursor, Aider, Copilot,
 Windsurf, and other AI coding tools.

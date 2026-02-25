@@ -131,7 +131,7 @@ boundaries.
 movement to other projects or users.
 
 **What it misses**: Actions within the agent's legitimate scope. If the
-agent has write access to source code (which it needs to do its job), it
+agent has write access to source code (*which it needs to do its job*), it
 can introduce vulnerabilities in the code itself.
 
 **Verdict**: Essential. This is the layer that makes the other layers
@@ -222,11 +222,11 @@ flag inside a properly isolated container or VM.
 socket mounted, running as root, with `--privileged`, and full network
 access is not sandboxed. It is a root shell with extra steps.
 
-**"CONSTITUTION.md says not to do that"**: Markdown is a suggestion. It
+**"`CONSTITUTION.md` says not to do that"**: Markdown is a suggestion. It
 works most of the time. It is not a security boundary. Do not use it as
 one.
 
-**"I reviewed the CLAUDE.md, it's fine"**: The agent can modify `CLAUDE.md`
+**"I reviewed the `CLAUDE.md`, it's fine"**: The agent can modify `CLAUDE.md`
 during iteration N. Iteration N+1 loads the modified version. Unless the
 file is immutable, your review is stale.
 

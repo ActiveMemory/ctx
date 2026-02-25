@@ -228,14 +228,14 @@ Agent: "Let me extract theirs and merge it in."
 
 ## Tips
 
-* **Back up the key**. If you lose it, you lose access to all encrypted
+* **Back up the key**: If you lose it, you lose access to all encrypted
   entries. Store a copy in your password manager.
-* **One key per project**. Each `ctx init` generates a unique key.
+* **One key per project**: Each `ctx init` generates a unique key.
   Don't reuse keys across projects.
-* **Plaintext fallback for non-sensitive projects**. If encryption adds
+* **Plaintext fallback for non-sensitive projects**: If encryption adds
   friction and you have nothing sensitive, set `scratchpad_encrypt: false`
   in `.ctxrc`. Merge conflicts become trivial text merges.
-* **Never commit the key**. It's gitignored by default. Don't override
+* **Never commit the key**: It is `.gitignore`d by default. Don't override
   this.
 
 ## Next Up

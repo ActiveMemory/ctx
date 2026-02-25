@@ -25,6 +25,8 @@ Without persistent memory, every session starts at *zero*;
 
 [Join the `ctx` Community →](community.md)
 
+----
+
 ## What Is `ctx`?
 
 `ctx` (*Context*) is a file-based system that enables AI coding assistants
@@ -100,7 +102,7 @@ Without persistent memory, every session starts at zero.
     0 minutes re-explaining. Straight to building.
     ```
 
-### How ctx Solves This
+### How `ctx` Solves This
 
 `ctx` creates a `.context/` directory in your project that stores [structured
 knowledge files](context-files.md):
@@ -130,14 +132,14 @@ makes the *next* session **smarter**.
 
 ----
 
-**Connect with ctx**
+**Connect with `ctx`**
 
 * [Join the Community →](community.md): ask questions, share workflows, and help shape what comes next
 * [Read the Blog →](../../blog/): real-world patterns, ponderings, and lessons learned from building `ctx` using `ctx`
 
 ----
 
-**Ready to get started?**
+**Ready to Get Started?**
 
 * [Getting Started →](getting-started.md) — full installation and setup
 * [Your First Session →](first-session.md) — step-by-step walkthrough from `ctx init` to verified recall

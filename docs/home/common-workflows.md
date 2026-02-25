@@ -44,6 +44,29 @@ ctx add learning "Mock functions must be hoisted in Jest" \
 ctx complete "user auth"
 ```
 
+## Leave a Reminder for Next Session
+
+Drop a note that surfaces automatically at the start of your next session:
+
+```bash
+# Leave a reminder
+ctx remind "refactor the swagger definitions"
+
+# Date-gated: don't surface until a specific date
+ctx remind "check CI after the deploy" --after 2026-02-25
+
+# List pending reminders
+ctx remind list
+
+# Dismiss a reminder by ID
+ctx remind dismiss 1
+```
+
+Reminders are relayed verbatim at session start by the `check-reminders` hook
+and repeat every session until you dismiss them.
+
+See [Session Reminders](../recipes/session-reminders.md) for the full recipe.
+
 ## Check Context Health
 
 ```bash
@@ -189,7 +212,7 @@ ctx system bootstrap
 ```
 
 This prints the resolved context directory, the files in it, and the
-operating rules. The CLAUDE.md template instructs the agent to run this
+operating rules. The `CLAUDE.md` template instructs the agent to run this
 automatically. See [CLI Reference: bootstrap](../reference/cli-reference.md#ctx-system-bootstrap).
 
 ## The Two Skills You Should Always Use
@@ -233,7 +256,7 @@ the full workflow.
 ## CLI Commands vs. AI Skills
 
 Most `ctx` operations come in two flavors: a **CLI command** you run
-in your terminal and an **AI skill** (slash command) you invoke
+in your terminal and an **AI skill** (*slash command*) you invoke
 inside your coding assistant.
 
 Commands and skills are **not interchangeable**: Each has a distinct role.
@@ -288,7 +311,7 @@ These have no CLI equivalent. They require the agent's reasoning.
 
 ### CLI-Only Commands
 
-These are infrastructure: The are used used in scripts, CI, or one-time setup.
+These are infrastructure: used in scripts, CI, or one-time setup.
 
 | Command                    | Purpose                                         |
 |----------------------------|-------------------------------------------------|
@@ -304,6 +327,8 @@ These are infrastructure: The are used used in scripts, CI, or one-time setup.
 | `ctx permissions restore`  | Restore settings from golden image              |
 | `ctx journal site`         | Generate browsable journal from exports         |
 | `ctx notify setup`         | Configure webhook notifications                 |
+| `ctx remind`               | Session-scoped reminders (surface at start)     |
+| `ctx completion`           | Generate shell autocompletion scripts           |
 
 !!! tip "Rule of Thumb"
     **Quick check?** Use the CLI. 

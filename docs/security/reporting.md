@@ -27,14 +27,14 @@ Send details to **security@ctx.ist**.
 
 1. Go to the [Security tab](https://github.com/ActiveMemory/ctx/security);
 2. Click "*Report a Vulnerability*";
-3. Provide a detailed description.
+3. Provide a **detailed** description.
 
 ### What to Include
 
-* Description of the vulnerability
-* Steps to reproduce
-* Potential impact
-* Suggested fix (*if any*)
+* Description of the vulnerability,
+* Steps to reproduce,
+* Potential impact,
+* Suggested fix (*if any*).
 
 ## Attribution
 

@@ -1417,6 +1417,8 @@
       
         
       
+        
+      
     
     
     
@@ -1542,6 +1544,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1856,16 +1888,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../system-hooks-audit/" class="md-nav__link">
+      <a href="../webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1886,16 +1918,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../webhook-notifications/" class="md-nav__link">
+      <a href="../system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2639,7 +2671,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2669,7 +2701,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2699,7 +2731,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -3271,7 +3303,7 @@ to set them up and how to tell your AI assistant where to find the context.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>~/repos/myproject
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ctx<span class="w"> </span>--context-dir<span class="w"> </span>~/repos/myproject-context<span class="w"> </span>--allow-outside-cwd<span class="w"> </span>init
 </span></code></pre></div>
-<p>Then, create a <a href="../../home/configuration/"><code>.ctxrc</code></a> in your <strong>project root</strong>
+<p>Then, <a href="../../home/configuration/">create a <code>.ctxrc</code></a> in your <strong>project root</strong>
 to specify the new <code>.context</code> folder location:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/repos/myproject-context</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -3365,8 +3397,9 @@ directory without extra flags:</p>
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Commit <code>.ctxrc</code></p>
-<p><code>.ctxrc</code> belongs in the project repo. It contains no secrets — just a
-path and a boundary override. It lets teammates share the same configuration.</p>
+<p><code>.ctxrc</code> belongs in the project repo. It contains no secrets: It's just a
+path and a boundary override. </p>
+<p><code>.ctxrc</code> lets teammates share the same configuration.</p>
 </div>
 <h4 id="option-b-ctx_dir-environment-variable">Option B: <code>CTX_DIR</code> Environment Variable<a class="headerlink" href="#option-b-ctx_dir-environment-variable" title="Permanent link">&para;</a></h4>
 <p>Good for CI pipelines, temporary overrides, or when you don't want to commit
@@ -3485,8 +3518,9 @@ project repo, context gets committed to the context repo.</p>
   <code>Error: context directory is outside the project root</code>. Set
   <code>allow_outside_cwd: true</code> in <code>.ctxrc</code> or pass <code>--allow-outside-cwd</code>.</li>
 <li><strong>Commit both repos at session boundaries</strong>. Context without code history
-  (or code without context history) loses half the value.</li>
+  (<em>or code without context history</em>) loses half the value.</li>
 </ul>
+<hr />
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>
 <p><strong><a href="../session-lifecycle/">The Complete Session →</a></strong>: Walk through a
 full ctx session from start to finish.</p>

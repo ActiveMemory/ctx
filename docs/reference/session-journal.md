@@ -129,7 +129,7 @@ After editing, regenerate the site:
 ctx journal site --serve
 ```
 
-!!! info "Safe by Default"
+??? info "Safe by Default"
     Running `ctx recall export --all` **only exports new sessions**. Existing
     files are skipped entirely — your edits and enrichments are never touched.
 
@@ -159,8 +159,8 @@ session-abc123-p3.md   (Part 3 of 3)
 
 ## Suggestion Sessions
 
-Claude Code generates "suggestion" sessions for auto-complete prompts. These 
-are separated in the index under a "Suggestions" section to keep your main 
+Claude Code generates "*suggestion*" sessions for auto-complete prompts. These
+are separated in the index under a "*Suggestions*" section to keep your main 
 session list focused.
 
 ## Enriching Journal Entries
@@ -251,12 +251,12 @@ content and proposing metadata.
 
 The skill will:
 
-1. Find the matching journal file
-2. Read and analyze the conversation
-3. Propose frontmatter (type, topics, outcome, technologies)
-4. Generate a 2-3 sentence summary
-5. Extract decisions, learnings, and tasks mentioned
-6. Show a diff and ask for confirmation before writing
+1. Find the matching journal file;
+2. Read and analyze the conversation;
+3. Propose frontmatter (*type, topics, outcome, technologies*);
+4. Generate a 2-3 sentence summary;
+5. Extract decisions, learnings, and tasks mentioned;
+6. Show a diff and ask for confirmation before writing.
 
 ### Before and After
 
@@ -347,61 +347,6 @@ grep -L "^---$" .context/journal/*.md | head -10
 Then run `/ctx-journal-enrich` on each. Enrichment is intentionally interactive
 to ensure accuracy.
 
-## Context Monitor
-
-The **Context Monitor** (`context-watch.sh`) is a terminal-based tool that shows
-real-time token usage for your active Claude Code session. Run it in a separate
-terminal window to keep an eye on context consumption.
-
-### Setup
-
-After running `ctx init`, the monitor script is available at:
-
-```bash
-.context/tools/context-watch.sh
-```
-
-### Usage
-
-```bash
-# Default: refresh every 10 seconds
-.context/tools/context-watch.sh
-
-# Custom refresh interval (5 seconds)
-.context/tools/context-watch.sh 5
-```
-
-The monitor displays:
-
-* **Progress bar** with estimated token usage versus effective limit
-* **Color-coded status**: green (healthy), yellow (monitor), red (save and end)
-* **Session info**: file size, message count, last update time
-* **Remaining tokens**: how much usable context is left
-
-![`ctx watch`: Healthy](../images/watch-green.png)
-
-![`ctx watch`: Unhealthy](../images/watch-red.png)
-
-### How It Works
-
-The monitor finds the most recently modified session `JSONL` in
-`~/.claude/projects/`, estimates token count using a character-based heuristic
-(~30 chars per token for JSON content), and adds an overhead estimate for system
-prompts, tools, and skills that aren't in the JSONL.
-
-| Constant           | Value   | Meaning                                    |
-|--------------------|---------|--------------------------------------------|
-| Model limit        | 200,000 | Claude's context window                    |
-| Autocompact buffer | 33,000  | Reserved by Claude Code, not usable        |
-| System overhead    | 20,000  | System prompt + tools + skills + memory    |
-| Effective limit    | 167,000 | What you can actually use for conversation |
-
-!!! tip "Pair with the context checkpoint hook"
-
-    The monitor is for **manual observation**. For **automated alerts** within
-    your session, the ctx plugin includes a `check-context-size` hook that
-    triggers the `/ctx-context-monitor` skill at adaptive intervals.
-
 ## Obsidian Vault Export
 
 If you use [Obsidian](https://obsidian.md/) for knowledge management, you can
@@ -429,12 +374,11 @@ To use: open the output directory in Obsidian ("Open folder as vault").
 ctx journal obsidian --output ~/vaults/ctx-journal
 ```
 
-!!! tip "Static site vs Obsidian vault"
-
+!!! tip "Static site vs Obsidian Vault"
     Use `ctx journal site` when you want a **web-browsable** archive with search
     and dark mode. Use `ctx journal obsidian` when you want **graph view**,
     **backlinks**, and **tag-based navigation** inside Obsidian. Both use the
-    same enriched source entries — you can generate both.
+    same enriched source entries: you can generate both.
 
 ## Full Pipeline
 
@@ -445,12 +389,12 @@ re-run, and stages skip already-processed entries.
 export → enrich → rebuild
 ```
 
-| Stage         | Command / Skill            | What it does                            | Skips if                     |
-|---------------|----------------------------|-----------------------------------------|------------------------------|
-| **Export**    | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
-| **Enrich**    | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present  |
-| **Rebuild**   | `ctx journal site --build` | Generates static HTML site              | —                            |
-| **Obsidian**  | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | —                            |
+| Stage        | Command / Skill            | What it does                            | Skips if                           |
+|--------------|----------------------------|-----------------------------------------|------------------------------------|
+| **Export**   | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
+| **Enrich**   | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present        |
+| **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | —                                  |
+| **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | —                                  |
 
 ### Using `make journal`
 
@@ -470,10 +414,10 @@ Next steps (in Claude Code):
 Then re-run: make journal
 ```
 
-!!! tip "Rendering issues?"
-    If individual entries have rendering problems (broken fences, malformed
-    lists), use `/ctx-journal-normalize` on the affected file. This is rarely
-    needed — programmatic normalization during export handles most cases.
+!!! tip "Rendering Issues?"
+    If individual entries have rendering problems (*broken fences, malformed
+    lists*), use `/ctx-journal-normalize` on the affected file. This is rarely
+    needed as programmatic normalization during export handles **most** cases.
 
 ## Tips
 
@@ -500,20 +444,21 @@ grep -r "authentication" .context/journal/
 
 ## Requirements
 
+??? warning "Use `pipx` for `zensical`"
+    `pip install zensical` may install a non-functional stub on
+    system Python. Using `venv` has other issues too.
+
+    These issues especially happen on *Mac OSX*.
+
+    Use `pipx install zensical`, which creates an
+    isolated environment and handles Python version management automatically.
+
+
 The journal site uses [zensical](https://pypi.org/project/zensical/) for static site generation:
 
 ```bash
 pipx install zensical
 ```
-
-!!! warn "Use pipx for zensical"
-    `pip install zensical` may install a non-functional stub on
-    system Python 3.9. 
-
-    Use `pipx install zensical` instead, which creates an
-    isolated environment and handles Python version management automatically.
-
-    This issue especially happens on *Mac OSX*.
 
 ## See Also
 

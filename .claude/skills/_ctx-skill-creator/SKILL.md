@@ -1,5 +1,5 @@
 ---
-name: skill-creator
+name: _ctx-skill-creator
 description: "Guide for creating or improving skills. Use when building a new skill or evaluating an existing one."
 ---
 
@@ -25,9 +25,9 @@ provide.
 ## Usage Examples
 
 ```text
-/skill-creator
-/skill-creator (improve the qa skill)
-/skill-creator (create a new deploy skill)
+/_ctx-skill-creator
+/_ctx-skill-creator (improve the qa skill)
+/_ctx-skill-creator (create a new deploy skill)
 ```
 
 ## Core Principles

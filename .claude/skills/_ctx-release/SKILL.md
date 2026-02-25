@@ -1,5 +1,5 @@
 ---
-name: release
+name: _ctx-release
 description: "Run the full release process. Use when cutting a new version of ctx."
 ---
 
@@ -10,7 +10,7 @@ Execute the release process for Context CLI.
 All three prerequisites must be true:
 
 1. **VERSION** is updated to the new version number
-2. **`dist/RELEASE_NOTES.md`** exists (generate with `/release-notes`)
+2. **`dist/RELEASE_NOTES.md`** exists (generate with `/_ctx-release-notes`)
 3. **Working tree is clean** (all changes committed)
 
 If any prerequisite fails, stop and tell the user what to fix.
@@ -22,7 +22,7 @@ If any prerequisite fails, stop and tell the user what to fix.
 
 ## When NOT to Use
 
-- When only generating release notes (use `/release-notes`)
+- When only generating release notes (use `/_ctx-release-notes`)
 - When doing a dry run or preview
 
 ## Process

@@ -22,7 +22,7 @@ If any of these sound like your project, it's worth trying:
 - **Architectural decisions that matter**: Your project has non-obvious
   choices (*database, auth strategy, API design*) that the AI keeps
   second-guessing.
-- **"Why" matters as much as "what"**: you need the AI to understand
+- **"*Why*" matters as much as "*what*"**: you need the AI to understand
   *rationale*, not just current code
 - **Team handoffs**: Multiple people (*or multiple AI tools*) work on the
   same project and need shared context.

@@ -123,7 +123,7 @@ Agent: [runs ctx pad rm 2]
 
 ### Step 7: Store a File as a Blob
 
-The scratchpad can hold small files (up to 64 KB) as encrypted blob entries.
+The scratchpad can hold small files (*up to 64 KB*) as encrypted blob entries.
 The file is base64-encoded and stored alongside a label you provide:
 
 ```bash
@@ -154,7 +154,7 @@ raw bytes.
 
 ### Step 9: Bulk Import Notes
 
-When you have a file with many notes (one per line), import them in bulk
+When you have a file with many notes (*one per line*), import them in bulk
 instead of adding one at a time:
 
 ```bash
@@ -224,27 +224,27 @@ Once the skill is active, it translates intent into commands:
 
 ## When to Use Scratchpad vs Context Files
 
-| Situation                                                  | Use                |
-|------------------------------------------------------------|--------------------|
-| Temporary reminders ("*check X after deploy*")             | **Scratchpad**     |
-| Session-start reminders ("*remind me next session*")       | **`ctx remind`**   |
-| Working values during debugging (ports, endpoints, counts) | **Scratchpad**     |
-| Sensitive tokens or API keys (short-term storage)          | **Scratchpad**     |
-| Quick notes that don't fit anywhere else                   | **Scratchpad**     |
-| Work items with completion tracking                        | **TASKS.md**       |
-| Trade-offs between alternatives with rationale             | **DECISIONS.md**   |
-| Reusable lessons with context/lesson/application           | **LEARNINGS.md**   |
-| Codified patterns and standards                            | **CONVENTIONS.md** |
+| Situation                                                  | Use                  |
+|------------------------------------------------------------|----------------------|
+| Temporary reminders ("*check X after deploy*")             | **Scratchpad**       |
+| Session-start reminders ("*remind me next session*")       | **`ctx remind`**     |
+| Working values during debugging (ports, endpoints, counts) | **Scratchpad**       |
+| Sensitive tokens or API keys (short-term storage)          | **Scratchpad**       |
+| Quick notes that don't fit anywhere else                   | **Scratchpad**       |
+| Work items with completion tracking                        | **`TASKS.md`**       |
+| Trade-offs between alternatives with rationale             | **`DECISIONS.md`**   |
+| Reusable lessons with context/lesson/application           | **`LEARNINGS.md`**   |
+| Codified patterns and standards                            | **`CONVENTIONS.md`** |
 
-**Decision guide:**
+**Decision Guide**
 
 * If it has structured fields (*context, rationale, lesson, application*),
-  it belongs in a context file.
+  it belongs in a **context file** like `DECISIONS.md` or `LEARNINGS.md`.
 * If it's a work item you'll mark done, it belongs in `TASKS.md`.
-* If you want a message relayed verbatim at the next session start,
+* If you want a message relayed VERBATIM at the next session start,
   it belongs in `ctx remind`.
-* If it's a quick note, reminder, or working value  (*especially if it's
-  sensitive or ephemeral*) it belongs on the scratchpad.
+* If it's a quick note, reminder, or working value (*especially if it's
+  sensitive or ephemeral*) it belongs on the **scratchpad**.
 
 !!! tip "Scratchpad Is Not a Junk Drawer"
     The scratchpad is for working memory, not long-term storage.
@@ -256,18 +256,18 @@ Once the skill is active, it translates intent into commands:
 
 ## Tips
 
-* **Entries persist across sessions.** The scratchpad is committed
+* **Entries persist across sessions**: The scratchpad is committed
   (encrypted) to git, so entries survive session boundaries. Pick up
   where you left off.
-* **Entries are numbered and reorderable.** Use `ctx pad mv` to put
+* **Entries are numbered and reorderable**: Use `ctx pad mv` to put
   high-priority items at the top.
-* **`ctx pad show N` enables unix piping.** Output raw entry text
+* **`ctx pad show N` enables unix piping**: Output raw entry text
   with no numbering prefix. Compose with `--append`, `--prepend`, or
   other shell tools.
-* **Never mention the key file contents to the AI.** The agent knows
+* **Never mention the key file contents to the AI**: The agent knows
   how to use `ctx pad` commands but should never read or print
   `.context/.context.key` directly.
-* **Encryption is transparent.** You interact with plaintext; the
+* **Encryption is transparent**: You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.
 
 ## Next Up

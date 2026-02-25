@@ -211,14 +211,14 @@ Keep reports actionable. Every finding should suggest a concrete fix or next ste
 
 ## Analyses to Run
 
-### 1. Extractable Patterns (session mining)
+### 1. Extractable Patterns (*session mining*)
 Search session JSONL files, journal entries, and task archives for repetitive
 multi-step workflows. Count frequency of bash command sequences, slash command
 usage, and recurring user prompts. Identify patterns that could become skills
 or scripts. Cross-reference with existing skills to find coverage gaps.
 Output: ranked list of automation opportunities with frequency data.
 
-### 2. Documentation Drift (godoc + inline)
+### 2. Documentation Drift (*godoc + inline*)
 Compare every doc.go against its package's actual exports and behavior. Check
 inline godoc comments on exported functions against their implementations.
 Scan for stale TODO/FIXME/HACK comments. Check that package-level comments match
@@ -250,7 +250,7 @@ Output: findings with severity ratings and plausible exploit scenarios.
 
 ### 5. Blog Theme Discovery
 Read existing blog posts for style and narrative voice. Analyze git history,
-recent session discussions, and DECISIONS.md for story arcs worth writing about.
+recent session discussions, and `DECISIONS.md` for story arcs worth writing about.
 Suggest 3-5 blog post themes with:
 - title
 - angle

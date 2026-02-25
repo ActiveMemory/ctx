@@ -449,7 +449,7 @@ Now the AI knows the subtasks serve a specific user-facing deliverable.
 
 ### Use Acceptance Criteria
 
-For complex tasks, add explicit "done when" criteria:
+For complex tasks, add explicit "*done when*" criteria:
 
 ```markdown
 - [ ] T2.0: Authentication system
@@ -486,10 +486,10 @@ Verify the stated deliverable exists and works.
 Found a prompt that works well?
 [Open an issue](https://github.com/ActiveMemory/ctx/issues) or PR with:
 
-1. The prompt text
-2. What behavior it triggers
-3. When to use it
-4. Why it works (*optional but helpful*)
+1. The prompt text;
+2. What behavior it triggers;
+3. When to use it;
+4. Why it works (*optional but helpful*).
 
 ----
 

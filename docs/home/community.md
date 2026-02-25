@@ -13,8 +13,8 @@ icon: lucide/heart-handshake
 
 **Open source is better together**.
 
-We are the builders who care about **durable** context, **verifiable** decisions, and
-human–AI workflows that **compound** over time.
+We are the builders who care about **durable** context, **verifiable** decisions, 
+and human–AI workflows that **compound** over time.
 
 !!! tip "Help `ctx` Change How AI Remembers"
     If the idea behind `ctx` resonates, a star helps it reach engineers

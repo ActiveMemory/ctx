@@ -132,7 +132,7 @@ An LLM session without memory is IRC without a bouncer:
 
 That is **friction**.
 
-!!! tip "This Walks and Talks like ctx"
+!!! tip "This Walks and Talks like `ctx`"
     Context engineering moves memory
     **out of sessions** and **into infrastructure**.
 

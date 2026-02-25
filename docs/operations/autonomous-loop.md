@@ -15,9 +15,10 @@ icon: lucide/repeat
 
 *Iterate until done.*
 
-An **autonomous loop** is an iterative AI development workflow where an agent works
-on tasks until completion—without constant human intervention. Context (`ctx`)
-provides the memory that makes this possible:
+An **autonomous loop** is an iterative AI development workflow where an agent 
+works on tasks until completion—without constant human intervention. 
+
+`ctx` provides the memory that makes this possible:
 
 * **`ctx`** provides the *memory*: persistent context that survives across iterations
 * **The loop** provides the *automation*: continuous execution until done

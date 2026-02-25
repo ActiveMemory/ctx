@@ -7,7 +7,7 @@ icon: lucide/shield-check
 
 ## The Problem
 
-ctx runs 12 system hooks behind the scenes — nudging your agent to persist
+`ctx` runs 14 system hooks behind the scenes: nudging your agent to persist
 context, warning about resource pressure, gating commits on QA. But these
 hooks are **invisible by design**. You never see them fire. You never know
 if they stopped working.
@@ -18,41 +18,41 @@ and get alerted when they go silent?**
 ## TL;DR
 
 ```bash
-ctx system check-resources          # run a hook manually
-ls -la .context/logs/               # check hook execution logs
-ctx notify setup                    # get notified when hooks fire
+ctx system check-resources # run a hook manually
+ls -la .context/logs/      # check hook execution logs
+ctx notify setup           # get notified when hooks fire
 ```
 
 Or ask your agent: *"Are our hooks running?"*
 
 ## Commands and Skills Used
 
-| Tool | Type | Purpose |
-|------|------|---------|
-| `ctx system <hook>` | CLI command | Run a system hook manually |
-| `ctx system resources` | CLI command | Show system resource status |
-| `ctx notify setup` | CLI command | Configure webhook for audit trail |
-| `ctx notify test` | CLI command | Verify webhook delivery |
+| Tool                     | Type          | Purpose                                  |
+|--------------------------|---------------|------------------------------------------|
+| `ctx system <hook>`      | CLI command   | Run a system hook manually               |
+| `ctx system resources`   | CLI command   | Show system resource status              |
+| `ctx notify setup`       | CLI command   | Configure webhook for audit trail        |
+| `ctx notify test`        | CLI command   | Verify webhook delivery                  |
 | `.ctxrc` `notify.events` | Configuration | Subscribe to `relay` for full hook audit |
-| `.context/logs/` | Log files | Local hook execution ledger |
+| `.context/logs/`         | Log files     | Local hook execution ledger              |
 
 ---
 
-## What System Hooks Are
+## What Are System Hooks?
 
-System hooks are **plumbing commands** that ctx registers with your AI tool
-(Claude Code, Cursor, etc.) via the plugin's `hooks.json`. They fire
+System hooks are **plumbing commands** that `ctx` registers with your AI tool
+(*Claude Code, Cursor, etc.*) via the plugin's `hooks.json`. They fire
 automatically at specific events during your AI session:
 
-| Event | When | Hooks |
-|-------|------|-------|
-| `UserPromptSubmit` | Before the agent sees your prompt | 7 check hooks |
-| `PreToolUse` | Before the agent uses a tool | `block-non-path-ctx`, `qa-reminder` |
-| `PostToolUse` | After a tool call succeeds | `post-commit` |
-| `SessionEnd` | Session terminates | `cleanup-tmp` |
+| Event              | When                              | Hooks                               |
+|--------------------|-----------------------------------|-------------------------------------|
+| `UserPromptSubmit` | Before the agent sees your prompt | 9 check hooks                       |
+| `PreToolUse`       | Before the agent uses a tool      | `block-non-path-ctx`, `qa-reminder` |
+| `PostToolUse`      | After a tool call succeeds        | `post-commit`                       |
+| `SessionEnd`       | Session terminates                | `cleanup-tmp`                       |
 
-You never run these manually. Your AI tool runs them for you. That's the
-point — and the problem.
+You never run these manually. Your AI tool runs them for you: That's the
+point.
 
 ---
 
@@ -62,10 +62,10 @@ point — and the problem.
 
 These fire before every prompt, but most are throttled to avoid noise.
 
-#### `check-context-size` — Context Capacity Warning
+#### `check-context-size`: Context Capacity Warning
 
 **What**: Adaptive prompt counter. Silent for the first 15 prompts, then
-nudges with increasing frequency (every 5th, then every 3rd).
+nudges with increasing frequency (*every 5th, then every 3rd*).
 
 **Why**: Long sessions lose coherence. The nudge reminds both you and the
 agent to persist context before the window fills up.
@@ -82,13 +82,13 @@ agent to persist context before the window fills up.
 
 ---
 
-#### `check-persistence` — Context Staleness Nudge
+#### `check-persistence`: Context Staleness Nudge
 
 **What**: Tracks when `.context/*.md` files were last modified. If too many
 prompts pass without a write, nudges the agent to persist.
 
 **Why**: Sessions produce insights that evaporate if not recorded. This
-catches the "we talked about it but never wrote it down" failure mode.
+catches the "*we talked about it but never wrote it down*" failure mode.
 
 **Output**: VERBATIM relay after 20+ prompts without a context file change.
 
@@ -105,19 +105,19 @@ catches the "we talked about it but never wrote it down" failure mode.
 
 ---
 
-#### `check-ceremonies` — Session Ritual Adoption
+#### `check-ceremonies`: Session Ritual Adoption
 
 **What**: Scans your last 3 journal entries for `/ctx-remember` and
 `/ctx-wrap-up` usage. Nudges once per day if missing.
 
-**Why**: Session ceremonies are the highest-leverage habit in ctx. This
+**Why**: Session ceremonies are the highest-leverage habit in `ctx`. This
 hook bootstraps the habit until it becomes automatic.
 
 **Output**: Tailored nudge depending on which ceremony is missing.
 
 ---
 
-#### `check-journal` — Unexported Session Reminder
+#### `check-journal`: Unexported Session Reminder
 
 **What**: Detects unexported Claude Code sessions and unenriched journal
 entries. Fires once per day.
@@ -140,7 +140,7 @@ lack metadata for filtering. Both decay in value over time.
 
 ---
 
-#### `check-resources` — System Resource Pressure
+#### `check-resources`: System Resource Pressure
 
 **What**: Monitors memory, swap, disk, and CPU load. Only fires at
 **DANGER** severity (memory >= 90%, swap >= 75%, disk >= 95%,
@@ -153,7 +153,7 @@ early warning to persist and exit.
 
 ---
 
-#### `check-knowledge` — Knowledge File Growth
+#### `check-knowledge`: Knowledge File Growth
 
 **What**: Counts entries in `LEARNINGS.md`, `DECISIONS.md`, and lines in
 `CONVENTIONS.md`. Fires once per day when thresholds are exceeded.
@@ -173,7 +173,7 @@ convention_line_count: 200
 
 ---
 
-#### `check-version` — Binary/Plugin Version Drift
+#### `check-version`: Binary/Plugin Version Drift
 
 **What**: Compares the `ctx` binary version against the plugin version.
 Fires once per day. Also checks encryption key age for rotation nudge.
@@ -183,19 +183,65 @@ have. The key rotation nudge prevents indefinite key reuse.
 
 ---
 
+#### `check-reminders`: Pending Reminder Relay
+
+**What**: Reads `.context/reminders.json` and surfaces any due reminders
+via VERBATIM relay. **No throttle**: fires every session until dismissed.
+
+**Why**: Reminders are sticky notes to future-you. Unlike nudges (*which
+throttle to once per day*), reminders repeat deliberately until the user
+dismisses them.
+
+**Output**: VERBATIM relay box listing due reminders.
+
+```
+┌─ Reminders ──────────────────────────────────────
+│  [1] refactor the swagger definitions
+│
+│ Dismiss: ctx remind dismiss <id>
+│ Dismiss all: ctx remind dismiss --all
+└──────────────────────────────────────────────────
+```
+
+---
+
+#### `check-map-staleness`: Architecture Map Drift
+
+**What**: Checks whether `map-tracking.json` is older than 30 days and
+there are commits touching `internal/` since the last map refresh. Daily
+throttle prevents repeated nudges.
+
+**Why**: Architecture documentation drifts silently as code evolves. This
+hook detects structural changes that the map hasn't caught up with and
+suggests running `/ctx-map` to refresh.
+
+**Output**: VERBATIM relay when stale and modules changed, silent otherwise.
+
+```
+┌─ Architecture Map Stale ────────────────────────────
+│ ARCHITECTURE.md hasn't been refreshed since 2026-01-15
+│ and there are commits touching 12 modules.
+│ /ctx-map keeps architecture docs drift-free.
+│
+│ Want me to run /ctx-map to refresh?
+└─────────────────────────────────────────────────────
+```
+
+---
+
 ### Tool-Time Hooks (PreToolUse / PostToolUse)
 
-#### `block-non-path-ctx` — PATH Enforcement (Hard Gate)
+#### `block-non-path-ctx`: PATH Enforcement (Hard Gate)
 
 **What**: Blocks any Bash command that invokes `./ctx`, `./dist/ctx`,
 `go run ./cmd/ctx`, or an absolute path to `ctx`. Only PATH invocations
 are allowed.
 
-**Why**: Enforces CONSTITUTION.md's invocation invariant. Running a
+**Why**: Enforces `CONSTITUTION.md`'s invocation invariant. Running a
 dev-built binary in production context causes version confusion and
 silent behavior drift.
 
-**Output**: Block response (prevents the tool call):
+**Output**: Block response (*prevents the tool call*):
 
 ```json
 {"decision": "block", "reason": "Use 'ctx' from PATH, not './ctx'..."}
@@ -203,20 +249,20 @@ silent behavior drift.
 
 ---
 
-#### `qa-reminder` — Pre-Commit QA Gate
+#### `qa-reminder`: Pre-Commit QA Gate
 
 **What**: Fires on every `Edit` tool use. Reminds the agent to lint and
 test the **entire** project before committing.
 
-**Why**: Agents tend to "I'll test later" and then commit untested code.
-Repetition is intentional — the hook reinforces the habit on every edit,
+**Why**: Agents tend to "*I'll test later*" and then commit untested code.
+Repetition is **intentional**: the hook reinforces the habit on every edit,
 not just before commits.
 
 **Output**: Agent directive with hard QA gate instructions.
 
 ---
 
-#### `post-commit` — Context Capture After Commit
+#### `post-commit`: Context Capture After Commit
 
 **What**: Fires after any `git commit` (excludes `--amend`). Prompts the
 agent to offer context capture (decision? learning?) and suggest running
@@ -229,15 +275,15 @@ mechanical git operations into context-capturing opportunities.
 
 ### Session Lifecycle (SessionEnd)
 
-#### `cleanup-tmp` — Temp File Cleanup
+#### `cleanup-tmp`: Temp File Cleanup
 
-**What**: Removes files older than 15 days from the ctx temp directory
+**What**: Removes files older than 15 days from the `ctx` temp directory
 (`$XDG_RUNTIME_DIR/ctx/` or `/tmp/ctx-<uid>/`).
 
-**Why**: State files from throttling (daily markers, prompt counters)
+**Why**: State files from throttling (*daily markers, prompt counters*)
 accumulate. Silent cleanup prevents temp directory bloat.
 
-**Output**: None (silent side-effect).
+**Output**: None (*silent side-effect*).
 
 ---
 
@@ -269,19 +315,21 @@ notify:
 The `relay` event fires for **every** hook that produces output. This
 includes:
 
-| Hook | Event sent |
-|------|-----------|
-| `check-context-size` | `relay` + `nudge` |
-| `check-persistence` | `relay` + `nudge` |
-| `check-ceremonies` | `relay` + `nudge` |
-| `check-journal` | `relay` + `nudge` |
-| `check-resources` | `relay` + `nudge` |
-| `check-knowledge` | `relay` + `nudge` |
-| `check-version` | `relay` + `nudge` |
-| `block-non-path-ctx` | `relay` only |
-| `post-commit` | `relay` only |
-| `qa-reminder` | `relay` only |
-| `cleanup-tmp` | *(silent — no notification)* |
+| Hook                  | Event sent                  |
+|-----------------------|-----------------------------|
+| `check-context-size`  | `relay` + `nudge`           |
+| `check-persistence`   | `relay` + `nudge`           |
+| `check-ceremonies`    | `relay` + `nudge`           |
+| `check-journal`       | `relay` + `nudge`           |
+| `check-resources`     | `relay` + `nudge`           |
+| `check-knowledge`     | `relay` + `nudge`           |
+| `check-version`       | `relay` + `nudge`           |
+| `check-reminders`     | `relay` + `nudge`           |
+| `check-map-staleness` | `relay` + `nudge`           |
+| `block-non-path-ctx`  | `relay` only                |
+| `post-commit`         | `relay` only                |
+| `qa-reminder`         | `relay` only                |
+| `cleanup-tmp`         | *(silent: no notification)* |
 
 ### Step 3: Cross-Reference
 
@@ -314,17 +362,19 @@ from simplest to most robust:
 
 The simplest check. After a few prompts into a session:
 
-> "Did you receive any hook output this session? Print the last
-> context checkpoint or persistence nudge you saw."
+```text
+"Did you receive any hook output this session? Print the last
+context checkpoint or persistence nudge you saw."
+```
 
 The agent should be able to recall recent hook output from its context
-window. If it says "I haven't received any hook output," either:
+window. If it says "*I haven't received any hook output*", either:
 
-- The hooks aren't firing (check installation)
-- The session is too short (hooks throttle early)
-- The hooks fired but the agent absorbed them silently
+* The hooks aren't firing (*check installation*);
+* The session is too short (*hooks throttle early*);
+* The hooks fired but the agent absorbed them silently.
 
-**Limitation**: You're trusting the agent to report accurately. Agents
+**Limitation**: You are trusting the agent to report accurately. Agents
 sometimes confabulate or miss context. Use this as a quick smoke test,
 not definitive proof.
 
@@ -334,7 +384,7 @@ If you have `relay` events enabled, check your webhook receiver. Every
 hook that fires sends a timestamped notification. No notification =
 no fire.
 
-This is the **ground truth**. The webhook is called directly by the ctx
+This is the **ground truth**. The webhook is called directly by the `ctx`
 binary, not by the agent. The agent cannot fake, suppress, or modify
 webhook deliveries.
 
@@ -365,7 +415,7 @@ cat .context/logs/check-persistence.log
 # [2026-02-22 09:20:01] [session:b854bd9c] prompt#20 NUDGE since_nudge=20
 ```
 
-Logs are append-only and written by the ctx binary, not the agent.
+Logs are append-only and written by the `ctx` binary, not the agent.
 
 ---
 
@@ -373,7 +423,7 @@ Logs are append-only and written by the ctx binary, not the agent.
 
 The hardest failure mode: hooks that **stop firing** without error. The
 plugin config changes, a binary update drops a hook, or a PATH issue
-silently breaks execution. Nothing errors — the hook just never runs.
+silently breaks execution. Nothing errors: The hook just never runs.
 
 ### The Staleness Signal
 
@@ -384,11 +434,11 @@ inactivity.
 
 ### False Positive Protection
 
-A naive "hooks haven't fired in N days" alert fires incorrectly when
-you simply haven't used ctx. The correct check needs two inputs:
+A naive "*hooks haven't fired in N days*" alert fires incorrectly when
+you simply haven't used `ctx`. The correct check needs two inputs:
 
-1. **Last hook fire time** — from `.context/logs/` or webhook history
-2. **Last session activity** — from journal entries or `ctx recall list`
+1. **Last hook fire time**: from `.context/logs/` or webhook history
+2. **Last session activity**: from journal entries or `ctx recall list`
 
 If sessions are happening but hooks aren't firing, that's a real
 problem. If neither sessions nor hooks are happening, that's a vacation.
@@ -416,36 +466,32 @@ ctx --version
 
 ## Tips
 
-* **Start with `nudge`, graduate to `relay`**. The `nudge` event covers
+* **Start with `nudge`, graduate to `relay`**: The `nudge` event covers
   user-facing VERBATIM relays. Add `relay` when you want full visibility
   into agent directives and hard gates.
-
-* **Webhooks are your trust anchor**. The agent can ignore a nudge, but
-  it can't suppress the webhook. If the webhook fired and the agent
-  didn't relay, you have proof of a compliance gap.
-
-* **Hooks are throttled by design**. Most check hooks fire once per day
-  or use adaptive frequency. Don't expect a notification every prompt —
-  silence usually means the throttle is working, not that the hook is
+* [**Webhooks are your trust anchor**](webhook-notifications.md): 
+  The agent can ignore a nudge, but it can't suppress the webhook. 
+  If the webhook fired and the agent didn't relay, you have proof of a 
+  compliance gap.
+* **Hooks are throttled by design**: Most check hooks fire once per day
+  or use adaptive frequency. Don't expect a notification every prompt:
+  Silence usually means the throttle is working, not that the hook is
   broken.
-
-* **Daily markers live in temp**. Throttle files are stored in
+* **Daily markers live in temp**: Throttle files are stored in
   `$XDG_RUNTIME_DIR/ctx/` and cleaned up by `cleanup-tmp` after 15
   days. If you need to force a hook to re-fire during testing, delete
   the corresponding marker file.
-
-* **The QA reminder is intentionally noisy**. Unlike other hooks,
+* **The QA reminder is intentionally noisy**: Unlike other hooks,
   `qa-reminder` fires on every `Edit` call with no throttle. This is
-  deliberate — commit quality degrades when the reminder fades from
+  deliberate: The commit quality degrades when the reminder fades from
   salience.
-
-* **Log files are safe to commit**. `.context/logs/` contains only
+* **Log files are safe to commit**: `.context/logs/` contains only
   timestamps, session IDs, and status keywords. No secrets, no code.
 
 ## Next Up
 
-**[Webhook Notifications →](webhook-notifications.md)**: Get push
-notifications when loops complete, hooks fire, or agents hit milestones.
+**[Detecting and Fixing Drift →](context-health.md)**: Keep context
+files accurate as your codebase evolves.
 
 ## See Also
 

@@ -1,5 +1,5 @@
 ---
-name: absorb
+name: _ctx-absorb
 description: "Extract and apply deltas between two directories of the same project. Use when merging results from a parallel worktree or separate checkout where git push/pull isn't practical."
 allowed-tools: Bash(git:*), Bash(diff:*), Bash(ls:*), Bash(patch:*), Read
 ---

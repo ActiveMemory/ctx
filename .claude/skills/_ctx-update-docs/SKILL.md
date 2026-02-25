@@ -1,5 +1,5 @@
 ---
-name: update-docs
+name: _ctx-update-docs
 description: "Check if docs and code conventions are consistent after changes. Use after modifying source code, before committing, or when asked to sync docs."
 ---
 
@@ -24,8 +24,8 @@ conventions for consistency.
 ## Usage Examples
 
 ```text
-/update-docs
-/update-docs (after adding --session flag to ctx agent)
+/_ctx-update-docs
+/_ctx-update-docs (after adding --session flag to ctx agent)
 ```
 
 ## Workflow

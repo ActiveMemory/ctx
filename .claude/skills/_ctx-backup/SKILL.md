@@ -1,5 +1,5 @@
 ---
-name: backup
+name: _ctx-backup
 description: "Backup project context and global Claude data to SMB share. Use before risky operations, at end of session, or on request."
 allowed-tools: Bash(make backup*), Bash(ls /tmp/ctx-backup*)
 ---

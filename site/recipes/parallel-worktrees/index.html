@@ -1131,6 +1131,8 @@
       
         
       
+        
+      
     
     
     
@@ -1256,6 +1258,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1570,16 +1602,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../system-hooks-audit/" class="md-nav__link">
+      <a href="../webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1600,16 +1632,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../webhook-notifications/" class="md-nav__link">
+      <a href="../system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2583,7 +2615,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2613,7 +2645,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2643,7 +2675,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -3145,7 +3177,7 @@ working in parallel, each on its own track, without stepping on each
 other's files.</p>
 <p><strong>Git worktrees</strong> solve this. </p>
 <p>Each worktree is a separate working directory with its own branch, but they 
-share the same <code>.git</code> object database. Combined with ctx's persistent context, 
+share the same <code>.git</code> object database. Combined with <code>ctx</code>'s persistent context, 
 each agent session picks up the full project state and works independently.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-worktree                                   # 1. group tasks by file overlap
@@ -3196,7 +3228,7 @@ touches.</p>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tracks based on which files they&#39;d touch. Show me the grouping
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>before creating anything.
 </span></code></pre></div>
-<p>The agent reads TASKS.md, estimates file overlap, and proposes groups:</p>
+<p>The agent reads <code>TASKS.md</code>, estimates file overlap, and proposes groups:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Proposed worktree groups:
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  work/docs    — recipe updates, blog post (touches: docs/)
@@ -3215,7 +3247,7 @@ directories:</p>
 </span></code></pre></div>
 <p>Each worktree is a full working copy on its own branch.</p>
 <h3 id="step-3-launch-agents">Step 3: Launch Agents<a class="headerlink" href="#step-3-launch-agents" title="Permanent link">&para;</a></h3>
-<p>Open a separate terminal (or editor window) for each worktree and
+<p>Open a separate terminal (<em>or editor window</em>) for each worktree and
 start a Claude Code session:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Terminal 1</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">cd</span><span class="w"> </span>../myproject-docs
@@ -3230,10 +3262,14 @@ start a Claude Code session:</p>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>claude
 </span></code></pre></div>
 <p>Each agent sees the full project, including <code>.context/</code>, and can work
-independently. Do <strong>not</strong> run <code>ctx init</code> in worktrees: The context
+independently. </p>
+<div class="admonition warning">
+<p class="admonition-title">Do Not Initialize Context in Worktrees</p>
+<p><strong>Do not</strong> run <code>ctx init</code> in worktrees: The <code>.context</code>
 directory is already tracked in <code>git</code>.</p>
+</div>
 <h3 id="step-4-work">Step 4: Work<a class="headerlink" href="#step-4-work" title="Permanent link">&para;</a></h3>
-<p>Each agent works through its assigned tasks. They can read TASKS.md to
+<p>Each agent works through its assigned tasks. They can read <code>TASKS.md</code> to
 know what's assigned to their track, use <code>/ctx-next</code> to pick the next
 item, and commit normally on their <code>work/*</code> branch.</p>
 <h3 id="step-5-merge-back">Step 5: Merge Back<a class="headerlink" href="#step-5-merge-back" title="Permanent link">&para;</a></h3>
@@ -3242,17 +3278,14 @@ item, and commit normally on their <code>work/*</code> branch.</p>
 </span></code></pre></div>
 <p>The agent checks for uncommitted changes, merges <code>work/docs</code> into your
 current branch, removes the worktree, and deletes the branch.</p>
-<h3 id="step-6-handle-tasksmd-conflicts">Step 6: Handle TASKS.md Conflicts<a class="headerlink" href="#step-6-handle-tasksmd-conflicts" title="Permanent link">&para;</a></h3>
-<p>TASKS.md will almost always conflict when merging — multiple agents
-marked different tasks as <code>[x]</code>. This is expected and easy to resolve:</p>
+<h3 id="step-6-handle-tasksmd-conflicts">Step 6: Handle <code>TASKS.md</code> Conflicts<a class="headerlink" href="#step-6-handle-tasksmd-conflicts" title="Permanent link">&para;</a></h3>
+<p><code>TASKS.md</code> will almost always conflict when merging: Multiple agents
+will mark different tasks as <code>[x]</code>. This is expected and easy to resolve:</p>
 <p><strong>Accept all completions from both sides.</strong> No task should go from
 <code>[x]</code> back to <code>[ ]</code>. The merge resolution is always additive.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>The merge has a conflict in TASKS.md. Both branches completed
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>different tasks. Accept all [x] completions from both sides.
-</span></code></pre></div>
 <h3 id="step-7-cleanup">Step 7: Cleanup<a class="headerlink" href="#step-7-cleanup" title="Permanent link">&para;</a></h3>
 <p>After all tracks are merged, verify everything is clean:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-worktree list
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/ctx-worktree list
 </span></code></pre></div>
 <p>Should show only the main working tree. All <code>work/*</code> branches should
 be gone.</p>
@@ -3281,8 +3314,11 @@ exists in the main checkout. This affects key-dependent features:</p>
   <strong>Enrich journals on the main branch after merging</strong>: the JSONL session
   logs are always intact, and you don't lose any data.</li>
 </ul>
-<p>Tracked context files (<em>TASKS.md, DECISIONS.md, LEARNINGS.md,
-CONVENTIONS.md</em>) work normally; <code>git</code> handles them.</p>
+<div class="admonition info">
+<p class="admonition-title">Context Files Will Merge Just Fine</p>
+<p>Tracked context files (<em><code>TASKS.md</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>,
+<code>CONVENTIONS.md</code></em>) work normally; <code>git</code> handles them.</p>
+</div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>3-4 worktrees max.</strong> Beyond that, merge complexity outweighs the

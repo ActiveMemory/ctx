@@ -1394,6 +1394,8 @@
       
         
       
+        
+      
     
     
     
@@ -1516,6 +1518,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1824,16 +1856,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/system-hooks-audit/" class="md-nav__link">
+      <a href="../../recipes/webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1854,16 +1886,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/webhook-notifications/" class="md-nav__link">
+      <a href="../../recipes/system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2601,7 +2633,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2631,7 +2663,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2661,7 +2693,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -3181,7 +3213,7 @@ with sensible defaults.</p>
 <hr />
 <h2 id="the-ctxrc-file">The <code>.ctxrc</code> File<a class="headerlink" href="#the-ctxrc-file" title="Permanent link">&para;</a></h2>
 <p>The <code>.ctxrc</code> file is an optional YAML file placed in the <strong>project root</strong>
-(next to your <code>.context/</code> directory). It lets you set project-level defaults
+(<em>next to your <code>.context/</code> directory</em>). It lets you set project-level defaults
 that apply to every <code>ctx</code> command.</p>
 <h3 id="location">Location<a class="headerlink" href="#location" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>my-project/
@@ -3289,19 +3321,19 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 <td><code>entry_count_learnings</code></td>
 <td><code>int</code></td>
 <td><code>30</code></td>
-<td>Drift warning when LEARNINGS.md exceeds this entry count (0 = disable)</td>
+<td>Drift warning when <code>LEARNINGS.md</code> exceeds this entry count (0 = disable)</td>
 </tr>
 <tr>
 <td><code>entry_count_decisions</code></td>
 <td><code>int</code></td>
 <td><code>20</code></td>
-<td>Drift warning when DECISIONS.md exceeds this entry count (0 = disable)</td>
+<td>Drift warning when <code>DECISIONS.md</code> exceeds this entry count (0 = disable)</td>
 </tr>
 <tr>
 <td><code>convention_line_count</code></td>
 <td><code>int</code></td>
 <td><code>200</code></td>
-<td>Drift warning when CONVENTIONS.md exceeds this line count (0 = disable)</td>
+<td>Drift warning when <code>CONVENTIONS.md</code> exceeds this line count (0 = disable)</td>
 </tr>
 <tr>
 <td><code>notify.events</code></td>
@@ -3323,7 +3355,7 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Default priority order</strong> (used when <code>priority_order</code> is not set):</p>
+<p><strong>Default priority order</strong> (<em>used when <code>priority_order</code> is not set</em>):</p>
 <ol>
 <li><code>CONSTITUTION.md</code></li>
 <li><code>TASKS.md</code></li>
@@ -3467,7 +3499,7 @@ used. With nothing configured, the default <code>.context</code> applies.</p>
 <hr />
 <h2 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h2>
 <h3 id="external-context-directory">External <code>.context</code> Directory<a class="headerlink" href="#external-context-directory" title="Permanent link">&para;</a></h3>
-<p>Store context outside the project tree (useful for monorepos or shared context):</p>
+<p>Store context outside the project tree (<em>useful for monorepos or shared context</em>):</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># .ctxrc</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">context_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/team/shared-context</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">allow_outside_cwd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -3485,8 +3517,8 @@ where key management is unnecessary</em>):</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># .ctxrc</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">scratchpad_encrypt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Unencrypted scratchpads store secrets in plaintext</p>
+<div class="admonition danger">
+<p class="admonition-title">Unencrypted Scratchpads Store Secrets in Plaintext</p>
 <p>Only disable encryption if you understand the security implications.</p>
 <p>The scratchpad may contain sensitive data such as API keys, database
 URLs, or deployment credentials.</p>
@@ -3542,12 +3574,13 @@ operating rules in both text and JSON formats:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">          </span><span class="c1"># text output for agents</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
 </span></code></pre></div>
-<p>The CLAUDE.md template instructs the agent to run this as its first action.
-Every nudge (context checkpoint, persistence reminder, etc.) also includes a
+<p>The <code>CLAUDE.md</code> template instructs the agent to run this as its first action.
+Every nudge (<em>context checkpoint, persistence reminder, etc.</em>) also includes a
 <code>Context: &lt;dir&gt;</code> footer that re-anchors the agent to the correct directory
 throughout the session.</p>
 <p>This replaces the previous approach of hardcoding <code>.context/</code> paths in agent
-instructions. See <a href="../../reference/cli-reference/#ctx-system-bootstrap">CLI Reference: bootstrap</a>
+instructions. </p>
+<p>See <a href="../../reference/cli-reference/#ctx-system-bootstrap">CLI Reference: bootstrap</a>
 for full details.</p>
 <hr />
 <p><strong>See also</strong>: <a href="../../reference/cli-reference/">CLI Reference</a> | <a href="../context-files/">Context Files</a> | <a href="../../reference/scratchpad/">Scratchpad</a></p>

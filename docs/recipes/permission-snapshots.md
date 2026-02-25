@@ -8,7 +8,7 @@ icon: lucide/camera
 ## The Problem
 
 Claude Code's `.claude/settings.local.json` accumulates one-off permissions
-every time you click "Allow." After busy sessions the file is full of
+every time you click "*Allow*". After busy sessions the file is full of
 session-specific entries that expand the agent's surface area beyond intent.
 
 Since `settings.local.json` is `.gitignore`d, there is no PR review or CI
@@ -41,18 +41,18 @@ with the team.
 
 ## Step by Step
 
-### 1. Curate your permissions
+### 1. Curate Your Permissions
 
 Start with a clean `settings.local.json`. Optionally run `/sanitize-permissions`
 to remove dangerous patterns first.
 
 Review the file manually. Every entry should be there because **you** decided
-it belongs, not because you clicked "Allow" once during debugging.
+it belongs, not because you clicked "*Allow*" once during debugging.
 
 See the [Permission Hygiene](claude-code-permissions.md) recipe for
 recommended defaults.
 
-### 2. Take a snapshot
+### 2. Take a Snapshot
 
 ```bash
 ctx permissions snapshot
@@ -61,7 +61,7 @@ ctx permissions snapshot
 
 This creates a byte-for-byte copy. No re-encoding, no indent changes.
 
-### 3. Commit the golden file
+### 3. Commit the Golden File
 
 ```bash
 git add .claude/settings.golden.json
@@ -71,7 +71,7 @@ git commit -m "Add permission golden image"
 The golden file is **not** gitignored (unlike `settings.local.json`). This
 is intentional: it becomes a team-shared baseline.
 
-### 4. Auto-restore at session start
+### 4. Auto-Restore at the Session Start
 
 Add this instruction to your `CLAUDE.md`:
 
@@ -84,9 +84,9 @@ Run `ctx permissions restore` to reset permissions to the golden image.
 The agent will restore the golden image at the start of every session,
 automatically dropping any permissions accumulated during previous sessions.
 
-### 5. Update when intentional changes are made
+### 5. Update When Intentional Changes Are Made
 
-When you add a new permanent permission (not a one-off debugging entry):
+When you add a new permanent permission (*not a one-off debugging entry*):
 
 ```bash
 # Edit settings.local.json with the new permission
@@ -99,14 +99,14 @@ git commit -m "Update permission golden image: add cargo test"
 ## Conversational Approach
 
 You don't need to remember exact commands. These natural-language prompts
-work with agents trained on the ctx playbook:
+work with agents trained on the `ctx` playbook:
 
-| What you say                              | What happens                                |
-|-------------------------------------------|---------------------------------------------|
-| "Save my current permissions as baseline" | Agent runs `ctx permissions snapshot`        |
-| "Reset permissions to the golden image"   | Agent runs `ctx permissions restore`         |
+| What you say                              | What happens                                     |
+|-------------------------------------------|--------------------------------------------------|
+| "Save my current permissions as baseline" | Agent runs `ctx permissions snapshot`            |
+| "Reset permissions to the golden image"   | Agent runs `ctx permissions restore`             |
 | "Clean up my permissions"                 | Agent runs `/sanitize-permissions` then snapshot |
-| "What permissions did I accumulate?"      | Agent diffs local vs golden                  |
+| "What permissions did I accumulate?"      | Agent diffs local vs golden                      |
 
 ## Next Up
 

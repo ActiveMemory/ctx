@@ -35,7 +35,7 @@ cd ~/repos/myproject
 ctx --context-dir ~/repos/myproject-context --allow-outside-cwd init
 ```
 
-Then, create a [`.ctxrc`](../home/configuration.md) in your **project root**
+Then, [create a `.ctxrc`](../home/configuration.md) in your **project root**
 to specify the new `.context` folder location:
 
 ```yaml
@@ -52,7 +52,7 @@ All `ctx` commands now use the external directory automatically.
 | `ctx init`            | CLI command  | Initialize context directory            |
 | `--context-dir`       | Global flag  | Point ctx at a non-default directory    |
 | `--allow-outside-cwd` | Global flag  | Permit context outside the project root |
-| `.ctxrc`          | Config file  | Persist the context directory setting   |
+| `.ctxrc`              | Config file  | Persist the context directory setting   |
 | `CTX_DIR`             | Env variable | Override context directory per-session  |
 | `/ctx-status`         | Skill        | Verify context is loading correctly     |
 
@@ -119,8 +119,10 @@ ctx add learning "Redis MULTI doesn't roll back on error"
 ```
 
 !!! tip "Commit `.ctxrc`"
-    `.ctxrc` belongs in the project repo. It contains no secrets — just a
-    path and a boundary override. It lets teammates share the same configuration.
+    `.ctxrc` belongs in the project repo. It contains no secrets: It's just a
+    path and a boundary override. 
+
+    `.ctxrc` lets teammates share the same configuration.
 
 #### Option B: `CTX_DIR` Environment Variable
 
@@ -290,7 +292,9 @@ Agent: [reads .ctxrc, finds the path, loads context from the external dir]
   `Error: context directory is outside the project root`. Set
   `allow_outside_cwd: true` in `.ctxrc` or pass `--allow-outside-cwd`.
 * **Commit both repos at session boundaries**. Context without code history
-  (or code without context history) loses half the value.
+  (*or code without context history*) loses half the value.
+
+----
 
 ## Next Up
 

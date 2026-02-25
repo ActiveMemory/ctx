@@ -1131,6 +1131,8 @@
       
         
       
+        
+      
     
     
     
@@ -1256,6 +1258,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1570,16 +1602,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../system-hooks-audit/" class="md-nav__link">
+      <a href="../webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1600,16 +1632,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../webhook-notifications/" class="md-nav__link">
+      <a href="../system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2578,7 +2610,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2608,7 +2640,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2638,7 +2670,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -3130,8 +3162,9 @@
 <p>Claude Code's <code>.claude/settings.local.json</code> controls what the agent can do
 without asking. Over time, this file accumulates one-off permissions from
 individual sessions: Exact commands with hardcoded paths, duplicate entries,
-and stale skill references. A noisy "<em>allowlist</em>" makes it harder to spot
-dangerous permissions and increases the surface area for unintended behavior.</p>
+and stale skill references. </p>
+<p>A noisy "<em>allowlist</em>" makes it harder to spot dangerous permissions and 
+increases the surface area for unintended behavior.</p>
 <p>Since <code>settings.local.json</code> is <code>.gitignore</code>d, it drifts independently of your
 codebase. There is no PR review, no CI check: just whatever you clicked
 "<em>Allow</em>" on.</p>
@@ -3167,7 +3200,7 @@ keep it clean.</p>
 </tbody>
 </table>
 <h2 id="recommended-defaults">Recommended Defaults<a class="headerlink" href="#recommended-defaults" title="Permanent link">&para;</a></h2>
-<p>After running <code>ctx init</code>, your <code>settings.local.json</code> will have the ctx
+<p>After running <code>ctx init</code>, your <code>settings.local.json</code> will have the <code>ctx</code>
 defaults pre-populated. Here is an opinionated safe starting point for a Go
 project using ctx:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
@@ -3310,10 +3343,10 @@ pattern always prompts the user, even if it also matches an allow entry.</p>
 </tbody>
 </table>
 <div class="admonition note">
-<p class="admonition-title">Read/Edit deny rules</p>
+<p class="admonition-title">Read/Edit Deny Rules</p>
 <p><code>Read()</code> and <code>Edit()</code> deny rules have known upstream enforcement issues
-(<code>claude-code#6631,#24846</code>). They are included as defense-in-depth and
-intent documentation.</p>
+(<code>claude-code#6631,#24846</code>). </p>
+<p>They are included as defense-in-depth and intent documentation.</p>
 </div>
 <p><strong>Blocked by default deny rules</strong> — no action needed, <code>ctx init</code> handles these:</p>
 <table>
@@ -3402,14 +3435,8 @@ catching patterns that require regex matching: Things deny rules can't express.<
 </tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title"><code>block-git-push.sh</code> retired</p>
-<p>The standalone <code>block-git-push.sh</code> hook has been replaced by the
-<code>Bash(git push *)</code> and <code>Bash(git push)</code> deny rules. The mid-command
-case (<code>cmd &amp;&amp; git push</code>) is handled by <code>block-dangerous-commands.sh</code>.</p>
-</div>
 <div class="admonition warning">
-<p class="admonition-title">Pre-approved + hook-blocked = silent block</p>
+<p class="admonition-title">Pre-Approved + Hook-Blocked = Silent Block</p>
 <p>If you pre-approve a command that a hook blocks, the user never sees
 the confirmation dialog. The agent gets a block response and must
 handle it, which is confusing.</p>
@@ -3418,24 +3445,26 @@ handle it, which is confusing.</p>
 <h2 id="the-maintenance-workflow">The Maintenance Workflow<a class="headerlink" href="#the-maintenance-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="after-busy-sessions">After busy sessions<a class="headerlink" href="#after-busy-sessions" title="Permanent link">&para;</a></h3>
 <p>Permissions accumulate fastest during debugging and exploration sessions.
-After a session where you clicked "Allow" many times:</p>
+After a session where you clicked "<em>Allow</em>" many times:</p>
 <ol>
-<li>Open <code>.claude/settings.local.json</code> in your editor</li>
-<li>Look for entries at the bottom of the allowlist (<em>new entries append there</em>)</li>
-<li>Delete anything that looks session-specific:</li>
-<li>Exact commands with hardcoded paths</li>
-<li>Commands with literal string arguments</li>
-<li>Entries that duplicate an existing wildcard</li>
+<li>Open <code>.claude/settings.local.json</code> in your editor;</li>
+<li>Look for entries at the bottom of the allowlist (<em>new entries append there</em>);</li>
+<li>Delete anything that looks session-specific:<ul>
+<li>Exact commands with hardcoded paths,</li>
+<li>Commands with literal string arguments,</li>
+<li>Entries that duplicate an existing wildcard.</li>
+</ul>
+</li>
 </ol>
 <p>See <a href="https://github.com/ActiveMemory/ctx/blob/main/hack/runbooks/sanitize-permissions.md"><code>hack/runbooks/sanitize-permissions.md</code></a>
 for a step-by-step runbook.</p>
 <h3 id="periodically">Periodically<a class="headerlink" href="#periodically" title="Permanent link">&para;</a></h3>
 <p>Run <code>/ctx-drift</code> to catch permission drift:</p>
 <ul>
-<li>Missing <code>Bash(ctx:*)</code> wildcard</li>
-<li>Missing <code>Skill(ctx-*)</code> entries for installed skills</li>
-<li>Stale <code>Skill(ctx-*)</code> entries for removed skills</li>
-<li>Granular <code>Bash(ctx &lt;subcommand&gt;:*)</code> entries that should be consolidated</li>
+<li>Missing <code>Bash(ctx:*)</code> wildcard;</li>
+<li>Missing <code>Skill(ctx-*)</code> entries for installed skills;</li>
+<li>Stale <code>Skill(ctx-*)</code> entries for removed skills;</li>
+<li>Granular <code>Bash(ctx &lt;subcommand&gt;:*)</code> entries that should be consolidated.</li>
 </ul>
 <p>Run <code>/sanitize-permissions</code> to catch security issues:</p>
 <ul>

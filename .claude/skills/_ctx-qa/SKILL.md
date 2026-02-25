@@ -1,5 +1,5 @@
 ---
-name: qa
+name: _ctx-qa
 description: "Run QA checks before committing. Use after writing code, before commits, or when CI might fail."
 ---
 
@@ -33,8 +33,8 @@ they hit CI.
 ## Usage Examples
 
 ```text
-/qa
-/qa (after refactoring the recall command)
+/_ctx-qa
+/_ctx-qa (after refactoring the recall command)
 ```
 
 ## What to Run

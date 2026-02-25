@@ -19,7 +19,7 @@ icon: lucide/sparkles
 ## Proactive Behavior
 
 These recipes show explicit commands and skills, but agents
-trained on the `ctx` playbook are **proactive**: they offer to
+trained on the `ctx` playbook are **proactive**: They offer to
 save learnings after debugging, record decisions after
 trade-offs, create follow-up tasks after completing work, and
 suggest what to work on next.

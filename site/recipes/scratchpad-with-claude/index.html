@@ -1131,6 +1131,8 @@
       
         
       
+        
+      
     
     
     
@@ -1256,6 +1258,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1833,16 +1865,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../system-hooks-audit/" class="md-nav__link">
+      <a href="../webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1863,16 +1895,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../webhook-notifications/" class="md-nav__link">
+      <a href="../system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2616,7 +2648,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2646,7 +2678,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2676,7 +2708,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -3336,7 +3368,7 @@ jot down:</p>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>       &quot;Removed entry 2. 3 entries remaining.&quot;
 </span></code></pre></div>
 <h3 id="step-7-store-a-file-as-a-blob">Step 7: Store a File as a Blob<a class="headerlink" href="#step-7-store-a-file-as-a-blob" title="Permanent link">&para;</a></h3>
-<p>The scratchpad can hold small files (up to 64 KB) as encrypted blob entries.
+<p>The scratchpad can hold small files (<em>up to 64 KB</em>) as encrypted blob entries.
 The file is base64-encoded and stored alongside a label you provide:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ingest a file — the first argument is the label</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
@@ -3358,7 +3390,7 @@ The file is base64-encoded and stored alongside a label you provide:</p>
 base64-encoded before encryption. The <code>--out</code> flag decodes and writes the
 raw bytes.</p>
 <h3 id="step-9-bulk-import-notes">Step 9: Bulk Import Notes<a class="headerlink" href="#step-9-bulk-import-notes" title="Permanent link">&para;</a></h3>
-<p>When you have a file with many notes (one per line), import them in bulk
+<p>When you have a file with many notes (<em>one per line</em>), import them in bulk
 instead of adding one at a time:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Import from a file — each non-empty line becomes an entry</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
@@ -3483,31 +3515,31 @@ fall back to <code>ctx pad add "..."</code> in your terminal.</p>
 </tr>
 <tr>
 <td>Work items with completion tracking</td>
-<td><strong>TASKS.md</strong></td>
+<td><strong><code>TASKS.md</code></strong></td>
 </tr>
 <tr>
 <td>Trade-offs between alternatives with rationale</td>
-<td><strong>DECISIONS.md</strong></td>
+<td><strong><code>DECISIONS.md</code></strong></td>
 </tr>
 <tr>
 <td>Reusable lessons with context/lesson/application</td>
-<td><strong>LEARNINGS.md</strong></td>
+<td><strong><code>LEARNINGS.md</code></strong></td>
 </tr>
 <tr>
 <td>Codified patterns and standards</td>
-<td><strong>CONVENTIONS.md</strong></td>
+<td><strong><code>CONVENTIONS.md</code></strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Decision guide:</strong></p>
+<p><strong>Decision Guide</strong></p>
 <ul>
 <li>If it has structured fields (<em>context, rationale, lesson, application</em>),
-  it belongs in a context file.</li>
+  it belongs in a <strong>context file</strong> like <code>DECISIONS.md</code> or <code>LEARNINGS.md</code>.</li>
 <li>If it's a work item you'll mark done, it belongs in <code>TASKS.md</code>.</li>
-<li>If you want a message relayed verbatim at the next session start,
+<li>If you want a message relayed VERBATIM at the next session start,
   it belongs in <code>ctx remind</code>.</li>
-<li>If it's a quick note, reminder, or working value  (<em>especially if it's
-  sensitive or ephemeral</em>) it belongs on the scratchpad.</li>
+<li>If it's a quick note, reminder, or working value (<em>especially if it's
+  sensitive or ephemeral</em>) it belongs on the <strong>scratchpad</strong>.</li>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Scratchpad Is Not a Junk Drawer</p>
@@ -3518,18 +3550,18 @@ convention, a hard-won insight becomes a learning.</p>
 </div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Entries persist across sessions.</strong> The scratchpad is committed
+<li><strong>Entries persist across sessions</strong>: The scratchpad is committed
   (encrypted) to git, so entries survive session boundaries. Pick up
   where you left off.</li>
-<li><strong>Entries are numbered and reorderable.</strong> Use <code>ctx pad mv</code> to put
+<li><strong>Entries are numbered and reorderable</strong>: Use <code>ctx pad mv</code> to put
   high-priority items at the top.</li>
-<li><strong><code>ctx pad show N</code> enables unix piping.</strong> Output raw entry text
+<li><strong><code>ctx pad show N</code> enables unix piping</strong>: Output raw entry text
   with no numbering prefix. Compose with <code>--append</code>, <code>--prepend</code>, or
   other shell tools.</li>
-<li><strong>Never mention the key file contents to the AI.</strong> The agent knows
+<li><strong>Never mention the key file contents to the AI</strong>: The agent knows
   how to use <code>ctx pad</code> commands but should never read or print
   <code>.context/.context.key</code> directly.</li>
-<li><strong>Encryption is transparent.</strong> You interact with plaintext; the
+<li><strong>Encryption is transparent</strong>: You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.</li>
 </ul>
 <h2 id="next-up">Next Up<a class="headerlink" href="#next-up" title="Permanent link">&para;</a></h2>

@@ -21,7 +21,7 @@ icon: lucide/git-pull-request
 * [GNU Make](https://www.gnu.org/software/make/)
 * [Zensical](https://github.com/zensical/zensical)
 
-### 1. Fork (or Clone) the Repository
+### 1. Fork (*or Clone*) the Repository
 
 ```bash
 # Fork on GitHub, then:
@@ -48,18 +48,18 @@ The repository ships a Claude Code plugin under `internal/assets/claude/`.
 Point Claude Code at your local copy so that skills and hooks reflect
 your working tree — no reinstall needed after edits:
 
-1. Launch `claude`
-2. Type `/plugin` and press Enter
+1. Launch `claude`;
+2. Type `/plugin` and press Enter;
 3. Select **Marketplaces** → **Add Marketplace**
 4. Enter the **absolute path** to the root of your clone,
    e.g. `~/WORKSPACE/ctx`
-   (this is where `.claude-plugin/marketplace.json` lives: it points
-   Claude Code to the actual plugin in `internal/assets/claude`)
-5. Back in `/plugin`, select **Install** and choose `ctx`
+   (*this is where `.claude-plugin/marketplace.json` lives: it points
+   Claude Code to the actual plugin in `internal/assets/claude`*);
+5. Back in `/plugin`, select **Install** and choose `ctx`.
 
 !!! warning "Claude Code Caches Plugin Files"
     Even though the marketplace points at a directory on disk, Claude Code
-    caches skills and hooks. 
+    **caches** skills and hooks. 
 
     After editing files under
     `internal/assets/claude/`, you must bump the plugin version and
@@ -80,6 +80,7 @@ You should see the `ctx` plugin listed, sourced from your local path.
 
 ## Project Layout
 
+<!-- drift-check: ls -d cmd/ internal/*/ .claude/ docs/ editors/ hack/ specs/ assets/ examples/ .context/ -->
 ```
 ctx/
 ├── cmd/ctx/            # CLI entry point
@@ -94,14 +95,18 @@ ctx/
 │   ├── drift/          # Drift detection
 │   ├── index/          # Context file indexing
 │   ├── journal/        # Journal site generation
+│   ├── notify/         # Webhook notifications
 │   ├── rc/             # .ctxrc parsing
 │   ├── recall/         # Session history and parsers
+│   ├── sysinfo/        # System resource monitoring
 │   ├── task/           # Task management
 │   └── validation/     # Input validation
 ├── .claude/
 │   └── skills/         # Dev-only skills (not distributed)
+├── assets/             # Static assets (banners, logos)
 ├── docs/               # Documentation site source
 ├── editors/            # Editor extensions (VS Code)
+├── examples/           # Example configurations
 ├── hack/               # Build scripts and runbooks
 ├── specs/              # Feature specifications
 └── .context/           # ctx's own context (dogfooding)
@@ -111,7 +116,8 @@ ctx/
 
 | Directory                        | What lives here                                 | Distributed to users? |
 |----------------------------------|-------------------------------------------------|-----------------------|
-| `internal/assets/claude/skills/` | The 27 `ctx-*` skills that ship with the plugin | Yes                   |
+<!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
+| `internal/assets/claude/skills/` | The 29 `ctx-*` skills that ship with the plugin | Yes                   |
 | `.claude/skills/`                | Dev-only skills (release, QA, backup, etc.)     | No                    |
 
 **`internal/assets/claude/skills/`** is the single source of truth for
@@ -119,7 +125,7 @@ user-facing skills. If you are adding or modifying a `ctx-*` skill,
 edit it there.
 
 **`.claude/skills/`** holds skills that only make sense inside this
-repository (release automation, QA checks, backup scripts). These are
+repository (*release automation, QA checks, backup scripts*). These are
 never distributed to users.
 
 ----
@@ -145,14 +151,14 @@ Edit files under `internal/assets/claude/skills/` or
 After making changes, update the plugin version and refresh the marketplace:
 
 1. Bump the version in `.claude-plugin/marketplace.json`
-   (*the `plugins[0].version` field*).
+   (*the `plugins[0].version` field*);
 2. Bump the version in `internal/assets/claude/.claude-plugin/plugin.json`
-   (*the top-level `version` field*)
+   (*the top-level `version` field*);
 3. *(Optional but recommended)* Update `VERSION` to match:
-   keeping all three in sync avoids confusion.
-4. In Claude Code, type `/plugin` and press Enter.
-5. Select **Marketplaces** → **activememory-ctx**.
-6. Select **Update marketplace**.
+   keeping all three in sync avoids confusion;
+4. In Claude Code, type `/plugin` and press Enter;
+5. Select **Marketplaces** → **activememory-ctx**;
+6. Select **Update marketplace**;
 7. Restart Claude Code for the changes to take effect.
 
 ### Running Tests
@@ -176,8 +182,8 @@ make site-serve  # serve at localhost
 
 ### Before You Start
 
-1. Check existing issues to avoid duplicating effort.
-2. For large changes, open an issue first to discuss the approach.
+1. Check existing issues to avoid duplicating effort;
+2. For large changes, open an issue first to discuss the approach;
 3. Read the specs in `specs/` for design context.
 
 ### Pull Request Process
@@ -188,10 +194,10 @@ Keep your pull requests **isolated** and strive to minimze code changes.
 If you Pull Request solves more than one distinct issues, it's better to create
 separate pull requests instead of sending them in one large bundle.
 
-1. Create a feature branch: `git checkout -b feature/my-feature`.
-2. Make your changes.
-3. Run `make audit` to catch issues early.
-4. Commit with a **clear message**.
+1. Create a feature branch: `git checkout -b feature/my-feature`;
+2. Make your changes;
+3. Run `make audit` to catch issues early;
+4. Commit with a **clear message**;
 5. Push and open a pull request.
 
 !!! tip "Audit Your Code Before Submitting"
@@ -214,16 +220,16 @@ Examples:
 
 ### Code Style
 
-* Follow Go conventions (`gofmt`, `go vet`).
-* Keep functions **focused** and **small**.
-* Add tests for new functionality.
+* Follow Go conventions (`gofmt`, `go vet`);
+* Keep functions **focused** and **small**;
+* Add tests for new functionality;
 * Handle errors explicitly.
 
 ----
 
 ## Code of Conduct
 
-Clear context requires respectful collaboration.
+A clear context requires **respectful** collaboration.
 
 `ctx` follows the
 [Contributor Covenant](https://github.com/ActiveMemory/ctx/blob/main/CODE_OF_CONDUCT.md).
@@ -232,7 +238,7 @@ Clear context requires respectful collaboration.
 
 ## Boring Legal Stuff
 
-### Developer Certificate of Origin (DCO)
+### Developer Certificate of Origin (*DCO*)
 
 By contributing, you agree to the
 [Developer Certificate of Origin](https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md).

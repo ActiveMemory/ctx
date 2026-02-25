@@ -1131,6 +1131,8 @@
       
         
       
+        
+      
     
     
     
@@ -1256,6 +1258,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1570,16 +1602,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../system-hooks-audit/" class="md-nav__link">
+      <a href="../webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1600,16 +1632,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../webhook-notifications/" class="md-nav__link">
+      <a href="../system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2567,7 +2599,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2597,7 +2629,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2627,7 +2659,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -3114,22 +3146,25 @@ re-reading context. </p>
 agent, parallel worktrees, and a full agent team, and explains what <code>ctx</code>
 provides at each level.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
-<p><strong>Single agent</strong> for most work. <strong>Parallel worktrees</strong> when tasks touch
-disjoint file sets. <strong>Agent teams</strong> only when tasks need real-time
-coordination. When in doubt, start with one agent.</p>
+<ul>
+<li><strong>Single agent</strong> for most work;</li>
+<li><strong>Parallel worktrees</strong> when tasks touch disjoint file sets;</li>
+<li><strong>Agent teams</strong> only when tasks need real-time
+  coordination. When in doubt, start with one agent.</li>
+</ul>
 <h2 id="the-spectrum">The Spectrum<a class="headerlink" href="#the-spectrum" title="Permanent link">&para;</a></h2>
 <p>There are three modes, ordered by complexity:</p>
 <h3 id="1-single-agent-default">1. Single Agent (<em>Default</em>)<a class="headerlink" href="#1-single-agent-default" title="Permanent link">&para;</a></h3>
 <p>One agent, one session, one branch. This is correct for most work.</p>
-<p><strong>Use when</strong>:</p>
+<p><strong>Use this when</strong>:</p>
 <ul>
-<li>The task has linear dependencies (<em>step 2 needs step 1's output</em>)</li>
-<li>Changes touch overlapping files</li>
-<li>You need tight feedback loops (<em>review each change before the next</em>)</li>
-<li>The task requires deep understanding of a single area</li>
-<li>Total effort is less than a few hours of agent time</li>
+<li>The task has linear dependencies (<em>step 2 needs step 1's output</em>);</li>
+<li>Changes touch overlapping files;</li>
+<li>You need tight feedback loops (<em>review each change before the next</em>);</li>
+<li>The task requires deep understanding of a single area;</li>
+<li>Total effort is less than a few hours of agent time.</li>
 </ul>
-<p><strong>What <code>ctx</code> provides</strong>: Full <code>.context/</code>: tasks, decisions, learnings,
+<p><strong><code>ctx</code> provides</strong>: Full <code>.context/</code>: tasks, decisions, learnings,
 conventions, all in one session. </p>
 <p>The agent builds a coherent mental model and persists it as it goes.</p>
 <p><strong>Example tasks</strong>: Bug fixes, feature implementation, refactoring a
@@ -3137,15 +3172,15 @@ module, writing documentation for one area, debugging.</p>
 <h3 id="2-parallel-worktrees-independent-tracks">2. Parallel Worktrees (<em>Independent Tracks</em>)<a class="headerlink" href="#2-parallel-worktrees-independent-tracks" title="Permanent link">&para;</a></h3>
 <p>2-4 agents, each in a separate git worktree on its own branch, working
 on non-overlapping parts of the codebase.</p>
-<p><strong>Use when</strong>:</p>
+<p><strong>Use this when</strong>:</p>
 <ul>
-<li>You have 5+ independent tasks in the backlog</li>
-<li>Tasks group cleanly by directory or package</li>
-<li>File overlap between groups is zero or near-zero</li>
-<li>Each track can be completed and merged independently</li>
-<li>You want parallelism without coordination complexity</li>
+<li>You have 5+ independent tasks in the backlog;</li>
+<li>Tasks group cleanly by directory or package;</li>
+<li>File overlap between groups is zero or near-zero;</li>
+<li>Each track can be completed and merged independently;</li>
+<li>You want parallelism without coordination complexity.</li>
 </ul>
-<p><strong>What <code>ctx</code> provides</strong>: Shared <code>.context/</code> via <code>git</code> (<em>each worktree sees
+<p><strong><code>ctx</code> provides</strong>: Shared <code>.context/</code> via <code>git</code> (<em>each worktree sees
 the same tasks, decisions, conventions</em>). <code>/ctx-worktree</code> skill for
 setup and teardown. <code>TASKS.md</code> as a lightweight work queue.</p>
 <p><strong>Example tasks</strong>: Docs + new package + test coverage (<em>three tracks
@@ -3155,15 +3190,15 @@ module development.</p>
 <h3 id="3-agent-team-coordinated-swarm">3. Agent Team (<em>Coordinated Swarm</em>)<a class="headerlink" href="#3-agent-team-coordinated-swarm" title="Permanent link">&para;</a></h3>
 <p>Multiple agents communicating via messages, sharing a task list, with
 a lead agent coordinating. Claude Code's team/swarm feature.</p>
-<p><strong>Use when:</strong></p>
+<p><strong>Use this when:</strong></p>
 <ul>
-<li>Tasks have dependencies but can still partially overlap</li>
-<li>You need research and implementation happening simultaneously</li>
-<li>The work requires different roles (<em>researcher, implementer, tester</em>)</li>
-<li>A lead agent needs to review and integrate others' work</li>
-<li>The task is large enough that coordination cost is justified</li>
+<li>Tasks have dependencies but can still partially overlap;</li>
+<li>You need research and implementation happening simultaneously;</li>
+<li>The work requires different roles (<em>researcher, implementer, tester</em>);</li>
+<li>A lead agent needs to review and integrate others' work;</li>
+<li>The task is large enough that coordination cost is justified.</li>
 </ul>
-<p><strong>What <code>ctx</code> provides</strong>: <code>.context/</code> as shared state that all agents
+<p><strong><code>ctx</code> provides</strong>: <code>.context/</code> as shared state that all agents
 can read. Task tracking for work assignment. Decisions and learnings
 as team memory that survives individual agent turnover.</p>
 <p><strong>Example tasks:</strong> Large refactor across modules where a lead reviews
@@ -3187,10 +3222,10 @@ after parallel implementation.</p>
 <h3 id="the-file-overlap-test">The File Overlap Test<a class="headerlink" href="#the-file-overlap-test" title="Permanent link">&para;</a></h3>
 <p>This is the critical decision point. Before choosing multi-agent, list the
 files each subtask would touch. If two subtasks modify the same file, they
-belong in the same track (or the same single-agent session).</p>
+belong in the same track (<em>or the same single-agent session</em>).</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>You: &quot;I want to parallelize these tasks. Which files would each one touch?&quot;
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: [reads TASKS.md, analyzes codebase]
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Agent: [reads `TASKS.md`, analyzes codebase]
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       &quot;Task A touches internal/config/ and internal/cli/initialize/
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        Task B touches docs/ and site/
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        Task C touches internal/config/ and internal/cli/status/
@@ -3201,8 +3236,8 @@ belong in the same track (or the same single-agent session).</p>
 <p>When in doubt, keep things in one track. A merge conflict in a critical
 file costs more time than the parallelism saves.</p>
 <h2 id="when-teams-make-things-worse">When Teams Make Things Worse<a class="headerlink" href="#when-teams-make-things-worse" title="Permanent link">&para;</a></h2>
-<p>More agents is not always better. Watch for these patterns:</p>
-<p><strong>Merge hell</strong>. If you are spending more time resolving conflicts than
+<p>"<em>More agents</em>" is not always better. Watch for these patterns:</p>
+<p><strong>Merge hell</strong>: If you are spending more time resolving conflicts than
 the parallel work saved, you split wrong: Re-group by file overlap.</p>
 <p><strong>Context divergence</strong>: Each agent builds its own mental model. After
 30 minutes of independent work, agent A might make assumptions that
@@ -3266,22 +3301,22 @@ before anyone does any work. For small tasks, that overhead dominates.</p>
 </table>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Start with one agent</strong>. Only add parallelism when you have identified
+<li><strong>Start with one agent</strong>: Only add parallelism when you have identified
   the bottleneck. "This would go faster with more agents" is usually
   wrong for tasks under 2 hours.</li>
-<li><strong>The 3-4 agent ceiling is real</strong>. Coordination overhead grows
+<li><strong>The 3-4 agent ceiling is real</strong>: Coordination overhead grows
   quadratically. 2 agents = 1 communication pair. 4 agents = 6 pairs.
   Beyond 4, you are managing agents more than doing work.</li>
-<li><strong>Worktrees &gt; teams for most parallelism needs.</strong> If agents don't
+<li><strong>Worktrees &gt; teams for most parallelism needs</strong>: If agents don't
   need to talk to each other during execution, worktrees give you
   parallelism with zero coordination overhead.</li>
-<li><strong>Use <code>ctx</code> as the shared brain</strong>. Whether it's one agent or four, the
+<li><strong>Use <code>ctx</code> as the shared brain</strong>: Whether it's one agent or four, the
   <code>.context/</code> directory is the single source of truth. Decisions go in
   <code>DECISIONS.md</code>, <strong>not</strong> in chat messages between agents.</li>
-<li><strong>Merge early, merge often</strong>. Long-lived parallel branches diverge.
+<li><strong>Merge early, merge often</strong>: Long-lived parallel branches diverge.
   Merge a track as soon as it's done rather than waiting for all tracks
   to finish.</li>
-<li><strong><code>TASKS.md</code> conflicts are normal</strong>. Multiple agents completing different
+<li><strong><code>TASKS.md</code> conflicts are normal</strong>: Multiple agents completing different
   tasks will conflict on merge. The resolution is always additive: accept
   all <code>[x]</code> completions from both sides.</li>
 </ul>

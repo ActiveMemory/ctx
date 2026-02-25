@@ -11,8 +11,8 @@ Technical reference for `ctx` **commands**, **skills**, and **internals**.
 
 ### [CLI](cli-reference.md)
 
-Every command, subcommand, and flag. Organized by category
-with usage examples.
+Every command, subcommand, and flag.
+Organized by category with usage examples.
 
 ---
 

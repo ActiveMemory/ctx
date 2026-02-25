@@ -21,9 +21,10 @@ provides at each level.
 
 ## TL;DR
 
-**Single agent** for most work. **Parallel worktrees** when tasks touch
-disjoint file sets. **Agent teams** only when tasks need real-time
-coordination. When in doubt, start with one agent.
+* **Single agent** for most work;
+* **Parallel worktrees** when tasks touch disjoint file sets;
+* **Agent teams** only when tasks need real-time
+  coordination. When in doubt, start with one agent.
 
 ## The Spectrum
 
@@ -33,15 +34,15 @@ There are three modes, ordered by complexity:
 
 One agent, one session, one branch. This is correct for most work.
 
-**Use when**:
+**Use this when**:
 
-* The task has linear dependencies (*step 2 needs step 1's output*)
-* Changes touch overlapping files
-* You need tight feedback loops (*review each change before the next*)
-* The task requires deep understanding of a single area
-* Total effort is less than a few hours of agent time
+* The task has linear dependencies (*step 2 needs step 1's output*);
+* Changes touch overlapping files;
+* You need tight feedback loops (*review each change before the next*);
+* The task requires deep understanding of a single area;
+* Total effort is less than a few hours of agent time.
 
-**What `ctx` provides**: Full `.context/`: tasks, decisions, learnings,
+**`ctx` provides**: Full `.context/`: tasks, decisions, learnings,
 conventions, all in one session. 
 
 The agent builds a coherent mental model and persists it as it goes.
@@ -54,15 +55,15 @@ module, writing documentation for one area, debugging.
 2-4 agents, each in a separate git worktree on its own branch, working
 on non-overlapping parts of the codebase.
 
-**Use when**:
+**Use this when**:
 
-* You have 5+ independent tasks in the backlog
-* Tasks group cleanly by directory or package
-* File overlap between groups is zero or near-zero
-* Each track can be completed and merged independently
-* You want parallelism without coordination complexity
+* You have 5+ independent tasks in the backlog;
+* Tasks group cleanly by directory or package;
+* File overlap between groups is zero or near-zero;
+* Each track can be completed and merged independently;
+* You want parallelism without coordination complexity.
 
-**What `ctx` provides**: Shared `.context/` via `git` (*each worktree sees
+**`ctx` provides**: Shared `.context/` via `git` (*each worktree sees
 the same tasks, decisions, conventions*). `/ctx-worktree` skill for
 setup and teardown. `TASKS.md` as a lightweight work queue.
 
@@ -77,15 +78,15 @@ module development.
 Multiple agents communicating via messages, sharing a task list, with
 a lead agent coordinating. Claude Code's team/swarm feature.
 
-**Use when:**
+**Use this when:**
 
-* Tasks have dependencies but can still partially overlap
-* You need research and implementation happening simultaneously
-* The work requires different roles (*researcher, implementer, tester*)
-* A lead agent needs to review and integrate others' work
-* The task is large enough that coordination cost is justified
+* Tasks have dependencies but can still partially overlap;
+* You need research and implementation happening simultaneously;
+* The work requires different roles (*researcher, implementer, tester*);
+* A lead agent needs to review and integrate others' work;
+* The task is large enough that coordination cost is justified.
 
-**What `ctx` provides**: `.context/` as shared state that all agents
+**`ctx` provides**: `.context/` as shared state that all agents
 can read. Task tracking for work assignment. Decisions and learnings
 as team memory that survives individual agent turnover.
 
@@ -116,12 +117,12 @@ Do the subtasks need to communicate during execution?
 
 This is the critical decision point. Before choosing multi-agent, list the
 files each subtask would touch. If two subtasks modify the same file, they
-belong in the same track (or the same single-agent session).
+belong in the same track (*or the same single-agent session*).
 
 ```text
 You: "I want to parallelize these tasks. Which files would each one touch?"
 
-Agent: [reads TASKS.md, analyzes codebase]
+Agent: [reads `TASKS.md`, analyzes codebase]
        "Task A touches internal/config/ and internal/cli/initialize/
         Task B touches docs/ and site/
         Task C touches internal/config/ and internal/cli/status/
@@ -135,9 +136,9 @@ file costs more time than the parallelism saves.
 
 ## When Teams Make Things Worse
 
-More agents is not always better. Watch for these patterns:
+"*More agents*" is not always better. Watch for these patterns:
 
-**Merge hell**. If you are spending more time resolving conflicts than
+**Merge hell**: If you are spending more time resolving conflicts than
 the parallel work saved, you split wrong: Re-group by file overlap.
 
 **Context divergence**: Each agent builds its own mental model. After
@@ -167,22 +168,22 @@ before anyone does any work. For small tasks, that overhead dominates.
 
 ## Tips
 
-* **Start with one agent**. Only add parallelism when you have identified
+* **Start with one agent**: Only add parallelism when you have identified
   the bottleneck. "This would go faster with more agents" is usually
   wrong for tasks under 2 hours.
-* **The 3-4 agent ceiling is real**. Coordination overhead grows
+* **The 3-4 agent ceiling is real**: Coordination overhead grows
   quadratically. 2 agents = 1 communication pair. 4 agents = 6 pairs.
   Beyond 4, you are managing agents more than doing work.
-* **Worktrees > teams for most parallelism needs.** If agents don't
+* **Worktrees > teams for most parallelism needs**: If agents don't
   need to talk to each other during execution, worktrees give you
   parallelism with zero coordination overhead.
-* **Use `ctx` as the shared brain**. Whether it's one agent or four, the
+* **Use `ctx` as the shared brain**: Whether it's one agent or four, the
   `.context/` directory is the single source of truth. Decisions go in
   `DECISIONS.md`, **not** in chat messages between agents.
-* **Merge early, merge often**. Long-lived parallel branches diverge.
+* **Merge early, merge often**: Long-lived parallel branches diverge.
   Merge a track as soon as it's done rather than waiting for all tracks
   to finish.
-* **`TASKS.md` conflicts are normal**. Multiple agents completing different
+* **`TASKS.md` conflicts are normal**: Multiple agents completing different
   tasks will conflict on merge. The resolution is always additive: accept
   all `[x]` completions from both sides.
 

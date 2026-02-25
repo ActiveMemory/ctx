@@ -53,7 +53,7 @@ Then start your AI tool and ask: "**Do you remember?**"
 
 ## The Workflow
 
-### Step 1: Initialize ctx
+### Step 1: Initialize `ctx`
 
 Run `ctx init` in your project root. This creates the `.context/` directory
 with all template files and seeds ctx permissions in `settings.local.json`.

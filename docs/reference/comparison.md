@@ -58,10 +58,10 @@ That single difference explains nearly all of `ctx`'s design choices.
 
 Examples include:
 
-* prompt templates
-* reusable system prompts
-* prompt libraries
-* prompt versioning tools
+* prompt templates;
+* reusable system prompts;
+* prompt libraries;
+* prompt versioning tools.
 
 These tools help you *start* a session.
 
@@ -69,18 +69,18 @@ They do not help you *continue* one.
 
 Prompt tools:
 
-* inject text at session start
-* are ephemeral by design
-* do not evolve with the project
+* inject text at session start;
+* are ephemeral by design;
+* do not evolve with the project.
 
 `ctx`:
 
-* persists knowledge over time
-* accumulates decisions and learnings
-* makes the context part of the repository itself
+* **persists knowledge** over time;
+* accumulates **decisions** and **learnings**;
+* makes the **context** part of the repository itself.
 
-Prompt tooling and `ctx` are complementary; not competing. 
-Yet they operate in different layers.
+Prompt tooling and `ctx` are **complementary**; not competing. 
+Yet, they operate in different layers.
 
 ---
 
@@ -228,11 +228,11 @@ live next to code; **not** behind a service boundary.
 
 `ctx` works best when:
 
-* you want AI work to compound over time
-* architectural decisions matter
-* context must be inspectable
-* humans and AI must share the same source of truth
-* Git history should include *why*, not just *what*
+* you want AI work to compound over time;
+* architectural decisions matter;
+* context must be inspectable;
+* humans and AI must share the same source of truth;
+* Git history should include *why*, not just *what*.
 
 ---
 
@@ -240,11 +240,11 @@ live next to code; **not** behind a service boundary.
 
 `ctx` is probably not what you want if:
 
-* you only need one-off prompts
-* you rely exclusively on RAG
-* you want autonomous agents without a human-readable state
-* you require centralized enterprise control
-* you want black-box memory systems
+* you only need one-off prompts;
+* you rely exclusively on RAG;
+* you want autonomous agents without a human-readable state;
+* you require centralized enterprise control;
+* you want black-box memory systems,
 
 These are valid goals; just different ones.
 

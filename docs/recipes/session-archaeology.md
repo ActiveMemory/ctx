@@ -65,29 +65,30 @@ Read on for what each stage does and why.
 
 The session journal follows a four-stage pipeline.
 
-Each stage is idempotent and safe to re-run.
-Each stage skips entries that have already been processed.
+Each stage is **idempotent** and **safe to re-run**:
+
+By default, each stage **skips** entries that have already been processed.
 
 ```text
 export -> enrich -> rebuild
 ```
 
-| Stage     | Tool                       | What it does                                | Skips if                     | Where        |
-|-----------|----------------------------|---------------------------------------------|------------------------------|--------------|
-| Export    | `ctx recall export --all`  | Converts session JSONL to Markdown          | File already exists (safe default) | CLI or agent |
-| Enrich    | `/ctx-journal-enrich-all`  | Adds frontmatter, summaries, topic tags     | Frontmatter already present  | Agent only   |
-| Rebuild   | `ctx journal site --build` | Generates browsable static HTML             | N/A                          | CLI only     |
-| Obsidian  | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks     | N/A                          | CLI only     |
+| Stage    | Tool                       | What it does                            | Skips if                           | Where        |
+|----------|----------------------------|-----------------------------------------|------------------------------------|--------------|
+| Export   | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) | CLI or agent |
+| Enrich   | `/ctx-journal-enrich-all`  | Adds frontmatter, summaries, topic tags | Frontmatter already present        | Agent only   |
+| Rebuild  | `ctx journal site --build` | Generates browsable static HTML         | N/A                                | CLI only     |
+| Obsidian | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | N/A                                | CLI only     |
 
-!!! tip "Where to run Each Stage"
-    Export (*Steps 1 to 3*) works equally well from the terminal or inside your
+!!! tip "Where Do You Run Each Stage?"
+    **Export** (*Steps 1 to 3*) works equally well from the terminal or inside your
     AI assistant via `/ctx-recall`. The CLI is fine here: the agent adds no
     special intelligence, it just runs the same command.
 
-    Enrich (Step 4) requires the agent: it reads conversation content and
+    **Enrich** (*Step 4*) requires the agent: it reads conversation content and
     produces structured metadata.
 
-    Rebuild and serve (Step 5) is a terminal operation that starts a
+    **Rebuild** and **serve** (*Step 5*) is a terminal operation that starts a
     long-running server.
 
 ### Step 1: List Your Sessions
@@ -169,26 +170,44 @@ ctx recall export gleaming-wobbling-sutherland
 ctx recall export --all --all-projects
 ```
 
+!!! warning "--keep-frontmatter=false Discards Enrichments"
+    `--keep-frontmatter=false` discards enriched YAML frontmatter during
+    regeneration.
+
+    **Back up your journal before using this flag**.
+
 Each exported file contains session metadata (*date, time, duration, model,
 project, git branch*), a tool usage summary, and the full conversation transcript.
 
 Re-exporting is safe. Running `ctx recall export --all` only exports **new**
-sessions — existing files are never touched. Use `--dry-run` to preview what
+sessions: Existing files are never touched. Use `--dry-run` to preview what
 would be exported without writing anything.
 
-To re-export existing files (e.g., after a format improvement), use
-`--regenerate`. Conversation content is regenerated while preserving any
-YAML frontmatter you or the enrichment skill have added. You'll be prompted
+To re-export existing files (*e.g., after a format improvement*), use
+`--regenerate`: Conversation content is regenerated while **preserving** any
+YAML frontmatter you or the **enrichment** skill has added. You'll be prompted
 before any files are overwritten.
 
-!!! warning "--keep-frontmatter=false Discards Enrichments"
-    `--keep-frontmatter=false` discards enriched YAML frontmatter during
-    regeneration. **Back up your journal before using this flag**.
+!!! danger "--regenerate Replaces the Markdown Body"
+    `--regenerate` preserves YAML frontmatter but **replaces the entire
+    Markdown body** with freshly generated content from the source JSONL.
 
-    To protect specific entries from regeneration entirely, use
-    `ctx recall lock <pattern>`. If you add `locked: true` to frontmatter
-    during enrichment instead, run `ctx recall sync` to propagate lock
-    state to `.state.json`.
+    If you manually edited the conversation transcript (*added notes,
+    redacted sensitive content, restructured sections*), those edits
+    will be **lost**.
+
+    **BACK UP YOUR JOURNAL FIRST**.
+
+    To protect entries you've hand-edited, you can explicitly lock them:
+
+    ```bash
+    ctx recall lock <pattern>
+    ```
+
+    Locked entries are always skipped, regardless of flags.
+
+    See `ctx recall lock --help` for more details.
+
 
 ### Step 4: Enrich with Metadata
 
@@ -271,10 +290,11 @@ You can also serve an already-generated site without regenerating using
 
 The site generator requires `zensical` (`pipx install zensical`).
 
-## Where the Agent Adds Value
+## Where Does Agent Add Value?
 
-Export, list, and show are mechanical. The agent runs the same CLI commands you
-would, so you can stay in your terminal for those.
+Export, list, and show are *mechanical*: 
+The agent runs the same CLI commands you would, so you can stay 
+in your terminal for those.
 
 The agent earns its keep in **enrich**. It reads conversation content,
 understands what happened, and produces structured metadata.
@@ -349,13 +369,14 @@ in the site index, so they do not clutter your main session list.
 or flags. Ask "*what did we do yesterday?*" or "*find the session about Redis*" 
 and it can map the question to recall commands.
 
-!!! warning "Journal files are sensitive"
+!!! danger "Journal Files Are Sensitive"
     Journal files **MUST** be `.gitignore`d.
     
     Session transcripts can contain sensitive data such as file contents,
     commands, error messages with stack traces, and potentially API keys.
     
-    Add `.context/journal/`, `.context/journal-site/`, and `.context/journal-obsidian/` to your `.gitignore`.
+    Add `.context/journal/`, `.context/journal-site/`, and 
+    `.context/journal-obsidian/` to your `.gitignore`.
 
 ## Next Up
 

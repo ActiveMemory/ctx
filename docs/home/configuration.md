@@ -28,7 +28,7 @@ with sensible defaults.
 ## The `.ctxrc` File
 
 The `.ctxrc` file is an optional YAML file placed in the **project root**
-(next to your `.context/` directory). It lets you set project-level defaults
+(*next to your `.context/` directory*). It lets you set project-level defaults
 that apply to every `ctx` command.
 
 ### Location
@@ -104,14 +104,14 @@ A commented `.ctxrc` showing all options and their defaults:
 | `archive_after_days`    | `int`      | `7`            | Days before completed tasks are archived                |
 | `scratchpad_encrypt`    | `bool`     | `true`         | Encrypt scratchpad with AES-256-GCM                     |
 | `allow_outside_cwd`     | `bool`     | `false`        | Allow context directory outside the current working directory |
-| `entry_count_learnings` | `int`      | `30`           | Drift warning when LEARNINGS.md exceeds this entry count (0 = disable) |
-| `entry_count_decisions` | `int`      | `20`           | Drift warning when DECISIONS.md exceeds this entry count (0 = disable) |
-| `convention_line_count` | `int`      | `200`          | Drift warning when CONVENTIONS.md exceeds this line count (0 = disable) |
+| `entry_count_learnings` | `int`      | `30`           | Drift warning when `LEARNINGS.md` exceeds this entry count (0 = disable) |
+| `entry_count_decisions` | `int`      | `20`           | Drift warning when `DECISIONS.md` exceeds this entry count (0 = disable) |
+| `convention_line_count` | `int`      | `200`          | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable) |
 | `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
 | `notify.key_rotation_days` | `int`   | `90`           | Days before encryption key rotation nudge               |
 | `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
 
-**Default priority order** (used when `priority_order` is not set):
+**Default priority order** (*used when `priority_order` is not set*):
 
 1. `CONSTITUTION.md`
 2. `TASKS.md`
@@ -213,7 +213,7 @@ used. With nothing configured, the default `.context` applies.
 
 ### External `.context` Directory
 
-Store context outside the project tree (useful for monorepos or shared context):
+Store context outside the project tree (*useful for monorepos or shared context*):
 
 ```yaml
 # .ctxrc
@@ -243,7 +243,7 @@ where key management is unnecessary*):
 scratchpad_encrypt: false
 ```
 
-!!! warning "Unencrypted scratchpads store secrets in plaintext"
+!!! danger "Unencrypted Scratchpads Store Secrets in Plaintext"
     Only disable encryption if you understand the security implications.
 
     The scratchpad may contain sensitive data such as API keys, database
@@ -324,13 +324,15 @@ ctx system bootstrap          # text output for agents
 ctx system bootstrap --json   # structured output for automation
 ```
 
-The CLAUDE.md template instructs the agent to run this as its first action.
-Every nudge (context checkpoint, persistence reminder, etc.) also includes a
+The `CLAUDE.md` template instructs the agent to run this as its first action.
+Every nudge (*context checkpoint, persistence reminder, etc.*) also includes a
 `Context: <dir>` footer that re-anchors the agent to the correct directory
 throughout the session.
 
 This replaces the previous approach of hardcoding `.context/` paths in agent
-instructions. See [CLI Reference: bootstrap](../reference/cli-reference.md#ctx-system-bootstrap)
+instructions. 
+
+See [CLI Reference: bootstrap](../reference/cli-reference.md#ctx-system-bootstrap)
 for full details.
 
 ---

@@ -58,6 +58,9 @@
         <loc>https://ctx.ist/recipes/session-archaeology/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/session-reminders/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/knowledge-capture/</loc>
       </url>
       <url>
@@ -73,10 +76,10 @@
         <loc>https://ctx.ist/recipes/hook-output-patterns/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/system-hooks-audit/</loc>
+        <loc>https://ctx.ist/recipes/webhook-notifications/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/recipes/webhook-notifications/</loc>
+        <loc>https://ctx.ist/recipes/system-hooks-audit/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/context-health/</loc>

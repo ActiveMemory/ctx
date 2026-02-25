@@ -1,5 +1,5 @@
 ---
-name: audit
+name: _ctx-audit
 description: "Detect and fix code-level drift. Use after YOLO sprints, before releases, or when the 3:1 consolidation ratio is due."
 ---
 
@@ -35,9 +35,9 @@ checking **source code** against project conventions.
 ## Usage Examples
 
 ```text
-/audit
-/audit (before v0.3.0 release)
-/audit (after the YOLO sprint this week)
+/_ctx-audit
+/_ctx-audit (before v0.3.0 release)
+/_ctx-audit (after the YOLO sprint this week)
 ```
 
 ## Checks
@@ -218,7 +218,7 @@ clues that the scope expanded or shifted.
 
 Documentation links drift when pages are renamed, moved, or deleted.
 
-Invoke the `/check-links` skill to scan all `docs/` markdown files for:
+Invoke the `/_ctx-check-links` skill to scan all `docs/` markdown files for:
 
 - **Internal links** pointing to files that don't exist
 - **External links** that return errors (reported as warnings, not failures)
@@ -398,11 +398,11 @@ After running checks, report:
 
 | Skill          | Scope                                     |
 |----------------|-------------------------------------------|
-| `/qa`          | Build/test/lint; this checks conventions  |
-| `/verify`      | Confirms claims; use after fixing findings|
-| `/update-docs` | Syncs docs with code; run after changes   |
-| `ctx drift`    | Checks `.context/` files; this checks `.go` |
-| `/check-links` | Dead doc links; invoked as check #12      |
+| `/_ctx-qa`          | Build/test/lint; this checks conventions  |
+| `/_ctx-verify`      | Confirms claims; use after fixing findings|
+| `/_ctx-update-docs` | Syncs docs with code; run after changes   |
+| `ctx drift`         | Checks `.context/` files; this checks `.go` |
+| `/_ctx-check-links` | Dead doc links; invoked as check #12      |
 
 ## Quality Checklist
 

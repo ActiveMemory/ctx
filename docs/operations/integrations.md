@@ -5,13 +5,13 @@
 #   \    Copyright 2026-present Context contributors.
 #                 SPDX-License-Identifier: Apache-2.0
 
-title: AI Tool Integrations
+title: AI Tools
 icon: lucide/plug
 ---
 
 ![ctx](../images/ctx-banner.png)
 
-## AI Tool Integrations
+## AI Tools
 
 Context works with any AI tool that can read files. This guide covers setup 
 for popular AI coding assistants.
@@ -66,6 +66,7 @@ graph TD
 
 ### Plugin Hooks
 
+<!-- drift-check: cat internal/assets/claude/hooks/hooks.json | grep -c '"command"' -->
 The ctx plugin provides lifecycle hooks implemented as Go subcommands
 (`ctx system *`):
 
@@ -77,8 +78,11 @@ The ctx plugin provides lifecycle hooks implemented as Go subcommands
 | `ctx system check-ceremonies`    | UserPromptSubmit   | Nudge /ctx-remember and /ctx-wrap-up adoption    |
 | `ctx system check-persistence`   | UserPromptSubmit   | Remind to persist learnings/decisions            |
 | `ctx system check-journal`       | UserPromptSubmit   | Remind to export/enrich journal entries          |
+| `ctx system check-reminders`     | UserPromptSubmit   | Relay pending reminders at session start         |
 | `ctx system check-version`       | UserPromptSubmit   | Warn when binary/plugin versions diverge         |
 | `ctx system check-resources`     | UserPromptSubmit   | Warn when memory/swap/disk/load hit DANGER level |
+| `ctx system check-knowledge`     | UserPromptSubmit   | Nudge when knowledge files grow large            |
+| `ctx system check-map-staleness` | UserPromptSubmit   | Nudge when ARCHITECTURE.md is stale              |
 | `ctx system post-commit`         | PostToolUse (Bash) | Nudge context capture and QA after git commits   |
 | `ctx system cleanup-tmp`         | SessionEnd         | Remove stale temp files (older than 15 days)     |
 
@@ -128,8 +132,11 @@ configuration in `settings.local.json` needed:
           { "type": "command", "command": "ctx system check-ceremonies" },
           { "type": "command", "command": "ctx system check-persistence" },
           { "type": "command", "command": "ctx system check-journal" },
+          { "type": "command", "command": "ctx system check-reminders" },
           { "type": "command", "command": "ctx system check-version" },
-          { "type": "command", "command": "ctx system check-resources" }
+          { "type": "command", "command": "ctx system check-resources" },
+          { "type": "command", "command": "ctx system check-knowledge" },
+          { "type": "command", "command": "ctx system check-map-staleness" }
         ]
       }
     ],
@@ -159,7 +166,7 @@ The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 
 ### Verifying Setup
 
-1. Start a new Claude Code session
+1. Start a new Claude Code session;
 2. Ask: **"Do you remember?"**
 3. Claude should cite specific context:
      * Current tasks from `.context/TASKS.md`;
@@ -168,22 +175,22 @@ The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 
 ### Local Plugin Development
 
-When developing ctx locally (adding skills, hooks, or changing plugin
-behavior), Claude Code caches the plugin by version. You must bump
+When developing `ctx` locally (*adding skills, hooks, or changing plugin
+behavior*), Claude Code caches the plugin by version. You must bump
 the version in **both** files and update the marketplace for changes
 to take effect:
 
 1. **Bump version** in both:
-   - `internal/assets/claude/.claude-plugin/plugin.json` (plugin manifest)
-   - `.claude-plugin/marketplace.json` (marketplace listing)
+   * `internal/assets/claude/.claude-plugin/plugin.json` (*plugin manifest*),
+   *`.claude-plugin/marketplace.json` (*marketplace listing*);
 
 2. **Update the marketplace** in Claude Code:
-   - Open the Plugins UI (`/plugins` or Esc menu)
-   - Go to **Marketplaces** tab
-   - Select the `activememory-ctx` marketplace
-   - Choose **Update marketplace**
+   * Open the Plugins UI (*`/plugins` or Esc menu*),
+   * Go to **Marketplaces** tab,
+   * Select the `activememory-ctx` Marketplace,
+   * Choose **Update marketplace**;
 
-3. **Start a new Claude Code session** — skill changes aren't
+3. **Start a new Claude Code session**: skill changes aren't
    reflected in existing sessions.
 
 !!! warning "Both Version Files Must Match"
@@ -193,10 +200,10 @@ to take effect:
 
 ### Troubleshooting
 
-| Issue                | Solution                                                   |
-|----------------------|------------------------------------------------------------|
-| Context not loading  | Check `ctx` is in PATH: `which ctx`                        |
-| Hook errors          | Verify plugin is installed: `claude /plugin list`          |
+| Issue                 | Solution                                                     |
+|-----------------------|--------------------------------------------------------------|
+| Context not loading   | Check `ctx` is in PATH: `which ctx`                          |
+| Hook errors           | Verify plugin is installed: `claude /plugin list`            |
 | New skill not visible | Bump version in both `plugin.json` files, update marketplace |
 
 ### Manual Context Load
@@ -211,6 +218,7 @@ ctx agent --budget 4000
 cat .context/TASKS.md
 ```
 
+<!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
 ### Agent Skills
 
 The ctx plugin ships Agent Skills following the
@@ -218,20 +226,22 @@ The ctx plugin ships Agent Skills following the
 
 These are invoked in Claude Code with `/skill-name`.
 
-#### Context Skills
+#### Session Lifecycle Skills
 
 | Skill                  | Description                                          |
 |------------------------|------------------------------------------------------|
+| `/ctx-remember`        | Recall project context at session start (ceremony)   |
+| `/ctx-wrap-up`         | End-of-session context persistence (ceremony)        |
 | `/ctx-status`          | Show context summary (tasks, decisions, learnings)   |
 | `/ctx-agent`           | Get AI-optimized context packet                      |
-| `/ctx-drift`           | Detect and fix context drift (structural + semantic) |
-| `/ctx-consolidate`     | Merge redundant learnings or decisions into denser entries |
-| `/ctx-alignment-audit` | Audit doc claims against playbook instructions       |
+| `/ctx-next`            | Suggest 1-3 concrete next actions from context       |
+| `/ctx-commit`          | Commit with integrated context capture               |
 | `/ctx-reflect`         | Review session and suggest what to persist           |
+| `/ctx-remind`          | Manage session-scoped reminders                      |
 
 #### Context Persistence Skills
 
-| Command               | Description                                        |
+| Skill                 | Description                                        |
 |-----------------------|----------------------------------------------------|
 | `/ctx-add-task`       | Add a task to TASKS.md                             |
 | `/ctx-add-learning`   | Add a learning to LEARNINGS.md                     |
@@ -239,13 +249,20 @@ These are invoked in Claude Code with `/skill-name`.
 | `/ctx-add-convention` | Add a coding convention to CONVENTIONS.md          |
 | `/ctx-archive`        | Archive completed tasks                            |
 
+#### Scratchpad Skills
+
+| Skill                 | Description                                        |
+|-----------------------|----------------------------------------------------|
+| `/ctx-pad`            | Manage encrypted scratchpad entries                |
+
 #### Session History Skills
 
-| Command                   | Description                                  |
+| Skill                     | Description                                  |
 |---------------------------|----------------------------------------------|
 | `/ctx-recall`             | Browse AI session history                    |
 | `/ctx-journal-enrich`     | Enrich a journal entry with frontmatter/tags |
 | `/ctx-journal-enrich-all` | Batch-enrich all unenriched journal entries  |
+| `/ctx-journal-normalize`  | Fix markdown rendering issues in journal     |
 
 #### Blogging Skills
 
@@ -255,17 +272,29 @@ These are invoked in Claude Code with `/skill-name`.
     AI reads your git commit history and creates a "*narrative*",
     which is essentially what a *release note* is for.
 
-| Command               | Description                                     |
+| Skill                 | Description                                     |
 |-----------------------|-------------------------------------------------|
 | `/ctx-blog`           | Generate blog post from recent activity         |
 | `/ctx-blog-changelog` | Generate blog post from commit range with theme |
 
-#### Development Skills
+#### Auditing & Health Skills
 
-| Command             | Description                            |
-|---------------------|----------------------------------------|
-| `/ctx-loop`         | Generate a Ralph Loop iteration script |
-| `/ctx-prompt-audit` | Analyze session logs for vague prompts |
+| Skill                  | Description                                               |
+|------------------------|-----------------------------------------------------------|
+| `/ctx-drift`           | Detect and fix context drift (structural + semantic)      |
+| `/ctx-consolidate`     | Merge redundant learnings or decisions into denser entries |
+| `/ctx-alignment-audit` | Audit doc claims against playbook instructions            |
+| `/ctx-prompt-audit`    | Analyze session logs for vague prompts                    |
+| `/check-links`         | Audit docs for dead internal and external links           |
+
+#### Planning & Execution Skills
+
+| Skill               | Description                              |
+|----------------------|------------------------------------------|
+| `/ctx-loop`          | Generate a Ralph Loop iteration script   |
+| `/ctx-implement`     | Execute a plan step-by-step with checks  |
+| `/ctx-worktree`      | Manage git worktrees for parallel agents |
+| `/ctx-map`           | Build and maintain architecture maps     |
 
 #### Usage Examples
 

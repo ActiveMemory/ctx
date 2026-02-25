@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-24 | Tone down proactive content suggestion claims rather than add more hooks |
 | 2026-02-24 | Notify events are opt-in, not opt-out |
 | 2026-02-24 | Document worktree limitations rather than reroute paths |
 | 2026-02-24 | RSS/Atom feed is infrastructure, not a user feature |
@@ -46,6 +47,20 @@
 | 2026-01-20 | Always Generate Claude Hooks in Init (No Flag Needed) |
 | 2026-01-20 | Generic Core with Optional Claude Code Enhancements |
 <!-- INDEX:END -->
+
+## [2026-02-24-204550] Tone down proactive content suggestion claims rather than add more hooks
+
+**Status**: Accepted
+
+**Context**: publishing.md claims agents proactively suggest blog posts and journal rebuilds at natural moments, but no hook or playbook mechanism exists to trigger this.
+
+**Decision**: Tone down proactive content suggestion claims rather than add more hooks
+
+**Rationale**: Already have 9 UserPromptSubmit hooks — adding another nudge risks fatigue. The claim is aspirational, not functional. Conversational prompting (ask your agent) already works.
+
+**Consequences**: Update docs to describe the conversational approach rather than claiming automatic behavior. Avoids over-promising. If demand emerges later, a hook can be added then.
+
+---
 
 ## [2026-02-24-032946] Notify events are opt-in, not opt-out
 

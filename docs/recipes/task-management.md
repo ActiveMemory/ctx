@@ -38,15 +38,15 @@ Read on for the full workflow and conversational patterns.
 
 ## Commands and Skills Used
 
-| Tool                 | Type    | Purpose                                   |
-|----------------------|---------|-------------------------------------------|
-| `ctx add task`       | Command | Add a new task to TASKS.md                |
-| `ctx complete`       | Command | Mark a task as done by number or text     |
-| `ctx tasks snapshot` | Command | Create a point-in-time backup of TASKS.md |
-| `ctx tasks archive`  | Command | Move completed tasks to archive file      |
-| `/ctx-add-task`      | Skill   | AI-assisted task creation with validation |
-| `/ctx-archive`       | Skill   | AI-guided archival with safety checks     |
-| `/ctx-next`          | Skill   | Pick what to work on based on priorities  |
+| Tool                 | Type    | Purpose                                     |
+|----------------------|---------|---------------------------------------------|
+| `ctx add task`       | Command | Add a new task to `TASKS.md`                |
+| `ctx complete`       | Command | Mark a task as done by number or text       |
+| `ctx tasks snapshot` | Command | Create a point-in-time backup of `TASKS.md` |
+| `ctx tasks archive`  | Command | Move completed tasks to archive file        |
+| `/ctx-add-task`      | Skill   | AI-assisted task creation with validation   |
+| `/ctx-archive`       | Skill   | AI-guided archival with safety checks       |
+| `/ctx-next`          | Skill   | Pick what to work on based on priorities    |
 
 ## The Workflow
 
@@ -74,7 +74,7 @@ someone else to pick up.
 If you say "*fix the bug,*" it will ask you to clarify which bug and where.
 
 !!! tip "Tasks Are Often Created Proactively"
-    In practice, many tasks are created proactively by the agent rather than by
+    In practice, many tasks are created **proactively** by the agent rather than by
     explicit CLI commands.
 
     After completing a feature, the agent will often identify follow-up work:
@@ -119,7 +119,7 @@ ctx add task "Add ctx watch XML parsing" --priority medium --section \
 ```
 
 Without `--section`, the task is inserted before the first unchecked task in
-TASKS.md.
+`TASKS.md`.
 
 ### Step 3: Pick What to Work On
 
@@ -188,7 +188,7 @@ preserved.
 ### Step 5: Snapshot Before Risky Changes
 
 Before a major refactor or any change that might break things, snapshot your
-current task state. This creates a copy of TASKS.md in `.context/archive/`
+current task state. This creates a copy of `TASKS.md` in `.context/archive/`
 without modifying the original.
 
 ```bash
@@ -246,13 +246,13 @@ An agent that has loaded the context files does not need you to type
 
 These conversational prompts replace explicit commands during interactive sessions:
 
-| Instead of typing...                   | Just say...                                      |
-|----------------------------------------|--------------------------------------------------|
-| `ctx add task "Write tests for X"`     | "We should add tests for this—track that?"       |
-| `/ctx-next`                            | "What should we work on?"                        |
-| `ctx complete "rate limiting"`         | "The rate limiter is done, what's next?"         |
-| `ctx tasks archive`                    | "TASKS.md is getting long, can you clean it up?" |
-| `ctx add task ... && ctx add task ...` | "Add follow-ups for what we just built."         |
+| Instead of typing...                   | Just say...                                        |
+|----------------------------------------|----------------------------------------------------|
+| `ctx add task "Write tests for X"`     | "We should add tests for this—track that?"         |
+| `/ctx-next`                            | "What should we work on?"                          |
+| `ctx complete "rate limiting"`         | "The rate limiter is done, what's next?"           |
+| `ctx tasks archive`                    | "`TASKS.md` is getting long, can you clean it up?" |
+| `ctx add task ... && ctx add task ...` | "Add follow-ups for what we just built."           |
 
 The agent translates these into the right `ctx` operations behind the scenes.
 
@@ -467,6 +467,9 @@ Store short-lived sensitive notes in an encrypted scratchpad.
   task management in context
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   capturing the "why" behind your work
-* [Detecting and Fixing Drift](context-health.md): keeping TASKS.md accurate over time
-* [CLI Reference](../reference/cli-reference.md): full documentation for `ctx add`, `ctx complete`, `ctx tasks`
-* [Context Files: TASKS.md](../home/context-files.md#tasksmd): format and conventions for TASKS.md
+* [Detecting and Fixing Drift](context-health.md):
+  keeping `TASKS.md` accurate over time
+* [CLI Reference](../reference/cli-reference.md): 
+  full documentation for `ctx add`, `ctx complete`, `ctx tasks`
+* [Context Files: `TASKS.md`](../home/context-files.md#tasksmd): 
+  format and conventions for `TASKS.md`

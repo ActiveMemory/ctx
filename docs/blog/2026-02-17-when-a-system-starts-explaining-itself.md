@@ -94,7 +94,7 @@ The question is correct. The category is wrong.
 * Skills live in people.
 * Infrastructure lives in the environment.
 
-!!! tip "ctx Is not a Skill: It is a Form of Relief"
+!!! tip "`ctx` Is not a Skill: It is a Form of Relief"
     What early adopters experience is **not** an ability.
 
     **It is the removal of a cognitive constraint**.

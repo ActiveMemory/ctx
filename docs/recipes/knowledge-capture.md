@@ -104,8 +104,8 @@ interactively. For quick decisions, it supports a Y-statement:
 "*In the context of [situation], facing [constraint], we decided for [choice]
 and against [alternatives], to achieve [benefit], accepting that [trade-off].*"
 
-??? note "CLI command for scripting and automation"
-    When no agent is in the loop (CI pipelines, shell scripts, hooks),
+??? note "CLI Command for Scripting and Automation"
+    When no agent is in the loop (*CI pipelines, shell scripts, hooks*),
     use the CLI directly with structured flags:
 
     ```bash
@@ -152,7 +152,7 @@ The `/ctx-add-learning` skill applies three quality filters:
 
 **Learnings** capture principles and heuristics, not code snippets.
 
-??? note "CLI command for scripting and automation"
+??? note "CLI Command for Scripting and Automation"
     When no agent is in the loop:
 
     ```bash
@@ -203,10 +203,10 @@ without reading the full file, which matters when token budgets are tight.
 !!! tip "Keep It Conversational"
     `/ctx-reflect` is not the only way to trigger reflection.
 
-    Agents trained on the ctx playbook naturally surface persist-worthy items at
+    Agents trained on the `ctx` playbook naturally surface persist-worthy items at
     breakpoints, even without invoking the skill explicitly.
 
-    A conversational prompt like "anything worth saving?" or "let's wrap up"
+    A **conversational** prompt like "*anything worth saving?*" or "*let's wrap up*"
     can trigger the same review.
 
     The skill provides a structured checklist, but the behavior is available
@@ -242,7 +242,7 @@ The skill always asks before persisting.
 ### Step 7: The Conversational Approach
 
 The commands shown in Steps 2 to 4 are precise, but you rarely need to type
-them yourself. When working with an agent that has loaded the ctx playbook,
+them yourself. When working with an agent that has loaded the `ctx` playbook,
 natural language triggers the same operations.
 
 **You ask, the agent acts**:
@@ -252,7 +252,7 @@ natural language triggers the same operations.
 | "*What have we learned this session?*" | Reviews recent work, identifies learnings, offers to persist     |
 | "*Save that as a decision*"            | Captures the trade-off you just discussed with structured fields |
 | "*Any gotchas worth remembering?*"     | Scans recent work for non-obvious lessons                        |
-| "*Record that convention*"             | Adds the pattern you just agreed on to CONVENTIONS.md            |
+| "*Record that convention*"             | Adds the pattern you just agreed on to `CONVENTIONS.md`          |
 | "*Let's wrap up*"                      | Runs through the reflect checklist conversationally              |
 
 Example exchange:
@@ -286,8 +286,8 @@ You may see:
 
 When agents run unattended (*no human in the loop*), they may persist directly:
 
-* "*I've added the subprocess env var gotcha to LEARNINGS.md so we don't hit it again.*"
-* "*Recorded the decision to use file-based tokens over env vars in DECISIONS.md.*"
+* "*I've added the subprocess env var gotcha to `LEARNINGS.md` so we don't hit it again.*"
+* "*Recorded the decision to use file-based tokens over env vars in `DECISIONS.md`.*"
 * "*Marked the cooldown task done and added a follow-up for TTL cleanup.*"
 
 This is **behavior by design**.
@@ -298,7 +298,7 @@ rather than waiting for explicit instructions.
 
 ## Putting It All Together
 
-### Command-line approach (scripting and automation)
+### Command-line Approach (*Scripting and Automation*)
 
 ```bash
 # Decision: record the trade-off
@@ -324,7 +324,7 @@ ctx learnings reindex
 # /ctx-reflect
 ```
 
-### Conversational approach (interactive sessions)
+### Conversational Approach (*Interactive Sessions*)
 
 ```text
 You: "We just picked Postgres over SQLite for the concurrency
@@ -380,11 +380,11 @@ Both approaches produce the same structured entries in the same context files.
   a rationale is just a fact. A learning without an application is just a story.
 * **Talk to your agent**, do not type commands. In interactive sessions, the
   conversational approach is the recommended way to capture knowledge. Say
-  "save that as a learning" or "any decisions worth recording?" and let the
+  "*save that as a learning*" or "*any decisions worth recording?*" and let the
   agent handle the structured fields. Reserve the CLI commands for scripting,
   automation, and CI/CD pipelines where there is no agent in the loop.
-* **Trust the agent's proactive instincts**. Agents trained on the ctx playbook will
-  offer to persist context at milestones. A brief "want me to save this?" is
+* **Trust the agent's proactive instincts**. Agents trained on the `ctx` playbook will
+  offer to persist context at milestones. A brief "*want me to save this?*" is
   cheaper than re-discovering the same lesson three sessions later.
 
 ## Next Up

@@ -1131,6 +1131,8 @@
       
         
       
+        
+      
     
     
     
@@ -1256,6 +1258,36 @@
     
   
     Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
   
 
     
@@ -1570,16 +1602,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../system-hooks-audit/" class="md-nav__link">
+      <a href="../webhook-notifications/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Auditing System Hooks
+    Webhook Notifications
   
 
     
@@ -1600,16 +1632,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../webhook-notifications/" class="md-nav__link">
+      <a href="../system-hooks-audit/" class="md-nav__link">
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
   
   <span class="md-ellipsis">
     
   
-    Webhook Notifications
+    Auditing System Hooks
   
 
     
@@ -2683,7 +2715,7 @@
   <span class="md-ellipsis">
     
   
-    Integrating ctx
+    Integration
   
 
     
@@ -2713,7 +2745,7 @@
   <span class="md-ellipsis">
     
   
-    Upgrading ctx
+    Upgrade
   
 
     
@@ -2743,7 +2775,7 @@
   <span class="md-ellipsis">
     
   
-    AI Tool Integrations
+    AI Tools
   
 
     
@@ -3345,8 +3377,8 @@ completed, and know when to stop.</p>
 <p>Without persistent memory, every iteration starts fresh and the loop collapses.
 With <code>ctx</code>, each iteration can pick up where the last one left off, but only if
 the agent persists its context as part of the work.</p>
-<p>This is the key insight: unattended operation works because the agent treats
-context persistence as a first-class deliverable, not an afterthought.</p>
+<p>Unattended operation works because the agent treats
+context persistence as a <strong>first-class deliverable</strong>, not an <em>afterthought</em>.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph<span class="w">                            </span><span class="c1"># 1. init for unattended mode</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Edit TASKS.md with phased work items</span>
@@ -3414,13 +3446,13 @@ reasonable choices instead of asking clarifying questions.</p>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>This<span class="w"> </span>creates<span class="w"> </span><span class="sb">`</span>.context/<span class="sb">`</span><span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>template<span class="w"> </span>files,<span class="w"> </span>a<span class="w"> </span><span class="sb">`</span>PROMPT.md<span class="sb">`</span><span class="w"> </span>configured<span class="w"> </span><span class="k">for</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>autonomous<span class="w"> </span>iteration,<span class="w"> </span>and<span class="w"> </span>seeds<span class="w"> </span>Claude<span class="w"> </span>Code<span class="w"> </span>permissions<span class="w"> </span><span class="k">in</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sb">`</span>.claude/settings.local.json<span class="sb">`</span>.<span class="w"> </span>Install<span class="w"> </span>the<span class="w"> </span>ctx<span class="w"> </span>plugin<span class="w"> </span><span class="k">for</span><span class="w"> </span>hooks<span class="w"> </span>and<span class="w"> </span>skills.
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sb">`</span>.claude/settings.local.json<span class="sb">`</span>.<span class="w"> </span>Install<span class="w"> </span>the<span class="w"> </span><span class="sb">`</span>ctx<span class="sb">`</span><span class="w"> </span>plugin<span class="w"> </span><span class="k">for</span><span class="w"> </span>hooks<span class="w"> </span>and<span class="w"> </span>skills.
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Without<span class="w"> </span><span class="sb">`</span>--ralph<span class="sb">`</span>,<span class="w"> </span>the<span class="w"> </span>agent<span class="w"> </span>will<span class="w"> </span>often<span class="w"> </span>pause<span class="w"> </span>when<span class="w"> </span>requirements<span class="w"> </span>are<span class="w"> </span>unclear.
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>For<span class="w"> </span>unattended<span class="w"> </span>runs,<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>it<span class="w"> </span>to<span class="w"> </span>choose<span class="w"> </span>a<span class="w"> </span>default<span class="w"> </span>and<span class="w"> </span>document<span class="w"> </span>the<span class="w"> </span>trade-off
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">in</span><span class="w"> </span><span class="sb">`</span>DECISIONS.md<span class="sb">`</span><span class="w"> </span>instead.
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">### Step 2: Populate TASKS.md with Phased Work</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">### Step 2: Populate `TASKS.md` with Phased Work</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Open<span class="w"> </span><span class="sb">`</span>.context/TASKS.md<span class="sb">`</span><span class="w"> </span>and<span class="w"> </span>organize<span class="w"> </span>your<span class="w"> </span>work<span class="w"> </span>into<span class="w"> </span>phases.<span class="w"> </span>The<span class="w"> </span>agent<span class="w"> </span>works
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>through<span class="w"> </span>these<span class="w"> </span>systematically,<span class="w"> </span>top<span class="w"> </span>to<span class="w"> </span>bottom,<span class="w"> </span>using<span class="w"> </span>priority<span class="w"> </span>tags<span class="w"> </span>to<span class="w"> </span><span class="k">break</span><span class="w"> </span>ties.
@@ -3466,8 +3498,8 @@ signals at the end:</p>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>End your response with exactly ONE of:
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">-</span><span class="w"> </span><span class="sb">`SYSTEM_CONVERGED`</span> — All tasks in TASKS.md are complete (this is the
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  signal the loop script detects by default)
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">-</span><span class="w"> </span><span class="sb">`SYSTEM_CONVERGED`</span> — All tasks in <span class="sb">`TASKS.md`</span> are complete (*this is the
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  signal the loop script detects by default*)
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">-</span><span class="w"> </span><span class="sb">`SYSTEM_BLOCKED`</span> — Cannot proceed, need human input (explain why)
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">-</span><span class="w"> </span>(no signal) — More work remains, continue to next iteration
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
@@ -3505,7 +3537,7 @@ permission prompts:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>.context/PROMPT.md<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <div class="admonition danger">
-<p class="admonition-title">This flag means what it says</p>
+<p class="admonition-title">This Flag Means What It Says</p>
 <p>With <code>--dangerously-skip-permissions</code>, the agent can execute any shell
 command, write to any file, and make network requests without
 confirmation.</p>
@@ -3516,15 +3548,16 @@ production systems.</p>
 not use this flag.</p>
 </div>
 <h4 id="enforce-isolation-at-the-os-level">Enforce Isolation at the OS Level<a class="headerlink" href="#enforce-isolation-at-the-os-level" title="Permanent link">&para;</a></h4>
-<div class="admonition danger">
-<p class="admonition-title">Do not skip this section</p>
-<p>This is not optional hardening. An unattended agent with unrestricted
-OS access is an unattended shell with unrestricted OS access. The
-allowlist above is a strong first layer, but do not rely on a single
-runtime boundary.</p>
-</div>
 <p>The only controls an agent cannot override are the ones enforced by the
 operating system, the container runtime, or the hypervisor.</p>
+<div class="admonition danger">
+<p class="admonition-title">Do Not Skip This Section</p>
+<p>This is <strong>not</strong> optional hardening:</p>
+<p>An unattended agent with unrestricted
+OS access is an unattended shell with unrestricted OS access. </p>
+<p>The allowlist above is a strong first layer, but do not rely on a single
+runtime boundary.</p>
+</div>
 <p>For unattended runs, enforce isolation at the infrastructure level:</p>
 <table>
 <thead>
@@ -3576,7 +3609,7 @@ operating system, the container runtime, or the hypervisor.</p>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log
 </span></code></pre></div>
 <div class="admonition tip">
-<p class="admonition-title">Defense in depth</p>
+<p class="admonition-title">Defense in Depth</p>
 <p>Use multiple layers together: OS-level isolation (<em>the boundary the
 agent cannot cross</em>), a permission allowlist (<em>what Claude Code will do
 within that boundary</em>), and <code>CONSTITUTION.md</code> (<em>a soft nudge for the
@@ -3597,7 +3630,7 @@ common case</em>).</p>
 signals, and loops until done or the cap is reached.</p>
 <p>You can also use the <code>/ctx-loop</code> skill from inside Claude Code.</p>
 <div class="admonition tip">
-<p class="admonition-title">A shell loop is best practice</p>
+<p class="admonition-title">A Shell Loop Is the Best Practice</p>
 <p>The shell loop approach spawns a fresh AI process each iteration, so
 the only state that carries between iterations is what lives in
 <code>.context/</code> and git.</p>
@@ -3645,7 +3678,7 @@ default this is <code>SYSTEM_CONVERGED</code>. You can change it with the
 <tbody>
 <tr>
 <td><code>SYSTEM_CONVERGED</code></td>
-<td>All tasks in TASKS.md are done</td>
+<td>All tasks in <code>TASKS.md</code> are done</td>
 <td>Detected by default (<code>--completion</code> default value)</td>
 </tr>
 <tr>
@@ -3679,7 +3712,7 @@ touch multiple files.</p>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Step 4/6: Write unit tests ................... OK
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Step 5/6: Run test suite ..................... FAIL
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  -&gt; Fixed: missing test dependency
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  -&gt; Re-verify ................................ OK
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  -&gt; Re-verify ............................... OK
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Step 6/6: Update TASKS.md .................... OK
 </span></code></pre></div>
 <p>Each step is verified (build, test, syntax check) before moving to the next.</p>
@@ -3706,9 +3739,8 @@ cannot rely on a human to prompt it. It must treat context updates as part of
 every task, not as a separate step.</p>
 <h3 id="the-agent-playbook-self-check-drives-autonomy">The Agent Playbook Self-Check Drives Autonomy<a class="headerlink" href="#the-agent-playbook-self-check-drives-autonomy" title="Permanent link">&para;</a></h3>
 <p>The Agent Playbook defines a self-check prompt the agent applies continuously:</p>
-<blockquote>
-<p>"If this session ended right now, would the next session know what happened?"</p>
-</blockquote>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>&quot;If this session ended right now, would the next session know what happened?&quot;
+</span></code></pre></div>
 <p>In interactive sessions, a human might remind the agent to save context. When
 the agent runs unattended, nobody is there to remind it.</p>
 <p>The self-check becomes the trigger: after meaningful work, the agent evaluates
@@ -3727,19 +3759,19 @@ instructions:</p>
 <tbody>
 <tr>
 <td>Completes a task</td>
-<td>Marks it <code>[x]</code> in TASKS.md with <code>#done</code> timestamp</td>
+<td>Marks it <code>[x]</code> in <code>TASKS.md</code> with <code>#done</code> timestamp</td>
 </tr>
 <tr>
 <td>Discovers a gotcha</td>
-<td>Adds it to LEARNINGS.md</td>
+<td>Adds it to <code>LEARNINGS.md</code></td>
 </tr>
 <tr>
 <td>Makes a design choice</td>
-<td>Records it in DECISIONS.md with rationale</td>
+<td>Records it in <code>DECISIONS.md</code> with rationale</td>
 </tr>
 <tr>
 <td>Identifies follow-up work</td>
-<td>Creates new tasks in TASKS.md with <code>#added</code> timestamp</td>
+<td>Creates new tasks in <code>TASKS.md</code> with <code>#added</code> timestamp</td>
 </tr>
 <tr>
 <td>Hits an unexpected failure</td>
@@ -3749,23 +3781,23 @@ instructions:</p>
 </table>
 <h3 id="example-what-proactive-persistence-looks-like">Example: What Proactive Persistence Looks Like<a class="headerlink" href="#example-what-proactive-persistence-looks-like" title="Permanent link">&para;</a></h3>
 <p>Here is what the agent does during a single iteration beyond writing code:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Iteration 4:
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  1. Read TASKS.md -&gt; pick &quot;Add email verification&quot; (#priority:high)
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  2. Add #started:2026-01-25-030012 to the task
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  3. Implement the feature (code, tests, docs if needed)
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  4. Tests pass -&gt; mark task [x], add #done:2026-01-25-031544
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  5. Add learning: &quot;SMTP config must be set before verification handler registers. Order matters in init().&quot;
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  6. Add decision: &quot;Use token-based verification links (not codes) because links work better in automated tests.&quot;
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  7. Create follow-up task: &quot;Add rate limiting to verification endpoint&quot; #added:...
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  8. Commit all changes including `.context/`
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  9. No signal emitted -&gt; loop continues to iteration 5
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Iteration 4:
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  1. Read TASKS.md -&gt; pick &quot;Add email verification&quot; (#priority:high)
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  2. Add #started:2026-01-25-030012 to the task
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  3. Implement the feature (code, tests, docs if needed)
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  4. Tests pass -&gt; mark task [x], add #done:2026-01-25-031544
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  5. Add learning: &quot;SMTP config must be set before verification handler registers. Order matters in init().&quot;
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  6. Add decision: &quot;Use token-based verification links (not codes) because links work better in automated tests.&quot;
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  7. Create follow-up task: &quot;Add rate limiting to verification endpoint&quot; #added:...
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  8. Commit all changes including `.context/`
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  9. No signal emitted -&gt; loop continues to iteration 5
 </span></code></pre></div>
-<p>Steps 2, 4, 5, 6, and 7 are proactive context persistence. The agent was not
-asked to do any of them.</p>
+<p>Steps 2, 4, 5, 6, and 7 are proactive context persistence: </p>
+<p>The agent was not asked to do any of them.</p>
 <h3 id="context-persistence-at-milestones">Context Persistence at Milestones<a class="headerlink" href="#context-persistence-at-milestones" title="Permanent link">&para;</a></h3>
-<p>For long autonomous runs, the agent persists context at natural boundaries,
+<p>For long autonomous runs, the agent persists context at <strong>natural boundaries</strong>,
 often at phase transitions or after completing a cluster of related tasks.
-It updates TASKS.md, DECISIONS.md, and LEARNINGS.md as it goes.</p>
+It updates <code>TASKS.md</code>, <code>DECISIONS.md</code>, and <code>LEARNINGS.md</code> as it goes.</p>
 <p>If the loop crashes at 4 AM, the context files tell you exactly where to
 resume. You can also use <code>ctx recall list</code> to review the session transcripts.</p>
 <h3 id="the-persistence-contract">The Persistence Contract<a class="headerlink" href="#the-persistence-contract" title="Permanent link">&para;</a></h3>
@@ -3779,11 +3811,11 @@ resume. You can also use <code>ctx recall list</code> to review the session tran
 <p>Break any part of this contract and the loop degrades.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
-<p class="admonition-title">Markdown is not enforcement</p>
-<p>Your real guardrails are permissions and isolation, not markdown.
-<code>CONSTITUTION.md</code> can nudge the agent, but it is probabilistic. The
-permission allowlist and OS isolation are deterministic. For
-unattended runs, trust the sandbox and the allowlist, not the prose.</p>
+<p class="admonition-title">Markdown Is Not Enforcement</p>
+<p>Your real guardrails are permissions and isolation, not Markdown.
+<code>CONSTITUTION.md</code> can nudge the agent, but it is <strong>probabilistic</strong>. </p>
+<p>The permission allowlist and OS isolation are <strong>deterministic</strong>:</p>
+<p>For unattended runs, trust the sandbox and the allowlist, not the prose.</p>
 </div>
 <ul>
 <li>Start with a small iteration cap. Use <code>--max-iterations 5</code> on your first run.</li>

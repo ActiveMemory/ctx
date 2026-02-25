@@ -7,8 +7,8 @@ icon: lucide/bell
 
 ## The Problem
 
-You're deep in a session and realize: "I need to refactor the swagger
-definitions next time." You could add a task, but this isn't a work item —
+You're deep in a session and realize: "*I need to refactor the swagger
+definitions next time.*" You could add a task, but this isn't a work item:
 it's a note to future-you. You could jot it on the scratchpad, but
 scratchpad entries don't announce themselves.
 
@@ -22,17 +22,17 @@ ctx remind list
 ctx remind dismiss 1
 ```
 
-Reminders surface automatically at session start — verbatim, every
+Reminders surface automatically at session start: VERBATIM, every
 session, until you dismiss them.
 
 ## Commands and Skills Used
 
-| Tool                    | Type        | Purpose                                        |
-|-------------------------|-------------|------------------------------------------------|
-| `ctx remind`            | CLI command | Add a reminder (default action)                |
-| `ctx remind list`       | CLI command | Show all pending reminders                     |
-| `ctx remind dismiss`    | CLI command | Remove a reminder by ID (or `--all`)           |
-| `/ctx-remind`           | Skill       | Natural language interface to reminders         |
+| Tool                 | Type        | Purpose                                 |
+|----------------------|-------------|-----------------------------------------|
+| `ctx remind`         | CLI command | Add a reminder (default action)         |
+| `ctx remind list`    | CLI command | Show all pending reminders              |
+| `ctx remind dismiss` | CLI command | Remove a reminder by ID (or `--all`)    |
+| `/ctx-remind`        | Skill       | Natural language interface to reminders |
 
 ## The Workflow
 
@@ -68,7 +68,7 @@ Agent: [runs ctx remind "check the deploy logs" --after 2026-02-25]
 
 The reminder stays silent until that date, then fires every session.
 
-The agent converts natural language dates ("tomorrow", "next week",
+The agent converts natural language dates ("*tomorrow*", "*next week*",
 "after the release on Friday") to `YYYY-MM-DD`. If it's ambiguous,
 it asks.
 
@@ -85,12 +85,12 @@ Next session, the reminder appears automatically before anything else:
 └──────────────────────────────────────────────────
 ```
 
-No action needed — the `check-reminders` hook fires on
+No action needed: The `check-reminders` hook fires on
 `UserPromptSubmit` and the agent relays the box verbatim.
 
 ### Step 4: Dismiss When Done
 
-After you've acted on a reminder (or decided to skip it):
+After you've acted on a reminder (*or decided to skip it*):
 
 ```text
 You: "dismiss reminder 1"
@@ -141,12 +141,12 @@ You: /ctx-remind dismiss reminder 3
 
 ## Reminders vs Scratchpad vs Tasks
 
-| You want to...                              | Use                |
-|---------------------------------------------|--------------------|
-| Leave a note that announces itself next session | **`ctx remind`**   |
-| Jot down a quick value or sensitive token   | **`ctx pad`**      |
-| Track work with status and completion       | **TASKS.md**       |
-| Record a decision or lesson for all sessions | **Context files**  |
+| You want to...                                  | Use               |
+|-------------------------------------------------|-------------------|
+| Leave a note that announces itself next session | **`ctx remind`**  |
+| Jot down a quick value or sensitive token       | **`ctx pad`**     |
+| Track work with status and completion           | **`TASKS.md`**    |
+| Record a decision or lesson for all sessions    | **Context files** |
 
 **Decision guide:**
 
@@ -156,24 +156,25 @@ You: /ctx-remind dismiss reminder 3
 
 !!! tip "Reminders Are Sticky Notes, Not Tasks"
     A reminder has no status, no priority, no lifecycle. It's a
-    message to future-you that fires until dismissed. If you need
-    tracking, use a task.
+    message to "*future you*" that fires until dismissed. 
+
+    If you need tracking, use a task in `TASKS.md`.
 
 ## Tips
 
-* **Reminders fire every session.** Unlike nudges (which throttle to
-  once per day), reminders repeat until you dismiss them. This is
-  intentional — you asked to be reminded.
-* **Date gating is session-scoped, not clock-scoped.** `--after
-  2026-02-25` means "don't show until sessions on or after Feb 25."
+* **Reminders fire every session**: Unlike nudges (*which throttle to
+  once per day*), reminders repeat until you dismiss them. This is
+  intentional: You asked to be reminded.
+* **Date gating is session-scoped, not clock-scoped**: `--after
+  2026-02-25` means "*don't show until sessions on or after Feb 25.*"
   It does not mean "alarm at midnight on Feb 25."
-* **The agent handles date parsing.** Say "next week" or "after
-  Friday" — the agent converts it to `YYYY-MM-DD`. The CLI only
+* **The agent handles date parsing**: Say "*next week*" or "*after
+  Friday*": The agent converts it to `YYYY-MM-DD`. The CLI only
   accepts the explicit date format.
-* **Reminders are committed to git.** They travel with the repo.
+* **Reminders are committed to git**: They travel with the repo.
   If you switch machines, your reminders follow.
-* **IDs never reuse.** After dismissing reminder 3, the next reminder
-  gets ID 4 (or higher). No confusion from recycled numbers.
+* **IDs never reuse**: After dismissing reminder 3, the next reminder
+  gets ID 4 (*or higher*). No confusion from recycled numbers.
 
 ## Next Up
 
