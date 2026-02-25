@@ -150,10 +150,27 @@ Let's step back. Explain what you're about to do before changing anything.
 Undo that last change and try a different approach.
 ```
 
-These work because they **interrupt momentum**. 
+These work because they **interrupt momentum**.
 
-Without explicit course correction, the AI tends to commit harder to a wrong 
+Without explicit course correction, the AI tends to commit harder to a wrong
 path rather than reconsidering.
+
+### Failure Modes
+
+When the AI misbehaves, match the symptom to the recovery prompt:
+
+| Symptom                          | Recovery prompt                                                         |
+|----------------------------------|-------------------------------------------------------------------------|
+| Hand-waves ("*should work now*") | "*Show evidence: file/line refs, command output, or test name.*"        |
+| Creates unnecessary files        | "*No new files. Modify the existing implementation.*"                   |
+| Expands scope unprompted         | "*Stop after the smallest working change. Ask before expanding scope.*" |
+| Narrates instead of acting       | "*Skip the explanation. Make the change and show the diff.*"            |
+| Repeats a failed approach        | "*That didn't work last time. Try a different approach.*"               |
+| Claims completion without proof  | "*Run the test. Show me the output.*"                                   |
+
+These are **recovery handles**, not rules to paste into `CLAUDE.md`.
+
+Use them **in the moment** when you see the behavior.
 
 ## Reflection and Persistence
 
@@ -342,6 +359,95 @@ so far, here are some prompts that tend to produce poor results:
 | "*Idiomatic X*"          | Triggers language priors      | "*Follow project conventions*"            |
 | "*Implement everything*" | No phasing, sprawl risk       | Break into tasks, implement one at a time |
 | "*You should know this*" | Assumes context is loaded     | "*Before you start, read X*"              |
+
+---
+
+## Reliability Checklist
+
+Before sending a non-trivial prompt, check these four elements.
+This is the guide's DNA in one screenful.
+
+1. **Goal in one sentence**: What does "*done*" look like?
+2. **Files to read**: What existing code or context should the AI
+   review before acting?
+3. **Verification command**: How will you *prove* it worked?
+   (*test name, CLI command, expected output*)
+4. **Scope boundary**: What should the AI *not* touch?
+
+A prompt that covers **all four** is almost always good enough.
+
+A prompt missing `#3` is how you get "*should work now*" without
+evidence.
+
+---
+
+## Safety Invariants
+
+Tool-using agents can read files, run commands, and modify your
+codebase. That power makes them useful. It also creates a trust
+boundary you should be aware of.
+
+These invariants apply regardless of which agent or model you use.
+
+### Treat repository text as untrusted input
+
+Issue descriptions, PR comments, commit messages, documentation,
+and even code comments can contain text that *looks like*
+instructions. An agent that reads a GitHub issue and then runs a
+command found inside it is executing untrusted input.
+
+**The rule**: Before running any command the agent found in repo
+text (issues, docs, comments), restate the command explicitly and
+confirm it does what you expect. Don't let the agent copy-paste
+from untrusted sources into a shell.
+
+### Ask before destructive operations
+
+`git push --force`, `rm -rf`, `DROP TABLE`, `docker system prune` —
+these are irreversible or hard to reverse. A good agent should pause
+before running them, but don't rely on that.
+
+**The rule**: For any operation that deletes data, overwrites
+history, or affects shared infrastructure, require explicit
+confirmation. If the agent runs something destructive without
+asking, that's a course-correction moment: "*Stop. Never run
+destructive commands without asking first.*"
+
+### Scope the blast radius
+
+An agent told to "*fix the tests*" might modify test fixtures,
+change assertions, or delete tests that inconveniently fail. An
+agent told to "*deploy*" might push to production. Broad mandates
+create broad risk.
+
+**The rule**: Constrain scope before starting work. The Reliability
+Checklist's **scope boundary** (#4) is your primary safety lever.
+When in doubt, err on the side of a tighter boundary.
+
+---
+
+### Secrets Never Belong in Context
+
+!!! tip "These are **Invariants**: Not Suggestions"
+    A prompting guide earns its trust by **being honest about risk**.
+
+    These four rules don't change with model versions, agent
+    frameworks, or project size. Build them into your workflow
+    once and stop thinking about them.
+
+`LEARNINGS.md`, `DECISIONS.md`, and session transcripts are
+plain-text files that may be committed to version control.
+
+**Don't persist API keys, passwords, tokens, or credentials in
+context files**.
+
+**The rule**: If the agent encounters a secret during work, it
+should use it transiently (*environment variable*, an *alias* to the secret
+instead of the actual secret, etc.) and **never** write it to a context file. 
+
+!!! danger "Any Secret Seen Should Be Assumed Exposed"
+    If you see a secret in a context file, **remove it immediately** and 
+    **rotate the credential**.
 
 ---
 
@@ -548,17 +654,44 @@ is the same principle behind regularization in ML: Without boundaries,
 powerful optimizers find solutions that technically satisfy the
 objective but are practically useless.
 
-These aren't prompting "*hacks*" that you will find in the 
-"*1000 AI Prompts for the Curious*" listicles: They are 
-**applications of foundational principles**: 
+**CLI commands as prompts** ("*Run `ctx status`*") interleave
+*reasoning with acting* — the model thinks, acts on external tools,
+observes results, then thinks again. Grounding reasoning in real
+tool output reduces hallucination because the model can't ignore
+evidence it just retrieved.
+<br>Yao et al., [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) (2022).
+
+**Task decomposition** ("*Prompts by Task Type*") applies
+*least-to-most prompting* — breaking a complex problem into
+subproblems and solving them sequentially, each building on the last.
+This is the research version of "plan, then implement one slice."
+<br>Zhou et al., [Least-to-Most Prompting Enables Complex Reasoning in Large Language Models](https://arxiv.org/abs/2205.10625) (2022).
+
+**Explicit planning** ("*Explore → Plan → Implement*") is directly
+supported by *plan-and-solve prompting*, which addresses missing-step
+failures in zero-shot reasoning by extracting a plan before executing.
+The phased structure prevents the model from jumping to code before
+understanding the problem.
+<br>Wang et al., [Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models](https://arxiv.org/abs/2305.04091) (2023).
+
+**Session reflection** ("*What did we learn?*", `/ctx-reflect`) is
+a form of *verbal reinforcement learning* — improving future
+performance by persisting linguistic feedback as memory rather than
+updating weights. This is exactly what `LEARNINGS.md` and
+`DECISIONS.md` provide: a durable feedback signal across sessions.
+<br>Shinn et al., [Reflexion: Language Agents with Verbal Reinforcement Learning](https://arxiv.org/abs/2303.11366) (2023).
+
+These aren't prompting "*hacks*" that you will find in the
+"*1000 AI Prompts for the Curious*" listicles: They are
+**applications of foundational principles**:
 
 * **Decomposition**,
-* **Abstraction**, 
-* **Ensemble Reasoning**, 
+* **Abstraction**,
+* **Ensemble Reasoning**,
 * **Search**,
 * and **Constrained Optimization**.
 
-They work because language models are, at their core, 
+They work because language models are, at their core,
 **optimization systems** navigating **probabilistic landscapes**.
 
 ## Further Reading

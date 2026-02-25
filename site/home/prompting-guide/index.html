@@ -1045,6 +1045,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1236,6 +1247,78 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reliability-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#safety-invariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety Invariants
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Safety Invariants">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treat-repository-text-as-untrusted-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat repository text as untrusted input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ask-before-destructive-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ask before destructive operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scope-the-blast-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope the blast radius
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-never-belong-in-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Never Belong in Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3314,6 +3397,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3505,6 +3599,78 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reliability-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#safety-invariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety Invariants
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Safety Invariants">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treat-repository-text-as-untrusted-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat repository text as untrusted input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ask-before-destructive-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ask before destructive operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scope-the-blast-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope the blast radius
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-never-belong-in-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Never Belong in Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3843,9 +4009,47 @@ a wrong approach.</p>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Undo that last change and try a different approach.
 </span></code></pre></div>
-<p>These work because they <strong>interrupt momentum</strong>. </p>
-<p>Without explicit course correction, the AI tends to commit harder to a wrong 
+<p>These work because they <strong>interrupt momentum</strong>.</p>
+<p>Without explicit course correction, the AI tends to commit harder to a wrong
 path rather than reconsidering.</p>
+<h3 id="failure-modes">Failure Modes<a class="headerlink" href="#failure-modes" title="Permanent link">&para;</a></h3>
+<p>When the AI misbehaves, match the symptom to the recovery prompt:</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Recovery prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hand-waves ("<em>should work now</em>")</td>
+<td>"<em>Show evidence: file/line refs, command output, or test name.</em>"</td>
+</tr>
+<tr>
+<td>Creates unnecessary files</td>
+<td>"<em>No new files. Modify the existing implementation.</em>"</td>
+</tr>
+<tr>
+<td>Expands scope unprompted</td>
+<td>"<em>Stop after the smallest working change. Ask before expanding scope.</em>"</td>
+</tr>
+<tr>
+<td>Narrates instead of acting</td>
+<td>"<em>Skip the explanation. Make the change and show the diff.</em>"</td>
+</tr>
+<tr>
+<td>Repeats a failed approach</td>
+<td>"<em>That didn't work last time. Try a different approach.</em>"</td>
+</tr>
+<tr>
+<td>Claims completion without proof</td>
+<td>"<em>Run the test. Show me the output.</em>"</td>
+</tr>
+</tbody>
+</table>
+<p>These are <strong>recovery handles</strong>, not rules to paste into <code>CLAUDE.md</code>.</p>
+<p>Use them <strong>in the moment</strong> when you see the behavior.</p>
 <h2 id="reflection-and-persistence">Reflection and Persistence<a class="headerlink" href="#reflection-and-persistence" title="Permanent link">&para;</a></h2>
 <h3 id="what-did-we-learn">"<em>What did we learn?</em>"<a class="headerlink" href="#what-did-we-learn" title="Permanent link">&para;</a></h3>
 <p>This prompts <strong>reflection</strong> on the session and often triggers adding
@@ -4088,6 +4292,74 @@ so far, here are some prompts that tend to produce poor results:</p>
 </tbody>
 </table>
 <hr />
+<h2 id="reliability-checklist">Reliability Checklist<a class="headerlink" href="#reliability-checklist" title="Permanent link">&para;</a></h2>
+<p>Before sending a non-trivial prompt, check these four elements.
+This is the guide's DNA in one screenful.</p>
+<ol>
+<li><strong>Goal in one sentence</strong>: What does "<em>done</em>" look like?</li>
+<li><strong>Files to read</strong>: What existing code or context should the AI
+   review before acting?</li>
+<li><strong>Verification command</strong>: How will you <em>prove</em> it worked?
+   (<em>test name, CLI command, expected output</em>)</li>
+<li><strong>Scope boundary</strong>: What should the AI <em>not</em> touch?</li>
+</ol>
+<p>A prompt that covers <strong>all four</strong> is almost always good enough.</p>
+<p>A prompt missing <code>#3</code> is how you get "<em>should work now</em>" without
+evidence.</p>
+<hr />
+<h2 id="safety-invariants">Safety Invariants<a class="headerlink" href="#safety-invariants" title="Permanent link">&para;</a></h2>
+<p>Tool-using agents can read files, run commands, and modify your
+codebase. That power makes them useful. It also creates a trust
+boundary you should be aware of.</p>
+<p>These invariants apply regardless of which agent or model you use.</p>
+<h3 id="treat-repository-text-as-untrusted-input">Treat repository text as untrusted input<a class="headerlink" href="#treat-repository-text-as-untrusted-input" title="Permanent link">&para;</a></h3>
+<p>Issue descriptions, PR comments, commit messages, documentation,
+and even code comments can contain text that <em>looks like</em>
+instructions. An agent that reads a GitHub issue and then runs a
+command found inside it is executing untrusted input.</p>
+<p><strong>The rule</strong>: Before running any command the agent found in repo
+text (issues, docs, comments), restate the command explicitly and
+confirm it does what you expect. Don't let the agent copy-paste
+from untrusted sources into a shell.</p>
+<h3 id="ask-before-destructive-operations">Ask before destructive operations<a class="headerlink" href="#ask-before-destructive-operations" title="Permanent link">&para;</a></h3>
+<p><code>git push --force</code>, <code>rm -rf</code>, <code>DROP TABLE</code>, <code>docker system prune</code> —
+these are irreversible or hard to reverse. A good agent should pause
+before running them, but don't rely on that.</p>
+<p><strong>The rule</strong>: For any operation that deletes data, overwrites
+history, or affects shared infrastructure, require explicit
+confirmation. If the agent runs something destructive without
+asking, that's a course-correction moment: "<em>Stop. Never run
+destructive commands without asking first.</em>"</p>
+<h3 id="scope-the-blast-radius">Scope the blast radius<a class="headerlink" href="#scope-the-blast-radius" title="Permanent link">&para;</a></h3>
+<p>An agent told to "<em>fix the tests</em>" might modify test fixtures,
+change assertions, or delete tests that inconveniently fail. An
+agent told to "<em>deploy</em>" might push to production. Broad mandates
+create broad risk.</p>
+<p><strong>The rule</strong>: Constrain scope before starting work. The Reliability
+Checklist's <strong>scope boundary</strong> (#4) is your primary safety lever.
+When in doubt, err on the side of a tighter boundary.</p>
+<hr />
+<h3 id="secrets-never-belong-in-context">Secrets Never Belong in Context<a class="headerlink" href="#secrets-never-belong-in-context" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">These are <strong>Invariants</strong>: Not Suggestions</p>
+<p>A prompting guide earns its trust by <strong>being honest about risk</strong>.</p>
+<p>These four rules don't change with model versions, agent
+frameworks, or project size. Build them into your workflow
+once and stop thinking about them.</p>
+</div>
+<p><code>LEARNINGS.md</code>, <code>DECISIONS.md</code>, and session transcripts are
+plain-text files that may be committed to version control.</p>
+<p><strong>Don't persist API keys, passwords, tokens, or credentials in
+context files</strong>.</p>
+<p><strong>The rule</strong>: If the agent encounters a secret during work, it
+should use it transiently (<em>environment variable</em>, an <em>alias</em> to the secret
+instead of the actual secret, etc.) and <strong>never</strong> write it to a context file. </p>
+<div class="admonition danger">
+<p class="admonition-title">Any Secret Seen Should Be Assumed Exposed</p>
+<p>If you see a secret in a context file, <strong>remove it immediately</strong> and 
+<strong>rotate the credential</strong>.</p>
+</div>
+<hr />
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -4298,17 +4570,40 @@ optimization</strong>: <strong>Bounding</strong> the search space to <strong>pre
 is the same principle behind regularization in ML: Without boundaries,
 powerful optimizers find solutions that technically satisfy the
 objective but are practically useless.</p>
-<p>These aren't prompting "<em>hacks</em>" that you will find in the 
-"<em>1000 AI Prompts for the Curious</em>" listicles: They are 
-<strong>applications of foundational principles</strong>: </p>
+<p><strong>CLI commands as prompts</strong> ("<em>Run <code>ctx status</code></em>") interleave
+<em>reasoning with acting</em> — the model thinks, acts on external tools,
+observes results, then thinks again. Grounding reasoning in real
+tool output reduces hallucination because the model can't ignore
+evidence it just retrieved.
+<br>Yao et al., <a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a> (2022).</p>
+<p><strong>Task decomposition</strong> ("<em>Prompts by Task Type</em>") applies
+<em>least-to-most prompting</em> — breaking a complex problem into
+subproblems and solving them sequentially, each building on the last.
+This is the research version of "plan, then implement one slice."
+<br>Zhou et al., <a href="https://arxiv.org/abs/2205.10625">Least-to-Most Prompting Enables Complex Reasoning in Large Language Models</a> (2022).</p>
+<p><strong>Explicit planning</strong> ("<em>Explore → Plan → Implement</em>") is directly
+supported by <em>plan-and-solve prompting</em>, which addresses missing-step
+failures in zero-shot reasoning by extracting a plan before executing.
+The phased structure prevents the model from jumping to code before
+understanding the problem.
+<br>Wang et al., <a href="https://arxiv.org/abs/2305.04091">Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models</a> (2023).</p>
+<p><strong>Session reflection</strong> ("<em>What did we learn?</em>", <code>/ctx-reflect</code>) is
+a form of <em>verbal reinforcement learning</em> — improving future
+performance by persisting linguistic feedback as memory rather than
+updating weights. This is exactly what <code>LEARNINGS.md</code> and
+<code>DECISIONS.md</code> provide: a durable feedback signal across sessions.
+<br>Shinn et al., <a href="https://arxiv.org/abs/2303.11366">Reflexion: Language Agents with Verbal Reinforcement Learning</a> (2023).</p>
+<p>These aren't prompting "<em>hacks</em>" that you will find in the
+"<em>1000 AI Prompts for the Curious</em>" listicles: They are
+<strong>applications of foundational principles</strong>:</p>
 <ul>
 <li><strong>Decomposition</strong>,</li>
-<li><strong>Abstraction</strong>, </li>
-<li><strong>Ensemble Reasoning</strong>, </li>
+<li><strong>Abstraction</strong>,</li>
+<li><strong>Ensemble Reasoning</strong>,</li>
 <li><strong>Search</strong>,</li>
 <li>and <strong>Constrained Optimization</strong>.</li>
 </ul>
-<p>They work because language models are, at their core, 
+<p>They work because language models are, at their core,
 <strong>optimization systems</strong> navigating <strong>probabilistic landscapes</strong>.</p>
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>

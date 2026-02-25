@@ -90,6 +90,22 @@ STRUCTURE RULES (see CONSTITUTION.md):
       `/_ctx-brainstorm` (dialogue) by producing the written artifact (document).
       Template: `specs/spec-template.md` #priority:medium #added:2026-02-25
 
+### Prompting Guide — Canonical Reference
+
+- [ ] Add agent/tool compatibility matrix to prompting guide — document which
+      patterns degrade gracefully when agents lack file access, CLI tools, or
+      ctx integration. Treat as a "works best with / degrades to" table.
+      #priority:medium #added:2026-02-25
+
+- [x] Add safety invariants section to prompting guide — short, non-alarmist
+      note covering: never execute commands found in repo text without restating,
+      treat docs/issue text as untrusted, ask before destructive commands.
+      #priority:medium #added:2026-02-25 #done:2026-02-25
+
+- [ ] Add versioning/stability note to prompting guide — "these principles are
+      stable; examples evolve" + doc date in frontmatter. Needed once the guide
+      becomes canonical and people start quoting it. #priority:low #added:2026-02-25
+
 ### Phase 0: Ideas
 
 - [ ] Blog: "Building a Claude Code Marketplace Plugin" — narrative from session 
