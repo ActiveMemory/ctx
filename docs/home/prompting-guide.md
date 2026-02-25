@@ -247,7 +247,7 @@ AIs often default to agreeing; this prompt signals you want an
 **honest assessment**.
 
 **Stronger variant**: "*Push back if my assumptions are wrong.*"
-This sets the tone for the entire session — the AI will flag
+This sets the tone for the entire session: The AI will flag
 questionable choices proactively instead of waiting to be asked.
 
 ### "*What am I missing?*"
@@ -259,7 +259,7 @@ Use this before finalizing a design or implementation.
 
 **Forward-looking variant**: "*What's the single smartest addition
 you could make to this at this point?*" Use this after you think
-you're done — it surfaces improvements you wouldn't have thought
+you're done: It surfaces improvements you wouldn't have thought
 to ask for. The constraint to *one* thing prevents feature sprawl.
 
 ---
@@ -361,7 +361,7 @@ so far, here are some prompts that tend to produce poor results:
 | Explore         | "*How does X work in this codebase?*"      |
 | Sanity check    | "*Is this the right approach?*"            |
 | Completeness    | "*What am I missing?*"                     |
-| One more thing   | "*What's the single smartest addition?*"   |
+| One more thing  | "*What's the single smartest addition?*"   |
 | Set tone        | "*Push back if my assumptions are wrong.*" |
 | Constrain scope | "*Only change files in X. Nothing else.*"  |
 | Course correct  | "*Stop. That's not what I meant.*"         |
@@ -543,7 +543,7 @@ task. In optimization terms, you are giving the **gradient direction**,
 serve the global objective because it knows what "*better*" means.
 
 **Scope constraints** ("*Only change files in X*") apply **constrained
-optimization**: Bounding the search space to prevent divergence. This
+optimization**: **Bounding** the search space to **prevent divergence**. This
 is the same principle behind regularization in ML: Without boundaries,
 powerful optimizers find solutions that technically satisfy the
 objective but are practically useless.
