@@ -344,7 +344,7 @@ Use `ctx` skills  by name:
 
     Two skills are the exception: `/ctx-remember` and `/ctx-wrap-up`
     are **ceremony skills** for session boundaries. Invoke them as
-    **explicit slash commands** — conversational triggers risk partial
+    **explicit slash commands**: conversational triggers risk partial
     execution. See [Session Ceremonies](../recipes/session-ceremonies.md).
 
 Skills combine a prompt, tool permissions, and domain knowledge
