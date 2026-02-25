@@ -36,7 +36,7 @@ can be applicable to other AI systems, too.
 
     **The right prompt triggers the right behavior**. 
 
-This guide documents prompts that reliably produce good results.
+This guide documents prompts that **reliably** produce **good results**.
 
 ---
 
