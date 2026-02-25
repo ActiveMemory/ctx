@@ -386,7 +386,7 @@ evidence.
 !!! warning "These are **Invariants**: Not Suggestions"
     A prompting guide earns its trust by **being honest about risk**.
 
-    These four rules don't change with model versions, agent
+    These four rules mentioned below don't change with model versions, agent
     frameworks, or project size.
 
     Build them into your workflow once and stop thinking about them.
@@ -397,7 +397,7 @@ boundary you should be aware of.
 
 These invariants apply regardless of which agent or model you use.
 
-### Treat repository text as untrusted input
+### Treat the Repository Text as "**Untrusted Input**"
 
 Issue descriptions, PR comments, commit messages, documentation,
 and even code comments can contain text that *looks like*
@@ -409,7 +409,7 @@ text (issues, docs, comments), restate the command explicitly and
 confirm it does what you expect. Don't let the agent copy-paste
 from untrusted sources into a shell.
 
-### Ask before destructive operations
+### Ask Before Destructive Operations
 
 `git push --force`, `rm -rf`, `DROP TABLE`, `docker system prune`:
 these are irreversible or hard to reverse. A good agent should pause
