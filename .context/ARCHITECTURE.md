@@ -23,6 +23,65 @@ Design philosophy:
 
 ## Package Dependency Graph
 
+```
+                          ┌─────────────┐
+                          │  cmd/ctx    │
+                          │  main.go    │
+                          └──────┬──────┘
+                                 │
+                          ┌──────▼──────┐
+                          │  bootstrap  │
+                          │  (root cmd) │
+                          └──────┬──────┘
+                                 │
+           ┌─────────────────────┼─────────────────────┐
+           │                     │                     │
+    ┌──────▼──────┐       ┌──────▼──────┐       ┌──────▼──────┐
+    │   cli/add   │       │  cli/agent  │  ...  │ cli/system  │
+    │  cli/drift  │       │  cli/recall │       │  cli/watch  │
+    └──────┬──────┘       └──────┬──────┘       └──────┬──────┘
+           │                     │                     │
+    ┌──────┴─────────────────────┴─────────────────────┘
+    │  Shared dependencies (selected per command)
+    │
+    ├──► context ──► rc ──► config          (leaf)
+    ├──► drift ──► context, index, rc
+    ├──► index ──► config
+    ├──► task ──► config
+    ├──► validation ──► config
+    ├──► recall/parser ──► config
+    ├──► claude ──► assets
+    ├──► notify ──► crypto, rc, config
+    ├──► journal/state ──► config
+    ├──► crypto                             (leaf, stdlib only)
+    └──► sysinfo                            (leaf, stdlib only)
+```
+
+Foundation packages (`config`, `assets`, `crypto`, `sysinfo`) have
+zero internal dependencies. Everything else builds upward from them.
+
+### Dependency Matrix
+
+```
+                    config  assets  rc  context  crypto  sysinfo  drift  index  task  validation  recall/parser  claude  notify  journal/state
+config                 -
+assets                 -      -
+rc                     ✓             -
+context                ✓             ✓     -
+crypto                                           -
+sysinfo                                                    -
+drift                  ✓             ✓     ✓                        -      ✓
+index                  ✓                                                   -
+task                   ✓                                                          -
+validation             ✓                                                                 -
+recall/parser          ✓                                                                            -
+claude                        ✓                                                                            -
+notify                 ✓             ✓                  ✓                                                          -
+journal/state          ✓                                                                                                  -
+```
+
+### Mermaid (for renderers that support it)
+
 ```mermaid
 graph TD
     config["config<br/>(constants, regex, file names)"]
@@ -33,12 +92,12 @@ graph TD
     context --> config
     drift["drift<br/>(detector)"] --> config
     drift --> context
+    drift --> index
     index["index<br/>(reindexing)"] --> config
     task["task<br/>(parsing)"] --> config
     validation["validation<br/>(sanitize)"] --> config
     recall_parser["recall/parser<br/>(session parsing)"] --> config
-    claude["claude<br/>(hooks, skills)"] --> config
-    claude --> assets
+    claude["claude<br/>(hooks, skills)"] --> assets
     crypto["crypto<br/>(AES-256-GCM)"]
     sysinfo["sysinfo<br/>(OS metrics)"]
     notify["notify<br/>(webhooks)"] --> config
@@ -47,7 +106,7 @@ graph TD
     journal_state["journal/state<br/>(pipeline state)"] --> config
 
     bootstrap["bootstrap<br/>(CLI entry)"] --> rc
-    bootstrap --> cli_all["cli/* (22 commands)"]
+    bootstrap --> cli_all["cli/* (23 commands)"]
     cli_all --> config
     cli_all --> rc
     cli_all --> context
@@ -64,198 +123,430 @@ graph TD
     cli_all --> journal_state
 ```
 
-`config`, `assets`, `crypto`, and `sysinfo` are foundation packages
-with zero internal dependencies. Everything else builds upward from them.
-
 ## Component Map
 
-### Foundation Packages
+### Foundation Packages (zero internal dependencies)
 
-| Package           | Purpose                                                                                                                                                                          | Depends On |
-|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| `internal/config` | Constants, regex patterns, file names, read order, permissions (9 files covering config, file names, directories, entries, headings, markers, patterns, regex, token formatting) | (none)     |
-| `internal/assets`    | Embedded templates via go:embed; provides access to all `.context/` scaffolds, skill definitions, hook scripts, and tools                                                        | (none)     |
+| Package           | Purpose                                           | Key Exports                                        |
+|-------------------|---------------------------------------------------|----------------------------------------------------|
+| `internal/config` | Constants, regex, file names, read order, perms   | `FileReadOrder`, `RegExEntryHeader`, `FileType`    |
+| `internal/assets` | Embedded templates via `go:embed`                 | `Template()`, `SkillContent()`, `PluginVersion()`  |
+| `internal/crypto` | AES-256-GCM encryption (stdlib only)              | `Encrypt()`, `Decrypt()`, `GenerateKey()`          |
+| `internal/sysinfo`| OS metrics with platform build tags               | `Collect()`, `Evaluate()`, `MaxSeverity()`         |
 
 ### Core Packages
 
-| Package                  | Purpose                                                                                                                                       | Depends On                            |
-|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|
-| `internal/rc`            | Runtime configuration from `.ctxrc`, env vars, and CLI flags; singleton with sync.Once caching                                            | `internal/config`                     |
-| `internal/context`       | Load `.context/` directory: read .md files, estimate tokens, generate summaries, detect empty files                                           | `internal/rc`, `internal/config`      |
-| `internal/drift`         | Detect stale or invalid context: dead path references, completed-task buildup, potential secrets, missing required files                      | `internal/config`, `internal/context` |
-| `internal/index`         | Generate and update markdown index tables in DECISIONS.md and LEARNINGS.md                                                                    | `internal/config`                     |
-| `internal/task`          | Parse task checkboxes in TASKS.md; match state, indentation, content                                                                          | `internal/config`                     |
-| `internal/validation`    | Input sanitization (filenames)                                                                                                                | `internal/config`                     |
-| `internal/recall/parser` | Parse AI session transcripts (JSONL) into structured data; extensible parser registry supporting Claude Code (and designed for Aider, Cursor) | `internal/config`                     |
-| `internal/claude`        | Generate Claude Code integration: hooks, skills, settings, permissions                                                                        | `internal/config`, `internal/assets`     |
-| `internal/crypto`        | AES-256-GCM encryption for scratchpad and webhook URL storage; key generation, load, save                                                     | (none — stdlib only)                  |
-| `internal/sysinfo`       | OS resource metrics (memory, swap, disk, load) with threshold alerting; platform-specific via build tags                                      | (none — stdlib only)                  |
-| `internal/notify`        | Fire-and-forget webhook notifications with encrypted URL storage and event filtering                                                          | `internal/config`, `internal/crypto`, `internal/rc` |
-| `internal/journal/state` | Journal processing pipeline state (exported/enriched/normalized/locked) via external JSON file                                                | `internal/config`                     |
+| Package                  | Purpose                                                | Key Exports                                |
+|--------------------------|--------------------------------------------------------|--------------------------------------------|
+| `internal/rc`            | Runtime config from `.ctxrc` + env + CLI flags         | `RC()`, `ContextDir()`, `TokenBudget()`    |
+| `internal/context`       | Load `.context/` directory with token estimation       | `Load()`, `EstimateTokens()`, `Exists()`   |
+| `internal/drift`         | Context quality validation (7 checks)                  | `Detect()`, `Report.Status()`              |
+| `internal/index`         | Markdown index tables for DECISIONS/LEARNINGS          | `Update()`, `ParseEntryBlocks()`           |
+| `internal/task`          | Task checkbox parsing                                  | `Completed()`, `Pending()`, `SubTask()`    |
+| `internal/validation`    | Input sanitization and path boundary checks            | `SanitizeFilename()`, `ValidateBoundary()` |
+| `internal/recall/parser` | Session transcript parsing (JSONL + Markdown)          | `ParseFile()`, `FindSessionsForCWD()`      |
+| `internal/claude`        | Claude Code integration types and skill access         | `Skills()`, `SkillContent()`               |
+| `internal/notify`        | Webhook notifications with encrypted URL storage       | `Send()`, `LoadWebhook()`, `SaveWebhook()` |
+| `internal/journal/state` | Journal processing pipeline state (JSON)               | `Load()`, `Save()`, `Mark*()`              |
 
 ### Entry Point
 
-| Package              | Purpose                                                                     | Depends On                                   |
-|----------------------|-----------------------------------------------------------------------------|----------------------------------------------|
-| `internal/bootstrap` | Create root Cobra command, register global flags, attach all 22 subcommands | `internal/rc`, all `internal/cli/*` packages |
+| Package              | Purpose                                                    |
+|----------------------|------------------------------------------------------------|
+| `internal/bootstrap` | Create root Cobra command, register 23 subcommands         |
 
 ### CLI Commands (`internal/cli/*`)
 
-| Command      | Purpose                                                                         | Key Dependencies                                                     |
-|--------------|---------------------------------------------------------------------------------|----------------------------------------------------------------------|
-| `add`        | Append entries to context files (decisions, tasks, learnings, conventions)      | `config`, `rc`, `index`, `initialize`                                |
-| `agent`      | Generate AI-ready context packets with token budgeting                          | `config`, `rc`, `context`, `task`, `initialize`                      |
-| `compact`    | Archive completed tasks, clean up context files                                 | `config`, `rc`, `context`, `task`, `add`, `complete`, `initialize`   |
-| `complete`   | Mark tasks as done in TASKS.md                                                  | `config`, `rc`, `task`, `add`, `initialize`                          |
-| `decision`   | Manage DECISIONS.md (add, list, reindex)                                        | `config`, `rc`, `index`                                              |
-| `drift`      | Detect stale/invalid context and report issues                                  | `config`, `rc`, `context`, `drift`, `task`, `tpl`, `initialize`      |
-| `hook`       | Generate AI tool integration configs (Claude, Cursor, Aider, Copilot, Windsurf) | (Cobra only)                                                         |
-| `initialize` | Create `.context/` directory, deploy templates, generate hooks, merge settings  | `config`, `rc`, `claude`, `tpl`                                      |
-| `journal`    | Export and synthesize sessions; generate static site                            | `config`, `rc`                                                       |
-| `learnings`  | Manage LEARNINGS.md (add, list, reindex)                                        | `config`, `rc`, `index`                                              |
-| `load`       | Output assembled context in read order with token budgeting                     | `config`, `rc`, `context`, `initialize`                              |
-| `loop`       | Generate Ralph loop scripts for iterative AI workflows                          | `config`                                                             |
-| `recall`     | Browse AI session history (list, show, export)                                  | `config`, `rc`, `recall/parser`                                      |
-| `serve`      | Serve static journal site locally                                               | `rc`                                                                 |
-| `status`     | Show context summary: file list, tokens, summaries                              | `config`, `rc`, `context`, `initialize`                              |
-| `sync`       | Sync project files with context; detect deps, suggest updates                   | `config`, `context`, `initialize`                                    |
-| `task`       | Task management utilities; archive completed tasks                              | `config`, `rc`, `task`, `validation`, `add`, `compact`, `initialize` |
-| `notify`     | Send fire-and-forget webhook notifications                                      | `notify`                                                             |
-| `pad`        | Encrypted scratchpad CRUD with file blob support and merge                      | `config`, `rc`, `crypto`                                             |
-| `permissions`| Permission snapshot/restore (golden images) for Claude Code settings             | `config`                                                             |
-| `system`     | System diagnostics, resource monitoring, and Claude Code hook plumbing commands  | `config`, `rc`, `sysinfo`, `notify`, `journal/state`                 |
-| `watch`      | Monitor stdin for context updates; auto-save sessions                           | `config`, `rc`, `context`, `task`, `add`, `initialize`               |
+| Command        | Purpose                                                                         |
+|----------------|---------------------------------------------------------------------------------|
+| `add`          | Append entries to context files (decisions, tasks, learnings, conventions)       |
+| `agent`        | Generate AI-ready context packets with token budgeting                          |
+| `compact`      | Archive completed tasks, clean up context files                                 |
+| `complete`     | Mark tasks as done in TASKS.md                                                  |
+| `decision`     | Manage DECISIONS.md (reindex)                                                   |
+| `drift`        | Detect stale/invalid context and report issues                                  |
+| `hook`         | Generate AI tool integration configs (Claude, Cursor, Aider, Copilot, Windsurf) |
+| `initialize`   | Create `.context/` directory, deploy templates, merge settings                  |
+| `journal`      | Export sessions; generate static site or Obsidian vault                         |
+| `learnings`    | Manage LEARNINGS.md (reindex)                                                   |
+| `load`         | Output assembled context in priority order                                      |
+| `loop`         | Generate Ralph loop scripts for autonomous iteration                            |
+| `notify`       | Send fire-and-forget webhook notifications                                      |
+| `pad`          | Encrypted scratchpad CRUD with blob support and merge                           |
+| `permissions`  | Permission snapshot/restore (golden images) for Claude Code                     |
+| `recall`       | Browse, export, lock/unlock AI session history                                  |
+| `remind`       | Session-scoped reminders surfaced at start                                      |
+| `serve`        | Serve static journal site locally via zensical                                  |
+| `status`       | Display context health summary                                                  |
+| `sync`         | Reconcile codebase changes with context documentation                           |
+| `system`       | System diagnostics, resource monitoring, hook plumbing                          |
+| `task`         | Task archival and snapshots                                                     |
+| `watch`        | Monitor stdin for context-update tags and apply them                            |
 
-## Data Flow
+## Data Flow Diagrams
 
-### 1. `ctx init` -- Initialization
+### 1. `ctx init` — Initialization
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant CLI as cli/initialize
-    participant TPL as tpl
-    participant Claude as claude
-    participant FS as Filesystem
-
-    User->>CLI: ctx init [--minimal]
-    CLI->>FS: Create .context/ directory
-    CLI->>TPL: Read embedded templates
-    TPL-->>CLI: Template content
-    CLI->>FS: Write context files (CONSTITUTION, TASKS, etc.)
-    CLI->>Claude: DefaultHooks(projectDir)
-    Claude->>TPL: Read hook scripts
-    Claude-->>CLI: Settings (hooks + permissions)
-    CLI->>FS: Write .claude/settings.local.json
-    CLI->>TPL: Read skill templates
-    CLI->>FS: Deploy .claude/skills/*/SKILL.md
-    CLI->>TPL: Read CLAUDE.md template
-    CLI->>FS: Write or merge CLAUDE.md
-    CLI->>FS: Deploy Makefile.ctx, context-watch.sh
-    CLI-->>User: Initialized .context/ with N files
+```
+User                     cli/initialize           assets           Filesystem
+ │                            │                     │                  │
+ │  ctx init [--minimal]      │                     │                  │
+ │ ─────────────────────────► │                     │                  │
+ │                            │  Read templates     │                  │
+ │                            │ ──────────────────► │                  │
+ │                            │  ◄────────────────  │                  │
+ │                            │  Template bytes     │                  │
+ │                            │                     │                  │
+ │                            │  Create .context/                      │
+ │                            │ ──────────────────────────────────────►│
+ │                            │  Write CONSTITUTION, TASKS, etc.       │
+ │                            │ ──────────────────────────────────────►│
+ │                            │  Generate AES-256 key                  │
+ │                            │ ──────────────────────────────────────►│
+ │                            │  Deploy hooks + skills                 │
+ │                            │ ──────────────────────────────────────►│
+ │                            │  Merge settings.local.json             │
+ │                            │ ──────────────────────────────────────►│
+ │                            │  Write/merge CLAUDE.md                 │
+ │                            │ ──────────────────────────────────────►│
+ │  ◄────────────────────────                                          │
+ │  "Initialized with N files"│                     │                  │
 ```
 
-### 2. `ctx agent` -- Context Packet Assembly
+### 2. `ctx agent` — Context Packet Assembly
 
-```mermaid
-sequenceDiagram
-    participant Agent as AI Agent
-    participant CLI as cli/agent
-    participant RC as rc
-    participant Ctx as context
-    participant FS as Filesystem
-
-    Agent->>CLI: ctx agent --budget 4000
-    CLI->>RC: TokenBudget(), PriorityOrder()
-    RC-->>CLI: Budget limit, file order
-    CLI->>Ctx: Load(contextDir)
-    Ctx->>FS: Read all .md files
-    FS-->>Ctx: File contents
-    Ctx-->>CLI: Context (files, tokens, summaries)
-    CLI->>CLI: Sort by priority (FileReadOrder)
-    CLI->>CLI: Truncate to budget
-    CLI-->>Agent: Markdown context packet
+```
+AI Agent              cli/agent              rc              context          FS
+  │                      │                   │                  │              │
+  │  ctx agent           │                   │                  │              │
+  │  --budget 4000       │                   │                  │              │
+  │ ───────────────────► │                   │                  │              │
+  │                      │  TokenBudget()    │                  │              │
+  │                      │ ────────────────► │                  │              │
+  │                      │  ◄──────────────  │                  │              │
+  │                      │  4000             │                  │              │
+  │                      │                   │                  │              │
+  │                      │  Load(dir)                           │              │
+  │                      │ ──────────────────────────────────►  │              │
+  │                      │                                      │  Read .md    │
+  │                      │                                      │ ───────────► │
+  │                      │                                      │  ◄─────────  │
+  │                      │  ◄──────────────────────────────────                │
+  │                      │  Context{files, tokens}              │              │
+  │                      │                                      │              │
+  │                      │  Score entries by                    │              │
+  │                      │  recency + relevance                │              │
+  │                      │  ┌──────────────┐                   │              │
+  │                      │  │ Sort by score│                   │              │
+  │                      │  │ Fit to budget│                   │              │
+  │                      │  │ Overflow →   │                   │              │
+  │                      │  │ "Also Noted" │                   │              │
+  │                      │  └──────────────┘                   │              │
+  │  ◄──────────────────                                       │              │
+  │  Markdown packet     │                   │                  │              │
 ```
 
-### 3. `ctx drift` -- Drift Detection
+### 3. `ctx drift` — Drift Detection
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant CLI as cli/drift
-    participant Ctx as context
-    participant Det as drift.Detect
-    participant FS as Filesystem
-
-    User->>CLI: ctx drift [--json]
-    CLI->>Ctx: Load(contextDir)
-    Ctx-->>CLI: Context with all files
-    CLI->>Det: Detect(ctx)
-    Det->>Det: checkPathReferences (ARCHITECTURE, CONVENTIONS)
-    Det->>FS: os.Stat() each backtick path
-    Det->>Det: checkStaleness (completed task count)
-    Det->>Det: checkConstitution (secret file scan)
-    Det->>Det: checkRequiredFiles (CONSTITUTION, TASKS, DECISIONS)
-    Det-->>CLI: Report (warnings, violations, passed)
-    CLI-->>User: Formatted report or JSON
+```
+User              cli/drift            context           drift.Detect           FS
+  │                  │                    │                    │                  │
+  │  ctx drift       │                    │                    │                  │
+  │ ───────────────► │                    │                    │                  │
+  │                  │  Load(dir)         │                    │                  │
+  │                  │ ─────────────────► │                    │                  │
+  │                  │  ◄───────────────  │                    │                  │
+  │                  │  Context           │                    │                  │
+  │                  │                    │                    │                  │
+  │                  │  Detect(ctx)                            │                  │
+  │                  │ ──────────────────────────────────────► │                  │
+  │                  │                                         │ checkPathRefs   │
+  │                  │                                         │ ──────────────► │
+  │                  │                                         │ checkStaleness  │
+  │                  │                                         │ checkConstitution
+  │                  │                                         │ checkRequired   │
+  │                  │                                         │ checkFileAge    │
+  │                  │                                         │ checkEntryCount │
+  │                  │                                         │ checkMissingPkgs│
+  │                  │  ◄──────────────────────────────────────                  │
+  │                  │  Report{warnings, violations}           │                  │
+  │  ◄──────────────                                           │                  │
+  │  Formatted report│                    │                    │                  │
 ```
 
-### 4. `ctx recall export` -- Session Export
+### 4. `ctx recall export` — Session Export Pipeline
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant CLI as cli/recall
-    participant Parser as recall/parser
-    participant FS as Filesystem
-
-    User->>CLI: ctx recall export [session-id]
-    CLI->>Parser: FindSessionsForCWD(cwd)
-    Parser->>FS: Scan ~/.claude/projects/
-    Parser->>Parser: Match by git remote or path
-    FS-->>Parser: JSONL session files
-    Parser->>Parser: ParseFile (Claude JSONL format)
-    Parser-->>CLI: []Session (messages, tools, tokens)
-    CLI->>CLI: Format as markdown
-    CLI-->>User: Session transcript
+```
+User           cli/recall        recall/parser        journal/state          FS
+  │                │                    │                    │                 │
+  │  ctx recall    │                    │                    │                 │
+  │  export --all  │                    │                    │                 │
+  │ ─────────────► │                    │                    │                 │
+  │                │  FindSessionsFor   │                    │                 │
+  │                │  CWD(cwd)          │                    │                 │
+  │                │ ─────────────────► │                    │                 │
+  │                │                    │  Scan              │                 │
+  │                │                    │  ~/.claude/        │                 │
+  │                │                    │  projects/         │                 │
+  │                │                    │ ──────────────────────────────────►  │
+  │                │                    │  ◄────────────────────────────────   │
+  │                │                    │  Parse JSONL       │                 │
+  │                │  ◄─────────────────                     │                 │
+  │                │  []Session          │                    │                 │
+  │                │                    │                    │                 │
+  │                │  Load(journalDir)                       │                 │
+  │                │ ──────────────────────────────────────► │                 │
+  │                │  ◄──────────────────────────────────────                  │
+  │                │  JournalState       │                    │                 │
+  │                │                    │                    │                 │
+  │                │  Plan: new/regen/skip/locked             │                 │
+  │                │  Format as Markdown                      │                 │
+  │                │  Write to .context/journal/              │                 │
+  │                │ ──────────────────────────────────────────────────────────►│
+  │                │  MarkExported()                          │                 │
+  │                │ ──────────────────────────────────────► │                 │
+  │  ◄────────────                                           │                 │
+  │  "Exported N"  │                    │                    │                 │
 ```
 
-### 5. Hook Lifecycle (via ctx plugin)
+### 5. Hook Lifecycle (Claude Code Plugin)
 
-```mermaid
-sequenceDiagram
-    participant CC as Claude Code
-    participant CTX as ctx system
-    participant FS as Filesystem
-
-    Note over CC: Event: PreToolUse
-    CC->>CTX: ctx system block-non-path-ctx
-    CTX->>CTX: Check if tool invokes ctx via absolute path
-    CTX-->>CC: BLOCK or ALLOW
-
-    Note over CC: Event: UserPromptSubmit
-    CC->>CTX: ctx system check-context-size
-    CTX->>CTX: Increment counter, check thresholds
-    CTX-->>CC: Checkpoint message (or silent)
-
-    Note over CC: Event: SessionEnd
-    CC->>CTX: ctx system cleanup-tmp
-    CTX->>FS: Remove stale temp files
-    CTX-->>CC: (silent)
+```
+Claude Code                  ctx system                  .context/
+     │                            │                          │
+     │  ─── UserPromptSubmit ───  │                          │
+     │  check-context-size        │                          │
+     │ ─────────────────────────► │  Read/increment counter  │
+     │                            │ ────────────────────────►│
+     │  ◄─────────────────────────                           │
+     │  (checkpoint msg or silent)│                          │
+     │                            │                          │
+     │  check-ceremonies          │                          │
+     │ ─────────────────────────► │                          │
+     │  ◄─────────────────────────                           │
+     │  (nudge or silent)         │                          │
+     │                            │                          │
+     │  check-persistence         │                          │
+     │ ─────────────────────────► │  Verify .context/ exists │
+     │  ◄─────────────────────────                           │
+     │                            │                          │
+     │  ─── PreToolUse(Bash) ───  │                          │
+     │  block-non-path-ctx        │                          │
+     │ ─────────────────────────► │  Check tool invocation   │
+     │  ◄─────────────────────────                           │
+     │  BLOCK/ALLOW JSON          │                          │
+     │                            │                          │
+     │  ─── PreToolUse(Edit) ───  │                          │
+     │  qa-reminder               │                          │
+     │ ─────────────────────────► │                          │
+     │  ◄─────────────────────────                           │
+     │  (reminder or silent)      │                          │
+     │                            │                          │
+     │  ─── PostToolUse(Bash) ──  │                          │
+     │  post-commit               │                          │
+     │ ─────────────────────────► │  Detect git commit       │
+     │  ◄─────────────────────────                           │
+     │  (nudge or silent)         │                          │
+     │                            │                          │
+     │  ─── SessionEnd ─────────  │                          │
+     │  cleanup-tmp               │                          │
+     │ ─────────────────────────► │  Remove stale tmp files  │
+     │  ◄─────────────────────────                           │
 ```
 
-## Context File Lifecycle
+## State Diagrams
 
-```mermaid
-stateDiagram-v2
-    [*] --> Empty: Project created
-    Empty --> Populated: ctx init
-    Populated --> Active: ctx add / manual edits
-    Active --> Active: ctx add, ctx complete
-    Active --> Stale: No updates, drift detected
-    Stale --> Active: ctx compact / consolidation
-    Active --> Archived: ctx task archive
-    Archived --> [*]
+### Context File Lifecycle
+
+```
+                     ┌──────────────┐
+                     │   Project    │
+                     │   Created    │
+                     └──────┬───────┘
+                            │ ctx init
+                            ▼
+                     ┌──────────────┐
+                     │  Populated   │
+                     │  (templates) │
+                     └──────┬───────┘
+                            │ ctx add / manual edits
+                            ▼
+                ┌───────────────────────┐
+                │                       │
+           ┌────┤       Active          ├────┐
+           │    │  (entries growing)    │    │
+           │    └───────────┬───────────┘    │
+           │                │                │
+    ctx add │         drift detected         │ ctx compact
+    ctx complete            │                │ ctx consolidate
+           │                ▼                │
+           │    ┌───────────────────┐        │
+           │    │      Stale        │        │
+           │    │  (drift warnings) │        │
+           │    └───────────┬───────┘        │
+           │                │                │
+           └────────────────┘                │
+                                             ▼
+                                 ┌───────────────────┐
+                                 │     Archived       │
+                                 │ .context/archive/  │
+                                 └───────────────────┘
+```
+
+### Task State Machine
+
+```
+                  ┌────────────┐
+                  │  Pending   │  - [ ] task text
+                  │            │
+                  └─────┬──────┘
+                        │
+              ┌─────────┼──────────┐
+              │         │          │
+              ▼         ▼          ▼
+     ┌────────────┐  ┌─────┐  ┌────────┐
+     │ In-Progress│  │Done │  │Skipped │
+     │ #in-progress│  │[x]  │  │[-]     │
+     └─────┬──────┘  └──┬──┘  └────────┘
+           │             │
+           │             ▼
+           │     ┌──────────────┐
+           │     │  Archivable  │
+           │     │  (no pending │
+           └────►│   children)  │
+                 └──────┬───────┘
+                        │ ctx task archive
+                        ▼
+                 ┌──────────────┐
+                 │  Archived    │
+                 │  .context/   │
+                 │  archive/    │
+                 └──────────────┘
+```
+
+### Journal Processing Pipeline
+
+```
+  ┌──────────┐     ┌──────────┐     ┌────────────┐     ┌──────────┐     ┌────────┐
+  │          │     │          │     │            │     │  Fences  │     │        │
+  │ Exported ├────►│ Enriched ├────►│ Normalized ├────►│ Verified ├────►│ Locked │
+  │          │     │          │     │            │     │          │     │        │
+  └──────────┘     └──────────┘     └────────────┘     └──────────┘     └────────┘
+       │                │                 │                  │               │
+   recall           enrich            normalize          verify           lock
+   export          (YAML front-     (soft-wrap,       (fence balance)   (prevent
+   (JSONL→MD)       matter, tags)    clean JSON)                        overwrite)
+
+  Each stage tracked in .context/journal/.state.json as YYYY-MM-DD dates.
+  Stages are idempotent. Re-running a stage updates the date.
+  Locked entries are skipped by export --regenerate.
+```
+
+### Scratchpad Encryption Flow
+
+```
+  ┌─────────┐     ┌──────────────┐     ┌──────────────┐
+  │  User   │     │  ctx pad     │     │  .context/   │
+  │  Input  │     │  (CLI)       │     │  Filesystem  │
+  └────┬────┘     └──────┬───────┘     └──────┬───────┘
+       │                 │                     │
+       │  ctx pad add    │                     │
+       │  "secret text"  │                     │
+       │ ──────────────► │                     │
+       │                 │  LoadKey()          │
+       │                 │ ──────────────────► │
+       │                 │  ◄──────────────── │
+       │                 │  32-byte key        │
+       │                 │                     │
+       │                 │  Decrypt existing   │
+       │                 │  scratchpad.enc     │
+       │                 │ ──────────────────► │
+       │                 │  ◄──────────────── │
+       │                 │  Existing entries   │
+       │                 │                     │
+       │                 │  Append entry       │
+       │                 │                     │
+       │                 │  Encrypt all        │
+       │                 │  ┌───────────────┐  │
+       │                 │  │ AES-256-GCM   │  │
+       │                 │  │ random nonce   │  │
+       │                 │  │ [12B nonce]    │  │
+       │                 │  │ [ciphertext]   │  │
+       │                 │  │ [16B auth tag] │  │
+       │                 │  └───────────────┘  │
+       │                 │                     │
+       │                 │  Write .enc         │
+       │                 │ ──────────────────► │
+       │  ◄────────────  │                     │
+       │  "Entry added"  │                     │
+```
+
+### Configuration Resolution Chain
+
+```
+  Highest priority                              Lowest priority
+  ┌─────────────┐   ┌───────────────┐   ┌──────────┐   ┌──────────┐
+  │  CLI flags  │ > │ Environment   │ > │  .ctxrc  │ > │ Defaults │
+  │ --context-  │   │ CTX_DIR       │   │  (YAML)  │   │ in rc.go │
+  │   dir       │   │ CTX_TOKEN_    │   │          │   │          │
+  │ --no-color  │   │   BUDGET      │   │          │   │          │
+  └─────────────┘   └───────────────┘   └──────────┘   └──────────┘
+        │                   │                 │               │
+        └───────────────────┴────────┬────────┴───────────────┘
+                                     │
+                              ┌──────▼──────┐
+                              │  internal/  │
+                              │  rc.RC()    │
+                              │  (singleton)│
+                              │  sync.Once  │
+                              └─────────────┘
+```
+
+## Security Architecture
+
+### Defense Layers
+
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │                    Layer 5: Plugin Hooks                  │
+  │  block-non-path-ctx: reject ./ctx or /abs/path/ctx      │
+  │  qa-reminder: gate before commit                         │
+  ├─────────────────────────────────────────────────────────┤
+  │                    Layer 4: Permission Deny List          │
+  │  Bash(sudo *), Bash(rm -rf *), Bash(curl *),            │
+  │  Bash(wget *), Bash(go install *), force push            │
+  ├─────────────────────────────────────────────────────────┤
+  │                    Layer 3: Boundary Validation           │
+  │  ValidateBoundary(): resolved .context/ must be under    │
+  │  project root (prevents path traversal)                  │
+  ├─────────────────────────────────────────────────────────┤
+  │                    Layer 2: Symlink Rejection             │
+  │  CheckSymlinks(): .context/ dir and children must not    │
+  │  be symlinks (M-2 defense against link attacks)          │
+  ├─────────────────────────────────────────────────────────┤
+  │                    Layer 1: File Permissions              │
+  │  Keys: 0600 (owner rw)                                   │
+  │  Executables: 0755                                       │
+  │  Regular files: 0644                                     │
+  ├─────────────────────────────────────────────────────────┤
+  │                    Layer 0: Encryption                    │
+  │  AES-256-GCM for scratchpad and webhook URLs             │
+  │  12-byte random nonce + 16-byte auth tag                 │
+  └─────────────────────────────────────────────────────────┘
+```
+
+### Secret Detection (Drift Check)
+
+```
+  drift.Detect() scans for files matching:
+    .env, credentials*, *secret*, *api_key*, *password*
+
+  Exceptions (not flagged):
+    *.example, *.sample, files with template markers
+
+  Constitution invariants:
+    Never commit secrets, tokens, API keys, or credentials
+    Never store customer/user data in context files
 ```
 
 ## Key Architectural Patterns
@@ -309,9 +600,9 @@ Managed by `internal/rc` with sync.Once singleton caching.
 
 `internal/recall/parser` defines a `SessionParser` interface. Each
 AI tool (Claude Code, potentially Aider, Cursor) registers its own
-parser. Currently only Claude Code JSONL is implemented
-(see `internal/recall/parser`). Session matching uses git
-remote URLs, relative paths, and exact CWD matching.
+parser. Currently only Claude Code JSONL is implemented.
+Session matching uses git remote URLs, relative paths, and exact
+CWD matching.
 
 ### Template and Live Skill Dual-Deployment
 
@@ -325,6 +616,85 @@ Skills exist in two locations:
 `ctx init` deploys templates to live. The `/update-docs` skill
 checks for drift between them.
 
+### Hook Architecture
+
+The Claude Code plugin uses four lifecycle hooks defined in
+`internal/assets/claude/hooks/hooks.json`:
+
+```
+  UserPromptSubmit (9 checks)          PreToolUse
+  ┌────────────────────────────┐      ┌────────────────────┐
+  │ check-context-size         │      │ Bash: block-non-   │
+  │ check-ceremonies           │      │   path-ctx         │
+  │ check-persistence          │      │ Edit: qa-reminder  │
+  │ check-journal              │      │ .*: ctx agent      │
+  │ check-reminders            │      │   (cooldown)       │
+  │ check-version              │      └────────────────────┘
+  │ check-resources            │
+  │ check-knowledge            │      PostToolUse
+  │ check-map-staleness        │      ┌────────────────────┐
+  └────────────────────────────┘      │ Bash: post-commit  │
+                                      └────────────────────┘
+  SessionEnd
+  ┌────────────────────┐
+  │ cleanup-tmp        │
+  └────────────────────┘
+```
+
+Hooks execute synchronously. Failures are softened with `|| true`
+where appropriate to prevent cascading session blocks.
+
+## External Dependencies
+
+```
+  go.mod (3 direct dependencies):
+  ┌──────────────────────────────────────────────────────┐
+  │  github.com/fatih/color     — terminal coloring      │
+  │  github.com/spf13/cobra     — CLI framework          │
+  │  gopkg.in/yaml.v3           — YAML parsing           │
+  └──────────────────────────────────────────────────────┘
+
+  External tools (optional, not Go dependencies):
+  ┌──────────────────────────────────────────────────────┐
+  │  zensical    — static site generation (journal, docs)│
+  │  gpg         — commit signing                        │
+  └──────────────────────────────────────────────────────┘
+```
+
+## Build & Release Pipeline
+
+```
+  Developer workstation             GitHub Actions
+  ┌──────────────────────┐         ┌──────────────────────┐
+  │ make build           │         │ ci.yml               │
+  │   CGO_ENABLED=0      │         │   go build           │
+  │   -ldflags version   │         │   go test -v ./...   │
+  │                      │         │   go vet             │
+  │ make audit           │         │   golangci-lint      │
+  │   gofmt              │         │   DCO check (PRs)    │
+  │   go vet             │         │                      │
+  │   golangci-lint      │         │ release.yml          │
+  │   lint-drift.sh      │         │   (on v* tag)        │
+  │   lint-docs.sh       │         │   test + build-all   │
+  │   go test ./...      │         │   6 platform binaries│
+  │                      │         │   GitHub release     │
+  │ make smoke           │         └──────────────────────┘
+  │   Integration tests  │
+  │                      │
+  │ hack/release.sh      │
+  │   VERSION bump       │
+  │   release notes      │
+  │   plugin version sync│
+  │   test + smoke       │
+  │   build-all          │
+  │   signed git tag     │
+  └──────────────────────┘
+
+  Build targets: darwin/amd64, darwin/arm64,
+                 linux/amd64, linux/arm64,
+                 windows/amd64, windows/arm64
+```
+
 ## File Layout
 
 ```
@@ -332,8 +702,8 @@ ctx/
 ├── cmd/ctx/                     # Main entry point (main.go)
 ├── internal/
 │   ├── bootstrap/               # CLI initialization, command registration
-│   ├── claude/                  # Claude Code hooks, skills, settings
-│   ├── cli/                     # 22 command packages
+│   ├── claude/                  # Claude Code hooks, skills, settings types
+│   ├── cli/                     # 23 command packages
 │   │   ├── add/                 #   ctx add
 │   │   ├── agent/               #   ctx agent
 │   │   ├── compact/             #   ctx compact
@@ -350,6 +720,7 @@ ctx/
 │   │   ├── pad/                 #   ctx pad
 │   │   ├── permissions/         #   ctx permissions
 │   │   ├── recall/              #   ctx recall
+│   │   ├── remind/              #   ctx remind
 │   │   ├── serve/               #   ctx serve
 │   │   ├── status/              #   ctx status
 │   │   ├── sync/                #   ctx sync
@@ -359,45 +730,48 @@ ctx/
 │   ├── config/                  # Constants, regex, file names, read order
 │   ├── context/                 # Context loading, token estimation
 │   ├── crypto/                  # AES-256-GCM encryption, key management
-│   ├── drift/                   # Drift detection engine
+│   ├── drift/                   # Drift detection engine (7 checks)
 │   ├── index/                   # Index table generation for DECISIONS/LEARNINGS
 │   ├── journal/
 │   │   └── state/               # Journal processing pipeline state
 │   ├── notify/                  # Webhook notifications, encrypted URL storage
 │   ├── rc/                      # Runtime config (.ctxrc, env, CLI flags)
 │   ├── recall/
-│   │   └── parser/              # Session transcript parsing
+│   │   └── parser/              # Session transcript parsing (JSONL, Markdown)
 │   ├── sysinfo/                 # OS resource metrics (memory, disk, load)
 │   ├── task/                    # Task checkbox parsing
 │   ├── assets/                  # Embedded templates (go:embed)
 │   │   ├── claude/
-│   │   │   ├── hooks/           #   Hook scripts
-│   │   │   └── skills/          #   Skill templates (28 directories)
+│   │   │   ├── .claude-plugin/  #   Plugin manifest (plugin.json)
+│   │   │   ├── hooks/           #   Hook definitions (hooks.json)
+│   │   │   └── skills/          #   30 skill templates (*/SKILL.md)
 │   │   ├── entry-templates/     #   Decision/learning entry templates
-│   │   ├── ralph/               #   Ralph loop PROMPT.md
-│   │   └── tools/               #   context-watch.sh, cleanup-ctx-tmp.sh
-│   └── validation/              # Input sanitization
-├── docs/                        # Documentation site source (mkdocs)
-│   ├── cli-reference.md
-│   ├── context-files.md
-│   ├── integrations.md
-│   ├── prompting-guide.md
-│   ├── session-journal.md
-│   └── blog/
-├── site/                        # Generated static site
-├── hack/                        # Build and release scripts
-├── .context/                    # This project's own context files
-│   ├── CONSTITUTION.md
-│   ├── TASKS.md
-│   ├── CONVENTIONS.md
-│   ├── ARCHITECTURE.md          # (this file)
-│   ├── DECISIONS.md
-│   ├── LEARNINGS.md
-│   ├── GLOSSARY.md
-│   ├── AGENT_PLAYBOOK.md
-│   ├── sessions/                # Session snapshots
-│   └── archive/                 # Archived tasks
-└── .claude/                     # Claude Code integration
-    ├── settings.local.json      # Hooks and permissions
-    └── skills/                  # Live skill definitions (22 skills)
+│   │   ├── ralph/               #   Ralph autonomous loop PROMPT.md
+│   │   └── tools/               #   Helper scripts (cleanup, watch)
+│   └── validation/              # Input sanitization, path boundary checks
+├── docs/                        # Documentation site source
+├── site/                        # Generated static site (zensical)
+├── hack/                        # Build/release scripts, runbooks
+├── editors/vscode/              # VS Code extension (@ctx chat participant)
+├── specs/                       # Feature specifications
+├── .context/                    # This project's own context directory
+│   ├── CONSTITUTION.md          #   Inviolable rules
+│   ├── TASKS.md                 #   Current work items
+│   ├── CONVENTIONS.md           #   Code patterns and standards
+│   ├── ARCHITECTURE.md          #   This file
+│   ├── DECISIONS.md             #   Architectural decisions
+│   ├── LEARNINGS.md             #   Gotchas and tips
+│   ├── GLOSSARY.md              #   Domain terms
+│   ├── DETAILED_DESIGN.md       #   Deep per-module reference
+│   ├── AGENT_PLAYBOOK.md        #   Meta instructions for AI agents
+│   ├── journal/                 #   Exported session transcripts
+│   ├── sessions/                #   Session snapshots
+│   └── archive/                 #   Archived tasks
+├── .claude/                     # Claude Code integration
+│   ├── settings.local.json      #   Hooks and permissions
+│   └── skills/                  #   Live skill definitions (30 skills)
+├── .claude-plugin/              # Plugin marketplace manifest
+├── Makefile                     # Build, test, lint, release targets
+├── VERSION                      # Single source of truth (0.7.0)
+└── go.mod                       # Go 1.25.6, 3 direct dependencies
 ```

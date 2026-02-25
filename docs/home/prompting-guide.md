@@ -241,10 +241,14 @@ This invites the AI to challenge the current direction.
 
 Use this when you want a sanity check.
 
-This works because it allows AI to disagree. 
+This works because it allows AI to disagree.
 
-AIs often default to agreeing; this prompt signals you want an 
+AIs often default to agreeing; this prompt signals you want an
 **honest assessment**.
+
+**Stronger variant**: "*Push back if my assumptions are wrong.*"
+This sets the tone for the entire session — the AI will flag
+questionable choices proactively instead of waiting to be asked.
 
 ### "*What am I missing?*"
 
@@ -252,6 +256,11 @@ This prompts thinking about edge cases, overlooked requirements,
 or unconsidered approaches.
 
 Use this before finalizing a design or implementation.
+
+**Forward-looking variant**: "*What's the single smartest addition
+you could make to this at this point?*" Use this after you think
+you're done — it surfaces improvements you wouldn't have thought
+to ask for. The constraint to *one* thing prevents feature sprawl.
 
 ---
 
@@ -351,7 +360,9 @@ so far, here are some prompts that tend to produce poor results:
 | Persist         | "*Add this as a learning*"                 |
 | Explore         | "*How does X work in this codebase?*"      |
 | Sanity check    | "*Is this the right approach?*"            |
-| Completeness    | "*What am I missing?"                      |
+| Completeness    | "*What am I missing?*"                     |
+| One more thing   | "*What's the single smartest addition?*"   |
+| Set tone        | "*Push back if my assumptions are wrong.*" |
 | Constrain scope | "*Only change files in X. Nothing else.*"  |
 | Course correct  | "*Stop. That's not what I meant.*"         |
 | Check health    | "*Run `ctx drift`*"                        |
@@ -423,6 +434,20 @@ you get a "*should work now*" instead of evidence.
 Tasks in `TASKS.md` are **indirect prompts** to the AI. How you write them
 shapes how the AI approaches the work.
 
+### State the Motivation, Not Just the Goal
+
+Tell the AI *why* you're building something, not just *what*.
+
+Bad: "*Build a calendar view.*"
+
+Good: "*Build a calendar view. The motivation is that all notes
+and tasks we build later should be viewable here.*"
+
+The second version lets the AI anticipate downstream requirements.
+It will design the calendar's data model to be compatible with
+future features — without you having to spell out every integration
+point. Motivation turns a one-off task into a *directional* task.
+
 ### State the Deliverable, Not Just Steps
 
 Bad task (*implementation-focused*):
@@ -475,10 +500,71 @@ Verify the stated deliverable exists and works.
 
 ---
 
+## Why Do These Approaches Work?
+
+The patterns in this guide **aren't invented here**: They are practitioner
+translations of **well-established, peer-reviewed research**, most of which 
+predate the current AI (*hype*) wave. 
+
+The underlying ideas come from decades of work in machine learning, 
+cognitive science, and numerical optimization.
+
+**Phased work** ("*Explore → Plan → Implement*") applies
+**chain-of-thought reasoning**: Decomposing a problem into sequential
+steps before acting. Forcing intermediate reasoning steps measurably
+improves output quality in language models, just as it does in human
+problem-solving.
+<br>Wei et al., [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903) (2022).
+
+**Root-cause prompts** ("*Why doesn't X work?*") use **step-back
+abstraction**: Retreating to a higher-level question before diving
+into specifics. This mirrors how experienced engineers debug: they
+ask "what *should* happen?" before asking "*what went wrong?*"
+<br>Zheng et al., [Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models](https://arxiv.org/abs/2310.06117) (2023).
+
+**Exploring alternatives** ("*Propose 2-3 approaches*") leverages
+**self-consistency**: Generating multiple independent reasoning paths
+and selecting the most coherent result. The idea traces back to
+ensemble methods in classical ML: A committee of diverse solutions
+outperforms any single one.
+<br>Wang et al., [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171) (2022).
+
+**Impact analysis** ("*What would break if we...*") is a form of
+**tree-structured exploration**: Branching into multiple consequence
+paths before committing. This is the same principle behind game-tree
+search (*minimax, MCTS*) that has powered decision-making systems
+since the 1950s.
+<br>Yao et al., [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601) (2023).
+
+**Motivation prompting** ("*Build X because Y*") works through
+**goal conditioning**: Providing the objective function alongside the
+task. In optimization terms, you are giving the **gradient direction**,
+**not just the loss**. The model can make **locally coherent decisions** that
+serve the global objective because it knows what "*better*" means.
+
+**Scope constraints** ("*Only change files in X*") apply **constrained
+optimization**: Bounding the search space to prevent divergence. This
+is the same principle behind regularization in ML: Without boundaries,
+powerful optimizers find solutions that technically satisfy the
+objective but are practically useless.
+
+These aren't prompting "*hacks*" that you will find in the 
+"*1000 AI Prompts for the Curious*" listicles: They are 
+**applications of foundational principles**: 
+
+* **Decomposition**,
+* **Abstraction**, 
+* **Ensemble Reasoning**, 
+* **Search**,
+* and **Constrained Optimization**.
+
+They work because language models are, at their core, 
+**optimization systems** navigating **probabilistic landscapes**.
+
 ## Further Reading
 
-- [The Attention Budget](../blog/2026-02-03-the-attention-budget.md): 
-  Why your AI forgets what you just told it, and how token budgets shape 
+- [The Attention Budget](../blog/2026-02-03-the-attention-budget.md):
+  Why your AI forgets what you just told it, and how token budgets shape
   context strategy
 
 ## Contributing

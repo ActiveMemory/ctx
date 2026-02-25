@@ -2,229 +2,235 @@
   "version": 1,
   "opted_out": false,
   "opted_out_at": null,
-  "last_run": "2026-02-23T20:00:00Z",
+  "last_run": "2026-02-24T21:00:00Z",
   "coverage": {
     "internal/config": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.85,
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.9,
       "files_seen": ["config.go", "dir.go", "entry.go", "file.go", "heading.go", "marker.go", "migrate.go", "pattern.go", "regex.go", "token.go"],
-      "notes": "Pure constants package. All exported constants, regex patterns, file maps, and permission lists well understood."
+      "notes": "Pure constants package. All exported constants, regex patterns, file maps, permission lists, and entry type mappings fully understood. FileReadOrder, FileType, DefaultClaudePermissions covered."
     },
     "internal/assets": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["assets.go", "assets_test.go"],
-      "notes": "Embed-based asset access. All exported functions (Template, List, SkillContent, etc.) understood. Plugin version extraction via JSON."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["embed.go", "embed_test.go"],
+      "notes": "Embed-based asset access. All exported functions understood. Plugin version extraction. 30 embedded skills, hooks.json, entry-templates, ralph, tools."
     },
     "internal/rc": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.85,
-      "files_seen": ["rc.go", "rc_test.go"],
-      "notes": "Lazy-loaded singleton via sync.Once. YAML config with env/CLI override chain. All exported accessors understood."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.9,
+      "files_seen": ["rc.go", "rc_test.go", "types.go", "load.go"],
+      "notes": "Lazy-loaded singleton via sync.Once. YAML config with env/CLI override chain. CtxRC and NotifyConfig types. All exported accessors understood including FilePriority, OverrideContextDir, Reset."
     },
     "internal/context": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["context.go", "context_test.go"],
-      "notes": "Context loading, token estimation (4 chars/token), file summaries. Symlink rejection for security."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["loader.go", "types.go", "summary.go", "token.go", "process.go", "sanitize.go", "summary_test.go"],
+      "notes": "Context loading with symlink rejection (M-2 defense). Token estimation (4 chars/token). File summaries by type. effectivelyEmpty heuristic for detecting placeholder files."
     },
     "internal/crypto": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.85,
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.9,
       "files_seen": ["crypto.go", "crypto_test.go"],
-      "notes": "AES-256-GCM with prepended nonce. Key management (generate, load, save). Clean, focused package."
+      "notes": "AES-256-GCM with prepended 12-byte nonce + 16-byte auth tag. Key management (generate, load, save with 0600 perms). Clean, focused stdlib-only package."
     },
     "internal/sysinfo": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["sysinfo.go", "sysinfo_test.go", "disk.go", "disk_windows.go", "load_linux.go", "load_darwin.go", "load_other.go", "memory_linux.go", "memory_darwin.go", "memory_other.go"],
-      "notes": "Platform-specific resource monitoring via build tags. Threshold-based alerting. Graceful degradation on unsupported platforms."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["resources.go", "disk.go", "disk_windows.go", "load_linux.go", "load_darwin.go", "load_other.go", "memory_linux.go", "memory_darwin.go", "memory_other.go"],
+      "notes": "Platform-specific resource monitoring via build tags. Threshold alerting (mem 80/90%, swap 50/75%, disk 85/95%, load 0.8x/1.5x CPUs). Graceful degradation on unsupported platforms."
     },
     "internal/drift": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["drift.go", "drift_test.go"],
-      "notes": "Six drift checks: path refs, staleness, constitution, required files, age, entry counts. Report with status computation."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["detector.go", "types.go", "detector_test.go"],
+      "notes": "Seven drift checks: path refs, staleness, constitution, required files, age, entry counts, missing packages. Report with Status() computation. Configurable thresholds via rc."
     },
     "internal/index": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["index.go", "index_test.go"],
-      "notes": "Entry header parsing, index table generation between markers, entry block splitting. Pipe escaping in tables."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["index.go", "entry.go", "index_test.go"],
+      "notes": "Entry header parsing (## [YYYY-MM-DD-HHMMSS] Title), index table generation between INDEX:START/END markers. EntryBlock splitting with superseded detection. Pipe escaping."
     },
     "internal/task": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
       "files_seen": ["task.go", "task_test.go"],
-      "notes": "Thin task checkbox parser. Match index constants for capture group access. SubTask detection by indent."
+      "notes": "Thin task checkbox parser. Match index constants for capture group access. SubTask detection by indent >= 2 spaces."
     },
     "internal/validation": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["validation.go", "validation_test.go"],
-      "notes": "Filename sanitization, path boundary validation, symlink detection. Defensive security functions."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["validate.go", "validation_test.go"],
+      "notes": "Filename sanitization (lowercase, hyphenated, max 50 chars), path boundary validation (resolved prefix check), symlink detection (M-2 defense)."
     },
     "internal/recall/parser": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["parser.go", "claude.go", "markdown.go", "session.go", "scanner.go", "parser_test.go"],
-      "notes": "Extensible parser registry. Claude Code JSONL and Markdown parsers. Session matching by git remote/path. Large and complex package."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["parser.go", "claude.go", "markdown.go", "session.go", "scanner.go", "parser_test.go", "markdown_test.go"],
+      "notes": "Extensible parser registry. Claude Code JSONL + Markdown parsers. Session matching by git remote/path. 1MB max buffer for large JSONL lines. Subagents dir skipped."
     },
     "internal/claude": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["claude.go", "claude_test.go"],
-      "notes": "Thin wrapper over assets for skill listing/content retrieval. Also defines hook/settings types for settings.local.json."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["skill.go", "types.go", "doc.go", "err.go", "claude_test.go"],
+      "notes": "Thin wrapper over assets for skill listing/content retrieval. Also defines HookConfig, HookMatcher, Hook, PermissionsConfig, Settings types for settings.local.json."
     },
     "internal/notify": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
       "files_seen": ["notify.go", "notify_test.go"],
-      "notes": "Fire-and-forget webhook. Encrypted URL storage. Event filtering. 5s timeout. Silent on all errors."
+      "notes": "Fire-and-forget webhook. Encrypted URL storage via crypto. Event filtering (opt-in only). 5s timeout. Silent on all errors. Payload: Event, Message, SessionID, Timestamp, Project."
     },
     "internal/journal/state": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
       "files_seen": ["state.go", "state_test.go"],
-      "notes": "Journal pipeline stage tracking via JSON. Atomic writes. Stage operations (mark/clear/check). Lock support."
+      "notes": "5-stage pipeline: exported → enriched → normalized → fences_verified → locked. Atomic writes via temp+rename. Dates as YYYY-MM-DD strings. CountUnenriched for nudge checks."
     },
     "internal/bootstrap": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["bootstrap.go", "bootstrap_test.go"],
-      "notes": "Root command creation, global flags, all subcommand registration. Version injected at build time."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["bootstrap.go", "cmd.go", "bootstrap_test.go"],
+      "notes": "Root command creation with global flags (--context-dir, --no-color, --allow-outside-cwd). PersistentPreRun applies flags and validates boundary. Registers all 23 subcommands."
     },
     "internal/cli/add": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["add.go", "add_test.go"],
-      "notes": "Entry append with validation. Task insertion logic (before first unchecked). Index update for decisions/learnings."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["add.go", "run.go", "content.go", "fmt.go", "insert.go", "normalize.go", "types.go", "add_test.go", "coverage_test.go"],
+      "notes": "Entry append with validation. EntryParams type. Content from args/--file/stdin. Task insertion before first unchecked. Index update for decisions/learnings. Shared WriteEntry used by watch."
     },
     "internal/cli/agent": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["agent.go", "agent_test.go"],
-      "notes": "Context packet assembly with budget. Cooldown mechanism. Also Noted section for overflow."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["agent.go", "run.go", "budget.go", "cooldown.go", "score.go", "sort.go", "extract.go", "out.go", "types.go", "agent_test.go", "budget_test.go", "score_test.go"],
+      "notes": "Context packet assembly with budget scoring. Entries scored by recency + relevance to active tasks. Cooldown mechanism with tombstone files per session. Also Noted section for overflow."
     },
     "internal/cli/compact": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["compact.go", "compact_test.go"],
-      "notes": "Task archival and empty section cleanup. Archive flag for timestamped archival."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.75,
+      "files_seen": ["compact.go", "run.go", "block.go", "archive.go", "task.go", "compact_test.go", "block_test.go"],
+      "notes": "Task block parsing with nesting. Archive flag for timestamped archival. Empty section cleanup. Block-level operations for task grouping."
     },
     "internal/cli/complete": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["complete.go", "complete_test.go"],
-      "notes": "Task completion by number, partial text, or full text. Checkbox toggle."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.75,
+      "files_seen": ["complete.go", "run.go", "complete_test.go"],
+      "notes": "Task completion by number, partial text, or full text. Checkbox toggle. Ambiguous match handling."
     },
     "internal/cli/decision": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["decision.go", "decision_test.go"],
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["cmd.go", "run.go", "decision.go", "decision_test.go"],
       "notes": "Reindex subcommand for DECISIONS.md index table."
     },
     "internal/cli/drift": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["drift.go", "drift_test.go"],
-      "notes": "CLI wrapper for drift.Detect(). JSON output, auto-fix support."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["drift.go", "run.go", "out.go", "fix.go", "sanitize.go", "types.go", "drift_test.go"],
+      "notes": "CLI wrapper for drift.Detect(). JSON output. Auto-fix support for staleness and missing_file issues. Sanitize output for clean display."
     },
     "internal/cli/hook": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["hook.go", "hook_test.go"],
-      "notes": "Multi-tool config generation. Tool-specific output formats."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.75,
+      "files_seen": ["hook.go", "run.go", "hook_test.go"],
+      "notes": "Multi-tool config generation (Claude, Cursor, Aider, Copilot, Windsurf). --write flag for Copilot auto-generation. Tool-specific output formats."
     },
     "internal/cli/initialize": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["run.go", "initialize.go", "initialize_test.go"],
-      "notes": "Complex init flow: templates, skills, hooks, settings merge, CLAUDE.md, Makefile.ctx, .gitignore. Idempotent with --force override."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["cmd.go", "run.go", "fs.go", "init.go", "validate.go", "hook.go", "claude.go", "makefile.go", "plan.go", "prompt.go", "tools.go", "tpl.go", "init_test.go", "initialize_test.go"],
+      "notes": "Complex init flow: templates, skills, hooks, settings merge, CLAUDE.md (with ctx markers for safe merge), Makefile.ctx, .gitignore. Idempotent with --force. --ralph for autonomous loop. --minimal for essentials only."
     },
     "internal/cli/journal": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["journal.go"],
-      "notes": "Static site and Obsidian vault generation from enriched journal entries."
+      "last_analyzed": "2026-02-24T22:00:00Z",
+      "confidence": 0.9,
+      "files_seen": ["journal.go", "run.go", "site.go", "vault.go", "obsidian.go", "parse.go", "types.go", "normalize.go", "reduce.go", "turn.go", "consolidate.go", "collapse.go", "wrap.go", "frontmatter.go", "wikilink.go", "group.go", "index.go", "section.go", "moc.go", "generate.go", "session.go", "fmt.go", "err.go", "doc.go", "journal_test.go"],
+      "notes": "Largest package (24 files). Two separate pipelines: site (zensical, in-place normalization, rendering transforms, index pages) and Obsidian (read-only, wikilinks, MOC hubs, related footers). Normalization: stripSystemReminders → cleanToolOutputJSON → consolidateToolRuns → mergeConsecutiveTurns → softWrapContent. Turn boundary uses last-match-wins for embedded headers. Popularity threshold=2. Multipart continuations excluded from nav."
     },
     "internal/cli/learnings": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["learnings.go", "learnings_test.go"],
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["cmd.go", "run.go", "learnings.go", "learnings_test.go"],
       "notes": "Reindex subcommand for LEARNINGS.md index table."
     },
     "internal/cli/load": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["load.go", "load_test.go"],
-      "notes": "Priority-ordered context assembly with budget. Raw mode bypasses assembly."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["load.go", "run.go", "convert.go", "sort.go", "out.go", "load_test.go"],
+      "notes": "Priority-ordered context assembly with budget. Raw mode bypasses headers. Convert and sort for output formatting."
     },
     "internal/cli/loop": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["loop.go", "loop_test.go"],
-      "notes": "Ralph loop script generation. Multi-tool templates (claude, aider, generic)."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["loop.go", "run.go", "script.go", "loop_test.go"],
+      "notes": "Ralph loop script generation. Multi-tool templates (claude, aider, generic). Completion signal and max-iterations support."
     },
     "internal/cli/notify": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["setup.go"],
-      "notes": "CLI for webhook notifications. Setup and test subcommands."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.75,
+      "files_seen": ["doc.go"],
+      "notes": "CLI for webhook notifications. Setup and test subcommands. Thin wrapper over internal/notify."
     },
     "internal/cli/pad": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.8,
-      "files_seen": ["pad.go", "store.go", "merge.go", "doc.go", "pad_test.go"],
-      "notes": "Encrypted scratchpad CRUD. File blob support (label:::base64). Merge with content dedup. 64KB blob limit."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.85,
+      "files_seen": ["pad.go", "store.go", "add.go", "edit.go", "rm.go", "mv.go", "show.go", "merge.go", "import.go", "export.go", "resolve.go", "blob.go", "doc.go", "pad_test.go"],
+      "notes": "Encrypted scratchpad CRUD. File blob support (label:::base64). Merge with content-hash dedup. 64KB blob limit. Import/export for file blobs."
     },
     "internal/cli/permissions": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["permissions.go", "permissions_test.go"],
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["permissions.go", "run.go", "permissions_test.go"],
       "notes": "Permission snapshot/restore (golden images). Diff of dropped permissions on restore."
     },
     "internal/cli/recall": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["recall.go", "recall_test.go"],
-      "notes": "Session history browsing. List/show/export/lock/unlock/sync subcommands. YAML frontmatter export."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["cmd.go", "run.go", "fmt.go", "index.go", "lock.go", "sync.go", "extract.go", "validate.go", "slug.go", "recall_test.go", "run_test.go", "lock_test.go", "sync_test.go"],
+      "notes": "Session history browsing. List/show/export/lock/unlock/sync. YAML frontmatter preservation on regeneration. Slug-based identification. Split for sessions >200 messages."
+    },
+    "internal/cli/remind": {
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["remind.go", "remind_test.go"],
+      "notes": "Session-scoped reminders. Add with optional --after date gate. List/dismiss subcommands. Stored in .context/reminders.json. Surfaced by check-reminders hook."
     },
     "internal/cli/serve": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["serve.go"],
-      "notes": "Thin wrapper invoking zensical serve. Requires external tool."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.75,
+      "files_seen": ["serve.go", "run.go", "serve_test.go"],
+      "notes": "Thin wrapper invoking zensical serve. Requires external tool (pipx install zensical)."
     },
     "internal/cli/status": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["status.go", "status_test.go"],
-      "notes": "Context health display. JSON and verbose modes. Token estimation per file."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["status.go", "run.go", "fmt.go", "out.go", "preview.go", "sort.go", "types.go", "status_test.go", "fmt_test.go", "preview_test.go", "sort_test.go"],
+      "notes": "Context health display. JSON and verbose modes. Token estimation per file. Preview generation for verbose output."
     },
     "internal/cli/sync": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["sync.go", "sync_test.go"],
-      "notes": "Codebase reconciliation. Detects undocumented directories, manifest changes."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.75,
+      "files_seen": ["sync.go", "run.go", "action.go", "validate.go", "types.go", "sync_test.go"],
+      "notes": "Codebase reconciliation. Detects undocumented directories, manifest changes. Action-based suggestions."
     },
     "internal/cli/system": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["system.go", "check_version.go", "mark_journal.go"],
-      "notes": "System diagnostics + hidden hook plumbing commands. Adaptive prompt counter. Resource monitoring. Multiple hook subcommands."
+      "last_analyzed": "2026-02-24T22:00:00Z",
+      "confidence": 0.9,
+      "files_seen": ["system.go", "input.go", "state.go", "bootstrap.go", "resources.go", "block_non_path_ctx.go", "block_dangerous_commands.go", "check_context_size.go", "check_persistence.go", "check_ceremonies.go", "check_journal.go", "check_reminders.go", "check_version.go", "check_resources.go", "check_knowledge.go", "check_map_staleness.go", "check_backup_age.go", "post_commit.go", "qa_reminder.go", "cleanup_tmp.go", "mark_journal.go", "doc.go"],
+      "notes": "Second-largest package (22 files). 2 visible + 16 hidden hook commands. Core infra: input.go (hook JSON protocol with 2s stdin timeout), state.go (secureTempDir, counters, daily throttle). Adaptive prompt counter: silent 1-15, every 5th 16-30, every 3rd 30+. Persistence nudge: silent 1-10, nudge #20, then every 15. Block commands output JSON decision. check-resources DANGER-only. Daily throttle via marker file date comparison. All hooks exit 0 (never block init)."
     },
     "internal/cli/task": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.75,
-      "files_seen": ["task.go", "task_test.go"],
-      "notes": "Task archive (preserve Phase structure) and snapshot subcommands."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.8,
+      "files_seen": ["task.go", "run.go", "task_test.go"],
+      "notes": "Task archive (preserve Phase structure, skip tasks with pending children) and snapshot subcommands. Archive to .context/archive/tasks-YYYY-MM-DD.md."
     },
     "internal/cli/watch": {
-      "last_analyzed": "2026-02-23T20:00:00Z",
-      "confidence": 0.7,
-      "files_seen": ["watch.go", "watch_test.go"],
-      "notes": "Context-update tag parser. Attribute validation per entry type. Stdin/file watching."
+      "last_analyzed": "2026-02-24T21:00:00Z",
+      "confidence": 0.75,
+      "files_seen": ["watch.go", "run.go", "watch_test.go"],
+      "notes": "Context-update XML tag parser from stdin/file. Attribute validation per entry type. Silent operations via shared add.WriteEntry. Dry-run support."
     }
   }
 }

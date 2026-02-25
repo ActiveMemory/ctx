@@ -1335,6 +1335,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#state-the-motivation-not-just-the-goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State the Motivation, Not Just the Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#state-the-deliverable-not-just-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1369,6 +1380,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-do-these-approaches-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Do These Approaches Work?
+      
+    </span>
+  </a>
   
 </li>
       
@@ -3582,6 +3604,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#state-the-motivation-not-just-the-goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State the Motivation, Not Just the Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#state-the-deliverable-not-just-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3616,6 +3649,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-do-these-approaches-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Do These Approaches Work?
+      
+    </span>
+  </a>
   
 </li>
       
@@ -3853,13 +3897,20 @@ worth persisting.</p>
 <h3 id="is-this-the-right-approach">"<em>Is this the right approach?</em>"<a class="headerlink" href="#is-this-the-right-approach" title="Permanent link">&para;</a></h3>
 <p>This invites the AI to challenge the current direction.</p>
 <p>Use this when you want a sanity check.</p>
-<p>This works because it allows AI to disagree. </p>
-<p>AIs often default to agreeing; this prompt signals you want an 
+<p>This works because it allows AI to disagree.</p>
+<p>AIs often default to agreeing; this prompt signals you want an
 <strong>honest assessment</strong>.</p>
+<p><strong>Stronger variant</strong>: "<em>Push back if my assumptions are wrong.</em>"
+This sets the tone for the entire session — the AI will flag
+questionable choices proactively instead of waiting to be asked.</p>
 <h3 id="what-am-i-missing">"<em>What am I missing?</em>"<a class="headerlink" href="#what-am-i-missing" title="Permanent link">&para;</a></h3>
 <p>This prompts thinking about edge cases, overlooked requirements,
 or unconsidered approaches.</p>
 <p>Use this before finalizing a design or implementation.</p>
+<p><strong>Forward-looking variant</strong>: "<em>What's the single smartest addition
+you could make to this at this point?</em>" Use this after you think
+you're done — it surfaces improvements you wouldn't have thought
+to ask for. The constraint to <em>one</em> thing prevents feature sprawl.</p>
 <hr />
 <h2 id="cli-commands-as-prompts">CLI Commands as Prompts<a class="headerlink" href="#cli-commands-as-prompts" title="Permanent link">&para;</a></h2>
 <p>Asking the AI to run <code>ctx</code> commands is itself a prompt. These
@@ -4092,7 +4143,15 @@ so far, here are some prompts that tend to produce poor results:</p>
 </tr>
 <tr>
 <td>Completeness</td>
-<td>"*What am I missing?"</td>
+<td>"<em>What am I missing?</em>"</td>
+</tr>
+<tr>
+<td>One more thing</td>
+<td>"<em>What's the single smartest addition?</em>"</td>
+</tr>
+<tr>
+<td>Set tone</td>
+<td>"<em>Push back if my assumptions are wrong.</em>"</td>
 </tr>
 <tr>
 <td>Constrain scope</td>
@@ -4157,6 +4216,15 @@ you get a "<em>should work now</em>" instead of evidence.</p>
 <h2 id="writing-tasks-as-prompts">Writing Tasks as Prompts<a class="headerlink" href="#writing-tasks-as-prompts" title="Permanent link">&para;</a></h2>
 <p>Tasks in <code>TASKS.md</code> are <strong>indirect prompts</strong> to the AI. How you write them
 shapes how the AI approaches the work.</p>
+<h3 id="state-the-motivation-not-just-the-goal">State the Motivation, Not Just the Goal<a class="headerlink" href="#state-the-motivation-not-just-the-goal" title="Permanent link">&para;</a></h3>
+<p>Tell the AI <em>why</em> you're building something, not just <em>what</em>.</p>
+<p>Bad: "<em>Build a calendar view.</em>"</p>
+<p>Good: "<em>Build a calendar view. The motivation is that all notes
+and tasks we build later should be viewable here.</em>"</p>
+<p>The second version lets the AI anticipate downstream requirements.
+It will design the calendar's data model to be compatible with
+future features — without you having to spell out every integration
+point. Motivation turns a one-off task into a <em>directional</em> task.</p>
 <h3 id="state-the-deliverable-not-just-steps">State the Deliverable, Not Just Steps<a class="headerlink" href="#state-the-deliverable-not-just-steps" title="Permanent link">&para;</a></h3>
 <p>Bad task (<em>implementation-focused</em>):
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">- [ ]</span> T1.1.0: Parser system
@@ -4191,10 +4259,61 @@ details are done, but the feature doesn't actually work.</p>
 <p>Always re-read the parent task description before marking it complete.
 Verify the stated deliverable exists and works.</p>
 <hr />
+<h2 id="why-do-these-approaches-work">Why Do These Approaches Work?<a class="headerlink" href="#why-do-these-approaches-work" title="Permanent link">&para;</a></h2>
+<p>The patterns in this guide <strong>aren't invented here</strong>: They are practitioner
+translations of <strong>well-established, peer-reviewed research</strong>, most of which 
+predate the current AI (<em>hype</em>) wave. </p>
+<p>The underlying ideas come from decades of work in machine learning, 
+cognitive science, and numerical optimization.</p>
+<p><strong>Phased work</strong> ("<em>Explore → Plan → Implement</em>") applies
+<strong>chain-of-thought reasoning</strong>: Decomposing a problem into sequential
+steps before acting. Forcing intermediate reasoning steps measurably
+improves output quality in language models, just as it does in human
+problem-solving.
+<br>Wei et al., <a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a> (2022).</p>
+<p><strong>Root-cause prompts</strong> ("<em>Why doesn't X work?</em>") use <strong>step-back
+abstraction</strong>: Retreating to a higher-level question before diving
+into specifics. This mirrors how experienced engineers debug: they
+ask "what <em>should</em> happen?" before asking "<em>what went wrong?</em>"
+<br>Zheng et al., <a href="https://arxiv.org/abs/2310.06117">Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models</a> (2023).</p>
+<p><strong>Exploring alternatives</strong> ("<em>Propose 2-3 approaches</em>") leverages
+<strong>self-consistency</strong>: Generating multiple independent reasoning paths
+and selecting the most coherent result. The idea traces back to
+ensemble methods in classical ML: A committee of diverse solutions
+outperforms any single one.
+<br>Wang et al., <a href="https://arxiv.org/abs/2203.11171">Self-Consistency Improves Chain of Thought Reasoning in Language Models</a> (2022).</p>
+<p><strong>Impact analysis</strong> ("<em>What would break if we...</em>") is a form of
+<strong>tree-structured exploration</strong>: Branching into multiple consequence
+paths before committing. This is the same principle behind game-tree
+search (<em>minimax, MCTS</em>) that has powered decision-making systems
+since the 1950s.
+<br>Yao et al., <a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts: Deliberate Problem Solving with Large Language Models</a> (2023).</p>
+<p><strong>Motivation prompting</strong> ("<em>Build X because Y</em>") works through
+<strong>goal conditioning</strong>: Providing the objective function alongside the
+task. In optimization terms, you are giving the <strong>gradient direction</strong>,
+<strong>not just the loss</strong>. The model can make <strong>locally coherent decisions</strong> that
+serve the global objective because it knows what "<em>better</em>" means.</p>
+<p><strong>Scope constraints</strong> ("<em>Only change files in X</em>") apply <strong>constrained
+optimization</strong>: Bounding the search space to prevent divergence. This
+is the same principle behind regularization in ML: Without boundaries,
+powerful optimizers find solutions that technically satisfy the
+objective but are practically useless.</p>
+<p>These aren't prompting "<em>hacks</em>" that you will find in the 
+"<em>1000 AI Prompts for the Curious</em>" listicles: They are 
+<strong>applications of foundational principles</strong>: </p>
+<ul>
+<li><strong>Decomposition</strong>,</li>
+<li><strong>Abstraction</strong>, </li>
+<li><strong>Ensemble Reasoning</strong>, </li>
+<li><strong>Search</strong>,</li>
+<li>and <strong>Constrained Optimization</strong>.</li>
+</ul>
+<p>They work because language models are, at their core, 
+<strong>optimization systems</strong> navigating <strong>probabilistic landscapes</strong>.</p>
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../blog/2026-02-03-the-attention-budget/">The Attention Budget</a>: 
-  Why your AI forgets what you just told it, and how token budgets shape 
+<li><a href="../../blog/2026-02-03-the-attention-budget/">The Attention Budget</a>:
+  Why your AI forgets what you just told it, and how token budgets shape
   context strategy</li>
 </ul>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>

@@ -504,14 +504,105 @@ Consult specific sections when working on a module.
 
 ## internal/cli/journal
 
-**Purpose**: Analyze and publish exported AI session files to static sites or Obsidian vaults.
+**Purpose**: Analyze and publish exported AI session files to static sites or Obsidian vaults. Largest package in the codebase (24 source files).
+
+**Key types**: `journalFrontmatter` (YAML: title, date, time, project, session_id, model, tokens, type, outcome, topics, key_files, summary), `journalEntry` (parsed file metadata), `groupedIndex` (aggregated entries by key with popularity flag), `topicData`, `keyFileData`, `typeData` (index structures)
 
 **Exported API**:
-- `Cmd() *cobra.Command` — subcommands: site, obsidian
+- `Cmd() *cobra.Command` — subcommands: `site`, `obsidian`
 
-**Data flow**: Scan .context/journal/ → parse YAML frontmatter → generate static site (zensical) or Obsidian vault (wikilinks, MOC)
+**Subcommands**:
+- `site [--output DIR] [--build] [--serve]` — generate zensical-compatible static site
+- `obsidian [--output DIR]` — generate Obsidian vault with wikilinks and MOC
 
-**Dependencies**: `internal/assets`, `internal/rc`
+**File organization** (24 files by responsibility):
+
+| File | Purpose |
+|------|---------|
+| `journal.go` | Command router (site + obsidian subcommands) |
+| `run.go` | Site generation pipeline orchestration |
+| `site.go` | `journal site` cobra subcommand definition |
+| `vault.go` | `journal obsidian` cobra subcommand definition |
+| `obsidian.go` | Obsidian vault generation pipeline |
+| `parse.go` | Scan journal dir, extract metadata from YAML frontmatter |
+| `types.go` | Core data structures |
+| `normalize.go` | Content normalization for rendering (fence strip, turn wrap, heading fix) |
+| `reduce.go` | Strip system reminders, clean API JSON, remove fences |
+| `turn.go` | Turn header extraction and consecutive same-role merging |
+| `consolidate.go` | Collapse consecutive identical turns with (×N) count |
+| `collapse.go` | Wrap long tool outputs in `<details>` collapsible blocks |
+| `wrap.go` | Soft-wrap long lines (~80 chars, preserve indent) |
+| `frontmatter.go` | Transform YAML frontmatter for Obsidian (topics→tags, aliases) |
+| `wikilink.go` | Convert Markdown links to Obsidian wikilinks |
+| `group.go` | Group entries by month, topic, file, type; mark popular (≥2 sessions) |
+| `index.go` | Generate index/archive pages for topics, files, types |
+| `section.go` | Write section directories with index + detail pages |
+| `moc.go` | Map of Content generation for Obsidian navigation hubs |
+| `generate.go` | Site content generation (index, zensical.toml, source links) |
+| `session.go` | Unique session counter utility |
+| `fmt.go` | Formatting helpers (size, slugs, links) |
+| `err.go` | Error types and warning formatting |
+| `doc.go` | Package documentation |
+
+**Two separate output pipelines**:
+
+```
+                    Journal entries (.context/journal/*.md)
+                                    │
+                    ┌───────────────┴───────────────┐
+                    │                               │
+              SITE PIPELINE                  OBSIDIAN PIPELINE
+                    │                               │
+        ┌───────────────────────┐       ┌───────────────────────┐
+        │ In-place normalization│       │ Read-only transforms  │
+        │ (writes back to src): │       │ (does not modify src):│
+        │ 1. stripSystemReminders│       │ 1. stripSystemReminders│
+        │ 2. cleanToolOutputJSON│       │ 2. cleanToolOutputJSON│
+        │ 3. consolidateToolRuns│       │ 3. consolidateToolRuns│
+        │ 4. mergeConsecutive   │       │ 4. mergeConsecutive   │
+        │ 5. softWrapContent    │       │ 5. softWrapContent    │
+        └───────────┬───────────┘       └───────────┬───────────┘
+                    │                               │
+        ┌───────────────────────┐       ┌───────────────────────┐
+        │ Rendering transforms: │       │ Obsidian transforms:  │
+        │ - injectSourceLink    │       │ - transformFrontmatter│
+        │ - injectSummary       │       │   (topics→tags)       │
+        │ - normalizeContent    │       │ - convertMarkdownLinks│
+        │   (fence strip,       │       │   (→ wikilinks)       │
+        │    wrapToolOutputs,   │       │ - generateRelatedFooter│
+        │    wrapUserTurns,     │       └───────────┬───────────┘
+        │    heading sanitize,  │                   │
+        │    list blank lines,  │       ┌───────────────────────┐
+        │    escape globs)      │       │ Output:               │
+        └───────────┬───────────┘       │ entries/ (files)      │
+                    │                   │ topics/ (MOC+detail)  │
+        ┌───────────────────────┐       │ files/ (MOC+detail)   │
+        │ Output:               │       │ types/ (MOC+detail)   │
+        │ docs/ (processed MD)  │       │ Home.md (nav hub)     │
+        │ topics/ (index+detail)│       │ .obsidian/app.json    │
+        │ files/ (index+detail) │       └───────────────────────┘
+        │ types/ (index+detail) │
+        │ index.md              │
+        │ zensical.toml         │
+        └───────────────────────┘
+```
+
+**Key design decisions**:
+- Turn boundary detection uses last-match-wins for embedded turn headers in tool output
+- Fence verification flag from journal state skips stripping for AI-verified files
+- HTML escaping inside `<pre><code>` disables all markdown interpretation (safety over formatting)
+- Popularity threshold = 2 sessions (popular topics/files get dedicated pages)
+- Multipart continuations (p2, p3...) excluded from navigation, reachable from part 1
+- Boilerplate tool outputs filtered ("No matches found", edit confirmations, hook denials)
+
+**Edge cases**:
+- Quoted journal files inside tool outputs contain false turn headers → last-match-wins solves
+- Old export format (HTML-escaped in `<pre>`) vs new format (raw) → `stripPreWrapper()` detects and adapts
+- Python-Markdown requires blank line before first list item → auto-inserted
+- Title sanitization strips Claude Code markup tags and truncates to 75 chars
+- Multipart footer at EOF not swallowed by tool output boundary detection
+
+**Dependencies**: `internal/config`, `internal/rc`, `internal/journal/state`, external: `zensical`
 
 ---
 
@@ -637,6 +728,33 @@ Consult specific sections when working on a module.
 
 ---
 
+## internal/cli/remind
+
+**Purpose**: Session-scoped reminders that persist until dismissed.
+
+**Key types**: `Reminder` (ID, Text, CreatedAt, After, DismissedAt)
+
+**Exported API**:
+- `Cmd() *cobra.Command` — subcommands: add, list (ls), dismiss (rm)
+- Default (no subcommand): show due reminders
+
+**Subcommands**:
+- `add TEXT [--after YYYY-MM-DD]` — create reminder, optionally date-gated
+- `list` / `ls` — show all reminders (active and dismissed)
+- `dismiss ID` / `rm ID` — dismiss specific reminder
+- `dismiss --all` — dismiss all active reminders
+
+**Data flow**: Reminders stored in `.context/reminders.json` as JSON array. On `ctx remind` (no args): load reminders → filter by After date → display due reminders. Hooks call `ctx system check-reminders` to surface reminders at session start.
+
+**Edge cases**:
+- After date in the future → reminder suppressed until date
+- Dismissed reminders kept in file (auditable) but not shown
+- Empty reminders.json → "(no reminders)"
+
+**Dependencies**: `internal/config`, `internal/rc`
+
+---
+
 ## internal/cli/sync
 
 **Purpose**: Reconcile context files with codebase changes.
@@ -652,19 +770,79 @@ Consult specific sections when working on a module.
 
 ## internal/cli/system
 
-**Purpose**: System diagnostics, resource monitoring, and Claude Code hook commands (plumbing).
+**Purpose**: System diagnostics, resource monitoring, and Claude Code hook plumbing commands. Second-largest package (22 source files).
+
+**Key types**: `HookInput` (SessionID, ToolInput.Command — JSON from stdin), `HookResponse` (HookSpecificOutput with HookEventName and AdditionalContext)
 
 **Exported API**:
-- `Cmd() *cobra.Command` — visible subcommands: resources, bootstrap; hidden hook subcommands: check-context-size, check-persistence, check-journal, check-ceremonies, check-version, block-non-path-ctx, post-commit, cleanup-tmp, qa-reminder, check-resources, check-knowledge, mark-journal
+- `Cmd() *cobra.Command`
 
-**Data flow**: resources: display OS metrics with thresholds. bootstrap: print context directory. Hook commands: read JSON from stdin → perform logic → exit 0 (block commands output JSON with "decision" field).
+**Visible subcommands**:
+- `resources [--json]` — display OS metrics (memory, swap, disk, load) with threshold-colored output
+- `bootstrap [--json]` — print context directory location, file list, and 6 agent rules
+
+**Core infrastructure** (3 files):
+
+| File | Purpose |
+|------|---------|
+| `input.go` | Hook protocol codec: `readInput()` reads JSON from stdin with 2s timeout (graceful on terminal/missing); `printHookContext()` emits structured JSON directive |
+| `state.go` | Shared utilities: `secureTempDir()` (XDG_RUNTIME_DIR or /tmp/ctx-UID), `readCounter()`/`writeCounter()`, `isDailyThrottled()`, `isInitialized()`, `logMessage()` |
+| `system.go` | Command registry: attaches all subcommands to root |
+
+**Hidden hook subcommands** (16 commands, called by hooks.json):
+
+| Subcommand | Hook Event | Matcher | Behavior | Throttle |
+|---|---|---|---|---|
+| `block-non-path-ctx` | PreToolUse | Bash | Regex-block `./ctx`, `/abs/ctx`, `go run ./cmd/ctx`; exception: `/tmp/ctx-test` for integration tests. Output: `{"decision":"block"}` | None |
+| `block-dangerous-commands` | PreToolUse | Bash | Regex-block mid-command sudo, mid-command git push, cp/mv to bin dirs. Output: `{"decision":"block"}` | None |
+| `qa-reminder` | PreToolUse | Edit | Hard gate: every Edit emits VERBATIM lint/test/clean-tree reminder. No throttle (repetition intentional) | None |
+| `post-commit` | PostToolUse | Bash | Detect `git commit` (skip `--amend`); emit HookContext directive suggesting decision/learning capture + QA offer | None |
+| `check-context-size` | UserPromptSubmit | (all) | Adaptive counter: silent 1–15, every 5th 16–30, every 3rd 30+. Per-session counter in temp file | Per-session |
+| `check-persistence` | UserPromptSubmit | (all) | Track .context/ mtime; silent 1–10, nudge at #20 if no modifications, then every 15 prompts since last mod | Per-session |
+| `check-ceremonies` | UserPromptSubmit | (all) | Scan last 3 journal entries for "ctx-remember" and "ctx-wrap-up" strings; nudge missing ceremonies | Daily |
+| `check-journal` | UserPromptSubmit | (all) | Stage 1: count .jsonl files newer than latest journal export. Stage 2: count unenriched entries via journal/state. Suggest `ctx recall export --all` and `/ctx-journal-enrich-all` | Daily |
+| `check-reminders` | UserPromptSubmit | (all) | Surface due reminders (After ≤ today) from reminders.json with dismiss commands | None (until dismissed) |
+| `check-version` | UserPromptSubmit | (all) | Compare binary version (ldflags) vs plugin.json major.minor; skip "dev" builds. Piggyback: check encryption key age vs `rc.KeyRotationDays()` | Daily |
+| `check-resources` | UserPromptSubmit | (all) | `sysinfo.Collect()` + `Evaluate()`; output ONLY at DANGER severity (mem≥90%, swap≥75%, disk≥95%, load≥1.5x CPUs) | None |
+| `check-knowledge` | UserPromptSubmit | (all) | DECISIONS entry count vs `rc.EntryCountDecisions()` (default 20), LEARNINGS vs `rc.EntryCountLearnings()` (default 30), CONVENTIONS lines vs `rc.ConventionLineCount()` (default 200). Suggest /ctx-consolidate | Daily |
+| `check-map-staleness` | UserPromptSubmit | (all) | Two conditions (both required): map-tracking.json `last_run` >30 days AND `git log --since=<last_run> -- internal/` has commits. Suggest /ctx-map | Daily |
+| `check-backup-age` | UserPromptSubmit | (all) | Check SMB mount (via GVFS path from `CTX_BACKUP_SMB_URL` env) + backup marker mtime (>2 days). Suggest `hack/backup-context.sh` | Daily |
+| `mark-journal` | (plumbing) | — | `ctx system mark-journal <file> <stage> [--check]`. Valid stages: exported, enriched, normalized, fences_verified, locked | N/A |
+| `cleanup-tmp` | SessionEnd | (all) | Remove files >15 days old from `secureTempDir()`. Silent side-effect, no output | N/A |
+
+**Hook output protocol**:
+- **Block**: `{"decision":"block","reason":"..."}` — Claude Code vetoes the tool call
+- **VERBATIM relay**: Plain text box — Claude Code renders to agent as context
+- **Hook directive**: `{"hookSpecificOutput":{...}}` — structured agent instruction
+- **Silent**: No output, exit 0 — check passed
+
+**Adaptive prompt counter algorithm** (check-context-size):
+```
+prompt 1-15:  silent
+prompt 16-30: fire every 5th (16, 21, 26)
+prompt 31+:   fire every 3rd (33, 36, 39...)
+```
+
+**Persistence nudge algorithm** (check-persistence):
+```
+prompt 1-10:   silent (too early)
+prompt 11-25:  one nudge at prompt #20 if no .md files modified
+prompt 25+:    nudge every 15 prompts since last modification
+reset:         any .context/*.md mtime change resets the counter
+```
+
+**Daily throttle mechanism**: Marker files in temp dir; `isDailyThrottled()` checks if marker file's date components match today.
 
 **Edge cases**:
-- Hook commands are plumbing (hidden, used by Claude Code plugin)
-- Block commands can veto operations via JSON output
-- Adaptive prompt counter with checkpoint messages
+- `readInput()` detects terminal (character device) and returns immediately without blocking
+- Block commands: regex patterns handle command separators (&&, ||, ;, |) for mid-command detection
+- check-resources: WARNING severity suppressed to avoid noise; only DANGER emits
+- check-version: "dev" builds skip version comparison entirely
+- check-map-staleness: respects `opted_out: true` in map-tracking.json
+- cleanup-tmp: graceful nil return if temp dir doesn't exist
+- All hooks exit 0 (never block initialization, even on errors)
 
-**Dependencies**: `internal/config`, `internal/rc`, `internal/sysinfo`, `internal/notify`, `internal/journal/state`
+**Dependencies**: `internal/config`, `internal/rc`, `internal/sysinfo`, `internal/notify`, `internal/journal/state`, `internal/cli/remind` (for check-reminders), `internal/index` (for check-knowledge entry counting)
 
 ---
 

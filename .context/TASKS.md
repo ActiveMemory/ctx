@@ -82,6 +82,14 @@ STRUCTURE RULES (see CONSTITUTION.md):
 - [ ] AI: verify and archive completed tasks in TASK.md; the file has gotten
       crowded. Verify each task individually before archiving.
 
+### Phase 0.5: Spec Scaffolding Skill
+
+- [ ] Create `/ctx-spec` skill — scaffolds a new spec from `specs/spec-template.md`,
+      prompts for feature name, creates `specs/{name}.md`, and walks through sections
+      with the user (especially edge cases, error handling, validation). Complements
+      `/_ctx-brainstorm` (dialogue) by producing the written artifact (document).
+      Template: `specs/spec-template.md` #priority:medium #added:2026-02-25
+
 ### Phase 0: Ideas
 
 - [ ] Blog: "Building a Claude Code Marketplace Plugin" — narrative from session 
