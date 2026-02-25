@@ -389,7 +389,7 @@ evidence.
     These four rules mentioned below don't change with model versions, agent
     frameworks, or project size.
 
-    Build them into your workflow once and stop thinking about them.
+    **Build them into your workflow** once and stop thinking about them.
 
 Tool-using agents can read files, run commands, and modify your
 codebase. That power makes them useful. It also creates a trust
