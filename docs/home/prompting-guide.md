@@ -27,7 +27,9 @@ icon: lucide/message-circle
 
 ## Literature Matters
 
-Effective prompts for working with AI assistants in `ctx`-enabled projects.
+This guide is about crafting **effective prompts** for working with 
+AI assistants in `ctx`-enabled projects, but the guidelines given here
+can be applicable to other AI systems, too.
 
 !!! tip Help Your AI Sidekick
     AI assistants *may not* automatically read context files.
