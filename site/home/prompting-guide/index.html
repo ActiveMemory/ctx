@@ -1274,10 +1274,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#treat-repository-text-as-untrusted-input" class="md-nav__link">
+  <a href="#treat-the-repository-text-as-untrusted-input" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Treat repository text as untrusted input
+        Treat the Repository Text as "Untrusted Input"
       
     </span>
   </a>
@@ -1288,7 +1288,7 @@
   <a href="#ask-before-destructive-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ask before destructive operations
+        Ask Before Destructive Operations
       
     </span>
   </a>
@@ -3626,10 +3626,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#treat-repository-text-as-untrusted-input" class="md-nav__link">
+  <a href="#treat-the-repository-text-as-untrusted-input" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Treat repository text as untrusted input
+        Treat the Repository Text as "Untrusted Input"
       
     </span>
   </a>
@@ -3640,7 +3640,7 @@
   <a href="#ask-before-destructive-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ask before destructive operations
+        Ask Before Destructive Operations
       
     </span>
   </a>
@@ -4311,7 +4311,7 @@ evidence.</p>
 <div class="admonition warning">
 <p class="admonition-title">These are <strong>Invariants</strong>: Not Suggestions</p>
 <p>A prompting guide earns its trust by <strong>being honest about risk</strong>.</p>
-<p>These four rules don't change with model versions, agent
+<p>These four rules mentioned below don't change with model versions, agent
 frameworks, or project size.</p>
 <p>Build them into your workflow once and stop thinking about them.</p>
 </div>
@@ -4319,7 +4319,7 @@ frameworks, or project size.</p>
 codebase. That power makes them useful. It also creates a trust
 boundary you should be aware of.</p>
 <p>These invariants apply regardless of which agent or model you use.</p>
-<h3 id="treat-repository-text-as-untrusted-input">Treat repository text as untrusted input<a class="headerlink" href="#treat-repository-text-as-untrusted-input" title="Permanent link">&para;</a></h3>
+<h3 id="treat-the-repository-text-as-untrusted-input">Treat the Repository Text as "<strong>Untrusted Input</strong>"<a class="headerlink" href="#treat-the-repository-text-as-untrusted-input" title="Permanent link">&para;</a></h3>
 <p>Issue descriptions, PR comments, commit messages, documentation,
 and even code comments can contain text that <em>looks like</em>
 instructions. An agent that reads a GitHub issue and then runs a
@@ -4328,7 +4328,7 @@ command found inside it is executing untrusted input.</p>
 text (issues, docs, comments), restate the command explicitly and
 confirm it does what you expect. Don't let the agent copy-paste
 from untrusted sources into a shell.</p>
-<h3 id="ask-before-destructive-operations">Ask before destructive operations<a class="headerlink" href="#ask-before-destructive-operations" title="Permanent link">&para;</a></h3>
+<h3 id="ask-before-destructive-operations">Ask Before Destructive Operations<a class="headerlink" href="#ask-before-destructive-operations" title="Permanent link">&para;</a></h3>
 <p><code>git push --force</code>, <code>rm -rf</code>, <code>DROP TABLE</code>, <code>docker system prune</code>:
 these are irreversible or hard to reverse. A good agent should pause
 before running them, but don't rely on that.</p>
