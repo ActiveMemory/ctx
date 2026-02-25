@@ -630,7 +630,7 @@ ask "what *should* happen?" before asking "*what went wrong?*"
 **Exploring alternatives** ("*Propose 2-3 approaches*") leverages
 **self-consistency**: Generating multiple independent reasoning paths
 and selecting the most coherent result. The idea traces back to
-ensemble methods in classical ML: A committee of diverse solutions
+ensemble methods in ML: A committee of diverse solutions
 outperforms any single one.
 <br>Wang et al., [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171) (2022).
 
