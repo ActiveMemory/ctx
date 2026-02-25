@@ -4570,13 +4570,13 @@ is the same principle behind regularization in ML: Without boundaries,
 powerful optimizers find solutions that technically satisfy the
 objective but are practically useless.</p>
 <p><strong>CLI commands as prompts</strong> ("<em>Run <code>ctx status</code></em>") interleave
-<em>reasoning with acting</em> — the model thinks, acts on external tools,
+<em>reasoning with acting</em>: The model thinks, acts on external tools,
 observes results, then thinks again. Grounding reasoning in real
 tool output reduces hallucination because the model can't ignore
 evidence it just retrieved.
 <br>Yao et al., <a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a> (2022).</p>
 <p><strong>Task decomposition</strong> ("<em>Prompts by Task Type</em>") applies
-<em>least-to-most prompting</em> — breaking a complex problem into
+<em>least-to-most prompting</em>: Breaking a complex problem into
 subproblems and solving them sequentially, each building on the last.
 This is the research version of "plan, then implement one slice."
 <br>Zhou et al., <a href="https://arxiv.org/abs/2205.10625">Least-to-Most Prompting Enables Complex Reasoning in Large Language Models</a> (2022).</p>
@@ -4587,7 +4587,7 @@ The phased structure prevents the model from jumping to code before
 understanding the problem.
 <br>Wang et al., <a href="https://arxiv.org/abs/2305.04091">Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models</a> (2023).</p>
 <p><strong>Session reflection</strong> ("<em>What did we learn?</em>", <code>/ctx-reflect</code>) is
-a form of <em>verbal reinforcement learning</em> — improving future
+a form of <em>verbal reinforcement learning</em>: Improving future
 performance by persisting linguistic feedback as memory rather than
 updating weights. This is exactly what <code>LEARNINGS.md</code> and
 <code>DECISIONS.md</code> provide: a durable feedback signal across sessions.

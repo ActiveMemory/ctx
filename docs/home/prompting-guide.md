@@ -654,14 +654,14 @@ powerful optimizers find solutions that technically satisfy the
 objective but are practically useless.
 
 **CLI commands as prompts** ("*Run `ctx status`*") interleave
-*reasoning with acting* — the model thinks, acts on external tools,
+*reasoning with acting*: The model thinks, acts on external tools,
 observes results, then thinks again. Grounding reasoning in real
 tool output reduces hallucination because the model can't ignore
 evidence it just retrieved.
 <br>Yao et al., [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) (2022).
 
 **Task decomposition** ("*Prompts by Task Type*") applies
-*least-to-most prompting* — breaking a complex problem into
+*least-to-most prompting*: Breaking a complex problem into
 subproblems and solving them sequentially, each building on the last.
 This is the research version of "plan, then implement one slice."
 <br>Zhou et al., [Least-to-Most Prompting Enables Complex Reasoning in Large Language Models](https://arxiv.org/abs/2205.10625) (2022).
@@ -674,7 +674,7 @@ understanding the problem.
 <br>Wang et al., [Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models](https://arxiv.org/abs/2305.04091) (2023).
 
 **Session reflection** ("*What did we learn?*", `/ctx-reflect`) is
-a form of *verbal reinforcement learning* — improving future
+a form of *verbal reinforcement learning*: Improving future
 performance by persisting linguistic feedback as memory rather than
 updating weights. This is exactly what `LEARNINGS.md` and
 `DECISIONS.md` provide: a durable feedback signal across sessions.
