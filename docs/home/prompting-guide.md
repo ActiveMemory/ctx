@@ -383,6 +383,14 @@ evidence.
 
 ## Safety Invariants
 
+!!! warning "These are **Invariants**: Not Suggestions"
+    A prompting guide earns its trust by **being honest about risk**.
+
+    These four rules don't change with model versions, agent
+    frameworks, or project size.
+
+    Build them into your workflow once and stop thinking about them.
+
 Tool-using agents can read files, run commands, and modify your
 codebase. That power makes them useful. It also creates a trust
 boundary you should be aware of.
@@ -403,7 +411,7 @@ from untrusted sources into a shell.
 
 ### Ask before destructive operations
 
-`git push --force`, `rm -rf`, `DROP TABLE`, `docker system prune` —
+`git push --force`, `rm -rf`, `DROP TABLE`, `docker system prune`:
 these are irreversible or hard to reverse. A good agent should pause
 before running them, but don't rely on that.
 
@@ -413,7 +421,7 @@ confirmation. If the agent runs something destructive without
 asking, that's a course-correction moment: "*Stop. Never run
 destructive commands without asking first.*"
 
-### Scope the blast radius
+### Scope the Blast Radius
 
 An agent told to "*fix the tests*" might modify test fixtures,
 change assertions, or delete tests that inconveniently fail. An
@@ -421,19 +429,10 @@ agent told to "*deploy*" might push to production. Broad mandates
 create broad risk.
 
 **The rule**: Constrain scope before starting work. The Reliability
-Checklist's **scope boundary** (#4) is your primary safety lever.
+Checklist's **scope boundary** (`#4`) is your primary safety lever.
 When in doubt, err on the side of a tighter boundary.
 
----
-
-### Secrets Never Belong in Context
-
-!!! tip "These are **Invariants**: Not Suggestions"
-    A prompting guide earns its trust by **being honest about risk**.
-
-    These four rules don't change with model versions, agent
-    frameworks, or project size. Build them into your workflow
-    once and stop thinking about them.
+### Secrets **Never** Belong in Context
 
 `LEARNINGS.md`, `DECISIONS.md`, and session transcripts are
 plain-text files that may be committed to version control.

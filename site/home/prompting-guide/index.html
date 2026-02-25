@@ -1299,7 +1299,7 @@
   <a href="#scope-the-blast-radius" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scope the blast radius
+        Scope the Blast Radius
       
     </span>
   </a>
@@ -3651,7 +3651,7 @@
   <a href="#scope-the-blast-radius" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scope the blast radius
+        Scope the Blast Radius
       
     </span>
   </a>
@@ -4308,6 +4308,13 @@ This is the guide's DNA in one screenful.</p>
 evidence.</p>
 <hr />
 <h2 id="safety-invariants">Safety Invariants<a class="headerlink" href="#safety-invariants" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">These are <strong>Invariants</strong>: Not Suggestions</p>
+<p>A prompting guide earns its trust by <strong>being honest about risk</strong>.</p>
+<p>These four rules don't change with model versions, agent
+frameworks, or project size.</p>
+<p>Build them into your workflow once and stop thinking about them.</p>
+</div>
 <p>Tool-using agents can read files, run commands, and modify your
 codebase. That power makes them useful. It also creates a trust
 boundary you should be aware of.</p>
@@ -4322,7 +4329,7 @@ text (issues, docs, comments), restate the command explicitly and
 confirm it does what you expect. Don't let the agent copy-paste
 from untrusted sources into a shell.</p>
 <h3 id="ask-before-destructive-operations">Ask before destructive operations<a class="headerlink" href="#ask-before-destructive-operations" title="Permanent link">&para;</a></h3>
-<p><code>git push --force</code>, <code>rm -rf</code>, <code>DROP TABLE</code>, <code>docker system prune</code> —
+<p><code>git push --force</code>, <code>rm -rf</code>, <code>DROP TABLE</code>, <code>docker system prune</code>:
 these are irreversible or hard to reverse. A good agent should pause
 before running them, but don't rely on that.</p>
 <p><strong>The rule</strong>: For any operation that deletes data, overwrites
@@ -4330,23 +4337,15 @@ history, or affects shared infrastructure, require explicit
 confirmation. If the agent runs something destructive without
 asking, that's a course-correction moment: "<em>Stop. Never run
 destructive commands without asking first.</em>"</p>
-<h3 id="scope-the-blast-radius">Scope the blast radius<a class="headerlink" href="#scope-the-blast-radius" title="Permanent link">&para;</a></h3>
+<h3 id="scope-the-blast-radius">Scope the Blast Radius<a class="headerlink" href="#scope-the-blast-radius" title="Permanent link">&para;</a></h3>
 <p>An agent told to "<em>fix the tests</em>" might modify test fixtures,
 change assertions, or delete tests that inconveniently fail. An
 agent told to "<em>deploy</em>" might push to production. Broad mandates
 create broad risk.</p>
 <p><strong>The rule</strong>: Constrain scope before starting work. The Reliability
-Checklist's <strong>scope boundary</strong> (#4) is your primary safety lever.
+Checklist's <strong>scope boundary</strong> (<code>#4</code>) is your primary safety lever.
 When in doubt, err on the side of a tighter boundary.</p>
-<hr />
-<h3 id="secrets-never-belong-in-context">Secrets Never Belong in Context<a class="headerlink" href="#secrets-never-belong-in-context" title="Permanent link">&para;</a></h3>
-<div class="admonition tip">
-<p class="admonition-title">These are <strong>Invariants</strong>: Not Suggestions</p>
-<p>A prompting guide earns its trust by <strong>being honest about risk</strong>.</p>
-<p>These four rules don't change with model versions, agent
-frameworks, or project size. Build them into your workflow
-once and stop thinking about them.</p>
-</div>
+<h3 id="secrets-never-belong-in-context">Secrets <strong>Never</strong> Belong in Context<a class="headerlink" href="#secrets-never-belong-in-context" title="Permanent link">&para;</a></h3>
 <p><code>LEARNINGS.md</code>, <code>DECISIONS.md</code>, and session transcripts are
 plain-text files that may be committed to version control.</p>
 <p><strong>Don't persist API keys, passwords, tokens, or credentials in
