@@ -445,7 +445,7 @@ and tasks we build later should be viewable here.*"
 
 The second version lets the AI anticipate downstream requirements.
 It will design the calendar's data model to be compatible with
-future features: without you having to spell out every integration
+future features: Without you having to spell out every integration
 point. Motivation turns a one-off task into a *directional* task.
 
 ### State the Deliverable, Not Just Steps
