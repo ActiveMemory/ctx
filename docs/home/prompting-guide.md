@@ -438,14 +438,14 @@ shapes how the AI approaches the work.
 
 Tell the AI *why* you're building something, not just *what*.
 
-Bad: "*Build a calendar view.*"
+**Bad**: "*Build a calendar view.*"
 
-Good: "*Build a calendar view. The motivation is that all notes
+**Good**: "*Build a calendar view. The motivation is that all notes
 and tasks we build later should be viewable here.*"
 
 The second version lets the AI anticipate downstream requirements.
 It will design the calendar's data model to be compatible with
-future features — without you having to spell out every integration
+future features: without you having to spell out every integration
 point. Motivation turns a one-off task into a *directional* task.
 
 ### State the Deliverable, Not Just Steps
