@@ -14,6 +14,8 @@ STRUCTURE RULES (see CONSTITUTION.md):
       ctx skill; needs rename. Renamed to /absorb. #done:2026-02-21
 - [-] Session pattern analysis skill — rejected. Automated pattern capture from sessions risks training the agent to please rather than push back. Existing mechanisms (learnings, hooks, constitution) already capture process preferences explicitly. See LEARNINGS.md. #added:2026-02-22-212143
 
+- [ ] Suppress context checkpoint nudges after wrap-up — marker file approach. Spec: specs/suppress-nudges-after-wrap-up.md #added:2026-02-24-205402
+
 - [ ] Remove Context Monitor section from docs/reference/session-journal.md — references wrong path (./tools/context-watch.sh), ./hack/context-watch.sh is a hacky heuristic, and VERBATIM relay hooks (check-context-size) already serve this purpose #added:2026-02-24-204552
 
 - [ ] Promote CLI to top-level nav group in zensical.toml: Home | Recipes | CLI | Reference | Operations | Security | Blog — CLI gets the split command pages, Reference keeps conceptual docs (skills, journal format, scratchpad, context files) #added:2026-02-24-204210
