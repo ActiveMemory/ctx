@@ -732,7 +732,7 @@ with the right escape valve.
 The solution **isn't** more instructions. It **isn't** harder gates. 
 It **isn't** forcing the agent into a ceremony it will resent and shortcut.
 
-The solution is a single, well-timed nudge with visible accountability:
+The solution is a single, well-timed nudge with **visible accountability**:
 
 **One hop. One moment. One choice the user can see.**
 
