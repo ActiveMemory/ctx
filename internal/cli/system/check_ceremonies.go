@@ -35,15 +35,17 @@ Output: VERBATIM relay (when ceremonies missing), silent otherwise
 Silent when: both ceremonies found in recent sessions`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckCeremonies(cmd)
+			return runCheckCeremonies(cmd, os.Stdin)
 		},
 	}
 }
 
-func runCheckCeremonies(cmd *cobra.Command) error {
+func runCheckCeremonies(cmd *cobra.Command, stdin *os.File) error {
 	if !isInitialized() {
 		return nil
 	}
+
+	input := readInput(stdin)
 
 	tmpDir := secureTempDir()
 	remindedFile := filepath.Join(tmpDir, "ceremony-reminded")
@@ -67,8 +69,8 @@ func runCheckCeremonies(cmd *cobra.Command) error {
 	}
 
 	emitCeremonyNudge(cmd, remember, wrapup)
-	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", "", "")
-	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", "", "")
+	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", input.SessionID, "")
+	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", input.SessionID, "")
 	touchFile(remindedFile)
 	return nil
 }

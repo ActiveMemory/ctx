@@ -114,6 +114,6 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 	)
 
 	printHookContext(cmd, "PreToolUse", msg)
-	_ = notify.Send("relay", "context-load-gate: directed agent to read context files (unconditional checkpoint)", "", msg)
+	_ = notify.Send("relay", "context-load-gate: directed agent to read context files (unconditional checkpoint)", input.SessionID, msg)
 	return nil
 }

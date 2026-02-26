@@ -46,16 +46,17 @@ Output: VERBATIM relay (when thresholds exceeded), silent otherwise
 Silent when: below thresholds, already nudged today, or uninitialized`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckKnowledge(cmd)
+			return runCheckKnowledge(cmd, os.Stdin)
 		},
 	}
 }
 
-func runCheckKnowledge(cmd *cobra.Command) error {
+func runCheckKnowledge(cmd *cobra.Command, stdin *os.File) error {
 	if !isInitialized() {
 		return nil
 	}
 
+	input := readInput(stdin)
 	markerPath := filepath.Join(secureTempDir(), "check-knowledge")
 	if isDailyThrottled(markerPath) {
 		return nil
@@ -137,8 +138,8 @@ func runCheckKnowledge(cmd *cobra.Command) error {
 	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
-	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", "", "")
-	_ = notify.Send("relay", "check-knowledge: Knowledge file growth detected", "", "")
+	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", input.SessionID, "")
+	_ = notify.Send("relay", "check-knowledge: Knowledge file growth detected", input.SessionID, "")
 
 	touchFile(markerPath)
 

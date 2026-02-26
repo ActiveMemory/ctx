@@ -7,6 +7,8 @@
 package system
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -36,6 +38,7 @@ Silent when: .context/ not initialized`,
 			if !isInitialized() {
 				return nil
 			}
+			input := readInput(os.Stdin)
 			msg := "HARD GATE — DO NOT COMMIT without completing ALL of these steps first:" +
 				" (1) lint the ENTIRE project," +
 				" (2) test the ENTIRE project," +
@@ -50,7 +53,7 @@ Silent when: .context/ not initialized`,
 				msg += " [" + line + "]"
 			}
 			printHookContext(cmd, "PreToolUse", msg)
-			_ = notify.Send("relay", "qa-reminder: QA gate reminder emitted", "", "")
+			_ = notify.Send("relay", "qa-reminder: QA gate reminder emitted", input.SessionID, "")
 			return nil
 		},
 	}

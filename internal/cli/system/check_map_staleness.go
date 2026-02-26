@@ -49,7 +49,7 @@ Silent when: map-tracking.json missing or fresh, opted out, no module
 commits, already nudged today, or uninitialized`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckMapStaleness(cmd)
+			return runCheckMapStaleness(cmd, os.Stdin)
 		},
 	}
 }
@@ -60,11 +60,12 @@ type mapTrackingInfo struct {
 	LastRun  string `json:"last_run"`
 }
 
-func runCheckMapStaleness(cmd *cobra.Command) error {
+func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 	if !isInitialized() {
 		return nil
 	}
 
+	input := readInput(stdin)
 	markerPath := filepath.Join(secureTempDir(), "check-map-staleness")
 	if isDailyThrottled(markerPath) {
 		return nil
@@ -117,8 +118,8 @@ func runCheckMapStaleness(cmd *cobra.Command) error {
 	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
-	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", "", "")
-	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", "", "")
+	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", input.SessionID, "")
+	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", input.SessionID, "")
 
 	touchFile(markerPath)
 

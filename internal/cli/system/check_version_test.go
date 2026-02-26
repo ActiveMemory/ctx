@@ -53,7 +53,7 @@ func TestCheckVersion_NotInitialized(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	cmd := newTestCmd()
-	if err := runCheckVersion(cmd); err != nil {
+	if err := runCheckVersion(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -78,7 +78,7 @@ func TestCheckVersion_DailyThrottle(t *testing.T) {
 	touchFile(filepath.Join(tmpDir, "ctx", "version-checked"))
 
 	cmd := newTestCmd()
-	if err := runCheckVersion(cmd); err != nil {
+	if err := runCheckVersion(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -101,7 +101,7 @@ func TestCheckVersion_SilentOnMatch(t *testing.T) {
 	setupContextDir(t)
 
 	cmd := newTestCmd()
-	if err := runCheckVersion(cmd); err != nil {
+	if err := runCheckVersion(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 

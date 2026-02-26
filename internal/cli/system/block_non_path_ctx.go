@@ -95,7 +95,7 @@ func runBlockNonPathCtx(cmd *cobra.Command, stdin *os.File) error {
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		_ = notify.Send("relay", "block-non-path-ctx: Blocked non-PATH ctx invocation", "", "")
+		_ = notify.Send("relay", "block-non-path-ctx: Blocked non-PATH ctx invocation", input.SessionID, "")
 	}
 
 	return nil

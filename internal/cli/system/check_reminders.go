@@ -8,6 +8,7 @@ package system
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -26,15 +27,17 @@ func checkRemindersCmd() *cobra.Command {
 		Short:  "Surface pending reminders at session start",
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckReminders(cmd)
+			return runCheckReminders(cmd, os.Stdin)
 		},
 	}
 }
 
-func runCheckReminders(cmd *cobra.Command) error {
+func runCheckReminders(cmd *cobra.Command, stdin *os.File) error {
 	if !isInitialized() {
 		return nil
 	}
+
+	input := readInput(stdin)
 
 	reminders, err := remind.ReadReminders()
 	if err != nil {
@@ -64,7 +67,7 @@ func runCheckReminders(cmd *cobra.Command) error {
 	cmd.Println("│ Dismiss all: ctx remind dismiss --all")
 	cmd.Println("└──────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), "", "")
+	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), input.SessionID, "")
 
 	return nil
 }

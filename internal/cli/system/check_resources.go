@@ -7,6 +7,8 @@
 package system
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/notify"
@@ -39,12 +41,14 @@ Output: VERBATIM relay (DANGER only), silent otherwise
 Silent when: all resources below DANGER thresholds`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckResources(cmd)
+			return runCheckResources(cmd, os.Stdin)
 		},
 	}
 }
 
-func runCheckResources(cmd *cobra.Command) error {
+func runCheckResources(cmd *cobra.Command, stdin *os.File) error {
+	input := readInput(stdin)
+
 	snap := sysinfo.Collect(".")
 	alerts := sysinfo.Evaluate(snap)
 
@@ -69,8 +73,8 @@ func runCheckResources(cmd *cobra.Command) error {
 	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
-	_ = notify.Send("nudge", "check-resources: System resources critically low", "", "")
-	_ = notify.Send("relay", "check-resources: System resources critically low", "", "")
+	_ = notify.Send("nudge", "check-resources: System resources critically low", input.SessionID, "")
+	_ = notify.Send("relay", "check-resources: System resources critically low", input.SessionID, "")
 
 	return nil
 }

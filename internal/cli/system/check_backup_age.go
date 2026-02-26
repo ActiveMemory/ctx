@@ -46,12 +46,14 @@ Output: VERBATIM relay with warning box, silent otherwise
 Silent when: backup is fresh, or already checked today`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckBackupAge(cmd)
+			return runCheckBackupAge(cmd, os.Stdin)
 		},
 	}
 }
 
-func runCheckBackupAge(cmd *cobra.Command) error {
+func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
+	input := readInput(stdin)
+
 	tmpDir := secureTempDir()
 	throttleFile := filepath.Join(tmpDir, backupThrottleID)
 
@@ -91,8 +93,8 @@ func runCheckBackupAge(cmd *cobra.Command) error {
 	}
 	cmd.Println("└──────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", "check-backup-age: Backup warning", "", "")
-	_ = notify.Send("relay", "check-backup-age: Backup warning", "", "")
+	_ = notify.Send("nudge", "check-backup-age: Backup warning", input.SessionID, "")
+	_ = notify.Send("relay", "check-backup-age: Backup warning", input.SessionID, "")
 
 	touchFile(throttleFile)
 

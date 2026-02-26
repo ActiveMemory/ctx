@@ -100,7 +100,7 @@ func TestCheckBackupAge_DailyThrottle(t *testing.T) {
 	touchFile(throttleFile)
 
 	cmd := newTestCmd()
-	if err := runCheckBackupAge(cmd); err != nil {
+	if err := runCheckBackupAge(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -134,7 +134,7 @@ func TestCheckBackupAge_StaleMarkerEmitsWarning(t *testing.T) {
 	t.Setenv("CTX_BACKUP_SMB_URL", "")
 
 	cmd := newTestCmd()
-	if err := runCheckBackupAge(cmd); err != nil {
+	if err := runCheckBackupAge(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -165,7 +165,7 @@ func TestCheckBackupAge_FreshMarkerSilent(t *testing.T) {
 	t.Setenv("CTX_BACKUP_SMB_URL", "")
 
 	cmd := newTestCmd()
-	if err := runCheckBackupAge(cmd); err != nil {
+	if err := runCheckBackupAge(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -185,7 +185,7 @@ func TestCheckBackupAge_MissingMarkerWarns(t *testing.T) {
 	t.Setenv("CTX_BACKUP_SMB_URL", "")
 
 	cmd := newTestCmd()
-	if err := runCheckBackupAge(cmd); err != nil {
+	if err := runCheckBackupAge(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
