@@ -11,6 +11,8 @@
 | 2026-02-26 | Agent autonomy and separation of concerns (consolidated) |
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-26 | All webhook payloads must include session_id |
+| 2026-02-26 | Context-load-gate v2: auto-injection replaces directive-based compliance |
+| 2026-02-26 | .context/state/ directory for project-scoped runtime state |
 | 2026-02-26 | Use imperative framing for context load gate hooks |
 | 2026-02-24 | Notify events are opt-in, not opt-out |
 | 2026-02-24 | Document worktree limitations rather than reroute paths |
@@ -33,6 +35,32 @@
 | 2026-02-13 | Spec-first planning for non-trivial features |
 | 2026-02-04 | E/A/R classification as the standard for skill evaluation |
 <!-- INDEX:END -->
+
+## [2026-02-26-200000] Context-load-gate v2: auto-injection replaces directive-based compliance
+
+**Status**: Accepted
+
+Soft instructions ("read these files") have a ~75-85% compliance ceiling because "don't apply judgment to this rule" is itself evaluated by judgment. Every instruction passes through the same attention/evaluation pipeline it's trying to override.
+
+The v2 context-load-gate reads context files in the hook itself and injects content directly via `additionalContext`. The agent never chooses whether to comply — the content is already in its context window. This moves enforcement from the reasoning layer (subject to judgment) to the infrastructure layer (not subject to evaluation).
+
+Injection strategy: CONSTITUTION, CONVENTIONS, ARCHITECTURE, AGENT_PLAYBOOK verbatim; DECISIONS, LEARNINGS index-only; TASKS mention-only; GLOSSARY skipped. Total ~7,700 tokens.
+
+See: `specs/context-load-gate-v2.md`, `docs/blog/2026-02-25-the-homework-problem.md`.
+
+---
+
+## [2026-02-26-200001] .context/state/ directory for project-scoped runtime state
+
+**Status**: Accepted
+
+New gitignored directory under `context_dir` resolution for ephemeral project-scoped state. Follows `.context/logs/` precedent — added to `config.GitignoreEntries` and root `.gitignore`.
+
+First use: injection oversize flag written by context-load-gate when injected tokens exceed the configurable `injection_token_warn` threshold (`.ctxrc`, default 15000). The check-context-size VERBATIM hook reads the flag and nudges the user to run `/ctx-consolidate`.
+
+See: `specs/injection-oversize-nudge.md`.
+
+---
 
 ## [2026-02-26-100000] Blog and content publishing architecture (consolidated)
 

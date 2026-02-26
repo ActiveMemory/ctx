@@ -65,6 +65,11 @@ If the AI instead narrates its discovery process ("*Let me check if
 there are files...*"), it has not loaded `CLAUDE.md` or
 `AGENT_PLAYBOOK.md` properly.
 
+For a detailed case study on making agents actually follow this
+protocol — including the failure modes, the timing problem, and the
+hook design that solved it — see
+[The Dog Ate My Homework](../blog/2026-02-25-the-homework-problem.md).
+
 ### "*What's the current state?*"
 
 Prompts reading of `TASKS.md`, recent sessions, and status overview.
@@ -628,11 +633,15 @@ Verify the stated deliverable exists and works.
 ## Why Do These Approaches Work?
 
 The patterns in this guide **aren't invented here**: They are practitioner
-translations of **well-established, peer-reviewed research**, most of which 
-predate the current AI (*hype*) wave. 
+translations of **well-established, peer-reviewed research**, most of which
+predate the current AI (*hype*) wave.
 
-The underlying ideas come from decades of work in machine learning, 
-cognitive science, and numerical optimization.
+The underlying ideas come from decades of work in machine learning,
+cognitive science, and numerical optimization. For a concrete case study
+showing how these principles play out when an agent decides whether to
+follow instructions (*attention competition, optimization toward
+least-resistance paths, and observable compliance as a design goal*) see
+[The Dog Ate My Homework](../blog/2026-02-25-the-homework-problem.md).
 
 **Phased work** ("*Explore → Plan → Implement*") applies
 **chain-of-thought reasoning**: Decomposing a problem into sequential
@@ -718,6 +727,9 @@ They work because language models are, at their core,
 * [The Attention Budget](../blog/2026-02-03-the-attention-budget.md):
   Why your AI forgets what you just told it, and how token budgets shape
   context strategy
+* [The Dog Ate My Homework](../blog/2026-02-25-the-homework-problem.md):
+  A case study in making agents follow instructions — attention timing,
+  delegation decay, and observable compliance as a design goal
 
 ## Contributing
 
