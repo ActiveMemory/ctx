@@ -229,7 +229,7 @@ publicly admits it skipped. There's no comfortable middle ground where
 it reads two files and quietly ignores the rest.
 
 The [VERBATIM relay pattern](2026-02-15-eight-ways-a-hook-can-talk.md)
-does the heavy lifting here" Without the relay requirement, the agent
+does the heavy lifting here: Without the relay requirement, the agent
 would silently rationalize skipping. With it, skipping becomes a
 **visible, auditable decision** that the user can override.
 
@@ -448,7 +448,7 @@ the rationalization simply aren't available.
 
 But mid-session, with a concrete narrow task, the agent has a
 user-visible goal it wants to move toward, and the hook is imposing a
-detour. 
+detour.
 
 My estimate from analyzing the sessions: **15--25% partial
 skip rate** in this scenario.
