@@ -459,7 +459,7 @@ You don't need to eliminate the 15-25%. You need to **see** it when it happens.
 
 The relay block makes skipping a **visible** event, not a silent one. And
 that's enough, because the user can always say "*go back and read
-the files*"/
+the files*"
 
 !!! info "The Math"
     At session start: ~5% skip rate. Low tension, nothing competing.
