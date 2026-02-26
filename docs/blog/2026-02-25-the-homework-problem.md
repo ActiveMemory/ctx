@@ -452,7 +452,7 @@ But mid-session, with a concrete narrow task, the agent has a
 user-visible goal it wants to move toward, and the hook is imposing a
 detour.
 
-My estimate from analyzing the sessions: **15--25% partial
+My estimate from analyzing the sessions: **15-25% partial
 skip rate** in this scenario.
 
 This is where the **compliance canary** earns its place: 
