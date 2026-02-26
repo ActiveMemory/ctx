@@ -41,15 +41,17 @@ Output: VERBATIM relay with reinstall command, silent otherwise
 Silent when: versions match, dev build, or already checked today`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckVersion(cmd)
+			return runCheckVersion(cmd, os.Stdin)
 		},
 	}
 }
 
-func runCheckVersion(cmd *cobra.Command) error {
+func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 	if !isInitialized() {
 		return nil
 	}
+
+	input := readInput(stdin)
 
 	tmpDir := secureTempDir()
 	markerFile := filepath.Join(tmpDir, "version-checked")
@@ -97,13 +99,13 @@ func runCheckVersion(cmd *cobra.Command) error {
 	}
 	cmd.Println("└────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "", "")
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "", "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, "")
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, "")
 
 	touchFile(markerFile)
 
 	// Key age check — piggyback on the daily version check
-	checkKeyAge(cmd)
+	checkKeyAge(cmd, input.SessionID)
 
 	return nil
 }
@@ -111,7 +113,7 @@ func runCheckVersion(cmd *cobra.Command) error {
 // checkKeyAge emits a nudge when the encryption key is older than the
 // configured rotation threshold. Runs at most once per day (shares the
 // daily throttle from the version check's marker file).
-func checkKeyAge(cmd *cobra.Command) {
+func checkKeyAge(cmd *cobra.Command, sessionID string) {
 	config.MigrateKeyFile(rc.ContextDir())
 	keyPath := filepath.Join(rc.ContextDir(), config.FileContextKey)
 	info, err := os.Stat(keyPath)
@@ -137,8 +139,8 @@ func checkKeyAge(cmd *cobra.Command) {
 	}
 	cmd.Println("└──────────────────────────────────────────────────┘")
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "", "")
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "", "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, "")
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, "")
 }
 
 // parseMajorMinor extracts major and minor version numbers from a semver

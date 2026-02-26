@@ -34,15 +34,16 @@ Output: VERBATIM relay with export/enrich commands, silent otherwise
 Silent when: no unexported sessions and no unenriched entries`,
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runCheckJournal(cmd)
+			return runCheckJournal(cmd, os.Stdin)
 		},
 	}
 }
 
-func runCheckJournal(cmd *cobra.Command) error {
+func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 	if !isInitialized() {
 		return nil
 	}
+	input := readInput(stdin)
 	tmpDir := secureTempDir()
 	remindedFile := filepath.Join(tmpDir, "journal-reminded")
 	claudeProjectsDir := filepath.Join(os.Getenv("HOME"), ".claude", "projects")
@@ -101,8 +102,8 @@ func runCheckJournal(cmd *cobra.Command) error {
 	}
 	cmd.Println("└────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "", "")
-	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "", "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, "")
+	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, "")
 
 	touchFile(remindedFile)
 	return nil

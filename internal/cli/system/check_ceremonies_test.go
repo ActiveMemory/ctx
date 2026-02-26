@@ -24,7 +24,7 @@ func TestCheckCeremonies_NotInitialized(t *testing.T) {
 
 	// No .context/ — should be silent
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -53,7 +53,7 @@ func TestCheckCeremonies_DailyThrottle(t *testing.T) {
 	touchFile(filepath.Join(tmpDir, "ctx", "ceremony-reminded"))
 
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -76,7 +76,7 @@ func TestCheckCeremonies_NoJournalDir(t *testing.T) {
 	// No journal directory — should be silent
 
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -101,7 +101,7 @@ func TestCheckCeremonies_BothUsed(t *testing.T) {
 	})
 
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -128,7 +128,7 @@ func TestCheckCeremonies_BothMissing(t *testing.T) {
 	})
 
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -162,7 +162,7 @@ func TestCheckCeremonies_OnlyRememberMissing(t *testing.T) {
 	})
 
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -190,7 +190,7 @@ func TestCheckCeremonies_OnlyWrapUpMissing(t *testing.T) {
 	})
 
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -220,7 +220,7 @@ func TestCheckCeremonies_CeremoniesAcrossFiles(t *testing.T) {
 	})
 
 	cmd := newTestCmd()
-	if err := runCheckCeremonies(cmd); err != nil {
+	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 

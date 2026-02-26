@@ -92,7 +92,7 @@ func runBlockDangerousCommands(cmd *cobra.Command, stdin *os.File) error {
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		_ = notify.Send("relay", "block-dangerous-commands: "+reason, "", "")
+		_ = notify.Send("relay", "block-dangerous-commands: "+reason, input.SessionID, "")
 	}
 
 	return nil

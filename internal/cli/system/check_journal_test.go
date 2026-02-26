@@ -24,7 +24,7 @@ func TestCheckJournal_NoJournalDir(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	cmd := newTestCmd()
-	if err := runCheckJournal(cmd); err != nil {
+	if err := runCheckJournal(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -56,7 +56,7 @@ func TestCheckJournal_DailyThrottle(t *testing.T) {
 	touchFile(filepath.Join(tmpDir, "ctx", "journal-reminded"))
 
 	cmd := newTestCmd()
-	if err := runCheckJournal(cmd); err != nil {
+	if err := runCheckJournal(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -86,7 +86,7 @@ func TestCheckJournal_Unenriched(t *testing.T) {
 	_ = os.MkdirAll(filepath.Join(tmpDir, ".claude", "projects"), 0o750)
 
 	cmd := newTestCmd()
-	if err := runCheckJournal(cmd); err != nil {
+	if err := runCheckJournal(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -128,7 +128,7 @@ func TestCheckJournal_BothStages(t *testing.T) {
 		[]byte(`{"type":"test"}`), 0o600)
 
 	cmd := newTestCmd()
-	if err := runCheckJournal(cmd); err != nil {
+	if err := runCheckJournal(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 

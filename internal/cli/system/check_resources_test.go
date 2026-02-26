@@ -13,7 +13,7 @@ import (
 
 func TestCheckResources_SilentWhenOK(t *testing.T) {
 	cmd := newTestCmd()
-	if err := runCheckResources(cmd); err != nil {
+	if err := runCheckResources(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	out := cmdOutput(cmd)
@@ -29,7 +29,7 @@ func TestCheckResources_OutputFormat(t *testing.T) {
 	// We can't force DANGER conditions in a unit test without mocking
 	// the collector, so we just verify error-free execution.
 	cmd := newTestCmd()
-	if err := runCheckResources(cmd); err != nil {
+	if err := runCheckResources(cmd, createTempStdin(t, `{}`)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	out := cmdOutput(cmd)
