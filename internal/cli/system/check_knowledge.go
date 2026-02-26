@@ -121,25 +121,25 @@ func runCheckKnowledge(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	cmd.Println("IMPORTANT: Relay this knowledge health notice to the user VERBATIM before answering their question.")
-	cmd.Println()
-	cmd.Println("\u250c\u2500 Knowledge File Growth \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+	msg := "IMPORTANT: Relay this knowledge health notice to the user VERBATIM before answering their question.\n\n" +
+		"\u250c\u2500 Knowledge File Growth \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
 	for _, f := range findings {
-		cmd.Println(fmt.Sprintf("\u2502 %s has %d %s (recommended: \u2264%d).", f.file, f.count, f.unit, f.threshold))
+		msg += fmt.Sprintf("\u2502 %s has %d %s (recommended: \u2264%d).\n", f.file, f.count, f.unit, f.threshold)
 	}
-	cmd.Println("\u2502")
-	cmd.Println("\u2502 Large knowledge files dilute agent context. Consider:")
-	cmd.Println("\u2502  \u2022 Review and remove outdated entries")
-	cmd.Println("\u2502  \u2022 Use /ctx-consolidate to merge overlapping entries")
-	cmd.Println("\u2502  \u2022 Use /ctx-drift for semantic drift (stale patterns)")
-	cmd.Println("\u2502  \u2022 Move stale entries to .context/archive/ manually")
+	msg += "\u2502\n" +
+		"\u2502 Large knowledge files dilute agent context. Consider:\n" +
+		"\u2502  \u2022 Review and remove outdated entries\n" +
+		"\u2502  \u2022 Use /ctx-consolidate to merge overlapping entries\n" +
+		"\u2502  \u2022 Use /ctx-drift for semantic drift (stale patterns)\n" +
+		"\u2502  \u2022 Move stale entries to .context/archive/ manually\n"
 	if line := contextDirLine(); line != "" {
-		cmd.Println("\u2502 " + line)
+		msg += "\u2502 " + line + "\n"
 	}
-	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
+	cmd.Println(msg)
 
-	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", input.SessionID, "")
-	_ = notify.Send("relay", "check-knowledge: Knowledge file growth detected", input.SessionID, "")
+	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", input.SessionID, msg)
+	_ = notify.Send("relay", "check-knowledge: Knowledge file growth detected", input.SessionID, msg)
 
 	touchFile(markerPath)
 

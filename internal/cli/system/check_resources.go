@@ -56,25 +56,25 @@ func runCheckResources(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	cmd.Println("IMPORTANT: Relay this resource warning to the user VERBATIM.")
-	cmd.Println()
-	cmd.Println("\u250c\u2500 Resource Alert \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+	msg := "IMPORTANT: Relay this resource warning to the user VERBATIM.\n\n" +
+		"\u250c\u2500 Resource Alert \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
 	for _, a := range alerts {
 		if a.Severity == sysinfo.SeverityDanger {
-			cmd.Println("\u2502 \u2716 " + a.Message)
+			msg += "\u2502 \u2716 " + a.Message + "\n"
 		}
 	}
-	cmd.Println("\u2502")
-	cmd.Println("\u2502 System resources are critically low.")
-	cmd.Println("\u2502 Persist unsaved context NOW with /ctx-wrap-up")
-	cmd.Println("\u2502 and consider ending this session.")
+	msg += "\u2502\n" +
+		"\u2502 System resources are critically low.\n" +
+		"\u2502 Persist unsaved context NOW with /ctx-wrap-up\n" +
+		"\u2502 and consider ending this session.\n"
 	if line := contextDirLine(); line != "" {
-		cmd.Println("\u2502 " + line)
+		msg += "\u2502 " + line + "\n"
 	}
-	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
+	cmd.Println(msg)
 
-	_ = notify.Send("nudge", "check-resources: System resources critically low", input.SessionID, "")
-	_ = notify.Send("relay", "check-resources: System resources critically low", input.SessionID, "")
+	_ = notify.Send("nudge", "check-resources: System resources critically low", input.SessionID, msg)
+	_ = notify.Send("relay", "check-resources: System resources critically low", input.SessionID, msg)
 
 	return nil
 }

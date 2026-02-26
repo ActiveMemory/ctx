@@ -172,23 +172,23 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if shouldNudge {
-		cmd.Println("IMPORTANT: Relay this persistence checkpoint to the user VERBATIM before answering their question.")
-		cmd.Println()
-		cmd.Println(fmt.Sprintf("┌─ Persistence Checkpoint (prompt #%d) ───────────", state.Count))
-		cmd.Println(fmt.Sprintf("│ No context files updated in %d+ prompts.", sinceNudge))
-		cmd.Println("│ Have you discovered learnings, made decisions,")
-		cmd.Println("│ established conventions, or completed tasks")
-		cmd.Println("│ worth persisting?")
-		cmd.Println("│")
-		cmd.Println("│ Run /ctx-wrap-up to capture session context.")
+		msg := fmt.Sprintf("IMPORTANT: Relay this persistence checkpoint to the user VERBATIM before answering their question.\n\n"+
+			"┌─ Persistence Checkpoint (prompt #%d) ───────────\n"+
+			"│ No context files updated in %d+ prompts.\n"+
+			"│ Have you discovered learnings, made decisions,\n"+
+			"│ established conventions, or completed tasks\n"+
+			"│ worth persisting?\n"+
+			"│\n"+
+			"│ Run /ctx-wrap-up to capture session context.\n", state.Count, sinceNudge)
 		if line := contextDirLine(); line != "" {
-			cmd.Println("│ " + line)
+			msg += "│ " + line + "\n"
 		}
-		cmd.Println("└──────────────────────────────────────────────────")
+		msg += "└──────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
+		cmd.Println(msg)
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", state.Count, sinceNudge))
-		_ = notify.Send("nudge", fmt.Sprintf("check-persistence: Persistence Checkpoint at prompt #%d", state.Count), sessionID, "")
-		_ = notify.Send("relay", fmt.Sprintf("check-persistence: No context updated in %d+ prompts", sinceNudge), sessionID, "")
+		_ = notify.Send("nudge", fmt.Sprintf("check-persistence: Persistence Checkpoint at prompt #%d", state.Count), sessionID, msg)
+		_ = notify.Send("relay", fmt.Sprintf("check-persistence: No context updated in %d+ prompts", sinceNudge), sessionID, msg)
 		state.LastNudge = state.Count
 	} else {
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silent since_nudge=%d", state.Count, sinceNudge))

@@ -68,9 +68,9 @@ func runCheckCeremonies(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	emitCeremonyNudge(cmd, remember, wrapup)
-	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", input.SessionID, "")
-	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", input.SessionID, "")
+	msg := emitCeremonyNudge(cmd, remember, wrapup)
+	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", input.SessionID, msg)
+	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", input.SessionID, msg)
 	touchFile(remindedFile)
 	return nil
 }
@@ -128,52 +128,54 @@ func scanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 	return
 }
 
-func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) {
-	cmd.Println("IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.")
-	cmd.Println()
+func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) string {
+	msg := "IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.\n\n"
 
 	dirFooter := contextDirLine()
 
 	switch {
 	case !remember && !wrapup:
-		cmd.Println("┌─ Session Ceremonies ──────────────────────────────")
-		cmd.Println("│ Your last 3 sessions didn't use /ctx-remember or")
-		cmd.Println("│ /ctx-wrap-up.")
-		cmd.Println("│")
-		cmd.Println("│ Start sessions with:  /ctx-remember")
-		cmd.Println("│   → Loads context, shows active tasks, picks up")
-		cmd.Println("│     where you left off. No re-explaining needed.")
-		cmd.Println("│")
-		cmd.Println("│ End sessions with:    /ctx-wrap-up")
-		cmd.Println("│   → Captures learnings and decisions so the next")
-		cmd.Println("│     session starts informed, not from scratch.")
-		cmd.Println("│")
-		cmd.Println("│ These take seconds and save minutes.")
+		msg += "┌─ Session Ceremonies ──────────────────────────────\n" +
+			"│ Your last 3 sessions didn't use /ctx-remember or\n" +
+			"│ /ctx-wrap-up.\n" +
+			"│\n" +
+			"│ Start sessions with:  /ctx-remember\n" +
+			"│   → Loads context, shows active tasks, picks up\n" +
+			"│     where you left off. No re-explaining needed.\n" +
+			"│\n" +
+			"│ End sessions with:    /ctx-wrap-up\n" +
+			"│   → Captures learnings and decisions so the next\n" +
+			"│     session starts informed, not from scratch.\n" +
+			"│\n" +
+			"│ These take seconds and save minutes.\n"
 		if dirFooter != "" {
-			cmd.Println("│ " + dirFooter)
+			msg += "│ " + dirFooter + "\n"
 		}
-		cmd.Println("└───────────────────────────────────────────────────")
+		msg += "└───────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
 
 	case !remember:
-		cmd.Println("┌─ Session Start ───────────────────────────────────")
-		cmd.Println("│ Try starting this session with /ctx-remember")
-		cmd.Println("│")
-		cmd.Println("│ It loads your context, shows active tasks, and")
-		cmd.Println("│ picks up where you left off — no re-explaining.")
+		msg += "┌─ Session Start ───────────────────────────────────\n" +
+			"│ Try starting this session with /ctx-remember\n" +
+			"│\n" +
+			"│ It loads your context, shows active tasks, and\n" +
+			"│ picks up where you left off — no re-explaining.\n"
 		if dirFooter != "" {
-			cmd.Println("│ " + dirFooter)
+			msg += "│ " + dirFooter + "\n"
 		}
-		cmd.Println("└───────────────────────────────────────────────────")
+		msg += "└───────────────────────────────────────────────────"
 
 	case !wrapup:
-		cmd.Println("┌─ Session End ─────────────────────────────────────")
-		cmd.Println("│ Your last 3 sessions didn't end with /ctx-wrap-up")
-		cmd.Println("│")
-		cmd.Println("│ It captures learnings and decisions so the next")
-		cmd.Println("│ session starts informed, not from scratch.")
+		msg += "┌─ Session End ─────────────────────────────────────\n" +
+			"│ Your last 3 sessions didn't end with /ctx-wrap-up\n" +
+			"│\n" +
+			"│ It captures learnings and decisions so the next\n" +
+			"│ session starts informed, not from scratch.\n"
 		if dirFooter != "" {
-			cmd.Println("│ " + dirFooter)
+			msg += "│ " + dirFooter + "\n"
 		}
-		cmd.Println("└───────────────────────────────────────────────────")
+		msg += "└───────────────────────────────────────────────────"
 	}
+
+	cmd.Println(msg)
+	return msg
 }

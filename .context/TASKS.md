@@ -205,7 +205,7 @@ Spec: `specs/ctx-map.md`
 
 - [ ] Human: Ensure the new journal creation /ctx-journal-normalize and
   /ctx-journal-enrich-all works.
-- [ ] Human: Ensure the new ctx files consolidation /ctx-consolidate works.
+- [x] Human: Ensure the new ctx files consolidation /ctx-consolidate works. *(validated 2026-02-26: 76→38 learnings, 46→30 decisions, archives written)*
 
 - [ ] Recipes section needs human review. For example, certain workflows can
   be autonomously done by asking AI "can you record our learnings?" but

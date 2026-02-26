@@ -79,20 +79,20 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if shouldCheck {
-		cmd.Println("IMPORTANT: Relay this context checkpoint to the user VERBATIM before answering their question.")
-		cmd.Println()
-		cmd.Println(fmt.Sprintf("┌─ Context Checkpoint (prompt #%d) ────────────────", count))
-		cmd.Println("│ This session is getting deep. Consider wrapping up")
-		cmd.Println("│ soon. If there are unsaved learnings, decisions, or")
-		cmd.Println("│ conventions, now is a good time to persist them.")
+		msg := fmt.Sprintf("IMPORTANT: Relay this context checkpoint to the user VERBATIM before answering their question.\n\n"+
+			"┌─ Context Checkpoint (prompt #%d) ────────────────\n"+
+			"│ This session is getting deep. Consider wrapping up\n"+
+			"│ soon. If there are unsaved learnings, decisions, or\n"+
+			"│ conventions, now is a good time to persist them.\n", count)
 		if line := contextDirLine(); line != "" {
-			cmd.Println("│ " + line)
+			msg += "│ " + line + "\n"
 		}
-		cmd.Println("└──────────────────────────────────────────────────")
+		msg += "└──────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
+		cmd.Println(msg)
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d CHECKPOINT", count))
-		_ = notify.Send("nudge", fmt.Sprintf("check-context-size: Context Checkpoint at prompt #%d", count), sessionID, "")
-		_ = notify.Send("relay", fmt.Sprintf("check-context-size: Context Checkpoint at prompt #%d", count), sessionID, "")
+		_ = notify.Send("nudge", fmt.Sprintf("check-context-size: Context Checkpoint at prompt #%d", count), sessionID, msg)
+		_ = notify.Send("relay", fmt.Sprintf("check-context-size: Context Checkpoint at prompt #%d", count), sessionID, msg)
 	} else {
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silent", count))
 	}

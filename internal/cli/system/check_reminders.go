@@ -56,18 +56,16 @@ func runCheckReminders(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	cmd.Println("IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.")
-	cmd.Println()
-	cmd.Println("┌─ Reminders ──────────────────────────────────────")
+	msg := "IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.\n\n" +
+		"┌─ Reminders ──────────────────────────────────────\n"
 	for _, r := range due {
-		cmd.Printf("│  [%d] %s\n", r.ID, r.Message)
+		msg += fmt.Sprintf("│  [%d] %s\n", r.ID, r.Message)
 	}
-	cmd.Println("│")
-	cmd.Println("│ Dismiss: ctx remind dismiss <id>")
-	cmd.Println("│ Dismiss all: ctx remind dismiss --all")
-	cmd.Println("└──────────────────────────────────────────────────")
+	msg += "│\n│ Dismiss: ctx remind dismiss <id>\n│ Dismiss all: ctx remind dismiss --all\n" +
+		"└──────────────────────────────────────────────────"
+	cmd.Println(msg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), input.SessionID, "")
+	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), input.SessionID, msg)
 
 	return nil
 }

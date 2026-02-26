@@ -73,37 +73,30 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	cmd.Println("IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.")
-	cmd.Println()
-	cmd.Println("┌─ Journal Reminder ─────────────────────────────")
+	msg := "IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.\n\n" +
+		"┌─ Journal Reminder ─────────────────────────────\n"
 
 	switch {
 	case unexported > 0 && unenriched > 0:
-		cmd.Println(fmt.Sprintf("│ You have %d new session(s) not yet exported.", unexported))
-		cmd.Println(fmt.Sprintf("│ %d existing entries need enrichment.", unenriched))
-		cmd.Println("│")
-		cmd.Println("│ Export and enrich:")
-		cmd.Println("│   ctx recall export --all")
-		cmd.Println("│   /ctx-journal-enrich-all")
+		msg += fmt.Sprintf("│ You have %d new session(s) not yet exported.\n", unexported)
+		msg += fmt.Sprintf("│ %d existing entries need enrichment.\n", unenriched)
+		msg += "│\n│ Export and enrich:\n│   ctx recall export --all\n│   /ctx-journal-enrich-all\n"
 	case unexported > 0:
-		cmd.Println(fmt.Sprintf("│ You have %d new session(s) not yet exported.", unexported))
-		cmd.Println("│")
-		cmd.Println("│ Export:")
-		cmd.Println("│   ctx recall export --all")
+		msg += fmt.Sprintf("│ You have %d new session(s) not yet exported.\n", unexported)
+		msg += "│\n│ Export:\n│   ctx recall export --all\n"
 	default:
-		cmd.Println(fmt.Sprintf("│ %d journal entries need enrichment.", unenriched))
-		cmd.Println("│")
-		cmd.Println("│ Enrich:")
-		cmd.Println("│   /ctx-journal-enrich-all")
+		msg += fmt.Sprintf("│ %d journal entries need enrichment.\n", unenriched)
+		msg += "│\n│ Enrich:\n│   /ctx-journal-enrich-all\n"
 	}
 
 	if line := contextDirLine(); line != "" {
-		cmd.Println("│ " + line)
+		msg += "│ " + line + "\n"
 	}
-	cmd.Println("└────────────────────────────────────────────────")
+	msg += "└────────────────────────────────────────────────"
+	cmd.Println(msg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, "")
-	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, msg)
+	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, msg)
 
 	touchFile(remindedFile)
 	return nil

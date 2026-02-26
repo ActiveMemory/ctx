@@ -105,21 +105,21 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 
 	// Emit VERBATIM nudge
 	dateStr := lastRun.Format("2006-01-02")
-	cmd.Println("IMPORTANT: Relay this architecture map notice to the user VERBATIM before answering their question.")
-	cmd.Println()
-	cmd.Println("\u250c\u2500 Architecture Map Stale \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
-	cmd.Println(fmt.Sprintf("\u2502 ARCHITECTURE.md hasn't been refreshed since %s", dateStr))
-	cmd.Println(fmt.Sprintf("\u2502 and there are commits touching %d modules.", moduleCommits))
-	cmd.Println("\u2502 /ctx-map keeps architecture docs drift-free.")
-	cmd.Println("\u2502")
-	cmd.Println("\u2502 Want me to run /ctx-map to refresh?")
+	msg := fmt.Sprintf("IMPORTANT: Relay this architecture map notice to the user VERBATIM before answering their question.\n\n"+
+		"\u250c\u2500 Architecture Map Stale \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"+
+		"\u2502 ARCHITECTURE.md hasn't been refreshed since %s\n"+
+		"\u2502 and there are commits touching %d modules.\n"+
+		"\u2502 /ctx-map keeps architecture docs drift-free.\n"+
+		"\u2502\n"+
+		"\u2502 Want me to run /ctx-map to refresh?\n", dateStr, moduleCommits)
 	if line := contextDirLine(); line != "" {
-		cmd.Println("\u2502 " + line)
+		msg += "\u2502 " + line + "\n"
 	}
-	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
+	cmd.Println(msg)
 
-	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", input.SessionID, "")
-	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", input.SessionID, "")
+	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", input.SessionID, msg)
+	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", input.SessionID, msg)
 
 	touchFile(markerPath)
 

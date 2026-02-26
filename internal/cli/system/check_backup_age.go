@@ -82,19 +82,19 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Emit VERBATIM relay
-	cmd.Println("IMPORTANT: Relay this backup warning to the user VERBATIM before answering their question.")
-	cmd.Println()
-	cmd.Println("┌─ Backup Warning ──────────────────────────────────")
+	msg := "IMPORTANT: Relay this backup warning to the user VERBATIM before answering their question.\n\n" +
+		"┌─ Backup Warning ──────────────────────────────────\n"
 	for _, w := range warnings {
-		cmd.Println("│ " + w)
+		msg += "│ " + w + "\n"
 	}
 	if line := contextDirLine(); line != "" {
-		cmd.Println("│ " + line)
+		msg += "│ " + line + "\n"
 	}
-	cmd.Println("└──────────────────────────────────────────────────")
+	msg += "└──────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
+	cmd.Println(msg)
 
-	_ = notify.Send("nudge", "check-backup-age: Backup warning", input.SessionID, "")
-	_ = notify.Send("relay", "check-backup-age: Backup warning", input.SessionID, "")
+	_ = notify.Send("nudge", "check-backup-age: Backup warning", input.SessionID, msg)
+	_ = notify.Send("relay", "check-backup-age: Backup warning", input.SessionID, msg)
 
 	touchFile(throttleFile)
 

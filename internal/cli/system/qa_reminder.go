@@ -53,7 +53,7 @@ Silent when: .context/ not initialized`,
 				msg += " [" + line + "]"
 			}
 			printHookContext(cmd, "PreToolUse", msg)
-			_ = notify.Send("relay", "qa-reminder: QA gate reminder emitted", input.SessionID, "")
+			_ = notify.Send("relay", "qa-reminder: QA gate reminder emitted", input.SessionID, msg)
 			return nil
 		},
 	}

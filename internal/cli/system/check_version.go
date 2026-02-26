@@ -87,20 +87,20 @@ func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Version mismatch — emit warning
-	cmd.Println("IMPORTANT: Relay this version warning to the user VERBATIM before answering their question.")
-	cmd.Println()
-	cmd.Println("┌─ Version Mismatch ─────────────────────────────")
-	cmd.Println(fmt.Sprintf("│ Your ctx binary is v%s but the plugin expects v%s.", binaryVer, pluginVer))
-	cmd.Println("│")
-	cmd.Println("│ Reinstall the binary to get the best out of ctx:")
-	cmd.Println("│   go install github.com/ActiveMemory/ctx/cmd/ctx@latest")
+	msg := fmt.Sprintf("IMPORTANT: Relay this version warning to the user VERBATIM before answering their question.\n\n"+
+		"┌─ Version Mismatch ─────────────────────────────\n"+
+		"│ Your ctx binary is v%s but the plugin expects v%s.\n"+
+		"│\n"+
+		"│ Reinstall the binary to get the best out of ctx:\n"+
+		"│   go install github.com/ActiveMemory/ctx/cmd/ctx@latest\n", binaryVer, pluginVer)
 	if line := contextDirLine(); line != "" {
-		cmd.Println("│ " + line)
+		msg += "│ " + line + "\n"
 	}
-	cmd.Println("└────────────────────────────────────────────────")
+	msg += "└────────────────────────────────────────────────"
+	cmd.Println(msg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, "")
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, msg)
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, msg)
 
 	touchFile(markerFile)
 
@@ -128,19 +128,18 @@ func checkKeyAge(cmd *cobra.Command, sessionID string) {
 		return
 	}
 
-	cmd.Println()
-	cmd.Println("IMPORTANT: Relay this security reminder to the user VERBATIM.")
-	cmd.Println()
-	cmd.Println("┌─ Key Rotation ──────────────────────────────────┐")
-	cmd.Println(fmt.Sprintf("│ Your encryption key is %d days old.                 ", ageDays))
-	cmd.Println("│ Consider rotating: ctx pad rotate-key                │")
+	keyMsg := fmt.Sprintf("\nIMPORTANT: Relay this security reminder to the user VERBATIM.\n\n"+
+		"┌─ Key Rotation ──────────────────────────────────┐\n"+
+		"│ Your encryption key is %d days old.                 \n"+
+		"│ Consider rotating: ctx pad rotate-key                │\n", ageDays)
 	if line := contextDirLine(); line != "" {
-		cmd.Println("│ " + line)
+		keyMsg += "│ " + line + "\n"
 	}
-	cmd.Println("└──────────────────────────────────────────────────┘")
+	keyMsg += "└──────────────────────────────────────────────────┘"
+	cmd.Println(keyMsg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, "")
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, keyMsg)
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, keyMsg)
 }
 
 // parseMajorMinor extracts major and minor version numbers from a semver
