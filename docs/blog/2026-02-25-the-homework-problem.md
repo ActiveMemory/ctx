@@ -779,7 +779,7 @@ This paper (*the medium is a blog; yet, the methodology disagrees*) uses
 agents behave under competing demands.
 
 The phrase *"agents optimize via gradient descent in attention space"* is a
-synthesis, not a direct quote from a single paper.
+**synthesis**, not a direct quote from a single paper.
 
 It connects three well-studied ideas:
 
