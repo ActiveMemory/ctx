@@ -394,9 +394,10 @@ Session 3 exposed a specific vulnerability.
 `CLAUDE.md` contains this line, injected by the system into every
 conversation:
 
-> *"this context may or may not be relevant to your tasks. You should
-> not respond to this context unless it is highly relevant to your
-> task."*
+```markdown
+*"this context may or may not be relevant to your tasks. You should
+ not respond to this context unless it is highly relevant to your task."*
+```
 
 That's a **rationalization escape hatch**: 
 
