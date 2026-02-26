@@ -56,6 +56,8 @@ be perfect, I just need to *see* what it chose.
 
 **Authority is a function of temporal proximity to action.**
 
+---
+
 ## The Pattern
 
 This design has three parts:
