@@ -3607,6 +3607,8 @@ your working tree — no reinstall needed after edits:</p>
 </span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>└── .context/           # ctx&#39;s own context (dogfooding)
 </span></code></pre></div>
 <h3 id="skills-two-directories-one-rule">Skills: Two Directories, One Rule<a class="headerlink" href="#skills-two-directories-one-rule" title="Permanent link">&para;</a></h3>
+<!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
+
 <table>
 <thead>
 <tr>
@@ -3617,15 +3619,17 @@ your working tree — no reinstall needed after edits:</p>
 </thead>
 <tbody>
 <tr>
-<td></td>
-<td></td>
-<td></td>
+<td><code>internal/assets/claude/skills/</code></td>
+<td>The 29 <code>ctx-*</code> skills that ship with the plugin</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.claude/skills/</code></td>
+<td>Dev-only skills (release, QA, backup, etc.)</td>
+<td>No</td>
 </tr>
 </tbody>
 </table>
-<!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
-<p>| <code>internal/assets/claude/skills/</code> | The 29 <code>ctx-*</code> skills that ship with the plugin | Yes                   |
-| <code>.claude/skills/</code>                | Dev-only skills (release, QA, backup, etc.)     | No                    |</p>
 <p><strong><code>internal/assets/claude/skills/</code></strong> is the single source of truth for
 user-facing skills. If you are adding or modifying a <code>ctx-*</code> skill,
 edit it there.</p>

@@ -636,7 +636,9 @@ other system reminders.
 instructions too: More instructions means less focus on each one.
 
 **A single clear line at the moment of action beats a paragraph of
-context at session start**.
+context at session start**. The [Prompting Guide](../home/prompting-guide.md)
+applies this insight directly: Scope constraints, verification commands,
+and the reliability checklist are all **one-hop**, moment-of-action patterns.
 
 ### 2. Delegation chains decay
 
@@ -769,6 +771,11 @@ what else can you record in them that makes the *next* session smarter?
 
 That thread continues in
 [Context as Infrastructure](2026-02-17-context-as-infrastructure.md).
+
+The day-to-day application of these principles (*scope constraints,
+phased work, verification commands, and the prompts that reliably
+trigger the right agent behavior*)lives in the
+[Prompting Guide](../home/prompting-guide.md).
 
 ---
 

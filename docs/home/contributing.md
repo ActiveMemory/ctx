@@ -115,9 +115,10 @@ ctx/
 
 ### Skills: Two Directories, One Rule
 
+<!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
+
 | Directory                        | What lives here                                 | Distributed to users? |
 |----------------------------------|-------------------------------------------------|-----------------------|
-<!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
 | `internal/assets/claude/skills/` | The 29 `ctx-*` skills that ship with the plugin | Yes                   |
 | `.claude/skills/`                | Dev-only skills (release, QA, backup, etc.)     | No                    |
 

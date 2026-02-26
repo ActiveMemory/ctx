@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-26 | Soft instructions cannot achieve deterministic compliance — compliance paradox |
+| 2026-02-26 | Sunk cost leverage inverts rationalization path for context loading |
 | 2026-02-26 | Webhook silence after ctxrc profile swap is the most common notify debugging red herring |
 | 2026-02-26 | Documentation drift and auditing (consolidated) |
 | 2026-02-26 | ctx init and CLAUDE.md behavior (consolidated) |
@@ -43,6 +45,26 @@
 | 2026-01-21 | One Templates Directory, Not Two |
 | 2026-01-20 | ctx and Ralph Loop Are Separate Systems |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-26-200000] Soft instructions cannot achieve deterministic compliance — compliance paradox
+
+**Context**: Context-load-gate v1 told the agent to read context files. The agent evaluated that instruction and rationalized skipping it — "don't apply judgment to this rule" is itself evaluated by judgment. Compliance ceiling: ~85% at session start, ~75% mid-session.
+
+**Lesson**: Every soft instruction passes through the same attention/evaluation pipeline. No amount of imperative framing ("STOP", "MANDATORY", "Do not assess relevance") solves this because the instruction is processed by the same mechanism it's trying to override. Only infrastructure-level enforcement (content injection via `additionalContext`, or exit code 2 hard gates) operates outside the reasoning layer.
+
+**Application**: When 100% compliance is required, don't instruct — inject. Use `additionalContext` for content that must be present, exit code 2 for actions that must be blocked. Reserve soft instructions for guidance where ~80% compliance is acceptable.
+
+---
+
+## [2026-02-26-200001] Sunk cost leverage inverts rationalization path for context loading
+
+**Context**: When designing the v2 injection strategy, we considered whether to inject DECISIONS/LEARNINGS indexes or skip them entirely.
+
+**Lesson**: Once ~7k tokens of core context are auto-injected (fait accompli), the agent's rationalization path inverts. Instead of "skip to save effort" (v1), the calculus becomes "I already have 80% of the context, the marginal cost of reading one more entry is trivial." This makes index-only injection effective — the agent sees titles, and the sunk cost makes on-demand reads near-certain.
+
+**Application**: When designing multi-file context loading, front-load the highest-value content as injection (no compliance step), then use the sunk cost to motivate demand-loaded reads for the remainder.
 
 ---
 

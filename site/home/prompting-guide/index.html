@@ -4185,6 +4185,10 @@ context (<em>session names, task counts, decisions</em>), not vague summaries.</
 <p>If the AI instead narrates its discovery process ("<em>Let me check if
 there are files...</em>"), it has not loaded <code>CLAUDE.md</code> or
 <code>AGENT_PLAYBOOK.md</code> properly.</p>
+<p>For a detailed case study on making agents actually follow this
+protocol — including the failure modes, the timing problem, and the
+hook design that solved it — see
+<a href="../../blog/2026-02-25-the-homework-problem/">The Dog Ate My Homework</a>.</p>
 <h3 id="whats-the-current-state">"<em>What's the current state?</em>"<a class="headerlink" href="#whats-the-current-state" title="Permanent link">&para;</a></h3>
 <p>Prompts reading of <code>TASKS.md</code>, recent sessions, and status overview.</p>
 <p>Use this when <strong>resuming work</strong> after a break.</p>
@@ -4768,10 +4772,14 @@ Verify the stated deliverable exists and works.</p>
 <hr />
 <h2 id="why-do-these-approaches-work">Why Do These Approaches Work?<a class="headerlink" href="#why-do-these-approaches-work" title="Permanent link">&para;</a></h2>
 <p>The patterns in this guide <strong>aren't invented here</strong>: They are practitioner
-translations of <strong>well-established, peer-reviewed research</strong>, most of which 
-predate the current AI (<em>hype</em>) wave. </p>
-<p>The underlying ideas come from decades of work in machine learning, 
-cognitive science, and numerical optimization.</p>
+translations of <strong>well-established, peer-reviewed research</strong>, most of which
+predate the current AI (<em>hype</em>) wave.</p>
+<p>The underlying ideas come from decades of work in machine learning,
+cognitive science, and numerical optimization. For a concrete case study
+showing how these principles play out when an agent decides whether to
+follow instructions (<em>attention competition, optimization toward
+least-resistance paths, and observable compliance as a design goal</em>) see
+<a href="../../blog/2026-02-25-the-homework-problem/">The Dog Ate My Homework</a>.</p>
 <p><strong>Phased work</strong> ("<em>Explore → Plan → Implement</em>") applies
 <strong>chain-of-thought reasoning</strong>: Decomposing a problem into sequential
 steps before acting. Forcing intermediate reasoning steps measurably
@@ -4845,6 +4853,9 @@ updating weights. This is exactly what <code>LEARNINGS.md</code> and
 <li><a href="../../blog/2026-02-03-the-attention-budget/">The Attention Budget</a>:
   Why your AI forgets what you just told it, and how token budgets shape
   context strategy</li>
+<li><a href="../../blog/2026-02-25-the-homework-problem/">The Dog Ate My Homework</a>:
+  A case study in making agents follow instructions — attention timing,
+  delegation decay, and observable compliance as a design goal</li>
 </ul>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
 <p>Found a prompt that works well?

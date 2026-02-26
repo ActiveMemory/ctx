@@ -15,48 +15,47 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // contextLoadGateCmd returns the "ctx system context-load-gate" command.
 //
-// Emits a one-shot directive on the first tool use of a session, telling the
-// agent to read context files before proceeding. Uses PreToolUse hook timing
-// so the directive arrives at the moment of action — not before (when it
-// competes with the user's question) and not after (when the agent is already
-// deep in task work).
+// Auto-injects project context into the agent's context window on the first
+// tool use of a session. Uses PreToolUse hook timing so the content arrives
+// at the moment of action — when the context window is fresh and attention
+// is highest.
 //
-// Design rationale: the directive lists file paths directly instead of
-// delegating to `ctx system bootstrap`. Experiments showed that delegation
-// chains ("run X and follow its output") lose authority at each link — the
-// agent runs the command but skips the follow-up steps. A direct file list
-// is a single-hop instruction with no authority decay.
+// Design rationale (v2): instead of telling the agent to read files (which
+// the agent can evaluate and skip), the hook reads the files itself and
+// injects the content directly via additionalContext. The agent never
+// chooses whether to comply — the content is already present.
 //
-// The message uses imperative framing ("STOP. You must read these files")
-// because experiments showed that advisory framing ("Read your context files
-// before proceeding") invites the agent to assess relevance and skip files
-// it deems unnecessary — defeating the gate's purpose.
+// This moves enforcement from the reasoning layer (soft instruction, subject
+// to judgment) to the infrastructure layer (content injection, not subject
+// to evaluation). See specs/context-load-gate-v2.md.
 //
-// Compliance checkpoint: the agent must ALWAYS output a "Context Loaded"
-// block with "Read" and "Skipped" fields. This is unconditional — there is
-// no separate skip path. The fill-in-the-blank template is lower friction
-// than evaluating a conditional, so models are much more likely to complete
-// it. Observable evidence: block present (compliant) or absent (single
-// failure mode, addressable via CONSTITUTION.md).
+// Injection strategy per file (follows config.FileReadOrder):
+//   - CONSTITUTION, CONVENTIONS, ARCHITECTURE, AGENT_PLAYBOOK: verbatim
+//   - DECISIONS, LEARNINGS: index table only (INDEX:START to INDEX:END)
+//   - TASKS: one-liner mention in footer (read on demand)
+//   - GLOSSARY: skipped (corpus covers terminology)
 //
-// GLOSSARY.md is excluded from the gate — it's reference material for
-// lookup, not context that must be loaded at session start.
+// Webhook payloads contain metadata only (file count, token estimate),
+// never file content — to avoid logging sensitive project context in
+// external systems.
 func contextLoadGateCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "context-load-gate",
-		Short: "Emit context-load directive on first tool use",
-		Long: `Emits a one-shot directive telling the agent to read context files.
+		Short: "Auto-inject project context on first tool use",
+		Long: `Auto-injects project context into the agent's context window.
 Fires on the first tool use per session via PreToolUse hook. Subsequent
 tool calls in the same session are silent (tracked by session marker file).
 
-Lists file paths directly — no delegation to bootstrap command.
-See specs/context-load-gate.md for design rationale.
+Reads context files directly and injects content — no delegation to
+bootstrap command, no agent compliance required.
+See specs/context-load-gate-v2.md for design rationale.
 
 Hook event: PreToolUse (.*)
 Output: JSON HookResponse (additionalContext) on first tool use, silent otherwise
@@ -90,30 +89,80 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 	touchFile(marker)
 
 	dir := rc.ContextDir()
-	var files []string
+	var content strings.Builder
+	var totalTokens int
+	var filesLoaded int
+
+	content.WriteString(
+		"PROJECT CONTEXT (auto-loaded by system hook" +
+			" — already in your context window)\n" +
+			strings.Repeat("=", 80) + "\n\n")
+
 	for _, f := range config.FileReadOrder {
 		if f == config.FileGlossary {
-			continue // reference material, not required at load time
+			continue
 		}
-		files = append(files, filepath.Join(dir, f))
+
+		path := filepath.Join(dir, f)
+		data, readErr := os.ReadFile(path) //#nosec G304 — path is within .context/
+		if readErr != nil {
+			continue // file missing — skip gracefully
+		}
+
+		switch f {
+		case config.FileTask:
+			// One-liner mention in footer, don't inject content
+			continue
+
+		case config.FileDecision, config.FileLearning:
+			idx := extractIndex(string(data))
+			if idx == "" {
+				idx = "(no index entries)"
+			}
+			content.WriteString(fmt.Sprintf(
+				"--- %s (index — read full entries by date "+
+					"when relevant) ---\n%s\n\n", f, idx))
+			totalTokens += context.EstimateTokensString(idx)
+			filesLoaded++
+
+		default:
+			content.WriteString(fmt.Sprintf(
+				"--- %s ---\n%s\n\n", f, string(data)))
+			totalTokens += context.EstimateTokens(data)
+			filesLoaded++
+		}
 	}
-	fileList := strings.Join(files, ", ")
 
-	msg := fmt.Sprintf(
-		"STOP. You must read these files in order before proceeding:\n\n"+
-			"%s\n\n"+
-			"Do not assess relevance. Do not skip. Read all of them.\n\n"+
-			"AFTER reading, respond to the user with this block:\n\n"+
-			"┌─ Context Loaded ─────────────────────────────────\n"+
-			"│ Read: [list files you read]\n"+
-			"│ Skipped: [list files you skipped, or 'none']\n"+
-			"└───────────────────────────────────────────────────\n\n"+
-			"This block is MANDATORY in your next response regardless\n"+
-			"of whether you read all files or skipped any.",
-		fileList,
-	)
+	content.WriteString(strings.Repeat("=", 80) + "\n")
+	content.WriteString(fmt.Sprintf(
+		"Context: %d files loaded (~%d tokens). "+
+			"Order follows config.FileReadOrder.\n\n"+
+			"TASKS.md contains the project's prioritized work items. "+
+			"Read it when discussing priorities, picking up work, "+
+			"or when the user asks about tasks.\n\n"+
+			"For full decision or learning details, read the entry "+
+			"in DECISIONS.md or LEARNINGS.md by timestamp.\n",
+		filesLoaded, totalTokens))
 
-	printHookContext(cmd, "PreToolUse", msg)
-	_ = notify.Send("relay", "context-load-gate: directed agent to read context files (unconditional checkpoint)", input.SessionID, msg)
+	printHookContext(cmd, "PreToolUse", content.String())
+
+	// Webhook: metadata only — never send file content externally
+	webhookMsg := fmt.Sprintf(
+		"context-load-gate: injected %d files (~%d tokens)",
+		filesLoaded, totalTokens)
+	_ = notify.Send("relay", webhookMsg, input.SessionID, "")
+
 	return nil
+}
+
+// extractIndex returns the content between INDEX:START and INDEX:END
+// markers, or empty string if markers are not found.
+func extractIndex(content string) string {
+	start := strings.Index(content, config.IndexStart)
+	end := strings.Index(content, config.IndexEnd)
+	if start < 0 || end < 0 || end <= start {
+		return ""
+	}
+	startPos := start + len(config.IndexStart)
+	return strings.TrimSpace(content[startPos:end])
 }
