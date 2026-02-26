@@ -3461,7 +3461,7 @@ the user's task in parallel.</p>
 <li>Hook says "<strong>STOP</strong>" -&gt; agent complies</li>
 <li>Hook says "<em>run bootstrap</em>" -&gt; agent runs it</li>
 <li>Bootstrap says "<em>read playbook</em>" -&gt; agent skips</li>
-<li>Bootstrap says "*run <code>ctx agent*</code>" -&gt; agent skips</li>
+<li>Bootstrap says "<em>run <code>ctx agent</code></em>" -&gt; agent skips</li>
 </ul>
 <p>Each link lost enforcement power. The hook's authority didn't
 transfer to the commands it delegated to. I call this the

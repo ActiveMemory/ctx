@@ -118,7 +118,7 @@ the user's task in parallel.
 * Hook says "**STOP**" -> agent complies
 * Hook says "*run bootstrap*" -> agent runs it
 * Bootstrap says "*read playbook*" -> agent skips
-* Bootstrap says "*run `ctx agent*`" -> agent skips
+* Bootstrap says "*run `ctx agent`*" -> agent skips
 
 Each link lost enforcement power. The hook's authority didn't
 transfer to the commands it delegated to. I call this the
