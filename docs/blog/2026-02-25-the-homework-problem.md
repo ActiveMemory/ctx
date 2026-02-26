@@ -259,7 +259,7 @@ non-compliance.
 
 ## Heuristics Is a Jeremy Bearimy
 
-Heuristics are non-linear. Improvements don't accumulate: they phase-shift.
+Heuristics are **non-linear**. Improvements don't accumulate: they phase-shift.
 
 The theory is nice. The data is better. 
 
