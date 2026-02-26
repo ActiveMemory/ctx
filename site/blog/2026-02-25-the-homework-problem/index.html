@@ -3552,9 +3552,9 @@ would silently rationalize skipping. With it, skipping becomes a
 <p>Here's the design insight that only became clear after watching it work
 across multiple sessions: <strong>the relay block is a compliance canary</strong>.</p>
 <ul>
-<li>You don't need to verify that the agent read all 7 files. </li>
-<li>You don't need to audit tool call sequences. </li>
-<li>You don't need to interrogate the agent about what it did.</li>
+<li>You <strong>don't</strong> need to verify that the agent read all 7 files;</li>
+<li>You <strong>don't</strong> need to audit tool call sequences;</li>
+<li>You <strong>don't</strong> need to interrogate the agent about what it did.</li>
 </ul>
 <p>You just look for the block.</p>
 <p>If the agent reads everything, you see a "<em>Context Loaded</em>" block listing

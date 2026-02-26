@@ -238,9 +238,9 @@ would silently rationalize skipping. With it, skipping becomes a
 Here's the design insight that only became clear after watching it work
 across multiple sessions: **the relay block is a compliance canary**.
 
-* You don't need to verify that the agent read all 7 files. 
-* You don't need to audit tool call sequences. 
-* You don't need to interrogate the agent about what it did.
+* You **don't** need to verify that the agent read all 7 files;
+* You **don't** need to audit tool call sequences;
+* You **don't** need to interrogate the agent about what it did.
 
 You just look for the block.
 
