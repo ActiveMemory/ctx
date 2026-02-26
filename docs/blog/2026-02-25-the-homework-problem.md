@@ -553,7 +553,9 @@ Every other rule in the Constitution is a **hard invariant**:
 "*never commit secrets*" isn't aspirational, it's **literal**. 
 
 The moment an agent discovers **one** overstatement, the entire document's 
-credibility **degrades**: The agent doesn't think 
+credibility **degrades**: 
+
+The agent doesn't think 
 "*they exaggerated for my benefit*". Per contra, it thinks "*this rule
 isn't precise, maybe others aren't either*."
 
