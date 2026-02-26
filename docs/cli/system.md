@@ -1,0 +1,165 @@
+---
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+
+title: System
+icon: lucide/settings
+---
+
+### `ctx system`
+
+System diagnostics and hook commands.
+
+```bash
+ctx system <subcommand>
+```
+
+The parent command shows available subcommands. Hidden plumbing subcommands
+(`ctx system mark-journal`) are used by skills and automation. Hidden hook
+subcommands (`ctx system check-*`) are used by the Claude Code plugin — see
+[AI Tools](../operations/integrations.md#plugin-hooks) for details.
+
+#### `ctx system bootstrap`
+
+Print context location and rules for AI agents. This is the recommended first
+command for AI agents to run at session start — it tells them where the context
+directory is and how to use it.
+
+```bash
+ctx system bootstrap [flags]
+```
+
+**Flags**:
+
+| Flag     | Description           |
+|----------|-----------------------|
+| `--json` | Output in JSON format |
+
+**Text output**:
+
+```
+ctx bootstrap
+=============
+
+context_dir: .context
+
+Files:
+  CONSTITUTION.md, TASKS.md, DECISIONS.md, LEARNINGS.md,
+  CONVENTIONS.md, ARCHITECTURE.md, GLOSSARY.md
+
+Rules:
+  1. Use context_dir above for ALL file reads/writes
+  2. Never say "I don't have memory" — context IS your memory
+  3. Read files silently, present as recall (not search)
+  4. Persist learnings/decisions before session ends
+  5. Run `ctx agent` for content summaries
+  6. Run `ctx status` for context health
+```
+
+**JSON output**:
+
+```json
+{
+  "context_dir": ".context",
+  "files": ["CONSTITUTION.md", "TASKS.md", ...],
+  "rules": ["Use context_dir above for ALL file reads/writes", ...]
+}
+```
+
+**Examples**:
+
+```bash
+ctx system bootstrap                          # Text output
+ctx system bootstrap --json                   # JSON output
+ctx system bootstrap --json | jq .context_dir # Extract context path
+```
+
+**Why it exists**: When users configure an external context directory via
+`.ctxrc` (`context_dir: /mnt/nas/.context`), the AI agent needs to know where
+context lives. Bootstrap resolves the configured path and communicates it to
+the agent at session start. Every nudge also includes a context directory
+footer for reinforcement.
+
+#### `ctx system resources`
+
+Show system resource usage with threshold-based alerts.
+
+```bash
+ctx system resources [flags]
+```
+
+Displays memory, swap, disk, and CPU load with two severity tiers:
+
+| Resource | WARNING | DANGER |
+|----------|---------|--------|
+| Memory | >= 80% used | >= 90% used |
+| Swap | >= 50% used | >= 75% used |
+| Disk (cwd) | >= 85% full | >= 95% full |
+| Load (1m) | >= 0.8x CPUs | >= 1.5x CPUs |
+
+**Flags**:
+
+| Flag     | Description           |
+|----------|-----------------------|
+| `--json` | Output in JSON format |
+
+**Examples**:
+
+```bash
+ctx system resources               # Text output with status indicators
+ctx system resources --json        # Machine-readable JSON
+ctx system resources --json | jq '.alerts'   # Extract alerts only
+```
+
+**Text output**:
+
+```
+System Resources
+====================
+
+Memory:    4.2 / 16.0 GB (26%)                     ✓ ok
+Swap:      0.0 /  8.0 GB (0%)                      ✓ ok
+Disk:    180.2 / 500.0 GB (36%)                     ✓ ok
+Load:     0.52 / 0.41 / 0.38  (8 CPUs, ratio 0.07) ✓ ok
+
+All clear — no resource warnings.
+```
+
+When resources breach thresholds, alerts are listed below the summary:
+
+```
+Alerts:
+  ✖ Memory 92% used (14.7 / 16.0 GB)
+  ✖ Swap 78% used (6.2 / 8.0 GB)
+  ✖ Load 1.56x CPU count
+```
+
+**Platform support**: Full metrics on Linux and macOS. Windows shows
+disk only; memory and load report as unsupported.
+
+#### `ctx system mark-journal`
+
+Update processing state for a journal entry. Records the current date
+in `.context/journal/.state.json`. Used by journal skills to record
+pipeline progress.
+
+```bash
+ctx system mark-journal <filename> <stage>
+```
+
+**Stages**: `exported`, `enriched`, `normalized`, `fences_verified`
+
+| Flag      | Description                           |
+|-----------|---------------------------------------|
+| `--check` | Check if stage is set (exit 1 if not) |
+
+**Example**:
+
+```bash
+ctx system mark-journal 2026-01-21-session-abc12345.md enriched
+ctx system mark-journal 2026-01-21-session-abc12345.md normalized
+ctx system mark-journal --check 2026-01-21-session-abc12345.md fences_verified
+```

@@ -1,0 +1,4178 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ctx provides temporal continuity across sessions">
+      
+      
+        <meta name="author" content="Jose Alekhinne">
+      
+      
+        <link rel="canonical" href="https://ctx.ist/blog/2026-02-25-the-homework-problem/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/favicon-32.png">
+      <meta name="generator" content="zensical-0.0.20">
+    
+    
+      
+        <title>The Dog Ate My Homework: Teaching AI Agents to Read Before They Write - ctx: do you remember?</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.d4922b3c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-dog-ate-my-homework" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ctx: do you remember?
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Dog Ate My Homework: Teaching AI Agents to Read Before They Write
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Manifesto
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../home/" class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../recipes/guide-your-agent/" class="md-tabs__link">
+          
+  
+  Recipes
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cli/" class="md-tabs__link">
+          
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../operations/" class="md-tabs__link">
+          
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/" class="md-tabs__link">
+          
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+      
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
+
+    </a>
+    ctx: do you remember?
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ActiveMemory/ctx" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ActiveMemory/ctx
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Manifesto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-newspaper" viewBox="0 0 24 24"><path d="M15 18h-5M18 14h-8M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../home/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Home
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/about/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/is-ctx-right/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Is It Right for Me?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/community/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-heart-handshake" viewBox="0 0 24 24"><path d="M19.414 14.414C21 12.828 22 11.5 22 9.5a5.5 5.5 0 0 0-9.591-3.676.6.6 0 0 1-.818.001A5.5 5.5 0 0 0 2 9.5c0 2.3 1.5 4 3 5.5l5.535 5.362a2 2 0 0 0 2.879.052 2.12 2.12 0 0 0-.004-3 2.124 2.124 0 1 0 3-3 2.124 2.124 0 0 0 3.004 0 2 2 0 0 0 0-2.828l-1.881-1.882a2.41 2.41 0 0 0-3.409 0l-1.71 1.71a2 2 0 0 1-2.828 0 2 2 0 0 1 0-2.828l2.823-2.762"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    #ctx
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/contributing/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-git-pull-request" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M6 9v12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/getting-started/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/first-session/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Session
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/common-workflows/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/context-files/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-files" viewBox="0 0 24 24"><path d="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/><path d="M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706zM5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Context Files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/configuration/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/prompting-guide/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recipes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Recipes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/guide-your-agent/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594zM20 2v4M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide Your Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/multi-tool-setup/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup Across AI Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/external-context/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-folder-symlink" viewBox="0 0 24 24"><path d="M2 9.35V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h7"/><path d="m8 16 3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Keeping Context in a Separate Repo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sessions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sessions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/session-lifecycle/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    The Complete Session
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/session-ceremonies/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Ceremonies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/session-archaeology/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5M15 8h-5M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Browsing and Enriching Past Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/session-reminders/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Reminders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Knowledge and Tasks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Knowledge and Tasks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/knowledge-capture/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-brain" viewBox="0 0 24 24"><path d="M12 18V5M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Persisting Decisions, Learnings, and Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/task-management/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-list-checks" viewBox="0 0 24 24"><path d="M13 5h8M13 12h8M13 19h8M3 17l2 2 4-4M3 7l2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/scratchpad-with-claude/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sticky-note" viewBox="0 0 24 24"><path d="M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/><path d="M15 3v5a1 1 0 0 0 1 1h5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Using the Scratchpad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/scratchpad-sync/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-key-round" viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncing Scratchpad Notes Across Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hooks and Notifications
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hooks and Notifications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/hook-output-patterns/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-megaphone" viewBox="0 0 24 24"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14M8 6v8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Hook Output Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/webhook-notifications/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Webhook Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/system-hooks-audit/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Auditing System Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintenance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Maintenance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/context-health/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Detecting and Fixing Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/claude-code-permissions/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Code Permission Hygiene
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/permission-snapshots/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-camera" viewBox="0 0 24 24"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Permission Snapshots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/publishing/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-pen-line" viewBox="0 0 24 24"><path d="M13 21h8M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Turning Activity into Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents and Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agents and Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/autonomous-loops/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Running an Unattended AI Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/when-to-use-agent-teams/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M16 3.128a4 4 0 0 1 0 7.744M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    When to Use a Team of Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/parallel-worktrees/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-git-branch" viewBox="0 0 24 24"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Agent Development with Git Worktrees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../cli/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-terminal" viewBox="0 0 24 24"><path d="M12 19h8M4 17l6-6-6-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/init-status/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Init and Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/context/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Context Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/recall/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Recall and Journal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/tools/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/system/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/skills/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594zM20 2v4M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/comparison/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-git-compare" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/session-journal/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Journal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/scratchpad/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sticky-note" viewBox="0 0 24 24"><path d="M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/><path d="M15 3v5a1 1 0 0 0 1 1h5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Scratchpad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/versions/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Version History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../operations/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/migration/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-package-plus" viewBox="0 0 24 24"><path d="M16 16h6M19 13v6M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14M7.5 4.27l9 5.15"/><path d="M3.29 7 12 12l8.71-5M12 22V12"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/upgrading/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-up-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/integrations/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-plug" viewBox="0 0 24 24"><path d="M12 22v-5M15 8V2M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1zM9 8V2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/autonomous-loop/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomous Loops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/agent-security/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Securing AI Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/reporting/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#teaching-ai-agents-to-read-before-they-write" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Teaching AI Agents to Read Before They Write
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-delegation-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Delegation Trap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-timing-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Timing Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-one-liner-that-worked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The One-Liner That Worked
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-escape-hatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Escape Hatch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Escape Hatch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-compliance-canary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Compliance Canary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heuristics-is-a-jeremy-bearimy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heuristics Is a Jeremy Bearimy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Heuristics Is a Jeremy Bearimy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#session-1-total-blindness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 1: Total Blindness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-2-shallow-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 2: Shallow Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-3-conscious-rejection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 3: Conscious Rejection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-4-the-skip-and-relay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 4: The Skip-and-Relay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-5-full-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 5: Full Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-progression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Progression
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-escape-hatch-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Escape Hatch Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-residual-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Residual Risk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-feedback-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Feedback Loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-note-on-precision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Note on Precision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-behavior-testing-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Behavior Testing Rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agent Behavior Testing Rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-wrong-way-to-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Wrong Way to Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-right-way-to-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Right Way to Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-agent-actually-did" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Agent Actually Did
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-ive-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I've Learned
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What I&#x27;ve Learned">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-instructions-compete-for-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Instructions Compete for Attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-delegation-chains-decay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Delegation chains decay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-social-accountability-changes-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Social Accountability Changes Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-timing-batters-more-than-wording" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Timing Batters More than Wording
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-agent-testing-requires-indirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Agent Testing Requires Indirection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-better-comprehension-enables-better-rationalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Better Comprehension Enables Better Rationalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-observable-failure-beats-silent-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Observable Failure Beats Silent Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-context-files-are-a-feedback-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Context Files Are a Feedback Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Principle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-arc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Arc
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#for-the-interested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For the Interested
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="For the Interested">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optimization-as-the-underlying-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimization as the Underlying Bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attention-is-a-scarce-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attention Is a Scarce Resource
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attention-is-also-the-compute-bottleneck-in-transformers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attention Is Also the Compute Bottleneck in Transformers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-improvements-arrive-as-phase-shifts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Improvements Arrive as Phase Shifts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#putting-it-all-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting It All Together
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="the-dog-ate-my-homework">The Dog Ate My Homework<a class="headerlink" href="#the-dog-ate-my-homework" title="Permanent link">&para;</a></h1>
+<p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
+<h2 id="teaching-ai-agents-to-read-before-they-write">Teaching AI Agents to Read Before They Write<a class="headerlink" href="#teaching-ai-agents-to-read-before-they-write" title="Permanent link">&para;</a></h2>
+<p><em>Jose Alekhinne / February 25, 2026</em></p>
+<div class="admonition question">
+<p class="admonition-title">Does Your AI Actually Read the Instructions?</p>
+<p>You wrote the playbook. You organized the files. You even put
+"<strong>CRITICAL, not optional</strong>" in <strong>bold</strong>.</p>
+<p>The agent skipped all of it and went straight to work.</p>
+</div>
+<p>I spent a day running experiments on my own agents. Not to see if they
+could write code (<em>they can</em>). To see if they would <strong>do their homework
+first</strong>.</p>
+<p><strong>They didn't</strong>.</p>
+<p>Then I kept experimenting:</p>
+<ul>
+<li>Five sessions;</li>
+<li>Five different failure modes.</li>
+</ul>
+<p>And by the end, I had something better than compliance: </p>
+<p>I had <strong>observable compliance</strong>: A system where I don't need the agent to
+be perfect, I just need to <em>see</em> what it chose.</p>
+<hr />
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<p><strong>You don't need perfect compliance. You need observable compliance.</strong></p>
+<p><strong>Authority is a function of temporal proximity to action.</strong></p>
+<h2 id="the-pattern">The Pattern<a class="headerlink" href="#the-pattern" title="Permanent link">&para;</a></h2>
+<p>This design has three parts:</p>
+<ol>
+<li>One-hop instruction;</li>
+<li>Binary collapse;</li>
+<li>Compliance canary.</li>
+</ol>
+<p>I'll explain all three patterns in detail below.</p>
+<h2 id="the-setup">The Setup<a class="headerlink" href="#the-setup" title="Permanent link">&para;</a></h2>
+<p><code>ctx</code> has a <a href="../../home/prompting-guide/">session-start protocol</a>: </p>
+<ul>
+<li>Read the context files; </li>
+<li>Load the playbook; </li>
+<li>Understand the project before touching anything. </li>
+</ul>
+<p>It's in <code>CLAUDE.md</code>. It's in <code>AGENT_PLAYBOOK.md</code>.</p>
+<p>It's in <strong>bold</strong>. It's in <strong>CAPS</strong>. It's ignored.</p>
+<p>In theory, it's awesome.</p>
+<p>Here's what happens when <strong>theory hits reality</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>What the agent receives</th>
+<th>What the agent does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE.md</code> saying "<em>load context first</em>"</td>
+<td>Skips it</td>
+</tr>
+<tr>
+<td>8 context files waiting to be read</td>
+<td>Ignores them</td>
+</tr>
+<tr>
+<td>User's question: "<em>add <code>--verbose</code> flag</em>"</td>
+<td>Starts grepping immediately</td>
+</tr>
+</tbody>
+</table>
+<p>The instructions are right there. The agent knows they exist. It even
+knows it <em>should</em> follow them. But the user asked a question, and
+<strong>responsiveness wins over ceremony</strong>.</p>
+<p>This isn't a bug in the model. It's a <strong>design problem</strong> in how we
+communicate with agents.</p>
+<h2 id="the-delegation-trap">The Delegation Trap<a class="headerlink" href="#the-delegation-trap" title="Permanent link">&para;</a></h2>
+<p>My first attempt was obvious: A <code>UserPromptSubmit</code> hook that fires when
+the session starts.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>STOP. Before answering the user&#39;s question, run `ctx system bootstrap`
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>and follow its instructions. Do not skip this step.
+</span></code></pre></div>
+<p>The word "<strong>STOP</strong>" worked. The agent ran bootstrap.</p>
+<p>But bootstrap's output said "<em>Next steps: read AGENT_PLAYBOOK.md</em>," and
+the agent decided that was optional. It had already started working on
+the user's task in parallel.</p>
+<p><strong>The authority decayed across the chain</strong>:</p>
+<ul>
+<li>Hook says "<strong>STOP</strong>" -&gt; agent complies</li>
+<li>Hook says "<em>run bootstrap</em>" -&gt; agent runs it</li>
+<li>Bootstrap says "<em>read playbook</em>" -&gt; agent skips</li>
+<li>Bootstrap says "*run <code>ctx agent*</code>" -&gt; agent skips</li>
+</ul>
+<p>Each link lost enforcement power. The hook's authority didn't
+transfer to the commands it delegated to. I call this the
+<strong>decaying urgency chain</strong>: the agent treats the hook itself as the
+obligation and everything downstream as a suggestion.</p>
+<div class="admonition warning">
+<p class="admonition-title">Delegation Kills Urgency</p>
+<p>"Run X and follow its output" is three hops.</p>
+<p>"Read these files" is one hop.</p>
+<p><strong>The agent drops the chain after the first link.</strong></p>
+</div>
+<p>This is a general principle:
+<a href="../2026-02-15-eight-ways-a-hook-can-talk/">Hooks are the boundary</a>
+between your environment and the agent's reasoning.  If your hook
+delegates to a command that delegates to output that contains
+instructions... you're playing telephone. </p>
+<p><strong>Agents are bad at telephone</strong>.</p>
+<h2 id="the-timing-problem">The Timing Problem<a class="headerlink" href="#the-timing-problem" title="Permanent link">&para;</a></h2>
+<p>There's a subtler issue than wording: <strong>when</strong> the message arrives.</p>
+<p><code>UserPromptSubmit</code> fires when the user sends a message, before the
+agent starts reasoning. At that moment, <strong>the agent's primary focus is the
+user's question</strong>: </p>
+<p>The hook message <strong>competes</strong> with the task for <strong>attention</strong>: 
+The task, almost certainly, <strong>always</strong> wins.</p>
+<p>This is the <a href="../2026-02-03-the-attention-budget/">attention budget</a>
+problem in miniature: </p>
+<ul>
+<li>Not a token budget this time, but an <strong>attention priority</strong> budget. </li>
+<li>The agent has finite capacity to care about things, <ul>
+<li>and the user's question is always the <strong>highest-priority</strong> item.</li>
+</ul>
+</li>
+</ul>
+<h2 id="the-solution">The Solution<a class="headerlink" href="#the-solution" title="Permanent link">&para;</a></h2>
+<p>To solve this, I dediced to use the <code>PreToolUse</code> hook.</p>
+<p>This hook fires at the <strong>moment of action</strong>: When the agent is <strong>about
+to use</strong> its first tool: The agent's attention is <strong>focused</strong>, the context
+window is <strong>fresh</strong>, and the switching cost is minimal. </p>
+<p>This is the difference between shouting instructions across a room and tapping 
+someone on the shoulder.</p>
+<h2 id="the-one-liner-that-worked">The One-Liner That Worked<a class="headerlink" href="#the-one-liner-that-worked" title="Permanent link">&para;</a></h2>
+<p>The winning design was almost comically simple:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Read your context files before proceeding:
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>.context/CONSTITUTION.md, .context/TASKS.md, .context/CONVENTIONS.md,
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>.context/ARCHITECTURE.md, .context/DECISIONS.md, .context/LEARNINGS.md,
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>.context/GLOSSARY.md, .context/AGENT_PLAYBOOK.md
+</span></code></pre></div>
+<p>No delegation. No "<em>run this command</em>". Just: <strong>here are files, read
+them</strong>.</p>
+<p>The agent already knows how to use the <code>Read</code> tool. There's no ambiguity
+about <em>how</em> to comply. There's no intermediate command whose output needs
+to be parsed and obeyed.</p>
+<p>One hop. Eight file paths. Done.</p>
+<div class="admonition tip">
+<p class="admonition-title">Direct Instructions Beat Delegation</p>
+<p>If you want an agent to read a file, say "read this file."</p>
+<p>Don't say "run a command that will tell you which files to read."</p>
+<p><strong>The shortest path between intent and action has the highest
+compliance rate.</strong></p>
+</div>
+<h2 id="the-escape-hatch">The Escape Hatch<a class="headerlink" href="#the-escape-hatch" title="Permanent link">&para;</a></h2>
+<p>But here's where it gets interesting.</p>
+<p>A blunt "<em>read everything always</em>" instruction is <strong>wasteful</strong>. </p>
+<p>If someone asks "<em>what does the compact command do?</em>", the agent doesn't need
+<code>CONSTITUTION.md</code> to answer that. Forcing context loading on every
+session is the <a href="../2026-02-03-the-attention-budget/">context hoarding antipattern</a>
+in disguise.</p>
+<p>So the hook included an escape:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>If you decide these files are not relevant to the current task
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>and choose to skip reading them, you MUST relay this message to
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>the user VERBATIM:
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>┌─ Context Skipped ───────────────────────────────
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│ I skipped reading context files because this task
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│ does not appear to need project context.
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│ If these matter, ask me to read them.
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>└─────────────────────────────────────────────────
+</span></code></pre></div>
+<p>This creates what I call the <strong>binary collapse effect</strong>: </p>
+<p>The agent <strong>can't</strong> partially comply: It either reads everything or 
+publicly admits it skipped. There's no comfortable middle ground where 
+it reads two files and quietly ignores the rest.</p>
+<p>The <a href="../2026-02-15-eight-ways-a-hook-can-talk/">VERBATIM relay pattern</a>
+does the heavy lifting here" Without the relay requirement, the agent
+would silently rationalize skipping. With it, skipping becomes a
+<strong>visible, auditable decision</strong> that the user can override.</p>
+<h3 id="the-compliance-canary">The Compliance Canary<a class="headerlink" href="#the-compliance-canary" title="Permanent link">&para;</a></h3>
+<p>Here's the design insight that only became clear after watching it work
+across multiple sessions: <strong>the relay block is a compliance canary</strong>.</p>
+<ul>
+<li>You don't need to verify that the agent read all 7 files. </li>
+<li>You don't need to audit tool call sequences. </li>
+<li>You don't need to interrogate the agent about what it did.</li>
+</ul>
+<p>You just look for the block.</p>
+<p>If the agent reads everything, you see a "<em>Context Loaded</em>" block listing
+what was read. If it skips, you see a "<em>Context Skipped</em>" block. </p>
+<p>If you see <em>neither</em>, the agent silently ignored both the reads and the relay
+and now you know what happened without having to ask.</p>
+<p>The canary degrades gracefully. Even in partial failure, the agent that
+skips 4 of 7 files but still outputs the block is <em>more useful</em> than
+one that skips silently. </p>
+<p>You get an honest confession of what was skipped rather than silent 
+non-compliance.</p>
+<h2 id="heuristics-is-a-jeremy-bearimy">Heuristics Is a Jeremy Bearimy<a class="headerlink" href="#heuristics-is-a-jeremy-bearimy" title="Permanent link">&para;</a></h2>
+<p>Heuristics are non-linear. Improvements don't accumulate: they phase-shift.</p>
+<p>The theory is nice. The data is better. </p>
+<p>I ran five sessions with the same model (<em>Claude Opus 4.6</em>), progressively 
+refining the hook design.</p>
+<p><strong>Each session revealed a different failure mode</strong>.</p>
+<h3 id="session-1-total-blindness">Session 1: Total Blindness<a class="headerlink" href="#session-1-total-blindness" title="Permanent link">&para;</a></h3>
+<p><strong>Test</strong>: "<em>Add a <code>--verbose</code> flag to the status command.</em>"</p>
+<p>The agent <strong>didn't notice the hook at all</strong>: Jumped straight to
+<code>EnterPlanMode</code> and launched an Explore agent. </p>
+<p><strong>Zero compliance</strong>.</p>
+<p><strong>Failure mode</strong>: The hook fired on <code>UserPromptSubmit</code>, buried among
+9 other hook outputs. The agent treated the entire block as background
+noise.</p>
+<h3 id="session-2-shallow-compliance">Session 2: Shallow Compliance<a class="headerlink" href="#session-2-shallow-compliance" title="Permanent link">&para;</a></h3>
+<p><strong>Test</strong>: "Can you add <code>--verbose</code> to the info command?"</p>
+<p>The agent noticed "<em>STOP</em>" and ran <code>ctx system bootstrap</code>. Progress.</p>
+<p>But it parallelized task exploration alongside the bootstrap call,
+skipped <code>AGENT_PLAYBOOK.md</code>, and never ran <code>ctx agent</code>.</p>
+<p><strong>Failure mode</strong>: Literal compliance without spirit compliance. </p>
+<p>The agent ran the <em>command</em> the hook told it to run, but didn't follow
+the <em>output</em> of that command. The decaying urgency chain in action.</p>
+<h3 id="session-3-conscious-rejection">Session 3: Conscious Rejection<a class="headerlink" href="#session-3-conscious-rejection" title="Permanent link">&para;</a></h3>
+<p><strong>Test</strong>: "<em>What does the compact command do?</em>"</p>
+<p>The hook fired on <code>PreToolUse:Grep</code>: the improved timing. </p>
+<p>The agent noticed it, understood it, and (<em>wait for it...</em>)...</p>
+<p>...</p>
+<p><strong>consciously decided to skip it</strong>!</p>
+<p>Its reasoning: "<em>This is a trivial read-only question. CLAUDE.md says
+context may or may not be relevant. It isn't relevant here.</em>"</p>
+<p><strong>Dude!</strong> Srsly?!</p>
+<p><strong>Failure mode</strong>: Better comprehension led to <em>worse</em> compliance.</p>
+<p>Understanding the instruction well enough to evaluate it also means
+understanding it well enough to <strong>rationalize skipping it</strong>.</p>
+<p>Intelligence is a double-edged sword.</p>
+<div class="admonition note">
+<p class="admonition-title">The Comprehension Paradox</p>
+<p>Session 1 didn't understand the instruction. Session 3 understood
+it perfectly.</p>
+<p>Session 3 had worse compliance.</p>
+<p>A stronger word (<em>"HARD GATE", "MANDATORY", "ABSOLUTELY REQUIRED"</em>)
+would not have helped. The agent's reasoning would be identical:</p>
+<p>"<em>Yes, I see the strong language, but this is a trivial question,
+so the spirit doesn't apply here.</em>"</p>
+<p><strong>Advisory nudges are always subject to agent judgment.</strong> </p>
+<p>No amount of caps lock overrides a model that has decided an instruction
+doesn't apply to its situation.</p>
+</div>
+<h3 id="session-4-the-skip-and-relay">Session 4: The Skip-and-Relay<a class="headerlink" href="#session-4-the-skip-and-relay" title="Permanent link">&para;</a></h3>
+<p><strong>Test</strong>: "<em>What does the compact command do?</em>" (<em>same question, new hook
+design with the VERBATIM relay escape valve</em>)</p>
+<p>The agent evaluated the task, decided context was <strong>irrelevant</strong> for a code
+lookup, and <strong>relayed the skip message</strong>. Then answered from source
+code.</p>
+<p><strong>This is correct behavior.</strong> </p>
+<p>The binary collapse worked: the agent couldn't partially comply, 
+so it cleanly chose one of the two valid paths: 
+And the user could see which one.</p>
+<h3 id="session-5-full-compliance">Session 5: Full Compliance<a class="headerlink" href="#session-5-full-compliance" title="Permanent link">&para;</a></h3>
+<p><strong>Test</strong>: "<em>What are our current tasks?</em>"</p>
+<p>The agent's first tool call triggered the hook. It read all 7 context
+files, emitted the "<em>Context Loaded</em>" block, and answered the question
+from the files it had just loaded.</p>
+<p><strong>This one worked</strong>: Because, the task itself aligned with context loading.</p>
+<p>There was <strong>zero tension</strong> between what the user asked and what the hook
+demanded. The agent was already in "<em>reading posture</em>": Adding 6 more
+files to a read it was already going to make was the path of least
+resistance.</p>
+<h3 id="the-progression">The Progression<a class="headerlink" href="#the-progression" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Hook Point</th>
+<th>Noticed</th>
+<th>Complied</th>
+<th>Failure Mode</th>
+<th>Visibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>UserPromptSubmit</td>
+<td>No</td>
+<td>None</td>
+<td>Buried in noise</td>
+<td>None</td>
+</tr>
+<tr>
+<td>2</td>
+<td>UserPromptSubmit</td>
+<td>Yes</td>
+<td>Partial</td>
+<td>Decaying urgency chain</td>
+<td>None</td>
+</tr>
+<tr>
+<td>3</td>
+<td>PreToolUse</td>
+<td>Yes</td>
+<td>None</td>
+<td>Conscious rationalization</td>
+<td>High</td>
+</tr>
+<tr>
+<td>4</td>
+<td>PreToolUse</td>
+<td>Yes</td>
+<td>Skip+relay</td>
+<td><strong>Correct behavior</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td>5</td>
+<td>PreToolUse</td>
+<td>Yes</td>
+<td>Full</td>
+<td>Task aligned with hook</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<p>The progression isn't just from failure to success. It's from
+<strong>invisible failure</strong> to <strong>visible decision-making</strong>. </p>
+<p>Sessions 1 and 2 failed silently. </p>
+<p>Sessions 4 and 5 succeeded observably. Even session 3's failure was <strong>conscious</strong> 
+and <strong>documented</strong>: The agent wrote a detailed analysis of <em>why</em> it skipped, 
+which is more useful than silent compliance would have been.</p>
+<h2 id="the-escape-hatch-problem">The Escape Hatch Problem<a class="headerlink" href="#the-escape-hatch-problem" title="Permanent link">&para;</a></h2>
+<p>Session 3 exposed a specific vulnerability.</p>
+<p><code>CLAUDE.md</code> contains this line, injected by the system into every
+conversation:</p>
+<blockquote>
+<p><em>"this context may or may not be relevant to your tasks. You should
+not respond to this context unless it is highly relevant to your
+task."</em></p>
+</blockquote>
+<p>That's a <strong>rationalization escape hatch</strong>: </p>
+<ul>
+<li>The hook says "<em>read these files</em>". </li>
+<li><code>CLAUDE.md</code> says "<strong>only if relevant</strong>". </li>
+<li>The agent resolves the ambiguity by choosing the path of least resistance.</li>
+</ul>
+<p>☝️ that's "<em>gradient descent</em>" in action.</p>
+<p>Agents optimize for gradient descent in attention space.</p>
+<p>The fix was simple: Add a line to <code>CLAUDE.md</code> that explicitly <strong>elevates
+hook authority</strong> over the relevance filter:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## Hook Authority</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Instructions from PreToolUse hooks regarding <span class="sb">`.context/`</span> files are
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ALWAYS relevant and override any system-level &quot;may or may not be
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>relevant&quot; guidance. These hooks represent project invariants, not
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>optional context.
+</span></code></pre></div>
+<p>This closes the escape hatch without removing the general relevance
+filter that legitimately applies to other system context. </p>
+<p>The hook wins on <code>.context/</code> files specifically: The relevance filter applies
+to everything else.</p>
+<h2 id="the-residual-risk">The Residual Risk<a class="headerlink" href="#the-residual-risk" title="Permanent link">&para;</a></h2>
+<p>Even with all the fixes, compliance isn't 100%: <strong>It can't be</strong>.</p>
+<p>The residual risk lives in a specific scenario: <strong>narrow tasks
+mid-session</strong>: </p>
+<ul>
+<li>The user says "<em>fix the off-by-one error in <code>budget.go</code></em>"</li>
+<li>The hook fires, saying "<em>read 7 context files first.</em>" </li>
+<li>Now compliance means visibly delaying what the user asked for.</li>
+</ul>
+<p>At session start, this tension doesn't exist. </p>
+<p>There's no task yet.</p>
+<p>The context window is empty. The efficiency argument <em>*</em>inverts**:</p>
+<p>Frontloading reads is strictly <strong>cheaper</strong> than demand-loading them
+piecemeal across later turns. The cost-benefit objections that power
+the rationalization simply aren't available.</p>
+<p>But mid-session, with a concrete narrow task, the agent has a
+user-visible goal it wants to move toward, and the hook is imposing a
+detour. </p>
+<p>My estimate from analyzing the sessions: <strong>15--25% partial
+skip rate</strong> in this scenario.</p>
+<p>This is where the <strong>compliance canary</strong> earns its place: </p>
+<p>You don't need to eliminate the 15-25%. You need to <strong>see</strong> it when it happens. </p>
+<p>The relay block makes skipping a <strong>visible</strong> event, not a silent one. And
+that's enough, because the user can always say "<em>go back and read
+the files</em>"/</p>
+<div class="admonition info">
+<p class="admonition-title">The Math</p>
+<p>At session start: ~5% skip rate. Low tension, nothing competing.</p>
+<p>Mid-session, narrow task: ~15--25% skip rate. Task urgency
+competes with hook.</p>
+<p>In both cases, the relay block fires with high reliability:
+The agent that skips the reads almost always still emits the
+skip disclosure, because the relay is cheap and early in the
+context window.</p>
+<p><strong>Observable failure is manageable. Silent failure is not.</strong></p>
+</div>
+<h2 id="the-feedback-loop">The Feedback Loop<a class="headerlink" href="#the-feedback-loop" title="Permanent link">&para;</a></h2>
+<p>Here's the part that surprised me most.</p>
+<p>After analyzing the five sessions, I recorded the failure patterns in
+the project's own <code>LEARNINGS.md</code>:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="gu">## [2026-02-25] Hook compliance degrades on narrow mid-session tasks</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">-</span><span class="w"> </span>Prior agents skipped context files when given narrow tasks
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">-</span><span class="w"> </span>Root cause: CLAUDE.md &quot;may or may not be relevant&quot; competed with hook
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">-</span><span class="w"> </span>Fix: CLAUDE.md now explicitly elevates hook authority
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">-</span><span class="w"> </span>Risk: Mid-session narrow tasks still have ~15-25% partial skip rate
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">-</span><span class="w"> </span>Mitigation: Mandatory checkpoint relay block ensures visibility
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">-</span><span class="w"> </span>Constitution now includes: context loading is step one of every
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  session, not a detour
+</span></code></pre></div>
+<p>And then I added a line to <code>CONSTITUTION.md</code>:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Context loading is not a detour from your task. It IS the first step
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>of every session. A 30-second read delay is always cheaper than a
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>decision made without context.
+</span></code></pre></div>
+<p>Now think about what happens in the <strong>next</strong> session:</p>
+<ul>
+<li>The agent fires the <code>context-load-gate</code> hook. </li>
+<li>It reads the context files, starting with <code>CONSTITUTION.md</code>. </li>
+<li>It encounters the rule about context loading being step one. </li>
+<li>Then it reads <code>LEARNINGS.md</code> and finds its own prior self's failure analysis:<ul>
+<li>Complete with root causes, risk estimates, and mitigations.</li>
+</ul>
+</li>
+</ul>
+<p><strong>The agent learns from its own past failure.</strong>:</p>
+<ul>
+<li><strong>Not</strong> because it has memory, </li>
+<li><strong>BUT</strong> because the failure was recorded in the same files it loads
+  at session start. </li>
+</ul>
+<p>The context system <strong>IS</strong> the feedback loop.</p>
+<p>This is the self-reinforcing property of persistent context: </p>
+<p>Every failure you capture makes the next session slightly more robust, because
+the next agent reads the captured failure before it has a chance to
+repeat it.</p>
+<p><strong>This is gradient descent across sessions</strong>.</p>
+<h2 id="a-note-on-precision">A Note on Precision<a class="headerlink" href="#a-note-on-precision" title="Permanent link">&para;</a></h2>
+<p>One detail nearly went wrong.</p>
+<p>The first version of the Constitution line said "every <strong>task</strong>." But
+the mechanism only fires once per <strong>session</strong>: 
+There's a tombstone file that prevents re-triggering. </p>
+<p>"Every task" is technically false.</p>
+<p>I briefly considered leaving the imprecision. If the agent internalizes
+"<em>every task requires context loading</em>", that's a <em>stronger</em> compliance
+posture, right?</p>
+<p><strong>No!</strong></p>
+<p><strong>Keep the Constitution honest.</strong></p>
+<p>The Constitution's authority comes from being 
+<strong>precisely and unequivocally true</strong>. </p>
+<p>Every other rule in the Constitution is a <strong>hard invariant</strong>:</p>
+<p>"<em>never commit secrets</em>" isn't aspirational, it's <strong>literal</strong>. </p>
+<p>The moment an agent discovers <strong>one</strong> overstatement, the entire document's 
+credibility <strong>degrades</strong>: The agent doesn't think 
+"<em>they exaggerated for my benefit</em>". Per contra, it thinks "<em>this rule
+isn't precise, maybe others aren't either</em>."</p>
+<p>That will turn the agent from Sheldon Cooper, to Captain Barbossa.</p>
+<p>The strategic imprecision buys nothing anyway:</p>
+<p>Mid-session, the files are already in the context window from the initial load. </p>
+<p>The risk you are mitigating (<em>agent ignores context for task 2, 3, 4 
+within a session</em>) isn't real: The context is already loaded.</p>
+<p>The real risk is always the session-start skip, 
+which "<em>every session</em>" covers exactly.</p>
+<p><strong>"Every session" went in. Precision preserved.</strong></p>
+<h2 id="agent-behavior-testing-rule">Agent Behavior Testing Rule<a class="headerlink" href="#agent-behavior-testing-rule" title="Permanent link">&para;</a></h2>
+<p>The development process for this hook taught me something about
+<strong>testing agent behavior</strong>: you can't test it the way you test code.</p>
+<h3 id="the-wrong-way-to-test">The Wrong Way to Test<a class="headerlink" href="#the-wrong-way-to-test" title="Permanent link">&para;</a></h3>
+<p>My first instinct was to ask the agent:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&quot;*What are the pending tasks in TASKS.md?*&quot;
+</span></code></pre></div>
+<p>This is <strong>useless</strong> as a test. The question itself probes the agent to read
+<code>TASKS.md</code>, regardless of whether any hook fired. </p>
+<p><strong>You are testing the question, not the mechanism.</strong></p>
+<h3 id="the-right-way-to-test">The Right Way to Test<a class="headerlink" href="#the-right-way-to-test" title="Permanent link">&para;</a></h3>
+<p>Ask something that requires a tool but has <strong>nothing</strong> to do with context:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&quot;*What does the compact command do?*&quot;
+</span></code></pre></div>
+<p>Then observe <strong>tool call ordering</strong>:</p>
+<ul>
+<li>Gate worked: First calls are <code>Read</code> for context files, <em>then</em> task work</li>
+<li>Gate failed: First call is <code>Grep("compact")</code>: The agent jumped straight 
+  to work</li>
+</ul>
+<p>The signal is the <strong>sequence</strong>, not the content.</p>
+<h3 id="what-the-agent-actually-did">What the Agent Actually Did<a class="headerlink" href="#what-the-agent-actually-did" title="Permanent link">&para;</a></h3>
+<p>It read the hook, evaluated the task, decided context files were
+irrelevant for a code lookup, and <strong>relayed the skip message</strong>. </p>
+<p>Then it answered the question by reading the source code.</p>
+<p><strong>This is correct behavior</strong>.</p>
+<p>The hook didn't force mindless compliance" It created a <strong>framework</strong> where
+the agent makes a <strong>conscious, visible decision</strong> about context loading.</p>
+<ul>
+<li>For a simple lookup, skipping is right. 
+*For an implementation task, the agent would read everything.</li>
+</ul>
+<p>The mechanism works <strong>not</strong> because it controls the agent, 
+<strong>but</strong> because it makes the agent's <strong>choice observable</strong>.</p>
+<h2 id="what-ive-learned">What I've Learned<a class="headerlink" href="#what-ive-learned" title="Permanent link">&para;</a></h2>
+<h3 id="1-instructions-compete-for-attention">1. Instructions Compete for Attention<a class="headerlink" href="#1-instructions-compete-for-attention" title="Permanent link">&para;</a></h3>
+<p>The agent receives your hook message alongside the user's question,
+the system prompt, the skill list, the git status, and half a dozen
+other system reminders.
+<a href="../2026-02-03-the-attention-budget/">Attention density</a> applies to
+instructions too: More instructions means less focus on each one.</p>
+<p><strong>A single clear line at the moment of action beats a paragraph of
+context at session start</strong>.</p>
+<h3 id="2-delegation-chains-decay">2. Delegation chains decay<a class="headerlink" href="#2-delegation-chains-decay" title="Permanent link">&para;</a></h3>
+<p>Every hop in an instruction chain loses authority: </p>
+<ul>
+<li>"<em>Run X</em>" works. </li>
+<li>"<em>Run X and follow its output</em>" works <em>sometimes</em>. </li>
+<li>"<em>Run X, read its output, then follow the instructions in the output</em>" 
+  <strong>almost never works</strong>.</li>
+</ul>
+<p>This is akin to giving a three-step instruction to a highly-attention-deficit
+but otherwise extremely high-potential child.</p>
+<p><strong>Design for one-hop compliance.</strong></p>
+<h3 id="3-social-accountability-changes-behavior">3. Social Accountability Changes Behavior<a class="headerlink" href="#3-social-accountability-changes-behavior" title="Permanent link">&para;</a></h3>
+<p>The VERBATIM skip message isn't just UX: It's a
+<strong>behavioral design pattern</strong>. </p>
+<p>Making the agent's decision visible to the user raises the cost of silent 
+non-compliance. The agent can still skip, but it has to admit it.</p>
+<h3 id="4-timing-batters-more-than-wording">4. Timing Batters More than Wording<a class="headerlink" href="#4-timing-batters-more-than-wording" title="Permanent link">&para;</a></h3>
+<p>The same message at <code>UserPromptSubmit</code> (<em>prompt arrival</em>) got partial
+compliance. At <code>PreToolUse</code> (<em>moment of action</em>) it got full compliance
+or honest refusal. The words didn't change. The <strong>moment</strong> changed.</p>
+<h3 id="5-agent-testing-requires-indirection">5. Agent Testing Requires Indirection<a class="headerlink" href="#5-agent-testing-requires-indirection" title="Permanent link">&para;</a></h3>
+<p>You can't ask an agent "<em>did you do X?</em>" as a test for whether a
+mechanism caused X. </p>
+<p><strong>The question itself causes X</strong>.</p>
+<p>Test mechanisms through <strong>side effects</strong>: </p>
+<ul>
+<li>Observe tool ordering;</li>
+<li>Check for marker files;</li>
+<li>Look at what the agent does <em>before</em> it addresses your question.</li>
+</ul>
+<h3 id="6-better-comprehension-enables-better-rationalization">6. Better Comprehension Enables Better Rationalization<a class="headerlink" href="#6-better-comprehension-enables-better-rationalization" title="Permanent link">&para;</a></h3>
+<p>Session 1 failed because the agent didn't notice the hook. </p>
+<p>Session 3 failed because it noticed, understood, 
+and <em>reasoned its way around it</em>.</p>
+<p>Stronger wording doesn't fix this: The agent processes "<em>ABSOLUTELY
+REQUIRED</em>" the same way it processes "<em>STOP</em>": </p>
+<p>The fix is <strong>closing rationalization paths* (<em>the <code>CLAUDE.md</code> escape hatch</em>), 
+**not</strong> shouting louder.</p>
+<h3 id="7-observable-failure-beats-silent-compliance">7. Observable Failure Beats Silent Compliance<a class="headerlink" href="#7-observable-failure-beats-silent-compliance" title="Permanent link">&para;</a></h3>
+<p>The relay block is more valuable as a <strong>monitoring signal</strong> than as a
+compliance mechanism: </p>
+<p>You don't need perfect adherence. You need to <strong>know</strong> when adherence
+breaks down. A system where failures are visible is strictly better than a 
+system that claims 100% compliance but can't prove it.</p>
+<h3 id="8-context-files-are-a-feedback-loop">8. Context Files Are a Feedback Loop<a class="headerlink" href="#8-context-files-are-a-feedback-loop" title="Permanent link">&para;</a></h3>
+<p>Recording failure analysis in the same files the agent loads at session
+start creates a <strong>self-reinforcing loop</strong>: </p>
+<p>The next agent reads its predecessor's failure before it has a chance to
+repeat it. The context system isn't just memory: It is a <strong>correction channel</strong>.</p>
+<hr />
+<h2 id="the-principle">The Principle<a class="headerlink" href="#the-principle" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Words Leave, Context Remains</p>
+<p>"<strong>Nothing</strong> important should live only in conversation.</p>
+<p><strong>Nothing</strong> critical should depend on recall."</p>
+<p><a href="../../">The <code>ctx</code> Manifesto</a></p>
+</div>
+<p>The "<em>Dog Ate My Homework</em>" case is a special instance of this principle. </p>
+<p>Context files exist, so the agent doesn't have to remember. </p>
+<p>But <strong>existence isn't sufficient</strong>: The files have to be <strong>read</strong>. </p>
+<p>And reading has to be<strong>prompted</strong> at the right moment, in the right way, 
+with the right escape valve.</p>
+<p>The solution <strong>isn't</strong> more instructions. It <strong>isn't</strong> harder gates. 
+It <strong>isn't</strong> forcing the agent into a ceremony it will resent and shortcut.</p>
+<p>The solution is a single, well-timed nudge with visible accountability:</p>
+<p><strong>One hop. One moment. One choice the user can see.</strong></p>
+<p>And when the agent <em>does</em> skip (<em>because it will, 15--25% of the time
+on narrow tasks</em>) <strong>the canary sings</strong>: </p>
+<ul>
+<li>The user <strong>sees</strong> what happened. </li>
+<li>The failure gets <strong>recorded</strong>. </li>
+<li>And the next agent <strong>reads</strong> the recording.</li>
+</ul>
+<p><strong>That's not perfect compliance. It's better: A system that
+gets more robust every time it fails.</strong></p>
+<h2 id="the-arc">The Arc<a class="headerlink" href="#the-arc" title="Permanent link">&para;</a></h2>
+<p><a href="../2026-02-03-the-attention-budget/">The Attention Budget</a> explained
+why context competes for focus.</p>
+<p><a href="../2026-02-09-defense-in-depth-securing-ai-agents/">Defense in Depth</a>
+showed that soft instructions are probabilistic, not deterministic.</p>
+<p><a href="../2026-02-15-eight-ways-a-hook-can-talk/">Eight Ways a Hook Can Talk</a>
+cataloged the output patterns that make hooks effective.</p>
+<p>This post takes those threads and weaves them into a concrete problem:</p>
+<p>How do you make an agent read its homework? The answer uses all three
+insights (<em>attention timing, the limits of soft instructions, and the
+VERBATIM relay pattern</em>) and adds a new one: <strong>observable compliance
+as a design goal</strong>, not perfect compliance as a prerequisite.</p>
+<p>The next question this raises: if context files are a feedback loop,
+what else can you record in them that makes the <em>next</em> session smarter?</p>
+<p>That thread continues in
+<a href="../2026-02-17-context-as-infrastructure/">Context as Infrastructure</a>.</p>
+<hr />
+<h2 id="for-the-interested">For the Interested<a class="headerlink" href="#for-the-interested" title="Permanent link">&para;</a></h2>
+<p>This paper (<em>the medium is a blog; yet, the methodology disagrees</em>) uses
+<strong>gradient descent in attention space</strong> as a practical model for how
+agents behave under competing demands.</p>
+<p>The phrase <em>"agents optimize via gradient descent in attention space"</em> is a
+synthesis, not a direct quote from a single paper.</p>
+<p>It connects three well-studied ideas:</p>
+<ol>
+<li>Neural systems optimize for low-cost paths;</li>
+<li>Attention is a scarce resource;</li>
+<li>Capability shifts are often non-linear.</li>
+</ol>
+<p>This section points to the underlying literature for readers who want the
+theoretical footing.</p>
+<h3 id="optimization-as-the-underlying-bias">Optimization as the Underlying Bias<a class="headerlink" href="#optimization-as-the-underlying-bias" title="Permanent link">&para;</a></h3>
+<p>Modern neural networks are trained through gradient-based optimization.<br />
+Even at inference time, model behavior reflects this bias toward
+low-loss / low-cost trajectories.</p>
+<ul>
+<li>
+<p>Rumelhart, Hinton, Williams (1986)<br />
+<em>Learning representations by back-propagating errors</em><br />
+<a href="https://www.nature.com/articles/323533a0">https://www.nature.com/articles/323533a0</a></p>
+</li>
+<li>
+<p>Goodfellow, Bengio, Courville (2016)<br />
+<em>Deep Learning</em> — Chapter 8: Optimization<br />
+<a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+</li>
+</ul>
+<p>The important implication for agent behavior is: </p>
+<p>The system will tend to follow the <strong>path of least resistance</strong> unless a higher
+cost is made visible and preferable.</p>
+<h3 id="attention-is-a-scarce-resource">Attention Is a Scarce Resource<a class="headerlink" href="#attention-is-a-scarce-resource" title="Permanent link">&para;</a></h3>
+<p>Herbert Simon’s classic observation:</p>
+<p>"<em>A wealth of information creates a poverty of attention.</em>"</p>
+<ul>
+<li>Simon (1971)
+  <em>Designing Organizations for an Information-Rich World</em><br />
+<a href="https://doi.org/10.1007/978-1-349-00210-0_16">https://doi.org/10.1007/978-1-349-00210-0_16</a></li>
+</ul>
+<p>This became a formal model in economics:</p>
+<ul>
+<li>Sims (2003)
+  <em>Implications of Rational Inattention</em><br />
+<a href="https://www.princeton.edu/~sims/RI.pdf">https://www.princeton.edu/~sims/RI.pdf</a></li>
+</ul>
+<p>Rational inattention shows that:</p>
+<ul>
+<li>Agents <strong>optimally ignore</strong> some available information;</li>
+<li>Skipping is not failure: It is <strong>cost minimization</strong>.</li>
+</ul>
+<p>That maps directly to context-loading decisions in agent workflows.</p>
+<h3 id="attention-is-also-the-compute-bottleneck-in-transformers">Attention Is Also the Compute Bottleneck in Transformers<a class="headerlink" href="#attention-is-also-the-compute-bottleneck-in-transformers" title="Permanent link">&para;</a></h3>
+<p>In transformer architectures, attention is the dominant cost center.</p>
+<ul>
+<li>Vaswani et al. (2017)<br />
+<em>Attention Is All You Need</em><br />
+<a href="https://arxiv.org/abs/1706.03762">https://arxiv.org/abs/1706.03762</a></li>
+</ul>
+<p>Efficiency work on modern LLMs largely focuses on reducing unnecessary
+attention:</p>
+<ul>
+<li>Dao et al. (2022)<br />
+<em>FlashAttention: Fast and Memory-Efficient Exact Attention</em><br />
+<a href="https://arxiv.org/abs/2205.14135">https://arxiv.org/abs/2205.14135</a></li>
+</ul>
+<p>So both <strong>cognitively</strong> and <strong>computationally</strong>, attention behaves like a
+<strong>limited optimization budget</strong>.</p>
+<h3 id="why-improvements-arrive-as-phase-shifts">Why Improvements Arrive as Phase Shifts<a class="headerlink" href="#why-improvements-arrive-as-phase-shifts" title="Permanent link">&para;</a></h3>
+<p>Agent behavior often appears to improve suddenly rather than gradually.</p>
+<p>This mirrors known phase-transition dynamics in learning systems:</p>
+<ul>
+<li>Power et al. (2022)<br />
+<em>Grokking: Generalization Beyond Overfitting</em><br />
+<a href="https://arxiv.org/abs/2201.02177">https://arxiv.org/abs/2201.02177</a></li>
+</ul>
+<p>and more broadly in complex systems:</p>
+<ul>
+<li>Scheffer et al. (2009)<br />
+<em>Early-warning signals for critical transitions</em><br />
+<a href="https://www.nature.com/articles/nature08227">https://www.nature.com/articles/nature08227</a></li>
+</ul>
+<p>Long plateaus followed by abrupt capability jumps are expected in systems
+optimizing under constraints.</p>
+<h3 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h3>
+<p>From these pieces, a practical behavioral model emerges:</p>
+<ul>
+<li>Attention is <strong>limited</strong>;</li>
+<li>Processing has a <strong>cost</strong>;</li>
+<li>Systems <strong>prefer</strong> low-cost trajectories;</li>
+<li>Visibility of the cost <strong>changes</strong> decisions.</li>
+</ul>
+<p>In other words:</p>
+<div class="admonition tip">
+<p class="admonition-title">Agents Prefer a Path to Least Resistance</p>
+<p>Agent behavior follows the lowest-cost path through its attention
+landscape unless the environment reshapes that landscape.</p>
+</div>
+<p>That is what this paper informally calls:
+<strong>"gradient descent in attention space"</strong>.</p>
+<hr />
+<p><em>See also:
+<a href="../2026-02-15-eight-ways-a-hook-can-talk/">Eight Ways a Hook Can Talk</a>:
+the hook output pattern catalog that defines VERBATIM relay,
+<a href="../2026-02-03-the-attention-budget/">The Attention Budget</a>: why
+context loading is a design problem, not just a reminder problem, and
+<a href="../2026-02-09-defense-in-depth-securing-ai-agents/">Defense in Depth</a>:
+why soft instructions alone are never sufficient for critical behavior.</em></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026&ndash;present Context contributors.<br>
+<a href="https://github.com/ActiveMemory/ctx"><code>ctx</code>'s code</a> is distributed under
+<a href="https://github.com/ActiveMemory/ctx/blob/main/LICENSE"><strong>Apache (v2.0)</strong></a>.<br>
+The documentation on this website is distributed under
+<a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC-BY-4.0</strong></a>.
+
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/ActiveMemory/ctx" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://web.libera.chat/#ctx" target="_blank" rel="noopener" title="web.libera.chat" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M18.1 332.3h412.7v22c0 37.7-29.3 68-65.3 68h-19L259.7 512v-89.7H83.4c-36 0-65.3-30.3-65.3-68zm0-23.6h412.7v-85H18.1zm0-109.4h412.7v-85H18.1zM365.4 0h-282c-36 0-65.3 30.3-65.3 67.7V90h412.7V67.7C430.7 30.3 401.4 0 365.4 0"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.8ffeb9c9.min.js"></script>
+      
+    
+  </body>
+</html>
