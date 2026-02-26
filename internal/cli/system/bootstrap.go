@@ -41,6 +41,12 @@ var bootstrapRules = []string{
 	"Run `ctx status` for context health",
 }
 
+// bootstrapNextSteps tells the agent what to do immediately after bootstrap.
+var bootstrapNextSteps = []string{
+	"Read AGENT_PLAYBOOK.md from the context directory",
+	"Run `ctx agent --budget 4000` for a content summary",
+}
+
 func runBootstrap(cmd *cobra.Command) error {
 	dir := rc.ContextDir()
 
@@ -71,6 +77,11 @@ func outputBootstrapText(cmd *cobra.Command, dir string, files []string) {
 	for i, r := range bootstrapRules {
 		cmd.Println(fmt.Sprintf("  %d. %s", i+1, r))
 	}
+	cmd.Println()
+	cmd.Println("Next steps:")
+	for i, s := range bootstrapNextSteps {
+		cmd.Println(fmt.Sprintf("  %d. %s", i+1, s))
+	}
 }
 
 func outputBootstrapJSON(cmd *cobra.Command, dir string, files []string) error {
@@ -78,12 +89,14 @@ func outputBootstrapJSON(cmd *cobra.Command, dir string, files []string) error {
 		ContextDir string   `json:"context_dir"`
 		Files      []string `json:"files"`
 		Rules      []string `json:"rules"`
+		NextSteps  []string `json:"next_steps"`
 	}
 
 	out := jsonOutput{
 		ContextDir: dir,
 		Files:      files,
 		Rules:      bootstrapRules,
+		NextSteps:  bootstrapNextSteps,
 	}
 
 	enc := json.NewEncoder(cmd.OutOrStdout())

@@ -11,6 +11,23 @@ Stories, insights, and lessons learned from **building** and **using** `ctx`.
 
 ## Posts
 
+### [The Dog Ate My Homework: Teaching AI Agents to Read Before They Write](2026-02-25-the-homework-problem.md)
+
+*Jose Alekhinne / February 25, 2026*
+
+You wrote the playbook. You organized the files. You even put "**CRITICAL,
+not optional**" in **bold**. The agent skipped all of it. Five sessions, five
+failure modes, and the discovery that **observable compliance** beats
+perfect compliance: A relay block that works as a compliance canary,
+a feedback loop where agents read their own prior failure analysis,
+and the principle that a 30-second read delay is always cheaper than
+a decision made without context.
+
+**Topics**: hooks, agent behavior, context engineering, behavioral design,
+testing methodology, compliance monitoring
+
+---
+
 ### [When a System Starts Explaining Itself](2026-02-17-when-a-system-starts-explaining-itself.md)
 
 *Jose Alekhinne / February 17, 2026*

@@ -9,10 +9,10 @@ Technical reference for `ctx` **commands**, **skills**, and **internals**.
 
 ---
 
-### [CLI](cli-reference.md)
+### [CLI](../cli/index.md)
 
 Every command, subcommand, and flag.
-Organized by category with usage examples.
+Now a top-level section — see [CLI Reference](../cli/index.md).
 
 ---
 

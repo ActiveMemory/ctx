@@ -59,13 +59,14 @@ your working tree — no reinstall needed after edits:
 
 !!! warning "Claude Code Caches Plugin Files"
     Even though the marketplace points at a directory on disk, Claude Code
-    **caches** skills and hooks. 
+    **caches** skills and hooks. After editing files under
+    `internal/assets/claude/`, clear the cache and restart:
 
-    After editing files under
-    `internal/assets/claude/`, you must bump the plugin version and
-    refresh the marketplace. 
-    
-    See [Skill or Hook Changes](#skill-or-hook-changes) for the steps.
+    ```bash
+    make plugin-reload   # then restart Claude Code
+    ```
+
+    See [Skill or Hook Changes](#skill-or-hook-changes) for details.
 
 ### 4. Verify
 
@@ -148,18 +149,21 @@ You must rebuild for Go changes to take effect.
 Edit files under `internal/assets/claude/skills/` or
 `internal/assets/claude/hooks/`.
 
-After making changes, update the plugin version and refresh the marketplace:
+Claude Code caches plugin files, so edits aren't picked up automatically.
+Clear the cache and restart:
 
-1. Bump the version in `.claude-plugin/marketplace.json`
-   (*the `plugins[0].version` field*);
-2. Bump the version in `internal/assets/claude/.claude-plugin/plugin.json`
-   (*the top-level `version` field*);
-3. *(Optional but recommended)* Update `VERSION` to match:
-   keeping all three in sync avoids confusion;
-4. In Claude Code, type `/plugin` and press Enter;
-5. Select **Marketplaces** → **activememory-ctx**;
-6. Select **Update marketplace**;
-7. Restart Claude Code for the changes to take effect.
+```bash
+make plugin-reload   # nukes ~/.claude/plugins/cache/activememory-ctx/
+# then restart Claude Code
+```
+
+The plugin will be re-installed from your local marketplace on startup.
+No version bump is needed during development.
+
+!!! tip "Version bumps are for releases, not iteration"
+    Only bump `VERSION`, `plugin.json`, and `marketplace.json` when
+    cutting a release. During development, `make plugin-reload` is
+    all you need.
 
 ### Running Tests
 

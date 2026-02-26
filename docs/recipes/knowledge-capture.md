@@ -400,7 +400,7 @@ Add, prioritize, complete, and archive tasks across sessions.
   reflection and context persistence
 * [Detecting and Fixing Drift](context-health.md): keeping knowledge files
   accurate as the codebase evolves
-* [CLI Reference](../reference/cli-reference.md): full documentation for `ctx add`,
+* [CLI Reference](../cli/context.md): full documentation for `ctx add`,
   `ctx decisions`, `ctx learnings`
 * [Context Files](../home/context-files.md): format and conventions for `DECISIONS.md`,
   `LEARNINGS.md`, and `CONVENTIONS.md`

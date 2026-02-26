@@ -497,7 +497,7 @@ rituals for every session: `/ctx-remember` at the start,
 
 * [Session Ceremonies](session-ceremonies.md): why `/ctx-remember` and
   `/ctx-wrap-up` are explicit slash commands, not conversational
-* [CLI Reference](../reference/cli-reference.md): full documentation for all `ctx` commands
+* [CLI Reference](../cli/index.md): full documentation for all `ctx` commands
 * [Prompting Guide](../home/prompting-guide.md): effective prompts for ctx-enabled projects
 * [Tracking Work Across Sessions](task-management.md): deep dive on task management
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):

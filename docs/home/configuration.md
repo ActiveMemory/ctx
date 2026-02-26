@@ -332,9 +332,9 @@ throughout the session.
 This replaces the previous approach of hardcoding `.context/` paths in agent
 instructions. 
 
-See [CLI Reference: bootstrap](../reference/cli-reference.md#ctx-system-bootstrap)
+See [CLI Reference: bootstrap](../cli/system.md#ctx-system-bootstrap)
 for full details.
 
 ---
 
-**See also**: [CLI Reference](../reference/cli-reference.md) | [Context Files](context-files.md) | [Scratchpad](../reference/scratchpad.md)
+**See also**: [CLI Reference](../cli/index.md) | [Context Files](context-files.md) | [Scratchpad](../reference/scratchpad.md)

@@ -102,7 +102,7 @@ with interpreted suggestions.
 **Wraps**: `ctx status [--verbose] [--json]`
 
 **See also**: [The Complete Session](../recipes/session-lifecycle.md),
-[`ctx status` CLI](cli-reference.md#ctx-status)
+[`ctx status` CLI](../cli/init-status.md#ctx-status)
 
 ---
 
@@ -114,7 +114,7 @@ Also runs automatically via the PreToolUse hook with cooldown.
 **Wraps**: `ctx agent [--budget] [--format] [--cooldown] [--session]`
 
 **See also**: [The Complete Session](../recipes/session-lifecycle.md),
-[`ctx agent` CLI](cli-reference.md#ctx-agent)
+[`ctx agent` CLI](../cli/init-status.md#ctx-agent)
 
 ---
 

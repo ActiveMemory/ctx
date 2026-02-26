@@ -103,10 +103,25 @@
         <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/reference/</loc>
+        <loc>https://ctx.ist/cli/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/reference/cli-reference/</loc>
+        <loc>https://ctx.ist/cli/init-status/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/context/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/recall/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/tools/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/system/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/reference/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/reference/skills/</loc>

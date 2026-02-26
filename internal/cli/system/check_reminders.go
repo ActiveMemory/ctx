@@ -64,7 +64,7 @@ func runCheckReminders(cmd *cobra.Command) error {
 	cmd.Println("│ Dismiss all: ctx remind dismiss --all")
 	cmd.Println("└──────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), "")
+	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), "", "")
 
 	return nil
 }

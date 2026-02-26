@@ -12,6 +12,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -112,7 +113,7 @@ func TestSend_NoWebhook(t *testing.T) {
 	defer cleanup()
 
 	// No webhook configured — should noop without error
-	err := Send("test", "hello", "session-1")
+	err := Send("test", "hello", "session-1", "")
 	if err != nil {
 		t.Fatalf("Send() error = %v", err)
 	}
@@ -140,7 +141,7 @@ func TestSend_EventFiltered(t *testing.T) {
 	rc.Reset()
 
 	// Send event "test" which is NOT in the allowed list
-	err := Send("test", "hello", "session-1")
+	err := Send("test", "hello", "session-1", "")
 	if err != nil {
 		t.Fatalf("Send() error = %v", err)
 	}
@@ -169,7 +170,7 @@ func TestSend_Payload(t *testing.T) {
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600)
 	rc.Reset()
 
-	err := Send("loop", "Loop completed after 5 iterations", "abc123")
+	err := Send("loop", "Loop completed after 5 iterations", "abc123", "detail payload here")
 	if err != nil {
 		t.Fatalf("Send() error = %v", err)
 	}
@@ -188,6 +189,44 @@ func TestSend_Payload(t *testing.T) {
 	}
 	if received.Project == "" {
 		t.Error("Project is empty")
+	}
+	if received.Detail != "detail payload here" {
+		t.Errorf("Detail = %q, want %q", received.Detail, "detail payload here")
+	}
+}
+
+func TestSend_DetailTruncation(t *testing.T) {
+	tempDir, cleanup := setupTestDir(t)
+	defer cleanup()
+
+	var received Payload
+	ts := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
+		_ = json.NewDecoder(r.Body).Decode(&received)
+	}))
+	defer ts.Close()
+
+	if err := SaveWebhook(ts.URL); err != nil {
+		t.Fatalf("SaveWebhook() error = %v", err)
+	}
+
+	rcContent := "notify:\n  events:\n    - test\n"
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0o600)
+	rc.Reset()
+
+	// Create a detail string longer than maxDetailLen (1000)
+	longDetail := strings.Repeat("x", 1200)
+	err := Send("test", "hello", "session-1", longDetail)
+	if err != nil {
+		t.Fatalf("Send() error = %v", err)
+	}
+
+	// Should be truncated to 1000 chars + suffix
+	wantPrefix := strings.Repeat("x", 1000)
+	if !strings.HasPrefix(received.Detail, wantPrefix) {
+		t.Errorf("Detail prefix length = %d, want %d", len(received.Detail), 1000)
+	}
+	if !strings.HasSuffix(received.Detail, "…[truncated]") {
+		t.Errorf("Detail should end with truncation marker, got suffix: %q", received.Detail[len(received.Detail)-20:])
 	}
 }
 
@@ -210,7 +249,7 @@ func TestSend_HTTPErrorIgnored(t *testing.T) {
 	rc.Reset()
 
 	// Should not return error even on HTTP 500
-	err := Send("test", "hello", "session-1")
+	err := Send("test", "hello", "session-1", "")
 	if err != nil {
 		t.Fatalf("Send() error = %v, want nil (fire-and-forget)", err)
 	}

@@ -213,7 +213,7 @@ ctx system bootstrap
 
 This prints the resolved context directory, the files in it, and the
 operating rules. The `CLAUDE.md` template instructs the agent to run this
-automatically. See [CLI Reference: bootstrap](../reference/cli-reference.md#ctx-system-bootstrap).
+automatically. See [CLI Reference: bootstrap](../cli/system.md#ctx-system-bootstrap).
 
 ## The Two Skills You Should Always Use
 

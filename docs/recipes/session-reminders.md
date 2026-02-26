@@ -183,7 +183,7 @@ and sensitive values that don't need session-start announcements.
 
 ## See Also
 
-* [CLI Reference: ctx remind](../reference/cli-reference.md): full
+* [CLI Reference: ctx remind](../cli/tools.md#ctx-remind): full
   command syntax and flags
 * [The Complete Session](session-lifecycle.md): how reminders fit into
   the session lifecycle

@@ -32,7 +32,7 @@ topics:
     What if you treated it as **infrastructure** instead?
 
 This post synthesizes a thread that has been running through every
-`ctx` blog post -- from the [origin story][origin-post] to the
+`ctx` blog post; from the [origin story][origin-post] to the
 [attention budget][attention-post] to the [discipline release][v030].
 The thread is this: **context is not a prompt problem. It is an
 infrastructure problem.** And the tools we build for it should look

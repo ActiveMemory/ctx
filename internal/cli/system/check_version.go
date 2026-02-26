@@ -97,8 +97,8 @@ func runCheckVersion(cmd *cobra.Command) error {
 	}
 	cmd.Println("└────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "")
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "", "")
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), "", "")
 
 	touchFile(markerFile)
 
@@ -137,8 +137,8 @@ func checkKeyAge(cmd *cobra.Command) {
 	}
 	cmd.Println("└──────────────────────────────────────────────────┘")
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "")
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "", "")
+	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), "", "")
 }
 
 // parseMajorMinor extracts major and minor version numbers from a semver

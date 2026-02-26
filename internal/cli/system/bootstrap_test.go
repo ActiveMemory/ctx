@@ -46,6 +46,12 @@ func TestBootstrap_TextOutput(t *testing.T) {
 	if !strings.Contains(out, "Rules:") {
 		t.Errorf("expected output to contain 'Rules:', got: %s", out)
 	}
+	if !strings.Contains(out, "Next steps:") {
+		t.Errorf("expected output to contain 'Next steps:', got: %s", out)
+	}
+	if !strings.Contains(out, "AGENT_PLAYBOOK") {
+		t.Errorf("expected output to contain 'AGENT_PLAYBOOK', got: %s", out)
+	}
 }
 
 func TestBootstrap_JSONOutput(t *testing.T) {
@@ -68,6 +74,7 @@ func TestBootstrap_JSONOutput(t *testing.T) {
 		ContextDir string   `json:"context_dir"`
 		Files      []string `json:"files"`
 		Rules      []string `json:"rules"`
+		NextSteps  []string `json:"next_steps"`
 	}
 	if err := json.Unmarshal([]byte(out), &result); err != nil {
 		t.Fatalf("invalid JSON output: %v\noutput: %s", err, out)
@@ -81,6 +88,19 @@ func TestBootstrap_JSONOutput(t *testing.T) {
 	}
 	if len(result.Rules) == 0 {
 		t.Error("expected rules to be non-empty")
+	}
+	if len(result.NextSteps) == 0 {
+		t.Error("expected next_steps to be non-empty")
+	}
+	foundPlaybook := false
+	for _, s := range result.NextSteps {
+		if strings.Contains(s, "AGENT_PLAYBOOK") {
+			foundPlaybook = true
+			break
+		}
+	}
+	if !foundPlaybook {
+		t.Errorf("expected next_steps to mention AGENT_PLAYBOOK, got: %v", result.NextSteps)
 	}
 
 	// Verify known files are present

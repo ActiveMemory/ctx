@@ -105,7 +105,7 @@ chmod +x loop.sh
 ./loop.sh
 ```
 
-You can also generate this script with `ctx loop` (see [CLI Reference](../reference/cli-reference.md#ctx-loop)).
+You can also generate this script with `ctx loop` (see [CLI Reference](../cli/tools.md#ctx-loop)).
 
 ### Why Do We Use a Shell Loop?
 
@@ -415,5 +415,5 @@ BEFORE any work:
 ## Resources
 
 - [Geoffrey Huntley's Ralph Wiggum Technique](https://ghuntley.com/ralph/): The original inspiration
-- [Context CLI](../reference/cli-reference.md): Command reference
+- [Context CLI](../cli/index.md): Command reference
 - [Integrations](integrations.md): Tool-specific setup

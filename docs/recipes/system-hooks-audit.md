@@ -501,5 +501,5 @@ files accurate as your codebase evolves.
   VERBATIM relays, agent directives, and hard gates
 * [Detecting and Fixing Drift](context-health.md): structural checks
   that complement runtime hook auditing
-* [CLI Reference](../reference/cli-reference.md): full `ctx system`
+* [CLI Reference](../cli/system.md): full `ctx system`
   command reference

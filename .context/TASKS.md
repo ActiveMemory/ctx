@@ -16,7 +16,7 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 - [ ] Suppress context checkpoint nudges after wrap-up — marker file approach. Spec: specs/suppress-nudges-after-wrap-up.md #added:2026-02-24-205402
 
-- [ ] Remove Context Monitor section from docs/reference/session-journal.md — references wrong path (./tools/context-watch.sh), ./hack/context-watch.sh is a hacky heuristic, and VERBATIM relay hooks (check-context-size) already serve this purpose #added:2026-02-24-204552
+- [x] Remove Context Monitor section from docs/reference/session-journal.md — references wrong path (./tools/context-watch.sh), ./hack/context-watch.sh is a hacky heuristic, and VERBATIM relay hooks (check-context-size) already serve this purpose #added:2026-02-24-204552
 
 - [ ] Promote CLI to top-level nav group in zensical.toml: Home | Recipes | CLI | Reference | Operations | Security | Blog — CLI gets the split command pages, Reference keeps conceptual docs (skills, journal format, scratchpad, context files) #added:2026-02-24-204210
 
@@ -118,7 +118,7 @@ STRUCTURE RULES (see CONSTITUTION.md):
 **User-Facing Documentation** (from `ideas/done/REPORT-7-documentation.md`):
 Docs are feature-organized, not problem-organized. Key structural improvements:
 
-- [ ] Investigate why this PR is closed, is there anything we can leverage
+- [x] Investigate why this PR is closed, is there anything we can leverage
       from it: https://github.com/ActiveMemory/ctx/pull/17
 
 - [ ] Use-case page: "My AI Keeps Making the Same Mistakes" — problem-first

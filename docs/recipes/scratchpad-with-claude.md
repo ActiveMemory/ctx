@@ -209,7 +209,7 @@ Once the skill is active, it translates intent into commands:
 | "show me entry 3"                         | `ctx pad show 3`                          |
 | "delete the third one" / "remove entry 3" | `ctx pad rm 3`                            |
 | "change entry 2 to ..."                   | `ctx pad edit 2 "new text"`               |
-| "append '-- important' to entry 3"        | `ctx pad edit 3 --append " -- important"` |
+| "append ' +important' to entry 3"        | `ctx pad edit 3 --append " +important"`    |
 | "prepend 'URGENT:' to entry 1"            | `ctx pad edit 1 --prepend "URGENT: "`     |
 | "prioritize entry 4" / "move to the top"  | `ctx pad mv 4 1`                          |
 | "import my notes from notes.txt"          | `ctx pad import notes.txt`                |

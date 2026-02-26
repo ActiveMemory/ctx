@@ -21,8 +21,8 @@ The documentation on this website is distributed under
 """
 
 nav = [
-  { "ctx Manifesto" = "index.md" },
-  { "ctx Blog" = [
+  { "Manifesto" = "index.md" },
+  { "Blog" = [
     "blog/index.md",
   ]},
   { "Home" = [
@@ -73,9 +73,16 @@ nav = [
       "recipes/parallel-worktrees.md",
     ]},
   ]},
+  { "CLI" = [
+    "cli/index.md",
+    "cli/init-status.md",
+    "cli/context.md",
+    "cli/recall.md",
+    "cli/tools.md",
+    "cli/system.md",
+  ]},
   { "Reference" = [
     "reference/index.md",
-    "reference/cli-reference.md",
     "reference/skills.md",
     "reference/comparison.md",
     "reference/session-journal.md",

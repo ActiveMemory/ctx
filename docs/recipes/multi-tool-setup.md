@@ -26,11 +26,11 @@ cd your-project
 ctx init                      # creates .context/
 source <(ctx completion zsh)  # shell completion (or bash/fish)
 
-# -- Claude Code (automatic after plugin install) --
+# ## Claude Code (automatic after plugin install) ##
 claude /plugin marketplace add ActiveMemory/ctx
 claude /plugin install ctx@activememory-ctx
 
-# -- Cursor / Aider / Copilot / Windsurf --
+# ## Cursor / Aider / Copilot / Windsurf ##
 ctx hook cursor # or: aider, copilot, windsurf
 ```
 
@@ -301,25 +301,25 @@ This converts raw session data into editable Markdown files in
 Here is the condensed setup for all three tools:
 
 ```bash
-# -- Common (run once per project) --
+# ## Common (run once per project) ##
 cd your-project
 ctx init
 source <(ctx completion zsh)       # or bash/fish
 
-# -- Claude Code (automatic, just verify) --
+# ## Claude Code (automatic, just verify) ##
 # Start Claude Code, then ask: "Do you remember?"
 
-# -- Cursor --
+# ## Cursor ##
 ctx hook cursor
 # Add the system prompt to .cursor/settings.json
 # Paste context: ctx agent --budget 4000 | pbcopy
 
-# -- Aider --
+# ## Aider ##
 ctx hook aider
 # Create .aider.conf.yml with read: paths
 # Run watch mode alongside: ctx watch --log /tmp/aider.log
 
-# -- Verify any tool --
+# ## Verify any Tool ##
 # Ask your AI: "Do you remember?"
 # Expect: specific tasks, decisions, recent context
 ```
@@ -353,5 +353,5 @@ setups.
 ## See Also
 
 * [The Complete Session](session-lifecycle.md): full session lifecycle recipe
-* [CLI Reference](../reference/cli-reference.md): all commands and flags
+* [CLI Reference](../cli/index.md): all commands and flags
 * [Integrations](../operations/integrations.md): detailed per-tool integration docs

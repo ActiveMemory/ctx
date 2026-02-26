@@ -37,6 +37,7 @@ Plumbing subcommands (used by skills and automation):
   mark-journal         Update journal processing state
 
 Hook subcommands (Claude Code plugin — safe to run manually):
+  context-load-gate           Context file read directive (PreToolUse)
   check-context-size          Context size checkpoint
   check-ceremonies            Session ceremony adoption nudge
   check-persistence           Context persistence nudge
@@ -58,6 +59,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		resourcesCmd(),
 		bootstrapCmd(),
 		markJournalCmd(),
+		contextLoadGateCmd(),
 		checkContextSizeCmd(),
 		checkPersistenceCmd(),
 		checkJournalCmd(),

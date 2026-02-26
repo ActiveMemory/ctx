@@ -469,7 +469,7 @@ Store short-lived sensitive notes in an encrypted scratchpad.
   capturing the "why" behind your work
 * [Detecting and Fixing Drift](context-health.md):
   keeping `TASKS.md` accurate over time
-* [CLI Reference](../reference/cli-reference.md): 
+* [CLI Reference](../cli/context.md):
   full documentation for `ctx add`, `ctx complete`, `ctx tasks`
 * [Context Files: `TASKS.md`](../home/context-files.md#tasksmd): 
   format and conventions for `TASKS.md`

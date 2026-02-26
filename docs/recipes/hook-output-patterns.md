@@ -339,7 +339,7 @@ A regex meant to catch `ctx` as a binary will also match `ctx` as a
 directory component:
 
 ```bash
-# Too broad -- blocks: git -C /home/jose/WORKSPACE/ctx status
+# Too broad: blocks: git -C /home/jose/WORKSPACE/ctx status
 (/home/|/tmp/|/var/)[^ ]*ctx[^ ]*
 
 # Narrow to binary only:

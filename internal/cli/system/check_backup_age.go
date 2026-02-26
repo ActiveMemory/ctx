@@ -91,8 +91,8 @@ func runCheckBackupAge(cmd *cobra.Command) error {
 	}
 	cmd.Println("└──────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", "check-backup-age: Backup warning", "")
-	_ = notify.Send("relay", "check-backup-age: Backup warning", "")
+	_ = notify.Send("nudge", "check-backup-age: Backup warning", "", "")
+	_ = notify.Send("relay", "check-backup-age: Backup warning", "", "")
 
 	touchFile(throttleFile)
 

@@ -137,8 +137,8 @@ func runCheckKnowledge(cmd *cobra.Command) error {
 	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
-	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", "")
-	_ = notify.Send("relay", "check-knowledge: Knowledge file growth detected", "")
+	_ = notify.Send("nudge", "check-knowledge: Knowledge file growth detected", "", "")
+	_ = notify.Send("relay", "check-knowledge: Knowledge file growth detected", "", "")
 
 	touchFile(markerPath)
 

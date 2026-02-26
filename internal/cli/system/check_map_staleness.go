@@ -117,8 +117,8 @@ func runCheckMapStaleness(cmd *cobra.Command) error {
 	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
-	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", "")
-	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", "")
+	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", "", "")
+	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", "", "")
 
 	touchFile(markerPath)
 

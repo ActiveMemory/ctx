@@ -303,4 +303,4 @@ grep -c "ctx:end" CLAUDE.md      # Should print 1
 * [Getting Started](../home/getting-started.md): Full setup walkthrough
 * [Context Files](../home/context-files.md): What each `.context/` file does
 * [Integrations](integrations.md): Per-tool setup (*Claude Code, Cursor, Aider, Copilot*)
-* [CLI Reference](../reference/cli-reference.md): All `ctx` commands and flags
+* [CLI Reference](../cli/index.md): All `ctx` commands and flags

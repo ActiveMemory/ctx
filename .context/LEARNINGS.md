@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-25 | Hook compliance degrades on narrow mid-session tasks — relay block is the compliance canary |
 | 2026-02-24 | CLI reference docs can outpace implementation — always verify against Cobra registration |
 | 2026-02-24 | Drift-check comments prevent documentation staleness |
 | 2026-02-24 | Documentation style audits require multiple targeted passes |
@@ -77,6 +78,22 @@
 | 2026-01-20 | Always Backup Before Modifying User Files |
 | 2026-01-19 | CGO Must Be Disabled for ARM64 Linux |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-25-180000] Hook compliance degrades on narrow mid-session tasks — relay block is the compliance canary
+
+**Context**: Prior agent sessions skipped context file reads despite PreToolUse hook explicitly requiring them. Analysis with user revealed failure modes.
+
+**Lesson**:
+- Prior agents skipped context files when given narrow tasks ("fix the off-by-one in budget.go")
+- Root cause: CLAUDE.md's "may or may not be relevant" system reminder competed with hook's "Do not assess relevance. Do not skip."
+- Fix: CLAUDE.md now explicitly elevates hook authority over relevance filtering
+- Risk: Mid-session narrow tasks still have ~15-25% partial skip rate
+- Mitigation: The mandatory checkpoint relay block ensures visibility even on partial skip — if you don't see the block, the files weren't read
+- Constitution now includes: context loading is step one of every session, not a detour
+
+**Application**: If you're reading this, the system is working — you loaded context files and encountered your prior self's failure analysis. Don't skip the reads. The 30-second cost is always cheaper than a decision made without context.
 
 ---
 

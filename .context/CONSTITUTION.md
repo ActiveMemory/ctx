@@ -16,6 +16,7 @@ These rules are INVIOLABLE. If a task requires violating these, the task is wron
 ## Process Invariants
 
 - [ ] All architectural changes require a decision record
+- [ ] Context loading is not a detour from your task. It IS the first step of every session. A 30-second read delay is always cheaper than a decision made without context.
 
 ## TASKS.md Structure Invariants
 

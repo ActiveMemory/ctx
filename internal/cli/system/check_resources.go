@@ -69,8 +69,8 @@ func runCheckResources(cmd *cobra.Command) error {
 	}
 	cmd.Println("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
 
-	_ = notify.Send("nudge", "check-resources: System resources critically low", "")
-	_ = notify.Send("relay", "check-resources: System resources critically low", "")
+	_ = notify.Send("nudge", "check-resources: System resources critically low", "", "")
+	_ = notify.Send("relay", "check-resources: System resources critically low", "", "")
 
 	return nil
 }

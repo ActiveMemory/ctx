@@ -194,7 +194,7 @@ Run multiple agents on independent task tracks using git worktrees.
 
 ## Go Deeper
 
-* [CLI Reference](../reference/cli-reference.md) — all commands and flags
+* [CLI Reference](../cli/index.md) — all commands and flags
 * [Integrations](../operations/integrations.md) — setup for Claude Code, Cursor, Aider
 * [Session Journal](../reference/session-journal.md) — browse and search session history
 

@@ -379,5 +379,5 @@ Recommended permission defaults and maintenance workflow for Claude Code.
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md): 
   keeping knowledge files current
 * [The Complete Session](session-lifecycle.md): where maintenance fits in the daily workflow
-* [CLI Reference](../reference/cli-reference.md): full flag documentation for all commands
+* [CLI Reference](../cli/index.md): full flag documentation for all commands
 * [Context Files](../home/context-files.md): structure and purpose of each `.context/` file

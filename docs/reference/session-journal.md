@@ -462,7 +462,7 @@ pipx install zensical
 
 ## See Also
 
-* [`ctx recall`](cli-reference.md#ctx-recall): Session discovery and listing
-* [`ctx journal site`](cli-reference.md#ctx-journal-site): Static site generation
-* [`ctx journal obsidian`](cli-reference.md#ctx-journal-obsidian): Obsidian vault export
+* [`ctx recall`](../cli/recall.md#ctx-recall): Session discovery and listing
+* [`ctx journal site`](../cli/recall.md#ctx-journal-site): Static site generation
+* [`ctx journal obsidian`](../cli/recall.md#ctx-journal-obsidian): Obsidian vault export
 * [Context Files](../home/context-files.md): The `.context/` directory structure

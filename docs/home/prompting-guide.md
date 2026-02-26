@@ -29,12 +29,9 @@ icon: lucide/message-circle
 
 This guide is about crafting **effective prompts** for working with 
 AI assistants in `ctx`-enabled projects, but the guidelines given here
-can be applicable to other AI systems, too.
+apply to other AI systems, too.
 
-!!! tip Help Your AI Sidekick
-    AI assistants *may not* automatically read context files.
-
-    **The right prompt triggers the right behavior**. 
+**The right prompt triggers the right behavior**. 
 
 This guide documents prompts that **reliably** produce **good results**.
 
@@ -46,7 +43,8 @@ This guide documents prompts that **reliably** produce **good results**.
 
 Triggers the AI to silently read `TASKS.md`, `DECISIONS.md`,
 `LEARNINGS.md`, and check recent history via `ctx recall` before
-responding with a **structured readback**:
+responding with a 
+**[structured readback](../recipes/session-lifecycle.md#step-1-load-context)**:
 
 1. **Last session**: most recent session topic and date
 2. **Active work**: pending or in-progress tasks
@@ -55,7 +53,7 @@ responding with a **structured readback**:
 
 Use this at the start of every important session.
 
-```
+```text
 Do you remember what we were working on?
 ```
 
@@ -71,7 +69,7 @@ there are files...*"), it has not loaded `CLAUDE.md` or
 
 Prompts reading of `TASKS.md`, recent sessions, and status overview.
 
-Use this when resuming work after a break.
+Use this when **resuming work** after a break.
 
 **Variants**:
 
@@ -134,35 +132,35 @@ Before you start, check ctx recall for the auth discussion session
 Constrain the AI to prevent sprawl. These are some of the most
 useful prompts in day-to-day work.
 
-```
+```text
 Only change files in internal/cli/add/. Nothing else.
 ```
 
-```
+```text
 No new files. Modify the existing implementation.
 ```
 
-```
+```text
 Keep the public API unchanged. Internal refactor only.
 ```
 
-Use these when the AI tends to "helpfully" modify adjacent code,
+Use these when the AI tends to "*helpfully*" modify adjacent code,
 add documentation you didn't ask for, or create new abstractions.
 
 ### Course Correction
 
-Steer the AI when it goes off-track. Don't wait for it to finish
+Steer the AI when it goes off-track: Don't wait for it to finish
 a wrong approach.
 
-```
-Stop. That's not what I meant. Let me clarify.
+```text
+Stop! That's not what I meant. Let me clarify.
 ```
 
-```
+```text
 Let's step back. Explain what you're about to do before changing anything.
 ```
 
-```
+```text
 Undo that last change and try a different approach.
 ```
 
@@ -247,7 +245,7 @@ This prompts reading actual code rather than explaining general concepts.
 
 Use this to understand the existing implementation.
 
-```
+```text
 How does session saving work in this codebase?
 ```
 
@@ -272,7 +270,7 @@ Use this after complex discussions or implementations.
 
 This invites the AI to challenge the current direction.
 
-Use this when you want a sanity check.
+Use this when you want a **sanity check**.
 
 This works because it allows AI to disagree.
 
@@ -285,8 +283,8 @@ questionable choices proactively instead of waiting to be asked.
 
 ### "*What am I missing?*"
 
-This prompts thinking about edge cases, overlooked requirements,
-or unconsidered approaches.
+This prompts thinking about **edge cases**, overlooked requirements,
+or **unconsidered approaches**.
 
 Use this before finalizing a design or implementation.
 
@@ -314,7 +312,7 @@ load context or trigger specific behaviors:
     Skills are formalized prompts stored as
     [`SKILL.md` files](https://github.com/anthropics/skills).
 
-    The `/slash-command` syntax below is Claude Code specific. 
+    The `/slash-command` syntax below is *Claude Code* specific. 
 
     Other agents can use the same skill files, but invocation may differ. 
 
@@ -343,14 +341,14 @@ Use `ctx` skills  by name:
     `/ctx-add-learning`. Natural language is the recommended approach.
 
     Two skills are the exception: `/ctx-remember` and `/ctx-wrap-up`
-    are **ceremony skills** for session boundaries. Invoke them as
+    are **ceremony skills** for session boundaries: Invoke them as
     **explicit slash commands**: conversational triggers risk partial
     execution. See [Session Ceremonies](../recipes/session-ceremonies.md).
 
 Skills combine a prompt, tool permissions, and domain knowledge
 into a single invocation.
 
-!!! info "Skills beyond Claude Code"
+!!! info "Skills Beyond Claude Code"
     The `/slash-command` syntax above is Claude Code native, but the
     underlying `SKILL.md` files are a standard markdown format that any
     agent can consume. If you use a different coding agent, consult its
@@ -460,7 +458,7 @@ context files**.
 should use it transiently (*environment variable*, an *alias* to the secret
 instead of the actual secret, etc.) and **never** write it to a context file. 
 
-!!! danger "Any Secret Seen Should Be Assumed Exposed"
+!!! danger "Any Secret Seen **IS** Exposed"
     If you see a secret in a context file, **remove it immediately** and 
     **rotate the credential**.
 
@@ -495,17 +493,18 @@ instead of the actual secret, etc.) and **never** write it to a context file.
 
 For non-trivial work, name the phase you want:
 
-```
+```text
 Explore src/auth and summarize the current flow.
 Then propose a plan. After I approve, implement with tests.
 ```
 
-This prevents the AI from jumping straight to code. The three phases
-map to different modes of thinking:
+This prevents the AI from jumping straight to code. 
 
-- **Explore**: read, search, understand: no changes
-- **Plan**: propose approach, trade-offs, scope: no changes
-- **Implement**: write code, run tests, verify: changes
+The three phases map to different modes of thinking:
+
+* **Explore**: read, search, understand: no changes
+* **Plan**: propose approach, trade-offs, scope: no changes
+* **Implement**: write code, run tests, verify: changes
 
 Small fixes skip straight to implement. Complex or uncertain work
 benefits from all three.
@@ -518,14 +517,16 @@ Different tasks need different prompt structures. The pattern:
 **symptom + location + verification**.
 
 ### Bugfix
-```
+
+```text
 Users report search returns empty results for queries with hyphens.
 Reproduce in src/search/. Write a failing test for "foo-bar",
 fix the root cause, run: go test ./internal/search/...
 ```
 
 ### Refactor
-```
+
+```text
 Inspect src/auth/ and list duplication hotspots.
 Propose a refactor plan scoped to one module.
 After approval, remove duplication without changing behavior.
@@ -533,14 +534,16 @@ Add a test if coverage is missing. Run: make audit
 ```
 
 ### Research
-```
+
+```text
 Explore the request flow around src/api/.
 Summarize likely bottlenecks with evidence.
 Propose 2-3 hypotheses. Do not implement yet.
 ```
 
 ### Docs
-```
+
+```text
 Update docs/cli-reference.md to reflect the new --format flag.
 Confirm the flag exists in the code and the example works.
 ```
@@ -557,14 +560,15 @@ shapes how the AI approaches the work.
 
 ### State the Motivation, Not Just the Goal
 
-Tell the AI *why* you're building something, not just *what*.
+Tell the AI **why** you are building something, not just *what*.
 
 **Bad**: "*Build a calendar view.*"
 
 **Good**: "*Build a calendar view. The motivation is that all notes
 and tasks we build later should be viewable here.*"
 
-The second version lets the AI anticipate downstream requirements.
+The second version lets the AI anticipate downstream requirements:
+
 It will design the calendar's data model to be compatible with
 future features: Without you having to spell out every integration
 point. Motivation turns a one-off task into a *directional* task.
@@ -711,7 +715,7 @@ They work because language models are, at their core,
 
 ## Further Reading
 
-- [The Attention Budget](../blog/2026-02-03-the-attention-budget.md):
+* [The Attention Budget](../blog/2026-02-03-the-attention-budget.md):
   Why your AI forgets what you just told it, and how token budgets shape
   context strategy
 
@@ -730,5 +734,5 @@ Found a prompt that works well?
 **Dive Deeper**:
 
 * [Recipes](../recipes/index.md): targeted how-to guides for specific tasks
-* [CLI Reference](../reference/cli-reference.md): all commands and flags
+* [CLI Reference](../cli/index.md): all commands and flags
 * [Integrations](../operations/integrations.md): setup for Claude Code, Cursor, Aider

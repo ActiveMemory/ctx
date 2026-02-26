@@ -101,8 +101,8 @@ func runCheckJournal(cmd *cobra.Command) error {
 	}
 	cmd.Println("└────────────────────────────────────────────────")
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "")
-	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "")
+	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "", "")
+	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), "", "")
 
 	touchFile(remindedFile)
 	return nil

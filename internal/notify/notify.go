@@ -28,10 +28,14 @@ import (
 type Payload struct {
 	Event     string `json:"event"`
 	Message   string `json:"message"`
+	Detail    string `json:"detail,omitempty"`
 	SessionID string `json:"session_id,omitempty"`
 	Timestamp string `json:"timestamp"`
 	Project   string `json:"project"`
 }
+
+// maxDetailLen is the truncation limit for the Detail field.
+const maxDetailLen = 1000
 
 // LoadWebhook reads and decrypts the webhook URL from .context/.notify.enc.
 //
@@ -115,7 +119,13 @@ func EventAllowed(event string, allowed []string) bool {
 //   - no webhook URL is configured
 //   - the event is not in the allowed list
 //   - the HTTP request fails (fire-and-forget)
-func Send(event, message, sessionID string) error {
+//
+// Parameters:
+//   - event: notification category (e.g. "relay", "nudge")
+//   - message: short human-readable summary
+//   - sessionID: Claude Code session ID (may be empty)
+//   - detail: full hook payload sent to the agent (truncated to 1000 chars)
+func Send(event, message, sessionID, detail string) error {
 	if !EventAllowed(event, rc.NotifyEvents()) {
 		return nil
 	}
@@ -130,9 +140,14 @@ func Send(event, message, sessionID string) error {
 		project = filepath.Base(cwd)
 	}
 
+	if len(detail) > maxDetailLen {
+		detail = detail[:maxDetailLen] + "…[truncated]"
+	}
+
 	payload := Payload{
 		Event:     event,
 		Message:   message,
+		Detail:    detail,
 		SessionID: sessionID,
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 		Project:   project,

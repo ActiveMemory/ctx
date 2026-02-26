@@ -70,7 +70,7 @@ func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
 	}
 	printHookContext(cmd, "PostToolUse", msg)
 
-	_ = notify.Send("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID)
+	_ = notify.Send("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID, "")
 
 	return nil
 }

@@ -67,8 +67,8 @@ func runCheckCeremonies(cmd *cobra.Command) error {
 	}
 
 	emitCeremonyNudge(cmd, remember, wrapup)
-	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", "")
-	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", "")
+	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", "", "")
+	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", "", "")
 	touchFile(remindedFile)
 	return nil
 }

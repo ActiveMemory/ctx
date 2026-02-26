@@ -3,7 +3,7 @@
 # Common targets for Go developers
 
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
-test-coverage smoke site site-serve site-serve-lan site-setup audit check \
+test-coverage smoke site site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan watch-session backup backup-global backup-all gpg-fix gpg-test
 
 # Default binary name and output
@@ -204,6 +204,10 @@ gpg-fix:
 ## gpg-test: Test GPG signing configuration
 gpg-test:
 	./hack/gpg-fix.sh --test
+
+## plugin-reload: Clear cached plugin (restart Claude Code to pick up skill/hook changes)
+plugin-reload:
+	@./hack/plugin-reload.sh
 
 ## watch-session: Watch current session for token usage
 watch-session:
