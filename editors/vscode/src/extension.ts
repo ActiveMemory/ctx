@@ -276,10 +276,13 @@ function runCtx(
     }
     let disposed = false;
     let disposable: { dispose(): void } | undefined;
+    // Use shell on Windows so execFile can resolve PATH executables
+    // without requiring the .exe extension.
+    const useShell = os.platform() === "win32";
     const child = execFile(
       ctxPath,
       args,
-      { cwd, maxBuffer: 1024 * 1024, timeout: 30000 },
+      { cwd, maxBuffer: 1024 * 1024, timeout: 30000, shell: useShell },
       (error, stdout, stderr) => {
         if (!disposed) {
           disposed = true;
@@ -581,6 +584,349 @@ async function handleSync(
   return { metadata: { command: "sync" } };
 }
 
+async function handleComplete(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const taskRef = prompt.trim();
+  if (!taskRef) {
+    stream.markdown(
+      "**Usage:** `@ctx /complete <task-id-or-text>`\n\n" +
+        "Example: `@ctx /complete 3` or `@ctx /complete Fix login bug`"
+    );
+    return { metadata: { command: "complete" } };
+  }
+
+  stream.progress("Marking task as completed...");
+  try {
+    const { stdout, stderr } = await runCtx(
+      ["complete", taskRef, "--no-color"],
+      cwd,
+      token
+    );
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(`Task **${taskRef}** marked as completed.`);
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to complete task.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "complete" } };
+}
+
+async function handleRemind(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+  const rest = parts.slice(1).join(" ");
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "dismiss":
+    case "rm":
+      args = rest ? ["remind", "dismiss", rest] : ["remind", "dismiss", "--all"];
+      progressMsg = "Dismissing reminder(s)...";
+      break;
+    case "list":
+    case "ls":
+      args = ["remind", "list"];
+      progressMsg = "Listing reminders...";
+      break;
+    case "add":
+      args = rest ? ["remind", "add", rest] : ["remind", "list"];
+      progressMsg = rest ? "Adding reminder..." : "Listing reminders...";
+      break;
+    default:
+      // If text provided without subcommand, treat as "add"
+      if (subcmd) {
+        args = ["remind", "add", prompt.trim()];
+        progressMsg = "Adding reminder...";
+      } else {
+        args = ["remind", "list"];
+        progressMsg = "Listing reminders...";
+      }
+      break;
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("No reminders.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to manage reminders.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "remind" } };
+}
+
+async function handleTasks(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+  const rest = parts.slice(1).join(" ");
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "archive":
+      args = ["tasks", "archive"];
+      progressMsg = "Archiving completed tasks...";
+      break;
+    case "snapshot":
+      args = rest ? ["tasks", "snapshot", rest] : ["tasks", "snapshot"];
+      progressMsg = "Creating task snapshot...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /tasks <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `archive` | Move completed tasks to archive |\n" +
+          "| `snapshot [name]` | Create point-in-time snapshot |\n\n" +
+          "Example: `@ctx /tasks archive` or `@ctx /tasks snapshot pre-refactor`"
+      );
+      return { metadata: { command: "tasks" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(
+        subcmd === "archive"
+          ? "Completed tasks archived."
+          : "Task snapshot created."
+      );
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to ${subcmd} tasks.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "tasks" } };
+}
+
+async function handlePad(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+  const rest = parts.slice(1).join(" ");
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "add":
+      if (!rest) {
+        stream.markdown("**Usage:** `@ctx /pad add <text>`");
+        return { metadata: { command: "pad" } };
+      }
+      args = ["pad", "add", rest];
+      progressMsg = "Adding scratchpad entry...";
+      break;
+    case "show":
+      args = rest ? ["pad", "show", rest] : ["pad"];
+      progressMsg = "Showing scratchpad entry...";
+      break;
+    case "rm":
+      if (!rest) {
+        stream.markdown("**Usage:** `@ctx /pad rm <number>`");
+        return { metadata: { command: "pad" } };
+      }
+      args = ["pad", "rm", rest];
+      progressMsg = "Removing scratchpad entry...";
+      break;
+    case "edit":
+      if (!rest) {
+        stream.markdown("**Usage:** `@ctx /pad edit <number> [text]`");
+        return { metadata: { command: "pad" } };
+      }
+      args = ["pad", "edit", ...parts.slice(1)];
+      progressMsg = "Editing scratchpad entry...";
+      break;
+    case "mv":
+      args = ["pad", "mv", ...parts.slice(1)];
+      progressMsg = "Moving scratchpad entry...";
+      break;
+    default:
+      // No subcommand or unknown — list all entries
+      args = ["pad"];
+      progressMsg = "Listing scratchpad...";
+      break;
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("Scratchpad is empty.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to access scratchpad.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "pad" } };
+}
+
+async function handleNotify(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+  const rest = parts.slice(1).join(" ");
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "setup":
+      args = ["notify", "setup"];
+      progressMsg = "Setting up webhook...";
+      break;
+    case "test":
+      args = ["notify", "test"];
+      progressMsg = "Sending test notification...";
+      break;
+    default: {
+      // Send a notification — require --event flag
+      if (!subcmd) {
+        stream.markdown(
+          "**Usage:** `@ctx /notify <subcommand>`\n\n" +
+            "| Subcommand | Description |\n" +
+            "|------------|-------------|\n" +
+            "| `setup` | Configure webhook URL |\n" +
+            "| `test` | Send test notification |\n" +
+            "| `<message> --event <name>` | Send notification |\n\n" +
+            "Example: `@ctx /notify test` or `@ctx /notify setup`"
+        );
+        return { metadata: { command: "notify" } };
+      }
+      args = ["notify", ...parts];
+      progressMsg = "Sending notification...";
+      break;
+    }
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown(
+        subcmd === "setup"
+          ? "Webhook configured."
+          : subcmd === "test"
+            ? "Test notification sent."
+            : "Notification sent."
+      );
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** Failed to send notification.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "notify" } };
+}
+
+async function handleSystem(
+  stream: vscode.ChatResponseStream,
+  prompt: string,
+  cwd: string,
+  token: vscode.CancellationToken
+): Promise<CtxResult> {
+  const parts = prompt.trim().split(/\s+/);
+  const subcmd = parts[0]?.toLowerCase();
+
+  let args: string[];
+  let progressMsg: string;
+
+  switch (subcmd) {
+    case "resources":
+      args = ["system", "resources"];
+      progressMsg = "Checking system resources...";
+      break;
+    case "bootstrap":
+      args = ["system", "bootstrap"];
+      progressMsg = "Running bootstrap...";
+      break;
+    case "message":
+      args = ["system", "message", ...parts.slice(1)];
+      progressMsg = "Managing hook messages...";
+      break;
+    default:
+      stream.markdown(
+        "**Usage:** `@ctx /system <subcommand>`\n\n" +
+          "| Subcommand | Description |\n" +
+          "|------------|-------------|\n" +
+          "| `resources` | Show system resource usage |\n" +
+          "| `bootstrap` | Print context location for AI agents |\n" +
+          "| `message list\|show\|edit\|reset` | Manage hook messages |\n\n" +
+          "Example: `@ctx /system resources` or `@ctx /system bootstrap`"
+      );
+      return { metadata: { command: "system" } };
+  }
+  args.push("--no-color");
+
+  stream.progress(progressMsg);
+  try {
+    const { stdout, stderr } = await runCtx(args, cwd, token);
+    const output = (stdout + stderr).trim();
+    if (output) {
+      stream.markdown("```\n" + output + "\n```");
+    } else {
+      stream.markdown("No output.");
+    }
+  } catch (err: unknown) {
+    stream.markdown(
+      `**Error:** System command failed.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
+    );
+  }
+  return { metadata: { command: "system" } };
+}
+
 async function handleFreeform(
   request: vscode.ChatRequest,
   stream: vscode.ChatResponseStream,
@@ -602,6 +948,24 @@ async function handleFreeform(
   if (prompt.includes("recall") || prompt.includes("session") || prompt.includes("history")) {
     return handleRecall(stream, request.prompt, cwd, token);
   }
+  if (prompt.includes("complete") || prompt.includes("done") || prompt.includes("finish")) {
+    return handleComplete(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("remind")) {
+    return handleRemind(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("task")) {
+    return handleTasks(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("pad") || prompt.includes("scratchpad") || prompt.includes("scratch")) {
+    return handlePad(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("notify") || prompt.includes("webhook")) {
+    return handleNotify(stream, request.prompt, cwd, token);
+  }
+  if (prompt.includes("system") || prompt.includes("resource") || prompt.includes("bootstrap")) {
+    return handleSystem(stream, request.prompt, cwd, token);
+  }
 
   // Default: show help with available commands
   stream.markdown(
@@ -618,7 +982,13 @@ async function handleFreeform(
       "| `/add` | Add task, decision, or learning |\n" +
       "| `/load` | Output assembled context |\n" +
       "| `/compact` | Archive completed tasks |\n" +
-      "| `/sync` | Reconcile context with codebase |\n\n" +
+      "| `/sync` | Reconcile context with codebase |\n" +
+      "| `/complete` | Mark a task as completed |\n" +
+      "| `/remind` | Manage session reminders |\n" +
+      "| `/tasks` | Archive or snapshot tasks |\n" +
+      "| `/pad` | Encrypted scratchpad |\n" +
+      "| `/notify` | Webhook notifications |\n" +
+      "| `/system` | System diagnostics |\n\n" +
       "Example: `@ctx /status` or `@ctx /add task Fix login bug`"
   );
   return { metadata: { command: "help" } };
@@ -673,6 +1043,18 @@ const handler: vscode.ChatRequestHandler = async (
       return handleCompact(stream, cwd, token);
     case "sync":
       return handleSync(stream, cwd, token);
+    case "complete":
+      return handleComplete(stream, request.prompt, cwd, token);
+    case "remind":
+      return handleRemind(stream, request.prompt, cwd, token);
+    case "tasks":
+      return handleTasks(stream, request.prompt, cwd, token);
+    case "pad":
+      return handlePad(stream, request.prompt, cwd, token);
+    case "notify":
+      return handleNotify(stream, request.prompt, cwd, token);
+    case "system":
+      return handleSystem(stream, request.prompt, cwd, token);
     default:
       return handleFreeform(request, stream, cwd, token);
   }
@@ -726,6 +1108,28 @@ export function activate(extensionContext: vscode.ExtensionContext) {
             { prompt: "Show context status", command: "status" }
           );
           break;
+        case "complete":
+          followups.push(
+            { prompt: "Show context status", command: "status" },
+            { prompt: "Archive completed tasks", command: "tasks" }
+          );
+          break;
+        case "remind":
+          followups.push(
+            { prompt: "Show context status", command: "status" }
+          );
+          break;
+        case "tasks":
+          followups.push(
+            { prompt: "Show context status", command: "status" },
+            { prompt: "Compact context", command: "compact" }
+          );
+          break;
+        case "pad":
+          followups.push(
+            { prompt: "List scratchpad", command: "pad" }
+          );
+          break;
         case "help":
           followups.push(
             { prompt: "Initialize project context", command: "init" },
@@ -748,6 +1152,12 @@ export {
   ensureCtxAvailable,
   bootstrap,
   getPlatformInfo,
+  handleComplete,
+  handleRemind,
+  handleTasks,
+  handlePad,
+  handleNotify,
+  handleSystem,
 };
 
 export function deactivate() {}
