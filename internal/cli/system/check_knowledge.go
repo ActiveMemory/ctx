@@ -121,17 +121,27 @@ func runCheckKnowledge(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
+	// Build pre-formatted findings list for the template variable
+	var fileWarnings string
+	for _, f := range findings {
+		fileWarnings += fmt.Sprintf("%s has %d %s (recommended: \u2264%d).\n", f.file, f.count, f.unit, f.threshold)
+	}
+
+	fallback := fileWarnings +
+		"\nLarge knowledge files dilute agent context. Consider:\n" +
+		" \u2022 Review and remove outdated entries\n" +
+		" \u2022 Use /ctx-consolidate to merge overlapping entries\n" +
+		" \u2022 Use /ctx-drift for semantic drift (stale patterns)\n" +
+		" \u2022 Move stale entries to .context/archive/ manually"
+	content := loadMessage("check-knowledge", "warning",
+		map[string]any{"FileWarnings": fileWarnings}, fallback)
+	if content == "" {
+		return nil
+	}
+
 	msg := "IMPORTANT: Relay this knowledge health notice to the user VERBATIM before answering their question.\n\n" +
 		"\u250c\u2500 Knowledge File Growth \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
-	for _, f := range findings {
-		msg += fmt.Sprintf("\u2502 %s has %d %s (recommended: \u2264%d).\n", f.file, f.count, f.unit, f.threshold)
-	}
-	msg += "\u2502\n" +
-		"\u2502 Large knowledge files dilute agent context. Consider:\n" +
-		"\u2502  \u2022 Review and remove outdated entries\n" +
-		"\u2502  \u2022 Use /ctx-consolidate to merge overlapping entries\n" +
-		"\u2502  \u2022 Use /ctx-drift for semantic drift (stale patterns)\n" +
-		"\u2502  \u2022 Move stale entries to .context/archive/ manually\n"
+	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
 		msg += "\u2502 " + line + "\n"
 	}

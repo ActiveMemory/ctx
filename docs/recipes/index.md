@@ -149,6 +149,17 @@ directives for nudges, and five more patterns across the spectrum.
 
 ---
 
+### [Customizing Hook Messages](customizing-hook-messages.md)
+
+Customize what hooks **say** without changing what they **do**. Override
+the QA gate for Python (`pytest` instead of `make lint`), silence noisy
+ceremony nudges, or tailor post-commit instructions for your stack.
+
+**Uses**: `ctx system message list`, `ctx system message show`,
+`ctx system message edit`, `ctx system message reset`
+
+---
+
 ### [Auditing System Hooks](system-hooks-audit.md)
 
 The 12 system hooks that run **invisibly** during every session — what each

@@ -849,6 +849,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Skills: Two Directories, One Rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev-only-skills-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev-Only Skills Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1843,6 +1860,8 @@
       
         
       
+        
+      
     
     
     
@@ -1905,6 +1924,36 @@
     
   
     Hook Output Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/customizing-hook-messages/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Hook Messages
   
 
     
@@ -3275,6 +3324,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Skills: Two Directories, One Rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev-only-skills-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev-Only Skills Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -3636,6 +3702,71 @@ edit it there.</p>
 <p><strong><code>.claude/skills/</code></strong> holds skills that only make sense inside this
 repository (<em>release automation, QA checks, backup scripts</em>). These are
 never distributed to users.</p>
+<h4 id="dev-only-skills-reference">Dev-Only Skills Reference<a class="headerlink" href="#dev-only-skills-reference" title="Permanent link">&para;</a></h4>
+<!-- drift-check: ls .claude/skills/ -->
+
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/_ctx-absorb</code></td>
+<td>Merge deltas from a parallel worktree or separate checkout</td>
+</tr>
+<tr>
+<td><code>/_ctx-audit</code></td>
+<td>Detect code-level drift after YOLO sprints or before releases</td>
+</tr>
+<tr>
+<td><code>/_ctx-backup</code></td>
+<td>Backup context and Claude data to SMB share</td>
+</tr>
+<tr>
+<td><code>/_ctx-brainstorm</code></td>
+<td>Structured design dialogue before implementation</td>
+</tr>
+<tr>
+<td><code>/_ctx-check-links</code></td>
+<td>Audit docs for dead links before releases</td>
+</tr>
+<tr>
+<td><code>/_ctx-qa</code></td>
+<td>Run QA checks before committing</td>
+</tr>
+<tr>
+<td><code>/_ctx-release</code></td>
+<td>Run the full release process</td>
+</tr>
+<tr>
+<td><code>/_ctx-release-notes</code></td>
+<td>Generate release notes for <code>dist/RELEASE_NOTES.md</code></td>
+</tr>
+<tr>
+<td><code>/_ctx-sanitize-permissions</code></td>
+<td>Audit <code>settings.local.json</code> for dangerous permissions</td>
+</tr>
+<tr>
+<td><code>/_ctx-skill-creator</code></td>
+<td>Create or improve a skill</td>
+</tr>
+<tr>
+<td><code>/_ctx-spec</code></td>
+<td>Scaffold a feature spec from <code>specs/spec-template.md</code></td>
+</tr>
+<tr>
+<td><code>/_ctx-update-docs</code></td>
+<td>Check docs/code consistency after changes</td>
+</tr>
+<tr>
+<td><code>/_ctx-verify</code></td>
+<td>Verify before claiming work is done</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="day-to-day-workflow">Day-to-Day Workflow<a class="headerlink" href="#day-to-day-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="go-code-changes">Go Code Changes<a class="headerlink" href="#go-code-changes" title="Permanent link">&para;</a></h3>

@@ -1,0 +1,4 @@
+{{.UnenrichedCount}} journal entries need enrichment.
+
+Enrich:
+  /ctx-journal-enrich-all

@@ -24,6 +24,9 @@ const (
 	DirJournalSite = "journal-site"
 	// DirSessions is the subdirectory for session summaries within .context/.
 	DirSessions = "sessions"
+	// DirState is the subdirectory for project-scoped runtime state within .context/.
+	// Gitignored — ephemeral files (flags, markers) that hooks write and consume.
+	DirState = "state"
 )
 
 // GitignoreEntries lists the recommended .gitignore entries added by ctx init.
@@ -34,6 +37,7 @@ var GitignoreEntries = []string{
 	".context/logs/",
 	".context/.context.key",
 	".context/.scratchpad.key",
+	".context/state/",
 	".claude/settings.local.json",
 }
 

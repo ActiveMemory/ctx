@@ -1,0 +1,1 @@
+Use 'ctx' from PATH, not './ctx' or './dist/ctx'. Ask the user to run: make build && sudo make install

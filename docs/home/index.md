@@ -5,6 +5,13 @@ icon: lucide/home
 
 ![ctx](../images/ctx-banner.png)
 
+* **`ctx` is not a prompt**.
+* **`ctx` is version-controlled cognitive state**.
+
+`ctx` is the persistence layer for human–AI reasoning.
+
+*Deterministic. Git-native. Human-readable. Local-first*.
+
 **Start here**. 
 
 Learn what `ctx` does, set it up, and run your first session.

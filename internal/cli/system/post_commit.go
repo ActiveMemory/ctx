@@ -60,11 +60,15 @@ func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	msg := "Commit succeeded." +
+	fallback := "Commit succeeded." +
 		" 1. Offer context capture to the user:" +
 		" Decision (design choice?), Learning (gotcha?), or Neither." +
 		" 2. Ask the user: \"Want me to run lints and tests before you push?\"" +
 		" Do NOT push. The user pushes manually."
+	msg := loadMessage("post-commit", "nudge", nil, fallback)
+	if msg == "" {
+		return nil
+	}
 	if line := contextDirLine(); line != "" {
 		msg += " [" + line + "]"
 	}

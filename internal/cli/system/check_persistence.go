@@ -172,18 +172,29 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if shouldNudge {
+		fallback := fmt.Sprintf("No context files updated in %d+ prompts.\n", sinceNudge) +
+			"Have you discovered learnings, made decisions,\n" +
+			"established conventions, or completed tasks\n" +
+			"worth persisting?\n" +
+			"\n" +
+			"Run /ctx-wrap-up to capture session context."
+		content := loadMessage("check-persistence", "nudge",
+			map[string]any{
+				"PromptCount":       state.Count,
+				"PromptsSinceNudge": sinceNudge,
+			}, fallback)
+		if content == "" {
+			logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silenced-by-template", state.Count))
+			writePersistenceState(stateFile, state)
+			return nil
+		}
 		msg := fmt.Sprintf("IMPORTANT: Relay this persistence checkpoint to the user VERBATIM before answering their question.\n\n"+
-			"┌─ Persistence Checkpoint (prompt #%d) ───────────\n"+
-			"│ No context files updated in %d+ prompts.\n"+
-			"│ Have you discovered learnings, made decisions,\n"+
-			"│ established conventions, or completed tasks\n"+
-			"│ worth persisting?\n"+
-			"│\n"+
-			"│ Run /ctx-wrap-up to capture session context.\n", state.Count, sinceNudge)
+			"┌─ Persistence Checkpoint (prompt #%d) ───────────\n", state.Count)
+		msg += boxLines(content)
 		if line := contextDirLine(); line != "" {
 			msg += "│ " + line + "\n"
 		}
-		msg += "└──────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
+		msg += "└──────────────────────────────────────────────────"
 		cmd.Println(msg)
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", state.Count, sinceNudge))

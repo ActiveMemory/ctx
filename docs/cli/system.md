@@ -140,6 +140,41 @@ Alerts:
 **Platform support**: Full metrics on Linux and macOS. Windows shows
 disk only; memory and load report as unsupported.
 
+#### `ctx system message`
+
+Manage hook message templates. Hook messages control what text hooks emit.
+The hook logic (when to fire, counting, state tracking) is universal; the
+messages are opinions that can be customized per-project.
+
+```bash
+ctx system message <subcommand>
+```
+
+**Subcommands**:
+
+| Subcommand | Args | Flags | Description |
+|------------|------|-------|-------------|
+| `list` | *(none)* | `--json` | Show all hook messages with category and override status |
+| `show` | `<hook> <variant>` | *(none)* | Print the effective message template with source |
+| `edit` | `<hook> <variant>` | *(none)* | Copy embedded default to `.context/` for editing |
+| `reset` | `<hook> <variant>` | *(none)* | Delete user override, revert to embedded default |
+
+**Examples**:
+
+```bash
+ctx system message list                      # Table of all 24 messages
+ctx system message list --json               # Machine-readable JSON
+ctx system message show qa-reminder gate     # View the QA gate template
+ctx system message edit qa-reminder gate     # Copy default to .context/ for editing
+ctx system message reset qa-reminder gate    # Delete override, revert to default
+```
+
+Override files are placed at `.context/hooks/messages/{hook}/{variant}.txt`.
+An empty override file silences the message while preserving the hook's logic.
+
+See the [Customizing Hook Messages](../recipes/customizing-hook-messages.md)
+recipe for detailed examples.
+
 #### `ctx system mark-journal`
 
 Update processing state for a journal entry. Records the current date

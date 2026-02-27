@@ -112,6 +112,166 @@ func TestCheckContextSize_CheckpointAt33(t *testing.T) {
 	}
 }
 
+func TestCheckContextSize_OversizeNudgeAtCheckpoint(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	// Create a flag file simulating an oversize injection
+	ctxDir := filepath.Join(workDir, config.DirContext)
+	stateDir := filepath.Join(ctxDir, config.DirState)
+	_ = os.MkdirAll(stateDir, 0o750)
+	flagContent := "Context injection oversize warning\n" +
+		"===================================\n" +
+		"Timestamp: 2026-02-26T14:30:00Z\n" +
+		"Injected:  18200 tokens (threshold: 15000)\n\n" +
+		"Per-file breakdown:\n" +
+		"  CONSTITUTION.md        1200 tokens\n"
+	_ = os.WriteFile(filepath.Join(stateDir, "injection-oversize"),
+		[]byte(flagContent), 0o600)
+
+	// Set counter to 19 so next = 20 (triggers checkpoint at 20 > 15, 20 % 5 == 0)
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-oversize-nudge")
+	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-oversize-nudge"}`)
+	if err := runCheckContextSize(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	if !strings.Contains(out, "Context Checkpoint") {
+		t.Error("expected checkpoint output")
+	}
+	if !strings.Contains(out, "18200") {
+		t.Errorf("expected oversize token count in output, got: %s", out)
+	}
+	if !strings.Contains(out, "ctx-consolidate") {
+		t.Error("expected consolidate suggestion in output")
+	}
+
+	// Flag should be consumed (deleted)
+	flagPath := filepath.Join(stateDir, "injection-oversize")
+	if _, err := os.Stat(flagPath); err == nil {
+		t.Error("flag file should be deleted after nudge (one-shot)")
+	}
+}
+
+func TestCheckContextSize_NoFlagNoOversizeNudge(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	// No flag file — trigger a checkpoint
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-no-flag")
+	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-no-flag"}`)
+	if err := runCheckContextSize(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	if !strings.Contains(out, "Context Checkpoint") {
+		t.Error("expected checkpoint output")
+	}
+	// Should NOT contain oversize nudge
+	if strings.Contains(out, "18200") || strings.Contains(out, "oversize") {
+		t.Errorf("should not contain oversize nudge without flag, got: %s", out)
+	}
+}
+
+func TestCheckContextSize_MalformedFlag(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	// Write a malformed flag file (no parseable token count)
+	ctxDir := filepath.Join(workDir, config.DirContext)
+	stateDir := filepath.Join(ctxDir, config.DirState)
+	_ = os.MkdirAll(stateDir, 0o750)
+	_ = os.WriteFile(filepath.Join(stateDir, "injection-oversize"),
+		[]byte("garbage data\n"), 0o600)
+
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-malformed")
+	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-malformed"}`)
+	if err := runCheckContextSize(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	// Should still fire checkpoint, nudge fires with 0 token fallback
+	if !strings.Contains(out, "Context Checkpoint") {
+		t.Error("expected checkpoint output")
+	}
+	// Flag should still be consumed
+	flagPath := filepath.Join(stateDir, "injection-oversize")
+	if _, err := os.Stat(flagPath); err == nil {
+		t.Error("malformed flag file should still be consumed")
+	}
+}
+
+func TestExtractOversizeTokens(t *testing.T) {
+	tests := []struct {
+		name string
+		data string
+		want int
+	}{
+		{
+			name: "normal format",
+			data: "Injected:  18200 tokens (threshold: 15000)",
+			want: 18200,
+		},
+		{
+			name: "single space",
+			data: "Injected: 7500 tokens (threshold: 5000)",
+			want: 7500,
+		},
+		{
+			name: "no match",
+			data: "garbage data",
+			want: 0,
+		},
+		{
+			name: "empty",
+			data: "",
+			want: 0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := extractOversizeTokens([]byte(tt.data))
+			if got != tt.want {
+				t.Errorf("extractOversizeTokens() = %d, want %d", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestCheckContextSize_EmptyStdin(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("XDG_RUNTIME_DIR", tmpDir)

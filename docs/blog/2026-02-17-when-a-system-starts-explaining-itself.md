@@ -37,17 +37,17 @@ topics:
 
 Every new substrate begins as a private advantage:
 
-* It lives inside one mind
-* One repository
-* One set of habits
+* It lives inside **one** mind,
+* **One** repository,
+* **One** set of habits.
 
 It is fast. It is not yet real.
 
 Reality begins when other people describe it in their own language:
 
-* Not accurately
-* Not consistently
-* But involuntarily
+* **Not** accurately;
+* **Not** consistently;
+* **But** involuntarily.
 
 The early reports arrived without coordination:
 
@@ -80,10 +80,10 @@ That was the **boundary**.
 
 When a tool is understood, it is categorized:
 
-* Editor
-* Framework
-* Task manager
-* Plugin
+* Editor,
+* Framework,
+* Task manager,
+* Plugin...
 
 When a substrate appears, it is **misclassified**:
 

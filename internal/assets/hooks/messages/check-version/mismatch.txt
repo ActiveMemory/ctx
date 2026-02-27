@@ -1,0 +1,4 @@
+Your ctx binary is v{{.BinaryVersion}} but the plugin expects v{{.PluginVersion}}.
+
+Reinstall the binary to get the best out of ctx:
+  go install github.com/ActiveMemory/ctx/cmd/ctx@latest

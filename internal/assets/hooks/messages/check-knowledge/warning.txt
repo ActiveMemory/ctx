@@ -1,0 +1,6 @@
+{{.FileWarnings}}
+Large knowledge files dilute agent context. Consider:
+ • Review and remove outdated entries
+ • Use /ctx-consolidate to merge overlapping entries
+ • Use /ctx-drift for semantic drift (stale patterns)
+ • Move stale entries to .context/archive/ manually

@@ -56,17 +56,27 @@ func runCheckResources(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	msg := "IMPORTANT: Relay this resource warning to the user VERBATIM.\n\n" +
-		"\u250c\u2500 Resource Alert \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
+	// Build pre-formatted alert messages for the template variable
+	var alertMessages string
 	for _, a := range alerts {
 		if a.Severity == sysinfo.SeverityDanger {
-			msg += "\u2502 \u2716 " + a.Message + "\n"
+			alertMessages += "\u2716 " + a.Message + "\n"
 		}
 	}
-	msg += "\u2502\n" +
-		"\u2502 System resources are critically low.\n" +
-		"\u2502 Persist unsaved context NOW with /ctx-wrap-up\n" +
-		"\u2502 and consider ending this session.\n"
+
+	fallback := alertMessages +
+		"\nSystem resources are critically low.\n" +
+		"Persist unsaved context NOW with /ctx-wrap-up\n" +
+		"and consider ending this session."
+	content := loadMessage("check-resources", "alert",
+		map[string]any{"AlertMessages": alertMessages}, fallback)
+	if content == "" {
+		return nil
+	}
+
+	msg := "IMPORTANT: Relay this resource warning to the user VERBATIM.\n\n" +
+		"\u250c\u2500 Resource Alert \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
+	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
 		msg += "\u2502 " + line + "\n"
 	}

@@ -1,0 +1,2 @@
+⚠ Context injection is large (~{{.TokenCount}} tokens).
+Run /ctx-consolidate to distill your context files.

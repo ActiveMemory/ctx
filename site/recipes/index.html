@@ -1514,6 +1514,8 @@
       
         
       
+        
+      
     
     
     
@@ -1576,6 +1578,36 @@
     
   
     Hook Output Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="customizing-hook-messages/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Hook Messages
   
 
     
@@ -3049,6 +3081,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#customizing-hook-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing Hook Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#auditing-system-hooks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3306,6 +3349,13 @@ simultaneously.</p>
 relay for user-facing reminders, <strong>hard gates</strong> for invariants, agent
 directives for nudges, and five more patterns across the spectrum.</p>
 <p><strong>Uses</strong>: ctx plugin hooks, <code>settings.local.json</code></p>
+<hr />
+<h3 id="customizing-hook-messages"><a href="customizing-hook-messages/">Customizing Hook Messages</a><a class="headerlink" href="#customizing-hook-messages" title="Permanent link">&para;</a></h3>
+<p>Customize what hooks <strong>say</strong> without changing what they <strong>do</strong>. Override
+the QA gate for Python (<code>pytest</code> instead of <code>make lint</code>), silence noisy
+ceremony nudges, or tailor post-commit instructions for your stack.</p>
+<p><strong>Uses</strong>: <code>ctx system message list</code>, <code>ctx system message show</code>,
+<code>ctx system message edit</code>, <code>ctx system message reset</code></p>
 <hr />
 <h3 id="auditing-system-hooks"><a href="system-hooks-audit/">Auditing System Hooks</a><a class="headerlink" href="#auditing-system-hooks" title="Permanent link">&para;</a></h3>
 <p>The 12 system hooks that run <strong>invisibly</strong> during every session — what each

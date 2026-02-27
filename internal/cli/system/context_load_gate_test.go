@@ -362,6 +362,188 @@ func TestExtractIndex(t *testing.T) {
 	}
 }
 
+func TestContextLoadGate_OversizeFlag_Written(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// Set a very low threshold so any content triggers the flag
+	_ = os.WriteFile(".ctxrc", []byte("injection_token_warn: 10\n"), 0o600)
+	setupContextDir(t)
+
+	ctxDir := filepath.Join(workDir, config.DirContext)
+	writeTestFile(t, ctxDir, config.FileConstitution,
+		"# Constitution\n\nNever commit secrets. This is enough content to exceed 10 tokens easily.\n")
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-oversize"}`)
+	if err := runContextLoadGate(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// Flag file should exist
+	flagPath := filepath.Join(ctxDir, config.DirState, "injection-oversize")
+	data, readErr := os.ReadFile(flagPath)
+	if readErr != nil {
+		t.Fatalf("expected oversize flag file, got error: %v", readErr)
+	}
+
+	content := string(data)
+	if !strings.Contains(content, "Context injection oversize warning") {
+		t.Error("flag file missing header")
+	}
+	if !strings.Contains(content, "Injected:") {
+		t.Error("flag file missing token count line")
+	}
+	if !strings.Contains(content, "threshold: 10") {
+		t.Errorf("flag file should show threshold 10, got: %s", content)
+	}
+	if !strings.Contains(content, config.FileConstitution) {
+		t.Error("flag file missing per-file breakdown")
+	}
+	if !strings.Contains(content, "/ctx-consolidate") {
+		t.Error("flag file missing action line")
+	}
+}
+
+func TestContextLoadGate_OversizeFlag_UnderThreshold(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// Set threshold high enough that minimal content won't trigger
+	_ = os.WriteFile(".ctxrc", []byte("injection_token_warn: 100000\n"), 0o600)
+	setupContextDir(t)
+
+	ctxDir := filepath.Join(workDir, config.DirContext)
+	writeTestFile(t, ctxDir, config.FileConstitution, "# Constitution\n\nShort.\n")
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-under"}`)
+	if err := runContextLoadGate(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// Flag file should NOT exist
+	flagPath := filepath.Join(ctxDir, config.DirState, "injection-oversize")
+	if _, err := os.Stat(flagPath); err == nil {
+		t.Error("oversize flag should NOT be written when under threshold")
+	}
+}
+
+func TestContextLoadGate_OversizeFlag_Disabled(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// Disable the check with 0
+	_ = os.WriteFile(".ctxrc", []byte("injection_token_warn: 0\n"), 0o600)
+	setupContextDir(t)
+
+	ctxDir := filepath.Join(workDir, config.DirContext)
+	writeTestFile(t, ctxDir, config.FileConstitution,
+		"# Constitution\n\n"+strings.Repeat("word ", 5000)+"\n")
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-disabled"}`)
+	if err := runContextLoadGate(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// Flag file should NOT exist when disabled
+	flagPath := filepath.Join(ctxDir, config.DirState, "injection-oversize")
+	if _, err := os.Stat(flagPath); err == nil {
+		t.Error("oversize flag should NOT be written when threshold is 0 (disabled)")
+	}
+}
+
+func TestContextLoadGate_OversizeFlag_StateDirCreated(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	_ = os.WriteFile(".ctxrc", []byte("injection_token_warn: 10\n"), 0o600)
+	setupContextDir(t)
+
+	ctxDir := filepath.Join(workDir, config.DirContext)
+	writeTestFile(t, ctxDir, config.FileConstitution,
+		"# Constitution\n\nEnough content here.\n")
+
+	// Verify state/ dir doesn't exist yet
+	stateDir := filepath.Join(ctxDir, config.DirState)
+	if _, err := os.Stat(stateDir); err == nil {
+		t.Fatal("state dir should not exist before gate runs")
+	}
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-statedir"}`)
+	if err := runContextLoadGate(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// State dir should now exist
+	if _, err := os.Stat(stateDir); err != nil {
+		t.Errorf("state dir should be auto-created, got error: %v", err)
+	}
+}
+
+func TestContextLoadGate_OversizeFlag_PerFileBreakdown(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	_ = os.WriteFile(".ctxrc", []byte("injection_token_warn: 10\n"), 0o600)
+	setupContextDir(t)
+
+	ctxDir := filepath.Join(workDir, config.DirContext)
+	writeTestFile(t, ctxDir, config.FileConstitution, "# Constitution\n\nRules here.\n")
+	writeTestFile(t, ctxDir, config.FileConvention, "# Conventions\n\nPatterns here.\n")
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-breakdown"}`)
+	if err := runContextLoadGate(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	flagPath := filepath.Join(ctxDir, config.DirState, "injection-oversize")
+	data, readErr := os.ReadFile(flagPath)
+	if readErr != nil {
+		t.Fatalf("expected flag file: %v", readErr)
+	}
+
+	content := string(data)
+	// Both files should appear in breakdown
+	if !strings.Contains(content, config.FileConstitution) {
+		t.Error("breakdown missing CONSTITUTION.md")
+	}
+	if !strings.Contains(content, config.FileConvention) {
+		t.Error("breakdown missing CONVENTIONS.md")
+	}
+	if !strings.Contains(content, "tokens") {
+		t.Error("breakdown missing token counts")
+	}
+}
+
 // writeTestFile creates a file in dir with the given name and content.
 func writeTestFile(t *testing.T, dir, name, content string) {
 	t.Helper()

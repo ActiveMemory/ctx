@@ -69,23 +69,31 @@ func runBlockNonPathCtx(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	var reason string
+	var variant, fallback string
 
 	// Pattern 1: ./ctx or ./dist/ctx at command position
 	if reRelativeStart.MatchString(command) || reRelativeSep.MatchString(command) {
-		reason = "Use 'ctx' from PATH, not './ctx' or './dist/ctx'. Ask the user to run: make build && sudo make install"
+		variant = "dot-slash"
+		fallback = "Use 'ctx' from PATH, not './ctx' or './dist/ctx'. Ask the user to run: make build && sudo make install"
 	}
 
 	// Pattern 2: go run ./cmd/ctx
 	if reGoRun.MatchString(command) {
-		reason = "Use 'ctx' from PATH, not 'go run ./cmd/ctx'. Ask the user to run: make build && sudo make install"
+		variant = "go-run"
+		fallback = "Use 'ctx' from PATH, not 'go run ./cmd/ctx'. Ask the user to run: make build && sudo make install"
 	}
 
 	// Pattern 3: Absolute paths to ctx binary at command position
-	if reason == "" && (reAbsoluteStart.MatchString(command) || reAbsoluteSep.MatchString(command)) {
+	if variant == "" && (reAbsoluteStart.MatchString(command) || reAbsoluteSep.MatchString(command)) {
 		if !reTestException.MatchString(command) {
-			reason = "Use 'ctx' from PATH, not absolute paths. Ask the user to run: make build && sudo make install"
+			variant = "absolute-path"
+			fallback = "Use 'ctx' from PATH, not absolute paths. Ask the user to run: make build && sudo make install"
 		}
+	}
+
+	var reason string
+	if variant != "" {
+		reason = loadMessage("block-non-path-ctx", variant, nil, fallback)
 	}
 
 	if reason != "" {

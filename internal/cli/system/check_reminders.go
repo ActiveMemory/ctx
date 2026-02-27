@@ -56,13 +56,25 @@ func runCheckReminders(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
+	// Build pre-formatted reminder list for the template variable
+	var reminderList string
+	for _, r := range due {
+		reminderList += fmt.Sprintf(" [%d] %s\n", r.ID, r.Message)
+	}
+
+	fallback := reminderList +
+		"\nDismiss: ctx remind dismiss <id>\n" +
+		"Dismiss all: ctx remind dismiss --all"
+	content := loadMessage("check-reminders", "reminders",
+		map[string]any{"ReminderList": reminderList}, fallback)
+	if content == "" {
+		return nil
+	}
+
 	msg := "IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.\n\n" +
 		"┌─ Reminders ──────────────────────────────────────\n"
-	for _, r := range due {
-		msg += fmt.Sprintf("│  [%d] %s\n", r.ID, r.Message)
-	}
-	msg += "│\n│ Dismiss: ctx remind dismiss <id>\n│ Dismiss all: ctx remind dismiss --all\n" +
-		"└──────────────────────────────────────────────────"
+	msg += boxLines(content)
+	msg += "└──────────────────────────────────────────────────"
 	cmd.Println(msg)
 
 	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), input.SessionID, msg)

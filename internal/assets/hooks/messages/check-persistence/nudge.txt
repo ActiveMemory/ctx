@@ -1,0 +1,6 @@
+No context files updated in {{.PromptsSinceNudge}}+ prompts.
+Have you discovered learnings, made decisions,
+established conventions, or completed tasks
+worth persisting?
+
+Run /ctx-wrap-up to capture session context.

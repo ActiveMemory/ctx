@@ -383,6 +383,8 @@ notifications when loops complete, hooks fire, or agents hit milestones.
 
 ## See Also
 
+* [Customizing Hook Messages](customizing-hook-messages.md): override
+  what hooks say without changing what they do
 * [Claude Code Permission Hygiene](claude-code-permissions.md): how
   permissions and hooks work together
 * [Defense in Depth](../blog/2026-02-09-defense-in-depth-securing-ai-agents.md):

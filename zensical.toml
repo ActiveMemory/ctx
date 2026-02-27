@@ -58,6 +58,7 @@ nav = [
     ]},
     { "Hooks and Notifications" = [
       "recipes/hook-output-patterns.md",
+      "recipes/customizing-hook-messages.md",
       "recipes/webhook-notifications.md",
       "recipes/system-hooks-audit.md",
     ]},

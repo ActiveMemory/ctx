@@ -39,7 +39,7 @@ Silent when: .context/ not initialized`,
 				return nil
 			}
 			input := readInput(os.Stdin)
-			msg := "HARD GATE — DO NOT COMMIT without completing ALL of these steps first:" +
+			fallback := "HARD GATE — DO NOT COMMIT without completing ALL of these steps first:" +
 				" (1) lint the ENTIRE project," +
 				" (2) test the ENTIRE project," +
 				" (3) verify a clean working tree (no modified or untracked files left behind)." +
@@ -49,6 +49,10 @@ Silent when: .context/ not initialized`,
 				" or get explicit confirmation to leave them." +
 				" Do NOT say 'I'll do that at the end' or 'I'll handle that after committing.'" +
 				" Run lint and tests BEFORE every git commit, every time, no exceptions."
+			msg := loadMessage("qa-reminder", "gate", nil, fallback)
+			if msg == "" {
+				return nil
+			}
 			if line := contextDirLine(); line != "" {
 				msg += " [" + line + "]"
 			}

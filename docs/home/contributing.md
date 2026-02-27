@@ -130,6 +130,26 @@ edit it there.
 repository (*release automation, QA checks, backup scripts*). These are
 never distributed to users.
 
+#### Dev-Only Skills Reference
+
+<!-- drift-check: ls .claude/skills/ -->
+
+| Skill | When to use |
+|-------|-------------|
+| `/_ctx-absorb` | Merge deltas from a parallel worktree or separate checkout |
+| `/_ctx-audit` | Detect code-level drift after YOLO sprints or before releases |
+| `/_ctx-backup` | Backup context and Claude data to SMB share |
+| `/_ctx-brainstorm` | Structured design dialogue before implementation |
+| `/_ctx-check-links` | Audit docs for dead links before releases |
+| `/_ctx-qa` | Run QA checks before committing |
+| `/_ctx-release` | Run the full release process |
+| `/_ctx-release-notes` | Generate release notes for `dist/RELEASE_NOTES.md` |
+| `/_ctx-sanitize-permissions` | Audit `settings.local.json` for dangerous permissions |
+| `/_ctx-skill-creator` | Create or improve a skill |
+| `/_ctx-spec` | Scaffold a feature spec from `specs/spec-template.md` |
+| `/_ctx-update-docs` | Check docs/code consistency after changes |
+| `/_ctx-verify` | Verify before claiming work is done |
+
 ----
 
 ## Day-to-Day Workflow

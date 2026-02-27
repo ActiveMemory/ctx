@@ -75,6 +75,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # entry_count_learnings: 30
 # entry_count_decisions: 20
 # convention_line_count: 200
+# injection_token_warn: 15000
 #
 # notify:               # requires: ctx notify setup
 #   events:             # required: no events sent unless listed
@@ -107,6 +108,7 @@ A commented `.ctxrc` showing all options and their defaults:
 | `entry_count_learnings` | `int`      | `30`           | Drift warning when `LEARNINGS.md` exceeds this entry count (0 = disable) |
 | `entry_count_decisions` | `int`      | `20`           | Drift warning when `DECISIONS.md` exceeds this entry count (0 = disable) |
 | `convention_line_count` | `int`      | `200`          | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable) |
+| `injection_token_warn`  | `int`      | `15000`        | Warn when auto-injected context exceeds this token count (0 = disable) |
 | `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
 | `notify.key_rotation_days` | `int`   | `90`           | Days before encryption key rotation nudge               |
 | `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
@@ -310,6 +312,35 @@ Notifications are **opt-in**: No events are sent unless explicitly listed.
 
 See [Webhook Notifications](../recipes/webhook-notifications.md) for a
 step-by-step recipe.
+
+---
+
+## Hook Message Overrides
+
+Hook messages control what text hooks emit when they fire. Each message
+can be overridden per-project by placing a text file at the matching
+path under `.context/`:
+
+```
+.context/hooks/messages/{hook}/{variant}.txt
+```
+
+The override takes priority over the embedded default compiled into the
+`ctx` binary. An empty file silences the message while preserving the
+hook's logic (counting, state tracking, cooldowns).
+
+Use `ctx system message` to discover and manage overrides:
+
+```bash
+ctx system message list                      # see all messages
+ctx system message show qa-reminder gate     # view the current template
+ctx system message edit qa-reminder gate     # copy default for editing
+ctx system message reset qa-reminder gate    # revert to default
+```
+
+See [Customizing Hook Messages](../recipes/customizing-hook-messages.md)
+for detailed examples including Python, JavaScript, and silence
+configurations.
 
 ---
 

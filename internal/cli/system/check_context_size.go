@@ -10,9 +10,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -79,15 +82,22 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	if shouldCheck {
+		fallback := "This session is getting deep. Consider wrapping up\n" +
+			"soon. If there are unsaved learnings, decisions, or\n" +
+			"conventions, now is a good time to persist them."
+		content := loadMessage("check-context-size", "checkpoint", nil, fallback)
+		if content == "" {
+			logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silenced-by-template", count))
+			return nil
+		}
 		msg := fmt.Sprintf("IMPORTANT: Relay this context checkpoint to the user VERBATIM before answering their question.\n\n"+
-			"┌─ Context Checkpoint (prompt #%d) ────────────────\n"+
-			"│ This session is getting deep. Consider wrapping up\n"+
-			"│ soon. If there are unsaved learnings, decisions, or\n"+
-			"│ conventions, now is a good time to persist them.\n", count)
+			"┌─ Context Checkpoint (prompt #%d) ────────────────\n", count)
+		msg += boxLines(content)
 		if line := contextDirLine(); line != "" {
 			msg += "│ " + line + "\n"
 		}
-		msg += "└──────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
+		msg += appendOversizeNudge()
+		msg += "└──────────────────────────────────────────────────"
 		cmd.Println(msg)
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d CHECKPOINT", count))
@@ -98,4 +108,45 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	return nil
+}
+
+// appendOversizeNudge checks for an injection-oversize flag file and returns
+// box-formatted nudge lines if present. Deletes the flag after reading (one-shot).
+// Returns empty string if no flag exists or the template is silenced.
+func appendOversizeNudge() string {
+	flagPath := filepath.Join(rc.ContextDir(), config.DirState, "injection-oversize")
+	data, readErr := os.ReadFile(flagPath) //nolint:gosec // project-local state path
+	if readErr != nil {
+		return ""
+	}
+
+	tokenCount := extractOversizeTokens(data)
+	fallback := fmt.Sprintf("⚠ Context injection is large (~%d tokens).\n"+
+		"Run /ctx-consolidate to distill your context files.", tokenCount)
+	content := loadMessage("check-context-size", "oversize",
+		map[string]any{"TokenCount": tokenCount}, fallback)
+	if content == "" {
+		_ = os.Remove(flagPath) // silenced, still consume the flag
+		return ""
+	}
+
+	_ = os.Remove(flagPath) // one-shot: consumed
+	return boxLines(content)
+}
+
+// oversizeTokenRe matches "Injected:  NNNNN tokens" in the flag file.
+var oversizeTokenRe = regexp.MustCompile(`Injected:\s+(\d+)\s+tokens`)
+
+// extractOversizeTokens parses the token count from an injection-oversize flag file.
+// Returns 0 if the format is unexpected.
+func extractOversizeTokens(data []byte) int {
+	m := oversizeTokenRe.FindSubmatch(data)
+	if m == nil {
+		return 0
+	}
+	n, err := strconv.Atoi(string(m[1]))
+	if err != nil {
+		return 0
+	}
+	return n
 }

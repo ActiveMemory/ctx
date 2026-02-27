@@ -69,6 +69,9 @@ func runCheckCeremonies(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	msg := emitCeremonyNudge(cmd, remember, wrapup)
+	if msg == "" {
+		return nil
+	}
 	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", input.SessionID, msg)
 	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", input.SessionID, msg)
 	touchFile(remindedFile)
@@ -129,52 +132,52 @@ func scanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 }
 
 func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) string {
-	msg := "IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.\n\n"
-
-	dirFooter := contextDirLine()
+	var variant, boxTitle, fallback string
 
 	switch {
 	case !remember && !wrapup:
-		msg += "┌─ Session Ceremonies ──────────────────────────────\n" +
-			"│ Your last 3 sessions didn't use /ctx-remember or\n" +
-			"│ /ctx-wrap-up.\n" +
-			"│\n" +
-			"│ Start sessions with:  /ctx-remember\n" +
-			"│   → Loads context, shows active tasks, picks up\n" +
-			"│     where you left off. No re-explaining needed.\n" +
-			"│\n" +
-			"│ End sessions with:    /ctx-wrap-up\n" +
-			"│   → Captures learnings and decisions so the next\n" +
-			"│     session starts informed, not from scratch.\n" +
-			"│\n" +
-			"│ These take seconds and save minutes.\n"
-		if dirFooter != "" {
-			msg += "│ " + dirFooter + "\n"
-		}
-		msg += "└───────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
-
+		variant = "both"
+		boxTitle = "Session Ceremonies"
+		fallback = "Your last 3 sessions didn't use /ctx-remember or\n" +
+			"/ctx-wrap-up.\n" +
+			"\n" +
+			"Start sessions with:  /ctx-remember\n" +
+			"  → Loads context, shows active tasks, picks up\n" +
+			"    where you left off. No re-explaining needed.\n" +
+			"\n" +
+			"End sessions with:    /ctx-wrap-up\n" +
+			"  → Captures learnings and decisions so the next\n" +
+			"    session starts informed, not from scratch.\n" +
+			"\n" +
+			"These take seconds and save minutes."
 	case !remember:
-		msg += "┌─ Session Start ───────────────────────────────────\n" +
-			"│ Try starting this session with /ctx-remember\n" +
-			"│\n" +
-			"│ It loads your context, shows active tasks, and\n" +
-			"│ picks up where you left off — no re-explaining.\n"
-		if dirFooter != "" {
-			msg += "│ " + dirFooter + "\n"
-		}
-		msg += "└───────────────────────────────────────────────────"
-
+		variant = "remember"
+		boxTitle = "Session Start"
+		fallback = "Try starting this session with /ctx-remember\n" +
+			"\n" +
+			"It loads your context, shows active tasks, and\n" +
+			"picks up where you left off — no re-explaining."
 	case !wrapup:
-		msg += "┌─ Session End ─────────────────────────────────────\n" +
-			"│ Your last 3 sessions didn't end with /ctx-wrap-up\n" +
-			"│\n" +
-			"│ It captures learnings and decisions so the next\n" +
-			"│ session starts informed, not from scratch.\n"
-		if dirFooter != "" {
-			msg += "│ " + dirFooter + "\n"
-		}
-		msg += "└───────────────────────────────────────────────────"
+		variant = "wrapup"
+		boxTitle = "Session End"
+		fallback = "Your last 3 sessions didn't end with /ctx-wrap-up\n" +
+			"\n" +
+			"It captures learnings and decisions so the next\n" +
+			"session starts informed, not from scratch."
 	}
+
+	content := loadMessage("check-ceremonies", variant, nil, fallback)
+	if content == "" {
+		return ""
+	}
+
+	msg := "IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.\n\n" +
+		"┌─ " + boxTitle + " " + strings.Repeat("─", 51-len(boxTitle)) + "\n"
+	msg += boxLines(content)
+	if dirFooter := contextDirLine(); dirFooter != "" {
+		msg += "│ " + dirFooter + "\n"
+	}
+	msg += "└───────────────────────────────────────────────────"
 
 	cmd.Println(msg)
 	return msg

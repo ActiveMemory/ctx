@@ -87,12 +87,22 @@ func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Version mismatch — emit warning
-	msg := fmt.Sprintf("IMPORTANT: Relay this version warning to the user VERBATIM before answering their question.\n\n"+
-		"┌─ Version Mismatch ─────────────────────────────\n"+
-		"│ Your ctx binary is v%s but the plugin expects v%s.\n"+
-		"│\n"+
-		"│ Reinstall the binary to get the best out of ctx:\n"+
-		"│   go install github.com/ActiveMemory/ctx/cmd/ctx@latest\n", binaryVer, pluginVer)
+	fallback := fmt.Sprintf("Your ctx binary is v%s but the plugin expects v%s.\n", binaryVer, pluginVer) +
+		"\nReinstall the binary to get the best out of ctx:\n" +
+		"  go install github.com/ActiveMemory/ctx/cmd/ctx@latest"
+	content := loadMessage("check-version", "mismatch",
+		map[string]any{
+			"BinaryVersion": binaryVer,
+			"PluginVersion": pluginVer,
+		}, fallback)
+	if content == "" {
+		touchFile(markerFile)
+		return nil
+	}
+
+	msg := "IMPORTANT: Relay this version warning to the user VERBATIM before answering their question.\n\n" +
+		"┌─ Version Mismatch ─────────────────────────────\n"
+	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
 		msg += "│ " + line + "\n"
 	}
@@ -128,10 +138,17 @@ func checkKeyAge(cmd *cobra.Command, sessionID string) {
 		return
 	}
 
-	keyMsg := fmt.Sprintf("\nIMPORTANT: Relay this security reminder to the user VERBATIM.\n\n"+
-		"┌─ Key Rotation ──────────────────────────────────┐\n"+
-		"│ Your encryption key is %d days old.                 \n"+
-		"│ Consider rotating: ctx pad rotate-key                │\n", ageDays)
+	keyFallback := fmt.Sprintf("Your encryption key is %d days old.\n", ageDays) +
+		"Consider rotating: ctx pad rotate-key"
+	keyContent := loadMessage("check-version", "key-rotation",
+		map[string]any{"KeyAgeDays": ageDays}, keyFallback)
+	if keyContent == "" {
+		return
+	}
+
+	keyMsg := "\nIMPORTANT: Relay this security reminder to the user VERBATIM.\n\n" +
+		"┌─ Key Rotation ──────────────────────────────────┐\n"
+	keyMsg += boxLines(keyContent)
 	if line := contextDirLine(); line != "" {
 		keyMsg += "│ " + line + "\n"
 	}

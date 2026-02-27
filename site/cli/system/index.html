@@ -1520,6 +1520,8 @@
       
         
       
+        
+      
     
     
     
@@ -1582,6 +1584,36 @@
     
   
     Hook Output Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/customizing-hook-messages/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Hook Messages
   
 
     
@@ -2324,6 +2356,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-system-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-system-mark-journal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2995,6 +3038,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-system-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-system-mark-journal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3217,11 +3271,65 @@ footer for reinforcement.</p>
 </span></code></pre></div>
 <p><strong>Platform support</strong>: Full metrics on Linux and macOS. Windows shows
 disk only; memory and load report as unsupported.</p>
+<h4 id="ctx-system-message"><code>ctx system message</code><a class="headerlink" href="#ctx-system-message" title="Permanent link">&para;</a></h4>
+<p>Manage hook message templates. Hook messages control what text hooks emit.
+The hook logic (when to fire, counting, state tracking) is universal; the
+messages are opinions that can be customized per-project.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>&lt;subcommand&gt;
+</span></code></pre></div>
+<p><strong>Subcommands</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Subcommand</th>
+<th>Args</th>
+<th>Flags</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list</code></td>
+<td><em>(none)</em></td>
+<td><code>--json</code></td>
+<td>Show all hook messages with category and override status</td>
+</tr>
+<tr>
+<td><code>show</code></td>
+<td><code>&lt;hook&gt; &lt;variant&gt;</code></td>
+<td><em>(none)</em></td>
+<td>Print the effective message template with source</td>
+</tr>
+<tr>
+<td><code>edit</code></td>
+<td><code>&lt;hook&gt; &lt;variant&gt;</code></td>
+<td><em>(none)</em></td>
+<td>Copy embedded default to <code>.context/</code> for editing</td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td><code>&lt;hook&gt; &lt;variant&gt;</code></td>
+<td><em>(none)</em></td>
+<td>Delete user override, revert to embedded default</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>list<span class="w">                      </span><span class="c1"># Table of all 24 messages</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>list<span class="w"> </span>--json<span class="w">               </span><span class="c1"># Machine-readable JSON</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># View the QA gate template</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># Copy default to .context/ for editing</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># Delete override, revert to default</span>
+</span></code></pre></div>
+<p>Override files are placed at <code>.context/hooks/messages/{hook}/{variant}.txt</code>.
+An empty override file silences the message while preserving the hook's logic.</p>
+<p>See the <a href="../../recipes/customizing-hook-messages/">Customizing Hook Messages</a>
+recipe for detailed examples.</p>
 <h4 id="ctx-system-mark-journal"><code>ctx system mark-journal</code><a class="headerlink" href="#ctx-system-mark-journal" title="Permanent link">&para;</a></h4>
 <p>Update processing state for a journal entry. Records the current date
 in <code>.context/journal/.state.json</code>. Used by journal skills to record
 pipeline progress.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;stage&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;stage&gt;
 </span></code></pre></div>
 <p><strong>Stages</strong>: <code>exported</code>, <code>enriched</code>, <code>normalized</code>, <code>fences_verified</code></p>
 <table>
@@ -3239,9 +3347,9 @@ pipeline progress.</p>
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>enriched
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>normalized
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>--check<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>fences_verified
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>enriched
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>normalized
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>--check<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>fences_verified
 </span></code></pre></div>
 
 

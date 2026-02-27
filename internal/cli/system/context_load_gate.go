@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -67,6 +68,12 @@ Silent when: marker exists for session_id, or context not initialized`,
 	}
 }
 
+// fileTokenEntry tracks per-file token counts during injection.
+type fileTokenEntry struct {
+	name   string
+	tokens int
+}
+
 func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 	if !isInitialized() {
 		return nil
@@ -92,6 +99,7 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 	var content strings.Builder
 	var totalTokens int
 	var filesLoaded int
+	var perFile []fileTokenEntry
 
 	content.WriteString(
 		"PROJECT CONTEXT (auto-loaded by system hook" +
@@ -122,13 +130,17 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 			content.WriteString(fmt.Sprintf(
 				"--- %s (index — read full entries by date "+
 					"when relevant) ---\n%s\n\n", f, idx))
-			totalTokens += context.EstimateTokensString(idx)
+			tokens := context.EstimateTokensString(idx)
+			totalTokens += tokens
+			perFile = append(perFile, fileTokenEntry{name: f + " (idx)", tokens: tokens})
 			filesLoaded++
 
 		default:
 			content.WriteString(fmt.Sprintf(
 				"--- %s ---\n%s\n\n", f, string(data)))
-			totalTokens += context.EstimateTokens(data)
+			tokens := context.EstimateTokens(data)
+			totalTokens += tokens
+			perFile = append(perFile, fileTokenEntry{name: f, tokens: tokens})
 			filesLoaded++
 		}
 	}
@@ -152,7 +164,39 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 		filesLoaded, totalTokens)
 	_ = notify.Send("relay", webhookMsg, input.SessionID, "")
 
+	// Oversize nudge: write flag for check-context-size to pick up
+	writeOversizeFlag(dir, totalTokens, perFile)
+
 	return nil
+}
+
+// writeOversizeFlag writes an injection-oversize flag file when the total
+// injected tokens exceed the configured threshold. The flag is consumed by
+// check-context-size, which appends a nudge to the VERBATIM checkpoint.
+func writeOversizeFlag(contextDir string, totalTokens int, perFile []fileTokenEntry) {
+	threshold := rc.InjectionTokenWarn()
+	if threshold == 0 || totalTokens <= threshold {
+		return
+	}
+
+	stateDir := filepath.Join(contextDir, config.DirState)
+	_ = os.MkdirAll(stateDir, 0o750)
+
+	var flag strings.Builder
+	flag.WriteString("Context injection oversize warning\n")
+	flag.WriteString(strings.Repeat("=", 35) + "\n")
+	flag.WriteString(fmt.Sprintf("Timestamp: %s\n", time.Now().UTC().Format(time.RFC3339)))
+	flag.WriteString(fmt.Sprintf("Injected:  %d tokens (threshold: %d)\n\n", totalTokens, threshold))
+	flag.WriteString("Per-file breakdown:\n")
+	for _, entry := range perFile {
+		flag.WriteString(fmt.Sprintf("  %-22s %5d tokens\n", entry.name, entry.tokens))
+	}
+	flag.WriteString("\nAction: Run /ctx-consolidate to distill context files.\n")
+	flag.WriteString("Files with the most growth are the best candidates.\n")
+
+	_ = os.WriteFile(
+		filepath.Join(stateDir, "injection-oversize"),
+		[]byte(flag.String()), 0o600)
 }
 
 // extractIndex returns the content between INDEX:START and INDEX:END

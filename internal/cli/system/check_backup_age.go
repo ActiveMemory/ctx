@@ -81,16 +81,26 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
+	// Build pre-formatted warnings for the template variable
+	var warningText string
+	for _, w := range warnings {
+		warningText += w + "\n"
+	}
+
+	content := loadMessage("check-backup-age", "warning",
+		map[string]any{"Warnings": warningText}, warningText)
+	if content == "" {
+		return nil
+	}
+
 	// Emit VERBATIM relay
 	msg := "IMPORTANT: Relay this backup warning to the user VERBATIM before answering their question.\n\n" +
 		"┌─ Backup Warning ──────────────────────────────────\n"
-	for _, w := range warnings {
-		msg += "│ " + w + "\n"
-	}
+	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
 		msg += "│ " + line + "\n"
 	}
-	msg += "└──────────────────────────────────────────────────" //nolint:goconst // box-drawing decoration
+	msg += "└──────────────────────────────────────────────────"
 	cmd.Println(msg)
 
 	_ = notify.Send("nudge", "check-backup-age: Backup warning", input.SessionID, msg)

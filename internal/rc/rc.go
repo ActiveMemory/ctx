@@ -28,6 +28,7 @@ func Default() *CtxRC {
 		EntryCountLearnings: DefaultEntryCountLearnings,
 		EntryCountDecisions: DefaultEntryCountDecisions,
 		ConventionLineCount: DefaultConventionLineCount,
+		InjectionTokenWarn:  DefaultInjectionTokenWarn,
 	}
 }
 
@@ -137,6 +138,16 @@ func EntryCountDecisions() int {
 //   - int: Threshold above which a drift warning is emitted
 func ConventionLineCount() int {
 	return RC().ConventionLineCount
+}
+
+// InjectionTokenWarn returns the token threshold for oversize injection warning.
+//
+// Returns 0 if the check is disabled. Default: 15000.
+//
+// Returns:
+//   - int: Threshold above which an oversize flag is written
+func InjectionTokenWarn() int {
+	return RC().InjectionTokenWarn
 }
 
 // NotifyEvents returns the configured event filter list for notifications.
