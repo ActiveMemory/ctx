@@ -43,4 +43,6 @@ const (
 	TomlNavSectionClose = "  ]}"
 	// TomlNavClose closes the top-level nav array.
 	TomlNavClose = "]"
+	// NudgeBoxBottom is the bottom border of a nudge/notification box.
+	NudgeBoxBottom = "└──────────────────────────────────────────────────"
 )

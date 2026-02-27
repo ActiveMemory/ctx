@@ -97,7 +97,7 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 			msg += "│ " + line + "\n"
 		}
 		msg += appendOversizeNudge()
-		msg += "└──────────────────────────────────────────────────"
+		msg += config.NudgeBoxBottom
 		cmd.Println(msg)
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d CHECKPOINT", count))

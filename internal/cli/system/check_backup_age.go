@@ -15,6 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -100,7 +101,7 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 	if line := contextDirLine(); line != "" {
 		msg += "│ " + line + "\n"
 	}
-	msg += "└──────────────────────────────────────────────────"
+	msg += config.NudgeBoxBottom
 	cmd.Println(msg)
 
 	_ = notify.Send("nudge", "check-backup-age: Backup warning", input.SessionID, msg)
