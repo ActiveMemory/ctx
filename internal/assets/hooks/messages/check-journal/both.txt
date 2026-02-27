@@ -1,0 +1,6 @@
+You have {{.UnexportedCount}} new session(s) not yet exported.
+{{.UnenrichedCount}} existing entries need enrichment.
+
+Export and enrich:
+  ctx recall export --all
+  /ctx-journal-enrich-all

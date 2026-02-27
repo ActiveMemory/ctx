@@ -1,0 +1,4 @@
+You have {{.UnexportedCount}} new session(s) not yet exported.
+
+Export:
+  ctx recall export --all

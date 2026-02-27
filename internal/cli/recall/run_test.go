@@ -1187,6 +1187,75 @@ func TestDiscardFrontmatter(t *testing.T) {
 	}
 }
 
+func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-fmlock",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-fmlock-022", "fmlock-test", "/home/test/fmlock",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export to create the file.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Verify the file is NOT locked in state.
+	jstate, loadErr := state.Load(journalDir)
+	if loadErr != nil {
+		t.Fatalf("load state: %v", loadErr)
+	}
+	if jstate.Locked(mdFile) {
+		t.Fatal("file should not be locked in state initially")
+	}
+
+	// Manually add "locked: true" to frontmatter (simulating user edit).
+	data, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read: %v", readErr)
+	}
+	content := string(data)
+	// Insert locked: true into existing frontmatter.
+	content = strings.Replace(content, "---\n", "---\nlocked: true\n", 1)
+	if writeErr := os.WriteFile(path, []byte(content), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export with --regenerate --yes.
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
+
+	// File should be unchanged (locked via frontmatter).
+	after, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read after: %v", readErr)
+	}
+	if !strings.Contains(string(after), "locked: true") {
+		t.Error("frontmatter-locked file should not be regenerated")
+	}
+
+	// State should now reflect the lock (promoted from frontmatter).
+	jstate, loadErr = state.Load(journalDir)
+	if loadErr != nil {
+		t.Fatalf("load state after export: %v", loadErr)
+	}
+	if !jstate.Locked(mdFile) {
+		t.Error("frontmatter lock should be promoted to state file")
+	}
+}
+
 func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)

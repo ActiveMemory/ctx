@@ -24,5 +24,10 @@ const DefaultEntryCountDecisions = 20
 // Conventions lack dated entry headers, so line count is used instead.
 const DefaultConventionLineCount = 200
 
+// DefaultInjectionTokenWarn is the token threshold for oversize injection warning.
+// When auto-injected context exceeds this count, a flag file is written for
+// check-context-size to pick up. 0 disables the check.
+const DefaultInjectionTokenWarn = 15000
+
 // DefaultKeyRotationDays is the number of days before a key rotation nudge.
 const DefaultKeyRotationDays = 90

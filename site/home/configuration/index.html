@@ -1118,6 +1118,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hook-message-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Message Overrides
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#agent-bootstrapping" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1793,6 +1804,8 @@
       
         
       
+        
+      
     
     
     
@@ -1855,6 +1868,36 @@
     
   
     Hook Output Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/customizing-hook-messages/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing Hook Messages
   
 
     
@@ -3344,6 +3387,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hook-message-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Message Overrides
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#agent-bootstrapping" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3475,23 +3529,24 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># entry_count_learnings: 30</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># entry_count_decisions: 20</span>
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># convention_line_count: 200</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1">#</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># notify:               # requires: ctx notify setup</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">#   events:             # required: no events sent unless listed</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1">#     - loop</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">#     - nudge</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1">#     - relay</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1">#   key_rotation_days: 90</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">#</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># priority_order:</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1">#   - CONSTITUTION.md</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   - TASKS.md</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#   - CONVENTIONS.md</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#   - ARCHITECTURE.md</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#   - DECISIONS.md</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1">#   - LEARNINGS.md</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1">#   - GLOSSARY.md</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># injection_token_warn: 15000</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1">#</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># notify:               # requires: ctx notify setup</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1">#   events:             # required: no events sent unless listed</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">#     - loop</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1">#     - nudge</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1">#     - relay</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">#   key_rotation_days: 90</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1">#</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># priority_order:</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   - CONSTITUTION.md</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#   - TASKS.md</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#   - CONVENTIONS.md</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#   - ARCHITECTURE.md</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1">#   - DECISIONS.md</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1">#   - LEARNINGS.md</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">#   - GLOSSARY.md</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1">#   - AGENT_PLAYBOOK.md</span>
 </span></code></pre></div>
 <h3 id="option-reference">Option Reference<a class="headerlink" href="#option-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -3557,6 +3612,12 @@ and <a href="#cli-global-flags">CLI Global Flags</a> below for details.</p>
 <td><code>int</code></td>
 <td><code>200</code></td>
 <td>Drift warning when <code>CONVENTIONS.md</code> exceeds this line count (0 = disable)</td>
+</tr>
+<tr>
+<td><code>injection_token_warn</code></td>
+<td><code>int</code></td>
+<td><code>15000</code></td>
+<td>Warn when auto-injected context exceeds this token count (0 = disable)</td>
 </tr>
 <tr>
 <td><code>notify.events</code></td>
@@ -3790,12 +3851,31 @@ calculations.</p>
 <p>See <a href="../../recipes/webhook-notifications/">Webhook Notifications</a> for a
 step-by-step recipe.</p>
 <hr />
+<h2 id="hook-message-overrides">Hook Message Overrides<a class="headerlink" href="#hook-message-overrides" title="Permanent link">&para;</a></h2>
+<p>Hook messages control what text hooks emit when they fire. Each message
+can be overridden per-project by placing a text file at the matching
+path under <code>.context/</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>.context/hooks/messages/{hook}/{variant}.txt
+</span></code></pre></div>
+<p>The override takes priority over the embedded default compiled into the
+<code>ctx</code> binary. An empty file silences the message while preserving the
+hook's logic (counting, state tracking, cooldowns).</p>
+<p>Use <code>ctx system message</code> to discover and manage overrides:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>list<span class="w">                      </span><span class="c1"># see all messages</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># view the current template</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># copy default for editing</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># revert to default</span>
+</span></code></pre></div>
+<p>See <a href="../../recipes/customizing-hook-messages/">Customizing Hook Messages</a>
+for detailed examples including Python, JavaScript, and silence
+configurations.</p>
+<hr />
 <h2 id="agent-bootstrapping">Agent Bootstrapping<a class="headerlink" href="#agent-bootstrapping" title="Permanent link">&para;</a></h2>
 <p>AI agents need to know the resolved context directory at session start.
 The <code>ctx system bootstrap</code> command prints the context path, file list, and
 operating rules in both text and JSON formats:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">          </span><span class="c1"># text output for agents</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">          </span><span class="c1"># text output for agents</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
 </span></code></pre></div>
 <p>The <code>CLAUDE.md</code> template instructs the agent to run this as its first action.
 Every nudge (<em>context checkpoint, persistence reminder, etc.</em>) also includes a

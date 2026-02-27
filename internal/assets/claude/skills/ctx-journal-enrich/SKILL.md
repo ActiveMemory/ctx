@@ -7,7 +7,12 @@ Enrich a session journal entry with structured metadata.
 
 ## Before Enriching
 
-1. **Check if already enriched**: check the state file via
+1. **Check if locked**: a file is locked if `.state.json` has a
+   `locked` date OR the frontmatter contains `locked: true`. Locked
+   files must not be modified — skip them silently. Check via:
+   `ctx system mark-journal --check <filename> locked`
+   or look for `locked: true` in the YAML frontmatter.
+2. **Check if already enriched**: check the state file via
    `ctx system mark-journal --check <filename> enriched` or read
    `.state.json` in the journal directory; confirm before overwriting
 

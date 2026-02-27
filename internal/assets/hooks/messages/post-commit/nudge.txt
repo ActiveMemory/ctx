@@ -1,0 +1,1 @@
+Commit succeeded. 1. Offer context capture to the user: Decision (design choice?), Learning (gotcha?), or Neither. 2. Ask the user: "Want me to run lints and tests before you push?" Do NOT push. The user pushes manually.

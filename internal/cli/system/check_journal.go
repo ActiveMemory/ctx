@@ -73,22 +73,36 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	msg := "IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.\n\n" +
-		"┌─ Journal Reminder ─────────────────────────────\n"
-
-	switch {
-	case unexported > 0 && unenriched > 0:
-		msg += fmt.Sprintf("│ You have %d new session(s) not yet exported.\n", unexported)
-		msg += fmt.Sprintf("│ %d existing entries need enrichment.\n", unenriched)
-		msg += "│\n│ Export and enrich:\n│   ctx recall export --all\n│   /ctx-journal-enrich-all\n"
-	case unexported > 0:
-		msg += fmt.Sprintf("│ You have %d new session(s) not yet exported.\n", unexported)
-		msg += "│\n│ Export:\n│   ctx recall export --all\n"
-	default:
-		msg += fmt.Sprintf("│ %d journal entries need enrichment.\n", unenriched)
-		msg += "│\n│ Enrich:\n│   /ctx-journal-enrich-all\n"
+	vars := map[string]any{
+		"UnexportedCount": unexported,
+		"UnenrichedCount": unenriched,
 	}
 
+	var variant, fallback string
+	switch {
+	case unexported > 0 && unenriched > 0:
+		variant = "both"
+		fallback = fmt.Sprintf("You have %d new session(s) not yet exported.\n", unexported) +
+			fmt.Sprintf("%d existing entries need enrichment.\n", unenriched) +
+			"\nExport and enrich:\n  ctx recall export --all\n  /ctx-journal-enrich-all"
+	case unexported > 0:
+		variant = "unexported"
+		fallback = fmt.Sprintf("You have %d new session(s) not yet exported.\n", unexported) +
+			"\nExport:\n  ctx recall export --all"
+	default:
+		variant = "unenriched"
+		fallback = fmt.Sprintf("%d journal entries need enrichment.\n", unenriched) +
+			"\nEnrich:\n  /ctx-journal-enrich-all"
+	}
+
+	content := loadMessage("check-journal", variant, vars, fallback)
+	if content == "" {
+		return nil
+	}
+
+	msg := "IMPORTANT: Relay this journal reminder to the user VERBATIM before answering their question.\n\n" +
+		"┌─ Journal Reminder ─────────────────────────────\n"
+	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
 		msg += "│ " + line + "\n"
 	}

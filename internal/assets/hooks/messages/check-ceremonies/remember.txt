@@ -1,0 +1,4 @@
+Try starting this session with /ctx-remember
+
+It loads your context, shows active tasks, and
+picks up where you left off — no re-explaining.

@@ -42,6 +42,11 @@ If all entries already have enrichment recorded, report that and stop.
 
 Skip entries that are not worth enriching:
 
+- **Locked entries**: a file is locked if `.state.json` has a
+  `locked` date OR the frontmatter contains `locked: true`. Never
+  modify locked files — neither metadata nor body. Check via:
+  `ctx system mark-journal --check <filename> locked`
+  or look for `locked: true` in the YAML frontmatter.
 - **Suggestion sessions**: files under ~20 lines or containing
   only auto-complete fragments. Check with:
   ```bash

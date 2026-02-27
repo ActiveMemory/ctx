@@ -14,7 +14,7 @@ import (
 	"encoding/json"
 )
 
-//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md tools/*.sh
+//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md tools/*.sh hooks/messages/*/*.txt
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -171,6 +171,65 @@ func ListTools() ([]string, error) {
 //   - error: Non-nil if the file is not found or read fails
 func Tool(name string) ([]byte, error) {
 	return FS.ReadFile("tools/" + name)
+}
+
+// HookMessage reads a hook message template by hook name and filename.
+//
+// Parameters:
+//   - hook: Hook directory name (e.g., "qa-reminder")
+//   - filename: Template filename (e.g., "gate.txt")
+//
+// Returns:
+//   - []byte: Template content from hooks/messages/<hook>/
+//   - error: Non-nil if the file is not found or read fails
+func HookMessage(hook, filename string) ([]byte, error) {
+	return FS.ReadFile("hooks/messages/" + hook + "/" + filename)
+}
+
+// ListHookMessages returns available hook message directory names.
+//
+// Each hook is a directory under hooks/messages/ containing one or
+// more variant .txt template files.
+//
+// Returns:
+//   - []string: List of hook directory names
+//   - error: Non-nil if directory read fails
+func ListHookMessages() ([]string, error) {
+	entries, readErr := FS.ReadDir("hooks/messages")
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if entry.IsDir() {
+			names = append(names, entry.Name())
+		}
+	}
+	return names, nil
+}
+
+// ListHookVariants returns available variant filenames for a hook.
+//
+// Parameters:
+//   - hook: Hook directory name (e.g., "qa-reminder")
+//
+// Returns:
+//   - []string: List of variant filenames (e.g., "gate.txt")
+//   - error: Non-nil if the hook directory is not found or read fails
+func ListHookVariants(hook string) ([]string, error) {
+	entries, readErr := FS.ReadDir("hooks/messages/" + hook)
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			names = append(names, entry.Name())
+		}
+	}
+	return names, nil
 }
 
 // PluginVersion returns the version string from the embedded plugin.json.

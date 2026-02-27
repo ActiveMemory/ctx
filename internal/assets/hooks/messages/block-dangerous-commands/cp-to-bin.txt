@@ -1,0 +1,1 @@
+Agent must not copy binaries to bin directories. Ask the user to run 'sudo make install' instead.

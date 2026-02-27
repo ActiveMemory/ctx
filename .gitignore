@@ -46,6 +46,9 @@ dist/
 # Hook diagnostic logs (machine-specific, not committed)
 .context/logs/
 
+# Runtime state (flags, markers — ephemeral, not committed)
+.context/state/
+
 # Journal entries (personal, potentially large)
 .context/journal/
 .context/journal.bak/

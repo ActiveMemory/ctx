@@ -14,6 +14,10 @@ STRUCTURE RULES (see CONSTITUTION.md):
       ctx skill; needs rename. Renamed to /absorb. #done:2026-02-21
 - [-] Session pattern analysis skill — rejected. Automated pattern capture from sessions risks training the agent to please rather than push back. Existing mechanisms (learnings, hooks, constitution) already capture process preferences explicitly. See LEARNINGS.md. #added:2026-02-22-212143
 
+- [ ] Audit test coverage for export frontmatter preservation — verify T2.1.3 tests exist for: default preserves frontmatter, --force discards it, --skip-existing leaves file untouched, multipart preservation, malformed frontmatter graceful degradation. See specs/future-complete/export-update-mode.md for full checklist. #added:2026-02-26-182446
+
+- [ ] Explore: Replace prompt counter heuristic with actual JSONL token counts in check-context-size hook — parse session JSONL mid-session via recall/parser to sum token fields instead of incrementing a counter. See ideas/done/toke-count.md for original discussion. #added:2026-02-26-180313
+
 - [ ] Suppress context checkpoint nudges after wrap-up — marker file approach. Spec: specs/suppress-nudges-after-wrap-up.md #added:2026-02-24-205402
 
 - [x] Remove Context Monitor section from docs/reference/session-journal.md — references wrong path (./tools/context-watch.sh), ./hack/context-watch.sh is a hacky heuristic, and VERBATIM relay hooks (check-context-size) already serve this purpose #added:2026-02-24-204552
@@ -81,6 +85,92 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 - [ ] AI: verify and archive completed tasks in TASK.md; the file has gotten
       crowded. Verify each task individually before archiving.
+
+### Phase 0.4: Hook Message Templates
+
+Spec: `specs/future-complete/hook-message-templates.md`. Read the spec before starting any P0.4 task.
+
+**Phase 1 — Core + defaults (no behavioral change):**
+
+- [x] P0.4.1: Create `internal/cli/system/message.go` with `loadMessage()` and
+      `renderTemplate()` — template loading with 3-tier fallback (user override →
+      embedded default → hardcoded fallback). #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.2: Create `internal/cli/system/message_test.go` — tests for all
+      priority/rendering paths: no override, embedded, user override, empty
+      (silence), template variables, unknown variables, malformed template,
+      nil vars map. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.3: Extract default templates into `internal/assets/hooks/messages/`
+      (24 `.txt` files across 14 hook directories). Update embed directive in
+      `internal/assets/embed.go`. Added `HookMessage()` accessor. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.4: Migrate VERBATIM relay hooks to `loadMessage()` — check-context-size,
+      check-persistence, check-ceremonies, check-journal, check-knowledge,
+      check-map-staleness, check-backup-age, check-reminders, check-resources,
+      check-version (10 hooks). #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.5: Migrate agent directive hooks to `loadMessage()` — qa-reminder,
+      post-commit (2 hooks). #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.6: Migrate block response hooks to `loadMessage()` —
+      block-dangerous-commands, block-non-path-ctx (2 hooks). #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.7: Verify all tests pass, `make build`, `make lint`. Ensure zero
+      behavioral change — output should be identical before and after migration.
+      #added:2026-02-26 #done:2026-02-26
+
+**Phase 2 — Discoverability + documentation:**
+
+Spec: `specs/future-complete/hook-message-customization.md`.
+
+- [x] P0.4.8.1: Write spec (`specs/hook-message-customization.md`) — CLI design,
+      categories, docs plan, testing. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.2: Create hook message registry (`internal/assets/hooks/messages/registry.go`)
+      + `ListHookMessages()`/`ListHookVariants()` in embed.go. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.3: Implement `ctx system message` command (list/show/edit/reset) in
+      `internal/cli/system/message_cmd.go`. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.4: Register command in `system.go` as visible subcommand.
+      #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.5: Write tests (`message_cmd_test.go`) — 17 tests covering all
+      subcommands + registry validation. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.6: Write recipe (`docs/recipes/customizing-hook-messages.md`) —
+      Python QA gate, silence ceremonies, JS post-commit examples.
+      #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.7: Update CLI docs (`docs/cli/system.md`) — message subcommand
+      reference section. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.8: Update configuration docs + cross-links (hook-output-patterns,
+      system-hooks-audit) + recipe index + zensical.toml nav.
+      #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.8.9: Verify: `make build` (pass), `make test` (all pass),
+      `make lint` (only pre-existing goconst for box-drawing chars). Manual
+      smoke test requires `sudo make install` first. #added:2026-02-26
+      #done:2026-02-26
+
+### Phase 0.4.9: Injection Oversize Nudge
+
+Spec: `specs/injection-oversize-nudge.md`. Read the spec before starting any P0.4.9 task.
+
+- [x] P0.4.9.1: Add `DirState` constant + gitignore entry in `internal/config/dir.go`.
+      Add `.context/state/` to project `.gitignore`. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.2: Add `InjectionTokenWarn` field to `CtxRC` in `internal/rc/types.go`,
+      `DefaultInjectionTokenWarn = 15000` in `default.go`, wire into `Default()` and
+      add `InjectionTokenWarn()` accessor in `rc.go`. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.3: Add per-file token tracking + flag file writer in
+      `internal/cli/system/context_load_gate.go`. Write `.context/state/injection-oversize`
+      when totalTokens exceeds threshold. #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.4: Create `check-context-size/oversize` hook message template in
+      `internal/assets/hooks/messages/check-context-size/oversize.txt` + registry entry.
+      #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.5: Add flag reader + nudge appender in
+      `internal/cli/system/check_context_size.go`. Read flag, append oversize nudge
+      to VERBATIM checkpoint, delete flag (one-shot). #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.6: Write tests in `context_load_gate_test.go` — under/over threshold,
+      disabled (0), per-file breakdown, state dir auto-created (5 tests).
+      #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.7: Write tests in `check_context_size_test.go` — flag present at
+      checkpoint, flag absent, flag deleted after nudge, malformed flag,
+      extractOversizeTokens unit tests (7 tests). #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.8: Update docs — configuration.md (new `.ctxrc` key), recipe
+      tables (15 customizable, oversize variant + template var).
+      #added:2026-02-26 #done:2026-02-26
+- [x] P0.4.9.9: Verify: `make build` (pass), `make test` (all pass),
+      `make lint` (only pre-existing goconst for box-drawing chars).
+      #added:2026-02-26 #done:2026-02-26
 
 ### Phase 0.5: Spec Scaffolding Skill
 

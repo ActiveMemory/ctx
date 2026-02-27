@@ -1,0 +1,5 @@
+ARCHITECTURE.md hasn't been refreshed since {{.LastRefreshDate}}
+and there are commits touching {{.ModuleCount}} modules.
+/ctx-map keeps architecture docs drift-free.
+
+Want me to run /ctx-map to refresh?

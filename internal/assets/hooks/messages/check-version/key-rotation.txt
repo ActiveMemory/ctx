@@ -1,0 +1,2 @@
+Your encryption key is {{.KeyAgeDays}} days old.
+Consider rotating: ctx pad rotate-key

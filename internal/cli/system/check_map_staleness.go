@@ -105,13 +105,23 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 
 	// Emit VERBATIM nudge
 	dateStr := lastRun.Format("2006-01-02")
-	msg := fmt.Sprintf("IMPORTANT: Relay this architecture map notice to the user VERBATIM before answering their question.\n\n"+
-		"\u250c\u2500 Architecture Map Stale \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"+
-		"\u2502 ARCHITECTURE.md hasn't been refreshed since %s\n"+
-		"\u2502 and there are commits touching %d modules.\n"+
-		"\u2502 /ctx-map keeps architecture docs drift-free.\n"+
-		"\u2502\n"+
-		"\u2502 Want me to run /ctx-map to refresh?\n", dateStr, moduleCommits)
+	fallback := fmt.Sprintf("ARCHITECTURE.md hasn't been refreshed since %s\n", dateStr) +
+		fmt.Sprintf("and there are commits touching %d modules.\n", moduleCommits) +
+		"/ctx-map keeps architecture docs drift-free.\n" +
+		"\n" +
+		"Want me to run /ctx-map to refresh?"
+	content := loadMessage("check-map-staleness", "stale",
+		map[string]any{
+			"LastRefreshDate": dateStr,
+			"ModuleCount":     moduleCommits,
+		}, fallback)
+	if content == "" {
+		return nil
+	}
+
+	msg := "IMPORTANT: Relay this architecture map notice to the user VERBATIM before answering their question.\n\n" +
+		"\u250c\u2500 Architecture Map Stale \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
+	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
 		msg += "\u2502 " + line + "\n"
 	}

@@ -180,6 +180,12 @@ func planExport(
 			case jstate.Locked(filename):
 				action = actionLocked
 				plan.lockedCount++
+			case frontmatterHasLocked(path):
+				// Frontmatter says locked — promote to state so future
+				// operations skip the file without re-parsing.
+				jstate.Mark(filename, "locked")
+				action = actionLocked
+				plan.lockedCount++
 			case singleSession || opts.regenerate || opts.discardFrontmatter():
 				action = actionRegenerate
 				plan.regenCount++

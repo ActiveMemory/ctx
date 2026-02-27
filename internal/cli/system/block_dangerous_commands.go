@@ -63,26 +63,35 @@ func runBlockDangerousCommands(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	var reason string
+	var variant, fallback string
 
 	// Mid-command sudo — after && || ; (prefix sudo caught by deny rule)
 	if reMidSudo.MatchString(command) {
-		reason = "Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed."
+		variant = "mid-sudo"
+		fallback = "Cannot use sudo (no password access). Use 'make build && sudo make install' manually if needed."
 	}
 
 	// Mid-command git push — after && || ; (prefix git push caught by deny rule)
-	if reason == "" && reMidGitPush.MatchString(command) {
-		reason = "git push requires explicit user approval."
+	if variant == "" && reMidGitPush.MatchString(command) {
+		variant = "mid-git-push"
+		fallback = "git push requires explicit user approval."
 	}
 
 	// cp/mv to bin directories — agent must never install binaries
-	if reason == "" && reCpMvToBin.MatchString(command) {
-		reason = "Agent must not copy binaries to bin directories. Ask the user to run 'sudo make install' instead."
+	if variant == "" && reCpMvToBin.MatchString(command) {
+		variant = "cp-to-bin"
+		fallback = "Agent must not copy binaries to bin directories. Ask the user to run 'sudo make install' instead."
 	}
 
 	// cp/install to ~/.local/bin — breaks PATH ctx rules
-	if reason == "" && reInstallToLocalBin.MatchString(command) {
-		reason = "Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH."
+	if variant == "" && reInstallToLocalBin.MatchString(command) {
+		variant = "install-to-local-bin"
+		fallback = "Do not copy binaries to ~/.local/bin — this overrides the system ctx in /usr/local/bin. Use 'ctx' from PATH."
+	}
+
+	var reason string
+	if variant != "" {
+		reason = loadMessage("block-dangerous-commands", variant, nil, fallback)
 	}
 
 	if reason != "" {

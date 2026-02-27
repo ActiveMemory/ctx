@@ -1,0 +1,4 @@
+Your last 3 sessions didn't end with /ctx-wrap-up
+
+It captures learnings and decisions so the next
+session starts informed, not from scratch.

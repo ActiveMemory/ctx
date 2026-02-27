@@ -495,6 +495,8 @@ files accurate as your codebase evolves.
 
 ## See Also
 
+* [Customizing Hook Messages](customizing-hook-messages.md): override
+  what hooks say without changing what they do
 * [Webhook Notifications](webhook-notifications.md): setting up and
   configuring the webhook system
 * [Hook Output Patterns](hook-output-patterns.md): understanding

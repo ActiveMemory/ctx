@@ -1,0 +1,1 @@
+Use 'ctx' from PATH, not 'go run ./cmd/ctx'. Ask the user to run: make build && sudo make install
