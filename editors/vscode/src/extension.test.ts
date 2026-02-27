@@ -20,7 +20,12 @@ vi.mock("vscode", () => ({
 
 vi.mock("child_process");
 
-import { runCtx, getCtxPath, getWorkspaceRoot } from "./extension";
+import {
+  runCtx,
+  getCtxPath,
+  getWorkspaceRoot,
+  getPlatformInfo,
+} from "./extension";
 
 // Helper: create a fake CancellationToken
 function fakeToken(cancelled = false) {
@@ -181,5 +186,18 @@ describe("runCtx", () => {
 
     await runCtx(["status"], "/test", token);
     expect(disposeFn).toHaveBeenCalled();
+  });
+});
+
+describe("getPlatformInfo", () => {
+  it("returns valid goos, goarch, and extension", () => {
+    const info = getPlatformInfo();
+    expect(["darwin", "linux", "windows"]).toContain(info.goos);
+    expect(["amd64", "arm64"]).toContain(info.goarch);
+    if (info.goos === "windows") {
+      expect(info.ext).toBe(".exe");
+    } else {
+      expect(info.ext).toBe("");
+    }
   });
 });
