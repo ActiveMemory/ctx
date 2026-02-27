@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -74,7 +75,7 @@ func runCheckReminders(cmd *cobra.Command, stdin *os.File) error {
 	msg := "IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.\n\n" +
 		"┌─ Reminders ──────────────────────────────────────\n"
 	msg += boxLines(content)
-	msg += "└──────────────────────────────────────────────────"
+	msg += config.NudgeBoxBottom
 	cmd.Println(msg)
 
 	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), input.SessionID, msg)
