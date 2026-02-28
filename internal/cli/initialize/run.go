@@ -74,15 +74,10 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	if minimal {
 		templatesToCreate = config.FilesRequired
 	} else {
-		allTemplates, err := assets.List()
-		if err != nil {
-			return fmt.Errorf("failed to list templates: %w", err)
-		}
-		// Filter out files that go in the project root, not .context/
-		for _, t := range allTemplates {
-			if t != config.FileImplementationPlan && t != config.FileClaudeMd {
-				templatesToCreate = append(templatesToCreate, t)
-			}
+		var listErr error
+		templatesToCreate, listErr = assets.List()
+		if listErr != nil {
+			return fmt.Errorf("failed to list templates: %w", listErr)
 		}
 	}
 

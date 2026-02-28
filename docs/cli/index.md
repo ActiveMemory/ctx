@@ -57,6 +57,7 @@ All commands support these flags:
 | [`ctx pad`](tools.md#ctx-pad)              | Encrypted scratchpad for sensitive one-liners             |
 | [`ctx remind`](tools.md#ctx-remind)        | Session-scoped reminders that surface at session start    |
 | [`ctx completion`](tools.md#ctx-completion) | Generate shell autocompletion scripts                   |
+| [`ctx why`](tools.md#ctx-why)              | Read the philosophy behind ctx                           |
 | [`ctx system`](system.md#ctx-system)       | System diagnostics and hook commands                     |
 
 ---

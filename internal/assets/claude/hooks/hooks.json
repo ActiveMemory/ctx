@@ -10,8 +10,12 @@
         "hooks": [{"type": "command", "command": "ctx system block-non-path-ctx"}]
       },
       {
-        "matcher": "Edit",
+        "matcher": "Bash",
         "hooks": [{"type": "command", "command": "ctx system qa-reminder"}]
+      },
+      {
+        "matcher": "EnterPlanMode",
+        "hooks": [{"type": "command", "command": "ctx system specs-nudge"}]
       },
       {
         "matcher": ".*",

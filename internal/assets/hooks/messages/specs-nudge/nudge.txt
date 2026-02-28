@@ -1,0 +1,1 @@
+Save your plan to specs/ — these documents track what was designed for the current release. Use specs/feature-name.md naming. If this is a quick fix that doesn't need a spec, proceed without one.

@@ -39,7 +39,7 @@ const CategoryCtxSpecific = "ctx-specific"
 // Registry returns the static list of all hook message entries.
 //
 // Returns:
-//   - []HookMessageInfo: All 25 entries sorted by hook then variant
+//   - []HookMessageInfo: All 27 entries sorted by hook then variant
 func Registry() []HookMessageInfo {
 	return []HookMessageInfo{
 		// block-dangerous-commands: ctx-specific block responses
@@ -130,6 +130,13 @@ func Registry() []HookMessageInfo {
 			Category:     CategoryCustomizable,
 			Description:  "Injection oversize nudge",
 			TemplateVars: []string{"TokenCount"},
+		},
+		{
+			Hook:         "check-context-size",
+			Variant:      "window",
+			Category:     CategoryCustomizable,
+			Description:  "Context window usage warning (>80%)",
+			TemplateVars: []string{"TokenCount", "Percentage"},
 		},
 
 		// check-journal: customizable
@@ -230,6 +237,14 @@ func Registry() []HookMessageInfo {
 			Variant:     "gate",
 			Category:    CategoryCustomizable,
 			Description: "Pre-commit QA gate instructions",
+		},
+
+		// specs-nudge: customizable
+		{
+			Hook:        "specs-nudge",
+			Variant:     "nudge",
+			Category:    CategoryCustomizable,
+			Description: "Plan-to-specs directory nudge",
 		},
 	}
 }

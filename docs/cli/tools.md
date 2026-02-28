@@ -495,6 +495,59 @@ ctx remind dismiss --all
 
 ---
 
+### `ctx pause`
+
+Pause all context nudge and reminder hooks for the current session.
+Security hooks (dangerous command blocking) and housekeeping hooks still fire.
+
+```bash
+ctx pause [flags]
+```
+
+**Flags**:
+
+| Flag             | Description                         |
+|------------------|-------------------------------------|
+| `--session-id`   | Session ID (overrides stdin)        |
+
+**Example**:
+
+```bash
+# Pause hooks for a quick investigation
+ctx pause
+
+# Resume when ready
+ctx resume
+```
+
+**See also**: [Pausing Context Hooks](../recipes/session-pause.md)
+
+---
+
+### `ctx resume`
+
+Resume context hooks after a pause. Silent no-op if not paused.
+
+```bash
+ctx resume [flags]
+```
+
+**Flags**:
+
+| Flag             | Description                         |
+|------------------|-------------------------------------|
+| `--session-id`   | Session ID (overrides stdin)        |
+
+**Example**:
+
+```bash
+ctx resume
+```
+
+**See also**: [Pausing Context Hooks](../recipes/session-pause.md)
+
+---
+
 ### `ctx completion`
 
 Generate shell autocompletion scripts.
@@ -535,3 +588,37 @@ ctx completion <shell>
     # Or save to completions directory
     ctx completion fish > ~/.config/fish/completions/ctx.fish
     ```
+
+---
+
+### `ctx why`
+
+Read ctx's philosophy documents directly in the terminal, stripped of
+MkDocs artifacts so they display cleanly without a browser.
+
+```bash
+ctx why [DOCUMENT]
+```
+
+**Documents**:
+
+| Name         | Description                                      |
+|--------------|--------------------------------------------------|
+| `manifesto`  | The ctx Manifesto — creation, not code           |
+| `about`      | About ctx — what it is and why it exists         |
+| `invariants` | Design invariants — properties that must hold    |
+
+**Usage**:
+
+```bash
+# Interactive numbered menu
+ctx why
+
+# Show a specific document
+ctx why manifesto
+ctx why about
+ctx why invariants
+
+# Pipe to a pager
+ctx why manifesto | less
+```

@@ -17,6 +17,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -81,6 +82,10 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 
 	input := readInput(stdin)
 	if input.SessionID == "" {
+		return nil
+	}
+
+	if paused(input.SessionID) > 0 {
 		return nil
 	}
 
@@ -162,7 +167,8 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 	webhookMsg := fmt.Sprintf(
 		"context-load-gate: injected %d files (~%d tokens)",
 		filesLoaded, totalTokens)
-	_ = notify.Send("relay", webhookMsg, input.SessionID, "")
+	_ = notify.Send("relay", webhookMsg, input.SessionID, nil)
+	eventlog.Append("relay", webhookMsg, input.SessionID, nil)
 
 	// Oversize nudge: write flag for check-context-size to pick up
 	writeOversizeFlag(dir, totalTokens, perFile)

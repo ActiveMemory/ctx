@@ -9,6 +9,14 @@ Technical reference for `ctx` **commands**, **skills**, and **internals**.
 
 ---
 
+### [The System Explains Itself](design-invariants.md)
+
+The 12 properties that must hold for any valid `ctx` implementation.
+Not features — constraints. The system's contract with its users
+and contributors.
+
+---
+
 ### [CLI](../cli/index.md)
 
 Every command, subcommand, and flag.

@@ -272,6 +272,180 @@ func TestExtractOversizeTokens(t *testing.T) {
 	}
 }
 
+func TestCheckpointWithTokenLine(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	t.Setenv("HOME", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	sessionID := "test-token-line"
+
+	// Create a fake JSONL file with usage data (52k tokens = 26% of 200k)
+	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	_ = os.MkdirAll(projectDir, 0o750)
+	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"hi","usage":{"input_tokens":40000,"output_tokens":500,"cache_creation_input_tokens":2000,"cache_read_input_tokens":10000}}}` + "\n"
+	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
+		[]byte(jsonlContent), 0o600)
+
+	// Set counter to 19 so next = 20 (triggers checkpoint)
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
+	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"`+sessionID+`"}`)
+	if runErr := runCheckContextSize(cmd, stdin); runErr != nil {
+		t.Fatalf("unexpected error: %v", runErr)
+	}
+
+	out := cmdOutput(cmd)
+	if !strings.Contains(out, "Context Checkpoint") {
+		t.Errorf("expected checkpoint, got: %s", out)
+	}
+	if !strings.Contains(out, "Context window:") {
+		t.Errorf("expected token usage line, got: %s", out)
+	}
+	if !strings.Contains(out, "52k") {
+		t.Errorf("expected ~52k tokens in output, got: %s", out)
+	}
+	// 52k/200k = 26%, should NOT say "running low"
+	if strings.Contains(out, "running low") {
+		t.Errorf("should not say 'running low' at 26%%, got: %s", out)
+	}
+}
+
+func TestWindowWarning_Over80(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	t.Setenv("HOME", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	sessionID := "test-window-over80"
+
+	// Create a fake JSONL file with 164k tokens (82% of 200k)
+	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	_ = os.MkdirAll(projectDir, 0o750)
+	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"hi","usage":{"input_tokens":100000,"output_tokens":2000,"cache_creation_input_tokens":4000,"cache_read_input_tokens":60000}}}` + "\n"
+	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
+		[]byte(jsonlContent), 0o600)
+
+	// Counter at 5 — normally silent, but >80% should trigger independently
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
+	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	_ = os.WriteFile(counterFile, []byte("5"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"`+sessionID+`"}`)
+	if runErr := runCheckContextSize(cmd, stdin); runErr != nil {
+		t.Fatalf("unexpected error: %v", runErr)
+	}
+
+	out := cmdOutput(cmd)
+	if !strings.Contains(out, "Context Window Warning") {
+		t.Errorf("expected window warning, got: %s", out)
+	}
+	if !strings.Contains(out, "82%") {
+		t.Errorf("expected 82%% in output, got: %s", out)
+	}
+}
+
+func TestWindowWarning_Under80_NoCheckpoint(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	t.Setenv("HOME", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	sessionID := "test-under80-silent"
+
+	// Create a JSONL file with 40k tokens (20% of 200k)
+	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	_ = os.MkdirAll(projectDir, 0o750)
+	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"hi","usage":{"input_tokens":30000,"output_tokens":500,"cache_creation_input_tokens":0,"cache_read_input_tokens":10000}}}` + "\n"
+	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
+		[]byte(jsonlContent), 0o600)
+
+	// Counter at 5 — normally silent
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
+	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	_ = os.WriteFile(counterFile, []byte("5"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"`+sessionID+`"}`)
+	if runErr := runCheckContextSize(cmd, stdin); runErr != nil {
+		t.Fatalf("unexpected error: %v", runErr)
+	}
+
+	out := cmdOutput(cmd)
+	if strings.Contains(out, "Context Checkpoint") || strings.Contains(out, "Context Window Warning") {
+		t.Errorf("expected silence at prompt 6 with 20%% usage, got: %s", out)
+	}
+}
+
+func TestTokenUsageLine(t *testing.T) {
+	tests := []struct {
+		name       string
+		tokens     int
+		pct        int
+		windowSize int
+		wantIcon   string
+		wantSuffix string
+	}{
+		{
+			name:       "under 80%",
+			tokens:     52000,
+			pct:        26,
+			windowSize: 200000,
+			wantIcon:   "⏱",
+		},
+		{
+			name:       "at 80%",
+			tokens:     160000,
+			pct:        80,
+			windowSize: 200000,
+			wantIcon:   "⚠",
+			wantSuffix: "running low",
+		},
+		{
+			name:       "over 80%",
+			tokens:     164000,
+			pct:        82,
+			windowSize: 200000,
+			wantIcon:   "⚠",
+			wantSuffix: "running low",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tokenUsageLine(tt.tokens, tt.pct, tt.windowSize)
+			if !strings.Contains(got, tt.wantIcon) {
+				t.Errorf("expected icon %q in %q", tt.wantIcon, got)
+			}
+			if tt.wantSuffix != "" && !strings.Contains(got, tt.wantSuffix) {
+				t.Errorf("expected %q in %q", tt.wantSuffix, got)
+			}
+			if tt.wantSuffix == "" && strings.Contains(got, "running low") {
+				t.Errorf("unexpected 'running low' in %q", got)
+			}
+		})
+	}
+}
+
 func TestCheckContextSize_EmptyStdin(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("XDG_RUNTIME_DIR", tmpDir)

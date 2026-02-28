@@ -184,6 +184,16 @@ const (
 	FileReminders = "reminders.json"
 )
 
+// Event log constants for .context/state/ directory.
+const (
+	// FileEventLog is the current event log file.
+	FileEventLog = "events.jsonl"
+	// FileEventLogPrev is the rotated (previous) event log file.
+	FileEventLogPrev = "events.1.jsonl"
+	// EventLogMaxBytes is the size threshold for log rotation (1MB).
+	EventLogMaxBytes = 1 << 20
+)
+
 // FileType maps short names to actual file names.
 var FileType = map[string]string{
 	EntryDecision:   FileDecision,

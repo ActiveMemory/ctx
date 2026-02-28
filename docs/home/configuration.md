@@ -76,6 +76,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # entry_count_decisions: 20
 # convention_line_count: 200
 # injection_token_warn: 15000
+# context_window: 200000
 #
 # notify:               # requires: ctx notify setup
 #   events:             # required: no events sent unless listed
@@ -109,6 +110,7 @@ A commented `.ctxrc` showing all options and their defaults:
 | `entry_count_decisions` | `int`      | `20`           | Drift warning when `DECISIONS.md` exceeds this entry count (0 = disable) |
 | `convention_line_count` | `int`      | `200`          | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable) |
 | `injection_token_warn`  | `int`      | `15000`        | Warn when auto-injected context exceeds this token count (0 = disable) |
+| `context_window`        | `int`      | `200000`       | Context window size in tokens for usage reporting (Opus/Sonnet default) |
 | `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
 | `notify.key_rotation_days` | `int`   | `90`           | Days before encryption key rotation nudge               |
 | `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
