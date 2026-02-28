@@ -32,7 +32,7 @@ but do not persist the cognitive state that produced decisions. Reasoning is
 not reproducible, intent is lost across sessions, and teams cannot audit the 
 knowledge that constrains automated behavior.
 
-This paper argues that context should be treated as deterministic, 
+This paper argues that context should be treated as deterministic,
 version-controlled state rather than as a transient query result. We ground this 
 argument in three sources of evidence: a landscape analysis of 17 systems 
 spanning AI coding assistants, agent frameworks, and knowledge stores; 
@@ -60,7 +60,7 @@ constraints, and domain knowledge that bound the space of acceptable responses.
 Current systems treat context as a query result assembled at the moment of 
 interaction. A developer begins a session; the tool retrieves what it estimates 
 to be relevant from chat history, recent files, and vector stores; the model 
-generates output conditioned on this transient assembly; the session ends and 
+generates output conditioned on this transient assembly; the session ends, and 
 the context evaporates. The next session begins the cycle again.
 
 This model has improved substantially over the past year. `CLAUDE.md` files, 
@@ -111,7 +111,7 @@ given output) is a foundational property of reliable systems. Its loss in
 AI-assisted development mirrors the historical evolution from ad-hoc builds to 
 deterministic build systems [^1] [^2]. The build community learned that when 
 outputs depend on implicit state (environment variables, system clocks, 
-network-fetched dependencies) debugging becomes archaeology. The same principle 
+network-fetched dependencies), debugging becomes archaeology. The same principle 
 applies when AI outputs depend on non-deterministic context retrieval.
 
 ### 2.2 Opaque Knowledge
@@ -180,7 +180,7 @@ deterministic assembly function that takes the authoritative state, a token
 budget, and an inclusion policy as inputs and produces a context window as 
 output. The same authoritative state, budget, and policy must always produce the 
 same delivery view. Delivery views are ephemeral (they exist only for the 
-duration of a session) but their construction is reproducible.
+duration of a session), but their construction is reproducible.
 
 **Tier 3: Ephemeral State**: Session transcripts, scratchpad notes, draft 
 journal entries, and other artifacts that exist during or immediately after a 
@@ -188,10 +188,10 @@ session but are not authoritative. Ephemeral state is the raw material from
 which authoritative state may be extracted through human review, but it is 
 never consumed directly by the assembly function.
 
-This three-tier model resolves a confusion present in earlier formulations:
-the claim that AI output is a deterministic function of repository state. 
+This three-tier model resolves confusion present in earlier formulations:
+the claim that AI output is a deterministic function of the repository state. 
 The corrected claim is that **context selection** is deterministic (the delivery 
-view is a function of authoritative state) but **model output** remains 
+view is a function of authoritative state), but **model output** remains 
 stochastic, conditioned on the deterministic context. Formally:
 
 ```
@@ -224,7 +224,7 @@ A normal session loads the constitution, tasks, and conventions; a deep
 investigation loads decision history and journal entries from specific dates.
 
 The budget mechanism is the constraint that makes separation valuable. Without a 
-budget, the default behavior is to load everything; which destroys the attention 
+budget, the default behavior is to load everything, which destroys the attention 
 density that makes loaded context useful. With a budget, the assembly function 
 must prioritize ruthlessly: constitution first (always full), then tasks and 
 conventions (budget-capped), then decisions and learnings (scored by recency). 
@@ -271,9 +271,9 @@ operations do not.
 
 ### Invariant 3: Deterministic Context Assembly
 
-Same files plus same budget must produce same output. No embedding-based 
-retrieval, no LLM-driven selection, no wall-clock-dependent scoring in the 
-assembly path.
+The same files plus the same budget must produce the same output. No 
+embedding-based retrieval, no LLM-driven selection, no wall-clock-dependent 
+scoring in the assembly path.
 
 *Validation*: 6 independent rejection decisions protected this property. 
 Non-deterministic assembly (whether from embedding variance, LLM-based selection, 
@@ -320,8 +320,8 @@ These six invariants collectively define a design space. Each feature proposal
 can be evaluated against them: a feature that violates any invariant is rejected 
 regardless of how many other systems implement it. The discipline of constraint 
 (refusing to add capabilities that compromise foundational properties) is 
-itself an architectural contribution. Across the 17 analyzed systems, 56 p
-atterns were explicitly rejected for violating these invariants. The rejection 
+itself an architectural contribution. Across the 17 analyzed systems, 56
+patterns were explicitly rejected for violating these invariants. The rejection 
 count per invariant (11, 13, 6, 6, 7, 4) provides a rough measure of each 
 property's vulnerability to architectural erosion. A representative sample of 
 these rejections is provided in Appendix A.[^1]
@@ -379,7 +379,7 @@ mechanisms for ranking. Five systems use this approach
 primitive requires an embedding model or vector database for core operations: 
 a dependency that precludes offline and air-gapped use.
 
-**Group C: State Snapshot Primitives**: Point-in-time captures of complete 
+**Group C: State Snapshot Primitives**: Point-in-time captures of the complete 
 system state. The invariant is that any past state can be reconstructed at any 
 historical point. Three systems use this approach (LangGraph, Entire, Dolt).
 
@@ -481,7 +481,7 @@ persistence using a real scenario from its development.
 During development, the system accumulated three overlapping storage layers for 
 session data: raw transcripts (owned by the AI tool), session copies 
 (JSONL copies plus context snapshots), and enriched journal entries 
-(markdown summaries). The middle layer (session copies) was a dead-end write 
+(Markdown summaries). The middle layer (session copies) was a dead-end write 
 sink. An auto-save hook copied transcripts to a directory that nothing read 
 from, because the journal pipeline already read directly from the raw 
 transcripts. Approximately 15 source files, a shell hook, 20 configuration 
@@ -500,7 +500,7 @@ the journal pipeline documentation showing it reads from raw transcripts
 directly, and the dependency analysis showing 15 files, a hook, and 30 doc 
 references. If any of these fragments are not retrieved (because they are in old 
 chat history, because the embedding similarity score is low, or because the 
-token budget was consumed by more recent but less relevant context) the model 
+token budget was consumed by more recent but less relevant context), the model 
 may recommend preserving the middle layer, or may not realize it exists.
 
 Six months later, a new team member asks the same question. The retrieval results 
@@ -672,7 +672,7 @@ on day 5 prevents a mistake on day 12, which avoids a debugging session that
 would have consumed a day 12 session, freeing that session for productive work 
 that generates new learnings. The growth is not literally exponential (it is 
 bounded by project scope and subject to diminishing returns as the knowledge 
-base matures) but within the observed 33-day window, the returns were 
+base matures), but within the observed 33-day window, the returns were 
 consistently accelerating.
 
 ### 7.5 Scope and Generalizability
@@ -766,7 +766,7 @@ The transition does not require full system replacement. An incremental path:
 **Step 1: Record decisions as versioned artifacts**: Instead of allowing 
 conclusions to remain in discussion threads, persist them in reviewable form 
 with context, rationale, and consequences [^4]. This alone converts ephemeral 
-reasoning into cognitive state.
+reasoning into the cognitive state.
 
 **Step 2: Make inclusion deterministic**: Define explicit assembly rules. 
 Retrieval may still exist, but it is no longer authoritative.
@@ -829,7 +829,7 @@ automatic detection of orphaned or contradictory constraints.
 **Content-addressed context caches**: Five systems in our landscape analysis 
 independently discovered that content hashing provides cache invalidation, 
 integrity verification, and change detection. Applying content addressing to the 
-assembly output would enable efficient cache reuse when authoritative state 
+assembly output would enable efficient cache reuse when the authoritative state 
 has not changed.
 
 **Conditional context inclusion**: Five systems independently suggest that 
@@ -840,7 +840,7 @@ knowledge bases without sacrificing determinism.
 
 **Provenance metadata**: Linking context entries to the sessions, decisions, or 
 learnings that motivated them would strengthen the audit trail. Optional 
-provenance fields on markdown entries (session identifier, cause reference, 
+provenance fields on Markdown entries (session identifier, cause reference, 
 motivation) would be lightweight and compatible with the existing file-based 
 model.
 
@@ -849,7 +849,7 @@ model.
 ## 11. Conclusion
 
 AI-assisted development has treated context as a "query result" assembled at the 
-moment of interaction, discarded at session end. This paper identifies a 
+moment of interaction, discarded at the session end. This paper identifies a 
 complementary layer: the persistence of authoritative cognitive state as 
 deterministic, version-controlled artifacts.
 
@@ -867,7 +867,7 @@ The core claim is this: persistent cognitive state enables causal reasoning
 across time. A system built on this model can explain not only *what* is true, 
 but *why it became true* and *when it changed*.
 
-When context is state:
+When context is the state:
 
 * Reasoning is reproducible: the same authoritative state, budget, and policy 
   produce the same delivery view.
@@ -908,7 +908,7 @@ distributed architecture was rejected as the antithesis of a single-binary
 design for a tool that manages text files.
 
 **Invariant 3: Deterministic Assembly (6 rejections)**: LlamaIndex's 
-embedding-based retrieval as primary selection mechanism was rejected because 
+embedding-based retrieval as the primary selection mechanism was rejected because 
 it destroys determinism, requires an embedding model, and removes human 
 judgment from the selection process. QubicDB's wall-clock-dependent scoring was 
 rejected because it directly conflicts with the "same inputs produce same 
