@@ -208,6 +208,16 @@ claims match agent instructions.
 
 ---
 
+### [Troubleshooting](troubleshooting.md)
+
+Diagnose hook failures, noisy nudges, stale context, and configuration
+issues. Start with `ctx doctor` for a structural health check, then
+use `/ctx-doctor` for agent-driven analysis of event patterns.
+
+**Uses**: `ctx doctor`, `ctx system events`, `/ctx-doctor`
+
+---
+
 ### [Claude Code Permission Hygiene](claude-code-permissions.md)
 
 Keep `.claude/settings.local.json` clean: recommended **safe defaults**,

@@ -39,6 +39,7 @@ Plumbing subcommands (used by skills and automation):
   mark-journal         Update journal processing state
   pause                Pause context hooks for this session
   resume               Resume context hooks for this session
+  events               Query the local hook event log
 
 Hook subcommands (Claude Code plugin — safe to run manually):
   context-load-gate           Context file read directive (PreToolUse)
@@ -67,6 +68,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		markJournalCmd(),
 		pauseCmd(),
 		resumeCmd(),
+		eventsCmd(),
 		contextLoadGateCmd(),
 		checkContextSizeCmd(),
 		checkPersistenceCmd(),

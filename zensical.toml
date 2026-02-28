@@ -66,6 +66,7 @@ nav = [
     ]},
     { "Maintenance" = [
       "recipes/context-health.md",
+      "recipes/troubleshooting.md",
       "recipes/claude-code-permissions.md",
       "recipes/permission-snapshots.md",
       "recipes/publishing.md",
@@ -82,6 +83,7 @@ nav = [
     "cli/context.md",
     "cli/recall.md",
     "cli/tools.md",
+    "cli/doctor.md",
     "cli/system.md",
   ]},
   { "Reference" = [

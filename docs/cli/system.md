@@ -175,6 +175,82 @@ An empty override file silences the message while preserving the hook's logic.
 See the [Customizing Hook Messages](../recipes/customizing-hook-messages.md)
 recipe for detailed examples.
 
+#### `ctx system events`
+
+Query the local hook event log. Reads events from `.context/state/events.jsonl`
+and outputs them in human-readable or raw JSONL format. Requires `event_log: true`
+in `.ctxrc`.
+
+```bash
+ctx system events [flags]
+```
+
+**Flags**:
+
+| Flag        | Short | Type   | Default | Description                                  |
+|-------------|-------|--------|---------|----------------------------------------------|
+| `--hook`    | `-k`  | string | *(all)* | Filter by hook name                          |
+| `--session` | `-s`  | string | *(all)* | Filter by session ID                         |
+| `--event`   | `-e`  | string | *(all)* | Filter by event type (relay, nudge)          |
+| `--last`    | `-n`  | int    | `50`    | Show last N events                           |
+| `--json`    | `-j`  | bool   | `false` | Output raw JSONL (for piping to `jq`)        |
+| `--all`     | `-a`  | bool   | `false` | Include rotated log file (`events.1.jsonl`)  |
+
+All filter flags use intersection (AND) logic.
+
+**Text output**:
+
+```
+2026-02-27 22:39:31  relay  qa-reminder          QA gate reminder emitted
+2026-02-27 22:41:56  relay  qa-reminder          QA gate reminder emitted
+2026-02-28 00:48:18  relay  context-load-gate    injected 6 files (~9367 tokens)
+```
+
+Columns: timestamp (*local timezone*), event type, hook name, message (*truncated
+to terminal width*).
+
+**JSON output** (`--json`):
+
+Each line is a standalone JSON object identical to the webhook payload format:
+
+```json
+{"event":"relay","message":"qa-reminder: QA gate reminder emitted","detail":{"hook":"qa-reminder","variant":"gate"},"session_id":"eb1dc9cd-...","timestamp":"2026-02-27T22:39:31Z","project":"ctx"}
+```
+
+**Examples**:
+
+```bash
+# Last 50 events (default)
+ctx system events
+
+# Events from a specific session
+ctx system events --session eb1dc9cd-0163-4853-89d0-785fbfaae3a6
+
+# Only QA reminder events
+ctx system events --hook qa-reminder
+
+# Raw JSONL for jq processing
+ctx system events --json | jq '.message'
+
+# How many context-load-gate fires today
+ctx system events --hook context-load-gate --json \
+  | jq -r '.timestamp' | grep "$(date +%Y-%m-%d)" | wc -l
+
+# Include rotated events
+ctx system events --all --last 100
+```
+
+**Why it exists**: System hooks fire invisibly. When something goes wrong (*"why
+didn't my hook fire?"*), the event log provides a local, queryable record of
+what hooks fired, when, and how often. Event logging is opt-in via
+`event_log: true` in `.ctxrc` to avoid surprises for existing users.
+
+**See also**: [Troubleshooting](../recipes/troubleshooting.md),
+[Auditing System Hooks](../recipes/system-hooks-audit.md),
+[`ctx doctor`](doctor.md#ctx-doctor)
+
+---
+
 #### `ctx system mark-journal`
 
 Update processing state for a journal entry. Records the current date

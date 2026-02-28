@@ -287,6 +287,32 @@ accumulate. Silent cleanup prevents temp directory bloat.
 
 ---
 
+## Auditing Hooks via the Local Event Log
+
+If you don't need an external audit trail, enable the **local event log** for
+a self-contained record of hook activity:
+
+```yaml
+# .ctxrc
+event_log: true
+```
+
+Once enabled, every hook that fires writes an entry to
+`.context/state/events.jsonl`. Query it with `ctx system events`:
+
+```bash
+ctx system events                    # last 50 events
+ctx system events --hook qa-reminder # filter by hook
+ctx system events --session <id>     # filter by session
+ctx system events --json | jq '.'    # raw JSONL for processing
+```
+
+The event log is local, queryable, and doesn't require any external service.
+For a full diagnostic workflow combining event logs with structural health
+checks, see [Troubleshooting](troubleshooting.md).
+
+---
+
 ## Auditing Hooks via Webhooks
 
 The most powerful audit setup pipes **all** hook output to a webhook,
@@ -495,6 +521,8 @@ files accurate as your codebase evolves.
 
 ## See Also
 
+* [Troubleshooting](troubleshooting.md): full diagnostic workflow using
+  `ctx doctor`, event logs, and `/ctx-doctor`
 * [Customizing Hook Messages](customizing-hook-messages.md): override
   what hooks say without changing what they do
 * [Webhook Notifications](webhook-notifications.md): setting up and

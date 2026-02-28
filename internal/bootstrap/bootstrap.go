@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
+	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
@@ -70,6 +71,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		sync.Cmd,
 		compact.Cmd,
 		decision.Cmd,
+		doctor.Cmd,
 		watch.Cmd,
 		hook.Cmd,
 		learnings.Cmd,
