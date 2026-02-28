@@ -62,11 +62,10 @@ So the question has to be asked again.
 
 This is usually read as a problem of computation: If only the
 machine were powerful enough, it could answer. But computation is
-**not** what's missing. What's missing is **accumulation**. 
+**not** what's missing. What's missing is **accumulation**.
 
-Every generation of Multivac starts with the question and without the
-working set of the previous generation: The solver resets before
-the work compounds.
+**Every generation inherits the question, but not the state that
+made the question meaningful**.
 
 That is not a failure of processing power: It is a failure of
 **persistence**.
@@ -126,7 +125,7 @@ Same system. Different body. Every transition is dangerous:
 * **Not** because the hardware changes, 
 * **but** because memory risks fragmentation. 
 
-The interfaces between substrates were neverdesigned to 
+*The interfaces between substrates were **never** designed to 
 understand each other.
 
 **Most systems do not die when they run out of resources: They die
@@ -158,11 +157,13 @@ Each one slightly less lossy than the last, **if** we are lucky.
 
 Libraries burn. Institutions forget their founding purpose.
 Practices survive as rituals after the reasoning behind them is
-lost: A long-lived intelligence is one that stops rebooting.
+lost.
 
 ---
 
 ## The First Continuous Mind
+
+**A long-lived intelligence is one that stops rebooting**.
 
 At the end of the story, something unprecedented happens: 
 
@@ -222,9 +223,12 @@ forgets**.
 
 ## Field Note
 
-We are not building cosmological minds. But we are, for the first
-time, building systems where **session continuity** is a 
-**design choice** rather than an accident.
+We are not building cosmological minds: We are deploying
+systems that reboot at the start of every conversation and
+calling the result intelligence.
+
+For the first time, **session continuity** is a **design choice**
+rather than an accident.
 
 Every AI session that starts from zero is a miniature reboot loop.
 Every decision relitigated, every convention re-explained, every
