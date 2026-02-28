@@ -168,7 +168,7 @@ At the end of the story, something unprecedented happens:
 
 AC (*the final successor*) does not answer immediately: 
 
-It waits... Not for more processing power, but for the 
+It waits... **Not** for more processing power, **but** for the 
 last observer to disappear.
 
 For the first time... 
