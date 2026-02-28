@@ -848,7 +848,7 @@ model.
 
 ## 11. Conclusion
 
-AI-assisted development has treated context as a query result" assembled at the 
+AI-assisted development has treated context as a "query result" assembled at the 
 moment of interaction, discarded at session end. This paper identifies a 
 complementary layer: the persistence of authoritative cognitive state as 
 deterministic, version-controlled artifacts.
