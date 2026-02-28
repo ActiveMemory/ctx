@@ -18,7 +18,8 @@ ctx system <subcommand>
 ```
 
 The parent command shows available subcommands. Hidden plumbing subcommands
-(`ctx system mark-journal`) are used by skills and automation. Hidden hook
+(`ctx system mark-journal`, `ctx system mark-wrapped-up`) are used by skills
+and automation. Hidden hook
 subcommands (`ctx system check-*`) are used by the Claude Code plugin — see
 [AI Tools](../operations/integrations.md#plugin-hooks) for details.
 
@@ -274,3 +275,19 @@ ctx system mark-journal 2026-01-21-session-abc12345.md enriched
 ctx system mark-journal 2026-01-21-session-abc12345.md normalized
 ctx system mark-journal --check 2026-01-21-session-abc12345.md fences_verified
 ```
+
+#### `ctx system mark-wrapped-up`
+
+Suppress context checkpoint nudges after a wrap-up ceremony. Writes a
+marker file that `check-context-size` checks before emitting checkpoint
+boxes. The marker expires after 2 hours.
+
+Called automatically by `/ctx-wrap-up` after persisting context — not
+intended for direct use.
+
+```bash
+ctx system mark-wrapped-up
+```
+
+No flags, no arguments. Idempotent — running it again updates the
+marker timestamp.

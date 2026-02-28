@@ -19,7 +19,43 @@ STRUCTURE RULES (see CONSTITUTION.md):
 - [ ] Audit test coverage for export frontmatter preservation — verify T2.1.3 tests exist for: default preserves frontmatter, --force discards it, --skip-existing leaves file untouched, multipart preservation, malformed frontmatter graceful degradation. See specs/future-complete/export-update-mode.md for full checklist. #added:2026-02-26-182446
 
 
-- [ ] Suppress context checkpoint nudges after wrap-up — marker file approach. Spec: specs/suppress-nudges-after-wrap-up.md #added:2026-02-24-205402
+- [-] Suppress context checkpoint nudges after wrap-up — replaced by Phase 0.9 breakdown below #added:2026-02-24-205402
+
+### Phase 0.9: Suppress Nudges After Wrap-Up
+
+Spec: `specs/suppress-nudges-after-wrap-up.md`. Read the spec before starting any P0.9 task.
+
+**Phase 1 — Plumbing command:**
+
+- [x] P0.9.1: Create `internal/cli/system/mark_wrapped_up.go` — hidden plumbing
+      command `ctx system mark-wrapped-up`. Writes a `ctx-wrapped-up` marker file
+      to `secureTempDir()`. No flags, no arguments, no stdin. Follow the
+      `mark-journal` pattern.
+      DOD: `ctx system mark-wrapped-up` creates the marker file. Running it twice
+      overwrites (idempotent). Unit test confirms file creation and mtime update.
+      #added:2026-02-28 #done:2026-02-28
+
+- [x] P0.9.2: Register `markWrappedUpCmd()` in `system.go` — add to
+      `cmd.AddCommand()` and update the Long description under plumbing section.
+      DOD: `ctx system mark-wrapped-up` is callable. `ctx system --help` lists it
+      (hidden, but callable). #added:2026-02-28 #done:2026-02-28
+
+**Phase 2 — Hook suppression:**
+
+- [x] P0.9.3: Modify `check_context_size.go` — before emitting a checkpoint,
+      check for the `ctx-wrapped-up` marker in `secureTempDir()`. If the marker
+      exists and is less than 2 hours old, suppress the nudge and log
+      `"prompt#N suppressed (wrapped up)"`. If the marker is expired (>2h),
+      ignore it.
+      DOD: Unit test confirms: nudge suppressed when marker is fresh, nudge fires
+      when marker is expired (>2h), nudge fires when marker is absent. Existing
+      check-context-size tests still pass. #added:2026-02-28 #done:2026-02-28
+
+**Phase 3 — Skill integration:**
+
+- [x] P0.9.4: Update `/ctx-wrap-up` skill — add `ctx system mark-wrapped-up`
+      call after Phase 3 (persist approved candidates). Single line addition.
+      DOD: Skill file contains the mark command. #added:2026-02-28 #done:2026-02-28
 
 
 - [ ] Promote CLI to top-level nav group in zensical.toml: Home | Recipes | CLI | Reference | Operations | Security | Blog — CLI gets the split command pages, Reference keeps conceptual docs (skills, journal format, scratchpad, context files) #added:2026-02-24-204210

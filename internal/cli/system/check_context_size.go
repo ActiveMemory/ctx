@@ -88,6 +88,14 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 	count := readCounter(counterFile) + 1
 	writeCounter(counterFile, count)
 
+	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
+	// suppress checkpoint nudges to avoid noise during/after the
+	// wrap-up ceremony. The marker expires after 2 hours.
+	if wrappedUpRecently() {
+		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d suppressed (wrapped up)", count))
+		return nil
+	}
+
 	// Adaptive frequency (prompt counter)
 	counterTriggered := false
 	if count > 30 {

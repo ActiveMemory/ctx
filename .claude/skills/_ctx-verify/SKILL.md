@@ -48,6 +48,23 @@ Never reuse output from a previous run. Always run fresh.
 | Regression tested | Red-green cycle: test fails without fix, passes with it |
 | All checks pass   | `make audit` output showing all steps pass              |
 | Files match       | `diff` showing no differences (e.g., template vs live)  |
+| Design is sound   | Assumptions listed, failure modes identified, alternatives considered |
+| Doc is accurate   | Claims traced to source code or config; no stale references |
+| Skill works       | Trigger conditions tested, output matches spec, edge cases covered |
+| Config is correct  | Values validated against schema or runtime; no stale references |
+
+## Self-Audit Questions
+
+Before presenting any artifact (code, design, doc, config) as
+complete, run this checklist on your own output:
+
+- What assumptions did I make?
+- What did I NOT check?
+- Where am I least confident?
+- What would a reviewer question first?
+
+If any answer reveals a gap, address it before reporting done.
+This applies to all artifact types — not just code.
 
 ## Transform Vague Tasks into Verifiable Goals
 
@@ -99,3 +116,6 @@ Before reporting a claim as verified:
 - [ ] The claim matches the evidence (build exit 0 does not
       prove tests pass)
 - [ ] If multiple claims, each has its own evidence
+- [ ] Self-audit questions answered (no unaddressed gaps)
+- [ ] For non-code artifacts: relevant artifact verification
+      criteria met

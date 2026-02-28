@@ -47,6 +47,12 @@ my-project/
 There is no global or user-level config file — configuration is always
 per-project.
 
+!!! note "Contributors: Dev Configuration Profile"
+    The ctx repo ships two `.ctxrc` source profiles (`.ctxrc.base` and
+    `.ctxrc.dev`). The working copy is gitignored and swapped between them
+    via `make rc-dev` / `make rc-base`.
+    See [Contributing: Configuration Profiles](contributing.md#configuration-profiles).
+
 !!! tip "Using a Different .context Directory"
     The default `.context/` directory can be changed per-project via the
     `context_dir` key in `.ctxrc`, the `CTX_DIR` environment variable, or the

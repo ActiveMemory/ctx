@@ -2529,6 +2529,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-system-mark-wrapped-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system mark-wrapped-up
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3254,6 +3265,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-system-mark-wrapped-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system mark-wrapped-up
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3332,7 +3354,8 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <p>The parent command shows available subcommands. Hidden plumbing subcommands
-(<code>ctx system mark-journal</code>) are used by skills and automation. Hidden hook
+(<code>ctx system mark-journal</code>, <code>ctx system mark-wrapped-up</code>) are used by skills
+and automation. Hidden hook
 subcommands (<code>ctx system check-*</code>) are used by the Claude Code plugin — see
 <a href="../../operations/integrations/#plugin-hooks">AI Tools</a> for details.</p>
 <h4 id="ctx-system-bootstrap"><code>ctx system bootstrap</code><a class="headerlink" href="#ctx-system-bootstrap" title="Permanent link">&para;</a></h4>
@@ -3648,6 +3671,16 @@ pipeline progress.</p>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>normalized
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>--check<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>fences_verified
 </span></code></pre></div>
+<h4 id="ctx-system-mark-wrapped-up"><code>ctx system mark-wrapped-up</code><a class="headerlink" href="#ctx-system-mark-wrapped-up" title="Permanent link">&para;</a></h4>
+<p>Suppress context checkpoint nudges after a wrap-up ceremony. Writes a
+marker file that <code>check-context-size</code> checks before emitting checkpoint
+boxes. The marker expires after 2 hours.</p>
+<p>Called automatically by <code>/ctx-wrap-up</code> after persisting context — not
+intended for direct use.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-wrapped-up
+</span></code></pre></div>
+<p>No flags, no arguments. Idempotent — running it again updates the
+marker timestamp.</p>
 
 
 

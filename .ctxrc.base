@@ -1,0 +1,11 @@
+# .ctxrc — ctx runtime configuration
+# https://ctx.ist/configuration/
+#
+# All settings use defaults. Copy to .ctxrc and uncomment to customize.
+# See .ctxrc.dev for a verbose profile with logging enabled.
+#
+# context_dir: .context
+# token_budget: 8000
+# event_log: false
+# notify:
+#   events: []

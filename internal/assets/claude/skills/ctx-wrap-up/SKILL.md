@@ -108,6 +108,15 @@ For each approved candidate, run the appropriate command:
 Report the result of each command. If any fail, report the error
 and continue with the remaining items.
 
+### Phase 3.5: Suppress post-wrap-up nudges
+
+After persisting, mark the session as wrapped up so checkpoint
+nudges are suppressed for the remainder of the session:
+
+```bash
+ctx system mark-wrapped-up
+```
+
 ### Phase 4: Commit (optional)
 
 After persisting, check for uncommitted changes:

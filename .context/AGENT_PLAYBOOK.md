@@ -130,6 +130,25 @@ Track task progress with timestamps for session correlation:
 | `#started` | When you begin working on the task       | `YYYY-MM-DD-HHMMSS`  |
 | `#done`    | When you mark the task `[x]` complete    | `YYYY-MM-DD-HHMMSS`  |
 
+## Collaboration Defaults
+
+Standing behavioral defaults for how the agent collaborates with the
+user. These apply unless the user overrides them for the session
+(e.g., "skip the alternatives, just build it").
+
+- **At design decisions**: always present 2+ approaches with
+  trade-offs before committing — don't silently pick one
+- **At completion claims**: run self-audit questions (What did I
+  assume? What didn't I check? Where am I least confident? What
+  would a reviewer question?) before reporting done
+- **At ambiguous moments**: ask the user rather than inferring
+  intent — a quick question is cheaper than rework
+- **When producing artifacts**: flag assumptions and uncertainty
+  areas inline, not buried in a footnote
+
+These follow the same pattern as proactive persistence: offer once
+and respect "no."
+
 ## Own the Whole Branch
 
 When working on a branch, you own every issue on it — lint failures, test

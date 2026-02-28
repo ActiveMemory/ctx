@@ -42,6 +42,7 @@ Read on for details on each stage.
 | `ctx journal site`        | Command  | Generate a static site from journal entries         |
 | `ctx journal obsidian`    | Command  | Generate an Obsidian vault from journal entries     |
 | `ctx serve`               | Command  | Serve any zensical directory (default: journal)     |
+| `ctx site feed`           | Command  | Generate Atom feed from finalized blog posts        |
 | `make journal`            | Makefile | Shortcut for export + site rebuild                  |
 | `/ctx-journal-enrich-all` | Skill    | Batch-enrich all unenriched entries (recommended)   |
 | `/ctx-journal-enrich`     | Skill    | Add metadata, summaries, and tags to one entry      |
@@ -218,6 +219,22 @@ starting commit and a theme, then analyzes everything that changed:
 The skill diffs the commit range, identifies the most-changed files, and
 constructs a narrative organized by theme rather than chronology, including a
 key commits table and before/after comparisons.
+
+### Step 6: Generate the Blog Feed
+
+After publishing blog posts, generate the Atom feed so readers and
+automation can discover new content:
+
+```bash
+ctx site feed
+```
+
+This scans `docs/blog/` for finalized posts (`reviewed_and_finalized: true`),
+extracts title, date, author, topics, and summary, and writes a valid
+Atom 1.0 feed to `site/feed.xml`. The feed is also generated automatically
+as part of `make site`.
+
+The feed is available at [ctx.ist/feed.xml](https://ctx.ist/feed.xml).
 
 ## The Conversational Approach
 

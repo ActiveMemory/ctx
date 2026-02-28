@@ -3677,6 +3677,13 @@ that apply to every <code>ctx</code> command.</p>
 <p><code>ctx</code> looks for <code>.ctxrc</code> in the current working directory when any command runs.
 There is no global or user-level config file — configuration is always
 per-project.</p>
+<div class="admonition note">
+<p class="admonition-title">Contributors: Dev Configuration Profile</p>
+<p>The ctx repo ships two <code>.ctxrc</code> source profiles (<code>.ctxrc.base</code> and
+<code>.ctxrc.dev</code>). The working copy is gitignored and swapped between them
+via <code>make rc-dev</code> / <code>make rc-base</code>.
+See <a href="../contributing/#configuration-profiles">Contributing: Configuration Profiles</a>.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">Using a Different .context Directory</p>
 <p>The default <code>.context/</code> directory can be changed per-project via the

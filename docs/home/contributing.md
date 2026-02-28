@@ -186,6 +186,29 @@ No version bump is needed during development.
     cutting a release. During development, `make plugin-reload` is
     all you need.
 
+### Configuration Profiles
+
+The repo ships two `.ctxrc` source profiles. The working copy (`.ctxrc`)
+is gitignored and swapped between them:
+
+| File | Purpose |
+|------|---------|
+| `.ctxrc.base` | Golden baseline — all defaults, no logging |
+| `.ctxrc.dev` | Dev profile — notify events enabled, verbose logging |
+| `.ctxrc` | Working copy (*gitignored* — copied from one of the above) |
+
+Use Make targets to switch:
+
+```bash
+make rc-dev      # switch to dev profile
+make rc-base     # switch to base profile
+make rc-status   # show which profile is active
+```
+
+After cloning, run `make rc-dev` to get started with full logging.
+
+See [Configuration](configuration.md) for the full `.ctxrc` option reference.
+
 ### Running Tests
 
 ```bash

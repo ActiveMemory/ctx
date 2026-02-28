@@ -58,6 +58,7 @@ All commands support these flags:
 | [`ctx remind`](tools.md#ctx-remind)        | Session-scoped reminders that surface at session start    |
 | [`ctx completion`](tools.md#ctx-completion) | Generate shell autocompletion scripts                   |
 | [`ctx why`](tools.md#ctx-why)              | Read the philosophy behind ctx                           |
+| [`ctx site`](tools.md#ctx-site)            | Site management (feed generation)                        |
 | [`ctx doctor`](doctor.md#ctx-doctor)       | Structural health check (hooks, drift, config)           |
 | [`ctx system`](system.md#ctx-system)       | System diagnostics and hook commands                     |
 

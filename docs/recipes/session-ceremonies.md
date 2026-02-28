@@ -160,6 +160,13 @@ Empty categories are omitted.
 After you approve (all, some, or modified), the skill runs the
 appropriate `ctx add` commands and reports results.
 
+### Nudge Suppression
+
+After persisting, the skill marks the session as wrapped up via
+`ctx system mark-wrapped-up`. This suppresses context checkpoint
+nudges for 2 hours so the wrap-up ceremony itself does not trigger
+noisy reminders.
+
 ### Phase 4: Commit Offer
 
 If there are uncommitted changes, offers to run `/ctx-commit`.
