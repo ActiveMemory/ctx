@@ -14,6 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -103,7 +104,9 @@ func runBlockNonPathCtx(cmd *cobra.Command, stdin *os.File) error {
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		_ = notify.Send("relay", "block-non-path-ctx: Blocked non-PATH ctx invocation", input.SessionID, reason)
+		blockRef := notify.NewTemplateRef("block-non-path-ctx", variant, nil)
+		_ = notify.Send("relay", "block-non-path-ctx: Blocked non-PATH ctx invocation", input.SessionID, blockRef)
+		eventlog.Append("relay", "block-non-path-ctx: Blocked non-PATH ctx invocation", input.SessionID, blockRef)
 	}
 
 	return nil

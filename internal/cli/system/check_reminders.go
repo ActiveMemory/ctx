@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -38,6 +39,14 @@ func runCheckReminders(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	input := readInput(stdin)
+
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
+	}
 
 	reminders, err := remind.ReadReminders()
 	if err != nil {
@@ -74,10 +83,14 @@ func runCheckReminders(cmd *cobra.Command, stdin *os.File) error {
 	msg := "IMPORTANT: Relay these reminders to the user VERBATIM before answering their question.\n\n" +
 		"┌─ Reminders ──────────────────────────────────────\n"
 	msg += boxLines(content)
-	msg += "└──────────────────────────────────────────────────"
+	msg += boxBottom
 	cmd.Println(msg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("You have %d pending reminders", len(due)), input.SessionID, msg)
+	ref := notify.NewTemplateRef("check-reminders", "reminders",
+		map[string]any{"ReminderList": reminderList})
+	nudgeMsg := fmt.Sprintf("You have %d pending reminders", len(due))
+	_ = notify.Send("nudge", nudgeMsg, input.SessionID, ref)
+	eventlog.Append("nudge", nudgeMsg, input.SessionID, ref)
 
 	return nil
 }

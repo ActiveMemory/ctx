@@ -4,7 +4,7 @@
         <loc>https://ctx.ist/</loc>
       </url>
       <url>
-        <loc>https://ctx.ist/blog/</loc>
+        <loc>https://ctx.ist/thesis/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/home/</loc>
@@ -40,6 +40,9 @@
         <loc>https://ctx.ist/home/prompting-guide/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/blog/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/guide-your-agent/</loc>
       </url>
       <url>
@@ -59,6 +62,9 @@
       </url>
       <url>
         <loc>https://ctx.ist/recipes/session-reminders/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/session-pause/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/recipes/knowledge-capture/</loc>
@@ -125,6 +131,9 @@
       </url>
       <url>
         <loc>https://ctx.ist/reference/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/reference/design-invariants/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/reference/skills/</loc>

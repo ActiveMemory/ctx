@@ -14,6 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -47,6 +48,14 @@ func runCheckCeremonies(cmd *cobra.Command, stdin *os.File) error {
 
 	input := readInput(stdin)
 
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
+	}
+
 	tmpDir := secureTempDir()
 	remindedFile := filepath.Join(tmpDir, "ceremony-reminded")
 
@@ -72,8 +81,19 @@ func runCheckCeremonies(cmd *cobra.Command, stdin *os.File) error {
 	if msg == "" {
 		return nil
 	}
-	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", input.SessionID, msg)
-	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", input.SessionID, msg)
+	var variant string
+	switch {
+	case !remember && !wrapup:
+		variant = variantBoth
+	case !remember:
+		variant = "remember"
+	default:
+		variant = "wrapup"
+	}
+	ref := notify.NewTemplateRef("check-ceremonies", variant, nil)
+	_ = notify.Send("nudge", "check-ceremonies: Session ceremony nudge", input.SessionID, ref)
+	_ = notify.Send("relay", "check-ceremonies: Session ceremony nudge", input.SessionID, ref)
+	eventlog.Append("relay", "check-ceremonies: Session ceremony nudge", input.SessionID, ref)
 	touchFile(remindedFile)
 	return nil
 }
@@ -136,7 +156,7 @@ func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) string {
 
 	switch {
 	case !remember && !wrapup:
-		variant = "both"
+		variant = variantBoth
 		boxTitle = "Session Ceremonies"
 		fallback = "Your last 3 sessions didn't use /ctx-remember or\n" +
 			"/ctx-wrap-up.\n" +

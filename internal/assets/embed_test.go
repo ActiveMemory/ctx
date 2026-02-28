@@ -67,12 +67,6 @@ func TestGetTemplate(t *testing.T) {
 			wantErr:     false,
 		},
 		{
-			name:        "CLAUDE.md exists",
-			template:    "CLAUDE.md",
-			wantContain: "Context",
-			wantErr:     false,
-		},
-		{
 			name:     "nonexistent template returns error",
 			template: "NONEXISTENT.md",
 			wantErr:  true,
@@ -126,6 +120,74 @@ func TestListTemplates(t *testing.T) {
 		if !templateSet[req] {
 			t.Errorf("List() missing required template: %s", req)
 		}
+	}
+
+	// Verify project-root and claude files are NOT in the list
+	excluded := []string{
+		"CLAUDE.md",
+		"IMPLEMENTATION_PLAN.md",
+		"Makefile.ctx",
+	}
+	for _, ex := range excluded {
+		if templateSet[ex] {
+			t.Errorf("List() should not contain %s (project-root file)", ex)
+		}
+	}
+}
+
+func TestClaudeMd(t *testing.T) {
+	content, err := ClaudeMd()
+	if err != nil {
+		t.Fatalf("ClaudeMd() unexpected error: %v", err)
+	}
+	if !strings.Contains(string(content), "Context") {
+		t.Error("ClaudeMd() content does not contain \"Context\"")
+	}
+}
+
+func TestProjectFile(t *testing.T) {
+	tests := []struct {
+		name        string
+		file        string
+		wantContain string
+		wantErr     bool
+	}{
+		{
+			name:        "IMPLEMENTATION_PLAN.md exists",
+			file:        "IMPLEMENTATION_PLAN.md",
+			wantContain: "Implementation",
+			wantErr:     false,
+		},
+		{
+			name:        "Makefile.ctx exists",
+			file:        "Makefile.ctx",
+			wantContain: "ctx",
+			wantErr:     false,
+		},
+		{
+			name:    "nonexistent project file returns error",
+			file:    "NONEXISTENT.md",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			content, err := ProjectFile(tt.file)
+			if tt.wantErr {
+				if err == nil {
+					t.Errorf("ProjectFile(%q) expected error, got nil", tt.file)
+				}
+				return
+			}
+			if err != nil {
+				t.Errorf("ProjectFile(%q) unexpected error: %v", tt.file, err)
+				return
+			}
+			if !strings.Contains(string(content), tt.wantContain) {
+				t.Errorf("ProjectFile(%q) content does not contain %q", tt.file, tt.wantContain)
+			}
+		})
 	}
 }
 
@@ -275,6 +337,82 @@ func TestToolContent(t *testing.T) {
 	}
 	if !strings.HasPrefix(string(content), "#!/bin/bash") {
 		t.Error("context-watch.sh missing bash shebang")
+	}
+}
+
+func TestWhyDoc(t *testing.T) {
+	tests := []struct {
+		name        string
+		doc         string
+		wantContain string
+		wantErr     bool
+	}{
+		{
+			name:        "manifesto exists",
+			doc:         "manifesto",
+			wantContain: "Manifesto",
+			wantErr:     false,
+		},
+		{
+			name:        "about exists",
+			doc:         "about",
+			wantContain: "ctx",
+			wantErr:     false,
+		},
+		{
+			name:        "design-invariants exists",
+			doc:         "design-invariants",
+			wantContain: "Invariants",
+			wantErr:     false,
+		},
+		{
+			name:    "nonexistent doc returns error",
+			doc:     "nonexistent",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			content, err := WhyDoc(tt.doc)
+			if tt.wantErr {
+				if err == nil {
+					t.Errorf("WhyDoc(%q) expected error, got nil", tt.doc)
+				}
+				return
+			}
+			if err != nil {
+				t.Errorf("WhyDoc(%q) unexpected error: %v", tt.doc, err)
+				return
+			}
+			if !strings.Contains(string(content), tt.wantContain) {
+				t.Errorf("WhyDoc(%q) content does not contain %q", tt.doc, tt.wantContain)
+			}
+		})
+	}
+}
+
+func TestListWhyDocs(t *testing.T) {
+	docs, err := ListWhyDocs()
+	if err != nil {
+		t.Fatalf("ListWhyDocs() unexpected error: %v", err)
+	}
+
+	expected := []string{"about", "design-invariants", "manifesto"}
+
+	docSet := make(map[string]bool)
+	for _, name := range docs {
+		docSet[name] = true
+	}
+
+	for _, exp := range expected {
+		if !docSet[exp] {
+			t.Errorf("ListWhyDocs() missing expected doc: %s", exp)
+		}
+	}
+
+	if len(docs) != len(expected) {
+		t.Errorf("ListWhyDocs() returned %d docs, expected %d", len(docs), len(expected))
 	}
 }
 

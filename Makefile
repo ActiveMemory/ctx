@@ -4,7 +4,8 @@
 
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
 test-coverage smoke site site-serve site-serve-lan site-setup audit check plugin-reload \
-journal journal-serve journal-serve-lan watch-session backup backup-global backup-all gpg-fix gpg-test
+journal journal-serve journal-serve-lan watch-session backup backup-global backup-all gpg-fix gpg-test \
+sync-why check-why
 
 # Default binary name and output
 BINARY := ctx
@@ -71,6 +72,8 @@ smoke: build
 	$(CURDIR)/$(BINARY) add task "smoke test task" > /dev/null && \
 	echo "  Testing: ctx recall list" && \
 	$(CURDIR)/$(BINARY) recall list > /dev/null && \
+	echo "  Testing: ctx why manifesto" && \
+	$(CURDIR)/$(BINARY) why manifesto > /dev/null && \
 	rm -rf $$TMPDIR && \
 	echo "" && \
 	echo "Smoke tests passed!"
@@ -107,6 +110,8 @@ audit:
 	@./hack/lint-drift.sh
 	@echo "==> Checking doc.go listings..."
 	@./hack/lint-docs.sh
+	@echo "==> Checking why docs freshness..."
+	@$(MAKE) --no-print-directory check-why
 	@echo "==> Running tests..."
 	@CGO_ENABLED=0 CTX_SKIP_PATH_CHECK=1 go test ./...
 	@echo ""
@@ -208,6 +213,20 @@ gpg-test:
 ## plugin-reload: Clear cached plugin (restart Claude Code to pick up skill/hook changes)
 plugin-reload:
 	@./hack/plugin-reload.sh
+
+## sync-why: Copy philosophy docs into internal/assets/why/ for embedding
+sync-why:
+	cp docs/index.md internal/assets/why/manifesto.md
+	cp docs/home/about.md internal/assets/why/about.md
+	cp docs/reference/design-invariants.md internal/assets/why/design-invariants.md
+	@echo "Why docs synced."
+
+## check-why: Verify embedded why docs match source docs
+check-why:
+	@diff -q docs/index.md internal/assets/why/manifesto.md || (echo "FAIL: manifesto.md is stale — run 'make sync-why'" && exit 1)
+	@diff -q docs/home/about.md internal/assets/why/about.md || (echo "FAIL: about.md is stale — run 'make sync-why'" && exit 1)
+	@diff -q docs/reference/design-invariants.md internal/assets/why/design-invariants.md || (echo "FAIL: design-invariants.md is stale — run 'make sync-why'" && exit 1)
+	@echo "Why docs are in sync."
 
 ## watch-session: Watch current session for token usage
 watch-session:

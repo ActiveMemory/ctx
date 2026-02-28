@@ -240,3 +240,5 @@ metadata.
   deep dive on what gets persisted during wrap-up
 * [Detecting and Fixing Drift](context-health.md): keeping context files
   accurate between ceremonies
+* [Pausing Context Hooks](session-pause.md): skip ceremonies entirely
+  for quick tasks that don't need them

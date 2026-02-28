@@ -15,6 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -127,7 +128,10 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 	input := readInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {
-		sessionID = "unknown"
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
 	}
 
 	tmpDir := secureTempDir()
@@ -194,12 +198,15 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 		if line := contextDirLine(); line != "" {
 			msg += "│ " + line + "\n"
 		}
-		msg += "└──────────────────────────────────────────────────"
+		msg += boxBottom
 		cmd.Println(msg)
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", state.Count, sinceNudge))
-		_ = notify.Send("nudge", fmt.Sprintf("check-persistence: Persistence Checkpoint at prompt #%d", state.Count), sessionID, msg)
-		_ = notify.Send("relay", fmt.Sprintf("check-persistence: No context updated in %d+ prompts", sinceNudge), sessionID, msg)
+		ref := notify.NewTemplateRef("check-persistence", "nudge",
+			map[string]any{"PromptCount": state.Count, "PromptsSinceNudge": sinceNudge})
+		_ = notify.Send("nudge", fmt.Sprintf("check-persistence: Persistence Checkpoint at prompt #%d", state.Count), sessionID, ref)
+		_ = notify.Send("relay", fmt.Sprintf("check-persistence: No context updated in %d+ prompts", sinceNudge), sessionID, ref)
+		eventlog.Append("relay", fmt.Sprintf("check-persistence: No context updated in %d+ prompts", sinceNudge), sessionID, ref)
 		state.LastNudge = state.Count
 	} else {
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silent since_nudge=%d", state.Count, sinceNudge))

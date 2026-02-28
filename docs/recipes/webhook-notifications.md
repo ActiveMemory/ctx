@@ -133,13 +133,23 @@ Every notification sends a JSON POST:
 
 ```json
 {
-  "event": "loop",
-  "message": "Loop completed after 5 iterations",
+  "event": "nudge",
+  "message": "check-context-size: Context window at 82%",
+  "detail": {
+    "hook": "check-context-size",
+    "variant": "window",
+    "variables": {"Percentage": 82, "TokenCount": "164k"}
+  },
   "session_id": "abc123-...",
   "timestamp": "2026-02-22T14:30:00Z",
   "project": "ctx"
 }
 ```
+
+The `detail` field is a structured template reference containing the hook
+name, variant, and any template variables. This lets receivers filter by
+hook or variant without parsing rendered text. The field is omitted when
+no template reference applies (e.g. custom `ctx notify` calls).
 
 ## Security Model
 

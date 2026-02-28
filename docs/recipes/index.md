@@ -91,6 +91,16 @@ Date-gate reminders to surface only after a specific date.
 
 ---
 
+### [Pausing Context Hooks](session-pause.md)
+
+Silence all nudge hooks for a **quick task** that doesn't need ceremony
+overhead. Session-scoped — other sessions are unaffected. Security
+hooks still fire.
+
+**Uses**: `ctx pause`, `ctx resume`, `/ctx-pause`, `/ctx-resume`
+
+---
+
 ## Knowledge & Tasks
 
 ### [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md)

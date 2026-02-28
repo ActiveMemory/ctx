@@ -68,6 +68,8 @@ opinionated behavior on top.
 | [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents               | user-invocable |
 | [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                   | user-invocable |
 | [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                        | user-invocable |
+| [`/ctx-pause`](#ctx-pause)                           | Pause context hooks for this session                   | user-invocable |
+| [`/ctx-resume`](#ctx-resume)                         | Resume context hooks after a pause                     | user-invocable |
 
 ---
 
@@ -247,7 +249,7 @@ Manage the encrypted scratchpad — add, remove, edit, and reorder
 one-liner notes. Encrypted at rest with AES-256-GCM.
 
 **Wraps**: `ctx pad`, `ctx pad add`, `ctx pad rm`, `ctx pad edit`,
-`ctx pad mv`, `ctx pad import`, `ctx pad export`
+`ctx pad mv`, `ctx pad import`, `ctx pad export`, `ctx pad merge`
 
 **See also**: [Scratchpad](scratchpad.md),
 [Using the Scratchpad](../recipes/scratchpad-with-claude.md)
@@ -503,6 +505,41 @@ intent (*"remind me to refactor swagger"*) into the corresponding
 
 **See also**:
 [Session Reminders](../recipes/session-reminders.md)
+
+---
+
+## Session Control
+
+Skills for controlling hook behavior during a session.
+
+### `/ctx-pause`
+
+Pause all context nudge and reminder hooks for the current session.
+Security hooks still fire. Use for quick investigations or tasks that
+don't need ceremony overhead.
+
+**Wraps**: `ctx pause`
+
+**Trigger phrases**: "pause ctx", "pause context", "stop the nudges",
+"quiet mode"
+
+**See also**:
+[Pausing Context Hooks](../recipes/session-pause.md)
+
+---
+
+### `/ctx-resume`
+
+Resume context hooks after a pause. Restores normal nudge, reminder,
+and ceremony behavior. Silent no-op if not paused.
+
+**Wraps**: `ctx resume`
+
+**Trigger phrases**: "resume ctx", "resume context", "turn nudges back on",
+"unpause"
+
+**See also**:
+[Pausing Context Hooks](../recipes/session-pause.md)
 
 ---
 
