@@ -5,7 +5,7 @@
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan watch-session backup backup-global backup-all gpg-fix gpg-test \
-sync-why check-why
+sync-why check-why rc-dev rc-base rc-status
 
 # Default binary name and output
 BINARY := ctx
@@ -232,6 +232,18 @@ check-why:
 	@diff -q docs/home/about.md internal/assets/why/about.md || (echo "FAIL: about.md is stale — run 'make sync-why'" && exit 1)
 	@diff -q docs/reference/design-invariants.md internal/assets/why/design-invariants.md || (echo "FAIL: design-invariants.md is stale — run 'make sync-why'" && exit 1)
 	@echo "Why docs are in sync."
+
+## rc-dev: Switch .ctxrc to dev profile (verbose logging)
+rc-dev:
+	@./hack/ctxrc-swap.sh dev
+
+## rc-base: Switch .ctxrc to base profile (all defaults)
+rc-base:
+	@./hack/ctxrc-swap.sh base
+
+## rc-status: Show which .ctxrc profile is active
+rc-status:
+	@./hack/ctxrc-swap.sh status
 
 ## watch-session: Watch current session for token usage
 watch-session:

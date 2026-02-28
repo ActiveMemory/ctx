@@ -39,6 +39,9 @@ dist/
 /ctx
 /amem
 
+# Active ctxrc (working copy — swap between .ctxrc.base and .ctxrc.dev)
+.ctxrc
+
 # Local Claude Code settings (machine-specific paths)
 .claude/settings.local.json
 .claude/ralph-loop.local.md

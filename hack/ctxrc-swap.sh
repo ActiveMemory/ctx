@@ -1,49 +1,41 @@
 #!/usr/bin/env bash
-# ctxrc-swap — toggle .ctxrc between committed (production) and dev (verbose logging)
+# ctxrc-swap — toggle .ctxrc between base (defaults) and dev (verbose logging)
 #
 # Usage:
-#   hack/ctxrc-swap.sh        # swap to the other profile
-#   hack/ctxrc-swap.sh dev    # switch to dev profile
-#   hack/ctxrc-swap.sh prod   # switch to prod profile
-#   hack/ctxrc-swap.sh status # show which profile is active
+#   hack/ctxrc-swap.sh          # swap to the other profile
+#   hack/ctxrc-swap.sh dev      # switch to dev profile
+#   hack/ctxrc-swap.sh base     # switch to base profile (all defaults)
+#   hack/ctxrc-swap.sh status   # show which profile is active
 #
-# The dev profile lives at .ctxrc.dev. The prod profile is whatever
-# git has committed. Swapping copies the current .ctxrc to the inactive
-# slot and restores the other.
+# Source files (.ctxrc.base, .ctxrc.dev) are committed to git.
+# The working copy (.ctxrc) is gitignored and treated as a sink.
 
 set -euo pipefail
 
-CTXRC=".ctxrc"
-CTXRC_DEV=".ctxrc.dev"
-
 cd "$(git rev-parse --show-toplevel)"
 
+CTXRC=".ctxrc"
+CTXRC_BASE=".ctxrc.base"
+CTXRC_DEV=".ctxrc.dev"
+
 is_dev() {
-    # Dev profile has uncommented notify: section
     grep -q '^notify:' "$CTXRC" 2>/dev/null
 }
 
-save_dev() {
-    cp "$CTXRC" "$CTXRC_DEV"
-}
-
-restore_dev() {
-    if [[ ! -f "$CTXRC_DEV" ]]; then
-        echo "error: no dev profile saved at $CTXRC_DEV" >&2
-        exit 1
+ensure_exists() {
+    if [[ ! -f "$CTXRC" ]]; then
+        cp "$CTXRC_BASE" "$CTXRC"
+        echo "created $CTXRC from base profile"
     fi
-    cp "$CTXRC_DEV" "$CTXRC"
-}
-
-restore_prod() {
-    git checkout -- "$CTXRC"
 }
 
 status() {
-    if is_dev; then
+    if [[ ! -f "$CTXRC" ]]; then
+        echo "active: none (.ctxrc does not exist — run 'make rc-base' or 'make rc-dev')"
+    elif is_dev; then
         echo "active: dev (verbose logging enabled)"
     else
-        echo "active: prod (committed defaults)"
+        echo "active: base (defaults)"
     fi
 }
 
@@ -52,34 +44,33 @@ case "${1:-swap}" in
         status
         ;;
     dev)
-        if is_dev; then
+        if [[ -f "$CTXRC" ]] && is_dev; then
             echo "already on dev profile"
         else
-            restore_dev
+            cp "$CTXRC_DEV" "$CTXRC"
             echo "switched to dev profile"
         fi
         ;;
-    prod)
-        if is_dev; then
-            save_dev
-            restore_prod
-            echo "switched to prod profile (dev saved to $CTXRC_DEV)"
+    base|prod)
+        if [[ -f "$CTXRC" ]] && ! is_dev; then
+            echo "already on base profile"
         else
-            echo "already on prod profile"
+            cp "$CTXRC_BASE" "$CTXRC"
+            echo "switched to base profile"
         fi
         ;;
     swap)
+        ensure_exists
         if is_dev; then
-            save_dev
-            restore_prod
-            echo "swapped: dev → prod (dev saved to $CTXRC_DEV)"
+            cp "$CTXRC_BASE" "$CTXRC"
+            echo "swapped: dev → base"
         else
-            restore_dev
-            echo "swapped: prod → dev"
+            cp "$CTXRC_DEV" "$CTXRC"
+            echo "swapped: base → dev"
         fi
         ;;
     *)
-        echo "usage: hack/ctxrc-swap.sh [dev|prod|swap|status]" >&2
+        echo "usage: hack/ctxrc-swap.sh [dev|base|swap|status]" >&2
         exit 1
         ;;
 esac

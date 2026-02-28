@@ -2702,6 +2702,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx site
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ctx site">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-site-feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx site feed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ctx-why" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3725,6 +3753,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx site
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ctx site">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-site-feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx site feed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ctx-why" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4467,10 +4523,107 @@ Security hooks (dangerous command blocking) and housekeeping hooks still fire.</
 </div>
 </div>
 <hr />
+<h3 id="ctx-site"><code>ctx site</code><a class="headerlink" href="#ctx-site" title="Permanent link">&para;</a></h3>
+<p>Site management commands for the ctx.ist static site.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>&lt;subcommand&gt;
+</span></code></pre></div>
+<h4 id="ctx-site-feed"><code>ctx site feed</code><a class="headerlink" href="#ctx-site-feed" title="Permanent link">&para;</a></h4>
+<p>Generate an Atom 1.0 feed from finalized blog posts in <code>docs/blog/</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+</span></code></pre></div>
+<p>Scans <code>docs/blog/</code> for files matching <code>YYYY-MM-DD-*.md</code>, parses YAML
+frontmatter, and generates a valid Atom feed. Only posts with
+<code>reviewed_and_finalized: true</code> are included. Summaries are extracted
+from the first paragraph after the heading.</p>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Short</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--out</code></td>
+<td><code>-o</code></td>
+<td>string</td>
+<td><code>site/feed.xml</code></td>
+<td>Output path</td>
+</tr>
+<tr>
+<td><code>--base-url</code></td>
+<td></td>
+<td>string</td>
+<td><code>https://ctx.ist</code></td>
+<td>Base URL for entry links</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>Generated site/feed.xml (21 entries)
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>Skipped:
+</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>  2026-02-25-the-homework-problem.md — not finalized
+</span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>
+</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>Warnings:
+</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a>  2026-02-09-defense-in-depth.md — no summary paragraph found
+</span></code></pre></div>
+<p>Three buckets: <strong>included</strong> (count), <strong>skipped</strong> (with reason),
+<strong>warnings</strong> (included but degraded). Exit 0 always — warnings
+inform but do not block.</p>
+<p><strong>Frontmatter requirements</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Feed mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>Yes</td>
+<td><code>&lt;title&gt;</code></td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>Yes</td>
+<td><code>&lt;updated&gt;</code></td>
+</tr>
+<tr>
+<td><code>reviewed_and_finalized</code></td>
+<td>Yes</td>
+<td>Draft gate (must be <code>true</code>)</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td>No</td>
+<td><code>&lt;author&gt;&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td><code>topics</code></td>
+<td>No</td>
+<td><code>&lt;category term=""&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w">                                </span><span class="c1"># Generate site/feed.xml</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span>--out<span class="w"> </span>/tmp/feed.xml<span class="w">            </span><span class="c1"># Custom output path</span>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed<span class="w"> </span>--base-url<span class="w"> </span>https://example.com<span class="w"> </span><span class="c1"># Custom base URL</span>
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>make<span class="w"> </span>site-feed<span class="w">                               </span><span class="c1"># Makefile shortcut</span>
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>make<span class="w"> </span>site<span class="w">                                    </span><span class="c1"># Builds site + feed</span>
+</span></code></pre></div>
+<hr />
 <h3 id="ctx-why"><code>ctx why</code><a class="headerlink" href="#ctx-why" title="Permanent link">&para;</a></h3>
 <p>Read ctx's philosophy documents directly in the terminal, stripped of
 MkDocs artifacts so they display cleanly without a browser.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ctx<span class="w"> </span>why<span class="w"> </span><span class="o">[</span>DOCUMENT<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>ctx<span class="w"> </span>why<span class="w"> </span><span class="o">[</span>DOCUMENT<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Documents</strong>:</p>
 <table>
@@ -4496,16 +4649,16 @@ MkDocs artifacts so they display cleanly without a browser.</p>
 </tbody>
 </table>
 <p><strong>Usage</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># Interactive numbered menu</span>
-</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>ctx<span class="w"> </span>why
-</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
-</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># Show a specific document</span>
-</span><span id="__span-43-5"><a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto
-</span><span id="__span-43-6"><a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>ctx<span class="w"> </span>why<span class="w"> </span>about
-</span><span id="__span-43-7"><a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>ctx<span class="w"> </span>why<span class="w"> </span>invariants
-</span><span id="__span-43-8"><a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>
-</span><span id="__span-43-9"><a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a><span class="c1"># Pipe to a pager</span>
-</span><span id="__span-43-10"><a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto<span class="w"> </span><span class="p">|</span><span class="w"> </span>less
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="c1"># Interactive numbered menu</span>
+</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>ctx<span class="w"> </span>why
+</span><span id="__span-47-3"><a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>
+</span><span id="__span-47-4"><a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a><span class="c1"># Show a specific document</span>
+</span><span id="__span-47-5"><a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto
+</span><span id="__span-47-6"><a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a>ctx<span class="w"> </span>why<span class="w"> </span>about
+</span><span id="__span-47-7"><a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a>ctx<span class="w"> </span>why<span class="w"> </span>invariants
+</span><span id="__span-47-8"><a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a>
+</span><span id="__span-47-9"><a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a><span class="c1"># Pipe to a pager</span>
+</span><span id="__span-47-10"><a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a>ctx<span class="w"> </span>why<span class="w"> </span>manifesto<span class="w"> </span><span class="p">|</span><span class="w"> </span>less
 </span></code></pre></div>
 
 

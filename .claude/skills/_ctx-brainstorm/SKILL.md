@@ -123,7 +123,32 @@ Once understanding is confirmed:
   maintenance
 - Apply YAGNI ruthlessly
 
-### 6. Present the Design
+### 6. Stress-Test the Chosen Approach
+
+After the user picks an approach, pause for adversarial review
+before moving to detailed design.
+
+**Surface assumptions**:
+- List assumptions the chosen approach depends on
+- Identify implicit dependencies (libraries, infra, team knowledge)
+
+**Identify failure modes**:
+- What would make this approach fail? (edge cases, scale limits,
+  integration risks, operational complexity)
+- What's the worst-case recovery if it does fail?
+
+**Steel-man an alternative**:
+- Name the strongest argument for a different approach
+- Be specific — "Approach B avoids X risk" not "there are other options"
+
+**Gate question**:
+> "These are the risks I see. Do they change your preference, or
+> should we proceed with the chosen approach?"
+
+Only move to detailed design after the user confirms. This is
+one gate, not a debate — if the user says "proceed," proceed.
+
+### 7. Present the Design
 
 Break into digestible sections. After each, ask:
 > "Does this look right so far?"
@@ -136,7 +161,7 @@ Cover as relevant:
 - Edge cases
 - Testing strategy
 
-### 7. Decision Log
+### 8. Decision Log
 
 Maintain a running log throughout:
 
@@ -195,6 +220,7 @@ Exit brainstorming mode **only when**:
 
 - [ ] Understanding Lock confirmed by the user
 - [ ] At least one design approach accepted
+- [ ] Stress-test completed (assumptions, failure modes, alternatives)
 - [ ] Major assumptions documented explicitly
 - [ ] Key risks acknowledged
 - [ ] Decision Log complete

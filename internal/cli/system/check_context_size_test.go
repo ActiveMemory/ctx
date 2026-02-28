@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -443,6 +444,70 @@ func TestTokenUsageLine(t *testing.T) {
 				t.Errorf("unexpected 'running low' in %q", got)
 			}
 		})
+	}
+}
+
+func TestCheckContextSize_SuppressedAfterWrapUp(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	// Create a fresh wrap-up marker.
+	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
+	_ = os.MkdirAll(filepath.Dir(markerPath), 0o700)
+	_ = os.WriteFile(markerPath, []byte("wrapped-up"), 0o600)
+
+	// Set counter to 19 — would normally trigger checkpoint at 20.
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-wrapup")
+	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-wrapup"}`)
+	if err := runCheckContextSize(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	if strings.Contains(out, "Context Checkpoint") {
+		t.Errorf("expected suppression after wrap-up, got: %s", out)
+	}
+}
+
+func TestCheckContextSize_NotSuppressedAfterExpiredWrapUp(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	// Create an expired wrap-up marker (3 hours old).
+	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
+	_ = os.MkdirAll(filepath.Dir(markerPath), 0o700)
+	_ = os.WriteFile(markerPath, []byte("wrapped-up"), 0o600)
+	expired := time.Now().Add(-3 * time.Hour)
+	_ = os.Chtimes(markerPath, expired, expired)
+
+	// Set counter to 19 — should trigger checkpoint since marker is expired.
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-expired-wrapup")
+	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"test-expired-wrapup"}`)
+	if err := runCheckContextSize(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	if !strings.Contains(out, "Context Checkpoint") {
+		t.Errorf("expected checkpoint after expired wrap-up marker, got: %s", out)
 	}
 }
 

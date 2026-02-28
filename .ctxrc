@@ -1,9 +1,0 @@
-# .ctxrc — ctx runtime configuration
-# https://ctx.ist/configuration/
-notify:
-  events:
-    - loop    # Loop script completed or hit max iterations
-    - nudge   # VERBATIM relay hooks fired a nudge to the agent
-    - relay   # All hook output (verbose — includes nudges plus)
-  key_rotation_days: 90  # Days before encryption key rotation nudge
-event_log: true

@@ -4,7 +4,22 @@
   <link href="https://ctx.ist/blog/"></link>
   <link href="https://ctx.ist/feed.xml" rel="self"></link>
   <id>https://ctx.ist/feed.xml</id>
-  <updated>2026-02-25T00:00:00Z</updated>
+  <updated>2026-02-28T00:00:00Z</updated>
+  <entry>
+    <title>The Last Question</title>
+    <link href="https://ctx.ist/blog/2026-02-28-the-last-question/"></link>
+    <id>https://ctx.ist/blog/2026-02-28-the-last-question/</id>
+    <updated>2026-02-28T00:00:00Z</updated>
+    <summary>— Isaac Asimov, [The Last Question][asimov] (1956)</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="context continuity"></category>
+    <category term="long-lived systems"></category>
+    <category term="persistence"></category>
+    <category term="intelligence over time"></category>
+    <category term="field notes"></category>
+  </entry>
   <entry>
     <title>The Dog Ate My Homework: Teaching AI Agents to Read Before They Write</title>
     <link href="https://ctx.ist/blog/2026-02-25-the-homework-problem/"></link>

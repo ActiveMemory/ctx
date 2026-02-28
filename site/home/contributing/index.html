@@ -882,6 +882,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#configuration-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Profiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#running-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3556,6 +3567,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#configuration-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Profiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#running-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3964,14 +3986,46 @@ No version bump is needed during development.</p>
 cutting a release. During development, <code>make plugin-reload</code> is
 all you need.</p>
 </div>
+<h3 id="configuration-profiles">Configuration Profiles<a class="headerlink" href="#configuration-profiles" title="Permanent link">&para;</a></h3>
+<p>The repo ships two <code>.ctxrc</code> source profiles. The working copy (<code>.ctxrc</code>)
+is gitignored and swapped between them:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.ctxrc.base</code></td>
+<td>Golden baseline — all defaults, no logging</td>
+</tr>
+<tr>
+<td><code>.ctxrc.dev</code></td>
+<td>Dev profile — notify events enabled, verbose logging</td>
+</tr>
+<tr>
+<td><code>.ctxrc</code></td>
+<td>Working copy (<em>gitignored</em> — copied from one of the above)</td>
+</tr>
+</tbody>
+</table>
+<p>Use Make targets to switch:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span>rc-dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>make<span class="w"> </span>rc-base<span class="w">     </span><span class="c1"># switch to base profile</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>make<span class="w"> </span>rc-status<span class="w">   </span><span class="c1"># show which profile is active</span>
+</span></code></pre></div>
+<p>After cloning, run <code>make rc-dev</code> to get started with full logging.</p>
+<p>See <a href="../configuration/">Configuration</a> for the full <code>.ctxrc</code> option reference.</p>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
 </span></code></pre></div>
 <h3 id="running-the-docs-site-locally">Running the Docs Site Locally<a class="headerlink" href="#running-the-docs-site-locally" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
 </span></code></pre></div>
 <hr />
 <h2 id="submitting-changes">Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
@@ -4026,7 +4080,7 @@ doc consistency, and tests in one pass.</p>
 <p>By contributing, you agree to the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
 <p>All commits must be signed off:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </span></code></pre></div>
 <h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
 <p>Contributions are licensed under the

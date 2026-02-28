@@ -2147,6 +2147,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-6-generate-the-blog-feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Generate the Blog Feed
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3397,6 +3408,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-6-generate-the-blog-feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Generate the Blog Feed
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3604,6 +3626,11 @@
 <td>Serve any zensical directory (default: journal)</td>
 </tr>
 <tr>
+<td><code>ctx site feed</code></td>
+<td>Command</td>
+<td>Generate Atom feed from finalized blog posts</td>
+</tr>
+<tr>
 <td><code>make journal</code></td>
 <td>Makefile</td>
 <td>Shortcut for export + site rebuild</td>
@@ -3762,36 +3789,46 @@ starting commit and a theme, then analyzes everything that changed:</p>
 <p>The skill diffs the commit range, identifies the most-changed files, and
 constructs a narrative organized by theme rather than chronology, including a
 key commits table and before/after comparisons.</p>
+<h3 id="step-6-generate-the-blog-feed">Step 6: Generate the Blog Feed<a class="headerlink" href="#step-6-generate-the-blog-feed" title="Permanent link">&para;</a></h3>
+<p>After publishing blog posts, generate the Atom feed so readers and
+automation can discover new content:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed
+</span></code></pre></div>
+<p>This scans <code>docs/blog/</code> for finalized posts (<code>reviewed_and_finalized: true</code>),
+extracts title, date, author, topics, and summary, and writes a valid
+Atom 1.0 feed to <code>site/feed.xml</code>. The feed is also generated automatically
+as part of <code>make site</code>.</p>
+<p>The feed is available at <a href="https://ctx.ist/feed.xml">ctx.ist/feed.xml</a>.</p>
 <h2 id="the-conversational-approach">The Conversational Approach<a class="headerlink" href="#the-conversational-approach" title="Permanent link">&para;</a></h2>
 <p>You can also drive your publishing anytime with <strong>natural language</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&quot;write about what we did this week&quot;
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>&quot;turn today&#39;s session into a blog post&quot;
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>&quot;make a changelog post covering everything since the last release&quot;
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>&quot;enrich the last few journal entries&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&quot;write about what we did this week&quot;
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>&quot;turn today&#39;s session into a blog post&quot;
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>&quot;make a changelog post covering everything since the last release&quot;
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>&quot;enrich the last few journal entries&quot;
 </span></code></pre></div>
 <p>The agent has full visibility into your <code>.context/</code> state (<em>tasks completed,
 decisions recorded, learnings captured</em>), so its suggestions are grounded in what
 actually happened.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>The full pipeline from raw transcripts to published content:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Export all sessions</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. In Claude Code: enrich all entries with metadata</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/ctx-journal-enrich-all
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Build and serve the journal site</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>make<span class="w"> </span>journal
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>make<span class="w"> </span>journal-serve
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># 3b. Or generate an Obsidian vault</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># 4. In Claude Code: draft a blog post</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># 5. In Claude Code: write a changelog post</span>
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Export all sessions</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># 2. In Claude Code: enrich all entries with metadata</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>/ctx-journal-enrich-all
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># 3. Build and serve the journal site</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>make<span class="w"> </span>journal
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>make<span class="w"> </span>journal-serve
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># 3b. Or generate an Obsidian vault</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># 4. In Claude Code: draft a blog post</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># 5. In Claude Code: write a changelog post</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
 </span></code></pre></div>
 <p>The journal pipeline is idempotent at every stage. You can rerun <code>ctx recall
 export --all</code> without losing enrichment. You can rebuild the site as many times

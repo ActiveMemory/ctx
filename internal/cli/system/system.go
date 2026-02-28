@@ -18,6 +18,7 @@ import (
 //
 // Hidden plumbing subcommands (used by skills and automation):
 //   - mark-journal: Update journal processing state
+//   - mark-wrapped-up: Suppress checkpoint nudges after wrap-up
 //
 // Hidden hook subcommands implement Claude Code hook logic as native Go
 // binaries and are not intended for direct user invocation.
@@ -37,6 +38,7 @@ Subcommands:
 
 Plumbing subcommands (used by skills and automation):
   mark-journal         Update journal processing state
+  mark-wrapped-up      Suppress checkpoint nudges after wrap-up
   pause                Pause context hooks for this session
   resume               Resume context hooks for this session
   events               Query the local hook event log
@@ -66,6 +68,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		bootstrapCmd(),
 		messageCmd(),
 		markJournalCmd(),
+		markWrappedUpCmd(),
 		pauseCmd(),
 		resumeCmd(),
 		eventsCmd(),
