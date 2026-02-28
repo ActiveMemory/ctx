@@ -150,9 +150,11 @@ Civilizations behave like processes with volatile memory:
 * They **lose** the index;
 * They **rebuild** from fragments.
 
-Most of what we call progress is cache reconstruction: We do not
-advance in a straight line. **We advance in recoveries**: Each one
-slightly less lossy than the last, **if** we are lucky.
+Most of what we call progress is cache reconstruction: 
+
+We do not advance in a straight line. **We advance in recoveries**:
+
+Each one slightly less lossy than the last, **if** we are lucky.
 
 Libraries burn. Institutions forget their founding purpose.
 Practices survive as rituals after the reasoning behind them is
