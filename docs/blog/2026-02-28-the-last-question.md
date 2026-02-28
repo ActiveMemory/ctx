@@ -117,8 +117,8 @@ is no longer here*".
 
 ## Substrate Migration
 
-* Multivac becomes planetary. 
-* Planetary becomes galactic.
+* Multivac becomes planetary;
+* Planetary becomes galactic;
 * Galactic becomes post-physical.
 
 Same system. Different body. Every transition is dangerous: 
