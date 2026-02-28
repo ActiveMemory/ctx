@@ -248,7 +248,7 @@ and the one after that, and the one after that.
 * **But** enough that the next session starts from where the last one stopped
   instead of from the question.
 
-Intelligence that forgets has to rediscover the universe every morning.
+**Intelligence that forgets has to rediscover the universe every morning**.
 
 And once there is a mind that retains its entire past, creation is
 no longer a calculation. It is the only remaining operation.
