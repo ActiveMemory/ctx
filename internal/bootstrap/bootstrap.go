@@ -23,6 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
+	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/hook"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
@@ -32,15 +33,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
 	"github.com/ActiveMemory/ctx/internal/cli/notify"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
+	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
+	"github.com/ActiveMemory/ctx/internal/cli/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
 	"github.com/ActiveMemory/ctx/internal/cli/system"
 	"github.com/ActiveMemory/ctx/internal/cli/task"
 	"github.com/ActiveMemory/ctx/internal/cli/watch"
+	"github.com/ActiveMemory/ctx/internal/cli/why"
 )
 
 // Initialize registers all ctx subcommands with the root command.
@@ -67,6 +71,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		sync.Cmd,
 		compact.Cmd,
 		decision.Cmd,
+		doctor.Cmd,
 		watch.Cmd,
 		hook.Cmd,
 		learnings.Cmd,
@@ -74,12 +79,15 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		loop.Cmd,
 		notify.Cmd,
 		pad.Cmd,
+		pause.Cmd,
 		permissions.Cmd,
 		recall.Cmd,
 		remind.Cmd,
+		resume.Cmd,
 		journal.Cmd,
 		serve.Cmd,
 		system.Cmd,
+		why.Cmd,
 	} {
 		cmd.AddCommand(c())
 	}

@@ -17,6 +17,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -52,6 +53,14 @@ func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	input := readInput(stdin)
+
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
+	}
 
 	tmpDir := secureTempDir()
 	markerFile := filepath.Join(tmpDir, "version-checked")
@@ -109,8 +118,12 @@ func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 	msg += "└────────────────────────────────────────────────"
 	cmd.Println(msg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, msg)
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer), input.SessionID, msg)
+	ref := notify.NewTemplateRef("check-version", "mismatch",
+		map[string]any{"BinaryVersion": binaryVer, "PluginVersion": pluginVer})
+	versionMsg := fmt.Sprintf("check-version: Binary v%s vs plugin v%s", binaryVer, pluginVer)
+	_ = notify.Send("nudge", versionMsg, input.SessionID, ref)
+	_ = notify.Send("relay", versionMsg, input.SessionID, ref)
+	eventlog.Append("relay", versionMsg, input.SessionID, ref)
 
 	touchFile(markerFile)
 
@@ -155,8 +168,12 @@ func checkKeyAge(cmd *cobra.Command, sessionID string) {
 	keyMsg += "└──────────────────────────────────────────────────┘"
 	cmd.Println(keyMsg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, keyMsg)
-	_ = notify.Send("relay", fmt.Sprintf("check-version: Encryption key is %d days old", ageDays), sessionID, keyMsg)
+	keyRef := notify.NewTemplateRef("check-version", "key-rotation",
+		map[string]any{"KeyAgeDays": ageDays})
+	keyNotifyMsg := fmt.Sprintf("check-version: Encryption key is %d days old", ageDays)
+	_ = notify.Send("nudge", keyNotifyMsg, sessionID, keyRef)
+	_ = notify.Send("relay", keyNotifyMsg, sessionID, keyRef)
+	eventlog.Append("relay", keyNotifyMsg, sessionID, keyRef)
 }
 
 // parseMajorMinor extracts major and minor version numbers from a semver

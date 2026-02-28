@@ -14,6 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
@@ -44,6 +45,15 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	input := readInput(stdin)
+
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
+	}
+
 	tmpDir := secureTempDir()
 	remindedFile := filepath.Join(tmpDir, "journal-reminded")
 	claudeProjectsDir := filepath.Join(os.Getenv("HOME"), ".claude", "projects")
@@ -81,7 +91,7 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 	var variant, fallback string
 	switch {
 	case unexported > 0 && unenriched > 0:
-		variant = "both"
+		variant = variantBoth
 		fallback = fmt.Sprintf("You have %d new session(s) not yet exported.\n", unexported) +
 			fmt.Sprintf("%d existing entries need enrichment.\n", unenriched) +
 			"\nExport and enrich:\n  ctx recall export --all\n  /ctx-journal-enrich-all"
@@ -109,8 +119,11 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 	msg += "└────────────────────────────────────────────────"
 	cmd.Println(msg)
 
-	_ = notify.Send("nudge", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, msg)
-	_ = notify.Send("relay", fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched), input.SessionID, msg)
+	ref := notify.NewTemplateRef("check-journal", variant, vars)
+	journalMsg := fmt.Sprintf("check-journal: %d unexported, %d unenriched", unexported, unenriched)
+	_ = notify.Send("nudge", journalMsg, input.SessionID, ref)
+	_ = notify.Send("relay", journalMsg, input.SessionID, ref)
+	eventlog.Append("relay", journalMsg, input.SessionID, ref)
 
 	touchFile(remindedFile)
 	return nil

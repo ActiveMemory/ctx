@@ -176,7 +176,7 @@ manually.
 Not all messages are equal. The `list` command shows each message's
 category:
 
-### Customizable (15 messages)
+### Customizable (16 messages)
 
 Messages that are **opinions** -- project-specific wording that benefits
 from customization. These are the primary targets for override.
@@ -189,6 +189,7 @@ from customization. These are the primary targets for override.
 | check-ceremonies | wrapup | End-of-session ceremony |
 | check-context-size | checkpoint | Context capacity warning |
 | check-context-size | oversize | Injection oversize nudge |
+| check-context-size | window | Context window usage warning (>80%) |
 | check-journal | both | Unexported sessions + unenriched entries |
 | check-journal | unenriched | Unenriched journal entries |
 | check-journal | unexported | Unexported sessions |
@@ -226,6 +227,7 @@ them, but `edit` will warn you first.
 | check-backup-age | warning | `{{.Warnings}}` |
 | check-context-size | checkpoint | *(none)* |
 | check-context-size | oversize | `{{.TokenCount}}` |
+| check-context-size | window | `{{.TokenCount}}`, `{{.Percentage}}` |
 | check-ceremonies | both, remember, wrapup | *(none)* |
 | check-journal | both | `{{.UnexportedCount}}`, `{{.UnenrichedCount}}` |
 | check-journal | unenriched | `{{.UnenrichedCount}}` |

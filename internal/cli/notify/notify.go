@@ -21,7 +21,8 @@ import (
 func Cmd() *cobra.Command {
 	var event string
 	var sessionID string
-	var detail string
+	var hook string
+	var variant string
 
 	cmd := &cobra.Command{
 		Use:   "notify [message]",
@@ -34,7 +35,7 @@ Silent noop when no webhook is configured or the event is filtered.
 Examples:
   ctx notify --event loop "Loop completed after 5 iterations"
   ctx notify -e nudge -s session-abc "Context checkpoint at prompt #20"
-  ctx notify -e relay -d "full hook output here" "Short summary"`,
+  ctx notify -e relay --hook check-version --variant mismatch "Version mismatch"`,
 		Args: cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if event == "" {
@@ -44,13 +45,18 @@ Examples:
 				return fmt.Errorf("message argument is required")
 			}
 			message := strings.Join(args, " ")
-			return notifylib.Send(event, message, sessionID, detail)
+			var ref *notifylib.TemplateRef
+			if hook != "" {
+				ref = notifylib.NewTemplateRef(hook, variant, nil)
+			}
+			return notifylib.Send(event, message, sessionID, ref)
 		},
 	}
 
 	cmd.Flags().StringVarP(&event, "event", "e", "", "Event name (required)")
 	cmd.Flags().StringVarP(&sessionID, "session-id", "s", "", "Session ID (optional)")
-	cmd.Flags().StringVarP(&detail, "detail", "d", "", "Full payload detail (optional, truncated to 1000 chars)")
+	cmd.Flags().StringVar(&hook, "hook", "", "Hook name for structured detail (optional)")
+	cmd.Flags().StringVar(&variant, "variant", "", "Template variant for structured detail (optional)")
 
 	cmd.AddCommand(setupCmd())
 	cmd.AddCommand(testCmd())

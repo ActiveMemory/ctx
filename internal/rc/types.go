@@ -17,6 +17,8 @@ package rc
 //   - ScratchpadEncrypt: Whether to encrypt the scratchpad (default true)
 //   - AllowOutsideCwd: Skip boundary validation for external context dirs (default false)
 //   - InjectionTokenWarn: Token threshold for oversize injection warning (default 15000, 0 = disabled)
+//   - ContextWindow: Context window size in tokens for usage reporting (default 200000)
+//   - EventLog: Whether to log hook events locally (default false)
 type CtxRC struct {
 	ContextDir          string        `yaml:"context_dir"`
 	TokenBudget         int           `yaml:"token_budget"`
@@ -29,6 +31,8 @@ type CtxRC struct {
 	EntryCountDecisions int           `yaml:"entry_count_decisions"`
 	ConventionLineCount int           `yaml:"convention_line_count"`
 	InjectionTokenWarn  int           `yaml:"injection_token_warn"`
+	ContextWindow       int           `yaml:"context_window"`
+	EventLog            bool          `yaml:"event_log"`
 	Notify              *NotifyConfig `yaml:"notify"`
 }
 

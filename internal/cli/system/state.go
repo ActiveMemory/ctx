@@ -109,6 +109,59 @@ func isInitialized() bool {
 	return true
 }
 
+// pauseMarkerPath returns the path to the session pause marker file.
+func pauseMarkerPath(sessionID string) string {
+	return filepath.Join(secureTempDir(), "ctx-paused-"+sessionID)
+}
+
+// paused checks if the session is paused. If paused, increments the
+// turn counter and returns the current count. Returns 0 if not paused.
+func paused(sessionID string) int {
+	path := pauseMarkerPath(sessionID)
+	data, readErr := os.ReadFile(path) //nolint:gosec // temp file path
+	if readErr != nil {
+		return 0
+	}
+	count, _ := strconv.Atoi(strings.TrimSpace(string(data)))
+	count++
+	writeCounter(path, count)
+	return count
+}
+
+// pausedMessage returns the appropriate pause indicator for the given
+// turn count, or empty string if not paused (turns == 0).
+func pausedMessage(turns int) string {
+	if turns == 0 {
+		return ""
+	}
+	if turns <= 5 {
+		return "ctx:paused"
+	}
+	return fmt.Sprintf("ctx:paused (%d turns) — resume with /ctx-resume", turns)
+}
+
+// Pause creates the session pause marker. Exported for use by the
+// top-level ctx pause command.
+func Pause(sessionID string) {
+	writeCounter(pauseMarkerPath(sessionID), 0)
+}
+
+// Resume removes the session pause marker. Exported for use by the
+// top-level ctx resume command. No-op if not paused.
+func Resume(sessionID string) {
+	_ = os.Remove(pauseMarkerPath(sessionID))
+}
+
+// ReadSessionID reads the session ID from stdin JSON, returning the
+// fallback "unknown" if stdin is empty or unparseable.
+func ReadSessionID(stdin *os.File) string {
+	input := readInput(stdin)
+	if input.SessionID == "" {
+		return sessionUnknown
+	}
+	return input.SessionID
+}
+
 // contextDirLine returns a one-line context directory identifier.
 // Returns empty string if directory cannot be resolved (callers omit footer).
 func contextDirLine() string {

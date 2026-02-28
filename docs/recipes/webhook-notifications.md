@@ -133,13 +133,23 @@ Every notification sends a JSON POST:
 
 ```json
 {
-  "event": "loop",
-  "message": "Loop completed after 5 iterations",
+  "event": "nudge",
+  "message": "check-context-size: Context window at 82%",
+  "detail": {
+    "hook": "check-context-size",
+    "variant": "window",
+    "variables": {"Percentage": 82, "TokenCount": "164k"}
+  },
   "session_id": "abc123-...",
   "timestamp": "2026-02-22T14:30:00Z",
   "project": "ctx"
 }
 ```
+
+The `detail` field is a structured template reference containing the hook
+name, variant, and any template variables. This lets receivers filter by
+hook or variant without parsing rendered text. The field is omitted when
+no template reference applies (e.g. custom `ctx notify` calls).
 
 ## Security Model
 
@@ -174,6 +184,26 @@ This means **agents running in worktrees cannot send webhook alerts**.
 For autonomous runs where worktree agents are opaque, monitor them from
 the terminal rather than relying on webhooks. Enrich journals and review
 results on the main branch after merging.
+
+## Event Log: The Local Complement
+
+Don't need a webhook but want diagnostic visibility? Enable `event_log: true`
+in `.ctxrc`. The event log writes the same payload as webhooks to a local
+JSONL file (`.context/state/events.jsonl`) that you can query without any
+external service:
+
+```bash
+ctx system events --last 20          # recent hook activity
+ctx system events --hook qa-reminder # filter by hook
+```
+
+Webhooks and event logging are independent: you can use either, both, or
+neither. Webhooks give you push notifications and an external audit trail.
+The event log gives you local queryability and `ctx doctor` integration.
+
+See [Troubleshooting](troubleshooting.md) for how they work together.
+
+---
 
 ## Tips
 

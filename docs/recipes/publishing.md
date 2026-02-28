@@ -72,7 +72,8 @@ session metadata and the full conversation transcript.
 
 `--all` is safe by default — only new sessions are exported. Existing files
 are skipped. Use `--regenerate` to re-export existing files (YAML frontmatter
-is preserved). Use `--force -y` to overwrite everything.
+is preserved). Use `--regenerate --keep-frontmatter=false -y` to regenerate
+everything including frontmatter.
 
 ### Step 2: Enrich Entries with Metadata
 

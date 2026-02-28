@@ -503,3 +503,5 @@ rituals for every session: `/ctx-remember` at the start,
 * [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   deep dive on knowledge capture
 * [Detecting and Fixing Drift](context-health.md): keeping context files accurate
+* [Pausing Context Hooks](session-pause.md): shortcut the full lifecycle
+  for quick tasks that don't need ceremony overhead

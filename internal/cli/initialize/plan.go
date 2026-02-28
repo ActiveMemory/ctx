@@ -42,7 +42,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Get template content
-	templateContent, err := assets.Template(config.FileImplementationPlan)
+	templateContent, err := assets.ProjectFile(config.FileImplementationPlan)
 	if err != nil {
 		return fmt.Errorf(
 			"failed to read IMPLEMENTATION_PLAN.md template: %w", err)

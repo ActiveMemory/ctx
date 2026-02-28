@@ -29,6 +29,7 @@ func Default() *CtxRC {
 		EntryCountDecisions: DefaultEntryCountDecisions,
 		ConventionLineCount: DefaultConventionLineCount,
 		InjectionTokenWarn:  DefaultInjectionTokenWarn,
+		ContextWindow:       DefaultContextWindow,
 	}
 }
 
@@ -150,6 +151,21 @@ func InjectionTokenWarn() int {
 	return RC().InjectionTokenWarn
 }
 
+// ContextWindow returns the configured context window size in tokens.
+//
+// Returns 200000 (default) for Claude Opus/Sonnet. Override via
+// `context_window` in .ctxrc for different models.
+//
+// Returns:
+//   - int: Context window size in tokens
+func ContextWindow() int {
+	v := RC().ContextWindow
+	if v <= 0 {
+		return DefaultContextWindow
+	}
+	return v
+}
+
 // NotifyEvents returns the configured event filter list for notifications.
 //
 // Returns nil if Notify is nil (no filtering — all events pass).
@@ -176,6 +192,16 @@ func KeyRotationDays() int {
 		return DefaultKeyRotationDays
 	}
 	return n.KeyRotationDays
+}
+
+// EventLog returns whether local hook event logging is enabled.
+//
+// Returns false (default) when the field is not set in .ctxrc.
+//
+// Returns:
+//   - bool: True if hook events should be logged to .context/state/events.jsonl
+func EventLog() bool {
+	return RC().EventLog
 }
 
 // AllowOutsideCwd returns whether boundary validation should be skipped.

@@ -55,6 +55,14 @@ Silent when: backup is fresh, or already checked today`,
 func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 	input := readInput(stdin)
 
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
+	}
+
 	tmpDir := secureTempDir()
 	throttleFile := filepath.Join(tmpDir, backupThrottleID)
 
@@ -104,8 +112,10 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 	msg += config.NudgeBoxBottom
 	cmd.Println(msg)
 
-	_ = notify.Send("nudge", "check-backup-age: Backup warning", input.SessionID, msg)
-	_ = notify.Send("relay", "check-backup-age: Backup warning", input.SessionID, msg)
+	ref := notify.NewTemplateRef("check-backup-age", "warning",
+		map[string]any{"Warnings": warningText})
+	_ = notify.Send("nudge", "check-backup-age: Backup warning", input.SessionID, ref)
+	_ = notify.Send("relay", "check-backup-age: Backup warning", input.SessionID, ref)
 
 	touchFile(throttleFile)
 

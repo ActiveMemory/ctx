@@ -109,6 +109,14 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 				if strings.Contains(path, "{") || strings.Contains(path, "*") {
 					continue
 				}
+				// Skip illustrative examples: bare filenames (no /)
+				// and shallow paths whose top-level directory doesn't
+				// exist in the project tree. Real references point
+				// into actual directories (internal/, cmd/, docs/).
+				topDir := strings.SplitN(path, "/", 2)[0]
+				if _, dirErr := os.Stat(topDir); os.IsNotExist(dirErr) {
+					continue
+				}
 				// Check if the file exists
 				if _, err := os.Stat(path); os.IsNotExist(err) {
 					report.Warnings = append(report.Warnings, Issue{

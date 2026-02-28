@@ -13,6 +13,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -101,7 +102,9 @@ func runBlockDangerousCommands(cmd *cobra.Command, stdin *os.File) error {
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		_ = notify.Send("relay", "block-dangerous-commands: "+reason, input.SessionID, reason)
+		ref := notify.NewTemplateRef("block-dangerous-commands", variant, nil)
+		_ = notify.Send("relay", "block-dangerous-commands: "+reason, input.SessionID, ref)
+		eventlog.Append("relay", "block-dangerous-commands: "+reason, input.SessionID, ref)
 	}
 
 	return nil

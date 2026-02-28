@@ -34,6 +34,12 @@ command.
 | "prepend 'URGENT:' to entry 1" | `ctx pad edit 1 --prepend "URGENT:"` |
 | "move entry 4 to the top" / "prioritize entry 4" | `ctx pad mv 4 1` |
 | "move entry 1 to the bottom" | `ctx pad mv 1 N` (where N = last position) |
+| "import my notes from notes.txt" | `ctx pad import notes.txt` |
+| "import from stdin" / pipe into pad | `cmd \| ctx pad import -` |
+| "export all blobs" / "extract blobs to DIR" | `ctx pad export [DIR]` |
+| "export blobs, overwrite existing" | `ctx pad export --force [DIR]` |
+| "merge entries from another pad" | `ctx pad merge FILE...` |
+| "merge with a different key" | `ctx pad merge --key /path/to/key FILE` |
 
 ## Execution
 
@@ -80,6 +86,30 @@ ctx pad mv 3 1    # move entry 3 to position 1
 **Compose entries (pipe show into edit):**
 ```bash
 ctx pad edit 1 --append "$(ctx pad show 3)"
+```
+
+**Import lines from a file:**
+```bash
+ctx pad import notes.txt
+```
+
+**Import from stdin:**
+```bash
+grep TODO *.go | ctx pad import -
+```
+
+**Export blobs to a directory:**
+```bash
+ctx pad export ./ideas
+ctx pad export --dry-run        # preview without writing
+ctx pad export --force ./backup # overwrite existing files
+```
+
+**Merge entries from another scratchpad:**
+```bash
+ctx pad merge worktree/.context/scratchpad.enc
+ctx pad merge --key /other/.context.key foreign.enc
+ctx pad merge --dry-run pad-a.enc pad-b.md
 ```
 
 ## Interpreting User Intent

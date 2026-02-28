@@ -68,6 +68,9 @@ opinionated behavior on top.
 | [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents               | user-invocable |
 | [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                   | user-invocable |
 | [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                        | user-invocable |
+| [`/ctx-doctor`](#ctx-doctor)                         | Troubleshoot ctx behavior with health checks and event analysis | user-invocable |
+| [`/ctx-pause`](#ctx-pause)                           | Pause context hooks for this session                   | user-invocable |
+| [`/ctx-resume`](#ctx-resume)                         | Resume context hooks after a pause                     | user-invocable |
 
 ---
 
@@ -247,7 +250,7 @@ Manage the encrypted scratchpad — add, remove, edit, and reorder
 one-liner notes. Encrypted at rest with AES-256-GCM.
 
 **Wraps**: `ctx pad`, `ctx pad add`, `ctx pad rm`, `ctx pad edit`,
-`ctx pad mv`, `ctx pad import`, `ctx pad export`
+`ctx pad mv`, `ctx pad import`, `ctx pad export`, `ctx pad merge`
 
 **See also**: [Scratchpad](scratchpad.md),
 [Using the Scratchpad](../recipes/scratchpad-with-claude.md)
@@ -399,6 +402,29 @@ positive observations.
 
 ---
 
+### `/ctx-doctor`
+
+Troubleshoot ctx behavior. Runs structural health checks via `ctx doctor`,
+analyzes event log patterns via `ctx system events`, and presents findings
+with suggested actions. The CLI provides the structural baseline; the agent
+adds semantic analysis of event patterns and correlations.
+
+**Wraps**: `ctx doctor --json`, `ctx system events --json --last 100`,
+`ctx remind list`, `ctx system message list`, reads `.ctxrc`
+
+**Trigger phrases**: "diagnose", "troubleshoot", "doctor", "health check",
+"why didn't my hook fire?", "hooks seem broken", "something seems off"
+
+**Graceful degradation**: If `event_log` is not enabled, the skill still
+works but with reduced capability. It runs structural checks and notes:
+"Enable `event_log: true` in `.ctxrc` for hook-level diagnostics."
+
+**See also**: [Troubleshooting](../recipes/troubleshooting.md),
+[`ctx doctor` CLI](../cli/doctor.md#ctx-doctor),
+[`ctx system events` CLI](../cli/system.md#ctx-system-events)
+
+---
+
 ### `/check-links`
 
 Scan all markdown files under `docs/` for broken links. Two passes:
@@ -503,6 +529,41 @@ intent (*"remind me to refactor swagger"*) into the corresponding
 
 **See also**:
 [Session Reminders](../recipes/session-reminders.md)
+
+---
+
+## Session Control
+
+Skills for controlling hook behavior during a session.
+
+### `/ctx-pause`
+
+Pause all context nudge and reminder hooks for the current session.
+Security hooks still fire. Use for quick investigations or tasks that
+don't need ceremony overhead.
+
+**Wraps**: `ctx pause`
+
+**Trigger phrases**: "pause ctx", "pause context", "stop the nudges",
+"quiet mode"
+
+**See also**:
+[Pausing Context Hooks](../recipes/session-pause.md)
+
+---
+
+### `/ctx-resume`
+
+Resume context hooks after a pause. Restores normal nudge, reminder,
+and ceremony behavior. Silent no-op if not paused.
+
+**Wraps**: `ctx resume`
+
+**Trigger phrases**: "resume ctx", "resume context", "turn nudges back on",
+"unpause"
+
+**See also**:
+[Pausing Context Hooks](../recipes/session-pause.md)
 
 ---
 

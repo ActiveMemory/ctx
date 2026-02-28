@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -48,6 +49,15 @@ func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	input := readInput(stdin)
+
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
+	}
+
 	command := input.ToolInput.Command
 
 	// Only trigger on git commit commands
@@ -74,7 +84,9 @@ func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
 	}
 	printHookContext(cmd, "PostToolUse", msg)
 
-	_ = notify.Send("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID, msg)
+	ref := notify.NewTemplateRef("post-commit", "nudge", nil)
+	_ = notify.Send("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID, ref)
+	eventlog.Append("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID, ref)
 
 	return nil
 }

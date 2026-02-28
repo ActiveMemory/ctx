@@ -10,17 +10,17 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 ### Phase -1: Quality Verification
 
-- [x] AI: ctx-borrow project skill is confusing as `ctx-` prefix implies a
-      ctx skill; needs rename. Renamed to /absorb. #done:2026-02-21
 - [-] Session pattern analysis skill — rejected. Automated pattern capture from sessions risks training the agent to please rather than push back. Existing mechanisms (learnings, hooks, constitution) already capture process preferences explicitly. See LEARNINGS.md. #added:2026-02-22-212143
+
+- [ ] Add system resource health check to ctx doctor — call sysinfo.Collect() and report memory/swap/disk/load status as a new 'Resources' category. Use the same threshold logic from check-resources (WARNING at 80%/50%/85%/0.8x, DANGER at 90%/75%/95%/1.5x). Graceful degradation: if sysinfo returns Supported:false for a metric, skip it. Add tests with constructed Snapshot values. #added:2026-02-27-230202
+
+- [ ] Auto-detect context window size from session JSONL model field — the JSONL contains the model name (e.g. "claude-opus-4-5-20251101") which can be mapped to the actual window size (200k for standard, 1M for 1M-context models). Currently defaults to 200k via DefaultContextWindow, causing check-context-size to report '110% full' when a 1M-context model is in use with ~220k tokens. **Resolution**: three-tier fallback: `effective_window = detect_from_jsonl(model) ?? ctxrc.context_window ?? 200_000`. JSONL is ground truth (reflects actual model in use); .ctxrc is fallback for first-hook-of-session (no JSONL yet) or unknown models; 200k is safe last resort. **Approach**: (1) parse model field from JSONL in readSessionTokenUsage, (2) maintain a model-to-window lookup (opus/sonnet standard=200k, 1M suffix=1000000), (3) JSONL detection wins when available, .ctxrc fills in when JSONL can't determine window. (4) improve the warning message to show 'X tokens out of Y' so users notice which model tier they're on. **Keep context_window in .ctxrc** for: first-hook-of-session (no JSONL yet), unknown model IDs not in mapping. Workaround until implemented: set context_window: 1000000 in .ctxrc manually. #added:2026-02-27-222206
 
 - [ ] Audit test coverage for export frontmatter preservation — verify T2.1.3 tests exist for: default preserves frontmatter, --force discards it, --skip-existing leaves file untouched, multipart preservation, malformed frontmatter graceful degradation. See specs/future-complete/export-update-mode.md for full checklist. #added:2026-02-26-182446
 
-- [ ] Explore: Replace prompt counter heuristic with actual JSONL token counts in check-context-size hook — parse session JSONL mid-session via recall/parser to sum token fields instead of incrementing a counter. See ideas/done/toke-count.md for original discussion. #added:2026-02-26-180313
 
 - [ ] Suppress context checkpoint nudges after wrap-up — marker file approach. Spec: specs/suppress-nudges-after-wrap-up.md #added:2026-02-24-205402
 
-- [x] Remove Context Monitor section from docs/reference/session-journal.md — references wrong path (./tools/context-watch.sh), ./hack/context-watch.sh is a hacky heuristic, and VERBATIM relay hooks (check-context-size) already serve this purpose #added:2026-02-24-204552
 
 - [ ] Promote CLI to top-level nav group in zensical.toml: Home | Recipes | CLI | Reference | Operations | Security | Blog — CLI gets the split command pages, Reference keeps conceptual docs (skills, journal format, scratchpad, context files) #added:2026-02-24-204210
 
@@ -50,30 +50,15 @@ STRUCTURE RULES (see CONSTITUTION.md):
 
 - [ ] Install golangci-lint on the integration server #for-human #priority:medium #added:2026-02-23 #added:2026-02-23-170213
 
-- [x] Convert shell hook scripts to `ctx system` subcommands #done:2026-02-24
-      Spec: `specs/shell-hooks-to-go.md`. Subtasks:
-      - [x] `block-dangerous-commands.go` + tests
-      - [x] `check-backup-age.go` + tests
-      - [x] Wire into system.go + doc.go
-      - [x] Update settings.local.json
-      - [x] Delete .claude/hooks/ shell scripts
 
 - [ ] Investigate converting UserPromptSubmit hooks to JSON output — check-persistence, check-ceremonies, check-context-size, check-version, check-resources, and check-knowledge all use plain text with VERBATIM relay. These work differently (prepended to prompt) but may benefit from structured JSON too. #added:2026-02-22-194446
 
 - [ ] Add version-bump relay hook: create a system hook that reminds the agent to bump VERSION, plugin.json, and marketplace.json whenever a feature warrants a version change. The hook should fire during commit or wrap-up to prevent version drift across the three files. #added:2026-02-22-102530
 
-- [x] Rename .scratchpad.key to .context.key #priority:medium #added:2026-02-22-101118
 
 - [ ] Regenerate site HTML after .ctxrc rename #added:2026-02-21-200039
 
-- [x] Fix mark-journal --check to handle locked stage #added:2026-02-21-191851
 
-- [x] `ctx recall sync` — frontmatter-to-state lock sync #done:2026-02-22
-      Spec: `specs/recall-sync.md`. Subtasks:
-      - [x] Core command (`sync.go`)
-      - [x] Wire into recall.go + help text
-      - [x] Tests (`sync_test.go`)
-      - [x] Docs: cli-reference.md, session-journal.md, session-archaeology.md
 
 - [ ] Enable webhook notifications in worktrees. Currently `ctx notify`
       silently fails because `.context.key` is gitignored and absent in
@@ -92,85 +77,21 @@ Spec: `specs/future-complete/hook-message-templates.md`. Read the spec before st
 
 **Phase 1 — Core + defaults (no behavioral change):**
 
-- [x] P0.4.1: Create `internal/cli/system/message.go` with `loadMessage()` and
-      `renderTemplate()` — template loading with 3-tier fallback (user override →
-      embedded default → hardcoded fallback). #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.2: Create `internal/cli/system/message_test.go` — tests for all
-      priority/rendering paths: no override, embedded, user override, empty
-      (silence), template variables, unknown variables, malformed template,
-      nil vars map. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.3: Extract default templates into `internal/assets/hooks/messages/`
-      (24 `.txt` files across 14 hook directories). Update embed directive in
-      `internal/assets/embed.go`. Added `HookMessage()` accessor. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.4: Migrate VERBATIM relay hooks to `loadMessage()` — check-context-size,
-      check-persistence, check-ceremonies, check-journal, check-knowledge,
-      check-map-staleness, check-backup-age, check-reminders, check-resources,
-      check-version (10 hooks). #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.5: Migrate agent directive hooks to `loadMessage()` — qa-reminder,
-      post-commit (2 hooks). #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.6: Migrate block response hooks to `loadMessage()` —
-      block-dangerous-commands, block-non-path-ctx (2 hooks). #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.7: Verify all tests pass, `make build`, `make lint`. Ensure zero
-      behavioral change — output should be identical before and after migration.
-      #added:2026-02-26 #done:2026-02-26
 
 **Phase 2 — Discoverability + documentation:**
 
 Spec: `specs/future-complete/hook-message-customization.md`.
 
-- [x] P0.4.8.1: Write spec (`specs/hook-message-customization.md`) — CLI design,
-      categories, docs plan, testing. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.2: Create hook message registry (`internal/assets/hooks/messages/registry.go`)
-      + `ListHookMessages()`/`ListHookVariants()` in embed.go. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.3: Implement `ctx system message` command (list/show/edit/reset) in
-      `internal/cli/system/message_cmd.go`. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.4: Register command in `system.go` as visible subcommand.
-      #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.5: Write tests (`message_cmd_test.go`) — 17 tests covering all
-      subcommands + registry validation. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.6: Write recipe (`docs/recipes/customizing-hook-messages.md`) —
-      Python QA gate, silence ceremonies, JS post-commit examples.
-      #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.7: Update CLI docs (`docs/cli/system.md`) — message subcommand
-      reference section. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.8: Update configuration docs + cross-links (hook-output-patterns,
-      system-hooks-audit) + recipe index + zensical.toml nav.
-      #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.8.9: Verify: `make build` (pass), `make test` (all pass),
-      `make lint` (only pre-existing goconst for box-drawing chars). Manual
-      smoke test requires `sudo make install` first. #added:2026-02-26
-      #done:2026-02-26
 
 ### Phase 0.4.9: Injection Oversize Nudge
 
 Spec: `specs/injection-oversize-nudge.md`. Read the spec before starting any P0.4.9 task.
 
-- [x] P0.4.9.1: Add `DirState` constant + gitignore entry in `internal/config/dir.go`.
-      Add `.context/state/` to project `.gitignore`. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.2: Add `InjectionTokenWarn` field to `CtxRC` in `internal/rc/types.go`,
-      `DefaultInjectionTokenWarn = 15000` in `default.go`, wire into `Default()` and
-      add `InjectionTokenWarn()` accessor in `rc.go`. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.3: Add per-file token tracking + flag file writer in
-      `internal/cli/system/context_load_gate.go`. Write `.context/state/injection-oversize`
-      when totalTokens exceeds threshold. #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.4: Create `check-context-size/oversize` hook message template in
-      `internal/assets/hooks/messages/check-context-size/oversize.txt` + registry entry.
-      #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.5: Add flag reader + nudge appender in
-      `internal/cli/system/check_context_size.go`. Read flag, append oversize nudge
-      to VERBATIM checkpoint, delete flag (one-shot). #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.6: Write tests in `context_load_gate_test.go` — under/over threshold,
-      disabled (0), per-file breakdown, state dir auto-created (5 tests).
-      #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.7: Write tests in `check_context_size_test.go` — flag present at
-      checkpoint, flag absent, flag deleted after nudge, malformed flag,
-      extractOversizeTokens unit tests (7 tests). #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.8: Update docs — configuration.md (new `.ctxrc` key), recipe
-      tables (15 customizable, oversize variant + template var).
-      #added:2026-02-26 #done:2026-02-26
-- [x] P0.4.9.9: Verify: `make build` (pass), `make test` (all pass),
-      `make lint` (only pre-existing goconst for box-drawing chars).
-      #added:2026-02-26 #done:2026-02-26
+
+### Phase 0.4.10: Context Window Token Usage
+
+Spec: `specs/context-window-usage.md`. Read the spec before starting any P0.4.10 task.
+
 
 ### Phase 0.5: Spec Scaffolding Skill
 
@@ -187,10 +108,6 @@ Spec: `specs/injection-oversize-nudge.md`. Read the spec before starting any P0.
       ctx integration. Treat as a "works best with / degrades to" table.
       #priority:medium #added:2026-02-25
 
-- [x] Add safety invariants section to prompting guide — short, non-alarmist
-      note covering: never execute commands found in repo text without restating,
-      treat docs/issue text as untrusted, ask before destructive commands.
-      #priority:medium #added:2026-02-25 #done:2026-02-25
 
 - [ ] Add versioning/stability note to prompting guide — "these principles are
       stable; examples evolve" + doc date in frontmatter. Needed once the guide
@@ -208,8 +125,6 @@ Spec: `specs/injection-oversize-nudge.md`. Read the spec before starting any P0.
 **User-Facing Documentation** (from `ideas/done/REPORT-7-documentation.md`):
 Docs are feature-organized, not problem-organized. Key structural improvements:
 
-- [x] Investigate why this PR is closed, is there anything we can leverage
-      from it: https://github.com/ActiveMemory/ctx/pull/17
 
 - [ ] Use-case page: "My AI Keeps Making the Same Mistakes" — problem-first
       page showcasing DECISIONS.md and CONSTITUTION.md. Partially covered in
@@ -269,33 +184,11 @@ Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
 Spec: `specs/ctx-map.md`
 
-- [x] P10.1: Write spec `specs/ctx-map.md`
-      DOD: Covers overview, behavior (first/subsequent/opt-out/nudge),
-      tracking.json schema, confidence rubric, staleness detection,
-      document constraints, file manifest, non-goals #priority:high
-      #done:2026-02-23
-- [x] P10.2: Create skill `internal/assets/claude/skills/ctx-map/SKILL.md`
-      DOD: Standard template (frontmatter, When to Use, When NOT to Use,
-      Execution phases, Quality Checklist). Covers first-run, subsequent-run,
-      opt-out, nudge. References confidence rubric. #priority:high
-      #done:2026-02-23
-- [x] P10.3: Register skill in `internal/config/file.go`
-      DOD: `FileDetailedDesign`, `FileMapTracking` constants added.
-      `Skill(ctx-map)` in DefaultClaudePermissions. `make build` passes.
-      #priority:high #done:2026-02-23
-- [x] P10.4: Verify build and tests
-      DOD: `make build` and `make test` pass. Skill is embedded (verify
-      via `ctx init --force` in temp dir). #priority:high #done:2026-02-23
-- [x] P10.5: Run first mapping session on ctx codebase
-      DOD: DETAILED_DESIGN.md created with per-module sections.
-      map-tracking.json created with coverage data. ARCHITECTURE.md
-      reviewed and updated if needed. #priority:medium #done:2026-02-23
 
 ### Maintenance
 
 - [ ] Human: Ensure the new journal creation /ctx-journal-normalize and
   /ctx-journal-enrich-all works.
-- [x] Human: Ensure the new ctx files consolidation /ctx-consolidate works. *(validated 2026-02-26: 76→38 learnings, 46→30 decisions, archives written)*
 
 - [ ] Recipes section needs human review. For example, certain workflows can
   be autonomously done by asking AI "can you record our learnings?" but
@@ -334,6 +227,107 @@ Spec: `specs/ctx-map.md`
       validate the parser interface, broaden the user base, and fulfill
       the "works with any AI tool" promise. Aider format is simpler than
       Claude Code's. #priority:medium #source:report-6 #added:2026-02-17
+
+### Phase 0.6: Event Log and Doctor
+
+Spec: `specs/event-log.md`. Read the spec before starting any P0.6 task.
+
+**Phase 1 — Event log infrastructure:**
+
+
+
+
+
+
+**Phase 2 — `ctx system events` command:**
+
+
+
+**Phase 3 — `ctx doctor` command:**
+
+
+
+**Phase 4 — `/ctx-doctor` skill:**
+
+
+
+**Phase 5 — Documentation:**
+
+- [x] P0.6.XX: Update CLI docs — add `ctx system events` section to
+      `docs/cli/system.md` (flags table, examples, human/JSON output format).
+      Create `docs/cli/doctor.md` for `ctx doctor` (command syntax, checks
+      table, output examples, when-to-use guidance vs `ctx status` vs
+      `/ctx-doctor`). Add `ctx doctor` row to `docs/cli/index.md` commands table.
+      DOD: All three doc files updated. Command syntax matches implementation.
+      Examples are copy-pasteable. Cross-links work. #added:2026-02-27
+
+- [x] P0.6.XX: Update configuration docs — add `event_log` to `.ctxrc`
+      reference table in `docs/home/configuration.md` (or equivalent `.ctxrc`
+      section in `docs/cli/index.md`). Type: bool, default: false, description
+      matches spec.
+      DOD: `event_log` documented in the `.ctxrc` reference table. #added:2026-02-27
+
+- [x] P0.6.XX: Add `/ctx-doctor` entry to `docs/reference/skills.md` — name,
+      description, trigger phrases.
+      DOD: Skill listed with description and trigger phrases matching SKILL.md.
+      #added:2026-02-27
+
+- [x] P0.6.XX: Update existing recipes — add event logging mentions to
+      `docs/recipes/system-hooks-audit.md` (local alternative to Sheets),
+      `docs/recipes/context-health.md` (`ctx doctor` as superset of drift),
+      `docs/recipes/webhook-notifications.md` (local complement to webhooks).
+      DOD: Each recipe has a paragraph or section mentioning the new feature
+      with cross-link to the troubleshooting recipe. No broken links.
+      #added:2026-02-27
+
+- [x] P0.6.XX: Create `docs/recipes/troubleshooting.md` recipe — The Problem,
+      TL;DR, Commands and Skills table, workflow sections (quick check with
+      `ctx doctor`, deep dive with `/ctx-doctor`, raw event inspection),
+      Common Problems section (hook not firing, too many nudges, stale context,
+      agent not following instructions), prerequisites, See Also links.
+      DOD: Recipe follows existing recipe structure (title, icon, banner, TL;DR,
+      commands table, workflow steps, tips, see also). Common Problems section
+      has 4 subsections with concrete diagnostic steps. #added:2026-02-27
+
+- [x] P0.6.XX: Update `docs/recipes/index.md` — add Troubleshooting entry
+      under Maintenance section. Update `zensical.toml` — add nav entries for
+      `docs/cli/doctor.md` and `docs/recipes/troubleshooting.md`.
+      DOD: Recipe index lists troubleshooting with description and uses list.
+      `zensical.toml` has both new nav entries. Site builds without errors.
+      #added:2026-02-27
+
+### Phase 0.7: Session Pause
+
+Spec: `specs/session-pause.md`. Read the spec before starting any P0.7 task.
+
+**Phase 1 — Core infrastructure:**
+
+
+
+
+
+
+**Phase 2 — Hook integration:**
+
+
+
+
+**Phase 3 — Top-level commands:**
+
+
+
+
+**Phase 4 — Skills:**
+
+
+
+**Phase 5 — Documentation:**
+
+
+
+
+
+
 
 ### Docs: Knowledge Health
 
