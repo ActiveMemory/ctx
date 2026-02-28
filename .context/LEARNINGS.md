@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-27 | site/ directory must be committed with docs changes |
 | 2026-02-27 | Doctor token_budget vs context_window confusion |
 | 2026-02-27 | Drift detector false positives on illustrative code examples |
 | 2026-02-27 | Context injection and compliance strategy (consolidated) |
@@ -24,6 +25,16 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-27-231228] site/ directory must be committed with docs changes
+
+**Context**: The site/ directory contains generated HTML served directly from the repo (no CI build step). Multiple sessions have committed docs/ changes without the corresponding site/ output, or ignored site/ as 'generated noise'.
+
+**Lesson**: site/ is intentionally tracked in git — there is no GitHub Pages workflow or CI step to build it. When docs change, the regenerated site/ HTML must be staged and committed alongside the source.
+
+**Application**: Always git add site/ when committing changes under docs/. Never gitignore site/.
 
 ---
 
