@@ -266,12 +266,12 @@ in a 70-year-old short story about the heat death of the universe*).
 
 The connection runs through every post in the series:
 
-* [Before Context Windows, We Had Bouncers][irc-post]: Stateless
+* [Before Context Windows, We Had Bouncers][irc-post]: stateless
   protocols have always needed stateful wrappers (*Asimov's story
   is the same pattern at cosmological scale*)
-* [The 3:1 Ratio][ratio-post]: The discipline of maintaining
+* [The 3:1 Ratio][ratio-post]: the discipline of maintaining
   context so it doesn't decay between sessions
-* [Code Is Cheap, Judgment Is Not][judgment-post]: The human skill
+* [Code Is Cheap, Judgment Is Not][judgment-post]: the human skill
   that makes continuity worth preserving
 
 [attention-post]: 2026-02-03-the-attention-budget.md
