@@ -38,13 +38,16 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - name: Get PR commits
+        id: get-pr-commits
+        uses: tim-actions/get-pr-commits@master
         with:
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check DCO sign-off
         uses: tim-actions/dco@master
+        with:
+          commits: ${{ steps.get-pr-commits.outputs.commits }}
 
   lint:
     name: Lint

@@ -15,6 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -198,7 +199,7 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 		if line := contextDirLine(); line != "" {
 			msg += "│ " + line + "\n"
 		}
-		msg += boxBottom
+		msg += config.NudgeBoxBottom
 		cmd.Println(msg)
 		cmd.Println()
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d NUDGE since_nudge=%d", state.Count, sinceNudge))
