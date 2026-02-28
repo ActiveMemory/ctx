@@ -159,5 +159,9 @@ link = "https://github.com/ActiveMemory/ctx"
 icon = "fontawesome/brands/stack-exchange"
 link = "https://web.libera.chat/#ctx"
 
+[[project.extra.social]]
+icon = "fontawesome/solid/rss"
+link = "https://ctx.ist/feed.xml"
+
 [project.extra]
 generator = false
