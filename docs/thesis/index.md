@@ -212,7 +212,7 @@ purposes is not cosmetic. Different types of knowledge have different lifecycles
 | Constitution   | Rarely           | Every session    | Always        | "Never commit secrets to git"                            |
 | Tasks          | Every session    | Session start    | Always        | "Implement token budget CLI flag"                        |
 | Conventions    | Weekly           | Before coding    | High          | "All errors use structured logging with severity levels" |
-| Decisions      | When decided     | When questioning | Medium        | "Use PostgreSQL over MySQL — see ADR-003"                |
+| Decisions      | When decided     | When questioning | Medium        | "Use PostgreSQL over MySQL (see ADR-003)"                |
 | Learnings      | When learned     | When stuck       | Medium        | "Hook scripts >50ms degrade interactive UX"              |
 | Architecture   | When changed     | When designing   | On demand     | "Three-layer pipeline: ingest → enrich → assemble"       |
 | Journal        | Every session    | Rarely           | Never auto    | "Session 247: Removed dead-end session copy layer"       |
