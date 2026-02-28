@@ -39,6 +39,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
 	"github.com/ActiveMemory/ctx/internal/cli/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
+	"github.com/ActiveMemory/ctx/internal/cli/site"
 	"github.com/ActiveMemory/ctx/internal/cli/status"
 	"github.com/ActiveMemory/ctx/internal/cli/sync"
 	"github.com/ActiveMemory/ctx/internal/cli/system"
@@ -86,6 +87,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		resume.Cmd,
 		journal.Cmd,
 		serve.Cmd,
+		site.Cmd,
 		system.Cmd,
 		why.Cmd,
 	} {

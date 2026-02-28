@@ -3,7 +3,7 @@
 # Common targets for Go developers
 
 .PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
-test-coverage smoke site site-serve site-serve-lan site-setup audit check plugin-reload \
+test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
 journal journal-serve journal-serve-lan watch-session backup backup-global backup-all gpg-fix gpg-test \
 sync-why check-why
 
@@ -156,9 +156,14 @@ install:
 site-setup:
 	pipx install zensical
 
-## site: Build documentation site
+## site: Build documentation site and generate feed
 site:
 	zensical build
+	ctx site feed
+
+## site-feed: Generate Atom feed from blog posts
+site-feed:
+	ctx site feed
 
 ## site-serve: Serve documentation site locally
 site-serve:
