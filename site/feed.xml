@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>ctx blog</title>
+  <link href="https://ctx.ist/blog/"></link>
+  <link href="https://ctx.ist/feed.xml" rel="self"></link>
+  <id>https://ctx.ist/feed.xml</id>
+  <updated>2026-02-25T00:00:00Z</updated>
+  <entry>
+    <title>The Dog Ate My Homework: Teaching AI Agents to Read Before They Write</title>
+    <link href="https://ctx.ist/blog/2026-02-25-the-homework-problem/"></link>
+    <id>https://ctx.ist/blog/2026-02-25-the-homework-problem/</id>
+    <updated>2026-02-25T00:00:00Z</updated>
+    <summary>You wrote the playbook. You organized the files. You even put</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="hooks"></category>
+    <category term="agent behavior"></category>
+    <category term="context engineering"></category>
+    <category term="behavioral design"></category>
+    <category term="testing methodology"></category>
+    <category term="compliance monitoring"></category>
+  </entry>
+  <entry>
+    <title>When a System Starts Explaining Itself</title>
+    <link href="https://ctx.ist/blog/2026-02-17-when-a-system-starts-explaining-itself/"></link>
+    <id>https://ctx.ist/blog/2026-02-17-when-a-system-starts-explaining-itself/</id>
+    <updated>2026-02-17T00:00:00Z</updated>
+    <summary>You know, deep in your heart, that it works</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="field notes"></category>
+    <category term="adoption signals"></category>
+    <category term="infrastructure vs tools"></category>
+    <category term="context engineering"></category>
+    <category term="substrates"></category>
+  </entry>
+  <entry>
+    <title>The 3:1 Ratio</title>
+    <link href="https://ctx.ist/blog/2026-02-17-the-3-1-ratio/"></link>
+    <id>https://ctx.ist/blog/2026-02-17-the-3-1-ratio/</id>
+    <updated>2026-02-17T00:00:00Z</updated>
+    <summary>Every developer knows technical debt exists. Every developer</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="consolidation"></category>
+    <category term="technical debt"></category>
+    <category term="development workflow"></category>
+    <category term="convention drift"></category>
+    <category term="code quality"></category>
+  </entry>
+  <entry>
+    <title>Parallel Agents, Merge Debt, and the Myth of Overnight Progress</title>
+    <link href="https://ctx.ist/blog/2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress/"></link>
+    <id>https://ctx.ist/blog/2026-02-17-parallel-agents-merge-debt-and-the-myth-of-overnight-progress/</id>
+    <updated>2026-02-17T00:00:00Z</updated>
+    <summary>You discover agents can run in parallel.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="agent workflows"></category>
+    <category term="parallelism"></category>
+    <category term="verification"></category>
+    <category term="context engineering"></category>
+    <category term="engineering practice"></category>
+  </entry>
+  <entry>
+    <title>Context as Infrastructure</title>
+    <link href="https://ctx.ist/blog/2026-02-17-context-as-infrastructure/"></link>
+    <id>https://ctx.ist/blog/2026-02-17-context-as-infrastructure/</id>
+    <updated>2026-02-17T00:00:00Z</updated>
+    <summary>If the answer is &#34;in a prompt I paste at the start,&#34; you are treating</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="context engineering"></category>
+    <category term="infrastructure"></category>
+    <category term="progressive disclosure"></category>
+    <category term="persistence"></category>
+    <category term="design philosophy"></category>
+  </entry>
+  <entry>
+    <title>Code Is Cheap. Judgment Is Not.</title>
+    <link href="https://ctx.ist/blog/2026-02-17-code-is-cheap-judgment-is-not/"></link>
+    <id>https://ctx.ist/blog/2026-02-17-code-is-cheap-judgment-is-not/</id>
+    <updated>2026-02-17T00:00:00Z</updated>
+    <summary>You might be confusing the thing that&#39;s *cheap* with the</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="AI and expertise"></category>
+    <category term="context engineering"></category>
+    <category term="judgment vs production"></category>
+    <category term="human-AI collaboration"></category>
+    <category term="automation discipline"></category>
+  </entry>
+  <entry>
+    <title>ctx v0.6.0: The Integration Release</title>
+    <link href="https://ctx.ist/blog/2026-02-16-ctx-v0.6.0-the-integration-release/"></link>
+    <id>https://ctx.ist/blog/2026-02-16-ctx-v0.6.0-the-integration-release/</id>
+    <updated>2026-02-16T00:00:00Z</updated>
+    <summary>`ctx` is now a Claude Code plugin. Two commands, no build step:</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="release"></category>
+    <category term="plugin system"></category>
+    <category term="Claude Marketplace"></category>
+    <category term="distribution"></category>
+    <category term="security hardening"></category>
+  </entry>
+  <entry>
+    <title>Version Numbers Are Lagging Indicators</title>
+    <link href="https://ctx.ist/blog/2026-02-15-why-zensical/"></link>
+    <id>https://ctx.ist/blog/2026-02-15-why-zensical/</id>
+    <updated>2026-02-15T00:00:00Z</updated>
+    <summary>Most engineers wouldn&#39;t. Version numbers signal maturity. Pre-1.0</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="tooling decisions"></category>
+    <category term="static site generators"></category>
+    <category term="infrastructure thinking"></category>
+    <category term="journal system"></category>
+    <category term="context engineering"></category>
+  </entry>
+  <entry>
+    <title>Eight Ways a Hook Can Talk</title>
+    <link href="https://ctx.ist/blog/2026-02-15-eight-ways-a-hook-can-talk/"></link>
+    <id>https://ctx.ist/blog/2026-02-15-eight-ways-a-hook-can-talk/</id>
+    <updated>2026-02-15T00:00:00Z</updated>
+    <summary>I had a backup warning that nobody ever saw.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="hooks"></category>
+    <category term="agent communication"></category>
+    <category term="design patterns"></category>
+    <category term="Claude Code"></category>
+  </entry>
+  <entry>
+    <title>ctx v0.3.0: The Discipline Release</title>
+    <link href="https://ctx.ist/blog/2026-02-15-ctx-v0.3.0-the-discipline-release/"></link>
+    <id>https://ctx.ist/blog/2026-02-15-ctx-v0.3.0-the-discipline-release/</id>
+    <updated>2026-02-15T00:00:00Z</updated>
+    <summary>No new headline feature. No architectural pivot. No rewrite.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="release"></category>
+    <category term="skills migration"></category>
+    <category term="consolidation"></category>
+    <category term="code quality"></category>
+    <category term="E/A/R framework"></category>
+  </entry>
+  <entry>
+    <title>Parallel Agents with Git Worktrees</title>
+    <link href="https://ctx.ist/blog/2026-02-14-parallel-agents-with-worktrees/"></link>
+    <id>https://ctx.ist/blog/2026-02-14-parallel-agents-with-worktrees/</id>
+    <updated>2026-02-14T00:00:00Z</updated>
+    <summary>You could work through them one at a time.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="agent teams"></category>
+    <category term="parallelism"></category>
+    <category term="git worktrees"></category>
+    <category term="context engineering"></category>
+    <category term="task management"></category>
+  </entry>
+  <entry>
+    <title>Before Context Windows, We Had Bouncers</title>
+    <link href="https://ctx.ist/blog/2026-02-14-irc-as-context/"></link>
+    <id>https://ctx.ist/blog/2026-02-14-irc-as-context/</id>
+    <updated>2026-02-14T00:00:00Z</updated>
+    <summary>[IRC][irc] is **stateless**.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="context engineering"></category>
+    <category term="infrastructure"></category>
+    <category term="IRC"></category>
+    <category term="persistence"></category>
+    <category term="state continuity"></category>
+  </entry>
+  <entry>
+    <title>How Deep Is Too Deep?</title>
+    <link href="https://ctx.ist/blog/2026-02-12-how-deep-is-too-deep/"></link>
+    <id>https://ctx.ist/blog/2026-02-12-how-deep-is-too-deep/</id>
+    <updated>2026-02-12T00:00:00Z</updated>
+    <summary>You can talk about transformers at a whiteboard.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="AI foundations"></category>
+    <category term="abstraction boundaries"></category>
+    <category term="agentic systems"></category>
+    <category term="context engineering"></category>
+    <category term="failure modes"></category>
+  </entry>
+  <entry>
+    <title>Defense in Depth: Securing AI Agents</title>
+    <link href="https://ctx.ist/blog/2026-02-09-defense-in-depth-securing-ai-agents/"></link>
+    <id>https://ctx.ist/blog/2026-02-09-defense-in-depth-securing-ai-agents/</id>
+    <updated>2026-02-09T00:00:00Z</updated>
+    <summary>It follows instructions: **That is the problem**.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="agent security"></category>
+    <category term="defense in depth"></category>
+    <category term="prompt injection"></category>
+    <category term="autonomous loops"></category>
+    <category term="container isolation"></category>
+  </entry>
+  <entry>
+    <title>Not Everything Is a Skill</title>
+    <link href="https://ctx.ist/blog/2026-02-08-not-everything-is-a-skill/"></link>
+    <id>https://ctx.ist/blog/2026-02-08-not-everything-is-a-skill/</id>
+    <updated>2026-02-08T00:00:00Z</updated>
+    <summary>As of v0.4.0, ctx consolidated sessions into the journal mechanism.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="skill design"></category>
+    <category term="context engineering"></category>
+    <category term="automation discipline"></category>
+    <category term="recipes"></category>
+    <category term="agent teams"></category>
+  </entry>
+  <entry>
+    <title>The Anatomy of a Skill That Works</title>
+    <link href="https://ctx.ist/blog/2026-02-07-the-anatomy-of-a-skill-that-works/"></link>
+    <id>https://ctx.ist/blog/2026-02-07-the-anatomy-of-a-skill-that-works/</id>
+    <updated>2026-02-07T00:00:00Z</updated>
+    <summary>As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="skill design"></category>
+    <category term="context engineering"></category>
+    <category term="quality gates"></category>
+    <category term="E/A/R framework"></category>
+    <category term="practical patterns"></category>
+  </entry>
+  <entry>
+    <title>You Can&#39;t Import Expertise</title>
+    <link href="https://ctx.ist/blog/2026-02-05-you-cant-import-expertise/"></link>
+    <id>https://ctx.ist/blog/2026-02-05-you-cant-import-expertise/</id>
+    <updated>2026-02-05T00:00:00Z</updated>
+    <summary>...and yet it sat there, inert, while the same old problems kept drifting in.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="skill adaptation"></category>
+    <category term="E/A/R framework"></category>
+    <category term="convention drift"></category>
+    <category term="consolidation"></category>
+    <category term="project-specific expertise"></category>
+  </entry>
+  <entry>
+    <title>Skills That Fight the Platform</title>
+    <link href="https://ctx.ist/blog/2026-02-04-skills-that-fight-the-platform/"></link>
+    <id>https://ctx.ist/blog/2026-02-04-skills-that-fight-the-platform/</id>
+    <updated>2026-02-04T00:00:00Z</updated>
+    <summary>You craft detailed instructions. You add examples. You build elaborate</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="context engineering"></category>
+    <category term="skill design"></category>
+    <category term="system prompts"></category>
+    <category term="antipatterns"></category>
+    <category term="AI safety primitives"></category>
+  </entry>
+  <entry>
+    <title>The Attention Budget: Why Your AI Forgets What You Just Told It</title>
+    <link href="https://ctx.ist/blog/2026-02-03-the-attention-budget/"></link>
+    <id>https://ctx.ist/blog/2026-02-03-the-attention-budget/</id>
+    <updated>2026-02-03T00:00:00Z</updated>
+    <summary>As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="attention mechanics"></category>
+    <category term="context engineering"></category>
+    <category term="progressive disclosure"></category>
+    <category term="ctx primitives"></category>
+    <category term="token budgets"></category>
+  </entry>
+  <entry>
+    <title>Refactoring with Intent: Human-Guided Sessions in AI Development</title>
+    <link href="https://ctx.ist/blog/2026-02-01-refactoring-with-intent/"></link>
+    <id>https://ctx.ist/blog/2026-02-01-refactoring-with-intent/</id>
+    <updated>2026-02-01T00:00:00Z</updated>
+    <summary>YOLO mode shipped 14 commands in a week.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="refactoring"></category>
+    <category term="code quality"></category>
+    <category term="documentation standards"></category>
+    <category term="module decomposition"></category>
+    <category term="YOLO versus intentional development"></category>
+  </entry>
+  <entry>
+    <title>ctx v0.2.0: The Archaeology Release</title>
+    <link href="https://ctx.ist/blog/2026-02-01-ctx-v0.2.0-the-archaeology-release/"></link>
+    <id>https://ctx.ist/blog/2026-02-01-ctx-v0.2.0-the-archaeology-release/</id>
+    <updated>2026-02-01T00:00:00Z</updated>
+    <summary>As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="session recall"></category>
+    <category term="journal system"></category>
+    <category term="structured entries"></category>
+    <category term="token budgets"></category>
+    <category term="meta-tools"></category>
+  </entry>
+  <entry>
+    <title>Building ctx Using ctx: A Meta-Experiment in AI-Assisted Development</title>
+    <link href="https://ctx.ist/blog/2026-01-27-building-ctx-using-ctx/"></link>
+    <id>https://ctx.ist/blog/2026-01-27-building-ctx-using-ctx/</id>
+    <updated>2026-01-27T00:00:00Z</updated>
+    <summary>As of `v0.4.0`, `ctx` consolidated sessions into the journal mechanism.</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="dogfooding"></category>
+    <category term="AI-assisted development"></category>
+    <category term="Ralph Loop"></category>
+    <category term="session persistence"></category>
+    <category term="architectural decisions"></category>
+  </entry>
+</feed>

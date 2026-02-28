@@ -54,41 +54,41 @@ Spec: `specs/rss-feed.md`. Read the spec before starting any P0.8 task.
 
 **Phase 1 — Types and scaffolding:**
 
-- [ ] P0.8.1: Create `internal/cli/site/` package with `site.go` parent command
+- [x] P0.8.1: Create `internal/cli/site/` package with `site.go` parent command
       — register `ctx site` as a Cobra command in bootstrap. Command should have
       no run function (parent only), short description, and long help text.
       DOD: `ctx site` prints help with "feed" listed as a subcommand. `ctx site --help`
       works. Package registered in `internal/bootstrap/bootstrap.go`.
-      #added:2026-02-28
+      #added:2026-02-28 #done:2026-02-28
 
-- [ ] P0.8.2: Create `internal/cli/site/atom.go` with Atom XML types — AtomFeed,
+- [x] P0.8.2: Create `internal/cli/site/atom.go` with Atom XML types — AtomFeed,
       AtomEntry, AtomLink, AtomAuthor, AtomCategory structs with xml tags per spec.
       DOD: Types compile. `xml.Marshal` of a hand-built AtomFeed produces valid
       Atom 1.0 XML matching the spec's example structure. Unit test confirms
-      round-trip. #added:2026-02-28
+      round-trip. #added:2026-02-28 #done:2026-02-28
 
 **Phase 2 — Blog scanner and feed generator:**
 
-- [ ] P0.8.3: Implement `scanBlogPosts()` in `internal/cli/site/feed.go` — scans
+- [x] P0.8.3: Implement `scanBlogPosts()` in `internal/cli/site/feed.go` — scans
       `docs/blog/*.md` for files matching `YYYY-MM-DD-*.md`, parses YAML frontmatter,
       extracts summary from first paragraph after `#` heading, applies draft gate
       (`reviewed_and_finalized: true`), returns `[]blogPost` and `feedReport`.
       DOD: Unit tests pass for: finalized posts included, drafts skipped, missing
       title/date skipped with warning, missing summary warns but includes, malformed
-      YAML skipped with warning, non-matching filenames ignored. #added:2026-02-28
+      YAML skipped with warning, non-matching filenames ignored. #added:2026-02-28 #done:2026-02-28
 
-- [ ] P0.8.4: Implement `generateAtom()` in `internal/cli/site/feed.go` — takes
+- [x] P0.8.4: Implement `generateAtom()` in `internal/cli/site/feed.go` — takes
       `[]blogPost` and config (base URL, output path), sorts by date descending,
       builds AtomFeed struct, marshals to indented XML with `<?xml?>` declaration,
       writes to output path (creating parent dirs if needed).
       DOD: Unit tests pass for: valid Atom output with correct entry count, sort
       order (newest first), empty blog produces valid empty feed, custom base URL
       reflected in all links and IDs. Output is idempotent (same input = same output).
-      #added:2026-02-28
+      #added:2026-02-28 #done:2026-02-28
 
 **Phase 3 — CLI wiring:**
 
-- [ ] P0.8.5: Implement `feedCmd()` in `internal/cli/site/feed.go` — Cobra command
+- [x] P0.8.5: Implement `feedCmd()` in `internal/cli/site/feed.go` — Cobra command
       with `--out` (`-o`, default `site/feed.xml`) and `--base-url` (default
       `https://ctx.ist`) flags. Calls `scanBlogPosts()` then `generateAtom()`,
       prints three-bucket report (included count, skipped with reasons, warnings).
@@ -96,31 +96,31 @@ Spec: `specs/rss-feed.md`. Read the spec before starting any P0.8 task.
       can't write output).
       DOD: `ctx site feed` generates `site/feed.xml` from real blog posts.
       `ctx site feed --out /tmp/test.xml --base-url https://example.com` works.
-      Output matches spec's example format. Report prints to stdout. #added:2026-02-28
+      Output matches spec's example format. Report prints to stdout. #added:2026-02-28 #done:2026-02-28
 
 **Phase 4 — Tests and integration:**
 
-- [ ] P0.8.6: Write full test suite in `internal/cli/site/feed_test.go` — cover
+- [x] P0.8.6: Write full test suite in `internal/cli/site/feed_test.go` — cover
       all 12 scenarios from spec: TestFeed_Basic, TestFeed_SkipsDrafts,
       TestFeed_MissingTitle, TestFeed_MissingDate, TestFeed_NoSummary,
       TestFeed_EmptyBlog, TestFeed_SortOrder, TestFeed_MalformedFrontmatter,
       TestFeed_Idempotent, TestFeed_Categories, TestFeed_CustomBaseURL,
       TestFeed_FilenameFilter. Use temp dirs with constructed blog entries.
       DOD: All 12 tests pass. `go test ./internal/cli/site/... -v` green.
-      #added:2026-02-28
+      #added:2026-02-28 #done:2026-02-28
 
-- [ ] P0.8.7: Add Makefile integration — add `site-feed` target that runs
+- [x] P0.8.7: Add Makefile integration — add `site-feed` target that runs
       `ctx site feed` after site build. Update `make site` (or equivalent) to
       include feed generation as a post-build step.
       DOD: `make site` produces `site/feed.xml`. Feed is valid XML (passes
-      `xmllint --noout site/feed.xml`). #added:2026-02-28
+      `xmllint --noout site/feed.xml`). #added:2026-02-28 #done:2026-02-28
 
-- [ ] P0.8.8: Verify end-to-end with real blog content — run against actual
+- [x] P0.8.8: Verify end-to-end with real blog content — run against actual
       `docs/blog/` posts, confirm correct entries included, drafts excluded,
       URLs resolve, feed validates.
       DOD: `site/feed.xml` committed with correct entries. Feed opened in a
       reader or validated online. `make lint` and `go test ./...` pass.
-      #added:2026-02-28
+      #added:2026-02-28 #done:2026-02-28
 
 - [ ] Install golangci-lint on the integration server #for-human #priority:medium #added:2026-02-23 #added:2026-02-23-170213
 
