@@ -8,7 +8,7 @@
 title: "The Dog Ate My Homework: Teaching AI Agents to Read Before They Write"
 date: 2026-02-25
 author: Jose Alekhinne
-reviewed_and_finalized: false
+reviewed_and_finalized: true
 topics:
   - hooks
   - agent behavior
