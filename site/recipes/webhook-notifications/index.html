@@ -1953,6 +1953,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#event-log-the-local-complement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log: The Local Complement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2049,6 +2060,8 @@
       
         
       
+        
+      
     
     
     
@@ -2114,6 +2127,36 @@
     
   
     Detecting and Fixing Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
   
 
     
@@ -2416,6 +2459,8 @@
       
         
       
+        
+      
     
     
     
@@ -2579,6 +2624,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/doctor/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Doctor
   
 
     
@@ -3427,6 +3502,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#event-log-the-local-complement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log: The Local Complement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3785,6 +3871,19 @@ the key is absent: Notifications silently do nothing.</p>
 For autonomous runs where worktree agents are opaque, monitor them from
 the terminal rather than relying on webhooks. Enrich journals and review
 results on the main branch after merging.</p>
+<h2 id="event-log-the-local-complement">Event Log: The Local Complement<a class="headerlink" href="#event-log-the-local-complement" title="Permanent link">&para;</a></h2>
+<p>Don't need a webhook but want diagnostic visibility? Enable <code>event_log: true</code>
+in <code>.ctxrc</code>. The event log writes the same payload as webhooks to a local
+JSONL file (<code>.context/state/events.jsonl</code>) that you can query without any
+external service:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">          </span><span class="c1"># recent hook activity</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
+</span></code></pre></div>
+<p>Webhooks and event logging are independent: you can use either, both, or
+neither. Webhooks give you push notifications and an external audit trail.
+The event log gives you local queryability and <code>ctx doctor</code> integration.</p>
+<p>See <a href="../troubleshooting/">Troubleshooting</a> for how they work together.</p>
+<hr />
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Fire-and-forget</strong>: Notifications never block. HTTP errors are silently

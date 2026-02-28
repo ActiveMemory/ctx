@@ -94,6 +94,9 @@
         <loc>https://ctx.ist/recipes/context-health/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/troubleshooting/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/claude-code-permissions/</loc>
       </url>
       <url>
@@ -125,6 +128,9 @@
       </url>
       <url>
         <loc>https://ctx.ist/cli/tools/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/cli/doctor/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/system/</loc>
