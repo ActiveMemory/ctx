@@ -14,7 +14,7 @@ import (
 	"encoding/json"
 )
 
-//go:embed *.md Makefile.ctx entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md tools/*.sh hooks/messages/*/*.txt
+//go:embed context/*.md project/* claude/CLAUDE.md entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md tools/*.sh hooks/messages/*/*.txt why/*.md
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -26,7 +26,7 @@ var FS embed.FS
 //   - []byte: Template content
 //   - error: Non-nil if the file is not found or read fails
 func Template(name string) ([]byte, error) {
-	return FS.ReadFile(name)
+	return FS.ReadFile("context/" + name)
 }
 
 // List returns all available template file names.
@@ -35,7 +35,7 @@ func Template(name string) ([]byte, error) {
 //   - []string: List of template filenames in the root templates directory
 //   - error: Non-nil if directory read fails
 func List() ([]string, error) {
-	entries, err := FS.ReadDir(".")
+	entries, err := FS.ReadDir("context")
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,34 @@ func SkillContent(name string) ([]byte, error) {
 //   - []byte: Makefile.ctx content
 //   - error: Non-nil if the file is not found or read fails
 func MakefileCtx() ([]byte, error) {
-	return FS.ReadFile("Makefile.ctx")
+	return FS.ReadFile("project/Makefile.ctx")
+}
+
+// ProjectFile reads a project-root file by name from the embedded filesystem.
+//
+// These files are deployed to the project root (not .context/) by dedicated
+// handlers during initialization.
+//
+// Parameters:
+//   - name: Filename (e.g., "IMPLEMENTATION_PLAN.md")
+//
+// Returns:
+//   - []byte: File content
+//   - error: Non-nil if the file is not found or read fails
+func ProjectFile(name string) ([]byte, error) {
+	return FS.ReadFile("project/" + name)
+}
+
+// ClaudeMd reads the CLAUDE.md template from the embedded filesystem.
+//
+// CLAUDE.md is deployed to the project root by a dedicated handler
+// during initialization, separate from the .context/ templates.
+//
+// Returns:
+//   - []byte: CLAUDE.md content
+//   - error: Non-nil if the file is not found or read fails
+func ClaudeMd() ([]byte, error) {
+	return FS.ReadFile("claude/CLAUDE.md")
 }
 
 // RalphTemplate reads a Ralph-mode template file by name.
@@ -227,6 +254,41 @@ func ListHookVariants(hook string) ([]string, error) {
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			names = append(names, entry.Name())
+		}
+	}
+	return names, nil
+}
+
+// WhyDoc reads a "why" document by name from the embedded filesystem.
+//
+// Parameters:
+//   - name: Document name (e.g., "manifesto", "about", "design-invariants")
+//
+// Returns:
+//   - []byte: Document content from why/
+//   - error: Non-nil if the file is not found or read fails
+func WhyDoc(name string) ([]byte, error) {
+	return FS.ReadFile("why/" + name + ".md")
+}
+
+// ListWhyDocs returns available "why" document names (without extension).
+//
+// Returns:
+//   - []string: List of document names in why/
+//   - error: Non-nil if directory read fails
+func ListWhyDocs() ([]string, error) {
+	entries, readErr := FS.ReadDir("why")
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			name := entry.Name()
+			if len(name) > 3 && name[len(name)-3:] == ".md" {
+				names = append(names, name[:len(name)-3])
+			}
 		}
 	}
 	return names, nil

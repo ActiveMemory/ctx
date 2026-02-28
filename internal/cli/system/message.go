@@ -66,6 +66,16 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 	return buf.String()
 }
 
+// boxBottom is the standard bottom border for hook message boxes.
+const boxBottom = "└──────────────────────────────────────────────────"
+
+// variantBoth is the template variant name used when both ceremony
+// conditions are unmet (e.g. neither remember nor wrapup done).
+const variantBoth = "both"
+
+// sessionUnknown is the fallback session ID used when input lacks one.
+const sessionUnknown = "unknown"
+
 // boxLines wraps each line of content with the │ box-drawing prefix.
 // Trailing newlines on content are trimmed before splitting to avoid
 // an empty trailing box line.

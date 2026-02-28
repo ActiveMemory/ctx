@@ -37,6 +37,9 @@ Subcommands:
 
 Plumbing subcommands (used by skills and automation):
   mark-journal         Update journal processing state
+  pause                Pause context hooks for this session
+  resume               Resume context hooks for this session
+  events               Query the local hook event log
 
 Hook subcommands (Claude Code plugin — safe to run manually):
   context-load-gate           Context file read directive (PreToolUse)
@@ -54,7 +57,8 @@ Hook subcommands (Claude Code plugin — safe to run manually):
   check-backup-age            Backup staleness check (project-local)
   post-commit                 Post-commit context capture nudge
   cleanup-tmp                 Remove stale temp files
-  qa-reminder                 QA reminder before completion`,
+  qa-reminder                 QA reminder before completion
+  specs-nudge                 Plan-to-specs directory nudge (PreToolUse)`,
 	}
 
 	cmd.AddCommand(
@@ -62,6 +66,9 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		bootstrapCmd(),
 		messageCmd(),
 		markJournalCmd(),
+		pauseCmd(),
+		resumeCmd(),
+		eventsCmd(),
 		contextLoadGateCmd(),
 		checkContextSizeCmd(),
 		checkPersistenceCmd(),
@@ -78,6 +85,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		checkMapStalenessCmd(),
 		blockDangerousCommandsCmd(),
 		checkBackupAgeCmd(),
+		specsNudgeCmd(),
 	)
 
 	return cmd

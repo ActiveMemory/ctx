@@ -6,3 +6,4 @@ notify:
     - nudge   # VERBATIM relay hooks fired a nudge to the agent
     - relay   # All hook output (verbose — includes nudges plus)
   key_rotation_days: 90  # Days before encryption key rotation nudge
+event_log: true

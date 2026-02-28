@@ -24,18 +24,29 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// Payload is the JSON body sent to the webhook endpoint.
-type Payload struct {
-	Event     string `json:"event"`
-	Message   string `json:"message"`
-	Detail    string `json:"detail,omitempty"`
-	SessionID string `json:"session_id,omitempty"`
-	Timestamp string `json:"timestamp"`
-	Project   string `json:"project"`
+// TemplateRef identifies the hook template and variables that produced a
+// notification, allowing receivers to filter, re-render, or aggregate
+// without parsing opaque rendered text.
+type TemplateRef struct {
+	Hook      string         `json:"hook"`
+	Variant   string         `json:"variant"`
+	Variables map[string]any `json:"variables,omitempty"`
 }
 
-// maxDetailLen is the truncation limit for the Detail field.
-const maxDetailLen = 1000
+// NewTemplateRef constructs a TemplateRef. Nil variables are omitted from JSON.
+func NewTemplateRef(hook, variant string, vars map[string]any) *TemplateRef {
+	return &TemplateRef{Hook: hook, Variant: variant, Variables: vars}
+}
+
+// Payload is the JSON body sent to the webhook endpoint.
+type Payload struct {
+	Event     string       `json:"event"`
+	Message   string       `json:"message"`
+	Detail    *TemplateRef `json:"detail,omitempty"`
+	SessionID string       `json:"session_id,omitempty"`
+	Timestamp string       `json:"timestamp"`
+	Project   string       `json:"project"`
+}
 
 // LoadWebhook reads and decrypts the webhook URL from .context/.notify.enc.
 //
@@ -124,8 +135,8 @@ func EventAllowed(event string, allowed []string) bool {
 //   - event: notification category (e.g. "relay", "nudge")
 //   - message: short human-readable summary
 //   - sessionID: Claude Code session ID (may be empty)
-//   - detail: full hook payload sent to the agent (truncated to 1000 chars)
-func Send(event, message, sessionID, detail string) error {
+//   - detail: structured template reference (nil omits the field)
+func Send(event, message, sessionID string, detail *TemplateRef) error {
 	if !EventAllowed(event, rc.NotifyEvents()) {
 		return nil
 	}
@@ -138,10 +149,6 @@ func Send(event, message, sessionID, detail string) error {
 	project := "unknown"
 	if cwd, cwdErr := os.Getwd(); cwdErr == nil {
 		project = filepath.Base(cwd)
-	}
-
-	if len(detail) > maxDetailLen {
-		detail = detail[:maxDetailLen] + "…[truncated]"
 	}
 
 	payload := Payload{

@@ -91,6 +91,16 @@ Date-gate reminders to surface only after a specific date.
 
 ---
 
+### [Pausing Context Hooks](session-pause.md)
+
+Silence all nudge hooks for a **quick task** that doesn't need ceremony
+overhead. Session-scoped — other sessions are unaffected. Security
+hooks still fire.
+
+**Uses**: `ctx pause`, `ctx resume`, `/ctx-pause`, `/ctx-resume`
+
+---
+
 ## Knowledge & Tasks
 
 ### [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md)
@@ -195,6 +205,16 @@ claims match agent instructions.
 **Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
 `/ctx-drift`, `/ctx-alignment-audit`, `/ctx-status`,
 `/ctx-prompt-audit`
+
+---
+
+### [Troubleshooting](troubleshooting.md)
+
+Diagnose hook failures, noisy nudges, stale context, and configuration
+issues. Start with `ctx doctor` for a structural health check, then
+use `/ctx-doctor` for agent-driven analysis of event patterns.
+
+**Uses**: `ctx doctor`, `ctx system events`, `/ctx-doctor`
 
 ---
 

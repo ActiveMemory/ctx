@@ -57,6 +57,8 @@ All commands support these flags:
 | [`ctx pad`](tools.md#ctx-pad)              | Encrypted scratchpad for sensitive one-liners             |
 | [`ctx remind`](tools.md#ctx-remind)        | Session-scoped reminders that surface at session start    |
 | [`ctx completion`](tools.md#ctx-completion) | Generate shell autocompletion scripts                   |
+| [`ctx why`](tools.md#ctx-why)              | Read the philosophy behind ctx                           |
+| [`ctx doctor`](doctor.md#ctx-doctor)       | Structural health check (hooks, drift, config)           |
 | [`ctx system`](system.md#ctx-system)       | System diagnostics and hook commands                     |
 
 ---
@@ -95,6 +97,7 @@ auto_archive: true                   # Auto-archive old items
 archive_after_days: 7                # Days before archiving tasks
 scratchpad_encrypt: true             # Encrypt scratchpad (default: true)
 allow_outside_cwd: false             # Skip boundary check (default: false)
+event_log: false                     # Enable local hook event logging
 entry_count_learnings: 30            # Drift warning threshold (0 = disable)
 entry_count_decisions: 20            # Drift warning threshold (0 = disable)
 convention_line_count: 200           # Line count warning for CONVENTIONS.md (0 = disable)
@@ -115,6 +118,7 @@ notify:                              # Webhook notification settings
 | `archive_after_days`            | `int`      | `7`          | Days before completed tasks are archived             |
 | `scratchpad_encrypt`            | `bool`     | `true`       | Encrypt scratchpad with AES-256-GCM                  |
 | `allow_outside_cwd`             | `bool`     | `false`      | Skip boundary check for external context dirs        |
+| `event_log`                     | `bool`     | `false`      | Enable local hook event logging to `.context/state/events.jsonl` |
 | `entry_count_learnings`         | `int`      | `30`         | Drift warning when `LEARNINGS.md` exceeds this count   |
 | `entry_count_decisions`         | `int`      | `20`         | Drift warning when `DECISIONS.md` exceeds this count   |
 | `convention_line_count`         | `int`      | `200`        | Line count warning for `CONVENTIONS.md`                |

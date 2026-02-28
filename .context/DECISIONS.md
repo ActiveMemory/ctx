@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-02-27 | Context window detection: JSONL-first fallback order |
 | 2026-02-27 | Context injection architecture v2 (consolidated) |
 | 2026-02-26 | .context/state/ directory for project-scoped runtime state |
 | 2026-02-26 | Hook and notification design (consolidated) |
@@ -12,6 +13,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-02-27-230718] Context window detection: JSONL-first fallback order
+
+**Status**: Accepted
+
+**Context**: check-context-size defaults to 200k but user runs 1M-context model, causing false 110% warnings. JSONL contains the model name which maps to actual window size.
+
+**Decision**: Context window detection: JSONL-first fallback order
+
+**Rationale**: effective_window = detect_from_jsonl(model) ?? ctxrc.context_window ?? 200_000. JSONL is ground truth (reflects actual model in use); ctxrc is fallback for first-hook-of-session or unknown models; 200k is safe last resort. Having ctxrc override JSONL would artificially restrict the check when a user forgets to update their config after switching models.
+
+**Consequences**: Most users get correct window automatically. ctxrc context_window becomes a fallback, not an override. Task exists for implementation.
+
+---
 
 ## [2026-02-27-002830] Context injection architecture v2 (consolidated)
 

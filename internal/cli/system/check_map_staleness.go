@@ -18,6 +18,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -66,6 +67,14 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	input := readInput(stdin)
+
+	sessionID := input.SessionID
+	if sessionID == "" {
+		sessionID = sessionUnknown
+	}
+	if paused(sessionID) > 0 {
+		return nil
+	}
 	markerPath := filepath.Join(secureTempDir(), "check-map-staleness")
 	if isDailyThrottled(markerPath) {
 		return nil
@@ -128,8 +137,11 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
 	cmd.Println(msg)
 
-	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", input.SessionID, msg)
-	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", input.SessionID, msg)
+	ref := notify.NewTemplateRef("check-map-staleness", "stale",
+		map[string]any{"LastRefreshDate": dateStr, "ModuleCount": moduleCommits})
+	_ = notify.Send("nudge", "check-map-staleness: Architecture map stale", input.SessionID, ref)
+	_ = notify.Send("relay", "check-map-staleness: Architecture map stale", input.SessionID, ref)
+	eventlog.Append("relay", "check-map-staleness: Architecture map stale", input.SessionID, ref)
 
 	touchFile(markerPath)
 

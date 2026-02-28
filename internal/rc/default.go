@@ -29,5 +29,9 @@ const DefaultConventionLineCount = 200
 // check-context-size to pick up. 0 disables the check.
 const DefaultInjectionTokenWarn = 15000
 
+// DefaultContextWindow is the default context window size in tokens.
+// Matches Claude Opus/Sonnet (200k). Override via `context_window` in .ctxrc.
+const DefaultContextWindow = 200000
+
 // DefaultKeyRotationDays is the number of days before a key rotation nudge.
 const DefaultKeyRotationDays = 90

@@ -1,0 +1,3 @@
+⚠ Context window is {{.Percentage}}% full (~{{.TokenCount}} tokens).
+The session will lose older context soon. Consider wrapping up
+or starting a fresh session with /ctx-wrap-up.
