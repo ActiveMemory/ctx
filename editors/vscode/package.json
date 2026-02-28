@@ -84,6 +84,30 @@
           {
             "name": "sync",
             "description": "Reconcile context with codebase"
+          },
+          {
+            "name": "complete",
+            "description": "Mark a task as completed"
+          },
+          {
+            "name": "remind",
+            "description": "Manage session-scoped reminders"
+          },
+          {
+            "name": "tasks",
+            "description": "Archive or snapshot tasks"
+          },
+          {
+            "name": "pad",
+            "description": "Encrypted scratchpad for sensitive notes"
+          },
+          {
+            "name": "notify",
+            "description": "Send webhook notifications"
+          },
+          {
+            "name": "system",
+            "description": "System diagnostics and bootstrap"
           }
         ],
         "disambiguation": [
