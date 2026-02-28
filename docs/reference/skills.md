@@ -68,6 +68,7 @@ opinionated behavior on top.
 | [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents               | user-invocable |
 | [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                   | user-invocable |
 | [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                        | user-invocable |
+| [`/ctx-doctor`](#ctx-doctor)                         | Troubleshoot ctx behavior with health checks and event analysis | user-invocable |
 | [`/ctx-pause`](#ctx-pause)                           | Pause context hooks for this session                   | user-invocable |
 | [`/ctx-resume`](#ctx-resume)                         | Resume context hooks after a pause                     | user-invocable |
 
@@ -398,6 +399,29 @@ positive observations.
 
 **See also**:
 [Detecting and Fixing Drift](../recipes/context-health.md)
+
+---
+
+### `/ctx-doctor`
+
+Troubleshoot ctx behavior. Runs structural health checks via `ctx doctor`,
+analyzes event log patterns via `ctx system events`, and presents findings
+with suggested actions. The CLI provides the structural baseline; the agent
+adds semantic analysis of event patterns and correlations.
+
+**Wraps**: `ctx doctor --json`, `ctx system events --json --last 100`,
+`ctx remind list`, `ctx system message list`, reads `.ctxrc`
+
+**Trigger phrases**: "diagnose", "troubleshoot", "doctor", "health check",
+"why didn't my hook fire?", "hooks seem broken", "something seems off"
+
+**Graceful degradation**: If `event_log` is not enabled, the skill still
+works but with reduced capability. It runs structural checks and notes:
+"Enable `event_log: true` in `.ctxrc` for hook-level diagnostics."
+
+**See also**: [Troubleshooting](../recipes/troubleshooting.md),
+[`ctx doctor` CLI](../cli/doctor.md#ctx-doctor),
+[`ctx system events` CLI](../cli/system.md#ctx-system-events)
 
 ---
 

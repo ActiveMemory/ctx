@@ -72,6 +72,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # archive_after_days: 7
 # scratchpad_encrypt: true
 # allow_outside_cwd: false
+# event_log: false
 # entry_count_learnings: 30
 # entry_count_decisions: 20
 # convention_line_count: 200
@@ -106,6 +107,7 @@ A commented `.ctxrc` showing all options and their defaults:
 | `archive_after_days`    | `int`      | `7`            | Days before completed tasks are archived                |
 | `scratchpad_encrypt`    | `bool`     | `true`         | Encrypt scratchpad with AES-256-GCM                     |
 | `allow_outside_cwd`     | `bool`     | `false`        | Allow context directory outside the current working directory |
+| `event_log`             | `bool`     | `false`        | Enable local hook event logging to `.context/state/events.jsonl` |
 | `entry_count_learnings` | `int`      | `30`           | Drift warning when `LEARNINGS.md` exceeds this entry count (0 = disable) |
 | `entry_count_decisions` | `int`      | `20`           | Drift warning when `DECISIONS.md` exceeds this entry count (0 = disable) |
 | `convention_line_count` | `int`      | `200`          | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable) |

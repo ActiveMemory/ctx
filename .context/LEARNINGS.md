@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-27 | Doctor token_budget vs context_window confusion |
+| 2026-02-27 | Drift detector false positives on illustrative code examples |
 | 2026-02-27 | Context injection and compliance strategy (consolidated) |
 | 2026-02-26 | Webhook silence after ctxrc profile swap is the most common notify debugging red herring |
 | 2026-02-26 | Documentation drift and auditing (consolidated) |
@@ -22,6 +24,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-27-230741] Doctor token_budget vs context_window confusion
+
+**Context**: ctx doctor reported context size against token_budget (8k) instead of context_window (200k), making 22k tokens look alarming.
+
+**Lesson**: token_budget (ctx agent output trim target) and context_window (model capacity) serve different purposes. Health checks about context fitting should use context_window, with warning threshold proportional (e.g., 20% of window).
+
+**Application**: Doctor now uses rc.ContextWindow() with 20% threshold and shows per-file token breakdown for actionable insight into which files are heavy.
+
+---
+
+## [2026-02-27-230738] Drift detector false positives on illustrative code examples
+
+**Context**: ctx drift flagged 23 warnings for backtick-quoted paths in CONVENTIONS.md and ARCHITECTURE.md that were prose examples (loader.go, session/run.go, sync.Once), not real file references.
+
+**Lesson**: Path reference detection should verify the top-level directory exists on disk before flagging. Bare filenames and paths under non-existent directories are almost always examples in documentation.
+
+**Application**: The fix checks os.Stat(topDir) on the first path component. Future drift checks on documentation-heavy files should use the same heuristic.
 
 ---
 

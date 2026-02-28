@@ -165,13 +165,19 @@ func TestCheckPathReferences(t *testing.T) {
 		}
 	}(origDir)
 
+	// Create the top-level directory so the path passes the
+	// "top dir exists" filter but the full file path is still dead.
+	if mkErr := os.Mkdir(filepath.Join(tmpDir, "internal"), 0o750); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+
 	// Create a test context with a dead path reference
 	ctx := &context.Context{
 		Dir: ".context",
 		Files: []context.FileInfo{
 			{
 				Name:    "ARCHITECTURE.md",
-				Content: []byte("# Architecture\n\nSee `nonexistent.go` for details.\n"),
+				Content: []byte("# Architecture\n\nSee `internal/nonexistent.go` for details.\n"),
 			},
 		},
 	}
@@ -191,7 +197,7 @@ func TestCheckPathReferences(t *testing.T) {
 		if report.Warnings[0].Type != "dead_path" {
 			t.Errorf("expected warning type 'dead_path', got %q", report.Warnings[0].Type)
 		}
-		if report.Warnings[0].Path != "nonexistent.go" {
+		if report.Warnings[0].Path != "internal/nonexistent.go" {
 			t.Errorf("expected path 'nonexistent.go', got %q", report.Warnings[0].Path)
 		}
 	}

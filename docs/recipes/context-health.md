@@ -199,6 +199,23 @@ To avoid confusion with `/ctx-prompt-audit`:
 
 ---
 
+## `ctx doctor`: The Superset Check
+
+`ctx doctor` combines drift detection with hook auditing, configuration checks,
+event logging status, and token size reporting in a single command. If you want
+one command that covers structural health, hooks, and state:
+
+```bash
+ctx doctor          # everything in one pass
+ctx doctor --json   # machine-readable for scripting
+```
+
+For agent-driven diagnosis that adds semantic analysis on top of the structural
+checks, use `/ctx-doctor`. See the [Troubleshooting](troubleshooting.md) recipe
+for the full workflow.
+
+---
+
 ## CLI Reference
 
 The conversational approach above uses CLI commands under the hood. When you
@@ -375,8 +392,10 @@ Recommended permission defaults and maintenance workflow for Claude Code.
 
 ## See Also
 
+* [Troubleshooting](troubleshooting.md): full diagnostic workflow using
+  `ctx doctor`, event logs, and `/ctx-doctor`
 * [Tracking Work Across Sessions](task-management.md): task lifecycle and archival
-* [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md): 
+* [Persisting Decisions, Learnings, and Conventions](knowledge-capture.md):
   keeping knowledge files current
 * [The Complete Session](session-lifecycle.md): where maintenance fits in the daily workflow
 * [CLI Reference](../cli/index.md): full flag documentation for all commands

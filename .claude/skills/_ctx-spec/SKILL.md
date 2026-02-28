@@ -3,7 +3,7 @@ name: _ctx-spec
 description: "Scaffold a feature spec from the project template. Use when planning a new feature, writing a design document, or when a task references a missing spec."
 ---
 
-Scaffold a new spec from `specs/spec-template.md` and walk through
+Scaffold a new spec from `specs/tpl/spec-template.md` and walk through
 each section with the user to produce a complete design document.
 
 ## When to Use
@@ -42,7 +42,7 @@ If the file already exists, warn and offer to review it instead.
 
 ### 2. Read the Template
 
-Read `specs/spec-template.md` to get the current structure.
+Read `specs/tpl/spec-template.md` to get the current structure.
 
 ### 3. Walk Through Sections
 

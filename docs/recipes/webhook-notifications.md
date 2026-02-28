@@ -185,6 +185,26 @@ For autonomous runs where worktree agents are opaque, monitor them from
 the terminal rather than relying on webhooks. Enrich journals and review
 results on the main branch after merging.
 
+## Event Log: The Local Complement
+
+Don't need a webhook but want diagnostic visibility? Enable `event_log: true`
+in `.ctxrc`. The event log writes the same payload as webhooks to a local
+JSONL file (`.context/state/events.jsonl`) that you can query without any
+external service:
+
+```bash
+ctx system events --last 20          # recent hook activity
+ctx system events --hook qa-reminder # filter by hook
+```
+
+Webhooks and event logging are independent: you can use either, both, or
+neither. Webhooks give you push notifications and an external audit trail.
+The event log gives you local queryability and `ctx doctor` integration.
+
+See [Troubleshooting](troubleshooting.md) for how they work together.
+
+---
+
 ## Tips
 
 * **Fire-and-forget**: Notifications never block. HTTP errors are silently
