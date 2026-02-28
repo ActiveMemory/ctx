@@ -18,7 +18,7 @@
         <link rel="prev" href="../system-hooks-audit/">
       
       
-        <link rel="next" href="../claude-code-permissions/">
+        <link rel="next" href="../troubleshooting/">
       
       
         
@@ -1810,6 +1810,8 @@
       
         
       
+        
+      
     
     
     
@@ -2031,6 +2033,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-doctor-the-superset-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx doctor: The Superset Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cli-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2161,6 +2174,36 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2455,6 +2498,8 @@
       
         
       
+        
+      
     
     
     
@@ -2618,6 +2663,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/doctor/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Doctor
   
 
     
@@ -3411,6 +3486,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-doctor-the-superset-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx doctor: The Superset Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cli-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3816,30 +3902,41 @@ checks instruction file health (<em>token budgets, bloat signals</em>).</p>
   token-efficient for the model.</li>
 </ul>
 <hr />
+<h2 id="ctx-doctor-the-superset-check"><code>ctx doctor</code>: The Superset Check<a class="headerlink" href="#ctx-doctor-the-superset-check" title="Permanent link">&para;</a></h2>
+<p><code>ctx doctor</code> combines drift detection with hook auditing, configuration checks,
+event logging status, and token size reporting in a single command. If you want
+one command that covers structural health, hooks, and state:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>doctor<span class="w">          </span><span class="c1"># everything in one pass</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w">   </span><span class="c1"># machine-readable for scripting</span>
+</span></code></pre></div>
+<p>For agent-driven diagnosis that adds semantic analysis on top of the structural
+checks, use <code>/ctx-doctor</code>. See the <a href="../troubleshooting/">Troubleshooting</a> recipe
+for the full workflow.</p>
+<hr />
 <h2 id="cli-reference">CLI Reference<a class="headerlink" href="#cli-reference" title="Permanent link">&para;</a></h2>
 <p>The conversational approach above uses CLI commands under the hood. When you
 need direct control, use the commands directly.</p>
 <h3 id="ctx-drift"><code>ctx drift</code><a class="headerlink" href="#ctx-drift" title="Permanent link">&para;</a></h3>
 <p>Scan context files for structural problems:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>drift
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>drift
 </span></code></pre></div>
 <p>Sample output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Drift Report
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>============
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Warnings (3):
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  ARCHITECTURE.md:14  path &quot;internal/api/router.go&quot; does not exist
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  ARCHITECTURE.md:28  path &quot;pkg/auth/&quot; directory is empty
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  CONVENTIONS.md:9    path &quot;internal/handlers/&quot; not found
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Violations (1):
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  TASKS.md            31 completed tasks (recommend archival)
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Staleness:
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  DECISIONS.md        last modified 45 days ago
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>  LEARNINGS.md        last modified 32 days ago
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>Exit code: 1 (warnings found)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Drift Report
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>============
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Warnings (3):
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  ARCHITECTURE.md:14  path &quot;internal/api/router.go&quot; does not exist
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  ARCHITECTURE.md:28  path &quot;pkg/auth/&quot; directory is empty
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  CONVENTIONS.md:9    path &quot;internal/handlers/&quot; not found
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Violations (1):
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  TASKS.md            31 completed tasks (recommend archival)
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Staleness:
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  DECISIONS.md        last modified 45 days ago
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  LEARNINGS.md        last modified 32 days ago
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>Exit code: 1 (warnings found)
 </span></code></pre></div>
 <table>
 <thead>
@@ -3869,28 +3966,28 @@ need direct control, use the commands directly.</p>
 </table>
 <p>Exit codes: <code>0</code> equals clean, <code>1</code> equals warnings, <code>3</code> equals violations.</p>
 <p>For CI integration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.warnings | length&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.warnings | length&#39;</span>
 </span></code></pre></div>
 <h3 id="ctx-drift-fix"><code>ctx drift --fix</code><a class="headerlink" href="#ctx-drift-fix" title="Permanent link">&para;</a></h3>
 <p>Auto-fix mechanical issues:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix
 </span></code></pre></div>
 <p>This handles removing dead path references, updating unambiguous renames, 
 clearing empty sections. Issues requiring judgment are flagged but left for you.</p>
 <p>Run <code>ctx drift</code> again afterward to confirm what remains.</p>
 <h3 id="ctx-sync"><code>ctx sync</code><a class="headerlink" href="#ctx-sync" title="Permanent link">&para;</a></h3>
 <p>After a refactor, reconcile context with the actual codebase structure:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w">   </span><span class="c1"># preview first</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>sync<span class="w">             </span><span class="c1"># apply</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w">   </span><span class="c1"># preview first</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>sync<span class="w">             </span><span class="c1"># apply</span>
 </span></code></pre></div>
 <p><code>ctx sync</code> scans for <strong>structural changes</strong>, compares with <code>ARCHITECTURE.md</code>, 
 checks for new dependencies worth documenting, and identifies context referring 
 to code that no longer exists.</p>
 <h3 id="ctx-compact"><code>ctx compact</code><a class="headerlink" href="#ctx-compact" title="Permanent link">&para;</a></h3>
 <p>Consolidate completed tasks and clean up empty sections:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>compact<span class="w">            </span><span class="c1"># move completed tasks to Completed section,</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">                       </span><span class="c1"># remove empty sections</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">  </span><span class="c1"># also archive old tasks to .context/archive/</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>compact<span class="w">            </span><span class="c1"># move completed tasks to Completed section,</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">                       </span><span class="c1"># remove empty sections</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">  </span><span class="c1"># also archive old tasks to .context/archive/</span>
 </span></code></pre></div>
 <ul>
 <li>Tasks: moves completed items (with all subtasks done) into the Completed
@@ -3902,7 +3999,7 @@ to code that no longer exists.</p>
 <p>Without <code>--archive</code>, nothing is deleted — tasks are reorganized in place.</p>
 <h3 id="ctx-status"><code>ctx status</code><a class="headerlink" href="#ctx-status" title="Permanent link">&para;</a></h3>
 <p>Quick health overview:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>status<span class="w"> </span>--verbose
 </span></code></pre></div>
 <p>Shows file counts, token estimates, modification times, and drift warnings in a
 single glance.</p>
@@ -3914,22 +4011,22 @@ single glance.</p>
 <li><code>/ctx-prompt-audit</code>: are our context files readable, compact, and efficient?</li>
 </ul>
 <p>Run them inside your AI assistant:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>/ctx-alignment-audit
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>/ctx-prompt-audit
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/ctx-alignment-audit
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>/ctx-prompt-audit
 </span></code></pre></div>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>Conversational approach (recommended):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Is our context clean?  -&gt; agent runs structural plus semantic checks
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Fix what you can       -&gt; agent auto-fixes and proposes edits
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Archive the done tasks -&gt; agent runs ctx compact --archive
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>How&#39;s token usage?     -&gt; agent checks ctx status
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Is our context clean?  -&gt; agent runs structural plus semantic checks
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Fix what you can       -&gt; agent auto-fixes and proposes edits
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Archive the done tasks -&gt; agent runs ctx compact --archive
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>How&#39;s token usage?     -&gt; agent checks ctx status
 </span></code></pre></div>
 <p>CLI approach (<em>for CI, scripts, or direct control</em>):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># 2. Auto-fix the easy ones</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># 3. Reconcile after refactors</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># 4. Archive old completed tasks</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># 5. Verify</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>drift<span class="w">                      </span><span class="c1"># 1. Detect problems</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ctx<span class="w"> </span>drift<span class="w"> </span>--fix<span class="w">                </span><span class="c1"># 2. Auto-fix the easy ones</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>ctx<span class="w"> </span>sync<span class="w"> </span>--dry-run<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ctx<span class="w"> </span>sync<span class="w"> </span><span class="c1"># 3. Reconcile after refactors</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>ctx<span class="w"> </span>compact<span class="w"> </span>--archive<span class="w">          </span><span class="c1"># 4. Archive old completed tasks</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>ctx<span class="w"> </span>status<span class="w">                     </span><span class="c1"># 5. Verify</span>
 </span></code></pre></div>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <p>Agents cross-reference context files with source code during normal work. When
@@ -3958,8 +4055,10 @@ cluttering active context.</p>
 Recommended permission defaults and maintenance workflow for Claude Code.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../troubleshooting/">Troubleshooting</a>: full diagnostic workflow using
+  <code>ctx doctor</code>, event logs, and <code>/ctx-doctor</code></li>
 <li><a href="../task-management/">Tracking Work Across Sessions</a>: task lifecycle and archival</li>
-<li><a href="../knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a>: 
+<li><a href="../knowledge-capture/">Persisting Decisions, Learnings, and Conventions</a>:
   keeping knowledge files current</li>
 <li><a href="../session-lifecycle/">The Complete Session</a>: where maintenance fits in the daily workflow</li>
 <li><a href="../../cli/">CLI Reference</a>: full flag documentation for all commands</li>
@@ -4024,13 +4123,13 @@ Recommended permission defaults and maintenance workflow for Claude Code.</p>
         
         
           
-          <a href="../claude-code-permissions/" class="md-footer__link md-footer__link--next" aria-label="Next: Claude Code Permission Hygiene">
+          <a href="../troubleshooting/" class="md-footer__link md-footer__link--next" aria-label="Next: Troubleshooting">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Claude Code Permission Hygiene
+                Troubleshooting
               </div>
             </div>
             <div class="md-footer__button md-icon">

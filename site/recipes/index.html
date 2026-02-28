@@ -1783,6 +1783,8 @@
       
         
       
+        
+      
     
     
     
@@ -1845,6 +1847,36 @@
     
   
     Detecting and Fixing Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
   
 
     
@@ -2144,6 +2176,8 @@
       
         
       
+        
+      
     
     
     
@@ -2307,6 +2341,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/doctor/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Doctor
   
 
     
@@ -3262,6 +3326,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#claude-code-permission-hygiene" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3582,12 @@ claims match agent instructions.</p>
 <p><strong>Uses</strong>: <code>ctx drift</code>, <code>ctx sync</code>, <code>ctx compact</code>, <code>ctx status</code>,
 <code>/ctx-drift</code>, <code>/ctx-alignment-audit</code>, <code>/ctx-status</code>,
 <code>/ctx-prompt-audit</code></p>
+<hr />
+<h3 id="troubleshooting"><a href="troubleshooting/">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
+<p>Diagnose hook failures, noisy nudges, stale context, and configuration
+issues. Start with <code>ctx doctor</code> for a structural health check, then
+use <code>/ctx-doctor</code> for agent-driven analysis of event patterns.</p>
+<p><strong>Uses</strong>: <code>ctx doctor</code>, <code>ctx system events</code>, <code>/ctx-doctor</code></p>
 <hr />
 <h3 id="claude-code-permission-hygiene"><a href="claude-code-permissions/">Claude Code Permission Hygiene</a><a class="headerlink" href="#claude-code-permission-hygiene" title="Permanent link">&para;</a></h3>
 <p>Keep <code>.claude/settings.local.json</code> clean: recommended <strong>safe defaults</strong>,

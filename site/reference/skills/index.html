@@ -1789,6 +1789,8 @@
       
         
       
+        
+      
     
     
     
@@ -1851,6 +1853,36 @@
     
   
     Detecting and Fixing Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/troubleshooting/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
   
 
     
@@ -2150,6 +2182,8 @@
       
         
       
+        
+      
     
     
     
@@ -2313,6 +2347,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/doctor/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Doctor
   
 
     
@@ -2912,6 +2976,17 @@
     <span class="md-ellipsis">
       
         /ctx-prompt-audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx-doctor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-doctor
       
     </span>
   </a>
@@ -3945,6 +4020,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-doctor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-doctor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#check-links" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4342,6 +4428,11 @@ to invoke the relevant skills directly.</p>
 <td>user-invocable</td>
 </tr>
 <tr>
+<td><a href="#ctx-doctor"><code>/ctx-doctor</code></a></td>
+<td>Troubleshoot ctx behavior with health checks and event analysis</td>
+<td>user-invocable</td>
+</tr>
+<tr>
 <td><a href="#ctx-pause"><code>/ctx-pause</code></a></td>
 <td>Pause context hooks for this session</td>
 <td>user-invocable</td>
@@ -4556,6 +4647,22 @@ positive observations.</p>
 <p><strong>Wraps</strong>: reads <code>.context/journal/</code> entries</p>
 <p><strong>See also</strong>:
 <a href="../../recipes/context-health/">Detecting and Fixing Drift</a></p>
+<hr />
+<h3 id="ctx-doctor"><code>/ctx-doctor</code><a class="headerlink" href="#ctx-doctor" title="Permanent link">&para;</a></h3>
+<p>Troubleshoot ctx behavior. Runs structural health checks via <code>ctx doctor</code>,
+analyzes event log patterns via <code>ctx system events</code>, and presents findings
+with suggested actions. The CLI provides the structural baseline; the agent
+adds semantic analysis of event patterns and correlations.</p>
+<p><strong>Wraps</strong>: <code>ctx doctor --json</code>, <code>ctx system events --json --last 100</code>,
+<code>ctx remind list</code>, <code>ctx system message list</code>, reads <code>.ctxrc</code></p>
+<p><strong>Trigger phrases</strong>: "diagnose", "troubleshoot", "doctor", "health check",
+"why didn't my hook fire?", "hooks seem broken", "something seems off"</p>
+<p><strong>Graceful degradation</strong>: If <code>event_log</code> is not enabled, the skill still
+works but with reduced capability. It runs structural checks and notes:
+"Enable <code>event_log: true</code> in <code>.ctxrc</code> for hook-level diagnostics."</p>
+<p><strong>See also</strong>: <a href="../../recipes/troubleshooting/">Troubleshooting</a>,
+<a href="../../cli/doctor/#ctx-doctor"><code>ctx doctor</code> CLI</a>,
+<a href="../../cli/system/#ctx-system-events"><code>ctx system events</code> CLI</a></p>
 <hr />
 <h3 id="check-links"><code>/check-links</code><a class="headerlink" href="#check-links" title="Permanent link">&para;</a></h3>
 <p>Scan all markdown files under <code>docs/</code> for broken links. Two passes:
