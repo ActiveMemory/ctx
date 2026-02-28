@@ -948,7 +948,7 @@ and Claude Code's 30-day transcript retention limit
 [^2]: S. McIntosh et al., *"The Impact of Build System Evolution on Software Quality"*, ICSE, 2015. <https://doi.org/10.1109/ICSE.2015.70>
 [^3]: C. Manning, P. Raghavan, H. Schütze, *Introduction to Information Retrieval*, Cambridge University Press, 2008. <https://nlp.stanford.edu/IR-book/>
 [^4]: M. Nygard, *"Documenting Architecture Decisions"*, Cognitect Blog, 2011. <https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions>
-[^5]: L. Torvalds et al., *Git Internals — Git Objects* (content-addressed storage concepts). <https://git-scm.com/book/en/v2/Git-Internals-Git-Objects>
+[^5]: L. Torvalds et al., *Git Internals - Git Objects* (content-addressed storage concepts). <https://git-scm.com/book/en/v2/Git-Internals-Git-Objects>
 [^6]: Kief Morris, *Infrastructure as Code*, O'Reilly, 2016.
 [^7]: J. Kreps, *"The Log: What every software engineer should know about real-time data's unifying abstraction"*, 2013. <https://engineering.linkedin.com/distributed-systems/log>
 [^8]: P. Hunt et al., *"ZooKeeper: Wait-free coordination for Internet-scale systems"*, USENIX ATC, 2010. <https://www.usenix.org/legacy/event/atc10/tech/full_papers/Hunt.pdf>

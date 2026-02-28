@@ -28,7 +28,14 @@ func runWhy(cmd *cobra.Command, args []string) error {
 
 // showMenu presents a numbered menu and reads user selection from stdin.
 func showMenu(cmd *cobra.Command) error {
-	cmd.Println("ctx philosophy documents:")
+	bt := "`"
+	cmd.Println(`
+   /    ctx:                         https://ctx.ist
+ ,'` + bt + `./    do you remember?
+ ` + bt + `.,'\
+   \
+      {}  -> what
+      ctx -> why`)
 	cmd.Println()
 	for i, doc := range docOrder {
 		cmd.Printf("  [%d] %s\n", i+1, doc.label)
