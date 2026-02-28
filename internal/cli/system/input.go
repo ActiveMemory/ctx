@@ -37,7 +37,7 @@ type HookResponse struct {
 
 // HookSpecificOutput carries event-specific fields inside a HookResponse.
 type HookSpecificOutput struct {
-	HookEventName    string `json:"hookEventName"`
+	HookEventName     string `json:"hookEventName"`
 	AdditionalContext string `json:"additionalContext,omitempty"`
 }
 
@@ -47,7 +47,7 @@ type HookSpecificOutput struct {
 func printHookContext(cmd *cobra.Command, event, context string) {
 	resp := HookResponse{
 		HookSpecificOutput: &HookSpecificOutput{
-			HookEventName:    event,
+			HookEventName:     event,
 			AdditionalContext: context,
 		},
 	}
