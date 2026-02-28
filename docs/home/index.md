@@ -16,13 +16,17 @@ icon: lucide/home
 
 Learn what `ctx` does, set it up, and run your first session.
 
-!!! warning "Pre-1.0 — Moving Fast"
-    `ctx` is under active development. The documentation tracks the
-    **development branch**, not the latest release — some features described
-    here may not exist in the binary you have installed.
+!!! warning "Pre-1.0: Moving Fast"
+    `ctx` is under active development. This website tracks the
+    **development branch**, not the latest release: 
 
-    Expect rough edges. If something is missing or broken,
-    [open an issue](https://github.com/AgenticManifold/ctx/issues).
+    Some features described here may not exist in the binary 
+    you have installed.
+
+    Expect rough edges. 
+
+    If something is missing or broken,
+    [open an issue](https://github.com/ActiveMemory/ctx/issues).
 
 ---
 
