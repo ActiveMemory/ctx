@@ -83,14 +83,14 @@ ctx recall export [session-id] [flags]
 
 **Flags**:
 
-| Flag             | Description                                               |
-|------------------|-----------------------------------------------------------|
-| `--all`          | Export all sessions (only new files by default)            |
-| `--all-projects` | Export from all projects                                   |
-| `--regenerate`        | Re-export existing files (preserves YAML frontmatter by default) |
+| Flag                 | Description                                                            |
+|----------------------|------------------------------------------------------------------------|
+| `--all`              | Export all sessions (only new files by default)                        |
+| `--all-projects`     | Export from all projects                                               |
+| `--regenerate`       | Re-export existing files (preserves YAML frontmatter by default)       |
 | `--keep-frontmatter` | Preserve enriched YAML frontmatter during regeneration (default: true) |
-| `--yes`, `-y`         | Skip confirmation prompt                                   |
-| `--dry-run`           | Show what would be exported without writing files           |
+| `--yes`, `-y`        | Skip confirmation prompt                                               |
+| `--dry-run`          | Show what would be exported without writing files                      |
 
 **Safe by default**: `--all` only exports new sessions. Existing files are
 skipped. Use `--regenerate` to re-export existing files (conversation content
@@ -109,11 +109,11 @@ contains raw conversation data.
 **Example**:
 
 ```bash
-ctx recall export abc123                              # Export one session
-ctx recall export --all                               # Export only new sessions
-ctx recall export --all --dry-run                     # Preview what would be exported
-ctx recall export --all --regenerate                  # Re-export existing (prompts)
-ctx recall export --all --regenerate -y               # Re-export without prompting
+ctx recall export abc123                 # Export one session
+ctx recall export --all                  # Export only new sessions
+ctx recall export --all --dry-run        # Preview what would be exported
+ctx recall export --all --regenerate     # Re-export existing (prompts)
+ctx recall export --all --regenerate -y  # Re-export without prompting
 ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter
 ```
 
@@ -127,9 +127,9 @@ ctx recall lock <pattern> [flags]
 
 **Flags**:
 
-| Flag    | Description                      |
-|---------|----------------------------------|
-| `--all` | Lock all journal entries          |
+| Flag    | Description              |
+|---------|--------------------------|
+| `--all` | Lock all journal entries |
 
 The pattern matches filenames by slug, date, or short ID. Locking a
 multi-part entry locks all parts. The lock is recorded in
@@ -154,9 +154,9 @@ ctx recall unlock <pattern> [flags]
 
 **Flags**:
 
-| Flag    | Description                        |
-|---------|------------------------------------|
-| `--all` | Unlock all journal entries          |
+| Flag    | Description                |
+|---------|----------------------------|
+| `--all` | Unlock all journal entries |
 
 **Example**:
 
@@ -260,15 +260,15 @@ Open the output directory as an Obsidian  vault directly.
 **Example**:
 
 ```bash
-ctx journal obsidian                          # Generate in .context/journal-obsidian/
-ctx journal obsidian --output ~/vaults/ctx    # Custom output directory
+ctx journal obsidian                        # Generate in .context/journal-obsidian/
+ctx journal obsidian --output ~/vaults/ctx  # Custom output directory
 ```
 
 ---
 
 ### `ctx serve`
 
-Serve any zensical directory locally. This is a **serve-only** command — it
+Serve any zensical directory locally. This is a **serve-only** command: It
 does not generate or regenerate site content.
 
 ```bash
@@ -285,13 +285,13 @@ pipx install zensical
 
 !!! tip "`ctx serve` vs. `ctx journal site --serve`"
     `ctx journal site --serve` **generates** the journal site *then* serves
-    it — an all-in-one command. `ctx serve` only **serves** an existing
+    it: an all-in-one command. `ctx serve` only **serves** an existing
     directory, and works with any zensical site (journal, docs, etc.).
 
 **Example**:
 
 ```bash
-ctx serve                           # Serve journal site (no regeneration)
-ctx serve .context/journal-site     # Same, explicit path
-ctx serve ./site                    # Serve the docs site
+ctx serve                        # Serve journal site (no regeneration)
+ctx serve .context/journal-site  # Same, explicit path
+ctx serve ./site                 # Serve the docs site
 ```

@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3033,6 +3065,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ctx-import-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-import-plans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-implement" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4070,6 +4113,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ctx-import-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /ctx-import-plans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-implement" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4267,6 +4321,7 @@ triggers that invoke these skills conversationally.</p>
 to invoke the relevant skills directly.</p>
 </div>
 <!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
+<!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/^## All Skills/,/^---$/p' docs/reference/skills.md | grep -oP '\| \[`/\K[a-z-]+(?=`\])' | grep -v check-links | sort -u) -->
 <h2 id="all-skills">All Skills<a class="headerlink" href="#all-skills" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -4395,12 +4450,17 @@ to invoke the relevant skills directly.</p>
 <tr>
 <td><a href="#check-links"><code>/check-links</code></a></td>
 <td>Audit docs for dead internal and external links</td>
-<td>user-invocable</td>
+<td>project-specific</td>
 </tr>
 <tr>
 <td><a href="#ctx-context-monitor"><code>/ctx-context-monitor</code></a></td>
 <td>Respond to context checkpoint signals</td>
 <td>automatic</td>
+</tr>
+<tr>
+<td><a href="#ctx-import-plans"><code>/ctx-import-plans</code></a></td>
+<td>Import Claude Code plan files into project specs</td>
+<td>user-invocable</td>
 </tr>
 <tr>
 <td><a href="#ctx-implement"><code>/ctx-implement</code></a></td>
@@ -4456,14 +4516,14 @@ for completeness. See <a href="../../recipes/session-ceremonies/">Session Ceremo
 </div>
 <h3 id="ctx-remember"><code>/ctx-remember</code><a class="headerlink" href="#ctx-remember" title="Permanent link">&para;</a></h3>
 <p>Recall project context and present a structured readback.
-<strong>Ceremony skill</strong> — invoke explicitly at session start.</p>
+<strong>Ceremony skill</strong>: invoke explicitly at session start.</p>
 <p><strong>Wraps</strong>: <code>ctx agent --budget 4000</code>, <code>ctx recall list --limit 3</code>,
 reads TASKS.md, DECISIONS.md, LEARNINGS.md</p>
 <p><strong>See also</strong>: <a href="../../recipes/session-ceremonies/">Session Ceremonies</a>,
 <a href="../../recipes/session-lifecycle/">The Complete Session</a></p>
 <hr />
 <h3 id="ctx-status"><code>/ctx-status</code><a class="headerlink" href="#ctx-status" title="Permanent link">&para;</a></h3>
-<p>Show context summary — files, token budget, tasks, recent activity —
+<p>Show context summary (<em>files, token budget, tasks, recent activity</em>)
 with interpreted suggestions.</p>
 <p><strong>Wraps</strong>: <code>ctx status [--verbose] [--json]</code></p>
 <p><strong>See also</strong>: <a href="../../recipes/session-lifecycle/">The Complete Session</a>,
@@ -4484,7 +4544,7 @@ and unblocked status.</p>
 <a href="../../recipes/task-management/">Tracking Work Across Sessions</a></p>
 <hr />
 <h3 id="ctx-commit"><code>/ctx-commit</code><a class="headerlink" href="#ctx-commit" title="Permanent link">&para;</a></h3>
-<p>Commit code with integrated context persistence — pre-commit checks,
+<p>Commit code with integrated context persistence: pre-commit checks,
 staged files, Co-Authored-By trailer, and a post-commit prompt to
 capture decisions and learnings.</p>
 <p><strong>Wraps</strong>: <code>git add</code>, <code>git commit</code>, optionally chains to
@@ -4505,7 +4565,7 @@ git diff, recent commits, and conversation themes. Proposes
 candidates (learnings, decisions, conventions, tasks) with complete
 structured fields for user approval, then persists via <code>ctx add</code>.
 Offers <code>/ctx-commit</code> if uncommitted changes remain.
-<strong>Ceremony skill</strong> — invoke explicitly at session end.</p>
+<strong>Ceremony skill</strong>: invoke explicitly at session end.</p>
 <p><strong>Wraps</strong>: <code>git diff --stat</code>, <code>git log</code>, <code>ctx add learning</code>,
 <code>ctx add decision</code>, <code>ctx add convention</code>, <code>ctx add task</code>,
 chains to <code>/ctx-commit</code></p>
@@ -4513,8 +4573,8 @@ chains to <code>/ctx-commit</code></p>
 <a href="../../recipes/session-lifecycle/">The Complete Session</a></p>
 <hr />
 <h2 id="context-persistence">Context Persistence<a class="headerlink" href="#context-persistence" title="Permanent link">&para;</a></h2>
-<p>Skills for recording work artifacts — tasks, decisions, learnings,
-conventions — into <code>.context/</code> files.</p>
+<p>Skills for recording work artifacts: tasks, decisions, learnings,
+conventions: into <code>.context/</code> files.</p>
 <h3 id="ctx-add-task"><code>/ctx-add-task</code><a class="headerlink" href="#ctx-add-task" title="Permanent link">&para;</a></h3>
 <p>Add an actionable task with optional priority and phase section.</p>
 <p><strong>Wraps</strong>: <code>ctx add task "description" [--priority high|medium|low]</code></p>
@@ -4552,7 +4612,7 @@ Targets patterns seen 2-3+ times.</p>
 <hr />
 <h2 id="scratchpad">Scratchpad<a class="headerlink" href="#scratchpad" title="Permanent link">&para;</a></h2>
 <h3 id="ctx-pad"><code>/ctx-pad</code><a class="headerlink" href="#ctx-pad" title="Permanent link">&para;</a></h3>
-<p>Manage the encrypted scratchpad — add, remove, edit, and reorder
+<p>Manage the encrypted scratchpad: add, remove, edit, and reorder
 one-liner notes. Encrypted at rest with AES-256-GCM.</p>
 <p><strong>Wraps</strong>: <code>ctx pad</code>, <code>ctx pad add</code>, <code>ctx pad rm</code>, <code>ctx pad edit</code>,
 <code>ctx pad mv</code>, <code>ctx pad import</code>, <code>ctx pad export</code>, <code>ctx pad merge</code></p>
@@ -4570,7 +4630,7 @@ show details by slug or ID, and export to <code>.context/journal/</code>.</p>
 <a href="../../recipes/session-archaeology/">Browsing and Enriching Past Sessions</a></p>
 <hr />
 <h3 id="ctx-journal-enrich"><code>/ctx-journal-enrich</code><a class="headerlink" href="#ctx-journal-enrich" title="Permanent link">&para;</a></h3>
-<p>Enrich a single journal entry with YAML frontmatter — title, type,
+<p>Enrich a single journal entry with YAML frontmatter: title, type,
 outcome, topics, technologies, and summary. Shows diff before writing.</p>
 <p><strong>Wraps</strong>: reads and edits <code>.context/journal/*.md</code> files</p>
 <p><strong>See also</strong>:
@@ -4585,7 +4645,7 @@ and continuations. Can spawn subagents for large backlogs.</p>
 <a href="../../recipes/session-archaeology/">Browsing and Enriching Past Sessions</a></p>
 <hr />
 <h3 id="ctx-journal-normalize"><code>/ctx-journal-normalize</code><a class="headerlink" href="#ctx-journal-normalize" title="Permanent link">&para;</a></h3>
-<p>Normalize journal markdown for clean rendering — fix fence nesting,
+<p>Normalize journal markdown for clean rendering: fix fence nesting,
 metadata formatting, list indentation, and collapse large tool outputs.</p>
 <p><strong>Wraps</strong>: reads and edits <code>.context/journal/*.md</code> files</p>
 <p><strong>See also</strong>:
@@ -4595,7 +4655,7 @@ metadata formatting, list indentation, and collapse large tool outputs.</p>
 <h2 id="content-creation">Content Creation<a class="headerlink" href="#content-creation" title="Permanent link">&para;</a></h2>
 <p>Skills for turning project activity into publishable content.</p>
 <h3 id="ctx-blog"><code>/ctx-blog</code><a class="headerlink" href="#ctx-blog" title="Permanent link">&para;</a></h3>
-<p>Generate a blog post draft from recent project activity — git history,
+<p>Generate a blog post draft from recent project activity: git history,
 decisions, learnings, tasks, and journal entries. Requires a narrative
 arc (problem, approach, outcome).</p>
 <p><strong>Wraps</strong>: reads <code>git log</code>, DECISIONS.md, LEARNINGS.md, TASKS.md,
@@ -4614,8 +4674,8 @@ that period.</p>
 prompt quality.</p>
 <h3 id="ctx-consolidate"><code>/ctx-consolidate</code><a class="headerlink" href="#ctx-consolidate" title="Permanent link">&para;</a></h3>
 <p>Consolidate redundant entries in LEARNINGS.md or DECISIONS.md. Groups
-overlapping entries by keyword similarity, presents candidates, and —
-with user approval — merges groups into denser combined entries.
+overlapping entries by keyword similarity, presents candidates, and
+(<em>with user approval</em>) merges groups into denser combined entries.
 Originals are archived, not deleted.</p>
 <p><strong>Wraps</strong>: reads LEARNINGS.md and DECISIONS.md, writes consolidated
 entries, archives originals, runs <code>ctx reindex</code></p>
@@ -4686,6 +4746,17 @@ not user-invocable</p>
 <hr />
 <h2 id="planning-execution">Planning &amp; Execution<a class="headerlink" href="#planning-execution" title="Permanent link">&para;</a></h2>
 <p>Skills for structured implementation and parallel agent workflows.</p>
+<h3 id="ctx-import-plans"><code>/ctx-import-plans</code><a class="headerlink" href="#ctx-import-plans" title="Permanent link">&para;</a></h3>
+<p>Import Claude Code plan files (<code>~/.claude/plans/*.md</code>) into the project's
+<code>specs/</code> directory. Lists plans with dates and H1 titles, supports
+filtering (<code>--today</code>, <code>--since</code>, <code>--all</code>), slugifies headings for
+filenames, and optionally creates tasks referencing each imported spec.</p>
+<p><strong>Wraps</strong>: reads <code>~/.claude/plans/*.md</code>, writes to <code>specs/</code>,
+optionally chains to <code>/ctx-add-task</code></p>
+<p><strong>See also</strong>:
+<a href="../../recipes/import-plans/">Importing Claude Code Plans</a>,
+<a href="../../recipes/task-management/">Tracking Work Across Sessions</a></p>
+<hr />
 <h3 id="ctx-implement"><code>/ctx-implement</code><a class="headerlink" href="#ctx-implement" title="Permanent link">&para;</a></h3>
 <p>Execute a multi-step plan with build and test verification at each
 step. Loads a plan from a file or conversation context, breaks it
@@ -4756,7 +4827,7 @@ and ceremony behavior. Silent no-op if not paused.</p>
 <h2 id="project-specific-skills">Project-Specific Skills<a class="headerlink" href="#project-specific-skills" title="Permanent link">&para;</a></h2>
 <p>The ctx plugin ships the skills listed above.
 Teams can add their own project-specific skills to <code>.claude/skills/</code> in the
-project root — these are separate from plugin-shipped skills and are scoped
+project root: These are separate from plugin-shipped skills and are scoped
 to the project.</p>
 <p>Project-specific skills follow the same format and are invoked the same way.</p>
 <p>Custom skills are not covered in this reference.</p>

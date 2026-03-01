@@ -11,14 +11,18 @@ import (
 	"path/filepath"
 )
 
-// MigrateKeyFile renames the legacy .scratchpad.key to .context.key if needed.
+// MigrateKeyFile renames legacy key files (.context.key, .scratchpad.key)
+// to .ctx.key if needed.
 func MigrateKeyFile(contextDir string) {
-	old := filepath.Join(contextDir, ".scratchpad.key")
 	nw := filepath.Join(contextDir, FileContextKey)
 	if _, err := os.Stat(nw); err == nil {
 		return // already migrated
 	}
-	if _, err := os.Stat(old); err == nil {
-		_ = os.Rename(old, nw)
+	for _, legacy := range []string{".context.key", ".scratchpad.key"} {
+		old := filepath.Join(contextDir, legacy)
+		if _, err := os.Stat(old); err == nil {
+			_ = os.Rename(old, nw)
+			return
+		}
 	}
 }

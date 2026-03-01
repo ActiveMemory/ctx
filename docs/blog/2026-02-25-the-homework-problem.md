@@ -808,7 +808,7 @@ low-loss / low-cost trajectories.
   https://www.nature.com/articles/323533a0
 
 * Goodfellow, Bengio, Courville (2016)  
-  *Deep Learning* — Chapter 8: Optimization  
+  *Deep Learning*: Chapter 8: Optimization  
   https://www.deeplearningbook.org/
 
 The important implication for agent behavior is: 
@@ -818,7 +818,7 @@ cost is made visible and preferable.
 
 ### Attention Is a Scarce Resource
 
-Herbert Simon’s classic observation:
+Herbert Simon's classic observation:
 
 "*A wealth of information creates a poverty of attention.*"
 

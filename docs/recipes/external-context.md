@@ -105,7 +105,7 @@ Pick one of these methods to make the configuration permanent.
 Create a `.ctxrc` file in your project root:
 
 ```yaml
-# .ctxrc — committed to the project repo
+# .ctxrc: committed to the project repo
 context_dir: ~/repos/myproject-context
 allow_outside_cwd: true
 ```
@@ -185,7 +185,7 @@ Here  is the relevant section from `CLAUDE.md` for reference:
 
 ```markdown
 <!-- CLAUDE.md -->
-1. **Run `ctx system bootstrap`** — CRITICAL, not optional.
+1. **Run `ctx system bootstrap`**: CRITICAL, not optional.
    This tells you where the context directory is. If it fails or returns
    no context_dir, STOP and warn the user.
 ```
@@ -214,7 +214,7 @@ cd myproject
 git clone git@github.com:org/myproject-context.git ~/repos/myproject-context
 ```
 
-If `.ctxrc` is already committed to the project, they're done — ctx
+If `.ctxrc` is already committed to the project, they're done: `ctx`
 commands will find the external context automatically.
 
 If teammates use different paths, each developer sets their own `CTX_DIR`:
@@ -229,7 +229,7 @@ For encryption key distribution across the team, see the
 ### Step 6: Day-to-Day Sync
 
 The external context repo has its own git history. Treat it like any other
-repo — commit and push after sessions:
+repo: Commit and push after sessions:
 
 ```bash
 cd ~/repos/myproject-context

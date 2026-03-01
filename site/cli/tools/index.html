@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3948,7 +3980,7 @@ them to context files.</p>
 </tbody>
 </table>
 <div class="admonition note">
-<p class="admonition-title">Claude Code uses the plugin system</p>
+<p class="admonition-title">Claude Code Uses the Plugin system</p>
 <p>Claude Code integration is now provided via the <code>ctx</code> plugin.
 Running <code>ctx hook claude-code</code> prints plugin install instructions.</p>
 </div>
@@ -4074,7 +4106,7 @@ AI builds on its previous work.</p>
 using the encryption key and stored in <code>.context/.notify.enc</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
 </span></code></pre></div>
-<p>The encrypted file is safe to commit. The key (<code>.context/.context.key</code>) is
+<p>The encrypted file is safe to commit. The key (<code>.context/.ctx.key</code>) is
 gitignored and never committed.</p>
 <h4 id="ctx-notify-test"><code>ctx notify test</code><a class="headerlink" href="#ctx-notify-test" title="Permanent link">&para;</a></h4>
 <p>Send a test notification and report the HTTP response status.</p>
@@ -4339,19 +4371,19 @@ deduplicated by exact content.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>notes.md<span class="w"> </span>backup.enc
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.context.key<span class="w"> </span>foreign.enc
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.ctx.key<span class="w"> </span>foreign.enc
 </span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-remind"><code>ctx remind</code><a class="headerlink" href="#ctx-remind" title="Permanent link">&para;</a></h3>
 <p>Session-scoped reminders that surface at session start. Reminders are
-stored verbatim and relayed verbatim — no summarization, no categories.</p>
+stored verbatim and relayed verbatim: no summarization, no categories.</p>
 <p>When invoked with a text argument and no subcommand, adds a reminder.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;text&quot;</span>
 </span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-remind-add"><code>ctx remind add</code><a class="headerlink" href="#ctx-remind-add" title="Permanent link">&para;</a></h4>
-<p>Add a reminder. This is the default action — <code>ctx remind "text"</code> and
+<p>Add a reminder. This is the default action: <code>ctx remind "text"</code> and
 <code>ctx remind add "text"</code> are equivalent.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ctx<span class="w"> </span>remind<span class="w"> </span><span class="s2">&quot;refactor the swagger definitions&quot;</span>
 </span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>ctx<span class="w"> </span>remind<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;check CI after the deploy&quot;</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2026</span>-02-25
@@ -4567,13 +4599,13 @@ from the first paragraph after the heading.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>Generated site/feed.xml (21 entries)
 </span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>
 </span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>Skipped:
-</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>  2026-02-25-the-homework-problem.md — not finalized
+</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>  2026-02-25-the-homework-problem.md: not finalized
 </span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>
 </span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>Warnings:
-</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a>  2026-02-09-defense-in-depth.md — no summary paragraph found
+</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a>  2026-02-09-defense-in-depth.md: no summary paragraph found
 </span></code></pre></div>
 <p>Three buckets: <strong>included</strong> (count), <strong>skipped</strong> (with reason),
-<strong>warnings</strong> (included but degraded). Exit 0 always — warnings
+<strong>warnings</strong> (included but degraded). <code>exit 0</code> always: warnings
 inform but do not block.</p>
 <p><strong>Frontmatter requirements</strong>:</p>
 <table>
@@ -4621,8 +4653,7 @@ inform but do not block.</p>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-why"><code>ctx why</code><a class="headerlink" href="#ctx-why" title="Permanent link">&para;</a></h3>
-<p>Read ctx's philosophy documents directly in the terminal, stripped of
-MkDocs artifacts so they display cleanly without a browser.</p>
+<p>Read <code>ctx</code>'s philosophy documents directly in the terminal.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>ctx<span class="w"> </span>why<span class="w"> </span><span class="o">[</span>DOCUMENT<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Documents</strong>:</p>
@@ -4636,15 +4667,15 @@ MkDocs artifacts so they display cleanly without a browser.</p>
 <tbody>
 <tr>
 <td><code>manifesto</code></td>
-<td>The ctx Manifesto — creation, not code</td>
+<td>The <code>ctx</code> Manifesto: creation, not code</td>
 </tr>
 <tr>
 <td><code>about</code></td>
-<td>About ctx — what it is and why it exists</td>
+<td>About <code>ctx</code>: what it is and why it exists</td>
 </tr>
 <tr>
 <td><code>invariants</code></td>
-<td>Design invariants — properties that must hold</td>
+<td>Design invariants: properties that must hold</td>
 </tr>
 </tbody>
 </table>

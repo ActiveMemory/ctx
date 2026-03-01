@@ -1422,6 +1422,8 @@
       
         
       
+        
+      
     
     
     
@@ -1517,6 +1519,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -2198,6 +2230,17 @@
     <span class="md-ellipsis">
       
         Step 1: Initialize for Unattended Operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-populate-tasksmd-with-phased-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Populate TASKS.md with Phased Work
       
     </span>
   </a>
@@ -3476,6 +3519,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#step-2-populate-tasksmd-with-phased-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Populate TASKS.md with Phased Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#step-3-configure-promptmd" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3870,41 +3924,35 @@ context persistence as a <strong>first-class deliverable</strong>, not an <em>af
 without human input. The <code>--ralph</code> flag sets up <code>PROMPT.md</code> so the agent makes
 reasonable choices instead of asking clarifying questions.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="sb">````</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>This<span class="w"> </span>creates<span class="w"> </span><span class="sb">`</span>.context/<span class="sb">`</span><span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>template<span class="w"> </span>files,<span class="w"> </span>a<span class="w"> </span><span class="sb">`</span>PROMPT.md<span class="sb">`</span><span class="w"> </span>configured<span class="w"> </span><span class="k">for</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>autonomous<span class="w"> </span>iteration,<span class="w"> </span>and<span class="w"> </span>seeds<span class="w"> </span>Claude<span class="w"> </span>Code<span class="w"> </span>permissions<span class="w"> </span><span class="k">in</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sb">`</span>.claude/settings.local.json<span class="sb">`</span>.<span class="w"> </span>Install<span class="w"> </span>the<span class="w"> </span><span class="sb">`</span>ctx<span class="sb">`</span><span class="w"> </span>plugin<span class="w"> </span><span class="k">for</span><span class="w"> </span>hooks<span class="w"> </span>and<span class="w"> </span>skills.
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Without<span class="w"> </span><span class="sb">`</span>--ralph<span class="sb">`</span>,<span class="w"> </span>the<span class="w"> </span>agent<span class="w"> </span>will<span class="w"> </span>often<span class="w"> </span>pause<span class="w"> </span>when<span class="w"> </span>requirements<span class="w"> </span>are<span class="w"> </span>unclear.
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>For<span class="w"> </span>unattended<span class="w"> </span>runs,<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>it<span class="w"> </span>to<span class="w"> </span>choose<span class="w"> </span>a<span class="w"> </span>default<span class="w"> </span>and<span class="w"> </span>document<span class="w"> </span>the<span class="w"> </span>trade-off
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">in</span><span class="w"> </span><span class="sb">`</span>DECISIONS.md<span class="sb">`</span><span class="w"> </span>instead.
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">### Step 2: Populate `TASKS.md` with Phased Work</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Open<span class="w"> </span><span class="sb">`</span>.context/TASKS.md<span class="sb">`</span><span class="w"> </span>and<span class="w"> </span>organize<span class="w"> </span>your<span class="w"> </span>work<span class="w"> </span>into<span class="w"> </span>phases.<span class="w"> </span>The<span class="w"> </span>agent<span class="w"> </span>works
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>through<span class="w"> </span>these<span class="w"> </span>systematically,<span class="w"> </span>top<span class="w"> </span>to<span class="w"> </span>bottom,<span class="w"> </span>using<span class="w"> </span>priority<span class="w"> </span>tags<span class="w"> </span>to<span class="w"> </span><span class="k">break</span><span class="w"> </span>ties.
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="sb">```</span>markdown
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Tasks</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">## Phase 1: Foundation</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Set<span class="w"> </span>up<span class="w"> </span>project<span class="w"> </span>structure<span class="w"> </span>and<span class="w"> </span>build<span class="w"> </span>system<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:high`</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Configure<span class="w"> </span>testing<span class="w"> </span>framework<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:high`</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Create<span class="w"> </span>CI<span class="w"> </span>pipeline<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:medium`</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">## Phase 2: Core Features</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Implement<span class="w"> </span>user<span class="w"> </span>registration<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:high`</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Add<span class="w"> </span>email<span class="w"> </span>verification<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:high`</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Create<span class="w"> </span>password<span class="w"> </span>reset<span class="w"> </span>flow<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:medium`</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1">## Phase 3: Hardening</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Add<span class="w"> </span>rate<span class="w"> </span>limiting<span class="w"> </span>to<span class="w"> </span>API<span class="w"> </span>endpoints<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:medium`</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Improve<span class="w"> </span>error<span class="w"> </span>messages<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:low`</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Write<span class="w"> </span>integration<span class="w"> </span>tests<span class="w"> </span><span class="sb">`</span><span class="c1">#priority:medium`</span>
+</span></code></pre></div>
+<p>This creates <code>.context/</code> with the template files, a <code>PROMPT.md</code> configured for
+autonomous iteration, and seeds Claude Code permissions in
+<code>.claude/settings.local.json</code>. Install the <code>ctx</code> plugin for hooks and skills.</p>
+<p>Without <code>--ralph</code>, the agent will often pause when requirements are unclear.
+For unattended runs, you want it to choose a default and document the trade-off
+in <code>DECISIONS.md</code> instead.</p>
+<h3 id="step-2-populate-tasksmd-with-phased-work">Step 2: Populate <code>TASKS.md</code> with Phased Work<a class="headerlink" href="#step-2-populate-tasksmd-with-phased-work" title="Permanent link">&para;</a></h3>
+<p>Open <code>.context/TASKS.md</code> and organize your work into phases. The agent works
+through these systematically, top to bottom, using priority tags to break ties.</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh"># Tasks</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="gu">## Phase 1: Foundation</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">- [ ]</span> Set up project structure and build system <span class="sb">`#priority:high`</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">- [ ]</span> Configure testing framework <span class="sb">`#priority:high`</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">- [ ]</span> Create CI pipeline <span class="sb">`#priority:medium`</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="gu">## Phase 2: Core Features</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">- [ ]</span> Implement user registration <span class="sb">`#priority:high`</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">- [ ]</span> Add email verification <span class="sb">`#priority:high`</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="k">- [ ]</span> Create password reset flow <span class="sb">`#priority:medium`</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="gu">## Phase 3: Hardening</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">- [ ]</span> Add rate limiting to API endpoints <span class="sb">`#priority:medium`</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="k">- [ ]</span> Improve error messages <span class="sb">`#priority:low`</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="k">- [ ]</span> Write integration tests <span class="sb">`#priority:medium`</span>
 </span></code></pre></div>
 <p>Phased organization matters because it gives the agent natural boundaries.
 Phase 1 tasks should be completable without Phase 2 code existing yet.</p>
@@ -3922,17 +3970,17 @@ autonomously:</p>
 <p>You can customize <code>PROMPT.md</code> for your project. The critical parts are the
 one-task-per-iteration discipline, proactive context persistence, and completion
 signals at the end:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gu">## Signal Status</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>End your response with exactly ONE of:
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">-</span><span class="w"> </span><span class="sb">`SYSTEM_CONVERGED`</span> — All tasks in <span class="sb">`TASKS.md`</span> are complete (*this is the
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  signal the loop script detects by default*)
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">-</span><span class="w"> </span><span class="sb">`SYSTEM_BLOCKED`</span> — Cannot proceed, need human input (explain why)
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">-</span><span class="w"> </span>(no signal) — More work remains, continue to next iteration
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Note: the loop script only checks for <span class="sb">`SYSTEM_CONVERGED`</span> by default.
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="sb">`SYSTEM_BLOCKED`</span> is a convention for the human reviewing the log.
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## Signal Status</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>End your response with exactly ONE of:
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">*</span><span class="w"> </span><span class="sb">`SYSTEM_CONVERGED`</span>: All tasks in <span class="sb">`TASKS.md`</span> are complete (*this is the
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  signal the loop script detects by default*)
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">*</span><span class="w"> </span><span class="sb">`SYSTEM_BLOCKED`</span>: Cannot proceed, need human input (explain why)
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">*</span><span class="w"> </span>(<span class="ge">*no signal*</span>): More work remains, continue to the next iteration
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Note: the loop script only checks for <span class="sb">`SYSTEM_CONVERGED`</span> by default.
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="sb">`SYSTEM_BLOCKED`</span> is a convention for the human reviewing the log.
 </span></code></pre></div>
 <h3 id="step-4-configure-permissions">Step 4: Configure Permissions<a class="headerlink" href="#step-4-configure-permissions" title="Permanent link">&para;</a></h3>
 <p>An unattended agent needs permission to use tools without prompting. By default,
@@ -3941,19 +3989,19 @@ operations, which stops the loop and waits for a human who is not there.</p>
 <p>There are two approaches.</p>
 <h4 id="option-a-explicit-allowlist-recommended">Option A: Explicit Allowlist (<em>Recommended</em>)<a class="headerlink" href="#option-a-explicit-allowlist-recommended" title="Permanent link">&para;</a></h4>
 <p>Grant only the permissions the agent needs. In <code>.claude/settings.local.json</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;allow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="s2">&quot;Bash(make:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="s2">&quot;Bash(go:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="s2">&quot;Bash(git:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="s2">&quot;Bash(ctx:*)&quot;</span><span class="p">,</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="s2">&quot;Read&quot;</span><span class="p">,</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="s2">&quot;Write&quot;</span><span class="p">,</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="s2">&quot;Edit&quot;</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="p">]</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;allow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="s2">&quot;Bash(make:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="s2">&quot;Bash(go:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="s2">&quot;Bash(git:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="s2">&quot;Bash(ctx:*)&quot;</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="s2">&quot;Read&quot;</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="s2">&quot;Write&quot;</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="s2">&quot;Edit&quot;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Adjust the <code>Bash</code> patterns for your project's toolchain. The agent can run
 <code>make</code>, <code>go</code>, <code>git</code>, and <code>ctx</code> commands but cannot run arbitrary shell commands.</p>
@@ -3962,7 +4010,7 @@ radius.</p>
 <h4 id="option-b-skip-all-permission-checks">Option B: Skip All Permission Checks<a class="headerlink" href="#option-b-skip-all-permission-checks" title="Permanent link">&para;</a></h4>
 <p>Claude Code supports a <code>--dangerously-skip-permissions</code> flag that disables all
 permission prompts:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>.context/PROMPT.md<span class="k">)</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>claude<span class="w"> </span>--dangerously-skip-permissions<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>.context/PROMPT.md<span class="k">)</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title">This Flag Means What It Says</p>
@@ -4026,15 +4074,15 @@ runtime boundary.</p>
 </tbody>
 </table>
 <p>A minimal Docker setup for overnight runs:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--network<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--cap-drop<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--memory<span class="o">=</span>4g<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--cpus<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-v<span class="w"> </span>/path/to/project:/workspace<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-w<span class="w"> </span>/workspace<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>your-dev-image<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--network<span class="o">=</span>none<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--cap-drop<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--memory<span class="o">=</span>4g<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--cpus<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-v<span class="w"> </span>/path/to/project:/workspace<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-w<span class="w"> </span>/workspace<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>your-dev-image<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Defense in Depth</p>
@@ -4045,14 +4093,14 @@ common case</em>).</p>
 </div>
 <h3 id="step-5-generate-the-loop-script">Step 5: Generate the Loop Script<a class="headerlink" href="#step-5-generate-the-loop-script" title="Permanent link">&para;</a></h3>
 <p>Use <code>ctx loop</code> to generate a <code>loop.sh</code> tailored to your AI tool:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate for Claude Code with a 10-iteration cap</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Generate for Aider</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>aider<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Custom prompt file and output filename (default prompt is PROMPT.md in project root)</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--prompt<span class="w"> </span>my-prompt.md<span class="w"> </span>--output<span class="w"> </span>my-loop.sh
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Generate for Claude Code with a 10-iteration cap</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Generate for Aider</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>aider<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Custom prompt file and output filename (default prompt is PROMPT.md in project root)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--prompt<span class="w"> </span>my-prompt.md<span class="w"> </span>--output<span class="w"> </span>my-loop.sh
 </span></code></pre></div>
 <p>The generated script reads <code>PROMPT.md</code>, runs the tool, checks for completion
 signals, and loops until done or the cap is reached.</p>
@@ -4073,26 +4121,26 @@ for details.</p>
 <h3 id="step-6-run-with-watch-mode">Step 6: Run with Watch Mode<a class="headerlink" href="#step-6-run-with-watch-mode" title="Permanent link">&para;</a></h3>
 <p>Open two terminals. In the first, run the loop. In the second, run <code>ctx watch</code>
 to process context updates from the AI output.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Terminal 1: Run the loop</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Terminal 2: Watch for context updates</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Terminal 1: Run the loop</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Terminal 2: Watch for context updates</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log
 </span></code></pre></div>
 <p>The watch command parses XML context-update commands from the AI output and
 applies them:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>registration<span class="nt">&lt;/context-update&gt;</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Setting up user registration&quot;</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="na">lesson=</span><span class="s">&quot;Email verification needs SMTP configured&quot;</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="na">application=</span><span class="s">&quot;Add SMTP setup to deployment checklist&quot;</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">&gt;</span>SMTP<span class="w"> </span>Requirement<span class="nt">&lt;/context-update&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;complete&quot;</span><span class="nt">&gt;</span>user<span class="w"> </span>registration<span class="nt">&lt;/context-update&gt;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">&lt;context-update</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;learning&quot;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="na">context=</span><span class="s">&quot;Setting up user registration&quot;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="na">lesson=</span><span class="s">&quot;Email verification needs SMTP configured&quot;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="na">application=</span><span class="s">&quot;Add SMTP setup to deployment checklist&quot;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nt">&gt;</span>SMTP<span class="w"> </span>Requirement<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
 <h3 id="step-7-completion-signals-end-the-loop">Step 7: Completion Signals End the Loop<a class="headerlink" href="#step-7-completion-signals-end-the-loop" title="Permanent link">&para;</a></h3>
 <p>The generated script checks for <strong>one</strong> completion signal per run. By
 default this is <code>SYSTEM_CONVERGED</code>. You can change it with the
 <code>--completion</code> flag:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--completion<span class="w"> </span>BOOTSTRAP_COMPLETE<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">5</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--completion<span class="w"> </span>BOOTSTRAP_COMPLETE<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">5</span>
 </span></code></pre></div>
 <p>The following signals are conventions used in <code>PROMPT.md</code>:</p>
 <table>
@@ -4125,38 +4173,38 @@ default this is <code>SYSTEM_CONVERGED</code>. You can change it with the
 signal. If you need to detect multiple signals in one run, edit the
 generated <code>loop.sh</code> to add additional <code>grep</code> checks.</p>
 <p>When you return in the morning, check the log and the context files:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/tmp/loop.log
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>status
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>load
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/tmp/loop.log
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>status
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ctx<span class="w"> </span>load
 </span></code></pre></div>
 <h3 id="step-8-use-ctx-implement-for-plan-execution">Step 8: Use <code>/ctx-implement</code> for Plan Execution<a class="headerlink" href="#step-8-use-ctx-implement-for-plan-execution" title="Permanent link">&para;</a></h3>
 <p>Within each iteration, the agent can use <code>/ctx-implement</code> to execute multi-step
 plans with verification between steps. This is useful for complex tasks that
 touch multiple files.</p>
 <p>The skill breaks a plan into atomic, verifiable steps:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Step 1/6: Create user model .................. OK
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Step 2/6: Add database migration ............. OK
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Step 3/6: Implement registration handler ..... OK
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Step 4/6: Write unit tests ................... OK
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Step 5/6: Run test suite ..................... FAIL
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  -&gt; Fixed: missing test dependency
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  -&gt; Re-verify ............................... OK
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Step 6/6: Update TASKS.md .................... OK
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Step 1/6: Create user model .................. OK
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Step 2/6: Add database migration ............. OK
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Step 3/6: Implement registration handler ..... OK
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Step 4/6: Write unit tests ................... OK
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Step 5/6: Run test suite ..................... FAIL
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  -&gt; Fixed: missing test dependency
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  -&gt; Re-verify ............................... OK
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Step 6/6: Update TASKS.md .................... OK
 </span></code></pre></div>
 <p>Each step is verified (build, test, syntax check) before moving to the next.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>A typical overnight run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Edit TASKS.md and PROMPT.md</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">20</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log<span class="w"> </span><span class="p">&amp;</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Next morning:</span>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>ctx<span class="w"> </span>status
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ctx<span class="w"> </span>load
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--ralph
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Edit TASKS.md and PROMPT.md</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>ctx<span class="w"> </span>loop<span class="w"> </span>--tool<span class="w"> </span>claude<span class="w"> </span>--max-iterations<span class="w"> </span><span class="m">20</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>./loop.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/loop.log<span class="w"> </span><span class="p">&amp;</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>ctx<span class="w"> </span>watch<span class="w"> </span>--log<span class="w"> </span>/tmp/loop.log
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Next morning:</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>ctx<span class="w"> </span>status
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>ctx<span class="w"> </span>load
 </span></code></pre></div>
 <h2 id="why-autonomous-loops-work-proactive-context-persistence">Why Autonomous Loops Work: Proactive Context Persistence<a class="headerlink" href="#why-autonomous-loops-work-proactive-context-persistence" title="Permanent link">&para;</a></h2>
 <p>The autonomous loop pattern works because the agent persists context as part of
@@ -4167,7 +4215,7 @@ cannot rely on a human to prompt it. It must treat context updates as part of
 every task, not as a separate step.</p>
 <h3 id="the-agent-playbook-self-check-drives-autonomy">The Agent Playbook Self-Check Drives Autonomy<a class="headerlink" href="#the-agent-playbook-self-check-drives-autonomy" title="Permanent link">&para;</a></h3>
 <p>The Agent Playbook defines a self-check prompt the agent applies continuously:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>&quot;If this session ended right now, would the next session know what happened?&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>&quot;If this session ended right now, would the next session know what happened?&quot;
 </span></code></pre></div>
 <p>In interactive sessions, a human might remind the agent to save context. When
 the agent runs unattended, nobody is there to remind it.</p>
@@ -4209,16 +4257,16 @@ instructions:</p>
 </table>
 <h3 id="example-what-proactive-persistence-looks-like">Example: What Proactive Persistence Looks Like<a class="headerlink" href="#example-what-proactive-persistence-looks-like" title="Permanent link">&para;</a></h3>
 <p>Here is what the agent does during a single iteration beyond writing code:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Iteration 4:
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  1. Read TASKS.md -&gt; pick &quot;Add email verification&quot; (#priority:high)
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  2. Add #started:2026-01-25-030012 to the task
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  3. Implement the feature (code, tests, docs if needed)
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  4. Tests pass -&gt; mark task [x], add #done:2026-01-25-031544
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  5. Add learning: &quot;SMTP config must be set before verification handler registers. Order matters in init().&quot;
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  6. Add decision: &quot;Use token-based verification links (not codes) because links work better in automated tests.&quot;
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  7. Create follow-up task: &quot;Add rate limiting to verification endpoint&quot; #added:...
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  8. Commit all changes including `.context/`
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  9. No signal emitted -&gt; loop continues to iteration 5
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Iteration 4:
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  1. Read TASKS.md -&gt; pick &quot;Add email verification&quot; (#priority:high)
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  2. Add #started:2026-01-25-030012 to the task
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  3. Implement the feature (code, tests, docs if needed)
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  4. Tests pass -&gt; mark task [x], add #done:2026-01-25-031544
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  5. Add learning: &quot;SMTP config must be set before verification handler registers. Order matters in init().&quot;
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  6. Add decision: &quot;Use token-based verification links (not codes) because links work better in automated tests.&quot;
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>  7. Create follow-up task: &quot;Add rate limiting to verification endpoint&quot; #added:...
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  8. Commit all changes including `.context/`
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  9. No signal emitted -&gt; loop continues to iteration 5
 </span></code></pre></div>
 <p>Steps 2, 4, 5, 6, and 7 are proactive context persistence: </p>
 <p>The agent was not asked to do any of them.</p>

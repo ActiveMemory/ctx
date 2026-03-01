@@ -392,7 +392,7 @@ The tool is a convenience: **The principles are what matter**.
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **Prompts are conversations. Infrastructure persists.**
 
     Your AI does not need a better prompt. It needs a filesystem:

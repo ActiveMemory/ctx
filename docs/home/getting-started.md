@@ -25,18 +25,16 @@ Also, several `ctx` features (*journal changelog, blog generation*) also use
 
 ## Installation
 
-A full ctx installation has two parts:
+Every setup starts with **the `ctx` binary**: the CLI tool itself.
 
-1. **The `ctx` binary**: the CLI tool itself;
-2. **The Claude Code plugin**: hooks and skills that make Claude Code
-   context-aware.
+If you use **Claude Code**, you also install the **ctx plugin**, which
+adds hooks (context autoloading, persistence nudges) and 25+ `/ctx-*`
+skills. For other AI tools, `ctx` integrates via generated instruction
+files or manual context pasting: see
+[Integrations](../operations/integrations.md) for tool-specific setup.
 
-You need **both**. The binary alone gives you the CLI, but Claude Code
-won't autoload context, nudge you to persist decisions, or provide
-the `/ctx-*` skills.
-
-Pick one of the options below. Each is a complete path from zero to
-a working setup.
+Pick one of the options below to install the binary. Claude Code users
+should also follow the plugin steps included in each option.
 
 ### Option 1: Build from Source (*Recommended*)
 
@@ -122,7 +120,7 @@ Pre-built binaries are available from the
 
     Download `ctx-0.6.0-windows-amd64.exe` from the releases page and add it to your `PATH`.
 
-**Install the Claude Code plugin** from the marketplace:
+**Claude Code users**: install the plugin from the marketplace:
 
 1. Launch `claude`;
 2. Type `/plugin` and press Enter;
@@ -130,11 +128,14 @@ Pre-built binaries are available from the
 4. Enter `ActiveMemory/ctx`;
 5. Back in `/plugin`, select **Install** and choose `ctx`.
 
+**Other tool users**: see [Integrations](../operations/integrations.md) for
+tool-specific setup (Cursor, Copilot, Aider, Windsurf, etc.).
+
 **Verify:**
 
 ```bash
 ctx --version       # binary is in PATH
-claude /plugin list # plugin is installed
+claude /plugin list # plugin is installed (Claude Code only)
 ```
 
 #### Verifying Checksums
@@ -175,7 +176,7 @@ ctx init
 ```
 
 This creates a `.context/` directory with template files and a
-`.context.key` for the [encrypted scratchpad](../reference/scratchpad.md).
+`.ctx.key` for the [encrypted scratchpad](../reference/scratchpad.md).
 For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
 

@@ -7,7 +7,7 @@
 // Package notify provides fire-and-forget webhook notifications.
 //
 // The webhook URL is stored encrypted in .context/.notify.enc using the
-// same AES-256-GCM key as the scratchpad (.context/.context.key).
+// same AES-256-GCM key as the scratchpad (.context/.ctx.key).
 // When no webhook is configured, all operations are silent noops.
 package notify
 

@@ -18,7 +18,7 @@
         <link rel="prev" href="../knowledge-capture/">
       
       
-        <link rel="next" href="../scratchpad-with-claude/">
+        <link rel="next" href="../import-plans/">
       
       
         
@@ -1424,6 +1424,8 @@
       
         
       
+        
+      
     
     
     
@@ -1816,6 +1818,36 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3934,7 +3966,7 @@ marked <code>[x]</code> prematurely.</p>
 <tbody>
 <tr>
 <td><code>ctx add task "Write tests for X"</code></td>
-<td>"We should add tests for this—track that?"</td>
+<td>"We should add tests for this: track that?"</td>
 </tr>
 <tr>
 <td><code>/ctx-next</code></td>
@@ -3994,7 +4026,7 @@ agent to do the thinking:</p>
 </tr>
 <tr>
 <td>"<em>What should we remember from today?</em>"</td>
-<td>Agent surfaces everything persist-worthy—not just tasks</td>
+<td>Agent surfaces everything persist-worthy: not just tasks</td>
 </tr>
 <tr>
 <td>"<em>Anything we should track before we move on?</em>"</td>
@@ -4009,7 +4041,7 @@ might miss:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You:   &quot;Are there any tasks, learnings, or decisions worth adding
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>        from this session?&quot;
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Agent: &quot;Yes—here&#39;s what I&#39;d suggest:
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Agent: &quot;Yes. Here&#39;s what I&#39;d suggest:
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  Tasks:
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  - Add retry logic to the webhook delivery (we discussed it when
@@ -4017,7 +4049,7 @@ might miss:</p>
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  - Update the API docs to reflect the new rate limit headers
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
 </span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  Learnings:
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  - net/http&#39;s default client has no timeout—we burned 15 minutes
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  - net/http&#39;s default client has no timeout: we burned 15 minutes
 </span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    on that before adding an explicit 30s timeout
 </span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>  Decisions:
@@ -4064,7 +4096,7 @@ surfaces it before context is lost.</p>
 driving:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>You:   What&#39;s left to do?
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Agent: You have 5 pending tasks across 2 phases. The highest priority is
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>       &quot;Implement ctx agent cooldown&quot;—it&#39;s marked in-progress from
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>       &quot;Implement ctx agent cooldown&quot;: it&#39;s marked in-progress from
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>       yesterday and half-built. Want to pick that up?
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
 </span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>You:   Yeah, let&#39;s finish it.
@@ -4074,13 +4106,13 @@ driving:</p>
 </span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Agent: Nice. I&#39;ll mark &quot;Implement ctx agent cooldown&quot; as done.
 </span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>       I noticed two things from the implementation:
 </span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>       1. The tombstone file cleanup should happen on a timer, not just
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>          at startup—want me to add that as a task?
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>          at startup. Want me to add that as a task?
 </span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>       2. We learned that file locks don&#39;t work reliably on NFS. I&#39;ll
 </span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>          add that to LEARNINGS.md.
 </span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
 </span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>You:   Yes to both. What&#39;s next?
 </span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Agent: Added the cleanup task as high priority. Next up is &quot;Add --section
-</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>       flag to ctx add task&quot;—last item in Phase 1. It should be
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>       flag to ctx add task&quot;: last item in Phase 1. It should be
 </span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>       straightforward since the flag parsing pattern already exists
 </span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>       in the codebase. Ready?
 </span></code></pre></div>
@@ -4089,7 +4121,7 @@ driving:</p>
 <p>Notice what did not happen:
 The user never typed a <code>ctx</code> command.</p>
 <p>The agent handled task completion, follow-up creation, learning capture,
-and next-task selection—all from natural conversation.</p>
+and next-task selection: all from natural conversation.</p>
 </div>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Add a task</span>
@@ -4215,13 +4247,13 @@ Store short-lived sensitive notes in an encrypted scratchpad.</p>
         
         
           
-          <a href="../scratchpad-with-claude/" class="md-footer__link md-footer__link--next" aria-label="Next: Using the Scratchpad">
+          <a href="../import-plans/" class="md-footer__link md-footer__link--next" aria-label="Next: Importing Claude Code Plans">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Using the Scratchpad
+                Importing Claude Code Plans
               </div>
             </div>
             <div class="md-footer__button md-icon">

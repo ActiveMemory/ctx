@@ -541,8 +541,7 @@ func TestKeyRotationDays_Custom(t *testing.T) {
 	_ = os.Chdir(tempDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
-	rcContent := `notify:
-  key_rotation_days: 30
+	rcContent := `key_rotation_days: 30
 `
 	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
 
@@ -551,6 +550,45 @@ func TestKeyRotationDays_Custom(t *testing.T) {
 	days := KeyRotationDays()
 	if days != 30 {
 		t.Errorf("KeyRotationDays() = %d, want %d", days, 30)
+	}
+}
+
+func TestKeyRotationDays_LegacyNotify(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `notify:
+  key_rotation_days: 45
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	days := KeyRotationDays()
+	if days != 45 {
+		t.Errorf("KeyRotationDays() = %d, want %d (legacy notify fallback)", days, 45)
+	}
+}
+
+func TestKeyRotationDays_TopLevelTakesPrecedence(t *testing.T) {
+	tempDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rcContent := `key_rotation_days: 60
+notify:
+  key_rotation_days: 45
+`
+	_ = os.WriteFile(filepath.Join(tempDir, ".ctxrc"), []byte(rcContent), 0600)
+
+	Reset()
+
+	days := KeyRotationDays()
+	if days != 60 {
+		t.Errorf("KeyRotationDays() = %d, want %d (top-level takes precedence)", days, 60)
 	}
 }
 

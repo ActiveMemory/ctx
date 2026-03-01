@@ -1588,6 +1588,8 @@
       
         
       
+        
+      
     
     
     
@@ -1680,6 +1682,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3449,17 +3481,14 @@ Without it, the data is gone.</p>
 <p>Also, several <code>ctx</code> features (<em>journal changelog, blog generation</em>) also use
 <code>git</code> history directly.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>A full ctx installation has two parts:</p>
-<ol>
-<li><strong>The <code>ctx</code> binary</strong>: the CLI tool itself;</li>
-<li><strong>The Claude Code plugin</strong>: hooks and skills that make Claude Code
-   context-aware.</li>
-</ol>
-<p>You need <strong>both</strong>. The binary alone gives you the CLI, but Claude Code
-won't autoload context, nudge you to persist decisions, or provide
-the <code>/ctx-*</code> skills.</p>
-<p>Pick one of the options below. Each is a complete path from zero to
-a working setup.</p>
+<p>Every setup starts with <strong>the <code>ctx</code> binary</strong>: the CLI tool itself.</p>
+<p>If you use <strong>Claude Code</strong>, you also install the <strong>ctx plugin</strong>, which
+adds hooks (context autoloading, persistence nudges) and 25+ <code>/ctx-*</code>
+skills. For other AI tools, <code>ctx</code> integrates via generated instruction
+files or manual context pasting: see
+<a href="../../operations/integrations/">Integrations</a> for tool-specific setup.</p>
+<p>Pick one of the options below to install the binary. Claude Code users
+should also follow the plugin steps included in each option.</p>
 <h3 id="option-1-build-from-source-recommended">Option 1: Build from Source (<em>Recommended</em>)<a class="headerlink" href="#option-1-build-from-source-recommended" title="Permanent link">&para;</a></h3>
 <p>Requires <a href="https://go.dev/">Go</a> (<em>version defined in 
 <a href="https://github.com/ActiveMemory/ctx/blob/main/go.mod"><code>go.mod</code></a></em>) and
@@ -3528,7 +3557,7 @@ you are installing, and the plugin stays in sync with the binary.</p>
 </div>
 </div>
 </div>
-<p><strong>Install the Claude Code plugin</strong> from the marketplace:</p>
+<p><strong>Claude Code users</strong>: install the plugin from the marketplace:</p>
 <ol>
 <li>Launch <code>claude</code>;</li>
 <li>Type <code>/plugin</code> and press Enter;</li>
@@ -3536,9 +3565,11 @@ you are installing, and the plugin stays in sync with the binary.</p>
 <li>Enter <code>ActiveMemory/ctx</code>;</li>
 <li>Back in <code>/plugin</code>, select <strong>Install</strong> and choose <code>ctx</code>.</li>
 </ol>
+<p><strong>Other tool users</strong>: see <a href="../../operations/integrations/">Integrations</a> for
+tool-specific setup (Cursor, Copilot, Aider, Windsurf, etc.).</p>
 <p><strong>Verify:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>--version<span class="w">       </span><span class="c1"># binary is in PATH</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>list<span class="w"> </span><span class="c1"># plugin is installed</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>claude<span class="w"> </span>/plugin<span class="w"> </span>list<span class="w"> </span><span class="c1"># plugin is installed (Claude Code only)</span>
 </span></code></pre></div>
 <h4 id="verifying-checksums">Verifying Checksums<a class="headerlink" href="#verifying-checksums" title="Permanent link">&para;</a></h4>
 <p>Each binary has a corresponding <code>.sha256</code> checksum file. To verify your download:</p>
@@ -3569,7 +3600,7 @@ full hook and skill reference.</p>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
 <p>This creates a <code>.context/</code> directory with template files and a
-<code>.context.key</code> for the <a href="../../reference/scratchpad/">encrypted scratchpad</a>.
+<code>.ctx.key</code> for the <a href="../../reference/scratchpad/">encrypted scratchpad</a>.
 For Claude Code, install the <a href="../../operations/integrations/#claude-code-full-integration">ctx plugin</a>
 for automatic hooks and skills.</p>
 <h3 id="2-check-status">2. Check Status<a class="headerlink" href="#2-check-status" title="Permanent link">&para;</a></h3>

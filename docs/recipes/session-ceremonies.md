@@ -62,14 +62,14 @@ braces.
 
 ## Commands and Skills Used
 
-| Tool             | Type  | Purpose                                          |
-|------------------|-------|--------------------------------------------------|
-| `/ctx-remember`  | Skill | Load context and present structured readback     |
-| `/ctx-wrap-up`   | Skill | Gather session signal, propose and persist context|
-| `/ctx-commit`    | Skill | Commit with context capture (offered by wrap-up) |
-| `ctx agent`      | CLI   | Load token-budgeted context packet               |
-| `ctx recall list`| CLI   | List recent sessions                             |
-| `ctx add`        | CLI   | Persist learnings, decisions, conventions, tasks  |
+| Tool              | Type  | Purpose                                            |
+|-------------------|-------|----------------------------------------------------|
+| `/ctx-remember`   | Skill | Load context and present structured readback       |
+| `/ctx-wrap-up`    | Skill | Gather session signal, propose and persist context |
+| `/ctx-commit`     | Skill | Commit with context capture (offered by wrap-up)   |
+| `ctx agent`       | CLI   | Load token-budgeted context packet                 |
+| `ctx recall list` | CLI   | List recent sessions                               |
+| `ctx add`         | CLI   | Persist learnings, decisions, conventions, tasks   |
 
 ## Session Start: /ctx-remember
 
@@ -208,12 +208,12 @@ That is the complete ceremony. Two commands, bookending your session.
 
 ## Relationship to Other Skills
 
-| Skill          | When                          | Purpose                        |
-|----------------|-------------------------------|--------------------------------|
-| `/ctx-remember`| Session start                 | Load and confirm context       |
-| `/ctx-reflect` | Mid-session breakpoints       | Checkpoint at milestones       |
-| `/ctx-wrap-up` | Session end                   | Full session review and persist|
-| `/ctx-commit`  | After completing work         | Commit with context capture    |
+| Skill           | When                    | Purpose                         |
+|-----------------|-------------------------|---------------------------------|
+| `/ctx-remember` | Session start           | Load and confirm context        |
+| `/ctx-reflect`  | Mid-session breakpoints | Checkpoint at milestones        |
+| `/ctx-wrap-up`  | Session end             | Full session review and persist |
+| `/ctx-commit`   | After completing work   | Commit with context capture     |
 
 `/ctx-reflect` is for mid-session checkpoints. `/ctx-wrap-up` is for
 end-of-session: it is more thorough, covers the full session arc, and

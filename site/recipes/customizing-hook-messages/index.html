@@ -1422,6 +1422,8 @@
       
         
       
+        
+      
     
     
     
@@ -1517,6 +1519,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3662,8 +3694,8 @@ just to change the <em>words</em>.</p>
 <li><strong>Embedded default</strong>: compiled into the <code>ctx</code> binary</li>
 <li><strong>Hardcoded fallback</strong>: belt-and-suspenders safety net</li>
 </ol>
-<p>The hook <em>logic</em> (when to fire, counting, state tracking, cooldowns) is
-unchanged. Only the <em>content</em> -- what text gets emitted -- comes from
+<p>The hook <em>logic</em> (<em>when to fire, counting, state tracking, cooldowns</em>) is
+unchanged. Only the <em>content</em> (<em>what text gets emitted</em>) comes from
 the template. You customize what the hook says without touching how it
 decides to speak.</p>
 <h3 id="finding-the-original-templates">Finding the Original Templates<a class="headerlink" href="#finding-the-original-templates" title="Permanent link">&para;</a></h3>
@@ -3689,16 +3721,16 @@ everything you need to write a replacement.</p>
 </span></code></pre></div>
 <p>The <code>show</code> and <code>edit</code> commands list available variables for each message.
 When writing a replacement, keep the same <code>{{.VariableName}}</code> placeholders
-to preserve dynamic content. Variables that you omit render as <code>&lt;no value&gt;</code>
--- no error, but the output may look odd.</p>
+to preserve dynamic content. Variables that you omit render as <code>&lt;no value&gt;</code>:
+no error, but the output may look odd.</p>
 <h3 id="intentional-silence">Intentional Silence<a class="headerlink" href="#intentional-silence" title="Permanent link">&para;</a></h3>
-<p>An <strong>empty template file</strong> (0 bytes or whitespace-only) means "don't
-emit a message." The hook still runs its logic but produces no output.
+<p>An <strong>empty template file</strong> (0 bytes or whitespace-only) means "<em>don't
+emit a message</em>". The hook still runs its logic but produces no output.
 This lets you silence specific messages without removing the hook from
 <code>hooks.json</code>.</p>
 <hr />
 <h2 id="example-python-project-qa-gate">Example: Python Project QA Gate<a class="headerlink" href="#example-python-project-qa-gate" title="Permanent link">&para;</a></h2>
-<p>The default QA gate says "lint the ENTIRE project" and references
+<p>The default QA gate says "<em>lint the ENTIRE project</em>" and references
 <code>make lint</code>. For a Python project, you want <code>pytest</code> and <code>ruff</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># See the current default</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate
@@ -3709,7 +3741,7 @@ This lets you silence specific messages without removing the hook from
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Edit the override</span>
 </span></code></pre></div>
 <p>Replace the content in <code>.context/hooks/messages/qa-reminder/gate.txt</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>HARD GATE — DO NOT COMMIT without completing ALL of these steps first:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>HARD GATE! DO NOT COMMIT without completing ALL of these steps first:
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>(1) Run the full test suite: pytest -x
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>(2) Run the linter: ruff check .
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>(3) Verify a clean working tree
@@ -3749,7 +3781,7 @@ JavaScript project:</p>
 <p>Not all messages are equal. The <code>list</code> command shows each message's
 category:</p>
 <h3 id="customizable-16-messages">Customizable (16 messages)<a class="headerlink" href="#customizable-16-messages" title="Permanent link">&para;</a></h3>
-<p>Messages that are <strong>opinions</strong> -- project-specific wording that benefits
+<p>Messages that are <strong>opinions</strong>: project-specific wording that benefits
 from customization. These are the primary targets for override.</p>
 <table>
 <thead>
@@ -4014,8 +4046,8 @@ them, but <code>edit</code> will warn you first.</p>
 </tr>
 </tbody>
 </table>
-<p>Templates that reference undefined variables render <code>&lt;no value&gt;</code> -- no
-error, graceful degradation.</p>
+<p>Templates that reference undefined variables render <code>&lt;no value&gt;</code>: 
+no error, graceful degradation.</p>
 <hr />
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>

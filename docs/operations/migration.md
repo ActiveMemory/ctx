@@ -15,11 +15,14 @@ icon: lucide/package-plus
 
 !!! tip "Claude Code User?"
     You probably want the plugin instead of this page.
-    Install ctx from the marketplace (`/plugin` → search "ctx" → Install) and
-    you're done — hooks, skills, and updates are handled for you.
+
+    Install ctx from the marketplace:<br />
+    (*`/plugin` → search "ctx" → Install*)<br />
+    and you're done: hooks, skills, and updates are handled for you.
+
     See [Getting Started](../home/getting-started.md) for the full walkthrough.
 
-This guide covers adopting `ctx` in existing projects — regardless of
+This guide covers adopting `ctx` in existing projects regardless of
 which tools your team uses.
 
 ## Quick Paths
@@ -29,26 +32,43 @@ which tools your team uses.
 | Nothing (*greenfield*)               | `ctx init`                                        | Creates `.context/`, `CLAUDE.md`, permissions        |
 | Existing `CLAUDE.md`                 | `ctx init --merge`                                | Backs up your file, inserts `ctx` block after the H1 |
 | Existing `CLAUDE.md` + `ctx` markers | `ctx init --force`                                | Replaces the `ctx` block, leaves your content intact |
-| `.cursorrules` / `.aider.conf.yml`   | `ctx init`                                        | `ctx` ignores those files — they coexist cleanly     |
+| `.cursorrules` / `.aider.conf.yml`   | `ctx init`                                        | `ctx` ignores those files: they coexist cleanly      |
 | Team repo, first adopter             | `ctx init --merge && git add .context/ CLAUDE.md` | Initialize and commit for the team                   |
 
 ---
 
 ## Existing `CLAUDE.md`
 
-This is the most common scenario. You have a `CLAUDE.md` with project-specific
-instructions and don't want to lose them.
+This is the most common scenario:
+
+You have a `CLAUDE.md` with project-specific instructions and don't want to 
+lose them.
+
+!!! tip "You Own `CLAUDE.md`"
+    **After initialization, `CLAUDE.md` is yours: edit it freely**.
+
+    Add project instructions, remove sections you don't need, reorganize as 
+    you see fit.
+
+    The only part `ctx` manages is the block between the `<!-- ctx:context -->`
+    and `<!-- ctx:end -->` markers; everything outside those markers is yours
+    to change at any time.
+
+    If you remove the markers, nothing breaks: `ctx` simply treats the file 
+    as having no `ctx` content and will offer to merge again on the next 
+    `ctx init`.
+
 
 ### What `ctx init` Does
 
 When `ctx init` detects an existing `CLAUDE.md`, it checks for ctx markers
 (`<!-- ctx:context -->` ... `<!-- ctx:end -->`):
 
-| State                    | Default behavior         | With `--merge`            | With `--force`            |
-|--------------------------|--------------------------|---------------------------|---------------------------|
-| No `CLAUDE.md`           | Creates from template    | Creates from template     | Creates from template     |
-| Exists, no ctx markers   | **Prompts** to merge     | Auto-merges (*no prompt*) | Auto-merges (*no prompt*) |
-| Exists, has ctx markers  | Skips (*already set up*) | Skips                     | Replaces ctx block only   |
+| State                      | Default behavior         | With `--merge`            | With `--force`                  |
+|----------------------------|--------------------------|---------------------------|---------------------------------|
+| No `CLAUDE.md`             | Creates from template    | Creates from template     | Creates from template           |
+| Exists, no `ctx` markers   | **Prompts** to merge     | Auto-merges (*no prompt*) | Auto-merges (*no prompt*)       |
+| Exists, has `ctx` markers  | Skips (*already set up*) | Skips                     | Replaces the `ctx` block only   |
 
 ### The `--merge` Flag
 
@@ -70,8 +90,8 @@ Your content before and after the ctx block remains exactly as it was.
 
 ## Build Commands
 
--`npm run build` — production build
-- `npm test` — run tests
+-`npm run build`: production build
+- `npm test`: run tests
 
 ## Code Style
 
@@ -96,8 +116,8 @@ This project uses Context (`ctx`) for context persistence across sessions.
 
 ## Build Commands
 
-- `npm run build` — production build
-- `npm test` — run tests
+- `npm run build`: production build
+- `npm test`: run tests
 
 ## Code Style
 
@@ -194,7 +214,7 @@ prompt files, consider migrating it:
 3. **Architecture notes** → `.context/ARCHITECTURE.md`
 4. **Known issues / tips** → `.context/LEARNINGS.md`
 
-You don't need to delete the originals — ctx and tool-specific files
+You don't need to delete the originals: `ctx` and tool-specific files
 can coexist. But centralizing in `.context/` means every tool gets the
 same context.
 
@@ -204,14 +224,36 @@ same context.
 
 ### `.context/` Is Designed to Be Committed
 
-The `.context/` directory is meant to live in version control. It contains
-project knowledge, **not** secrets or personal preferences.
+The context files (tasks, decisions, learnings, conventions, architecture)
+are meant to live in version control. However, some subdirectories are
+personal or sensitive and should **not** be committed.
+
+`ctx init` automatically adds these `.gitignore` entries:
+
+```gitignore
+# Journals contain full session transcripts: personal, potentially large
+.context/journal/
+.context/journal-site/
+.context/journal-obsidian/
+
+# Encryption key (NEVER COMMIT)
+.context/.ctx.key
+
+# Runtime state and logs (ephemeral, machine-specific):
+.context/state/
+.context/logs/
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
+```
+
+With those in place, committing is straightforward:
 
 ```bash
 # One person initializes
 ctx init --merge
 
-# Commit everything
+# Commit context files (journals and keys are already gitignored)
 git add .context/ CLAUDE.md
 git commit -m "Add ctx context management"
 git push

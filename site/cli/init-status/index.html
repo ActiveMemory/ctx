@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3391,7 +3423,7 @@
 <tr>
 <td><code>--budget</code></td>
 <td>8000</td>
-<td>Token budget — controls content selection and prioritization</td>
+<td>Token budget: controls content selection and prioritization</td>
 </tr>
 <tr>
 <td><code>--format</code></td>
@@ -3414,11 +3446,11 @@
 <p>The budget controls how much context is included. Entries are selected
 in priority tiers:</p>
 <ol>
-<li><strong>Constitution</strong> — always included in full (inviolable rules)</li>
-<li><strong>Tasks</strong> — all active tasks, up to 40% of budget</li>
-<li><strong>Conventions</strong> — all conventions, up to 20% of budget</li>
-<li><strong>Decisions</strong> — scored by recency and relevance to active tasks</li>
-<li><strong>Learnings</strong> — scored by recency and relevance to active tasks</li>
+<li><strong>Constitution</strong>: always included in full (<em>inviolable rules</em>)</li>
+<li><strong>Tasks</strong>: all active tasks, up to 40% of budget</li>
+<li><strong>Conventions</strong>: all conventions, up to 20% of budget</li>
+<li><strong>Decisions</strong>: scored by recency and relevance to active tasks</li>
+<li><strong>Learnings</strong>: scored by recency and relevance to active tasks</li>
 </ol>
 <p>Decisions and learnings are ranked by a combined score (how recent + how
 relevant to your current tasks). High-scoring entries are included with
@@ -3484,7 +3516,7 @@ their full body. Entries that don't fit get title-only summaries in an
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Pipe to file</span>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span>&gt;<span class="w"> </span>context.md
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># With cooldown (hooks/automation — requires --session)</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># With cooldown (hooks/automation: requires --session)</span>
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--session<span class="w"> </span><span class="nv">$PPID</span>
 </span></code></pre></div>
 <p><strong>Use case</strong>: Copy-paste into AI chat, pipe to system prompt, or use in hooks.</p>

@@ -35,7 +35,7 @@ It lives in a `.context/` directory in your repo.
 
 * A session is *interactive*.
 * `ctx` enables **cognitive continuity**.
-* **Cognitive continuity** enables durable, *symbiotic-like* human–AI workflows.
+* **Cognitive continuity** enables durable, *symbiotic-like* human-AI workflows.
 
 !!! tip "Context Files"
     Context files let AI tools **remember** [*decisions*, *conventions*, and *learnings*](context-files.md):
@@ -95,7 +95,7 @@ Without persistent memory, every session starts at zero.
     AI:   "Per DECISIONS.md (2026-02-12): JWT, not sessions: 
            The project uses PostgreSQL with JWT
            authentication. The API follows snake_case conventions.
-           Last session you completed the login endpoint — the
+           Last session you completed the login endpoint: the
            registration endpoint is next on TASKS.md. Want me to
            start there?"
 
@@ -141,5 +141,5 @@ makes the *next* session **smarter**.
 
 **Ready to Get Started?**
 
-* [Getting Started →](getting-started.md) — full installation and setup
-* [Your First Session →](first-session.md) — step-by-step walkthrough from `ctx init` to verified recall
+* [Getting Started →](getting-started.md): full installation and setup
+* [Your First Session →](first-session.md): step-by-step walkthrough from `ctx init` to verified recall

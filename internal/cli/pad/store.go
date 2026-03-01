@@ -20,7 +20,7 @@ import (
 
 // Error messages matching the spec.
 const (
-	errNoKey       = "encrypted scratchpad found but no key; place your key at .context/.context.key"
+	errNoKey       = "encrypted scratchpad found but no key; place your key at .context/.ctx.key"
 	errDecryptFail = "decryption failed: wrong key?"
 	msgEmpty       = "Scratchpad is empty."
 	msgKeyCreated  = "Scratchpad key created at %s\nCopy this file to your other machines at the same path.\n"

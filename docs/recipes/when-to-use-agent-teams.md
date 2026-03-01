@@ -127,7 +127,7 @@ Agent: [reads `TASKS.md`, analyzes codebase]
         Task B touches docs/ and site/
         Task C touches internal/config/ and internal/cli/status/
 
-        Tasks A and C overlap on internal/config/ — they should be
+        Tasks A and C overlap on internal/config/ # they should be
         in the same track. Task B is independent."
 ```
 
@@ -194,15 +194,15 @@ Run multiple agents on independent task tracks using git worktrees.
 
 ## Go Deeper
 
-* [CLI Reference](../cli/index.md) — all commands and flags
-* [Integrations](../operations/integrations.md) — setup for Claude Code, Cursor, Aider
-* [Session Journal](../reference/session-journal.md) — browse and search session history
+* [CLI Reference](../cli/index.md): all commands and flags
+* [Integrations](../operations/integrations.md): setup for Claude Code, Cursor, Aider
+* [Session Journal](../reference/session-journal.md): browse and search session history
 
 ## See Also
 
 * [Parallel Agent Development with Git Worktrees](parallel-worktrees.md):
   the mechanical "how" for worktree-based parallelism
 * [Running an Unattended AI Agent](autonomous-loops.md): serial autonomous
-  loops — a different scaling strategy
+  loops: a different scaling strategy
 * [Tracking Work Across Sessions](task-management.md): managing the task
   backlog that feeds into any multi-agent setup

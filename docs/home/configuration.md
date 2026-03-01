@@ -44,7 +44,7 @@ my-project/
 ```
 
 `ctx` looks for `.ctxrc` in the current working directory when any command runs.
-There is no global or user-level config file — configuration is always
+There is no global or user-level config file: Configuration is always
 per-project.
 
 !!! note "Contributors: Dev Configuration Profile"
@@ -85,12 +85,13 @@ A commented `.ctxrc` showing all options and their defaults:
 # injection_token_warn: 15000
 # context_window: 200000
 #
+# key_rotation_days: 90
+#
 # notify:               # requires: ctx notify setup
 #   events:             # required: no events sent unless listed
 #     - loop
 #     - nudge
 #     - relay
-#   key_rotation_days: 90
 #
 # priority_order:
 #   - CONSTITUTION.md
@@ -119,8 +120,8 @@ A commented `.ctxrc` showing all options and their defaults:
 | `convention_line_count` | `int`      | `200`          | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable) |
 | `injection_token_warn`  | `int`      | `15000`        | Warn when auto-injected context exceeds this token count (0 = disable) |
 | `context_window`        | `int`      | `200000`       | Context window size in tokens for usage reporting (Opus/Sonnet default) |
+| `key_rotation_days`     | `int`      | `90`           | Days before encryption key rotation nudge               |
 | `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
-| `notify.key_rotation_days` | `int`   | `90`           | Days before encryption key rotation nudge               |
 | `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
 
 **Default priority order** (*used when `priority_order` is not set*):
@@ -316,6 +317,7 @@ notify:
     - loop      # loop completion/max-iteration
     - nudge     # VERBATIM relay hooks fired
     # - relay   # all hook output (verbose, for debugging)
+    # - heartbeat  # every-prompt session-alive signal
 ```
 
 Notifications are **opt-in**: No events are sent unless explicitly listed.

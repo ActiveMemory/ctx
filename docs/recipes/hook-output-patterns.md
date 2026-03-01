@@ -95,10 +95,10 @@ what they asked: Stale backups, unexported sessions, resource warnings.
 
 **Examples in `ctx`**:
 
-- `ctx system check-journal`: Unexported sessions and unenriched entries
-- `ctx system check-context-size`: Context capacity warning
-- `ctx system check-resources`: Resource pressure (memory, swap, disk, load) — `DANGER` only
-- `check-backup-age.sh`: Stale backup warning (*project-local*)
+* `ctx system check-journal`: Unexported sessions and unenriched entries
+* `ctx system check-context-size`: Context capacity warning
+* `ctx system check-resources`: Resource pressure (memory, swap, disk, load): `DANGER` only
+* `check-backup-age.sh`: Stale backup warning (*project-local*)
 
 **Trade-off**: Noisy if overused. Every VERBATIM relay adds a preamble
 before the agent's actual answer. Throttle with once-per-day markers or

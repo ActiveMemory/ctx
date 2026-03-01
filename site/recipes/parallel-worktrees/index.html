@@ -1422,6 +1422,8 @@
       
         
       
+        
+      
     
     
     
@@ -1517,6 +1519,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3649,7 +3681,7 @@ each agent session picks up the full project state and works independently.</p>
 <h2 id="the-workflow">The Workflow<a class="headerlink" href="#the-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-assess-the-backlog">Step 1: Assess the Backlog<a class="headerlink" href="#step-1-assess-the-backlog" title="Permanent link">&para;</a></h3>
 <p>Start in your main checkout. Ask the agent to analyze your tasks and
-group them by blast radius — which files and directories each task
+group them by blast radius: which files and directories each task
 touches.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ctx-worktree
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Look at TASKS.md and group the pending tasks into 2-3 independent
@@ -3659,9 +3691,9 @@ touches.</p>
 <p>The agent reads <code>TASKS.md</code>, estimates file overlap, and proposes groups:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Proposed worktree groups:
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  work/docs    — recipe updates, blog post (touches: docs/)
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  work/crypto  — scratchpad encryption infra (touches: internal/crypto/)
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  work/tests   — recall test coverage (touches: internal/cli/recall/)
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  work/docs   # recipe updates, blog post (touches: docs/)
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  work/crypto # scratchpad encryption infra (touches: internal/crypto/)
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  work/tests  # recall test coverage (touches: internal/cli/recall/)
 </span></code></pre></div>
 <h3 id="step-2-create-the-worktrees">Step 2: Create the Worktrees<a class="headerlink" href="#step-2-create-the-worktrees" title="Permanent link">&para;</a></h3>
 <p>Once you approve the grouping, the agent creates worktrees as sibling
@@ -3727,7 +3759,7 @@ prompts work:</p>
 <li><em>"Clean up all the worktrees, we're done."</em></li>
 </ul>
 <h2 id="what-does-not-work-in-worktrees">What Does NOT Work in Worktrees<a class="headerlink" href="#what-does-not-work-in-worktrees" title="Permanent link">&para;</a></h2>
-<p>The encryption key (<code>.context/.context.key</code>) is gitignored: It only
+<p>The encryption key (<code>.context/.ctx.key</code>) is gitignored: It only
 exists in the main checkout. This affects key-dependent features:</p>
 <ul>
 <li><strong><code>ctx pad</code></strong>: The scratchpad is inaccessible. Commands fail

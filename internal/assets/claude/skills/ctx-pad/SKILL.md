@@ -108,7 +108,7 @@ ctx pad export --force ./backup # overwrite existing files
 **Merge entries from another scratchpad:**
 ```bash
 ctx pad merge worktree/.context/scratchpad.enc
-ctx pad merge --key /other/.context.key foreign.enc
+ctx pad merge --key /other/.ctx.key foreign.enc
 ctx pad merge --dry-run pad-a.enc pad-b.md
 ```
 
@@ -128,7 +128,7 @@ When the user says "add" — check context:
 
 ## Important Notes
 
-- The encryption key (`.context.key` in the context directory)
+- The encryption key (`.ctx.key` in the context directory)
   must NEVER be printed to stdout or shown to the user
 - Do not attempt to read `scratchpad.enc` in the context directory
   directly; always use `ctx pad`

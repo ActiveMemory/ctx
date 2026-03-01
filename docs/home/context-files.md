@@ -55,7 +55,7 @@ The priority order follows a logical progression for AI tools:
 
 ## `CONSTITUTION.md`
 
-**Purpose:** Define hard invariants—rules that must **NEVER** be violated, 
+**Purpose:** Define hard invariants: Rules that must **NEVER** be violated, 
 regardless of the task.
 
 AI tools read this first and should refuse tasks that violate these rules.
@@ -70,21 +70,21 @@ is wrong.
 
 ## Security Invariants
 
-- [ ] Never commit secrets, tokens, API keys, or credentials
-- [ ] Never store customer/user data in context files
-- [ ] Never disable security linters without documented exception
+* [ ] Never commit secrets, tokens, API keys, or credentials
+* [ ] Never store customer/user data in context files
+* [ ] Never disable security linters without documented exception
 
 ## Quality Invariants
 
-- [ ] All code must pass tests before commit
-- [ ] No `any` types in TypeScript without documented reason
-- [ ] No TODO comments in main branch (*move to `TASKS.md`*)
+* [ ] All code must pass tests before commit
+* [ ] No `any` types in TypeScript without documented reason
+* [ ] No TODO comments in main branch (*move to `TASKS.md`*)
 
 ## Process Invariants
 
-- [ ] All architectural changes require a decision record
-- [ ] Breaking changes require version bump
-- [ ] Generated files are never committed
+* [ ] All architectural changes require a decision record
+* [ ] Breaking changes require version bump
+* [ ] Generated files are never committed
 ```
 
 ### Guidelines
@@ -113,25 +113,25 @@ inline tags.
 
 ## Phase 1: Initial Setup
 
-- [x] Set up project structure
-- [x] Configure linting and formatting
-- [ ] Add CI/CD pipeline `#in-progress`
+* [x] Set up project structure
+* [x] Configure linting and formatting
+* [ ] Add CI/CD pipeline `#in-progress`
 
 ## Phase 2: Core Features
 
-- [ ] Implement user authentication `#priority:high`
-- [ ] Add API rate limiting `#priority:medium`
-  - Blocked by: Need to finalize auth first
+* [ ] Implement user authentication `#priority:high`
+* [ ] Add API rate limiting `#priority:medium`
+  * Blocked by: Need to finalize auth first
 
 ## Backlog
 
-- [ ] Performance optimization `#priority:low`
-- [ ] Add metrics dashboard `#priority:deferred`
+* [ ] Performance optimization `#priority:low`
+* [ ] Add metrics dashboard `#priority:deferred`
 ```
 
 **Key principles:**
 
-* Tasks never move between sections — mark as `[x]` or `[-]` in place
+* Tasks never move between sections: mark as `[x]` or `[-]` in place
 * Use `#in-progress` inline tag to indicate current work
 * Phase headers provide structure and replay order
 * Backlog section for unscheduled work
@@ -198,8 +198,8 @@ get re-debated.
 **Consequences**: What are the implications?
 
 **Alternatives Considered**:
-- Alternative A: Why rejected
-- Alternative B: Why rejected
+* Alternative A: Why rejected
+* Alternative B: Why rejected
 ```
 
 ### Example
@@ -321,7 +321,7 @@ Organize learnings by topic:
 
 * Include concrete examples
 * Explain the "why" not just the "what"
-* Keep patterns minimal—only document what's non-obvious
+* Keep patterns minimal: Only document what's non-obvious
 
 ---
 
@@ -349,7 +349,7 @@ Brief description of what the system does and how it's organized.
 **Dependents**: What depends on it
 
 **Key Files**:
-- path/to/file.ts — Description
+* path/to/file.ts: Description
 
 ## Data Flow
 
@@ -416,9 +416,9 @@ and update context.
 
 **How to Avoid Hallucinating Memory:** Critical rules:
 
-1. Never assume—if not in files, you don't know it
-2. Never invent history—don't claim "*we discussed*" without evidence
-3. Verify before referencing—search files before citing
+1. Never assume: If not in files, you don't know it
+2. Never invent history: Don't claim "*we discussed*" without evidence
+3. Verify before referencing: Search files before citing
 4. When uncertain, say so
 5. Trust files over intuition
 
@@ -439,7 +439,8 @@ and update context.
 >Use Redis for caching</context-update>
 ```
 
-See [Integrations](../operations/integrations.md#context-update-commands) for full documentation.
+See [Integrations](../operations/integrations.md#context-update-commands) 
+for full documentation.
 
 ---
 
@@ -457,7 +458,7 @@ All context files follow these conventions:
 ## Further Reading
 
 * [Refactoring with Intent](../blog/2026-02-01-refactoring-with-intent.md):
-  How persistent context prevents drift during refactoring sessions.
+  how persistent context prevents drift during refactoring sessions
 
 ## Token Efficiency
 
@@ -471,4 +472,5 @@ Keep context files **concise**:
 
 ----
 
-**Next Up**: [Prompting Guide →](prompting-guide.md) — effective prompts for AI sessions with ctx.
+**Next Up**: [Prompting Guide →](prompting-guide.md): 
+  effective prompts for AI sessions with `ctx`

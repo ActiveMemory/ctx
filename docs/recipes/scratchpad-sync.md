@@ -11,7 +11,7 @@ You work from multiple machines: a desktop and a laptop, or a local
 machine and a remote dev server.
 
 The scratchpad entries are encrypted. The ciphertext (`.context/scratchpad.enc`)
-travels with git, but the encryption key (`.context/.context.key`) is
+travels with git, but the encryption key (`.context/.ctx.key`) is
 gitignored. Without the key on each machine, you cannot read or write entries.
 
 **How do you distribute the key and keep the scratchpad in sync?**
@@ -19,14 +19,14 @@ gitignored. Without the key on each machine, you cannot read or write entries.
 ## TL;DR
 
 ```bash
-ctx init                                                    # 1. generates .context.key
-scp .context/.context.key user@machine-b:project/.context/  # 2. copy key
-chmod 600 project/.context/.context.key                     # 3. secure it
+ctx init                                                    # 1. generates .ctx.key
+scp .context/.ctx.key user@machine-b:project/.context/  # 2. copy key
+chmod 600 project/.context/.ctx.key                     # 3. secure it
 # Normal git push/pull syncs the encrypted scratchpad.enc
 # On conflict: ctx pad resolve → rebuild → git add + commit
 ```
 
-!!! danger "Treat `.context.key` Like a Password"
+!!! danger "Treat `.ctx.key` Like a Password"
     The scratchpad key is the only thing protecting your **encrypted** entries.
 
     Store a backup in a secure enclave such as a password manager, and treat
@@ -60,7 +60,7 @@ Run `ctx init` on your first machine. The key is created automatically:
 ```bash
 ctx init
 # ...
-# Created .context/.context.key (0600)
+# Created .context/.ctx.key (0600)
 # Created .context/scratchpad.enc
 ```
 
@@ -72,7 +72,7 @@ Use any secure transfer method:
 
 ```bash
 # scp
-scp .context/.context.key user@machine-b:project/.context/
+scp .context/.ctx.key user@machine-b:project/.context/
 
 # Or use a password manager, USB drive, etc.
 ```
@@ -80,7 +80,7 @@ scp .context/.context.key user@machine-b:project/.context/
 Set permissions on Machine B:
 
 ```bash
-chmod 600 project/.context/.context.key
+chmod 600 project/.context/.ctx.key
 ```
 
 !!! danger "Secure the Transfer"
@@ -121,7 +121,7 @@ If both machines add entries between syncs, pulling will create a merge
 conflict on `.context/scratchpad.enc`. Git cannot merge binary (encrypted)
 content automatically.
 
-The fastest approach is `ctx pad merge` — it reads both conflict sides,
+The fastest approach is `ctx pad merge`: It reads both conflict sides,
 deduplicates, and writes the union:
 
 ```bash
@@ -130,7 +130,7 @@ git show :3:.context/scratchpad.enc > /tmp/theirs.enc
 git checkout --ours .context/scratchpad.enc
 ctx pad merge /tmp/theirs.enc
 
-# Done — commit the resolved scratchpad
+# Done: Commit the resolved scratchpad:
 git add .context/scratchpad.enc
 git commit -m "Resolve scratchpad merge conflict"
 ```

@@ -67,31 +67,35 @@ graph TD
 ### Plugin Hooks
 
 <!-- drift-check: cat internal/assets/claude/hooks/hooks.json | grep -c '"command"' -->
+<!-- drift-check: diff <(grep -oP '"ctx system \K[^"]+' internal/assets/claude/hooks/hooks.json | sort) <(sed -n '/Plugin Hooks/,/Hook Configuration/p' docs/operations/integrations.md | grep -oP 'ctx system \K[a-z-]+' | sort) -->
 The ctx plugin provides lifecycle hooks implemented as Go subcommands
 (`ctx system *`):
 
-| Hook                             | Event              | Purpose                                          |
-|----------------------------------|--------------------|--------------------------------------------------|
-| `ctx system block-non-path-ctx`  | PreToolUse (Bash)  | Block `./ctx` or `go run`: force `$PATH` install |
-| `ctx system qa-reminder`         | PreToolUse (Edit)  | Remind agent to lint/test before committing      |
-| `ctx system check-context-size`  | UserPromptSubmit   | Nudge context assessment as sessions grow        |
-| `ctx system check-ceremonies`    | UserPromptSubmit   | Nudge /ctx-remember and /ctx-wrap-up adoption    |
-| `ctx system check-persistence`   | UserPromptSubmit   | Remind to persist learnings/decisions            |
-| `ctx system check-journal`       | UserPromptSubmit   | Remind to export/enrich journal entries          |
-| `ctx system check-reminders`     | UserPromptSubmit   | Relay pending reminders at session start         |
-| `ctx system check-version`       | UserPromptSubmit   | Warn when binary/plugin versions diverge         |
-| `ctx system check-resources`     | UserPromptSubmit   | Warn when memory/swap/disk/load hit DANGER level |
-| `ctx system check-knowledge`     | UserPromptSubmit   | Nudge when knowledge files grow large            |
-| `ctx system check-map-staleness` | UserPromptSubmit   | Nudge when ARCHITECTURE.md is stale              |
-| `ctx system post-commit`         | PostToolUse (Bash) | Nudge context capture and QA after git commits   |
-| `ctx system cleanup-tmp`         | SessionEnd         | Remove stale temp files (older than 15 days)     |
+| Hook                             | Event                        | Purpose                                          |
+|----------------------------------|------------------------------|--------------------------------------------------|
+| `ctx system context-load-gate`   | PreToolUse (`.*`)            | Auto-inject context on first tool use            |
+| `ctx system block-non-path-ctx`  | PreToolUse (`Bash`)          | Block `./ctx` or `go run`: force `$PATH` install |
+| `ctx system qa-reminder`         | PreToolUse (`Bash`)          | Remind agent to lint/test before committing      |
+| `ctx system specs-nudge`         | PreToolUse (`EnterPlanMode`) | Nudge agent to use project specs when planning   |
+| `ctx system check-context-size`  | UserPromptSubmit             | Nudge context assessment as sessions grow        |
+| `ctx system check-ceremonies`    | UserPromptSubmit             | Nudge /ctx-remember and /ctx-wrap-up adoption    |
+| `ctx system check-persistence`   | UserPromptSubmit             | Remind to persist learnings/decisions            |
+| `ctx system check-journal`       | UserPromptSubmit             | Remind to export/enrich journal entries          |
+| `ctx system check-reminders`     | UserPromptSubmit             | Relay pending reminders at session start         |
+| `ctx system check-version`       | UserPromptSubmit             | Warn when binary/plugin versions diverge         |
+| `ctx system check-resources`     | UserPromptSubmit             | Warn when memory/swap/disk/load hit DANGER level |
+| `ctx system check-knowledge`     | UserPromptSubmit             | Nudge when knowledge files grow large            |
+| `ctx system check-map-staleness` | UserPromptSubmit             | Nudge when ARCHITECTURE.md is stale              |
+| `ctx system heartbeat`           | UserPromptSubmit             | Session-alive signal with prompt count metadata  |
+| `ctx system post-commit`         | PostToolUse (`Bash`)         | Nudge context capture and QA after git commits   |
+| `ctx system cleanup-tmp`         | SessionEnd                   | Remove stale temp files (older than 15 days)     |
 
 A catch-all `PreToolUse` hook also runs `ctx agent` on every tool use
 (with cooldown) to autoload context.
 
 ### Hook Configuration
 
-The plugin's `hooks.json` wires everything automatically — no manual
+The plugin's `hooks.json` wires everything automatically: no manual
 configuration in `settings.local.json` needed:
 
 ```json
@@ -99,15 +103,27 @@ configuration in `settings.local.json` needed:
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": ".*",
+        "hooks": [
+          { "type": "command", "command": "ctx system context-load-gate" }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           { "type": "command", "command": "ctx system block-non-path-ctx" }
         ]
       },
       {
-        "matcher": "Edit",
+        "matcher": "Bash",
         "hooks": [
           { "type": "command", "command": "ctx system qa-reminder" }
+        ]
+      },
+      {
+        "matcher": "EnterPlanMode",
+        "hooks": [
+          { "type": "command", "command": "ctx system specs-nudge" }
         ]
       },
       {
@@ -136,7 +152,8 @@ configuration in `settings.local.json` needed:
           { "type": "command", "command": "ctx system check-version" },
           { "type": "command", "command": "ctx system check-resources" },
           { "type": "command", "command": "ctx system check-knowledge" },
-          { "type": "command", "command": "ctx system check-map-staleness" }
+          { "type": "command", "command": "ctx system check-map-staleness" },
+          { "type": "command", "command": "ctx system heartbeat" }
         ]
       }
     ],
@@ -160,7 +177,7 @@ Edit the `PreToolUse` command to change the token budget or cooldown:
 "command": "ctx agent --budget 4000 --cooldown 5m --session $PPID >/dev/null || true"
 ```
 
-The `--session $PPID` flag isolates the cooldown per session — `$PPID` resolves
+The `--session $PPID` flag isolates the cooldown per session: `$PPID` resolves
 to the Claude Code process PID, so concurrent sessions don't interfere.
 The default cooldown is 10 minutes; use `--cooldown 0` to disable it.
 
@@ -219,6 +236,7 @@ cat .context/TASKS.md
 ```
 
 <!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
+<!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/Agent Skills/,/Usage Examples/p' docs/operations/integrations.md | grep -oP '/\Kctx-[a-z-]+' | sort -u) -->
 ### Agent Skills
 
 The ctx plugin ships Agent Skills following the
@@ -238,6 +256,8 @@ These are invoked in Claude Code with `/skill-name`.
 | `/ctx-commit`          | Commit with integrated context capture               |
 | `/ctx-reflect`         | Review session and suggest what to persist           |
 | `/ctx-remind`          | Manage session-scoped reminders                      |
+| `/ctx-pause`           | Pause context hooks for this session                 |
+| `/ctx-resume`          | Resume context hooks after a pause                   |
 
 #### Context Persistence Skills
 
@@ -279,22 +299,24 @@ These are invoked in Claude Code with `/skill-name`.
 
 #### Auditing & Health Skills
 
-| Skill                  | Description                                               |
-|------------------------|-----------------------------------------------------------|
-| `/ctx-drift`           | Detect and fix context drift (structural + semantic)      |
+| Skill                  | Description                                                |
+|------------------------|------------------------------------------------------------|
+| `/ctx-doctor`          | Troubleshoot ctx behavior with structural health checks    |
+| `/ctx-drift`           | Detect and fix context drift (structural + semantic)       |
 | `/ctx-consolidate`     | Merge redundant learnings or decisions into denser entries |
-| `/ctx-alignment-audit` | Audit doc claims against playbook instructions            |
-| `/ctx-prompt-audit`    | Analyze session logs for vague prompts                    |
-| `/check-links`         | Audit docs for dead internal and external links           |
+| `/ctx-alignment-audit` | Audit doc claims against playbook instructions             |
+| `/ctx-prompt-audit`    | Analyze session logs for vague prompts                     |
+| `/check-links`         | Audit docs for dead internal and external links            |
 
 #### Planning & Execution Skills
 
-| Skill               | Description                              |
-|----------------------|------------------------------------------|
-| `/ctx-loop`          | Generate a Ralph Loop iteration script   |
-| `/ctx-implement`     | Execute a plan step-by-step with checks  |
-| `/ctx-worktree`      | Manage git worktrees for parallel agents |
-| `/ctx-map`           | Build and maintain architecture maps     |
+| Skill               | Description                                      |
+|---------------------|--------------------------------------------------|
+| `/ctx-loop`         | Generate a Ralph Loop iteration script           |
+| `/ctx-implement`    | Execute a plan step-by-step with checks          |
+| `/ctx-import-plans` | Import Claude Code plan files into project specs |
+| `/ctx-worktree`     | Manage git worktrees for parallel agents         |
+| `/ctx-map`          | Build and maintain architecture maps             |
 
 #### Usage Examples
 
@@ -425,7 +447,7 @@ ctx hook copilot --write
 The `--write` flag creates `.github/copilot-instructions.md`, which
 Copilot reads automatically at the start of every session. This file
 contains your project's constitution rules, current tasks, conventions,
-and architecture — giving Copilot persistent context without manual
+and architecture: giving Copilot persistent context without manual
 copy-paste.
 
 Re-run `ctx hook copilot --write` after updating your `.context/` files
@@ -458,18 +480,18 @@ code --install-extension ctx-context-0.7.0.vsix
 
 #### Slash Commands
 
-| Command | Description |
-|---------|-------------|
-| `@ctx /init` | Initialize `.context/` directory with template files |
-| `@ctx /status` | Show context summary with token estimate |
-| `@ctx /agent` | Print AI-ready context packet |
-| `@ctx /drift` | Detect stale or invalid context |
-| `@ctx /recall` | Browse and search AI session history |
-| `@ctx /hook` | Generate AI tool integration configs |
-| `@ctx /add` | Add a task, decision, or learning |
-| `@ctx /load` | Output assembled context Markdown |
-| `@ctx /compact` | Archive completed tasks and clean up |
-| `@ctx /sync` | Reconcile context with codebase |
+| Command         | Description                                          |
+|-----------------|------------------------------------------------------|
+| `@ctx /init`    | Initialize `.context/` directory with template files |
+| `@ctx /status`  | Show context summary with token estimate             |
+| `@ctx /agent`   | Print AI-ready context packet                        |
+| `@ctx /drift`   | Detect stale or invalid context                      |
+| `@ctx /recall`  | Browse and search AI session history                 |
+| `@ctx /hook`    | Generate AI tool integration configs                 |
+| `@ctx /add`     | Add a task, decision, or learning                    |
+| `@ctx /load`    | Output assembled context Markdown                    |
+| `@ctx /compact` | Archive completed tasks and clean up                 |
+| `@ctx /sync`    | Reconcile context with codebase                      |
 
 #### Usage Examples
 
@@ -483,14 +505,14 @@ code --install-extension ctx-context-0.7.0.vsix
 ```
 
 Typing `@ctx` without a command shows help with all available commands.
-The extension also supports natural language — asking `@ctx` about
+The extension also supports natural language: asking `@ctx` about
 "status" or "drift" routes to the correct command automatically.
 
 #### Configuration
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `ctx.executablePath` | `ctx` | Path to the ctx binary. Set this if `ctx` is not in your `PATH`. |
+| Setting              | Default | Description                                                      |
+|----------------------|---------|------------------------------------------------------------------|
+| `ctx.executablePath` | `ctx`   | Path to the ctx binary. Set this if `ctx` is not in your `PATH`. |
 
 #### Follow-Up Suggestions
 
@@ -662,7 +684,7 @@ Learnings and decisions support structured attributes for better documentation:
 <context-update type="learning"
   context="Debugging Claude Code hooks"
   lesson="Hooks receive JSON via stdin, not environment variables"
-  application="Parse JSON stdin with the host language (Go, Python, etc.) — no jq needed"
+  application="Parse JSON stdin with the host language (Go, Python, etc.): no jq needed"
 >Hook Input Format</context-update>
 ```
 
@@ -682,5 +704,7 @@ Updates missing required attributes are rejected with an error.
 
 ## Further Reading
 
-- [Skills That Fight the Platform](../blog/2026-02-04-skills-that-fight-the-platform.md) — Common pitfalls in skill design that work against the host tool
-- [The Anatomy of a Skill That Works](../blog/2026-02-07-the-anatomy-of-a-skill-that-works.md) — What makes a skill reliable: the E/A/R framework and quality gates
+* [Skills That Fight the Platform](../blog/2026-02-04-skills-that-fight-the-platform.md): 
+  Common pitfalls in skill design that work against the host tool
+* [The Anatomy of a Skill That Works](../blog/2026-02-07-the-anatomy-of-a-skill-that-works.md):
+  What makes a skill reliable: the E/A/R framework and quality gates

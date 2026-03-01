@@ -213,11 +213,11 @@ The **journal system** includes:
 
 ...and the meta continues: **this blog post was generated using `/ctx-blog`**.
 
-The session history from January 28–31 was 
+The session history from January 28-31 was
 
 * **exported**, 
 * **enriched**,
-* and **synthesized** 
+* and **synthesized**.
 
 into the narrative you are reading.
 

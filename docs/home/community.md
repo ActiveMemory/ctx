@@ -14,16 +14,18 @@ icon: lucide/heart-handshake
 **Open source is better together**.
 
 We are the builders who care about **durable** context, **verifiable** decisions, 
-and human–AI workflows that **compound** over time.
+and human-AI workflows that **compound** over time.
 
-!!! tip "Help `ctx` Change How AI Remembers"
-    If the idea behind `ctx` resonates, a star helps it reach engineers
-    who run into context drift every day.
+## Help `ctx` Change How AI Remembers
 
-    [:fontawesome-brands-github: Star `ctx` on GitHub](https://github.com/ActiveMemory/ctx) ⭐
+If you like the idea, a star helps `ctx` reach engineers
+who run into context drift every day:
 
-    `ctx` is free and open source software, and **contributions are always
-    welcome** and appreciated.
+**[:fontawesome-brands-github: Star `ctx` on GitHub](https://github.com/ActiveMemory/ctx) ⭐**
+
+---
+
+## `ctx` ♥️ You
 
 Join the community to ask questions, share feedback, and connect with
 other users:
@@ -34,15 +36,19 @@ other users:
 * [:fontawesome-brands-github: Read the `ctx` Source on **GitHub**](https://github.com/ActiveMemory/ctx):<br />
   Issues, discussions, and contributions.
 
-----
+---
+
+## Want to Contribute?
 
 Early adopters shape the conventions.
 
-**Want to contribute?** See the [**contributioun guide** →](contributing.md)
+`ctx` is free and open source software.
 
-----
+[Contributions are always welcome](contributing.md) and appreciated.
 
-**Code of Conduct**  
+---
+
+## Code of Conduct
 
 Clear context requires respectful collaboration.  
 

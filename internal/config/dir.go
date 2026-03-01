@@ -35,6 +35,7 @@ var GitignoreEntries = []string{
 	".context/journal-site/",
 	".context/journal-obsidian/",
 	".context/logs/",
+	".context/.ctx.key",
 	".context/.context.key",
 	".context/.scratchpad.key",
 	".context/state/",

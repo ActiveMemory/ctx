@@ -1403,6 +1403,8 @@
       
         
       
+        
+      
     
     
     
@@ -1495,6 +1497,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3369,6 +3401,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#importing-claude-code-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importing Claude Code Plans
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3511,7 +3554,7 @@ Date-gate reminders to surface only after a specific date.</p>
 <hr />
 <h3 id="pausing-context-hooks"><a href="session-pause/">Pausing Context Hooks</a><a class="headerlink" href="#pausing-context-hooks" title="Permanent link">&para;</a></h3>
 <p>Silence all nudge hooks for a <strong>quick task</strong> that doesn't need ceremony
-overhead. Session-scoped — other sessions are unaffected. Security
+overhead. Session-scoped: Other sessions are unaffected. Security
 hooks still fire.</p>
 <p><strong>Uses</strong>: <code>ctx pause</code>, <code>ctx resume</code>, <code>/ctx-pause</code>, <code>/ctx-resume</code></p>
 <hr />
@@ -3559,7 +3602,7 @@ ceremony nudges, or tailor post-commit instructions for your stack.</p>
 <code>ctx system message edit</code>, <code>ctx system message reset</code></p>
 <hr />
 <h3 id="auditing-system-hooks"><a href="system-hooks-audit/">Auditing System Hooks</a><a class="headerlink" href="#auditing-system-hooks" title="Permanent link">&para;</a></h3>
-<p>The 12 system hooks that run <strong>invisibly</strong> during every session — what each
+<p>The 12 system hooks that run <strong>invisibly</strong> during every session: what each
 one does, why it exists, and how to <strong>verify</strong> they're actually firing.
 Covers webhook-based audit trails, log inspection, and detecting silent
 hook failures.</p>
@@ -3568,7 +3611,7 @@ hook failures.</p>
 <hr />
 <h3 id="webhook-notifications"><a href="webhook-notifications/">Webhook Notifications</a><a class="headerlink" href="#webhook-notifications" title="Permanent link">&para;</a></h3>
 <p>Get <strong>push notifications</strong> when loops complete, hooks fire, or agents hit
-milestones. Webhook URL is <strong>encrypted</strong> — never stored in plaintext.
+milestones. Webhook URL is <strong>encrypted</strong>: never stored in plaintext.
 Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.</p>
 <p><strong>Uses</strong>: <code>ctx notify setup</code>, <code>ctx notify test</code>, <code>ctx notify --event</code>,
 <code>.ctxrc</code> <code>notify.events</code></p>
@@ -3611,6 +3654,12 @@ blog artifacts you see on this website.</p>
 <p><strong>Uses</strong>: <code>ctx journal site</code>, <code>ctx journal obsidian</code>, <code>ctx serve</code>,
 <code>ctx recall export</code>, <code>/ctx-blog</code>, <code>/ctx-blog-changelog</code>,
 <code>/ctx-journal-enrich</code>, <code>/ctx-journal-normalize</code></p>
+<hr />
+<h3 id="importing-claude-code-plans"><a href="import-plans/">Importing Claude Code Plans</a><a class="headerlink" href="#importing-claude-code-plans" title="Permanent link">&para;</a></h3>
+<p>Import Claude Code <strong>plan files</strong> (<code>~/.claude/plans/*.md</code>) into <code>specs/</code>
+as permanent project specs. Filter by date, select interactively, and
+optionally create tasks referencing each imported spec.</p>
+<p><strong>Uses</strong>: <code>/ctx-import-plans</code>, <code>/ctx-add-task</code></p>
 <hr />
 <h2 id="agents-automation">Agents &amp; Automation<a class="headerlink" href="#agents-automation" title="Permanent link">&para;</a></h2>
 <h3 id="running-an-unattended-ai-agent"><a href="autonomous-loops/">Running an Unattended AI Agent</a><a class="headerlink" href="#running-an-unattended-ai-agent" title="Permanent link">&para;</a></h3>

@@ -57,7 +57,7 @@ ctx notify setup
 ```
 
 This encrypts the URL with AES-256-GCM using the same key as the scratchpad
-(`.context/.context.key`). The encrypted file (`.context/.notify.enc`) is
+(`.context/.ctx.key`). The encrypted file (`.context/.notify.enc`) is
 safe to commit. The key is `.gitignore`d.
 
 ### Step 3: Test It
@@ -81,6 +81,7 @@ notify:
     - loop       # loop completion or max-iteration hit
     - nudge      # VERBATIM relay hooks (context checkpoint, persistence, etc.)
     - relay      # all hook output (verbose, for debugging)
+    - heartbeat  # every-prompt session-alive signal with metadata
 ```
 
 Only listed events fire. Omitting an event silently drops it.
@@ -104,17 +105,18 @@ script: If there's no webhook or the HTTP call fails, it's a silent noop.
 
 `ctx` fires these events automatically:
 
-| Event      | Source            | When                                                                                                                  |
-|------------|-------------------|-----------------------------------------------------------------------------------------------------------------------|
-| `loop`     | Loop script       | Loop completes or hits max iterations                                                                                 |
-| `nudge`    | System hooks      | VERBATIM relay nudge is emitted (context checkpoint, persistence, ceremonies, journal, resources, knowledge, version) |
-| `relay`    | System hooks      | Any hook output (VERBATIM relays, agent directives, block responses)                                                  |
-| `test`     | `ctx notify test` | Manual test notification                                                                                              |
-| *(custom)* | Your skills       | You wire `ctx notify --event <name>` in your own scripts                                                              |
+| Event       | Source            | When                                                                                                                  |
+|-------------|-------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `loop`      | Loop script       | Loop completes or hits max iterations                                                                                 |
+| `nudge`     | System hooks      | VERBATIM relay nudge is emitted (context checkpoint, persistence, ceremonies, journal, resources, knowledge, version) |
+| `relay`     | System hooks      | Any hook output (VERBATIM relays, agent directives, block responses)                                                  |
+| `heartbeat` | System hook       | Every prompt: session-alive signal with prompt count and context modification status                                  |
+| `test`      | `ctx notify test` | Manual test notification                                                                                              |
+| *(custom)*  | Your skills       | You wire `ctx notify --event <name>` in your own scripts                                                              |
 
 **`nudge` vs `relay`**: The `nudge` event fires only for VERBATIM relay hooks
 (*the ones the agent is instructed to show verbatim*). The `relay` event fires
-for *all* hook output — VERBATIM relays, agent directives, and hard gates.
+for *all* hook output: VERBATIM relays, agent directives, and hard gates.
 Subscribe to `relay` for debugging (*"did the agent get the post-commit nudge?"*),
 `nudge` for user-facing assurance (*"was the checkpoint emitted?"*).
 
@@ -151,11 +153,33 @@ name, variant, and any template variables. This lets receivers filter by
 hook or variant without parsing rendered text. The field is omitted when
 no template reference applies (e.g. custom `ctx notify` calls).
 
+### Heartbeat Payload
+
+The `heartbeat` event fires on every prompt with session metadata:
+
+```json
+{
+  "event": "heartbeat",
+  "message": "heartbeat: prompt #7 (context_modified=false)",
+  "detail": {
+    "hook": "heartbeat",
+    "variant": "pulse",
+    "variables": {"prompt_count": 7, "session_id": "abc123-...", "context_modified": false}
+  },
+  "session_id": "abc123-...",
+  "timestamp": "2026-02-28T10:15:00Z",
+  "project": "ctx"
+}
+```
+
+Unlike other events, `heartbeat` fires every prompt (not throttled). Use it
+for observability dashboards or liveness monitoring of long-running sessions.
+
 ## Security Model
 
 | Component      | Location                   | Committed?      | Permissions |
 |----------------|----------------------------|-----------------|-------------|
-| Encryption key | `.context/.context.key`    | No (gitignored) | `0600`      |
+| Encryption key | `.context/.ctx.key`        | No (gitignored) | `0600`      |
 | Encrypted URL  | `.context/.notify.enc`     | Yes (safe)      | `0600`      |
 | Webhook URL    | Never on disk in plaintext | N/A             | N/A         |
 
@@ -164,20 +188,19 @@ re-run `ctx notify setup` to re-encrypt the webhook URL with the new key.
 
 ## Key Rotation
 
-`ctx` checks the age of `.context/.context.key` once per day. If it's older
-than 90 days (*configurable via `notify.key_rotation_days`*), a VERBATIM nudge
+`ctx` checks the age of `.context/.ctx.key` once per day. If it's older
+than 90 days (*configurable via `key_rotation_days`*), a VERBATIM nudge
 is emitted suggesting rotation.
 
 ```yaml
 # .ctxrc
-notify:
-  key_rotation_days: 30   # nudge sooner (default: 90)
+key_rotation_days: 30   # nudge sooner (default: 90)
 ```
 
 ## Worktrees
 
 The webhook URL is encrypted with the same encryption key
-(`.context/.context.key`), which is `.gitignore`d. In a git worktree,
+(`.context/.ctx.key`), which is `.gitignore`d. In a git worktree,
 the key is absent: Notifications silently do nothing.
 
 This means **agents running in worktrees cannot send webhook alerts**.

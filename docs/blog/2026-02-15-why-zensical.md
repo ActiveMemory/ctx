@@ -329,7 +329,7 @@ This is the same kind of decision that shows up throughout `ctx`:
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **Version numbers measure where a project has been.**
 
     **The team and the architecture tell you where it's going.**

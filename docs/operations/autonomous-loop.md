@@ -16,7 +16,7 @@ icon: lucide/repeat
 *Iterate until done.*
 
 An **autonomous loop** is an iterative AI development workflow where an agent 
-works on tasks until completion—without constant human intervention. 
+works on tasks until completion, without constant human intervention. 
 
 `ctx` provides the memory that makes this possible:
 
@@ -68,7 +68,7 @@ Create a `loop.sh`:
 
 ```bash
 #!/bin/bash
-# loop.sh — an autonomous iteration loop
+# loop.sh: an autonomous iteration loop
 
 PROMPT_FILE="${1:-PROMPT.md}"
 MAX_ITERATIONS="${2:-10}"
@@ -157,14 +157,16 @@ You are working on this project autonomously. Follow these steps:
 ## 1. Load Context
 
 Read these files in order:
-1. `.context/CONSTITUTION.md` — NEVER violate these rules
-2. `.context/TASKS.md` — Find work to do
-3. `.context/CONVENTIONS.md` — Follow these patterns
-4. `.context/DECISIONS.md` — Understand past choices
+
+1. `.context/CONSTITUTION.md`: NEVER violate these rules
+2. `.context/TASKS.md`: Find work to do
+3. `.context/CONVENTIONS.md`: Follow these patterns
+4. `.context/DECISIONS.md`: Understand past choices
 
 ## 2. Pick One Task
 
 From `.context/TASKS.md`, select ONE task that is:
+
 - Not blocked
 - Highest priority available
 - Within your capabilities
@@ -178,6 +180,7 @@ From `.context/TASKS.md`, select ONE task that is:
 ## 4. Update Context
 
 After completing work:
+
 - Mark task complete in TASKS.md
 - Add any learnings to LEARNINGS.md
 - Add any decisions to DECISIONS.md
@@ -190,9 +193,9 @@ Create a focused commit with clear message.
 
 End your response with exactly ONE of:
 
-- `SYSTEM_CONVERGED` — All tasks in TASKS.md are complete
-- `SYSTEM_BLOCKED` — Cannot proceed, need human input (explain why)
-- (no signal) — More work remains, continue to next iteration
+- `SYSTEM_CONVERGED`: All tasks in TASKS.md are complete
+- `SYSTEM_BLOCKED`: Cannot proceed, need human input (explain why)
+- (no signal): More work remains, continue to next iteration
 
 ## Rules
 

@@ -1403,6 +1403,8 @@
       
         
       
+        
+      
     
     
     
@@ -1495,6 +1497,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3285,7 +3317,7 @@ and the criteria I established argued <strong>against</strong> it.</p>
 <blockquote>
 <p>"<em>You are the guest, not the host.</em>"</p>
 </blockquote>
-<p>The audit prompt fails all three tests:</p>
+<p>The audit prompt <strong>fails</strong> all three tests:</p>
 <table>
 <thead>
 <tr>
@@ -3377,8 +3409,11 @@ activating them.</p>
 on every prompt is <strong>pure waste</strong>: attention spent on something that
 will say "When NOT to Use: now" 99% of the time.</p>
 <p>Runbooks have <strong>zero</strong> attention cost. They sit in a Markdown file until
-a human decides to use them. The human provides the <strong>judgment</strong> about
-timing. The prompt provides the <strong>structure</strong>.</p>
+a human decides to use them. </p>
+<ul>
+<li>The <strong>human</strong> provides the <strong>judgment</strong> about timing. </li>
+<li>The <strong>prompt</strong> provides the <strong>structure</strong>.</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">The Attention Budget Applies to Skills Too</p>
 <p>Every skill in <code>.claude/skills/</code> is a standing claim on the
@@ -3423,7 +3458,7 @@ concrete tasks:</p>
 </table>
 <ul>
 <li>Some findings became skills;</li>
-<li>Some became <code>Makefile</code> targets.</li>
+<li>Some became <code>Makefile</code> targets;</li>
 <li>Some became one-line doc fixes. </li>
 </ul>
 <p>The audit did not prescribe the artifact type: <strong>The findings did</strong>.</p>
@@ -3432,7 +3467,7 @@ the only one.</strong></p>
 <h2 id="the-audit-prompt">The Audit Prompt<a class="headerlink" href="#the-audit-prompt" title="Permanent link">&para;</a></h2>
 <p>Here is the exact prompt I used, for those who are curious.</p>
 <p><strong>This is not a template</strong>: It worked because it was written against this
-codebase, at this moment, with <strong>specific</strong> goals in mind.</p>
+codebase, at this moment, with <strong>specific</strong> goals in mind:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>I want you to create an agent team to audit this codebase. Save each report as
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>a separate Markdown file under <span class="sb">`./ideas/`</span> (or another directory if you prefer).
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -3575,7 +3610,7 @@ better as Markdown files you read when you need them.</strong></p>
 the right things and to make the rest easy to find when you need it.</p>
 <hr />
 <div class="admonition quote">
-<p class="admonition-title">If you remember one thing from this post...</p>
+<p class="admonition-title"><strong>If You Remember One Thing From This Post...</strong></p>
 <p><strong>The best automation decision is sometimes not to automate.</strong></p>
 <p>A <strong>runbook</strong> in a Markdown file costs nothing until you use it.</p>
 <p>A <strong>skill</strong> costs attention on every prompt, whether it fires or not.</p>

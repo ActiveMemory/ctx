@@ -1543,6 +1543,8 @@
       
         
       
+        
+      
     
     
     
@@ -1635,6 +1637,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3380,7 +3412,7 @@ when to skip it:</p>
   gives the agent everything it needs for each session, adding <code>ctx</code> may be
   unnecessary. RAG retrieves <em>information</em>; <code>ctx</code> defines the project's
   <em>working memory</em>: They are <em>complementary</em>.</li>
-<li><strong>No AI involvement</strong>: <code>ctx</code> is designed for human–AI workflows; without
+<li><strong>No AI involvement</strong>: <code>ctx</code> is designed for human-AI workflows; without
   an AI consumer, the files are just documentation.</li>
 <li><strong>Enterprise-managed context platforms</strong>: If your organization provides
   centralized context services, <code>ctx</code> may duplicate that layer.</li>
@@ -3398,7 +3430,7 @@ directory stays small, and every session gets faster.</p>
 <p>Works well. </p>
 <p>Context files commit to git, so the whole team shares the same
 decisions and conventions.
-Each person's AI starts with the team’s decisions already loaded.
+Each person's AI starts with the team's decisions already loaded.
 Merge conflicts on <code>.context/</code> files are rare and
 easy to resolve (<em>they are just Markdown</em>).</p>
 <h3 id="multiple-repos-or-larger-teams">Multiple Repos or Larger Teams<a class="headerlink" href="#multiple-repos-or-larger-teams" title="Permanent link">&para;</a></h3>

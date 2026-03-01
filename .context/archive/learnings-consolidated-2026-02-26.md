@@ -8,7 +8,7 @@ Originals replaced by consolidated entries in LEARNINGS.md.
 
 **Context**: Found 3 commands fully documented in cli-reference.md (ctx remind, ctx recall sync, key file naming) that don't match the binary. Documentation was written speculatively before Cobra subcommands were registered.
 
-**Lesson**: ctx remind has no CLI at all, ctx recall sync has Go code but no Cobra wiring, and key file naming diverged between docs (.context.key) and code (.scratchpad.key). Docs can describe commands that are unreachable.
+**Lesson**: ctx remind has no CLI at all, ctx recall sync has Go code but no Cobra wiring, and key file naming diverged between docs (.ctx.key) and code (.scratchpad.key). Docs can describe commands that are unreachable.
 
 **Application**: Before releasing docs for new commands, verify with ctx <cmd> --help that the command is actually reachable. Add a drift check to the QA gate.
 
@@ -256,7 +256,7 @@ completeness, blog for readability.
 
 ## [2026-02-24-030252] Worktree agents lack key-dependent features by design
 
-**Context**: Investigated whether hooks/notify/pad would break in git worktrees when .context.key is gitignored
+**Context**: Investigated whether hooks/notify/pad would break in git worktrees when .ctx.key is gitignored
 
 **Lesson**: ctx pad fails gracefully (no key), ctx notify silently no-ops, journal enrichment writes to the worktree and is orphaned on teardown. All path resolution is cwd-relative with no git-root awareness. The only real gap is notify — pad and journal are naturally avoided by workflow.
 

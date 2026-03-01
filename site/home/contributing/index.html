@@ -1760,6 +1760,8 @@
       
         
       
+        
+      
     
     
     
@@ -1852,6 +1854,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3810,7 +3842,7 @@
 <h3 id="3-install-the-plugin-from-your-local-clone">3. Install the Plugin from Your Local Clone<a class="headerlink" href="#3-install-the-plugin-from-your-local-clone" title="Permanent link">&para;</a></h3>
 <p>The repository ships a Claude Code plugin under <code>internal/assets/claude/</code>.
 Point Claude Code at your local copy so that skills and hooks reflect
-your working tree — no reinstall needed after edits:</p>
+your working tree: no reinstall needed after edits:</p>
 <ol>
 <li>Launch <code>claude</code>;</li>
 <li>Type <code>/plugin</code> and press Enter;</li>
@@ -3825,7 +3857,7 @@ your working tree — no reinstall needed after edits:</p>
 <p class="admonition-title">Claude Code Caches Plugin Files</p>
 <p>Even though the marketplace points at a directory on disk, Claude Code
 <strong>caches</strong> skills and hooks. After editing files under
-<code>internal/assets/claude/</code>, clear the cache and restart:</p>
+<code>internal/assets/claude/</code>, <strong>clear the cache and restart</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># then restart Claude Code</span>
 </span></code></pre></div>
 <p>See <a href="#skill-or-hook-changes">Skill or Hook Changes</a> for details.</p>
@@ -3973,8 +4005,8 @@ You must rebuild for Go changes to take effect.</p>
 <h3 id="skill-or-hook-changes">Skill or Hook Changes<a class="headerlink" href="#skill-or-hook-changes" title="Permanent link">&para;</a></h3>
 <p>Edit files under <code>internal/assets/claude/skills/</code> or
 <code>internal/assets/claude/hooks/</code>.</p>
-<p>Claude Code caches plugin files, so edits aren't picked up automatically.
-Clear the cache and restart:</p>
+<p>Claude Code caches plugin files, so edits aren't picked up automatically.</p>
+<p><strong>Clear the cache and restart</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>plugin-reload<span class="w">   </span><span class="c1"># nukes ~/.claude/plugins/cache/activememory-ctx/</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># then restart Claude Code</span>
 </span></code></pre></div>
@@ -3999,15 +4031,15 @@ is gitignored and swapped between them:</p>
 <tbody>
 <tr>
 <td><code>.ctxrc.base</code></td>
-<td>Golden baseline — all defaults, no logging</td>
+<td>Golden baseline: all defaults, no logging</td>
 </tr>
 <tr>
 <td><code>.ctxrc.dev</code></td>
-<td>Dev profile — notify events enabled, verbose logging</td>
+<td>Dev profile: notify events enabled, verbose logging</td>
 </tr>
 <tr>
 <td><code>.ctxrc</code></td>
-<td>Working copy (<em>gitignored</em> — copied from one of the above)</td>
+<td>Working copy (<em>gitignored</em>: copied from one of the above)</td>
 </tr>
 </tbody>
 </table>

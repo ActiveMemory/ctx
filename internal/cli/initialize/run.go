@@ -131,7 +131,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Println(fmt.Sprintf("  %s sessions/", green("✓")))
 	}
 
-	// Migrate legacy .scratchpad.key → .context.key
+	// Migrate legacy key files (.context.key, .scratchpad.key) → .ctx.key
 	config.MigrateKeyFile(contextDir)
 
 	// Set up scratchpad
@@ -196,7 +196,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 // initScratchpad sets up the scratchpad key or plaintext file.
 //
 // When encryption is enabled (default):
-//   - Generates a 256-bit key at .context/.context.key if not present
+//   - Generates a 256-bit key at .context/.ctx.key if not present
 //   - Adds the key file to .gitignore
 //   - Warns if .enc exists but no key
 //
@@ -332,7 +332,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 //
 // Parameters:
 //   - contextDir: The .context/ directory (entry is relative to this)
-//   - filename: The filename to add (e.g., ".context.key")
+//   - filename: The filename to add (e.g., ".ctx.key")
 func addToGitignore(contextDir, filename string) error {
 	entry := filepath.Join(contextDir, filename)
 	gitignorePath := ".gitignore"

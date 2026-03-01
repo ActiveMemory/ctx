@@ -699,7 +699,7 @@ func TestEnsureGitignore_NewFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	err := ensureGitignore(".context", ".context.key")
+	err := ensureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -708,7 +708,7 @@ func TestEnsureGitignore_NewFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(data), filepath.Join(".context", ".context.key")) {
+	if !strings.Contains(string(data), filepath.Join(".context", ".ctx.key")) {
 		t.Errorf(".gitignore = %q, want key entry", string(data))
 	}
 }
@@ -721,12 +721,12 @@ func TestEnsureGitignore_AlreadyPresent(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	entry := filepath.Join(".context", ".context.key")
+	entry := filepath.Join(".context", ".ctx.key")
 	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
-	err := ensureGitignore(".context", ".context.key")
+	err := ensureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -752,7 +752,7 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := ensureGitignore(".context", ".context.key")
+	err := ensureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -761,7 +761,7 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 	if !strings.Contains(string(data), "node_modules\n") {
 		t.Error("existing content should be preserved with newline")
 	}
-	if !strings.Contains(string(data), filepath.Join(".context", ".context.key")) {
+	if !strings.Contains(string(data), filepath.Join(".context", ".ctx.key")) {
 		t.Error("new entry should be present")
 	}
 }

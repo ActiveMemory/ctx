@@ -1422,6 +1422,8 @@
       
         
       
+        
+      
     
     
     
@@ -1517,6 +1519,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3658,7 +3690,7 @@ belong in the same track (<em>or the same single-agent session</em>).</p>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        Task B touches docs/ and site/
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        Task C touches internal/config/ and internal/cli/status/
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        Tasks A and C overlap on internal/config/ — they should be
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        Tasks A and C overlap on internal/config/ # they should be
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        in the same track. Task B is independent.&quot;
 </span></code></pre></div>
 <p>When in doubt, keep things in one track. A merge conflict in a critical
@@ -3753,16 +3785,16 @@ before anyone does any work. For small tasks, that overhead dominates.</p>
 Run multiple agents on independent task tracks using git worktrees.</p>
 <h2 id="go-deeper">Go Deeper<a class="headerlink" href="#go-deeper" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../cli/">CLI Reference</a> — all commands and flags</li>
-<li><a href="../../operations/integrations/">Integrations</a> — setup for Claude Code, Cursor, Aider</li>
-<li><a href="../../reference/session-journal/">Session Journal</a> — browse and search session history</li>
+<li><a href="../../cli/">CLI Reference</a>: all commands and flags</li>
+<li><a href="../../operations/integrations/">Integrations</a>: setup for Claude Code, Cursor, Aider</li>
+<li><a href="../../reference/session-journal/">Session Journal</a>: browse and search session history</li>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../parallel-worktrees/">Parallel Agent Development with Git Worktrees</a>:
   the mechanical "how" for worktree-based parallelism</li>
 <li><a href="../autonomous-loops/">Running an Unattended AI Agent</a>: serial autonomous
-  loops — a different scaling strategy</li>
+  loops: a different scaling strategy</li>
 <li><a href="../task-management/">Tracking Work Across Sessions</a>: managing the task
   backlog that feeds into any multi-agent setup</li>
 </ul>

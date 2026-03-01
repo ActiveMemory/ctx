@@ -1403,6 +1403,8 @@
       
         
       
+        
+      
     
     
     
@@ -1495,6 +1497,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3407,7 +3439,7 @@ type system catching any misses.</p>
 </tr>
 <tr>
 <td><code>package initcmd</code> in <code>init/</code> folder</td>
-<td>Go's "init" is reserved—subtle naming collision</td>
+<td>Go's "init" is reserved: subtle naming collision</td>
 </tr>
 </tbody>
 </table>
@@ -3454,11 +3486,11 @@ that before every major release, from that point on.</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gu">## Key Findings</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="gu">### Dogfooding Binary Is Broken</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Commands don&#39;t execute — they just print root help text
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Commands don&#39;t execute: they just print root help text
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">-</span><span class="w"> </span>All tasks were marked complete but binary doesn&#39;t work
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">-</span><span class="w"> </span>Lesson: &quot;tasks checked off&quot; ≠ &quot;implementation works&quot;
 </span></code></pre></div>
-<p>This was humbling—to say the least.</p>
+<p>This was humbling; to say the least.</p>
 <p>I realized I had the same blind spot in my own codebase:
 no integration tests that actually invoked the binary. </p>
 <p>So I added:</p>
@@ -3600,7 +3632,7 @@ forgotten. Each has Context, Lesson, and Application sections:</p>
 <p><strong>"Do you remember?" handling</strong></p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gs">**Lesson**</span>: In a <span class="sb">`ctx`</span>-enabled project, &quot;<span class="ge">*do you remember?*</span>&quot; 
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>has an obvious meaning:
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>check the <span class="sb">`.context/`</span> files. Don&#39;t ask for clarification—just do it.
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>check the <span class="sb">`.context/`</span> files. Don&#39;t ask for clarification. Just do it.
 </span></code></pre></div>
 <h2 id="task-archives-the-completed-work">Task Archives: The Completed Work<a class="headerlink" href="#task-archives-the-completed-work" title="Permanent link">&para;</a></h2>
 <p>Completed tasks are archived to <code>.context/archive/</code> with timestamps. </p>
@@ -3659,7 +3691,7 @@ decision was made helped me <strong>a lot</strong>. </p>
 <li><strong>Search</strong>: Inverted index for searching across sessions</li>
 <li><strong>CLI</strong>: <code>ctx recall serve &lt;path&gt;</code> to start the server</li>
 </ul>
-<p>The goal is to make the archaeological record browsable—not just <code>grep</code>-able.</p>
+<p>The goal is to make the archaeological record browsable, not just <code>grep</code>-able.</p>
 <p>Because not everyone always lives in the terminal (<em>me included</em>).</p>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
 <p>Building <code>ctx</code> using ctx was a meta-experiment in AI-assisted development. </p>
@@ -3689,7 +3721,7 @@ surprises me every day.</p>
 <hr />
 <p><em>This blog post was written with the help of <code>ctx</code> with full access to the 
 <code>ctx</code> session files, decision log, learning log, task archives, and 
-git history of <code>ctx</code>—The meta continues.</em></p>
+git history of <code>ctx</code>: The meta continues.</em></p>
 
 
 

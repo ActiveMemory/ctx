@@ -66,12 +66,12 @@ ctx recall export --all --all-projects
 # Export a single session by ID or slug
 ctx recall export abc123
 ctx recall export gleaming-wobbling-sutherland
-````
+```
 
 Exported files land in `.context/journal/` as individual Markdown files with
 session metadata and the full conversation transcript.
 
-`--all` is safe by default — only new sessions are exported. Existing files
+`--all` is safe by default: Only new sessions are exported. Existing files
 are skipped. Use `--regenerate` to re-export existing files (YAML frontmatter
 is preserved). Use `--regenerate --keep-frontmatter=false -y` to regenerate
 everything including frontmatter.
@@ -173,7 +173,7 @@ pages for topics/files/types, and a "Related Sessions" footer on each entry for
 graph connectivity. Open the output directory in Obsidian as a vault.
 
 The vault uses the same enriched source entries as the static site. Both outputs
-can coexist — the static site goes to `.context/journal-site/`, the vault to
+can coexist: The static site goes to `.context/journal-site/`, the vault to
 `.context/journal-obsidian/`.
 
 ### Step 4: Draft Blog Posts from Activity
@@ -283,7 +283,7 @@ as you want.
 ## Tips
 
 * Export regularly. Run `ctx recall export --all` after each session to keep
-  your journal current. Only new sessions are exported — existing files are
+  your journal current. Only new sessions are exported: Existing files are
   skipped by default.
 * Use batch enrichment. `/ctx-journal-enrich-all` filters noise (suggestion
   sessions, trivial sessions, multipart continuations) so you do not have to

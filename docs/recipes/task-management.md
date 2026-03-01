@@ -248,7 +248,7 @@ These conversational prompts replace explicit commands during interactive sessio
 
 | Instead of typing...                   | Just say...                                        |
 |----------------------------------------|----------------------------------------------------|
-| `ctx add task "Write tests for X"`     | "We should add tests for this—track that?"         |
+| `ctx add task "Write tests for X"`     | "We should add tests for this: track that?"        |
 | `/ctx-next`                            | "What should we work on?"                          |
 | `ctx complete "rate limiting"`         | "The rate limiter is done, what's next?"           |
 | `ctx tasks archive`                    | "`TASKS.md` is getting long, can you clean it up?" |
@@ -291,7 +291,7 @@ agent to do the thinking:
 |----------------------------------------------------------------|-----------------------------------------------------------------------|
 | "*What tasks came out of this session?*"                       | Agent reviews the work, identifies follow-ups, and offers to add them |
 | "*Are there any tasks, learnings, or decisions worth adding?*" | Agent scans the full session for all three types and proposes a batch |
-| "*What should we remember from today?*"                        | Agent surfaces everything persist-worthy—not just tasks               |
+| "*What should we remember from today?*"                        | Agent surfaces everything persist-worthy: not just tasks              |
 | "*Anything we should track before we move on?*"                | Agent checks for loose ends specific to the work just completed       |
 
 This is especially powerful after long or exploratory sessions where multiple
@@ -304,7 +304,7 @@ might miss:
 You:   "Are there any tasks, learnings, or decisions worth adding
         from this session?"
 
-Agent: "Yes—here's what I'd suggest:
+Agent: "Yes. Here's what I'd suggest:
 
   Tasks:
   - Add retry logic to the webhook delivery (we discussed it when
@@ -312,7 +312,7 @@ Agent: "Yes—here's what I'd suggest:
   - Update the API docs to reflect the new rate limit headers
 
   Learnings:
-  - net/http's default client has no timeout—we burned 15 minutes
+  - net/http's default client has no timeout: we burned 15 minutes
     on that before adding an explicit 30s timeout
 
   Decisions:
@@ -376,7 +376,7 @@ driving:
 ```text
 You:   What's left to do?
 Agent: You have 5 pending tasks across 2 phases. The highest priority is
-       "Implement ctx agent cooldown"—it's marked in-progress from
+       "Implement ctx agent cooldown": it's marked in-progress from
        yesterday and half-built. Want to pick that up?
 
 You:   Yeah, let's finish it.
@@ -386,13 +386,13 @@ You:   That's working. Tests pass.
 Agent: Nice. I'll mark "Implement ctx agent cooldown" as done.
        I noticed two things from the implementation:
        1. The tombstone file cleanup should happen on a timer, not just
-          at startup—want me to add that as a task?
+          at startup. Want me to add that as a task?
        2. We learned that file locks don't work reliably on NFS. I'll
           add that to LEARNINGS.md.
 
 You:   Yes to both. What's next?
 Agent: Added the cleanup task as high priority. Next up is "Add --section
-       flag to ctx add task"—last item in Phase 1. It should be
+       flag to ctx add task": last item in Phase 1. It should be
        straightforward since the flag parsing pattern already exists
        in the codebase. Ready?
 ```
@@ -402,7 +402,7 @@ Agent: Added the cleanup task as high priority. Next up is "Add --section
     The user never typed a `ctx` command.
 
     The agent handled task completion, follow-up creation, learning capture,
-    and next-task selection—all from natural conversation.
+    and next-task selection: all from natural conversation.
 
 ## Putting It All Together
 

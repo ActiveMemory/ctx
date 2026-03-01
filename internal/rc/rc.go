@@ -182,16 +182,22 @@ func NotifyEvents() []string {
 
 // KeyRotationDays returns the configured key rotation threshold in days.
 //
-// Returns 90 if Notify is nil or the field is 0.
+// The encryption key (.context/.context.key) is shared by both ctx pad and
+// ctx notify, so the rotation threshold is a project-wide setting.
+//
+// Priority: top-level key_rotation_days > notify.key_rotation_days (legacy) > default (90).
 //
 // Returns:
 //   - int: Number of days before a key rotation nudge
 func KeyRotationDays() int {
-	n := RC().Notify
-	if n == nil || n.KeyRotationDays == 0 {
-		return DefaultKeyRotationDays
+	cfg := RC()
+	if cfg.KeyRotationDays > 0 {
+		return cfg.KeyRotationDays
 	}
-	return n.KeyRotationDays
+	if cfg.Notify != nil && cfg.Notify.KeyRotationDays > 0 {
+		return cfg.Notify.KeyRotationDays
+	}
+	return DefaultKeyRotationDays
 }
 
 // EventLog returns whether local hook event logging is enabled.

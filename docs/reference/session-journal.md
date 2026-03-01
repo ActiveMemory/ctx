@@ -131,7 +131,7 @@ ctx journal site --serve
 
 ??? info "Safe by Default"
     Running `ctx recall export --all` **only exports new sessions**. Existing
-    files are skipped entirely — your edits and enrichments are never touched.
+    files are skipped entirely (*your edits and enrichments are never touched*).
 
     Use `--regenerate` to re-export existing files. Conversation content is
     regenerated, but YAML frontmatter (*topics, type, outcome, etc.*) is
@@ -359,12 +359,12 @@ ctx journal obsidian
 
 This generates a vault in `.context/journal-obsidian/` with:
 
-- **Wikilinks** (`[[target|display]]`) instead of Markdown links
-- **MOC pages** (Map of Content) for topics, key files, and session types
-- **Related sessions footer** per entry — links to entries sharing the same topics
-- **Transformed frontmatter** — `topics` renamed to `tags` (Obsidian-recognized),
+* **Wikilinks** (`[[target|display]]`) instead of Markdown links
+* **MOC pages** (Map of Content) for topics, key files, and session types
+* **Related sessions footer** per entry: links to entries sharing the same topics
+* **Transformed frontmatter**: `topics` renamed to `tags` (Obsidian-recognized),
   `aliases` added from title for search
-- **Graph-optimized structure** — MOC hubs + cross-linked entries create dense
+* **Graph-optimized structure**: MOC hubs and cross-linked entries create dense
   graph connectivity
 
 To use: open the output directory in Obsidian ("Open folder as vault").
@@ -382,7 +382,7 @@ ctx journal obsidian --output ~/vaults/ctx-journal
 
 ## Full Pipeline
 
-The complete journal workflow has four stages. Each is idempotent — safe to
+The complete journal workflow has four stages. Each is idempotent: safe to
 re-run, and stages skip already-processed entries.
 
 ```
@@ -393,8 +393,8 @@ export → enrich → rebuild
 |--------------|----------------------------|-----------------------------------------|------------------------------------|
 | **Export**   | `ctx recall export --all`  | Converts session JSONL to Markdown      | File already exists (safe default) |
 | **Enrich**   | `/ctx-journal-enrich`      | Adds frontmatter, summaries, topics     | Frontmatter already present        |
-| **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | —                                  |
-| **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | —                                  |
+| **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | --                                 |
+| **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | --                                 |
 
 ### Using `make journal`
 
@@ -409,7 +409,7 @@ After it runs, it reminds you to enrich in Claude Code:
 
 ```
 Next steps (in Claude Code):
-  /ctx-journal-enrich-all  — add metadata per entry (skips if frontmatter exists)
+  /ctx-journal-enrich-all # add metadata per entry (skips if frontmatter exists)
 
 Then re-run: make journal
 ```

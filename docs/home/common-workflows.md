@@ -183,7 +183,7 @@ ctx pad get db-password
 ctx pad list
 ```
 
-The scratchpad is encrypted with a key stored in `.context/.context.key`
+The scratchpad is encrypted with a key stored in `.context/.ctx.key`
 (*`.gitignore`d by default*). 
 
 See [Scratchpad](../reference/scratchpad.md) for details.
@@ -269,6 +269,9 @@ Commands and skills are **not interchangeable**: Each has a distinct role.
 | **Analysis**   | Deterministic heuristics           | Semantic / judgment-based                         |
 | **Best for**   | Quick checks, scripting, CI        | Deep analysis, generation, workflow orchestration |
 
+<!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/Paired Commands/,/CLI-Only Commands/p' docs/home/common-workflows.md | grep -oP 'ctx-[a-z-]+' | sort -u) -->
+<!-- drift-check: diff <(ctx --help 2>&1 | sed -n '/Available Commands/,/Flags/p' | grep -oP '^\s+\K\w+' | sort) <(sed -n '/CLI-Only Commands/,/Rule of Thumb/p' docs/home/common-workflows.md | grep -oP 'ctx \K[a-z]+' | sort -u) -->
+
 ### Paired Commands
 
 These have both a CLI and a skill counterpart. Use the CLI for
@@ -288,26 +291,34 @@ agent's judgment.
 | `ctx recall`         | `/ctx-recall`         | Agent searches session history with semantic understanding |
 | `ctx agent`          | `/ctx-agent`          | Agent loads and acts on the context packet                 |
 | `ctx loop`           | `/ctx-loop`           | Agent tailors the loop script to your project              |
+| `ctx doctor`         | `/ctx-doctor`         | Agent adds semantic analysis to structural checks          |
+| `ctx pause`          | `/ctx-pause`          | Agent pauses hooks with session-aware reasoning            |
+| `ctx resume`         | `/ctx-resume`         | Agent resumes hooks after a pause                          |
+| `ctx remind`         | `/ctx-remind`         | Agent manages reminders in conversation flow               |
 
 ### AI-Only Skills
 
 These have no CLI equivalent. They require the agent's reasoning.
 
-| Skill                    | Purpose                                                       |
-|--------------------------|---------------------------------------------------------------|
-| `/ctx-remember`          | Load context and present structured readback at session start |
-| `/ctx-wrap-up`           | End-of-session ceremony: persist learnings, decisions, tasks  |
-| `/ctx-next`              | Suggest 1–3 concrete next actions from context                |
-| `/ctx-commit`            | Commit with integrated context capture                        |
-| `/ctx-reflect`           | Pause and assess session progress                             |
-| `/ctx-consolidate`       | Merge overlapping learnings or decisions                      |
-| `/ctx-alignment-audit`   | Verify docs claims match agent instructions                   |
-| `/ctx-prompt-audit`      | Analyze prompting patterns for improvement                    |
-| `/ctx-implement`         | Execute a plan step-by-step with verification                 |
-| `/ctx-worktree`          | Manage parallel agent worktrees                               |
-| `/ctx-journal-normalize` | Fix markdown rendering issues in journal entries              |
-| `/ctx-journal-enrich`    | Add metadata, tags, and summaries to journal entries          |
-| `/ctx-blog`              | Generate a blog post ([zensical](https://pypi.org/project/zensical/)-flavored Markdown) |
+| Skill                     | Purpose                                                                                 |
+|---------------------------|-----------------------------------------------------------------------------------------|
+| `/ctx-remember`           | Load context and present structured readback at session start                           |
+| `/ctx-wrap-up`            | End-of-session ceremony: persist learnings, decisions, tasks                            |
+| `/ctx-next`               | Suggest 1-3 concrete next actions from context                                          |
+| `/ctx-commit`             | Commit with integrated context capture                                                  |
+| `/ctx-reflect`            | Pause and assess session progress                                                       |
+| `/ctx-consolidate`        | Merge overlapping learnings or decisions                                                |
+| `/ctx-alignment-audit`    | Verify docs claims match agent instructions                                             |
+| `/ctx-prompt-audit`       | Analyze prompting patterns for improvement                                              |
+| `/ctx-import-plans`       | Import Claude Code plan files into project specs                                        |
+| `/ctx-implement`          | Execute a plan step-by-step with verification                                           |
+| `/ctx-worktree`           | Manage parallel agent worktrees                                                         |
+| `/ctx-journal-normalize`  | Fix markdown rendering issues in journal entries                                        |
+| `/ctx-journal-enrich`     | Add metadata, tags, and summaries to journal entries                                    |
+| `/ctx-journal-enrich-all` | Batch-enrich all unenriched journal entries                                             |
+| `/ctx-blog`               | Generate a blog post ([zensical](https://pypi.org/project/zensical/)-flavored Markdown) |
+| `/ctx-blog-changelog`     | Generate themed blog post from commits between releases                                 |
+| `/ctx-map`                | Build and maintain architecture maps (ARCHITECTURE.md, DETAILED_DESIGN.md)              |
 
 ### CLI-Only Commands
 
@@ -327,7 +338,13 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx permissions restore`  | Restore settings from golden image              |
 | `ctx journal site`         | Generate browsable journal from exports         |
 | `ctx notify setup`         | Configure webhook notifications                 |
-| `ctx remind`               | Session-scoped reminders (surface at start)     |
+| `ctx decisions`            | List and filter decisions                       |
+| `ctx learnings`            | List and filter learnings                       |
+| `ctx tasks`                | List tasks, manage archival and snapshots       |
+| `ctx why`                  | Read the philosophy behind ctx                  |
+| `ctx guide`                | Quick-reference cheat sheet                     |
+| `ctx site`                 | Site management commands                        |
+| `ctx system`               | System diagnostics and hook commands            |
 | `ctx completion`           | Generate shell autocompletion scripts           |
 
 !!! tip "Rule of Thumb"

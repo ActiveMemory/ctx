@@ -107,7 +107,7 @@ From [Skills That Fight the Platform][fight-post]:
 
 > "*You are the guest, not the host.*"
 
-The audit prompt fails all three tests:
+The audit prompt **fails** all three tests:
 
 | Criterion | Audit prompt               | Good skill              |
 |-----------|----------------------------|-------------------------|
@@ -151,8 +151,10 @@ on every prompt is **pure waste**: attention spent on something that
 will say "When NOT to Use: now" 99% of the time.
 
 Runbooks have **zero** attention cost. They sit in a Markdown file until
-a human decides to use them. The human provides the **judgment** about
-timing. The prompt provides the **structure**.
+a human decides to use them. 
+
+* The **human** provides the **judgment** about timing. 
+* The **prompt** provides the **structure**.
 
 [attention-post]: 2026-02-03-the-attention-budget.md
 
@@ -180,7 +182,7 @@ concrete tasks:
 | 120 commit sequences disconnected from context  | Task: `/ctx-commit` workflow                                     |
 
 * Some findings became skills;
-* Some became `Makefile` targets.
+* Some became `Makefile` targets;
 * Some became one-line doc fixes. 
 
 The audit did not prescribe the artifact type: **The findings did**.
@@ -193,7 +195,7 @@ the only one.**
 Here is the exact prompt I used, for those who are curious.
 
 **This is not a template**: It worked because it was written against this
-codebase, at this moment, with **specific** goals in mind.
+codebase, at this moment, with **specific** goals in mind:
 
 ```markdown
 I want you to create an agent team to audit this codebase. Save each report as
@@ -354,7 +356,7 @@ the right things and to make the rest easy to find when you need it.
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **The best automation decision is sometimes not to automate.**
 
     A **runbook** in a Markdown file costs nothing until you use it.

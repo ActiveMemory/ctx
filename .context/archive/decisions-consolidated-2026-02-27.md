@@ -84,9 +84,9 @@ See: `specs/context-load-gate-v2.md`, `docs/blog/2026-02-25-the-homework-problem
 
 **Decision**: Webhook URL encrypted with shared encryption key, not a dedicated key
 
-**Rationale**: Reusing .context.key keeps the key management surface area minimal -- one key, one gitignore entry, one rotation cycle. The notify feature is a peer of the scratchpad (both store user secrets encrypted at rest).
+**Rationale**: Reusing .ctx.key keeps the key management surface area minimal -- one key, one gitignore entry, one rotation cycle. The notify feature is a peer of the scratchpad (both store user secrets encrypted at rest).
 
-**Consequences**: Key rename from .scratchpad.key to .context.key is now a follow-up task. Rotating the encryption key requires re-running ctx notify setup.
+**Consequences**: Key rename from .scratchpad.key to .ctx.key is now a follow-up task. Rotating the encryption key requires re-running ctx notify setup.
 
 ---
 

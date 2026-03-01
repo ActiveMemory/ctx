@@ -1407,6 +1407,8 @@
       
         
       
+        
+      
     
     
     
@@ -1499,6 +1501,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3107,6 +3139,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#encrypted-reports-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypted Reports (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#what-to-include" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3274,6 +3317,17 @@
     <span class="md-ellipsis">
       
         GitHub Private Reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encrypted-reports-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypted Reports (Optional)
       
     </span>
   </a>
@@ -3460,6 +3514,22 @@
 <li>Click "<em>Report a Vulnerability</em>";</li>
 <li>Provide a <strong>detailed</strong> description.</li>
 </ol>
+<h3 id="encrypted-reports-optional">Encrypted Reports (<em>Optional</em>)<a class="headerlink" href="#encrypted-reports-optional" title="Permanent link">&para;</a></h3>
+<p>If your report contains sensitive details (<em>proof-of-concept exploits,
+credentials, or internal system information</em>), you can encrypt your message
+with our PGP key:</p>
+<ul>
+<li><strong>In-repo</strong>: <a href="https://github.com/ActiveMemory/ctx/blob/main/SECURITY_KEY.asc"><code>SECURITY_KEY.asc</code></a></li>
+<li><strong>Keybase</strong>: <a href="https://keybase.io/alekhinejose/pgp_keys.asc">keybase.io/alekhinejose</a></li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Import the key</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>gpg<span class="w"> </span>--import<span class="w"> </span>SECURITY_KEY.asc
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Encrypt your report</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--encrypt<span class="w"> </span>--recipient<span class="w"> </span>security@ctx.ist<span class="w"> </span>report.txt
+</span></code></pre></div>
+<p>Encryption is optional. Unencrypted reports to <strong><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#101;&#99;&#117;&#114;&#105;&#116;&#121;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;">&#115;&#101;&#99;&#117;&#114;&#105;&#116;&#121;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;</a></strong> or via
+GitHub Private Reporting are perfectly fine.</p>
 <h3 id="what-to-include">What to Include<a class="headerlink" href="#what-to-include" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Description of the vulnerability,</li>
@@ -3560,8 +3630,8 @@ over time. Periodically review for:</p>
 (<code>$XDG_RUNTIME_DIR/ctx-&lt;uid&gt;/</code> or <code>/tmp/ctx-&lt;uid&gt;/</code>). A <code>SessionEnd</code>
 hook automatically removes files older than 15 days. For manual cleanup
 or cron scheduling, use:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>.context/tools/cleanup-ctx-tmp.sh<span class="w">        </span><span class="c1"># default: 15-day threshold</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>.context/tools/cleanup-ctx-tmp.sh<span class="w"> </span><span class="m">7</span><span class="w">      </span><span class="c1"># custom: 7-day threshold</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.context/tools/cleanup-ctx-tmp.sh<span class="w">        </span><span class="c1"># default: 15-day threshold</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>.context/tools/cleanup-ctx-tmp.sh<span class="w"> </span><span class="m">7</span><span class="w">      </span><span class="c1"># custom: 7-day threshold</span>
 </span></code></pre></div>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>

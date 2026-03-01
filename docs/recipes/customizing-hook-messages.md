@@ -27,12 +27,12 @@ ctx system message reset qa-reminder gate   # revert to embedded default
 
 ## Commands Used
 
-| Tool | Type | Purpose |
-|------|------|---------|
-| `ctx system message list` | CLI command | Show all hook messages with category and override status |
-| `ctx system message show` | CLI command | Print the effective message template |
-| `ctx system message edit` | CLI command | Copy embedded default to `.context/` for editing |
-| `ctx system message reset` | CLI command | Delete user override, revert to default |
+| Tool                       | Type        | Purpose                                                  |
+|----------------------------|-------------|----------------------------------------------------------|
+| `ctx system message list`  | CLI command | Show all hook messages with category and override status |
+| `ctx system message show`  | CLI command | Print the effective message template                     |
+| `ctx system message edit`  | CLI command | Copy embedded default to `.context/` for editing         |
+| `ctx system message reset` | CLI command | Delete user override, revert to default                  |
 
 ---
 
@@ -44,8 +44,8 @@ Hook messages use a **3-tier fallback**:
 2. **Embedded default**: compiled into the `ctx` binary
 3. **Hardcoded fallback**: belt-and-suspenders safety net
 
-The hook *logic* (when to fire, counting, state tracking, cooldowns) is
-unchanged. Only the *content* -- what text gets emitted -- comes from
+The hook *logic* (*when to fire, counting, state tracking, cooldowns*) is
+unchanged. Only the *content* (*what text gets emitted*) comes from
 the template. You customize what the hook says without touching how it
 decides to speak.
 
@@ -85,13 +85,13 @@ worth persisting?
 
 The `show` and `edit` commands list available variables for each message.
 When writing a replacement, keep the same `{{.VariableName}}` placeholders
-to preserve dynamic content. Variables that you omit render as `<no value>`
--- no error, but the output may look odd.
+to preserve dynamic content. Variables that you omit render as `<no value>`:
+no error, but the output may look odd.
 
 ### Intentional Silence
 
-An **empty template file** (0 bytes or whitespace-only) means "don't
-emit a message." The hook still runs its logic but produces no output.
+An **empty template file** (0 bytes or whitespace-only) means "*don't
+emit a message*". The hook still runs its logic but produces no output.
 This lets you silence specific messages without removing the hook from
 `hooks.json`.
 
@@ -99,7 +99,7 @@ This lets you silence specific messages without removing the hook from
 
 ## Example: Python Project QA Gate
 
-The default QA gate says "lint the ENTIRE project" and references
+The default QA gate says "*lint the ENTIRE project*" and references
 `make lint`. For a Python project, you want `pytest` and `ruff`:
 
 ```bash
@@ -115,7 +115,7 @@ ctx system message edit qa-reminder gate
 Replace the content in `.context/hooks/messages/qa-reminder/gate.txt`:
 
 ```
-HARD GATE — DO NOT COMMIT without completing ALL of these steps first:
+HARD GATE! DO NOT COMMIT without completing ALL of these steps first:
 (1) Run the full test suite: pytest -x
 (2) Run the linter: ruff check .
 (3) Verify a clean working tree
@@ -178,74 +178,74 @@ category:
 
 ### Customizable (16 messages)
 
-Messages that are **opinions** -- project-specific wording that benefits
+Messages that are **opinions**: project-specific wording that benefits
 from customization. These are the primary targets for override.
 
-| Hook | Variant | Description |
-|------|---------|-------------|
-| check-backup-age | warning | Backup staleness warning |
-| check-ceremonies | both | Both ceremonies missing |
-| check-ceremonies | remember | Start-of-session ceremony |
-| check-ceremonies | wrapup | End-of-session ceremony |
-| check-context-size | checkpoint | Context capacity warning |
-| check-context-size | oversize | Injection oversize nudge |
-| check-context-size | window | Context window usage warning (>80%) |
-| check-journal | both | Unexported sessions + unenriched entries |
-| check-journal | unenriched | Unenriched journal entries |
-| check-journal | unexported | Unexported sessions |
-| check-knowledge | warning | Knowledge file growth |
-| check-map-staleness | stale | Architecture map staleness |
-| check-persistence | nudge | Context persistence nudge |
-| post-commit | nudge | Post-commit context capture |
-| qa-reminder | gate | Pre-commit QA gate |
+| Hook                | Variant    | Description                              |
+|---------------------|------------|------------------------------------------|
+| check-backup-age    | warning    | Backup staleness warning                 |
+| check-ceremonies    | both       | Both ceremonies missing                  |
+| check-ceremonies    | remember   | Start-of-session ceremony                |
+| check-ceremonies    | wrapup     | End-of-session ceremony                  |
+| check-context-size  | checkpoint | Context capacity warning                 |
+| check-context-size  | oversize   | Injection oversize nudge                 |
+| check-context-size  | window     | Context window usage warning (>80%)      |
+| check-journal       | both       | Unexported sessions + unenriched entries |
+| check-journal       | unenriched | Unenriched journal entries               |
+| check-journal       | unexported | Unexported sessions                      |
+| check-knowledge     | warning    | Knowledge file growth                    |
+| check-map-staleness | stale      | Architecture map staleness               |
+| check-persistence   | nudge      | Context persistence nudge                |
+| post-commit         | nudge      | Post-commit context capture              |
+| qa-reminder         | gate       | Pre-commit QA gate                       |
 
 ### ctx-specific (10 messages)
 
 Messages specific to ctx's own development workflow. You *can* customize
 them, but `edit` will warn you first.
 
-| Hook | Variant | Description |
-|------|---------|-------------|
-| block-dangerous-commands | cp-to-bin | Block copy to bin dirs |
-| block-dangerous-commands | install-to-local-bin | Block copy to ~/.local/bin |
-| block-dangerous-commands | mid-git-push | Block git push |
-| block-dangerous-commands | mid-sudo | Block sudo |
-| block-non-path-ctx | absolute-path | Block absolute path invocation |
-| block-non-path-ctx | dot-slash | Block ./ctx invocation |
-| block-non-path-ctx | go-run | Block go run invocation |
-| check-reminders | reminders | Pending reminders relay |
-| check-resources | alert | Resource pressure alert |
-| check-version | key-rotation | Key rotation nudge |
-| check-version | mismatch | Version mismatch |
+| Hook                     | Variant              | Description                    |
+|--------------------------|----------------------|--------------------------------|
+| block-dangerous-commands | cp-to-bin            | Block copy to bin dirs         |
+| block-dangerous-commands | install-to-local-bin | Block copy to ~/.local/bin     |
+| block-dangerous-commands | mid-git-push         | Block git push                 |
+| block-dangerous-commands | mid-sudo             | Block sudo                     |
+| block-non-path-ctx       | absolute-path        | Block absolute path invocation |
+| block-non-path-ctx       | dot-slash            | Block ./ctx invocation         |
+| block-non-path-ctx       | go-run               | Block go run invocation        |
+| check-reminders          | reminders            | Pending reminders relay        |
+| check-resources          | alert                | Resource pressure alert        |
+| check-version            | key-rotation         | Key rotation nudge             |
+| check-version            | mismatch             | Version mismatch               |
 
 ---
 
 ## Template Variables Reference
 
-| Hook | Variant | Variables |
-|------|---------|-----------|
-| check-backup-age | warning | `{{.Warnings}}` |
-| check-context-size | checkpoint | *(none)* |
-| check-context-size | oversize | `{{.TokenCount}}` |
-| check-context-size | window | `{{.TokenCount}}`, `{{.Percentage}}` |
-| check-ceremonies | both, remember, wrapup | *(none)* |
-| check-journal | both | `{{.UnexportedCount}}`, `{{.UnenrichedCount}}` |
-| check-journal | unenriched | `{{.UnenrichedCount}}` |
-| check-journal | unexported | `{{.UnexportedCount}}` |
-| check-knowledge | warning | `{{.FileWarnings}}` |
-| check-map-staleness | stale | `{{.LastRefreshDate}}`, `{{.ModuleCount}}` |
-| check-persistence | nudge | `{{.PromptsSinceNudge}}` |
-| check-reminders | reminders | `{{.ReminderList}}` |
-| check-resources | alert | `{{.AlertMessages}}` |
-| check-version | key-rotation | `{{.KeyAgeDays}}` |
-| check-version | mismatch | `{{.BinaryVersion}}`, `{{.PluginVersion}}` |
-| post-commit | nudge | *(none)* |
-| qa-reminder | gate | *(none)* |
-| block-dangerous-commands | all variants | *(none)* |
-| block-non-path-ctx | all variants | *(none)* |
+| Hook                     | Variant                | Variables                                      |
+|--------------------------|------------------------|------------------------------------------------|
+| check-backup-age         | warning                | `{{.Warnings}}`                                |
+| check-context-size       | checkpoint             | *(none)*                                       |
+| check-context-size       | oversize               | `{{.TokenCount}}`                              |
+| check-context-size       | window                 | `{{.TokenCount}}`, `{{.Percentage}}`           |
+| check-ceremonies         | both, remember, wrapup | *(none)*                                       |
+| check-journal            | both                   | `{{.UnexportedCount}}`, `{{.UnenrichedCount}}` |
+| check-journal            | unenriched             | `{{.UnenrichedCount}}`                         |
+| check-journal            | unexported             | `{{.UnexportedCount}}`                         |
+| check-knowledge          | warning                | `{{.FileWarnings}}`                            |
+| check-map-staleness      | stale                  | `{{.LastRefreshDate}}`, `{{.ModuleCount}}`     |
+| check-persistence        | nudge                  | `{{.PromptsSinceNudge}}`                       |
+| check-reminders          | reminders              | `{{.ReminderList}}`                            |
+| check-resources          | alert                  | `{{.AlertMessages}}`                           |
+| check-version            | key-rotation           | `{{.KeyAgeDays}}`                              |
+| check-version            | mismatch               | `{{.BinaryVersion}}`, `{{.PluginVersion}}`     |
+| post-commit              | nudge                  | *(none)*                                       |
+| qa-reminder              | gate                   | *(none)*                                       |
+| block-dangerous-commands | all variants           | *(none)*                                       |
+| block-non-path-ctx       | all variants           | *(none)*                                       |
 
-Templates that reference undefined variables render `<no value>` -- no
-error, graceful degradation.
+Templates that reference undefined variables render `<no value>`: 
+no error, graceful degradation.
 
 ---
 

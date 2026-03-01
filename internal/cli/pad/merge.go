@@ -39,7 +39,7 @@ Use --key to provide a key file for encrypted pads from other projects.
 Examples:
   ctx pad merge worktree/.context/scratchpad.enc
   ctx pad merge notes.md backup.enc
-  ctx pad merge --key /other/.context.key foreign.enc
+  ctx pad merge --key /other/.ctx.key foreign.enc
   ctx pad merge --dry-run pad-a.enc pad-b.md`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

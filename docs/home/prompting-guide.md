@@ -37,6 +37,31 @@ This guide documents prompts that **reliably** produce **good results**.
 
 ---
 
+## TL;DR
+
+| Goal            | Prompt                                     |
+|-----------------|--------------------------------------------|
+| Load context    | "*Do you remember?*"                       |
+| Resume work     | "*What's the current state?*"              |
+| What's next     | `/ctx-next`                                |
+| Debug           | "*Why doesn't X work?*"                    |
+| Validate        | "*Is this consistent with our decisions?*" |
+| Impact analysis | "*What would break if we...*"              |
+| Reflect         | `/ctx-reflect`                             |
+| Wrap up         | `/ctx-wrap-up`                             |
+| Persist         | "*Add this as a learning*"                 |
+| Explore         | "*How does X work in this codebase?*"      |
+| Sanity check    | "*Is this the right approach?*"            |
+| Completeness    | "*What am I missing?*"                     |
+| One more thing  | "*What's the single smartest addition?*"   |
+| Set tone        | "*Push back if my assumptions are wrong.*" |
+| Constrain scope | "*Only change files in X. Nothing else.*"  |
+| Course correct  | "*Stop. That's not what I meant.*"         |
+| Check health    | "*Run `ctx drift`*"                        |
+| Commit          | `/ctx-commit`                              |
+
+---
+
 ## Session Start
 
 ### "*Do you remember?*"
@@ -66,8 +91,8 @@ there are files...*"), it has not loaded `CLAUDE.md` or
 `AGENT_PLAYBOOK.md` properly.
 
 For a detailed case study on making agents actually follow this
-protocol — including the failure modes, the timing problem, and the
-hook design that solved it — see
+protocol (*including the failure modes, the timing problem, and the
+hook design that solved it*) see
 [The Dog Ate My Homework](../blog/2026-02-25-the-homework-problem.md).
 
 ### "*What's the current state?*"
@@ -227,9 +252,9 @@ Use it at the end of the session or before switching topics.
 
 * "*Let's persist what we did*"
 * "*Update the context files*"
-* `/ctx-wrap-up` — the recommended end-of-session ceremony
+* `/ctx-wrap-up`:the recommended end-of-session ceremony
   (see [Session Ceremonies](../recipes/session-ceremonies.md))
-* `/ctx-reflect` — mid-session reflection checkpoint
+* `/ctx-reflect`: mid-session reflection checkpoint
 
 ---
 
@@ -469,31 +494,6 @@ instead of the actual secret, etc.) and **never** write it to a context file.
 
 ---
 
-## Quick Reference
-
-| Goal            | Prompt                                     |
-|-----------------|--------------------------------------------|
-| Load context    | "*Do you remember?*"                       |
-| Resume work     | "*What's the current state?*"              |
-| What's next     | `/ctx-next`                                |
-| Debug           | "*Why doesn't X work?*"                    |
-| Validate        | "*Is this consistent with our decisions?*" |
-| Impact analysis | "*What would break if we...*"              |
-| Reflect         | `/ctx-reflect`                             |
-| Wrap up         | `/ctx-wrap-up`                             |
-| Persist         | "*Add this as a learning*"                 |
-| Explore         | "*How does X work in this codebase?*"      |
-| Sanity check    | "*Is this the right approach?*"            |
-| Completeness    | "*What am I missing?*"                     |
-| One more thing  | "*What's the single smartest addition?*"   |
-| Set tone        | "*Push back if my assumptions are wrong.*" |
-| Constrain scope | "*Only change files in X. Nothing else.*"  |
-| Course correct  | "*Stop. That's not what I meant.*"         |
-| Check health    | "*Run `ctx drift`*"                        |
-| Commit          | `/ctx-commit`                              |
-
----
-
 ## Explore → Plan → Implement
 
 For non-trivial work, name the phase you want:
@@ -728,7 +728,7 @@ They work because language models are, at their core,
   Why your AI forgets what you just told it, and how token budgets shape
   context strategy
 * [The Dog Ate My Homework](../blog/2026-02-25-the-homework-problem.md):
-  A case study in making agents follow instructions — attention timing,
+  A case study in making agents follow instructions: attention timing,
   delegation decay, and observable compliance as a design goal
 
 ## Contributing

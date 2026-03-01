@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-02-28 | ctx pad import, ctx pad export, and ctx system resources make three hack scripts redundant |
+| 2026-02-28 | Getting-started docs assumed Claude Code as the only agent |
+| 2026-02-28 | Plugin reload script must rebuild cache, not just delete it |
 | 2026-02-27 | site/ directory must be committed with docs changes |
 | 2026-02-27 | Doctor token_budget vs context_window confusion |
 | 2026-02-27 | Drift detector false positives on illustrative code examples |
@@ -25,6 +28,36 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-02-28-184758] ctx pad import, ctx pad export, and ctx system resources make three hack scripts redundant
+
+**Context**: Audited hack/ scripts against ctx CLI surface
+
+**Lesson**: As ctx CLI grew, several hack scripts became wrappers around built-in commands (pad-import.sh -> ctx pad import, pad-export-blobs.sh -> ctx pad export, resource-watch.sh -> watch -n5 ctx system resources)
+
+**Application**: Periodically audit hack/ for scripts that ctx has absorbed
+
+---
+
+## [2026-02-28-184647] Getting-started docs assumed Claude Code as the only agent
+
+**Context**: The installation section opened with 'A full ctx installation has two parts' — binary + Claude Code plugin — leaving non-Claude-Code users without a clear path
+
+**Lesson**: Installation docs should lead with the universal requirement (the binary) and present agent-specific integration as conditional
+
+**Application**: When writing docs for multi-tool projects, frame the common denominator first, then branch by tool
+
+---
+
+## [2026-02-28-150701] Plugin reload script must rebuild cache, not just delete it
+
+**Context**: hack/plugin-reload.sh was deleting ~/.claude/plugins/cache/activememory-ctx/ without repopulating it. Claude Code's installed_plugins.json still referenced the cache path, so the plugin appeared enabled but hooks.json was missing — all plugin hooks silently stopped firing.
+
+**Lesson**: Claude Code snapshots plugin hooks from the cache directory at session startup. If the cache is deleted, plugin hooks vanish silently with no error. The reload script must rebuild the cache from source assets (internal/assets/claude/) after clearing it, and warn that a session restart is required.
+
+**Application**: Always rebuild the plugin cache in hack/plugin-reload.sh. When debugging hooks that don't fire, check ~/.claude/plugins/cache/ first — a missing hooks.json is the most likely cause.
 
 ---
 

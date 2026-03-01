@@ -121,10 +121,10 @@ trick can override. An unprivileged user cannot read files owned by root.
 A process without `CAP_NET_RAW` cannot open raw sockets. These are kernel
 boundaries.
 
-| Control                    | Purpose                                                                                                                                                                                                        |
-|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Dedicated user account** | No `sudo`, no privileged group membership (`docker`, `wheel`, `adm`). The agent cannot escalate privileges.                                                                                                    |
-| **Filesystem permissions** | Project directory writable; everything else read-only or inaccessible. Agent cannot reach other projects, home directories, or system config.                                                                  |
+| Control                    | Purpose                                                                                                                                                                                      |
+|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Dedicated user account** | No `sudo`, no privileged group membership (`docker`, `wheel`, `adm`). The agent cannot escalate privileges.                                                                                  |
+| **Filesystem permissions** | Project directory writable; everything else read-only or inaccessible. Agent cannot reach other projects, home directories, or system config.                                                |
 | **Immutable config files** | `CLAUDE.md`, `.claude/settings.local.json`, and `.context/CONSTITUTION.md` owned by a different user or marked immutable (`chattr +i` on Linux). The agent cannot modify its own guardrails. |
 
 **What it catches**: Privilege escalation, self-modification, lateral
@@ -161,8 +161,8 @@ resolution, so a full airgap requires pre-populated caches.
 
 ### Layer 5: Infrastructure Isolation
 
-The strongest boundary is a separate machine — or something that behaves
-like one.
+The strongest boundary is a separate machine (*or something that behaves
+like one*).
 
 The moment you stop arguing about prompts and start arguing about
 kernels, you are finally doing security.

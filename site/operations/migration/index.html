@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3719,12 +3751,13 @@
 <h2 id="adopting-ctx-in-existing-projects">Adopting <code>ctx</code> in Existing Projects<a class="headerlink" href="#adopting-ctx-in-existing-projects" title="Permanent link">&para;</a></h2>
 <div class="admonition tip">
 <p class="admonition-title">Claude Code User?</p>
-<p>You probably want the plugin instead of this page.
-Install ctx from the marketplace (<code>/plugin</code> → search "ctx" → Install) and
-you're done — hooks, skills, and updates are handled for you.
-See <a href="../../home/getting-started/">Getting Started</a> for the full walkthrough.</p>
+<p>You probably want the plugin instead of this page.</p>
+<p>Install ctx from the marketplace:<br />
+(<em><code>/plugin</code> → search "ctx" → Install</em>)<br />
+and you're done: hooks, skills, and updates are handled for you.</p>
+<p>See <a href="../../home/getting-started/">Getting Started</a> for the full walkthrough.</p>
 </div>
-<p>This guide covers adopting <code>ctx</code> in existing projects — regardless of
+<p>This guide covers adopting <code>ctx</code> in existing projects regardless of
 which tools your team uses.</p>
 <h2 id="quick-paths">Quick Paths<a class="headerlink" href="#quick-paths" title="Permanent link">&para;</a></h2>
 <table>
@@ -3754,7 +3787,7 @@ which tools your team uses.</p>
 <tr>
 <td><code>.cursorrules</code> / <code>.aider.conf.yml</code></td>
 <td><code>ctx init</code></td>
-<td><code>ctx</code> ignores those files — they coexist cleanly</td>
+<td><code>ctx</code> ignores those files: they coexist cleanly</td>
 </tr>
 <tr>
 <td>Team repo, first adopter</td>
@@ -3765,8 +3798,21 @@ which tools your team uses.</p>
 </table>
 <hr />
 <h2 id="existing-claudemd">Existing <code>CLAUDE.md</code><a class="headerlink" href="#existing-claudemd" title="Permanent link">&para;</a></h2>
-<p>This is the most common scenario. You have a <code>CLAUDE.md</code> with project-specific
-instructions and don't want to lose them.</p>
+<p>This is the most common scenario:</p>
+<p>You have a <code>CLAUDE.md</code> with project-specific instructions and don't want to 
+lose them.</p>
+<div class="admonition tip">
+<p class="admonition-title">You Own <code>CLAUDE.md</code></p>
+<p><strong>After initialization, <code>CLAUDE.md</code> is yours: edit it freely</strong>.</p>
+<p>Add project instructions, remove sections you don't need, reorganize as 
+you see fit.</p>
+<p>The only part <code>ctx</code> manages is the block between the <code>&lt;!-- ctx:context --&gt;</code>
+and <code>&lt;!-- ctx:end --&gt;</code> markers; everything outside those markers is yours
+to change at any time.</p>
+<p>If you remove the markers, nothing breaks: <code>ctx</code> simply treats the file 
+as having no <code>ctx</code> content and will offer to merge again on the next 
+<code>ctx init</code>.</p>
+</div>
 <h3 id="what-ctx-init-does">What <code>ctx init</code> Does<a class="headerlink" href="#what-ctx-init-does" title="Permanent link">&para;</a></h3>
 <p>When <code>ctx init</code> detects an existing <code>CLAUDE.md</code>, it checks for ctx markers
 (<code>&lt;!-- ctx:context --&gt;</code> ... <code>&lt;!-- ctx:end --&gt;</code>):</p>
@@ -3787,16 +3833,16 @@ instructions and don't want to lose them.</p>
 <td>Creates from template</td>
 </tr>
 <tr>
-<td>Exists, no ctx markers</td>
+<td>Exists, no <code>ctx</code> markers</td>
 <td><strong>Prompts</strong> to merge</td>
 <td>Auto-merges (<em>no prompt</em>)</td>
 <td>Auto-merges (<em>no prompt</em>)</td>
 </tr>
 <tr>
-<td>Exists, has ctx markers</td>
+<td>Exists, has <code>ctx</code> markers</td>
 <td>Skips (<em>already set up</em>)</td>
 <td>Skips</td>
-<td>Replaces ctx block only</td>
+<td>Replaces the <code>ctx</code> block only</td>
 </tr>
 </tbody>
 </table>
@@ -3815,8 +3861,8 @@ instructions and don't want to lose them.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gu">## Build Commands</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>-<span class="sb">`npm run build`</span> — production build
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">-</span><span class="w"> </span><span class="sb">`npm test`</span> — run tests
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>-<span class="sb">`npm run build`</span>: production build
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">-</span><span class="w"> </span><span class="sb">`npm test`</span>: run tests
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gu">## Code Style</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
@@ -3838,8 +3884,8 @@ instructions and don't want to lose them.</p>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="gu">## Build Commands</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">-</span><span class="w"> </span><span class="sb">`npm run build`</span> — production build
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">-</span><span class="w"> </span><span class="sb">`npm test`</span> — run tests
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">-</span><span class="w"> </span><span class="sb">`npm run build`</span>: production build
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">-</span><span class="w"> </span><span class="sb">`npm test`</span>: run tests
 </span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="gu">## Code Style</span>
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
@@ -3931,21 +3977,39 @@ prompt files, consider migrating it:</p>
 <li><strong>Architecture notes</strong> → <code>.context/ARCHITECTURE.md</code></li>
 <li><strong>Known issues / tips</strong> → <code>.context/LEARNINGS.md</code></li>
 </ol>
-<p>You don't need to delete the originals — ctx and tool-specific files
+<p>You don't need to delete the originals: <code>ctx</code> and tool-specific files
 can coexist. But centralizing in <code>.context/</code> means every tool gets the
 same context.</p>
 <hr />
 <h2 id="team-adoption">Team Adoption<a class="headerlink" href="#team-adoption" title="Permanent link">&para;</a></h2>
 <h3 id="context-is-designed-to-be-committed"><code>.context/</code> Is Designed to Be Committed<a class="headerlink" href="#context-is-designed-to-be-committed" title="Permanent link">&para;</a></h3>
-<p>The <code>.context/</code> directory is meant to live in version control. It contains
-project knowledge, <strong>not</strong> secrets or personal preferences.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># One person initializes</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--merge
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Commit everything</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>add<span class="w"> </span>.context/<span class="w"> </span>CLAUDE.md
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add ctx context management&quot;</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>git<span class="w"> </span>push
+<p>The context files (tasks, decisions, learnings, conventions, architecture)
+are meant to live in version control. However, some subdirectories are
+personal or sensitive and should <strong>not</strong> be committed.</p>
+<p><code>ctx init</code> automatically adds these <code>.gitignore</code> entries:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># Journals contain full session transcripts: personal, potentially large
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>.context/journal/
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>.context/journal-site/
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>.context/journal-obsidian/
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a># Encryption key (NEVER COMMIT)
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>.context/.ctx.key
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a># Runtime state and logs (ephemeral, machine-specific):
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>.context/state/
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>.context/logs/
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a># Claude Code local settings (machine-specific)
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>.claude/settings.local.json
+</span></code></pre></div>
+<p>With those in place, committing is straightforward:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># One person initializes</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>init<span class="w"> </span>--merge
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Commit context files (journals and keys are already gitignored)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>add<span class="w"> </span>.context/<span class="w"> </span>CLAUDE.md
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add ctx context management&quot;</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>git<span class="w"> </span>push
 </span></code></pre></div>
 <p>Teammates pull and immediately have context. No per-developer setup needed.</p>
 <h3 id="what-about-claude">What About <code>.claude/</code>?<a class="headerlink" href="#what-about-claude" title="Permanent link">&para;</a></h3>
@@ -3975,11 +4039,11 @@ Hooks and skills are provided by the <code>ctx</code> plugin (<em>not per-projec
 <h3 id="merge-conflicts-in-context-files">Merge Conflicts in Context Files<a class="headerlink" href="#merge-conflicts-in-context-files" title="Permanent link">&para;</a></h3>
 <p>Context files are plain Markdown. Resolve conflicts the same way you would
 for any other documentation file:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># After a conflicting pull</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>diff<span class="w"> </span>.context/TASKS.md<span class="w">    </span><span class="c1"># See both sides</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Edit to keep both sets of tasks, then:</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>git<span class="w"> </span>add<span class="w"> </span>.context/TASKS.md
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>commit
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># After a conflicting pull</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>diff<span class="w"> </span>.context/TASKS.md<span class="w">    </span><span class="c1"># See both sides</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Edit to keep both sets of tasks, then:</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>git<span class="w"> </span>add<span class="w"> </span>.context/TASKS.md
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>git<span class="w"> </span>commit
 </span></code></pre></div>
 <p>Common conflict scenarios:</p>
 <ul>
@@ -3998,7 +4062,7 @@ for any other documentation file:</p>
 <hr />
 <h2 id="verifying-it-worked">Verifying It Worked<a class="headerlink" href="#verifying-it-worked" title="Permanent link">&para;</a></h2>
 <h3 id="check-status">Check Status<a class="headerlink" href="#check-status" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>status
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>status
 </span></code></pre></div>
 <p>You should see your context files listed with token counts and no warnings.</p>
 <h3 id="test-memory">Test Memory<a class="headerlink" href="#test-memory" title="Permanent link">&para;</a></h3>
@@ -4014,12 +4078,12 @@ your PATH (<code>which ctx</code>) and that hooks are configured
 (see <a href="../integrations/#troubleshooting">Troubleshooting</a>).</p>
 <h3 id="verify-the-merge">Verify the Merge<a class="headerlink" href="#verify-the-merge" title="Permanent link">&para;</a></h3>
 <p>If you used <code>--merge</code>, check that your original content is intact:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Your original content should still be there</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cat<span class="w"> </span>CLAUDE.md
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># The ctx block should be between markers</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ctx:context&quot;</span><span class="w"> </span>CLAUDE.md<span class="w">  </span><span class="c1"># Should print 1</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ctx:end&quot;</span><span class="w"> </span>CLAUDE.md<span class="w">      </span><span class="c1"># Should print 1</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Your original content should still be there</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>cat<span class="w"> </span>CLAUDE.md
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># The ctx block should be between markers</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ctx:context&quot;</span><span class="w"> </span>CLAUDE.md<span class="w">  </span><span class="c1"># Should print 1</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ctx:end&quot;</span><span class="w"> </span>CLAUDE.md<span class="w">      </span><span class="c1"># Should print 1</span>
 </span></code></pre></div>
 <hr />
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>

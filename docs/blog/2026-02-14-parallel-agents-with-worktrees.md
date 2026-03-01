@@ -274,7 +274,7 @@ The hard part is not the `git` commands; it is the **discipline**:
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **Partition by blast radius, not by priority.**
 
     Two tasks that touch the same files belong in the same track,
@@ -284,6 +284,6 @@ The hard part is not the `git` commands; it is the **discipline**:
 
 ---
 
-*The practical setup — skill invocation, worktree creation, merge
-workflow, and cleanup — lives in the recipe:
+*The practical setup (skill invocation, worktree creation, merge
+workflow, and cleanup) lives in the recipe:
 [Parallel Agent Development with Git Worktrees](../recipes/parallel-worktrees.md).*

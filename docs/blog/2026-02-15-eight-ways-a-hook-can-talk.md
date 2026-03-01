@@ -108,7 +108,7 @@ I use this for actionable reminders:
 
 A nudge, not a command. The hook tells the agent something; the agent
 decides what (if anything) to tell the user. This is right for behavioral
-nudges — "you haven't saved context in a while" doesn't need to be relayed
+nudges: "you haven't saved context in a while" doesn't need to be relayed
 verbatim, but the agent should consider acting on it.
 
 ### 4. Silent Context Injection
@@ -119,8 +119,8 @@ ctx agent --budget 4000 2>/dev/null || true
 
 Pure background enrichment. The agent's context window gets project
 information injected on every tool call, with no visible output. Neither
-the agent nor the user sees the hook fire — but the agent makes better
-decisions because of the context.
+the agent nor the user sees the hook fire, but the agent makes **better
+decisions** because of the **context**.
 
 ### 5. Silent Side-Effect
 

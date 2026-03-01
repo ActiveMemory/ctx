@@ -1422,6 +1422,8 @@
       
         
       
+        
+      
     
     
     
@@ -1517,6 +1519,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3611,8 +3643,8 @@
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>Something isn't working: a hook isn't firing, nudges are too noisy,
 context seems stale, or the agent isn't following instructions. The
-information to diagnose it exists -- across status, drift, event logs,
-hook config, and session history -- but assembling it manually is tedious.</p>
+information to diagnose it exists (<em>across status, drift, event logs,
+hook config, and session history</em>), but assembling it manually is tedious.</p>
 <p><strong>How do you figure out what's wrong and fix it?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>doctor<span class="w">                   </span><span class="c1"># structural health check</span>
@@ -3656,7 +3688,7 @@ hook config, and session history -- but assembling it manually is tedious.</p>
 <h3 id="quick-check-ctx-doctor">Quick Check: <code>ctx doctor</code><a class="headerlink" href="#quick-check-ctx-doctor" title="Permanent link">&para;</a></h3>
 <p>Run <code>ctx doctor</code> for an instant structural health report. It checks context
 initialization, required files, drift, hook configuration, event logging,
-webhooks, reminders, task completion ratio, and context token size -- all in
+webhooks, reminders, task completion ratio, and context token size: all in
 one pass:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>doctor
 </span></code></pre></div>
@@ -3676,7 +3708,7 @@ one pass:</p>
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>State
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  ✓ No pending reminders
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  ⚠ Task completion ratio high (18/22 = 82%) — consider archiving
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  ⚠ Task completion ratio high (18/22 = 82%): consider archiving
 </span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
 </span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>Size
 </span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>  ✓ Context size: ~4200 tokens (budget: 8000)
@@ -3747,9 +3779,9 @@ for the expected hook.</p>
 <ul>
 <li><strong>Plugin not installed</strong>: run <code>ctx init --claude</code> to reinstall</li>
 <li><strong>PATH issue</strong>: the hook invokes <code>ctx</code> from PATH; ensure it resolves</li>
-<li><strong>Throttle active</strong>: most hooks fire once per day -- check
+<li><strong>Throttle active</strong>: most hooks fire once per day: check
   <code>$XDG_RUNTIME_DIR/ctx/</code> for daily marker files</li>
-<li><strong>Hook silenced</strong>: a custom message override may be an empty file --
+<li><strong>Hook silenced</strong>: a custom message override may be an empty file:
   check <code>ctx system message list</code> for overrides</li>
 </ul>
 <h3 id="too-many-nudges">"Too many nudges"<a class="headerlink" href="#too-many-nudges" title="Permanent link">&para;</a></h3>
@@ -3760,7 +3792,8 @@ persistence reminders, and QA gates fire constantly.</p>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--last<span class="w"> </span><span class="m">50</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Count fires per hook</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.detail.hook // &quot;unknown&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.detail.hook // &quot;unknown&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
 </span></code></pre></div>
 <p><strong>Common causes</strong>:</p>
 <ul>
@@ -3768,7 +3801,7 @@ persistence reminders, and QA gates fire constantly.</p>
   throttle. This is intentional. If it's too much, silence it with an empty
   override: <code>ctx system message edit qa-reminder gate</code>, then empty the file</li>
 <li><strong>Long session</strong>: context checkpoint fires with increasing frequency after
-  prompt 15. This is the system telling you the session is getting long --
+  prompt 15. This is the system telling you the session is getting long:
   consider wrapping up</li>
 <li><strong>Short throttle window</strong>: if you deleted marker files in
   <code>$XDG_RUNTIME_DIR/ctx/</code>, daily-throttled hooks will re-fire</li>
@@ -3802,7 +3835,7 @@ exist, or decisions that were reversed.</p>
 <p><strong>Symptoms</strong>: The agent ignores conventions, forgets decisions, or acts
 contrary to <code>CONSTITUTION.md</code> rules.</p>
 <p><strong>Diagnosis</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check context token size -- is it too large for the model?</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check context token size: Is it too large for the model?</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.name == &quot;context_size&quot;)&#39;</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check if context is actually being loaded</span>
@@ -3840,8 +3873,8 @@ event data is unavailable.</p>
 <li><strong>Start with <code>ctx doctor</code></strong>: It's the fastest way to get a comprehensive
   health picture. Save event log inspection for when you need to understand
   <em>when</em> and <em>how often</em> something happened.</li>
-<li><strong>Enable event logging early</strong>: The log is opt-in and low-cost (~250 bytes
-  per event, 1MB rotation cap). Enable it before you need it -- diagnosing
+<li><strong>Enable event logging early</strong>: The log is opt-in and low-cost (<em>~250 bytes
+  per event, 1MB rotation cap</em>). Enable it before you need it: Diagnosing
   a problem without historical data is much harder.</li>
 <li><strong>Use the skill for correlation</strong>: <code>ctx doctor</code> tells you <em>what</em> is wrong.
   <code>/ctx-doctor</code> tells you <em>why</em> by correlating structural findings with event

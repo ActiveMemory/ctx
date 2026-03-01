@@ -7,7 +7,7 @@ icon: lucide/shield-check
 
 ## The Problem
 
-`ctx` runs 14 system hooks behind the scenes: nudging your agent to persist
+`ctx` runs 15 system hooks behind the scenes: nudging your agent to persist
 context, warning about resource pressure, gating commits on QA. But these
 hooks are **invisible by design**. You never see them fire. You never know
 if they stopped working.
@@ -46,7 +46,7 @@ automatically at specific events during your AI session:
 
 | Event              | When                              | Hooks                               |
 |--------------------|-----------------------------------|-------------------------------------|
-| `UserPromptSubmit` | Before the agent sees your prompt | 9 check hooks                       |
+| `UserPromptSubmit` | Before the agent sees your prompt | 9 check hooks + heartbeat           |
 | `PreToolUse`       | Before the agent uses a tool      | `block-non-path-ctx`, `qa-reminder` |
 | `PostToolUse`      | After a tool call succeeds        | `post-commit`                       |
 | `SessionEnd`       | Session terminates                | `cleanup-tmp`                       |
@@ -229,6 +229,35 @@ suggests running `/ctx-map` to refresh.
 
 ---
 
+#### `heartbeat`: Session Heartbeat Webhook
+
+**What**: Fires on every prompt. Sends a webhook notification with prompt
+count, session ID, and whether context files were modified since the last
+heartbeat. Never produces stdout.
+
+**Why**: Other hooks only send webhooks when they "speak" (nudge/relay).
+When silent, you have no visibility into session activity. The heartbeat
+provides a continuous session-alive signal for observability dashboards
+or liveness monitoring.
+
+**Output**: None (*webhook + event log only*).
+
+**Payload**:
+
+```json
+{
+  "event": "heartbeat",
+  "message": "heartbeat: prompt #7 (context_modified=false)",
+  "detail": {
+    "hook": "heartbeat",
+    "variant": "pulse",
+    "variables": {"prompt_count": 7, "session_id": "abc...", "context_modified": false}
+  }
+}
+```
+
+---
+
 ### Tool-Time Hooks (PreToolUse / PostToolUse)
 
 #### `block-non-path-ctx`: PATH Enforcement (Hard Gate)
@@ -334,7 +363,7 @@ setup.
 # .ctxrc
 notify:
   events:
-    - relay   # all hook output — VERBATIM relays, directives, blocks
+    - relay   # all hook output: VERBATIM relays, directives, blocks
     - nudge   # just the user-facing VERBATIM relays
 ```
 
@@ -352,6 +381,7 @@ includes:
 | `check-version`       | `relay` + `nudge`           |
 | `check-reminders`     | `relay` + `nudge`           |
 | `check-map-staleness` | `relay` + `nudge`           |
+| `heartbeat`           | `heartbeat` only            |
 | `block-non-path-ctx`  | `relay` only                |
 | `post-commit`         | `relay` only                |
 | `qa-reminder`         | `relay` only                |
@@ -455,7 +485,7 @@ silently breaks execution. Nothing errors: The hook just never runs.
 
 If `.context/logs/check-context-size.log` has no entries newer than
 5 days but you've been running sessions daily, something is wrong. The
-absence of evidence is evidence of absence — but only if you control for
+absence of evidence is evidence of absence: but only if you control for
 inactivity.
 
 ### False Positive Protection

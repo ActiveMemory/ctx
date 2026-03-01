@@ -8,10 +8,11 @@
 #
 # detect-ai-typography.sh — find docs likely AI-edited but not human-reviewed.
 #
-# Scans markdown files for em-dashes, smart quotes, and "--" (double hyphen
-# used as dash). These are heuristic signals: almost all LLM output uses
-# them because the training corpus overwhelmingly contains typographic
-# punctuation from published English text.
+# Scans markdown files for em-dashes, smart quotes, "--" (double hyphen
+# used as dash), and quad backticks (````). These are heuristic signals:
+# almost all LLM output uses typographic punctuation from its training
+# corpus, and AI frequently wraps code fences in quad backticks which
+# breaks zensical rendering.
 #
 # False positives are possible (em-dash is valid typography). False negatives
 # are unlikely given current model behavior.
@@ -39,24 +40,39 @@ if [[ ! -d "$DIR" ]]; then
   exit 1
 fi
 
-# Patterns (PCRE):
-#   \xe2\x80\x94  = em-dash (—)
-#   \xe2\x80\x93  = en-dash (–)
-#   \xe2\x80\x9c  = left double quote (")
-#   \xe2\x80\x9d  = right double quote (")
-#   \xe2\x80\x98  = left single quote (')
-#   \xe2\x80\x99  = right single quote (')
-#    --            = space-padded double hyphen (" -- ") used as dash.
-#                    Bare -- without spaces is excluded (CLI flags, YAML
-#                    frontmatter, table separators). AI almost always
-#                    space-pads its dashes. "| -- " is excluded (empty
-#                    table cells).
-PATTERN='\xe2\x80[\x93\x94\x98\x99\x9c\x9d]|(?<!\|) -- '
+# Patterns (PCRE with Unicode escapes):
+#   \x{2014}  = em-dash (—)
+#   \x{2013}  = en-dash (–)
+#   \x{201C}  = left double quote (")
+#   \x{201D}  = right double quote (")
+#   \x{2018}  = left single quote (')
+#   \x{2019}  = right single quote (')
+#    --       = space-padded double hyphen (" -- ") used as dash.
+#               Bare -- without spaces is excluded (CLI flags, YAML
+#               frontmatter, table separators). AI almost always
+#               space-pads its dashes. "| -- " is excluded (empty
+#               table cells).
+#   ````      = quad backtick. AI wraps code fences in four-backtick
+#               blocks; zensical doesn't support them. Triple is the
+#               project maximum.
+PATTERN='\x{2013}|\x{2014}|\x{2018}|\x{2019}|\x{201C}|\x{201D}|(?<!\|) -- |````'
+
+# Files where typographic punctuation is intentional.
+# Add glob patterns here to skip specific paths.
+EXCLUDE_PATTERNS=()
 
 file_count=0
 hit_count=0
 
 while IFS= read -r -d '' file; do
+  # Skip excluded files (formal/academic content where typography is intentional).
+  skip=false
+  for excl in "${EXCLUDE_PATTERNS[@]}"; do
+    # shellcheck disable=SC2254
+    case "$file" in $excl) skip=true; break ;; esac
+  done
+  if [[ "$skip" == true ]]; then continue; fi
+
   # Skip files inside code fences — match only outside fences.
   # Simple approach: grep the whole file; code-fence false positives
   # are acceptable for a heuristic tool.

@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://ctx.ist/recipes/scratchpad-with-claude/">
       
       
-        <link rel="prev" href="../task-management/">
+        <link rel="prev" href="../import-plans/">
       
       
         <link rel="next" href="../scratchpad-sync/">
@@ -1424,6 +1424,8 @@
       
         
       
+        
+      
     
     
     
@@ -1519,6 +1521,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3798,7 +3830,7 @@ jot down:</p>
 <h3 id="step-7-store-a-file-as-a-blob">Step 7: Store a File as a Blob<a class="headerlink" href="#step-7-store-a-file-as-a-blob" title="Permanent link">&para;</a></h3>
 <p>The scratchpad can hold small files (<em>up to 64 KB</em>) as encrypted blob entries.
 The file is base64-encoded and stored alongside a label you provide:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ingest a file — the first argument is the label</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ingest a file: the first argument is the label</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;deploy config&quot;</span><span class="w"> </span>--file<span class="w"> </span>./deploy.yaml
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List shows the label with a [BLOB] marker</span>
@@ -3814,13 +3846,13 @@ The file is base64-encoded and stored alongside a label you provide:</p>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Or print to stdout (for piping)</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ctx<span class="w"> </span>pad<span class="w"> </span>show<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
 </span></code></pre></div>
-<p>Blob entries are encrypted identically to text entries — they're just
+<p>Blob entries are encrypted identically to text entries: They're just
 base64-encoded before encryption. The <code>--out</code> flag decodes and writes the
 raw bytes.</p>
 <h3 id="step-9-bulk-import-notes">Step 9: Bulk Import Notes<a class="headerlink" href="#step-9-bulk-import-notes" title="Permanent link">&para;</a></h3>
 <p>When you have a file with many notes (<em>one per line</em>), import them in bulk
 instead of adding one at a time:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Import from a file — each non-empty line becomes an entry</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Import from a file: Each non-empty line becomes an entry</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Or pipe from stdin</span>
@@ -3988,7 +4020,7 @@ convention, a hard-won insight becomes a learning.</p>
   other shell tools.</li>
 <li><strong>Never mention the key file contents to the AI</strong>: The agent knows
   how to use <code>ctx pad</code> commands but should never read or print
-  <code>.context/.context.key</code> directly.</li>
+  <code>.context/.ctx.key</code> directly.</li>
 <li><strong>Encryption is transparent</strong>: You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.</li>
 </ul>
@@ -4046,7 +4078,7 @@ encryption keys and scratchpad data across environments.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../task-management/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tracking Work Across Sessions">
+          <a href="../import-plans/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Importing Claude Code Plans">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -4056,7 +4088,7 @@ encryption keys and scratchpad data across environments.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tracking Work Across Sessions
+                Importing Claude Code Plans
               </div>
             </div>
           </a>
