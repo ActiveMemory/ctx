@@ -306,7 +306,7 @@ ctx compact --archive  # also archive old tasks to .context/archive/
 * With `--archive`: writes tasks older than 7 days to
   `.context/archive/tasks-YYYY-MM-DD.md`
 
-Without `--archive`, nothing is deleted — tasks are reorganized in place.
+Without `--archive`, nothing is deleted: Tasks are reorganized in place.
 
 ### `ctx status`
 

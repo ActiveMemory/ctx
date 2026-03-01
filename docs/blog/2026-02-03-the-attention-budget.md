@@ -82,7 +82,7 @@ the **beginning** and **end** of a context window than to its middle (*a
 phenomenon often called 
 "[lost in the middle](https://arxiv.org/abs/2307.03172)"*)[^1].
 
-[^1]: Liu et al., "Lost in the Middle: How Language Models Use Long Contexts," *Transactions of the Association for Computational Linguistics*, vol. 12, pp. 157–173, 2023.
+[^1]: Liu et al., "Lost in the Middle: How Language Models Use Long Contexts," *Transactions of the Association for Computational Linguistics*, vol. 12, pp. 157-173, 2023.
 
 **Positional anchors matter, and the middle has fewer of them**.
 
@@ -104,7 +104,7 @@ know before it can understand the next thing:
 This ordering is about **logical dependencies**, not attention engineering.
 But it happens to be **attention-friendly** too:
 
-The files that matter most—**CONSTITUTION**, **TASKS**, **CONVENTIONS**—land
+The files that matter most (**CONSTITUTION**, **TASKS**, **CONVENTIONS**) land
 at the **beginning** of the context window, where attention is strongest.
 
 Reference material like **GLOSSARY** sits in the middle, where lower salience
@@ -326,14 +326,16 @@ This is why `ctx` exists: **not** to cram more context into AI sessions,
 
 I now approach every AI interaction with one question:
 
-> "*Given a fixed attention budget, what's the highest-signal thing I can load?*"
+```text
+"Given a fixed attention budget, what's the highest-signal thing I can load?"
+```
 
 Not "*how do I explain everything*," but "*what's the minimum that matters*."
 
 That shift (*from abundance to curation*) is the difference between
 frustrating sessions and **productive** ones.
 
-----
+---
 
 **Spend your tokens wisely**.
 

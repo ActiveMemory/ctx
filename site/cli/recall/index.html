@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3581,11 +3613,11 @@ prompting, since you are explicitly targeting one session.</p>
 <p>The <code>journal/</code> directory should be gitignored (like <code>sessions/</code>) since it
 contains raw conversation data.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">                              </span><span class="c1"># Export one session</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">                               </span><span class="c1"># Export only new sessions</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--dry-run<span class="w">                     </span><span class="c1"># Preview what would be exported</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w">                  </span><span class="c1"># Re-export existing (prompts)</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>-y<span class="w">               </span><span class="c1"># Re-export without prompting</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123<span class="w">                 </span><span class="c1"># Export one session</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w">                  </span><span class="c1"># Export only new sessions</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--dry-run<span class="w">        </span><span class="c1"># Preview what would be exported</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w">     </span><span class="c1"># Re-export existing (prompts)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>-y<span class="w">  </span><span class="c1"># Re-export without prompting</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--regenerate<span class="w"> </span>--keep-frontmatter<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-y<span class="w">  </span><span class="c1"># Discard frontmatter</span>
 </span></code></pre></div>
 <h4 id="ctx-recall-lock"><code>ctx recall lock</code><a class="headerlink" href="#ctx-recall-lock" title="Permanent link">&para;</a></h4>
@@ -3732,12 +3764,12 @@ all sessions by date, and individual pages for each journal entry.</p>
 <p>No external dependencies are required:
 Open the output directory as an Obsidian  vault directly.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w">                          </span><span class="c1"># Generate in .context/journal-obsidian/</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx<span class="w">    </span><span class="c1"># Custom output directory</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w">                        </span><span class="c1"># Generate in .context/journal-obsidian/</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx<span class="w">  </span><span class="c1"># Custom output directory</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-serve"><code>ctx serve</code><a class="headerlink" href="#ctx-serve" title="Permanent link">&para;</a></h3>
-<p>Serve any zensical directory locally. This is a <strong>serve-only</strong> command — it
+<p>Serve any zensical directory locally. This is a <strong>serve-only</strong> command: It
 does not generate or regenerate site content.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>serve<span class="w"> </span><span class="o">[</span>directory<span class="o">]</span>
 </span></code></pre></div>
@@ -3748,13 +3780,13 @@ does not generate or regenerate site content.</p>
 <div class="admonition tip">
 <p class="admonition-title"><code>ctx serve</code> vs. <code>ctx journal site --serve</code></p>
 <p><code>ctx journal site --serve</code> <strong>generates</strong> the journal site <em>then</em> serves
-it — an all-in-one command. <code>ctx serve</code> only <strong>serves</strong> an existing
+it: an all-in-one command. <code>ctx serve</code> only <strong>serves</strong> an existing
 directory, and works with any zensical site (journal, docs, etc.).</p>
 </div>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>serve<span class="w">                           </span><span class="c1"># Serve journal site (no regeneration)</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">     </span><span class="c1"># Same, explicit path</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./site<span class="w">                    </span><span class="c1"># Serve the docs site</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>serve<span class="w">                        </span><span class="c1"># Serve journal site (no regeneration)</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ctx<span class="w"> </span>serve<span class="w"> </span>.context/journal-site<span class="w">  </span><span class="c1"># Same, explicit path</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>ctx<span class="w"> </span>serve<span class="w"> </span>./site<span class="w">                 </span><span class="c1"># Serve the docs site</span>
 </span></code></pre></div>
 
 

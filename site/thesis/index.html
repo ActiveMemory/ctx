@@ -522,15 +522,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#a-persistence-layer-for-humanai-cognition" class="md-nav__link">
+  <a href="#a-persistence-layer-for-human-ai-cognition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A Persistence Layer for Human–AI Cognition
+        A Persistence Layer for Human-AI Cognition
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="A Persistence Layer for Human–AI Cognition">
+    <nav class="md-nav" aria-label="A Persistence Layer for Human-AI Cognition">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1969,6 +1969,8 @@
       
         
       
+        
+      
     
     
     
@@ -2061,6 +2063,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3627,15 +3659,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#a-persistence-layer-for-humanai-cognition" class="md-nav__link">
+  <a href="#a-persistence-layer-for-human-ai-cognition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A Persistence Layer for Human–AI Cognition
+        A Persistence Layer for Human-AI Cognition
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="A Persistence Layer for Human–AI Cognition">
+    <nav class="md-nav" aria-label="A Persistence Layer for Human-AI Cognition">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4164,7 +4196,7 @@
 
 <h1 id="context-as-state">Context as State<a class="headerlink" href="#context-as-state" title="Permanent link">&para;</a></h1>
 <p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<h2 id="a-persistence-layer-for-humanai-cognition">A Persistence Layer for Human–AI Cognition<a class="headerlink" href="#a-persistence-layer-for-humanai-cognition" title="Permanent link">&para;</a></h2>
+<h2 id="a-persistence-layer-for-human-ai-cognition">A Persistence Layer for Human-AI Cognition<a class="headerlink" href="#a-persistence-layer-for-human-ai-cognition" title="Permanent link">&para;</a></h2>
 <p><em>Jose Alekhinne</em> - <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#106;&#111;&#115;&#101;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;">&#106;&#111;&#115;&#101;&#64;&#99;&#116;&#120;&#46;&#105;&#115;&#116;</a></p>
 <p><em>February 2026</em></p>
 <h3 id="abstract">Abstract<a class="headerlink" href="#abstract" title="Permanent link">&para;</a></h3>
@@ -4255,7 +4287,7 @@ identifies as fundamental trade-offs of probabilistic ranking) <sup id="fnref:3"
 <p>In practice, this opacity manifests as a compliance ceiling. In our experience 
 developing a context management system (detailed in Section 7), soft instructions 
 (directives that ask an AI agent to read specific files or follow specific 
-procedures) achieve approximately 75–85% compliance. The remaining 15–25% 
+procedures) achieve approximately 75-85% compliance. The remaining 15-25% 
 represents cases where the agent exercises judgment about whether the 
 instruction applies, effectively applying a second ranking function on top of 
 the explicit directive. When 100% compliance is required, instruction is 
@@ -4758,7 +4790,7 @@ decision record captured the failure mode for future reference.</p>
 <p><strong>Reversal 3: The soft-instruction compliance model</strong>: The original context 
 injection strategy relied on soft instructions: directives asking the AI agent 
 to read specific files. After measuring compliance across multiple sessions, 
-we found a consistent 75–85% compliance ceiling. The revised strategy 
+we found a consistent 75-85% compliance ceiling. The revised strategy 
 injects content directly, bypassing the agent's judgment about whether to 
 comply. The learning record captures the ceiling measurement and the rationale 
 for the architectural change.</p>
@@ -4768,7 +4800,7 @@ exist only in chat history, discoverable only if the retrieval function happens
 to surface them. In the persistence model, they are permanent, indexable 
 artifacts that inform future decisions.</p>
 <h3 id="73-compliance-ceiling">7.3 Compliance Ceiling<a class="headerlink" href="#73-compliance-ceiling" title="Permanent link">&para;</a></h3>
-<p>The 75–85% compliance ceiling for soft instructions is the most operationally 
+<p>The 75-85% compliance ceiling for soft instructions is the most operationally 
 significant finding from the experience report. It means that any context 
 management strategy relying on agent compliance with instructions ("read this 
 file," "follow this convention," "check this list") has a hard ceiling on 
@@ -4787,9 +4819,9 @@ views are assembled deterministically; ephemeral state is available but
 not pushed.</p>
 <h3 id="74-compounding-returns">7.4 Compounding Returns<a class="headerlink" href="#74-compounding-returns" title="Permanent link">&para;</a></h3>
 <p>Over 33 days, we observed a qualitative shift in the development experience. 
-Early sessions (days 1–7) spent significant time re-establishing context:
+Early sessions (days 1-7) spent significant time re-establishing context:
 explaining conventions, re-stating constraints, re-deriving past decisions. 
-Later sessions (days 25–33) began with the agent loading curated context and 
+Later sessions (days 25-33) began with the agent loading curated context and 
 immediately operating within established constraints, because the constraints 
 were in files rather than in chat history.</p>
 <p>This compounding effect (where each session's context curation improves all 
@@ -4895,14 +4927,14 @@ is paid once; the benefit compounds.</p>
 <p>The experience report provides rough order-of-magnitude numbers. Across 389 
 sessions over 33 days, curation activities (writing decision records, 
 capturing learnings, updating the task list, consolidating entries) averaged 
-approximately 3–5 minutes per session. In early sessions (days 1–7), before 
-curated context existed, re-establishing context consumed approximately 10–15 
+approximately 3-5 minutes per session. In early sessions (days 1-7), before 
+curated context existed, re-establishing context consumed approximately 10-15 
 minutes per session: re-explaining conventions, re-stating architectural 
 constraints, re-deriving decisions that had been made but not persisted. By the 
-final week (days 25–33), the re-explanation overhead had dropped to near zero: 
+final week (days 25-33), the re-explanation overhead had dropped to near zero: 
 the agent loaded curated context and began productive work immediately.</p>
-<p>At ~12 sessions per day, the curation cost was roughly 35–60 minutes daily. 
-The re-explanation cost in the first week was roughly 120–180 minutes daily. 
+<p>At ~12 sessions per day, the curation cost was roughly 35-60 minutes daily. 
+The re-explanation cost in the first week was roughly 120-180 minutes daily. 
 By the third week, that cost had fallen to under 15 minutes daily while the 
 curation cost remained stable. The crossover (where cumulative curation cost 
 was exceeded by cumulative time saved) occurred around day 10. These figures are 

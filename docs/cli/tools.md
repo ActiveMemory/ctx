@@ -52,8 +52,8 @@ ctx hook <tool> [flags]
 
 **Flags**:
 
-| Flag      | Short | Description                                                            |
-|-----------|-------|------------------------------------------------------------------------|
+| Flag      | Short | Description                                                                 |
+|-----------|-------|-----------------------------------------------------------------------------|
 | `--write` | `-w`  | Write the generated config to disk (e.g. `.github/copilot-instructions.md`) |
 
 **Supported tools**:
@@ -66,7 +66,7 @@ ctx hook <tool> [flags]
 | `copilot`     | GitHub Copilot                               |
 | `windsurf`    | Windsurf IDE                                 |
 
-!!! note "Claude Code uses the plugin system"
+!!! note "Claude Code Uses the Plugin system"
     Claude Code integration is now provided via the `ctx` plugin.
     Running `ctx hook claude-code` prints plugin install instructions.
 
@@ -151,10 +151,10 @@ ctx notify --event <name> [--session-id <id>] "message"
 
 **Behavior**:
 
-- No webhook configured: silent noop (exit 0)
-- Webhook set but event not in `events` list: silent noop (exit 0)
-- Webhook set and event matches: fire-and-forget HTTP POST
-- HTTP errors silently ignored (no retry)
+* No webhook configured: silent noop (exit 0)
+* Webhook set but event not in `events` list: silent noop (exit 0)
+* Webhook set and event matches: fire-and-forget HTTP POST
+* HTTP errors silently ignored (no retry)
 
 **Example**:
 
@@ -172,7 +172,7 @@ using the encryption key and stored in `.context/.notify.enc`.
 ctx notify setup
 ```
 
-The encrypted file is safe to commit. The key (`.context/.context.key`) is
+The encrypted file is safe to commit. The key (`.context/.ctx.key`) is
 gitignored and never committed.
 
 #### `ctx notify test`
@@ -254,9 +254,9 @@ ctx pad show <n> --out <path>
 
 **Flags**:
 
-| Flag    | Description                                      |
-|---------|--------------------------------------------------|
-| `--out` | Write decoded blob content to a file (blobs only)|
+| Flag    | Description                                       |
+|---------|---------------------------------------------------|
+| `--out` | Write decoded blob content to a file (blobs only) |
 
 **Examples**:
 
@@ -275,7 +275,7 @@ ctx pad rm <n>
 
 **Arguments**:
 
-- `n`: 1-based entry number
+* `n`: 1-based entry number
 
 #### `ctx pad edit`
 
@@ -287,8 +287,8 @@ ctx pad edit <n> [text]
 
 **Arguments**:
 
-- `n`: 1-based entry number
-- `text`: Replacement text (mutually exclusive with `--append`/`--prepend`)
+* `n`: 1-based entry number
+* `text`: Replacement text (mutually exclusive with `--append`/`--prepend`)
 
 **Flags**:
 
@@ -367,10 +367,10 @@ ctx pad export [dir]
 
 **Flags**:
 
-| Flag        | Short | Description                                         |
-|-------------|-------|-----------------------------------------------------|
-| `--force`   | `-f`  | Overwrite existing files instead of timestamping     |
-| `--dry-run` |       | Print what would be exported without writing         |
+| Flag        | Short | Description                                      |
+|-------------|-------|--------------------------------------------------|
+| `--force`   | `-f`  | Overwrite existing files instead of timestamping |
+| `--dry-run` |       | Print what would be exported without writing     |
 
 When a file already exists, a unix timestamp is prepended to avoid
 collisions (e.g., `1739836200-label`). Use `--force` to overwrite instead.
@@ -399,17 +399,17 @@ ctx pad merge FILE...
 
 **Flags**:
 
-| Flag        | Short | Description                                         |
-|-------------|-------|-----------------------------------------------------|
-| `--key`     | `-k`  | Path to key file for decrypting input files          |
-| `--dry-run` |       | Print what would be merged without writing           |
+| Flag        | Short | Description                                 |
+|-------------|-------|---------------------------------------------|
+| `--key`     | `-k`  | Path to key file for decrypting input files |
+| `--dry-run` |       | Print what would be merged without writing  |
 
 **Examples**:
 
 ```bash
 ctx pad merge worktree/.context/scratchpad.enc
 ctx pad merge notes.md backup.enc
-ctx pad merge --key /other/.context.key foreign.enc
+ctx pad merge --key /other/.ctx.key foreign.enc
 ctx pad merge --dry-run pad-a.enc pad-b.md
 ```
 
@@ -418,7 +418,7 @@ ctx pad merge --dry-run pad-a.enc pad-b.md
 ### `ctx remind`
 
 Session-scoped reminders that surface at session start. Reminders are
-stored verbatim and relayed verbatim — no summarization, no categories.
+stored verbatim and relayed verbatim: no summarization, no categories.
 
 When invoked with a text argument and no subcommand, adds a reminder.
 
@@ -429,7 +429,7 @@ ctx remind <subcommand>
 
 #### `ctx remind add`
 
-Add a reminder. This is the default action — `ctx remind "text"` and
+Add a reminder. This is the default action: `ctx remind "text"` and
 `ctx remind add "text"` are equivalent.
 
 ```bash
@@ -614,10 +614,10 @@ from the first paragraph after the heading.
 
 **Flags**:
 
-| Flag         | Short | Type   | Default          | Description              |
-|--------------|-------|--------|------------------|--------------------------|
-| `--out`      | `-o`  | string | `site/feed.xml`  | Output path              |
-| `--base-url` |       | string | `https://ctx.ist`| Base URL for entry links |
+| Flag         | Short | Type   | Default           | Description              |
+|--------------|-------|--------|-------------------|--------------------------|
+| `--out`      | `-o`  | string | `site/feed.xml`   | Output path              |
+| `--base-url` |       | string | `https://ctx.ist` | Base URL for entry links |
 
 **Output**:
 
@@ -625,25 +625,25 @@ from the first paragraph after the heading.
 Generated site/feed.xml (21 entries)
 
 Skipped:
-  2026-02-25-the-homework-problem.md — not finalized
+  2026-02-25-the-homework-problem.md: not finalized
 
 Warnings:
-  2026-02-09-defense-in-depth.md — no summary paragraph found
+  2026-02-09-defense-in-depth.md: no summary paragraph found
 ```
 
 Three buckets: **included** (count), **skipped** (with reason),
-**warnings** (included but degraded). Exit 0 always — warnings
+**warnings** (included but degraded). `exit 0` always: warnings
 inform but do not block.
 
 **Frontmatter requirements**:
 
-| Field                    | Required | Feed mapping         |
-|--------------------------|----------|----------------------|
-| `title`                  | Yes      | `<title>`            |
-| `date`                   | Yes      | `<updated>`          |
+| Field                    | Required | Feed mapping                |
+|--------------------------|----------|-----------------------------|
+| `title`                  | Yes      | `<title>`                   |
+| `date`                   | Yes      | `<updated>`                 |
 | `reviewed_and_finalized` | Yes      | Draft gate (must be `true`) |
-| `author`                 | No       | `<author><name>`     |
-| `topics`                 | No       | `<category term="">` |
+| `author`                 | No       | `<author><name>`            |
+| `topics`                 | No       | `<category term="">`        |
 
 **Examples**:
 
@@ -659,8 +659,7 @@ make site                                    # Builds site + feed
 
 ### `ctx why`
 
-Read ctx's philosophy documents directly in the terminal, stripped of
-MkDocs artifacts so they display cleanly without a browser.
+Read `ctx`'s philosophy documents directly in the terminal.
 
 ```bash
 ctx why [DOCUMENT]
@@ -668,11 +667,11 @@ ctx why [DOCUMENT]
 
 **Documents**:
 
-| Name         | Description                                      |
-|--------------|--------------------------------------------------|
-| `manifesto`  | The ctx Manifesto — creation, not code           |
-| `about`      | About ctx — what it is and why it exists         |
-| `invariants` | Design invariants — properties that must hold    |
+| Name         | Description                                  |
+|--------------|----------------------------------------------|
+| `manifesto`  | The `ctx` Manifesto: creation, not code      |
+| `about`      | About `ctx`: what it is and why it exists    |
+| `invariants` | Design invariants: properties that must hold |
 
 **Usage**:
 

@@ -1422,6 +1422,8 @@
       
         
       
+        
+      
     
     
     
@@ -1517,6 +1519,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -2097,6 +2129,17 @@
     <span class="md-ellipsis">
       
         Step 1: Export Sessions to Markdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-enrich-entries-with-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Enrich Entries with Metadata
       
     </span>
   </a>
@@ -3365,6 +3408,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#step-2-enrich-entries-with-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Enrich Entries with Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#step-3-generate-the-journal-site" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3670,24 +3724,18 @@ first step is converting these into readable, editable markdown.</p>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export a single session by ID or slug</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>abc123
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>gleaming-wobbling-sutherland
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="sb">````</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Exported<span class="w"> </span>files<span class="w"> </span>land<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="sb">`</span>.context/journal/<span class="sb">`</span><span class="w"> </span>as<span class="w"> </span>individual<span class="w"> </span>Markdown<span class="w"> </span>files<span class="w"> </span>with
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>session<span class="w"> </span>metadata<span class="w"> </span>and<span class="w"> </span>the<span class="w"> </span>full<span class="w"> </span>conversation<span class="w"> </span>transcript.
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="sb">`</span>--all<span class="sb">`</span><span class="w"> </span>is<span class="w"> </span>safe<span class="w"> </span>by<span class="w"> </span>default<span class="w"> </span>—<span class="w"> </span>only<span class="w"> </span>new<span class="w"> </span>sessions<span class="w"> </span>are<span class="w"> </span>exported.<span class="w"> </span>Existing<span class="w"> </span>files
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>are<span class="w"> </span>skipped.<span class="w"> </span>Use<span class="w"> </span><span class="sb">`</span>--regenerate<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>re-export<span class="w"> </span>existing<span class="w"> </span>files<span class="w"> </span><span class="o">(</span>YAML<span class="w"> </span>frontmatter
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>is<span class="w"> </span>preserved<span class="o">)</span>.<span class="w"> </span>Use<span class="w"> </span><span class="sb">`</span>--regenerate<span class="w"> </span>--keep-frontmatter<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-y<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>regenerate
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>everything<span class="w"> </span>including<span class="w"> </span>frontmatter.
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">### Step 2: Enrich Entries with Metadata</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Raw<span class="w"> </span>entries<span class="w"> </span>have<span class="w"> </span>timestamps<span class="w"> </span>and<span class="w"> </span>conversations<span class="w"> </span>but<span class="w"> </span>lack<span class="w"> </span>the<span class="w"> </span>structured<span class="w"> </span>metadata
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>that<span class="w"> </span>makes<span class="w"> </span>a<span class="w"> </span>journal<span class="w"> </span>searchable.<span class="w"> </span>Use<span class="w"> </span><span class="sb">`</span>/ctx-journal-enrich-all<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>process<span class="w"> </span>your
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>entire<span class="w"> </span>backlog<span class="w"> </span>at<span class="w"> </span>once:
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="sb">```</span>text
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>/ctx-journal-enrich-all
+</span></code></pre></div>
+<p>Exported files land in <code>.context/journal/</code> as individual Markdown files with
+session metadata and the full conversation transcript.</p>
+<p><code>--all</code> is safe by default: Only new sessions are exported. Existing files
+are skipped. Use <code>--regenerate</code> to re-export existing files (YAML frontmatter
+is preserved). Use <code>--regenerate --keep-frontmatter=false -y</code> to regenerate
+everything including frontmatter.</p>
+<h3 id="step-2-enrich-entries-with-metadata">Step 2: Enrich Entries with Metadata<a class="headerlink" href="#step-2-enrich-entries-with-metadata" title="Permanent link">&para;</a></h3>
+<p>Raw entries have timestamps and conversations but lack the structured metadata
+that makes a journal searchable. Use <code>/ctx-journal-enrich-all</code> to process your
+entire backlog at once:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-journal-enrich-all
 </span></code></pre></div>
 <p>The skill finds all unenriched entries, filters out noise (<em>suggestion sessions,
 very short sessions, multipart continuations</em>), and processes each one by
@@ -3695,25 +3743,25 @@ extracting titles, topics, technologies, and summaries from the conversation.</p
 <p>For large backlogs (<em>20+ entries</em>), it can spawn subagents to process entries in
 parallel.</p>
 <p>To enrich a single entry instead:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ctx-journal-enrich twinkly-stirring-kettle
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/ctx-journal-enrich 2026-01-24
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ctx-journal-enrich twinkly-stirring-kettle
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/ctx-journal-enrich 2026-01-24
 </span></code></pre></div>
 <p>After enrichment, an entry gains YAML frontmatter:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nn">---</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Implement</span><span class="nv"> </span><span class="s">Redis</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">endpoints&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-01-24</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">outcome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">completed</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">topics</span><span class="p">:</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">caching</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-performance</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nt">technologies</span><span class="p">:</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">go</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nt">key_files</span><span class="p">:</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal/api/middleware/cache.go</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal/cache/redis.go</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nn">---</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nn">---</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Implement</span><span class="nv"> </span><span class="s">Redis</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">endpoints&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-01-24</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">outcome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">completed</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">topics</span><span class="p">:</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">caching</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-performance</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nt">technologies</span><span class="p">:</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">go</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nt">key_files</span><span class="p">:</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal/api/middleware/cache.go</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal/cache/redis.go</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nn">---</span>
 </span></code></pre></div>
 <p>This metadata powers better navigation in the journal site: </p>
 <ul>
@@ -3723,23 +3771,23 @@ parallel.</p>
 </ul>
 <h3 id="step-3-generate-the-journal-site">Step 3: Generate the Journal Site<a class="headerlink" href="#step-3-generate-the-journal-site" title="Permanent link">&para;</a></h3>
 <p>With entries exported and enriched, generate the static site:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate site files</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Generate and build static HTML</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--build
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Generate and serve locally (opens at http://localhost:8000)</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Custom output directory</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--output<span class="w"> </span>~/my-journal
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate site files</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Generate and build static HTML</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--build
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Generate and serve locally (opens at http://localhost:8000)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--serve
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Custom output directory</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site<span class="w"> </span>--output<span class="w"> </span>~/my-journal
 </span></code></pre></div>
 <p>The site is generated in <code>.context/journal-site/</code> by default. It uses
 <a href="https://pypi.org/project/zensical/">zensical</a> for static site generation
 (<code>pipx install zensical</code>).</p>
 <p>Or use the Makefile shortcut that combines export and rebuild:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span>journal
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>journal
 </span></code></pre></div>
 <p>This runs <code>ctx recall export --all</code> followed by <code>ctx journal site --build</code>, then
 reminds you to enrich before rebuilding. To serve the built site, use
@@ -3747,22 +3795,22 @@ reminds you to enrich before rebuilding. To serve the built site, use
 <h3 id="alternative-export-to-obsidian-vault">Alternative: Export to Obsidian Vault<a class="headerlink" href="#alternative-export-to-obsidian-vault" title="Permanent link">&para;</a></h3>
 <p>If you use <a href="https://obsidian.md/">Obsidian</a> for knowledge management, generate
 a vault instead of (<em>or alongside</em>) the static site:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx-journal
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian<span class="w"> </span>--output<span class="w"> </span>~/vaults/ctx-journal
 </span></code></pre></div>
 <p>This produces an Obsidian-ready directory with wikilinks, MOC (Map of Content)
 pages for topics/files/types, and a "Related Sessions" footer on each entry for
 graph connectivity. Open the output directory in Obsidian as a vault.</p>
 <p>The vault uses the same enriched source entries as the static site. Both outputs
-can coexist — the static site goes to <code>.context/journal-site/</code>, the vault to
+can coexist: The static site goes to <code>.context/journal-site/</code>, the vault to
 <code>.context/journal-obsidian/</code>.</p>
 <h3 id="step-4-draft-blog-posts-from-activity">Step 4: Draft Blog Posts from Activity<a class="headerlink" href="#step-4-draft-blog-posts-from-activity" title="Permanent link">&para;</a></h3>
 <p>When your project reaches a milestone worth sharing, use <code>/ctx-blog</code> to draft a
 post from recent activity. The skill gathers context from multiple sources:
 <code>git log</code>, <code>DECISIONS.md</code>, <code>LEARNINGS.md</code>, completed tasks, and journal entries.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/ctx-blog about the caching layer we just built
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/ctx-blog last week&#39;s refactoring work
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>/ctx-blog lessons learned from the migration
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-blog about the caching layer we just built
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/ctx-blog last week&#39;s refactoring work
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/ctx-blog lessons learned from the migration
 </span></code></pre></div>
 <p>The skill gathers recent commits, decisions, and learnings; identifies a
 narrative arc; drafts an outline for approval; writes the full post; and saves
@@ -3782,9 +3830,9 @@ project structure.</p>
 <h3 id="step-5-write-changelog-posts-from-commit-ranges">Step 5: Write Changelog Posts from Commit Ranges<a class="headerlink" href="#step-5-write-changelog-posts-from-commit-ranges" title="Permanent link">&para;</a></h3>
 <p>For release notes or "<em>what changed</em>" posts, <code>/ctx-blog-changelog</code> takes a
 starting commit and a theme, then analyzes everything that changed:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/ctx-blog-changelog 040ce99 &quot;building the journal system&quot;
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/ctx-blog-changelog HEAD~30 &quot;what&#39;s new in v0.2.0&quot;
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/ctx-blog-changelog v0.1.0 &quot;the road to v0.2.0&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/ctx-blog-changelog 040ce99 &quot;building the journal system&quot;
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/ctx-blog-changelog HEAD~30 &quot;what&#39;s new in v0.2.0&quot;
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/ctx-blog-changelog v0.1.0 &quot;the road to v0.2.0&quot;
 </span></code></pre></div>
 <p>The skill diffs the commit range, identifies the most-changed files, and
 constructs a narrative organized by theme rather than chronology, including a
@@ -3792,7 +3840,7 @@ key commits table and before/after comparisons.</p>
 <h3 id="step-6-generate-the-blog-feed">Step 6: Generate the Blog Feed<a class="headerlink" href="#step-6-generate-the-blog-feed" title="Permanent link">&para;</a></h3>
 <p>After publishing blog posts, generate the Atom feed so readers and
 automation can discover new content:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>site<span class="w"> </span>feed
 </span></code></pre></div>
 <p>This scans <code>docs/blog/</code> for finalized posts (<code>reviewed_and_finalized: true</code>),
 extracts title, date, author, topics, and summary, and writes a valid
@@ -3801,34 +3849,34 @@ as part of <code>make site</code>.</p>
 <p>The feed is available at <a href="https://ctx.ist/feed.xml">ctx.ist/feed.xml</a>.</p>
 <h2 id="the-conversational-approach">The Conversational Approach<a class="headerlink" href="#the-conversational-approach" title="Permanent link">&para;</a></h2>
 <p>You can also drive your publishing anytime with <strong>natural language</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&quot;write about what we did this week&quot;
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>&quot;turn today&#39;s session into a blog post&quot;
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>&quot;make a changelog post covering everything since the last release&quot;
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>&quot;enrich the last few journal entries&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&quot;write about what we did this week&quot;
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>&quot;turn today&#39;s session into a blog post&quot;
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>&quot;make a changelog post covering everything since the last release&quot;
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>&quot;enrich the last few journal entries&quot;
 </span></code></pre></div>
 <p>The agent has full visibility into your <code>.context/</code> state (<em>tasks completed,
 decisions recorded, learnings captured</em>), so its suggestions are grounded in what
 actually happened.</p>
 <h2 id="putting-it-all-together">Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permanent link">&para;</a></h2>
 <p>The full pipeline from raw transcripts to published content:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Export all sessions</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># 2. In Claude Code: enrich all entries with metadata</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>/ctx-journal-enrich-all
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># 3. Build and serve the journal site</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>make<span class="w"> </span>journal
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>make<span class="w"> </span>journal-serve
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># 3b. Or generate an Obsidian vault</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># 4. In Claude Code: draft a blog post</span>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># 5. In Claude Code: write a changelog post</span>
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Export all sessions</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. In Claude Code: enrich all entries with metadata</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>/ctx-journal-enrich-all
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># 3. Build and serve the journal site</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>make<span class="w"> </span>journal
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>make<span class="w"> </span>journal-serve
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># 3b. Or generate an Obsidian vault</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>ctx<span class="w"> </span>journal<span class="w"> </span>obsidian
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># 4. In Claude Code: draft a blog post</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>/ctx-blog<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>features<span class="w"> </span>we<span class="w"> </span>shipped<span class="w"> </span>this<span class="w"> </span>week
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># 5. In Claude Code: write a changelog post</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>/ctx-blog-changelog<span class="w"> </span>v0.1.0<span class="w"> </span><span class="s2">&quot;what&#39;s new in v0.2.0&quot;</span>
 </span></code></pre></div>
 <p>The journal pipeline is idempotent at every stage. You can rerun <code>ctx recall
 export --all</code> without losing enrichment. You can rebuild the site as many times
@@ -3836,7 +3884,7 @@ as you want.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Export regularly. Run <code>ctx recall export --all</code> after each session to keep
-  your journal current. Only new sessions are exported — existing files are
+  your journal current. Only new sessions are exported: Existing files are
   skipped by default.</li>
 <li>Use batch enrichment. <code>/ctx-journal-enrich-all</code> filters noise (suggestion
   sessions, trivial sessions, multipart continuations) so you do not have to

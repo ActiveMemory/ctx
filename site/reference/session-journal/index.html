@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3843,7 +3875,7 @@ journal site with:</p>
 <details class="info">
 <summary>Safe by Default</summary>
 <p>Running <code>ctx recall export --all</code> <strong>only exports new sessions</strong>. Existing
-files are skipped entirely — your edits and enrichments are never touched.</p>
+files are skipped entirely (<em>your edits and enrichments are never touched</em>).</p>
 <p>Use <code>--regenerate</code> to re-export existing files. Conversation content is
 regenerated, but YAML frontmatter (<em>topics, type, outcome, etc.</em>) is
 preserved. You'll be prompted before any existing files are overwritten;
@@ -4116,10 +4148,10 @@ site:</p>
 <ul>
 <li><strong>Wikilinks</strong> (<code>[[target|display]]</code>) instead of Markdown links</li>
 <li><strong>MOC pages</strong> (Map of Content) for topics, key files, and session types</li>
-<li><strong>Related sessions footer</strong> per entry — links to entries sharing the same topics</li>
-<li><strong>Transformed frontmatter</strong> — <code>topics</code> renamed to <code>tags</code> (Obsidian-recognized),
+<li><strong>Related sessions footer</strong> per entry: links to entries sharing the same topics</li>
+<li><strong>Transformed frontmatter</strong>: <code>topics</code> renamed to <code>tags</code> (Obsidian-recognized),
   <code>aliases</code> added from title for search</li>
-<li><strong>Graph-optimized structure</strong> — MOC hubs + cross-linked entries create dense
+<li><strong>Graph-optimized structure</strong>: MOC hubs and cross-linked entries create dense
   graph connectivity</li>
 </ul>
 <p>To use: open the output directory in Obsidian ("Open folder as vault").</p>
@@ -4134,7 +4166,7 @@ and dark mode. Use <code>ctx journal obsidian</code> when you want <strong>graph
 same enriched source entries: you can generate both.</p>
 </div>
 <h2 id="full-pipeline">Full Pipeline<a class="headerlink" href="#full-pipeline" title="Permanent link">&para;</a></h2>
-<p>The complete journal workflow has four stages. Each is idempotent — safe to
+<p>The complete journal workflow has four stages. Each is idempotent: safe to
 re-run, and stages skip already-processed entries.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>export → enrich → rebuild
 </span></code></pre></div>
@@ -4164,13 +4196,13 @@ re-run, and stages skip already-processed entries.</p>
 <td><strong>Rebuild</strong></td>
 <td><code>ctx journal site --build</code></td>
 <td>Generates static HTML site</td>
-<td>—</td>
+<td>--</td>
 </tr>
 <tr>
 <td><strong>Obsidian</strong></td>
 <td><code>ctx journal obsidian</code></td>
 <td>Generates Obsidian vault with wikilinks</td>
-<td>—</td>
+<td>--</td>
 </tr>
 </tbody>
 </table>
@@ -4181,7 +4213,7 @@ and last stages are combined:</p>
 </span></code></pre></div>
 <p>After it runs, it reminds you to enrich in Claude Code:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Next steps (in Claude Code):
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  /ctx-journal-enrich-all  — add metadata per entry (skips if frontmatter exists)
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  /ctx-journal-enrich-all # add metadata per entry (skips if frontmatter exists)
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Then re-run: make journal
 </span></code></pre></div>

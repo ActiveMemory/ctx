@@ -19,8 +19,8 @@ ctx add <type> <content> [flags]
 
 **Types**:
 
-| Type         | Target File    |
-|--------------|----------------|
+| Type         | Target File      |
+|--------------|------------------|
 | `task`       | `TASKS.md`       |
 | `decision`   | `DECISIONS.md`   |
 | `learning`   | `LEARNINGS.md`   |
@@ -46,7 +46,7 @@ ctx add <type> <content> [flags]
 ctx add task "Implement user authentication"
 ctx add task "Fix login bug" --priority high
 
-# Record a decision (requires all ADR—Architectural Decision Record—fields)
+# Record a decision (requires all ADR (Architectural Decision Record) fields)
 ctx add decision "Use PostgreSQL for primary database" \
   --context "Need a reliable database for production" \
   --rationale "PostgreSQL offers ACID compliance and JSON support" \
@@ -74,7 +74,7 @@ ctx complete <task-id-or-text>
 
 **Arguments**:
 
-- `task-id-or-text`: Task number or partial text match
+* `task-id-or-text`: Task number or partial text match
 
 **Examples**:
 
@@ -105,13 +105,13 @@ ctx drift [flags]
 
 **Checks**:
 
-- Path references in `ARCHITECTURE.md` and `CONVENTIONS.md` exist
-- Task references are valid
-- Constitution rules aren't violated (*heuristic*)
-- Staleness indicators (*old files, many completed tasks*)
-- Missing packages — warns when `internal/` directories exist on disk but are
+* Path references in `ARCHITECTURE.md` and `CONVENTIONS.md` exist
+* Task references are valid
+* Constitution rules aren't violated (*heuristic*)
+* Staleness indicators (*old files, many completed tasks*)
+* Missing packages: warns when `internal/` directories exist on disk but are
   not referenced in `ARCHITECTURE.md` (*suggests running `/ctx-map`*)
-- Entry count — warns when `LEARNINGS.md` or `DECISIONS.md` exceed configurable
+* Entry count: warns when `LEARNINGS.md` or `DECISIONS.md` exceed configurable
   thresholds (*default: 30 learnings, 20 decisions*), or when `CONVENTIONS.md`
   exceeds a line count threshold (default: 200). Configure via `.ctxrc`:
   ```yaml

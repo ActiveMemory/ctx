@@ -217,7 +217,7 @@ func TestAddToGitignore_New(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	if err := addToGitignore(".context", ".context.key"); err != nil {
+	if err := addToGitignore(".context", ".ctx.key"); err != nil {
 		t.Fatalf("addToGitignore failed: %v", err)
 	}
 
@@ -225,7 +225,7 @@ func TestAddToGitignore_New(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(content), ".context/.context.key") {
+	if !strings.Contains(string(content), ".context/.ctx.key") {
 		t.Error("entry not added to .gitignore")
 	}
 }
@@ -234,12 +234,12 @@ func TestAddToGitignore_AlreadyPresent(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
 
-	entry := ".context/.context.key"
+	entry := ".context/.ctx.key"
 	if err := os.WriteFile(".gitignore", []byte(entry+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := addToGitignore(".context", ".context.key"); err != nil {
+	if err := addToGitignore(".context", ".ctx.key"); err != nil {
 		t.Fatalf("addToGitignore failed: %v", err)
 	}
 
@@ -261,7 +261,7 @@ func TestAddToGitignore_AppendNoTrailingNewline(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := addToGitignore(".context", ".context.key"); err != nil {
+	if err := addToGitignore(".context", ".ctx.key"); err != nil {
 		t.Fatalf("addToGitignore failed: %v", err)
 	}
 
@@ -269,7 +269,7 @@ func TestAddToGitignore_AppendNoTrailingNewline(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(content), "node_modules\n.context/.context.key") {
+	if !strings.Contains(string(content), "node_modules\n.context/.ctx.key") {
 		t.Errorf("unexpected content: %q", string(content))
 	}
 }

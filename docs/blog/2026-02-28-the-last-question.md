@@ -27,7 +27,7 @@ topics:
 
 !!! quote "The Origin"
     *"The last question was asked for the first time, half in jest..."*
-    — Isaac Asimov, [The Last Question][asimov] (1956)
+    - Isaac Asimov, [The Last Question][asimov] (1956)
 
 [asimov]: https://en.wikipedia.org/wiki/The_Last_Question
 
@@ -282,6 +282,6 @@ The connection runs through every post in the series:
 
 ---
 
-*See also: [Context as Infrastructure](2026-02-17-context-as-infrastructure.md)
-— the practical companion to this post's philosophical argument:
+*See also: [Context as Infrastructure](2026-02-17-context-as-infrastructure.md):
+the practical companion to this post's philosophical argument:
 how to build the persistence layer that makes continuity possible.*

@@ -76,6 +76,7 @@ func TestInitialize(t *testing.T) {
 		"recall",
 		"journal",
 		"serve",
+		"guide",
 	}
 
 	commands := make(map[string]bool)

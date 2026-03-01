@@ -55,6 +55,7 @@ nav = [
     { "Knowledge and Tasks" = [
       "recipes/knowledge-capture.md",
       "recipes/task-management.md",
+      "recipes/import-plans.md",
       "recipes/scratchpad-with-claude.md",
       "recipes/scratchpad-sync.md",
     ]},

@@ -142,7 +142,7 @@ The [attention budget][attention-post] explained why context degrades:
 * The middle gets lost;
 * Sessions end and everything **evaporates**.
 
-The pharmacological metaphor says the same thing from the user’s lens:
+The pharmacological metaphor says the same thing from the user's lens:
 
 !!! tip "Save the Cheerleader, Save the World"
     The symptom of lost context is lost focus.
@@ -190,7 +190,7 @@ Most complex work is **not** execution. It is:
 
 The system becomes real when two things happen:
 
-1. It can be installed as a *versioned artifact**.
+1. It can be installed as a **versioned artifact**.
 2. It **survives** contact with a hostile, real codebase.
 
 This is why the  
@@ -201,7 +201,7 @@ Demos prove possibility.
 
 Diffs prove reality.
 
-The [Manifesto](../index.md) calls this out directly:
+The [`ctx` Manifesto](../index.md) calls this out directly:
 
 > Verified reality is the scoreboard.
 
@@ -227,9 +227,9 @@ Neither is sufficient alone.
 
 This entire blog has been the **second voice**.
 
-The [origin story][origin-post] was the **first**.  
-The [refactoring post][refactor-post] was the **first**.  
-Every release note with concrete diffs was the **first**.
+* The [origin story][origin-post] was the **first**.  
+* The [refactoring post][refactor-post] was the **first**.  
+* Every release note with concrete diffs was the **first**.
 
 This is **the first second**.
 
@@ -303,7 +303,7 @@ a **shared infrastructure for thought**.
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     You do not know a substrate is real when people praise it.
 
     You know it is real when:

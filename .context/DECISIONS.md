@@ -123,7 +123,7 @@ See: `specs/injection-oversize-nudge.md`.
 
 - **Session attribution**: All webhook payloads must include session_id. Reading it from stdin costs nothing and enables multi-agent diagnostics. All run functions take stdin parameter; tests use createTempStdin.
 - **Opt-in events**: Notify events are opt-in, not opt-out. EventAllowed returns false for nil/empty event lists. The correct default for notifications is silence. `ctx notify test` bypasses the filter as a special case.
-- **Shared encryption key**: Webhook URLs encrypted with the shared .context.key (AES-256-GCM), not a dedicated key. One key, one gitignore entry, one rotation cycle. Notify is a peer of scratchpad — both store user secrets encrypted at rest.
+- **Shared encryption key**: Webhook URLs encrypted with the shared .ctx.key (AES-256-GCM), not a dedicated key. One key, one gitignore entry, one rotation cycle. Notify is a peer of scratchpad — both store user secrets encrypted at rest.
 
 ---
 

@@ -173,12 +173,12 @@ But **it created technical debt that I didn't notice until later**.
 
 A comparison session on January 25th revealed the patterns:
 
-| YOLO Pattern                           | What We Found                                   |
-|----------------------------------------|-------------------------------------------------|
-| `"TASKS.md"` scattered in 10 files     | Same string literal everywhere, no constants    |
-| `dir + "/" + file`                     | Should be `filepath.Join()`                     |
-| Monolithic `cli_test.go` (1500+ lines) | Tests disconnected from implementations         |
-| `package initcmd` in `init/` folder    | Go's "init" is reserved—subtle naming collision |
+| YOLO Pattern                           | What We Found                                    |
+|----------------------------------------|--------------------------------------------------|
+| `"TASKS.md"` scattered in 10 files     | Same string literal everywhere, no constants     |
+| `dir + "/" + file`                     | Should be `filepath.Join()`                      |
+| Monolithic `cli_test.go` (1500+ lines) | Tests disconnected from implementations          |
+| `package initcmd` in `init/` folder    | Go's "init" is reserved: subtle naming collision |
 
 Here is another analysis made by `ctx`:
 
@@ -240,12 +240,12 @@ Here's what `ctx` discovered:
 ## Key Findings
 
 ### Dogfooding Binary Is Broken
-- Commands don't execute — they just print root help text
+- Commands don't execute: they just print root help text
 - All tasks were marked complete but binary doesn't work
 - Lesson: "tasks checked off" ≠ "implementation works"
 ```
 
-This was humbling—to say the least.
+This was humbling; to say the least.
 
 I realized I had the same blind spot in my own codebase:
 no integration tests that actually invoked the binary. 
@@ -445,7 +445,7 @@ frontmatter (*description, argument-hint, allowed-tools*). Body is the prompt.
 ```markdown
 **Lesson**: In a `ctx`-enabled project, "*do you remember?*" 
 has an obvious meaning:
-check the `.context/` files. Don't ask for clarification—just do it.
+check the `.context/` files. Don't ask for clarification. Just do it.
 ```
 
 ## Task Archives: The Completed Work
@@ -532,7 +532,7 @@ The next phase of `ctx` is the **Recall System**:
 * **Search**: Inverted index for searching across sessions
 * **CLI**: `ctx recall serve <path>` to start the server
 
-The goal is to make the archaeological record browsable—not just `grep`-able.
+The goal is to make the archaeological record browsable, not just `grep`-able.
 
 Because not everyone always lives in the terminal (*me included*).
 
@@ -570,4 +570,4 @@ The **archaeological record** might surprise you.
 
 *This blog post was written with the help of `ctx` with full access to the 
 `ctx` session files, decision log, learning log, task archives, and 
-git history of `ctx`—The meta continues.*
+git history of `ctx`: The meta continues.*

@@ -65,6 +65,6 @@ editors/vscode/*.vsix
 
 # Some ideas are best kept hidden.
 ideas
-.context/.context.key
+.context/.ctx.key
 .context/.scratchpad.key
 .DS_Store

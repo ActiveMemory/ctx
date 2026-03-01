@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3356,11 +3388,11 @@
 <p>The parent command shows available subcommands. Hidden plumbing subcommands
 (<code>ctx system mark-journal</code>, <code>ctx system mark-wrapped-up</code>) are used by skills
 and automation. Hidden hook
-subcommands (<code>ctx system check-*</code>) are used by the Claude Code plugin — see
-<a href="../../operations/integrations/#plugin-hooks">AI Tools</a> for details.</p>
+subcommands (<code>ctx system check-*</code>) are used by the Claude Code plugin.</p>
+<p>See <a href="../../operations/integrations/#plugin-hooks">AI Tools</a> for details.</p>
 <h4 id="ctx-system-bootstrap"><code>ctx system bootstrap</code><a class="headerlink" href="#ctx-system-bootstrap" title="Permanent link">&para;</a></h4>
 <p>Print context location and rules for AI agents. This is the recommended first
-command for AI agents to run at session start — it tells them where the context
+command for AI agents to run at session start: It tells them where the context
 directory is and how to use it.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
@@ -3391,7 +3423,7 @@ directory is and how to use it.</p>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Rules:
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  1. Use context_dir above for ALL file reads/writes
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  2. Never say &quot;I don&#39;t have memory&quot; — context IS your memory
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  2. Never say &quot;I don&#39;t have memory&quot;: context IS your memory
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  3. Read files silently, present as recall (not search)
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  4. Persist learnings/decisions before session ends
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  5. Run `ctx agent` for content summaries
@@ -3479,7 +3511,7 @@ footer for reinforcement.</p>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Disk:    180.2 / 500.0 GB (36%)                     ✓ ok
 </span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Load:     0.52 / 0.41 / 0.38  (8 CPUs, ratio 0.07) ✓ ok
 </span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>All clear — no resource warnings.
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>All clear: no resource warnings.
 </span></code></pre></div>
 <p>When resources breach thresholds, alerts are listed below the summary:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Alerts:
@@ -3615,7 +3647,10 @@ in <code>.ctxrc</code>.</p>
 to terminal width</em>).</p>
 <p><strong>JSON output</strong> (<code>--json</code>):</p>
 <p>Each line is a standalone JSON object identical to the webhook payload format:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;relay&quot;</span><span class="p">,</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder: QA gate reminder emitted&quot;</span><span class="p">,</span><span class="nt">&quot;detail&quot;</span><span class="p">:{</span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder&quot;</span><span class="p">,</span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="s2">&quot;gate&quot;</span><span class="p">},</span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="s2">&quot;eb1dc9cd-...&quot;</span><span class="p">,</span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="s2">&quot;2026-02-27T22:39:31Z&quot;</span><span class="p">,</span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="s2">&quot;ctx&quot;</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// converted to multi-line for convenience:</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="p">{</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;relay&quot;</span><span class="p">,</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder: QA gate reminder emitted&quot;</span><span class="p">,</span><span class="nt">&quot;detail&quot;</span><span class="p">:</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="p">{</span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder&quot;</span><span class="p">,</span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="s2">&quot;gate&quot;</span><span class="p">},</span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="s2">&quot;eb1dc9cd-...&quot;</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="s2">&quot;2026-02-27T22:39:31Z&quot;</span><span class="p">,</span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="s2">&quot;ctx&quot;</span><span class="p">}</span>
 </span></code></pre></div>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Last 50 events (default)</span>
@@ -3675,11 +3710,11 @@ pipeline progress.</p>
 <p>Suppress context checkpoint nudges after a wrap-up ceremony. Writes a
 marker file that <code>check-context-size</code> checks before emitting checkpoint
 boxes. The marker expires after 2 hours.</p>
-<p>Called automatically by <code>/ctx-wrap-up</code> after persisting context — not
-intended for direct use.</p>
+<p>Called automatically by <code>/ctx-wrap-up</code> after persisting context
+(<em>not intended for direct use</em>).</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-wrapped-up
 </span></code></pre></div>
-<p>No flags, no arguments. Idempotent — running it again updates the
+<p>No flags, no arguments. Idempotent: running it again updates the
 marker timestamp.</p>
 
 

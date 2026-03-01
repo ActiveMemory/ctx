@@ -10,6 +10,14 @@
     display: flow-root;
     margin: 1.5em 0;
   }
+
+  .md-typeset code, .md-typeset kbd, .md-typeset pre {
+    color: var(--md-code-fg-color);
+    background-color: #f0f0f0;
+    direction: ltr;
+    font-variant-ligatures: none;
+    transition: background-color 125ms;
+  }
 }
 
 [data-md-color-scheme="slate"] {

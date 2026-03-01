@@ -46,7 +46,7 @@ This compiles the `ctx` binary and places it in `/usr/local/bin/`.
 
 The repository ships a Claude Code plugin under `internal/assets/claude/`.
 Point Claude Code at your local copy so that skills and hooks reflect
-your working tree — no reinstall needed after edits:
+your working tree: no reinstall needed after edits:
 
 1. Launch `claude`;
 2. Type `/plugin` and press Enter;
@@ -60,7 +60,7 @@ your working tree — no reinstall needed after edits:
 !!! warning "Claude Code Caches Plugin Files"
     Even though the marketplace points at a directory on disk, Claude Code
     **caches** skills and hooks. After editing files under
-    `internal/assets/claude/`, clear the cache and restart:
+    `internal/assets/claude/`, **clear the cache and restart**:
 
     ```bash
     make plugin-reload   # then restart Claude Code
@@ -134,21 +134,21 @@ never distributed to users.
 
 <!-- drift-check: ls .claude/skills/ -->
 
-| Skill | When to use |
-|-------|-------------|
-| `/_ctx-absorb` | Merge deltas from a parallel worktree or separate checkout |
-| `/_ctx-audit` | Detect code-level drift after YOLO sprints or before releases |
-| `/_ctx-backup` | Backup context and Claude data to SMB share |
-| `/_ctx-brainstorm` | Structured design dialogue before implementation |
-| `/_ctx-check-links` | Audit docs for dead links before releases |
-| `/_ctx-qa` | Run QA checks before committing |
-| `/_ctx-release` | Run the full release process |
-| `/_ctx-release-notes` | Generate release notes for `dist/RELEASE_NOTES.md` |
-| `/_ctx-sanitize-permissions` | Audit `settings.local.json` for dangerous permissions |
-| `/_ctx-skill-creator` | Create or improve a skill |
-| `/_ctx-spec` | Scaffold a feature spec from `specs/spec-template.md` |
-| `/_ctx-update-docs` | Check docs/code consistency after changes |
-| `/_ctx-verify` | Verify before claiming work is done |
+| Skill                        | When to use                                                   |
+|------------------------------|---------------------------------------------------------------|
+| `/_ctx-absorb`               | Merge deltas from a parallel worktree or separate checkout    |
+| `/_ctx-audit`                | Detect code-level drift after YOLO sprints or before releases |
+| `/_ctx-backup`               | Backup context and Claude data to SMB share                   |
+| `/_ctx-brainstorm`           | Structured design dialogue before implementation              |
+| `/_ctx-check-links`          | Audit docs for dead links before releases                     |
+| `/_ctx-qa`                   | Run QA checks before committing                               |
+| `/_ctx-release`              | Run the full release process                                  |
+| `/_ctx-release-notes`        | Generate release notes for `dist/RELEASE_NOTES.md`            |
+| `/_ctx-sanitize-permissions` | Audit `settings.local.json` for dangerous permissions         |
+| `/_ctx-skill-creator`        | Create or improve a skill                                     |
+| `/_ctx-spec`                 | Scaffold a feature spec from `specs/spec-template.md`         |
+| `/_ctx-update-docs`          | Check docs/code consistency after changes                     |
+| `/_ctx-verify`               | Verify before claiming work is done                           |
 
 ----
 
@@ -171,7 +171,8 @@ Edit files under `internal/assets/claude/skills/` or
 `internal/assets/claude/hooks/`.
 
 Claude Code caches plugin files, so edits aren't picked up automatically.
-Clear the cache and restart:
+
+**Clear the cache and restart**:
 
 ```bash
 make plugin-reload   # nukes ~/.claude/plugins/cache/activememory-ctx/
@@ -191,11 +192,11 @@ No version bump is needed during development.
 The repo ships two `.ctxrc` source profiles. The working copy (`.ctxrc`)
 is gitignored and swapped between them:
 
-| File | Purpose |
-|------|---------|
-| `.ctxrc.base` | Golden baseline — all defaults, no logging |
-| `.ctxrc.dev` | Dev profile — notify events enabled, verbose logging |
-| `.ctxrc` | Working copy (*gitignored* — copied from one of the above) |
+| File          | Purpose                                                   |
+|---------------|-----------------------------------------------------------|
+| `.ctxrc.base` | Golden baseline: all defaults, no logging                 |
+| `.ctxrc.dev`  | Dev profile: notify events enabled, verbose logging       |
+| `.ctxrc`      | Working copy (*gitignored*: copied from one of the above) |
 
 Use Make targets to switch:
 

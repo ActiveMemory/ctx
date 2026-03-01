@@ -316,7 +316,7 @@ loss function.
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     Go deep enough to diagnose your failures. Stop before you are solving
     problems that do not propagate to your layer.
 

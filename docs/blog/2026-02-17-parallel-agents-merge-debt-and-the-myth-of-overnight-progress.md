@@ -426,7 +426,7 @@ This is *slower* to watch. **Faster** to ship.
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **Progress is not what the machine produces while you sleep.**
 
     **Progress is what survives contact with the main branch.**

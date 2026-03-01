@@ -25,7 +25,7 @@ Consult specific sections when working on a module.
 **Edge cases**:
 - Custom priority orders via `.ctxrc` override `FileReadOrder` defaults
 - Obsidian vault output paths coexist with JSON site output
-- Migration support for legacy `.scratchpad.key` → `.context.key`
+- Migration support for legacy key files (`.context.key`, `.scratchpad.key`) → `.ctx.key`
 
 **Dependencies**: None — foundation package with zero internal dependencies
 
@@ -663,7 +663,7 @@ Consult specific sections when working on a module.
 **Exported API**:
 - `Cmd() *cobra.Command` — subcommands: show, add, rm, edit, mv, resolve, import, export, merge
 
-**Data flow**: Entries encrypted with AES-256-GCM via .context/.context.key. File blobs stored as "label:::base64data". Subcommands: CRUD operations, merge with dedup, import/export for file blobs.
+**Data flow**: Entries encrypted with AES-256-GCM via .context/.ctx.key. File blobs stored as "label:::base64data". Subcommands: CRUD operations, merge with dedup, import/export for file blobs.
 
 **Edge cases**:
 - Blobs limited to 64KB pre-encoding

@@ -1422,6 +1422,8 @@
       
         
       
+        
+      
     
     
     
@@ -1517,6 +1519,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -1916,6 +1948,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Payload Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#heartbeat-payload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heartbeat Payload
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3466,6 +3515,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Payload Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#heartbeat-payload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heartbeat Payload
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3724,7 +3790,7 @@ in your repo.</p>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Encrypted at: .context/.notify.enc</span>
 </span></code></pre></div>
 <p>This encrypts the URL with AES-256-GCM using the same key as the scratchpad
-(<code>.context/.context.key</code>). The encrypted file (<code>.context/.notify.enc</code>) is
+(<code>.context/.ctx.key</code>). The encrypted file (<code>.context/.notify.enc</code>) is
 safe to commit. The key is <code>.gitignore</code>d.</p>
 <h3 id="step-3-test-it">Step 3: Test It<a class="headerlink" href="#step-3-test-it" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
@@ -3740,6 +3806,7 @@ list in <code>.ctxrc</code>:</p>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span><span class="w">       </span><span class="c1"># loop completion or max-iteration hit</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nudge</span><span class="w">      </span><span class="c1"># VERBATIM relay hooks (context checkpoint, persistence, etc.)</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span><span class="w">      </span><span class="c1"># all hook output (verbose, for debugging)</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">heartbeat</span><span class="w">  </span><span class="c1"># every-prompt session-alive signal with metadata</span>
 </span></code></pre></div>
 <p>Only listed events fire. Omitting an event silently drops it.</p>
 <h3 id="step-5-use-in-your-own-skills">Step 5: Use in Your Own Skills<a class="headerlink" href="#step-5-use-in-your-own-skills" title="Permanent link">&para;</a></h3>
@@ -3779,6 +3846,11 @@ script: If there's no webhook or the HTTP call fails, it's a silent noop.</p>
 <td>Any hook output (VERBATIM relays, agent directives, block responses)</td>
 </tr>
 <tr>
+<td><code>heartbeat</code></td>
+<td>System hook</td>
+<td>Every prompt: session-alive signal with prompt count and context modification status</td>
+</tr>
+<tr>
 <td><code>test</code></td>
 <td><code>ctx notify test</code></td>
 <td>Manual test notification</td>
@@ -3792,7 +3864,7 @@ script: If there's no webhook or the HTTP call fails, it's a silent noop.</p>
 </table>
 <p><strong><code>nudge</code> vs <code>relay</code></strong>: The <code>nudge</code> event fires only for VERBATIM relay hooks
 (<em>the ones the agent is instructed to show verbatim</em>). The <code>relay</code> event fires
-for <em>all</em> hook output — VERBATIM relays, agent directives, and hard gates.
+for <em>all</em> hook output: VERBATIM relays, agent directives, and hard gates.
 Subscribe to <code>relay</code> for debugging (<em>"did the agent get the post-commit nudge?"</em>),
 <code>nudge</code> for user-facing assurance (<em>"was the checkpoint emitted?"</em>).</p>
 <div class="admonition tip">
@@ -3822,6 +3894,23 @@ absorbs a nudge instead of surfacing it. </p>
 name, variant, and any template variables. This lets receivers filter by
 hook or variant without parsing rendered text. The field is omitted when
 no template reference applies (e.g. custom <code>ctx notify</code> calls).</p>
+<h3 id="heartbeat-payload">Heartbeat Payload<a class="headerlink" href="#heartbeat-payload" title="Permanent link">&para;</a></h3>
+<p>The <code>heartbeat</code> event fires on every prompt with session metadata:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat: prompt #7 (context_modified=false)&quot;</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pulse&quot;</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nt">&quot;variables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;prompt_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123-...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;context_modified&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123-...&quot;</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-28T10:15:00Z&quot;</span><span class="p">,</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx&quot;</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Unlike other events, <code>heartbeat</code> fires every prompt (not throttled). Use it
+for observability dashboards or liveness monitoring of long-running sessions.</p>
 <h2 id="security-model">Security Model<a class="headerlink" href="#security-model" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3835,7 +3924,7 @@ no template reference applies (e.g. custom <code>ctx notify</code> calls).</p>
 <tbody>
 <tr>
 <td>Encryption key</td>
-<td><code>.context/.context.key</code></td>
+<td><code>.context/.ctx.key</code></td>
 <td>No (gitignored)</td>
 <td><code>0600</code></td>
 </tr>
@@ -3856,16 +3945,15 @@ no template reference applies (e.g. custom <code>ctx notify</code> calls).</p>
 <p>The key is shared with the scratchpad. If you rotate the encryption key,
 re-run <code>ctx notify setup</code> to re-encrypt the webhook URL with the new key.</p>
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
-<p><code>ctx</code> checks the age of <code>.context/.context.key</code> once per day. If it's older
-than 90 days (<em>configurable via <code>notify.key_rotation_days</code></em>), a VERBATIM nudge
+<p><code>ctx</code> checks the age of <code>.context/.ctx.key</code> once per day. If it's older
+than 90 days (<em>configurable via <code>key_rotation_days</code></em>), a VERBATIM nudge
 is emitted suggesting rotation.</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># .ctxrc</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">notify</span><span class="p">:</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">key_rotation_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">   </span><span class="c1"># nudge sooner (default: 90)</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># .ctxrc</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">key_rotation_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">   </span><span class="c1"># nudge sooner (default: 90)</span>
 </span></code></pre></div>
 <h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
 <p>The webhook URL is encrypted with the same encryption key
-(<code>.context/.context.key</code>), which is <code>.gitignore</code>d. In a git worktree,
+(<code>.context/.ctx.key</code>), which is <code>.gitignore</code>d. In a git worktree,
 the key is absent: Notifications silently do nothing.</p>
 <p>This means <strong>agents running in worktrees cannot send webhook alerts</strong>.
 For autonomous runs where worktree agents are opaque, monitor them from
@@ -3876,8 +3964,8 @@ results on the main branch after merging.</p>
 in <code>.ctxrc</code>. The event log writes the same payload as webhooks to a local
 JSONL file (<code>.context/state/events.jsonl</code>) that you can query without any
 external service:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">          </span><span class="c1"># recent hook activity</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--last<span class="w"> </span><span class="m">20</span><span class="w">          </span><span class="c1"># recent hook activity</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder<span class="w"> </span><span class="c1"># filter by hook</span>
 </span></code></pre></div>
 <p>Webhooks and event logging are independent: you can use either, both, or
 neither. Webhooks give you push notifications and an external audit trail.

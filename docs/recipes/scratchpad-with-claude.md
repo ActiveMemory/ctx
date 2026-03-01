@@ -127,7 +127,7 @@ The scratchpad can hold small files (*up to 64 KB*) as encrypted blob entries.
 The file is base64-encoded and stored alongside a label you provide:
 
 ```bash
-# Ingest a file — the first argument is the label
+# Ingest a file: the first argument is the label
 ctx pad add "deploy config" --file ./deploy.yaml
 
 # List shows the label with a [BLOB] marker
@@ -148,7 +148,7 @@ ctx pad show 2 --out ./recovered-deploy.yaml
 ctx pad show 2 | head -5
 ```
 
-Blob entries are encrypted identically to text entries — they're just
+Blob entries are encrypted identically to text entries: They're just
 base64-encoded before encryption. The `--out` flag decodes and writes the
 raw bytes.
 
@@ -158,7 +158,7 @@ When you have a file with many notes (*one per line*), import them in bulk
 instead of adding one at a time:
 
 ```bash
-# Import from a file — each non-empty line becomes an entry
+# Import from a file: Each non-empty line becomes an entry
 ctx pad import notes.txt
 
 # Or pipe from stdin
@@ -266,7 +266,7 @@ Once the skill is active, it translates intent into commands:
   other shell tools.
 * **Never mention the key file contents to the AI**: The agent knows
   how to use `ctx pad` commands but should never read or print
-  `.context/.context.key` directly.
+  `.context/.ctx.key` directly.
 * **Encryption is transparent**: You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.
 

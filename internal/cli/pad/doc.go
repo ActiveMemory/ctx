@@ -9,7 +9,7 @@
 //
 // The scratchpad stores short, sensitive one-liners that travel with the
 // project via git but remain opaque at rest. Entries are encrypted with
-// AES-256-GCM using a symmetric key at .context/.context.key.
+// AES-256-GCM using a symmetric key at .context/.ctx.key.
 //
 // File blobs can be stored as entries using the format "label:::base64data".
 // The add --file flag ingests a file, and show auto-decodes blob entries.

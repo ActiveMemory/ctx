@@ -46,7 +46,7 @@ cd ../myproject-docs && claude                  # 3. launch agents (one per trac
 ### Step 1: Assess the Backlog
 
 Start in your main checkout. Ask the agent to analyze your tasks and
-group them by blast radius — which files and directories each task
+group them by blast radius: which files and directories each task
 touches.
 
 ```text
@@ -61,9 +61,9 @@ The agent reads `TASKS.md`, estimates file overlap, and proposes groups:
 ```text
 Proposed worktree groups:
 
-  work/docs    — recipe updates, blog post (touches: docs/)
-  work/crypto  — scratchpad encryption infra (touches: internal/crypto/)
-  work/tests   — recall test coverage (touches: internal/cli/recall/)
+  work/docs   # recipe updates, blog post (touches: docs/)
+  work/crypto # scratchpad encryption infra (touches: internal/crypto/)
+  work/tests  # recall test coverage (touches: internal/cli/recall/)
 ```
 
 ### Step 2: Create the Worktrees
@@ -159,7 +159,7 @@ prompts work:
 
 ## What Does NOT Work in Worktrees
 
-The encryption key (`.context/.context.key`) is gitignored: It only
+The encryption key (`.context/.ctx.key`) is gitignored: It only
 exists in the main checkout. This affects key-dependent features:
 
 * **`ctx pad`**: The scratchpad is inaccessible. Commands fail

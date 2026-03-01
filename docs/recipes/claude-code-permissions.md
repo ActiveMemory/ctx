@@ -172,7 +172,7 @@ The defaults block:
 
     They are included as defense-in-depth and intent documentation.
 
-**Blocked by default deny rules** — no action needed, `ctx init` handles these:
+**Blocked by default deny rules**: no action needed, `ctx init` handles these:
 
 | Pattern                         | Risk                                           |
 |---------------------------------|------------------------------------------------|

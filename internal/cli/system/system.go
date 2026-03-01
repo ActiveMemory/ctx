@@ -60,7 +60,8 @@ Hook subcommands (Claude Code plugin — safe to run manually):
   post-commit                 Post-commit context capture nudge
   cleanup-tmp                 Remove stale temp files
   qa-reminder                 QA reminder before completion
-  specs-nudge                 Plan-to-specs directory nudge (PreToolUse)`,
+  specs-nudge                 Plan-to-specs directory nudge (PreToolUse)
+  heartbeat                   Session heartbeat webhook (no stdout)`,
 	}
 
 	cmd.AddCommand(
@@ -89,6 +90,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		blockDangerousCommandsCmd(),
 		checkBackupAgeCmd(),
 		specsNudgeCmd(),
+		heartbeatCmd(),
 	)
 
 	return cmd

@@ -13,7 +13,7 @@ icon: lucide/scroll-text
 
 ![ctx](../images/ctx-banner.png)
 
-## A Persistence Layer for Human–AI Cognition
+## A Persistence Layer for Human-AI Cognition
 
 *Jose Alekhinne* - <jose@ctx.ist>
 
@@ -127,7 +127,7 @@ identifies as fundamental trade-offs of probabilistic ranking) [^3].
 In practice, this opacity manifests as a compliance ceiling. In our experience 
 developing a context management system (detailed in Section 7), soft instructions 
 (directives that ask an AI agent to read specific files or follow specific 
-procedures) achieve approximately 75–85% compliance. The remaining 15–25% 
+procedures) achieve approximately 75-85% compliance. The remaining 15-25% 
 represents cases where the agent exercises judgment about whether the 
 instruction applies, effectively applying a second ranking function on top of 
 the explicit directive. When 100% compliance is required, instruction is 
@@ -618,7 +618,7 @@ decision record captured the failure mode for future reference.
 **Reversal 3: The soft-instruction compliance model**: The original context 
 injection strategy relied on soft instructions: directives asking the AI agent 
 to read specific files. After measuring compliance across multiple sessions, 
-we found a consistent 75–85% compliance ceiling. The revised strategy 
+we found a consistent 75-85% compliance ceiling. The revised strategy 
 injects content directly, bypassing the agent's judgment about whether to 
 comply. The learning record captures the ceiling measurement and the rationale 
 for the architectural change.
@@ -631,7 +631,7 @@ artifacts that inform future decisions.
 
 ### 7.3 Compliance Ceiling
 
-The 75–85% compliance ceiling for soft instructions is the most operationally 
+The 75-85% compliance ceiling for soft instructions is the most operationally 
 significant finding from the experience report. It means that any context 
 management strategy relying on agent compliance with instructions ("read this 
 file," "follow this convention," "check this list") has a hard ceiling on 
@@ -654,9 +654,9 @@ not pushed.
 ### 7.4 Compounding Returns
 
 Over 33 days, we observed a qualitative shift in the development experience. 
-Early sessions (days 1–7) spent significant time re-establishing context:
+Early sessions (days 1-7) spent significant time re-establishing context:
 explaining conventions, re-stating constraints, re-deriving past decisions. 
-Later sessions (days 25–33) began with the agent loading curated context and 
+Later sessions (days 25-33) began with the agent loading curated context and 
 immediately operating within established constraints, because the constraints 
 were in files rather than in chat history.
 
@@ -794,15 +794,15 @@ is paid once; the benefit compounds.
 The experience report provides rough order-of-magnitude numbers. Across 389 
 sessions over 33 days, curation activities (writing decision records, 
 capturing learnings, updating the task list, consolidating entries) averaged 
-approximately 3–5 minutes per session. In early sessions (days 1–7), before 
-curated context existed, re-establishing context consumed approximately 10–15 
+approximately 3-5 minutes per session. In early sessions (days 1-7), before 
+curated context existed, re-establishing context consumed approximately 10-15 
 minutes per session: re-explaining conventions, re-stating architectural 
 constraints, re-deriving decisions that had been made but not persisted. By the 
-final week (days 25–33), the re-explanation overhead had dropped to near zero: 
+final week (days 25-33), the re-explanation overhead had dropped to near zero: 
 the agent loaded curated context and began productive work immediately.
 
-At ~12 sessions per day, the curation cost was roughly 35–60 minutes daily. 
-The re-explanation cost in the first week was roughly 120–180 minutes daily. 
+At ~12 sessions per day, the curation cost was roughly 35-60 minutes daily. 
+The re-explanation cost in the first week was roughly 120-180 minutes daily. 
 By the third week, that cost had fallen to under 15 minutes daily while the 
 curation cost remained stable. The crossover (where cumulative curation cost 
 was exceeded by cumulative time saved) occurred around day 10. These figures are 

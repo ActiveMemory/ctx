@@ -58,7 +58,7 @@ The encryption key has no built-in age tracking. We add a lightweight check:
 
 - **Detection:** `os.Stat(".context/.context.key").ModTime()` gives creation
   time (key is never modified after generation).
-- **Threshold:** 90 days (configurable in `.ctxrc` as `key_rotation_days`).
+- **Threshold:** 90 days (configurable in `.ctxrc` as top-level `key_rotation_days`).
 - **Nudge:** Existing `check-version` or new system hook emits a VERBATIM relay:
   ```
   IMPORTANT: Relay this security reminder to the user VERBATIM.
@@ -73,13 +73,14 @@ The encryption key has no built-in age tracking. We add a lightweight check:
 ### Configuration (`.ctxrc`)
 
 ```yaml
+# key_rotation_days: 90    # optional, default 90 (top-level, not under notify)
+
 notify:
   events:          # optional filter; absent/empty = all events pass
     - loop
     - implement
     - nudge
     - relay
-  # key_rotation_days: 90    # optional, default 90
 ```
 
 Note: `webhook` is NOT in `.ctxrc` — it's encrypted in `.context/.notify.enc`.

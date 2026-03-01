@@ -1871,6 +1871,8 @@
       
         
       
+        
+      
     
     
     
@@ -1963,6 +1965,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -4083,7 +4115,7 @@
 </ol>
 <hr />
 <h2 id="constitutionmd"><code>CONSTITUTION.md</code><a class="headerlink" href="#constitutionmd" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Define hard invariants—rules that must <strong>NEVER</strong> be violated, 
+<p><strong>Purpose:</strong> Define hard invariants: Rules that must <strong>NEVER</strong> be violated, 
 regardless of the task.</p>
 <p>AI tools read this first and should refuse tasks that violate these rules.</p>
 <h3 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h3>
@@ -4094,21 +4126,21 @@ regardless of the task.</p>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gu">## Security Invariants</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">- [ ]</span> Never commit secrets, tokens, API keys, or credentials
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">- [ ]</span> Never store customer/user data in context files
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">- [ ]</span> Never disable security linters without documented exception
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">* [ ]</span> Never commit secrets, tokens, API keys, or credentials
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">* [ ]</span> Never store customer/user data in context files
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">* [ ]</span> Never disable security linters without documented exception
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="gu">## Quality Invariants</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="k">- [ ]</span> All code must pass tests before commit
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="k">- [ ]</span> No <span class="sb">`any`</span> types in TypeScript without documented reason
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">- [ ]</span> No TODO comments in main branch (<span class="ge">*move to `TASKS.md`*</span>)
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="k">* [ ]</span> All code must pass tests before commit
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="k">* [ ]</span> No <span class="sb">`any`</span> types in TypeScript without documented reason
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">* [ ]</span> No TODO comments in main branch (<span class="ge">*move to `TASKS.md`*</span>)
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="gu">## Process Invariants</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="k">- [ ]</span> All architectural changes require a decision record
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="k">- [ ]</span> Breaking changes require version bump
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="k">- [ ]</span> Generated files are never committed
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="k">* [ ]</span> All architectural changes require a decision record
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="k">* [ ]</span> Breaking changes require version bump
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="k">* [ ]</span> Generated files are never committed
 </span></code></pre></div>
 <h3 id="guidelines">Guidelines<a class="headerlink" href="#guidelines" title="Permanent link">&para;</a></h3>
 <ul>
@@ -4129,24 +4161,24 @@ inline tags.</p>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gu">## Phase 1: Initial Setup</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">- [x]</span> Set up project structure
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">- [x]</span> Configure linting and formatting
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">- [ ]</span> Add CI/CD pipeline <span class="sb">`#in-progress`</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">* [x]</span> Set up project structure
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">* [x]</span> Configure linting and formatting
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">* [ ]</span> Add CI/CD pipeline <span class="sb">`#in-progress`</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="gu">## Phase 2: Core Features</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">- [ ]</span> Implement user authentication <span class="sb">`#priority:high`</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">- [ ]</span> Add API rate limiting <span class="sb">`#priority:medium`</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Blocked by: Need to finalize auth first
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">* [ ]</span> Implement user authentication <span class="sb">`#priority:high`</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">* [ ]</span> Add API rate limiting <span class="sb">`#priority:medium`</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="k">*</span><span class="w"> </span>Blocked by: Need to finalize auth first
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="gu">## Backlog</span>
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">- [ ]</span> Performance optimization <span class="sb">`#priority:low`</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">- [ ]</span> Add metrics dashboard <span class="sb">`#priority:deferred`</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">* [ ]</span> Performance optimization <span class="sb">`#priority:low`</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">* [ ]</span> Add metrics dashboard <span class="sb">`#priority:deferred`</span>
 </span></code></pre></div>
 <p><strong>Key principles:</strong></p>
 <ul>
-<li>Tasks never move between sections — mark as <code>[x]</code> or <code>[-]</code> in place</li>
+<li>Tasks never move between sections: mark as <code>[x]</code> or <code>[-]</code> in place</li>
 <li>Use <code>#in-progress</code> inline tag to indicate current work</li>
 <li>Phase headers provide structure and replay order</li>
 <li>Backlog section for unscheduled work</li>
@@ -4263,8 +4295,8 @@ get re-debated.</p>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="gs">**Consequences**</span>: What are the implications?
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="gs">**Alternatives Considered**</span>:
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">-</span><span class="w"> </span>Alternative A: Why rejected
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">-</span><span class="w"> </span>Alternative B: Why rejected
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">*</span><span class="w"> </span>Alternative A: Why rejected
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">*</span><span class="w"> </span>Alternative B: Why rejected
 </span></code></pre></div>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## [2025-01-15] Use TypeScript Strict Mode</span>
@@ -4381,7 +4413,7 @@ be forgotten.</p>
 <ul>
 <li>Include concrete examples</li>
 <li>Explain the "why" not just the "what"</li>
-<li>Keep patterns minimal—only document what's non-obvious</li>
+<li>Keep patterns minimal: Only document what's non-obvious</li>
 </ul>
 <hr />
 <h2 id="architecturemd"><code>ARCHITECTURE.md</code><a class="headerlink" href="#architecturemd" title="Permanent link">&para;</a></h2>
@@ -4404,7 +4436,7 @@ be forgotten.</p>
 </span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="gs">**Dependents**</span>: What depends on it
 </span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
 </span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="gs">**Key Files**</span>:
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="k">-</span><span class="w"> </span>path/to/file.ts — Description
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="k">*</span><span class="w"> </span>path/to/file.ts: Description
 </span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
 </span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="gu">## Data Flow</span>
 </span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
@@ -4458,9 +4490,9 @@ and update context.</p>
 <p><strong>When to Update</strong>: Events that trigger context updates</p>
 <p><strong>How to Avoid Hallucinating Memory:</strong> Critical rules:</p>
 <ol>
-<li>Never assume—if not in files, you don't know it</li>
-<li>Never invent history—don't claim "<em>we discussed</em>" without evidence</li>
-<li>Verify before referencing—search files before citing</li>
+<li>Never assume: If not in files, you don't know it</li>
+<li>Never invent history: Don't claim "<em>we discussed</em>" without evidence</li>
+<li>Verify before referencing: Search files before citing</li>
 <li>When uncertain, say so</li>
 <li>Trust files over intuition</li>
 </ol>
@@ -4478,7 +4510,8 @@ and update context.</p>
 </span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="na">consequences=</span><span class="s">&quot;Must provision Redis infrastructure&quot;</span>
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nt">&gt;</span>Use<span class="w"> </span>Redis<span class="w"> </span>for<span class="w"> </span>caching<span class="nt">&lt;/context-update&gt;</span>
 </span></code></pre></div>
-<p>See <a href="../../operations/integrations/#context-update-commands">Integrations</a> for full documentation.</p>
+<p>See <a href="../../operations/integrations/#context-update-commands">Integrations</a> 
+for full documentation.</p>
 <hr />
 <h2 id="parsing-rules">Parsing Rules<a class="headerlink" href="#parsing-rules" title="Permanent link">&para;</a></h2>
 <p>All context files follow these conventions:</p>
@@ -4493,7 +4526,7 @@ and update context.</p>
 <h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../blog/2026-02-01-refactoring-with-intent/">Refactoring with Intent</a>:
-  How persistent context prevents drift during refactoring sessions.</li>
+  how persistent context prevents drift during refactoring sessions</li>
 </ul>
 <h2 id="token-efficiency">Token Efficiency<a class="headerlink" href="#token-efficiency" title="Permanent link">&para;</a></h2>
 <p>Keep context files <strong>concise</strong>:</p>
@@ -4505,7 +4538,8 @@ and update context.</p>
 <li>Archive old completed items periodically.</li>
 </ul>
 <hr />
-<p><strong>Next Up</strong>: <a href="../prompting-guide/">Prompting Guide →</a> — effective prompts for AI sessions with ctx.</p>
+<p><strong>Next Up</strong>: <a href="../prompting-guide/">Prompting Guide →</a>: 
+  effective prompts for AI sessions with <code>ctx</code></p>
 
 
 

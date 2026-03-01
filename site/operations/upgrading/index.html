@@ -1409,6 +1409,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1503,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -2886,6 +2918,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL:DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-changes-between-versions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2984,17 +3027,6 @@
     <span class="md-ellipsis">
       
         What If I Skip the Upgrade?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Reference
       
     </span>
   </a>
@@ -3254,6 +3286,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL:DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-changes-between-versions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3358,17 +3401,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3445,11 +3477,22 @@ or plugin hooks and skills.</p>
 <p class="admonition-title">Claude Code User?</p>
 <p>The marketplace can update <strong>skills, hooks, and prompts</strong> independently:
 <code>/plugin</code> → select <strong>ctx</strong> → <strong>Update now</strong> (or enable auto-update).</p>
-<p>The <code>ctx</code> <strong>binary</strong> is separate —
+<p>The <code>ctx</code> <strong>binary</strong> is separate:
 <a href="../../home/getting-started/#installation">rebuild from source or download a new release</a>
 when one is available, then run <code>ctx init --force --merge</code>.
 Knowledge files are preserved automatically.</p>
 </div>
+<h2 id="tldr">TL:DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Plugin users (Claude Code)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># /plugin → select ctx → Update now</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Then update the binary and reinitialize:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># From-source / manual users</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># install new ctx binary, then:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># /plugin → select ctx → Update now   (if using Claude Code)</span>
+</span></code></pre></div>
 <h2 id="what-changes-between-versions">What Changes Between Versions<a class="headerlink" href="#what-changes-between-versions" title="Permanent link">&para;</a></h2>
 <p><code>ctx init</code> generates two categories of files:</p>
 <table>
@@ -3478,14 +3521,14 @@ Knowledge files are yours and should never be overwritten.</p>
 <h2 id="upgrade-steps">Upgrade Steps<a class="headerlink" href="#upgrade-steps" title="Permanent link">&para;</a></h2>
 <h3 id="1-install-the-new-version">1. Install the New Version<a class="headerlink" href="#1-install-the-new-version" title="Permanent link">&para;</a></h3>
 <p>Build from source or download the binary:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/ctx-source
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>pull
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>make<span class="w"> </span>build
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ctx<span class="w"> </span>--version<span class="w">   </span><span class="c1"># verify</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/ctx-source
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>pull
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>make<span class="w"> </span>build
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ctx<span class="w"> </span>--version<span class="w">   </span><span class="c1"># verify</span>
 </span></code></pre></div>
 <h3 id="2-reinitialize">2. Reinitialize<a class="headerlink" href="#2-reinitialize" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
 </span></code></pre></div>
 <ul>
 <li><code>--force</code> regenerates infrastructure files (permissions, ctx-managed
@@ -3493,9 +3536,9 @@ Knowledge files are yours and should never be overwritten.</p>
 <li><code>--merge</code> preserves your content outside <code>ctx</code> markers.</li>
 </ul>
 <p>Knowledge files (<code>.context/TASKS.md</code>, <code>DECISIONS.md</code>, etc.) are <strong>preserved
-automatically</strong> — <code>ctx init</code> only overwrites infrastructure, never your data.</p>
+automatically</strong>: <code>ctx init</code> only overwrites infrastructure, never your data.</p>
 <blockquote>
-<p><strong>Encryption key</strong>: If you use <code>ctx pad</code>, verify that <code>.context/.context.key</code>
+<p><strong>Encryption key</strong>: If you use <code>ctx pad</code>, verify that <code>.context/.ctx.key</code>
 is still present after reinit. It should be preserved, but losing it means
 losing access to encrypted scratchpad data.</p>
 </blockquote>
@@ -3510,16 +3553,16 @@ losing access to encrypted scratchpad data.</p>
 <h3 id="4-review-custom-settings">4. Review Custom Settings<a class="headerlink" href="#4-review-custom-settings" title="Permanent link">&para;</a></h3>
 <p>If you added custom permissions to <code>.claude/settings.local.json</code> beyond
 what <code>ctx init</code> provides, diff and merge:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>diff<span class="w"> </span>.claude.bak/settings.local.json<span class="w"> </span>.claude/settings.local.json
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>diff<span class="w"> </span>.claude.bak/settings.local.json<span class="w"> </span>.claude/settings.local.json
 </span></code></pre></div>
 <p>Manually add back any custom entries that the new init dropped.</p>
 <h3 id="5-verify">5. Verify<a class="headerlink" href="#5-verify" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>status<span class="w">          </span><span class="c1"># context files intact</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ctx<span class="w"> </span>drift<span class="w">           </span><span class="c1"># no broken references</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>status<span class="w">          </span><span class="c1"># context files intact</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>drift<span class="w">           </span><span class="c1"># no broken references</span>
 </span></code></pre></div>
 <h3 id="6-clean-up">6. Clean Up<a class="headerlink" href="#6-clean-up" title="Permanent link">&para;</a></h3>
 <p>If you made manual backups, remove them once satisfied:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.context.bak<span class="w"> </span>.claude.bak<span class="w"> </span>CLAUDE.md.bak<span class="w"> </span>PROMPT.md.bak
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.context.bak<span class="w"> </span>.claude.bak<span class="w"> </span>CLAUDE.md.bak<span class="w"> </span>PROMPT.md.bak
 </span></code></pre></div>
 <h2 id="what-if-i-skip-the-upgrade">What If I Skip the Upgrade?<a class="headerlink" href="#what-if-i-skip-the-upgrade" title="Permanent link">&para;</a></h2>
 <p>The old binary still works with your existing <code>.context/</code> files. But you
@@ -3535,17 +3578,6 @@ the plugin (for new hooks/skills) even if you stay on an older binary,
 and vice versa.</p>
 <p>Context files are plain Markdown: They <strong>never</strong> break between versions.</p>
 <p><strong>The surrounding infrastructure is what evolves</strong>.</p>
-<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Plugin users (Claude Code)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /plugin → select ctx → Update now</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Then update the binary and reinitialize:</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># From-source / manual users</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># install new ctx binary, then:</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ctx<span class="w"> </span>init<span class="w"> </span>--force<span class="w"> </span>--merge
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># /plugin → select ctx → Update now   (if using Claude Code)</span>
-</span></code></pre></div>
 
 
 

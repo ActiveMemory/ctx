@@ -25,7 +25,7 @@ Scratchpad entries are encrypted with `AES-256-GCM` before touching the disk.
 
 | Component      | Path                      | Git status                     |
 |----------------|---------------------------|--------------------------------|
-| Encryption key | `.context/.context.key`   | Gitignored, `0600` permissions |
+| Encryption key | `.context/.ctx.key`       | Gitignored, `0600` permissions |
 | Encrypted data | `.context/scratchpad.enc` | Committed                      |
 
 The key is generated automatically during `ctx init` (256-bit via
@@ -87,7 +87,7 @@ ctx pad rm 2
 
 ## Bulk Import and Export
 
-Import lines from a file in bulk — each non-empty line becomes an entry:
+Import lines from a file in bulk (*each non-empty line becomes an entry*):
 
 ```bash
 # Import from a file
@@ -123,13 +123,13 @@ ctx pad merge worktree/.context/scratchpad.enc
 ctx pad merge pad-a.enc notes.md
 
 # Merge a foreign encrypted pad using its key
-ctx pad merge --key /other/.context.key foreign.enc
+ctx pad merge --key /other/.ctx.key foreign.enc
 
 # Preview without writing
 ctx pad merge --dry-run pad-a.enc pad-b.md
 ```
 
-Each input file is auto-detected as encrypted or plaintext — decryption is
+Each input file is auto-detected as encrypted or plaintext: decryption is
 attempted first, and on failure the file is parsed as plain text. Entries are
 deduplicated by exact content, so running merge twice with the same file is
 safe.
@@ -140,7 +140,7 @@ The scratchpad can store small files (*up to 64 KB*) as blob entries. Files
 are base64-encoded and stored with a human-readable label.
 
 ```bash
-# Ingest a file — first argument is the label
+# Ingest a file: first argument is the label
 ctx pad add "deploy config" --file ./deploy.yaml
 
 # Listing shows label with a [BLOB] marker
@@ -196,9 +196,9 @@ English; the agent picks the right command.
 
 ## Worktrees
 
-The encryption key (`.context/.context.key`) is gitignored. It only
+The encryption key (`.context/.ctx.key`) is gitignored. It only
 exists in the main checkout. In a git worktree, `ctx pad` commands fail
-gracefully — no key is found, no crash, but the pad is inaccessible.
+gracefully: no key is found, no crash, but the pad is inaccessible.
 
 Use the scratchpad from the main checkout only. This is by design: the
 key never leaves the machine where it was generated, and worktrees are
@@ -206,7 +206,7 @@ ephemeral working copies.
 
 ## Key Distribution
 
-The encryption key (`.context/.context.key`) stays on the machine
+The encryption key (`.context/.ctx.key`) stays on the machine
 where it was generated. `ctx` **never** transmits it.
 
 To share the scratchpad across machines:

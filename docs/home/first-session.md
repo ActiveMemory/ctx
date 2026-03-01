@@ -42,7 +42,7 @@ Creating project root files...
   ✓ IMPLEMENTATION_PLAN.md
 
 Setting up Claude Code permissions...
-  ✓ .context.key
+  ✓ .ctx.key
 
 Claude Code plugin (hooks + skills):
   Install: claude /plugin marketplace add ActiveMemory/ctx
@@ -129,7 +129,7 @@ via hooks, but the explicit ceremony gives you a **readback** to verify.
 
 !!! info "Using VS Code?"
     With **VS Code Copilot Chat** (*and the
-    [ctx extension]*(../operations/integrations.md#vs-code-chat-extension-ctx)), 
+    [ctx extension](../operations/integrations.md#vs-code-chat-extension-ctx)*), 
     type `@ctx /agent` in chat to load your context packet, or `@ctx /status`
     to check your project context. Run `ctx hook copilot --write` once
     to generate `.github/copilot-instructions.md` for automatic context loading.
@@ -206,7 +206,7 @@ asking you to re-explain.
 
 ```
 .context/
-├── CONSTITUTION.md     # Hard rules — NEVER violate these
+├── CONSTITUTION.md     # Hard rules: NEVER violate these
 ├── TASKS.md            # Current and planned work
 ├── CONVENTIONS.md      # Project patterns and standards
 ├── ARCHITECTURE.md     # System overview
@@ -247,7 +247,7 @@ You should **`.gitignore`** the generated and sensitive paths:
 .context/logs/
 
 # Encryption key (NEVER commit)
-.context/.context.key
+.context/.ctx.key
 
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json

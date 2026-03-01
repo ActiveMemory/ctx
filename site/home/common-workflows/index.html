@@ -1648,6 +1648,8 @@
       
         
       
+        
+      
     
     
     
@@ -1740,6 +1742,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3705,7 +3737,7 @@ that travels with the project:</p>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># List all keys</span>
 </span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ctx<span class="w"> </span>pad<span class="w"> </span>list
 </span></code></pre></div>
-<p>The scratchpad is encrypted with a key stored in <code>.context/.context.key</code>
+<p>The scratchpad is encrypted with a key stored in <code>.context/.ctx.key</code>
 (<em><code>.gitignore</code>d by default</em>). </p>
 <p>See <a href="../../reference/scratchpad/">Scratchpad</a> for details.</p>
 <h2 id="run-an-autonomous-loop">Run an Autonomous Loop<a class="headerlink" href="#run-an-autonomous-loop" title="Permanent link">&para;</a></h2>
@@ -3794,6 +3826,9 @@ inside your coding assistant.</p>
 </tr>
 </tbody>
 </table>
+<!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/Paired Commands/,/CLI-Only Commands/p' docs/home/common-workflows.md | grep -oP 'ctx-[a-z-]+' | sort -u) -->
+<!-- drift-check: diff <(ctx --help 2>&1 | sed -n '/Available Commands/,/Flags/p' | grep -oP '^\s+\K\w+' | sort) <(sed -n '/CLI-Only Commands/,/Rule of Thumb/p' docs/home/common-workflows.md | grep -oP 'ctx \K[a-z]+' | sort -u) -->
+
 <h3 id="paired-commands">Paired Commands<a class="headerlink" href="#paired-commands" title="Permanent link">&para;</a></h3>
 <p>These have both a CLI and a skill counterpart. Use the CLI for
 quick, deterministic checks; use the skill when you need the
@@ -3862,6 +3897,26 @@ agent's judgment.</p>
 <td><code>/ctx-loop</code></td>
 <td>Agent tailors the loop script to your project</td>
 </tr>
+<tr>
+<td><code>ctx doctor</code></td>
+<td><code>/ctx-doctor</code></td>
+<td>Agent adds semantic analysis to structural checks</td>
+</tr>
+<tr>
+<td><code>ctx pause</code></td>
+<td><code>/ctx-pause</code></td>
+<td>Agent pauses hooks with session-aware reasoning</td>
+</tr>
+<tr>
+<td><code>ctx resume</code></td>
+<td><code>/ctx-resume</code></td>
+<td>Agent resumes hooks after a pause</td>
+</tr>
+<tr>
+<td><code>ctx remind</code></td>
+<td><code>/ctx-remind</code></td>
+<td>Agent manages reminders in conversation flow</td>
+</tr>
 </tbody>
 </table>
 <h3 id="ai-only-skills">AI-Only Skills<a class="headerlink" href="#ai-only-skills" title="Permanent link">&para;</a></h3>
@@ -3884,7 +3939,7 @@ agent's judgment.</p>
 </tr>
 <tr>
 <td><code>/ctx-next</code></td>
-<td>Suggest 1–3 concrete next actions from context</td>
+<td>Suggest 1-3 concrete next actions from context</td>
 </tr>
 <tr>
 <td><code>/ctx-commit</code></td>
@@ -3907,6 +3962,10 @@ agent's judgment.</p>
 <td>Analyze prompting patterns for improvement</td>
 </tr>
 <tr>
+<td><code>/ctx-import-plans</code></td>
+<td>Import Claude Code plan files into project specs</td>
+</tr>
+<tr>
 <td><code>/ctx-implement</code></td>
 <td>Execute a plan step-by-step with verification</td>
 </tr>
@@ -3923,8 +3982,20 @@ agent's judgment.</p>
 <td>Add metadata, tags, and summaries to journal entries</td>
 </tr>
 <tr>
+<td><code>/ctx-journal-enrich-all</code></td>
+<td>Batch-enrich all unenriched journal entries</td>
+</tr>
+<tr>
 <td><code>/ctx-blog</code></td>
 <td>Generate a blog post (<a href="https://pypi.org/project/zensical/">zensical</a>-flavored Markdown)</td>
+</tr>
+<tr>
+<td><code>/ctx-blog-changelog</code></td>
+<td>Generate themed blog post from commits between releases</td>
+</tr>
+<tr>
+<td><code>/ctx-map</code></td>
+<td>Build and maintain architecture maps (ARCHITECTURE.md, DETAILED_DESIGN.md)</td>
 </tr>
 </tbody>
 </table>
@@ -3987,8 +4058,32 @@ agent's judgment.</p>
 <td>Configure webhook notifications</td>
 </tr>
 <tr>
-<td><code>ctx remind</code></td>
-<td>Session-scoped reminders (surface at start)</td>
+<td><code>ctx decisions</code></td>
+<td>List and filter decisions</td>
+</tr>
+<tr>
+<td><code>ctx learnings</code></td>
+<td>List and filter learnings</td>
+</tr>
+<tr>
+<td><code>ctx tasks</code></td>
+<td>List tasks, manage archival and snapshots</td>
+</tr>
+<tr>
+<td><code>ctx why</code></td>
+<td>Read the philosophy behind ctx</td>
+</tr>
+<tr>
+<td><code>ctx guide</code></td>
+<td>Quick-reference cheat sheet</td>
+</tr>
+<tr>
+<td><code>ctx site</code></td>
+<td>Site management commands</td>
+</tr>
+<tr>
+<td><code>ctx system</code></td>
+<td>System diagnostics and hook commands</td>
 </tr>
 <tr>
 <td><code>ctx completion</code></td>

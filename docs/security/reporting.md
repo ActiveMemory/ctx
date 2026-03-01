@@ -29,6 +29,26 @@ Send details to **security@ctx.ist**.
 2. Click "*Report a Vulnerability*";
 3. Provide a **detailed** description.
 
+### Encrypted Reports (*Optional*)
+
+If your report contains sensitive details (*proof-of-concept exploits,
+credentials, or internal system information*), you can encrypt your message
+with our PGP key:
+
+* **In-repo**: [`SECURITY_KEY.asc`](https://github.com/ActiveMemory/ctx/blob/main/SECURITY_KEY.asc)
+* **Keybase**: [keybase.io/alekhinejose](https://keybase.io/alekhinejose/pgp_keys.asc)
+
+```bash
+# Import the key
+gpg --import SECURITY_KEY.asc
+
+# Encrypt your report
+gpg --armor --encrypt --recipient security@ctx.ist report.txt
+```
+
+Encryption is optional. Unencrypted reports to **security@ctx.ist** or via
+GitHub Private Reporting are perfectly fine.
+
 ### What to Include
 
 * Description of the vulnerability,

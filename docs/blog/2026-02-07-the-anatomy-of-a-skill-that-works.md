@@ -72,8 +72,8 @@ that runs *before* execution**, not during it.
 
 ## The Pattern That Emerged
 
-After rewriting 20 skills, a **repeatable anatomy** emerged—independent
-of the skill’s purpose. Not every skill needs every section, but the
+After rewriting 20 skills, a **repeatable anatomy** emerged (*independent
+of the skill's purpose*). Not every skill needs every section, but the
 effective ones share the same bones:
 
 | Section           | What It Does                                    |
@@ -331,7 +331,7 @@ intervention**.
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **Skills that work have bones, not just flesh.**
 
     Quality gates, negative triggers, examples, and checklists

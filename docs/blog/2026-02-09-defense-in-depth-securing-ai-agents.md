@@ -344,7 +344,7 @@ for each layer.
 
 [security-doc]: ../security/agent-security.md
 
-## What Changed in ctx
+## What Changed in `ctx`
 
 The autonomous loops recipe now has a full
 [permissions and isolation section][loops-permissions] instead of a
@@ -367,7 +367,7 @@ overnight.
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **Markdown is not a security boundary.**
 
     `CONSTITUTION.md` is a nudge. An allowlist is a gate.

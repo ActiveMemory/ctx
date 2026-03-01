@@ -57,7 +57,7 @@ reasonable choices instead of asking clarifying questions.
 
 ```bash
 ctx init --ralph
-````
+```
 
 This creates `.context/` with the template files, a `PROMPT.md` configured for
 autonomous iteration, and seeds Claude Code permissions in
@@ -118,10 +118,10 @@ signals at the end:
 
 End your response with exactly ONE of:
 
-- `SYSTEM_CONVERGED` — All tasks in `TASKS.md` are complete (*this is the
+* `SYSTEM_CONVERGED`: All tasks in `TASKS.md` are complete (*this is the
   signal the loop script detects by default*)
-- `SYSTEM_BLOCKED` — Cannot proceed, need human input (explain why)
-- (no signal) — More work remains, continue to next iteration
+* `SYSTEM_BLOCKED`: Cannot proceed, need human input (explain why)
+* (*no signal*): More work remains, continue to the next iteration
 
 Note: the loop script only checks for `SYSTEM_CONVERGED` by default.
 `SYSTEM_BLOCKED` is a convention for the human reviewing the log.

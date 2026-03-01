@@ -157,7 +157,7 @@ Let's work on the session enrichment feature.
 ### Step 4: Do the Work
 
 This is the main body of the session: write code, fix bugs, refactor,
-research—whatever the task requires.
+research: whatever the task requires.
 
 During this phase, a few `ctx`-specific patterns help:
 
@@ -291,7 +291,7 @@ learnings, decisions, conventions, and tasks:
 
 !!! tip "Ceremony Skills"
     `/ctx-remember` at session start and `/ctx-wrap-up` at session end are
-    **ceremony skills** — invoke them as explicit slash commands for
+    **ceremony skills**: Invoke them as explicit slash commands for
     completeness, not conversationally.
 
     See [Session Ceremonies](session-ceremonies.md) for details on why
@@ -409,7 +409,7 @@ Context is up to date. You are good to close.
     "*Let's wrap up*" was enough to trigger the full reflect-and-persist flow.
 
     The agent surfaced persist-worthy items at milestones: after a design
-    choice, after discovering a gotcha—without waiting to be asked.
+    choice, after discovering a gotcha: without waiting to be asked.
 
 This is the *intended* experience. 
 

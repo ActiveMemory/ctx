@@ -34,43 +34,45 @@ opinionated behavior on top.
     to invoke the relevant skills directly.
 
 <!-- drift-check: ls internal/assets/claude/skills/ | wc -l -->
+<!-- drift-check: diff <(ls internal/assets/claude/skills/ | sort) <(sed -n '/^## All Skills/,/^---$/p' docs/reference/skills.md | grep -oP '\| \[`/\K[a-z-]+(?=`\])' | grep -v check-links | sort -u) -->
 ## All Skills
 
-| Skill                                                | Description                                            | Type           |
-|------------------------------------------------------|--------------------------------------------------------|----------------|
-| [`/ctx-remember`](#ctx-remember)                     | Recall project context and present structured readback | user-invocable |
-| [`/ctx-wrap-up`](#ctx-wrap-up)                       | End-of-session context persistence ceremony            | user-invocable |
-| [`/ctx-status`](#ctx-status)                         | Show context summary with interpretation               | user-invocable |
-| [`/ctx-agent`](#ctx-agent)                           | Load full context packet for AI consumption            | user-invocable |
-| [`/ctx-next`](#ctx-next)                             | Suggest 1-3 concrete next actions with rationale       | user-invocable |
-| [`/ctx-commit`](#ctx-commit)                         | Commit with integrated context persistence             | user-invocable |
-| [`/ctx-reflect`](#ctx-reflect)                       | Pause and reflect on session progress                  | user-invocable |
-| [`/ctx-add-task`](#ctx-add-task)                     | Add actionable task to TASKS.md                        | user-invocable |
-| [`/ctx-add-decision`](#ctx-add-decision)             | Record architectural decision with rationale           | user-invocable |
-| [`/ctx-add-learning`](#ctx-add-learning)             | Record gotchas and lessons learned                     | user-invocable |
-| [`/ctx-add-convention`](#ctx-add-convention)         | Record coding convention for consistency               | user-invocable |
-| [`/ctx-archive`](#ctx-archive)                       | Archive completed tasks from TASKS.md                  | user-invocable |
-| [`/ctx-pad`](#ctx-pad)                               | Manage encrypted scratchpad entries                    | user-invocable |
-| [`/ctx-recall`](#ctx-recall)                         | Browse and export AI session history                   | user-invocable |
-| [`/ctx-journal-enrich`](#ctx-journal-enrich)         | Enrich single journal entry with metadata              | user-invocable |
-| [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all) | Batch-enrich all unenriched journal entries            | user-invocable |
-| [`/ctx-journal-normalize`](#ctx-journal-normalize)   | Normalize journal markdown for clean rendering         | user-invocable |
-| [`/ctx-blog`](#ctx-blog)                             | Generate blog post draft from project activity         | user-invocable |
-| [`/ctx-blog-changelog`](#ctx-blog-changelog)         | Generate themed blog post from a commit range          | user-invocable |
-| [`/ctx-consolidate`](#ctx-consolidate)               | Consolidate redundant learnings or decisions            | user-invocable |
-| [`/ctx-drift`](#ctx-drift)                           | Detect and fix context drift                           | user-invocable |
-| [`/ctx-alignment-audit`](#ctx-alignment-audit)       | Audit docs claims against agent instructions           | user-invocable |
-| [`/ctx-prompt-audit`](#ctx-prompt-audit)             | Analyze prompting patterns for improvement             | user-invocable |
-| [`/check-links`](#check-links)                       | Audit docs for dead internal and external links        | user-invocable |
-| [`/ctx-context-monitor`](#ctx-context-monitor)       | Respond to context checkpoint signals                  | automatic      |
-| [`/ctx-implement`](#ctx-implement)                   | Execute a plan step-by-step with verification          | user-invocable |
-| [`/ctx-loop`](#ctx-loop)                             | Generate autonomous loop script                        | user-invocable |
-| [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents               | user-invocable |
-| [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                   | user-invocable |
-| [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                        | user-invocable |
-| [`/ctx-doctor`](#ctx-doctor)                         | Troubleshoot ctx behavior with health checks and event analysis | user-invocable |
-| [`/ctx-pause`](#ctx-pause)                           | Pause context hooks for this session                   | user-invocable |
-| [`/ctx-resume`](#ctx-resume)                         | Resume context hooks after a pause                     | user-invocable |
+| Skill                                                | Description                                                     | Type             |
+|------------------------------------------------------|-----------------------------------------------------------------|------------------|
+| [`/ctx-remember`](#ctx-remember)                     | Recall project context and present structured readback          | user-invocable   |
+| [`/ctx-wrap-up`](#ctx-wrap-up)                       | End-of-session context persistence ceremony                     | user-invocable   |
+| [`/ctx-status`](#ctx-status)                         | Show context summary with interpretation                        | user-invocable   |
+| [`/ctx-agent`](#ctx-agent)                           | Load full context packet for AI consumption                     | user-invocable   |
+| [`/ctx-next`](#ctx-next)                             | Suggest 1-3 concrete next actions with rationale                | user-invocable   |
+| [`/ctx-commit`](#ctx-commit)                         | Commit with integrated context persistence                      | user-invocable   |
+| [`/ctx-reflect`](#ctx-reflect)                       | Pause and reflect on session progress                           | user-invocable   |
+| [`/ctx-add-task`](#ctx-add-task)                     | Add actionable task to TASKS.md                                 | user-invocable   |
+| [`/ctx-add-decision`](#ctx-add-decision)             | Record architectural decision with rationale                    | user-invocable   |
+| [`/ctx-add-learning`](#ctx-add-learning)             | Record gotchas and lessons learned                              | user-invocable   |
+| [`/ctx-add-convention`](#ctx-add-convention)         | Record coding convention for consistency                        | user-invocable   |
+| [`/ctx-archive`](#ctx-archive)                       | Archive completed tasks from TASKS.md                           | user-invocable   |
+| [`/ctx-pad`](#ctx-pad)                               | Manage encrypted scratchpad entries                             | user-invocable   |
+| [`/ctx-recall`](#ctx-recall)                         | Browse and export AI session history                            | user-invocable   |
+| [`/ctx-journal-enrich`](#ctx-journal-enrich)         | Enrich single journal entry with metadata                       | user-invocable   |
+| [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all) | Batch-enrich all unenriched journal entries                     | user-invocable   |
+| [`/ctx-journal-normalize`](#ctx-journal-normalize)   | Normalize journal markdown for clean rendering                  | user-invocable   |
+| [`/ctx-blog`](#ctx-blog)                             | Generate blog post draft from project activity                  | user-invocable   |
+| [`/ctx-blog-changelog`](#ctx-blog-changelog)         | Generate themed blog post from a commit range                   | user-invocable   |
+| [`/ctx-consolidate`](#ctx-consolidate)               | Consolidate redundant learnings or decisions                    | user-invocable   |
+| [`/ctx-drift`](#ctx-drift)                           | Detect and fix context drift                                    | user-invocable   |
+| [`/ctx-alignment-audit`](#ctx-alignment-audit)       | Audit docs claims against agent instructions                    | user-invocable   |
+| [`/ctx-prompt-audit`](#ctx-prompt-audit)             | Analyze prompting patterns for improvement                      | user-invocable   |
+| [`/check-links`](#check-links)                       | Audit docs for dead internal and external links                 | project-specific |
+| [`/ctx-context-monitor`](#ctx-context-monitor)       | Respond to context checkpoint signals                           | automatic        |
+| [`/ctx-import-plans`](#ctx-import-plans)             | Import Claude Code plan files into project specs                | user-invocable   |
+| [`/ctx-implement`](#ctx-implement)                   | Execute a plan step-by-step with verification                   | user-invocable   |
+| [`/ctx-loop`](#ctx-loop)                             | Generate autonomous loop script                                 | user-invocable   |
+| [`/ctx-worktree`](#ctx-worktree)                     | Manage git worktrees for parallel agents                        | user-invocable   |
+| [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                            | user-invocable   |
+| [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                                 | user-invocable   |
+| [`/ctx-doctor`](#ctx-doctor)                         | Troubleshoot ctx behavior with health checks and event analysis | user-invocable   |
+| [`/ctx-pause`](#ctx-pause)                           | Pause context hooks for this session                            | user-invocable   |
+| [`/ctx-resume`](#ctx-resume)                         | Resume context hooks after a pause                              | user-invocable   |
 
 ---
 
@@ -87,7 +89,7 @@ Skills for starting, running, and ending a productive session.
 ### `/ctx-remember`
 
 Recall project context and present a structured readback.
-**Ceremony skill** — invoke explicitly at session start.
+**Ceremony skill**: invoke explicitly at session start.
 
 **Wraps**: `ctx agent --budget 4000`, `ctx recall list --limit 3`,
 reads TASKS.md, DECISIONS.md, LEARNINGS.md
@@ -99,7 +101,7 @@ reads TASKS.md, DECISIONS.md, LEARNINGS.md
 
 ### `/ctx-status`
 
-Show context summary — files, token budget, tasks, recent activity —
+Show context summary (*files, token budget, tasks, recent activity*)
 with interpreted suggestions.
 
 **Wraps**: `ctx status [--verbose] [--json]`
@@ -135,7 +137,7 @@ and unblocked status.
 
 ### `/ctx-commit`
 
-Commit code with integrated context persistence — pre-commit checks,
+Commit code with integrated context persistence: pre-commit checks,
 staged files, Co-Authored-By trailer, and a post-commit prompt to
 capture decisions and learnings.
 
@@ -166,7 +168,7 @@ git diff, recent commits, and conversation themes. Proposes
 candidates (learnings, decisions, conventions, tasks) with complete
 structured fields for user approval, then persists via `ctx add`.
 Offers `/ctx-commit` if uncommitted changes remain.
-**Ceremony skill** — invoke explicitly at session end.
+**Ceremony skill**: invoke explicitly at session end.
 
 **Wraps**: `git diff --stat`, `git log`, `ctx add learning`,
 `ctx add decision`, `ctx add convention`, `ctx add task`,
@@ -179,8 +181,8 @@ chains to `/ctx-commit`
 
 ## Context Persistence
 
-Skills for recording work artifacts — tasks, decisions, learnings,
-conventions — into `.context/` files.
+Skills for recording work artifacts: tasks, decisions, learnings,
+conventions: into `.context/` files.
 
 ### `/ctx-add-task`
 
@@ -246,7 +248,7 @@ Archive completed tasks from TASKS.md to a timestamped file in
 
 ### `/ctx-pad`
 
-Manage the encrypted scratchpad — add, remove, edit, and reorder
+Manage the encrypted scratchpad: add, remove, edit, and reorder
 one-liner notes. Encrypted at rest with AES-256-GCM.
 
 **Wraps**: `ctx pad`, `ctx pad add`, `ctx pad rm`, `ctx pad edit`,
@@ -276,7 +278,7 @@ show details by slug or ID, and export to `.context/journal/`.
 
 ### `/ctx-journal-enrich`
 
-Enrich a single journal entry with YAML frontmatter — title, type,
+Enrich a single journal entry with YAML frontmatter: title, type,
 outcome, topics, technologies, and summary. Shows diff before writing.
 
 **Wraps**: reads and edits `.context/journal/*.md` files
@@ -301,7 +303,7 @@ and continuations. Can spawn subagents for large backlogs.
 
 ### `/ctx-journal-normalize`
 
-Normalize journal markdown for clean rendering — fix fence nesting,
+Normalize journal markdown for clean rendering: fix fence nesting,
 metadata formatting, list indentation, and collapse large tool outputs.
 
 **Wraps**: reads and edits `.context/journal/*.md` files
@@ -318,7 +320,7 @@ Skills for turning project activity into publishable content.
 
 ### `/ctx-blog`
 
-Generate a blog post draft from recent project activity — git history,
+Generate a blog post draft from recent project activity: git history,
 decisions, learnings, tasks, and journal entries. Requires a narrative
 arc (problem, approach, outcome).
 
@@ -349,8 +351,8 @@ prompt quality.
 ### `/ctx-consolidate`
 
 Consolidate redundant entries in LEARNINGS.md or DECISIONS.md. Groups
-overlapping entries by keyword similarity, presents candidates, and —
-with user approval — merges groups into denser combined entries.
+overlapping entries by keyword similarity, presents candidates, and
+(*with user approval*) merges groups into denser combined entries.
 Originals are archived, not deleted.
 
 **Wraps**: reads LEARNINGS.md and DECISIONS.md, writes consolidated
@@ -460,6 +462,22 @@ not user-invocable
 ## Planning & Execution
 
 Skills for structured implementation and parallel agent workflows.
+
+### `/ctx-import-plans`
+
+Import Claude Code plan files (`~/.claude/plans/*.md`) into the project's
+`specs/` directory. Lists plans with dates and H1 titles, supports
+filtering (`--today`, `--since`, `--all`), slugifies headings for
+filenames, and optionally creates tasks referencing each imported spec.
+
+**Wraps**: reads `~/.claude/plans/*.md`, writes to `specs/`,
+optionally chains to `/ctx-add-task`
+
+**See also**:
+[Importing Claude Code Plans](../recipes/import-plans.md),
+[Tracking Work Across Sessions](../recipes/task-management.md)
+
+---
 
 ### `/ctx-implement`
 
@@ -571,7 +589,7 @@ and ceremony behavior. Silent no-op if not paused.
 
 The ctx plugin ships the skills listed above.
 Teams can add their own project-specific skills to `.claude/skills/` in the
-project root — these are separate from plugin-shipped skills and are scoped
+project root: These are separate from plugin-shipped skills and are scoped
 to the project.
 
 Project-specific skills follow the same format and are invoked the same way.

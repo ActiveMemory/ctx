@@ -94,7 +94,7 @@ Date-gate reminders to surface only after a specific date.
 ### [Pausing Context Hooks](session-pause.md)
 
 Silence all nudge hooks for a **quick task** that doesn't need ceremony
-overhead. Session-scoped — other sessions are unaffected. Security
+overhead. Session-scoped: Other sessions are unaffected. Security
 hooks still fire.
 
 **Uses**: `ctx pause`, `ctx resume`, `/ctx-pause`, `/ctx-resume`
@@ -172,7 +172,7 @@ ceremony nudges, or tailor post-commit instructions for your stack.
 
 ### [Auditing System Hooks](system-hooks-audit.md)
 
-The 12 system hooks that run **invisibly** during every session — what each
+The 12 system hooks that run **invisibly** during every session: what each
 one does, why it exists, and how to **verify** they're actually firing.
 Covers webhook-based audit trails, log inspection, and detecting silent
 hook failures.
@@ -185,7 +185,7 @@ hook failures.
 ### [Webhook Notifications](webhook-notifications.md)
 
 Get **push notifications** when loops complete, hooks fire, or agents hit
-milestones. Webhook URL is **encrypted** — never stored in plaintext.
+milestones. Webhook URL is **encrypted**: never stored in plaintext.
 Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
 
 **Uses**: `ctx notify setup`, `ctx notify test`, `ctx notify --event`,
@@ -251,6 +251,16 @@ blog artifacts you see on this website.
 **Uses**: `ctx journal site`, `ctx journal obsidian`, `ctx serve`,
 `ctx recall export`, `/ctx-blog`, `/ctx-blog-changelog`,
 `/ctx-journal-enrich`, `/ctx-journal-normalize`
+
+---
+
+### [Importing Claude Code Plans](import-plans.md)
+
+Import Claude Code **plan files** (`~/.claude/plans/*.md`) into `specs/`
+as permanent project specs. Filter by date, select interactively, and
+optionally create tasks referencing each imported spec.
+
+**Uses**: `/ctx-import-plans`, `/ctx-add-task`
 
 ---
 

@@ -20,13 +20,14 @@ ctx system <subcommand>
 The parent command shows available subcommands. Hidden plumbing subcommands
 (`ctx system mark-journal`, `ctx system mark-wrapped-up`) are used by skills
 and automation. Hidden hook
-subcommands (`ctx system check-*`) are used by the Claude Code plugin — see
-[AI Tools](../operations/integrations.md#plugin-hooks) for details.
+subcommands (`ctx system check-*`) are used by the Claude Code plugin.
+
+See [AI Tools](../operations/integrations.md#plugin-hooks) for details.
 
 #### `ctx system bootstrap`
 
 Print context location and rules for AI agents. This is the recommended first
-command for AI agents to run at session start — it tells them where the context
+command for AI agents to run at session start: It tells them where the context
 directory is and how to use it.
 
 ```bash
@@ -53,7 +54,7 @@ Files:
 
 Rules:
   1. Use context_dir above for ALL file reads/writes
-  2. Never say "I don't have memory" — context IS your memory
+  2. Never say "I don't have memory": context IS your memory
   3. Read files silently, present as recall (not search)
   4. Persist learnings/decisions before session ends
   5. Run `ctx agent` for content summaries
@@ -94,12 +95,12 @@ ctx system resources [flags]
 
 Displays memory, swap, disk, and CPU load with two severity tiers:
 
-| Resource | WARNING | DANGER |
-|----------|---------|--------|
-| Memory | >= 80% used | >= 90% used |
-| Swap | >= 50% used | >= 75% used |
-| Disk (cwd) | >= 85% full | >= 95% full |
-| Load (1m) | >= 0.8x CPUs | >= 1.5x CPUs |
+| Resource   | WARNING      | DANGER       |
+|------------|--------------|--------------|
+| Memory     | >= 80% used  | >= 90% used  |
+| Swap       | >= 50% used  | >= 75% used  |
+| Disk (cwd) | >= 85% full  | >= 95% full  |
+| Load (1m)  | >= 0.8x CPUs | >= 1.5x CPUs |
 
 **Flags**:
 
@@ -126,7 +127,7 @@ Swap:      0.0 /  8.0 GB (0%)                      ✓ ok
 Disk:    180.2 / 500.0 GB (36%)                     ✓ ok
 Load:     0.52 / 0.41 / 0.38  (8 CPUs, ratio 0.07) ✓ ok
 
-All clear — no resource warnings.
+All clear: no resource warnings.
 ```
 
 When resources breach thresholds, alerts are listed below the summary:
@@ -153,12 +154,12 @@ ctx system message <subcommand>
 
 **Subcommands**:
 
-| Subcommand | Args | Flags | Description |
-|------------|------|-------|-------------|
-| `list` | *(none)* | `--json` | Show all hook messages with category and override status |
-| `show` | `<hook> <variant>` | *(none)* | Print the effective message template with source |
-| `edit` | `<hook> <variant>` | *(none)* | Copy embedded default to `.context/` for editing |
-| `reset` | `<hook> <variant>` | *(none)* | Delete user override, revert to embedded default |
+| Subcommand | Args               | Flags    | Description                                              |
+|------------|--------------------|----------|----------------------------------------------------------|
+| `list`     | *(none)*           | `--json` | Show all hook messages with category and override status |
+| `show`     | `<hook> <variant>` | *(none)* | Print the effective message template with source         |
+| `edit`     | `<hook> <variant>` | *(none)* | Copy embedded default to `.context/` for editing         |
+| `reset`    | `<hook> <variant>` | *(none)* | Delete user override, revert to embedded default         |
 
 **Examples**:
 
@@ -215,7 +216,10 @@ to terminal width*).
 Each line is a standalone JSON object identical to the webhook payload format:
 
 ```json
-{"event":"relay","message":"qa-reminder: QA gate reminder emitted","detail":{"hook":"qa-reminder","variant":"gate"},"session_id":"eb1dc9cd-...","timestamp":"2026-02-27T22:39:31Z","project":"ctx"}
+// converted to multi-line for convenience:
+{"event":"relay","message":"qa-reminder: QA gate reminder emitted","detail":
+{"hook":"qa-reminder","variant":"gate"},"session_id":"eb1dc9cd-...",
+  "timestamp":"2026-02-27T22:39:31Z","project":"ctx"}
 ```
 
 **Examples**:
@@ -282,12 +286,12 @@ Suppress context checkpoint nudges after a wrap-up ceremony. Writes a
 marker file that `check-context-size` checks before emitting checkpoint
 boxes. The marker expires after 2 hours.
 
-Called automatically by `/ctx-wrap-up` after persisting context — not
-intended for direct use.
+Called automatically by `/ctx-wrap-up` after persisting context
+(*not intended for direct use*).
 
 ```bash
 ctx system mark-wrapped-up
 ```
 
-No flags, no arguments. Idempotent — running it again updates the
+No flags, no arguments. Idempotent: running it again updates the
 marker timestamp.

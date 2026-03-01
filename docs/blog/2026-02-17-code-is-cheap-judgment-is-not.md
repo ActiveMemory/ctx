@@ -306,7 +306,7 @@ the *replacement*:
 
 ---
 
-!!! quote "If you remember one thing from this post..."
+!!! quote "**If You Remember One Thing From This Post...**"
     **Code is cheap. Judgment is not.**
 
     AI replaces unstructured effort, not directed expertise. The
@@ -353,7 +353,7 @@ From **YOLO mode** to **defense in depth**, the pattern is the same:
 *This post synthesizes the thread running through every previous
 entry in this blog. The evidence is drawn from three weeks of
 building ctx with AI assistance, the decisions recorded in
-DECISIONS.md, the learnings captured in LEARNINGS.md, and the git
+`DECISIONS.md`, the learnings captured in `LEARNINGS.md`, and the git
 history that tracks where the human mattered and where the AI
 ran unsupervised.*
 

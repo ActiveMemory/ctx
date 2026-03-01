@@ -17,19 +17,19 @@ icon: lucide/compass
 
 If any of these sound like your project, it's worth trying:
 
-- **Multi-session AI work**: You use AI across many sessions on the same
+* **Multi-session AI work**: You use AI across many sessions on the same
   codebase, and re-explaining is slowing you down.
-- **Architectural decisions that matter**: Your project has non-obvious
+* **Architectural decisions that matter**: Your project has non-obvious
   choices (*database, auth strategy, API design*) that the AI keeps
   second-guessing.
-- **"*Why*" matters as much as "*what*"**: you need the AI to understand
+* **"*Why*" matters as much as "*what*"**: you need the AI to understand
   *rationale*, not just current code
-- **Team handoffs**: Multiple people (*or multiple AI tools*) work on the
+* **Team handoffs**: Multiple people (*or multiple AI tools*) work on the
   same project and need shared context.
-- **AI-assisted development across tools**: Uou switch between Claude Code,
+* **AI-assisted development across tools**: Uou switch between Claude Code,
   Cursor, Copilot, or other tools and want context to follow the project,
   not the tool.
-- **Long-lived projects**: Anything you'll work on for weeks or months,
+* **Long-lived projects**: Anything you'll work on for weeks or months,
   where accumulated knowledge has compounding value.
 
 ---
@@ -39,15 +39,15 @@ If any of these sound like your project, it's worth trying:
 `ctx` adds overhead that isn't worth it for every project. Be honest about
 when to skip it:
 
-- **One-off scripts**: If the project is a single file you'll finish today,
+* **One-off scripts**: If the project is a single file you'll finish today,
   there's nothing to remember.
-- **RAG-only workflows**: If retrieval from an external knowledge base already
+* **RAG-only workflows**: If retrieval from an external knowledge base already
   gives the agent everything it needs for each session, adding `ctx` may be
   unnecessary. RAG retrieves *information*; `ctx` defines the project's
   *working memory*: They are *complementary*.
-- **No AI involvement**: `ctx` is designed for human–AI workflows; without
+* **No AI involvement**: `ctx` is designed for human-AI workflows; without
   an AI consumer, the files are just documentation.
-- **Enterprise-managed context platforms**: If your organization provides
+* **Enterprise-managed context platforms**: If your organization provides
   centralized context services, `ctx` may duplicate that layer.
 
 For a deeper technical comparison with RAG, prompt management tools, and
@@ -71,7 +71,7 @@ Works well.
 
 Context files commit to git, so the whole team shares the same
 decisions and conventions.
-Each person's AI starts with the team’s decisions already loaded.
+Each person's AI starts with the team's decisions already loaded.
 Merge conflicts on `.context/` files are rare and
 easy to resolve (*they are just Markdown*).
 

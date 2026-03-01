@@ -173,7 +173,7 @@ const (
 	// FileScratchpadMd is the plaintext scratchpad file.
 	FileScratchpadMd = "scratchpad.md"
 	// FileContextKey is the context encryption key file.
-	FileContextKey = ".context.key"
+	FileContextKey = ".ctx.key"
 	// FileNotifyEnc is the encrypted webhook URL file.
 	FileNotifyEnc = ".notify.enc"
 )

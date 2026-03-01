@@ -17,7 +17,7 @@ Stories, insights, and lessons learned from **building** and **using** `ctx`.
 
 In 1956, Asimov wrote a story about a question that spans the entire future
 of the universe. Everyone remembers the last line. What they forget is how
-many times the question had to be asked — and why. The answer isn't about
+many times the question had to be asked (*and why*). The answer isn't about
 computation. It's about **continuity**: the system that never forgets is the
 one that can finally answer. A reading of "The Last Question" through the lens
 of persistence, substrate migration, and what it means to build systems where

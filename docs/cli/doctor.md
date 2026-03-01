@@ -62,7 +62,7 @@ Hooks
 
 State
   ✓ No pending reminders
-  ⚠ Task completion ratio high (18/22 = 82%) — consider archiving
+  ⚠ Task completion ratio high (18/22 = 82%): consider archiving
 
 Size
   ✓ Context size: ~4200 tokens (budget: 8000)
@@ -126,7 +126,7 @@ Status indicators:
       "name": "task_completion",
       "category": "State",
       "status": "warning",
-      "message": "Tasks: 18/22 completed (82%) — consider archiving with ctx tasks archive"
+      "message": "Tasks: 18/22 completed (82%): consider archiving with ctx tasks archive"
     },
     {
       "name": "context_size",
@@ -175,9 +175,9 @@ ctx doctor --json | jq '[.results[] | select(.status == "error")]'
 
 #### What It Does Not Do
 
-- **No event pattern analysis** — that's the `/ctx-doctor` skill's job
-- **No auto-fixing** — reports findings, doesn't modify anything
-- **No external service checks** — doesn't verify webhook endpoint availability
+* **No event pattern analysis**: that's the `/ctx-doctor` skill's job
+* **No auto-fixing**: reports findings, doesn't modify anything
+* **No external service checks**: doesn't verify webhook endpoint availability
 
 ---
 

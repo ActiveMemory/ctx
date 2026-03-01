@@ -1403,6 +1403,8 @@
       
         
       
+        
+      
     
     
     
@@ -1495,6 +1497,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3258,15 +3290,15 @@ explicit instruction changes the behavior from "<em>I know about this</em>" to
 </span></code></pre></div>
 <p>A nudge, not a command. The hook tells the agent something; the agent
 decides what (if anything) to tell the user. This is right for behavioral
-nudges — "you haven't saved context in a while" doesn't need to be relayed
+nudges: "you haven't saved context in a while" doesn't need to be relayed
 verbatim, but the agent should consider acting on it.</p>
 <h3 id="4-silent-context-injection">4. Silent Context Injection<a class="headerlink" href="#4-silent-context-injection" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>agent<span class="w"> </span>--budget<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 </span></code></pre></div>
 <p>Pure background enrichment. The agent's context window gets project
 information injected on every tool call, with no visible output. Neither
-the agent nor the user sees the hook fire — but the agent makes better
-decisions because of the context.</p>
+the agent nor the user sees the hook fire, but the agent makes <strong>better
+decisions</strong> because of the <strong>context</strong>.</p>
 <h3 id="5-silent-side-effect">5. Silent Side-Effect<a class="headerlink" href="#5-silent-side-effect" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CTX_TMPDIR</span><span class="s2">&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+15<span class="w"> </span>-delete
 </span></code></pre></div>

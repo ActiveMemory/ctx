@@ -122,7 +122,7 @@ Merge a completed worktree back and clean up.
 
 ## What Does NOT Work in Worktrees
 
-The encryption key (`.context.key` in the context directory) is
+The encryption key (`.ctx.key` in the context directory) is
 gitignored. It exists only in the main checkout. This means
 key-dependent features silently fail in worktrees:
 

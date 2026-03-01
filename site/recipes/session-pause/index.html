@@ -1558,6 +1558,8 @@
       
         
       
+        
+      
     
     
     
@@ -1653,6 +1655,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3410,7 +3442,7 @@
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
 <p>Not every session needs the full ceremony. Quick investigations, one-off
-questions, small fixes unrelated to active project work — these tasks
+questions, small fixes unrelated to active project work: These tasks
 don't benefit from persistence nudges, ceremony reminders, or knowledge
 checks. Every hook still fires, consuming tokens and attention on work
 that won't produce learnings or decisions worth capturing.</p>
@@ -3433,7 +3465,7 @@ that won't produce learnings or decisions worth capturing.</p>
 </tr>
 </tbody>
 </table>
-<p>Pause is <strong>session-scoped</strong> — it only affects the current session.
+<p>Pause is <strong>session-scoped</strong>: It only affects the current session.
 Other sessions (same project, different terminal) are unaffected.</p>
 <h2 id="what-gets-paused">What Gets Paused<a class="headerlink" href="#what-gets-paused" title="Permanent link">&para;</a></h2>
 <p>All nudge and reminder hooks go silent:</p>
@@ -3456,20 +3488,20 @@ Other sessions (same project, different terminal) are unaffected.</p>
 <h2 id="what-still-fires">What Still Fires<a class="headerlink" href="#what-still-fires" title="Permanent link">&para;</a></h2>
 <p><strong>Security hooks</strong> always run, even when paused:</p>
 <ul>
-<li><code>block-non-path-ctx</code> — prevents <code>./ctx</code> invocations</li>
-<li><code>block-dangerous-commands</code> — blocks <code>sudo</code>, force push, etc.</li>
+<li><code>block-non-path-ctx</code>: prevents <code>./ctx</code> invocations</li>
+<li><code>block-dangerous-commands</code>: blocks <code>sudo</code>, force push, etc.</li>
 </ul>
 <p><strong>Housekeeping hooks</strong> also run:</p>
 <ul>
-<li><code>cleanup-tmp</code> — removes stale temp files at session end</li>
+<li><code>cleanup-tmp</code>: removes stale temp files at session end</li>
 </ul>
 <h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Session starts — context loads normally (~8k tokens, unavoidable)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Session starts: Context loads normally.</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># 2. You realize this is a quick task</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>pause
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 3. Work without interruption — hooks are silent</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 3. Work without interruption: hooks are silent</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 4. Session evolves into real work? Resume first</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ctx<span class="w"> </span>resume
@@ -3489,12 +3521,12 @@ you always know the state:</p>
 </thead>
 <tbody>
 <tr>
-<td>1–5</td>
+<td>1-5</td>
 <td><code>ctx:paused</code></td>
 </tr>
 <tr>
 <td>6+</td>
-<td><code>ctx:paused (N turns) — resume with /ctx-resume</code></td>
+<td><code>ctx:paused (N turns): resume with /ctx-resume</code></td>
 </tr>
 </tbody>
 </table>
@@ -3518,16 +3550,16 @@ you always know the state:</p>
 </li>
 <li>
 <p><strong>Don't use for real work.</strong> If you're implementing features, fixing
-  bugs, or making decisions — keep hooks active. The nudges exist to
+  bugs, or making decisions: keep hooks active. The nudges exist to
   prevent context loss.</p>
 </li>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<p><em>See also: <a href="../session-ceremonies/">Session Ceremonies</a> — the bookend
+<p><em>See also: <a href="../session-ceremonies/">Session Ceremonies</a>: the bookend
 rituals that pause lets you skip when they aren't needed.</em></p>
-<p><em>See also: <a href="../customizing-hook-messages/">Customizing Hook Messages</a> —
+<p><em>See also: <a href="../customizing-hook-messages/">Customizing Hook Messages</a>:
 if you want to change what hooks say rather than silencing them entirely.</em></p>
-<p><em>See also: <a href="../session-lifecycle/">The Complete Session</a> — the full
+<p><em>See also: <a href="../session-lifecycle/">The Complete Session</a>: the full
 session workflow that pause shortcuts for quick tasks.</em></p>
 
 

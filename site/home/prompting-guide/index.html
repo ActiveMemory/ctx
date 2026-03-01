@@ -922,6 +922,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#session-start" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1312,17 +1323,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Reference
-      
-    </span>
-  </a>
   
 </li>
       
@@ -2042,6 +2042,8 @@
       
         
       
+        
+      
     
     
     
@@ -2134,6 +2136,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3709,6 +3741,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#session-start" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4103,17 +4146,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#explore-plan-implement" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4369,6 +4401,90 @@ apply to other AI systems, too.</p>
 <p><strong>The right prompt triggers the right behavior</strong>. </p>
 <p>This guide documents prompts that <strong>reliably</strong> produce <strong>good results</strong>.</p>
 <hr />
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Load context</td>
+<td>"<em>Do you remember?</em>"</td>
+</tr>
+<tr>
+<td>Resume work</td>
+<td>"<em>What's the current state?</em>"</td>
+</tr>
+<tr>
+<td>What's next</td>
+<td><code>/ctx-next</code></td>
+</tr>
+<tr>
+<td>Debug</td>
+<td>"<em>Why doesn't X work?</em>"</td>
+</tr>
+<tr>
+<td>Validate</td>
+<td>"<em>Is this consistent with our decisions?</em>"</td>
+</tr>
+<tr>
+<td>Impact analysis</td>
+<td>"<em>What would break if we...</em>"</td>
+</tr>
+<tr>
+<td>Reflect</td>
+<td><code>/ctx-reflect</code></td>
+</tr>
+<tr>
+<td>Wrap up</td>
+<td><code>/ctx-wrap-up</code></td>
+</tr>
+<tr>
+<td>Persist</td>
+<td>"<em>Add this as a learning</em>"</td>
+</tr>
+<tr>
+<td>Explore</td>
+<td>"<em>How does X work in this codebase?</em>"</td>
+</tr>
+<tr>
+<td>Sanity check</td>
+<td>"<em>Is this the right approach?</em>"</td>
+</tr>
+<tr>
+<td>Completeness</td>
+<td>"<em>What am I missing?</em>"</td>
+</tr>
+<tr>
+<td>One more thing</td>
+<td>"<em>What's the single smartest addition?</em>"</td>
+</tr>
+<tr>
+<td>Set tone</td>
+<td>"<em>Push back if my assumptions are wrong.</em>"</td>
+</tr>
+<tr>
+<td>Constrain scope</td>
+<td>"<em>Only change files in X. Nothing else.</em>"</td>
+</tr>
+<tr>
+<td>Course correct</td>
+<td>"<em>Stop. That's not what I meant.</em>"</td>
+</tr>
+<tr>
+<td>Check health</td>
+<td>"<em>Run <code>ctx drift</code></em>"</td>
+</tr>
+<tr>
+<td>Commit</td>
+<td><code>/ctx-commit</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="session-start">Session Start<a class="headerlink" href="#session-start" title="Permanent link">&para;</a></h2>
 <h3 id="do-you-remember">"<em>Do you remember?</em>"<a class="headerlink" href="#do-you-remember" title="Permanent link">&para;</a></h3>
 <p>Triggers the AI to silently read <code>TASKS.md</code>, <code>DECISIONS.md</code>,
@@ -4391,8 +4507,8 @@ context (<em>session names, task counts, decisions</em>), not vague summaries.</
 there are files...</em>"), it has not loaded <code>CLAUDE.md</code> or
 <code>AGENT_PLAYBOOK.md</code> properly.</p>
 <p>For a detailed case study on making agents actually follow this
-protocol — including the failure modes, the timing problem, and the
-hook design that solved it — see
+protocol (<em>including the failure modes, the timing problem, and the
+hook design that solved it</em>) see
 <a href="../../blog/2026-02-25-the-homework-problem/">The Dog Ate My Homework</a>.</p>
 <h3 id="whats-the-current-state">"<em>What's the current state?</em>"<a class="headerlink" href="#whats-the-current-state" title="Permanent link">&para;</a></h3>
 <p>Prompts reading of <code>TASKS.md</code>, recent sessions, and status overview.</p>
@@ -4518,9 +4634,9 @@ and often offer to persist them.</p>
 <ul>
 <li>"<em>Let's persist what we did</em>"</li>
 <li>"<em>Update the context files</em>"</li>
-<li><code>/ctx-wrap-up</code> — the recommended end-of-session ceremony
+<li><code>/ctx-wrap-up</code>:the recommended end-of-session ceremony
   (see <a href="../../recipes/session-ceremonies/">Session Ceremonies</a>)</li>
-<li><code>/ctx-reflect</code> — mid-session reflection checkpoint</li>
+<li><code>/ctx-reflect</code>: mid-session reflection checkpoint</li>
 </ul>
 <hr />
 <h2 id="exploration-and-research">Exploration and Research<a class="headerlink" href="#exploration-and-research" title="Permanent link">&para;</a></h2>
@@ -4804,90 +4920,6 @@ instead of the actual secret, etc.) and <strong>never</strong> write it to a con
 <strong>rotate the credential</strong>.</p>
 </div>
 <hr />
-<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Goal</th>
-<th>Prompt</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Load context</td>
-<td>"<em>Do you remember?</em>"</td>
-</tr>
-<tr>
-<td>Resume work</td>
-<td>"<em>What's the current state?</em>"</td>
-</tr>
-<tr>
-<td>What's next</td>
-<td><code>/ctx-next</code></td>
-</tr>
-<tr>
-<td>Debug</td>
-<td>"<em>Why doesn't X work?</em>"</td>
-</tr>
-<tr>
-<td>Validate</td>
-<td>"<em>Is this consistent with our decisions?</em>"</td>
-</tr>
-<tr>
-<td>Impact analysis</td>
-<td>"<em>What would break if we...</em>"</td>
-</tr>
-<tr>
-<td>Reflect</td>
-<td><code>/ctx-reflect</code></td>
-</tr>
-<tr>
-<td>Wrap up</td>
-<td><code>/ctx-wrap-up</code></td>
-</tr>
-<tr>
-<td>Persist</td>
-<td>"<em>Add this as a learning</em>"</td>
-</tr>
-<tr>
-<td>Explore</td>
-<td>"<em>How does X work in this codebase?</em>"</td>
-</tr>
-<tr>
-<td>Sanity check</td>
-<td>"<em>Is this the right approach?</em>"</td>
-</tr>
-<tr>
-<td>Completeness</td>
-<td>"<em>What am I missing?</em>"</td>
-</tr>
-<tr>
-<td>One more thing</td>
-<td>"<em>What's the single smartest addition?</em>"</td>
-</tr>
-<tr>
-<td>Set tone</td>
-<td>"<em>Push back if my assumptions are wrong.</em>"</td>
-</tr>
-<tr>
-<td>Constrain scope</td>
-<td>"<em>Only change files in X. Nothing else.</em>"</td>
-</tr>
-<tr>
-<td>Course correct</td>
-<td>"<em>Stop. That's not what I meant.</em>"</td>
-</tr>
-<tr>
-<td>Check health</td>
-<td>"<em>Run <code>ctx drift</code></em>"</td>
-</tr>
-<tr>
-<td>Commit</td>
-<td><code>/ctx-commit</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
 <h2 id="explore-plan-implement">Explore → Plan → Implement<a class="headerlink" href="#explore-plan-implement" title="Permanent link">&para;</a></h2>
 <p>For non-trivial work, name the phase you want:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Explore src/auth and summarize the current flow.
@@ -5059,7 +5091,7 @@ updating weights. This is exactly what <code>LEARNINGS.md</code> and
   Why your AI forgets what you just told it, and how token budgets shape
   context strategy</li>
 <li><a href="../../blog/2026-02-25-the-homework-problem/">The Dog Ate My Homework</a>:
-  A case study in making agents follow instructions — attention timing,
+  A case study in making agents follow instructions: attention timing,
   delegation decay, and observable compliance as a design goal</li>
 </ul>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>

@@ -1403,6 +1403,8 @@
       
         
       
+        
+      
     
     
     
@@ -1495,6 +1497,36 @@
     
   
     Tracking Work Across Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-input" viewBox="0 0 24 24"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5M2 15h10M9 18l3-3-3-3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing Claude Code Plans
   
 
     
@@ -3105,6 +3137,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ctx-journal-from-raw-to-rich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx journal: From Raw to Rich
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3307,7 +3350,7 @@
   
 
 
-<h1 id="ctx-v020-the-archaeology-release">ctx v0.2.0: The Archaeology Release<a class="headerlink" href="#ctx-v020-the-archaeology-release" title="Permanent link">&para;</a></h1>
+<h1 id="ctx-v020-the-archaeology-release"><code>ctx</code> v0.2.0: The Archaeology Release<a class="headerlink" href="#ctx-v020-the-archaeology-release" title="Permanent link">&para;</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Update (2026-02-11)</p>
 <p>As of <code>v0.4.0</code>, <code>ctx</code> consolidated sessions into the journal mechanism.</p>
@@ -3372,48 +3415,67 @@ needing to support <strong>the human</strong> on the other side of the loop.</p>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># See the full transcript</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ctx<span class="w"> </span>recall<span class="w"> </span>show<span class="w"> </span>gleaming-wobbling-sutherland<span class="w"> </span>--full
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="sb">````</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>The<span class="w"> </span><span class="sb">`</span>recall<span class="sb">`</span><span class="w"> </span>system<span class="w"> </span>parses<span class="w"> </span>Claude<span class="w"> </span>Code<span class="s1">&#39;s `JSONL` transcripts and presents</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s1">them in a human-readable format:</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">| Session                       | Date       | Turns | Duration |</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s1">|-------------------------------|------------|-------|----------|</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">| tender-painting-sundae        | 2026-01-29 | 3     | &lt;1m      |</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">| crystalline-gliding-willow    | 2026-01-29 | 3     | &lt;1m      |</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s1">| declarative-hugging-snowglobe | 2026-01-31 | 2     | &lt;1m      |</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s1">Slugs are auto-generated from session IDs (*memorable names instead of</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s1">UUIDs*). The goal (*as the name implies*) is **recall**, not archival accuracy.</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s1">!!! note &quot;2,121 lines of new code&quot;</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="s1">    The `ctx recall` feature was the largest single addition:</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="s1">    parser library, CLI commands, test suite, and slash command.</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="s1">### `ctx journal`: From Raw to Rich</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="s1">Listing sessions isn&#39;</span>t<span class="w"> </span>enough.<span class="w"> </span>The<span class="w"> </span>transcripts<span class="w"> </span>are<span class="w"> </span>still<span class="w"> </span>unwieldy.
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>*<span class="w"> </span>**Recall**<span class="w"> </span>answers<span class="w"> </span>*what<span class="w"> </span>happened*.
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>*<span class="w"> </span>**Journal**<span class="w"> </span>answers<span class="w"> </span>*what<span class="w"> </span>mattered*.
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="sb">```</span>bash
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Export sessions to editable Markdown</span>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="c1"># Generate a static site from journal entries</span>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
-</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="c1"># Serve it locally</span>
-</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>ctx<span class="w"> </span>serve
+</span></code></pre></div>
+<p>The <code>recall</code> system parses Claude Code's <code>JSONL</code> transcripts and presents
+them in a human-readable format:</p>
+<table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Date</th>
+<th>Turns</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tender-painting-sundae</td>
+<td>2026-01-29</td>
+<td>3</td>
+<td>&lt;1m</td>
+</tr>
+<tr>
+<td>crystalline-gliding-willow</td>
+<td>2026-01-29</td>
+<td>3</td>
+<td>&lt;1m</td>
+</tr>
+<tr>
+<td>declarative-hugging-snowglobe</td>
+<td>2026-01-31</td>
+<td>2</td>
+<td>&lt;1m</td>
+</tr>
+</tbody>
+</table>
+<p>Slugs are auto-generated from session IDs (<em>memorable names instead of
+UUIDs</em>). The goal (<em>as the name implies</em>) is <strong>recall</strong>, not archival accuracy.</p>
+<div class="admonition note">
+<p class="admonition-title">2,121 lines of new code</p>
+<p>The <code>ctx recall</code> feature was the largest single addition:</p>
+<p>parser library, CLI commands, test suite, and slash command.</p>
+</div>
+<h3 id="ctx-journal-from-raw-to-rich"><code>ctx journal</code>: From Raw to Rich<a class="headerlink" href="#ctx-journal-from-raw-to-rich" title="Permanent link">&para;</a></h3>
+<p>Listing sessions isn't enough. The transcripts are still unwieldy.</p>
+<ul>
+<li><strong>Recall</strong> answers <em>what happened</em>.</li>
+<li><strong>Journal</strong> answers <em>what mattered</em>.</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Export sessions to editable Markdown</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ctx<span class="w"> </span>recall<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate a static site from journal entries</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ctx<span class="w"> </span>journal<span class="w"> </span>site
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Serve it locally</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ctx<span class="w"> </span>serve
 </span></code></pre></div>
 <p>The exported files land in <code>.context/journal/</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.context/journal/
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── 2026-01-28-proud-sleeping-cook-6e535360.md
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── 2026-01-29-tender-painting-sundae-b14ddaaa.md
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├── 2026-01-29-crystalline-gliding-willow-ff7fd67d.md
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>└── 2026-01-31-declarative-hugging-snowglobe-4549026d.md
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>.context/journal/
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── 2026-01-28-proud-sleeping-cook-6e535360.md
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├── 2026-01-29-tender-painting-sundae-b14ddaaa.md
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├── 2026-01-29-crystalline-gliding-willow-ff7fd67d.md
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└── 2026-01-31-declarative-hugging-snowglobe-4549026d.md
 </span></code></pre></div>
 <p>Each file is a structured Markdown document ready for <strong>enrichment</strong>.</p>
 <p>They are meant to be <strong>read</strong>, <strong>edited</strong>, and <strong>reasoned about</strong>; 
@@ -3450,7 +3512,7 @@ refactoring was drafted the same way.</p>
 <p>It is <strong>participating</strong> in its <strong>interpretation</strong>.</p>
 <h2 id="the-structure-decisions-as-first-class-citizens">The Structure: Decisions as First-Class Citizens<a class="headerlink" href="#the-structure-decisions-as-first-class-citizens" title="Permanent link">&para;</a></h2>
 <p><code>v0.1.0</code> let you add decisions with a simple command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span>
 </span></code></pre></div>
 <p>But sessions showed a pattern: decisions added this way were <strong>incomplete</strong>:</p>
 <ul>
@@ -3462,19 +3524,19 @@ refactoring was drafted the same way.</p>
 to ignore: </p>
 <p>Structure stopped being optional.</p>
 <p><code>v0.2.0</code> <strong>enforces</strong> structure:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for user data&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;ACID compliance, team familiarity, strong ecosystem&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--consequences<span class="w"> </span><span class="s2">&quot;Need to set up connection pooling, team training&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>decision<span class="w"> </span><span class="s2">&quot;Use PostgreSQL&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;Need a reliable database for user data&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--rationale<span class="w"> </span><span class="s2">&quot;ACID compliance, team familiarity, strong ecosystem&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--consequences<span class="w"> </span><span class="s2">&quot;Need to set up connection pooling, team training&quot;</span>
 </span></code></pre></div>
 <p>All three flags are <strong>required</strong>. No more placeholder text. </p>
 <p>Every decision is now a proper Architecture Decision Record (*ADR),
 not a note.</p>
 <p>The same enforcement applies to <strong>learnings</strong> too:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;CGO breaks ARM64 builds&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;go test failed with gcc errors on ARM64&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Always use CGO_ENABLED=0 for cross-platform builds&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Added to Makefile and CI config&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>add<span class="w"> </span>learning<span class="w"> </span><span class="s2">&quot;CGO breaks ARM64 builds&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--context<span class="w"> </span><span class="s2">&quot;go test failed with gcc errors on ARM64&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--lesson<span class="w"> </span><span class="s2">&quot;Always use CGO_ENABLED=0 for cross-platform builds&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--application<span class="w"> </span><span class="s2">&quot;Added to Makefile and CI config&quot;</span>
 </span></code></pre></div>
 <div class="admonition quote">
 <p class="admonition-title">Structured entries are prompts to the AI</p>
@@ -3493,7 +3555,7 @@ have more emphasis on the project. So it follows that they should be read first.
 <p>When the AI reads a file, it reads from the top (<em>and seldom from the bottom</em>). </p>
 <p>If the token budget is tight, old content gets <strong>truncated</strong>. 
 As in any good engineering practice, it's always <em>about the tradeoffs</em>.</p>
-<p>Reverse order ensures the most recent—and most relevant—context is
+<p>Reverse order ensures the most recent (<em>and most relevant</em>) context is
 always loaded first.</p>
 <h2 id="the-index-quick-reference-tables">The Index: Quick Reference Tables<a class="headerlink" href="#the-index-quick-reference-tables" title="Permanent link">&para;</a></h2>
 <p><code>DECISIONS.md</code> and <code>LEARNINGS.md</code> now include auto-generated indexes.</p>
@@ -3505,8 +3567,8 @@ always loaded first.</p>
 <div class="admonition tip">
 <p class="admonition-title">Reindex after manual edits</p>
 <p>If you edit entries by hand, rebuild the index with:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>See the <a href="../../recipes/knowledge-capture/#step-5-reindex-after-manual-edits">Knowledge Capture</a>
 recipe for details.</p>
@@ -3537,7 +3599,7 @@ a human can <strong>reason</strong> about.</p>
 <div class="admonition quote">
 <p class="admonition-title">The Prompt is a Guideline</p>
 <p>The code is more what you'd call '<em>guidelines</em>' than actual rules.</p>
-<p>—<strong>Hector Barbossa</strong></p>
+<p>-<strong>Hector Barbossa</strong></p>
 </div>
 <p>Rules written in Markdown are <strong>suggestions</strong>.</p>
 <p>Rules enforced by the CLI <strong>shape behavior</strong>; both for humans and AI.</p>
@@ -3598,9 +3660,9 @@ plugin. Installation is now simpler. </p>
 <p>See the <a href="../../home/getting-started/">Getting Started</a> guide for the 
 current instructions.</p>
 </div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>build
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>init
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span>build
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>make<span class="w"> </span>install
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ctx<span class="w"> </span>init
 </span></code></pre></div>
 <div class="admonition quote">
 <p class="admonition-title">The Archaeological Record</p>
