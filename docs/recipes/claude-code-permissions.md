@@ -125,7 +125,7 @@ project using ctx:
 }
 ```
 
-!!! note "This is a starting point, not a mandate"
+!!! note "This Is a Starting Point, Not a Mandate"
     Your project may need more or fewer entries. 
 
     The goal is intentional permissions: Every entry should be there because

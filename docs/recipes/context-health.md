@@ -13,7 +13,7 @@ icon: lucide/stethoscope
 
 ## The Problem
 
-Context files drift: you rename a package, delete a module, or finish a sprint,
+`ctx` files drift: you rename a package, delete a module, or finish a sprint,
 and suddenly `ARCHITECTURE.md` references paths that no longer exist,
 `TASKS.md` is 80 percent completed checkboxes, and `CONVENTIONS.md` describes
 patterns you stopped using two months ago.
@@ -210,9 +210,11 @@ ctx doctor          # everything in one pass
 ctx doctor --json   # machine-readable for scripting
 ```
 
-For agent-driven diagnosis that adds semantic analysis on top of the structural
-checks, use `/ctx-doctor`. See the [Troubleshooting](troubleshooting.md) recipe
-for the full workflow.
+!!! tip "Use `/ctx-doctor` Too" 
+    For agent-driven diagnosis that adds semantic analysis on top of the structural
+    checks, use `/ctx-doctor`. 
+
+    See the [Troubleshooting](troubleshooting.md) recipe for the full workflow.
 
 ---
 

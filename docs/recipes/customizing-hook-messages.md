@@ -7,11 +7,11 @@ icon: lucide/message-square-text
 
 ## The Problem
 
-ctx hooks speak ctx's language, not your project's. The QA gate says
+`ctx` hooks speak `ctx`'s language, not your project's. The QA gate says
 "lint the ENTIRE project" and "make build," but your Python project uses
 `pytest` and `ruff`. The post-commit nudge suggests running lints, but
 your project uses `npm test`. You could remove the hook entirely, but
-then you lose the *logic* (counting, state tracking, adaptive frequency)
+then you lose the *logic* (*counting, state tracking, adaptive frequency*)
 just to change the *words*.
 
 **How do you customize what hooks say without removing what they do?**

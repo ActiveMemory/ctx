@@ -3784,7 +3784,7 @@ for the expected hook.</p>
 <li><strong>Hook silenced</strong>: a custom message override may be an empty file:
   check <code>ctx system message list</code> for overrides</li>
 </ul>
-<h3 id="too-many-nudges">"Too many nudges"<a class="headerlink" href="#too-many-nudges" title="Permanent link">&para;</a></h3>
+<h3 id="too-many-nudges">"<em>Too many nudges</em>"<a class="headerlink" href="#too-many-nudges" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: The agent is overwhelmed with hook output. Context checkpoints,
 persistence reminders, and QA gates fire constantly.</p>
 <p><strong>Diagnosis</strong>:</p>
@@ -3805,8 +3805,12 @@ persistence reminders, and QA gates fire constantly.</p>
   consider wrapping up</li>
 <li><strong>Short throttle window</strong>: if you deleted marker files in
   <code>$XDG_RUNTIME_DIR/ctx/</code>, daily-throttled hooks will re-fire</li>
+<li><strong>Outdated Claude Code plugin</strong>: Update the plugin using Claude Code &rarr; 
+  <code>/plugin</code> &rarr; "Marketplace"</li>
+<li><strong><code>ctx</code> version mismatch</strong>: Build (<em>or download</em>) and install the 
+  latest <code>ctx</code> vesion.</li>
 </ul>
-<h3 id="context-seems-stale">"Context seems stale"<a class="headerlink" href="#context-seems-stale" title="Permanent link">&para;</a></h3>
+<h3 id="context-seems-stale">"<em>Context seems stale</em>"<a class="headerlink" href="#context-seems-stale" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: The agent references outdated information, paths that don't
 exist, or decisions that were reversed.</p>
 <p><strong>Diagnosis</strong>:</p>
@@ -3822,16 +3826,16 @@ exist, or decisions that were reversed.</p>
 <p><strong>Common causes</strong>:</p>
 <ul>
 <li><strong>Drift accumulated</strong>: stale path references in <code>ARCHITECTURE.md</code> or
-  <code>CONVENTIONS.md</code>. Fix with <code>ctx drift --fix</code> or ask the agent to clean up</li>
+  <code>CONVENTIONS.md</code>. Fix with <code>ctx drift --fix</code> or ask the agent to clean up.</li>
 <li><strong>Task backlog</strong>: too many completed tasks diluting active context. Archive
-  with <code>ctx tasks archive</code> or <code>ctx compact --archive</code></li>
+  with <code>ctx tasks archive</code> or <code>ctx compact --archive</code>.</li>
 <li><strong>Large context files</strong>: <code>LEARNINGS.md</code> with 40+ entries competes for
-  attention. Consolidate with <code>/ctx-consolidate</code></li>
+  attention. Consolidate with <code>/ctx-consolidate</code>.</li>
 <li><strong>Missing session ceremonies</strong>: if <code>/ctx-remember</code> and <code>/ctx-wrap-up</code> aren't
   being used, context doesn't get refreshed. See
-  <a href="../session-ceremonies/">Session Ceremonies</a></li>
+  <a href="../session-ceremonies/">Session Ceremonies</a>.</li>
 </ul>
-<h3 id="the-agent-isnt-following-instructions">"The agent isn't following instructions"<a class="headerlink" href="#the-agent-isnt-following-instructions" title="Permanent link">&para;</a></h3>
+<h3 id="the-agent-isnt-following-instructions">"<em>The agent isn't following instructions</em>"<a class="headerlink" href="#the-agent-isnt-following-instructions" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms</strong>: The agent ignores conventions, forgets decisions, or acts
 contrary to <code>CONSTITUTION.md</code> rules.</p>
 <p><strong>Diagnosis</strong>:</p>
@@ -3849,14 +3853,14 @@ contrary to <code>CONSTITUTION.md</code> rules.</p>
 <ul>
 <li><strong>Context too large</strong>: if total tokens exceed the model's effective attention,
   instructions get diluted. Check <code>ctx doctor</code> for the size check. Compact with
-  <code>ctx compact --archive</code></li>
+  <code>ctx compact --archive</code>.</li>
 <li><strong>Context not loading</strong>: if <code>context-load-gate</code> hasn't fired, the agent
-  may not have received context. Verify the hook is registered</li>
+  may not have received context. Verify the hook is registered.</li>
 <li><strong>Conflicting instructions</strong>: <code>CONVENTIONS.md</code> says one thing,
-  <code>AGENT_PLAYBOOK.md</code> says another. Run <code>/ctx-alignment-audit</code> to find gaps</li>
+  <code>AGENT_PLAYBOOK.md</code> says another. Run <code>/ctx-alignment-audit</code> to find gaps.</li>
 <li><strong>Agent drift</strong>: the agent's behavior diverges from instructions over long
   sessions. This is normal. Use <code>/ctx-reflect</code> to re-anchor, or start a new
-  session</li>
+  session.</li>
 </ul>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>

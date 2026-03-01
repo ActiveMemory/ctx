@@ -15,9 +15,9 @@ But none of this is visible to anyone outside your terminal.
 
 You want to turn this raw activity into:
 
-* a browsable journal site
-* blog posts
-* changelog posts
+* a browsable journal site,
+* blog posts,
+* changelog posts.
 
 ## TL;DR
 
