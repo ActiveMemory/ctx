@@ -3641,11 +3641,11 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>ctx hooks speak ctx's language, not your project's. The QA gate says
+<p><code>ctx</code> hooks speak <code>ctx</code>'s language, not your project's. The QA gate says
 "lint the ENTIRE project" and "make build," but your Python project uses
 <code>pytest</code> and <code>ruff</code>. The post-commit nudge suggests running lints, but
 your project uses <code>npm test</code>. You could remove the hook entirely, but
-then you lose the <em>logic</em> (counting, state tracking, adaptive frequency)
+then you lose the <em>logic</em> (<em>counting, state tracking, adaptive frequency</em>)
 just to change the <em>words</em>.</p>
 <p><strong>How do you customize what hooks say without removing what they do?</strong></p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>

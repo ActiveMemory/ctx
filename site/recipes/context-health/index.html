@@ -3751,7 +3751,7 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p>Context files drift: you rename a package, delete a module, or finish a sprint,
+<p><code>ctx</code> files drift: you rename a package, delete a module, or finish a sprint,
 and suddenly <code>ARCHITECTURE.md</code> references paths that no longer exist,
 <code>TASKS.md</code> is 80 percent completed checkboxes, and <code>CONVENTIONS.md</code> describes
 patterns you stopped using two months ago.</p>
@@ -3941,9 +3941,12 @@ one command that covers structural health, hooks, and state:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>doctor<span class="w">          </span><span class="c1"># everything in one pass</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w">   </span><span class="c1"># machine-readable for scripting</span>
 </span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Use <code>/ctx-doctor</code> Too</p>
 <p>For agent-driven diagnosis that adds semantic analysis on top of the structural
-checks, use <code>/ctx-doctor</code>. See the <a href="../troubleshooting/">Troubleshooting</a> recipe
-for the full workflow.</p>
+checks, use <code>/ctx-doctor</code>. </p>
+<p>See the <a href="../troubleshooting/">Troubleshooting</a> recipe for the full workflow.</p>
+</div>
 <hr />
 <h2 id="cli-reference">CLI Reference<a class="headerlink" href="#cli-reference" title="Permanent link">&para;</a></h2>
 <p>The conversational approach above uses CLI commands under the hood. When you

@@ -167,7 +167,7 @@ ctx system events --hook check-persistence
 * **Hook silenced**: a custom message override may be an empty file:
   check `ctx system message list` for overrides
 
-### "Too many nudges"
+### "*Too many nudges*"
 
 **Symptoms**: The agent is overwhelmed with hook output. Context checkpoints,
 persistence reminders, and QA gates fire constantly.
@@ -193,8 +193,12 @@ ctx system events --json | jq -r '.detail.hook // "unknown"' \
   consider wrapping up
 * **Short throttle window**: if you deleted marker files in
   `$XDG_RUNTIME_DIR/ctx/`, daily-throttled hooks will re-fire
+* **Outdated Claude Code plugin**: Update the plugin using Claude Code --> 
+  `/plugin` --> "Marketplace"
+* **`ctx` version mismatch**: Build (*or download*) and install the 
+  latest `ctx` vesion.
 
-### "Context seems stale"
+### "*Context seems stale*"
 
 **Symptoms**: The agent references outdated information, paths that don't
 exist, or decisions that were reversed.
@@ -215,16 +219,16 @@ ctx status --verbose
 **Common causes**:
 
 * **Drift accumulated**: stale path references in `ARCHITECTURE.md` or
-  `CONVENTIONS.md`. Fix with `ctx drift --fix` or ask the agent to clean up
+  `CONVENTIONS.md`. Fix with `ctx drift --fix` or ask the agent to clean up.
 * **Task backlog**: too many completed tasks diluting active context. Archive
-  with `ctx tasks archive` or `ctx compact --archive`
+  with `ctx tasks archive` or `ctx compact --archive`.
 * **Large context files**: `LEARNINGS.md` with 40+ entries competes for
-  attention. Consolidate with `/ctx-consolidate`
+  attention. Consolidate with `/ctx-consolidate`.
 * **Missing session ceremonies**: if `/ctx-remember` and `/ctx-wrap-up` aren't
   being used, context doesn't get refreshed. See
-  [Session Ceremonies](session-ceremonies.md)
+  [Session Ceremonies](session-ceremonies.md).
 
-### "The agent isn't following instructions"
+### "*The agent isn't following instructions*"
 
 **Symptoms**: The agent ignores conventions, forgets decisions, or acts
 contrary to `CONSTITUTION.md` rules.
@@ -247,14 +251,14 @@ ctx system events --hook context-load-gate
 
 * **Context too large**: if total tokens exceed the model's effective attention,
   instructions get diluted. Check `ctx doctor` for the size check. Compact with
-  `ctx compact --archive`
+  `ctx compact --archive`.
 * **Context not loading**: if `context-load-gate` hasn't fired, the agent
-  may not have received context. Verify the hook is registered
+  may not have received context. Verify the hook is registered.
 * **Conflicting instructions**: `CONVENTIONS.md` says one thing,
-  `AGENT_PLAYBOOK.md` says another. Run `/ctx-alignment-audit` to find gaps
+  `AGENT_PLAYBOOK.md` says another. Run `/ctx-alignment-audit` to find gaps.
 * **Agent drift**: the agent's behavior diverges from instructions over long
   sessions. This is normal. Use `/ctx-reflect` to re-anchor, or start a new
-  session
+  session.
 
 ---
 
