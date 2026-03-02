@@ -21,6 +21,19 @@ TASK STATUS LABELS:
 - [x] P-1.2: Write "Building Project Skills" recipe — shows /ctx-skill-creator
   end-to-end: identify repeating workflow, create skill, test, deploy. Add to
   recipe index and zensical.toml nav. #priority:medium #added:2026-03-01-125814 #done:2026-03-01
+
+### Phase GK: Global Encryption Key — Spec: `specs/global-encryption-key.md`
+
+- [x] GK.0: Read specs/global-encryption-key.md before starting any GK task #added:2026-03-02-114146 #done:2026-03-02
+- [x] GK.1: Simplify keypath.go: replace KeyDir/ProjectKeySlug/ProjectKeyPath with GlobalKeyPath returning ~/.ctx/.ctx.key; simplify ResolveKeyPath to two-tier (project-override → global); add tilde expansion for override path #added:2026-03-02-114146 #done:2026-03-02
+- [x] GK.2: Rewrite MigrateKeyFile: consolidate ~/.local/ctx/keys/*.key → ~/.ctx/.ctx.key, promote project-local, handle legacy names, warn on key mismatch #added:2026-03-02-114146 #done:2026-03-02
+- [x] GK.3: Rewrite keypath_test.go and migrate_test.go for new two-tier resolution and migration #added:2026-03-02-114146 #done:2026-03-02
+- [x] GK.4: Update callers: pad_test.go and initialize_test.go — switch from ProjectKeyPath() to GlobalKeyPath() #added:2026-03-02-114146 #done:2026-03-02
+- [x] GK.5: Update 12+ doc files referencing ~/.local/ctx/keys/ or slug-based key paths (see spec for full list) #added:2026-03-02-114146 #done:2026-03-02
+- [-] GK.6: Update ARCHITECTURE.md and DETAILED_DESIGN.md for new key resolution model — no references to old paths found in either file #added:2026-03-02-114146
+- [x] GK.7: Delete specs/user-level-dir-relocation.md (superseded by specs/global-encryption-key.md) #added:2026-03-02-114146 #done:2026-03-02
+- [x] GK.8: Record decision: global encryption key at ~/.ctx/.ctx.key replaces per-project slug keys #added:2026-03-02-114146 #done:2026-03-02
+
 - [ ] P-1.3: Audit all skills against Anthropic prompting best practices —
   use `/_ctx-skill-audit` to pass through all 30+ skills with lens
   from `ideas/claude-best-practices.md`. Key checks: (1) positive instructions
@@ -80,17 +93,11 @@ Spec: `specs/user-level-dir-relocation.md`, `specs/state-consolidation.md`,
 
 **User-level directory relocation:**
 
-- [ ] P-2.3: Relocate user-level dir from ~/.local/ctx to ~/.ctx — change
-  `KeyDir()` to return `~/.ctx/keys/`, add migration tier in
-  `MigrateKeyFile()` that checks `~/.local/ctx/keys/` and moves to
-  `~/.ctx/keys/` on first access. Update tests.
+- [-] P-2.3: Relocate user-level dir from ~/.local/ctx to ~/.ctx — superseded by Phase GK (global encryption key at ~/.ctx/.ctx.key)
   Spec: `specs/user-level-dir-relocation.md`
   #priority:high #added:2026-03-01
 
-- [ ] P-2.4: Update docs for ~/.ctx key path — all files referencing
-  `~/.local/ctx/keys/` need updating: scratchpad-sync.md, scratchpad.md,
-  upgrading.md, migration.md, first-session.md, pad help text, notify help
-  text, initialize godoc. Same scope as P-1.1 but for the new path.
+- [-] P-2.4: Update docs for ~/.ctx key path — superseded by GK.5 and GK.6
   Spec: `specs/user-level-dir-relocation.md`
   #priority:high #added:2026-03-01
 

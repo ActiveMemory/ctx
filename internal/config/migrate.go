@@ -7,68 +7,64 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-// MigrateKeyFile consolidates legacy key files and promotes project-local
-// keys to the user-level directory.
+// MigrateKeyFile warns about legacy key files that should be moved
+// to the global path (~/.ctx/.ctx.key).
 //
-// Migration tiers (executed in order, stopping at first match):
-//  1. Rename legacy names (.context.key, .scratchpad.key) → .ctx.key
-//  2. Copy project-local .ctx.key → ~/.local/ctx/keys/<slug>.key,
-//     then remove the project-local copy
+// If the global key exists, no action is taken. Otherwise, legacy
+// locations are checked and a warning is printed to stderr.
 //
 // Parameters:
 //   - contextDir: The .context/ directory path
-//   - projectRoot: Absolute path to the project root (for user-level path)
-func MigrateKeyFile(contextDir, projectRoot string) {
-	localKey := filepath.Join(contextDir, FileContextKey)
+func MigrateKeyFile(contextDir string) {
+	global := GlobalKeyPath()
+	if global == "" {
+		return
+	}
 
-	// Tier 1: rename legacy file names within project dir.
-	if _, err := os.Stat(localKey); err != nil {
-		for _, legacy := range []string{".context.key", ".scratchpad.key"} {
-			old := filepath.Join(contextDir, legacy)
-			if _, err := os.Stat(old); err == nil {
-				_ = os.Rename(old, localKey)
-				break
+	// Global key exists — nothing to do.
+	if _, err := os.Stat(global); err == nil {
+		return
+	}
+
+	// Check legacy locations and warn.
+	var found string
+
+	// Legacy project-local names.
+	for _, name := range []string{FileContextKey, ".context.key", ".scratchpad.key"} {
+		candidate := filepath.Join(contextDir, name)
+		if _, err := os.Stat(candidate); err == nil {
+			found = candidate
+			break
+		}
+	}
+
+	// Legacy user-level directory (~/.local/ctx/keys/).
+	if found == "" {
+		home, homeErr := os.UserHomeDir()
+		if homeErr == nil {
+			legacyKeyDir := filepath.Join(home, ".local", "ctx", "keys")
+			entries, readErr := os.ReadDir(legacyKeyDir)
+			if readErr == nil {
+				for _, entry := range entries {
+					if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".key") {
+						found = filepath.Join(legacyKeyDir, entry.Name())
+						break
+					}
+				}
 			}
 		}
 	}
 
-	// Tier 2: promote project-local key to user-level directory.
-	userLevel := ProjectKeyPath(projectRoot)
-	if userLevel == "" {
-		return // home dir unavailable
+	if found != "" {
+		fmt.Fprintf(os.Stderr, "ctx: legacy key found at %s\n"+
+			"  Copy it to the new location:\n"+
+			"    mkdir -p %s && cp %s %s && chmod 600 %s\n",
+			found, filepath.Dir(global), found, global, global)
 	}
-
-	// Already at user level — nothing to do.
-	if _, err := os.Stat(userLevel); err == nil {
-		// Clean up stale project-local copy if both exist.
-		if _, localErr := os.Stat(localKey); localErr == nil {
-			_ = os.Remove(localKey)
-		}
-		return
-	}
-
-	// No project-local key to promote.
-	if _, err := os.Stat(localKey); err != nil {
-		return
-	}
-
-	// Copy to user-level, then remove project-local.
-	data, readErr := os.ReadFile(localKey) //nolint:gosec // project-local path
-	if readErr != nil {
-		return
-	}
-
-	if mkdirErr := os.MkdirAll(filepath.Dir(userLevel), PermKeyDir); mkdirErr != nil {
-		return
-	}
-
-	if writeErr := os.WriteFile(userLevel, data, PermSecret); writeErr != nil {
-		return
-	}
-
-	_ = os.Remove(localKey)
 }

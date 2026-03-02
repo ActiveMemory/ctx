@@ -115,9 +115,8 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bo
 		cmd.Printf("  %s Entry templates: %v\n", color.YellowString("⚠"), err)
 	}
 
-	// Migrate legacy key files and promote to user-level path.
-	cwd, _ := os.Getwd()
-	config.MigrateKeyFile(contextDir, cwd)
+	// Migrate legacy key files and promote to global path.
+	config.MigrateKeyFile(contextDir)
 
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
@@ -194,7 +193,7 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bo
 // initScratchpad sets up the scratchpad key or plaintext file.
 //
 // When encryption is enabled (default):
-//   - Generates a 256-bit key at ~/.local/ctx/keys/ if not present
+//   - Generates a 256-bit key at ~/.ctx/ if not present
 //   - Adds legacy key path to .gitignore for migration safety
 //   - Warns if .enc exists but no key
 //

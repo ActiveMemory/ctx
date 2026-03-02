@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 		Long: `Manage an encrypted scratchpad stored in .context/.
 
 Entries are short one-liners encrypted with AES-256-GCM. The key is
-stored at ~/.local/ctx/keys/<slug>.key (user-level). The encrypted file
+stored at ~/.ctx/.ctx.key (global, user-level). The encrypted file
 (.context/scratchpad.enc) is committed to git.
 
 File blobs can be stored as entries using "add --file". Blob entries use

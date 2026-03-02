@@ -236,7 +236,7 @@ personal or sensitive and should **not** be committed.
 .context/journal-site/
 .context/journal-obsidian/
 
-# Legacy encryption key path (auto-migrated to ~/.local/ctx/keys/)
+# Legacy encryption key path (copy to ~/.ctx/.ctx.key if needed)
 .context/.ctx.key
 
 # Runtime state and logs (ephemeral, machine-specific):

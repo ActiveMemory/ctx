@@ -3,8 +3,10 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-02 | Replace auto-migration with stderr warning for legacy keys |
+| 2026-03-02 | Consolidate all session state to .context/state/ |
 | 2026-03-01 | PersistentPreRunE init guard with three-level exemption |
-| 2026-03-01 | User-level encryption key with slug--sha filename format |
+| 2026-03-01 | Global encryption key at ~/.ctx/.ctx.key |
 | 2026-03-01 | Heartbeat token telemetry: conditional fields, not always-present |
 | 2026-03-01 | Hook log rotation: size-based with one previous generation, matching eventlog pattern |
 | 2026-03-01 | Promote 6 private skills to bundled plugin skills; keep 7 project-local |
@@ -18,6 +20,34 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-02-123611] Replace auto-migration with stderr warning for legacy keys
+
+**Status**: Accepted
+
+**Context**: Auto-migration code existed for promoting keys from ~/.local/ctx/keys/ and .context/.ctx.key to ~/.ctx/.ctx.key. Userbase is small and this is alpha — no need to bloat the codebase.
+
+**Decision**: Replace auto-migration with stderr warning for legacy keys
+
+**Rationale**: Warn-only is simpler, avoids silent file operations, and puts the user in control. Migration instructions in docs are sufficient for the small userbase.
+
+**Consequences**: MigrateKeyFile() now only warns on stderr. promoteToGlobal() helper deleted. Tests verify keys are not moved.
+
+---
+
+## [2026-03-02-005213] Consolidate all session state to .context/state/
+
+**Status**: Accepted
+
+**Context**: Session-scoped state (cooldown tombstones, pause markers, daily throttle markers) was split between /tmp (via secureTempDir()) and .context/state/ for project-scoped state
+
+**Decision**: Consolidate all session state to .context/state/
+
+**Rationale**: Single location simplifies mental model, eliminates duplicated secureTempDir() in two packages, removes the cleanup-tmp SessionEnd hook entirely. .context/state/ is already gitignored and project-scoped.
+
+**Consequences**: All 18 callers updated. Tests switch from XDG_RUNTIME_DIR mocking to CTX_DIR + rc.Reset(). Hook lifecycle drops from 4 events to 3 (SessionEnd removed).
+
+---
 
 ## [2026-03-01-222733] PersistentPreRunE init guard with three-level exemption
 
@@ -33,17 +63,17 @@
 
 ---
 
-## [2026-03-01-161457] User-level encryption key with slug--sha filename format
+## [2026-03-01-161457] Global encryption key at ~/.ctx/.ctx.key
 
-**Status**: Accepted
+**Status**: Superseded by [2026-03-02] global key simplification
 
-**Context**: Key stored next to ciphertext (.context/.ctx.key) was a security antipattern and broke in worktrees
+**Context**: Key stored next to ciphertext (.context/.ctx.key) was a security antipattern and broke in worktrees. The slug-based per-project key system at ~/.local/ctx/keys/ was over-engineered for the common case (one user, one machine, one key).
 
-**Decision**: User-level encryption key with slug--sha filename format
+**Decision**: Single global key at ~/.ctx/.ctx.key. Project-local override via .ctxrc key_path or .context/.ctx.key.
 
-**Rationale**: ~/.local/ctx/keys/<slug>--<sha8>.key decouples key from project, uses human-readable slug plus 8-char SHA256 for collision resistance, aligns with Claude Code path-slug convention. .ctxrc key_path override available for explicit control
+**Rationale**: One key per machine covers 99% of users. Per-project slug filenames and three-tier resolution added complexity without clear benefit. ~/.ctx/ is the natural home (matches ~/.claude/ convention). Tilde expansion in .ctxrc key_path fixes a standalone bug.
 
-**Consequences**: Auto-migration promotes project-local keys on first access (copy-then-delete). New keys always go to user-level. Worktree key-absent problem naturally solved. 12+ doc files still reference old path
+**Consequences**: Auto-migration promotes legacy keys (project-local, ~/.local/ctx/keys/) to ~/.ctx/.ctx.key. Deleted KeyDir(), ProjectKeySlug(), ProjectKeyPath(). ResolveKeyPath simplified to two params. 15+ doc files updated.
 
 ---
 

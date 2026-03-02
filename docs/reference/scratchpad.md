@@ -25,13 +25,12 @@ Scratchpad entries are encrypted with `AES-256-GCM` before touching the disk.
 
 | Component      | Path                             | Git status                      |
 |----------------|----------------------------------|---------------------------------|
-| Encryption key | `~/.local/ctx/keys/<slug>.key`   | User-level, `0600` permissions  |
+| Encryption key | `~/.ctx/.ctx.key`                | User-level, `0600` permissions  |
 | Encrypted data | `.context/scratchpad.enc`        | Committed                       |
 
 The key is generated automatically during `ctx init` (256-bit via
-`crypto/rand`) and stored at `~/.local/ctx/keys/`. The slug is derived
-from the project's absolute path. Legacy project-local keys
-(`.context/.ctx.key`) are auto-migrated on first access.
+`crypto/rand`) and stored at `~/.ctx/.ctx.key`. One key per machine,
+shared across all projects.
 
 The ciphertext format is `[12-byte nonce][ciphertext+tag]`.
 No external dependencies: Go stdlib only.
@@ -201,14 +200,14 @@ English; the agent picks the right command.
 
 ## Worktrees
 
-The encryption key lives at `~/.local/ctx/keys/` (outside the project
+The encryption key lives at `~/.ctx/.ctx.key` (outside the project
 directory). Because all worktrees on the same machine share this path,
 `ctx pad` works in worktrees automatically — no special setup needed.
 
 ## Key Distribution
 
-The encryption key (`~/.local/ctx/keys/<slug>.key`) stays on the
-machine where it was generated. `ctx` **never** transmits it.
+The encryption key (`~/.ctx/.ctx.key`) stays on the machine where it
+was generated. `ctx` **never** transmits it.
 
 To share the scratchpad across machines:
 

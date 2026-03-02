@@ -54,8 +54,7 @@ type Payload struct {
 // (silent noop — webhook not configured).
 func LoadWebhook() (string, error) {
 	contextDir := rc.ContextDir()
-	cwd, _ := os.Getwd()
-	config.MigrateKeyFile(contextDir, cwd)
+	config.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
 	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
 
@@ -88,8 +87,7 @@ func LoadWebhook() (string, error) {
 // If the scratchpad key does not exist, it is generated and saved first.
 func SaveWebhook(url string) error {
 	contextDir := rc.ContextDir()
-	cwd, _ := os.Getwd()
-	config.MigrateKeyFile(contextDir, cwd)
+	config.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
 	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
 
