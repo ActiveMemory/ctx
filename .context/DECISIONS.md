@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-01 | PersistentPreRunE init guard with three-level exemption |
 | 2026-03-01 | User-level encryption key with slug--sha filename format |
 | 2026-03-01 | Heartbeat token telemetry: conditional fields, not always-present |
 | 2026-03-01 | Hook log rotation: size-based with one previous generation, matching eventlog pattern |
@@ -17,6 +18,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-01-222733] PersistentPreRunE init guard with three-level exemption
+
+**Status**: Accepted
+
+**Context**: ctx commands handled missing .context/ inconsistently — some caught errors, some got confusing file-not-found messages, some produced empty output
+
+**Decision**: PersistentPreRunE init guard with three-level exemption
+
+**Rationale**: Single PersistentPreRunE on root command gives one clear error. Three-level exemption (hidden commands, annotated commands, grouping commands) covers all edge cases without per-command boilerplate
+
+**Consequences**: Boundary violation now returns an error instead of os.Exit(1), making it testable. The subprocess-based boundary test was simplified to a direct error assertion
+
+---
 
 ## [2026-03-01-161457] User-level encryption key with slug--sha filename format
 

@@ -11,6 +11,9 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestParseMajorMinor(t *testing.T) {
@@ -44,9 +47,6 @@ func TestParseMajorMinor(t *testing.T) {
 }
 
 func TestCheckVersion_NotInitialized(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	// Change to empty temp dir (no .context/)
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(t.TempDir())
@@ -64,9 +64,6 @@ func TestCheckVersion_NotInitialized(t *testing.T) {
 }
 
 func TestCheckVersion_DailyThrottle(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -74,8 +71,7 @@ func TestCheckVersion_DailyThrottle(t *testing.T) {
 	setupContextDir(t)
 
 	// Create the throttle marker (touched today)
-	_ = os.MkdirAll(filepath.Join(tmpDir, "ctx"), 0o700)
-	touchFile(filepath.Join(tmpDir, "ctx", "version-checked"))
+	touchFile(filepath.Join(rc.ContextDir(), config.DirState, "version-checked"))
 
 	cmd := newTestCmd()
 	if err := runCheckVersion(cmd, createTempStdin(t, `{}`)); err != nil {
@@ -91,9 +87,6 @@ func TestCheckVersion_DailyThrottle(t *testing.T) {
 func TestCheckVersion_SilentOnMatch(t *testing.T) {
 	// When binary == plugin version, no output.
 	// In test context, bootstrap.version is "dev" which skips the check.
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)

@@ -8,6 +8,8 @@ package initialize
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx init" command for initializing a .context/ directory.
@@ -38,8 +40,9 @@ func Cmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use:   "init",
-		Short: "Initialize a new .context/ directory with template files",
+		Use:         "init",
+		Short:       "Initialize a new .context/ directory with template files",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
 		Long: `Initialize a new .context/ directory with template files for
 maintaining persistent context for AI coding assistants.
 

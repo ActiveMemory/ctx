@@ -1504,6 +1504,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#session-retention-and-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Retention and Cleanup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Session Retention and Cleanup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-cleanupperioddays-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cleanupPeriodDays Setting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-journal-export-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Journal Export Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-archival-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Archival Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2303,6 +2364,8 @@
       
         
       
+        
+      
     
     
     
@@ -2350,6 +2413,36 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building-skills/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-hammer" viewBox="0 0 24 24"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9M18 15l4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Building Project Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -3521,6 +3614,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#session-retention-and-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Retention and Cleanup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Session Retention and Cleanup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-cleanupperioddays-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cleanupPeriodDays Setting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-journal-export-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Journal Export Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-archival-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Archival Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3974,6 +4128,62 @@ without you manually switching tools.</p>
 <p>If your project includes <code>Makefile.ctx</code> (deployed by <code>ctx init</code>), use
 <code>make journal</code> to combine export and rebuild stages. Then enrich inside
 Claude Code, then <code>make journal</code> again to pick up enrichments.</p>
+<h2 id="session-retention-and-cleanup">Session Retention and Cleanup<a class="headerlink" href="#session-retention-and-cleanup" title="Permanent link">&para;</a></h2>
+<p>Claude Code does not keep JSONL transcripts forever. Understanding its
+cleanup behavior helps you avoid losing session history.</p>
+<h3 id="default-behavior">Default Behavior<a class="headerlink" href="#default-behavior" title="Permanent link">&para;</a></h3>
+<p>Claude Code retains session transcripts for approximately <strong>30 days</strong>.
+After that, JSONL files are automatically deleted during cleanup. Once
+deleted, <code>ctx recall</code> can no longer see those sessions — the data is
+gone.</p>
+<h3 id="the-cleanupperioddays-setting">The <code>cleanupPeriodDays</code> Setting<a class="headerlink" href="#the-cleanupperioddays-setting" title="Permanent link">&para;</a></h3>
+<p>Claude Code exposes a <code>cleanupPeriodDays</code> setting in its configuration
+(<code>~/.claude/settings.json</code>) that controls retention:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>30</code> (default)</td>
+<td>Transcripts older than 30 days are deleted</td>
+</tr>
+<tr>
+<td><code>60</code>, <code>90</code>, etc.</td>
+<td>Extends the retention window</td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td><strong>Disables writing new transcripts entirely</strong> — not "keep forever"</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Setting <code>cleanupPeriodDays</code> to 0</p>
+<p>Setting this to <code>0</code> does <strong>not</strong> mean "never delete." It disables
+transcript creation altogether. No new JSONL files are written, which
+means <code>ctx recall</code> sees nothing new. This is rarely what you want.</p>
+</div>
+<h3 id="why-journal-export-matters">Why Journal Export Matters<a class="headerlink" href="#why-journal-export-matters" title="Permanent link">&para;</a></h3>
+<p>The journal export pipeline (<em>Steps 1–4 above</em>) is your <strong>archival
+mechanism</strong>. Exported Markdown files in <code>.context/journal/</code> persist
+independently of Claude Code's cleanup cycle. Even after the source
+JSONL files are deleted, your journal entries remain.</p>
+<p><strong>Recommendation</strong>: export regularly — weekly, or after any session worth
+revisiting. A quick <code>ctx recall export --all</code> takes seconds and ensures
+nothing falls through the 30-day window.</p>
+<h3 id="quick-archival-checklist">Quick Archival Checklist<a class="headerlink" href="#quick-archival-checklist" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Run <code>ctx recall export --all</code> at least weekly</li>
+<li>Enrich high-value sessions with <code>/ctx-journal-enrich</code> before the
+   details fade from your own memory</li>
+<li>Lock enriched entries (<code>ctx recall lock &lt;pattern&gt;</code>) to protect them
+   from accidental regeneration</li>
+<li>Rebuild the journal site periodically to keep it current</li>
+</ol>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Start with <code>/ctx-recall</code> inside your AI assistant. If you want to quickly check

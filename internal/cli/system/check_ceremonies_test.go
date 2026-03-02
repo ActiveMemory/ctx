@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestCheckCeremonies_NotInitialized(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -35,9 +35,6 @@ func TestCheckCeremonies_NotInitialized(t *testing.T) {
 }
 
 func TestCheckCeremonies_DailyThrottle(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -49,8 +46,7 @@ func TestCheckCeremonies_DailyThrottle(t *testing.T) {
 	})
 
 	// Create the throttle marker (touched today)
-	_ = os.MkdirAll(filepath.Join(tmpDir, "ctx"), 0o700)
-	touchFile(filepath.Join(tmpDir, "ctx", "ceremony-reminded"))
+	touchFile(filepath.Join(rc.ContextDir(), config.DirState, "ceremony-reminded"))
 
 	cmd := newTestCmd()
 	if err := runCheckCeremonies(cmd, createTempStdin(t, `{}`)); err != nil {
@@ -64,9 +60,6 @@ func TestCheckCeremonies_DailyThrottle(t *testing.T) {
 }
 
 func TestCheckCeremonies_NoJournalDir(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -87,9 +80,6 @@ func TestCheckCeremonies_NoJournalDir(t *testing.T) {
 }
 
 func TestCheckCeremonies_BothUsed(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -112,9 +102,6 @@ func TestCheckCeremonies_BothUsed(t *testing.T) {
 }
 
 func TestCheckCeremonies_BothMissing(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -148,9 +135,6 @@ func TestCheckCeremonies_BothMissing(t *testing.T) {
 }
 
 func TestCheckCeremonies_OnlyRememberMissing(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -176,9 +160,6 @@ func TestCheckCeremonies_OnlyRememberMissing(t *testing.T) {
 }
 
 func TestCheckCeremonies_OnlyWrapUpMissing(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -204,9 +185,6 @@ func TestCheckCeremonies_OnlyWrapUpMissing(t *testing.T) {
 }
 
 func TestCheckCeremonies_CeremoniesAcrossFiles(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)

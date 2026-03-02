@@ -56,7 +56,7 @@ func runCheckCeremonies(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	remindedFile := filepath.Join(tmpDir, "ceremony-reminded")
 
 	if isDailyThrottled(remindedFile) {

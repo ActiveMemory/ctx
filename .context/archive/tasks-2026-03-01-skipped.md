@@ -15,3 +15,10 @@
   explicitly. See LEARNINGS.md. #added:2026-02-22-212143
 - [-] Suppress context checkpoint nudges after wrap-up — replaced by Phase 0.9 
   breakdown below #added:2026-02-24-205402
+- [-] Consider ignoring unknown flags gracefully in CLI commands
+  (especially `system bootstrap`) instead of hard-failing. Skipped: added 
+  `-q`/`--quiet` to bootstrap instead — strict flag parsing catches real 
+  errors; lenient parsing would mask them and produce wrong-format output 
+  silently. #priority:medium #added:2026-02-28 #done:2026-03-01
+- [-] Implement RSS/Atom feed generation for ctx.ist blog — 
+  replaced by Phase 0.8 breakdown below #added:2026-02-24-025015

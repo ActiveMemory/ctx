@@ -280,7 +280,7 @@ the target if it was removed accidentally.
 ### 15. Skill Metadata Drift
 
 Skill directories under `.claude/skills/` and skill entries in
-`internal/config/file.go` (`DefaultClaudePermissions`) must stay aligned.
+`internal/assets/permissions/allow.txt` must stay aligned.
 Skills get renamed (e.g., `ctx-borrow` → `absorb`) but stale references
 linger in permission lists, docs, or other skills.
 
@@ -291,8 +291,8 @@ ls .claude/skills/
 # List ctx-plugin skill directories
 ls .claude/ctx-skills/ 2>/dev/null
 
-# Extract Skill() entries from DefaultClaudePermissions
-rg 'Skill\(' internal/config/file.go -o | sort -u
+# Extract Skill() entries from allow.txt
+grep '^Skill(' internal/assets/permissions/allow.txt | sort -u
 
 # Find cross-references to skill names in other skills
 rg '/\w[-\w]+' .claude/skills/ --type md -o | sort -u
@@ -302,6 +302,7 @@ Check:
 - Every skill directory has a matching `Skill()` permission entry (or is
   intentionally unpermissioned)
 - No `Skill()` entry references a skill that no longer exists
+- `TestDefaultPermissions` in `embed_test.go` catches drift automatically
 - Cross-references between skills use current names
 
 **Fix**: Update stale names in permission lists and cross-references.

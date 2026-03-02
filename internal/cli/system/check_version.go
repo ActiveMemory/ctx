@@ -62,7 +62,7 @@ func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	markerFile := filepath.Join(tmpDir, "version-checked")
 
 	if isDailyThrottled(markerFile) {

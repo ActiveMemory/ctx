@@ -7,7 +7,7 @@ icon: lucide/shield-check
 
 ## The Problem
 
-`ctx` runs 15 system hooks behind the scenes: nudging your agent to persist
+`ctx` runs 14 system hooks behind the scenes: nudging your agent to persist
 context, warning about resource pressure, gating commits on QA. But these
 hooks are **invisible by design**. You never see them fire. You never know
 if they stopped working.
@@ -49,7 +49,6 @@ automatically at specific events during your AI session:
 | `UserPromptSubmit` | Before the agent sees your prompt | 9 check hooks + heartbeat           |
 | `PreToolUse`       | Before the agent uses a tool      | `block-non-path-ctx`, `qa-reminder` |
 | `PostToolUse`      | After a tool call succeeds        | `post-commit`                       |
-| `SessionEnd`       | Session terminates                | `cleanup-tmp`                       |
 
 You never run these manually. Your AI tool runs them for you: That's the
 point.
@@ -312,20 +311,6 @@ mechanical git operations into context-capturing opportunities.
 
 ---
 
-### Session Lifecycle (SessionEnd)
-
-#### `cleanup-tmp`: Temp File Cleanup
-
-**What**: Removes files older than 15 days from the `ctx` temp directory
-(`$XDG_RUNTIME_DIR/ctx/` or `/tmp/ctx-<uid>/`).
-
-**Why**: State files from throttling (*daily markers, prompt counters*)
-accumulate. Silent cleanup prevents temp directory bloat.
-
-**Output**: None (*silent side-effect*).
-
----
-
 ## Auditing Hooks via the Local Event Log
 
 If you don't need an external audit trail, enable the **local event log** for
@@ -395,7 +380,6 @@ includes:
 | `block-non-path-ctx`  | `relay` only                |
 | `post-commit`         | `relay` only                |
 | `qa-reminder`         | `relay` only                |
-| `cleanup-tmp`         | *(silent: no notification)* |
 
 ### Step 3: Cross-Reference
 
@@ -543,10 +527,10 @@ ctx --version
   or use adaptive frequency. Don't expect a notification every prompt:
   Silence usually means the throttle is working, not that the hook is
   broken.
-* **Daily markers live in temp**: Throttle files are stored in
-  `$XDG_RUNTIME_DIR/ctx/` and cleaned up by `cleanup-tmp` after 15
-  days. If you need to force a hook to re-fire during testing, delete
-  the corresponding marker file.
+* **Daily markers live in `.context/state/`**: Throttle files are stored
+  in `.context/state/` alongside other project-scoped state. If you need
+  to force a hook to re-fire during testing, delete the corresponding
+  marker file.
 * **The QA reminder is intentionally noisy**: Unlike other hooks,
   `qa-reminder` fires on every `Edit` call with no throttle. This is
   deliberate: The commit quality degrades when the reminder fades from

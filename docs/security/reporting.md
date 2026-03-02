@@ -140,17 +140,12 @@ over time. Periodically review for:
 * **Broad wildcards**: overly permissive patterns that pre-approve
   more than intended
 
-## Temp File Cleanup
+## State File Management
 
-Hook state files accumulate in the user-specific temp directory
-(`$XDG_RUNTIME_DIR/ctx-<uid>/` or `/tmp/ctx-<uid>/`). A `SessionEnd`
-hook automatically removes files older than 15 days. For manual cleanup
-or cron scheduling, use:
-
-```bash
-.context/tools/cleanup-ctx-tmp.sh        # default: 15-day threshold
-.context/tools/cleanup-ctx-tmp.sh 7      # custom: 7-day threshold
-```
+Hook state files (throttle markers, prompt counters, pause markers) are
+stored in `.context/state/`, which is project-scoped and gitignored.
+State files are automatically managed by the hooks that create them;
+no manual cleanup is needed.
 
 ## Best Practices
 

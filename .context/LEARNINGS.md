@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-01 | Gosec G306 flags test file WriteFile with 0644 permissions |
+| 2026-03-01 | Converting PersistentPreRun to PersistentPreRunE changes exit behavior |
+| 2026-03-01 | User-level key path change ripples across 13+ doc files and 2 skills |
 | 2026-03-01 | Test HOME isolation is required for user-level path functions |
 | 2026-03-01 | Skill enhancement is a documentation-heavy operation across 10+ files |
 | 2026-03-01 | Task descriptions can be stale in reverse — implementation done but task not marked complete |
@@ -37,6 +40,36 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-01-222739] Gosec G306 flags test file WriteFile with 0644 permissions
+
+**Context**: New tests used os.WriteFile(..., 0o644) for temp context files; lint flagged all three occurrences
+
+**Lesson**: Gosec enforces 0600 max on WriteFile even in test code. Use 0o600 for test temp files
+
+**Application**: Default to 0o600 for os.WriteFile in tests; only use wider permissions when testing permission behavior specifically
+
+---
+
+## [2026-03-01-222738] Converting PersistentPreRun to PersistentPreRunE changes exit behavior
+
+**Context**: Boundary violation test used subprocess pattern because original code called os.Exit(1)
+
+**Lesson**: With PersistentPreRunE, errors propagate through Cobra Execute() return — no os.Exit call. Subprocess-based tests that expected exit codes need converting to direct error assertions
+
+**Application**: When converting PreRun to PreRunE in Cobra commands, audit all tests that relied on os.Exit behavior
+
+---
+
+## [2026-03-01-194147] User-level key path change ripples across 13+ doc files and 2 skills
+
+**Context**: Updating docs for the .context/.ctx.key to ~/.local/ctx/keys/ migration
+
+**Lesson**: Key path changes have a long documentation tail — recipes, references, getting-started, operations, CLI docs, and skills all carry path references. The worktree behavior flip (limitation to works automatically) was the highest-value change per line edited.
+
+**Application**: When moving a file path that appears in user-facing docs, grep broadly (not just code) and budget for 10+ file touches
 
 ---
 

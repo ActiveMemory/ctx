@@ -2119,34 +2119,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#session-lifecycle-sessionend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Session Lifecycle (SessionEnd)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Session Lifecycle (SessionEnd)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cleanup-tmp-temp-file-cleanup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        cleanup-tmp: Temp File Cleanup
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2603,6 +2575,8 @@
       
         
       
+        
+      
     
     
     
@@ -2650,6 +2624,36 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building-skills/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-hammer" viewBox="0 0 24 24"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9M18 15l4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Building Project Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -3926,34 +3930,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#session-lifecycle-sessionend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Session Lifecycle (SessionEnd)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Session Lifecycle (SessionEnd)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cleanup-tmp-temp-file-cleanup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        cleanup-tmp: Temp File Cleanup
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -4249,7 +4225,7 @@
 
 <p><img alt="ctx" src="../../images/ctx-banner.png" /></p>
 <h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
-<p><code>ctx</code> runs 15 system hooks behind the scenes: nudging your agent to persist
+<p><code>ctx</code> runs 14 system hooks behind the scenes: nudging your agent to persist
 context, warning about resource pressure, gating commits on QA. But these
 hooks are <strong>invisible by design</strong>. You never see them fire. You never know
 if they stopped working.</p>
@@ -4331,11 +4307,6 @@ automatically at specific events during your AI session:</p>
 <td><code>PostToolUse</code></td>
 <td>After a tool call succeeds</td>
 <td><code>post-commit</code></td>
-</tr>
-<tr>
-<td><code>SessionEnd</code></td>
-<td>Session terminates</td>
-<td><code>cleanup-tmp</code></td>
 </tr>
 </tbody>
 </table>
@@ -4513,14 +4484,6 @@ lints/tests before pushing.</p>
 <p><strong>Why</strong>: Commits are natural reflection points. The nudge converts
 mechanical git operations into context-capturing opportunities.</p>
 <hr />
-<h3 id="session-lifecycle-sessionend">Session Lifecycle (SessionEnd)<a class="headerlink" href="#session-lifecycle-sessionend" title="Permanent link">&para;</a></h3>
-<h4 id="cleanup-tmp-temp-file-cleanup"><code>cleanup-tmp</code>: Temp File Cleanup<a class="headerlink" href="#cleanup-tmp-temp-file-cleanup" title="Permanent link">&para;</a></h4>
-<p><strong>What</strong>: Removes files older than 15 days from the <code>ctx</code> temp directory
-(<code>$XDG_RUNTIME_DIR/ctx/</code> or <code>/tmp/ctx-&lt;uid&gt;/</code>).</p>
-<p><strong>Why</strong>: State files from throttling (<em>daily markers, prompt counters</em>)
-accumulate. Silent cleanup prevents temp directory bloat.</p>
-<p><strong>Output</strong>: None (<em>silent side-effect</em>).</p>
-<hr />
 <h2 id="auditing-hooks-via-the-local-event-log">Auditing Hooks via the Local Event Log<a class="headerlink" href="#auditing-hooks-via-the-local-event-log" title="Permanent link">&para;</a></h2>
 <p>If you don't need an external audit trail, enable the <strong>local event log</strong> for
 a self-contained record of hook activity:</p>
@@ -4615,10 +4578,6 @@ includes:</p>
 <tr>
 <td><code>qa-reminder</code></td>
 <td><code>relay</code> only</td>
-</tr>
-<tr>
-<td><code>cleanup-tmp</code></td>
-<td><em>(silent: no notification)</em></td>
 </tr>
 </tbody>
 </table>
@@ -4732,10 +4691,10 @@ problem. If neither sessions nor hooks are happening, that's a vacation.</p>
   or use adaptive frequency. Don't expect a notification every prompt:
   Silence usually means the throttle is working, not that the hook is
   broken.</li>
-<li><strong>Daily markers live in temp</strong>: Throttle files are stored in
-  <code>$XDG_RUNTIME_DIR/ctx/</code> and cleaned up by <code>cleanup-tmp</code> after 15
-  days. If you need to force a hook to re-fire during testing, delete
-  the corresponding marker file.</li>
+<li><strong>Daily markers live in <code>.context/state/</code></strong>: Throttle files are stored
+  in <code>.context/state/</code> alongside other project-scoped state. If you need
+  to force a hook to re-fire during testing, delete the corresponding
+  marker file.</li>
 <li><strong>The QA reminder is intentionally noisy</strong>: Unlike other hooks,
   <code>qa-reminder</code> fires on every <code>Edit</code> call with no throttle. This is
   deliberate: The commit quality degrades when the reminder fades from

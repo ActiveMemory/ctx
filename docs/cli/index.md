@@ -29,6 +29,18 @@ All commands support these flags:
 
 > The `NO_COLOR=1` environment variable also disables colored output.
 
+**Initialization required.** Most commands require a `.context/` directory
+created by `ctx init`. Running a command without one produces:
+
+```
+ctx: not initialized — run "ctx init" first
+```
+
+Commands that work before initialization: `ctx init`, `ctx hook`,
+`ctx doctor`, and grouping commands that only show help (e.g. `ctx`
+with no subcommand, `ctx system`). Hidden hook commands have their
+own guards and no-op gracefully.
+
 <!-- drift-check: ctx --help | grep -c '  [a-z]' -->
 ## Commands
 
@@ -108,7 +120,7 @@ entry_count_learnings: 30    # Drift warning threshold (0 = disable)
 entry_count_decisions: 20    # Drift warning threshold (0 = disable)
 convention_line_count: 200   # Line count warning for CONVENTIONS.md (0 = disable)
 injection_token_warn: 15000  # Oversize injection warning (0 = disable)
-context_window: 200000       # Context window size in tokens
+context_window: 200000       # Auto-detected for Claude Code; override for other tools
 key_rotation_days: 90        # Days before key rotation nudge
 notify:                      # Webhook notification settings
   events:                    # Required: only listed events fire
@@ -132,7 +144,7 @@ notify:                      # Webhook notification settings
 | `entry_count_decisions` | `int`      | `20`          | Drift warning when `DECISIONS.md` exceeds this count                   |
 | `convention_line_count` | `int`      | `200`         | Line count warning for `CONVENTIONS.md`                                |
 | `injection_token_warn`  | `int`      | `15000`       | Warn when auto-injected context exceeds this token count (0 = disable) |
-| `context_window`        | `int`      | `200000`      | Context window size in tokens for usage reporting                      |
+| `context_window`        | `int`      | `200000`      | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools |
 | `key_rotation_days`     | `int`      | `90`          | Days before encryption key rotation nudge                              |
 | `notify.events`         | `[]string` | *(all)*       | Event filter for webhook notifications (empty = all)                   |
 

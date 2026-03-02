@@ -12,9 +12,11 @@ package assets
 import (
 	"embed"
 	"encoding/json"
+	"strings"
+	"sync"
 )
 
-//go:embed context/*.md project/* claude/CLAUDE.md entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md hooks/messages/*/*.txt why/*.md
+//go:embed context/*.md project/* claude/CLAUDE.md entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md hooks/messages/*/*.txt why/*.md permissions/*.txt
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -260,6 +262,55 @@ func ListWhyDocs() ([]string, error) {
 		}
 	}
 	return names, nil
+}
+
+var (
+	allowOnce  sync.Once
+	allowPerms []string
+
+	denyOnce  sync.Once
+	denyPerms []string
+)
+
+// parsePermissions splits a text file into permission entries.
+//
+// Lines are trimmed; empty lines and lines starting with '#' are skipped.
+func parsePermissions(data []byte) []string {
+	var result []string
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		result = append(result, line)
+	}
+	return result
+}
+
+// DefaultAllowPermissions returns the default allow permissions for ctx
+// commands and skills, parsed from the embedded permissions/allow.txt.
+func DefaultAllowPermissions() []string {
+	allowOnce.Do(func() {
+		data, readErr := FS.ReadFile("permissions/allow.txt")
+		if readErr != nil {
+			return
+		}
+		allowPerms = parsePermissions(data)
+	})
+	return allowPerms
+}
+
+// DefaultDenyPermissions returns the default deny permissions that block
+// dangerous operations, parsed from the embedded permissions/deny.txt.
+func DefaultDenyPermissions() []string {
+	denyOnce.Do(func() {
+		data, readErr := FS.ReadFile("permissions/deny.txt")
+		if readErr != nil {
+			return
+		}
+		denyPerms = parsePermissions(data)
+	})
+	return denyPerms
 }
 
 // PluginVersion returns the version string from the embedded plugin.json.

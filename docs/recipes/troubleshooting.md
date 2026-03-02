@@ -137,6 +137,25 @@ QA reminder events from that specific session.
 
 ## Common Problems
 
+### "ctx: not initialized"
+
+**Symptoms**: Any `ctx` command fails with
+`ctx: not initialized — run "ctx init" first`.
+
+**Cause**: You're running ctx in a directory without an initialized
+`.context/` directory. This guard runs on all user-facing commands to
+prevent confusing downstream errors.
+
+**Fix**:
+
+```bash
+ctx init          # create .context/ with template files
+ctx init --minimal  # or just the essentials (CONSTITUTION, TASKS, DECISIONS)
+```
+
+**Commands that work without initialization**: `ctx init`, `ctx hook`,
+`ctx doctor`, and help-only grouping commands (`ctx`, `ctx system`).
+
 ### "My hook isn't firing"
 
 **Symptoms**: No nudges appearing, webhook silent, event log shows no entries
@@ -163,7 +182,7 @@ ctx system events --hook check-persistence
 * **Plugin not installed**: run `ctx init --claude` to reinstall
 * **PATH issue**: the hook invokes `ctx` from PATH; ensure it resolves
 * **Throttle active**: most hooks fire once per day: check
-  `$XDG_RUNTIME_DIR/ctx/` for daily marker files
+  `.context/state/` for daily marker files
 * **Hook silenced**: a custom message override may be an empty file:
   check `ctx system message list` for overrides
 
@@ -192,7 +211,7 @@ ctx system events --json | jq -r '.detail.hook // "unknown"' \
   prompt 15. This is the system telling you the session is getting long:
   consider wrapping up
 * **Short throttle window**: if you deleted marker files in
-  `$XDG_RUNTIME_DIR/ctx/`, daily-throttled hooks will re-fire
+  `.context/state/`, daily-throttled hooks will re-fire
 * **Outdated Claude Code plugin**: Update the plugin using Claude Code --> 
   `/plugin` --> "Marketplace"
 * **`ctx` version mismatch**: Build (*or download*) and install the 

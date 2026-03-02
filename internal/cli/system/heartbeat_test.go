@@ -13,13 +13,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestHeartbeat_Silent(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -40,9 +38,6 @@ func TestHeartbeat_Silent(t *testing.T) {
 }
 
 func TestHeartbeat_CounterIncrement(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -57,7 +52,7 @@ func TestHeartbeat_CounterIncrement(t *testing.T) {
 		t.Fatalf("call 1: unexpected error: %v", err)
 	}
 
-	counterFile := filepath.Join(tmpDir, "ctx", "heartbeat-hb-counter")
+	counterFile := filepath.Join(workDir, ".context", config.DirState, "heartbeat-hb-counter")
 	count1 := readCounter(counterFile)
 	if count1 != 1 {
 		t.Errorf("after call 1: expected counter=1, got %d", count1)
@@ -89,9 +84,6 @@ func TestHeartbeat_CounterIncrement(t *testing.T) {
 }
 
 func TestHeartbeat_ContextModifiedDetection(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -106,7 +98,7 @@ func TestHeartbeat_ContextModifiedDetection(t *testing.T) {
 		t.Fatalf("call 1: unexpected error: %v", err)
 	}
 
-	mtimeFile := filepath.Join(tmpDir, "ctx", "heartbeat-mtime-hb-mtime")
+	mtimeFile := filepath.Join(workDir, ".context", config.DirState, "heartbeat-mtime-hb-mtime")
 	storedMtime := readMtime(mtimeFile)
 	if storedMtime == 0 {
 		t.Fatal("mtime file should have a non-zero value after first call")
@@ -134,9 +126,6 @@ func TestHeartbeat_ContextModifiedDetection(t *testing.T) {
 }
 
 func TestHeartbeat_RespectsNotInitialized(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	// Work in a directory with no .context/ — not initialized.
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
@@ -157,16 +146,13 @@ func TestHeartbeat_RespectsNotInitialized(t *testing.T) {
 	}
 
 	// Counter file should not exist.
-	counterFile := filepath.Join(tmpDir, "ctx", "heartbeat-hb-noinit")
+	counterFile := filepath.Join(workDir, ".context", config.DirState, "heartbeat-hb-noinit")
 	if _, statErr := os.Stat(counterFile); !os.IsNotExist(statErr) {
 		t.Error("counter file should not be created when not initialized")
 	}
 }
 
 func TestHeartbeat_RespectsPaused(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -189,16 +175,15 @@ func TestHeartbeat_RespectsPaused(t *testing.T) {
 	}
 
 	// Counter file should not exist (heartbeat skipped entirely).
-	counterFile := filepath.Join(tmpDir, "ctx", "heartbeat-hb-paused")
+	counterFile := filepath.Join(workDir, ".context", config.DirState, "heartbeat-hb-paused")
 	if _, statErr := os.Stat(counterFile); !os.IsNotExist(statErr) {
 		t.Error("counter file should not be created when paused")
 	}
 }
 
 func TestHeartbeat_TokenTelemetry(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-	t.Setenv("HOME", tmpDir)
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
 
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
@@ -209,7 +194,7 @@ func TestHeartbeat_TokenTelemetry(t *testing.T) {
 
 	// Create a fake JSONL file with usage data.
 	sessionID := "hb-token-test"
-	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	projectDir := filepath.Join(homeDir, ".claude", "projects", "testproj")
 	if mkErr := os.MkdirAll(projectDir, 0o750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
@@ -247,9 +232,6 @@ func TestHeartbeat_TokenTelemetry(t *testing.T) {
 }
 
 func TestHeartbeat_EmptyStdin(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -269,7 +251,7 @@ func TestHeartbeat_EmptyStdin(t *testing.T) {
 	}
 
 	// Should have used "unknown" as session ID.
-	counterFile := filepath.Join(tmpDir, "ctx", "heartbeat-unknown")
+	counterFile := filepath.Join(workDir, ".context", config.DirState, "heartbeat-unknown")
 	count := readCounter(counterFile)
 	if count != 1 {
 		t.Errorf("expected counter=1 for fallback session, got %d", count)

@@ -2364,6 +2364,8 @@
       
         
       
+        
+      
     
     
     
@@ -2411,6 +2413,36 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building-skills/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-hammer" viewBox="0 0 24 24"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9M18 15l4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Building Project Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -3854,8 +3886,8 @@ in your repo.</p>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Encrypted at: .context/.notify.enc</span>
 </span></code></pre></div>
 <p>This encrypts the URL with AES-256-GCM using the same key as the scratchpad
-(<code>.context/.ctx.key</code>). The encrypted file (<code>.context/.notify.enc</code>) is
-safe to commit. The key is <code>.gitignore</code>d.</p>
+(<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>). The encrypted file (<code>.context/.notify.enc</code>)
+is safe to commit. The key lives outside the project and is never committed.</p>
 <h3 id="step-3-test-it">Step 3: Test It<a class="headerlink" href="#step-3-test-it" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Webhook responded: HTTP 200 OK</span>
@@ -3999,8 +4031,8 @@ for observability dashboards or liveness monitoring of long-running sessions.</p
 <tbody>
 <tr>
 <td>Encryption key</td>
-<td><code>.context/.ctx.key</code></td>
-<td>No (gitignored)</td>
+<td><code>~/.local/ctx/keys/&lt;slug&gt;.key</code></td>
+<td>No (user-level)</td>
 <td><code>0600</code></td>
 </tr>
 <tr>
@@ -4020,7 +4052,7 @@ for observability dashboards or liveness monitoring of long-running sessions.</p
 <p>The key is shared with the scratchpad. If you rotate the encryption key,
 re-run <code>ctx notify setup</code> to re-encrypt the webhook URL with the new key.</p>
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
-<p><code>ctx</code> checks the age of <code>.context/.ctx.key</code> once per day. If it's older
+<p><code>ctx</code> checks the age of the encryption key once per day. If it's older
 than 90 days (<em>configurable via <code>key_rotation_days</code></em>), a VERBATIM nudge
 is emitted suggesting rotation.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># .ctxrc</span>
@@ -4028,8 +4060,9 @@ is emitted suggesting rotation.</p>
 </span></code></pre></div>
 <h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
 <p>The webhook URL is encrypted with the same encryption key
-(<code>.context/.ctx.key</code>), which is <code>.gitignore</code>d. In a git worktree,
-the key is absent: Notifications silently do nothing.</p>
+(<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>). Because the key lives at the user
+level, it is shared across all worktrees on the same machine —
+notifications work in worktrees automatically.</p>
 <p>This means <strong>agents running in worktrees cannot send webhook alerts</strong>.
 For autonomous runs where worktree agents are opaque, monitor them from
 the terminal rather than relying on webhooks. Enrich journals and review

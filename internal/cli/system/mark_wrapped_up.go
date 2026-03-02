@@ -22,7 +22,7 @@ const wrappedUpExpiry = 2 * time.Hour
 
 // markWrappedUpCmd returns the "ctx system mark-wrapped-up" subcommand.
 //
-// Writes a marker file to secureTempDir() that suppresses context
+// Writes a marker file to stateDir() that suppresses context
 // checkpoint nudges for 2 hours. Called by the /ctx-wrap-up skill
 // after persisting session context, so the wrap-up ceremony itself
 // does not trigger noisy checkpoint reminders.
@@ -50,7 +50,7 @@ This is a plumbing command — use /ctx-wrap-up instead.`,
 
 // runMarkWrappedUp creates or updates the wrap-up marker file.
 func runMarkWrappedUp(cmd *cobra.Command) error {
-	markerPath := filepath.Join(secureTempDir(), wrappedUpMarker)
+	markerPath := filepath.Join(stateDir(), wrappedUpMarker)
 
 	if writeErr := os.WriteFile(
 		markerPath, []byte("wrapped-up"), 0o600,
@@ -67,7 +67,7 @@ func runMarkWrappedUp(cmd *cobra.Command) error {
 //
 // Returns true if nudges should be suppressed.
 func wrappedUpRecently() bool {
-	markerPath := filepath.Join(secureTempDir(), wrappedUpMarker)
+	markerPath := filepath.Join(stateDir(), wrappedUpMarker)
 
 	info, statErr := os.Stat(markerPath)
 	if statErr != nil {

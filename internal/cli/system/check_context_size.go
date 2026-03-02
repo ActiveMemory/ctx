@@ -80,7 +80,7 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	counterFile := filepath.Join(tmpDir, "context-check-"+sessionID)
 	logFile := filepath.Join(rc.ContextDir(), "logs", "check-context-size.log")
 

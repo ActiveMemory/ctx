@@ -11,12 +11,13 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestFindJSONLPath_Found(t *testing.T) {
+	setupStateDir(t)
 	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
 	t.Setenv("HOME", tmpDir)
 
 	// Create a fake JSONL file in the expected location
@@ -40,8 +41,8 @@ func TestFindJSONLPath_Found(t *testing.T) {
 }
 
 func TestFindJSONLPath_NotFound(t *testing.T) {
+	setupStateDir(t)
 	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
 	t.Setenv("HOME", tmpDir)
 
 	got, findErr := findJSONLPath("nonexistent-session")
@@ -54,8 +55,8 @@ func TestFindJSONLPath_NotFound(t *testing.T) {
 }
 
 func TestFindJSONLPath_Cached(t *testing.T) {
+	ctxDir := setupStateDir(t)
 	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
 	t.Setenv("HOME", tmpDir)
 
 	sessionID := "test-cached-session"
@@ -75,7 +76,7 @@ func TestFindJSONLPath_Cached(t *testing.T) {
 	}
 
 	// Verify cache file exists
-	cacheFile := filepath.Join(tmpDir, "ctx", "jsonl-path-"+sessionID)
+	cacheFile := filepath.Join(ctxDir, config.DirState, "jsonl-path-"+sessionID)
 	if _, statErr := os.Stat(cacheFile); statErr != nil {
 		t.Fatalf("cache file not created: %v", statErr)
 	}
@@ -232,18 +233,18 @@ func TestModelContextWindow(t *testing.T) {
 		model string
 		want  int
 	}{
-		// 1M-capable models
-		{"claude-opus-4-6", contextWindow1M},
-		{"claude-opus-4-6-20260205", contextWindow1M},
-		{"claude-sonnet-4-6", contextWindow1M},
-		{"claude-sonnet-4-6-20260217", contextWindow1M},
-		{"claude-sonnet-4-5", contextWindow1M},
-		{"claude-sonnet-4-5-20250929", contextWindow1M},
-		{"claude-sonnet-4", contextWindow1M},
-		{"claude-sonnet-4-0", contextWindow1M},
-		{"claude-sonnet-4-20250514", contextWindow1M},
-
-		// 200k models
+		// All Claude models default to 200k (1M requires beta header
+		// which is not detectable from the model ID alone; users with
+		// 1M should set context_window in .ctxrc).
+		{"claude-opus-4-6", rc.DefaultContextWindow},
+		{"claude-opus-4-6-20260205", rc.DefaultContextWindow},
+		{"claude-sonnet-4-6", rc.DefaultContextWindow},
+		{"claude-sonnet-4-6-20260217", rc.DefaultContextWindow},
+		{"claude-sonnet-4-5", rc.DefaultContextWindow},
+		{"claude-sonnet-4-5-20250929", rc.DefaultContextWindow},
+		{"claude-sonnet-4", rc.DefaultContextWindow},
+		{"claude-sonnet-4-0", rc.DefaultContextWindow},
+		{"claude-sonnet-4-20250514", rc.DefaultContextWindow},
 		{"claude-opus-4-5", rc.DefaultContextWindow},
 		{"claude-opus-4-5-20251101", rc.DefaultContextWindow},
 		{"claude-opus-4-1", rc.DefaultContextWindow},
@@ -275,28 +276,93 @@ func TestModelContextWindow(t *testing.T) {
 func TestEffectiveContextWindow(t *testing.T) {
 	rc.Reset()
 
-	// Tier 1: known 1M model
+	// All Claude models return 200k by default (no [1m] in settings)
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
+
 	got := effectiveContextWindow("claude-opus-4-6")
-	if got != contextWindow1M {
-		t.Errorf("with 1M model: got %d, want %d", got, contextWindow1M)
-	}
-
-	// Tier 1: known 200k model
-	got = effectiveContextWindow("claude-opus-4-5")
 	if got != rc.DefaultContextWindow {
-		t.Errorf("with 200k model: got %d, want %d", got, rc.DefaultContextWindow)
+		t.Errorf("with claude model: got %d, want %d", got, rc.DefaultContextWindow)
 	}
 
-	// Tier 2/3: empty model falls to rc.ContextWindow()
+	// Empty model falls to rc.ContextWindow()
 	got = effectiveContextWindow("")
 	if got != rc.DefaultContextWindow {
 		t.Errorf("with empty model: got %d, want %d", got, rc.DefaultContextWindow)
 	}
 
-	// Tier 2/3: non-Claude model falls to rc.ContextWindow()
+	// Non-Claude model falls to rc.ContextWindow()
 	got = effectiveContextWindow("gpt-4o")
 	if got != rc.DefaultContextWindow {
 		t.Errorf("with unknown model: got %d, want %d", got, rc.DefaultContextWindow)
+	}
+}
+
+func TestClaudeSettingsHas1M(t *testing.T) {
+	t.Run("no_settings_file", func(t *testing.T) {
+		homeDir := t.TempDir()
+		t.Setenv("HOME", homeDir)
+		if claudeSettingsHas1M() {
+			t.Error("expected false when settings.json does not exist")
+		}
+	})
+
+	t.Run("no_model_key", func(t *testing.T) {
+		homeDir := t.TempDir()
+		t.Setenv("HOME", homeDir)
+		_ = os.MkdirAll(filepath.Join(homeDir, ".claude"), 0o750)
+		_ = os.WriteFile(filepath.Join(homeDir, ".claude", "settings.json"),
+			[]byte(`{"cleanupPeriodDays": 30}`), 0o600)
+		if claudeSettingsHas1M() {
+			t.Error("expected false when model key is absent")
+		}
+	})
+
+	t.Run("model_without_1m", func(t *testing.T) {
+		homeDir := t.TempDir()
+		t.Setenv("HOME", homeDir)
+		_ = os.MkdirAll(filepath.Join(homeDir, ".claude"), 0o750)
+		_ = os.WriteFile(filepath.Join(homeDir, ".claude", "settings.json"),
+			[]byte(`{"model": "opus"}`), 0o600)
+		if claudeSettingsHas1M() {
+			t.Error("expected false for model without [1m] suffix")
+		}
+	})
+
+	t.Run("model_with_1m", func(t *testing.T) {
+		homeDir := t.TempDir()
+		t.Setenv("HOME", homeDir)
+		_ = os.MkdirAll(filepath.Join(homeDir, ".claude"), 0o750)
+		_ = os.WriteFile(filepath.Join(homeDir, ".claude", "settings.json"),
+			[]byte(`{"model": "opus[1m]"}`), 0o600)
+		if !claudeSettingsHas1M() {
+			t.Error("expected true for model with [1m] suffix")
+		}
+	})
+
+	t.Run("sonnet_with_1m", func(t *testing.T) {
+		homeDir := t.TempDir()
+		t.Setenv("HOME", homeDir)
+		_ = os.MkdirAll(filepath.Join(homeDir, ".claude"), 0o750)
+		_ = os.WriteFile(filepath.Join(homeDir, ".claude", "settings.json"),
+			[]byte(`{"model": "sonnet[1m]"}`), 0o600)
+		if !claudeSettingsHas1M() {
+			t.Error("expected true for sonnet with [1m] suffix")
+		}
+	})
+}
+
+func TestEffectiveContextWindow_1MAutoDetect(t *testing.T) {
+	rc.Reset()
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
+	_ = os.MkdirAll(filepath.Join(homeDir, ".claude"), 0o750)
+	_ = os.WriteFile(filepath.Join(homeDir, ".claude", "settings.json"),
+		[]byte(`{"model": "opus[1m]"}`), 0o600)
+
+	got := effectiveContextWindow("claude-opus-4-6")
+	if got != contextWindow1M {
+		t.Errorf("with [1m] in settings: got %d, want %d", got, contextWindow1M)
 	}
 }
 

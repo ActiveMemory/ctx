@@ -13,12 +13,10 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestContextLoadGate_NotInitialized(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -38,9 +36,6 @@ func TestContextLoadGate_NotInitialized(t *testing.T) {
 }
 
 func TestContextLoadGate_EmptySessionID(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -61,9 +56,6 @@ func TestContextLoadGate_EmptySessionID(t *testing.T) {
 }
 
 func TestContextLoadGate_InjectsContent(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -173,9 +165,6 @@ func TestContextLoadGate_InjectsContent(t *testing.T) {
 }
 
 func TestContextLoadGate_SecondToolUse_Silent(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -207,9 +196,6 @@ func TestContextLoadGate_SecondToolUse_Silent(t *testing.T) {
 }
 
 func TestContextLoadGate_DifferentSessions(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -228,7 +214,7 @@ func TestContextLoadGate_DifferentSessions(t *testing.T) {
 	}
 
 	// Verify marker exists for session-a
-	marker := filepath.Join(tmpDir, "ctx", "ctx-loaded-session-a")
+	marker := filepath.Join(rc.ContextDir(), config.DirState, "ctx-loaded-session-a")
 	if _, err := os.Stat(marker); err != nil {
 		t.Errorf("expected marker for session-a, got error: %v", err)
 	}
@@ -256,9 +242,6 @@ func TestContextLoadGate_DifferentSessions(t *testing.T) {
 }
 
 func TestContextLoadGate_MissingFile(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -288,9 +271,6 @@ func TestContextLoadGate_MissingFile(t *testing.T) {
 }
 
 func TestContextLoadGate_NoIndexMarkers(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -363,9 +343,6 @@ func TestExtractIndex(t *testing.T) {
 }
 
 func TestContextLoadGate_OversizeFlag_Written(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -411,9 +388,6 @@ func TestContextLoadGate_OversizeFlag_Written(t *testing.T) {
 }
 
 func TestContextLoadGate_OversizeFlag_UnderThreshold(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -440,9 +414,6 @@ func TestContextLoadGate_OversizeFlag_UnderThreshold(t *testing.T) {
 }
 
 func TestContextLoadGate_OversizeFlag_Disabled(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -470,24 +441,27 @@ func TestContextLoadGate_OversizeFlag_Disabled(t *testing.T) {
 }
 
 func TestContextLoadGate_OversizeFlag_StateDirCreated(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
 	defer func() { _ = os.Chdir(origDir) }()
 
 	_ = os.WriteFile(".ctxrc", []byte("injection_token_warn: 10\n"), 0o600)
-	setupContextDir(t)
 
+	// Set up context dir manually WITHOUT state/ to test auto-creation
+	rc.Reset()
 	ctxDir := filepath.Join(workDir, config.DirContext)
+	_ = os.MkdirAll(ctxDir, 0o750)
+	for _, f := range config.FilesRequired {
+		_ = os.WriteFile(filepath.Join(ctxDir, f), []byte("# "+f+"\n"), 0o600)
+	}
+
 	writeTestFile(t, ctxDir, config.FileConstitution,
 		"# Constitution\n\nEnough content here.\n")
 
 	// Verify state/ dir doesn't exist yet
-	stateDir := filepath.Join(ctxDir, config.DirState)
-	if _, err := os.Stat(stateDir); err == nil {
+	stateDirPath := filepath.Join(ctxDir, config.DirState)
+	if _, err := os.Stat(stateDirPath); err == nil {
 		t.Fatal("state dir should not exist before gate runs")
 	}
 
@@ -498,15 +472,12 @@ func TestContextLoadGate_OversizeFlag_StateDirCreated(t *testing.T) {
 	}
 
 	// State dir should now exist
-	if _, err := os.Stat(stateDir); err != nil {
+	if _, err := os.Stat(stateDirPath); err != nil {
 		t.Errorf("state dir should be auto-created, got error: %v", err)
 	}
 }
 
 func TestContextLoadGate_OversizeFlag_PerFileBreakdown(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)

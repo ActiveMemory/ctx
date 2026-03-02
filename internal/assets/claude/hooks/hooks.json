@@ -43,11 +43,6 @@
           {"type": "command", "command": "ctx system heartbeat"}
         ]
       }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [{"type": "command", "command": "ctx system cleanup-tmp"}]
-      }
     ]
   }
 }

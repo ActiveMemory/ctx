@@ -55,10 +55,6 @@ All nudge and reminder hooks go silent:
 * `block-non-path-ctx`: prevents `./ctx` invocations
 * `block-dangerous-commands`: blocks `sudo`, force push, etc.
 
-**Housekeeping hooks** also run:
-
-* `cleanup-tmp`: removes stale temp files at session end
-
 ## Workflow
 
 ```bash

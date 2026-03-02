@@ -172,8 +172,8 @@ using the encryption key and stored in `.context/.notify.enc`.
 ctx notify setup
 ```
 
-The encrypted file is safe to commit. The key (`.context/.ctx.key`) is
-gitignored and never committed.
+The encrypted file is safe to commit. The key (`~/.local/ctx/keys/<slug>.key`)
+lives outside the project and is never committed.
 
 #### `ctx notify test`
 
@@ -421,7 +421,7 @@ ctx pad merge FILE...
 ```bash
 ctx pad merge worktree/.context/scratchpad.enc
 ctx pad merge notes.md backup.enc
-ctx pad merge --key /other/.ctx.key foreign.enc
+ctx pad merge --key ~/.local/ctx/keys/other-slug.key foreign.enc
 ctx pad merge --dry-run pad-a.enc pad-b.md
 ```
 

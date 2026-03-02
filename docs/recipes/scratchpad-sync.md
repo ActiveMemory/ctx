@@ -11,27 +11,33 @@ You work from multiple machines: a desktop and a laptop, or a local
 machine and a remote dev server.
 
 The scratchpad entries are encrypted. The ciphertext (`.context/scratchpad.enc`)
-travels with git, but the encryption key (`.context/.ctx.key`) is
-gitignored. Without the key on each machine, you cannot read or write entries.
+travels with git, but the encryption key lives outside the project at
+`~/.local/ctx/keys/<slug>.key` and is never committed. Without the key
+on each machine, you cannot read or write entries.
 
 **How do you distribute the key and keep the scratchpad in sync?**
 
 ## TL;DR
 
 ```bash
-ctx init                                                    # 1. generates .ctx.key
-scp .context/.ctx.key user@machine-b:project/.context/  # 2. copy key
-chmod 600 project/.context/.ctx.key                     # 3. secure it
+ctx init                                                       # 1. generates key
+scp ~/.local/ctx/keys/<slug>.key user@machine-b:~/.local/ctx/keys/  # 2. copy key
+chmod 600 ~/.local/ctx/keys/<slug>.key                         # 3. secure it
 # Normal git push/pull syncs the encrypted scratchpad.enc
 # On conflict: ctx pad resolve → rebuild → git add + commit
 ```
 
-!!! danger "Treat `.ctx.key` Like a Password"
+!!! tip "Finding Your Key File"
+    Run `ls ~/.local/ctx/keys/` to see the key filename. The slug is
+    derived from your project's absolute path
+    (e.g., `-home-jose-myproject--a1b2c3d4.key`).
+
+!!! danger "Treat the Key Like a Password"
     The scratchpad key is the only thing protecting your **encrypted** entries.
 
     Store a backup in a secure enclave such as a password manager, and treat
     it with the same care you would give passwords, certificates, or API
-    tokens. 
+    tokens.
 
     **Anyone with the key can decrypt every scratchpad entry**.
 
@@ -55,24 +61,40 @@ chmod 600 project/.context/.ctx.key                     # 3. secure it
 
 ### Step 1: Initialize on Machine A
 
-Run `ctx init` on your first machine. The key is created automatically:
+Run `ctx init` on your first machine. The key is created automatically
+at `~/.local/ctx/keys/`:
 
 ```bash
 ctx init
 # ...
-# Created .context/.ctx.key (0600)
+# Created ~/.local/ctx/keys/-home-jose-myproject--a1b2c3d4.key (0600)
 # Created .context/scratchpad.enc
 ```
 
-The key is gitignored. The `.enc` file is tracked.
+The key lives outside the project directory and is never committed.
+The `.enc` file is tracked in git.
+
+!!! note "Existing Projects"
+    If you have an older project with a key at `.context/.ctx.key`,
+    `ctx` auto-migrates it to the user-level location on first access.
+    No manual action needed.
 
 ### Step 2: Copy the Key to Machine B
 
-Use any secure transfer method:
+Use any secure transfer method. First, find the key filename:
 
 ```bash
-# scp
-scp .context/.ctx.key user@machine-b:project/.context/
+ls ~/.local/ctx/keys/
+# -home-jose-myproject--a1b2c3d4.key
+```
+
+Then copy it:
+
+```bash
+# scp — create the target directory first
+ssh user@machine-b "mkdir -p ~/.local/ctx/keys && chmod 700 ~/.local/ctx/keys"
+scp ~/.local/ctx/keys/-home-jose-myproject--a1b2c3d4.key \
+    user@machine-b:~/.local/ctx/keys/
 
 # Or use a password manager, USB drive, etc.
 ```
@@ -80,8 +102,14 @@ scp .context/.ctx.key user@machine-b:project/.context/
 Set permissions on Machine B:
 
 ```bash
-chmod 600 project/.context/.ctx.key
+chmod 600 ~/.local/ctx/keys/-home-jose-myproject--a1b2c3d4.key
 ```
+
+!!! tip "Different Project Paths?"
+    If the project lives at a different absolute path on Machine B,
+    rename the key file to match that machine's slug. Run `ctx init`
+    on Machine B first (it will generate an empty key), note the
+    filename, then replace it with the copied key.
 
 !!! danger "Secure the Transfer"
     The key is a raw 256-bit AES key. Anyone with the key can decrypt
@@ -232,11 +260,14 @@ Agent: "Let me extract theirs and merge it in."
   entries. Store a copy in your password manager.
 * **One key per project**: Each `ctx init` generates a unique key.
   Don't reuse keys across projects.
+* **Keys work in worktrees**: Because the key lives at `~/.local/ctx/keys/`
+  (outside the project), git worktrees on the same machine share the key
+  automatically. No special setup needed.
 * **Plaintext fallback for non-sensitive projects**: If encryption adds
   friction and you have nothing sensitive, set `scratchpad_encrypt: false`
   in `.ctxrc`. Merge conflicts become trivial text merges.
-* **Never commit the key**: It is `.gitignore`d by default. Don't override
-  this.
+* **Never commit the key**: The key is stored outside the project at
+  `~/.local/ctx/keys/` and should never be copied into the repository.
 
 ## Next Up
 

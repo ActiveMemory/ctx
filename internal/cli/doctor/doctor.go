@@ -52,8 +52,9 @@ type Report struct {
 // Cmd returns the "ctx doctor" command.
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "doctor",
-		Short: "Structural health check",
+		Use:         "doctor",
+		Short:       "Structural health check",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
 		Long: `Run mechanical health checks across context, hooks, and configuration.
 
 Checks:

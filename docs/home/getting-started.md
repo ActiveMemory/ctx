@@ -195,8 +195,9 @@ cd your-project
 ctx init
 ```
 
-This creates a `.context/` directory with template files and a
-`.ctx.key` for the [encrypted scratchpad](../reference/scratchpad.md).
+This creates a `.context/` directory with template files and an
+encryption key at `~/.local/ctx/keys/` for the
+[encrypted scratchpad](../reference/scratchpad.md).
 For Claude Code, install the [ctx plugin](../operations/integrations.md#claude-code-full-integration)
 for automatic hooks and skills.
 

@@ -120,18 +120,14 @@ Merge a completed worktree back and clean up.
   complete. Resolution: accept all `[x]` completions from both sides.
   No task should go from `[x]` back to `[ ]`.
 
-## What Does NOT Work in Worktrees
+## What Works Differently in Worktrees
 
-The encryption key (`.ctx.key` in the context directory) is
-gitignored. It exists only in the main checkout. This means
-key-dependent features silently fail in worktrees:
+The encryption key lives at `~/.local/ctx/keys/` (user-level, outside
+the project). All worktrees on the same machine share this path, so
+**`ctx pad` and `ctx notify` work in worktrees automatically**.
 
-- **`ctx pad`** — cannot decrypt the scratchpad. Commands fail
-  gracefully (no key found), but the pad is inaccessible. Use the
-  pad from the main checkout only.
-- **`ctx notify`** — cannot decrypt the webhook URL. Notifications
-  silently do nothing. Agents in worktrees are opaque: no webhook
-  alerts for loop completions, nudges, or custom events.
+One thing to watch:
+
 - **Journal enrichment** — `ctx recall export` and `ctx journal enrich`
   resolve paths relative to the current working directory. Files
   created in a worktree stay in that worktree and are discarded on

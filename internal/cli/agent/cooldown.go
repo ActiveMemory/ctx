@@ -7,10 +7,12 @@
 package agent
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // defaultCooldown is the default cooldown duration between context packet
@@ -19,20 +21,6 @@ const defaultCooldown = 10 * time.Minute
 
 // tombstonePrefix is the filename prefix for cooldown tombstone files.
 const tombstonePrefix = "ctx-agent-"
-
-// secureTempDir returns a user-specific temp directory for ctx state files.
-// Uses $XDG_RUNTIME_DIR when available (tmpfs, user-owned, 0700 on Linux),
-// otherwise creates a user-specific subdirectory under os.TempDir().
-func secureTempDir() string {
-	if xdg := os.Getenv("XDG_RUNTIME_DIR"); xdg != "" {
-		dir := filepath.Join(xdg, "ctx")
-		_ = os.MkdirAll(dir, 0o700)
-		return dir
-	}
-	dir := filepath.Join(os.TempDir(), fmt.Sprintf("ctx-%d", os.Getuid()))
-	_ = os.MkdirAll(dir, 0o700)
-	return dir
-}
 
 // cooldownActive checks whether the cooldown tombstone for the given
 // session is still fresh.
@@ -74,7 +62,7 @@ func touchTombstone(session string) {
 // Returns:
 //   - string: absolute path in the system temp directory
 func tombstonePath(session string) string {
-	return filepath.Join(
-		secureTempDir(), fmt.Sprintf("%s%s", tombstonePrefix, session),
-	)
+	stateDir := filepath.Join(rc.ContextDir(), config.DirState)
+	_ = os.MkdirAll(stateDir, 0o750)
+	return filepath.Join(stateDir, tombstonePrefix+session)
 }

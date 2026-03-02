@@ -22,9 +22,6 @@ import (
 // JSONL file when scanning for the last usage block.
 const maxTailBytes = 32768
 
-// contextWindow1M is the context window size for 1M-capable models.
-const contextWindow1M = 1_000_000
-
 // sessionTokenInfo holds token usage and model information extracted from a
 // session's JSONL file.
 type sessionTokenInfo struct {
@@ -59,7 +56,7 @@ func readSessionTokenInfo(sessionID string) (sessionTokenInfo, error) {
 // findJSONLPath locates the JSONL file for a session ID.
 //
 // Uses glob: ~/.claude/projects/*/{sessionID}.jsonl
-// Caches the result in secureTempDir()/jsonl-path-{sessionID} so the glob
+// Caches the result in stateDir()/jsonl-path-{sessionID} so the glob
 // runs once per session.
 //
 // Parameters:
@@ -70,8 +67,8 @@ func readSessionTokenInfo(sessionID string) (sessionTokenInfo, error) {
 //   - error: Non-nil only on unexpected errors
 func findJSONLPath(sessionID string) (string, error) {
 	// Check cache first
-	cacheFile := filepath.Join(secureTempDir(), "jsonl-path-"+sessionID)
-	if data, readErr := os.ReadFile(cacheFile); readErr == nil { //nolint:gosec // temp dir path
+	cacheFile := filepath.Join(stateDir(), "jsonl-path-"+sessionID)
+	if data, readErr := os.ReadFile(cacheFile); readErr == nil { //nolint:gosec // state dir path
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {
 			if _, statErr := os.Stat(cached); statErr == nil {
@@ -198,8 +195,10 @@ func parseLastUsageAndModel(path string) (sessionTokenInfo, error) {
 // Returns 0 if the model is not recognized, signaling callers to fall back
 // to rc.ContextWindow() or the default.
 //
-// Claude Code enables the 1M beta header for supported models, so models
-// in the 1M-capable set are mapped to 1,000,000 tokens.
+// The JSONL model ID does not distinguish between 200k and 1M context
+// variants (both report "claude-opus-4-6"). All recognized Claude models
+// default to 200k here; 1M is auto-detected from ~/.claude/settings.json
+// by effectiveContextWindow via claudeSettingsHas1M.
 //
 // Parameters:
 //   - model: Model ID string from the JSONL (e.g., "claude-opus-4-6-20260205")
@@ -211,23 +210,6 @@ func modelContextWindow(model string) int {
 		return 0
 	}
 
-	// 1M-capable models. Claude Code enables the beta header for these.
-	// Check most specific prefixes first to avoid ambiguity.
-	switch {
-	case strings.HasPrefix(model, "claude-opus-4-6"):
-		return contextWindow1M
-	case strings.HasPrefix(model, "claude-sonnet-4-6"):
-		return contextWindow1M
-	case strings.HasPrefix(model, "claude-sonnet-4-5"):
-		return contextWindow1M
-	case strings.HasPrefix(model, "claude-sonnet-4-2"):
-		// Matches dated snapshots like "claude-sonnet-4-20250514"
-		return contextWindow1M
-	case model == "claude-sonnet-4" || model == "claude-sonnet-4-0":
-		return contextWindow1M
-	}
-
-	// All other recognized Claude models default to 200k.
 	if strings.HasPrefix(model, "claude-") {
 		return rc.DefaultContextWindow
 	}
@@ -235,8 +217,16 @@ func modelContextWindow(model string) int {
 	return 0
 }
 
-// effectiveContextWindow returns the context window size using a three-tier
-// fallback: JSONL-detected model > .ctxrc setting > 200k default.
+// contextWindow1M is the context window size for 1M-capable models.
+const contextWindow1M = 1_000_000
+
+// effectiveContextWindow returns the context window size using a four-tier
+// fallback:
+//
+//  1. Explicit .ctxrc context_window (non-default value wins)
+//  2. Claude Code ~/.claude/settings.json model selection ([1m] suffix → 1M)
+//  3. JSONL model ID prefix (all claude-* → 200k)
+//  4. rc.ContextWindow() default (200k)
 //
 // Parameters:
 //   - model: Model ID string from JSONL (may be empty)
@@ -244,10 +234,41 @@ func modelContextWindow(model string) int {
 // Returns:
 //   - int: Effective context window size in tokens
 func effectiveContextWindow(model string) int {
+	// Tier 1: explicit .ctxrc override (non-default value wins).
+	if w := rc.RC().ContextWindow; w > 0 && w != rc.DefaultContextWindow {
+		return w
+	}
+	// Tier 2: auto-detect from Claude Code settings.
+	if claudeSettingsHas1M() {
+		return contextWindow1M
+	}
+	// Tier 3: model-based detection (all Claude models → 200k).
 	if w := modelContextWindow(model); w > 0 {
 		return w
 	}
+	// Tier 4: default.
 	return rc.ContextWindow()
+}
+
+// claudeSettingsHas1M reads ~/.claude/settings.json and returns true if the
+// selected model name contains "[1m]", indicating the user has opted into
+// the 1M extended context window. Returns false on any error.
+func claudeSettingsHas1M() bool {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return false
+	}
+	data, readErr := os.ReadFile(filepath.Join(home, ".claude", "settings.json")) //nolint:gosec // user home config
+	if readErr != nil {
+		return false
+	}
+	var settings struct {
+		Model string `json:"model"`
+	}
+	if jsonErr := json.Unmarshal(data, &settings); jsonErr != nil {
+		return false
+	}
+	return strings.Contains(strings.ToLower(settings.Model), "[1m]")
 }
 
 // formatTokenCount formats a token count as a human-readable abbreviated

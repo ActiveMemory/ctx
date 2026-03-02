@@ -67,7 +67,7 @@ func runCheckKnowledge(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	markerPath := filepath.Join(secureTempDir(), "check-knowledge")
+	markerPath := filepath.Join(stateDir(), "check-knowledge")
 	if isDailyThrottled(markerPath) {
 		return nil
 	}

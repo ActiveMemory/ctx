@@ -54,7 +54,7 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	remindedFile := filepath.Join(tmpDir, "journal-reminded")
 	claudeProjectsDir := filepath.Join(os.Getenv("HOME"), ".claude", "projects")
 

@@ -15,6 +15,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -48,8 +49,8 @@ func mergeSettingsPermissions(cmd *cobra.Command) error {
 	}
 
 	// Merge permissions - always additive, never removes existing permissions
-	allowModified := mergePermissions(&settings.Permissions.Allow, config.DefaultClaudePermissions)
-	denyModified := mergePermissions(&settings.Permissions.Deny, config.DefaultClaudeDenyPermissions)
+	allowModified := mergePermissions(&settings.Permissions.Allow, assets.DefaultAllowPermissions())
+	denyModified := mergePermissions(&settings.Permissions.Deny, assets.DefaultDenyPermissions())
 
 	if !allowModified && !denyModified {
 		cmd.Printf(

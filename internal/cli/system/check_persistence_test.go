@@ -12,12 +12,12 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestCheckPersistence_Init(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -38,16 +38,13 @@ func TestCheckPersistence_Init(t *testing.T) {
 	}
 
 	// Verify state file was created
-	stateFile := filepath.Join(tmpDir, "ctx", "persistence-nudge-persist-init")
+	stateFile := filepath.Join(rc.ContextDir(), config.DirState, "persistence-nudge-persist-init")
 	if _, err := os.Stat(stateFile); os.IsNotExist(err) {
 		t.Error("state file not created")
 	}
 }
 
 func TestCheckPersistence_MtimeReset(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -56,8 +53,7 @@ func TestCheckPersistence_MtimeReset(t *testing.T) {
 	setupContextDir(t)
 
 	// Create state file with old mtime to simulate context modification
-	stateFile := filepath.Join(tmpDir, "ctx", "persistence-nudge-persist-mtime")
-	_ = os.MkdirAll(filepath.Dir(stateFile), 0o700)
+	stateFile := filepath.Join(rc.ContextDir(), config.DirState, "persistence-nudge-persist-mtime")
 	writePersistenceState(stateFile, persistenceState{
 		Count:     20,
 		LastNudge: 0,
@@ -78,9 +74,6 @@ func TestCheckPersistence_MtimeReset(t *testing.T) {
 }
 
 func TestCheckPersistence_NudgeAt20(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -89,8 +82,7 @@ func TestCheckPersistence_NudgeAt20(t *testing.T) {
 	setupContextDir(t)
 	futureMtime := time.Now().Unix() + 3600
 
-	stateFile := filepath.Join(tmpDir, "ctx", "persistence-nudge-persist-20")
-	_ = os.MkdirAll(filepath.Dir(stateFile), 0o700)
+	stateFile := filepath.Join(rc.ContextDir(), config.DirState, "persistence-nudge-persist-20")
 	writePersistenceState(stateFile, persistenceState{
 		Count:     19, // will become 20
 		LastNudge: 0,
@@ -113,9 +105,6 @@ func TestCheckPersistence_NudgeAt20(t *testing.T) {
 }
 
 func TestCheckPersistence_Every15AfterPrompt25(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -124,8 +113,7 @@ func TestCheckPersistence_Every15AfterPrompt25(t *testing.T) {
 	setupContextDir(t)
 	futureMtime := time.Now().Unix() + 3600
 
-	stateFile := filepath.Join(tmpDir, "ctx", "persistence-nudge-persist-40")
-	_ = os.MkdirAll(filepath.Dir(stateFile), 0o700)
+	stateFile := filepath.Join(rc.ContextDir(), config.DirState, "persistence-nudge-persist-40")
 	writePersistenceState(stateFile, persistenceState{
 		Count:     39, // will become 40
 		LastNudge: 25, // 40 - 25 = 15 >= 15

@@ -78,9 +78,9 @@ ctx init --force --merge
 Knowledge files (`.context/TASKS.md`, `DECISIONS.md`, etc.) are **preserved
 automatically**: `ctx init` only overwrites infrastructure, never your data.
 
-> **Encryption key**: If you use `ctx pad`, verify that `.context/.ctx.key`
-> is still present after reinit. It should be preserved, but losing it means
-> losing access to encrypted scratchpad data.
+> **Encryption key**: The encryption key now lives at `~/.local/ctx/keys/`
+> (outside the project). Reinit does not affect it. Legacy project-local
+> keys (`.context/.ctx.key`) are auto-migrated on first access.
 
 ### 3. Update the `ctx` Plugin
 

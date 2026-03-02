@@ -89,7 +89,7 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	marker := filepath.Join(tmpDir, "ctx-loaded-"+input.SessionID)
 
 	if _, err := os.Stat(marker); err == nil {

@@ -194,8 +194,8 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bo
 // initScratchpad sets up the scratchpad key or plaintext file.
 //
 // When encryption is enabled (default):
-//   - Generates a 256-bit key at .context/.ctx.key if not present
-//   - Adds the key file to .gitignore
+//   - Generates a 256-bit key at ~/.local/ctx/keys/ if not present
+//   - Adds legacy key path to .gitignore for migration safety
 //   - Warns if .enc exists but no key
 //
 // When encryption is disabled:

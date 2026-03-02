@@ -32,6 +32,5 @@
 //   - block-dangerous-commands: Blocks dangerous command patterns (project-local)
 //   - check-backup-age: Backup staleness check (project-local)
 //   - post-commit: Post-commit context capture nudge
-//   - cleanup-tmp: Removes stale temp files on session end
 //   - qa-reminder: Reminds agent to lint/test full project before declaring done
 package system

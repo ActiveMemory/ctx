@@ -12,12 +12,12 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestCheckJournal_NoJournalDir(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -35,9 +35,6 @@ func TestCheckJournal_NoJournalDir(t *testing.T) {
 }
 
 func TestCheckJournal_DailyThrottle(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -46,14 +43,12 @@ func TestCheckJournal_DailyThrottle(t *testing.T) {
 	setupContextDir(t)
 	// Create journal dir and projects dir
 	_ = os.MkdirAll(resolvedJournalDir(), 0o750)
-	fakeProjectsDir := filepath.Join(tmpDir, "claude-projects")
-	_ = os.MkdirAll(fakeProjectsDir, 0o750)
-	t.Setenv("HOME", tmpDir)
-	_ = os.MkdirAll(filepath.Join(tmpDir, ".claude", "projects"), 0o750)
+	tmpHome := t.TempDir()
+	t.Setenv("HOME", tmpHome)
+	_ = os.MkdirAll(filepath.Join(tmpHome, ".claude", "projects"), 0o750)
 
 	// Create the throttle marker (touched today)
-	_ = os.MkdirAll(filepath.Join(tmpDir, "ctx"), 0o700)
-	touchFile(filepath.Join(tmpDir, "ctx", "journal-reminded"))
+	touchFile(filepath.Join(rc.ContextDir(), config.DirState, "journal-reminded"))
 
 	cmd := newTestCmd()
 	if err := runCheckJournal(cmd, createTempStdin(t, `{}`)); err != nil {
@@ -67,9 +62,8 @@ func TestCheckJournal_DailyThrottle(t *testing.T) {
 }
 
 func TestCheckJournal_Unenriched(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-	t.Setenv("HOME", tmpDir)
+	tmpHome := t.TempDir()
+	t.Setenv("HOME", tmpHome)
 
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
@@ -83,7 +77,7 @@ func TestCheckJournal_Unenriched(t *testing.T) {
 		[]byte("# No frontmatter here"), 0o600)
 
 	// Create Claude projects dir
-	_ = os.MkdirAll(filepath.Join(tmpDir, ".claude", "projects"), 0o750)
+	_ = os.MkdirAll(filepath.Join(tmpHome, ".claude", "projects"), 0o750)
 
 	cmd := newTestCmd()
 	if err := runCheckJournal(cmd, createTempStdin(t, `{}`)); err != nil {
@@ -103,9 +97,8 @@ func TestCheckJournal_Unenriched(t *testing.T) {
 }
 
 func TestCheckJournal_BothStages(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-	t.Setenv("HOME", tmpDir)
+	tmpHome := t.TempDir()
+	t.Setenv("HOME", tmpHome)
 
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
@@ -122,7 +115,7 @@ func TestCheckJournal_BothStages(t *testing.T) {
 	_ = os.Chtimes(filepath.Join(jDir, "2025-01-01-test.md"), oldTime, oldTime)
 
 	// Create newer JSONL file (unexported session)
-	projectsDir := filepath.Join(tmpDir, ".claude", "projects", "test")
+	projectsDir := filepath.Join(tmpHome, ".claude", "projects", "test")
 	_ = os.MkdirAll(projectsDir, 0o750)
 	_ = os.WriteFile(filepath.Join(projectsDir, "session.jsonl"),
 		[]byte(`{"type":"test"}`), 0o600)

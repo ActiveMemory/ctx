@@ -7,6 +7,7 @@
 package assets
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -401,4 +402,70 @@ func TestPluginVersion(t *testing.T) {
 	if !strings.Contains(ver, ".") {
 		t.Errorf("PluginVersion() = %q, expected semver format", ver)
 	}
+}
+
+func TestDefaultPermissions(t *testing.T) {
+	t.Run("allow list is non-empty", func(t *testing.T) {
+		allow := DefaultAllowPermissions()
+		if len(allow) == 0 {
+			t.Fatal("DefaultAllowPermissions() returned empty list")
+		}
+	})
+
+	t.Run("deny list is non-empty", func(t *testing.T) {
+		deny := DefaultDenyPermissions()
+		if len(deny) == 0 {
+			t.Fatal("DefaultDenyPermissions() returned empty list")
+		}
+	})
+
+	t.Run("allow list contains Bash(ctx:*)", func(t *testing.T) {
+		allowSet := make(map[string]bool)
+		for _, p := range DefaultAllowPermissions() {
+			allowSet[p] = true
+		}
+		if !allowSet["Bash(ctx:*)"] {
+			t.Error("allow list missing: Bash(ctx:*)")
+		}
+	})
+
+	t.Run("allow list covers all bundled skills", func(t *testing.T) {
+		skills, listErr := ListSkills()
+		if listErr != nil {
+			t.Fatalf("ListSkills() error: %v", listErr)
+		}
+
+		allowSet := make(map[string]bool)
+		for _, p := range DefaultAllowPermissions() {
+			allowSet[p] = true
+		}
+
+		for _, skill := range skills {
+			entry := fmt.Sprintf("Skill(%s)", skill)
+			if !allowSet[entry] {
+				t.Errorf("allow list missing bundled skill: %s", entry)
+			}
+		}
+	})
+
+	t.Run("deny list contains dangerous patterns", func(t *testing.T) {
+		denySet := make(map[string]bool)
+		for _, p := range DefaultDenyPermissions() {
+			denySet[p] = true
+		}
+
+		expected := []string{
+			"Bash(sudo *)",
+			"Bash(git push *)",
+			"Bash(rm -rf /*)",
+			"Bash(curl *)",
+			"Read(**/.env)",
+			"Edit(**/.env)",
+		}
+		for _, e := range expected {
+			if !denySet[e] {
+				t.Errorf("deny list missing: %s", e)
+			}
+		}
+	})
 }

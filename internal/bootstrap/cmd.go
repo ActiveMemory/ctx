@@ -53,7 +53,7 @@ func RootCmd() *cobra.Command {
   Use 'ctx init' to create a .context/ directory in your project,
   then use 'ctx status', 'ctx load', and 'ctx agent' to work with context.`,
 		Version: version,
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			// Apply global flag values
 			if contextDir != "" {
 				rc.OverrideContextDir(contextDir)
@@ -65,12 +65,32 @@ func RootCmd() *cobra.Command {
 			// Validate that the context directory stays within the project root.
 			// Skip if CLI flag is set or .ctxrc has allow_outside_cwd: true.
 			if !allowOutsideCwd && !rc.AllowOutsideCwd() {
-				if err := validation.ValidateBoundary(rc.ContextDir()); err != nil {
-					fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-					fmt.Fprintln(os.Stderr, "Use --allow-outside-cwd to override this check.")
-					os.Exit(1)
+				if validateErr := validation.ValidateBoundary(rc.ContextDir()); validateErr != nil {
+					return fmt.Errorf("%w\nUse --allow-outside-cwd to override this check", validateErr)
 				}
 			}
+
+			// Skip init check for hidden commands (hooks have their own guards).
+			if cmd.Hidden {
+				return nil
+			}
+
+			// Skip init check for annotated commands.
+			if _, ok := cmd.Annotations[config.AnnotationSkipInit]; ok {
+				return nil
+			}
+
+			// Skip init check for grouping commands (no Run/RunE = just shows help).
+			if cmd.RunE == nil && cmd.Run == nil {
+				return nil
+			}
+
+			// Require initialization.
+			if !config.Initialized(rc.ContextDir()) {
+				return fmt.Errorf("ctx: not initialized — run \"ctx init\" first")
+			}
+
+			return nil
 		},
 	}
 

@@ -157,17 +157,15 @@ prompts work:
 - *"Merge the docs track back in."*
 - *"Clean up all the worktrees, we're done."*
 
-## What Does NOT Work in Worktrees
+## What Works Differently in Worktrees
 
-The encryption key (`.context/.ctx.key`) is gitignored: It only
-exists in the main checkout. This affects key-dependent features:
+The encryption key lives at `~/.local/ctx/keys/` (user-level, outside
+the project). Because all worktrees on the same machine share this path,
+**`ctx pad` and `ctx notify` work in worktrees automatically** — no
+special setup needed.
 
-* **`ctx pad`**: The scratchpad is inaccessible. Commands fail
-  gracefully (*no key found*). Use the pad from the main checkout only.
-* **`ctx notify`**: Webhook notifications silently do nothing. Agents
-  in worktrees cannot send alerts for loop completions, nudges, or
-  custom events. If you need visibility into worktree agents, monitor
-  them from the terminal rather than relying on webhooks.
+One thing to watch:
+
 * **Journal enrichment**: `ctx recall export` and `ctx journal enrich`
   write files relative to the current working directory. Enrichments
   created in a worktree stay there and are discarded on teardown.

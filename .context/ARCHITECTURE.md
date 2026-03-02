@@ -131,14 +131,14 @@ Five core flows define how data moves through the system:
    Markdown → writes to `.context/journal/` → marks exported in state.
 
 <!-- drift-check: grep -c 'ctx system check-' internal/assets/claude/hooks/hooks.json -->
-5. **Hook lifecycle**: Claude Code plugin fires hooks at 4 lifecycle
-   points — `UserPromptSubmit` (9 checks: context size, ceremonies,
+5. **Hook lifecycle**: Claude Code plugin fires hooks at 3 lifecycle
+   points — `UserPromptSubmit` (10 checks: context size, ceremonies,
    persistence, journal, reminders, version, resources, knowledge,
-   map staleness), `PreToolUse` (block-non-path-ctx for Bash,
-   qa-reminder for Edit, context-load-gate for all tools),
-   `PostToolUse` (post-commit for Bash), and `SessionEnd`
-   (cleanup-tmp). All hooks execute synchronously; failures softened
-   with `|| true` where appropriate.
+   map staleness, heartbeat), `PreToolUse` (block-non-path-ctx for
+   Bash, qa-reminder for Bash, context-load-gate for all tools,
+   specs-nudge for EnterPlanMode, agent context for all tools),
+   `PostToolUse` (post-commit for Bash). All hooks execute
+   synchronously; failures softened with `|| true` where appropriate.
 
 *Full sequence diagrams:
 [architecture-dia-data-flows.md](architecture-dia-data-flows.md)*
@@ -273,11 +273,11 @@ checks for drift between them.
 <!-- drift-check: cat internal/assets/claude/hooks/hooks.json | grep -c '"command"' -->
 ### Hook Architecture
 
-The Claude Code plugin uses four lifecycle hooks defined in
-`internal/assets/claude/hooks/hooks.json`: `UserPromptSubmit` (9
-checks), `PreToolUse` (3 matchers), `PostToolUse` (1 matcher),
-`SessionEnd` (1 cleanup). Hooks execute synchronously; failures
-softened with `|| true` where appropriate.
+The Claude Code plugin uses three lifecycle hooks defined in
+`internal/assets/claude/hooks/hooks.json`: `UserPromptSubmit` (10
+checks), `PreToolUse` (5 matchers), `PostToolUse` (1 matcher).
+Hooks execute synchronously; failures softened with `|| true`
+where appropriate.
 
 <!-- drift-check: awk '/^require \(/{f=1;next}/^\)/{if(f)exit}f' go.mod | wc -l -->
 ## External Dependencies
