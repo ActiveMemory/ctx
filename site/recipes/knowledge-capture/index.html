@@ -1426,6 +1426,8 @@
       
         
       
+        
+      
     
     
     
@@ -1796,6 +1798,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2488,6 +2520,8 @@
       
         
       
+        
+      
     
     
     
@@ -2651,6 +2685,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3703,14 +3767,19 @@ rejected.</p>
 <td>Record a coding pattern or standard</td>
 </tr>
 <tr>
+<td><code>ctx reindex</code></td>
+<td>Command</td>
+<td>Rebuild both quick-reference indices</td>
+</tr>
+<tr>
 <td><code>ctx decisions reindex</code></td>
 <td>Command</td>
-<td>Rebuild the quick-reference index</td>
+<td>Rebuild the DECISIONS.md index</td>
 </tr>
 <tr>
 <td><code>ctx learnings reindex</code></td>
 <td>Command</td>
-<td>Rebuild the quick-reference index</td>
+<td>Rebuild the LEARNINGS.md index</td>
 </tr>
 <tr>
 <td><code>/ctx-add-decision</code></td>
@@ -3847,9 +3916,10 @@ third time you see it, not the first.</p>
 <p><code>DECISIONS.md</code> and <code>LEARNINGS.md</code> maintain a quick-reference index at the top:
 a compact table of date and title for each entry. The index updates
 automatically via <code>ctx add</code>, but falls out of sync after hand edits.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>reindex
 </span></code></pre></div>
+<p>This single command regenerates both indices. You can also reindex
+individually with <code>ctx decisions reindex</code> or <code>ctx learnings reindex</code>.</p>
 <p>Run reindex after any manual edit. The index lets AI tools scan all entries
 without reading the full file, which matters when token budgets are tight.</p>
 <h3 id="step-6-use-ctx-reflect-to-surface-what-to-capture">Step 6: Use /ctx-reflect to Surface What to Capture<a class="headerlink" href="#step-6-use-ctx-reflect-to-surface-what-to-capture" title="Permanent link">&para;</a></h3>
@@ -3970,11 +4040,10 @@ rather than waiting for explicit instructions.</p>
 </span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>ctx<span class="w"> </span>add<span class="w"> </span>convention<span class="w"> </span><span class="s2">&quot;API handlers return structured errors&quot;</span><span class="w"> </span>--section<span class="w"> </span><span class="s2">&quot;API&quot;</span>
 </span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
 </span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Reindex after manual edits</span>
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
-</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
-</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># Reflect at breakpoints (from AI assistant)</span>
-</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="c1"># /ctx-reflect</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>ctx<span class="w"> </span>reindex
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># Reflect at breakpoints (from AI assistant)</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># /ctx-reflect</span>
 </span></code></pre></div>
 <h3 id="conversational-approach-interactive-sessions">Conversational Approach (<em>Interactive Sessions</em>)<a class="headerlink" href="#conversational-approach-interactive-sessions" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>You: &quot;We just picked Postgres over SQLite for the concurrency

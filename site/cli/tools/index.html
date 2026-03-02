@@ -18,7 +18,7 @@
         <link rel="prev" href="../recall/">
       
       
-        <link rel="next" href="../doctor/">
+        <link rel="next" href="../config/">
       
       
         
@@ -1411,6 +1411,8 @@
       
         
       
+        
+      
     
     
     
@@ -1533,6 +1535,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2218,6 +2250,8 @@
       
         
       
+        
+      
     
     
     
@@ -2776,6 +2810,36 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -4287,16 +4351,36 @@ decoded file content (or writes to disk with <code>--out</code>).</p>
 <p>Bulk-import lines from a file into the scratchpad. Each non-empty line
 becomes a separate entry. All entries are written in a single encrypt/write
 cycle.</p>
+<p>With <code>--blobs</code>, import all first-level files from a directory as blob
+entries. Each file becomes a blob with the filename as its label.
+Subdirectories and non-regular files are skipped.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>&lt;file&gt;
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">          </span><span class="c1"># read from stdin</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-<span class="w">              </span><span class="c1"># read from stdin</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blobs<span class="w"> </span>&lt;dir&gt;<span class="w">  </span><span class="c1"># import directory files as blobs</span>
 </span></code></pre></div>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>file</code>: Path to a text file, or <code>-</code> for stdin</li>
+<li><code>file</code>: Path to a text file, <code>-</code> for stdin, or a directory (with <code>--blobs</code>)</li>
 </ul>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--blobs</code></td>
+<td>Import first-level files from a directory as blobs</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>notes.txt
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>grep<span class="w"> </span>TODO<span class="w"> </span>*.go<span class="w"> </span><span class="p">|</span><span class="w"> </span>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>-
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>import<span class="w"> </span>--blobs<span class="w"> </span>./ideas/
 </span></code></pre></div>
 <h4 id="ctx-pad-export"><code>ctx pad export</code><a class="headerlink" href="#ctx-pad-export" title="Permanent link">&para;</a></h4>
 <p>Export all blob entries from the scratchpad to a directory as files.
@@ -4750,13 +4834,13 @@ inform but do not block.</p>
         
         
           
-          <a href="../doctor/" class="md-footer__link md-footer__link--next" aria-label="Next: Doctor">
+          <a href="../config/" class="md-footer__link md-footer__link--next" aria-label="Next: Config">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Doctor
+                Config
               </div>
             </div>
             <div class="md-footer__button md-icon">

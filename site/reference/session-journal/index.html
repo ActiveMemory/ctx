@@ -1411,6 +1411,8 @@
       
         
       
+        
+      
     
     
     
@@ -1533,6 +1535,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2216,6 +2248,8 @@
       
         
       
+        
+      
     
     
     
@@ -2379,6 +2413,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -4056,6 +4120,7 @@ content and proposing metadata.</p>
 </span></code></pre></div>
 <p>The skill will:</p>
 <ol>
+<li><strong>Check if locked</strong> — locked entries are skipped (same as export);</li>
 <li>Find the matching journal file;</li>
 <li>Read and analyze the conversation;</li>
 <li>Propose frontmatter (<em>type, topics, outcome, technologies</em>);</li>
@@ -4206,6 +4271,12 @@ re-run, and stages skip already-processed entries.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">One-command pipeline</p>
+<p><code>/ctx-journal-enrich-all</code> handles export automatically — it detects
+unexported sessions and exports them before enriching. You only need
+to run <code>ctx journal site --build</code> afterward.</p>
+</div>
 <h3 id="using-make-journal">Using <code>make journal</code><a class="headerlink" href="#using-make-journal" title="Permanent link">&para;</a></h3>
 <p>If your project includes <code>Makefile.ctx</code> (deployed by <code>ctx init</code>), the first
 and last stages are combined:</p>
@@ -4213,7 +4284,7 @@ and last stages are combined:</p>
 </span></code></pre></div>
 <p>After it runs, it reminds you to enrich in Claude Code:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Next steps (in Claude Code):
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  /ctx-journal-enrich-all # add metadata per entry (skips if frontmatter exists)
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  /ctx-journal-enrich-all # exports if needed + adds metadata per entry
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Then re-run: make journal
 </span></code></pre></div>

@@ -1650,6 +1650,8 @@
       
         
       
+        
+      
     
     
     
@@ -1772,6 +1774,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2455,6 +2487,8 @@
       
         
       
+        
+      
     
     
     
@@ -2618,6 +2652,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3684,9 +3748,11 @@ Homebrew Python blocks system-wide installs (<code>PEP 668</code>).</p>
 <h3 id="safe-by-default">Safe By Default<a class="headerlink" href="#safe-by-default" title="Permanent link">&para;</a></h3>
 <p><code>ctx recall export --all</code> is <strong>safe by default</strong>: </p>
 <ul>
-<li>It only exports new sessions and <strong>skips existing files</strong>. </li>
-<li>Locked entries (<em>via <code>ctx recall lock</code></em>) are <strong>always skipped</strong> 
-  regardless of flags.</li>
+<li>It only exports new sessions and <strong>skips existing files</strong>.</li>
+<li>Locked entries (<em>via <code>ctx recall lock</code></em>) are <strong>always skipped</strong> by
+  both export and enrichment skills.</li>
+<li>If you add <code>locked: true</code> to frontmatter during enrichment, run
+  <code>ctx recall sync</code> to propagate the lock state to <code>.state.json</code>.</li>
 </ul>
 <h3 id="re-exporting-existing-files">Re-Exporting Existing Files<a class="headerlink" href="#re-exporting-existing-files" title="Permanent link">&para;</a></h3>
 <p>Here is how you regenerate existing files. </p>
@@ -3983,7 +4049,7 @@ agent's judgment.</p>
 </tr>
 <tr>
 <td><code>/ctx-journal-enrich-all</code></td>
-<td>Batch-enrich all unenriched journal entries</td>
+<td>Full journal pipeline: export if needed, then batch-enrich</td>
 </tr>
 <tr>
 <td><code>/ctx-blog</code></td>
@@ -4082,8 +4148,16 @@ agent's judgment.</p>
 <td>Site management commands</td>
 </tr>
 <tr>
+<td><code>ctx config</code></td>
+<td>Manage runtime configuration profiles</td>
+</tr>
+<tr>
 <td><code>ctx system</code></td>
 <td>System diagnostics and hook commands</td>
+</tr>
+<tr>
+<td><code>ctx system backup</code></td>
+<td>Back up context and Claude data to tar.gz / SMB</td>
 </tr>
 <tr>
 <td><code>ctx completion</code></td>

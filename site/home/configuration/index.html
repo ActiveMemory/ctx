@@ -1695,6 +1695,8 @@
       
         
       
+        
+      
     
     
     
@@ -1817,6 +1819,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2500,6 +2532,8 @@
       
         
       
+        
+      
     
     
     
@@ -2663,6 +2697,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3713,7 +3777,7 @@ per-project.</p>
 <p class="admonition-title">Contributors: Dev Configuration Profile</p>
 <p>The ctx repo ships two <code>.ctxrc</code> source profiles (<code>.ctxrc.base</code> and
 <code>.ctxrc.dev</code>). The working copy is gitignored and swapped between them
-via <code>make rc-dev</code> / <code>make rc-base</code>.
+via <code>ctx config switch dev</code> / <code>ctx config switch base</code>.
 See <a href="../contributing/#configuration-profiles">Contributing: Configuration Profiles</a>.</p>
 </div>
 <div class="admonition tip">
@@ -4103,7 +4167,8 @@ configurations.</p>
 The <code>ctx system bootstrap</code> command prints the context path, file list, and
 operating rules in both text and JSON formats:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">          </span><span class="c1"># text output for agents</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>-q<span class="w">       </span><span class="c1"># just the context directory path</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">   </span><span class="c1"># structured output for automation</span>
 </span></code></pre></div>
 <p>The <code>CLAUDE.md</code> template instructs the agent to run this as its first action.
 Every nudge (<em>context checkpoint, persistence reminder, etc.</em>) also includes a

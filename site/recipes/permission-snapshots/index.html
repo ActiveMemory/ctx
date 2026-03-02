@@ -1424,6 +1424,8 @@
       
         
       
+        
+      
     
     
     
@@ -1549,6 +1551,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2438,6 +2470,8 @@
       
         
       
+        
+      
     
     
     
@@ -2601,6 +2635,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3570,7 +3634,7 @@ session-specific entries that expand the agent's surface area beyond intent.</p>
 check. The file drifts independently on every machine, and there is no
 built-in way to reset to a known-good state.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/sanitize-permissions<span class="w">               </span><span class="c1"># audit for dangerous patterns</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/ctx-sanitize-permissions<span class="w">               </span><span class="c1"># audit for dangerous patterns</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>snapshot<span class="w">            </span><span class="c1"># save golden image</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># ... sessions accumulate cruft ...</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ctx<span class="w"> </span>permissions<span class="w"> </span>restore<span class="w">             </span><span class="c1"># reset to golden state</span>
@@ -3598,14 +3662,14 @@ with the team.</p>
 <td>Reset settings.local.json from golden image</td>
 </tr>
 <tr>
-<td><code>/sanitize-permissions</code></td>
+<td><code>/ctx-sanitize-permissions</code></td>
 <td>Audit for dangerous patterns before snapshotting</td>
 </tr>
 </tbody>
 </table>
 <h2 id="step-by-step">Step by Step<a class="headerlink" href="#step-by-step" title="Permanent link">&para;</a></h2>
 <h3 id="1-curate-your-permissions">1. Curate Your Permissions<a class="headerlink" href="#1-curate-your-permissions" title="Permanent link">&para;</a></h3>
-<p>Start with a clean <code>settings.local.json</code>. Optionally run <code>/sanitize-permissions</code>
+<p>Start with a clean <code>settings.local.json</code>. Optionally run <code>/ctx-sanitize-permissions</code>
 to remove dangerous patterns first.</p>
 <p>Review the file manually. Every entry should be there because <strong>you</strong> decided
 it belongs, not because you clicked "<em>Allow</em>" once during debugging.</p>
@@ -3659,7 +3723,7 @@ work with agents trained on the <code>ctx</code> playbook:</p>
 </tr>
 <tr>
 <td>"Clean up my permissions"</td>
-<td>Agent runs <code>/sanitize-permissions</code> then snapshot</td>
+<td>Agent runs <code>/ctx-sanitize-permissions</code> then snapshot</td>
 </tr>
 <tr>
 <td>"What permissions did I accumulate?"</td>

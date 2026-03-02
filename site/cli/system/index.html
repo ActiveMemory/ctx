@@ -1411,6 +1411,8 @@
       
         
       
+        
+      
     
     
     
@@ -1533,6 +1535,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2218,6 +2250,8 @@
       
         
       
+        
+      
     
     
     
@@ -2404,6 +2438,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../doctor/" class="md-nav__link">
         
   
@@ -2505,6 +2569,17 @@
   
     <nav class="md-nav" aria-label="ctx system">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-system-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system backup
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#ctx-system-bootstrap" class="md-nav__link">
@@ -3243,6 +3318,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ctx-system-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-system-bootstrap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3390,11 +3476,86 @@
 and automation. Hidden hook
 subcommands (<code>ctx system check-*</code>) are used by the Claude Code plugin.</p>
 <p>See <a href="../../operations/integrations/#plugin-hooks">AI Tools</a> for details.</p>
+<h4 id="ctx-system-backup"><code>ctx system backup</code><a class="headerlink" href="#ctx-system-backup" title="Permanent link">&para;</a></h4>
+<p>Create timestamped tar.gz archives of project context and/or global Claude
+Code data. Optionally copies archives to an SMB share via GVFS.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+</span></code></pre></div>
+<p><strong>Scopes</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>What it includes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>project</code></td>
+<td><code>.context/</code>, <code>.claude/</code>, <code>ideas/</code>, <code>~/.bashrc</code></td>
+</tr>
+<tr>
+<td><code>global</code></td>
+<td><code>~/.claude/</code> (excludes <code>todos/</code>)</td>
+</tr>
+<tr>
+<td><code>all</code></td>
+<td>Both project and global (default)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--scope &lt;scope&gt;</code></td>
+<td>Backup scope: project, global, or all</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Output results as JSON</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Environment</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CTX_BACKUP_SMB_URL</code></td>
+<td>SMB share URL (e.g. <code>smb://host/share</code>)</td>
+</tr>
+<tr>
+<td><code>CTX_BACKUP_SMB_SUBDIR</code></td>
+<td>Subdirectory on share (default: <code>ctx-sessions</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w">                       </span><span class="c1"># Back up everything (default: all)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>project<span class="w">       </span><span class="c1"># Project context only</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>global<span class="w">        </span><span class="c1"># Global Claude data only</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>all<span class="w"> </span>--json<span class="w">    </span><span class="c1"># Both, JSON output</span>
+</span></code></pre></div>
+<p>Archives are saved to <code>/tmp/</code> with timestamped names. When <code>CTX_BACKUP_SMB_URL</code>
+is configured, archives are also copied to the SMB share. Project backups touch
+<code>~/.local/state/ctx-last-backup</code> for the <code>check-backup-age</code> hook.</p>
 <h4 id="ctx-system-bootstrap"><code>ctx system bootstrap</code><a class="headerlink" href="#ctx-system-bootstrap" title="Permanent link">&para;</a></h4>
 <p>Print context location and rules for AI agents. This is the recommended first
 command for AI agents to run at session start: It tells them where the context
 directory is and how to use it.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -3406,40 +3567,49 @@ directory is and how to use it.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>-q</code>, <code>--quiet</code></td>
+<td>Output only the context directory path</td>
+</tr>
+<tr>
 <td><code>--json</code></td>
 <td>Output in JSON format</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Quiet output</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>-q
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># .context</span>
+</span></code></pre></div>
 <p><strong>Text output</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx bootstrap
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>=============
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>context_dir: .context
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Files:
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  CONSTITUTION.md, TASKS.md, DECISIONS.md, LEARNINGS.md,
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  CONVENTIONS.md, ARCHITECTURE.md, GLOSSARY.md
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Rules:
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  1. Use context_dir above for ALL file reads/writes
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  2. Never say &quot;I don&#39;t have memory&quot;: context IS your memory
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  3. Read files silently, present as recall (not search)
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  4. Persist learnings/decisions before session ends
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  5. Run `ctx agent` for content summaries
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  6. Run `ctx status` for context health
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx bootstrap
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>=============
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>context_dir: .context
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Files:
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  CONSTITUTION.md, TASKS.md, DECISIONS.md, LEARNINGS.md,
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  CONVENTIONS.md, ARCHITECTURE.md, GLOSSARY.md
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Rules:
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  1. Use context_dir above for ALL file reads/writes
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  2. Never say &quot;I don&#39;t have memory&quot;: context IS your memory
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  3. Read files silently, present as recall (not search)
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  4. Persist learnings/decisions before session ends
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  5. Run `ctx agent` for content summaries
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  6. Run `ctx status` for context health
 </span></code></pre></div>
 <p><strong>JSON output</strong>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;context_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.context&quot;</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CONSTITUTION.md&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;TASKS.md&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="p">],</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Use context_dir above for ALL file reads/writes&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="p">]</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;context_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.context&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CONSTITUTION.md&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;TASKS.md&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="p">],</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Use context_dir above for ALL file reads/writes&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="p">]</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">}</span>
 </span></code></pre></div>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">                          </span><span class="c1"># Text output</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">                   </span><span class="c1"># JSON output</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.context_dir<span class="w"> </span><span class="c1"># Extract context path</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w">                          </span><span class="c1"># Text output</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>-q<span class="w">                       </span><span class="c1"># Just the path</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w">                   </span><span class="c1"># JSON output</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>bootstrap<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.context_dir<span class="w"> </span><span class="c1"># Extract context path</span>
 </span></code></pre></div>
 <p><strong>Why it exists</strong>: When users configure an external context directory via
 <code>.ctxrc</code> (<code>context_dir: /mnt/nas/.context</code>), the AI agent needs to know where
@@ -3448,7 +3618,7 @@ the agent at session start. Every nudge also includes a context directory
 footer for reinforcement.</p>
 <h4 id="ctx-system-resources"><code>ctx system resources</code><a class="headerlink" href="#ctx-system-resources" title="Permanent link">&para;</a></h4>
 <p>Show system resource usage with threshold-based alerts.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p>Displays memory, swap, disk, and CPU load with two severity tiers:</p>
 <table>
@@ -3498,26 +3668,26 @@ footer for reinforcement.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w">               </span><span class="c1"># Text output with status indicators</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w"> </span>--json<span class="w">        </span><span class="c1"># Machine-readable JSON</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.alerts&#39;</span><span class="w">   </span><span class="c1"># Extract alerts only</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w">               </span><span class="c1"># Text output with status indicators</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w"> </span>--json<span class="w">        </span><span class="c1"># Machine-readable JSON</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>resources<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.alerts&#39;</span><span class="w">   </span><span class="c1"># Extract alerts only</span>
 </span></code></pre></div>
 <p><strong>Text output</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>System Resources
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>====================
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Memory:    4.2 / 16.0 GB (26%)                     ✓ ok
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Swap:      0.0 /  8.0 GB (0%)                      ✓ ok
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Disk:    180.2 / 500.0 GB (36%)                     ✓ ok
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Load:     0.52 / 0.41 / 0.38  (8 CPUs, ratio 0.07) ✓ ok
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>All clear: no resource warnings.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>System Resources
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>====================
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Memory:    4.2 / 16.0 GB (26%)                     ✓ ok
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Swap:      0.0 /  8.0 GB (0%)                      ✓ ok
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Disk:    180.2 / 500.0 GB (36%)                     ✓ ok
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Load:     0.52 / 0.41 / 0.38  (8 CPUs, ratio 0.07) ✓ ok
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>All clear: no resource warnings.
 </span></code></pre></div>
 <p>When resources breach thresholds, alerts are listed below the summary:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Alerts:
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  ✖ Memory 92% used (14.7 / 16.0 GB)
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  ✖ Swap 78% used (6.2 / 8.0 GB)
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  ✖ Load 1.56x CPU count
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Alerts:
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  ✖ Memory 92% used (14.7 / 16.0 GB)
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  ✖ Swap 78% used (6.2 / 8.0 GB)
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  ✖ Load 1.56x CPU count
 </span></code></pre></div>
 <p><strong>Platform support</strong>: Full metrics on Linux and macOS. Windows shows
 disk only; memory and load report as unsupported.</p>
@@ -3525,7 +3695,7 @@ disk only; memory and load report as unsupported.</p>
 <p>Manage hook message templates. Hook messages control what text hooks emit.
 The hook logic (when to fire, counting, state tracking) is universal; the
 messages are opinions that can be customized per-project.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <p><strong>Subcommands</strong>:</p>
 <table>
@@ -3565,11 +3735,11 @@ messages are opinions that can be customized per-project.</p>
 </tbody>
 </table>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>list<span class="w">                      </span><span class="c1"># Table of all 24 messages</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>list<span class="w"> </span>--json<span class="w">               </span><span class="c1"># Machine-readable JSON</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># View the QA gate template</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># Copy default to .context/ for editing</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># Delete override, revert to default</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>list<span class="w">                      </span><span class="c1"># Table of all 24 messages</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>list<span class="w"> </span>--json<span class="w">               </span><span class="c1"># Machine-readable JSON</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>show<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># View the QA gate template</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>edit<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">     </span><span class="c1"># Copy default to .context/ for editing</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>message<span class="w"> </span>reset<span class="w"> </span>qa-reminder<span class="w"> </span>gate<span class="w">    </span><span class="c1"># Delete override, revert to default</span>
 </span></code></pre></div>
 <p>Override files are placed at <code>.context/hooks/messages/{hook}/{variant}.txt</code>.
 An empty override file silences the message while preserving the hook's logic.</p>
@@ -3579,7 +3749,7 @@ recipe for detailed examples.</p>
 <p>Query the local hook event log. Reads events from <code>.context/state/events.jsonl</code>
 and outputs them in human-readable or raw JSONL format. Requires <code>event_log: true</code>
 in <code>.ctxrc</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
 </span></code></pre></div>
 <p><strong>Flags</strong>:</p>
 <table>
@@ -3639,38 +3809,38 @@ in <code>.ctxrc</code>.</p>
 </table>
 <p>All filter flags use intersection (AND) logic.</p>
 <p><strong>Text output</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>2026-02-27 22:39:31  relay  qa-reminder          QA gate reminder emitted
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>2026-02-27 22:41:56  relay  qa-reminder          QA gate reminder emitted
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>2026-02-28 00:48:18  relay  context-load-gate    injected 6 files (~9367 tokens)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>2026-02-27 22:39:31  relay  qa-reminder          QA gate reminder emitted
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2026-02-27 22:41:56  relay  qa-reminder          QA gate reminder emitted
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>2026-02-28 00:48:18  relay  context-load-gate    injected 6 files (~9367 tokens)
 </span></code></pre></div>
 <p>Columns: timestamp (<em>local timezone</em>), event type, hook name, message (<em>truncated
 to terminal width</em>).</p>
 <p><strong>JSON output</strong> (<code>--json</code>):</p>
 <p>Each line is a standalone JSON object identical to the webhook payload format:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// converted to multi-line for convenience:</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="p">{</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;relay&quot;</span><span class="p">,</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder: QA gate reminder emitted&quot;</span><span class="p">,</span><span class="nt">&quot;detail&quot;</span><span class="p">:</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="p">{</span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder&quot;</span><span class="p">,</span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="s2">&quot;gate&quot;</span><span class="p">},</span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="s2">&quot;eb1dc9cd-...&quot;</span><span class="p">,</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="s2">&quot;2026-02-27T22:39:31Z&quot;</span><span class="p">,</span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="s2">&quot;ctx&quot;</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">// converted to multi-line for convenience:</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="p">{</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;relay&quot;</span><span class="p">,</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder: QA gate reminder emitted&quot;</span><span class="p">,</span><span class="nt">&quot;detail&quot;</span><span class="p">:</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="p">{</span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="s2">&quot;qa-reminder&quot;</span><span class="p">,</span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="s2">&quot;gate&quot;</span><span class="p">},</span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="s2">&quot;eb1dc9cd-...&quot;</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="s2">&quot;2026-02-27T22:39:31Z&quot;</span><span class="p">,</span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="s2">&quot;ctx&quot;</span><span class="p">}</span>
 </span></code></pre></div>
 <p><strong>Examples</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Last 50 events (default)</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Events from a specific session</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--session<span class="w"> </span>eb1dc9cd-0163-4853-89d0-785fbfaae3a6
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Only QA reminder events</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Raw JSONL for jq processing</span>
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.message&#39;</span>
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
-</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># How many context-load-gate fires today</span>
-</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>context-load-gate<span class="w"> </span>--json<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.timestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
-</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Include rotated events</span>
-</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--all<span class="w"> </span>--last<span class="w"> </span><span class="m">100</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Last 50 events (default)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>events
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Events from a specific session</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--session<span class="w"> </span>eb1dc9cd-0163-4853-89d0-785fbfaae3a6
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Only QA reminder events</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>qa-reminder
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Raw JSONL for jq processing</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.message&#39;</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># How many context-load-gate fires today</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--hook<span class="w"> </span>context-load-gate<span class="w"> </span>--json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.timestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="c1"># Include rotated events</span>
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>ctx<span class="w"> </span>system<span class="w"> </span>events<span class="w"> </span>--all<span class="w"> </span>--last<span class="w"> </span><span class="m">100</span>
 </span></code></pre></div>
 <p><strong>Why it exists</strong>: System hooks fire invisibly. When something goes wrong (<em>"why
 didn't my hook fire?"</em>), the event log provides a local, queryable record of
@@ -3684,7 +3854,7 @@ what hooks fired, when, and how often. Event logging is opt-in via
 <p>Update processing state for a journal entry. Records the current date
 in <code>.context/journal/.state.json</code>. Used by journal skills to record
 pipeline progress.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;stage&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;stage&gt;
 </span></code></pre></div>
 <p><strong>Stages</strong>: <code>exported</code>, <code>enriched</code>, <code>normalized</code>, <code>fences_verified</code></p>
 <table>
@@ -3702,9 +3872,9 @@ pipeline progress.</p>
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>enriched
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>normalized
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>--check<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>fences_verified
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>enriched
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>normalized
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>--check<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>fences_verified
 </span></code></pre></div>
 <h4 id="ctx-system-mark-wrapped-up"><code>ctx system mark-wrapped-up</code><a class="headerlink" href="#ctx-system-mark-wrapped-up" title="Permanent link">&para;</a></h4>
 <p>Suppress context checkpoint nudges after a wrap-up ceremony. Writes a
@@ -3712,7 +3882,7 @@ marker file that <code>check-context-size</code> checks before emitting checkpoi
 boxes. The marker expires after 2 hours.</p>
 <p>Called automatically by <code>/ctx-wrap-up</code> after persisting context
 (<em>not intended for direct use</em>).</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-wrapped-up
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-wrapped-up
 </span></code></pre></div>
 <p>No flags, no arguments. Idempotent: running it again updates the
 marker timestamp.</p>
