@@ -16,7 +16,7 @@ import (
 //
 // Creates a session-scoped pause marker that causes all nudge hooks to
 // no-op. Security hooks (block-non-path-ctx, block-dangerous-commands)
-// and housekeeping hooks (cleanup-tmp) are unaffected.
+// are unaffected.
 func pauseCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "pause",

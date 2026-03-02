@@ -364,6 +364,54 @@ If your project includes `Makefile.ctx` (deployed by `ctx init`), use
 `make journal` to combine export and rebuild stages. Then enrich inside
 Claude Code, then `make journal` again to pick up enrichments.
 
+## Session Retention and Cleanup
+
+Claude Code does not keep JSONL transcripts forever. Understanding its
+cleanup behavior helps you avoid losing session history.
+
+### Default Behavior
+
+Claude Code retains session transcripts for approximately **30 days**.
+After that, JSONL files are automatically deleted during cleanup. Once
+deleted, `ctx recall` can no longer see those sessions — the data is
+gone.
+
+### The `cleanupPeriodDays` Setting
+
+Claude Code exposes a `cleanupPeriodDays` setting in its configuration
+(`~/.claude/settings.json`) that controls retention:
+
+| Value | Behavior |
+|-------|----------|
+| `30` (default) | Transcripts older than 30 days are deleted |
+| `60`, `90`, etc. | Extends the retention window |
+| `0` | **Disables writing new transcripts entirely** — not "keep forever" |
+
+!!! warning "Setting `cleanupPeriodDays` to 0"
+    Setting this to `0` does **not** mean "never delete." It disables
+    transcript creation altogether. No new JSONL files are written, which
+    means `ctx recall` sees nothing new. This is rarely what you want.
+
+### Why Journal Export Matters
+
+The journal export pipeline (*Steps 1–4 above*) is your **archival
+mechanism**. Exported Markdown files in `.context/journal/` persist
+independently of Claude Code's cleanup cycle. Even after the source
+JSONL files are deleted, your journal entries remain.
+
+**Recommendation**: export regularly — weekly, or after any session worth
+revisiting. A quick `ctx recall export --all` takes seconds and ensures
+nothing falls through the 30-day window.
+
+### Quick Archival Checklist
+
+1. Run `ctx recall export --all` at least weekly
+2. Enrich high-value sessions with `/ctx-journal-enrich` before the
+   details fade from your own memory
+3. Lock enriched entries (`ctx recall lock <pattern>`) to protect them
+   from accidental regeneration
+4. Rebuild the journal site periodically to keep it current
+
 ## Tips
 
 * Start with `/ctx-recall` inside your AI assistant. If you want to quickly check

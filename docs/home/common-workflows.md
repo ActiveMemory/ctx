@@ -185,8 +185,8 @@ ctx pad get db-password
 ctx pad list
 ```
 
-The scratchpad is encrypted with a key stored in `.context/.ctx.key`
-(*`.gitignore`d by default*). 
+The scratchpad is encrypted with a key stored at
+`~/.local/ctx/keys/<slug>.key` (outside the project, never committed). 
 
 See [Scratchpad](../reference/scratchpad.md) for details.
 

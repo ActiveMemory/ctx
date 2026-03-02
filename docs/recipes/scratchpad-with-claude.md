@@ -266,7 +266,7 @@ Once the skill is active, it translates intent into commands:
   other shell tools.
 * **Never mention the key file contents to the AI**: The agent knows
   how to use `ctx pad` commands but should never read or print
-  `.context/.ctx.key` directly.
+  the encryption key (`~/.local/ctx/keys/<slug>.key`) directly.
 * **Encryption is transparent**: You interact with plaintext; the
   encryption/decryption happens automatically on every read/write.
 

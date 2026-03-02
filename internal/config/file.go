@@ -6,6 +6,25 @@
 
 package config
 
+import (
+	"os"
+	"path/filepath"
+)
+
+// AnnotationSkipInit is the cobra.Command annotation key that exempts
+// a command from the PersistentPreRunE initialization guard.
+const AnnotationSkipInit = "skipInitCheck"
+
+// Initialized reports whether the context directory contains all required files.
+func Initialized(contextDir string) bool {
+	for _, f := range FilesRequired {
+		if _, err := os.Stat(filepath.Join(contextDir, f)); err != nil {
+			return false
+		}
+	}
+	return true
+}
+
 // File permission constants.
 const (
 	// PermFile is the standard permission for regular files (owner rw, others r).
@@ -282,68 +301,3 @@ var Packages = map[string]string{
 	"Gemfile":          "Ruby dependencies",
 }
 
-// DefaultClaudePermissions lists the default permissions for ctx commands and skills.
-//
-// These permissions allow Claude Code to run ctx CLI commands and skills without
-// prompting for approval. The Bash wildcard covers all ctx subcommands; the Skill
-// entries cover all ctx-shipped skills.
-var DefaultClaudePermissions = []string{
-	"Bash(ctx:*)",
-	"Skill(ctx-add-convention)",
-	"Skill(ctx-add-decision)",
-	"Skill(ctx-add-learning)",
-	"Skill(ctx-add-task)",
-	"Skill(ctx-agent)",
-	"Skill(ctx-alignment-audit)",
-	"Skill(ctx-archive)",
-	"Skill(ctx-blog)",
-	"Skill(ctx-blog-changelog)",
-	"Skill(absorb)",
-	"Skill(ctx-commit)",
-	"Skill(ctx-consolidate)",
-	"Skill(ctx-context-monitor)",
-	"Skill(ctx-drift)",
-	"Skill(ctx-implement)",
-	"Skill(ctx-journal-enrich)",
-	"Skill(ctx-journal-enrich-all)",
-	"Skill(ctx-journal-normalize)",
-	"Skill(ctx-loop)",
-	"Skill(ctx-map)",
-	"Skill(ctx-next)",
-	"Skill(ctx-pad)",
-	"Skill(ctx-prompt-audit)",
-	"Skill(ctx-recall)",
-	"Skill(ctx-reflect)",
-	"Skill(ctx-remind)",
-	"Skill(ctx-remember)",
-	"Skill(ctx-status)",
-	"Skill(ctx-worktree)",
-}
-
-// DefaultClaudeDenyPermissions lists the default deny rules for Claude Code.
-//
-// These rules block dangerous operations that should never be auto-approved.
-// The deny list is evaluated before the allow list: A denied pattern always
-// prompts the user, even if it also matches an allow entry.
-//
-// Note: Read()/Edit() deny rules have known upstream enforcement issues
-// (claude-code#6631, #24846). They are included as defense-in-depth and
-// intent documentation.
-var DefaultClaudeDenyPermissions = []string{
-	"Bash(sudo *)",
-	"Bash(git push *)",
-	"Bash(git push)",
-	"Bash(rm -rf /*)",
-	"Bash(rm -rf ~*)",
-	"Bash(curl *)",
-	"Bash(wget *)",
-	"Bash(chmod 777 *)",
-	"Read(**/.env)",
-	"Read(**/.env.*)",
-	"Read(**/*credentials*)",
-	"Read(**/*secret*)",
-	"Read(**/*.pem)",
-	"Read(**/*.key)",
-	"Edit(**/.env)",
-	"Edit(**/.env.*)",
-}

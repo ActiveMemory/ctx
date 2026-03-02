@@ -10,17 +10,35 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
+// setupStateDir creates a temp context directory with state/ for tests
+// that write pause markers or other state files.
+func setupStateDir(t *testing.T) string {
+	t.Helper()
+	dir := t.TempDir()
+	t.Setenv("CTX_DIR", dir)
+	rc.Reset()
+	if mkErr := os.MkdirAll(filepath.Join(dir, config.DirState), 0o750); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+	return dir
+}
+
 func TestPauseMarkerPath(t *testing.T) {
+	dir := setupStateDir(t)
 	got := pauseMarkerPath("abc-123")
-	want := filepath.Join(secureTempDir(), "ctx-paused-abc-123")
+	want := filepath.Join(dir, config.DirState, "ctx-paused-abc-123")
 	if got != want {
 		t.Errorf("pauseMarkerPath() = %q, want %q", got, want)
 	}
 }
 
 func TestPaused_NoMarker(t *testing.T) {
+	setupStateDir(t)
 	turns := paused("nonexistent-session-test-pause")
 	if turns != 0 {
 		t.Errorf("paused() with no marker = %d, want 0", turns)
@@ -28,6 +46,7 @@ func TestPaused_NoMarker(t *testing.T) {
 }
 
 func TestPaused_IncrementsCounter(t *testing.T) {
+	setupStateDir(t)
 	sessionID := "test-pause-increment"
 	path := pauseMarkerPath(sessionID)
 	writeCounter(path, 0) // create marker
@@ -53,6 +72,7 @@ func TestPaused_IncrementsCounter(t *testing.T) {
 }
 
 func TestPaused_DoublePauseResets(t *testing.T) {
+	setupStateDir(t)
 	sessionID := "test-pause-double"
 	path := pauseMarkerPath(sessionID)
 	writeCounter(path, 7) // simulate 7 turns
@@ -97,6 +117,7 @@ func TestPausedMessage_LaterTurns(t *testing.T) {
 }
 
 func TestResumeWhenNotPaused(t *testing.T) {
+	setupStateDir(t)
 	path := pauseMarkerPath("test-resume-noop")
 	// Ensure no marker exists
 	_ = os.Remove(path)
@@ -109,6 +130,7 @@ func TestResumeWhenNotPaused(t *testing.T) {
 }
 
 func TestResumeRemovesMarker(t *testing.T) {
+	setupStateDir(t)
 	sessionID := "test-resume-removes"
 	path := pauseMarkerPath(sessionID)
 	writeCounter(path, 5)

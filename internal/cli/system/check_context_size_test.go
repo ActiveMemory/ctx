@@ -31,9 +31,6 @@ func cmdOutput(cmd *cobra.Command) string {
 }
 
 func TestCheckContextSize_SilentEarly(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	// Change to temp dir so .context/logs don't pollute
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(t.TempDir())
@@ -53,9 +50,6 @@ func TestCheckContextSize_SilentEarly(t *testing.T) {
 }
 
 func TestCheckContextSize_CheckpointAt18(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -64,8 +58,7 @@ func TestCheckContextSize_CheckpointAt18(t *testing.T) {
 
 	// Pre-set counter to 17 so next increment = 18 (18 > 15, 18 is not divisible by 5)
 	// Need count 20 for first trigger (20 > 15, 20 % 5 == 0)
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-18")
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(rc.ContextDir(), config.DirState, "context-check-test-18")
 	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
 
 	cmd := newTestCmd()
@@ -87,9 +80,6 @@ func TestCheckContextSize_CheckpointAt18(t *testing.T) {
 }
 
 func TestCheckContextSize_CheckpointAt33(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -97,8 +87,7 @@ func TestCheckContextSize_CheckpointAt33(t *testing.T) {
 	setupContextDir(t)
 
 	// Pre-set counter to 32 so next = 33 (33 > 30, 33 % 3 == 0)
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-33")
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(rc.ContextDir(), config.DirState, "context-check-test-33")
 	_ = os.WriteFile(counterFile, []byte("32"), 0o600)
 
 	cmd := newTestCmd()
@@ -114,9 +103,6 @@ func TestCheckContextSize_CheckpointAt33(t *testing.T) {
 }
 
 func TestCheckContextSize_OversizeNudgeAtCheckpoint(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -124,21 +110,18 @@ func TestCheckContextSize_OversizeNudgeAtCheckpoint(t *testing.T) {
 	setupContextDir(t)
 
 	// Create a flag file simulating an oversize injection
-	ctxDir := filepath.Join(workDir, config.DirContext)
-	stateDir := filepath.Join(ctxDir, config.DirState)
-	_ = os.MkdirAll(stateDir, 0o750)
+	sd := filepath.Join(rc.ContextDir(), config.DirState)
 	flagContent := "Context injection oversize warning\n" +
 		"===================================\n" +
 		"Timestamp: 2026-02-26T14:30:00Z\n" +
 		"Injected:  18200 tokens (threshold: 15000)\n\n" +
 		"Per-file breakdown:\n" +
 		"  CONSTITUTION.md        1200 tokens\n"
-	_ = os.WriteFile(filepath.Join(stateDir, "injection-oversize"),
+	_ = os.WriteFile(filepath.Join(sd, "injection-oversize"),
 		[]byte(flagContent), 0o600)
 
 	// Set counter to 19 so next = 20 (triggers checkpoint at 20 > 15, 20 % 5 == 0)
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-oversize-nudge")
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(sd, "context-check-test-oversize-nudge")
 	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
 
 	cmd := newTestCmd()
@@ -159,16 +142,13 @@ func TestCheckContextSize_OversizeNudgeAtCheckpoint(t *testing.T) {
 	}
 
 	// Flag should be consumed (deleted)
-	flagPath := filepath.Join(stateDir, "injection-oversize")
+	flagPath := filepath.Join(sd, "injection-oversize")
 	if _, err := os.Stat(flagPath); err == nil {
 		t.Error("flag file should be deleted after nudge (one-shot)")
 	}
 }
 
 func TestCheckContextSize_NoFlagNoOversizeNudge(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -176,8 +156,7 @@ func TestCheckContextSize_NoFlagNoOversizeNudge(t *testing.T) {
 	setupContextDir(t)
 
 	// No flag file — trigger a checkpoint
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-no-flag")
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(rc.ContextDir(), config.DirState, "context-check-test-no-flag")
 	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
 
 	cmd := newTestCmd()
@@ -197,9 +176,6 @@ func TestCheckContextSize_NoFlagNoOversizeNudge(t *testing.T) {
 }
 
 func TestCheckContextSize_MalformedFlag(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -207,14 +183,11 @@ func TestCheckContextSize_MalformedFlag(t *testing.T) {
 	setupContextDir(t)
 
 	// Write a malformed flag file (no parseable token count)
-	ctxDir := filepath.Join(workDir, config.DirContext)
-	stateDir := filepath.Join(ctxDir, config.DirState)
-	_ = os.MkdirAll(stateDir, 0o750)
-	_ = os.WriteFile(filepath.Join(stateDir, "injection-oversize"),
+	sd := filepath.Join(rc.ContextDir(), config.DirState)
+	_ = os.WriteFile(filepath.Join(sd, "injection-oversize"),
 		[]byte("garbage data\n"), 0o600)
 
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-malformed")
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(sd, "context-check-test-malformed")
 	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
 
 	cmd := newTestCmd()
@@ -229,7 +202,7 @@ func TestCheckContextSize_MalformedFlag(t *testing.T) {
 		t.Error("expected checkpoint output")
 	}
 	// Flag should still be consumed
-	flagPath := filepath.Join(stateDir, "injection-oversize")
+	flagPath := filepath.Join(sd, "injection-oversize")
 	if _, err := os.Stat(flagPath); err == nil {
 		t.Error("malformed flag file should still be consumed")
 	}
@@ -275,7 +248,6 @@ func TestExtractOversizeTokens(t *testing.T) {
 
 func TestCheckpointWithTokenLine(t *testing.T) {
 	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
 	t.Setenv("HOME", tmpDir)
 
 	workDir := t.TempDir()
@@ -294,8 +266,7 @@ func TestCheckpointWithTokenLine(t *testing.T) {
 		[]byte(jsonlContent), 0o600)
 
 	// Set counter to 19 so next = 20 (triggers checkpoint)
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(rc.ContextDir(), config.DirState, "context-check-"+sessionID)
 	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
 
 	cmd := newTestCmd()
@@ -321,9 +292,8 @@ func TestCheckpointWithTokenLine(t *testing.T) {
 }
 
 func TestWindowWarning_Over80(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-	t.Setenv("HOME", tmpDir)
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
 
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
@@ -334,15 +304,14 @@ func TestWindowWarning_Over80(t *testing.T) {
 	sessionID := "test-window-over80"
 
 	// Create a fake JSONL file with 164k tokens (82% of 200k)
-	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	projectDir := filepath.Join(homeDir, ".claude", "projects", "testproj")
 	_ = os.MkdirAll(projectDir, 0o750)
 	jsonlContent := `{"type":"assistant","message":{"model":"claude-opus-4-5","role":"assistant","content":"hi","usage":{"input_tokens":100000,"output_tokens":2000,"cache_creation_input_tokens":4000,"cache_read_input_tokens":60000}}}` + "\n"
 	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
 		[]byte(jsonlContent), 0o600)
 
 	// Counter at 5 — normally silent, but >80% should trigger independently
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(rc.ContextDir(), config.DirState, "context-check-"+sessionID)
 	_ = os.WriteFile(counterFile, []byte("5"), 0o600)
 
 	cmd := newTestCmd()
@@ -361,9 +330,8 @@ func TestWindowWarning_Over80(t *testing.T) {
 }
 
 func TestWindowWarning_Under80_NoCheckpoint(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-	t.Setenv("HOME", tmpDir)
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
 
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
@@ -374,15 +342,14 @@ func TestWindowWarning_Under80_NoCheckpoint(t *testing.T) {
 	sessionID := "test-under80-silent"
 
 	// Create a JSONL file with 40k tokens (20% of 200k)
-	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	projectDir := filepath.Join(homeDir, ".claude", "projects", "testproj")
 	_ = os.MkdirAll(projectDir, 0o750)
 	jsonlContent := `{"type":"assistant","message":{"model":"claude-opus-4-5","role":"assistant","content":"hi","usage":{"input_tokens":30000,"output_tokens":500,"cache_creation_input_tokens":0,"cache_read_input_tokens":10000}}}` + "\n"
 	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
 		[]byte(jsonlContent), 0o600)
 
 	// Counter at 5 — normally silent
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	counterFile := filepath.Join(rc.ContextDir(), config.DirState, "context-check-"+sessionID)
 	_ = os.WriteFile(counterFile, []byte("5"), 0o600)
 
 	cmd := newTestCmd()
@@ -397,10 +364,9 @@ func TestWindowWarning_Under80_NoCheckpoint(t *testing.T) {
 	}
 }
 
-func TestWindowWarning_1MModel_NoFalseAlarm(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-	t.Setenv("HOME", tmpDir)
+func TestWindowWarning_HighUsage(t *testing.T) {
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
 
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
@@ -408,19 +374,17 @@ func TestWindowWarning_1MModel_NoFalseAlarm(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 	setupContextDir(t)
 
-	sessionID := "test-1m-no-false-alarm"
+	sessionID := "test-high-usage-warning"
 
-	// 164k tokens = 82% of 200k, but only ~16% of 1M.
-	// With a 1M-capable model, no warning should fire.
-	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	// 164k tokens = 82% of 200k — should trigger warning.
+	projectDir := filepath.Join(homeDir, ".claude", "projects", "testproj")
 	_ = os.MkdirAll(projectDir, 0o750)
 	jsonlContent := `{"type":"assistant","message":{"model":"claude-opus-4-6","role":"assistant","content":"hi","usage":{"input_tokens":100000,"output_tokens":2000,"cache_creation_input_tokens":4000,"cache_read_input_tokens":60000}}}` + "\n"
 	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
 		[]byte(jsonlContent), 0o600)
 
-	// Counter at 5 — normally silent
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
-	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	// Counter at 5 — normally silent, but window warning fires regardless
+	counterFile := filepath.Join(rc.ContextDir(), config.DirState, "context-check-"+sessionID)
 	_ = os.WriteFile(counterFile, []byte("5"), 0o600)
 
 	cmd := newTestCmd()
@@ -430,9 +394,9 @@ func TestWindowWarning_1MModel_NoFalseAlarm(t *testing.T) {
 	}
 
 	out := cmdOutput(cmd)
-	// 164k/1M = 16%, well under 80% — no warning should fire
-	if strings.Contains(out, "Context Window Warning") {
-		t.Errorf("1M model should not trigger 80%% warning at 164k tokens, got: %s", out)
+	// 164k/200k = 82%, above 80% threshold — warning should fire
+	if !strings.Contains(out, "Context Window Warning") {
+		t.Errorf("expected window warning at 82%% usage, got: %s", out)
 	}
 }
 
@@ -487,9 +451,6 @@ func TestTokenUsageLine(t *testing.T) {
 }
 
 func TestCheckContextSize_SuppressedAfterWrapUp(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -497,12 +458,12 @@ func TestCheckContextSize_SuppressedAfterWrapUp(t *testing.T) {
 	setupContextDir(t)
 
 	// Create a fresh wrap-up marker.
-	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
-	_ = os.MkdirAll(filepath.Dir(markerPath), 0o700)
+	sd := filepath.Join(rc.ContextDir(), config.DirState)
+	markerPath := filepath.Join(sd, wrappedUpMarker)
 	_ = os.WriteFile(markerPath, []byte("wrapped-up"), 0o600)
 
 	// Set counter to 19 — would normally trigger checkpoint at 20.
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-wrapup")
+	counterFile := filepath.Join(sd, "context-check-test-wrapup")
 	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
 
 	cmd := newTestCmd()
@@ -518,9 +479,6 @@ func TestCheckContextSize_SuppressedAfterWrapUp(t *testing.T) {
 }
 
 func TestCheckContextSize_NotSuppressedAfterExpiredWrapUp(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -528,14 +486,14 @@ func TestCheckContextSize_NotSuppressedAfterExpiredWrapUp(t *testing.T) {
 	setupContextDir(t)
 
 	// Create an expired wrap-up marker (3 hours old).
-	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
-	_ = os.MkdirAll(filepath.Dir(markerPath), 0o700)
+	sd := filepath.Join(rc.ContextDir(), config.DirState)
+	markerPath := filepath.Join(sd, wrappedUpMarker)
 	_ = os.WriteFile(markerPath, []byte("wrapped-up"), 0o600)
 	expired := time.Now().Add(-3 * time.Hour)
 	_ = os.Chtimes(markerPath, expired, expired)
 
 	// Set counter to 19 — should trigger checkpoint since marker is expired.
-	counterFile := filepath.Join(tmpDir, "ctx", "context-check-test-expired-wrapup")
+	counterFile := filepath.Join(sd, "context-check-test-expired-wrapup")
 	_ = os.WriteFile(counterFile, []byte("19"), 0o600)
 
 	cmd := newTestCmd()
@@ -551,9 +509,6 @@ func TestCheckContextSize_NotSuppressedAfterExpiredWrapUp(t *testing.T) {
 }
 
 func TestCheckContextSize_EmptyStdin(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
-
 	workDir := t.TempDir()
 	origDir, _ := os.Getwd()
 	_ = os.Chdir(workDir)
@@ -576,6 +531,9 @@ func setupContextDir(t *testing.T) {
 	rc.Reset()
 	dir := rc.ContextDir()
 	if err := os.MkdirAll(dir, 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(filepath.Join(dir, config.DirState), 0o750); err != nil {
 		t.Fatal(err)
 	}
 	for _, f := range config.FilesRequired {

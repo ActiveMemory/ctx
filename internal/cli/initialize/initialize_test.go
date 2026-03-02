@@ -13,6 +13,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/spf13/cobra"
@@ -961,8 +962,8 @@ func TestMergeSettingsPermissions_ExistingWithAllPerms(t *testing.T) {
 
 	settings := claude.Settings{
 		Permissions: claude.PermissionsConfig{
-			Allow: config.DefaultClaudePermissions,
-			Deny:  config.DefaultClaudeDenyPermissions,
+			Allow: assets.DefaultAllowPermissions(),
+			Deny:  assets.DefaultDenyPermissions(),
 		},
 	}
 	data, _ := json.MarshalIndent(settings, "", "  ")
@@ -987,7 +988,7 @@ func TestMergeSettingsPermissions_DenyPreservesExisting(t *testing.T) {
 	// Start with a custom deny rule plus some defaults
 	settings := claude.Settings{
 		Permissions: claude.PermissionsConfig{
-			Allow: config.DefaultClaudePermissions,
+			Allow: assets.DefaultAllowPermissions(),
 			Deny:  []string{"Bash(custom-block *)", "Bash(sudo *)"},
 		},
 	}

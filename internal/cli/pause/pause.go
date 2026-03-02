@@ -8,7 +8,7 @@
 //
 // Pauses all context nudge hooks for the current session. Security and
 // housekeeping hooks are unaffected. Delegates to the session-scoped
-// pause marker in secureTempDir.
+// pause marker in .context/state/.
 package pause
 
 import (

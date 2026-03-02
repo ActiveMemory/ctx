@@ -63,7 +63,7 @@ func runHeartbeat(_ *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	counterFile := filepath.Join(tmpDir, "heartbeat-"+sessionID)
 	mtimeFile := filepath.Join(tmpDir, "heartbeat-mtime-"+sessionID)
 	contextDir := rc.ContextDir()

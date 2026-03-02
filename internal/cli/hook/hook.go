@@ -8,6 +8,8 @@ package hook
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx hook" command for generating AI tool integrations.
@@ -24,8 +26,9 @@ func Cmd() *cobra.Command {
 	var write bool
 
 	cmd := &cobra.Command{
-		Use:   "hook <tool>",
-		Short: "Generate AI tool integration configs",
+		Use:         "hook <tool>",
+		Short:       "Generate AI tool integration configs",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
 		Long: `Generate configuration and instructions
 for integrating Context with AI tools.
 

@@ -236,7 +236,7 @@ personal or sensitive and should **not** be committed.
 .context/journal-site/
 .context/journal-obsidian/
 
-# Encryption key (NEVER COMMIT)
+# Legacy encryption key path (auto-migrated to ~/.local/ctx/keys/)
 .context/.ctx.key
 
 # Runtime state and logs (ephemeral, machine-specific):

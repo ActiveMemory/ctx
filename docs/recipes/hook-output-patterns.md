@@ -174,11 +174,11 @@ find "$CTX_TMPDIR" -type f -mtime +15 -delete
 **When to use**: Cleanup, log rotation, temp file management. Anything
 where the action is the point and nobody needs to know it happened.
 
-**Hook type**: `SessionEnd`, or any hook where output is irrelevant.
+**Hook type**: Any hook where output is irrelevant.
 
 **Examples in `ctx`**:
 
-* `ctx system cleanup-tmp`: Removes stale temp files on session end
+* Log rotation, marker file cleanup, state directory maintenance
 
 **Trade-off**: None, if the action is truly invisible. If it can fail in
 a way that matters, consider logging.

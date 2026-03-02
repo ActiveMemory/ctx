@@ -57,8 +57,8 @@ ctx notify setup
 ```
 
 This encrypts the URL with AES-256-GCM using the same key as the scratchpad
-(`.context/.ctx.key`). The encrypted file (`.context/.notify.enc`) is
-safe to commit. The key is `.gitignore`d.
+(`~/.local/ctx/keys/<slug>.key`). The encrypted file (`.context/.notify.enc`)
+is safe to commit. The key lives outside the project and is never committed.
 
 ### Step 3: Test It
 
@@ -189,18 +189,18 @@ for observability dashboards or liveness monitoring of long-running sessions.
 
 ## Security Model
 
-| Component      | Location                   | Committed?      | Permissions |
-|----------------|----------------------------|-----------------|-------------|
-| Encryption key | `.context/.ctx.key`        | No (gitignored) | `0600`      |
-| Encrypted URL  | `.context/.notify.enc`     | Yes (safe)      | `0600`      |
-| Webhook URL    | Never on disk in plaintext | N/A             | N/A         |
+| Component      | Location                          | Committed?      | Permissions |
+|----------------|-----------------------------------|-----------------|-------------|
+| Encryption key | `~/.local/ctx/keys/<slug>.key`    | No (user-level) | `0600`      |
+| Encrypted URL  | `.context/.notify.enc`            | Yes (safe)      | `0600`      |
+| Webhook URL    | Never on disk in plaintext        | N/A             | N/A         |
 
 The key is shared with the scratchpad. If you rotate the encryption key,
 re-run `ctx notify setup` to re-encrypt the webhook URL with the new key.
 
 ## Key Rotation
 
-`ctx` checks the age of `.context/.ctx.key` once per day. If it's older
+`ctx` checks the age of the encryption key once per day. If it's older
 than 90 days (*configurable via `key_rotation_days`*), a VERBATIM nudge
 is emitted suggesting rotation.
 
@@ -212,8 +212,9 @@ key_rotation_days: 30   # nudge sooner (default: 90)
 ## Worktrees
 
 The webhook URL is encrypted with the same encryption key
-(`.context/.ctx.key`), which is `.gitignore`d. In a git worktree,
-the key is absent: Notifications silently do nothing.
+(`~/.local/ctx/keys/<slug>.key`). Because the key lives at the user
+level, it is shared across all worktrees on the same machine —
+notifications work in worktrees automatically.
 
 This means **agents running in worktrees cannot send webhook alerts**.
 For autonomous runs where worktree agents are opaque, monitor them from

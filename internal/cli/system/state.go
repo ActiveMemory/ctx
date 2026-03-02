@@ -25,24 +25,19 @@ func resolvedJournalDir() string {
 	return filepath.Join(rc.ContextDir(), config.DirJournal)
 }
 
-// secureTempDir returns a user-specific temp directory for ctx state files.
-// Uses $XDG_RUNTIME_DIR when available (tmpfs, user-owned, 0700 on Linux),
-// otherwise creates a user-specific subdirectory under os.TempDir().
-func secureTempDir() string {
-	if xdg := os.Getenv("XDG_RUNTIME_DIR"); xdg != "" {
-		dir := filepath.Join(xdg, "ctx")
-		_ = os.MkdirAll(dir, 0o700)
-		return dir
-	}
-	dir := filepath.Join(os.TempDir(), fmt.Sprintf("ctx-%d", os.Getuid()))
-	_ = os.MkdirAll(dir, 0o700)
+// stateDir returns the project-scoped runtime state directory
+// (.context/state/). Ensures the directory exists on each call — MkdirAll
+// is a no-op when the directory is already present.
+func stateDir() string {
+	dir := filepath.Join(rc.ContextDir(), config.DirState)
+	_ = os.MkdirAll(dir, 0o750)
 	return dir
 }
 
 // readCounter reads an integer counter from a file. Returns 0 if the file
 // does not exist or cannot be parsed.
 func readCounter(path string) int {
-	data, err := os.ReadFile(path) //nolint:gosec // temp file path
+	data, err := os.ReadFile(path) //nolint:gosec // state dir path
 	if err != nil {
 		return 0
 	}
@@ -119,25 +114,19 @@ func touchFile(path string) {
 // via "ctx init". Hooks should no-op when this returns false to avoid
 // creating partial state (e.g. logs/) before initialization.
 func isInitialized() bool {
-	dir := rc.ContextDir()
-	for _, f := range config.FilesRequired {
-		if _, err := os.Stat(filepath.Join(dir, f)); err != nil {
-			return false
-		}
-	}
-	return true
+	return config.Initialized(rc.ContextDir())
 }
 
 // pauseMarkerPath returns the path to the session pause marker file.
 func pauseMarkerPath(sessionID string) string {
-	return filepath.Join(secureTempDir(), "ctx-paused-"+sessionID)
+	return filepath.Join(stateDir(), "ctx-paused-"+sessionID)
 }
 
 // paused checks if the session is paused. If paused, increments the
 // turn counter and returns the current count. Returns 0 if not paused.
 func paused(sessionID string) int {
 	path := pauseMarkerPath(sessionID)
-	data, readErr := os.ReadFile(path) //nolint:gosec // temp file path
+	data, readErr := os.ReadFile(path) //nolint:gosec // state dir path
 	if readErr != nil {
 		return 0
 	}

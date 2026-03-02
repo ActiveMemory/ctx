@@ -12,18 +12,19 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 func TestMarkWrappedUp_CreatesMarker(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	ctxDir := setupStateDir(t)
 
 	cmd := newTestCmd()
 	if err := runMarkWrappedUp(cmd); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
+	markerPath := filepath.Join(ctxDir, config.DirState, wrappedUpMarker)
 	if _, statErr := os.Stat(markerPath); statErr != nil {
 		t.Fatalf("marker file not created: %v", statErr)
 	}
@@ -35,8 +36,7 @@ func TestMarkWrappedUp_CreatesMarker(t *testing.T) {
 }
 
 func TestMarkWrappedUp_Idempotent(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	ctxDir := setupStateDir(t)
 
 	cmd1 := newTestCmd()
 	if err := runMarkWrappedUp(cmd1); err != nil {
@@ -48,19 +48,17 @@ func TestMarkWrappedUp_Idempotent(t *testing.T) {
 		t.Fatalf("second run: %v", err)
 	}
 
-	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
+	markerPath := filepath.Join(ctxDir, config.DirState, wrappedUpMarker)
 	if _, statErr := os.Stat(markerPath); statErr != nil {
 		t.Fatalf("marker file missing after second run: %v", statErr)
 	}
 }
 
 func TestWrappedUpRecently_Fresh(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	ctxDir := setupStateDir(t)
 
 	// Create a fresh marker.
-	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
-	_ = os.MkdirAll(filepath.Dir(markerPath), 0o700)
+	markerPath := filepath.Join(ctxDir, config.DirState, wrappedUpMarker)
 	_ = os.WriteFile(markerPath, []byte("wrapped-up"), 0o600)
 
 	if !wrappedUpRecently() {
@@ -69,12 +67,10 @@ func TestWrappedUpRecently_Fresh(t *testing.T) {
 }
 
 func TestWrappedUpRecently_Expired(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	ctxDir := setupStateDir(t)
 
 	// Create a marker and backdate it beyond the expiry.
-	markerPath := filepath.Join(tmpDir, "ctx", wrappedUpMarker)
-	_ = os.MkdirAll(filepath.Dir(markerPath), 0o700)
+	markerPath := filepath.Join(ctxDir, config.DirState, wrappedUpMarker)
 	_ = os.WriteFile(markerPath, []byte("wrapped-up"), 0o600)
 
 	expired := time.Now().Add(-3 * time.Hour)
@@ -86,8 +82,7 @@ func TestWrappedUpRecently_Expired(t *testing.T) {
 }
 
 func TestWrappedUpRecently_NoMarker(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	setupStateDir(t)
 
 	if wrappedUpRecently() {
 		t.Error("expected wrappedUpRecently() = false when no marker exists")

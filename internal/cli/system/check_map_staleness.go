@@ -75,7 +75,7 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 	if paused(sessionID) > 0 {
 		return nil
 	}
-	markerPath := filepath.Join(secureTempDir(), "check-map-staleness")
+	markerPath := filepath.Join(stateDir(), "check-map-staleness")
 	if isDailyThrottled(markerPath) {
 		return nil
 	}

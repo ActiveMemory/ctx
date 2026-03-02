@@ -8,12 +8,13 @@ package bootstrap
 
 import (
 	"os"
-	"os/exec"
+	"path/filepath"
 	"testing"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -124,8 +125,9 @@ func TestRootCmdPersistentPreRun_NoColor(t *testing.T) {
 
 	// Add a dummy subcommand so Execute doesn't just print help
 	dummy := &cobra.Command{
-		Use: "dummy",
-		Run: func(cmd *cobra.Command, args []string) {},
+		Use:         "dummy",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
 	cmd.SetArgs([]string{"--no-color", "--allow-outside-cwd", "dummy"})
@@ -144,8 +146,9 @@ func TestRootCmdPersistentPreRun_ContextDir(t *testing.T) {
 	cmd := RootCmd()
 
 	dummy := &cobra.Command{
-		Use: "dummy",
-		Run: func(cmd *cobra.Command, args []string) {},
+		Use:         "dummy",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
 	cmd.SetArgs([]string{"--context-dir", "/tmp/test-ctx", "--allow-outside-cwd", "dummy"})
@@ -167,8 +170,9 @@ func TestRootCmdPersistentPreRun_DefaultFlags(t *testing.T) {
 	cmd := RootCmd()
 
 	dummy := &cobra.Command{
-		Use: "dummy",
-		Run: func(cmd *cobra.Command, args []string) {},
+		Use:         "dummy",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Run:         func(cmd *cobra.Command, args []string) {},
 	}
 	cmd.AddCommand(dummy)
 	cmd.SetArgs([]string{"--allow-outside-cwd", "dummy"})
@@ -199,35 +203,113 @@ func TestInitializeSubcommandCount(t *testing.T) {
 }
 
 // TestRootCmdPersistentPreRun_BoundaryViolation tests that boundary validation
-// causes a non-zero exit when --context-dir is outside cwd and
-// --allow-outside-cwd is not set. We use a subprocess because the code
-// under test calls os.Exit(1).
+// returns an error when --context-dir is outside cwd and --allow-outside-cwd
+// is not set.
 func TestRootCmdPersistentPreRun_BoundaryViolation(t *testing.T) {
-	if os.Getenv("TEST_BOUNDARY_EXIT") == "1" {
-		cmd := RootCmd()
-		dummy := &cobra.Command{
-			Use: "dummy",
-			Run: func(cmd *cobra.Command, args []string) {},
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use:         "dummy",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Run:         func(cmd *cobra.Command, args []string) {},
+	}
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--context-dir", "/etc/not-inside-cwd", "dummy"})
+
+	execErr := cmd.Execute()
+	if execErr == nil {
+		t.Fatal("expected error from boundary violation")
+	}
+}
+
+func TestInitGuard_BlocksUninitializedCommand(t *testing.T) {
+	tmp := t.TempDir()
+
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use: "dummy",
+		Run: func(cmd *cobra.Command, args []string) {},
+	}
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+
+	execErr := cmd.Execute()
+	if execErr == nil {
+		t.Fatal("expected error for uninitialized context directory")
+	}
+	if got := execErr.Error(); got != `ctx: not initialized — run "ctx init" first` {
+		t.Errorf("unexpected error: %s", got)
+	}
+}
+
+func TestInitGuard_AllowsAnnotatedCommand(t *testing.T) {
+	tmp := t.TempDir() // empty — not initialized
+
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use:         "dummy",
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Run:         func(cmd *cobra.Command, args []string) {},
+	}
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("annotated command should succeed: %v", execErr)
+	}
+}
+
+func TestInitGuard_AllowsHiddenCommand(t *testing.T) {
+	tmp := t.TempDir() // empty — not initialized
+
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use:    "dummy",
+		Hidden: true,
+		Run:    func(cmd *cobra.Command, args []string) {},
+	}
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("hidden command should succeed: %v", execErr)
+	}
+}
+
+func TestInitGuard_AllowsGroupingCommand(t *testing.T) {
+	cmd := RootCmd()
+	// Grouping command: no Run or RunE — just shows help.
+	group := &cobra.Command{
+		Use:   "group",
+		Short: "A grouping command",
+	}
+	cmd.AddCommand(group)
+	cmd.SetArgs([]string{"--allow-outside-cwd", "group"})
+
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("grouping command should succeed: %v", execErr)
+	}
+}
+
+func TestInitGuard_AllowsInitializedCommand(t *testing.T) {
+	tmp := t.TempDir()
+
+	// Create required context files so Initialized() returns true.
+	for _, f := range config.FilesRequired {
+		path := filepath.Join(tmp, f)
+		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
+			t.Fatalf("setup: %v", writeErr)
 		}
-		cmd.AddCommand(dummy)
-		cmd.SetArgs([]string{"--context-dir", "/etc/not-inside-cwd", "dummy"})
-		_ = cmd.Execute()
-		// If we reach here, the boundary check didn't exit
-		return
 	}
 
-	// Run this test in a subprocess with the env var set
-	sub := exec.Command(os.Args[0], "-test.run=^TestRootCmdPersistentPreRun_BoundaryViolation$") //nolint:gosec // test re-exec pattern
-	sub.Env = append(os.Environ(), "TEST_BOUNDARY_EXIT=1")
-	err := sub.Run()
-	if err == nil {
-		t.Fatal("expected subprocess to exit with non-zero status")
+	cmd := RootCmd()
+	dummy := &cobra.Command{
+		Use: "dummy",
+		Run: func(cmd *cobra.Command, args []string) {},
 	}
-	exitErr, ok := err.(*exec.ExitError)
-	if !ok {
-		t.Fatalf("expected *exec.ExitError, got %T: %v", err, err)
-	}
-	if exitErr.ExitCode() == 0 {
-		t.Fatal("expected non-zero exit code from boundary violation")
+	cmd.AddCommand(dummy)
+	cmd.SetArgs([]string{"--context-dir", tmp, "--allow-outside-cwd", "dummy"})
+
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("initialized command should succeed: %v", execErr)
 	}
 }

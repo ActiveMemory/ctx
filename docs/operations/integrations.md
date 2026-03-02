@@ -100,7 +100,6 @@ The ctx plugin provides lifecycle hooks implemented as Go subcommands
 | `ctx system check-map-staleness` | UserPromptSubmit             | Nudge when ARCHITECTURE.md is stale              |
 | `ctx system heartbeat`           | UserPromptSubmit             | Session-alive signal with prompt count metadata  |
 | `ctx system post-commit`         | PostToolUse (`Bash`)         | Nudge context capture and QA after git commits   |
-| `ctx system cleanup-tmp`         | SessionEnd                   | Remove stale temp files (older than 15 days)     |
 
 A catch-all `PreToolUse` hook also runs `ctx agent` on every tool use
 (with cooldown) to autoload context.
@@ -166,13 +165,6 @@ configuration in `settings.local.json` needed:
           { "type": "command", "command": "ctx system check-knowledge" },
           { "type": "command", "command": "ctx system check-map-staleness" },
           { "type": "command", "command": "ctx system heartbeat" }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          { "type": "command", "command": "ctx system cleanup-tmp" }
         ]
       }
     ]

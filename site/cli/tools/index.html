@@ -2073,6 +2073,8 @@
       
         
       
+        
+      
     
     
     
@@ -2117,6 +2119,36 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/building-skills/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-hammer" viewBox="0 0 24 24"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9M18 15l4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Building Project Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -4170,8 +4202,8 @@ AI builds on its previous work.</p>
 using the encryption key and stored in <code>.context/.notify.enc</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
 </span></code></pre></div>
-<p>The encrypted file is safe to commit. The key (<code>.context/.ctx.key</code>) is
-gitignored and never committed.</p>
+<p>The encrypted file is safe to commit. The key (<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>)
+lives outside the project and is never committed.</p>
 <h4 id="ctx-notify-test"><code>ctx notify test</code><a class="headerlink" href="#ctx-notify-test" title="Permanent link">&para;</a></h4>
 <p>Send a test notification and report the HTTP response status.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
@@ -4455,7 +4487,7 @@ deduplicated by exact content.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>notes.md<span class="w"> </span>backup.enc
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/other/.ctx.key<span class="w"> </span>foreign.enc
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>~/.local/ctx/keys/other-slug.key<span class="w"> </span>foreign.enc
 </span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
 </span></code></pre></div>
 <hr />

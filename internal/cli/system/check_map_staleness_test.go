@@ -43,10 +43,8 @@ func setupMapStalenessTest(t *testing.T, tracking *mapTrackingInfo) string {
 		_ = os.WriteFile(filepath.Join(ctxDir, config.FileMapTracking), data, 0o600)
 	}
 
-	// Point XDG_RUNTIME_DIR to a temp location so marker files don't interfere
-	tmpState := filepath.Join(dir, "state")
-	_ = os.MkdirAll(tmpState, 0o700)
-	t.Setenv("XDG_RUNTIME_DIR", tmpState)
+	// Create state dir so marker files don't interfere
+	_ = os.MkdirAll(filepath.Join(ctxDir, config.DirState), 0o750)
 
 	return dir
 }

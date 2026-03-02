@@ -74,6 +74,7 @@ nav = [
       "recipes/publishing.md",
     ]},
     { "Agents and Automation" = [
+      "recipes/building-skills.md",
       "recipes/autonomous-loops.md",
       "recipes/when-to-use-agent-teams.md",
       "recipes/parallel-worktrees.md",

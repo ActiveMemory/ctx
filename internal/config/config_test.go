@@ -6,7 +6,11 @@
 
 package config
 
-import "testing"
+import (
+	"os"
+	"path/filepath"
+	"testing"
+)
 
 func TestUserInputToEntry(t *testing.T) {
 	tests := []struct {
@@ -499,34 +503,6 @@ func TestEntryPlural(t *testing.T) {
 	}
 }
 
-func TestDefaultClaudePermissions(t *testing.T) {
-	if len(DefaultClaudePermissions) == 0 {
-		t.Error("DefaultClaudePermissions should not be empty")
-	}
-
-	// Check that the ctx wildcard is included (covers all subcommands)
-	permSet := make(map[string]bool)
-	for _, p := range DefaultClaudePermissions {
-		permSet[p] = true
-	}
-
-	if !permSet["Bash(ctx:*)"] {
-		t.Error("DefaultClaudePermissions missing: Bash(ctx:*)")
-	}
-
-	// Check that ctx skills are included
-	expectedSkills := []string{
-		"Skill(ctx-add-learning)",
-		"Skill(ctx-agent)",
-		"Skill(ctx-status)",
-	}
-	for _, e := range expectedSkills {
-		if !permSet[e] {
-			t.Errorf("DefaultClaudePermissions missing: %s", e)
-		}
-	}
-}
-
 func TestConstants(t *testing.T) {
 	// Verify important constants are set correctly
 	tests := []struct {
@@ -551,5 +527,39 @@ func TestConstants(t *testing.T) {
 				t.Errorf("%s = %q, want %q", tt.name, tt.got, tt.want)
 			}
 		})
+	}
+}
+
+func TestInitialized_AllFilesPresent(t *testing.T) {
+	tmp := t.TempDir()
+	for _, f := range FilesRequired {
+		path := filepath.Join(tmp, f)
+		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
+			t.Fatalf("setup: %v", writeErr)
+		}
+	}
+	if !Initialized(tmp) {
+		t.Error("Initialized() = false, want true when all required files present")
+	}
+}
+
+func TestInitialized_MissingFile(t *testing.T) {
+	tmp := t.TempDir()
+	// Create all but the last required file.
+	for _, f := range FilesRequired[:len(FilesRequired)-1] {
+		path := filepath.Join(tmp, f)
+		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
+			t.Fatalf("setup: %v", writeErr)
+		}
+	}
+	if Initialized(tmp) {
+		t.Error("Initialized() = true, want false when a required file is missing")
+	}
+}
+
+func TestInitialized_EmptyDir(t *testing.T) {
+	tmp := t.TempDir()
+	if Initialized(tmp) {
+		t.Error("Initialized() = true, want false for empty directory")
 	}
 }

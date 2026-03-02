@@ -60,7 +60,7 @@ type persistenceState struct {
 }
 
 func readPersistenceState(path string) (persistenceState, bool) {
-	data, err := os.ReadFile(path) //nolint:gosec // temp file path
+	data, err := os.ReadFile(path) //nolint:gosec // state dir path
 	if err != nil {
 		return persistenceState{}, false
 	}
@@ -135,7 +135,7 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	stateFile := filepath.Join(tmpDir, "persistence-nudge-"+sessionID)
 	contextDir := rc.ContextDir()
 	logFile := filepath.Join(contextDir, "logs", "check-persistence.log")

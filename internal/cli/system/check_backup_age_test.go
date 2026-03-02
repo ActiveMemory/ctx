@@ -95,10 +95,9 @@ func TestCheckSMBMount_Unmounted(t *testing.T) {
 }
 
 func TestCheckBackupAge_DailyThrottle(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	dir := setupStateDir(t)
 
-	throttleFile := filepath.Join(secureTempDir(), backupThrottleID)
+	throttleFile := filepath.Join(dir, config.DirState, backupThrottleID)
 	touchFile(throttleFile)
 
 	cmd := newTestCmd()
@@ -113,17 +112,16 @@ func TestCheckBackupAge_DailyThrottle(t *testing.T) {
 }
 
 func TestCheckBackupAge_StaleMarkerEmitsWarning(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	setupStateDir(t)
 
 	// Create a stale marker at the expected location
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	stateDir := filepath.Join(home, ".local", "state")
-	if err := os.MkdirAll(stateDir, 0o750); err != nil {
+	localStateDir := filepath.Join(home, ".local", "state")
+	if err := os.MkdirAll(localStateDir, 0o750); err != nil {
 		t.Fatal(err)
 	}
-	marker := filepath.Join(stateDir, config.BackupMarkerFile)
+	marker := filepath.Join(localStateDir, config.BackupMarkerFile)
 	if err := os.WriteFile(marker, nil, 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -150,16 +148,15 @@ func TestCheckBackupAge_StaleMarkerEmitsWarning(t *testing.T) {
 }
 
 func TestCheckBackupAge_FreshMarkerSilent(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	setupStateDir(t)
 
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	stateDir := filepath.Join(home, ".local", "state")
-	if err := os.MkdirAll(stateDir, 0o750); err != nil {
+	localStateDir := filepath.Join(home, ".local", "state")
+	if err := os.MkdirAll(localStateDir, 0o750); err != nil {
 		t.Fatal(err)
 	}
-	marker := filepath.Join(stateDir, config.BackupMarkerFile)
+	marker := filepath.Join(localStateDir, config.BackupMarkerFile)
 	if err := os.WriteFile(marker, nil, 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -178,8 +175,7 @@ func TestCheckBackupAge_FreshMarkerSilent(t *testing.T) {
 }
 
 func TestCheckBackupAge_MissingMarkerWarns(t *testing.T) {
-	tmpDir := t.TempDir()
-	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	setupStateDir(t)
 
 	// Use a home dir with no marker file
 	home := t.TempDir()

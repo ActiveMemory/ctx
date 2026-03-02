@@ -23,13 +23,17 @@ Entries are numbered, reorderable, and persist across sessions.
 
 Scratchpad entries are encrypted with `AES-256-GCM` before touching the disk.
 
-| Component      | Path                      | Git status                     |
-|----------------|---------------------------|--------------------------------|
-| Encryption key | `.context/.ctx.key`       | Gitignored, `0600` permissions |
-| Encrypted data | `.context/scratchpad.enc` | Committed                      |
+| Component      | Path                             | Git status                      |
+|----------------|----------------------------------|---------------------------------|
+| Encryption key | `~/.local/ctx/keys/<slug>.key`   | User-level, `0600` permissions  |
+| Encrypted data | `.context/scratchpad.enc`        | Committed                       |
 
 The key is generated automatically during `ctx init` (256-bit via
-`crypto/rand`). The ciphertext format is `[12-byte nonce][ciphertext+tag]`.
+`crypto/rand`) and stored at `~/.local/ctx/keys/`. The slug is derived
+from the project's absolute path. Legacy project-local keys
+(`.context/.ctx.key`) are auto-migrated on first access.
+
+The ciphertext format is `[12-byte nonce][ciphertext+tag]`.
 No external dependencies: Go stdlib only.
 
 Because the key is `.gitignore`d and the data is committed, you get:
@@ -197,18 +201,14 @@ English; the agent picks the right command.
 
 ## Worktrees
 
-The encryption key (`.context/.ctx.key`) is gitignored. It only
-exists in the main checkout. In a git worktree, `ctx pad` commands fail
-gracefully: no key is found, no crash, but the pad is inaccessible.
-
-Use the scratchpad from the main checkout only. This is by design: the
-key never leaves the machine where it was generated, and worktrees are
-ephemeral working copies.
+The encryption key lives at `~/.local/ctx/keys/` (outside the project
+directory). Because all worktrees on the same machine share this path,
+`ctx pad` works in worktrees automatically — no special setup needed.
 
 ## Key Distribution
 
-The encryption key (`.context/.ctx.key`) stays on the machine
-where it was generated. `ctx` **never** transmits it.
+The encryption key (`~/.local/ctx/keys/<slug>.key`) stays on the
+machine where it was generated. `ctx` **never** transmits it.
 
 To share the scratchpad across machines:
 

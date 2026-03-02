@@ -2073,6 +2073,8 @@
       
         
       
+        
+      
     
     
     
@@ -2117,6 +2119,36 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/building-skills/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-hammer" viewBox="0 0 24 24"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9M18 15l4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Building Project Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -3596,8 +3628,8 @@ Entries are numbered, reorderable, and persist across sessions.</p>
 <tbody>
 <tr>
 <td>Encryption key</td>
-<td><code>.context/.ctx.key</code></td>
-<td>Gitignored, <code>0600</code> permissions</td>
+<td><code>~/.local/ctx/keys/&lt;slug&gt;.key</code></td>
+<td>User-level, <code>0600</code> permissions</td>
 </tr>
 <tr>
 <td>Encrypted data</td>
@@ -3607,7 +3639,10 @@ Entries are numbered, reorderable, and persist across sessions.</p>
 </tbody>
 </table>
 <p>The key is generated automatically during <code>ctx init</code> (256-bit via
-<code>crypto/rand</code>). The ciphertext format is <code>[12-byte nonce][ciphertext+tag]</code>.
+<code>crypto/rand</code>) and stored at <code>~/.local/ctx/keys/</code>. The slug is derived
+from the project's absolute path. Legacy project-local keys
+(<code>.context/.ctx.key</code>) are auto-migrated on first access.</p>
+<p>The ciphertext format is <code>[12-byte nonce][ciphertext+tag]</code>.
 No external dependencies: Go stdlib only.</p>
 <p>Because the key is <code>.gitignore</code>d and the data is committed, you get:</p>
 <ul>
@@ -3848,15 +3883,12 @@ don't need to remember the syntax:</p>
 <p>The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.</p>
 <h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
-<p>The encryption key (<code>.context/.ctx.key</code>) is gitignored. It only
-exists in the main checkout. In a git worktree, <code>ctx pad</code> commands fail
-gracefully: no key is found, no crash, but the pad is inaccessible.</p>
-<p>Use the scratchpad from the main checkout only. This is by design: the
-key never leaves the machine where it was generated, and worktrees are
-ephemeral working copies.</p>
+<p>The encryption key lives at <code>~/.local/ctx/keys/</code> (outside the project
+directory). Because all worktrees on the same machine share this path,
+<code>ctx pad</code> works in worktrees automatically — no special setup needed.</p>
 <h2 id="key-distribution">Key Distribution<a class="headerlink" href="#key-distribution" title="Permanent link">&para;</a></h2>
-<p>The encryption key (<code>.context/.ctx.key</code>) stays on the machine
-where it was generated. <code>ctx</code> <strong>never</strong> transmits it.</p>
+<p>The encryption key (<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>) stays on the
+machine where it was generated. <code>ctx</code> <strong>never</strong> transmits it.</p>
 <p>To share the scratchpad across machines:</p>
 <ol>
 <li>Copy the key manually: <code>scp</code>, USB drive, password manager.</li>

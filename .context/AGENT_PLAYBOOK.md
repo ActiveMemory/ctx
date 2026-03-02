@@ -40,6 +40,21 @@ This applies to debugging too — reason through the cause before reaching
 for a fix. Rushing to code before reasoning is the most common source of
 wasted work.
 
+### Chunk and Checkpoint Large Tasks
+
+For work spanning many files or steps, break it into independently
+verifiable chunks. After each chunk:
+
+1. **Commit** — save progress to git so nothing is lost
+2. **Persist** — record learnings or decisions discovered during the chunk
+3. **Verify** — run tests or `make lint` before moving on
+
+Track progress via TASKS.md checkboxes. If context runs low mid-task,
+persist a progress note (what's done, what's next, what assumptions
+remain) before continuing in a new window. The `check-context-size`
+hook warns at 80% usage — treat that as a signal to checkpoint, not
+to rush.
+
 ## Session Lifecycle
 
 A session follows this arc:
@@ -72,6 +87,22 @@ Surface problems worth mentioning:
   ARCHITECTURE.md against the actual file tree
 
 One sentence is enough — don't turn startup into a maintenance session.
+
+### Context Window Limits
+
+The `check-context-size` hook (`ctx system check-context-size`) monitors
+context window usage and warns when it exceeds 80%. When you see this
+warning or sense context is running long:
+
+- **Persist progress**: write what's done and what's left to TASKS.md
+  or a progress note
+- **Checkpoint state**: commit work-in-progress so a fresh session can
+  pick up cleanly
+- **Summarize**: leave a breadcrumb for the next window — the current
+  task, open questions, and next step
+
+Context compaction happens automatically, but the next window loses
+nuance. Explicit persistence is cheaper than re-discovery.
 
 ### Conversational Triggers
 
@@ -138,9 +169,11 @@ user. These apply unless the user overrides them for the session
 
 - **At design decisions**: always present 2+ approaches with
   trade-offs before committing — don't silently pick one
-- **At completion claims**: run self-audit questions (What did I
-  assume? What didn't I check? Where am I least confident? What
-  would a reviewer question?) before reporting done
+- **At completion claims**: run `/ctx-verify` — it maps claims to
+  evidence (e.g., "tests pass" requires 0-failure output, "build
+  succeeds" requires exit 0). At minimum, answer the self-audit
+  questions: What did I assume? What didn't I check? Where am I
+  least confident? What would a reviewer question?
 - **At ambiguous moments**: ask the user rather than inferring
   intent — a quick question is cheaper than rework
 - **When producing artifacts**: flag assumptions and uncertainty

@@ -61,7 +61,7 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	tmpDir := secureTempDir()
+	tmpDir := stateDir()
 	throttleFile := filepath.Join(tmpDir, backupThrottleID)
 
 	if isDailyThrottled(throttleFile) {

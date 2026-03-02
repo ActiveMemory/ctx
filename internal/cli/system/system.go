@@ -59,7 +59,6 @@ Hook subcommands (Claude Code plugin — safe to run manually):
   block-dangerous-commands    Block dangerous command patterns (project-local)
   check-backup-age            Backup staleness check (project-local)
   post-commit                 Post-commit context capture nudge
-  cleanup-tmp                 Remove stale temp files
   qa-reminder                 QA reminder before completion
   specs-nudge                 Plan-to-specs directory nudge (PreToolUse)
   heartbeat                   Session heartbeat webhook (no stdout)`,
@@ -84,7 +83,6 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		checkVersionCmd(),
 		blockNonPathCtxCmd(),
 		postCommitCmd(),
-		cleanupTmpCmd(),
 		qaReminderCmd(),
 		checkResourcesCmd(),
 		checkKnowledgeCmd(),

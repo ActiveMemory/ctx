@@ -52,7 +52,7 @@ func GenerateKey() ([]byte, error) {
 //
 // Returns:
 //   - []byte: Nonce-prefixed ciphertext
-//   - error: Non-nil if key is wrong size or encryption fails
+//   - error: Non-nil if the key is the wrong size or encryption fails
 func Encrypt(key, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {

@@ -154,8 +154,9 @@ func InjectionTokenWarn() int {
 
 // ContextWindow returns the configured context window size in tokens.
 //
-// Returns 200000 (default) for Claude Opus/Sonnet. Override via
-// `context_window` in .ctxrc for different models.
+// Returns 200000 (default). For Claude Code users this value is a no-op:
+// the system hook auto-detects 200k vs 1M from ~/.claude/settings.json.
+// Only useful as a manual override for non-Claude AI tools.
 //
 // Returns:
 //   - int: Context window size in tokens

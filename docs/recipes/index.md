@@ -277,6 +277,17 @@ Each step produces an artifact that feeds the next.
 
 ## Agents & Automation
 
+### [Building Project Skills](building-skills.md)
+
+Encode repeating workflows into reusable **skills** the agent loads
+automatically. Covers the full cycle: **identify** a pattern, **create**
+the skill, **test** with realistic prompts, and **iterate** until it
+triggers correctly.
+
+**Uses**: `/ctx-skill-creator`, `ctx init`
+
+---
+
 ### [Running an Unattended AI Agent](autonomous-loops.md)
 
 Set up a **loop** where an AI agent works through tasks overnight

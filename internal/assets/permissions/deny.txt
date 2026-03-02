@@ -1,0 +1,21 @@
+# Dangerous operations
+Bash(sudo *)
+Bash(git push *)
+Bash(git push)
+Bash(rm -rf /*)
+Bash(rm -rf ~*)
+Bash(curl *)
+Bash(wget *)
+Bash(chmod 777 *)
+
+# Sensitive file reads (defense-in-depth; upstream enforcement has known issues)
+Read(**/.env)
+Read(**/.env.*)
+Read(**/*credentials*)
+Read(**/*secret*)
+Read(**/*.pem)
+Read(**/*.key)
+
+# Sensitive file edits
+Edit(**/.env)
+Edit(**/.env.*)

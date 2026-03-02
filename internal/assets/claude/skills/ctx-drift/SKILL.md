@@ -181,8 +181,8 @@ drifts independently from the codebase.
 1. Read `.claude/settings.local.json` and extract the allow list.
 
 2. Check for **missing ctx defaults**. Every entry in
-   `DefaultClaudePermissions` (defined in
-   `internal/config/file.go`) should be present. The current
+   `DefaultAllowPermissions()` (defined in
+   `internal/assets/permissions/allow.txt`) should be present. The current
    expected set is:
 
    - `Bash(ctx:*)` — covers all ctx subcommands

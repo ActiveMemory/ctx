@@ -17,7 +17,9 @@ package rc
 //   - ScratchpadEncrypt: Whether to encrypt the scratchpad (default true)
 //   - AllowOutsideCwd: Skip boundary validation for external context dirs (default false)
 //   - InjectionTokenWarn: Token threshold for oversize injection warning (default 15000, 0 = disabled)
-//   - ContextWindow: Context window size in tokens for usage reporting (default 200000)
+//   - ContextWindow: Context window size in tokens for usage reporting (default 200000).
+//     No-op for Claude Code users: auto-detected from ~/.claude/settings.json.
+//     Only needed for non-Claude AI tools.
 //   - EventLog: Whether to log hook events locally (default false)
 //   - KeyRotationDays: Days before encryption key rotation nudge (default 90)
 //   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)

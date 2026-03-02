@@ -41,8 +41,8 @@ Creating project root files...
   ✓ PROMPT.md
   ✓ IMPLEMENTATION_PLAN.md
 
-Setting up Claude Code permissions...
-  ✓ .ctx.key
+Setting up encryption key...
+  ✓ ~/.local/ctx/keys/<slug>.key
 
 Claude Code plugin (hooks + skills):
   Install: claude /plugin marketplace add ActiveMemory/ctx
@@ -246,7 +246,7 @@ You should **`.gitignore`** the generated and sensitive paths:
 # Hook logs (machine-specific)
 .context/logs/
 
-# Encryption key (NEVER commit)
+# Legacy encryption key path (auto-migrated to ~/.local/ctx/keys/)
 .context/.ctx.key
 
 # Claude Code local settings (machine-specific)
