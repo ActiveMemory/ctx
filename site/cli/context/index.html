@@ -1411,6 +1411,8 @@
       
         
       
+        
+      
     
     
     
@@ -1533,6 +1535,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2218,6 +2250,8 @@
       
         
       
+        
+      
     
     
     
@@ -2508,6 +2542,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-reindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx reindex
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ctx-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2619,6 +2664,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3470,6 +3545,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ctx-reindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx reindex
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ctx-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3916,38 +4002,54 @@ No-op if the files already match.</p>
 </span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Restored from golden image.</span>
 </span></code></pre></div>
 <hr />
+<h3 id="ctx-reindex"><code>ctx reindex</code><a class="headerlink" href="#ctx-reindex" title="Permanent link">&para;</a></h3>
+<p>Regenerate the quick-reference index for both <code>DECISIONS.md</code> and <code>LEARNINGS.md</code>
+in a single invocation.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>reindex
+</span></code></pre></div>
+<p>This is a convenience wrapper around <code>ctx decisions reindex</code> and
+<code>ctx learnings reindex</code>. Both files grow at similar rates and users
+typically want to reindex both after manual edits.</p>
+<p>The index is a compact table of date and title for each entry, allowing
+AI tools to scan entries without reading the full file.</p>
+<p><strong>Example</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>reindex
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
+</span></code></pre></div>
+<hr />
 <h3 id="ctx-decisions"><code>ctx decisions</code><a class="headerlink" href="#ctx-decisions" title="Permanent link">&para;</a></h3>
 <p>Manage the <code>DECISIONS.md</code> file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-decisions-reindex"><code>ctx decisions reindex</code><a class="headerlink" href="#ctx-decisions-reindex" title="Permanent link">&para;</a></h4>
 <p>Regenerate the quick-reference index at the top of <code>DECISIONS.md</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>The index is a compact table showing the date and title for each decision,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to <code>DECISIONS.md</code> or when migrating existing
 files to use the index format.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>decisions<span class="w"> </span>reindex
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># ✓ Index regenerated with 12 entries</span>
 </span></code></pre></div>
 <hr />
 <h3 id="ctx-learnings"><code>ctx learnings</code><a class="headerlink" href="#ctx-learnings" title="Permanent link">&para;</a></h3>
 <p>Manage the <code>LEARNINGS.md</code> file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>&lt;subcommand&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>&lt;subcommand&gt;
 </span></code></pre></div>
 <h4 id="ctx-learnings-reindex"><code>ctx learnings reindex</code><a class="headerlink" href="#ctx-learnings-reindex" title="Permanent link">&para;</a></h4>
 <p>Regenerate the quick-reference index at the top of <code>LEARNINGS.md</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
 </span></code></pre></div>
 <p>The index is a compact table showing the date and title for each learning,
 allowing AI tools to quickly scan entries without reading the full file.</p>
 <p>Use this after manual edits to <code>LEARNINGS.md</code> or when migrating existing
 files to use the index format.</p>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ctx<span class="w"> </span>learnings<span class="w"> </span>reindex
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># ✓ Index regenerated with 8 entries</span>
 </span></code></pre></div>
 
 

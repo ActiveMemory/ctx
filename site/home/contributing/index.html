@@ -893,6 +893,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#running-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1762,6 +1773,8 @@
       
         
       
+        
+      
     
     
     
@@ -1884,6 +1897,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2567,6 +2610,8 @@
       
         
       
+        
+      
     
     
     
@@ -2730,6 +2775,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3610,6 +3685,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#running-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3953,14 +4039,6 @@ never distributed to users.</p>
 <td>Backup context and Claude data to SMB share</td>
 </tr>
 <tr>
-<td><code>/_ctx-brainstorm</code></td>
-<td>Structured design dialogue before implementation</td>
-</tr>
-<tr>
-<td><code>/_ctx-check-links</code></td>
-<td>Audit docs for dead links before releases</td>
-</tr>
-<tr>
 <td><code>/_ctx-qa</code></td>
 <td>Run QA checks before committing</td>
 </tr>
@@ -3973,27 +4051,14 @@ never distributed to users.</p>
 <td>Generate release notes for <code>dist/RELEASE_NOTES.md</code></td>
 </tr>
 <tr>
-<td><code>/_ctx-sanitize-permissions</code></td>
-<td>Audit <code>settings.local.json</code> for dangerous permissions</td>
-</tr>
-<tr>
-<td><code>/_ctx-skill-creator</code></td>
-<td>Create or improve a skill</td>
-</tr>
-<tr>
-<td><code>/_ctx-spec</code></td>
-<td>Scaffold a feature spec from <code>specs/spec-template.md</code></td>
-</tr>
-<tr>
 <td><code>/_ctx-update-docs</code></td>
 <td>Check docs/code consistency after changes</td>
 </tr>
-<tr>
-<td><code>/_ctx-verify</code></td>
-<td>Verify before claiming work is done</td>
-</tr>
 </tbody>
 </table>
+<p>Six skills previously in this list have been promoted to bundled plugin skills
+and are now available to all ctx users: <code>/ctx-brainstorm</code>, <code>/ctx-check-links</code>,
+<code>/ctx-sanitize-permissions</code>, <code>/ctx-skill-creator</code>, <code>/ctx-spec</code>, <code>/ctx-verify</code>.</p>
 <hr />
 <h2 id="day-to-day-workflow">Day-to-Day Workflow<a class="headerlink" href="#day-to-day-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="go-code-changes">Go Code Changes<a class="headerlink" href="#go-code-changes" title="Permanent link">&para;</a></h3>
@@ -4043,21 +4108,30 @@ is gitignored and swapped between them:</p>
 </tr>
 </tbody>
 </table>
-<p>Use Make targets to switch:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span>rc-dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>make<span class="w"> </span>rc-base<span class="w">     </span><span class="c1"># switch to base profile</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>make<span class="w"> </span>rc-status<span class="w">   </span><span class="c1"># show which profile is active</span>
+<p>Use ctx commands to switch:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>dev<span class="w">      </span><span class="c1"># switch to dev profile</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ctx<span class="w"> </span>config<span class="w"> </span>switch<span class="w"> </span>base<span class="w">     </span><span class="c1"># switch to base profile</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ctx<span class="w"> </span>config<span class="w"> </span>status<span class="w">          </span><span class="c1"># show which profile is active</span>
 </span></code></pre></div>
-<p>After cloning, run <code>make rc-dev</code> to get started with full logging.</p>
+<p>After cloning, run <code>ctx config switch dev</code> to get started with full logging.</p>
 <p>See <a href="../configuration/">Configuration</a> for the full <code>.ctxrc</code> option reference.</p>
+<h3 id="backups">Backups<a class="headerlink" href="#backups" title="Permanent link">&para;</a></h3>
+<p>Back up project context and global Claude Code data with:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w">                    </span><span class="c1"># both project + global (default)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>project<span class="w">    </span><span class="c1"># .context/, .claude/, ideas/ only</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>backup<span class="w"> </span>--scope<span class="w"> </span>global<span class="w">     </span><span class="c1"># ~/.claude/ only</span>
+</span></code></pre></div>
+<p>Archives are saved to <code>/tmp/</code>. When <code>CTX_BACKUP_SMB_URL</code> is configured,
+they are also copied to an SMB share. See
+<a href="../../cli/system/#ctx-system-backup">CLI Reference: backup</a> for details.</p>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span><span class="nb">test</span><span class="w">   </span><span class="c1"># fast: all tests</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make<span class="w"> </span>audit<span class="w">  </span><span class="c1"># full: fmt + vet + lint + drift + docs + test</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>make<span class="w"> </span>smoke<span class="w">  </span><span class="c1"># build + run basic commands end-to-end</span>
 </span></code></pre></div>
 <h3 id="running-the-docs-site-locally">Running the Docs Site Locally<a class="headerlink" href="#running-the-docs-site-locally" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span>site-setup<span class="w">  </span><span class="c1"># one-time: install zensical via pipx</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>make<span class="w"> </span>site-serve<span class="w">  </span><span class="c1"># serve at localhost</span>
 </span></code></pre></div>
 <hr />
 <h2 id="submitting-changes">Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
@@ -4112,7 +4186,7 @@ doc consistency, and tests in one pass.</p>
 <p>By contributing, you agree to the
 <a href="https://github.com/ActiveMemory/ctx/blob/main/CONTRIBUTING_DCO.md">Developer Certificate of Origin</a>.</p>
 <p>All commits must be signed off:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-s<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </span></code></pre></div>
 <h3 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h3>
 <p>Contributions are licensed under the

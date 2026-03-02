@@ -1405,6 +1405,8 @@
       
         
       
+        
+      
     
     
     
@@ -1527,6 +1529,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2210,6 +2242,8 @@
       
         
       
+        
+      
     
     
     
@@ -2373,6 +2407,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3412,6 +3476,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#design-before-coding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Before Coding
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3636,14 +3711,14 @@ use <code>/ctx-doctor</code> for agent-driven analysis of event patterns.</p>
 <p>Keep <code>.claude/settings.local.json</code> clean: recommended <strong>safe defaults</strong>,
 what to <strong>never</strong> pre-approve, and a <strong>maintenance workflow</strong> for cleaning
 up session debris.</p>
-<p><strong>Uses</strong>: <code>ctx init</code>, <code>/ctx-drift</code>, <code>/sanitize-permissions</code>,
+<p><strong>Uses</strong>: <code>ctx init</code>, <code>/ctx-drift</code>, <code>/ctx-sanitize-permissions</code>,
 <code>ctx permissions snapshot</code>, <code>ctx permissions restore</code></p>
 <hr />
 <h3 id="permission-snapshots"><a href="permission-snapshots/">Permission Snapshots</a><a class="headerlink" href="#permission-snapshots" title="Permanent link">&para;</a></h3>
 <p>Capture a known-good permission <strong>baseline</strong> as a <strong>golden image</strong>, then restore
 at session start to automatically drop session-accumulated permissions.</p>
 <p><strong>Uses</strong>: <code>ctx permissions snapshot</code>, <code>ctx permissions restore</code>,
-<code>/sanitize-permissions</code></p>
+<code>/ctx-sanitize-permissions</code></p>
 <hr />
 <h3 id="turning-activity-into-content"><a href="publishing/">Turning Activity into Content</a><a class="headerlink" href="#turning-activity-into-content" title="Permanent link">&para;</a></h3>
 <p>Generate <strong>blog posts</strong> from project activity, write <strong>changelog
@@ -3660,6 +3735,13 @@ blog artifacts you see on this website.</p>
 as permanent project specs. Filter by date, select interactively, and
 optionally create tasks referencing each imported spec.</p>
 <p><strong>Uses</strong>: <code>/ctx-import-plans</code>, <code>/ctx-add-task</code></p>
+<hr />
+<h3 id="design-before-coding"><a href="design-before-coding/">Design Before Coding</a><a class="headerlink" href="#design-before-coding" title="Permanent link">&para;</a></h3>
+<p>Front-load design with a four-skill chain: <strong>brainstorm</strong> the approach,
+<strong>spec</strong> the design, <strong>task</strong> the work, <strong>implement</strong> step-by-step.
+Each step produces an artifact that feeds the next.</p>
+<p><strong>Uses</strong>: <code>/ctx-brainstorm</code>, <code>/ctx-spec</code>, <code>/ctx-add-task</code>,
+<code>/ctx-implement</code>, <code>/ctx-add-decision</code></p>
 <hr />
 <h2 id="agents-automation">Agents &amp; Automation<a class="headerlink" href="#agents-automation" title="Permanent link">&para;</a></h2>
 <h3 id="running-an-unattended-ai-agent"><a href="autonomous-loops/">Running an Unattended AI Agent</a><a class="headerlink" href="#running-an-unattended-ai-agent" title="Permanent link">&para;</a></h3>

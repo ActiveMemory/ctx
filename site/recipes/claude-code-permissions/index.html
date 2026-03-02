@@ -1424,6 +1424,8 @@
       
         
       
+        
+      
     
     
     
@@ -1549,6 +1551,36 @@
     
   
     Importing Claude Code Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-before-coding/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-drafting-compass" viewBox="0 0 24 24"><path d="m12.99 6.74 1.93 3.44M19.136 12a10 10 0 0 1-14.271 0M21 21l-2.16-3.84M3 21l8.02-14.26"/><circle cx="12" cy="5" r="2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Before Coding
   
 
     
@@ -2466,6 +2498,8 @@
       
         
       
+        
+      
     
     
     
@@ -2629,6 +2663,36 @@
     
   
     Tools and Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/config/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-settings-2" viewBox="0 0 24 24"><path d="M14 17H5M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
   
 
     
@@ -3633,7 +3697,7 @@ keep it clean.</p>
 <h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx<span class="w"> </span>init<span class="w">                            </span><span class="c1"># seeds safe defaults</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/ctx-drift<span class="w">                          </span><span class="c1"># detects missing/stale permissions</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/sanitize-permissions<span class="w">               </span><span class="c1"># audits for dangerous patterns</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/ctx-sanitize-permissions<span class="w">               </span><span class="c1"># audits for dangerous patterns</span>
 </span></code></pre></div>
 <p>See <a href="#recommended-defaults">Recommended Defaults</a> for the full list.</p>
 <h2 id="commands-and-skills-used">Commands and Skills Used<a class="headerlink" href="#commands-and-skills-used" title="Permanent link">&para;</a></h2>
@@ -3654,7 +3718,7 @@ keep it clean.</p>
 <td>Detects missing or stale permission entries</td>
 </tr>
 <tr>
-<td><code>/sanitize-permissions</code></td>
+<td><code>/ctx-sanitize-permissions</code></td>
 <td>Audits for dangerous patterns (security-focused)</td>
 </tr>
 </tbody>
@@ -3853,7 +3917,7 @@ pattern always prompts the user, even if it also matches an allow entry.</p>
 <td>Deletes untracked files</td>
 </tr>
 <tr>
-<td><code>Skill(sanitize-permissions)</code></td>
+<td><code>Skill(ctx-sanitize-permissions)</code></td>
 <td>Edits this file: self-modification vector</td>
 </tr>
 <tr>
@@ -3926,7 +3990,7 @@ for a step-by-step runbook.</p>
 <li>Stale <code>Skill(ctx-*)</code> entries for removed skills;</li>
 <li>Granular <code>Bash(ctx &lt;subcommand&gt;:*)</code> entries that should be consolidated.</li>
 </ul>
-<p>Run <code>/sanitize-permissions</code> to catch security issues:</p>
+<p>Run <code>/ctx-sanitize-permissions</code> to catch security issues:</p>
 <ul>
 <li>Hook bypass patterns</li>
 <li>Destructive commands</li>
