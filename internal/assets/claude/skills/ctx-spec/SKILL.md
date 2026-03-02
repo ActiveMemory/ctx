@@ -1,5 +1,5 @@
 ---
-name: _ctx-spec
+name: ctx-spec
 description: "Scaffold a feature spec from the project template. Use when planning a new feature, writing a design document, or when a task references a missing spec."
 ---
 
@@ -10,7 +10,7 @@ each section with the user to produce a complete design document.
 
 - Before implementing a non-trivial feature
 - When a task says "Spec: `specs/X.md`" and the file does not exist
-- When `/_ctx-brainstorm` has produced a validated design that needs
+- When `/ctx-brainstorm` has produced a validated design that needs
   a written artifact
 - When the user says "let's spec this out" or "write a spec for..."
 
@@ -18,14 +18,14 @@ each section with the user to produce a complete design document.
 
 - Bug fixes or small changes (just do them)
 - When a spec already exists (read it instead)
-- When the design is still vague (use `/_ctx-brainstorm` first)
+- When the design is still vague (use `/ctx-brainstorm` first)
 
 ## Usage Examples
 
 ```text
-/_ctx-spec
-/_ctx-spec (session checkpointing)
-/_ctx-spec (rss feed generation)
+/ctx-spec
+/ctx-spec (session checkpointing)
+/ctx-spec (rss feed generation)
 ```
 
 ## Process

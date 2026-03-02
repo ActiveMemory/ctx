@@ -23,7 +23,8 @@ import (
 )
 
 // setupEncrypted creates a temp dir with a .context/ directory and encryption key.
-// It sets the RC context dir override and returns a cleanup function.
+// It sets HOME to the temp dir so user-level key paths stay isolated,
+// sets the RC context dir override, and returns the temp dir path.
 func setupEncrypted(t *testing.T) string {
 	t.Helper()
 	dir := t.TempDir()
@@ -31,6 +32,7 @@ func setupEncrypted(t *testing.T) string {
 	if err := os.Chdir(dir); err != nil {
 		t.Fatal(err)
 	}
+	t.Setenv("HOME", dir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -44,12 +46,16 @@ func setupEncrypted(t *testing.T) string {
 		t.Fatal(err)
 	}
 
+	// Write key to the user-level path (where rc.KeyPath resolves).
+	userKeyPath := config.ProjectKeyPath(dir)
+	if err := os.MkdirAll(filepath.Dir(userKeyPath), config.PermKeyDir); err != nil {
+		t.Fatal(err)
+	}
 	key, err := crypto.GenerateKey()
 	if err != nil {
 		t.Fatal(err)
 	}
-	keyFile := filepath.Join(ctxDir, config.FileContextKey)
-	if err := crypto.SaveKey(keyFile, key); err != nil {
+	if err := crypto.SaveKey(userKeyPath, key); err != nil {
 		t.Fatal(err)
 	}
 
@@ -65,6 +71,7 @@ func setupPlaintext(t *testing.T) string {
 	if err := os.Chdir(dir); err != nil {
 		t.Fatal(err)
 	}
+	t.Setenv("HOME", dir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -514,8 +521,8 @@ func TestDecryptionFailure_WrongKey(t *testing.T) {
 
 	// Replace the key with a different one
 	newKey, _ := crypto.GenerateKey()
-	keyFile := filepath.Join(config.DirContext, config.FileContextKey)
-	if err := crypto.SaveKey(keyFile, newKey); err != nil {
+	kp := rc.KeyPath()
+	if err := crypto.SaveKey(kp, newKey); err != nil {
 		t.Fatal(err)
 	}
 
@@ -788,8 +795,11 @@ func TestKeyPath(t *testing.T) {
 	setupEncrypted(t)
 
 	path := keyPath()
-	if !strings.HasSuffix(path, config.FileContextKey) {
-		t.Errorf("keyPath() = %q, want suffix %q", path, config.FileContextKey)
+	if !strings.HasSuffix(path, ".key") {
+		t.Errorf("keyPath() = %q, want suffix %q", path, ".key")
+	}
+	if !strings.Contains(path, ".local/ctx/keys/") {
+		t.Errorf("keyPath() = %q, want user-level path containing .local/ctx/keys/", path)
 	}
 }
 
@@ -809,6 +819,7 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 	if err := os.Chdir(dir); err != nil {
 		t.Fatal(err)
 	}
+	t.Setenv("HOME", dir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -843,6 +854,7 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 	if err := os.Chdir(dir); err != nil {
 		t.Fatal(err)
 	}
+	t.Setenv("HOME", dir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -856,15 +868,15 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// No key, no enc file -- should generate
+	// No key, no enc file -- should generate at user-level path.
 	err := ensureKey()
 	if err != nil {
 		t.Fatalf("ensureKey error: %v", err)
 	}
 
-	kp := filepath.Join(ctxDir, config.FileContextKey)
-	if _, err := os.Stat(kp); err != nil {
-		t.Error("key file should have been created")
+	kp := rc.KeyPath()
+	if _, statErr := os.Stat(kp); statErr != nil {
+		t.Errorf("key file should have been created at %s", kp)
 	}
 }
 
@@ -943,8 +955,7 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 	setupEncrypted(t)
 
 	// Load the key
-	kp := filepath.Join(config.DirContext, config.FileContextKey)
-	key, err := crypto.LoadKey(kp)
+	key, err := crypto.LoadKey(rc.KeyPath())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -994,8 +1005,7 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 func TestResolve_OnlyOursFile(t *testing.T) {
 	setupEncrypted(t)
 
-	kp := filepath.Join(config.DirContext, config.FileContextKey)
-	key, err := crypto.LoadKey(kp)
+	key, err := crypto.LoadKey(rc.KeyPath())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1852,6 +1862,243 @@ func TestImport_WhitespaceOnly(t *testing.T) {
 	}
 }
 
+// --- Import --blobs tests ---
+
+func TestImportBlobs_Basic(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	blobDir := filepath.Join(dir, "blobs")
+	if err := os.MkdirAll(blobDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"a.txt", "b.md", "c.log"} {
+		if err := os.WriteFile(filepath.Join(blobDir, name),
+			[]byte("content of "+name), 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	if err != nil {
+		t.Fatalf("import --blobs error: %v", err)
+	}
+	if !strings.Contains(out, "Done. Added 3, skipped 0.") {
+		t.Errorf("output = %q, want 'Done. Added 3, skipped 0.'", out)
+	}
+	for _, name := range []string{"a.txt", "b.md", "c.log"} {
+		if !strings.Contains(out, "+ "+name) {
+			t.Errorf("output missing '+ %s': %q", name, out)
+		}
+	}
+
+	// Verify blobs appear in list
+	listOut, listErr := runCmd(newPadCmd())
+	if listErr != nil {
+		t.Fatal(listErr)
+	}
+	for _, name := range []string{"a.txt", "b.md", "c.log"} {
+		want := name + " [BLOB]"
+		if !strings.Contains(listOut, want) {
+			t.Errorf("list missing %q: %q", want, listOut)
+		}
+	}
+}
+
+func TestImportBlobs_SkipsDirectories(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	blobDir := filepath.Join(dir, "blobs")
+	if err := os.MkdirAll(filepath.Join(blobDir, "subdir"), 0750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(blobDir, "keep.txt"),
+		[]byte("data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	if err != nil {
+		t.Fatalf("import --blobs error: %v", err)
+	}
+	if !strings.Contains(out, "Done. Added 1, skipped 0.") {
+		t.Errorf("output = %q, want 'Done. Added 1, skipped 0.'", out)
+	}
+	if strings.Contains(out, "subdir") {
+		t.Errorf("output should not mention subdir: %q", out)
+	}
+}
+
+func TestImportBlobs_SkipsTooLarge(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	blobDir := filepath.Join(dir, "blobs")
+	if err := os.MkdirAll(blobDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+	// Small file
+	if err := os.WriteFile(filepath.Join(blobDir, "small.txt"),
+		[]byte("ok"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	// Oversized file
+	big := make([]byte, MaxBlobSize+1)
+	if err := os.WriteFile(filepath.Join(blobDir, "huge.bin"),
+		big, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	if err != nil {
+		t.Fatalf("import --blobs error: %v", err)
+	}
+	if !strings.Contains(out, "Done. Added 1, skipped 1.") {
+		t.Errorf("output = %q, want 'Done. Added 1, skipped 1.'", out)
+	}
+	if !strings.Contains(out, "! skipped: huge.bin") {
+		t.Errorf("output missing skip message for huge.bin: %q", out)
+	}
+}
+
+func TestImportBlobs_EmptyDir(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	blobDir := filepath.Join(dir, "empty")
+	if err := os.MkdirAll(blobDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	if err != nil {
+		t.Fatalf("import --blobs error: %v", err)
+	}
+	if !strings.Contains(out, "No files to import.") {
+		t.Errorf("output = %q, want 'No files to import.'", out)
+	}
+}
+
+func TestImportBlobs_NotADirectory(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	regularFile := filepath.Join(dir, "file.txt")
+	if err := os.WriteFile(regularFile, []byte("data"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := runCmd(newPadCmd("import", "--blobs", regularFile))
+	if err == nil {
+		t.Fatal("expected error for non-directory path")
+	}
+	if !strings.Contains(err.Error(), "is not a directory") {
+		t.Errorf("error = %v, want 'is not a directory'", err)
+	}
+}
+
+func TestImportBlobs_AppendsToExisting(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	// Add a pre-existing entry
+	if _, err := runCmd(newPadCmd("add", "existing note")); err != nil {
+		t.Fatal(err)
+	}
+
+	blobDir := filepath.Join(dir, "blobs")
+	if err := os.MkdirAll(blobDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(blobDir, "new.txt"),
+		[]byte("new content"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	if err != nil {
+		t.Fatalf("import --blobs error: %v", err)
+	}
+	if !strings.Contains(out, "Done. Added 1, skipped 0.") {
+		t.Errorf("output = %q, want 'Done. Added 1, skipped 0.'", out)
+	}
+
+	// Verify both entries exist
+	listOut, listErr := runCmd(newPadCmd())
+	if listErr != nil {
+		t.Fatal(listErr)
+	}
+	if !strings.Contains(listOut, "existing note") {
+		t.Errorf("list missing pre-existing entry: %q", listOut)
+	}
+	if !strings.Contains(listOut, "new.txt [BLOB]") {
+		t.Errorf("list missing blob entry: %q", listOut)
+	}
+}
+
+func TestImportBlobs_Encrypted(t *testing.T) {
+	dir := setupEncrypted(t)
+
+	blobDir := filepath.Join(dir, "blobs")
+	if err := os.MkdirAll(blobDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(blobDir, "secret.key"),
+		[]byte("classified"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := runCmd(newPadCmd("import", "--blobs", blobDir))
+	if err != nil {
+		t.Fatalf("import --blobs error: %v", err)
+	}
+	if !strings.Contains(out, "Done. Added 1, skipped 0.") {
+		t.Errorf("output = %q, want 'Done. Added 1, skipped 0.'", out)
+	}
+
+	// Verify entry exists after decryption
+	listOut, listErr := runCmd(newPadCmd())
+	if listErr != nil {
+		t.Fatal(listErr)
+	}
+	if !strings.Contains(listOut, "secret.key [BLOB]") {
+		t.Errorf("list missing blob: %q", listOut)
+	}
+}
+
+func TestImportBlobs_BlobContent(t *testing.T) {
+	dir := setupPlaintext(t)
+
+	blobDir := filepath.Join(dir, "blobs")
+	if err := os.MkdirAll(blobDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+	original := []byte("hello world\nline two\n")
+	if err := os.WriteFile(filepath.Join(blobDir, "test.txt"),
+		original, 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := runCmd(newPadCmd("import", "--blobs", blobDir)); err != nil {
+		t.Fatal(err)
+	}
+
+	// Read entries and verify splitBlob roundtrip
+	entries, readErr := readEntries()
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if len(entries) != 1 {
+		t.Fatalf("got %d entries, want 1", len(entries))
+	}
+
+	label, data, ok := splitBlob(entries[0])
+	if !ok {
+		t.Fatal("entry is not a valid blob")
+	}
+	if label != "test.txt" {
+		t.Errorf("label = %q, want %q", label, "test.txt")
+	}
+	if string(data) != string(original) {
+		t.Errorf("data = %q, want %q", string(data), string(original))
+	}
+}
+
 // --- Export tests ---
 
 func TestExport_Basic(t *testing.T) {
@@ -2254,9 +2501,7 @@ func TestMerge_EncryptedInput(t *testing.T) {
 	}
 
 	// Create encrypted file using the same project key.
-	key, loadErr := crypto.LoadKey(
-		filepath.Join(dir, config.DirContext, config.FileContextKey),
-	)
+	key, loadErr := crypto.LoadKey(rc.KeyPath())
 	if loadErr != nil {
 		t.Fatal(loadErr)
 	}
@@ -2300,9 +2545,7 @@ func TestMerge_PlaintextFallback(t *testing.T) {
 func TestMerge_MixedEncPlain(t *testing.T) {
 	dir := setupEncrypted(t)
 
-	key, loadErr := crypto.LoadKey(
-		filepath.Join(dir, config.DirContext, config.FileContextKey),
-	)
+	key, loadErr := crypto.LoadKey(rc.KeyPath())
 	if loadErr != nil {
 		t.Fatal(loadErr)
 	}
@@ -2585,9 +2828,7 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 	}
 
 	// Get the project key.
-	key, loadErr := crypto.LoadKey(
-		filepath.Join(dir, config.DirContext, config.FileContextKey),
-	)
+	key, loadErr := crypto.LoadKey(rc.KeyPath())
 	if loadErr != nil {
 		t.Fatal(loadErr)
 	}

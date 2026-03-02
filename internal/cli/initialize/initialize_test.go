@@ -19,6 +19,7 @@ import (
 )
 
 // helper creates a temp dir, chdir into it, and returns a cleanup function.
+// Sets HOME to the temp dir so user-level key paths stay isolated.
 func helper(t *testing.T) (string, func()) {
 	t.Helper()
 	tmpDir, err := os.MkdirTemp("", "ctx-init-test-*")
@@ -30,6 +31,7 @@ func helper(t *testing.T) (string, func()) {
 		_ = os.RemoveAll(tmpDir)
 		t.Fatalf("failed to chdir: %v", err)
 	}
+	t.Setenv("HOME", tmpDir)
 	return tmpDir, func() {
 		_ = os.Chdir(origDir)
 		_ = os.RemoveAll(tmpDir)
@@ -404,60 +406,6 @@ func TestEnsureGitignoreEntries_NoTrailingNewline(t *testing.T) {
 	// Should have a newline before the comment header
 	if !strings.Contains(contentStr, "node_modules/\n\n# ctx managed entries\n") {
 		t.Errorf("unexpected content format: %q", contentStr)
-	}
-}
-
-// --- createTools tests ---
-
-func TestCreateTools(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	contextDir := ".context"
-	if err := os.MkdirAll(contextDir, 0750); err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := newTestCmd()
-	if err := createTools(cmd, contextDir, false); err != nil {
-		t.Fatalf("createTools failed: %v", err)
-	}
-
-	toolsDir := filepath.Join(contextDir, config.DirTools)
-	entries, err := os.ReadDir(toolsDir)
-	if err != nil {
-		t.Fatalf("failed to read tools dir: %v", err)
-	}
-	if len(entries) == 0 {
-		t.Error("no tools created")
-	}
-}
-
-func TestCreateTools_ExistsNoForce(t *testing.T) {
-	_, cleanup := helper(t)
-	defer cleanup()
-
-	contextDir := ".context"
-	toolsDir := filepath.Join(contextDir, config.DirTools)
-	if err := os.MkdirAll(toolsDir, 0750); err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a tool file manually
-	toolPath := filepath.Join(toolsDir, "context-watch.sh")
-	if err := os.WriteFile(toolPath, []byte("#!/bin/bash\n# original"), 0600); err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := newTestCmd()
-	if err := createTools(cmd, contextDir, false); err != nil {
-		t.Fatalf("createTools failed: %v", err)
-	}
-
-	// Should not be overwritten
-	content, _ := os.ReadFile(toolPath) //nolint:gosec // test temp path
-	if !strings.Contains(string(content), "# original") {
-		t.Error("tool was overwritten when force=false")
 	}
 }
 
@@ -1080,7 +1028,7 @@ func TestMergeSettingsPermissions_DenyPreservesExisting(t *testing.T) {
 // --- initScratchpad tests ---
 
 func TestInitScratchpad_Plaintext(t *testing.T) {
-	_, cleanup := helper(t)
+	dir, cleanup := helper(t)
 	defer cleanup()
 
 	// Set scratchpad_encrypt to false via .ctxrc
@@ -1105,10 +1053,10 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 		t.Fatalf("initScratchpad failed: %v", err)
 	}
 
-	// Either a key file or scratchpad.md should have been created
-	keyPath := filepath.Join(contextDir, config.FileContextKey)
+	// Either a user-level key file or scratchpad.md should have been created.
+	userKeyPath := config.ProjectKeyPath(dir)
 	mdPath := filepath.Join(contextDir, config.FileScratchpadMd)
-	_, keyErr := os.Stat(keyPath)
+	_, keyErr := os.Stat(userKeyPath)
 	_, mdErr := os.Stat(mdPath)
 	if keyErr != nil && mdErr != nil {
 		t.Error("neither key nor scratchpad.md was created")
@@ -1116,7 +1064,7 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 }
 
 func TestInitScratchpad_KeyExists(t *testing.T) {
-	_, cleanup := helper(t)
+	dir, cleanup := helper(t)
 	defer cleanup()
 
 	contextDir := ".context"
@@ -1124,9 +1072,12 @@ func TestInitScratchpad_KeyExists(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Create existing key file
-	keyPath := filepath.Join(contextDir, config.FileContextKey)
-	if err := os.WriteFile(keyPath, []byte("existing-key"), 0600); err != nil {
+	// Create existing key at user-level path.
+	userKeyPath := config.ProjectKeyPath(dir)
+	if err := os.MkdirAll(filepath.Dir(userKeyPath), config.PermKeyDir); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(userKeyPath, []byte("existing-key"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1136,14 +1087,14 @@ func TestInitScratchpad_KeyExists(t *testing.T) {
 	}
 
 	// Key should not have been overwritten
-	content, _ := os.ReadFile(keyPath) //nolint:gosec // test temp path
+	content, _ := os.ReadFile(userKeyPath) //nolint:gosec // test temp path
 	if string(content) != "existing-key" {
 		t.Error("existing key was overwritten")
 	}
 }
 
 func TestInitScratchpad_EncExistsNoKey(t *testing.T) {
-	_, cleanup := helper(t)
+	dir, cleanup := helper(t)
 	defer cleanup()
 
 	contextDir := ".context"
@@ -1163,8 +1114,8 @@ func TestInitScratchpad_EncExistsNoKey(t *testing.T) {
 	}
 
 	// Key should NOT have been generated (warning path)
-	keyPath := filepath.Join(contextDir, config.FileContextKey)
-	if _, err := os.Stat(keyPath); err == nil {
+	userKeyPath := config.ProjectKeyPath(dir)
+	if _, err := os.Stat(userKeyPath); err == nil {
 		t.Error("key was generated even though enc exists without key (should just warn)")
 	}
 }
@@ -1273,6 +1224,15 @@ func TestRunInit_Force(t *testing.T) {
 	// Verify files still exist
 	if _, err := os.Stat(filepath.Join(".context", config.FileConstitution)); err != nil {
 		t.Error("CONSTITUTION.md missing after force reinit")
+	}
+
+	// Verify removed directories are NOT created (tools/ was removed from
+	// init; sessions/ is created at runtime by hooks, not by init).
+	for _, banned := range []string{"tools", config.DirSessions} {
+		dir := filepath.Join(".context", banned)
+		if _, err := os.Stat(dir); err == nil {
+			t.Errorf("%s/ should not be created by init --force", banned)
+		}
 	}
 }
 

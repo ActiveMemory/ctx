@@ -103,7 +103,7 @@ While you're in here, also flag:
 | `Bash(curl:*)`, `Bash(wget:*)` | Arbitrary network access |
 | Any write to `.claude/` paths | Agent self-modification |
 
-See the `_ctx-sanitize-permissions` skill SKILL.md for the full threat matrix.
+See the `ctx-sanitize-permissions` skill SKILL.md for the full threat matrix.
 
 ## Step 5: Edit
 
@@ -139,6 +139,6 @@ You can safely ask the agent to *analyze* the file:
 The agent can read and report. **You** do the edits.
 
 Do **not** add these to your allow list:
-- `Skill(_ctx-sanitize-permissions)`
+- `Skill(ctx-sanitize-permissions)`
 - `Edit(.claude/settings.local.json)`
 - Any `Bash(...)` pattern that writes to `.claude/`

@@ -135,9 +135,11 @@ To update after new sessions, run the same two commands again.
 
 `ctx recall export --all` is **safe by default**: 
 
-* It only exports new sessions and **skips existing files**. 
-* Locked entries (*via `ctx recall lock`*) are **always skipped** 
-  regardless of flags.
+* It only exports new sessions and **skips existing files**.
+* Locked entries (*via `ctx recall lock`*) are **always skipped** by
+  both export and enrichment skills.
+* If you add `locked: true` to frontmatter during enrichment, run
+  `ctx recall sync` to propagate the lock state to `.state.json`.
 
 ### Re-Exporting Existing Files
 
@@ -315,7 +317,7 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-worktree`           | Manage parallel agent worktrees                                                         |
 | `/ctx-journal-normalize`  | Fix markdown rendering issues in journal entries                                        |
 | `/ctx-journal-enrich`     | Add metadata, tags, and summaries to journal entries                                    |
-| `/ctx-journal-enrich-all` | Batch-enrich all unenriched journal entries                                             |
+| `/ctx-journal-enrich-all` | Full journal pipeline: export if needed, then batch-enrich                               |
 | `/ctx-blog`               | Generate a blog post ([zensical](https://pypi.org/project/zensical/)-flavored Markdown) |
 | `/ctx-blog-changelog`     | Generate themed blog post from commits between releases                                 |
 | `/ctx-map`                | Build and maintain architecture maps (ARCHITECTURE.md, DETAILED_DESIGN.md)              |
@@ -344,7 +346,9 @@ These are infrastructure: used in scripts, CI, or one-time setup.
 | `ctx why`                  | Read the philosophy behind ctx                  |
 | `ctx guide`                | Quick-reference cheat sheet                     |
 | `ctx site`                 | Site management commands                        |
+| `ctx config`               | Manage runtime configuration profiles           |
 | `ctx system`               | System diagnostics and hook commands            |
+| `ctx system backup`        | Back up context and Claude data to tar.gz / SMB |
 | `ctx completion`           | Generate shell autocompletion scripts           |
 
 !!! tip "Rule of Thumb"

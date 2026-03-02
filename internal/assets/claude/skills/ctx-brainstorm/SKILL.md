@@ -1,5 +1,5 @@
 ---
-name: _ctx-brainstorm
+name: ctx-brainstorm
 description: "Design before implementation. Use before any creative or constructive work (features, architecture, behavior changes) to transform vague ideas into validated designs."
 ---
 
@@ -34,9 +34,9 @@ structured dialogue **before any implementation begins**.
 ## Usage Examples
 
 ```text
-/_ctx-brainstorm
-/_ctx-brainstorm (new caching layer for the API)
-/_ctx-brainstorm (should we split the monolith?)
+/ctx-brainstorm
+/ctx-brainstorm (new caching layer for the API)
+/ctx-brainstorm (should we split the monolith?)
 ```
 
 ## Operating Mode

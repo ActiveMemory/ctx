@@ -59,6 +59,18 @@ const (
 	EnvCtxDir = "CTX_DIR"
 	// EnvCtxTokenBudget is the environment variable for overriding the token budget.
 	EnvCtxTokenBudget = "CTX_TOKEN_BUDGET" //nolint:gosec // G101: env var name, not a credential
+	// EnvBackupSMBURL is the environment variable for the SMB share URL.
+	EnvBackupSMBURL = "CTX_BACKUP_SMB_URL"
+	// EnvBackupSMBSubdir is the environment variable for the SMB share subdirectory.
+	EnvBackupSMBSubdir = "CTX_BACKUP_SMB_SUBDIR"
+)
+
+// Backup configuration.
+const (
+	// BackupDefaultSubdir is the default subdirectory on the SMB share.
+	BackupDefaultSubdir = "ctx-sessions"
+	// BackupMarkerFile is the state file touched on successful project backup.
+	BackupMarkerFile = "ctx-last-backup"
 )
 
 // Parser configuration.
@@ -123,10 +135,18 @@ const (
 	FileSettings = ".claude/settings.local.json"
 	// FileSettingsGolden is the golden image of the Claude Code settings.
 	FileSettingsGolden = ".claude/settings.golden.json"
-	// FileContextWatch is the context monitoring tool script.
-	FileContextWatch = "context-watch.sh"
 	// FileMakefileCtx is the ctx-owned Makefile include for project root.
 	FileMakefileCtx = "Makefile.ctx"
+
+	// FileGlobalSettings is the Claude Code global settings file.
+	// Located at ~/.claude/settings.json (not the project-local one).
+	FileGlobalSettings = "settings.json"
+	// FileInstalledPlugins is the Claude Code installed plugins registry.
+	// Located at ~/.claude/plugins/installed_plugins.json.
+	FileInstalledPlugins = "plugins/installed_plugins.json"
+
+	// PluginID is the ctx plugin identifier in Claude Code.
+	PluginID = "ctx@activememory-ctx"
 )
 
 // Context file name constants for .context/ directory.
@@ -192,6 +212,8 @@ const (
 	FileEventLogPrev = "events.1.jsonl"
 	// EventLogMaxBytes is the size threshold for log rotation (1MB).
 	EventLogMaxBytes = 1 << 20
+	// LogMaxBytes is the size threshold for hook log rotation (1MB).
+	LogMaxBytes = 1 << 20
 )
 
 // FileType maps short names to actual file names.

@@ -1,4 +1,4 @@
 You have {{.UnexportedCount}} new session(s) not yet exported.
 
-Export:
-  ctx recall export --all
+Process journal (exports and enriches):
+  /ctx-journal-enrich-all

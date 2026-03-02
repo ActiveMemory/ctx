@@ -155,22 +155,34 @@ no template reference applies (e.g. custom `ctx notify` calls).
 
 ### Heartbeat Payload
 
-The `heartbeat` event fires on every prompt with session metadata:
+The `heartbeat` event fires on every prompt with session metadata and token
+usage telemetry:
 
 ```json
 {
   "event": "heartbeat",
-  "message": "heartbeat: prompt #7 (context_modified=false)",
+  "message": "heartbeat: prompt #7 (context_modified=false tokens=158k pct=79%)",
   "detail": {
     "hook": "heartbeat",
     "variant": "pulse",
-    "variables": {"prompt_count": 7, "session_id": "abc123-...", "context_modified": false}
+    "variables": {
+      "prompt_count": 7,
+      "session_id": "abc123-...",
+      "context_modified": false,
+      "tokens": 158000,
+      "context_window": 200000,
+      "usage_pct": 79
+    }
   },
   "session_id": "abc123-...",
   "timestamp": "2026-02-28T10:15:00Z",
   "project": "ctx"
 }
 ```
+
+The `tokens`, `context_window`, and `usage_pct` fields are included when
+token data is available from the session JSONL file. They are omitted when
+no usage data has been recorded yet (e.g. first prompt).
 
 Unlike other events, `heartbeat` fires every prompt (not throttled). Use it
 for observability dashboards or liveness monitoring of long-running sessions.

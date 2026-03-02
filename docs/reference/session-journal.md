@@ -251,12 +251,13 @@ content and proposing metadata.
 
 The skill will:
 
-1. Find the matching journal file;
-2. Read and analyze the conversation;
-3. Propose frontmatter (*type, topics, outcome, technologies*);
-4. Generate a 2-3 sentence summary;
-5. Extract decisions, learnings, and tasks mentioned;
-6. Show a diff and ask for confirmation before writing.
+1. **Check if locked** — locked entries are skipped (same as export);
+2. Find the matching journal file;
+3. Read and analyze the conversation;
+4. Propose frontmatter (*type, topics, outcome, technologies*);
+5. Generate a 2-3 sentence summary;
+6. Extract decisions, learnings, and tasks mentioned;
+7. Show a diff and ask for confirmation before writing.
 
 ### Before and After
 
@@ -396,6 +397,11 @@ export → enrich → rebuild
 | **Rebuild**  | `ctx journal site --build` | Generates static HTML site              | --                                 |
 | **Obsidian** | `ctx journal obsidian`     | Generates Obsidian vault with wikilinks | --                                 |
 
+!!! tip "One-command pipeline"
+    `/ctx-journal-enrich-all` handles export automatically — it detects
+    unexported sessions and exports them before enriching. You only need
+    to run `ctx journal site --build` afterward.
+
 ### Using `make journal`
 
 If your project includes `Makefile.ctx` (deployed by `ctx init`), the first
@@ -409,7 +415,7 @@ After it runs, it reminds you to enrich in Claude Code:
 
 ```
 Next steps (in Claude Code):
-  /ctx-journal-enrich-all # add metadata per entry (skips if frontmatter exists)
+  /ctx-journal-enrich-all # exports if needed + adds metadata per entry
 
 Then re-run: make journal
 ```

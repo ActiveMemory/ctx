@@ -336,20 +336,32 @@ Bulk-import lines from a file into the scratchpad. Each non-empty line
 becomes a separate entry. All entries are written in a single encrypt/write
 cycle.
 
+With `--blobs`, import all first-level files from a directory as blob
+entries. Each file becomes a blob with the filename as its label.
+Subdirectories and non-regular files are skipped.
+
 ```bash
 ctx pad import <file>
-ctx pad import -          # read from stdin
+ctx pad import -              # read from stdin
+ctx pad import --blobs <dir>  # import directory files as blobs
 ```
 
 **Arguments**:
 
-- `file`: Path to a text file, or `-` for stdin
+- `file`: Path to a text file, `-` for stdin, or a directory (with `--blobs`)
+
+**Flags**:
+
+| Flag      | Description                                          |
+|-----------|------------------------------------------------------|
+| `--blobs` | Import first-level files from a directory as blobs   |
 
 **Examples**:
 
 ```bash
 ctx pad import notes.txt
 grep TODO *.go | ctx pad import -
+ctx pad import --blobs ./ideas/
 ```
 
 #### `ctx pad export`

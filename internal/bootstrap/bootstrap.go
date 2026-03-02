@@ -21,6 +21,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
+	cliconfig "github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
@@ -37,6 +38,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
+	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
 	"github.com/ActiveMemory/ctx/internal/cli/resume"
 	"github.com/ActiveMemory/ctx/internal/cli/serve"
@@ -73,6 +75,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		guide.Cmd,
 		sync.Cmd,
 		compact.Cmd,
+		cliconfig.Cmd,
 		decision.Cmd,
 		doctor.Cmd,
 		watch.Cmd,
@@ -85,6 +88,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		pause.Cmd,
 		permissions.Cmd,
 		recall.Cmd,
+		reindex.Cmd,
 		remind.Cmd,
 		resume.Cmd,
 		journal.Cmd,

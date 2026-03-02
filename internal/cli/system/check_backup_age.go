@@ -8,7 +8,6 @@ package system
 
 import (
 	"fmt"
-	"net/url"
 	"os"
 	"path/filepath"
 	"time"
@@ -21,14 +20,13 @@ import (
 
 const (
 	backupMaxAgeDays = 2
-	backupMarkerFile = "ctx-last-backup"
 	backupThrottleID = "backup-reminded"
 )
 
 // checkBackupAgeCmd returns the "ctx system check-backup-age" command.
 //
 // Warns when the SMB backup is stale (>2 days) or the share is unmounted.
-// Depends on hack/backup-context.sh touching ~/.local/state/ctx-last-backup
+// Depends on ctx system backup touching ~/.local/state/ctx-last-backup
 // on successful backup. Throttled to once per day.
 func checkBackupAgeCmd() *cobra.Command {
 	return &cobra.Command{
@@ -78,12 +76,12 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 	var warnings []string
 
 	// Check 1: Is the SMB share mounted?
-	if smbURL := os.Getenv("CTX_BACKUP_SMB_URL"); smbURL != "" {
-		warnings = checkSMBMount(smbURL, warnings)
+	if smbURL := os.Getenv(config.EnvBackupSMBURL); smbURL != "" {
+		warnings = checkSMBMountWarnings(smbURL, warnings)
 	}
 
 	// Check 2: Is the backup stale?
-	markerPath := filepath.Join(home, ".local", "state", backupMarkerFile)
+	markerPath := filepath.Join(home, ".local", "state", config.BackupMarkerFile)
 	warnings = checkBackupMarker(markerPath, warnings)
 
 	if len(warnings) == 0 {
@@ -122,28 +120,16 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 	return nil
 }
 
-// checkSMBMount checks if the GVFS mount for the given SMB URL exists.
-func checkSMBMount(smbURL string, warnings []string) []string {
-	u, err := url.Parse(smbURL)
-	if err != nil || u.Host == "" {
+// checkSMBMountWarnings checks if the GVFS mount for the given SMB URL exists.
+func checkSMBMountWarnings(smbURL string, warnings []string) []string {
+	cfg, cfgErr := parseSMBConfig(smbURL, "")
+	if cfgErr != nil {
 		return warnings
 	}
 
-	host := u.Host
-	share := u.Path
-	if len(share) > 0 && share[0] == '/' {
-		share = share[1:]
-	}
-	if share == "" {
-		return warnings
-	}
-
-	gvfsPath := fmt.Sprintf("/run/user/%d/gvfs/smb-share:server=%s,share=%s",
-		os.Getuid(), host, share)
-
-	if _, err := os.Stat(gvfsPath); os.IsNotExist(err) {
+	if _, statErr := os.Stat(cfg.GVFSPath); os.IsNotExist(statErr) {
 		warnings = append(warnings,
-			fmt.Sprintf("SMB share (%s) is not mounted.", host),
+			fmt.Sprintf("SMB share (%s) is not mounted.", cfg.Host),
 			"Backups cannot run until it's available.",
 		)
 	}
@@ -157,7 +143,7 @@ func checkBackupMarker(markerPath string, warnings []string) []string {
 	if os.IsNotExist(err) {
 		return append(warnings,
 			"No backup marker found — backup may have never run.",
-			"Run: hack/backup-context.sh",
+			"Run: ctx system backup",
 		)
 	}
 	if err != nil {
@@ -168,7 +154,7 @@ func checkBackupMarker(markerPath string, warnings []string) []string {
 	if ageDays >= backupMaxAgeDays {
 		return append(warnings,
 			fmt.Sprintf("Last .context backup is %d days old.", ageDays),
-			"Run: hack/backup-context.sh",
+			"Run: ctx system backup",
 		)
 	}
 

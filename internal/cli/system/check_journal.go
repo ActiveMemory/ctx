@@ -94,11 +94,11 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 		variant = variantBoth
 		fallback = fmt.Sprintf("You have %d new session(s) not yet exported.\n", unexported) +
 			fmt.Sprintf("%d existing entries need enrichment.\n", unenriched) +
-			"\nExport and enrich:\n  ctx recall export --all\n  /ctx-journal-enrich-all"
+			"\nProcess journal (exports and enriches):\n  /ctx-journal-enrich-all"
 	case unexported > 0:
 		variant = "unexported"
 		fallback = fmt.Sprintf("You have %d new session(s) not yet exported.\n", unexported) +
-			"\nExport:\n  ctx recall export --all"
+			"\nProcess journal (exports and enriches):\n  /ctx-journal-enrich-all"
 	default:
 		variant = "unenriched"
 		fallback = fmt.Sprintf("%d journal entries need enrichment.\n", unenriched) +

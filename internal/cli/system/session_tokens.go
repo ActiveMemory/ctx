@@ -14,33 +14,46 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // maxTailBytes is the maximum number of bytes to read from the end of a
 // JSONL file when scanning for the last usage block.
 const maxTailBytes = 32768
 
-// readSessionTokenUsage finds the current session's JSONL file and returns
-// the most recent total input token count (input_tokens + cache_creation +
-// cache_read). Returns 0, nil if the file isn't found or has no usage data.
+// contextWindow1M is the context window size for 1M-capable models.
+const contextWindow1M = 1_000_000
+
+// sessionTokenInfo holds token usage and model information extracted from a
+// session's JSONL file.
+type sessionTokenInfo struct {
+	Tokens int    // Total input tokens (input + cache_creation + cache_read)
+	Model  string // Model ID from the last assistant message, or ""
+}
+
+// readSessionTokenInfo finds the current session's JSONL file and returns
+// the most recent total input token count and model ID from the last
+// assistant message. Returns zero value if the file isn't found or has no
+// usage data.
 //
 // Parameters:
 //   - sessionID: The Claude Code session ID
 //
 // Returns:
-//   - int: Total input tokens from the last assistant message, or 0
+//   - sessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
-func readSessionTokenUsage(sessionID string) (int, error) {
+func readSessionTokenInfo(sessionID string) (sessionTokenInfo, error) {
 	if sessionID == "" || sessionID == sessionUnknown {
-		return 0, nil
+		return sessionTokenInfo{}, nil
 	}
 
 	path, findErr := findJSONLPath(sessionID)
 	if findErr != nil || path == "" {
-		return 0, findErr
+		return sessionTokenInfo{}, findErr
 	}
 
-	return parseLastUsage(path)
+	return parseLastUsageAndModel(path)
 }
 
 // findJSONLPath locates the JSONL file for a session ID.
@@ -96,35 +109,35 @@ type usageData struct {
 }
 
 // jsonlMessage represents the minimal structure of a Claude Code JSONL line
-// needed to extract usage data from assistant messages.
+// needed to extract usage and model data from assistant messages.
 type jsonlMessage struct {
 	Type    string `json:"type"`
 	Message struct {
 		Role  string    `json:"role"`
+		Model string    `json:"model"`
 		Usage usageData `json:"usage"`
 	} `json:"message"`
 }
 
-// parseLastUsage reads the tail of a JSONL file and extracts the last
-// assistant message's usage data. Returns the sum of input_tokens,
-// cache_creation_input_tokens, and cache_read_input_tokens.
+// parseLastUsageAndModel reads the tail of a JSONL file and extracts the
+// last assistant message's usage data and model ID.
 //
 // Parameters:
 //   - path: Absolute path to the JSONL file
 //
 // Returns:
-//   - int: Total input tokens, or 0 if no usage data found
+//   - sessionTokenInfo: Token count and model, or zero value if not found
 //   - error: Non-nil only on I/O errors
-func parseLastUsage(path string) (int, error) {
+func parseLastUsageAndModel(path string) (sessionTokenInfo, error) {
 	f, openErr := os.Open(path) //nolint:gosec // path from glob result
 	if openErr != nil {
-		return 0, openErr
+		return sessionTokenInfo{}, openErr
 	}
 	defer func() { _ = f.Close() }()
 
 	info, statErr := f.Stat()
 	if statErr != nil {
-		return 0, statErr
+		return sessionTokenInfo{}, statErr
 	}
 
 	// Read the tail of the file
@@ -135,12 +148,12 @@ func parseLastUsage(path string) (int, error) {
 	}
 
 	if _, seekErr := f.Seek(offset, io.SeekStart); seekErr != nil {
-		return 0, seekErr
+		return sessionTokenInfo{}, seekErr
 	}
 
 	tail, readErr := io.ReadAll(f)
 	if readErr != nil {
-		return 0, readErr
+		return sessionTokenInfo{}, readErr
 	}
 
 	// Scan lines in reverse for the last assistant message with usage
@@ -171,11 +184,70 @@ func parseLastUsage(path string) (int, error) {
 		u := msg.Message.Usage
 		total := u.InputTokens + u.CacheCreationInputTokens + u.CacheReadInputTokens
 		if total > 0 {
-			return total, nil
+			return sessionTokenInfo{
+				Tokens: total,
+				Model:  msg.Message.Model,
+			}, nil
 		}
 	}
 
-	return 0, nil
+	return sessionTokenInfo{}, nil
+}
+
+// modelContextWindow returns the context window size for a known model ID.
+// Returns 0 if the model is not recognized, signaling callers to fall back
+// to rc.ContextWindow() or the default.
+//
+// Claude Code enables the 1M beta header for supported models, so models
+// in the 1M-capable set are mapped to 1,000,000 tokens.
+//
+// Parameters:
+//   - model: Model ID string from the JSONL (e.g., "claude-opus-4-6-20260205")
+//
+// Returns:
+//   - int: Context window size in tokens, or 0 if unknown
+func modelContextWindow(model string) int {
+	if model == "" {
+		return 0
+	}
+
+	// 1M-capable models. Claude Code enables the beta header for these.
+	// Check most specific prefixes first to avoid ambiguity.
+	switch {
+	case strings.HasPrefix(model, "claude-opus-4-6"):
+		return contextWindow1M
+	case strings.HasPrefix(model, "claude-sonnet-4-6"):
+		return contextWindow1M
+	case strings.HasPrefix(model, "claude-sonnet-4-5"):
+		return contextWindow1M
+	case strings.HasPrefix(model, "claude-sonnet-4-2"):
+		// Matches dated snapshots like "claude-sonnet-4-20250514"
+		return contextWindow1M
+	case model == "claude-sonnet-4" || model == "claude-sonnet-4-0":
+		return contextWindow1M
+	}
+
+	// All other recognized Claude models default to 200k.
+	if strings.HasPrefix(model, "claude-") {
+		return rc.DefaultContextWindow
+	}
+
+	return 0
+}
+
+// effectiveContextWindow returns the context window size using a three-tier
+// fallback: JSONL-detected model > .ctxrc setting > 200k default.
+//
+// Parameters:
+//   - model: Model ID string from JSONL (may be empty)
+//
+// Returns:
+//   - int: Effective context window size in tokens
+func effectiveContextWindow(model string) int {
+	if w := modelContextWindow(model); w > 0 {
+		return w
+	}
+	return rc.ContextWindow()
 }
 
 // formatTokenCount formats a token count as a human-readable abbreviated

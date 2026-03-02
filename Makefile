@@ -2,10 +2,10 @@
 #
 # Common targets for Go developers
 
-.PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all dogfood help \
+.PHONY: build test vet fmt lint lint-drift lint-docs clean all release build-all help \
 test-coverage smoke site site-feed site-serve site-serve-lan site-setup audit check plugin-reload \
-journal journal-serve journal-serve-lan watch-session backup backup-global backup-all gpg-fix gpg-test \
-sync-why check-why rc-dev rc-base rc-status
+journal journal-serve journal-serve-lan gpg-fix gpg-test \
+sync-why check-why
 
 # Default binary name and output
 BINARY := ctx
@@ -141,11 +141,6 @@ release-notes:
 	@echo ""
 	@echo "This will analyze commits since the last tag and write to dist/RELEASE_NOTES.md"
 
-## dogfood: Start dogfooding in a target folder
-dogfood:
-	@test -n "$(TARGET)" || (echo "Usage: make dogfood TARGET=~/WORKSPACE/ctx-dogfood" && exit 1)
-	./hack/start-dogfood.sh $(TARGET)
-
 ## install: Install to /usr/local/bin (run as: make build && sudo make install)
 install:
 	@test -f $(BINARY) || (echo "Binary not found. Run 'make build' first, then 'sudo make install'" && exit 1)
@@ -183,7 +178,7 @@ journal:
 	@echo "Journal site updated!"
 	@echo ""
 	@echo "Next steps (in Claude Code):"
-	@echo "  /ctx-journal-enrich-all  — add metadata per entry (skips if frontmatter exists)"
+	@echo "  /ctx-journal-enrich-all  — exports if needed + adds metadata per entry"
 	@echo ""
 	@echo "Then re-run: make journal"
 
@@ -195,17 +190,6 @@ journal-serve:
 ## journal-serve-lan: Serve journal site on all interfaces (LAN-accessible, port 8001)
 journal-serve-lan:
 	cd .context/journal-site && zensical serve -a 0.0.0.0:8001
-
-## backup: Backup project context (.context/ and .claude/) to SMB share
-backup:
-	./hack/backup-context.sh
-
-## backup-global: Backup global Claude Code data (~/.claude/) to SMB share
-backup-global:
-	./hack/backup-global.sh
-
-## backup-all: Backup both project context and global Claude data
-backup-all: backup backup-global
 
 ## gpg-fix: Fix GPG signing configuration
 gpg-fix:
@@ -232,22 +216,6 @@ check-why:
 	@diff -q docs/home/about.md internal/assets/why/about.md || (echo "FAIL: about.md is stale — run 'make sync-why'" && exit 1)
 	@diff -q docs/reference/design-invariants.md internal/assets/why/design-invariants.md || (echo "FAIL: design-invariants.md is stale — run 'make sync-why'" && exit 1)
 	@echo "Why docs are in sync."
-
-## rc-dev: Switch .ctxrc to dev profile (verbose logging)
-rc-dev:
-	@./hack/ctxrc-swap.sh dev
-
-## rc-base: Switch .ctxrc to base profile (all defaults)
-rc-base:
-	@./hack/ctxrc-swap.sh base
-
-## rc-status: Show which .ctxrc profile is active
-rc-status:
-	@./hack/ctxrc-swap.sh status
-
-## watch-session: Watch current session for token usage
-watch-session:
-	./hack/context-watch.sh
 
 ## help: Show this help
 help:

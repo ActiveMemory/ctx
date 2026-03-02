@@ -24,6 +24,50 @@ subcommands (`ctx system check-*`) are used by the Claude Code plugin.
 
 See [AI Tools](../operations/integrations.md#plugin-hooks) for details.
 
+#### `ctx system backup`
+
+Create timestamped tar.gz archives of project context and/or global Claude
+Code data. Optionally copies archives to an SMB share via GVFS.
+
+```bash
+ctx system backup [flags]
+```
+
+**Scopes**:
+
+| Scope     | What it includes                                     |
+|-----------|------------------------------------------------------|
+| `project` | `.context/`, `.claude/`, `ideas/`, `~/.bashrc`      |
+| `global`  | `~/.claude/` (excludes `todos/`)                     |
+| `all`     | Both project and global (default)                    |
+
+**Flags**:
+
+| Flag              | Description                              |
+|-------------------|------------------------------------------|
+| `--scope <scope>` | Backup scope: project, global, or all    |
+| `--json`          | Output results as JSON                   |
+
+**Environment**:
+
+| Variable               | Description                                        |
+|------------------------|----------------------------------------------------|
+| `CTX_BACKUP_SMB_URL`   | SMB share URL (e.g. `smb://host/share`)           |
+| `CTX_BACKUP_SMB_SUBDIR`| Subdirectory on share (default: `ctx-sessions`)    |
+
+**Examples**:
+
+```bash
+ctx system backup                       # Back up everything (default: all)
+ctx system backup --scope project       # Project context only
+ctx system backup --scope global        # Global Claude data only
+ctx system backup --scope all --json    # Both, JSON output
+```
+
+Archives are saved to `/tmp/` with timestamped names. When `CTX_BACKUP_SMB_URL`
+is configured, archives are also copied to the SMB share. Project backups touch
+`~/.local/state/ctx-last-backup` for the `check-backup-age` hook.
+
 #### `ctx system bootstrap`
 
 Print context location and rules for AI agents. This is the recommended first
@@ -36,9 +80,17 @@ ctx system bootstrap [flags]
 
 **Flags**:
 
-| Flag     | Description           |
-|----------|-----------------------|
-| `--json` | Output in JSON format |
+| Flag            | Description                          |
+|-----------------|--------------------------------------|
+| `-q`, `--quiet` | Output only the context directory path |
+| `--json`        | Output in JSON format                |
+
+**Quiet output**:
+
+```bash
+ctx system bootstrap -q
+# .context
+```
 
 **Text output**:
 
@@ -75,6 +127,7 @@ Rules:
 
 ```bash
 ctx system bootstrap                          # Text output
+ctx system bootstrap -q                       # Just the path
 ctx system bootstrap --json                   # JSON output
 ctx system bootstrap --json | jq .context_dir # Extract context path
 ```

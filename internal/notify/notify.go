@@ -7,7 +7,7 @@
 // Package notify provides fire-and-forget webhook notifications.
 //
 // The webhook URL is stored encrypted in .context/.notify.enc using the
-// same AES-256-GCM key as the scratchpad (.context/.ctx.key).
+// same AES-256-GCM key as the scratchpad (resolved via rc.KeyPath()).
 // When no webhook is configured, all operations are silent noops.
 package notify
 
@@ -54,11 +54,12 @@ type Payload struct {
 // (silent noop — webhook not configured).
 func LoadWebhook() (string, error) {
 	contextDir := rc.ContextDir()
-	config.MigrateKeyFile(contextDir)
-	keyPath := filepath.Join(contextDir, config.FileContextKey)
+	cwd, _ := os.Getwd()
+	config.MigrateKeyFile(contextDir, cwd)
+	kp := rc.KeyPath()
 	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
 
-	key, err := crypto.LoadKey(keyPath)
+	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return "", nil
@@ -87,18 +88,22 @@ func LoadWebhook() (string, error) {
 // If the scratchpad key does not exist, it is generated and saved first.
 func SaveWebhook(url string) error {
 	contextDir := rc.ContextDir()
-	config.MigrateKeyFile(contextDir)
-	keyPath := filepath.Join(contextDir, config.FileContextKey)
+	cwd, _ := os.Getwd()
+	config.MigrateKeyFile(contextDir, cwd)
+	kp := rc.KeyPath()
 	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
 
-	key, err := crypto.LoadKey(keyPath)
+	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		// Key doesn't exist — generate one.
 		key, err = crypto.GenerateKey()
 		if err != nil {
 			return err
 		}
-		if saveErr := crypto.SaveKey(keyPath, key); saveErr != nil {
+		if mkdirErr := os.MkdirAll(filepath.Dir(kp), config.PermKeyDir); mkdirErr != nil {
+			return mkdirErr
+		}
+		if saveErr := crypto.SaveKey(kp, key); saveErr != nil {
 			return saveErr
 		}
 	}

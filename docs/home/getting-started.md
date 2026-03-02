@@ -63,6 +63,16 @@ sudo make install
 This points Claude Code at the plugin source on disk. Changes you make
 to hooks or skills take effect immediately: No reinstall is needed.
 
+!!! warning "Local Installs Need Manual Enablement"
+    Unlike marketplace installs, local plugin installs are **not**
+    auto-enabled globally. The plugin will only work in projects that
+    explicitly enable it. Run `ctx init` in each project (it auto-enables
+    the plugin), or add the entry to `~/.claude/settings.json` manually:
+
+    ```json
+    { "enabledPlugins": { "ctx@activememory-ctx": true } }
+    ```
+
 **Verify:**
 
 ```bash
@@ -130,6 +140,16 @@ Pre-built binaries are available from the
 
 **Other tool users**: see [Integrations](../operations/integrations.md) for
 tool-specific setup (Cursor, Copilot, Aider, Windsurf, etc.).
+
+!!! note "Verify the Plugin Is Enabled"
+    After installing, confirm the plugin is enabled globally. Check
+    `~/.claude/settings.json` for an `enabledPlugins` entry. If missing,
+    run `ctx init` in your project (it auto-enables the plugin), or add
+    it manually:
+
+    ```json
+    { "enabledPlugins": { "ctx@activememory-ctx": true } }
+    ```
 
 **Verify:**
 

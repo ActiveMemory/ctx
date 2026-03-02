@@ -8,8 +8,11 @@
 // and hidden subcommands that implement Claude Code hook logic as native Go
 // binaries, replacing the shell scripts previously deployed to .claude/hooks/.
 //
-// The parent command (ctx system) displays memory, swap, disk, and load
-// metrics with WARNING/DANGER threshold alerts.
+// Visible subcommands:
+//   - backup: Create timestamped tar.gz archives of context/Claude data
+//   - resources: Display system resource usage with threshold alerts
+//   - bootstrap: Print context location for AI agents
+//   - message: Manage hook message templates
 //
 // Plumbing subcommands (hidden, used by skills and automation):
 //   - mark-journal: Update journal processing state (.state.json)

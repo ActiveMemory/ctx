@@ -232,13 +232,13 @@ suggests running `/ctx-map` to refresh.
 #### `heartbeat`: Session Heartbeat Webhook
 
 **What**: Fires on every prompt. Sends a webhook notification with prompt
-count, session ID, and whether context files were modified since the last
-heartbeat. Never produces stdout.
+count, session ID, context modification status, and token usage telemetry.
+Never produces stdout.
 
 **Why**: Other hooks only send webhooks when they "speak" (nudge/relay).
 When silent, you have no visibility into session activity. The heartbeat
-provides a continuous session-alive signal for observability dashboards
-or liveness monitoring.
+provides a continuous session-alive signal with token consumption data
+for observability dashboards or liveness monitoring.
 
 **Output**: None (*webhook + event log only*).
 
@@ -247,14 +247,24 @@ or liveness monitoring.
 ```json
 {
   "event": "heartbeat",
-  "message": "heartbeat: prompt #7 (context_modified=false)",
+  "message": "heartbeat: prompt #7 (context_modified=false tokens=158k pct=79%)",
   "detail": {
     "hook": "heartbeat",
     "variant": "pulse",
-    "variables": {"prompt_count": 7, "session_id": "abc...", "context_modified": false}
+    "variables": {
+      "prompt_count": 7,
+      "session_id": "abc...",
+      "context_modified": false,
+      "tokens": 158000,
+      "context_window": 200000,
+      "usage_pct": 79
+    }
   }
 }
 ```
+
+Token fields (`tokens`, `context_window`, `usage_pct`) are included when
+usage data is available from the session JSONL file.
 
 ---
 

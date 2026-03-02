@@ -105,8 +105,9 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Read actual context window usage from session JSONL
-	tokens, _ := readSessionTokenUsage(sessionID)
-	windowSize := rc.ContextWindow()
+	info, _ := readSessionTokenInfo(sessionID)
+	tokens := info.Tokens
+	windowSize := effectiveContextWindow(info.Model)
 	pct := 0
 	if windowSize > 0 && tokens > 0 {
 		pct = tokens * 100 / windowSize

@@ -9,6 +9,7 @@ package system
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -191,6 +192,57 @@ func TestHeartbeat_RespectsPaused(t *testing.T) {
 	counterFile := filepath.Join(tmpDir, "ctx", "heartbeat-hb-paused")
 	if _, statErr := os.Stat(counterFile); !os.IsNotExist(statErr) {
 		t.Error("counter file should not be created when paused")
+	}
+}
+
+func TestHeartbeat_TokenTelemetry(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	t.Setenv("HOME", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	setupContextDir(t)
+
+	// Create a fake JSONL file with usage data.
+	sessionID := "hb-token-test"
+	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	if mkErr := os.MkdirAll(projectDir, 0o750); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+	jsonlContent := `{"type":"assistant","message":{"model":"claude-sonnet-4-5","role":"assistant","content":"hi","usage":{"input_tokens":50000,"output_tokens":500,"cache_creation_input_tokens":8000,"cache_read_input_tokens":100000}}}` + "\n"
+	jsonlPath := filepath.Join(projectDir, sessionID+".jsonl")
+	if writeErr := os.WriteFile(jsonlPath, []byte(jsonlContent), 0o600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"`+sessionID+`"}`)
+	if err := runHeartbeat(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	if out != "" {
+		t.Errorf("heartbeat must produce no stdout, got: %q", out)
+	}
+
+	// Verify the heartbeat log includes token data.
+	contextDir := rc.ContextDir()
+	logFile := filepath.Join(contextDir, "logs", "heartbeat.log")
+	logData, readErr := os.ReadFile(logFile) //nolint:gosec // test path
+	if readErr != nil {
+		t.Fatalf("failed to read heartbeat log: %v", readErr)
+	}
+	logStr := string(logData)
+	if !strings.Contains(logStr, "tokens=") {
+		t.Errorf("heartbeat log missing token data: %s", logStr)
+	}
+	if !strings.Contains(logStr, "pct=") {
+		t.Errorf("heartbeat log missing pct data: %s", logStr)
 	}
 }
 

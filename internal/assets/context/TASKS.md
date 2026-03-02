@@ -17,6 +17,12 @@ STRUCTURE RULES (see CONSTITUTION.md):
 - Use inline labels: #in-progress, #blocked, #priority:high
 - Mark completed: [x], skipped: [-] (with reason)
 - Never delete tasks, never remove Phase headers
+
+TASK STATUS LABELS:
+  `[ ]` — pending
+  `[x]` — completed
+  `[-]` — skipped (with reason)
+  `#in-progress` — currently being worked on (add inline, don't move task)
 -->
 
 ### Phase 1: [Name] `#priority:high`
@@ -28,11 +34,3 @@ STRUCTURE RULES (see CONSTITUTION.md):
 - [ ] Task 2
 
 ## Blocked
-
-## Reference
-
-**Task Status Labels**:
-- `[ ]` — pending
-- `[x]` — completed
-- `[-]` — skipped (with reason)
-- `#in-progress` — currently being worked on (add inline, don't move task)

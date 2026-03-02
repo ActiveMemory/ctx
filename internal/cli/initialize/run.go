@@ -33,10 +33,11 @@ import (
 //   - minimal: If true, only create essential files
 //   - merge: If true, auto-merge ctx content into existing files
 //   - ralph: If true, use autonomous loop templates (no questions, signals)
+//   - noPluginEnable: If true, skip auto-enabling the plugin globally
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
-func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
+func runInit(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) error {
 	// Check if ctx is in PATH (required for hooks to work)
 	if err := checkCtxInPath(cmd); err != nil {
 		return err
@@ -114,25 +115,9 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Printf("  %s Entry templates: %v\n", color.YellowString("⚠"), err)
 	}
 
-	// Create tool scripts in .context/tools/
-	if err := createTools(cmd, contextDir, force); err != nil {
-		// Non-fatal: warn but continue
-		cmd.Printf("  %s Tools: %v\n", color.YellowString("⚠"), err)
-	}
-
-	// Create .context/sessions/ directory for session summaries
-	sessionsDir := filepath.Join(contextDir, config.DirSessions)
-	if err := os.MkdirAll(sessionsDir, config.PermExec); err != nil {
-		cmd.Println(fmt.Sprintf(
-			"  %s sessions/: %v", color.YellowString("⚠"), err,
-		))
-	} else {
-		green := color.New(color.FgGreen).SprintFunc()
-		cmd.Println(fmt.Sprintf("  %s sessions/", green("✓")))
-	}
-
-	// Migrate legacy key files (.context.key, .scratchpad.key) → .ctx.key
-	config.MigrateKeyFile(contextDir)
+	// Migrate legacy key files and promote to user-level path.
+	cwd, _ := os.Getwd()
+	config.MigrateKeyFile(contextDir, cwd)
 
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
@@ -164,6 +149,14 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 		cmd.Printf("  %s Permissions: %v\n", color.YellowString("⚠"), err)
 	}
 
+	// Auto-enable plugin globally unless suppressed
+	if !noPluginEnable {
+		if pluginErr := enablePluginGlobally(cmd); pluginErr != nil {
+			// Non-fatal: warn but continue
+			cmd.Printf("  %s Plugin enablement: %v\n", color.YellowString("⚠"), pluginErr)
+		}
+	}
+
 	// Handle CLAUDE.md creation/merge
 	if err := handleClaudeMd(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
@@ -189,6 +182,11 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph bool) error {
 	cmd.Println("Claude Code users: install the ctx plugin for hooks & skills:")
 	cmd.Println("  /plugin marketplace add ActiveMemory/ctx")
 	cmd.Println("  /plugin install ctx@activememory-ctx")
+	cmd.Println()
+	cmd.Println("Note: local plugin installs are not auto-enabled globally.")
+	cmd.Println("Run 'ctx init' again after installing the plugin to enable it,")
+	cmd.Println("or manually add to ~/.claude/settings.json:")
+	cmd.Println("  {\"enabledPlugins\": {\"ctx@activememory-ctx\": true}}")
 
 	return nil
 }
@@ -228,7 +226,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	}
 
 	// Encrypted mode
-	kPath := filepath.Join(contextDir, config.FileContextKey)
+	kPath := rc.KeyPath()
 	encPath := filepath.Join(contextDir, config.FileScratchpadEnc)
 
 	// Check if key already exists (idempotent)
@@ -244,6 +242,11 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 		return nil
 	}
 
+	// Ensure key directory exists.
+	if mkdirErr := os.MkdirAll(filepath.Dir(kPath), config.PermKeyDir); mkdirErr != nil {
+		return fmt.Errorf("failed to create key dir: %w", mkdirErr)
+	}
+
 	// Generate key
 	key, err := crypto.GenerateKey()
 	if err != nil {
@@ -254,12 +257,6 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 		return fmt.Errorf("failed to save scratchpad key: %w", err)
 	}
 	cmd.Printf("  %s Scratchpad key created at %s\n", green("✓"), kPath)
-	cmd.Println("  Copy this file to your other machines at the same path.")
-
-	// Add key to .gitignore
-	if err := addToGitignore(contextDir, config.FileContextKey); err != nil {
-		cmd.Printf("  %s Could not update .gitignore: %v\n", yellow("⚠"), err)
-	}
 
 	return nil
 }

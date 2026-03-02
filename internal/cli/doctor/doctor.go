@@ -17,11 +17,13 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/eventlog"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/sysinfo"
 )
 
 // Status constants for check results.
@@ -57,11 +59,13 @@ func Cmd() *cobra.Command {
 Checks:
   - Context initialized and required files present
   - Drift detected (stale paths, missing files)
+  - Plugin installed and enabled
   - Event logging status
   - Webhook configured
   - Pending reminders
   - Task completion ratio
   - Context token size
+  - System resources (memory, swap, disk, load)
 
 Use --json for machine-readable output.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -79,11 +83,13 @@ func runDoctor(cmd *cobra.Command, jsonOutput bool) error {
 	checkContextInitialized(report)
 	checkRequiredFiles(report)
 	checkDrift(report)
+	checkPluginEnablement(report)
 	checkEventLogging(report)
 	checkWebhook(report)
 	checkReminders(report)
 	checkTaskCompletion(report)
 	checkContextTokenSize(report)
+	checkSystemResources(report)
 	checkRecentEventActivity(report)
 
 	// Count warnings and errors.
@@ -199,6 +205,58 @@ func checkDrift(report *Report) {
 		Status:   status,
 		Message:  fmt.Sprintf("Drift: %s — run ctx drift for details", strings.Join(parts, ", ")),
 	})
+}
+
+func checkPluginEnablement(report *Report) {
+	installed := initialize.PluginInstalled()
+	if !installed {
+		report.Results = append(report.Results, Result{
+			Name:     "plugin_installed",
+			Category: "Plugin",
+			Status:   statusInfo,
+			Message:  "ctx plugin not installed",
+		})
+		return
+	}
+
+	report.Results = append(report.Results, Result{
+		Name:     "plugin_installed",
+		Category: "Plugin",
+		Status:   statusOK,
+		Message:  "ctx plugin installed",
+	})
+
+	globalEnabled := initialize.PluginEnabledGlobally()
+	localEnabled := initialize.PluginEnabledLocally()
+
+	if globalEnabled {
+		report.Results = append(report.Results, Result{
+			Name:     "plugin_enabled_global",
+			Category: "Plugin",
+			Status:   statusOK,
+			Message:  "Plugin enabled globally (~/.claude/settings.json)",
+		})
+	}
+
+	if localEnabled {
+		report.Results = append(report.Results, Result{
+			Name:     "plugin_enabled_local",
+			Category: "Plugin",
+			Status:   statusOK,
+			Message:  "Plugin enabled locally (.claude/settings.local.json)",
+		})
+	}
+
+	if !globalEnabled && !localEnabled {
+		report.Results = append(report.Results, Result{
+			Name:     "plugin_enabled",
+			Category: "Plugin",
+			Status:   statusWarning,
+			Message: "Plugin installed but not enabled — run 'ctx init' to auto-enable, " +
+				"or add {\"enabledPlugins\": {\"" + config.PluginID +
+				"\": true}} to ~/.claude/settings.json",
+		})
+	}
 }
 
 func checkEventLogging(report *Report) {
@@ -410,6 +468,99 @@ func checkRecentEventActivity(report *Report) {
 	})
 }
 
+func checkSystemResources(report *Report) {
+	snap := sysinfo.Collect(".")
+	addResourceResults(report, snap)
+}
+
+// addResourceResults appends per-metric resource results to the report.
+// Extracted for testability with constructed Snapshot values.
+func addResourceResults(report *Report, snap sysinfo.Snapshot) {
+	alerts := sysinfo.Evaluate(snap)
+
+	// Build severity lookup by resource name.
+	sevMap := make(map[string]sysinfo.Severity, len(alerts))
+	for _, a := range alerts {
+		sevMap[a.Resource] = a.Severity
+	}
+
+	// Memory.
+	if snap.Memory.Supported && snap.Memory.TotalBytes > 0 {
+		pct := resourcePct(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
+		msg := fmt.Sprintf("Memory %d%% (%s / %s GB)",
+			pct,
+			sysinfo.FormatGiB(snap.Memory.UsedBytes),
+			sysinfo.FormatGiB(snap.Memory.TotalBytes))
+		report.Results = append(report.Results, Result{
+			Name:     "resource_memory",
+			Category: "Resources",
+			Status:   severityToStatus(sevMap["memory"]),
+			Message:  msg,
+		})
+	}
+
+	// Swap (only when swap is configured).
+	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
+		pct := resourcePct(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
+		msg := fmt.Sprintf("Swap %d%% (%s / %s GB)",
+			pct,
+			sysinfo.FormatGiB(snap.Memory.SwapUsedBytes),
+			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes))
+		report.Results = append(report.Results, Result{
+			Name:     "resource_swap",
+			Category: "Resources",
+			Status:   severityToStatus(sevMap["swap"]),
+			Message:  msg,
+		})
+	}
+
+	// Disk.
+	if snap.Disk.Supported && snap.Disk.TotalBytes > 0 {
+		pct := resourcePct(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
+		msg := fmt.Sprintf("Disk %d%% (%s / %s GB)",
+			pct,
+			sysinfo.FormatGiB(snap.Disk.UsedBytes),
+			sysinfo.FormatGiB(snap.Disk.TotalBytes))
+		report.Results = append(report.Results, Result{
+			Name:     "resource_disk",
+			Category: "Resources",
+			Status:   severityToStatus(sevMap["disk"]),
+			Message:  msg,
+		})
+	}
+
+	// Load (1-minute average relative to CPU count).
+	if snap.Load.Supported && snap.Load.NumCPU > 0 {
+		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
+		msg := fmt.Sprintf("Load %.2fx (%.1f / %d CPUs)",
+			ratio, snap.Load.Load1, snap.Load.NumCPU)
+		report.Results = append(report.Results, Result{
+			Name:     "resource_load",
+			Category: "Resources",
+			Status:   severityToStatus(sevMap["load"]),
+			Message:  msg,
+		})
+	}
+}
+
+func severityToStatus(sev sysinfo.Severity) string {
+	switch sev {
+	case sysinfo.SeverityWarning:
+		return statusWarning
+	case sysinfo.SeverityDanger:
+		return statusError
+	default:
+		return statusOK
+	}
+}
+
+func resourcePct(used, total uint64) int {
+	if total == 0 {
+		return 0
+	}
+	return int(float64(used) / float64(total) * 100)
+}
+
 func outputDoctorJSON(cmd *cobra.Command, report *Report) error {
 	data, marshalErr := json.MarshalIndent(report, "", "  ")
 	if marshalErr != nil {
@@ -425,7 +576,7 @@ func outputDoctorHuman(cmd *cobra.Command, report *Report) error {
 	cmd.Println()
 
 	// Group by category.
-	categories := []string{"Structure", "Quality", "Hooks", "State", "Size", "Events"}
+	categories := []string{"Structure", "Quality", "Plugin", "Hooks", "State", "Size", "Resources", "Events"}
 	grouped := make(map[string][]Result)
 	for _, r := range report.Results {
 		grouped[r.Category] = append(grouped[r.Category], r)

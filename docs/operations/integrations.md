@@ -39,6 +39,18 @@ claude /plugin marketplace add ActiveMemory/ctx
 claude /plugin install ctx@activememory-ctx
 ```
 
+!!! warning "Ensure the Plugin Is Enabled"
+    Installing a plugin registers it, but local installs may not
+    auto-enable it globally. Verify `~/.claude/settings.json` contains:
+
+    ```json
+    { "enabledPlugins": { "ctx@activememory-ctx": true } }
+    ```
+
+    Without this, the plugin's hooks and skills won't appear in other
+    projects. Running `ctx init` auto-enables the plugin; use
+    `--no-plugin-enable` to skip this step.
+
 This gives you:
 
 | Component                     | Purpose                |
@@ -281,7 +293,7 @@ These are invoked in Claude Code with `/skill-name`.
 |---------------------------|----------------------------------------------|
 | `/ctx-recall`             | Browse AI session history                    |
 | `/ctx-journal-enrich`     | Enrich a journal entry with frontmatter/tags |
-| `/ctx-journal-enrich-all` | Batch-enrich all unenriched journal entries  |
+| `/ctx-journal-enrich-all` | Full journal pipeline: export if needed, then batch-enrich |
 | `/ctx-journal-normalize`  | Fix markdown rendering issues in journal     |
 
 #### Blogging Skills

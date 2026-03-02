@@ -20,6 +20,7 @@ package rc
 //   - ContextWindow: Context window size in tokens for usage reporting (default 200000)
 //   - EventLog: Whether to log hook events locally (default false)
 //   - KeyRotationDays: Days before encryption key rotation nudge (default 90)
+//   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)
 type CtxRC struct {
 	ContextDir          string        `yaml:"context_dir"`
 	TokenBudget         int           `yaml:"token_budget"`
@@ -35,6 +36,7 @@ type CtxRC struct {
 	ContextWindow       int           `yaml:"context_window"`
 	EventLog            bool          `yaml:"event_log"`
 	KeyRotationDays     int           `yaml:"key_rotation_days"`
+	KeyPathOverride     string        `yaml:"key_path"`
 	Notify              *NotifyConfig `yaml:"notify"`
 }
 

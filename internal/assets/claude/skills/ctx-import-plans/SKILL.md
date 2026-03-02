@@ -16,7 +16,7 @@ project's `specs/` directory so they become part of project memory.
 
 ## When NOT to Use
 
-- User wants to create a new spec from scratch (use `/_ctx-spec`)
+- User wants to create a new spec from scratch (use `/ctx-spec`)
 - User wants to edit an existing spec directly
 - No `~/.claude/plans/` directory or it's empty
 

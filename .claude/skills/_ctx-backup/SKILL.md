@@ -1,7 +1,7 @@
 ---
 name: _ctx-backup
 description: "Backup project context and global Claude data to SMB share. Use before risky operations, at end of session, or on request."
-allowed-tools: Bash(make backup*), Bash(ls /tmp/ctx-backup*)
+allowed-tools: Bash(ctx system backup*), Bash(ls /tmp/ctx-backup*)
 ---
 
 Backup `.context/`, `.claude/`, `ideas/`, and `~/.claude/` to
@@ -16,7 +16,7 @@ the configured SMB share.
 
 ## When NOT to Use
 
-- When `CTX_BACKUP_SMB_URL` is not configured (the script will
+- When `CTX_BACKUP_SMB_URL` is not configured (the command will
   error — tell the user to set it up)
 - Multiple times in quick succession with no changes in between
 
@@ -40,29 +40,29 @@ the configured SMB share.
 
 ## Execution
 
-Based on the argument, run the appropriate make target:
+Based on the argument, run the appropriate command:
 
 ```bash
 # For "project"
-make backup
+ctx system backup --scope project
 
 # For "global"
-make backup-global
+ctx system backup --scope global
 
 # For "all" or no argument
-make backup-all
+ctx system backup --scope all
 ```
 
 ## Process
 
 1. Parse the argument (default to `all` if none provided)
-2. Run the appropriate `make` target
+2. Run the appropriate `ctx system backup` command
 3. Report the archive path and size from the output
 4. Confirm success to the user
 
 ## Quality Checklist
 
-- [ ] The make target completed without errors
+- [ ] The command completed without errors
 - [ ] Archive size is reported to the user
 - [ ] If the SMB share was not mounted, the error is clearly
       communicated

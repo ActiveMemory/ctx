@@ -119,7 +119,8 @@ ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard fron
 
 #### `ctx recall lock`
 
-Protect journal entries from being overwritten by `export --regenerate`.
+Protect journal entries from being overwritten by `export --regenerate` or
+modified by enrichment skills (`/ctx-journal-enrich`, `/ctx-journal-enrich-all`).
 
 ```bash
 ctx recall lock <pattern> [flags]
