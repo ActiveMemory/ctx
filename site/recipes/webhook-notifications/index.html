@@ -3886,7 +3886,7 @@ in your repo.</p>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Encrypted at: .context/.notify.enc</span>
 </span></code></pre></div>
 <p>This encrypts the URL with AES-256-GCM using the same key as the scratchpad
-(<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>). The encrypted file (<code>.context/.notify.enc</code>)
+(<code>~/.ctx/.ctx.key</code>). The encrypted file (<code>.context/.notify.enc</code>)
 is safe to commit. The key lives outside the project and is never committed.</p>
 <h3 id="step-3-test-it">Step 3: Test It<a class="headerlink" href="#step-3-test-it" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span><span class="nb">test</span>
@@ -4031,7 +4031,7 @@ for observability dashboards or liveness monitoring of long-running sessions.</p
 <tbody>
 <tr>
 <td>Encryption key</td>
-<td><code>~/.local/ctx/keys/&lt;slug&gt;.key</code></td>
+<td><code>~/.ctx/.ctx.key</code></td>
 <td>No (user-level)</td>
 <td><code>0600</code></td>
 </tr>
@@ -4060,8 +4060,8 @@ is emitted suggesting rotation.</p>
 </span></code></pre></div>
 <h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
 <p>The webhook URL is encrypted with the same encryption key
-(<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>). Because the key lives at the user
-level, it is shared across all worktrees on the same machine —
+(<code>~/.ctx/.ctx.key</code>). Because the key lives at the user level, it is
+shared across all worktrees on the same machine —
 notifications work in worktrees automatically.</p>
 <p>This means <strong>agents running in worktrees cannot send webhook alerts</strong>.
 For autonomous runs where worktree agents are opaque, monitor them from

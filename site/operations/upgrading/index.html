@@ -3634,9 +3634,10 @@ Knowledge files are yours and should never be overwritten.</p>
 <p>Knowledge files (<code>.context/TASKS.md</code>, <code>DECISIONS.md</code>, etc.) are <strong>preserved
 automatically</strong>: <code>ctx init</code> only overwrites infrastructure, never your data.</p>
 <blockquote>
-<p><strong>Encryption key</strong>: The encryption key now lives at <code>~/.local/ctx/keys/</code>
-(outside the project). Reinit does not affect it. Legacy project-local
-keys (<code>.context/.ctx.key</code>) are auto-migrated on first access.</p>
+<p><strong>Encryption key</strong>: The encryption key lives at <code>~/.ctx/.ctx.key</code>
+(outside the project). Reinit does not affect it. If you have a legacy
+key at <code>.context/.ctx.key</code> or <code>~/.local/ctx/keys/</code>, copy it manually
+(see <a href="../../recipes/scratchpad-sync/">Syncing Scratchpad Notes</a>).</p>
 </blockquote>
 <h3 id="3-update-the-ctx-plugin">3. Update the <code>ctx</code> Plugin<a class="headerlink" href="#3-update-the-ctx-plugin" title="Permanent link">&para;</a></h3>
 <p>If you use Claude Code, update the plugin to get new hooks and skills:</p>
