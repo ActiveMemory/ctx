@@ -59,9 +59,13 @@ func writeCounter(path string, n int) {
 }
 
 // logMessage appends a timestamped log line to the given file.
+// Rotates the log when it exceeds config.LogMaxBytes, keeping one
+// previous generation (.1 suffix) — same pattern as eventlog.
 func logMessage(logFile, sessionID, msg string) {
 	dir := filepath.Dir(logFile)
 	_ = os.MkdirAll(dir, 0o750)
+
+	rotateLog(logFile)
 
 	short := sessionID
 	if len(short) > 8 {
@@ -77,6 +81,21 @@ func logMessage(logFile, sessionID, msg string) {
 	}
 	defer func() { _ = f.Close() }()
 	_, _ = f.WriteString(line)
+}
+
+// rotateLog checks the log file size and rotates if it exceeds
+// config.LogMaxBytes. The previous generation is replaced.
+func rotateLog(logFile string) {
+	info, statErr := os.Stat(logFile)
+	if statErr != nil {
+		return
+	}
+	if info.Size() < int64(config.LogMaxBytes) {
+		return
+	}
+	prev := logFile + ".1"
+	_ = os.Remove(prev)
+	_ = os.Rename(logFile, prev)
 }
 
 // isDailyThrottled checks if a marker file was touched today (used to

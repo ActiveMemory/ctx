@@ -9,9 +9,11 @@ package system
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -115,6 +117,38 @@ func TestBootstrap_JSONOutput(t *testing.T) {
 	}
 }
 
+func TestBootstrap_QuietOutput(t *testing.T) {
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(t.TempDir())
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	cmd := newTestCmd()
+	cmd.Flags().BoolP("quiet", "q", false, "")
+	_ = cmd.Flags().Set("quiet", "true")
+
+	if err := runBootstrap(cmd); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+	trimmed := strings.TrimSpace(out)
+
+	// Quiet output should be exactly the context dir path, nothing else.
+	expectedDir := rc.ContextDir()
+	if trimmed != expectedDir {
+		t.Errorf("expected quiet output to be %q, got %q", expectedDir, trimmed)
+	}
+
+	// Should NOT contain verbose markers.
+	if strings.Contains(out, "Rules:") {
+		t.Error("quiet output should not contain 'Rules:'")
+	}
+	if strings.Contains(out, "ctx bootstrap") {
+		t.Error("quiet output should not contain 'ctx bootstrap'")
+	}
+}
+
 func TestBootstrap_CustomDir(t *testing.T) {
 	origDir, _ := os.Getwd()
 	workDir := t.TempDir()
@@ -162,5 +196,92 @@ func TestBootstrap_MissingDir(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "ctx init") {
 		t.Errorf("expected error to mention 'ctx init', got: %v", err)
+	}
+}
+
+// writeTestJSON writes a JSON file at the given path, creating parent dirs.
+func writeTestJSON(t *testing.T, path string, v any) {
+	t.Helper()
+	if mkErr := os.MkdirAll(filepath.Dir(path), 0o750); mkErr != nil {
+		t.Fatalf("mkdir: %v", mkErr)
+	}
+	data, marshalErr := json.Marshal(v)
+	if marshalErr != nil {
+		t.Fatalf("marshal: %v", marshalErr)
+	}
+	if writeErr := os.WriteFile(path, data, 0o600); writeErr != nil {
+		t.Fatalf("write: %v", writeErr)
+	}
+}
+
+func TestPluginWarning_EmptyWhenNotInstalled(t *testing.T) {
+	tmpHome := t.TempDir()
+	t.Setenv("HOME", tmpHome)
+
+	if w := pluginWarning(); w != "" {
+		t.Errorf("expected empty warning, got: %s", w)
+	}
+}
+
+func TestPluginWarning_EmptyWhenEnabledGlobally(t *testing.T) {
+	tmpHome := t.TempDir()
+	t.Setenv("HOME", tmpHome)
+
+	// Create installed_plugins.json.
+	writeTestJSON(t,
+		filepath.Join(tmpHome, ".claude", config.FileInstalledPlugins),
+		map[string]any{
+			"version": 2,
+			"plugins": map[string]any{
+				config.PluginID: []map[string]string{
+					{"scope": "user"},
+				},
+			},
+		},
+	)
+
+	// Create settings.json with plugin enabled.
+	writeTestJSON(t,
+		filepath.Join(tmpHome, ".claude", config.FileGlobalSettings),
+		map[string]any{
+			"enabledPlugins": map[string]bool{
+				config.PluginID: true,
+			},
+		},
+	)
+
+	if w := pluginWarning(); w != "" {
+		t.Errorf("expected empty warning, got: %s", w)
+	}
+}
+
+func TestPluginWarning_WarnsWhenInstalledButNotEnabled(t *testing.T) {
+	tmpHome := t.TempDir()
+	t.Setenv("HOME", tmpHome)
+
+	// Create installed_plugins.json.
+	writeTestJSON(t,
+		filepath.Join(tmpHome, ".claude", config.FileInstalledPlugins),
+		map[string]any{
+			"version": 2,
+			"plugins": map[string]any{
+				config.PluginID: []map[string]string{
+					{"scope": "user"},
+				},
+			},
+		},
+	)
+
+	// No settings.json — plugin not enabled.
+
+	w := pluginWarning()
+	if w == "" {
+		t.Fatal("expected warning, got empty string")
+	}
+	if !strings.Contains(w, "not enabled") {
+		t.Errorf("warning should mention 'not enabled', got: %s", w)
+	}
+	if !strings.Contains(w, "ctx init") {
+		t.Errorf("warning should mention 'ctx init', got: %s", w)
 	}
 }

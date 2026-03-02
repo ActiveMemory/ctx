@@ -218,7 +218,7 @@ clues that the scope expanded or shifted.
 
 Documentation links drift when pages are renamed, moved, or deleted.
 
-Invoke the `/_ctx-check-links` skill to scan all `docs/` markdown files for:
+Invoke the `/ctx-check-links` skill to scan all `docs/` markdown files for:
 
 - **Internal links** pointing to files that don't exist
 - **External links** that return errors (reported as warnings, not failures)
@@ -399,10 +399,10 @@ After running checks, report:
 | Skill          | Scope                                     |
 |----------------|-------------------------------------------|
 | `/_ctx-qa`          | Build/test/lint; this checks conventions  |
-| `/_ctx-verify`      | Confirms claims; use after fixing findings|
+| `/ctx-verify`       | Confirms claims; use after fixing findings|
 | `/_ctx-update-docs` | Syncs docs with code; run after changes   |
 | `ctx drift`         | Checks `.context/` files; this checks `.go` |
-| `/_ctx-check-links` | Dead doc links; invoked as check #12      |
+| `/ctx-check-links`  | Dead doc links; invoked as check #12      |
 
 ## Quality Checklist
 

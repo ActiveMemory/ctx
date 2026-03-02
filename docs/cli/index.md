@@ -45,6 +45,7 @@ All commands support these flags:
 | [`ctx compact`](context.md#ctx-compact)         | Archive completed tasks, clean up files                |
 | [`ctx tasks`](context.md#ctx-tasks)             | Task archival and snapshots                            |
 | [`ctx permissions`](context.md#ctx-permissions) | Permission snapshots (golden image)                    |
+| [`ctx reindex`](context.md#ctx-reindex)         | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
 | [`ctx decisions`](context.md#ctx-decisions)     | Manage `DECISIONS.md` (reindex)                        |
 | [`ctx learnings`](context.md#ctx-learnings)     | Manage `LEARNINGS.md` (reindex)                        |
 | [`ctx recall`](recall.md#ctx-recall)            | Browse and export AI session history                   |
@@ -60,6 +61,7 @@ All commands support these flags:
 | [`ctx why`](tools.md#ctx-why)                   | Read the philosophy behind ctx                         |
 | [`ctx site`](tools.md#ctx-site)                 | Site management (feed generation)                      |
 | [`ctx doctor`](doctor.md#ctx-doctor)            | Structural health check (hooks, drift, config)         |
+| [`ctx config`](config.md#ctx-config)            | Manage runtime configuration profiles                  |
 | [`ctx system`](system.md#ctx-system)            | System diagnostics and hook commands                   |
 
 ---
@@ -76,11 +78,13 @@ All commands support these flags:
 
 ## Environment Variables
 
-| Variable           | Description                             |
-|--------------------|-----------------------------------------|
-| `CTX_DIR`          | Override default context directory path |
-| `CTX_TOKEN_BUDGET` | Override default token budget           |
-| `NO_COLOR`         | Disable colored output when set         |
+| Variable               | Description                                        |
+|------------------------|----------------------------------------------------|
+| `CTX_DIR`              | Override default context directory path             |
+| `CTX_TOKEN_BUDGET`     | Override default token budget                       |
+| `CTX_BACKUP_SMB_URL`   | SMB share URL for backups (e.g. `smb://host/share`)|
+| `CTX_BACKUP_SMB_SUBDIR`| Subdirectory on SMB share (default: `ctx-sessions`) |
+| `NO_COLOR`             | Disable colored output when set                     |
 
 <!-- drift-check: diff <(grep 'yaml:' internal/rc/types.go | grep -oP '"[a-z_]+"' | tr -d '"' | sort) <(sed -n '/Configuration File/,/^##[^#]/p' docs/cli/index.md | grep -oP '`[a-z_]+`' | tr -d '`' | sort -u) -->
 ## Configuration File

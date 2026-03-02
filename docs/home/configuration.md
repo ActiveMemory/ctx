@@ -50,7 +50,7 @@ per-project.
 !!! note "Contributors: Dev Configuration Profile"
     The ctx repo ships two `.ctxrc` source profiles (`.ctxrc.base` and
     `.ctxrc.dev`). The working copy is gitignored and swapped between them
-    via `make rc-dev` / `make rc-base`.
+    via `ctx config switch dev` / `ctx config switch base`.
     See [Contributing: Configuration Profiles](contributing.md#configuration-profiles).
 
 !!! tip "Using a Different .context Directory"
@@ -364,6 +364,7 @@ operating rules in both text and JSON formats:
 
 ```bash
 ctx system bootstrap          # text output for agents
+ctx system bootstrap -q       # just the context directory path
 ctx system bootstrap --json   # structured output for automation
 ```
 

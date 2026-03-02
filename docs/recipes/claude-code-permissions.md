@@ -27,7 +27,7 @@ keep it clean.
 ```bash
 ctx init                            # seeds safe defaults
 /ctx-drift                          # detects missing/stale permissions
-/sanitize-permissions               # audits for dangerous patterns
+/ctx-sanitize-permissions               # audits for dangerous patterns
 ```
 
 See [Recommended Defaults](#recommended-defaults) for the full list.
@@ -38,7 +38,7 @@ See [Recommended Defaults](#recommended-defaults) for the full list.
 |-------------------------|--------------------------------------------------|
 | `ctx init`              | Populates default ctx permissions                |
 | `/ctx-drift`            | Detects missing or stale permission entries      |
-| `/sanitize-permissions` | Audits for dangerous patterns (security-focused) |
+| `/ctx-sanitize-permissions` | Audits for dangerous patterns (security-focused) |
 
 ## Recommended Defaults
 
@@ -187,7 +187,7 @@ The defaults block:
 |---------------------------------|-------------------------------------------|
 | `Bash(git reset:*)`             | Can discard uncommitted work              |
 | `Bash(git clean:*)`             | Deletes untracked files                   |
-| `Skill(sanitize-permissions)`   | Edits this file: self-modification vector |
+| `Skill(ctx-sanitize-permissions)` | Edits this file: self-modification vector |
 | `Skill(release)`                | Runs the release pipeline: high impact    |
 
 ## Hooks: Regex Safety Net
@@ -241,7 +241,7 @@ Run `/ctx-drift` to catch permission drift:
 * Stale `Skill(ctx-*)` entries for removed skills;
 * Granular `Bash(ctx <subcommand>:*)` entries that should be consolidated.
 
-Run `/sanitize-permissions` to catch security issues:
+Run `/ctx-sanitize-permissions` to catch security issues:
 
 * Hook bypass patterns
 * Destructive commands

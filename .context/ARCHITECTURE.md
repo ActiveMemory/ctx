@@ -95,6 +95,7 @@ upward from them. The `rc` package mediates config resolution;
 | `pad`         | Encrypted scratchpad CRUD with blob support and merge                           |
 | `permissions` | Permission snapshot/restore (golden images) for Claude Code                     |
 | `recall`      | Browse, export, lock/unlock AI session history                                  |
+| `reindex`     | Regenerate indices for DECISIONS.md and LEARNINGS.md                            |
 | `remind`      | Session-scoped reminders surfaced at start                                      |
 | `serve`       | Serve static journal site locally via zensical                                  |
 | `status`      | Display context health summary                                                  |

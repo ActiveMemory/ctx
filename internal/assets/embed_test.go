@@ -279,6 +279,12 @@ func TestListSkills(t *testing.T) {
 	expected := []string{
 		"ctx-status",
 		"ctx-recall",
+		"ctx-brainstorm",
+		"ctx-check-links",
+		"ctx-sanitize-permissions",
+		"ctx-skill-creator",
+		"ctx-spec",
+		"ctx-verify",
 	}
 
 	skillSet := make(map[string]bool)
@@ -304,39 +310,6 @@ func TestSkillContent(t *testing.T) {
 	// Verify it's a valid SKILL.md with frontmatter
 	if !strings.HasPrefix(string(content), "---") {
 		t.Error("ctx-recall SKILL.md missing frontmatter")
-	}
-}
-
-func TestListTools(t *testing.T) {
-	tools, err := ListTools()
-	if err != nil {
-		t.Fatalf("ListTools() unexpected error: %v", err)
-	}
-
-	if len(tools) == 0 {
-		t.Error("ListTools() returned empty list")
-	}
-
-	toolSet := make(map[string]bool)
-	for _, name := range tools {
-		toolSet[name] = true
-	}
-
-	if !toolSet["context-watch.sh"] {
-		t.Error("ListTools() missing expected tool: context-watch.sh")
-	}
-}
-
-func TestToolContent(t *testing.T) {
-	content, err := Tool("context-watch.sh")
-	if err != nil {
-		t.Fatalf("Tool(context-watch.sh) error: %v", err)
-	}
-	if !strings.Contains(string(content), "Context Monitor") {
-		t.Error("context-watch.sh does not contain 'Context Monitor'")
-	}
-	if !strings.HasPrefix(string(content), "#!/bin/bash") {
-		t.Error("context-watch.sh missing bash shebang")
 	}
 }
 

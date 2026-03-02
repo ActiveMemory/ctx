@@ -14,7 +14,7 @@ import (
 	"encoding/json"
 )
 
-//go:embed context/*.md project/* claude/CLAUDE.md entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md tools/*.sh hooks/messages/*/*.txt why/*.md
+//go:embed context/*.md project/* claude/CLAUDE.md entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md hooks/messages/*/*.txt why/*.md
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -166,38 +166,6 @@ func ClaudeMd() ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func RalphTemplate(name string) ([]byte, error) {
 	return FS.ReadFile("ralph/" + name)
-}
-
-// ListTools returns available tool script filenames.
-//
-// Returns:
-//   - []string: List of tool filenames in tools/
-//   - error: Non-nil if directory read fails
-func ListTools() ([]string, error) {
-	entries, err := FS.ReadDir("tools")
-	if err != nil {
-		return nil, err
-	}
-
-	names := make([]string, 0, len(entries))
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			names = append(names, entry.Name())
-		}
-	}
-	return names, nil
-}
-
-// Tool reads a tool script by filename.
-//
-// Parameters:
-//   - name: Tool filename (e.g., "context-watch.sh")
-//
-// Returns:
-//   - []byte: Tool script content from tools/
-//   - error: Non-nil if the file is not found or read fails
-func Tool(name string) ([]byte, error) {
-	return FS.ReadFile("tools/" + name)
 }
 
 // HookMessage reads a hook message template by hook name and filename.

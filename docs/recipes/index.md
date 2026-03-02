@@ -224,7 +224,7 @@ Keep `.claude/settings.local.json` clean: recommended **safe defaults**,
 what to **never** pre-approve, and a **maintenance workflow** for cleaning
 up session debris.
 
-**Uses**: `ctx init`, `/ctx-drift`, `/sanitize-permissions`,
+**Uses**: `ctx init`, `/ctx-drift`, `/ctx-sanitize-permissions`,
 `ctx permissions snapshot`, `ctx permissions restore`
 
 ---
@@ -235,7 +235,7 @@ Capture a known-good permission **baseline** as a **golden image**, then restore
 at session start to automatically drop session-accumulated permissions.
 
 **Uses**: `ctx permissions snapshot`, `ctx permissions restore`,
-`/sanitize-permissions`
+`/ctx-sanitize-permissions`
 
 ---
 
@@ -261,6 +261,17 @@ as permanent project specs. Filter by date, select interactively, and
 optionally create tasks referencing each imported spec.
 
 **Uses**: `/ctx-import-plans`, `/ctx-add-task`
+
+---
+
+### [Design Before Coding](design-before-coding.md)
+
+Front-load design with a four-skill chain: **brainstorm** the approach,
+**spec** the design, **task** the work, **implement** step-by-step.
+Each step produces an artifact that feeds the next.
+
+**Uses**: `/ctx-brainstorm`, `/ctx-spec`, `/ctx-add-task`,
+`/ctx-implement`, `/ctx-add-decision`
 
 ---
 

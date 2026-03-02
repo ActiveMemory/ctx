@@ -23,15 +23,18 @@ import (
 //   - --merge: Auto-merge ctx content into existing CLAUDE.md and PROMPT.md
 //   - --ralph: Use autonomous loop templates (no clarifying questions,
 //     one-task-per-iteration, completion signals)
+//   - --no-plugin-enable: Skip auto-enabling the ctx plugin in
+//     ~/.claude/settings.json
 //
 // Returns:
 //   - *cobra.Command: Configured init command with flags registered
 func Cmd() *cobra.Command {
 	var (
-		force   bool
-		minimal bool
-		merge   bool
-		ralph   bool
+		force          bool
+		minimal        bool
+		merge          bool
+		ralph          bool
+		noPluginEnable bool
 	)
 
 	cmd := &cobra.Command{
@@ -65,6 +68,10 @@ one-task-per-iteration discipline.
 By default (without --ralph), the agent is encouraged to ask questions
 when requirements are unclear — better for collaborative sessions.
 
+If the ctx Claude Code plugin is installed, init auto-enables it in
+~/.claude/settings.json so it works across all projects.
+Use --no-plugin-enable to skip this step.
+
 Examples:
   ctx init           # Collaborative mode (agent asks questions)
   ctx init --ralph   # Autonomous mode (agent works independently)
@@ -72,7 +79,7 @@ Examples:
   ctx init --force   # Overwrite existing files without prompting
   ctx init --merge   # Auto-merge ctx content into existing files`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runInit(cmd, force, minimal, merge, ralph)
+			return runInit(cmd, force, minimal, merge, ralph, noPluginEnable)
 		},
 	}
 
@@ -92,6 +99,10 @@ Examples:
 	cmd.Flags().BoolVar(
 		&ralph, "ralph", false,
 		"Agent works autonomously without asking questions",
+	)
+	cmd.Flags().BoolVar(
+		&noPluginEnable, "no-plugin-enable", false,
+		"Skip auto-enabling the ctx plugin in global Claude Code settings",
 	)
 
 	return cmd

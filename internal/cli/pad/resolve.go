@@ -44,10 +44,11 @@ func runResolve(cmd *cobra.Command) error {
 		return errors.New("resolve is only needed for encrypted scratchpads")
 	}
 
-	key, err := crypto.LoadKey(keyPath())
+	kp := keyPath()
+	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return errors.New(errNoKey)
+			return errors.New(errNoKeyAt(kp))
 		}
 		return fmt.Errorf("load key: %w", err)
 	}

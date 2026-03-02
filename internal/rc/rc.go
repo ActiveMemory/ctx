@@ -8,6 +8,7 @@
 package rc
 
 import (
+	"os"
 	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -180,10 +181,24 @@ func NotifyEvents() []string {
 	return n.Events
 }
 
+// KeyPath returns the resolved encryption key file path.
+//
+// Priority: key_path in .ctxrc (explicit) > user-level (~/.local/ctx/keys/) > legacy project-local.
+//
+// Returns:
+//   - string: Resolved path to the encryption key file
+func KeyPath() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		cwd = "."
+	}
+	return config.ResolveKeyPath(ContextDir(), cwd, RC().KeyPathOverride)
+}
+
 // KeyRotationDays returns the configured key rotation threshold in days.
 //
-// The encryption key (.context/.context.key) is shared by both ctx pad and
-// ctx notify, so the rotation threshold is a project-wide setting.
+// The encryption key is shared by both ctx pad and ctx notify, so the
+// rotation threshold is a project-wide setting.
 //
 // Priority: top-level key_rotation_days > notify.key_rotation_days (legacy) > default (90).
 //

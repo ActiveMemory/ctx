@@ -1,5 +1,5 @@
 ---
-name: _ctx-skill-creator
+name: ctx-skill-creator
 description: "Create, improve, and test skills. Use when building a new skill, evaluating or fixing an existing one, turning a conversation workflow into a reusable skill, or when a skill is not triggering or producing poor results. Also use when the user says 'turn this into a skill', 'make a slash command for this', or 'this should be a skill'."
 ---
 

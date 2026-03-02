@@ -12,6 +12,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 func TestCheckBackupMarker_NoMarker(t *testing.T) {
@@ -69,7 +71,7 @@ func TestCheckBackupMarker_StaleMarker(t *testing.T) {
 }
 
 func TestCheckSMBMount_NoURL(t *testing.T) {
-	warnings := checkSMBMount("", nil)
+	warnings := checkSMBMountWarnings("", nil)
 	if len(warnings) != 0 {
 		t.Errorf("expected no warnings for empty URL, got: %v", warnings)
 	}
@@ -77,7 +79,7 @@ func TestCheckSMBMount_NoURL(t *testing.T) {
 
 func TestCheckSMBMount_Unmounted(t *testing.T) {
 	// Use a URL that definitely won't have a GVFS mount
-	warnings := checkSMBMount("smb://testhost/testshare", nil)
+	warnings := checkSMBMountWarnings("smb://testhost/testshare", nil)
 	if len(warnings) == 0 {
 		t.Fatal("expected warnings for unmounted SMB share")
 	}
@@ -121,7 +123,7 @@ func TestCheckBackupAge_StaleMarkerEmitsWarning(t *testing.T) {
 	if err := os.MkdirAll(stateDir, 0o750); err != nil {
 		t.Fatal(err)
 	}
-	marker := filepath.Join(stateDir, backupMarkerFile)
+	marker := filepath.Join(stateDir, config.BackupMarkerFile)
 	if err := os.WriteFile(marker, nil, 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -157,7 +159,7 @@ func TestCheckBackupAge_FreshMarkerSilent(t *testing.T) {
 	if err := os.MkdirAll(stateDir, 0o750); err != nil {
 		t.Fatal(err)
 	}
-	marker := filepath.Join(stateDir, backupMarkerFile)
+	marker := filepath.Join(stateDir, config.BackupMarkerFile)
 	if err := os.WriteFile(marker, nil, 0o600); err != nil {
 		t.Fatal(err)
 	}

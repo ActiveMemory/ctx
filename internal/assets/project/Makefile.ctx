@@ -14,7 +14,7 @@ journal:
 	@echo "Journal site updated!"
 	@echo ""
 	@echo "Next steps (in Claude Code):"
-	@echo "  /ctx-journal-enrich-all  — add metadata per entry (skips if frontmatter exists)"
+	@echo "  /ctx-journal-enrich-all  — exports if needed + adds metadata per entry"
 	@echo ""
 	@echo "Then re-run: make journal"
 

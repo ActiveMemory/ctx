@@ -14,8 +14,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // bootstrapCmd returns the "ctx system bootstrap" subcommand.
@@ -28,6 +30,7 @@ func bootstrapCmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().Bool("json", false, "Output in JSON format")
+	cmd.Flags().BoolP("quiet", "q", false, "Output only the context directory path")
 	return cmd
 }
 
@@ -52,6 +55,12 @@ func runBootstrap(cmd *cobra.Command) error {
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		return fmt.Errorf("context directory not found: %s — run 'ctx init'", dir)
+	}
+
+	quiet, _ := cmd.Flags().GetBool("quiet")
+	if quiet {
+		cmd.Println(dir)
+		return nil
 	}
 
 	files := listContextFiles(dir)
@@ -82,6 +91,11 @@ func outputBootstrapText(cmd *cobra.Command, dir string, files []string) {
 	for i, s := range bootstrapNextSteps {
 		cmd.Println(fmt.Sprintf("  %d. %s", i+1, s))
 	}
+
+	if w := pluginWarning(); w != "" {
+		cmd.Println()
+		cmd.Println("Warning: " + w)
+	}
 }
 
 func outputBootstrapJSON(cmd *cobra.Command, dir string, files []string) error {
@@ -90,6 +104,7 @@ func outputBootstrapJSON(cmd *cobra.Command, dir string, files []string) error {
 		Files      []string `json:"files"`
 		Rules      []string `json:"rules"`
 		NextSteps  []string `json:"next_steps"`
+		Warnings   []string `json:"warnings,omitempty"`
 	}
 
 	out := jsonOutput{
@@ -99,9 +114,29 @@ func outputBootstrapJSON(cmd *cobra.Command, dir string, files []string) error {
 		NextSteps:  bootstrapNextSteps,
 	}
 
+	if w := pluginWarning(); w != "" {
+		out.Warnings = []string{w}
+	}
+
 	enc := json.NewEncoder(cmd.OutOrStdout())
 	enc.SetIndent("", "  ")
 	return enc.Encode(out)
+}
+
+// pluginWarning returns a warning string if the ctx plugin is installed
+// but not enabled in either global or local settings. Returns empty string
+// if no warning is needed.
+func pluginWarning() string {
+	if !initialize.PluginInstalled() {
+		return ""
+	}
+	if initialize.PluginEnabledGlobally() || initialize.PluginEnabledLocally() {
+		return ""
+	}
+	return "ctx plugin is installed but not enabled. " +
+		"Run 'ctx init' to auto-enable, or add " +
+		"{\"enabledPlugins\": {\"ctx@activememory-ctx\": true}} " +
+		"to ~/.claude/settings.json"
 }
 
 // listContextFiles reads the given directory and returns sorted .md filenames.

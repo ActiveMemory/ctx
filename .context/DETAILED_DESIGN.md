@@ -806,7 +806,7 @@ Consult specific sections when working on a module.
 | `check-resources` | UserPromptSubmit | (all) | `sysinfo.Collect()` + `Evaluate()`; output ONLY at DANGER severity (mem≥90%, swap≥75%, disk≥95%, load≥1.5x CPUs) | None |
 | `check-knowledge` | UserPromptSubmit | (all) | DECISIONS entry count vs `rc.EntryCountDecisions()` (default 20), LEARNINGS vs `rc.EntryCountLearnings()` (default 30), CONVENTIONS lines vs `rc.ConventionLineCount()` (default 200). Suggest /ctx-consolidate | Daily |
 | `check-map-staleness` | UserPromptSubmit | (all) | Two conditions (both required): map-tracking.json `last_run` >30 days AND `git log --since=<last_run> -- internal/` has commits. Suggest /ctx-map | Daily |
-| `check-backup-age` | UserPromptSubmit | (all) | Check SMB mount (via GVFS path from `CTX_BACKUP_SMB_URL` env) + backup marker mtime (>2 days). Suggest `hack/backup-context.sh` | Daily |
+| `check-backup-age` | UserPromptSubmit | (all) | Check SMB mount (via GVFS path from `CTX_BACKUP_SMB_URL` env) + backup marker mtime (>2 days). Suggest `ctx system backup` | Daily |
 | `mark-journal` | (plumbing) | — | `ctx system mark-journal <file> <stage> [--check]`. Valid stages: exported, enriched, normalized, fences_verified, locked | N/A |
 | `cleanup-tmp` | SessionEnd | (all) | Remove files >15 days old from `secureTempDir()`. Silent side-effect, no output | N/A |
 

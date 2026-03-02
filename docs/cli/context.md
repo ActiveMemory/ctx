@@ -304,6 +304,32 @@ ctx permissions restore
 
 ---
 
+### `ctx reindex`
+
+Regenerate the quick-reference index for both `DECISIONS.md` and `LEARNINGS.md`
+in a single invocation.
+
+```bash
+ctx reindex
+```
+
+This is a convenience wrapper around `ctx decisions reindex` and
+`ctx learnings reindex`. Both files grow at similar rates and users
+typically want to reindex both after manual edits.
+
+The index is a compact table of date and title for each entry, allowing
+AI tools to scan entries without reading the full file.
+
+**Example**:
+
+```bash
+ctx reindex
+# ✓ Index regenerated with 12 entries
+# ✓ Index regenerated with 8 entries
+```
+
+---
+
 ### `ctx decisions`
 
 Manage the `DECISIONS.md` file.

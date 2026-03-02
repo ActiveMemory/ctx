@@ -20,11 +20,15 @@ import (
 
 // Error messages matching the spec.
 const (
-	errNoKey       = "encrypted scratchpad found but no key; place your key at .context/.ctx.key"
 	errDecryptFail = "decryption failed: wrong key?"
 	msgEmpty       = "Scratchpad is empty."
-	msgKeyCreated  = "Scratchpad key created at %s\nCopy this file to your other machines at the same path.\n"
+	msgKeyCreated  = "Scratchpad key created at %s\n"
 )
+
+// errNoKeyAt returns a dynamic error message referencing the resolved key path.
+func errNoKeyAt(path string) string {
+	return fmt.Sprintf("encrypted scratchpad found but no key at %s", path)
+}
 
 // errEntryRange returns the spec-defined out-of-range error.
 func errEntryRange(n, total int) string {
@@ -40,9 +44,13 @@ func scratchpadPath() string {
 }
 
 // keyPath returns the full path to the encryption key file.
+//
+// Triggers legacy key migration on each call, then resolves
+// the effective path via rc.KeyPath().
 func keyPath() string {
-	config.MigrateKeyFile(rc.ContextDir())
-	return filepath.Join(rc.ContextDir(), config.FileContextKey)
+	cwd, _ := os.Getwd()
+	config.MigrateKeyFile(rc.ContextDir(), cwd)
+	return rc.KeyPath()
 }
 
 // ensureKey generates a scratchpad key if one doesn't exist and there is no
@@ -59,26 +67,23 @@ func ensureKey() error {
 	// Encrypted file already exists without a key — we can't generate a new
 	// one because it wouldn't decrypt the existing data.
 	if _, err := os.Stat(scratchpadPath()); err == nil {
-		return errors.New(errNoKey)
+		return errors.New(errNoKeyAt(kp))
 	}
 
 	// First use: generate key.
-	key, err := crypto.GenerateKey()
-	if err != nil {
-		return fmt.Errorf("generate scratchpad key: %w", err)
+	key, genErr := crypto.GenerateKey()
+	if genErr != nil {
+		return fmt.Errorf("generate scratchpad key: %w", genErr)
 	}
 
-	// Ensure .context/ directory exists.
-	if err := os.MkdirAll(filepath.Dir(kp), 0750); err != nil {
-		return fmt.Errorf("create context dir: %w", err)
+	// Ensure parent directory exists (user-level or project-local).
+	if mkErr := os.MkdirAll(filepath.Dir(kp), config.PermKeyDir); mkErr != nil {
+		return fmt.Errorf("create key dir: %w", mkErr)
 	}
 
-	if err := crypto.SaveKey(kp, key); err != nil {
-		return fmt.Errorf("save scratchpad key: %w", err)
+	if saveErr := crypto.SaveKey(kp, key); saveErr != nil {
+		return fmt.Errorf("save scratchpad key: %w", saveErr)
 	}
-
-	// Best-effort: add key to .gitignore.
-	_ = ensureGitignore(rc.ContextDir(), config.FileContextKey)
 
 	fmt.Fprintf(os.Stderr, msgKeyCreated, kp)
 	return nil
@@ -131,10 +136,11 @@ func readEntries() ([]string, error) {
 	}
 
 	// Encrypted mode: load key and decrypt
-	key, err := crypto.LoadKey(keyPath())
+	kp := keyPath()
+	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return nil, errors.New(errNoKey)
+			return nil, errors.New(errNoKeyAt(kp))
 		}
 		return nil, fmt.Errorf("load key: %w", err)
 	}
@@ -170,10 +176,11 @@ func writeEntries(entries []string) error {
 		return err
 	}
 
-	key, err := crypto.LoadKey(keyPath())
+	kp := keyPath()
+	key, err := crypto.LoadKey(kp)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return errors.New(errNoKey)
+			return errors.New(errNoKeyAt(kp))
 		}
 		return fmt.Errorf("load key: %w", err)
 	}

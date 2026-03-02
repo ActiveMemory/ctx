@@ -59,7 +59,7 @@ Read on for what each stage does and why.
 | `ctx serve`               | Command | Serve any zensical directory (default: journal) |
 | `/ctx-recall`             | Skill   | Browse sessions inside your AI assistant        |
 | `/ctx-journal-enrich`     | Skill   | Add frontmatter metadata to a single entry      |
-| `/ctx-journal-enrich-all` | Skill   | Batch-enrich all unenriched entries             |
+| `/ctx-journal-enrich-all` | Skill   | Full pipeline: export if needed, then batch-enrich |
 
 ## The Workflow
 
@@ -206,7 +206,15 @@ before any files are overwritten.
 
     Locked entries are always skipped, regardless of flags.
 
-    See `ctx recall lock --help` for more details.
+    If you prefer to add `locked: true` directly in frontmatter during
+    enrichment, run `ctx recall sync` to propagate the lock state to
+    `.state.json`:
+
+    ```bash
+    ctx recall sync
+    ```
+
+    See `ctx recall lock --help` and `ctx recall sync --help` for details.
 
 
 ### Step 4: Enrich with Metadata
@@ -214,6 +222,9 @@ before any files are overwritten.
 Raw exports have timestamps and transcripts but lack the semantic metadata that
 makes sessions searchable: topics, technology tags, outcome status, and
 summaries. The `/ctx-journal-enrich*` skills add this structured frontmatter.
+
+Locked entries are skipped by enrichment skills, just as they are by export.
+Lock entries you want to protect before running batch enrichment.
 
 Batch enrichment (*recommended*):
 

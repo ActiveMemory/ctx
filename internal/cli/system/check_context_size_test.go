@@ -289,7 +289,7 @@ func TestCheckpointWithTokenLine(t *testing.T) {
 	// Create a fake JSONL file with usage data (52k tokens = 26% of 200k)
 	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
 	_ = os.MkdirAll(projectDir, 0o750)
-	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"hi","usage":{"input_tokens":40000,"output_tokens":500,"cache_creation_input_tokens":2000,"cache_read_input_tokens":10000}}}` + "\n"
+	jsonlContent := `{"type":"assistant","message":{"model":"claude-sonnet-4-5","role":"assistant","content":"hi","usage":{"input_tokens":40000,"output_tokens":500,"cache_creation_input_tokens":2000,"cache_read_input_tokens":10000}}}` + "\n"
 	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
 		[]byte(jsonlContent), 0o600)
 
@@ -336,7 +336,7 @@ func TestWindowWarning_Over80(t *testing.T) {
 	// Create a fake JSONL file with 164k tokens (82% of 200k)
 	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
 	_ = os.MkdirAll(projectDir, 0o750)
-	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"hi","usage":{"input_tokens":100000,"output_tokens":2000,"cache_creation_input_tokens":4000,"cache_read_input_tokens":60000}}}` + "\n"
+	jsonlContent := `{"type":"assistant","message":{"model":"claude-opus-4-5","role":"assistant","content":"hi","usage":{"input_tokens":100000,"output_tokens":2000,"cache_creation_input_tokens":4000,"cache_read_input_tokens":60000}}}` + "\n"
 	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
 		[]byte(jsonlContent), 0o600)
 
@@ -376,7 +376,7 @@ func TestWindowWarning_Under80_NoCheckpoint(t *testing.T) {
 	// Create a JSONL file with 40k tokens (20% of 200k)
 	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
 	_ = os.MkdirAll(projectDir, 0o750)
-	jsonlContent := `{"type":"assistant","message":{"role":"assistant","content":"hi","usage":{"input_tokens":30000,"output_tokens":500,"cache_creation_input_tokens":0,"cache_read_input_tokens":10000}}}` + "\n"
+	jsonlContent := `{"type":"assistant","message":{"model":"claude-opus-4-5","role":"assistant","content":"hi","usage":{"input_tokens":30000,"output_tokens":500,"cache_creation_input_tokens":0,"cache_read_input_tokens":10000}}}` + "\n"
 	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
 		[]byte(jsonlContent), 0o600)
 
@@ -394,6 +394,45 @@ func TestWindowWarning_Under80_NoCheckpoint(t *testing.T) {
 	out := cmdOutput(cmd)
 	if strings.Contains(out, "Context Checkpoint") || strings.Contains(out, "Context Window Warning") {
 		t.Errorf("expected silence at prompt 6 with 20%% usage, got: %s", out)
+	}
+}
+
+func TestWindowWarning_1MModel_NoFalseAlarm(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_RUNTIME_DIR", tmpDir)
+	t.Setenv("HOME", tmpDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+	setupContextDir(t)
+
+	sessionID := "test-1m-no-false-alarm"
+
+	// 164k tokens = 82% of 200k, but only ~16% of 1M.
+	// With a 1M-capable model, no warning should fire.
+	projectDir := filepath.Join(tmpDir, ".claude", "projects", "testproj")
+	_ = os.MkdirAll(projectDir, 0o750)
+	jsonlContent := `{"type":"assistant","message":{"model":"claude-opus-4-6","role":"assistant","content":"hi","usage":{"input_tokens":100000,"output_tokens":2000,"cache_creation_input_tokens":4000,"cache_read_input_tokens":60000}}}` + "\n"
+	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
+		[]byte(jsonlContent), 0o600)
+
+	// Counter at 5 — normally silent
+	counterFile := filepath.Join(tmpDir, "ctx", "context-check-"+sessionID)
+	_ = os.MkdirAll(filepath.Dir(counterFile), 0o700)
+	_ = os.WriteFile(counterFile, []byte("5"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"`+sessionID+`"}`)
+	if runErr := runCheckContextSize(cmd, stdin); runErr != nil {
+		t.Fatalf("unexpected error: %v", runErr)
+	}
+
+	out := cmdOutput(cmd)
+	// 164k/1M = 16%, well under 80% — no warning should fire
+	if strings.Contains(out, "Context Window Warning") {
+		t.Errorf("1M model should not trigger 80%% warning at 164k tokens, got: %s", out)
 	}
 }
 

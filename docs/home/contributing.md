@@ -139,16 +139,14 @@ never distributed to users.
 | `/_ctx-absorb`               | Merge deltas from a parallel worktree or separate checkout    |
 | `/_ctx-audit`                | Detect code-level drift after YOLO sprints or before releases |
 | `/_ctx-backup`               | Backup context and Claude data to SMB share                   |
-| `/_ctx-brainstorm`           | Structured design dialogue before implementation              |
-| `/_ctx-check-links`          | Audit docs for dead links before releases                     |
 | `/_ctx-qa`                   | Run QA checks before committing                               |
 | `/_ctx-release`              | Run the full release process                                  |
 | `/_ctx-release-notes`        | Generate release notes for `dist/RELEASE_NOTES.md`            |
-| `/_ctx-sanitize-permissions` | Audit `settings.local.json` for dangerous permissions         |
-| `/_ctx-skill-creator`        | Create or improve a skill                                     |
-| `/_ctx-spec`                 | Scaffold a feature spec from `specs/spec-template.md`         |
 | `/_ctx-update-docs`          | Check docs/code consistency after changes                     |
-| `/_ctx-verify`               | Verify before claiming work is done                           |
+
+Six skills previously in this list have been promoted to bundled plugin skills
+and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-check-links`,
+`/ctx-sanitize-permissions`, `/ctx-skill-creator`, `/ctx-spec`, `/ctx-verify`.
 
 ----
 
@@ -198,17 +196,31 @@ is gitignored and swapped between them:
 | `.ctxrc.dev`  | Dev profile: notify events enabled, verbose logging       |
 | `.ctxrc`      | Working copy (*gitignored*: copied from one of the above) |
 
-Use Make targets to switch:
+Use ctx commands to switch:
 
 ```bash
-make rc-dev      # switch to dev profile
-make rc-base     # switch to base profile
-make rc-status   # show which profile is active
+ctx config switch dev      # switch to dev profile
+ctx config switch base     # switch to base profile
+ctx config status          # show which profile is active
 ```
 
-After cloning, run `make rc-dev` to get started with full logging.
+After cloning, run `ctx config switch dev` to get started with full logging.
 
 See [Configuration](configuration.md) for the full `.ctxrc` option reference.
+
+### Backups
+
+Back up project context and global Claude Code data with:
+
+```bash
+ctx system backup                    # both project + global (default)
+ctx system backup --scope project    # .context/, .claude/, ideas/ only
+ctx system backup --scope global     # ~/.claude/ only
+```
+
+Archives are saved to `/tmp/`. When `CTX_BACKUP_SMB_URL` is configured,
+they are also copied to an SMB share. See
+[CLI Reference: backup](../cli/system.md#ctx-system-backup) for details.
 
 ### Running Tests
 

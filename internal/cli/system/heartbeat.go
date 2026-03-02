@@ -79,17 +79,45 @@ func runHeartbeat(_ *cobra.Command, stdin *os.File) error {
 	contextModified := currentMtime > lastMtime
 	writeMtime(mtimeFile, currentMtime)
 
+	// Read token usage for this session.
+	info, _ := readSessionTokenInfo(sessionID)
+	tokens := info.Tokens
+	window := effectiveContextWindow(info.Model)
+
 	// Build and send notification.
-	ref := notify.NewTemplateRef("heartbeat", "pulse", map[string]any{
+	vars := map[string]any{
 		"prompt_count":     count,
 		"session_id":       sessionID,
 		"context_modified": contextModified,
-	})
-	msg := fmt.Sprintf("heartbeat: prompt #%d (context_modified=%t)", count, contextModified)
+	}
+	if tokens > 0 {
+		pct := tokens * 100 / window
+		vars["tokens"] = tokens
+		vars["context_window"] = window
+		vars["usage_pct"] = pct
+	}
+	ref := notify.NewTemplateRef("heartbeat", "pulse", vars)
+
+	var msg string
+	if tokens > 0 {
+		pct := tokens * 100 / window
+		msg = fmt.Sprintf("heartbeat: prompt #%d (context_modified=%t tokens=%s pct=%d%%)",
+			count, contextModified, formatTokenCount(tokens), pct)
+	} else {
+		msg = fmt.Sprintf("heartbeat: prompt #%d (context_modified=%t)", count, contextModified)
+	}
 	_ = notify.Send("heartbeat", msg, sessionID, ref)
 	eventlog.Append("heartbeat", msg, sessionID, ref)
 
-	logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d context_modified=%t", count, contextModified))
+	var logLine string
+	if tokens > 0 {
+		pct := tokens * 100 / window
+		logLine = fmt.Sprintf("prompt#%d context_modified=%t tokens=%s pct=%d%%",
+			count, contextModified, formatTokenCount(tokens), pct)
+	} else {
+		logLine = fmt.Sprintf("prompt#%d context_modified=%t", count, contextModified)
+	}
+	logMessage(logFile, sessionID, logLine)
 
 	// No stdout — agent never sees this hook.
 	return nil

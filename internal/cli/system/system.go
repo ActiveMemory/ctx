@@ -32,6 +32,7 @@ func Cmd() *cobra.Command {
 		Long: `System diagnostics and hook commands.
 
 Subcommands:
+  backup               Backup context and Claude data
   resources            Show system resource usage (memory, swap, disk, load)
   bootstrap            Print context location for AI agents
   message              Manage hook message templates (list/show/edit/reset)
@@ -65,6 +66,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 	}
 
 	cmd.AddCommand(
+		backupCmd(),
 		resourcesCmd(),
 		bootstrapCmd(),
 		messageCmd(),

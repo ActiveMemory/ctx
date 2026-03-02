@@ -54,7 +54,7 @@ opinionated behavior on top.
 | [`/ctx-pad`](#ctx-pad)                               | Manage encrypted scratchpad entries                             | user-invocable   |
 | [`/ctx-recall`](#ctx-recall)                         | Browse and export AI session history                            | user-invocable   |
 | [`/ctx-journal-enrich`](#ctx-journal-enrich)         | Enrich single journal entry with metadata                       | user-invocable   |
-| [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all) | Batch-enrich all unenriched journal entries                     | user-invocable   |
+| [`/ctx-journal-enrich-all`](#ctx-journal-enrich-all) | Full journal pipeline: export if needed, then batch-enrich      | user-invocable   |
 | [`/ctx-journal-normalize`](#ctx-journal-normalize)   | Normalize journal markdown for clean rendering                  | user-invocable   |
 | [`/ctx-blog`](#ctx-blog)                             | Generate blog post draft from project activity                  | user-invocable   |
 | [`/ctx-blog-changelog`](#ctx-blog-changelog)         | Generate themed blog post from a commit range                   | user-invocable   |
@@ -62,8 +62,12 @@ opinionated behavior on top.
 | [`/ctx-drift`](#ctx-drift)                           | Detect and fix context drift                                    | user-invocable   |
 | [`/ctx-alignment-audit`](#ctx-alignment-audit)       | Audit docs claims against agent instructions                    | user-invocable   |
 | [`/ctx-prompt-audit`](#ctx-prompt-audit)             | Analyze prompting patterns for improvement                      | user-invocable   |
-| [`/check-links`](#check-links)                       | Audit docs for dead internal and external links                 | project-specific |
+| [`/ctx-check-links`](#ctx-check-links)               | Audit docs for dead internal and external links                 | user-invocable   |
+| [`/ctx-sanitize-permissions`](#ctx-sanitize-permissions) | Audit Claude Code permissions for security risks            | user-invocable   |
+| [`/ctx-verify`](#ctx-verify)                         | Verify claims before reporting completion                       | user-invocable   |
 | [`/ctx-context-monitor`](#ctx-context-monitor)       | Respond to context checkpoint signals                           | automatic        |
+| [`/ctx-brainstorm`](#ctx-brainstorm)                 | Structured design dialogue before implementation                | user-invocable   |
+| [`/ctx-spec`](#ctx-spec)                             | Scaffold a feature spec from a project template                 | user-invocable   |
 | [`/ctx-import-plans`](#ctx-import-plans)             | Import Claude Code plan files into project specs                | user-invocable   |
 | [`/ctx-implement`](#ctx-implement)                   | Execute a plan step-by-step with verification                   | user-invocable   |
 | [`/ctx-loop`](#ctx-loop)                             | Generate autonomous loop script                                 | user-invocable   |
@@ -71,6 +75,7 @@ opinionated behavior on top.
 | [`/ctx-map`](#ctx-map)                               | Build and maintain architecture maps                            | user-invocable   |
 | [`/ctx-remind`](#ctx-remind)                         | Manage session-scoped reminders                                 | user-invocable   |
 | [`/ctx-doctor`](#ctx-doctor)                         | Troubleshoot ctx behavior with health checks and event analysis | user-invocable   |
+| [`/ctx-skill-creator`](#ctx-skill-creator)           | Create, improve, and test skills                                | user-invocable   |
 | [`/ctx-pause`](#ctx-pause)                           | Pause context hooks for this session                            | user-invocable   |
 | [`/ctx-resume`](#ctx-resume)                         | Resume context hooks after a pause                              | user-invocable   |
 
@@ -291,10 +296,11 @@ outcome, topics, technologies, and summary. Shows diff before writing.
 
 ### `/ctx-journal-enrich-all`
 
-Batch-enrich all unenriched journal entries. Filters out short sessions
+Full journal pipeline: exports unexported sessions first, then
+batch-enriches all unenriched entries. Filters out short sessions
 and continuations. Can spawn subagents for large backlogs.
 
-**Wraps**: iterates `/ctx-journal-enrich` across all entries
+**Wraps**: `ctx recall export --all` + iterates `/ctx-journal-enrich`
 
 **See also**:
 [Browsing and Enriching Past Sessions](../recipes/session-archaeology.md)
@@ -427,19 +433,57 @@ works but with reduced capability. It runs structural checks and notes:
 
 ---
 
-### `/check-links`
+### `/ctx-check-links`
 
-Scan all markdown files under `docs/` for broken links. Two passes:
-internal links (verify file targets exist on disk) and external links
-(HTTP HEAD with timeout, report failures as warnings). Also checks
-image references.
-
-Invoked automatically as check #12 during `/audit`.
+Scan all markdown files under `docs/` for broken links. Three passes:
+internal links (verify file targets exist on disk), external links
+(HTTP HEAD with timeout, report failures as warnings), and image
+references. Resolves relative paths, strips anchors before checking,
+and skips localhost/example URLs.
 
 **Wraps**: Glob + Grep to scan, `curl` for external checks
 
+**Trigger phrases**: "check links", "audit links", "any broken links?",
+"dead links"
+
 **See also**:
-[`/audit`](#audit-related-skills)
+[Detecting and Fixing Drift](../recipes/context-health.md)
+
+---
+
+### `/ctx-sanitize-permissions`
+
+Audit `.claude/settings.local.json` for dangerous permissions across
+four risk categories: hook bypass (*Critical*), destructive commands
+(*High*), config injection vectors (*High*), and overly broad patterns
+(*Medium*). Reports findings by severity and offers specific fix actions
+with user confirmation.
+
+**Wraps**: reads `.claude/settings.local.json`, edits with confirmation
+
+**Trigger phrases**: "audit permissions", "are my permissions safe?",
+"sanitize permissions", "check settings"
+
+**See also**:
+[Claude Code Permission Hygiene](../recipes/claude-code-permissions.md)
+
+---
+
+### `/ctx-verify`
+
+Run the relevant verification command before claiming a result. Maps
+claims to required evidence (*"tests pass" needs test output, "build
+succeeds" needs exit 0*) and includes self-audit questions to surface
+gaps before reporting done.
+
+**Wraps**: runs the verification command appropriate to the claim
+(`go test`, `make audit`, `go build`, `diff`, etc.)
+
+**Trigger phrases**: "verify this", "does it work?", "prove it passes",
+"is it done?"
+
+**See also**:
+[Detecting and Fixing Drift](../recipes/context-health.md)
 
 ---
 
@@ -461,7 +505,48 @@ not user-invocable
 
 ## Planning & Execution
 
-Skills for structured implementation and parallel agent workflows.
+Skills for structured design, implementation, and parallel agent
+workflows.
+
+### `/ctx-brainstorm`
+
+Transform raw ideas into clear, validated designs through structured
+dialogue before any implementation begins. Follows a gated process:
+understand context, clarify the idea (one question at a time),
+surface non-functional requirements, lock understanding with user
+confirmation, explore 2-3 design approaches with trade-offs,
+stress-test the chosen approach, and present the detailed design.
+
+**Wraps**: reads DECISIONS.md, relevant source files; chains to
+`/ctx-add-decision` for recording design choices
+
+**Trigger phrases**: "let's brainstorm", "design this", "think through",
+"before we build", "what approach should we take?"
+
+**See also**:
+[`/ctx-spec`](#ctx-spec)
+
+---
+
+### `/ctx-spec`
+
+Scaffold a feature spec from the project template and walk through
+each section with the user. Covers: problem, approach, happy path,
+edge cases, validation rules, error handling, interface, implementation,
+configuration, testing, and non-goals. Spends extra time on edge cases
+and error handling.
+
+**Wraps**: reads `specs/tpl/spec-template.md`, writes to `specs/`,
+optionally chains to `/ctx-add-task`
+
+**Trigger phrases**: "spec this out", "write a spec", "create a spec",
+"design document"
+
+**See also**:
+[`/ctx-brainstorm`](#ctx-brainstorm),
+[`/ctx-import-plans`](#ctx-import-plans)
+
+---
 
 ### `/ctx-import-plans`
 
@@ -547,6 +632,29 @@ intent (*"remind me to refactor swagger"*) into the corresponding
 
 **See also**:
 [Session Reminders](../recipes/session-reminders.md)
+
+---
+
+## Skill Authoring
+
+### `/ctx-skill-creator`
+
+Create, improve, and test skills. Guides the full lifecycle: capture
+intent, interview for edge cases, draft the SKILL.md, test with
+realistic prompts, review results with the user, and iterate. Applies
+core principles: the agent is already smart (only add what it does
+not know), the description is the trigger (make it specific and
+"pushy"), and explain the why instead of rigid directives.
+
+**Wraps**: reads/writes `.claude/skills/` and
+`internal/assets/claude/skills/`
+
+**Trigger phrases**: "create a skill", "turn this into a skill",
+"make a slash command", "this should be a skill", "improve this skill",
+"the skill isn't triggering"
+
+**See also**:
+[Contributing](../home/contributing.md)
 
 ---
 

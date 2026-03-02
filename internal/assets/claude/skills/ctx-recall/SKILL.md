@@ -106,6 +106,22 @@ ctx recall unlock <pattern>   # Unlock matching entries
 ctx recall unlock --all       # Unlock all entries
 ```
 
+### `ctx recall sync`
+
+Sync lock state from journal frontmatter to `.state.json`.
+
+```bash
+ctx recall sync
+```
+
+Scans all journal markdowns and updates `.state.json` to match
+each file's frontmatter. Files with `locked: true` in frontmatter
+are marked locked in state; files without a `locked:` line have
+their lock cleared. This is the inverse of `ctx recall lock`:
+frontmatter drives state instead of state driving frontmatter.
+Useful after batch enrichment where you add `locked: true` to
+frontmatter manually.
+
 ## Data Source
 
 Sessions are read from `~/.claude/projects/` (Claude Code

@@ -36,8 +36,9 @@ Or just tell your agent: *"What have we learned this session?"*
 | `ctx add decision`      | Command | Record an architectural decision              |
 | `ctx add learning`      | Command | Record a gotcha, tip, or lesson               |
 | `ctx add convention`    | Command | Record a coding pattern or standard           |
-| `ctx decisions reindex` | Command | Rebuild the quick-reference index             |
-| `ctx learnings reindex` | Command | Rebuild the quick-reference index             |
+| `ctx reindex`           | Command | Rebuild both quick-reference indices          |
+| `ctx decisions reindex` | Command | Rebuild the DECISIONS.md index                |
+| `ctx learnings reindex` | Command | Rebuild the LEARNINGS.md index                |
 | `/ctx-add-decision`     | Skill   | AI-guided decision capture with validation    |
 | `/ctx-add-learning`     | Skill   | AI-guided learning capture with validation    |
 | `/ctx-add-convention`   | Skill   | AI-guided convention recording with placement |
@@ -191,9 +192,11 @@ a compact table of date and title for each entry. The index updates
 automatically via `ctx add`, but falls out of sync after hand edits.
 
 ```bash
-ctx decisions reindex
-ctx learnings reindex
+ctx reindex
 ```
+
+This single command regenerates both indices. You can also reindex
+individually with `ctx decisions reindex` or `ctx learnings reindex`.
 
 Run reindex after any manual edit. The index lets AI tools scan all entries
 without reading the full file, which matters when token budgets are tight.
@@ -317,8 +320,7 @@ ctx add learning "SQL migrations must be idempotent" \
 ctx add convention "API handlers return structured errors" --section "API"
 
 # Reindex after manual edits
-ctx decisions reindex
-ctx learnings reindex
+ctx reindex
 
 # Reflect at breakpoints (from AI assistant)
 # /ctx-reflect

@@ -1,5 +1,5 @@
 ---
-name: _ctx-check-links
+name: ctx-check-links
 description: "Audit docs for dead links. Use before releases, after restructuring docs, or when /_ctx-audit runs."
 allowed-tools: Bash(curl:*), Read, Grep, Glob
 ---
@@ -12,7 +12,7 @@ internal (file targets) and external (HTTP URLs).
 - Before releases or doc deployments
 - After renaming, moving, or deleting doc pages
 - After restructuring the `docs/` directory or nav
-- When `/_ctx-audit` runs (check #12)
+- When `/_ctx-audit` runs (audit check #12)
 - When a user reports a 404 on the site
 
 ## When NOT to Use

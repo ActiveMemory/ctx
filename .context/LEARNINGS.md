@@ -3,6 +3,15 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-01 | Test HOME isolation is required for user-level path functions |
+| 2026-03-01 | Skill enhancement is a documentation-heavy operation across 10+ files |
+| 2026-03-01 | Task descriptions can be stale in reverse — implementation done but task not marked complete |
+| 2026-03-01 | Elevating private skills requires synchronized updates across 5 layers |
+| 2026-03-01 | Model-to-window mapping requires ordered prefix matching |
+| 2026-03-01 | Removing embedded asset directories requires synchronized cleanup across 5+ layers |
+| 2026-03-01 | Absorbing shell scripts into Go commands creates a discoverability gap |
+| 2026-03-01 | TASKS.md template checkbox syntax inside HTML comments is parsed by RegExTaskMultiline |
+| 2026-03-01 | Hook logs had no rotation; event log already did |
 | 2026-02-28 | ctx pad import, ctx pad export, and ctx system resources make three hack scripts redundant |
 | 2026-02-28 | Getting-started docs assumed Claude Code as the only agent |
 | 2026-02-28 | Plugin reload script must rebuild cache, not just delete it |
@@ -28,6 +37,96 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-01-161459] Test HOME isolation is required for user-level path functions
+
+**Context**: After adding ~/.local/ctx/keys/ as default key location, test suites wrote real files to the developer home directory
+
+**Lesson**: Any code that uses os.UserHomeDir() needs t.Setenv(HOME, tmpDir) in tests — especially test helpers called by many tests (like setupEncrypted and helper)
+
+**Application**: When adding features that write to user-level paths (~/.local/, ~/.config/), always add HOME isolation to test setup functions first
+
+---
+
+## [2026-03-01-144544] Skill enhancement is a documentation-heavy operation across 10+ files
+
+**Context**: Enhancing /ctx-journal-enrich-all to handle export-if-needed touched the skill, hook messages, fallback strings, 5 doc files, 2 Makefiles, and TASKS.md
+
+**Lesson**: Skill behavior changes ripple through hook messages, fallback strings in Go code, doc descriptions, and Makefile hints — all must stay synchronized
+
+**Application**: When modifying a skill's scope, grep for its name across the entire repo and update every description, not just the skill file itself
+
+---
+
+## [2026-03-01-133014] Task descriptions can be stale in reverse — implementation done but task not marked complete
+
+**Context**: ctx recall sync task said 'command is not registered in Cobra' but the code was fully wired and all tests passed. The task description was stale.
+
+**Lesson**: Tasks can become stale in the opposite direction from docs: implementation gets completed but the task is not updated. Always verify with ctx <cmd> --help before assuming work remains.
+
+**Application**: Before starting implementation on a 'code exists but not wired' task, run the command first to check if it already works.
+
+---
+
+## [2026-03-01-125807] Elevating private skills requires synchronized updates across 5 layers
+
+**Context**: Promoted 6 _ctx-* skills to bundled ctx-* plugin skills
+
+**Lesson**: Moving a skill from .claude/skills/ to internal/assets/claude/skills/ touches: (1) SKILL.md frontmatter name field, (2) internal cross-references between skills (slash command paths), (3) external cross-references in other skills and docs, (4) embed_test.go expected skill list, (5) recipe and reference docs that mention the old name. Missing any layer creates invisible drift.
+
+**Application**: When promoting future skills, use grep -r /_ctx-{name} across the whole tree before declaring done
+
+---
+
+## [2026-03-01-124921] Model-to-window mapping requires ordered prefix matching
+
+**Context**: Implementing modelContextWindow() for the three-tier context window fallback. Claude model IDs use nested prefixes (claude-sonnet-4-5 vs claude-sonnet-4-20250514).
+
+**Lesson**: A switch with ordered HasPrefix cases (most specific first) is cleaner and safer than iterating separate prefix lists. The catch-all 'claude-*' returns 200k for unrecognized Claude models.
+
+**Application**: When adding new model families to modelContextWindow() in session_tokens.go, add the most specific prefix first to avoid shadowing shorter prefixes.
+
+---
+
+## [2026-03-01-112538] Removing embedded asset directories requires synchronized cleanup across 5+ layers
+
+**Context**: Deleting .context/tools/ deployment touched embed directive, asset functions, init logic, tests, config constants, Makefile targets, and docs — missing any one layer leaves dead code or build failures.
+
+**Lesson**: Embedded asset removal is a cross-cutting concern: embed directive → accessor functions → callers → tests → config constants → build targets → documentation. Work outward from the embed.
+
+**Application**: When removing an embedded asset category, use the grep-first approach (search for all references to the accessor functions and constants) before deleting anything.
+
+---
+
+## [2026-03-01-102232] Absorbing shell scripts into Go commands creates a discoverability gap
+
+**Context**: Deleted make backup/backup-global/backup-all and make rc-dev/rc-base/rc-status targets when absorbing into ctx system backup and ctx config switch. The Makefile served as self-documenting discovery (make help).
+
+**Lesson**: When eliminating Makefile targets, the CLI reference page alone is not sufficient — contributor-facing docs (contributing.md) and command catalogs (common-workflows.md) must gain explicit entries to compensate.
+
+**Application**: For future hack/ absorptions (e.g. pad-import-ideas.sh, context-watch.sh), audit contributing.md, common-workflows.md CLI-Only table, and the CLI index page as part of the absorption checklist.
+
+---
+
+## [2026-03-01-095709] TASKS.md template checkbox syntax inside HTML comments is parsed by RegExTaskMultiline
+
+**Context**: Template had example checkboxes (- [x], - [ ]) in HTML comments that the line-based regex matched as real tasks, causing TestArchiveCommand_NoCompletedTasks to fail
+
+**Lesson**: RegExTaskMultiline is line-based and has no awareness of HTML comment blocks — checkbox-like patterns inside comments get counted as real tasks
+
+**Application**: Use backtick-quoted or indented references instead of actual checkbox syntax in template comments. When adding examples to TASKS.md templates, avoid patterns that match regExTaskPattern
+
+---
+
+## [2026-03-01-092611] Hook logs had no rotation; event log already did
+
+**Context**: Investigated .context/logs/ and .context/state/ file management
+
+**Lesson**: eventlog already rotates at 1MB with one previous generation. logMessage() in state.go was pure append-only with no size check.
+
+**Application**: When adding new log sinks, follow the established rotation pattern (size-based, single previous generation)
 
 ---
 
@@ -105,9 +204,9 @@
 
 **Context**: Spent time investigating why webhooks weren't firing — checked binary version, hook configs, notify.Send internals. Actual cause was .ctxrc swapped to prod profile (notify commented out) earlier in session.
 
-**Lesson**: When webhooks stop, check .ctxrc profile first (hack/ctxrc-swap.sh status). Also: not all tool uses trigger webhook-sending hooks — Read only triggers context-load-gate (one-shot) and ctx agent (no webhook). qa-reminder requires Edit matcher.
+**Lesson**: When webhooks stop, check .ctxrc profile first (`ctx config status`). Also: not all tool uses trigger webhook-sending hooks — Read only triggers context-load-gate (one-shot) and ctx agent (no webhook). qa-reminder requires Edit matcher.
 
-**Application**: Before debugging notify internals, run hack/ctxrc-swap.sh status and verify the event would actually match a hook with notify.Send.
+**Application**: Before debugging notify internals, run `ctx config status` and verify the event would actually match a hook with notify.Send.
 
 ---
 
