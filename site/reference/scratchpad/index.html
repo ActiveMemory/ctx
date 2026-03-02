@@ -3628,7 +3628,7 @@ Entries are numbered, reorderable, and persist across sessions.</p>
 <tbody>
 <tr>
 <td>Encryption key</td>
-<td><code>~/.local/ctx/keys/&lt;slug&gt;.key</code></td>
+<td><code>~/.ctx/.ctx.key</code></td>
 <td>User-level, <code>0600</code> permissions</td>
 </tr>
 <tr>
@@ -3639,9 +3639,8 @@ Entries are numbered, reorderable, and persist across sessions.</p>
 </tbody>
 </table>
 <p>The key is generated automatically during <code>ctx init</code> (256-bit via
-<code>crypto/rand</code>) and stored at <code>~/.local/ctx/keys/</code>. The slug is derived
-from the project's absolute path. Legacy project-local keys
-(<code>.context/.ctx.key</code>) are auto-migrated on first access.</p>
+<code>crypto/rand</code>) and stored at <code>~/.ctx/.ctx.key</code>. One key per machine,
+shared across all projects.</p>
 <p>The ciphertext format is <code>[12-byte nonce][ciphertext+tag]</code>.
 No external dependencies: Go stdlib only.</p>
 <p>Because the key is <code>.gitignore</code>d and the data is committed, you get:</p>
@@ -3883,12 +3882,12 @@ don't need to remember the syntax:</p>
 <p>The skill handles the translation. You describe what you want in plain
 English; the agent picks the right command.</p>
 <h2 id="worktrees">Worktrees<a class="headerlink" href="#worktrees" title="Permanent link">&para;</a></h2>
-<p>The encryption key lives at <code>~/.local/ctx/keys/</code> (outside the project
+<p>The encryption key lives at <code>~/.ctx/.ctx.key</code> (outside the project
 directory). Because all worktrees on the same machine share this path,
 <code>ctx pad</code> works in worktrees automatically — no special setup needed.</p>
 <h2 id="key-distribution">Key Distribution<a class="headerlink" href="#key-distribution" title="Permanent link">&para;</a></h2>
-<p>The encryption key (<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>) stays on the
-machine where it was generated. <code>ctx</code> <strong>never</strong> transmits it.</p>
+<p>The encryption key (<code>~/.ctx/.ctx.key</code>) stays on the machine where it
+was generated. <code>ctx</code> <strong>never</strong> transmits it.</p>
 <p>To share the scratchpad across machines:</p>
 <ol>
 <li>Copy the key manually: <code>scp</code>, USB drive, password manager.</li>

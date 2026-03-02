@@ -4202,7 +4202,7 @@ AI builds on its previous work.</p>
 using the encryption key and stored in <code>.context/.notify.enc</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ctx<span class="w"> </span>notify<span class="w"> </span>setup
 </span></code></pre></div>
-<p>The encrypted file is safe to commit. The key (<code>~/.local/ctx/keys/&lt;slug&gt;.key</code>)
+<p>The encrypted file is safe to commit. The key (<code>~/.ctx/.ctx.key</code>)
 lives outside the project and is never committed.</p>
 <h4 id="ctx-notify-test"><code>ctx notify test</code><a class="headerlink" href="#ctx-notify-test" title="Permanent link">&para;</a></h4>
 <p>Send a test notification and report the HTTP response status.</p>
@@ -4487,7 +4487,7 @@ deduplicated by exact content.</p>
 <p><strong>Examples</strong>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>worktree/.context/scratchpad.enc
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>notes.md<span class="w"> </span>backup.enc
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>~/.local/ctx/keys/other-slug.key<span class="w"> </span>foreign.enc
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--key<span class="w"> </span>/path/to/other.key<span class="w"> </span>foreign.enc
 </span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>ctx<span class="w"> </span>pad<span class="w"> </span>merge<span class="w"> </span>--dry-run<span class="w"> </span>pad-a.enc<span class="w"> </span>pad-b.md
 </span></code></pre></div>
 <hr />
