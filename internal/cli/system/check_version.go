@@ -137,8 +137,7 @@ func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 // configured rotation threshold. Runs at most once per day (shares the
 // daily throttle from the version check's marker file).
 func checkKeyAge(cmd *cobra.Command, sessionID string) {
-	cwd, _ := os.Getwd()
-	config.MigrateKeyFile(rc.ContextDir(), cwd)
+	config.MigrateKeyFile(rc.ContextDir())
 	kp := rc.KeyPath()
 	info, err := os.Stat(kp)
 	if err != nil {

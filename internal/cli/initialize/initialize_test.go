@@ -1029,7 +1029,7 @@ func TestMergeSettingsPermissions_DenyPreservesExisting(t *testing.T) {
 // --- initScratchpad tests ---
 
 func TestInitScratchpad_Plaintext(t *testing.T) {
-	dir, cleanup := helper(t)
+	_, cleanup := helper(t)
 	defer cleanup()
 
 	// Set scratchpad_encrypt to false via .ctxrc
@@ -1054,8 +1054,8 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 		t.Fatalf("initScratchpad failed: %v", err)
 	}
 
-	// Either a user-level key file or scratchpad.md should have been created.
-	userKeyPath := config.ProjectKeyPath(dir)
+	// Either a global key file or scratchpad.md should have been created.
+	userKeyPath := config.GlobalKeyPath()
 	mdPath := filepath.Join(contextDir, config.FileScratchpadMd)
 	_, keyErr := os.Stat(userKeyPath)
 	_, mdErr := os.Stat(mdPath)
@@ -1065,7 +1065,7 @@ func TestInitScratchpad_Plaintext(t *testing.T) {
 }
 
 func TestInitScratchpad_KeyExists(t *testing.T) {
-	dir, cleanup := helper(t)
+	_, cleanup := helper(t)
 	defer cleanup()
 
 	contextDir := ".context"
@@ -1073,8 +1073,8 @@ func TestInitScratchpad_KeyExists(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Create existing key at user-level path.
-	userKeyPath := config.ProjectKeyPath(dir)
+	// Create existing key at global path.
+	userKeyPath := config.GlobalKeyPath()
 	if err := os.MkdirAll(filepath.Dir(userKeyPath), config.PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
@@ -1095,7 +1095,7 @@ func TestInitScratchpad_KeyExists(t *testing.T) {
 }
 
 func TestInitScratchpad_EncExistsNoKey(t *testing.T) {
-	dir, cleanup := helper(t)
+	_, cleanup := helper(t)
 	defer cleanup()
 
 	contextDir := ".context"
@@ -1115,7 +1115,7 @@ func TestInitScratchpad_EncExistsNoKey(t *testing.T) {
 	}
 
 	// Key should NOT have been generated (warning path)
-	userKeyPath := config.ProjectKeyPath(dir)
+	userKeyPath := config.GlobalKeyPath()
 	if _, err := os.Stat(userKeyPath); err == nil {
 		t.Error("key was generated even though enc exists without key (should just warn)")
 	}

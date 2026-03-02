@@ -3,9 +3,11 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-02 | Existing Projects is ambiguous framing for migration notes |
+| 2026-03-02 | Claude Code JSONL model ID does not distinguish 200k from 1M context |
 | 2026-03-01 | Gosec G306 flags test file WriteFile with 0644 permissions |
 | 2026-03-01 | Converting PersistentPreRun to PersistentPreRunE changes exit behavior |
-| 2026-03-01 | User-level key path change ripples across 13+ doc files and 2 skills |
+| 2026-03-01 | Key path changes ripple across 15+ doc files and 2 skills |
 | 2026-03-01 | Test HOME isolation is required for user-level path functions |
 | 2026-03-01 | Skill enhancement is a documentation-heavy operation across 10+ files |
 | 2026-03-01 | Task descriptions can be stale in reverse — implementation done but task not marked complete |
@@ -43,6 +45,26 @@
 
 ---
 
+## [2026-03-02-123613] Existing Projects is ambiguous framing for migration notes
+
+**Context**: A doc admonition said Existing Projects: if you have an older key at X, it auto-migrates. Every project is existing once installed — the framing does not tell you how far behind you need to be.
+
+**Lesson**: Version-anchored framing (Key Folder Change v0.7.0+) is clearer than relative framing (Existing Projects, Legacy). State the version boundary and the concrete action.
+
+**Application**: When writing migration notes, anchor to a version number and give copy-pasteable commands, not vague auto-handled assurances.
+
+---
+
+## [2026-03-02-005217] Claude Code JSONL model ID does not distinguish 200k from 1M context
+
+**Context**: Heartbeat hook was reporting 16% usage at 162k tokens because it assumed claude-opus-4-6 always has 1M context window
+
+**Lesson**: The JSONL model field is identical for both variants (both report claude-opus-4-6). The 1M context requires a beta header, not a different model ID. The user's model selection is stored in ~/.claude/settings.json with a [1m] suffix when 1M is active.
+
+**Application**: Auto-detect context window from ~/.claude/settings.json model field containing [1m]. Default to 200k for all Claude models. The .ctxrc context_window setting is a no-op for Claude Code users.
+
+---
+
 ## [2026-03-01-222739] Gosec G306 flags test file WriteFile with 0644 permissions
 
 **Context**: New tests used os.WriteFile(..., 0o644) for temp context files; lint flagged all three occurrences
@@ -63,23 +85,23 @@
 
 ---
 
-## [2026-03-01-194147] User-level key path change ripples across 13+ doc files and 2 skills
+## [2026-03-01-194147] Key path changes ripple across 15+ doc files and 2 skills
 
-**Context**: Updating docs for the .context/.ctx.key to ~/.local/ctx/keys/ migration
+**Context**: Updating docs for the .context/.ctx.key → ~/.local/ctx/keys/ → ~/.ctx/.ctx.key migrations
 
-**Lesson**: Key path changes have a long documentation tail — recipes, references, getting-started, operations, CLI docs, and skills all carry path references. The worktree behavior flip (limitation to works automatically) was the highest-value change per line edited.
+**Lesson**: Key path changes have a long documentation tail — recipes, references, getting-started, operations, CLI docs, and skills all carry path references. The worktree behavior flip (limitation to works automatically) was the highest-value change per line edited. Simplifying from per-project slugs to a single global key eliminated more code and docs than the original migration added.
 
-**Application**: When moving a file path that appears in user-facing docs, grep broadly (not just code) and budget for 10+ file touches
+**Application**: When moving a file path that appears in user-facing docs, grep broadly (not just code) and budget for 15+ file touches
 
 ---
 
 ## [2026-03-01-161459] Test HOME isolation is required for user-level path functions
 
-**Context**: After adding ~/.local/ctx/keys/ as default key location, test suites wrote real files to the developer home directory
+**Context**: After adding ~/.ctx/.ctx.key as global key location, test suites wrote real files to the developer home directory
 
 **Lesson**: Any code that uses os.UserHomeDir() needs t.Setenv(HOME, tmpDir) in tests — especially test helpers called by many tests (like setupEncrypted and helper)
 
-**Application**: When adding features that write to user-level paths (~/.local/, ~/.config/), always add HOME isolation to test setup functions first
+**Application**: When adding features that write to user-level paths (~/.ctx/, ~/.config/), always add HOME isolation to test setup functions first
 
 ---
 

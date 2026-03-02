@@ -46,8 +46,8 @@ func setupEncrypted(t *testing.T) string {
 		t.Fatal(err)
 	}
 
-	// Write key to the user-level path (where rc.KeyPath resolves).
-	userKeyPath := config.ProjectKeyPath(dir)
+	// Write key to the global path (where rc.KeyPath resolves).
+	userKeyPath := config.GlobalKeyPath()
 	if err := os.MkdirAll(filepath.Dir(userKeyPath), config.PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
@@ -476,6 +476,7 @@ func TestMv_OutOfRange(t *testing.T) {
 
 func TestNoKey_EncryptedFileExists(t *testing.T) {
 	dir := t.TempDir()
+	t.Setenv("HOME", dir)
 	origDir, _ := os.Getwd()
 	if err := os.Chdir(dir); err != nil {
 		t.Fatal(err)
@@ -798,8 +799,8 @@ func TestKeyPath(t *testing.T) {
 	if !strings.HasSuffix(path, ".key") {
 		t.Errorf("keyPath() = %q, want suffix %q", path, ".key")
 	}
-	if !strings.Contains(path, ".local/ctx/keys/") {
-		t.Errorf("keyPath() = %q, want user-level path containing .local/ctx/keys/", path)
+	if !strings.Contains(path, ".ctx/") {
+		t.Errorf("keyPath() = %q, want global path containing .ctx/", path)
 	}
 }
 

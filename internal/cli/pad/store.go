@@ -48,8 +48,7 @@ func scratchpadPath() string {
 // Triggers legacy key migration on each call, then resolves
 // the effective path via rc.KeyPath().
 func keyPath() string {
-	cwd, _ := os.Getwd()
-	config.MigrateKeyFile(rc.ContextDir(), cwd)
+	config.MigrateKeyFile(rc.ContextDir())
 	return rc.KeyPath()
 }
 

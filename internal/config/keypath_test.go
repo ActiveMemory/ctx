@@ -9,137 +9,116 @@ package config
 import (
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 )
 
-func TestKeyDir(t *testing.T) {
+func TestGlobalKeyPath(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
 
-	got := KeyDir()
-	want := filepath.Join(dir, ".local", "ctx", "keys")
+	got := GlobalKeyPath()
+	want := filepath.Join(dir, ".ctx", FileContextKey)
 	if got != want {
-		t.Errorf("KeyDir() = %q, want %q", got, want)
+		t.Errorf("GlobalKeyPath() = %q, want %q", got, want)
 	}
 }
 
-func TestProjectKeySlug(t *testing.T) {
-	slug := ProjectKeySlug("/home/jose/WORKSPACE/ctx")
-
-	if !strings.HasPrefix(slug, "-home-jose-WORKSPACE-ctx--") {
-		t.Errorf("slug = %q, want prefix -home-jose-WORKSPACE-ctx--", slug)
-	}
-	if !strings.HasSuffix(slug, ".key") {
-		t.Errorf("slug = %q, want .key suffix", slug)
-	}
-	// SHA portion: 8 hex chars between -- and .key
-	parts := strings.Split(slug, "--")
-	if len(parts) != 2 {
-		t.Fatalf("slug = %q, want exactly one -- separator", slug)
-	}
-	hashPart := strings.TrimSuffix(parts[1], ".key")
-	if len(hashPart) != 8 {
-		t.Errorf("hash = %q, want 8 hex chars", hashPart)
-	}
-}
-
-func TestProjectKeySlug_Deterministic(t *testing.T) {
-	a := ProjectKeySlug("/home/jose/project")
-	b := ProjectKeySlug("/home/jose/project")
-	if a != b {
-		t.Errorf("non-deterministic: %q != %q", a, b)
-	}
-}
-
-func TestProjectKeySlug_UniquePerProject(t *testing.T) {
-	a := ProjectKeySlug("/home/jose/project-a")
-	b := ProjectKeySlug("/home/jose/project-b")
-	if a == b {
-		t.Errorf("different projects produced same slug: %q", a)
-	}
-}
-
-func TestProjectKeyPath(t *testing.T) {
+func TestExpandHome_Tilde(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
 
-	path := ProjectKeyPath("/some/project")
-	if !strings.HasPrefix(path, filepath.Join(dir, ".local", "ctx", "keys")) {
-		t.Errorf("path = %q, want prefix in ~/.local/ctx/keys/", path)
+	got := ExpandHome("~/foo")
+	want := filepath.Join(dir, "foo")
+	if got != want {
+		t.Errorf("ExpandHome(~/foo) = %q, want %q", got, want)
 	}
-	if !strings.HasSuffix(path, ".key") {
-		t.Errorf("path = %q, want .key suffix", path)
+}
+
+func TestExpandHome_NoTilde(t *testing.T) {
+	got := ExpandHome("/abs/path")
+	if got != "/abs/path" {
+		t.Errorf("ExpandHome(/abs/path) = %q, want /abs/path", got)
+	}
+}
+
+func TestExpandHome_TildeOnly(t *testing.T) {
+	got := ExpandHome("~")
+	if got != "~" {
+		t.Errorf("ExpandHome(~) = %q, want ~ (no trailing /)", got)
 	}
 }
 
 func TestResolveKeyPath_OverrideTakesPrecedence(t *testing.T) {
-	override := "/custom/path/my.key"
-	got := ResolveKeyPath(".context", "/project", override)
-	if got != override {
-		t.Errorf("ResolveKeyPath() = %q, want override %q", got, override)
-	}
-}
-
-func TestResolveKeyPath_UserLevelBeforeLegacy(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
-	projectRoot := filepath.Join(dir, "project")
 
-	// Create both user-level and legacy keys.
-	userKey := ProjectKeyPath(projectRoot)
-	if err := os.MkdirAll(filepath.Dir(userKey), PermKeyDir); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(userKey, []byte("user-key"), PermSecret); err != nil {
-		t.Fatal(err)
-	}
-
-	contextDir := filepath.Join(projectRoot, ".context")
-	if err := os.MkdirAll(contextDir, 0750); err != nil {
-		t.Fatal(err)
-	}
-	legacyKey := filepath.Join(contextDir, FileContextKey)
-	if err := os.WriteFile(legacyKey, []byte("legacy-key"), PermSecret); err != nil {
-		t.Fatal(err)
-	}
-
-	got := ResolveKeyPath(contextDir, projectRoot, "")
-	if got != userKey {
-		t.Errorf("ResolveKeyPath() = %q, want user-level %q", got, userKey)
-	}
-}
-
-func TestResolveKeyPath_FallbackToLegacy(t *testing.T) {
-	dir := t.TempDir()
-	t.Setenv("HOME", dir)
-	projectRoot := filepath.Join(dir, "project")
-
-	contextDir := filepath.Join(projectRoot, ".context")
-	if err := os.MkdirAll(contextDir, 0750); err != nil {
-		t.Fatal(err)
-	}
-	legacyKey := filepath.Join(contextDir, FileContextKey)
-	if err := os.WriteFile(legacyKey, []byte("legacy-key"), PermSecret); err != nil {
-		t.Fatal(err)
-	}
-
-	got := ResolveKeyPath(contextDir, projectRoot, "")
-	if got != legacyKey {
-		t.Errorf("ResolveKeyPath() = %q, want legacy %q", got, legacyKey)
-	}
-}
-
-func TestResolveKeyPath_DefaultsToUserLevel(t *testing.T) {
-	dir := t.TempDir()
-	t.Setenv("HOME", dir)
-	projectRoot := filepath.Join(dir, "project")
-	contextDir := filepath.Join(projectRoot, ".context")
-
-	// Neither key exists — should default to user-level.
-	got := ResolveKeyPath(contextDir, projectRoot, "")
-	want := ProjectKeyPath(projectRoot)
+	got := ResolveKeyPath(".context", "~/custom/my.key")
+	want := filepath.Join(dir, "custom", "my.key")
 	if got != want {
-		t.Errorf("ResolveKeyPath() = %q, want default user-level %q", got, want)
+		t.Errorf("ResolveKeyPath() = %q, want override %q", got, want)
+	}
+}
+
+func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
+	dir := t.TempDir()
+	t.Setenv("HOME", dir)
+
+	// Create both project-local and global keys.
+	contextDir := filepath.Join(dir, "project", ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+	localKey := filepath.Join(contextDir, FileContextKey)
+	if err := os.WriteFile(localKey, []byte("local-key"), PermSecret); err != nil {
+		t.Fatal(err)
+	}
+
+	globalDir := filepath.Join(dir, ".ctx")
+	if err := os.MkdirAll(globalDir, PermKeyDir); err != nil {
+		t.Fatal(err)
+	}
+	globalKey := filepath.Join(globalDir, FileContextKey)
+	if err := os.WriteFile(globalKey, []byte("global-key"), PermSecret); err != nil {
+		t.Fatal(err)
+	}
+
+	got := ResolveKeyPath(contextDir, "")
+	if got != localKey {
+		t.Errorf("ResolveKeyPath() = %q, want project-local %q", got, localKey)
+	}
+}
+
+func TestResolveKeyPath_FallbackToGlobal(t *testing.T) {
+	dir := t.TempDir()
+	t.Setenv("HOME", dir)
+
+	// Create global key only — no project-local.
+	globalDir := filepath.Join(dir, ".ctx")
+	if err := os.MkdirAll(globalDir, PermKeyDir); err != nil {
+		t.Fatal(err)
+	}
+	globalKey := filepath.Join(globalDir, FileContextKey)
+	if err := os.WriteFile(globalKey, []byte("global-key"), PermSecret); err != nil {
+		t.Fatal(err)
+	}
+
+	contextDir := filepath.Join(dir, "project", ".context")
+	got := ResolveKeyPath(contextDir, "")
+	if got != globalKey {
+		t.Errorf("ResolveKeyPath() = %q, want global %q", got, globalKey)
+	}
+}
+
+func TestResolveKeyPath_DefaultsToGlobal(t *testing.T) {
+	dir := t.TempDir()
+	t.Setenv("HOME", dir)
+
+	contextDir := filepath.Join(dir, "project", ".context")
+
+	// Neither key exists — should default to global path.
+	got := ResolveKeyPath(contextDir, "")
+	want := GlobalKeyPath()
+	if got != want {
+		t.Errorf("ResolveKeyPath() = %q, want global default %q", got, want)
 	}
 }

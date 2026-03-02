@@ -57,7 +57,7 @@ ctx notify setup
 ```
 
 This encrypts the URL with AES-256-GCM using the same key as the scratchpad
-(`~/.local/ctx/keys/<slug>.key`). The encrypted file (`.context/.notify.enc`)
+(`~/.ctx/.ctx.key`). The encrypted file (`.context/.notify.enc`)
 is safe to commit. The key lives outside the project and is never committed.
 
 ### Step 3: Test It
@@ -191,7 +191,7 @@ for observability dashboards or liveness monitoring of long-running sessions.
 
 | Component      | Location                          | Committed?      | Permissions |
 |----------------|-----------------------------------|-----------------|-------------|
-| Encryption key | `~/.local/ctx/keys/<slug>.key`    | No (user-level) | `0600`      |
+| Encryption key | `~/.ctx/.ctx.key`                 | No (user-level) | `0600`      |
 | Encrypted URL  | `.context/.notify.enc`            | Yes (safe)      | `0600`      |
 | Webhook URL    | Never on disk in plaintext        | N/A             | N/A         |
 
@@ -212,8 +212,8 @@ key_rotation_days: 30   # nudge sooner (default: 90)
 ## Worktrees
 
 The webhook URL is encrypted with the same encryption key
-(`~/.local/ctx/keys/<slug>.key`). Because the key lives at the user
-level, it is shared across all worktrees on the same machine —
+(`~/.ctx/.ctx.key`). Because the key lives at the user level, it is
+shared across all worktrees on the same machine —
 notifications work in worktrees automatically.
 
 This means **agents running in worktrees cannot send webhook alerts**.
