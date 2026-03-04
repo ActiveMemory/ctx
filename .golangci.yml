@@ -30,6 +30,14 @@ linters:
       - linters: [gosec]
         text: "G304"
         path: "_test\\.go"
+      # Test files use 0644/0755 for throwaway temp files and dirs
+      - linters: [gosec]
+        text: "G30[16]"
+        path: "_test\\.go"
+      # git log args built from time.Format — not user input
+      - linters: [gosec]
+        text: "G204"
+        path: "changes/scan\\.go"
 
 run:
   timeout: 5m

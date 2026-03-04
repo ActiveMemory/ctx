@@ -15,6 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/changes"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/eventlog"
@@ -147,6 +148,16 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 			totalTokens += tokens
 			perFile = append(perFile, fileTokenEntry{name: f, tokens: tokens})
 			filesLoaded++
+		}
+	}
+
+	// Best-effort changes summary — never blocks injection
+	if refTime, refLabel, refErr := changes.DetectReferenceTime(""); refErr == nil {
+		ctxChanges, _ := changes.FindContextChanges(refTime)
+		codeChanges, _ := changes.SummarizeCodeChanges(refTime)
+		if len(ctxChanges) > 0 || codeChanges.CommitCount > 0 {
+			content.WriteString("\n" + changes.RenderChangesForHook(
+				refLabel, ctxChanges, codeChanges))
 		}
 	}
 

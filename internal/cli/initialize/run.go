@@ -115,6 +115,12 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bo
 		cmd.Printf("  %s Entry templates: %v\n", color.YellowString("⚠"), err)
 	}
 
+	// Create prompt templates in .context/prompts/
+	if err := createPromptTemplates(cmd, contextDir, force); err != nil {
+		// Non-fatal: warn but continue
+		cmd.Printf("  %s Prompt templates: %v\n", color.YellowString("⚠"), err)
+	}
+
 	// Migrate legacy key files and promote to global path.
 	config.MigrateKeyFile(contextDir)
 
@@ -126,6 +132,11 @@ func runInit(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bo
 
 	// Create project root files
 	cmd.Println("\nCreating project root files...")
+
+	// Create specs/ and ideas/ directories with README.md
+	if err := createProjectDirs(cmd); err != nil {
+		cmd.Printf("  %s Project dirs: %v\n", color.YellowString("⚠"), err)
+	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
 	if err := handlePromptMd(cmd, force, merge, ralph); err != nil {

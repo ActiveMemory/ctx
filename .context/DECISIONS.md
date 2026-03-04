@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-02 | Billing threshold piggybacks on check-context-size, not heartbeat |
 | 2026-03-02 | Replace auto-migration with stderr warning for legacy keys |
 | 2026-03-02 | Consolidate all session state to .context/state/ |
 | 2026-03-01 | PersistentPreRunE init guard with three-level exemption |
@@ -20,6 +21,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-02-165038] Billing threshold piggybacks on check-context-size, not heartbeat
+
+**Status**: Accepted
+
+**Context**: User wanted a configurable token-count nudge for billing awareness (Claude Pro 1M context, extra cost after 200k). Heartbeat produces zero stdout and can't relay to user.
+
+**Decision**: Billing threshold piggybacks on check-context-size, not heartbeat
+
+**Rationale**: check-context-size already reads tokens, has VERBATIM relay working, and runs every prompt. Adding a third independent trigger there is minimal code and follows established patterns.
+
+**Consequences**: New .ctxrc field billing_token_warn (default 0 = disabled). One-shot per session via billing-warned-{sessionID} state file. Template-overridable via check-context-size/billing.txt.
+
+---
 
 ## [2026-03-02-123611] Replace auto-migration with stderr warning for legacy keys
 

@@ -84,6 +84,7 @@ A commented `.ctxrc` showing all options and their defaults:
 # convention_line_count: 200
 # injection_token_warn: 15000
 # context_window: 200000      # auto-detected for Claude Code; override for other tools
+# billing_token_warn: 0       # one-shot warning at this token count (0 = disabled)
 #
 # key_rotation_days: 90
 #
@@ -120,6 +121,7 @@ A commented `.ctxrc` showing all options and their defaults:
 | `convention_line_count` | `int`      | `200`          | Drift warning when `CONVENTIONS.md` exceeds this line count (0 = disable) |
 | `injection_token_warn`  | `int`      | `15000`        | Warn when auto-injected context exceeds this token count (0 = disable) |
 | `context_window`        | `int`      | `200000`       | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools |
+| `billing_token_warn`    | `int`      | `0` *(off)*    | One-shot warning when session tokens exceed this threshold (0 = disabled). For plans where tokens beyond an included allowance cost extra |
 | `key_rotation_days`     | `int`      | `90`           | Days before encryption key rotation nudge               |
 | `notify.events`         | `[]string` | *(all)*        | Event filter for webhook notifications (empty = all)    |
 | `priority_order`        | `[]string` | *(see below)*  | Custom file loading priority for context assembly       |
@@ -282,6 +284,20 @@ priority_order:
 Files not listed in `priority_order` receive the lowest priority (100).
 The order affects `ctx agent`, `ctx load`, and drift's file-priority
 calculations.
+
+### Billing Token Threshold
+
+Get a one-shot warning when your session crosses a token threshold where
+extra charges begin (*e.g., Claude Pro includes 200k tokens; beyond that
+costs extra*):
+
+```yaml
+# .ctxrc
+billing_token_warn: 180000   # warn before hitting the 200k paid boundary
+```
+
+The warning fires once per session the first time token usage exceeds
+the threshold. Set to `0` (or omit) to disable.
 
 ### Adjusted Drift Thresholds
 

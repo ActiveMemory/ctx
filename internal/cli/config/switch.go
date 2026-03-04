@@ -30,8 +30,9 @@ const (
 
 func switchCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "switch [dev|base]",
-		Short: "Switch .ctxrc profile",
+		Use:         "switch [dev|base]",
+		Short:       "Switch .ctxrc profile",
+		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
 		Long: `Switch between .ctxrc configuration profiles.
 
 With no argument, toggles between dev and base.
@@ -52,8 +53,9 @@ The working copy (.ctxrc) is gitignored.`,
 
 func statusCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "status",
-		Short: "Show active .ctxrc profile",
+		Use:         "status",
+		Short:       "Show active .ctxrc profile",
+		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			root, rootErr := gitRoot()

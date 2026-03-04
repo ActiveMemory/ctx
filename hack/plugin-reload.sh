@@ -33,11 +33,14 @@ mkdir -p "$CACHE_DIR/skills"
 cp "$ASSETS_DIR/.claude-plugin/plugin.json" "$CACHE_DIR/.claude-plugin/"
 cp "$ASSETS_DIR/hooks/hooks.json" "$CACHE_DIR/hooks/"
 
-# Copy all skills.
+# Copy all skills (SKILL.md + references/).
 for skill_dir in "$ASSETS_DIR"/skills/*/; do
     skill_name="$(basename "$skill_dir")"
     mkdir -p "$CACHE_DIR/skills/$skill_name"
     cp "$skill_dir"SKILL.md "$CACHE_DIR/skills/$skill_name/"
+    if [ -d "$skill_dir"references ]; then
+        cp -r "$skill_dir"references "$CACHE_DIR/skills/$skill_name/"
+    fi
 done
 
 echo "Rebuilt plugin cache at: $CACHE_DIR"

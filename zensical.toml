@@ -23,6 +23,9 @@ The documentation on this website is distributed under
 nav = [
   { "Manifesto" = "index.md" },
   { "The Thesis" = "thesis/index.md" },
+  { "Blog" = [
+    "blog/index.md",
+  ]},
   { "Home" = [
     "home/index.md",
     "home/about.md",
@@ -35,9 +38,6 @@ nav = [
     "home/context-files.md",
     "home/configuration.md",
     "home/prompting-guide.md",
-  ]},
-  { "Blog" = [
-    "blog/index.md",
   ]},
   { "Recipes" = [
     { "Getting Started" = [

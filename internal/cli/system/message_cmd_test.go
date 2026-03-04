@@ -370,6 +370,16 @@ func TestMessageReset_NoOpWhenNoOverride(t *testing.T) {
 
 // --- registry validation ---
 
+func TestRegistryYAMLParsesFromSystem(t *testing.T) {
+	registry := messages.Registry()
+	if parseErr := messages.RegistryError(); parseErr != nil {
+		t.Fatalf("registry YAML parse error: %v", parseErr)
+	}
+	if len(registry) != 28 {
+		t.Errorf("registry has %d entries, want 28", len(registry))
+	}
+}
+
 func TestRegistryEntriesHaveEmbeddedFiles(t *testing.T) {
 	registry := messages.Registry()
 	for _, info := range registry {

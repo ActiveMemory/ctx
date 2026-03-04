@@ -44,6 +44,7 @@ Subcommands:
   import   Bulk-import lines from a file
   export   Export blob entries to a directory as files
   merge    Merge entries from scratchpad files`,
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runList(cmd)
 		},

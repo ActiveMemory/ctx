@@ -8,6 +8,8 @@ package guide
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx guide" cobra command.
@@ -18,8 +20,9 @@ func Cmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use:   "guide",
-		Short: "Quick-reference cheat sheet for ctx",
+		Use:         "guide",
+		Short:       "Quick-reference cheat sheet for ctx",
+		Annotations: map[string]string{config.AnnotationSkipInit: ""},
 		Long: `Use-case-oriented cheat sheet for ctx.
 
 Shows core commands grouped by workflow, key skills, and common recipes.

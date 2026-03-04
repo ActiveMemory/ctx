@@ -22,6 +22,17 @@ TASK STATUS LABELS:
   end-to-end: identify repeating workflow, create skill, test, deploy. Add to
   recipe index and zensical.toml nav. #priority:medium #added:2026-03-01-125814 #done:2026-03-01
 
+- [ ] P-1.3: ctx-map skill runs ctx deps, but we are not sure if ctx deps handles non-go
+  dependency trees. -- brainstorm about this, as it's virtually impossible to support
+  all dependency models, and it will introduce bloat to ctx codebase; maybe 
+  a semantic approach is better. a follow-up question will be whether ctx deps
+  is really necessary.
+
+- [ ] ctx-skill-creator Markdown file does not refer to the references folder
+  of the skill. Is the agent smart enough to find it on its own?
+
+- [ ] internal/claude/hooks/registry.go -> 
+
 ### Phase GK: Global Encryption Key — Spec: `specs/global-encryption-key.md`
 
 - [x] GK.0: Read specs/global-encryption-key.md before starting any GK task #added:2026-03-02-114146 #done:2026-03-02
@@ -34,6 +45,14 @@ TASK STATUS LABELS:
 - [x] GK.7: Delete specs/user-level-dir-relocation.md (superseded by specs/global-encryption-key.md) #added:2026-03-02-114146 #done:2026-03-02
 - [x] GK.8: Record decision: global encryption key at ~/.ctx/.ctx.key replaces per-project slug keys #added:2026-03-02-114146 #done:2026-03-02
 
+- [x] Rebuild site/ for billing_token_warn docs changes #added:2026-03-02-165039
+
+- [ ] Add PreToolUse hook to block direct ./hack/ and hack/ script invocations — nudge agent to use make targets instead. If no matching make target exists, suggest the user create one. Rationale: make targets are a controlled interface; direct script calls bypass dependency chains and are harder to audit. Similar pattern to existing block-non-path-ctx hook. #priority:low #added:2026-03-04-022129
+
+- [ ] Add alphabetical sorting to ctx-sanitize-permissions — sort allow and deny entries in settings.local.json for easier visual scanning. Group by tool prefix (Bash, Skill, WebFetch, etc.) then sort within each group. #priority:low #added:2026-03-04-021823
+
+- [ ] Deduplicate settings.local.json permission entries — ctx init seeds bare forms (e.g., Skill(ctx-journal-enrich-all)) but Claude Code accumulates fully-qualified duplicates (ctx:ctx-* and ctx:ctx-*:*). Consider adding dedup logic to ctx-sanitize-permissions or to the mergePermissions function in ctx init. #priority:low #added:2026-03-04-021524
+
 - [ ] P-1.3: Audit all skills against Anthropic prompting best practices —
   use `/_ctx-skill-audit` to pass through all 30+ skills with lens
   from `ideas/claude-best-practices.md`. Key checks: (1) positive instructions
@@ -44,6 +63,30 @@ TASK STATUS LABELS:
   `_ctx-skill-creator/references/anthropic-best-practices.md` so future skill
   work automatically gets the lens. Source: `ideas/claude-best-practices.md`
   #priority:medium #added:2026-03-01
+
+
+- [ ] P-1.3a: Refresh plugin cache after skill promotion — run
+  `hack/plugin-reload.sh` and restart session. Verify 6 promoted skills
+  (ctx-brainstorm, ctx-check-links, ctx-sanitize-permissions, ctx-skill-creator,
+  ctx-spec, ctx-verify) appear as `ctx:ctx-*` in autocomplete. Clean stale
+  `Skill(_ctx-*)` entries from `.claude/settings.local.json`.
+  #priority:high #added:2026-03-02
+- [ ] P-1.3b: Create `/ctx-skill-audit` bundled skill — new skill at
+  `internal/assets/claude/skills/ctx-skill-audit/` with `SKILL.md` and
+  `references/anthropic-best-practices.md` (condensed from
+  `ideas/done/claude-best-practices.md`). The skill audits any skill file
+  against Anthropic prompting best practices. Also add the same reference
+  to `ctx-skill-creator/references/` so future skill creation gets the lens.
+  Update `allow.txt`, `embed_test.go`, and run plugin-reload.sh.
+  #priority:medium #added:2026-03-02
+- [ ] P-1.3c: Audit all skills against Anthropic prompting best practices —
+  use `/ctx-skill-audit` to pass through all 39 bundled skills. Key checks:
+  (1) positive instructions over negative ("do X" not "don't Y"),
+  (2) XML tag structure for mixed content, (3) explain-the-why over rigid
+  MUST/NEVER, (4) subagent-spawning skills guarded against overuse,
+  (5) few-shot examples for non-trivial behaviors.
+  Source: `ideas/done/claude-best-practices.md`
+  #priority:medium #added:2026-03-02
 - [x] P-1.4: Update AGENT_PLAYBOOK.md with patterns from Anthropic best practices —
   three additions: (1) explicit mention of context window limits and the
   check-context-size hook in the "persist before continuing" guidance,
@@ -136,10 +179,10 @@ any P0.9 task.
 
 **Phase 3 — Skill integration:**
 
-- [ ] P0.9.1: Promote CLI to top-level nav group in zensical.toml: Home | Recipes |
+- [x] P0.9.1: Promote CLI to top-level nav group in zensical.toml: Home | Recipes |
   CLI | Reference | Operations | Security | Blog — CLI gets the split command
   pages, Reference keeps conceptual docs (skills, journal format, scratchpad,
-  context files) #added:2026-02-24-204210
+  context files) #added:2026-02-24-204210 #done:2026-03-03
 
 - [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
   cli-overview, cli-init-status, cli-context, cli-recall, cli-tools, cli-system —
@@ -236,20 +279,22 @@ commands are invisible in non-ctx projects.
 
 ### Phase 0: Ideas (from competitive analysis)
 
-- [ ] P0.2: Brainstorm: JSON Schema for `.ctxrc` — ship a `json-schema.json` that
+- [x] P0.2: Brainstorm: JSON Schema for `.ctxrc` — ship a `json-schema.json` that
   gives IDE users autocompletion and validation for `.ctxrc`. Small YAML surface
   area; would catch silent typos like `scratchpad_encypt: true`.
-  #priority:low #added:2026-02-28
+  #priority:low #added:2026-02-28 #done:2026-03-03
 
-- [ ] P0.3: Brainstorm: Lightweight prompt snippets — reusable prompt templates
-  lighter than full skills. Our skills are heavier (full SKILL.md). A
-  "prompt snippet" concept could fill the gap between a skill and a raw
-  instruction. #priority:low #added:2026-02-28
+- [x] P0.3: Implement prompt templates (`ctx prompt`) — plain markdown files in
+  `.context/prompts/` invokable via `/ctx-prompt <name>` skill or `ctx prompt`
+  CLI. `ctx init` stamps starter templates (code-review, refactor, explain).
+  No frontmatter, no build step. Committed to git by default.
+  Spec: `specs/prompt-templates.md`
+  #priority:medium #added:2026-02-28 #done:2026-03-03
 
-- [ ] P0.4: Brainstorm: Source-derived context as a complement to authored context —
+- [x] P0.4: Brainstorm: Source-derived context as a complement to authored context —
   auto-generate ARCHITECTURE.md skeleton from package dependency graph, or a
   "what changed since last session" summary from git diffs. Would not replace
-   authored context but could bootstrap it. #priority:low #added:2026-02-28
+   authored context but could bootstrap it. #priority:low #added:2026-02-28 #done:2026-03-03
 
 ### Phase 0: Ideas
 

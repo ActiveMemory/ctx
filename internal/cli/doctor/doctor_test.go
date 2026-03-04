@@ -488,3 +488,95 @@ func TestDoctor_ResourcesCategoryInOutput(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckCtxrcValidation_NoFile(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	report := &Report{}
+	checkCtxrcValidation(report)
+
+	if len(report.Results) != 1 {
+		t.Fatalf("expected 1 result, got %d", len(report.Results))
+	}
+	r := report.Results[0]
+	if r.Status != statusOK {
+		t.Errorf("expected ok, got %s", r.Status)
+	}
+	if !strings.Contains(r.Message, "using defaults") {
+		t.Errorf("expected 'using defaults' message, got: %s", r.Message)
+	}
+}
+
+func TestCheckCtxrcValidation_ValidFile(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	tmp := t.TempDir()
+	if writeErr := os.WriteFile(
+		filepath.Join(tmp, ".ctxrc"),
+		[]byte("token_budget: 4000\n"),
+		0o600,
+	); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	report := &Report{}
+	checkCtxrcValidation(report)
+
+	if len(report.Results) != 1 {
+		t.Fatalf("expected 1 result, got %d", len(report.Results))
+	}
+	r := report.Results[0]
+	if r.Status != statusOK {
+		t.Errorf("expected ok, got %s", r.Status)
+	}
+	if !strings.Contains(r.Message, "valid") {
+		t.Errorf("expected 'valid' message, got: %s", r.Message)
+	}
+}
+
+func TestCheckCtxrcValidation_Typo(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	tmp := t.TempDir()
+	if writeErr := os.WriteFile(
+		filepath.Join(tmp, ".ctxrc"),
+		[]byte("scratchpad_encypt: true\n"),
+		0o600,
+	); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	report := &Report{}
+	checkCtxrcValidation(report)
+
+	if len(report.Results) != 1 {
+		t.Fatalf("expected 1 result, got %d", len(report.Results))
+	}
+	r := report.Results[0]
+	if r.Status != statusWarning {
+		t.Errorf("expected warning, got %s", r.Status)
+	}
+	if !strings.Contains(r.Message, "unknown") {
+		t.Errorf("expected 'unknown' in message, got: %s", r.Message)
+	}
+}

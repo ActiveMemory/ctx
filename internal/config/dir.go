@@ -16,6 +16,8 @@ const (
 	DirClaudeHooks = ".claude/hooks"
 	// DirContext is the default context directory name.
 	DirContext = ".context"
+	// DirPrompts is the subdirectory for prompt templates within .context/.
+	DirPrompts = "prompts"
 	// DirJournal is the subdirectory for journal entries within .context/.
 	DirJournal = "journal"
 	// DirJournalSite is the journal static site output directory within .context/.
@@ -25,6 +27,10 @@ const (
 	// DirState is the subdirectory for project-scoped runtime state within .context/.
 	// Gitignored — ephemeral files (flags, markers) that hooks write and consume.
 	DirState = "state"
+	// DirSpecs is the project-root directory for formalized plans and feature specs.
+	DirSpecs = "specs"
+	// DirIdeas is the project-root directory for early-stage ideas and explorations.
+	DirIdeas = "ideas"
 )
 
 // GitignoreEntries lists the recommended .gitignore entries added by ctx init.

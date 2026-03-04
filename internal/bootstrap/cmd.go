@@ -70,8 +70,13 @@ func RootCmd() *cobra.Command {
 				}
 			}
 
-			// Skip init check for hidden commands (hooks have their own guards).
+			// Skip init check for hidden commands (hooks have their own guards)
+			// and cobra's built-in completion subcommands (bash, zsh, fish,
+			// powershell) which must work in any directory.
 			if cmd.Hidden {
+				return nil
+			}
+			if p := cmd.Parent(); p != nil && p.Name() == "completion" {
 				return nil
 			}
 

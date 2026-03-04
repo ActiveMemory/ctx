@@ -75,7 +75,7 @@ func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 	if openErr != nil {
 		return
 	}
-	defer f.Close() //nolint:errcheck // best-effort logging
+	defer func() { _ = f.Close() }()
 
 	_, _ = f.Write(line)
 }
@@ -152,7 +152,7 @@ func readLogFile(path string) ([]notify.Payload, error) {
 		}
 		return nil, openErr
 	}
-	defer f.Close() //nolint:errcheck // read-only
+	defer func() { _ = f.Close() }()
 
 	var events []notify.Payload
 	scanner := bufio.NewScanner(f)

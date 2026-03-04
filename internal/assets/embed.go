@@ -16,7 +16,7 @@ import (
 	"sync"
 )
 
-//go:embed context/*.md project/* claude/CLAUDE.md entry-templates/*.md claude/skills/*/SKILL.md claude/.claude-plugin/plugin.json ralph/*.md hooks/messages/*/*.txt why/*.md permissions/*.txt
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -83,6 +83,38 @@ func Entry(name string) ([]byte, error) {
 	return FS.ReadFile("entry-templates/" + name)
 }
 
+// ListPromptTemplates returns available prompt template file names.
+//
+// Returns:
+//   - []string: List of template filenames in prompt-templates/
+//   - error: Non-nil if directory read fails
+func ListPromptTemplates() ([]string, error) {
+	entries, err := FS.ReadDir("prompt-templates")
+	if err != nil {
+		return nil, err
+	}
+
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			names = append(names, entry.Name())
+		}
+	}
+	return names, nil
+}
+
+// PromptTemplate reads a prompt template by name.
+//
+// Parameters:
+//   - name: Template filename (e.g., "code-review.md")
+//
+// Returns:
+//   - []byte: Template content from prompt-templates/
+//   - error: Non-nil if the file is not found or read fails
+func PromptTemplate(name string) ([]byte, error) {
+	return FS.ReadFile("prompt-templates/" + name)
+}
+
 // ListSkills returns available skill directory names.
 //
 // Each skill is a directory containing a SKILL.md file following the
@@ -118,6 +150,42 @@ func SkillContent(name string) ([]byte, error) {
 	return FS.ReadFile("claude/skills/" + name + "/SKILL.md")
 }
 
+// SkillReference reads a reference file from a skill's references/ directory.
+//
+// Parameters:
+//   - skill: Skill directory name (e.g., "ctx-skill-audit")
+//   - filename: Reference filename (e.g., "anthropic-best-practices.md")
+//
+// Returns:
+//   - []byte: Reference file content
+//   - error: Non-nil if the file is not found or read fails
+func SkillReference(skill, filename string) ([]byte, error) {
+	return FS.ReadFile("claude/skills/" + skill + "/references/" + filename)
+}
+
+// ListSkillReferences returns available reference filenames for a skill.
+//
+// Parameters:
+//   - skill: Skill directory name (e.g., "ctx-skill-audit")
+//
+// Returns:
+//   - []string: List of reference filenames
+//   - error: Non-nil if the references directory is not found or read fails
+func ListSkillReferences(skill string) ([]string, error) {
+	entries, readErr := FS.ReadDir("claude/skills/" + skill + "/references")
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			names = append(names, entry.Name())
+		}
+	}
+	return names, nil
+}
+
 // MakefileCtx reads the ctx-owned Makefile include template.
 //
 // Returns:
@@ -140,6 +208,20 @@ func MakefileCtx() ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func ProjectFile(name string) ([]byte, error) {
 	return FS.ReadFile("project/" + name)
+}
+
+// ProjectReadme reads a project directory README template by directory name.
+//
+// Templates are stored as project/<dir>-README.md in the embedded filesystem.
+//
+// Parameters:
+//   - dir: Directory name (e.g., "specs", "ideas")
+//
+// Returns:
+//   - []byte: README.md content for the directory
+//   - error: Non-nil if the file is not found or read fails
+func ProjectReadme(dir string) ([]byte, error) {
+	return FS.ReadFile("project/" + dir + "-README.md")
 }
 
 // ClaudeMd reads the CLAUDE.md template from the embedded filesystem.
@@ -181,6 +263,16 @@ func RalphTemplate(name string) ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func HookMessage(hook, filename string) ([]byte, error) {
 	return FS.ReadFile("hooks/messages/" + hook + "/" + filename)
+}
+
+// HookMessageRegistry reads the embedded registry.yaml that describes
+// all hook message templates.
+//
+// Returns:
+//   - []byte: Raw YAML content
+//   - error: Non-nil if the file is not found or read fails
+func HookMessageRegistry() ([]byte, error) {
+	return FS.ReadFile("hooks/messages/registry.yaml")
 }
 
 // ListHookMessages returns available hook message directory names.
@@ -262,6 +354,15 @@ func ListWhyDocs() ([]string, error) {
 		}
 	}
 	return names, nil
+}
+
+// Schema reads the embedded JSON Schema for .ctxrc.
+//
+// Returns:
+//   - []byte: JSON Schema content
+//   - error: Non-nil if the file is not found or read fails
+func Schema() ([]byte, error) {
+	return FS.ReadFile("schema/ctxrc.schema.json")
 }
 
 var (

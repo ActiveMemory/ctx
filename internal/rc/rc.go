@@ -151,6 +151,18 @@ func InjectionTokenWarn() int {
 	return RC().InjectionTokenWarn
 }
 
+// BillingTokenWarn returns the absolute token threshold for billing warnings.
+//
+// Returns 0 (default, disabled). When set to a positive value, the
+// check-context-size hook emits a one-shot VERBATIM warning the first
+// time session tokens exceed this threshold.
+//
+// Returns:
+//   - int: Token threshold, or 0 if disabled
+func BillingTokenWarn() int {
+	return RC().BillingTokenWarn
+}
+
 // ContextWindow returns the configured context window size in tokens.
 //
 // Returns 200000 (default). For Claude Code users this value is a no-op:

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ctx.ist/schema/ctxrc.schema.json",
+  "title": ".ctxrc",
+  "description": "Runtime configuration for ctx (https://ctx.ist)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "context_dir": {
+      "type": "string",
+      "description": "Name of the context directory.",
+      "default": ".context"
+    },
+    "token_budget": {
+      "type": "integer",
+      "description": "Default token budget for context assembly.",
+      "default": 8000,
+      "minimum": 1
+    },
+    "priority_order": {
+      "type": "array",
+      "description": "Custom file loading priority order.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "auto_archive": {
+      "type": "boolean",
+      "description": "Whether to auto-archive completed tasks.",
+      "default": true
+    },
+    "archive_after_days": {
+      "type": "integer",
+      "description": "Days before archiving completed tasks.",
+      "default": 7,
+      "minimum": 0
+    },
+    "scratchpad_encrypt": {
+      "type": "boolean",
+      "description": "Whether to encrypt the scratchpad.",
+      "default": true
+    },
+    "allow_outside_cwd": {
+      "type": "boolean",
+      "description": "Skip boundary validation for external context dirs.",
+      "default": false
+    },
+    "entry_count_learnings": {
+      "type": "integer",
+      "description": "Entry count threshold for LEARNINGS.md drift warning. 0 disables.",
+      "default": 30,
+      "minimum": 0
+    },
+    "entry_count_decisions": {
+      "type": "integer",
+      "description": "Entry count threshold for DECISIONS.md drift warning. 0 disables.",
+      "default": 20,
+      "minimum": 0
+    },
+    "convention_line_count": {
+      "type": "integer",
+      "description": "Line count threshold for CONVENTIONS.md drift warning. 0 disables.",
+      "default": 200,
+      "minimum": 0
+    },
+    "injection_token_warn": {
+      "type": "integer",
+      "description": "Token threshold for oversize injection warning. 0 disables.",
+      "default": 15000,
+      "minimum": 0
+    },
+    "context_window": {
+      "type": "integer",
+      "description": "Context window size in tokens. Auto-detected for Claude Code users.",
+      "default": 200000,
+      "minimum": 1
+    },
+    "event_log": {
+      "type": "boolean",
+      "description": "Whether to log hook events locally.",
+      "default": false
+    },
+    "key_rotation_days": {
+      "type": "integer",
+      "description": "Days before encryption key rotation nudge.",
+      "default": 90,
+      "minimum": 0
+    },
+    "key_path": {
+      "type": "string",
+      "description": "Explicit encryption key file path."
+    },
+    "notify": {
+      "type": "object",
+      "description": "Webhook notification settings.",
+      "additionalProperties": false,
+      "properties": {
+        "events": {
+          "type": "array",
+          "description": "Event filter list for notifications.",
+          "items": {
+            "type": "string",
+            "enum": ["loop", "nudge", "relay", "heartbeat"]
+          }
+        },
+        "key_rotation_days": {
+          "type": "integer",
+          "description": "Deprecated: use top-level key_rotation_days instead.",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

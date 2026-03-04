@@ -1,7 +1,7 @@
 ---
 name: ctx-map
 description: "Build and maintain architecture maps. Use to create or refresh ARCHITECTURE.md and DETAILED_DESIGN.md."
-allowed-tools: Bash(ctx:*), Bash(git:*), Read, Write, Edit, Glob, Grep
+allowed-tools: Bash(ctx:*), Bash(git:*), Bash(go:*), Read, Write, Edit, Glob, Grep
 ---
 
 Build and maintain two architecture documents incrementally:
@@ -63,6 +63,13 @@ analysis:
 ### Phase 2: Survey (First Run) or Analyze Frontier (Subsequent Run)
 
 **First run — full survey:**
+
+0. Run `ctx deps` to bootstrap the dependency graph:
+   ```bash
+   ctx deps
+   ```
+   Use this as the starting point for "Package Dependency Graph" —
+   verify and enrich with semantic context.
 
 1. Read `go.mod` (or equivalent) for project identity and deps
 2. Explore directory structure:

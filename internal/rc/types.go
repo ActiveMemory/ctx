@@ -20,6 +20,10 @@ package rc
 //   - ContextWindow: Context window size in tokens for usage reporting (default 200000).
 //     No-op for Claude Code users: auto-detected from ~/.claude/settings.json.
 //     Only needed for non-Claude AI tools.
+//   - BillingTokenWarn: Absolute token threshold for billing nudge (default 0 = disabled).
+//     When set, a one-shot VERBATIM warning fires the first time session tokens
+//     exceed this value. Useful for Claude Pro users with 1M context where tokens
+//     beyond the included allowance incur extra cost.
 //   - EventLog: Whether to log hook events locally (default false)
 //   - KeyRotationDays: Days before encryption key rotation nudge (default 90)
 //   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)
@@ -36,6 +40,7 @@ type CtxRC struct {
 	ConventionLineCount int           `yaml:"convention_line_count"`
 	InjectionTokenWarn  int           `yaml:"injection_token_warn"`
 	ContextWindow       int           `yaml:"context_window"`
+	BillingTokenWarn    int           `yaml:"billing_token_warn"`
 	EventLog            bool          `yaml:"event_log"`
 	KeyRotationDays     int           `yaml:"key_rotation_days"`
 	KeyPathOverride     string        `yaml:"key_path"`

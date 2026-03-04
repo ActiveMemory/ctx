@@ -18,6 +18,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
+// discardWriter silences command output in tests.
+type discardWriter struct{}
+
+func (discardWriter) Write(p []byte) (int, error) { return len(p), nil }
+
 func TestRootCmd(t *testing.T) {
 	cmd := RootCmd()
 
@@ -287,6 +292,34 @@ func TestInitGuard_AllowsGroupingCommand(t *testing.T) {
 
 	if execErr := cmd.Execute(); execErr != nil {
 		t.Fatalf("grouping command should succeed: %v", execErr)
+	}
+}
+
+func TestInitGuard_AllowsCompletionSubcommand(t *testing.T) {
+	tmp := t.TempDir() // empty — not initialized
+	origDir, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	rc.Reset()
+	t.Cleanup(func() { rc.Reset() })
+
+	cmd := RootCmd()
+	Initialize(cmd)
+
+	// "completion bash" is added by cobra during Execute; simulate by
+	// running the full command.
+	cmd.SetArgs([]string{"completion", "bash"})
+	cmd.SetOut(&discardWriter{})
+	cmd.SetErr(&discardWriter{})
+
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("completion bash should succeed without init: %v", execErr)
 	}
 }
 

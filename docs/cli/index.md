@@ -67,7 +67,10 @@ own guards and no-op gracefully.
 | [`ctx hook`](tools.md#ctx-hook)                 | Generate AI tool integration configs                   |
 | [`ctx loop`](tools.md#ctx-loop)                 | Generate autonomous loop script                        |
 | [`ctx notify`](tools.md#ctx-notify)             | Send webhook notifications                             |
+| [`ctx changes`](tools.md#ctx-changes)           | Show what changed since last session                   |
+| [`ctx deps`](tools.md#ctx-deps)                 | Show package dependency graph                          |
 | [`ctx pad`](tools.md#ctx-pad)                   | Encrypted scratchpad for sensitive one-liners          |
+| [`ctx prompt`](tools.md#ctx-prompt)             | Manage reusable prompt templates                       |
 | [`ctx remind`](tools.md#ctx-remind)             | Session-scoped reminders that surface at session start |
 | [`ctx completion`](tools.md#ctx-completion)     | Generate shell autocompletion scripts                  |
 | [`ctx why`](tools.md#ctx-why)                   | Read the philosophy behind ctx                         |
@@ -121,6 +124,7 @@ entry_count_decisions: 20    # Drift warning threshold (0 = disable)
 convention_line_count: 200   # Line count warning for CONVENTIONS.md (0 = disable)
 injection_token_warn: 15000  # Oversize injection warning (0 = disable)
 context_window: 200000       # Auto-detected for Claude Code; override for other tools
+billing_token_warn: 0        # One-shot billing warning at this token count (0 = disabled)
 key_rotation_days: 90        # Days before key rotation nudge
 notify:                      # Webhook notification settings
   events:                    # Required: only listed events fire
@@ -145,6 +149,7 @@ notify:                      # Webhook notification settings
 | `convention_line_count` | `int`      | `200`         | Line count warning for `CONVENTIONS.md`                                |
 | `injection_token_warn`  | `int`      | `15000`       | Warn when auto-injected context exceeds this token count (0 = disable) |
 | `context_window`        | `int`      | `200000`      | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools |
+| `billing_token_warn`    | `int`      | `0` *(off)*   | One-shot warning when session tokens exceed this threshold (0 = disabled) |
 | `key_rotation_days`     | `int`      | `90`          | Days before encryption key rotation nudge                              |
 | `notify.events`         | `[]string` | *(all)*       | Event filter for webhook notifications (empty = all)                   |
 

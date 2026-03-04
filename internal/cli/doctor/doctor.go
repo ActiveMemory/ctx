@@ -59,6 +59,7 @@ func Cmd() *cobra.Command {
 
 Checks:
   - Context initialized and required files present
+  - .ctxrc validation (unknown fields, typos)
   - Drift detected (stale paths, missing files)
   - Plugin installed and enabled
   - Event logging status
@@ -83,6 +84,7 @@ func runDoctor(cmd *cobra.Command, jsonOutput bool) error {
 
 	checkContextInitialized(report)
 	checkRequiredFiles(report)
+	checkCtxrcValidation(report)
 	checkDrift(report)
 	checkPluginEnablement(report)
 	checkEventLogging(report)
@@ -155,6 +157,48 @@ func checkRequiredFiles(report *Report) {
 			Message:  fmt.Sprintf("Missing required files (%d/%d): %s", present, total, strings.Join(missing, ", ")),
 		})
 	}
+}
+
+func checkCtxrcValidation(report *Report) {
+	data, readErr := os.ReadFile(config.FileContextRC) //nolint:gosec // project-local config file
+	if readErr != nil {
+		// No .ctxrc is fine — defaults are used.
+		report.Results = append(report.Results, Result{
+			Name:     "ctxrc_validation",
+			Category: "Structure",
+			Status:   statusOK,
+			Message:  "No .ctxrc file (using defaults)",
+		})
+		return
+	}
+
+	warnings, validateErr := rc.Validate(data)
+	if validateErr != nil {
+		report.Results = append(report.Results, Result{
+			Name:     "ctxrc_validation",
+			Category: "Structure",
+			Status:   statusError,
+			Message:  fmt.Sprintf(".ctxrc parse error: %v", validateErr),
+		})
+		return
+	}
+
+	if len(warnings) > 0 {
+		report.Results = append(report.Results, Result{
+			Name:     "ctxrc_validation",
+			Category: "Structure",
+			Status:   statusWarning,
+			Message:  fmt.Sprintf(".ctxrc has unknown fields: %s", strings.Join(warnings, "; ")),
+		})
+		return
+	}
+
+	report.Results = append(report.Results, Result{
+		Name:     "ctxrc_validation",
+		Category: "Structure",
+		Status:   statusOK,
+		Message:  ".ctxrc valid",
+	})
 }
 
 func checkDrift(report *Report) {

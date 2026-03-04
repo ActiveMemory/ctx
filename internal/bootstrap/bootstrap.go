@@ -20,10 +20,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
+	"github.com/ActiveMemory/ctx/internal/cli/changes"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	cliconfig "github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
+	"github.com/ActiveMemory/ctx/internal/cli/deps"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
 	"github.com/ActiveMemory/ctx/internal/cli/drift"
 	"github.com/ActiveMemory/ctx/internal/cli/guide"
@@ -36,6 +38,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/notify"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
+	"github.com/ActiveMemory/ctx/internal/cli/prompt"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
@@ -74,9 +77,11 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		drift.Cmd,
 		guide.Cmd,
 		sync.Cmd,
+		changes.Cmd,
 		compact.Cmd,
 		cliconfig.Cmd,
 		decision.Cmd,
+		deps.Cmd,
 		doctor.Cmd,
 		watch.Cmd,
 		hook.Cmd,
@@ -87,6 +92,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		pad.Cmd,
 		pause.Cmd,
 		permissions.Cmd,
+		prompt.Cmd,
 		recall.Cmd,
 		reindex.Cmd,
 		remind.Cmd,

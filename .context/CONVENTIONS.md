@@ -151,3 +151,5 @@
 - New CLI subcommand documentation checklist: When adding a new CLI subcommand, update docs in at least three places: (1) Feature page (e.g., docs/scratchpad.md) — commands table, usage section, skill/NL table. (2) CLI reference (docs/cli-reference.md) — full reference entry with args, flags, examples. (3) Relevant recipes — any recipe that covers the feature area. (4) zensical.toml — only if adding a new page.
 
 - Always stage site/ when committing docs/ changes — the generated HTML is tracked in git with no CI build step.
+
+- Zero //nolint:errcheck policy — handle errors, don't suppress them. In test code: use t.Fatal(err) for setup errors, _ = os.Chdir(orig) for cleanup. In production code: use defer func() { _ = f.Close() }() for best-effort close. For gosec false positives: prefer config-level exclusions in .golangci.yml.

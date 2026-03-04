@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-04 | nolint:errcheck in tests normalizes unchecked errors for agents |
+| 2026-03-04 | golangci-lint v2 ignores inline nolint directives for some linters |
+| 2026-03-02 | Hook message registry test enforces exhaustive coverage of embedded templates |
 | 2026-03-02 | Existing Projects is ambiguous framing for migration notes |
 | 2026-03-02 | Claude Code JSONL model ID does not distinguish 200k from 1M context |
 | 2026-03-01 | Gosec G306 flags test file WriteFile with 0644 permissions |
@@ -11,7 +14,7 @@
 | 2026-03-01 | Test HOME isolation is required for user-level path functions |
 | 2026-03-01 | Skill enhancement is a documentation-heavy operation across 10+ files |
 | 2026-03-01 | Task descriptions can be stale in reverse — implementation done but task not marked complete |
-| 2026-03-01 | Elevating private skills requires synchronized updates across 5 layers |
+| 2026-03-01 | Elevating private skills requires synchronized updates across 6 layers |
 | 2026-03-01 | Model-to-window mapping requires ordered prefix matching |
 | 2026-03-01 | Removing embedded asset directories requires synchronized cleanup across 5+ layers |
 | 2026-03-01 | Absorbing shell scripts into Go commands creates a discoverability gap |
@@ -42,6 +45,36 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-04-040211] nolint:errcheck in tests normalizes unchecked errors for agents
+
+**Context**: User flagged that suppressing errcheck in tests teaches the agent to spread the pattern to production code
+
+**Lesson**: Broken-window theory applies to lint suppressions. Agents learn from test code patterns. Use _ = f.Close() in a closure or check errors with t.Fatal — never suppress with nolint.
+
+**Application**: Handle all errors in test code the same as production: t.Fatal(err) for setup, defer func() { _ = f.Close() }() for best-effort cleanup.
+
+---
+
+## [2026-03-04-040209] golangci-lint v2 ignores inline nolint directives for some linters
+
+**Context**: nolint:errcheck and nolint:gosec comments were present but golangci-lint v2 still reported violations
+
+**Lesson**: In golangci-lint v2, use config-level exclusions.rules for gosec patterns (G204, G301, G306) rather than relying on inline nolint directives. For errcheck, fix the code instead of suppressing.
+
+**Application**: When adding new lint suppressions, prefer config-level rules for gosec false positives on safe paths/args; never suppress errcheck — handle the error.
+
+---
+
+## [2026-03-02-165039] Hook message registry test enforces exhaustive coverage of embedded templates
+
+**Context**: Adding billing.txt to embedded assets without a registry entry caused TestRegistryCoversAllEmbeddedFiles to fail immediately
+
+**Lesson**: Every new .txt file under internal/assets/hooks/messages/ must have a corresponding entry in registry.go — the test acts as an exhaustive bidirectional check
+
+**Application**: When adding new hook message variants, update the registry entry before running tests
 
 ---
 
@@ -125,13 +158,13 @@
 
 ---
 
-## [2026-03-01-125807] Elevating private skills requires synchronized updates across 5 layers
+## [2026-03-01-125807] Elevating private skills requires synchronized updates across 6 layers
 
 **Context**: Promoted 6 _ctx-* skills to bundled ctx-* plugin skills
 
-**Lesson**: Moving a skill from .claude/skills/ to internal/assets/claude/skills/ touches: (1) SKILL.md frontmatter name field, (2) internal cross-references between skills (slash command paths), (3) external cross-references in other skills and docs, (4) embed_test.go expected skill list, (5) recipe and reference docs that mention the old name. Missing any layer creates invisible drift.
+**Lesson**: Moving a skill from .claude/skills/ to internal/assets/claude/skills/ touches: (1) SKILL.md frontmatter name field, (2) internal cross-references between skills (slash command paths), (3) external cross-references in other skills and docs, (4) embed_test.go expected skill list, (5) recipe and reference docs that mention the old name, (6) plugin cache rebuild (`hack/plugin-reload.sh`) + session restart — Claude Code snapshots skills from `~/.claude/plugins/cache/` at startup, so new skills are invisible until the cache is refreshed. Also clean stale underscore-prefixed `Skill(_ctx-*)` entries from `.claude/settings.local.json`.
 
-**Application**: When promoting future skills, use grep -r /_ctx-{name} across the whole tree before declaring done
+**Application**: When promoting future skills, use grep -r /_ctx-{name} across the whole tree before declaring done. After code changes, run plugin-reload.sh and restart the session to verify the skill appears in autocomplete.
 
 ---
 

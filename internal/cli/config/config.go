@@ -19,12 +19,14 @@ func Cmd() *cobra.Command {
 
 Subcommands:
   switch [dev|base]    Switch .ctxrc profile (no arg = toggle)
-  status               Show active .ctxrc profile`,
+  status               Show active .ctxrc profile
+  schema               Print JSON Schema for .ctxrc`,
 	}
 
 	cmd.AddCommand(
 		switchCmd(),
 		statusCmd(),
+		schemaCmd(),
 	)
 
 	return cmd

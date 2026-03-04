@@ -1,0 +1,157 @@
+# Hook message registry — metadata for embedded .txt templates.
+# Each entry maps to a template at <hook>/<variant>.txt.
+# Fields: hook, variant, category, description, vars (optional).
+
+- hook: block-dangerous-commands
+  variant: cp-to-bin
+  category: ctx-specific
+  description: Block copying binaries to bin directories
+
+- hook: block-dangerous-commands
+  variant: install-to-local-bin
+  category: ctx-specific
+  description: Block copying binaries to ~/.local/bin
+
+- hook: block-dangerous-commands
+  variant: mid-git-push
+  category: ctx-specific
+  description: Block git push without user approval
+
+- hook: block-dangerous-commands
+  variant: mid-sudo
+  category: ctx-specific
+  description: Block sudo usage
+
+- hook: block-non-path-ctx
+  variant: absolute-path
+  category: ctx-specific
+  description: Block absolute path ctx invocation
+
+- hook: block-non-path-ctx
+  variant: dot-slash
+  category: ctx-specific
+  description: Block ./ctx or ./dist/ctx invocation
+
+- hook: block-non-path-ctx
+  variant: go-run
+  category: ctx-specific
+  description: Block go run ./cmd/ctx invocation
+
+- hook: check-backup-age
+  variant: warning
+  category: customizable
+  description: Backup staleness warning
+  vars: [Warnings]
+
+- hook: check-ceremonies
+  variant: both
+  category: customizable
+  description: Both ceremonies missing nudge
+
+- hook: check-ceremonies
+  variant: remember
+  category: customizable
+  description: Start-of-session ceremony nudge
+
+- hook: check-ceremonies
+  variant: wrapup
+  category: customizable
+  description: End-of-session ceremony nudge
+
+- hook: check-context-size
+  variant: billing
+  category: customizable
+  description: Billing token threshold warning (one-shot)
+  vars: [TokenCount, Threshold]
+
+- hook: check-context-size
+  variant: checkpoint
+  category: customizable
+  description: Context capacity warning
+
+- hook: check-context-size
+  variant: oversize
+  category: customizable
+  description: Injection oversize nudge
+  vars: [TokenCount]
+
+- hook: check-context-size
+  variant: window
+  category: customizable
+  description: Context window usage warning (>80%)
+  vars: [TokenCount, Percentage]
+
+- hook: check-journal
+  variant: both
+  category: customizable
+  description: Unexported sessions and unenriched entries
+  vars: [UnexportedCount, UnenrichedCount]
+
+- hook: check-journal
+  variant: unenriched
+  category: customizable
+  description: Unenriched journal entries
+  vars: [UnenrichedCount]
+
+- hook: check-journal
+  variant: unexported
+  category: customizable
+  description: Unexported sessions reminder
+  vars: [UnexportedCount]
+
+- hook: check-knowledge
+  variant: warning
+  category: customizable
+  description: Knowledge file growth warning
+  vars: [FileWarnings]
+
+- hook: check-map-staleness
+  variant: stale
+  category: customizable
+  description: Architecture map staleness nudge
+  vars: [LastRefreshDate, ModuleCount]
+
+- hook: check-persistence
+  variant: nudge
+  category: customizable
+  description: Context persistence nudge
+  vars: [PromptsSinceNudge]
+
+- hook: check-reminders
+  variant: reminders
+  category: ctx-specific
+  description: Pending reminders relay
+  vars: [ReminderList]
+
+- hook: check-resources
+  variant: alert
+  category: ctx-specific
+  description: System resource pressure alert
+  vars: [AlertMessages]
+
+- hook: check-version
+  variant: key-rotation
+  category: ctx-specific
+  description: Encryption key rotation nudge
+  vars: [KeyAgeDays]
+
+- hook: check-version
+  variant: mismatch
+  category: ctx-specific
+  description: Binary/plugin version mismatch
+  vars: [BinaryVersion, PluginVersion]
+
+- hook: post-commit
+  variant: nudge
+  category: customizable
+  description: Post-commit context capture nudge
+
+- hook: qa-reminder
+  variant: gate
+  category: customizable
+  description: Pre-commit QA gate instructions
+
+- hook: specs-nudge
+  variant: nudge
+  category: customizable
+  description: Plan-to-specs directory nudge

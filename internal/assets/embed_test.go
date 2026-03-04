@@ -266,6 +266,86 @@ func TestGetEntryTemplate(t *testing.T) {
 	}
 }
 
+func TestListPromptTemplates(t *testing.T) {
+	templates, err := ListPromptTemplates()
+	if err != nil {
+		t.Fatalf("ListPromptTemplates() unexpected error: %v", err)
+	}
+
+	if len(templates) == 0 {
+		t.Error("ListPromptTemplates() returned empty list")
+	}
+
+	expected := []string{
+		"code-review.md",
+		"refactor.md",
+		"explain.md",
+	}
+
+	templateSet := make(map[string]bool)
+	for _, name := range templates {
+		templateSet[name] = true
+	}
+
+	for _, exp := range expected {
+		if !templateSet[exp] {
+			t.Errorf("ListPromptTemplates() missing expected template: %s", exp)
+		}
+	}
+}
+
+func TestGetPromptTemplate(t *testing.T) {
+	tests := []struct {
+		name        string
+		template    string
+		wantContain string
+		wantErr     bool
+	}{
+		{
+			name:        "code-review.md exists",
+			template:    "code-review.md",
+			wantContain: "Review",
+			wantErr:     false,
+		},
+		{
+			name:        "refactor.md exists",
+			template:    "refactor.md",
+			wantContain: "Refactor",
+			wantErr:     false,
+		},
+		{
+			name:        "explain.md exists",
+			template:    "explain.md",
+			wantContain: "Explain",
+			wantErr:     false,
+		},
+		{
+			name:     "nonexistent prompt template returns error",
+			template: "nonexistent.md",
+			wantErr:  true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			content, err := PromptTemplate(tt.template)
+			if tt.wantErr {
+				if err == nil {
+					t.Errorf("PromptTemplate(%q) expected error, got nil", tt.template)
+				}
+				return
+			}
+			if err != nil {
+				t.Errorf("PromptTemplate(%q) unexpected error: %v", tt.template, err)
+				return
+			}
+			if !strings.Contains(string(content), tt.wantContain) {
+				t.Errorf("PromptTemplate(%q) content does not contain %q", tt.template, tt.wantContain)
+			}
+		})
+	}
+}
+
 func TestListSkills(t *testing.T) {
 	skills, err := ListSkills()
 	if err != nil {
@@ -278,11 +358,13 @@ func TestListSkills(t *testing.T) {
 
 	// Check for expected skills (directory names, not files)
 	expected := []string{
+		"ctx-prompt",
 		"ctx-status",
 		"ctx-recall",
 		"ctx-brainstorm",
 		"ctx-check-links",
 		"ctx-sanitize-permissions",
+		"ctx-skill-audit",
 		"ctx-skill-creator",
 		"ctx-spec",
 		"ctx-verify",
@@ -311,6 +393,45 @@ func TestSkillContent(t *testing.T) {
 	// Verify it's a valid SKILL.md with frontmatter
 	if !strings.HasPrefix(string(content), "---") {
 		t.Error("ctx-recall SKILL.md missing frontmatter")
+	}
+}
+
+func TestSkillReference(t *testing.T) {
+	content, err := SkillReference("ctx-skill-audit", "anthropic-best-practices.md")
+	if err != nil {
+		t.Fatalf("SkillReference() error: %v", err)
+	}
+	if !strings.Contains(string(content), "Anthropic") {
+		t.Error("anthropic-best-practices.md does not contain 'Anthropic'")
+	}
+}
+
+func TestListSkillReferences(t *testing.T) {
+	refs, err := ListSkillReferences("ctx-skill-audit")
+	if err != nil {
+		t.Fatalf("ListSkillReferences() error: %v", err)
+	}
+
+	if len(refs) == 0 {
+		t.Error("ListSkillReferences(ctx-skill-audit) returned empty list")
+	}
+
+	found := false
+	for _, name := range refs {
+		if name == "anthropic-best-practices.md" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("ListSkillReferences() missing anthropic-best-practices.md")
+	}
+}
+
+func TestListSkillReferencesNonexistent(t *testing.T) {
+	_, err := ListSkillReferences("ctx-status")
+	if err == nil {
+		t.Error("ListSkillReferences(ctx-status) expected error for skill without references")
 	}
 }
 
@@ -401,6 +522,23 @@ func TestPluginVersion(t *testing.T) {
 	// Should be a semver-like string
 	if !strings.Contains(ver, ".") {
 		t.Errorf("PluginVersion() = %q, expected semver format", ver)
+	}
+}
+
+func TestSchema(t *testing.T) {
+	data, err := Schema()
+	if err != nil {
+		t.Fatalf("Schema() unexpected error: %v", err)
+	}
+	content := string(data)
+	if !strings.Contains(content, "$schema") {
+		t.Error("Schema() content does not contain $schema")
+	}
+	if !strings.Contains(content, "additionalProperties") {
+		t.Error("Schema() content does not contain additionalProperties")
+	}
+	if !strings.Contains(content, "ctx.ist") {
+		t.Error("Schema() content does not contain ctx.ist $id")
 	}
 }
 

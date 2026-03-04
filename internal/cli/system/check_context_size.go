@@ -114,6 +114,13 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 	}
 	windowTrigger := pct >= contextWindowThresholdPct
 
+	// Billing threshold: one-shot warning when tokens exceed the
+	// user-configured billing_token_warn. Independent of all other
+	// triggers — fires at most once per session.
+	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
+		emitBillingWarning(cmd, logFile, sessionID, count, tokens, billingThreshold)
+	}
+
 	switch {
 	case counterTriggered:
 		// Checkpoint fires (token line appended when available)
@@ -226,6 +233,49 @@ func appendOversizeNudge() string {
 
 	_ = os.Remove(flagPath) // one-shot: consumed
 	return boxLines(content)
+}
+
+// emitBillingWarning emits a one-shot warning when token usage crosses the
+// billing_token_warn threshold. Uses a state file to ensure it fires at most
+// once per session.
+func emitBillingWarning(cmd *cobra.Command, logFile, sessionID string, count, tokens, threshold int) {
+	// One-shot guard: skip if already warned this session.
+	warnedFile := filepath.Join(stateDir(), "billing-warned-"+sessionID)
+	if _, statErr := os.Stat(warnedFile); statErr == nil {
+		return // already fired
+	}
+
+	fallback := fmt.Sprintf("⚠ Token usage (~%s) has exceeded your\n"+
+		"billing_token_warn threshold (%s).\n"+
+		"Additional tokens may incur extra cost.",
+		formatTokenCount(tokens), formatTokenCount(threshold))
+	content := loadMessage("check-context-size", "billing",
+		map[string]any{"TokenCount": formatTokenCount(tokens), "Threshold": formatTokenCount(threshold)}, fallback)
+	if content == "" {
+		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d billing-silenced tokens=%d threshold=%d", count, tokens, threshold))
+		touchFile(warnedFile) // silenced counts as fired
+		return
+	}
+
+	msg := "IMPORTANT: Relay this billing warning to the user VERBATIM before answering their question.\n\n" +
+		"┌─ Billing Threshold ──────────────────────────────\n"
+	msg += boxLines(content)
+	if line := contextDirLine(); line != "" {
+		msg += "│ " + line + "\n"
+	}
+	msg += boxBottom
+	cmd.Println(msg)
+	cmd.Println()
+
+	touchFile(warnedFile) // one-shot: mark as fired
+	logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d BILLING-WARNING tokens=%d threshold=%d", count, tokens, threshold))
+	ref := notify.NewTemplateRef("check-context-size", "billing",
+		map[string]any{"TokenCount": formatTokenCount(tokens), "Threshold": formatTokenCount(threshold)})
+	billingMsg := fmt.Sprintf("check-context-size: Billing threshold exceeded (%s tokens > %s)",
+		formatTokenCount(tokens), formatTokenCount(threshold))
+	_ = notify.Send("nudge", billingMsg, sessionID, ref)
+	_ = notify.Send("relay", billingMsg, sessionID, ref)
+	eventlog.Append("relay", billingMsg, sessionID, ref)
 }
 
 // oversizeTokenRe matches "Injected:  NNNNN tokens" in the flag file.

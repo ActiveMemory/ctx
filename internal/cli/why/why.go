@@ -8,6 +8,8 @@ package why
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // docAliases maps user-facing names to embedded asset names.
@@ -30,9 +32,10 @@ var docOrder = []struct {
 // Cmd returns the "ctx why" cobra command.
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:       "why [DOCUMENT]",
-		Short:     "Read the philosophy behind ctx",
-		ValidArgs: []string{"manifesto", "about", "invariants"},
+		Use:         "why [DOCUMENT]",
+		Short:       "Read the philosophy behind ctx",
+		Annotations: map[string]string{config.AnnotationSkipInit: ""},
+		ValidArgs:   []string{"manifesto", "about", "invariants"},
 		Long: `Surface ctx's philosophy documents in the terminal.
 
 Documents:
