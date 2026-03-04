@@ -14,6 +14,23 @@ import (
 	"strings"
 )
 
+// goBuilder implements GraphBuilder for Go projects.
+type goBuilder struct{}
+
+func (g *goBuilder) Name() string { return "go" }
+
+func (g *goBuilder) Detect() bool {
+	_, err := os.Stat("go.mod")
+	return err == nil
+}
+
+func (g *goBuilder) Build(external bool) (map[string][]string, error) {
+	if external {
+		return buildGoFullGraph()
+	}
+	return buildGoInternalGraph()
+}
+
 // goPackage represents the subset of `go list -json` output we need.
 type goPackage struct {
 	ImportPath string   `json:"ImportPath"`
@@ -24,16 +41,8 @@ type goPackage struct {
 	} `json:"Module"`
 }
 
-// detectProjectType checks for known project manifests.
-func detectProjectType() string {
-	if _, err := os.Stat("go.mod"); err == nil {
-		return "go"
-	}
-	return ""
-}
-
-// modulePath reads the module path from go.mod via the first goPackage.
-func modulePath(pkgs []goPackage) string {
+// goModulePath reads the module path from the first goPackage with a Module field.
+func goModulePath(pkgs []goPackage) string {
 	for _, p := range pkgs {
 		if p.Module != nil && p.Module.Path != "" {
 			return p.Module.Path
@@ -45,9 +54,9 @@ func modulePath(pkgs []goPackage) string {
 // listGoPackages runs `go list -json ./...` and parses the output.
 // go list outputs concatenated JSON objects (not an array).
 func listGoPackages() ([]goPackage, error) {
-	out, err := exec.Command("go", "list", "-json", "./...").Output() //nolint:gosec // fixed args
-	if err != nil {
-		return nil, err
+	out, listErr := exec.Command("go", "list", "-json", "./...").Output() //nolint:gosec // fixed args
+	if listErr != nil {
+		return nil, listErr
 	}
 
 	var pkgs []goPackage
@@ -83,15 +92,15 @@ func shortPkgName(importPath, modPath string) string {
 	return importPath
 }
 
-// buildInternalGraph returns an adjacency list of internal package dependencies.
+// buildGoInternalGraph returns an adjacency list of internal package dependencies.
 // Keys and values use shortened names (module prefix stripped).
-func buildInternalGraph() (map[string][]string, error) {
-	pkgs, err := listGoPackages()
-	if err != nil {
-		return nil, err
+func buildGoInternalGraph() (map[string][]string, error) {
+	pkgs, listErr := listGoPackages()
+	if listErr != nil {
+		return nil, listErr
 	}
 
-	modPath := modulePath(pkgs)
+	modPath := goModulePath(pkgs)
 
 	// Build a set of internal packages for filtering.
 	internal := make(map[string]bool)
@@ -115,15 +124,15 @@ func buildInternalGraph() (map[string][]string, error) {
 	return graph, nil
 }
 
-// buildFullGraph returns an adjacency list including external dependencies.
+// buildGoFullGraph returns an adjacency list including external dependencies.
 // Stdlib packages are excluded.
-func buildFullGraph() (map[string][]string, error) {
-	pkgs, err := listGoPackages()
-	if err != nil {
-		return nil, err
+func buildGoFullGraph() (map[string][]string, error) {
+	pkgs, listErr := listGoPackages()
+	if listErr != nil {
+		return nil, listErr
 	}
 
-	modPath := modulePath(pkgs)
+	modPath := goModulePath(pkgs)
 
 	graph := make(map[string][]string)
 	for _, p := range pkgs {

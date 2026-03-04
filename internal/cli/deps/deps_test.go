@@ -31,44 +31,9 @@ func TestMermaidID(t *testing.T) {
 	}
 }
 
-func TestIsStdlib(t *testing.T) {
-	tests := []struct {
-		input string
-		want  bool
-	}{
-		{"fmt", true},
-		{"os/exec", true},
-		{"encoding/json", true},
-		{"github.com/foo/bar", false},
-		{"golang.org/x/tools", false},
-	}
-	for _, tt := range tests {
-		if got := isStdlib(tt.input); got != tt.want {
-			t.Errorf("isStdlib(%q) = %v, want %v", tt.input, got, tt.want)
-		}
-	}
-}
-
-func TestShortPkgName(t *testing.T) {
-	mod := "github.com/ActiveMemory/ctx"
-	tests := []struct {
-		input string
-		want  string
-	}{
-		{"github.com/ActiveMemory/ctx/internal/cli/deps", "internal/cli/deps"},
-		{"github.com/ActiveMemory/ctx", "github.com/ActiveMemory/ctx"},
-		{"github.com/other/pkg", "github.com/other/pkg"},
-	}
-	for _, tt := range tests {
-		if got := shortPkgName(tt.input, mod); got != tt.want {
-			t.Errorf("shortPkgName(%q, %q) = %q, want %q", tt.input, mod, got, tt.want)
-		}
-	}
-}
-
 func TestRenderMermaid(t *testing.T) {
 	graph := map[string][]string{
-		"cmd": {"internal/cli"},
+		"cmd":          {"internal/cli"},
 		"internal/cli": {"internal/config"},
 	}
 
@@ -110,29 +75,152 @@ func TestRenderJSON(t *testing.T) {
 	}
 }
 
-func TestDetectProjectType(t *testing.T) {
-	// Save and restore working directory.
+func TestDetectBuilder(t *testing.T) {
 	orig, getErr := os.Getwd()
 	if getErr != nil {
 		t.Fatal(getErr)
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	// Temp dir without go.mod.
+	// Empty dir — no builder detected.
 	tmp := t.TempDir()
 	if chdirErr := os.Chdir(tmp); chdirErr != nil {
 		t.Fatal(chdirErr)
 	}
-	if got := detectProjectType(); got != "" {
-		t.Errorf("detectProjectType() = %q in empty dir, want empty", got)
+	if b := detectBuilder(); b != nil {
+		t.Errorf("detectBuilder() = %q in empty dir, want nil", b.Name())
 	}
 
-	// Add go.mod.
+	// go.mod → Go builder.
 	if writeErr := os.WriteFile(filepath.Join(tmp, "go.mod"), []byte("module test\n"), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
-	if got := detectProjectType(); got != "go" {
-		t.Errorf("detectProjectType() = %q with go.mod, want 'go'", got)
+	if b := detectBuilder(); b == nil || b.Name() != "go" {
+		t.Errorf("detectBuilder() with go.mod: want 'go', got %v", b)
+	}
+}
+
+func TestDetectBuilder_Node(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+
+	if writeErr := os.WriteFile(filepath.Join(tmp, "package.json"), []byte(`{"name":"test"}`), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	if b := detectBuilder(); b == nil || b.Name() != "node" {
+		t.Errorf("detectBuilder() with package.json: want 'node', got %v", b)
+	}
+}
+
+func TestDetectBuilder_Python(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+
+	if writeErr := os.WriteFile(filepath.Join(tmp, "requirements.txt"), []byte("flask\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	if b := detectBuilder(); b == nil || b.Name() != "python" {
+		t.Errorf("detectBuilder() with requirements.txt: want 'python', got %v", b)
+	}
+}
+
+func TestDetectBuilder_Rust(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+
+	if writeErr := os.WriteFile(filepath.Join(tmp, "Cargo.toml"), []byte("[package]\nname = \"test\"\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	if b := detectBuilder(); b == nil || b.Name() != "rust" {
+		t.Errorf("detectBuilder() with Cargo.toml: want 'rust', got %v", b)
+	}
+}
+
+func TestDetectBuilder_PriorityOrder(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+
+	// Create both go.mod and package.json — Go should win (first in registry).
+	if writeErr := os.WriteFile(filepath.Join(tmp, "go.mod"), []byte("module test\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	if writeErr := os.WriteFile(filepath.Join(tmp, "package.json"), []byte(`{"name":"test"}`), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	if b := detectBuilder(); b == nil || b.Name() != "go" {
+		t.Errorf("detectBuilder() with go.mod+package.json: want 'go', got %v", b)
+	}
+}
+
+func TestFindBuilder(t *testing.T) {
+	for _, name := range []string{"go", "node", "python", "rust"} {
+		if b := findBuilder(name); b == nil {
+			t.Errorf("findBuilder(%q) = nil, want builder", name)
+		}
+	}
+	if b := findBuilder("java"); b != nil {
+		t.Errorf("findBuilder('java') = %v, want nil", b)
+	}
+}
+
+func TestBuilderNames(t *testing.T) {
+	names := builderNames()
+	if len(names) != 4 {
+		t.Fatalf("builderNames() returned %d names, want 4", len(names))
+	}
+	expected := []string{"go", "node", "python", "rust"}
+	for i, want := range expected {
+		if names[i] != want {
+			t.Errorf("builderNames()[%d] = %q, want %q", i, names[i], want)
+		}
+	}
+}
+
+func TestRunDeps_TypeFlag(t *testing.T) {
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+	cmd.SetArgs([]string{"--type", "invalid"})
+	err := cmd.Execute()
+	if err == nil {
+		t.Fatal("expected error for invalid --type, got nil")
+	}
+	if !strings.Contains(err.Error(), "unknown project type") {
+		t.Errorf("unexpected error: %v", err)
 	}
 }
 

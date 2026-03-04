@@ -68,10 +68,12 @@ analysis:
    ```bash
    ctx deps
    ```
-   Use this as the starting point for "Package Dependency Graph" —
-   verify and enrich with semantic context.
+   Auto-detects the ecosystem (Go, Node.js, Python, Rust) from
+   manifest files. Use this as the starting point for "Package
+   Dependency Graph" — verify and enrich with semantic context.
 
-1. Read `go.mod` (or equivalent) for project identity and deps
+1. Read the project manifest for project identity (name, version,
+   description) — `ctx deps` covers the dependency tree
 2. Explore directory structure:
    ```bash
    ctx status

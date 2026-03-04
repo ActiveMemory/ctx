@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-04 | Interface-based GraphBuilder for multi-ecosystem ctx deps |
 | 2026-03-02 | Billing threshold piggybacks on check-context-size, not heartbeat |
 | 2026-03-02 | Replace auto-migration with stderr warning for legacy keys |
 | 2026-03-02 | Consolidate all session state to .context/state/ |
@@ -21,6 +22,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-04-105238] Interface-based GraphBuilder for multi-ecosystem ctx deps
+
+**Status**: Accepted
+
+**Context**: P-1.3 questioned whether non-Go dependency support would introduce bloat and whether a semantic approach was better
+
+**Decision**: Interface-based GraphBuilder for multi-ecosystem ctx deps
+
+**Rationale**: The output pipeline (map[string][]string to Mermaid/table/JSON) was already language-agnostic. Each ecosystem builder is ~40 lines — this is finishing what was started, not bloat. Static manifest parsing (no external tools for Node/Python) keeps dependencies minimal.
+
+**Consequences**: ctx deps now auto-detects Go, Node.js, Python, Rust. --type flag overrides detection. ctx-map skill works across ecosystems without changes.
+
+---
 
 ## [2026-03-02-165038] Billing threshold piggybacks on check-context-size, not heartbeat
 

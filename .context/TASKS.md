@@ -22,11 +22,11 @@ TASK STATUS LABELS:
   end-to-end: identify repeating workflow, create skill, test, deploy. Add to
   recipe index and zensical.toml nav. #priority:medium #added:2026-03-01-125814 #done:2026-03-01
 
-- [ ] P-1.3: ctx-map skill runs ctx deps, but we are not sure if ctx deps handles non-go
+- [x] P-1.3: ctx-map skill runs ctx deps, but we are not sure if ctx deps handles non-go
   dependency trees. -- brainstorm about this, as it's virtually impossible to support
-  all dependency models, and it will introduce bloat to ctx codebase; maybe 
+  all dependency models, and it will introduce bloat to ctx codebase; maybe
   a semantic approach is better. a follow-up question will be whether ctx deps
-  is really necessary.
+  is really necessary. #done:2026-03-04 — Implemented multi-ecosystem deps: Go, Node.js, Python, Rust via GraphBuilder interface. ~40 lines per ecosystem, no bloat.
 
 - [ ] ctx-skill-creator Markdown file does not refer to the references folder
   of the skill. Is the agent smart enough to find it on its own?
