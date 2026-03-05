@@ -171,16 +171,58 @@ so the user can scan quickly rather than reviewing one by one.
 **Unattended** (when running in a loop or explicitly told
 "just do it"): apply enrichments directly and report results.
 
-## Large Backlogs
+## Large Backlogs (20+ entries)
 
-For backlogs of 20+ entries, consider spawning subagents to
-process entries in parallel. Each subagent handles a batch of
-5-10 entries. The parent agent tracks progress via a task list.
+For large backlogs, use the heuristic enrichment script bundled
+in `references/enrich-heuristic.py`. This script infers type,
+outcome, topics, and technologies from the title and filename
+patterns, then inserts frontmatter and marks state automatically.
 
-Only spawn subagents when the backlog is large enough to justify
-the coordination overhead (20+ entries). For smaller backlogs,
-sequential processing in the main conversation is faster and
-simpler.
+### How to use
+
+1. Build a file list of eligible entries (non-multipart, 20+ lines,
+   missing `type:` and `outcome:` fields):
+   ```bash
+   CTX_DIR=$(ctx system bootstrap -q)
+   for f in "$CTX_DIR"/journal/*.md; do
+     [ -f "$f" ] || continue
+     has_type=$(head -30 "$f" | grep -c '^type:' || true)
+     has_outcome=$(head -30 "$f" | grep -c '^outcome:' || true)
+     if [ "$has_type" -eq 0 ] || [ "$has_outcome" -eq 0 ]; then
+       name=$(basename "$f")
+       case "$name" in *-p[0-9].md|*-p[0-9][0-9].md) continue ;; esac
+       lines=$(wc -l < "$f")
+       [ "$lines" -ge 20 ] && echo "$f"
+     fi
+   done > /tmp/enrich-list.txt
+   ```
+
+2. Run the heuristic enrichment script. The script path is relative
+   to this skill's directory — copy it to /tmp or reference it via
+   the full embedded path:
+   ```bash
+   python3 references/enrich-heuristic.py /tmp/enrich-list.txt
+   ```
+
+3. The script handles everything: reads files, inserts frontmatter,
+   runs `ctx system mark-journal` for each, and reports counts.
+
+### When to use heuristic vs. per-file enrichment
+
+| Backlog size | Approach |
+|-------------|----------|
+| 1-5 entries | Read each file, enrich manually with full context |
+| 6-20 entries | Sequential processing in the main conversation |
+| 20+ entries | Use `enrich-heuristic.py` for bulk processing |
+
+The heuristic script produces good-enough enrichment from titles
+and filenames. For higher quality, follow up with manual review
+of entries where the type or topics look wrong.
+
+Subagent parallelization is an alternative for 20+ entries, but
+requires that subagents have Edit and Bash permissions granted.
+If permissions are restricted, the heuristic script is faster
+and more reliable.
 
 ## Quality Checklist
 

@@ -235,6 +235,59 @@ directory contain `.env` files, SSH keys, API tokens, or credentials? Does
 it have a `.git/config` with push access to a remote? Filesystem isolation
 means isolating what is *in* the directory too.
 
+## Team Security Considerations
+
+When multiple developers share a `.context/` directory, security
+considerations extend beyond single-agent hardening.
+
+### Code Review for Context Files
+
+Treat `.context/` changes like code changes. Context files influence
+agent behavior -- a modified CONSTITUTION.md or CONVENTIONS.md changes
+what every agent on the team will do next session. Review them in PRs
+with the same scrutiny you apply to production code.
+
+Watch for:
+
+* Weakened constitutional rules (removed constraints, softened language)
+* New decisions that contradict existing ones without acknowledging it
+* Learnings that encode incorrect assumptions
+* Task additions that bypass the team's prioritization process
+
+### Gitignore Patterns
+
+`ctx init` configures `.gitignore` automatically, but verify these
+patterns are in place:
+
+* **Always gitignored**: `.context.key` (encryption key -- now at
+  `~/.ctx/.ctx.key`), `.context/logs/`, `.context/journal/`
+* **Team decision**: `scratchpad.enc` -- encrypted, safe to commit for
+  shared scratchpad state; gitignore if scratchpads are personal
+* **Never committed**: `.env`, credentials, API keys (enforced by
+  drift secret detection)
+
+### Multi-Developer Context Sharing
+
+CONSTITUTION.md is the shared contract. All team members and their
+agents inherit it. Changes require team consensus, not unilateral edits.
+
+When multiple agents write to the same context files concurrently
+(e.g., two developers adding learnings simultaneously), git merge
+conflicts are expected. Resolution is typically additive: accept both
+additions. Destructive resolution (dropping one side) loses context.
+
+### Team Conventions for Context Management
+
+Establish and document:
+
+* **Who reviews context changes**: Same reviewers as code, or a
+  designated context owner?
+* **How to resolve conflicting decisions**: If two sessions record
+  contradictory decisions, which wins? Default: the later one must
+  explicitly supersede the earlier one with rationale.
+* **Frequency of context maintenance**: Weekly `ctx drift` checks,
+  monthly consolidation passes, archival after each milestone.
+
 ## Checklist
 
 Before running an unattended AI agent:

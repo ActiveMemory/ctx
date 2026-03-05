@@ -585,6 +585,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -928,6 +936,126 @@
     
   
     Prompting Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/repeated-mistakes/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    My AI Keeps Making the Same Mistakes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/joining-a-project/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Joining a ctx Project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/keeping-ai-honest/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Keeping AI Honest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../home/faq/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-help-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
   
 
     
@@ -2074,6 +2202,17 @@
     <span class="md-ellipsis">
       
         Step 4: Archival and Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-health-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Health Flow
       
     </span>
   </a>
@@ -3598,6 +3737,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#knowledge-health-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Health Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#step-5-alignment-audits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4014,6 +4164,30 @@ But do not expect it from a cold start.</p>
 flags it as a staleness warning. Running <code>ctx drift --fix</code> archives completed
 tasks automatically. </p>
 <p>You can also run <code>/ctx-archive</code> to compact on demand.</p>
+<h3 id="knowledge-health-flow">Knowledge Health Flow<a class="headerlink" href="#knowledge-health-flow" title="Permanent link">&para;</a></h3>
+<p>Over time, LEARNINGS.md and DECISIONS.md accumulate entries that overlap
+or partially repeat each other. The <code>check-persistence</code> hook detects when
+entry counts exceed a configurable threshold and surfaces a nudge:</p>
+<blockquote>
+<p><em>"LEARNINGS.md has 25+ entries. Consider running /ctx-consolidate to
+merge overlapping items."</em></p>
+</blockquote>
+<p>The consolidation workflow:</p>
+<ol>
+<li><strong>Review</strong>: <code>/ctx-consolidate</code> groups entries by keyword similarity
+   and presents candidate merges for your approval.</li>
+<li><strong>Merge</strong>: Approved groups are combined into single entries that
+   preserve the key information from each original.</li>
+<li><strong>Archive</strong>: Originals move to <code>.context/archive/</code>, not deleted --
+   the full history is preserved in git and the archive directory.</li>
+<li><strong>Verify</strong>: Run <code>ctx drift</code> after consolidation to confirm no
+   cross-references were broken by the merge.</li>
+</ol>
+<p>This replaces ad-hoc cleanup with a repeatable, nudge-driven cycle:
+detect accumulation, review candidates, merge with approval, archive
+originals.</p>
+<p>See also: <a href="../knowledge-capture/">Knowledge Capture</a> for the recording
+workflow that feeds into this maintenance cycle.</p>
 <h3 id="step-5-alignment-audits">Step 5: Alignment Audits<a class="headerlink" href="#step-5-alignment-audits" title="Permanent link">&para;</a></h3>
 <p>A related problem is <strong>alignment drift</strong>: Documentation that makes claims about
 agent behavior not backed by actual playbook or skill instructions. </p>
