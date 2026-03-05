@@ -4,7 +4,22 @@
   <link href="https://ctx.ist/blog/"></link>
   <link href="https://ctx.ist/feed.xml" rel="self"></link>
   <id>https://ctx.ist/feed.xml</id>
-  <updated>2026-02-28T00:00:00Z</updated>
+  <updated>2026-03-04T00:00:00Z</updated>
+  <entry>
+    <title>Agent Memory Is Infrastructure</title>
+    <link href="https://ctx.ist/blog/2026-03-04-agent-memory-is-infrastructure/"></link>
+    <id>https://ctx.ist/blog/2026-03-04-agent-memory-is-infrastructure/</id>
+    <updated>2026-03-04T00:00:00Z</updated>
+    <summary>If the answer depends on which machine they&#39;re using, which</summary>
+    <author>
+      <name>Jose Alekhinne</name>
+    </author>
+    <category term="context engineering"></category>
+    <category term="agent memory"></category>
+    <category term="infrastructure"></category>
+    <category term="persistence"></category>
+    <category term="team knowledge"></category>
+  </entry>
   <entry>
     <title>The Last Question</title>
     <link href="https://ctx.ist/blog/2026-02-28-the-last-question/"></link>

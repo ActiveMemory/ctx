@@ -8,6 +8,7 @@
 title: "Agent Memory Is Infrastructure"
 date: 2026-03-04
 author: Jose Alekhinne
+reviewed_and_finalized: true
 topics:
   - context engineering
   - agent memory
