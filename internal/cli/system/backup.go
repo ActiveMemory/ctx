@@ -88,7 +88,7 @@ func runBackup(cmd *cobra.Command) error {
 		return fmt.Errorf("determine home directory: %w", homeErr)
 	}
 
-	// Parse SMB config if configured:
+	// Parse SMB config if configured.
 	smbURL := os.Getenv(config.EnvBackupSMBURL)
 	smbSubdir := os.Getenv(config.EnvBackupSMBSubdir)
 	var smb *smbConfig
@@ -137,7 +137,7 @@ func runBackup(cmd *cobra.Command) error {
 }
 
 func backupProject(
-		cmd *cobra.Command, home, timestamp string, smb *smbConfig,
+	cmd *cobra.Command, home, timestamp string, smb *smbConfig,
 ) (backupResult, error) {
 	cwd, cwdErr := os.Getwd()
 	if cwdErr != nil {
@@ -185,7 +185,7 @@ func backupProject(
 }
 
 func backupGlobal(
-		cmd *cobra.Command, home, timestamp string, smb *smbConfig,
+	cmd *cobra.Command, home, timestamp string, smb *smbConfig,
 ) (backupResult, error) {
 	archiveName := fmt.Sprintf("claude-global-backup-%s.tar.gz", timestamp)
 	archivePath := filepath.Join(os.TempDir(), archiveName)
@@ -220,7 +220,7 @@ func backupGlobal(
 
 // createArchive builds a tar.gz archive from the given entries.
 func createArchive(
-		archivePath string, entries []archiveEntry, cmd *cobra.Command,
+	archivePath string, entries []archiveEntry, cmd *cobra.Command,
 ) error {
 	outFile, createErr := os.Create(archivePath) //nolint:gosec // tmp path
 	if createErr != nil {
@@ -313,7 +313,7 @@ func addEntry(tw *tar.Writer, entry archiveEntry, cmd *cobra.Command) error {
 
 // addSingleFile writes a single file entry into the tar.
 func addSingleFile(
-		tw *tar.Writer, path, name string, info fs.FileInfo,
+	tw *tar.Writer, path, name string, info fs.FileInfo,
 ) error {
 	header, headerErr := tar.FileInfoHeader(info, "")
 	if headerErr != nil {
