@@ -30,6 +30,7 @@ func Default() *CtxRC {
 		ConventionLineCount: DefaultConventionLineCount,
 		InjectionTokenWarn:  DefaultInjectionTokenWarn,
 		ContextWindow:       DefaultContextWindow,
+		TaskNudgeInterval:   DefaultTaskNudgeInterval,
 	}
 }
 
@@ -221,6 +222,15 @@ func KeyRotationDays() int {
 		return cfg.Notify.KeyRotationDays
 	}
 	return DefaultKeyRotationDays
+}
+
+// TaskNudgeInterval returns the number of Edit/Write calls between task
+// completion nudges. Returns 0 if disabled.
+//
+// Returns:
+//   - int: Interval between nudges, or 0 if disabled
+func TaskNudgeInterval() int {
+	return RC().TaskNudgeInterval
 }
 
 // EventLog returns whether local hook event logging is enabled.

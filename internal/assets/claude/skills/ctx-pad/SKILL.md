@@ -128,10 +128,11 @@ When the user says "add" — check context:
 
 ## Important Notes
 
-- The encryption key (`~/.ctx/.ctx.key`)
-  must NEVER be printed to stdout or shown to the user
-- Do not attempt to read `scratchpad.enc` in the context directory
-  directly; always use `ctx pad`
+- Keep the encryption key path (`~/.ctx/.ctx.key`) internal to
+  `ctx pad` commands — exposing it grants full decryption access
+  to all pad entries
+- Always use `ctx pad` to access entries — reading `scratchpad.enc`
+  directly yields unreadable ciphertext
 - If the user gets a "no key" error, tell them to obtain the
   key file from a teammate
 - Entries are one-liners; do not add multi-line content

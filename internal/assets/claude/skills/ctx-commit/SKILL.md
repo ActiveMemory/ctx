@@ -80,7 +80,7 @@ If the committed files include source code that could affect
 documentation (Go files in `internal/cli/`, `internal/config/`,
 `internal/assets/`, `cmd/`), remind the user:
 
-> Source files changed — want me to run `/update-docs` to check
+> Source files changed — want me to run `/_ctx-update-docs` to check
 > for doc drift?
 
 Skip this prompt if:
@@ -123,16 +123,16 @@ the playbook template.
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-## What NOT to Do
+## Commit Discipline
 
-- **Don't commit without asking** — always confirm the commit
-  message with the user (or use their provided message)
-- **Don't skip the context prompt** — this is the whole point
+- **Confirm the message** with the user before committing (or use
+  their provided message)
+- **Always present the context prompt** — this is the whole point
   of the skill; without it, use raw git commit
-- **Don't force reflection** — suggest it only when warranted,
-  and accept "no" gracefully
-- **Don't commit secrets** — check for `.env`, credentials,
-  tokens in the diff
+- **Suggest reflection only when warranted** — and accept "no"
+  gracefully
+- **Check for secrets** (`.env`, credentials, tokens) in the diff
+  before staging
 
 ## Quality Checklist
 

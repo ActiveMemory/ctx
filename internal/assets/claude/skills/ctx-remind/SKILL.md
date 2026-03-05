@@ -20,7 +20,8 @@ command.
 - For structured tasks with status tracking (use `ctx add task`)
 - For sensitive values or quick notes (use `ctx pad`)
 - For architectural decisions (use `ctx add decision`)
-- Do NOT auto-create reminders — only when the user explicitly says "remind me"
+- Create a reminder only when the user explicitly says "remind me" —
+  for everything else, let the conversation proceed without creating records
 
 ## Command Mapping
 

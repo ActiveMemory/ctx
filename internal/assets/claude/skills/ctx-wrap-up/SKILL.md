@@ -93,7 +93,10 @@ Persist all? Or select which to keep?
 ### Phase 3: Persist approved candidates
 
 Wait for the user to approve, select, or modify candidates.
-**Never persist without explicit approval.**
+Wait for the user to approve each item before persisting —
+candidates proposed by the agent may be incomplete or
+mischaracterized, and the user is the final authority on what
+belongs in their context.
 
 For each approved candidate, run the appropriate command:
 

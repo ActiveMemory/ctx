@@ -156,7 +156,8 @@ ctx recall show <slug>
 ctx recall export --all
 ```
 This only exports new sessions — existing files are skipped.
-Then suggest enrichment (`/ctx-journal-enrich-all`) as a next step.
+If the user asks what to do next, mention that `/ctx-journal-enrich-all`
+can enrich the exported journals.
 
 **"Re-export sessions after a format improvement"**
 ```bash

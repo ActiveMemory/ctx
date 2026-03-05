@@ -58,6 +58,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
   block-non-path-ctx          Block non-PATH ctx invocations
   block-dangerous-commands    Block dangerous command patterns (project-local)
   check-backup-age            Backup staleness check (project-local)
+  check-task-completion       Task completion nudge after edits
   post-commit                 Post-commit context capture nudge
   qa-reminder                 QA reminder before completion
   specs-nudge                 Plan-to-specs directory nudge (PreToolUse)
@@ -82,6 +83,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		checkRemindersCmd(),
 		checkVersionCmd(),
 		blockNonPathCtxCmd(),
+		checkTaskCompletionCmd(),
 		postCommitCmd(),
 		qaReminderCmd(),
 		checkResourcesCmd(),

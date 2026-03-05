@@ -1299,3 +1299,168 @@ func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 		t.Error("--keep-frontmatter=false should imply --regenerate")
 	}
 }
+
+func TestRunRecallExport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-malformed",
+	)
+	createTestSessionJSONL(
+		t, projDir, "sess-malformed-030", "malformed-fm", "/home/test/malformed",
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export to create the file.
+	journalDir, mdFile := exportHelper(t, tmpDir)
+	path := filepath.Join(journalDir, mdFile)
+
+	// Overwrite with malformed YAML frontmatter (unclosed delimiter, invalid YAML).
+	malformedContent := "---\ndate: \"2026-01-20\"\ntitle: \"test\"\nsummary: [invalid yaml\n\n# Body\n\nSome content here\n"
+	if writeErr := os.WriteFile(path, []byte(malformedContent), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export with --regenerate --yes — should not crash.
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
+
+	data, readErr := os.ReadFile(filepath.Clean(path))
+	if readErr != nil {
+		t.Fatalf("read: %v", readErr)
+	}
+	content := string(data)
+
+	// The file should have valid content (regenerated from session data).
+	if !strings.Contains(content, "session_id:") {
+		t.Error("regenerated file should contain session_id in frontmatter")
+	}
+	if !strings.Contains(content, "hello from test") {
+		t.Error("regenerated file should contain session content")
+	}
+}
+
+// createLargeTestSessionJSONL writes a JSONL file with the specified number of
+// user/assistant message pairs for testing multipart splitting.
+func createLargeTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string, pairs int) {
+	t.Helper()
+	if err := os.MkdirAll(dir, 0750); err != nil {
+		t.Fatalf("mkdir %s: %v", dir, err)
+	}
+	var lines []string
+	for i := 0; i < pairs; i++ {
+		userUUID := fmt.Sprintf("u%d", i*2+1)
+		assistUUID := fmt.Sprintf("u%d", i*2+2)
+		ts := fmt.Sprintf("2026-01-20T10:%02d:%02dZ", i/60, i%60)
+
+		userLine := fmt.Sprintf(
+			`{"uuid":%q,"sessionId":%q,"slug":%q,"type":"user","timestamp":%q,"cwd":%q,"version":"2.1.0","message":{"role":"user","content":[{"type":"text","text":"message %d from user"}]}}`,
+			userUUID, sessionID, slug, ts, cwd, i+1,
+		)
+		assistLine := fmt.Sprintf(
+			`{"uuid":%q,"parentUuid":%q,"sessionId":%q,"slug":%q,"type":"assistant","timestamp":%q,"cwd":%q,"version":"2.1.0","message":{"model":"claude-test","role":"assistant","content":[{"type":"text","text":"reply %d from assistant"}],"usage":{"input_tokens":100,"output_tokens":50}}}`,
+			assistUUID, userUUID, sessionID, slug, ts, cwd, i+1,
+		)
+		lines = append(lines, userLine, assistLine)
+	}
+	content := strings.Join(lines, "\n") + "\n"
+	file := filepath.Join(dir, sessionID+".jsonl")
+	if writeErr := os.WriteFile(file, []byte(content), 0600); writeErr != nil {
+		t.Fatalf("write %s: %v", file, writeErr)
+	}
+}
+
+func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+
+	projDir := filepath.Join(
+		tmpDir, ".claude", "projects", "-home-test-multipart",
+	)
+	// 110 pairs = 220 messages, exceeding maxMessagesPerPart (200) → 2 parts.
+	createLargeTestSessionJSONL(
+		t, projDir, "sess-multi-031", "multipart-fm", "/home/test/multipart", 110,
+	)
+
+	contextDir := filepath.Join(tmpDir, ".context")
+	if err := os.MkdirAll(contextDir, 0750); err != nil {
+		t.Fatal(err)
+	}
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// First export — should produce 2 files (part 1 and part 2).
+	journalDir, _ := exportHelper(t, tmpDir)
+
+	entries, readErr := os.ReadDir(journalDir)
+	if readErr != nil {
+		t.Fatalf("read journal dir: %v", readErr)
+	}
+	var mdFiles []string
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".md") {
+			mdFiles = append(mdFiles, e.Name())
+		}
+	}
+	if len(mdFiles) < 2 {
+		t.Fatalf("expected at least 2 .md files for multipart export, got %d: %v", len(mdFiles), mdFiles)
+	}
+
+	// Inject enriched frontmatter into part 1 (the base file without -p2 suffix).
+	part1Path := filepath.Join(journalDir, mdFiles[0])
+	origData, readErr := os.ReadFile(filepath.Clean(part1Path))
+	if readErr != nil {
+		t.Fatalf("read part1: %v", readErr)
+	}
+	origTitle := extractFrontmatterField(string(origData), "title")
+
+	enrichedFM := fmt.Sprintf(
+		"---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"Multipart curated summary\"\ntags:\n  - multipart-enriched\n---\n",
+		origTitle,
+	)
+	body := stripFrontmatter(string(origData))
+	if writeErr := os.WriteFile(part1Path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	// Re-export with --regenerate --yes.
+	exportHelper(t, tmpDir, "--regenerate", "--yes")
+
+	// Verify part 1 preserved enriched frontmatter.
+	data, readErr := os.ReadFile(filepath.Clean(part1Path))
+	if readErr != nil {
+		t.Fatalf("read part1 after re-export: %v", readErr)
+	}
+	content := string(data)
+
+	if !strings.Contains(content, "Multipart curated summary") {
+		t.Error("part 1 enriched frontmatter summary should be preserved on re-export")
+	}
+	if !strings.Contains(content, "multipart-enriched") {
+		t.Error("part 1 enriched frontmatter tags should be preserved on re-export")
+	}
+
+	// Verify part 2 still exists and has valid content.
+	part2Path := filepath.Join(journalDir, mdFiles[1])
+	data2, readErr := os.ReadFile(filepath.Clean(part2Path))
+	if readErr != nil {
+		t.Fatalf("read part2 after re-export: %v", readErr)
+	}
+	if !strings.Contains(string(data2), "session_id:") {
+		t.Error("part 2 should contain session_id in frontmatter")
+	}
+}

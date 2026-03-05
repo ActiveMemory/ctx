@@ -114,6 +114,13 @@ cloud-deploy/
     └── azure.md
 ```
 
+## Reference Material
+
+Read `references/anthropic-best-practices.md` from this skill's
+directory before creating or evaluating a skill. It contains
+condensed Anthropic prompting best practices covering clarity,
+positive framing, examples, XML structure, and common pitfalls.
+
 ## Writing Guide
 
 ### Output Formats

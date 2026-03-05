@@ -88,5 +88,7 @@ func runPostCommit(cmd *cobra.Command, stdin *os.File) error {
 	_ = notify.Send("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID, ref)
 	eventlog.Append("relay", "post-commit: Commit succeeded, context capture offered", input.SessionID, ref)
 
+	checkVersionDrift(cmd, sessionID)
+
 	return nil
 }

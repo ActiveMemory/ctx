@@ -174,9 +174,12 @@ or too narrow (misses common phrasings).
 ### Batch Audit
 
 1. List all skills to audit (bundled, live, or both).
-2. Audit each skill, but report concisely — only dimensions
-   that fail or have notable findings.
-3. Summarize with a scorecard at the end.
+2. Audit each skill directly in the main conversation —
+   spawning one subagent per skill adds latency and context
+   overhead that outweighs parallelism for typical batch sizes.
+3. Report concisely — only dimensions that fail or have notable
+   findings.
+4. Summarize with a scorecard at the end.
 
 ## Output Format
 

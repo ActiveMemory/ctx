@@ -35,7 +35,9 @@ Run the relevant verification command before claiming a result.
 4. **Read** the full output; check exit code, count failures
 5. **Report** actual results with evidence
 
-Never reuse output from a previous run. Always run fresh.
+Run the verification command fresh each time — reusing earlier output
+is unreliable because code changes between runs and stale results
+have caused false confidence.
 
 ## Claim-to-Evidence Map
 
@@ -103,10 +105,11 @@ Weak criteria ("make it work") require constant clarification.
 - "Tests passed earlier" (stale result; code changed since)
 - "The build works" (did you actually run it?)
 
-## Relationship to /ctx-qa
+## Relationship to QA
 
-`/ctx-qa` tells you *what to run*. `/ctx-verify` reminds you to
-*actually run it* before claiming the result.
+A companion QA skill (if installed) tells you *what to run*.
+`/ctx-verify` reminds you to *actually run it* before claiming
+the result.
 
 ## Quality Checklist
 

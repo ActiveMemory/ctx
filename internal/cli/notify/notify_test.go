@@ -8,12 +8,15 @@ package notify
 
 import (
 	"bytes"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -139,5 +142,121 @@ func TestMaskURL(t *testing.T) {
 		if got != tc.want {
 			t.Errorf("maskURL(%q) = %q, want %q", tc.input, got, tc.want)
 		}
+	}
+}
+
+func TestSetup_EmptyInput(t *testing.T) {
+	_, cleanup := setupCLITest(t)
+	defer cleanup()
+
+	tmpFile, createErr := os.CreateTemp("", "notify-stdin-empty-*")
+	if createErr != nil {
+		t.Fatal(createErr)
+	}
+	defer func() { _ = os.Remove(tmpFile.Name()) }()
+
+	// Write only a newline so the scanner reads an empty line.
+	_, _ = tmpFile.WriteString("\n")
+	_, _ = tmpFile.Seek(0, 0)
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	setupErr := runSetup(cmd, tmpFile)
+	if setupErr == nil {
+		t.Fatal("expected error for empty webhook URL input")
+	}
+	if !strings.Contains(setupErr.Error(), "empty") {
+		t.Errorf("error = %q, want mention of 'empty'", setupErr.Error())
+	}
+}
+
+func TestTest_NoWebhookConfigured(t *testing.T) {
+	_, cleanup := setupCLITest(t)
+	defer cleanup()
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"test"})
+
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	execErr := cmd.Execute()
+	if execErr != nil {
+		t.Fatalf("Execute() error = %v", execErr)
+	}
+
+	output := buf.String()
+	if !strings.Contains(strings.ToLower(output), "no webhook") {
+		t.Errorf("output = %q, want mention of 'no webhook'", output)
+	}
+}
+
+func TestTest_WebhookSuccess(t *testing.T) {
+	_, cleanup := setupCLITest(t)
+	defer cleanup()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	// Save the test server URL as the webhook.
+	if saveErr := notifylib.SaveWebhook(server.URL); saveErr != nil {
+		t.Fatalf("SaveWebhook() error = %v", saveErr)
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"test"})
+
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	execErr := cmd.Execute()
+	if execErr != nil {
+		t.Fatalf("Execute() error = %v", execErr)
+	}
+
+	output := buf.String()
+	if !strings.Contains(output, "200") {
+		t.Errorf("output = %q, want mention of HTTP 200", output)
+	}
+	if !strings.Contains(output, "working") {
+		t.Errorf("output = %q, want mention of 'working'", output)
+	}
+}
+
+func TestTest_WebhookServerError(t *testing.T) {
+	_, cleanup := setupCLITest(t)
+	defer cleanup()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer server.Close()
+
+	if saveErr := notifylib.SaveWebhook(server.URL); saveErr != nil {
+		t.Fatalf("SaveWebhook() error = %v", saveErr)
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"test"})
+
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+
+	execErr := cmd.Execute()
+	if execErr != nil {
+		t.Fatalf("Execute() error = %v", execErr)
+	}
+
+	output := buf.String()
+	if !strings.Contains(output, "500") {
+		t.Errorf("output = %q, want mention of HTTP 500", output)
 	}
 }

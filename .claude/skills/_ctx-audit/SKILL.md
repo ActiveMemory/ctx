@@ -1,6 +1,6 @@
 ---
 name: _ctx-audit
-description: "Detect and fix code-level drift. Use after YOLO sprints, before releases, or when the 3:1 consolidation ratio is due."
+description: "Run a code-level convention audit across the codebase. Use when checking for naming drift, magic strings, dead exports, and doc alignment before a release or after a heavy development session."
 ---
 
 Run a code-level consolidation pass on the ctx codebase. This
@@ -56,7 +56,7 @@ Convention: no `Is`/`Has`/`Can` prefixes on exported bool-returning methods.
 rg '^\s*func\s+\([^)]+\)\s+(Is|Has|Can)[A-Z]\w*\(' --type go -l
 ```
 
-Accepted exceptions (do NOT flag these):
+Mark these as accepted exceptions:
 - `IsUser()`, `IsAssistant()` on `Message`: dropping `Is` makes
   these look like getters (`msg.User()` reads as "get user?").
   The prefix earns its keep.
@@ -218,7 +218,7 @@ clues that the scope expanded or shifted.
 
 Documentation links drift when pages are renamed, moved, or deleted.
 
-Invoke the `/ctx-check-links` skill to scan all `docs/` markdown files for:
+Run `/ctx-check-links` (if installed) to scan all `docs/` markdown files for:
 
 - **Internal links** pointing to files that don't exist
 - **External links** that return errors (reported as warnings, not failures)
@@ -374,7 +374,8 @@ When consolidating would change public API:
 3. Migrate callers incrementally
 4. Delete old function when no callers remain
 
-Never bulk-rename in a single commit if callers span packages.
+Avoid bulk-renaming across packages in a single commit — it makes
+bisecting regressions and reviewing diffs significantly harder.
 
 ## Output Format
 
@@ -399,11 +400,11 @@ After running checks, report:
 
 | Skill          | Scope                                     |
 |----------------|-------------------------------------------|
-| `/_ctx-qa`          | Build/test/lint; this checks conventions  |
-| `/ctx-verify`       | Confirms claims; use after fixing findings|
-| `/_ctx-update-docs` | Syncs docs with code; run after changes   |
-| `ctx drift`         | Checks `.context/` files; this checks `.go` |
-| `/ctx-check-links`  | Dead doc links; invoked as check #12      |
+| `/_ctx-qa`          | Build/test/lint; this checks conventions   |
+| `/ctx-verify`       | Confirms claims; use after fixing findings |
+| `/_ctx-update-docs` | Syncs docs with code; run after changes    |
+| `ctx drift`         | Checks `.context/` files; this checks `.go`|
+| `/ctx-check-links`  | Dead doc links; run as check #12           |
 
 ## Quality Checklist
 

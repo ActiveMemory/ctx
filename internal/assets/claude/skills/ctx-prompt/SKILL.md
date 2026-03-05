@@ -1,6 +1,6 @@
 ---
 name: ctx-prompt
-description: "Use and manage reusable prompt templates. Lightweight alternative to full skills for common tasks."
+description: "Apply, list, and manage saved prompt templates from .context/prompts/. Use when the user asks to apply, list, or create a reusable template like code-review or refactor."
 allowed-tools: Bash(ctx:*)
 ---
 

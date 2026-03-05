@@ -81,6 +81,11 @@
   description: Context window usage warning (>80%)
   vars: [TokenCount, Percentage]
 
+- hook: check-task-completion
+  variant: nudge
+  category: customizable
+  description: Task completion nudge after edits
+
 - hook: check-journal
   variant: both
   category: customizable
@@ -145,6 +150,12 @@
   variant: nudge
   category: customizable
   description: Post-commit context capture nudge
+
+- hook: version-drift
+  variant: nudge
+  category: customizable
+  description: Version file drift nudge after commit
+  vars: [FileVersion, PluginVersion, MarketplaceVersion]
 
 - hook: qa-reminder
   variant: gate

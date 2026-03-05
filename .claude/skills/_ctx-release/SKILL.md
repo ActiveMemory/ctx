@@ -13,7 +13,9 @@ All three prerequisites must be true:
 2. **`dist/RELEASE_NOTES.md`** exists (generate with `/_ctx-release-notes`)
 3. **Working tree is clean** (all changes committed)
 
-If any prerequisite fails, stop and tell the user what to fix.
+If any prerequisite fails, stop — running the release script with
+missing notes or a dirty tree can produce an incomplete or unsigned
+tag that must be manually deleted.
 
 ## When to Use
 
