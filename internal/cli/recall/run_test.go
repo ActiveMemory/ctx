@@ -1464,3 +1464,23 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 		t.Error("part 2 should contain session_id in frontmatter")
 	}
 }
+
+func TestParseDate(t *testing.T) {
+	tests := []struct {
+		input   string
+		wantErr bool
+	}{
+		{"2026-03-05", false},
+		{"2026-01-01", false},
+		{"", false},
+		{"not-a-date", true},
+		{"2026/03/05", true},
+		{"03-05-2026", true},
+	}
+	for _, tt := range tests {
+		_, err := parseDate(tt.input)
+		if (err != nil) != tt.wantErr {
+			t.Errorf("parseDate(%q): err=%v, wantErr=%v", tt.input, err, tt.wantErr)
+		}
+	}
+}

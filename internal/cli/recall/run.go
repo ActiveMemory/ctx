@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -21,6 +22,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
+
+// parseDate parses a YYYY-MM-DD string into a time.Time at midnight UTC.
+func parseDate(s string) (time.Time, error) {
+	if s == "" {
+		return time.Time{}, nil
+	}
+	return time.Parse("2006-01-02", s)
+}
 
 // exportOpts holds all flag values for the export command.
 type exportOpts struct {
@@ -469,7 +478,21 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 //
 // Returns:
 //   - error: Non-nil if session scanning fails
-func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProjects bool) error {
+func runRecallList(cmd *cobra.Command, limit int, project, tool, since, until string, allProjects bool) error {
+	// Parse date filters
+	sinceTime, sinceErr := parseDate(since)
+	if since != "" && sinceErr != nil {
+		return fmt.Errorf("invalid --since date %q (expected YYYY-MM-DD): %w", since, sinceErr)
+	}
+	untilTime, untilErr := parseDate(until)
+	if until != "" && untilErr != nil {
+		return fmt.Errorf("invalid --until date %q (expected YYYY-MM-DD): %w", until, untilErr)
+	}
+	// --until is inclusive: advance to end of day
+	if until != "" && untilErr == nil {
+		untilTime = untilTime.Add(24*time.Hour - time.Second)
+	}
+
 	sessions, err := findSessions(allProjects)
 	if err != nil {
 		return fmt.Errorf("failed to find sessions: %w", err)
@@ -494,6 +517,12 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool string, allProje
 			continue
 		}
 		if tool != "" && s.Tool != tool {
+			continue
+		}
+		if since != "" && s.StartTime.Before(sinceTime) {
+			continue
+		}
+		if until != "" && s.StartTime.After(untilTime) {
 			continue
 		}
 		filtered = append(filtered, s)

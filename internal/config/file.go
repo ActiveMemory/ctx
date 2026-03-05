@@ -223,6 +223,14 @@ const (
 	FileReminders = "reminders.json"
 )
 
+// Memory bridge file constants for .context/memory/ directory.
+const (
+	// FileMemoryMirror is the raw copy of Claude Code's MEMORY.md.
+	FileMemoryMirror = "mirror.md"
+	// FileMemoryState is the sync/import tracking state file.
+	FileMemoryState = "memory-import.json"
+)
+
 // Event log constants for .context/state/ directory.
 const (
 	// FileEventLog is the current event log file.

@@ -1,0 +1,8 @@
+# Auto Memory
+
+## Key patterns
+- ctx uses .context/ for persistence
+- Always use ctx from PATH
+
+- new learning: memory bridge works
+- another line

@@ -97,6 +97,9 @@
         <loc>https://ctx.ist/recipes/scratchpad-sync/</loc>
       </url>
       <url>
+        <loc>https://ctx.ist/recipes/memory-bridge/</loc>
+      </url>
+      <url>
         <loc>https://ctx.ist/recipes/hook-output-patterns/</loc>
       </url>
       <url>
@@ -134,6 +137,9 @@
       </url>
       <url>
         <loc>https://ctx.ist/recipes/parallel-worktrees/</loc>
+      </url>
+      <url>
+        <loc>https://ctx.ist/recipes/prompt-templates/</loc>
       </url>
       <url>
         <loc>https://ctx.ist/cli/</loc>

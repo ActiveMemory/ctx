@@ -66,6 +66,7 @@ own guards and no-op gracefully.
 | [`ctx watch`](tools.md#ctx-watch)               | Auto-apply context updates from AI output              |
 | [`ctx hook`](tools.md#ctx-hook)                 | Generate AI tool integration configs                   |
 | [`ctx loop`](tools.md#ctx-loop)                 | Generate autonomous loop script                        |
+| [`ctx memory`](tools.md#ctx-memory)             | Bridge Claude Code auto memory into .context/          |
 | [`ctx notify`](tools.md#ctx-notify)             | Send webhook notifications                             |
 | [`ctx changes`](tools.md#ctx-changes)           | Show what changed since last session                   |
 | [`ctx deps`](tools.md#ctx-deps)                 | Show package dependency graph                          |

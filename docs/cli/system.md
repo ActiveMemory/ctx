@@ -360,6 +360,40 @@ ctx system stats --follow --session abc12345
 
 **See also**: [Auditing System Hooks](../recipes/system-hooks-audit.md)
 
+#### `ctx system prune`
+
+Clean stale per-session state files from `.context/state/`. Session hooks
+write tombstone files (context-check, heartbeat, persistence-nudge, etc.)
+that accumulate ~6-8 files per session with no automatic cleanup.
+
+```bash
+ctx system prune [flags]
+```
+
+**Flags**:
+
+| Flag     | Type | Default | Description                              |
+|----------|------|---------|------------------------------------------|
+| `--days` | int  | `7`     | Prune files older than this many days    |
+| `--dry-run` | bool | `false` | Show what would be pruned without deleting |
+
+Files are identified as session-scoped by UUID suffix (e.g.
+`heartbeat-a1b2c3d4-...`). Global files without UUIDs (`events.jsonl`,
+`memory-import.json`, etc.) are always preserved.
+
+!!! note "Safe to run anytime"
+    The worst outcome of pruning is a hook re-firing its nudge in the
+    next session. No context files, decisions, or learnings are stored
+    in the state directory.
+
+**Examples**:
+
+```bash
+ctx system prune                # Prune files older than 7 days
+ctx system prune --days 3       # More aggressive cleanup
+ctx system prune --dry-run      # Preview what would be removed
+```
+
 ---
 
 #### `ctx system mark-journal`
