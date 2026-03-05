@@ -128,17 +128,17 @@ func (s *Server) toolStatus(id json.RawMessage) *Response {
 	}
 
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("Context: %s\n", ctx.Dir))
-	sb.WriteString(fmt.Sprintf("Files: %d\n", len(ctx.Files)))
-	sb.WriteString(fmt.Sprintf("Tokens: ~%d\n\n", ctx.TotalTokens))
+	fmt.Fprintf(&sb, "Context: %s\n", ctx.Dir)
+	fmt.Fprintf(&sb, "Files: %d\n", len(ctx.Files))
+	fmt.Fprintf(&sb, "Tokens: ~%d\n\n", ctx.TotalTokens)
 
 	for _, f := range ctx.Files {
 		status := "OK"
 		if f.IsEmpty {
 			status = "EMPTY"
 		}
-		sb.WriteString(fmt.Sprintf("  %-22s %6d tokens  [%s]\n",
-			f.Name, f.Tokens, status))
+		fmt.Fprintf(&sb, "  %-22s %6d tokens  [%s]\n",
+			f.Name, f.Tokens, status)
 	}
 
 	return s.toolOK(id, sb.String())
@@ -189,7 +189,7 @@ func (s *Server) toolAdd(
 		return s.toolError(id, fmt.Sprintf("write failed: %v", wErr))
 	}
 
-	fileName, _ := config.FileType[strings.ToLower(entryType)]
+	fileName := config.FileType[strings.ToLower(entryType)]
 	return s.toolOK(id, fmt.Sprintf("Added %s to %s", entryType, fileName))
 }
 
@@ -273,13 +273,13 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 	report := drift.Detect(ctx)
 
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("Status: %s\n\n", report.Status()))
+	fmt.Fprintf(&sb, "Status: %s\n\n", report.Status())
 
 	if len(report.Violations) > 0 {
 		sb.WriteString("Violations:\n")
 		for _, v := range report.Violations {
-			sb.WriteString(fmt.Sprintf("  - [%s] %s: %s\n",
-				v.Type, v.File, v.Message))
+			fmt.Fprintf(&sb, "  - [%s] %s: %s\n",
+				v.Type, v.File, v.Message)
 		}
 		sb.WriteString("\n")
 	}
@@ -287,8 +287,8 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 	if len(report.Warnings) > 0 {
 		sb.WriteString("Warnings:\n")
 		for _, w := range report.Warnings {
-			sb.WriteString(fmt.Sprintf("  - [%s] %s: %s\n",
-				w.Type, w.File, w.Message))
+			fmt.Fprintf(&sb, "  - [%s] %s: %s\n",
+				w.Type, w.File, w.Message)
 		}
 		sb.WriteString("\n")
 	}
@@ -296,7 +296,7 @@ func (s *Server) toolDrift(id json.RawMessage) *Response {
 	if len(report.Passed) > 0 {
 		sb.WriteString("Passed:\n")
 		for _, p := range report.Passed {
-			sb.WriteString(fmt.Sprintf("  - %s\n", p))
+			fmt.Fprintf(&sb, "  - %s\n", p)
 		}
 	}
 

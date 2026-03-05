@@ -75,7 +75,7 @@ func (s *Server) Serve() error {
 			s.writeError(nil, errCodeInternal, "failed to marshal response")
 			continue
 		}
-		fmt.Fprintf(s.out, "%s\n", out)
+		_, _ = fmt.Fprintf(s.out, "%s\n", out) //nolint:gosec // G705: stdout, not HTTP response
 	}
 
 	return scanner.Err()
@@ -168,6 +168,6 @@ func (s *Server) error(id json.RawMessage, code int, msg string) *Response {
 func (s *Server) writeError(id json.RawMessage, code int, msg string) {
 	resp := s.error(id, code, msg)
 	if out, err := json.Marshal(resp); err == nil {
-		fmt.Fprintf(s.out, "%s\n", out)
+		_, _ = fmt.Fprintf(s.out, "%s\n", out) //nolint:gosec // G705: stdout, not HTTP response
 	}
 }

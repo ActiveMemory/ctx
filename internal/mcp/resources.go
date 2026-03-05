@@ -126,7 +126,7 @@ func (s *Server) readAgentPacket(
 		if f == nil || f.IsEmpty {
 			continue
 		}
-		sb.WriteString(fmt.Sprintf("---\n## %s\n\n", fileName))
+		fmt.Fprintf(&sb, "---\n## %s\n\n", fileName)
 		sb.WriteString(string(f.Content))
 		sb.WriteString("\n\n")
 	}
