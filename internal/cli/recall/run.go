@@ -141,7 +141,7 @@ func planExport(
 		slug, title := titleSlug(s, existingTitle)
 
 		baseFilename := formatJournalFilename(s, slug)
-		baseName := strings.TrimSuffix(baseFilename, ".md")
+		baseName := strings.TrimSuffix(baseFilename, config.ExtMarkdown)
 
 		// Detect renames (dedup: old slug → new slug).
 		if oldFile := lookupSessionFile(sessionIndex, s.ID); oldFile != "" {
@@ -237,7 +237,7 @@ func printExportSummary(cmd *cobra.Command, plan exportPlan, isDryRun bool) {
 		cmd.Println("Nothing to export.")
 		return
 	}
-	cmd.Printf("%s %s.\n", verb, strings.Join(parts, ", "))
+	cmd.Println(fmt.Sprintf("%s %s.", verb, strings.Join(parts, ", ")))
 }
 
 // confirmExport prints the plan summary and prompts for confirmation.
@@ -297,7 +297,7 @@ func executeExport(
 			existing, readErr := os.ReadFile(filepath.Clean(fa.path))
 			if readErr == nil {
 				if fm := extractFrontmatter(string(existing)); fm != "" {
-					content = fm + "\n" + stripFrontmatter(content)
+					content = fm + config.NewlineLF + stripFrontmatter(content)
 				}
 			}
 		}
@@ -312,16 +312,16 @@ func executeExport(
 
 		// Write file.
 		if err := os.WriteFile(fa.path, []byte(content), config.PermFile); err != nil {
-			cmd.PrintErrf("  %s failed to write %s: %v\n", yellow("!"), fa.filename, err)
+			cmd.PrintErrln(fmt.Sprintf("  %s failed to write %s: %v", yellow("!"), fa.filename, err))
 			continue
 		}
 
 		jstate.MarkExported(fa.filename)
 
 		if fileExists && !discard {
-			cmd.Printf("  %s %s (updated, frontmatter preserved)\n", green("✓"), fa.filename)
+			cmd.Println(fmt.Sprintf("  %s %s (updated, frontmatter preserved)", green("✓"), fa.filename))
 		} else {
-			cmd.Printf("  %s %s\n", green("✓"), fa.filename)
+			cmd.Println(fmt.Sprintf("  %s %s", green("✓"), fa.filename))
 		}
 	}
 
@@ -376,10 +376,10 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 			return fmt.Errorf("session not found: %s", args[0])
 		}
 		if len(toExport) > 1 {
-			cmd.PrintErrf("Multiple sessions match '%s':\n", args[0])
+			cmd.PrintErrln(fmt.Sprintf("Multiple sessions match '%s':", args[0]))
 			for _, m := range toExport {
-				cmd.PrintErrf("  %s (%s) - %s\n",
-					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04"))
+				cmd.PrintErrln(fmt.Sprintf("  %s (%s) - %s",
+					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04")))
 			}
 			return fmt.Errorf("ambiguous query, use a more specific ID")
 		}
@@ -433,19 +433,19 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 
 	// 11. Persist journal state.
 	if err := jstate.Save(journalDir); err != nil {
-		cmd.PrintErrf("warning: failed to save journal state: %v\n", err)
+		cmd.PrintErrln(fmt.Sprintf("warning: failed to save journal state: %v", err))
 	}
 
 	// 12. Print final summary.
 	cmd.Println()
 	if exported > 0 {
-		cmd.Printf("Exported %d new session(s) to %s\n", exported, journalDir)
+		cmd.Println(fmt.Sprintf("Exported %d new session(s) to %s", exported, journalDir))
 	}
 	if updated > 0 {
-		cmd.Printf("Updated %d existing session(s) (YAML frontmatter preserved)\n", updated)
+		cmd.Println(fmt.Sprintf("Updated %d existing session(s) (YAML frontmatter preserved)", updated))
 	}
 	if renamed > 0 {
-		cmd.Printf("Renamed %d session(s) to title-based filenames\n", renamed)
+		cmd.Println(fmt.Sprintf("Renamed %d session(s) to title-based filenames", renamed))
 	}
 	dim := color.New(color.FgHiBlack)
 	if skipped > 0 {

@@ -9,6 +9,7 @@
 package sysinfo
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -54,7 +55,7 @@ func parseVMStat(output string, totalBytes uint64) uint64 {
 	var pageSize uint64 = 16384 // default on Apple Silicon
 	pages := make(map[string]uint64)
 
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(output, config.NewlineLF) {
 		if strings.Contains(line, "page size of") {
 			for _, word := range strings.Fields(line) {
 				if n, err := strconv.ParseUint(word, 10, 64); err == nil && n > 0 {

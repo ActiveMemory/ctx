@@ -75,7 +75,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		if ralph {
 			mode = " (ralph mode)"
 		}
-		cmd.Printf("  %s %s%s\n", green("✓"), config.FilePromptMd, mode)
+		cmd.Println(fmt.Sprintf("  %s %s%s", green("✓"), config.FilePromptMd, mode))
 		return nil
 	}
 
@@ -86,10 +86,10 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if hasCtxMarkers {
 		// Already has ctx content
 		if !force {
-			cmd.Printf(
+			cmd.Println(fmt.Sprintf(
 				"  %s %s (ctx content exists, skipped)\n", yellow("○"),
 				config.FilePromptMd,
-			)
+			))
 			return nil
 		}
 		// Force update: replace the existing ctx section
@@ -99,9 +99,9 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	// No ctx markers: need to merge
 	if !autoMerge {
 		// Prompt user
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"\n%s exists but has no ctx content.\n", config.FilePromptMd,
-		)
+		))
 		cmd.Println(
 			"Would you like to merge ctx prompt instructions?",
 		)
@@ -113,7 +113,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != "y" && response != "yes" { //nolint:goconst // trivial user input check
-			cmd.Printf("  %s %s (skipped)\n", yellow("○"), config.FilePromptMd)
+			cmd.Println(fmt.Sprintf("  %s %s (skipped)", yellow("○"), config.FilePromptMd))
 			return nil
 		}
 	}
@@ -124,7 +124,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
-	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
+	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
 
 	// Find the best insertion point (after the H1 title, or at the top)
 	insertPos := findInsertionPoint(existingStr)
@@ -133,11 +133,11 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	var mergedContent string
 	if insertPos == 0 {
 		// Insert at top
-		mergedContent = string(templateContent) + "\n" + existingStr
+		mergedContent = string(templateContent) + config.NewlineLF + existingStr
 	} else {
 		// Insert after H1 heading
-		mergedContent = existingStr[:insertPos] + "\n" +
-			string(templateContent) + "\n" + existingStr[insertPos:]
+		mergedContent = existingStr[:insertPos] + config.NewlineLF +
+			string(templateContent) + config.NewlineLF + existingStr[insertPos:]
 	}
 
 	if err := os.WriteFile(
@@ -145,7 +145,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		return fmt.Errorf(
 			"failed to write merged %s: %w", config.FilePromptMd, err)
 	}
-	cmd.Printf("  %s %s (merged)\n", green("✓"), config.FilePromptMd)
+	cmd.Println(fmt.Sprintf("  %s %s (merged)", green("✓"), config.FilePromptMd))
 
 	return nil
 }
@@ -198,16 +198,16 @@ func updatePromptSection(
 	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
-	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
+	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
 
 	if err := os.WriteFile(
 		config.FilePromptMd, []byte(newContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to update %s: %w", config.FilePromptMd, err)
 	}
-	cmd.Printf(
+	cmd.Println(fmt.Sprintf(
 		"  %s %s (updated prompt section)\n", green("✓"), config.FilePromptMd,
-	)
+	))
 
 	return nil
 }

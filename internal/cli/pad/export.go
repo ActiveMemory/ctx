@@ -76,27 +76,27 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 				ts := fmt.Sprintf("%d", time.Now().Unix())
 				newName := ts + "-" + label
 				if dryRun {
-					cmd.Printf("  %s → %s (exists)\n", label, filepath.Join(dir, newName))
+					cmd.Println(fmt.Sprintf("  %s → %s (exists)", label, filepath.Join(dir, newName)))
 					count++
 					continue
 				}
 				outPath = filepath.Join(dir, newName)
-				cmd.Printf("  ! %s exists, writing as %s\n", label, newName)
+				cmd.Println(fmt.Sprintf("  ! %s exists, writing as %s", label, newName))
 			}
 		}
 
 		if dryRun {
-			cmd.Printf("  %s → %s\n", label, outPath)
+			cmd.Println(fmt.Sprintf("  %s → %s", label, outPath))
 			count++
 			continue
 		}
 
 		if err := os.WriteFile(outPath, data, 0o600); err != nil {
-			cmd.PrintErrf("  ! failed to write %s: %v\n", label, err)
+			cmd.PrintErrln(fmt.Sprintf("  ! failed to write %s: %v", label, err))
 			continue
 		}
 
-		cmd.Printf("  + %s\n", label)
+		cmd.Println(fmt.Sprintf("  + %s", label))
 		count++
 	}
 
@@ -109,6 +109,6 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 	if dryRun {
 		verb = "Would export"
 	}
-	cmd.Printf("%s %d blobs.\n", verb, count)
+	cmd.Println(fmt.Sprintf("%s %d blobs.", verb, count))
 	return nil
 }

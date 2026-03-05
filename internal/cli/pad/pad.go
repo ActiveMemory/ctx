@@ -76,7 +76,7 @@ func runList(cmd *cobra.Command) error {
 	}
 
 	for i, entry := range entries {
-		cmd.Printf("  %d. %s\n", i+1, displayEntry(entry))
+		cmd.Println(fmt.Sprintf("  %d. %s", i+1, displayEntry(entry)))
 	}
 
 	return nil

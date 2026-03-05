@@ -104,7 +104,7 @@ func outputEventsHuman(cmd *cobra.Command, events []notify.Payload) error {
 		ts := formatEventTimestamp(e.Timestamp)
 		hookName := extractHookName(e)
 		msg := truncateMessage(e.Message, 60)
-		cmd.Printf("%-19s  %-5s  %-24s  %s\n", ts, e.Event, hookName, msg)
+		cmd.Println(fmt.Sprintf("%-19s  %-5s  %-24s  %s", ts, e.Event, hookName, msg))
 	}
 	return nil
 }

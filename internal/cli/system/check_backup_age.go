@@ -91,7 +91,7 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 	// Build pre-formatted warnings for the template variable
 	var warningText string
 	for _, w := range warnings {
-		warningText += w + "\n"
+		warningText += w + config.NewlineLF
 	}
 
 	content := loadMessage("check-backup-age", "warning",
@@ -105,7 +105,7 @@ func runCheckBackupAge(cmd *cobra.Command, stdin *os.File) error {
 		"┌─ Backup Warning ──────────────────────────────────\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "│ " + line + "\n"
+		msg += "│ " + line + config.NewlineLF
 	}
 	msg += config.NudgeBoxBottom
 	cmd.Println(msg)

@@ -248,7 +248,7 @@ Run 'ctx agent' for AI-ready context packet.
 		cmd.Println(green("```"))
 
 	default:
-		cmd.Printf("Unknown tool: %s\n\n", tool)
+		cmd.Println(fmt.Sprintf("Unknown tool: %s\n", tool))
 		cmd.Println("Supported tools:")
 		cmd.Println("  claude-code  - Anthropic's Claude Code CLI (use plugin instead)")
 		cmd.Println("  cursor       - Cursor IDE")

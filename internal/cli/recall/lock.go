@@ -168,7 +168,7 @@ func runLockUnlock(
 		path := filepath.Join(journalDir, filename)
 		updateLockFrontmatter(path, lock)
 
-		cmd.Printf("  %s %s (%s)\n", green("✓"), filename, verb)
+		cmd.Println(fmt.Sprintf("  %s %s (%s)", green("✓"), filename, verb))
 		count++
 	}
 
@@ -177,9 +177,9 @@ func runLockUnlock(
 	}
 
 	if count == 0 {
-		cmd.Printf("No changes — all matched entries already %s.\n", verb)
+		cmd.Println(fmt.Sprintf("No changes — all matched entries already %s.", verb))
 	} else {
-		cmd.Printf("\n%s %d entry(s).\n", strings.Title(verb), count) //nolint:staticcheck // strings.Title is fine for single words
+		cmd.Println(fmt.Sprintf("\n%s %d entry(s).", strings.Title(verb), count)) //nolint:staticcheck // strings.Title is fine for single words
 	}
 
 	return nil

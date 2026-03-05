@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"io"
 	"os"
 	"path/filepath"
@@ -154,7 +155,7 @@ func parseLastUsageAndModel(path string) (sessionTokenInfo, error) {
 	}
 
 	// Scan lines in reverse for the last assistant message with usage
-	lines := bytes.Split(tail, []byte("\n"))
+	lines := bytes.Split(tail, []byte(config.NewlineLF))
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := bytes.TrimSpace(lines[i])
 		if len(line) == 0 {
