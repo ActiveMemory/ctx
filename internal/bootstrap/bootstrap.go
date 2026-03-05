@@ -22,8 +22,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/changes"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
-	cliconfig "github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
+	cliconfig "github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/deps"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
@@ -35,11 +35,12 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/learnings"
 	"github.com/ActiveMemory/ctx/internal/cli/load"
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
+	climcp "github.com/ActiveMemory/ctx/internal/cli/mcp"
 	"github.com/ActiveMemory/ctx/internal/cli/notify"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
-	"github.com/ActiveMemory/ctx/internal/cli/prompt"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions"
+	"github.com/ActiveMemory/ctx/internal/cli/prompt"
 	"github.com/ActiveMemory/ctx/internal/cli/recall"
 	"github.com/ActiveMemory/ctx/internal/cli/reindex"
 	"github.com/ActiveMemory/ctx/internal/cli/remind"
@@ -88,6 +89,7 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		learnings.Cmd,
 		task.Cmd,
 		loop.Cmd,
+		climcp.Cmd,
 		notify.Cmd,
 		pad.Cmd,
 		pause.Cmd,
