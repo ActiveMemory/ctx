@@ -375,8 +375,8 @@ func TestRegistryYAMLParsesFromSystem(t *testing.T) {
 	if parseErr := messages.RegistryError(); parseErr != nil {
 		t.Fatalf("registry YAML parse error: %v", parseErr)
 	}
-	if len(registry) != 28 {
-		t.Errorf("registry has %d entries, want 28", len(registry))
+	if len(registry) != 30 {
+		t.Errorf("registry has %d entries, want 30", len(registry))
 	}
 }
 

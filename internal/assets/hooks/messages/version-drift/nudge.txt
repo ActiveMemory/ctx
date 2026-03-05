@@ -1,0 +1,5 @@
+VERSION, plugin.json, and marketplace.json are out of sync:
+  VERSION:          {{.FileVersion}}
+  plugin.json:      {{.PluginVersion}}
+  marketplace.json: {{.MarketplaceVersion}}
+Update all three before releasing.

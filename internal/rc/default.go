@@ -33,5 +33,9 @@ const DefaultInjectionTokenWarn = 15000
 // Matches Claude Opus/Sonnet (200k). Override via `context_window` in .ctxrc.
 const DefaultContextWindow = 200000
 
+// DefaultTaskNudgeInterval is the number of Edit/Write calls between task
+// completion nudges. Set to 0 in .ctxrc to disable.
+const DefaultTaskNudgeInterval = 5
+
 // DefaultKeyRotationDays is the number of days before a key rotation nudge.
 const DefaultKeyRotationDays = 90

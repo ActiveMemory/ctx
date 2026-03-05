@@ -18,7 +18,7 @@ absorb merges results back.
 ## When NOT to Use
 
 - Directories are on a shared git remote — use `git pull` / `git merge`
-- Worktree is managed by git and can use `ctx-worktree teardown`
+- Worktree is managed by git — exit or delete the worktree directly
 - Directories are different projects (no common ancestry)
 
 ## Pre-flight Checks

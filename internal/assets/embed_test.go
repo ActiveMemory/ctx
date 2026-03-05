@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+
+	"gopkg.in/yaml.v3"
 )
 
 func TestGetTemplate(t *testing.T) {
@@ -606,4 +608,88 @@ func TestDefaultPermissions(t *testing.T) {
 			}
 		}
 	})
+}
+
+func TestHookMessageRegistry(t *testing.T) {
+	data, readErr := HookMessageRegistry()
+	if readErr != nil {
+		t.Fatalf("HookMessageRegistry() error: %v", readErr)
+	}
+	if len(data) == 0 {
+		t.Fatal("HookMessageRegistry() returned empty data")
+	}
+
+	// Verify it parses as valid YAML (list of entries).
+	var entries []map[string]any
+	if parseErr := yaml.Unmarshal(data, &entries); parseErr != nil {
+		t.Fatalf("HookMessageRegistry() returned invalid YAML: %v", parseErr)
+	}
+	if len(entries) == 0 {
+		t.Fatal("HookMessageRegistry() parsed to empty list")
+	}
+
+	// Each entry should have at least "hook" and "variant" keys.
+	for i, entry := range entries {
+		if _, ok := entry["hook"]; !ok {
+			t.Errorf("registry entry %d missing 'hook' key", i)
+		}
+		if _, ok := entry["variant"]; !ok {
+			t.Errorf("registry entry %d missing 'variant' key", i)
+		}
+	}
+}
+
+func TestListHookMessages(t *testing.T) {
+	hooks, listErr := ListHookMessages()
+	if listErr != nil {
+		t.Fatalf("ListHookMessages() error: %v", listErr)
+	}
+	if len(hooks) == 0 {
+		t.Fatal("ListHookMessages() returned empty list")
+	}
+
+	hookSet := make(map[string]bool)
+	for _, h := range hooks {
+		hookSet[h] = true
+	}
+
+	expected := []string{"qa-reminder", "check-context-size", "block-dangerous-commands"}
+	for _, exp := range expected {
+		if !hookSet[exp] {
+			t.Errorf("ListHookMessages() missing expected hook: %s", exp)
+		}
+	}
+}
+
+func TestHookMessage_ReadVariant(t *testing.T) {
+	content, readErr := HookMessage("qa-reminder", "gate.txt")
+	if readErr != nil {
+		t.Fatalf("HookMessage(qa-reminder, gate.txt) error: %v", readErr)
+	}
+	if len(content) == 0 {
+		t.Fatal("HookMessage(qa-reminder, gate.txt) returned empty content")
+	}
+}
+
+func TestRalphTemplate(t *testing.T) {
+	content, readErr := RalphTemplate("PROMPT.md")
+	if readErr != nil {
+		t.Fatalf("RalphTemplate(PROMPT.md) error: %v", readErr)
+	}
+	if len(content) == 0 {
+		t.Fatal("RalphTemplate(PROMPT.md) returned empty content")
+	}
+}
+
+func TestMakefileCtx(t *testing.T) {
+	content, readErr := MakefileCtx()
+	if readErr != nil {
+		t.Fatalf("MakefileCtx() error: %v", readErr)
+	}
+	if len(content) == 0 {
+		t.Fatal("MakefileCtx() returned empty content")
+	}
+	if !strings.Contains(string(content), "ctx") {
+		t.Error("MakefileCtx() content does not contain 'ctx'")
+	}
 }

@@ -79,8 +79,7 @@ For each step:
 5. **If failed**: stop, diagnose, fix, re-verify before
    moving to the next step
 
-Do NOT skip verification. Do NOT batch multiple steps
-without checking between them.
+Verify after every individual step before proceeding to the next.
 
 ### 4. Checkpoint progress
 

@@ -26,8 +26,8 @@ summary, not a substitute. In particular, read CONVENTIONS.md before writing
 any code.
 
 Confirm to the user: "I have read the required context files and I'm
-following project conventions." Do not begin implementation until you have
-done so.
+following project conventions." Read and confirm before beginning
+implementation.
 
 ## Flags
 

@@ -33,7 +33,8 @@ tracking, then there will be something to remember."
 
 ## Process
 
-Do all of this **silently** — do not narrate the steps:
+Do all of this **silently** — narrating the steps makes the readback
+feel like a file search rather than genuine recall:
 
 1. **Load context packet**:
    ```bash
@@ -65,12 +66,12 @@ tasks, or ask the user for direction if priorities are unclear.
 
 ## Readback Rules
 
-- **Never** say "I don't have memory" or "I don't remember"
-- **Never** say "Let me check" or "Let me look for files"
-- **Never** narrate the file-reading process ("I found a file
-  called TASKS.md...")
-- **Present findings as recall**, not discovery — you are
-  *remembering*, not *searching*
+- Open directly with the readback — instead of "I don't have memory",
+  present what you found
+- Skip preamble like "Let me check" — go straight to the structured
+  readback
+- Present findings as recall, not discovery — you are *remembering*,
+  not *searching*
 - Be honest about the mechanism only if the user explicitly asks
   *how* you remember (e.g., "It's stored in context files managed
   by ctx")

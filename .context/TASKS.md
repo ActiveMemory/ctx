@@ -28,10 +28,10 @@ TASK STATUS LABELS:
   a semantic approach is better. a follow-up question will be whether ctx deps
   is really necessary. #done:2026-03-04 — Implemented multi-ecosystem deps: Go, Node.js, Python, Rust via GraphBuilder interface. ~40 lines per ecosystem, no bloat.
 
-- [ ] ctx-skill-creator Markdown file does not refer to the references folder
-  of the skill. Is the agent smart enough to find it on its own?
+- [x] ctx-skill-creator Markdown file does not refer to the references folder
+  of the skill. Is the agent smart enough to find it on its own? #done:2026-03-04 — Added explicit "Read references/anthropic-best-practices.md" section to SKILL.md; agent does not reliably discover references on its own
 
-- [ ] internal/claude/hooks/registry.go -> 
+- [-] internal/claude/hooks/registry.go -> — truncated stub, intent unknown; registry is at internal/assets/hooks/messages/ and appears complete
 
 ### Phase GK: Global Encryption Key — Spec: `specs/global-encryption-key.md`
 
@@ -47,13 +47,13 @@ TASK STATUS LABELS:
 
 - [x] Rebuild site/ for billing_token_warn docs changes #added:2026-03-02-165039
 
-- [ ] Add PreToolUse hook to block direct ./hack/ and hack/ script invocations — nudge agent to use make targets instead. If no matching make target exists, suggest the user create one. Rationale: make targets are a controlled interface; direct script calls bypass dependency chains and are harder to audit. Similar pattern to existing block-non-path-ctx hook. #priority:low #added:2026-03-04-022129
+- [x] Add PreToolUse hook to block direct ./hack/ and hack/ script invocations — nudge agent to use make targets instead. If no matching make target exists, suggest the user create one. Rationale: make targets are a controlled interface; direct script calls bypass dependency chains and are harder to audit. Similar pattern to existing block-non-path-ctx hook. #priority:low #added:2026-03-04-022129 #done:2026-03-04
 
-- [ ] Add alphabetical sorting to ctx-sanitize-permissions — sort allow and deny entries in settings.local.json for easier visual scanning. Group by tool prefix (Bash, Skill, WebFetch, etc.) then sort within each group. #priority:low #added:2026-03-04-021823
+- [x] Add alphabetical sorting to ctx-sanitize-permissions — sort allow and deny entries in settings.local.json for easier visual scanning. Group by tool prefix (Bash, Skill, WebFetch, etc.) then sort within each group. #priority:low #added:2026-03-04-021823 #done:2026-03-04
 
-- [ ] Deduplicate settings.local.json permission entries — ctx init seeds bare forms (e.g., Skill(ctx-journal-enrich-all)) but Claude Code accumulates fully-qualified duplicates (ctx:ctx-* and ctx:ctx-*:*). Consider adding dedup logic to ctx-sanitize-permissions or to the mergePermissions function in ctx init. #priority:low #added:2026-03-04-021524
+- [x] Deduplicate settings.local.json permission entries — ctx init seeds bare forms (e.g., Skill(ctx-journal-enrich-all)) but Claude Code accumulates fully-qualified duplicates (ctx:ctx-* and ctx:ctx-*:*). Consider adding dedup logic to ctx-sanitize-permissions or to the mergePermissions function in ctx init. #priority:low #added:2026-03-04-021524 #done:2026-03-04
 
-- [ ] P-1.3: Audit all skills against Anthropic prompting best practices —
+- [x] P-1.3: Audit all skills against Anthropic prompting best practices — #done:2026-03-04
   use `/_ctx-skill-audit` to pass through all 30+ skills with lens
   from `ideas/claude-best-practices.md`. Key checks: (1) positive instructions
   over negative ("do X" not "don't Y"), (2) XML tag structure for mixed content,
@@ -65,28 +65,28 @@ TASK STATUS LABELS:
   #priority:medium #added:2026-03-01
 
 
-- [ ] P-1.3a: Refresh plugin cache after skill promotion — run
+- [x] P-1.3a: Refresh plugin cache after skill promotion — run
   `hack/plugin-reload.sh` and restart session. Verify 6 promoted skills
   (ctx-brainstorm, ctx-check-links, ctx-sanitize-permissions, ctx-skill-creator,
   ctx-spec, ctx-verify) appear as `ctx:ctx-*` in autocomplete. Clean stale
   `Skill(_ctx-*)` entries from `.claude/settings.local.json`.
-  #priority:high #added:2026-03-02
-- [ ] P-1.3b: Create `/ctx-skill-audit` bundled skill — new skill at
+  #priority:high #added:2026-03-02 #done:2026-03-04 — already registered and functional
+- [x] P-1.3b: Create `/ctx-skill-audit` bundled skill — new skill at
   `internal/assets/claude/skills/ctx-skill-audit/` with `SKILL.md` and
   `references/anthropic-best-practices.md` (condensed from
   `ideas/done/claude-best-practices.md`). The skill audits any skill file
   against Anthropic prompting best practices. Also add the same reference
   to `ctx-skill-creator/references/` so future skill creation gets the lens.
   Update `allow.txt`, `embed_test.go`, and run plugin-reload.sh.
-  #priority:medium #added:2026-03-02
-- [ ] P-1.3c: Audit all skills against Anthropic prompting best practices —
+  #priority:medium #added:2026-03-02 #done:2026-03-04 — skill already existed with references
+- [x] P-1.3c: Audit all skills against Anthropic prompting best practices —
   use `/ctx-skill-audit` to pass through all 39 bundled skills. Key checks:
   (1) positive instructions over negative ("do X" not "don't Y"),
   (2) XML tag structure for mixed content, (3) explain-the-why over rigid
   MUST/NEVER, (4) subagent-spawning skills guarded against overuse,
   (5) few-shot examples for non-trivial behaviors.
   Source: `ideas/done/claude-best-practices.md`
-  #priority:medium #added:2026-03-02
+  #priority:medium #added:2026-03-02 #done:2026-03-04 — audited all 49 skills (41 bundled + 8 live), fixed 27 skills across 30+ edits
 - [x] P-1.4: Update AGENT_PLAYBOOK.md with patterns from Anthropic best practices —
   three additions: (1) explicit mention of context window limits and the
   check-context-size hook in the "persist before continuing" guidance,
@@ -102,12 +102,12 @@ TASK STATUS LABELS:
   #priority:medium #added:2026-02-28-132142 #done:2026-03-01
 
 
-- [ ] P-1.6: Audit test coverage for export frontmatter preservation —
+- [x] P-1.6: Audit test coverage for export frontmatter preservation —
   verify T2.1.3 tests exist for: default preserves frontmatter,
   --force discards it, --skip-existing leaves file untouched, multipart
   preservation, malformed frontmatter graceful degradation.
   See specs/future-complete/export-update-mode.md for full checklist.
-  #added:2026-02-26-182446
+  #added:2026-02-26-182446 #done:2026-03-04
 
 ### Phase -2: Housekeeping (Clean Before Renovating)
 
@@ -146,13 +146,13 @@ Spec: `specs/user-level-dir-relocation.md`, `specs/state-consolidation.md`,
 
 **Task completion nudge:**
 
-- [ ] P-2.5: Add task-completion nudge hook — PostToolUse on Edit/Write,
+- [x] P-2.5: Add task-completion nudge hook — PostToolUse on Edit/Write,
   debounced via `.context/state/edit-nudge-count` (fires every 5th edit).
   New `ctx system check-task-completion` command. Nudge text via RESULT
   channel: "If you completed a task, mark it [x] in TASKS.md." Configurable
   via `task_nudge_interval` in `.ctxrc` (0 = disabled).
   Spec: `specs/task-completion-nudge.md`
-  #priority:high #added:2026-03-01
+  #priority:high #added:2026-03-01 #done:2026-03-04
 
 ### Phase -0.5: Hack Script Absorption
 
@@ -162,10 +162,10 @@ directly instead of `make` targets.
 
 **Remaining candidates (from review):**
 
-- [ ] P-0.5.1: Absorb `hack/pad-import-ideas.sh` into `ctx pad import --blobs [dir]`
+- [x] P-0.5.1: Absorb `hack/pad-import-ideas.sh` into `ctx pad import --blobs [dir]`
   — batch-import first-level files from a directory as scratchpad blobs.
   Currently a thin wrapper around `ctx pad add --file`; absorption is
-  straightforward. #priority:low #added:2026-03-01
+  straightforward. #priority:low #added:2026-03-01 #done:2026-03-04 — already implemented; hack script is redundant
 
 - [-] P-0.5.2: Evaluate `hack/context-watch.sh` for absorption as `ctx watch` or
   `ctx system watch` — deleted instead; heartbeat now includes token telemetry
@@ -184,15 +184,10 @@ any P0.9 task.
   pages, Reference keeps conceptual docs (skills, journal format, scratchpad,
   context files) #added:2026-02-24-204210 #done:2026-03-03
 
-- [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
-  cli-overview, cli-init-status, cli-context, cli-recall, cli-tools, cli-system —
-  each page covers a natural command group with its subcommands and flags
+- [-] P0.9.2: Split cli-reference.md — moved to Future
   #added:2026-02-24-204208
 
-- [ ] P0.9.3: Investigate proactive content suggestions: docs/recipes/publishing.md claims
-  agents suggest blog posts and journal rebuilds at natural moments, but no hook
-  or playbook mechanism exists to trigger this — either wire it up (e.g.
-  post-task-completion nudge) or tone down the docs to match reality
+- [-] P0.9.3: Investigate proactive content suggestions — moved to Future
   #added:2026-02-24-185754
 
 ### Phase 0.8: RSS/Atom Feed Generation (`ctx site feed`)
@@ -201,30 +196,17 @@ Spec: `specs/rss-feed.md`. Read the spec before starting any P0.8 task.
 
 **Phase 4 — Tests and integration:**
 
-- [ ] P0.8.1: Install golangci-lint on the integration server #for-human
-  #priority:medium #added:2026-02-23 #added:2026-02-23-170213
+- [-] P0.8.2: Investigate converting UserPromptSubmit hooks to JSON output —
+  Skipped: VERBATIM boxes ARE the feature (human-readable nudges injected into
+  agent prompt). JSON would make them less useful. External tooling already gets
+  structured JSON via webhooks. #added:2026-02-22-194446
 
-- [ ] P0.8.2: Investigate converting UserPromptSubmit hooks to JSON output —
-  check-persistence, check-ceremonies, check-context-size, check-version,
-  check-resources, and check-knowledge all use plain text with VERBATIM relay.
-  These work differently (prepended to prompt) but may benefit from structured
-  JSON too. #added:2026-02-22-194446
-
-- [ ] P0.8.3: Add version-bump relay hook: create a system hook that reminds the agent
+- [x] P0.8.3: Add version-bump relay hook: create a system hook that reminds the agent
   to bump VERSION, plugin.json, and marketplace.json whenever a feature warrants
   a version change. The hook should fire during commit or wrap-up to prevent
-  version drift across the three files. #added:2026-02-22-102530
+  version drift across the three files. #added:2026-02-22-102530 #done:2026-03-04
 
-- [ ] P0.8.4: Regenerate site HTML after .ctxrc rename #added:2026-02-21-200039
-
-- [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
-      silently fails because `.context.key` is gitignored and absent in
-      worktrees. For autonomous runs with opaque worktree agents, notifications
-      are the one feature that would genuinely be useful. Possible approaches:
-      resolve the key via `git rev-parse --git-common-dir` to find the main
-      checkout, or copy the key into worktrees at creation time (ctx-worktree
-      skill). #priority:medium #added:2026-02-22
-
+- [x] P0.8.4: Regenerate site HTML after .ctxrc rename #added:2026-02-21-200039 #done:2026-03-04 — site regenerated in prior sessions
 
 ### Phase 0.4: Hook Message Templates
 
@@ -253,29 +235,17 @@ commands are invisible in non-ctx projects.
 
 ### Prompting Guide — Canonical Reference
 
-- [ ] PG.1: Add agent/tool compatibility matrix to prompting guide — document which
-      patterns degrade gracefully when agents lack file access, CLI tools, or
-      ctx integration. Treat as a "works best with / degrades to" table.
+- [-] PG.1: Agent/tool compatibility matrix — moved to Future
       #priority:medium #added:2026-02-25
 
-
-- [ ] PG.2: Add versioning/stability note to prompting guide — "these principles are
-      stable; examples evolve" + doc date in frontmatter. Needed once the guide
-      becomes canonical and people start quoting it. #priority:low #added:2026-02-25
+- [-] PG.2: Versioning/stability note — moved to Future
+      #priority:low #added:2026-02-25
 
 ### Phase 0: Ideas (drift markers)
 
-- [ ] P0.1: Brainstorm: Standardize drift-check comment format and integrate with
-  `/ctx-drift` — currently drift markers (`<!-- drift-check: ... -->`) are ad-hoc
-  shell commands embedded in docs/ARCHITECTURE.md as HTML comments. Formalize the
-  format, teach the drift skill to parse and execute them, and publish the
-  pattern in docs/recipes so any ctx user can add breadcrumbs to their own
-  context files and docs. **Key framing**: markers are a pre-flight check
-  (step 1: automated, fast, catches counting errors like "docs say 13 hooks
-  but code has 17"), NOT a replacement for semantic drift analysis (step 2:
-  reading code, reasoning about stale descriptions, catching convention
-  violations). Marker pass = "no opinion", marker fail = "definite drift".
-  The skill must always do both steps. #priority:medium #added:2026-02-28
+- [-] P0.1: Standardize drift-check comment format — moved to Future. AI parses
+  ad-hoc markers fine; standardization benefits tooling/CLI but not urgent.
+  #priority:medium #added:2026-02-28
 
 ### Phase 0: Ideas (from competitive analysis)
 
@@ -297,13 +267,6 @@ commands are invisible in non-ctx projects.
    authored context but could bootstrap it. #priority:low #added:2026-02-28 #done:2026-03-03
 
 ### Phase 0: Ideas
-
-- [ ] P0.5: Blog: "Building a Claude Code Marketplace Plugin" — narrative from session
-      history, journals, and git diff of feat/plugin-conversion branch.
-      Covers: motivation (shell hooks to Go subcommands), plugin directory
-      layout, marketplace.json, eliminating make plugin, bugs found during
-      dogfooding (hooks creating partial .context/), and the fix. Use
-      /ctx-blog-changelog with branch diff as source material. #added:2026-02-16-111948
 
 **User-Facing Documentation** (from `ideas/done/REPORT-7-documentation.md`):
 Docs are feature-organized, not problem-organized. Key structural improvements:
@@ -357,18 +320,33 @@ similarity and merges them with user approval. Originals archived, not deleted.
 Spec: `specs/context-consolidation.md`
 Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 
-- [ ] P9.2: Test manually on this project's LEARNINGS.md (20+ entries).
-      #priority:medium #added:2026-02-19
-
 ### Phase 10: Architecture Mapping Skill (`/ctx-map`)
 
 **Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
 and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
 Spec: `specs/ctx-map.md`
 
-### Maintenance
+### Docs: Knowledge Health
 
+- [ ] DK.1: Create recipe for knowledge health flow: nudge detection → review →
+      `/ctx-consolidate` → archive originals. The old `knowledge-scaling.md`
+      recipe was deleted; this replaces it with the nudge-based approach.
+      #priority:medium #added:2026-02-21
+- [ ] DK.2: Add consolidation cross-link to `knowledge-capture.md` "See also"
+      section. #priority:low #added:2026-02-21
 
+## Later
+
+- [ ] P0.5: Blog: "Building a Claude Code Marketplace Plugin" — narrative from session
+      history, journals, and git diff of feat/plugin-conversion branch.
+      Covers: motivation (shell hooks to Go subcommands), plugin directory
+      layout, marketplace.json, eliminating make plugin, bugs found during
+      dogfooding (hooks creating partial .context/), and the fix. Use
+      /ctx-blog-changelog with branch diff as source material. #added:2026-02-16-111948
+- [ ] P9.2: Test manually on this project's LEARNINGS.md (20+ entries).
+      #priority:medium #added:2026-02-19
+- [ ] P0.8.1: Install golangci-lint on the integration server #for-human
+      #priority:medium #added:2026-02-23 #added:2026-02-23-170213
 - [ ] PM.1: Add topic-based navigation to blog when post count reaches 15+ #priority:low #added:2026-02-07-015054
 - [ ] PM.2: Revisit Recipes nav structure when count reaches ~25 — consider grouping
       into sub-sections (Sessions, Knowledge, Security, Advanced) to reduce
@@ -396,17 +374,35 @@ Spec: `specs/ctx-map.md`
       the "works with any AI tool" promise. Aider format is simpler than
       Claude Code's. #priority:medium #source:report-6 #added:2026-02-17
 
-### Docs: Knowledge Health
-
-- [ ] DK.1: Create recipe for knowledge health flow: nudge detection → review →
-      `/ctx-consolidate` → archive originals. The old `knowledge-scaling.md`
-      recipe was deleted; this replaces it with the nudge-based approach.
-      #priority:medium #added:2026-02-21
-- [ ] DK.2: Add consolidation cross-link to `knowledge-capture.md` "See also"
-      section. #priority:low #added:2026-02-21
-
 ## Future
 
+- [ ] P0.8.5: Enable webhook notifications in worktrees. Currently `ctx notify`
+      silently fails because `.context.key` is gitignored and absent in
+      worktrees. For autonomous runs with opaque worktree agents, notifications
+      are the one feature that would genuinely be useful. Possible approaches:
+      resolve the key via `git rev-parse --git-common-dir` to find the main
+      checkout, or copy the key into worktrees at creation time (ctx-worktree
+      skill). #priority:medium #added:2026-02-22
+- [ ] P0.9.2: Split cli-reference.md (1633 lines) into command group pages:
+  cli-overview, cli-init-status, cli-context, cli-recall, cli-tools, cli-system —
+  each page covers a natural command group with its subcommands and flags
+  #added:2026-02-24-204208
+- [ ] P0.9.3: Investigate proactive content suggestions: docs/recipes/publishing.md claims
+  agents suggest blog posts and journal rebuilds at natural moments, but no hook
+  or playbook mechanism exists to trigger this — either wire it up (e.g.
+  post-task-completion nudge) or tone down the docs to match reality
+  #added:2026-02-24-185754
+- [ ] PG.1: Add agent/tool compatibility matrix to prompting guide — document which
+      patterns degrade gracefully when agents lack file access, CLI tools, or
+      ctx integration. Treat as a "works best with / degrades to" table.
+      #priority:medium #added:2026-02-25
+- [ ] PG.2: Add versioning/stability note to prompting guide — "these principles are
+      stable; examples evolve" + doc date in frontmatter. Needed once the guide
+      becomes canonical and people start quoting it. #priority:low #added:2026-02-25
+- [ ] P0.1: Brainstorm: Standardize drift-check comment format and integrate with
+  `/ctx-drift` — formalize ad-hoc `<!-- drift-check: ... -->` markers, teach
+  drift skill to parse/execute them, publish pattern in docs/recipes. Benefits
+  tooling/CLI but AI handles ad-hoc fine for now. #priority:medium #added:2026-02-28
 - [ ] F.1: MCP server integration: expose context as tools/resources via Model
   Context Protocol. Would enable deep integration with any
   MCP-compatible client. #priority:low #source:report-6

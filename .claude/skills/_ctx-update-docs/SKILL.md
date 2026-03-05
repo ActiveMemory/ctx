@@ -16,8 +16,8 @@ conventions for consistency.
 
 ## When NOT to Use
 
-- After changes that are purely internal with no docs impact
-  (e.g., renaming a private variable)
+- When changes are purely internal — renaming a private variable,
+  reordering unexported code — skip this skill and commit directly
 - When only docs were changed (no code to drift from)
 - When the user explicitly says docs updates are not needed
 
@@ -41,19 +41,19 @@ conventions for consistency.
 
 ## Code-to-Docs Mapping
 
-| Source Path                        | Likely Affected Docs                               |
-|------------------------------------|----------------------------------------------------|
-| `cmd/ctx/`, `internal/cli/`        | `docs/cli-reference.md`                            |
-| `internal/config/`                 | `docs/context-files.md`                            |
-| `internal/context/`                | `docs/context-files.md`, `docs/prompting-guide.md` |
-| `internal/drift/`                  | `docs/context-files.md` (drift section)            |
-| `internal/recall/`                 | `docs/session-journal.md`                          |
-| `internal/bootstrap/`              | `docs/index.md` (getting started)                  |
-| `internal/claude/`, `internal/rc/` | `docs/integrations.md`                             |
-| `internal/assets/`                    | `docs/context-files.md` (templates)                |
-| `internal/assets/claude/skills/`      | `.claude/skills/` (live versions)                  |
-| `SECURITY.md`                      | `docs/security.md`                                 |
-| `.context/` schema changes         | `docs/context-files.md`                            |
+| Source Path                        | Likely Affected Docs                                          |
+|------------------------------------|---------------------------------------------------------------|
+| `cmd/ctx/`, `internal/cli/`        | `docs/cli/*.md`                                               |
+| `internal/config/`                 | `docs/home/context-files.md`, `docs/home/configuration.md`    |
+| `internal/context/`                | `docs/home/context-files.md`, `docs/home/prompting-guide.md`  |
+| `internal/drift/`                  | `docs/recipes/context-health.md`                              |
+| `internal/recall/`                 | `docs/reference/session-journal.md`, `docs/cli/recall.md`     |
+| `internal/bootstrap/`              | `docs/home/getting-started.md`                                |
+| `internal/claude/`, `internal/rc/` | `docs/operations/integrations.md`, `docs/home/configuration.md` |
+| `internal/assets/`                 | `docs/home/context-files.md` (templates)                      |
+| `internal/assets/claude/skills/`   | `.claude/skills/` (live versions), `docs/reference/skills.md` |
+| `SECURITY.md`                      | `docs/security/*.md`                                          |
+| `.context/` schema changes         | `docs/home/context-files.md`                                  |
 
 ## What to Check
 
@@ -79,7 +79,8 @@ This mapping table will drift. Before relying on it:
 
 1. `ls internal/`: any packages not in the table? Add them.
 2. `ls docs/*.md`: any doc pages not in the table? Map them.
-3. If you update the table, edit this skill file directly.
+3. If the mapping table is stale, flag it to the user rather
+   than editing this file automatically.
 
 The skill is its own first test case: if the mapping is stale,
 the skill has already failed at its job.

@@ -7,9 +7,14 @@
 package changes
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 func TestHumanAgo(t *testing.T) {
@@ -178,5 +183,156 @@ func TestRenderChanges_NoChanges(t *testing.T) {
 	out := RenderChanges("1 hour ago", nil, CodeSummary{})
 	if !strings.Contains(out, "No changes detected") {
 		t.Error("expected 'No changes detected' message")
+	}
+}
+
+func TestItoa(t *testing.T) {
+	tests := []struct {
+		n    int
+		want string
+	}{
+		{0, "0"},
+		{1, "1"},
+		{42, "42"},
+		{-5, "-5"},
+		{100, "100"},
+	}
+	for _, tt := range tests {
+		if got := itoa(tt.n); got != tt.want {
+			t.Errorf("itoa(%d) = %q, want %q", tt.n, got, tt.want)
+		}
+	}
+}
+
+func TestDetectReferenceTime_SinceFlag(t *testing.T) {
+	_, label, detectErr := DetectReferenceTime("6h")
+	if detectErr != nil {
+		t.Fatalf("DetectReferenceTime(6h) error: %v", detectErr)
+	}
+	if !strings.Contains(label, "hour") {
+		t.Errorf("expected label containing 'hour', got: %s", label)
+	}
+}
+
+func TestDetectReferenceTime_Fallback(t *testing.T) {
+	tmp := t.TempDir()
+	t.Setenv("CTX_DIR", tmp)
+	rc.Reset()
+
+	stateDir := filepath.Join(tmp, config.DirState)
+	mkErr := os.MkdirAll(stateDir, 0o755)
+	if mkErr != nil {
+		t.Fatalf("MkdirAll: %v", mkErr)
+	}
+
+	_, label, detectErr := DetectReferenceTime("")
+	if detectErr != nil {
+		t.Fatalf("DetectReferenceTime fallback error: %v", detectErr)
+	}
+	if !strings.Contains(label, "24 hour") {
+		t.Errorf("expected label containing '24 hour', got: %s", label)
+	}
+}
+
+func TestDetectReferenceTime_FromMarkers(t *testing.T) {
+	tmp := t.TempDir()
+	t.Setenv("CTX_DIR", tmp)
+	rc.Reset()
+
+	stateDir := filepath.Join(tmp, config.DirState)
+	mkErr := os.MkdirAll(stateDir, 0o755)
+	if mkErr != nil {
+		t.Fatalf("MkdirAll: %v", mkErr)
+	}
+
+	// Create two marker files with different mtimes.
+	older := filepath.Join(stateDir, "ctx-loaded-aaa")
+	newer := filepath.Join(stateDir, "ctx-loaded-bbb")
+
+	writeErr := os.WriteFile(older, []byte(""), 0o644)
+	if writeErr != nil {
+		t.Fatalf("WriteFile older: %v", writeErr)
+	}
+	writeErr = os.WriteFile(newer, []byte(""), 0o644)
+	if writeErr != nil {
+		t.Fatalf("WriteFile newer: %v", writeErr)
+	}
+
+	olderTime := time.Now().Add(-2 * time.Hour)
+	newerTime := time.Now().Add(-30 * time.Minute)
+
+	chtErr := os.Chtimes(older, olderTime, olderTime)
+	if chtErr != nil {
+		t.Fatalf("Chtimes older: %v", chtErr)
+	}
+	chtErr = os.Chtimes(newer, newerTime, newerTime)
+	if chtErr != nil {
+		t.Fatalf("Chtimes newer: %v", chtErr)
+	}
+
+	refTime, _, detectErr := DetectReferenceTime("")
+	if detectErr != nil {
+		t.Fatalf("DetectReferenceTime from markers error: %v", detectErr)
+	}
+
+	// Should return the second most recent (older) marker time.
+	diff := refTime.Sub(olderTime)
+	if diff < -time.Second || diff > time.Second {
+		t.Errorf("expected refTime ~%v, got %v (diff=%v)", olderTime, refTime, diff)
+	}
+}
+
+func TestFindContextChanges(t *testing.T) {
+	tmp := t.TempDir()
+	t.Setenv("CTX_DIR", tmp)
+	rc.Reset()
+
+	// Create two .md files with different mtimes.
+	recentFile := filepath.Join(tmp, "TASKS.md")
+	oldFile := filepath.Join(tmp, "OLD.md")
+
+	writeErr := os.WriteFile(recentFile, []byte("# Tasks"), 0o644)
+	if writeErr != nil {
+		t.Fatalf("WriteFile recent: %v", writeErr)
+	}
+	writeErr = os.WriteFile(oldFile, []byte("# Old"), 0o644)
+	if writeErr != nil {
+		t.Fatalf("WriteFile old: %v", writeErr)
+	}
+
+	// Set old file to 48 hours ago.
+	oldTime := time.Now().Add(-48 * time.Hour)
+	chtErr := os.Chtimes(oldFile, oldTime, oldTime)
+	if chtErr != nil {
+		t.Fatalf("Chtimes old: %v", chtErr)
+	}
+
+	// Reference time between old and recent.
+	refTime := time.Now().Add(-24 * time.Hour)
+	changes, findErr := FindContextChanges(refTime)
+	if findErr != nil {
+		t.Fatalf("FindContextChanges error: %v", findErr)
+	}
+
+	if len(changes) != 1 {
+		t.Fatalf("expected 1 change, got %d", len(changes))
+	}
+	if changes[0].Name != "TASKS.md" {
+		t.Errorf("expected TASKS.md, got %s", changes[0].Name)
+	}
+}
+
+func TestFindContextChanges_EmptyDir(t *testing.T) {
+	tmp := t.TempDir()
+	t.Setenv("CTX_DIR", tmp)
+	rc.Reset()
+
+	refTime := time.Now().Add(-1 * time.Hour)
+	changes, findErr := FindContextChanges(refTime)
+	if findErr != nil {
+		t.Fatalf("FindContextChanges error: %v", findErr)
+	}
+	if len(changes) != 0 {
+		t.Errorf("expected 0 changes, got %d", len(changes))
 	}
 }

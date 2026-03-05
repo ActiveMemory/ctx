@@ -19,7 +19,7 @@ Generate release notes for the next release of Context CLI.
 
 ## When NOT to Use
 
-- For blog posts about a release (use `/ctx-blog-changelog`)
+- For blog posts about a release (use the blog changelog skill if installed)
 - When no commits exist since the last tag
 
 ## Process

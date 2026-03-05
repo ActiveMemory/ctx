@@ -95,7 +95,8 @@ analysis:
 
 **ARCHITECTURE.md** — update ONLY if module boundaries, dependency
 graph, data flow, or key patterns changed. Internal implementation
-changes do NOT warrant updates. Target: under 4000 tokens (~16KB).
+changes do NOT warrant updates. Target: under 4000 tokens (~16KB)
+so ARCHITECTURE.md loads within the session-start context budget.
 
 Required sections:
 - Overview (design philosophy, key concepts)

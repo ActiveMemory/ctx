@@ -108,6 +108,101 @@ func TestMergePermissions_AllExist(t *testing.T) {
 	}
 }
 
+// --- deduplicatePermissions tests ---
+
+func TestDeduplicatePermissions_ExactDuplicates(t *testing.T) {
+	slice := []string{
+		"Bash(ctx:*)",
+		"Skill(ctx-agent)",
+		"Bash(ctx:*)",
+		"Skill(ctx-agent)",
+		"Bash(git status)",
+	}
+	removed := deduplicatePermissions(&slice)
+	if !removed {
+		t.Error("expected duplicates to be removed")
+	}
+	if len(slice) != 3 {
+		t.Errorf("expected 3 entries, got %d: %v", len(slice), slice)
+	}
+	// Order preserved: first occurrences kept.
+	want := []string{"Bash(ctx:*)", "Skill(ctx-agent)", "Bash(git status)"}
+	for i, w := range want {
+		if slice[i] != w {
+			t.Errorf("slice[%d] = %q, want %q", i, slice[i], w)
+		}
+	}
+}
+
+func TestDeduplicatePermissions_FQSkillForms(t *testing.T) {
+	slice := []string{
+		"Skill(ctx-add-convention)",
+		"Skill(ctx:ctx-add-convention)",
+		"Skill(ctx:ctx-add-convention:*)",
+		"Skill(ctx-agent)",
+		"Skill(ctx:ctx-agent)",
+	}
+	removed := deduplicatePermissions(&slice)
+	if !removed {
+		t.Error("expected FQ forms to be removed")
+	}
+	want := []string{"Skill(ctx-add-convention)", "Skill(ctx-agent)"}
+	if len(slice) != len(want) {
+		t.Fatalf("expected %d entries, got %d: %v", len(want), len(slice), slice)
+	}
+	for i, w := range want {
+		if slice[i] != w {
+			t.Errorf("slice[%d] = %q, want %q", i, slice[i], w)
+		}
+	}
+}
+
+func TestDeduplicatePermissions_NoChanges(t *testing.T) {
+	slice := []string{
+		"Bash(ctx:*)",
+		"Skill(ctx-agent)",
+		"Skill(ctx-commit)",
+		"Bash(git status)",
+	}
+	removed := deduplicatePermissions(&slice)
+	if removed {
+		t.Error("expected no changes")
+	}
+	if len(slice) != 4 {
+		t.Errorf("expected 4 entries, got %d", len(slice))
+	}
+}
+
+func TestDeduplicatePermissions_MixedBashAndSkill(t *testing.T) {
+	slice := []string{
+		"Bash(ctx:*)",
+		"Bash(ctx:*)",
+		"Skill(ctx-add-task)",
+		"Skill(ctx:ctx-add-task)",
+		"Skill(ctx:ctx-add-task:*)",
+		"Bash(git status)",
+		"Skill(other-plugin:foo)",
+	}
+	removed := deduplicatePermissions(&slice)
+	if !removed {
+		t.Error("expected duplicates to be removed")
+	}
+	want := []string{
+		"Bash(ctx:*)",
+		"Skill(ctx-add-task)",
+		"Bash(git status)",
+		"Skill(other-plugin:foo)",
+	}
+	if len(slice) != len(want) {
+		t.Fatalf("expected %d entries, got %d: %v", len(want), len(slice), slice)
+	}
+	for i, w := range want {
+		if slice[i] != w {
+			t.Errorf("slice[%d] = %q, want %q", i, slice[i], w)
+		}
+	}
+}
+
 // --- handleMakefileCtx tests ---
 
 func TestHandleMakefileCtx_NoExistingMakefile(t *testing.T) {

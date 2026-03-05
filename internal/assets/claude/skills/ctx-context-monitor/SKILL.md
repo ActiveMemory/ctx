@@ -25,8 +25,8 @@ relay the checkpoint:
 2. **If you also sense context is critically full**: add a brief note
    offering to persist unsaved learnings, decisions, conventions, or
    session notes via `/ctx-reflect`
-3. **Never mention the checkpoint mechanism** unless the user asks
-   about it
+3. **Mention the checkpoint mechanism only if the user directly asks**
+   how it works
 
 ## Good Response
 

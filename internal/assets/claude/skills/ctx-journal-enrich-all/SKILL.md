@@ -177,8 +177,10 @@ For backlogs of 20+ entries, consider spawning subagents to
 process entries in parallel. Each subagent handles a batch of
 5-10 entries. The parent agent tracks progress via a task list.
 
-This is optional — sequential processing works fine for smaller
-backlogs and avoids coordination overhead.
+Only spawn subagents when the backlog is large enough to justify
+the coordination overhead (20+ entries). For smaller backlogs,
+sequential processing in the main conversation is faster and
+simpler.
 
 ## Quality Checklist
 

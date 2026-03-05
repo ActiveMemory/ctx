@@ -26,6 +26,14 @@
       {
         "matcher": "Bash",
         "hooks": [{"type": "command", "command": "ctx system post-commit"}]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [{"type": "command", "command": "ctx system check-task-completion"}]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [{"type": "command", "command": "ctx system check-task-completion"}]
       }
     ],
     "UserPromptSubmit": [

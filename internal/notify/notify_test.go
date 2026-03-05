@@ -267,3 +267,108 @@ func TestSend_HTTPErrorIgnored(t *testing.T) {
 		t.Fatalf("Send() error = %v, want nil (fire-and-forget)", err)
 	}
 }
+
+func TestSaveWebhook_Roundtrip(t *testing.T) {
+	_, cleanup := setupTestDir(t)
+	defer cleanup()
+
+	want := "https://hooks.example.com/notify?key=abc123"
+
+	if saveErr := SaveWebhook(want); saveErr != nil {
+		t.Fatalf("SaveWebhook() error = %v", saveErr)
+	}
+
+	got, loadErr := LoadWebhook()
+	if loadErr != nil {
+		t.Fatalf("LoadWebhook() error = %v", loadErr)
+	}
+	if got != want {
+		t.Errorf("LoadWebhook() = %q, want %q", got, want)
+	}
+}
+
+func TestLoadWebhook_CorruptedFile(t *testing.T) {
+	tempDir, cleanup := setupTestDir(t)
+	defer cleanup()
+
+	// Save a valid webhook first (to create the key file).
+	if saveErr := SaveWebhook("https://example.com"); saveErr != nil {
+		t.Fatalf("SaveWebhook() error = %v", saveErr)
+	}
+
+	// Corrupt the encrypted file with garbage bytes.
+	encPath := filepath.Join(tempDir, ".context", config.FileNotifyEnc)
+	if writeErr := os.WriteFile(encPath, []byte("corrupted-garbage-data"), 0o600); writeErr != nil {
+		t.Fatalf("WriteFile() error = %v", writeErr)
+	}
+
+	// Should return an error, not panic.
+	_, loadErr := LoadWebhook()
+	if loadErr == nil {
+		t.Error("LoadWebhook() with corrupted file: expected error, got nil")
+	}
+}
+
+func TestNewTemplateRef(t *testing.T) {
+	ref := NewTemplateRef("check-context-size", "window", nil)
+
+	if ref.Hook != "check-context-size" {
+		t.Errorf("Hook = %q, want %q", ref.Hook, "check-context-size")
+	}
+	if ref.Variant != "window" {
+		t.Errorf("Variant = %q, want %q", ref.Variant, "window")
+	}
+	if ref.Variables != nil {
+		t.Errorf("Variables = %v, want nil", ref.Variables)
+	}
+}
+
+func TestPayload_JSONMarshal(t *testing.T) {
+	original := Payload{
+		Event:     "loop",
+		Message:   "Loop completed",
+		SessionID: "sess-42",
+		Timestamp: "2026-01-01T00:00:00Z",
+		Project:   "myproject",
+		Detail: &TemplateRef{
+			Hook:      "check-context-size",
+			Variant:   "window",
+			Variables: map[string]any{"Percentage": 85},
+		},
+	}
+
+	data, marshalErr := json.Marshal(original)
+	if marshalErr != nil {
+		t.Fatalf("json.Marshal() error = %v", marshalErr)
+	}
+
+	var restored Payload
+	if unmarshalErr := json.Unmarshal(data, &restored); unmarshalErr != nil {
+		t.Fatalf("json.Unmarshal() error = %v", unmarshalErr)
+	}
+
+	if restored.Event != original.Event {
+		t.Errorf("Event = %q, want %q", restored.Event, original.Event)
+	}
+	if restored.Message != original.Message {
+		t.Errorf("Message = %q, want %q", restored.Message, original.Message)
+	}
+	if restored.SessionID != original.SessionID {
+		t.Errorf("SessionID = %q, want %q", restored.SessionID, original.SessionID)
+	}
+	if restored.Timestamp != original.Timestamp {
+		t.Errorf("Timestamp = %q, want %q", restored.Timestamp, original.Timestamp)
+	}
+	if restored.Project != original.Project {
+		t.Errorf("Project = %q, want %q", restored.Project, original.Project)
+	}
+	if restored.Detail == nil {
+		t.Fatal("Detail is nil after roundtrip")
+	}
+	if restored.Detail.Hook != original.Detail.Hook {
+		t.Errorf("Detail.Hook = %q, want %q", restored.Detail.Hook, original.Detail.Hook)
+	}
+	if restored.Detail.Variant != original.Detail.Variant {
+		t.Errorf("Detail.Variant = %q, want %q", restored.Detail.Variant, original.Detail.Variant)
+	}
+}

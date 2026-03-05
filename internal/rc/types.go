@@ -26,6 +26,7 @@ package rc
 //     beyond the included allowance incur extra cost.
 //   - EventLog: Whether to log hook events locally (default false)
 //   - KeyRotationDays: Days before encryption key rotation nudge (default 90)
+//   - TaskNudgeInterval: Edit/Write calls between task completion nudges (default 5, 0 = disabled)
 //   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)
 type CtxRC struct {
 	ContextDir          string        `yaml:"context_dir"`
@@ -43,6 +44,7 @@ type CtxRC struct {
 	BillingTokenWarn    int           `yaml:"billing_token_warn"`
 	EventLog            bool          `yaml:"event_log"`
 	KeyRotationDays     int           `yaml:"key_rotation_days"`
+	TaskNudgeInterval   int           `yaml:"task_nudge_interval"`
 	KeyPathOverride     string        `yaml:"key_path"`
 	Notify              *NotifyConfig `yaml:"notify"`
 }

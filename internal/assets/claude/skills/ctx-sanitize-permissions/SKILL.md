@@ -51,7 +51,7 @@ confirmation dialog — so they cannot reject it.
 
 | Pattern | Why Dangerous |
 |---------|---------------|
-| `Bash(git push:*)` | Bypasses block-git-push.sh hook confirmation |
+| `Bash(git push:*)` | Bypasses push-blocking hook confirmation |
 | `Bash(git push)` | Same — exact match variant |
 | `Bash(git push --force:*)` | Force push with no confirmation |
 
@@ -97,12 +97,33 @@ worth noting.
 
 ### Step 3: Check for Duplicates
 
-Look for permissions that are redundant:
-- Exact duplicates
+Note: `ctx init` now automatically removes exact duplicates and
+fully-qualified skill forms that are subsumed by bare equivalents
+(e.g., `Skill(ctx:ctx-agent)` when `Skill(ctx-agent)` exists).
+If you see these, suggest running `ctx init` to clean them up.
+
+Look for remaining redundancies that automatic dedup does not cover:
 - Entries where a broader pattern already covers a narrower one
   (e.g., `Bash(git:*)` makes `Bash(git status:*)` redundant)
 
-### Step 4: Report
+### Step 4: Sort Entries Alphabetically
+
+Sort both `permissions.allow` and `permissions.deny` arrays in
+`settings.local.json` for easier visual scanning:
+
+1. **Group by tool prefix**: `Bash(...)`, `Edit(...)`, `Read(...)`,
+   `Skill(...)`, `WebFetch(...)`, `WebSearch`, etc.
+2. **Sort alphabetically within each group** by the full entry string
+3. **Sort groups alphabetically** by prefix name
+
+This produces a stable, predictable order that makes it easy to spot
+duplicates, find specific entries, and review diffs.
+
+Apply the sort directly to the file — this is a non-destructive
+reformat. Show the user a summary of what moved (e.g., "Sorted 45
+allow entries and 8 deny entries into 4 tool groups").
+
+### Step 5: Report
 
 Format findings by severity:
 
@@ -126,7 +147,7 @@ Format findings by severity:
 - 45 permissions reviewed, no issues found
 ```
 
-### Step 5: Offer to Fix
+### Step 6: Offer to Fix
 
 For each finding, offer a specific action:
 
@@ -140,8 +161,9 @@ directly. Show the diff before and after.
 
 ## Important Notes
 
-- NEVER remove permissions without showing the user what will
-  be removed and getting confirmation
+- Show the user exactly what will be removed and get explicit
+  confirmation before editing — preventing accidental lockout
+  preserves user agency
 - Permissions the user just granted in this session are more
   likely intentional — note them but do not alarm
 - Some broad permissions are legitimate for development
@@ -156,6 +178,7 @@ After running the audit, verify:
 - [ ] Checked all four categories (bypass, destructive,
       injection, broad)
 - [ ] Checked for duplicates
+- [ ] Sorted allow and deny arrays alphabetically by tool prefix
 - [ ] Reported findings by severity
 - [ ] Offered specific fix actions for Critical/High
 - [ ] Did not remove anything without confirmation

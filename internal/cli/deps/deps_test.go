@@ -281,3 +281,149 @@ func TestRunDeps_GoProject(t *testing.T) {
 		t.Errorf("expected pkgb -> pkga edge in output, got: %s", out)
 	}
 }
+
+func TestRunDeps_NoProject(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+	cmd.SetArgs([]string{})
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("expected no error in empty dir, got: %v", execErr)
+	}
+
+	out := buf.String()
+	if !strings.Contains(out, "No supported project") {
+		t.Errorf("expected 'No supported project' message, got: %s", out)
+	}
+}
+
+func TestRunDeps_TableFormat(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+
+	// Minimal Go project with two packages.
+	if writeErr := os.WriteFile(filepath.Join(tmp, "go.mod"),
+		[]byte("module example.com/tblmod\n\ngo 1.21\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	pkgA := filepath.Join(tmp, "pkga")
+	if mkErr := os.MkdirAll(pkgA, 0o755); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+	if writeErr := os.WriteFile(filepath.Join(pkgA, "a.go"),
+		[]byte("package pkga\n\nfunc Hello() string { return \"hello\" }\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	pkgB := filepath.Join(tmp, "pkgb")
+	if mkErr := os.MkdirAll(pkgB, 0o755); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+	if writeErr := os.WriteFile(filepath.Join(pkgB, "b.go"),
+		[]byte("package pkgb\n\nimport \"example.com/tblmod/pkga\"\n\nvar _ = pkga.Hello\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+	cmd.SetArgs([]string{"--format", "table"})
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("runDeps --format table failed: %v", execErr)
+	}
+
+	out := buf.String()
+	if !strings.Contains(out, "Package") {
+		t.Errorf("expected table header 'Package', got: %s", out)
+	}
+	if !strings.Contains(out, "pkgb") {
+		t.Errorf("expected 'pkgb' in table output, got: %s", out)
+	}
+}
+
+func TestRunDeps_JSONFormat(t *testing.T) {
+	orig, getErr := os.Getwd()
+	if getErr != nil {
+		t.Fatal(getErr)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	tmp := t.TempDir()
+	if chdirErr := os.Chdir(tmp); chdirErr != nil {
+		t.Fatal(chdirErr)
+	}
+
+	if writeErr := os.WriteFile(filepath.Join(tmp, "go.mod"),
+		[]byte("module example.com/jsonmod\n\ngo 1.21\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	pkgA := filepath.Join(tmp, "pkga")
+	if mkErr := os.MkdirAll(pkgA, 0o755); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+	if writeErr := os.WriteFile(filepath.Join(pkgA, "a.go"),
+		[]byte("package pkga\n\nfunc Hello() string { return \"hello\" }\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+	pkgB := filepath.Join(tmp, "pkgb")
+	if mkErr := os.MkdirAll(pkgB, 0o755); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+	if writeErr := os.WriteFile(filepath.Join(pkgB, "b.go"),
+		[]byte("package pkgb\n\nimport \"example.com/jsonmod/pkga\"\n\nvar _ = pkga.Hello\n"), 0o644); writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+	cmd.SetArgs([]string{"--format", "json"})
+	if execErr := cmd.Execute(); execErr != nil {
+		t.Fatalf("runDeps --format json failed: %v", execErr)
+	}
+
+	out := buf.String()
+	var parsed map[string][]string
+	if unmarshalErr := json.Unmarshal([]byte(out), &parsed); unmarshalErr != nil {
+		t.Fatalf("output is not valid JSON: %v\noutput: %s", unmarshalErr, out)
+	}
+	if len(parsed) == 0 {
+		t.Error("expected non-empty JSON graph")
+	}
+}
+
+func TestRunDeps_UnknownFormat(t *testing.T) {
+	cmd := Cmd()
+	var buf bytes.Buffer
+	cmd.SetOut(&buf)
+	cmd.SetErr(&buf)
+	cmd.SetArgs([]string{"--format", "xml"})
+	execErr := cmd.Execute()
+	if execErr == nil {
+		t.Fatal("expected error for --format xml, got nil")
+	}
+	if !strings.Contains(execErr.Error(), "unknown format") {
+		t.Errorf("unexpected error message: %v", execErr)
+	}
+}
