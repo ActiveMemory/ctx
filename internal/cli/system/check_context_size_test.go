@@ -47,6 +47,12 @@ func TestCheckContextSize_SilentEarly(t *testing.T) {
 	if strings.Contains(out, "Context Checkpoint") {
 		t.Errorf("expected silence at prompt 1, got: %s", out)
 	}
+
+	// Stats file should be written even on silent prompts
+	statsPath := filepath.Join(rc.ContextDir(), config.DirState, "stats-test-silent.jsonl")
+	if _, statErr := os.Stat(statsPath); statErr != nil {
+		t.Errorf("stats file should exist after silent prompt: %v", statErr)
+	}
 }
 
 func TestCheckContextSize_CheckpointAt18(t *testing.T) {
@@ -475,6 +481,66 @@ func TestCheckContextSize_SuppressedAfterWrapUp(t *testing.T) {
 	out := cmdOutput(cmd)
 	if strings.Contains(out, "Context Checkpoint") {
 		t.Errorf("expected suppression after wrap-up, got: %s", out)
+	}
+
+	// Stats should still be written even when nudges are suppressed.
+	statsPath := filepath.Join(sd, "stats-test-wrapup.jsonl")
+	data, readErr := os.ReadFile(statsPath)
+	if readErr != nil {
+		t.Fatalf("stats file should exist after suppressed prompt: %v", readErr)
+	}
+	if !strings.Contains(string(data), `"event":"suppressed"`) {
+		t.Errorf("stats should record event as suppressed, got: %s", string(data))
+	}
+}
+
+func TestCheckContextSize_BillingFiresDuringWrapUp(t *testing.T) {
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
+
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	// Write .ctxrc with a low billing threshold.
+	_ = os.WriteFile(filepath.Join(workDir, ".ctxrc"),
+		[]byte("billing_token_warn: 10000\n"), 0o600)
+	rc.Reset()
+	setupContextDir(t)
+
+	sessionID := "test-billing-wrapup"
+	sd := filepath.Join(rc.ContextDir(), config.DirState)
+
+	// Create a fresh wrap-up marker.
+	_ = os.WriteFile(filepath.Join(sd, wrappedUpMarker), []byte("wrapped-up"), 0o600)
+
+	// Create a fake JSONL with 50k tokens (exceeds 10k threshold).
+	projectDir := filepath.Join(homeDir, ".claude", "projects", "testproj")
+	_ = os.MkdirAll(projectDir, 0o750)
+	jsonlContent := `{"type":"assistant","message":{"model":"claude-opus-4-6","role":"assistant","content":"hi","usage":{"input_tokens":40000,"output_tokens":500,"cache_creation_input_tokens":2000,"cache_read_input_tokens":10000}}}` + "\n"
+	_ = os.WriteFile(filepath.Join(projectDir, sessionID+".jsonl"),
+		[]byte(jsonlContent), 0o600)
+
+	counterFile := filepath.Join(sd, "context-check-"+sessionID)
+	_ = os.WriteFile(counterFile, []byte("5"), 0o600)
+
+	cmd := newTestCmd()
+	stdin := createTempStdin(t, `{"session_id":"`+sessionID+`"}`)
+	if err := runCheckContextSize(cmd, stdin); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	out := cmdOutput(cmd)
+
+	// Checkpoint nudges should be suppressed.
+	if strings.Contains(out, "Context Checkpoint") {
+		t.Errorf("checkpoint should be suppressed during wrap-up, got: %s", out)
+	}
+
+	// Billing warning should fire despite wrap-up suppression.
+	if !strings.Contains(out, "Billing Threshold") {
+		t.Errorf("billing warning should fire even during wrap-up, got: %s", out)
 	}
 }
 

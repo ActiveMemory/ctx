@@ -37,6 +37,8 @@ Subcommands:
   bootstrap            Print context location for AI agents
   message              Manage hook message templates (list/show/edit/reset)
 
+  stats                Show session token usage stats
+
 Plumbing subcommands (used by skills and automation):
   mark-journal         Update journal processing state
   mark-wrapped-up      Suppress checkpoint nudges after wrap-up
@@ -68,6 +70,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 	cmd.AddCommand(
 		backupCmd(),
 		resourcesCmd(),
+		statsCmd(),
 		bootstrapCmd(),
 		messageCmd(),
 		markJournalCmd(),

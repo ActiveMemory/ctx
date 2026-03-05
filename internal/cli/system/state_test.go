@@ -7,6 +7,7 @@
 package system
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -179,5 +180,86 @@ func TestTouchFile(t *testing.T) {
 	touchFile(path)
 	if _, statErr := os.Stat(path); statErr != nil {
 		t.Errorf("touchFile did not create file: %v", statErr)
+	}
+}
+
+func TestWriteSessionStats_CreatesAndAppends(t *testing.T) {
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rc.Reset()
+	ctxDir := rc.ContextDir()
+	if mkErr := os.MkdirAll(filepath.Join(ctxDir, config.DirState), 0o750); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+
+	sid := "test-stats"
+
+	// Write two entries
+	writeSessionStats(sid, sessionStats{
+		Timestamp: "2026-03-05T10:00:00Z", Prompt: 1,
+		Tokens: 5000, Pct: 2, WindowSize: 200000,
+		Model: "claude-opus-4-6", Event: "silent",
+	})
+	writeSessionStats(sid, sessionStats{
+		Timestamp: "2026-03-05T10:01:00Z", Prompt: 2,
+		Tokens: 12000, Pct: 6, WindowSize: 200000,
+		Model: "claude-opus-4-6", Event: "silent",
+	})
+
+	statsPath := filepath.Join(ctxDir, config.DirState, "stats-"+sid+".jsonl")
+	data, readErr := os.ReadFile(statsPath)
+	if readErr != nil {
+		t.Fatalf("stats file not created: %v", readErr)
+	}
+
+	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+	if len(lines) != 2 {
+		t.Fatalf("expected 2 lines, got %d", len(lines))
+	}
+
+	var first sessionStats
+	if jsonErr := json.Unmarshal([]byte(lines[0]), &first); jsonErr != nil {
+		t.Fatalf("failed to parse first line: %v", jsonErr)
+	}
+	if first.Prompt != 1 || first.Tokens != 5000 || first.Event != "silent" {
+		t.Errorf("unexpected first entry: %+v", first)
+	}
+
+	var second sessionStats
+	if jsonErr := json.Unmarshal([]byte(lines[1]), &second); jsonErr != nil {
+		t.Fatalf("failed to parse second line: %v", jsonErr)
+	}
+	if second.Prompt != 2 || second.Tokens != 12000 {
+		t.Errorf("unexpected second entry: %+v", second)
+	}
+}
+
+func TestWriteSessionStats_OmitsEmptyModel(t *testing.T) {
+	workDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(workDir)
+	defer func() { _ = os.Chdir(origDir) }()
+
+	rc.Reset()
+	ctxDir := rc.ContextDir()
+	if mkErr := os.MkdirAll(filepath.Join(ctxDir, config.DirState), 0o750); mkErr != nil {
+		t.Fatal(mkErr)
+	}
+
+	writeSessionStats("test-no-model", sessionStats{
+		Timestamp: "2026-03-05T10:00:00Z", Prompt: 1,
+		Event: "silent",
+	})
+
+	statsPath := filepath.Join(ctxDir, config.DirState, "stats-test-no-model.jsonl")
+	data, readErr := os.ReadFile(statsPath)
+	if readErr != nil {
+		t.Fatalf("stats file not created: %v", readErr)
+	}
+	if strings.Contains(string(data), `"model"`) {
+		t.Errorf("expected model field to be omitted when empty, got: %s", data)
 	}
 }

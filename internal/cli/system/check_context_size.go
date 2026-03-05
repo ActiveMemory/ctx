@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -88,11 +89,38 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 	count := readCounter(counterFile) + 1
 	writeCounter(counterFile, count)
 
+	// Read actual context window usage from session JSONL
+	info, _ := readSessionTokenInfo(sessionID)
+	tokens := info.Tokens
+	windowSize := effectiveContextWindow(info.Model)
+	pct := 0
+	if windowSize > 0 && tokens > 0 {
+		pct = tokens * 100 / windowSize
+	}
+
+	// Billing threshold: one-shot warning when tokens exceed the
+	// user-configured billing_token_warn. Independent of all other
+	// triggers — fires even during wrap-up suppression because cost
+	// guards are never convenience nudges.
+	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
+		emitBillingWarning(cmd, logFile, sessionID, count, tokens, billingThreshold)
+	}
+
 	// Wrap-up suppression: if the user recently ran /ctx-wrap-up,
-	// suppress checkpoint nudges to avoid noise during/after the
-	// wrap-up ceremony. The marker expires after 2 hours.
+	// suppress checkpoint and window nudges to avoid noise during/after
+	// the wrap-up ceremony. The marker expires after 2 hours.
+	// Stats are still recorded so token usage tracking is continuous.
 	if wrappedUpRecently() {
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d suppressed (wrapped up)", count))
+		writeSessionStats(sessionID, sessionStats{
+			Timestamp:  time.Now().Format(time.RFC3339),
+			Prompt:     count,
+			Tokens:     tokens,
+			Pct:        pct,
+			WindowSize: windowSize,
+			Model:      info.Model,
+			Event:      "suppressed",
+		})
 		return nil
 	}
 
@@ -104,33 +132,29 @@ func runCheckContextSize(cmd *cobra.Command, stdin *os.File) error {
 		counterTriggered = count%5 == 0
 	}
 
-	// Read actual context window usage from session JSONL
-	info, _ := readSessionTokenInfo(sessionID)
-	tokens := info.Tokens
-	windowSize := effectiveContextWindow(info.Model)
-	pct := 0
-	if windowSize > 0 && tokens > 0 {
-		pct = tokens * 100 / windowSize
-	}
 	windowTrigger := pct >= contextWindowThresholdPct
 
-	// Billing threshold: one-shot warning when tokens exceed the
-	// user-configured billing_token_warn. Independent of all other
-	// triggers — fires at most once per session.
-	if billingThreshold := rc.BillingTokenWarn(); billingThreshold > 0 && tokens >= billingThreshold {
-		emitBillingWarning(cmd, logFile, sessionID, count, tokens, billingThreshold)
-	}
-
+	event := "silent"
 	switch {
 	case counterTriggered:
-		// Checkpoint fires (token line appended when available)
+		event = "checkpoint"
 		emitCheckpoint(cmd, logFile, sessionID, count, tokens, pct, windowSize)
 	case windowTrigger:
-		// >80% context window, no checkpoint due — independent warning
+		event = "window-warning"
 		emitWindowWarning(cmd, logFile, sessionID, count, tokens, pct)
 	default:
 		logMessage(logFile, sessionID, fmt.Sprintf("prompt#%d silent", count))
 	}
+
+	writeSessionStats(sessionID, sessionStats{
+		Timestamp:  time.Now().Format(time.RFC3339),
+		Prompt:     count,
+		Tokens:     tokens,
+		Pct:        pct,
+		WindowSize: windowSize,
+		Model:      info.Model,
+		Event:      event,
+	})
 
 	return nil
 }

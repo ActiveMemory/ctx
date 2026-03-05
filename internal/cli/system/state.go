@@ -7,6 +7,7 @@
 package system
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -158,6 +159,36 @@ func Pause(sessionID string) {
 // top-level ctx resume command. No-op if not paused.
 func Resume(sessionID string) {
 	_ = os.Remove(pauseMarkerPath(sessionID))
+}
+
+// sessionStats holds the fields written to the per-session stats JSONL file.
+type sessionStats struct {
+	Timestamp  string `json:"ts"`
+	Prompt     int    `json:"prompt"`
+	Tokens     int    `json:"tokens"`
+	Pct        int    `json:"pct"`
+	WindowSize int    `json:"window"`
+	Model      string `json:"model,omitempty"`
+	Event      string `json:"event"`
+}
+
+// writeSessionStats appends a JSONL line to .context/state/stats-{sessionID}.jsonl.
+// The file is designed for `tail -f` monitoring of token usage across prompts.
+// Best-effort: errors are silently ignored.
+func writeSessionStats(sessionID string, stats sessionStats) {
+	path := filepath.Join(stateDir(), "stats-"+sessionID+".jsonl")
+	data, marshalErr := json.Marshal(stats)
+	if marshalErr != nil {
+		return
+	}
+	data = append(data, '\n')
+
+	f, openErr := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600) //nolint:gosec // state dir path
+	if openErr != nil {
+		return
+	}
+	defer func() { _ = f.Close() }()
+	_, _ = f.Write(data)
 }
 
 // ReadSessionID reads the session ID from stdin JSON, returning the

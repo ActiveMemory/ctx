@@ -214,6 +214,8 @@ Spec: `specs/ctx-map.md`
 
 ## Later
 
+- [ ] PM.8: Add ctx system prune to clean stale per-session state files from .context/state/. Two candidate strategies: (1) prune files for sessions with no matching JSONL in ~/.claude/projects/, (2) prune state files older than N days (default 7). Decide at implementation time. Currently ~6 files per session accumulate forever (context-check, ctx-loaded, heartbeat, heartbeat-mtime, persistence-nudge, jsonl-path). #priority:medium #added:2026-03-05-045948
+
 - [ ] P0.5: Blog: "Building a Claude Code Marketplace Plugin" — narrative from session
       history, journals, and git diff of feat/plugin-conversion branch.
       Covers: motivation (shell hooks to Go subcommands), plugin directory

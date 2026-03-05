@@ -2786,6 +2786,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-system-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-system-mark-journal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3533,6 +3544,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ctx-system-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx system stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ctx-system-mark-journal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4009,12 +4031,86 @@ what hooks fired, when, and how often. Event logging is opt-in via
 <p><strong>See also</strong>: <a href="../../recipes/troubleshooting/">Troubleshooting</a>,
 <a href="../../recipes/system-hooks-audit/">Auditing System Hooks</a>,
 <a href="../doctor/#ctx-doctor"><code>ctx doctor</code></a></p>
+<h4 id="ctx-system-stats"><code>ctx system stats</code><a class="headerlink" href="#ctx-system-stats" title="Permanent link">&para;</a></h4>
+<p>Show per-session token usage statistics. Reads stats JSONL files from
+<code>.context/state/stats-*.jsonl</code>, written automatically by the <code>check-context-size</code>
+hook on every prompt.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>flags<span class="o">]</span>
+</span></code></pre></div>
+<p><strong>Flags</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Short</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--follow</code></td>
+<td><code>-f</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Stream new entries as they arrive</td>
+</tr>
+<tr>
+<td><code>--session</code></td>
+<td><code>-s</code></td>
+<td>string</td>
+<td><em>(all)</em></td>
+<td>Filter by session ID (prefix match)</td>
+</tr>
+<tr>
+<td><code>--last</code></td>
+<td><code>-n</code></td>
+<td>int</td>
+<td><code>20</code></td>
+<td>Show last N entries</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td><code>-j</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Output raw JSONL (for piping to <code>jq</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Text output</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>TIME                 SESSION   PROMPT    TOKENS  PCT  EVENT
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>-------------------  --------  ------  --------  ----  ------------
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>2026-03-05 10:00:05  abc12345       1      5k    2%  silent
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>2026-03-05 10:01:12  abc12345       2     12k    6%  silent
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>2026-03-05 10:15:30  abc12345      20     45k   22%  checkpoint
+</span></code></pre></div>
+<p><strong>Events</strong>: <code>silent</code>, <code>checkpoint</code>, <code>window-warning</code>, <code>suppressed</code> (wrap-up active),
+<code>billing</code> (threshold exceeded).</p>
+<p><strong>Examples</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Recent stats across all sessions</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>stats
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Stream live token usage (like tail -f)</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>ctx<span class="w"> </span>system<span class="w"> </span>stats<span class="w"> </span>--follow
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Filter to current session</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>ctx<span class="w"> </span>system<span class="w"> </span>stats<span class="w"> </span>--session<span class="w"> </span>abc12345
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Raw JSONL for analysis</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>ctx<span class="w"> </span>system<span class="w"> </span>stats<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.pct&#39;</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Monitor a long session in another terminal</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>ctx<span class="w"> </span>system<span class="w"> </span>stats<span class="w"> </span>--follow<span class="w"> </span>--session<span class="w"> </span>abc12345
+</span></code></pre></div>
+<p><strong>See also</strong>: <a href="../../recipes/system-hooks-audit/">Auditing System Hooks</a></p>
 <hr />
 <h4 id="ctx-system-mark-journal"><code>ctx system mark-journal</code><a class="headerlink" href="#ctx-system-mark-journal" title="Permanent link">&para;</a></h4>
 <p>Update processing state for a journal entry. Records the current date
 in <code>.context/journal/.state.json</code>. Used by journal skills to record
 pipeline progress.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;stage&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>&lt;filename&gt;<span class="w"> </span>&lt;stage&gt;
 </span></code></pre></div>
 <p><strong>Stages</strong>: <code>exported</code>, <code>enriched</code>, <code>normalized</code>, <code>fences_verified</code></p>
 <table>
@@ -4032,9 +4128,9 @@ pipeline progress.</p>
 </tbody>
 </table>
 <p><strong>Example</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>enriched
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>normalized
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>--check<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>fences_verified
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>enriched
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>normalized
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-journal<span class="w"> </span>--check<span class="w"> </span><span class="m">2026</span>-01-21-session-abc12345.md<span class="w"> </span>fences_verified
 </span></code></pre></div>
 <h4 id="ctx-system-mark-wrapped-up"><code>ctx system mark-wrapped-up</code><a class="headerlink" href="#ctx-system-mark-wrapped-up" title="Permanent link">&para;</a></h4>
 <p>Suppress context checkpoint nudges after a wrap-up ceremony. Writes a
@@ -4042,7 +4138,7 @@ marker file that <code>check-context-size</code> checks before emitting checkpoi
 boxes. The marker expires after 2 hours.</p>
 <p>Called automatically by <code>/ctx-wrap-up</code> after persisting context
 (<em>not intended for direct use</em>).</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-wrapped-up
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ctx<span class="w"> </span>system<span class="w"> </span>mark-wrapped-up
 </span></code></pre></div>
 <p>No flags, no arguments. Idempotent: running it again updates the
 marker timestamp.</p>

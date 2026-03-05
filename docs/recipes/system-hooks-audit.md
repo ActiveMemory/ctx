@@ -31,6 +31,7 @@ Or ask your agent: *"Are our hooks running?"*
 |--------------------------|---------------|------------------------------------------|
 | `ctx system <hook>`      | CLI command   | Run a system hook manually               |
 | `ctx system resources`   | CLI command   | Show system resource status              |
+| `ctx system stats`       | CLI command   | Stream or dump per-session token stats   |
 | `ctx notify setup`       | CLI command   | Configure webhook for audit trail        |
 | `ctx notify test`        | CLI command   | Verify webhook delivery                  |
 | `.ctxrc` `notify.events` | Configuration | Subscribe to `relay` for full hook audit |
@@ -76,8 +77,17 @@ agent to persist context before the window fills up.
 │ This session is getting deep. Consider wrapping up
 │ soon. If there are unsaved learnings, decisions, or
 │ conventions, now is a good time to persist them.
+│ ⏱ Context window: ~45k tokens (~22% of 200k)
 └──────────────────────────────────────────────────
 ```
+
+**Stats**: Every prompt records token usage to `.context/state/stats-{session}.jsonl`.
+Monitor live with `ctx system stats --follow` or query with `ctx system stats --json`.
+Stats are recorded even during wrap-up suppression (event: `suppressed`).
+
+**Billing guard**: When `billing_token_warn` is set in `.ctxrc`, a one-shot warning
+fires if session tokens exceed the threshold. This warning is independent of all
+other triggers — it fires even during wrap-up suppression.
 
 ---
 
