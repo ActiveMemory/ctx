@@ -166,6 +166,67 @@ before anyone does any work. For small tasks, that overhead dominates.
 | `/ctx-worktree`     | N/A                  | Setup + teardown     | Optional               |
 | `/ctx-commit`       | Normal commits       | Per-branch commits   | Per-agent commits      |
 
+## Team Composition Recipes
+
+Four practical team compositions for common workflows.
+
+### Feature Development (3 agents)
+
+| Role         | Responsibility                                              |
+|--------------|-------------------------------------------------------------|
+| Architect    | Writes spec in `specs/`, breaks work into TASKS.md phases   |
+| Implementer  | Picks tasks from TASKS.md, writes code, marks `[x]` done   |
+| Reviewer     | Runs tests, `ctx drift`, lint; files issues as new tasks    |
+
+**Coordination**: TASKS.md checkboxes. Architect writes tasks before
+implementer starts. Reviewer runs after each implementer commit.
+
+**Anti-pattern**: All three agents editing the same file simultaneously.
+Sequence the work so only one agent touches a file at a time.
+
+### Consolidation Sprint (3-4 agents)
+
+| Role        | Responsibility                                               |
+|-------------|--------------------------------------------------------------|
+| Auditor     | Runs `ctx drift`, identifies stale paths and broken refs     |
+| Code Fixer  | Updates source code to match context (or vice versa)         |
+| Doc Writer  | Updates ARCHITECTURE.md, CONVENTIONS.md, and docs/           |
+| Test Fixer  | (Optional) Fixes tests broken by the fixer's changes        |
+
+**Coordination**: Auditor's `ctx drift` output is the shared work queue.
+Each agent claims a subset of issues by adding `#in-progress` labels.
+
+**Anti-pattern**: Fixer and doc writer both editing ARCHITECTURE.md.
+Assign file ownership explicitly.
+
+### Release Prep (2 agents)
+
+| Role           | Responsibility                                            |
+|----------------|-----------------------------------------------------------|
+| Release Notes  | Generates changelog from commits, writes release notes    |
+| Validation     | Runs full test suite, lint, build across platforms         |
+
+**Coordination**: Both read TASKS.md to identify what shipped. Release
+notes agent works from `git log`; validation agent works from `make audit`.
+
+**Anti-pattern**: Release notes agent running tests "to verify." Each
+agent stays in its lane.
+
+### Documentation Sprint (3 agents)
+
+| Role          | Responsibility                                             |
+|---------------|------------------------------------------------------------|
+| Content       | Writes new pages, expands existing docs                    |
+| Cross-linker  | Adds nav entries, cross-references, "See Also" sections    |
+| Verifier      | Builds site, checks broken links, validates rendering      |
+
+**Coordination**: Content agent writes files first. Cross-linker updates
+`zensical.toml` and index pages after content lands. Verifier builds
+after each batch.
+
+**Anti-pattern**: Content and cross-linker both editing `zensical.toml`.
+Batch nav updates into the cross-linker's pass.
+
 ## Tips
 
 * **Start with one agent**: Only add parallelism when you have identified

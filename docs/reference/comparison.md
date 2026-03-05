@@ -224,6 +224,80 @@ live next to code; **not** behind a service boundary.
 
 ---
 
+## Specific Tool Comparisons
+
+Users often evaluate `ctx` against specific tools they already use. These
+comparisons clarify where responsibilities overlap, where they diverge, and
+where the tools are genuinely complementary.
+
+### Claude Code Memory / Anthropic Auto-Memory
+
+Anthropic's auto-memory is **tool-managed memory (L2)**: the model decides
+what to remember, stores it automatically, and retrieves it implicitly.
+`ctx` is **system memory (L3)**: humans and agents explicitly curate
+decisions, learnings, and tasks in inspectable files.
+
+Auto-memory is convenient -- you do not configure anything. But it is also
+opaque: you cannot see what was stored, edit it precisely, or share it
+across tools. `ctx` files are plain Markdown in your repository, visible
+in diffs and code review.
+
+The two are complementary. `ctx` can absorb auto-memory as an input source
+(importing what the model remembered into structured context files) while
+providing the durable, inspectable layer that auto-memory lacks.
+
+### .cursorrules / .claude/rules
+
+Static rule files (`.cursorrules`, `.claude/rules/`) declare conventions:
+coding style, forbidden patterns, preferred libraries. They are effective
+for **what to do** and load automatically at session start.
+
+`ctx` adds dimensions that rule files do not cover: architectural
+**decisions** with rationale, **learnings** discovered during development,
+active **tasks**, and a **constitution** that governs agent behavior.
+Critically, `ctx` context **accumulates** -- each session can add to it,
+and token budgeting ensures only the most relevant context is injected.
+
+Use rule files for static conventions. Use `ctx` for evolving project
+memory.
+
+### Aider `--read` / `--watch`
+
+Aider's `--read` flag injects file contents at session start; `--watch`
+reloads them on change. The concept is similar to `ctx`'s "load" step:
+make the agent aware of specific files.
+
+The differences emerge beyond loading. Aider has no persistence model --
+nothing the agent learns during a session is written back. There is no
+token budgeting (large files consume the full context window), no priority
+ordering across file types, and no structured format for decisions or
+learnings. `ctx` provides the full lifecycle: load, accumulate, persist,
+and budget.
+
+### Copilot @workspace
+
+GitHub Copilot's `@workspace` performs workspace-wide code search. It
+answers **"what code exists?"** -- finding function definitions, usages,
+and file structure across the repository.
+
+`ctx` answers a different question: **"what did we decide?"** It stores
+architectural intent, not code indices. Copilot's workspace search and
+`ctx`'s project memory are orthogonal; one finds code, the other
+preserves the reasoning behind it.
+
+### Cline Memory
+
+Cline's memory bank stores session context within the Cline extension.
+The motivation is similar to `ctx`: help the agent remember across
+sessions.
+
+The key difference is portability. Cline memory is tied to Cline -- it
+does not transfer to Claude Code, Cursor, Aider, or any other tool.
+`ctx` is tool-agnostic: context lives in plain files that any editor,
+agent, or script can read. Switching tools does not mean losing memory.
+
+---
+
 ## When `ctx` Is a Good Fit
 
 `ctx` works best when:

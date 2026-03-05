@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-05 | Memory bridge design: three-phase architecture with hook nudge + on-demand |
+| 2026-03-05 | Revised strategic analysis: blog-first execution order, bidirectional sync as top-level section |
 | 2026-03-04 | Interface-based GraphBuilder for multi-ecosystem ctx deps |
 | 2026-03-02 | Billing threshold piggybacks on check-context-size, not heartbeat |
 | 2026-03-02 | Replace auto-migration with stderr warning for legacy keys |
@@ -22,6 +24,34 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-05-042154] Memory bridge design: three-phase architecture with hook nudge + on-demand
+
+**Status**: Accepted
+
+**Context**: Brainstormed how to bridge Claude Code MEMORY.md with ctx structured context files
+
+**Decision**: Memory bridge design: three-phase architecture with hook nudge + on-demand
+
+**Rationale**: Hook nudge + on-demand gives user choice and freedom. Wrap-up is the publish trigger, never commit (footgun). Heuristic classification for v1, no LLM. Marker-based merge for bidirectional conflict. Mirror is git-tracked + timestamped archives. Foundation spec delivers sync/status/diff/hook; import and publish are future phases.
+
+**Consequences**: Foundation spec in specs/memory-bridge.md, import/publish specs deferred to ideas/. Tasked out as S-0.1.1 through S-0.1.10 in ideas/TASKS.md.
+
+---
+
+## [2026-03-05-023937] Revised strategic analysis: blog-first execution order, bidirectional sync as top-level section
+
+**Status**: Accepted
+
+**Context**: Editorial review of ideas/claude-memory-strategic-analysis.md surfaced six structural weaknesses in competitive positioning
+
+**Decision**: Revised strategic analysis: blog-first execution order, bidirectional sync as top-level section
+
+**Rationale**: 200-line cap is fragile differentiator (demoted); org-scoped memory is the real threat (elevated to HIGH); model agnosticism is premature (parked with trigger condition); bidirectional sync is the most underweighted insight (promoted); narrative shapes categories before implementation does (blog first)
+
+**Consequences**: Execution order is now S-3 (blog) -> S-0 -> S-1 -> S-2. Strategic doc restructured from 9 to 10 sections. Blog post shipped as first deliverable.
+
+---
 
 ## [2026-03-04-105238] Interface-based GraphBuilder for multi-ecosystem ctx deps
 

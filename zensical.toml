@@ -38,6 +38,10 @@ nav = [
     "home/context-files.md",
     "home/configuration.md",
     "home/prompting-guide.md",
+    "home/repeated-mistakes.md",
+    "home/joining-a-project.md",
+    "home/keeping-ai-honest.md",
+    "home/faq.md",
   ]},
   { "Recipes" = [
     { "Getting Started" = [

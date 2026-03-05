@@ -178,6 +178,33 @@ tasks automatically.
 
 You can also run `/ctx-archive` to compact on demand.
 
+### Knowledge Health Flow
+
+Over time, LEARNINGS.md and DECISIONS.md accumulate entries that overlap
+or partially repeat each other. The `check-persistence` hook detects when
+entry counts exceed a configurable threshold and surfaces a nudge:
+
+> *"LEARNINGS.md has 25+ entries. Consider running /ctx-consolidate to
+> merge overlapping items."*
+
+The consolidation workflow:
+
+1. **Review**: `/ctx-consolidate` groups entries by keyword similarity
+   and presents candidate merges for your approval.
+2. **Merge**: Approved groups are combined into single entries that
+   preserve the key information from each original.
+3. **Archive**: Originals move to `.context/archive/`, not deleted --
+   the full history is preserved in git and the archive directory.
+4. **Verify**: Run `ctx drift` after consolidation to confirm no
+   cross-references were broken by the merge.
+
+This replaces ad-hoc cleanup with a repeatable, nudge-driven cycle:
+detect accumulation, review candidates, merge with approval, archive
+originals.
+
+See also: [Knowledge Capture](knowledge-capture.md) for the recording
+workflow that feeds into this maintenance cycle.
+
 ### Step 5: Alignment Audits
 
 A related problem is **alignment drift**: Documentation that makes claims about

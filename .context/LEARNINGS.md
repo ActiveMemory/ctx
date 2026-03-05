@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-05 | Claude Code has two separate memory systems behind feature flags |
+| 2026-03-05 | Blog post editorial feedback is higher-leverage than drafting |
 | 2026-03-04 | CONSTITUTION hook compliance is non-negotiable — don't work around it |
 | 2026-03-04 | nolint:errcheck in tests normalizes unchecked errors for agents |
 | 2026-03-04 | golangci-lint v2 ignores inline nolint directives for some linters |
@@ -46,6 +48,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-05-042157] Claude Code has two separate memory systems behind feature flags
+
+**Context**: Filesystem and behavioral analysis of Claude Code v2.1.69
+
+**Lesson**: Claude Code has two separate memory systems behind feature flags. Auto memory writes MEMORY.md to disk (user-visible, toggleable via settings). Session memory is a separate background extraction pipeline with compaction and team sync (push/pull model). The two systems serve different purposes and are independently feature-flagged.
+
+**Application**: ctx memory bridge targets auto memory (MEMORY.md on disk). Session memory is API-side and not directly accessible. Full findings in ideas/claude-code-project-directory-structure.md.
+
+---
+
+## [2026-03-05-023941] Blog post editorial feedback is higher-leverage than drafting
+
+**Context**: Draft of Agent Memory Is Infrastructure was publication-quality on first pass; user editorial feedback (structural emphasis, rhetorical sharpening, amnesia/archaeology bridge) elevated it significantly more than initial generation
+
+**Lesson**: For narrative content, the first draft captures the argument; the editorial pass captures the voice. Both are necessary but the editorial pass has disproportionate impact on quality.
+
+**Application**: For future blog posts, invest more in the editorial cycle (structural feedback then targeted refinements) rather than trying to nail voice on first generation.
 
 ---
 
