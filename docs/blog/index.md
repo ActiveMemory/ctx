@@ -11,6 +11,28 @@ Stories, insights, and lessons learned from **building** and **using** `ctx`.
 
 ## Posts
 
+### [Agent Memory Is Infrastructure](2026-03-04-agent-memory-is-infrastructure.md)
+
+*Jose Alekhinne / March 4, 2026*
+
+Every AI coding agent starts fresh. The obvious fix is "memory": give it a
+notepad, let it write things down. But there's a different problem memory
+doesn't touch: the project itself accumulates knowledge that has nothing to do
+with any single session. 
+
+**Decisions**, **conventions**, 3am pagers, **discoveries**, 
+**constraints** that shape every line of code. 
+
+**NONE** of this survives a `git clone`. This post argues that agent memory is 
+L2 (*runtime cache*); what's missing is L3 (*project infrastructure*): 
+*versioned*, *structured*, **team-shared** knowledge that lives in the 
+repository and travels wherever the code travels.
+
+**Topics**: context engineering, agent memory, infrastructure, persistence,
+team knowledge
+
+---
+
 ### [The Last Question](2026-02-28-the-last-question.md)
 
 *Jose Alekhinne / February 28, 2026*
