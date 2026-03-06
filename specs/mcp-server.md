@@ -54,7 +54,7 @@ protocol-native equivalent of ctx skills.** They let the server
 encode *how* to work, not just *what* to read; making ctx's
 behavioral discipline available to every MCP client.
 
-## How Does MCP Fit ctx's Evolution and Manifesto?
+## How Does MCP Fit `ctx`'s Evolution and Manifesto?
 
 MCP is a natural and important fit, but with nuance.
 
