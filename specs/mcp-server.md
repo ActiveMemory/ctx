@@ -170,7 +170,7 @@ The entire data model is designed so that `cp`, `git pull`, and
 A remote MCP server would bypass all of this: no review, no
 history, no branching, no ownership. The **`ctx` Manifesto** says "*structure
 enables scale*" and "*ambiguity is a system failure*": A remote
-context endpoint that anyone can read or write is **the opposite
+context endpoint that anyone  or write is **the opposite
 of structure**.
 
 ### The machine boundary is the trust boundary.
@@ -258,7 +258,7 @@ internal/cli/mcp/
 ### v0.1 — Foundation (Present)
 
 **Goal**: Ship a correct, **minimally-delightful** MCP server that any tool
-can use to read ctx context and perform validated writes.
+can use to read `ctx` context and perform validated writes.
 
 Aligns with PR #27 scope, plus corrections for spec compliance.
 
@@ -799,7 +799,7 @@ tools + prompts*) is necessary and how the layers compose.
 ### The Problem with Tools Alone
 
 An MCP server with only resources and tools is merely a CRUD API over
-`.context/`. Any AI agent can read and write; but nothing guides
+`.context/`. Any AI agent  and write; but nothing guides
 *when* or *why*. This is the equivalent of giving someone access to
 a codebase without a contributing guide.
 
