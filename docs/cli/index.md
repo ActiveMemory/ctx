@@ -77,6 +77,7 @@ own guards and no-op gracefully.
 | [`ctx why`](tools.md#ctx-why)                   | Read the philosophy behind ctx                         |
 | [`ctx site`](tools.md#ctx-site)                 | Site management (feed generation)                      |
 | [`ctx doctor`](doctor.md#ctx-doctor)            | Structural health check (hooks, drift, config)         |
+| [`ctx mcp`](mcp.md#ctx-mcp)                    | MCP server for AI tool integration (stdin/stdout)      |
 | [`ctx config`](config.md#ctx-config)            | Manage runtime configuration profiles                  |
 | [`ctx system`](system.md#ctx-system)            | System diagnostics and hook commands                   |
 
