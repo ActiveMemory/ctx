@@ -32,6 +32,7 @@ var resourceTable = []resourceMapping{
 	{config.FileDecision, "decisions", "Architectural decisions with rationale"},
 	{config.FileLearning, "learnings", "Gotchas, tips, and lessons learned"},
 	{config.FileGlossary, "glossary", "Project-specific terminology"},
+	{config.FileAgentPlaybook, "playbook", "How agents should use this system"},
 }
 
 // resourceURI builds a resource URI from a suffix.
@@ -113,22 +114,45 @@ func (s *Server) readContextFile(
 }
 
 // readAgentPacket assembles all context files in read order into a
-// single response. This provides the same content that `ctx agent`
-// would output, concatenated as a single markdown document.
+// single response, respecting the configured token budget.
+//
+// Files are added in priority order (FileReadOrder). When the token
+// budget would be exceeded, remaining files are listed as "Also noted"
+// summaries instead of included in full.
 func (s *Server) readAgentPacket(
 	id json.RawMessage, ctx *context.Context,
 ) *Response {
 	var sb strings.Builder
 	sb.WriteString("# Context Packet\n\n")
 
+	tokensUsed := context.EstimateTokensString("# Context Packet\n\n")
+	budget := s.tokenBudget
+	var skipped []string
+
 	for _, fileName := range config.FileReadOrder {
 		f := ctx.File(fileName)
 		if f == nil || f.IsEmpty {
 			continue
 		}
-		fmt.Fprintf(&sb, "---\n## %s\n\n", fileName)
-		sb.WriteString(string(f.Content))
-		sb.WriteString("\n\n")
+
+		section := fmt.Sprintf("---\n## %s\n\n%s\n\n", fileName, string(f.Content))
+		sectionTokens := context.EstimateTokensString(section)
+
+		if budget > 0 && tokensUsed+sectionTokens > budget {
+			skipped = append(skipped, fileName)
+			continue
+		}
+
+		sb.WriteString(section)
+		tokensUsed += sectionTokens
+	}
+
+	if len(skipped) > 0 {
+		sb.WriteString("---\n## Also Noted\n\n")
+		for _, name := range skipped {
+			fmt.Fprintf(&sb, "- %s (omitted for budget)\n", name)
+		}
+		sb.WriteString("\n")
 	}
 
 	return s.ok(id, ReadResourceResult{

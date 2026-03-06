@@ -151,15 +151,4 @@ passed checks.
 
 **Arguments:** None.
 
----
 
-## Design
-
-The MCP server preserves all six ctx design invariants:
-
-1. **Markdown-on-filesystem** — all state remains in `.context/` files
-2. **Zero runtime dependencies** — no external services required
-3. **Deterministic assembly** — same files produce same output
-4. **Human authority** — tools write to files, humans review
-5. **Local-first** — no network required
-6. **No telemetry** — no data leaves the local machine

@@ -21,32 +21,33 @@ import (
 	"github.com/ActiveMemory/ctx/internal/task"
 )
 
-// runComplete executes the complete command logic.
-//
-// Finds a task in TASKS.md by number or text match and marks it complete
-// by changing "- [ ]" to "- [x]".
+// CompleteTask finds a task in TASKS.md by number or text match and marks
+// it complete by changing "- [ ]" to "- [x]".
 //
 // Parameters:
-//   - cmd: Cobra command for output messages
-//   - args: Command arguments; args[0] is the task number or search text
+//   - query: Task number (e.g. "1") or search text to match
+//   - contextDir: Path to .context/ directory; if empty, uses rc.ContextDir()
 //
 // Returns:
+//   - string: The text of the completed task
 //   - error: Non-nil if the task is not found, multiple matches, or file
 //     operations fail
-func runComplete(cmd *cobra.Command, args []string) error {
-	query := args[0]
+func CompleteTask(query, contextDir string) (string, error) {
+	if contextDir == "" {
+		contextDir = rc.ContextDir()
+	}
 
-	filePath := filepath.Join(rc.ContextDir(), config.FileTask)
+	filePath := filepath.Join(contextDir, config.FileTask)
 
 	// Check if the file exists
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return fmt.Errorf("TASKS.md not found. Run 'ctx init' first")
+		return "", fmt.Errorf("TASKS.md not found")
 	}
 
 	// Read existing content
 	content, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
-		return fmt.Errorf("failed to read TASKS.md: %w", err)
+		return "", fmt.Errorf("failed to read TASKS.md: %w", err)
 	}
 
 	// Parse tasks and find matching one
@@ -81,9 +82,8 @@ func runComplete(cmd *cobra.Command, args []string) error {
 				strings.ToLower(taskText), strings.ToLower(query),
 			) {
 				if matchedLine != -1 {
-					// Multiple matches - be more specific
-					return fmt.Errorf(
-						"multiple tasks match %q. Be more specific or use task number",
+					return "", fmt.Errorf(
+						"multiple tasks match %q; be more specific or use task number",
 						query,
 					)
 				}
@@ -94,14 +94,7 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	}
 
 	if matchedLine == -1 {
-		if isNumber {
-			return fmt.Errorf(
-				"task #%d not found. Use 'ctx status' to see tasks", taskNumber,
-			)
-		}
-		return fmt.Errorf(
-			"no task matching %q found. Use 'ctx status' to see tasks", query,
-		)
+		return "", fmt.Errorf("no task matching %q found", query)
 	}
 
 	// Mark the task as complete
@@ -112,7 +105,17 @@ func runComplete(cmd *cobra.Command, args []string) error {
 	// Write back
 	newContent := strings.Join(lines, config.NewlineLF)
 	if writeErr := os.WriteFile(filePath, []byte(newContent), config.PermFile); writeErr != nil {
-		return fmt.Errorf("failed to write TASKS.md: %w", writeErr)
+		return "", fmt.Errorf("failed to write TASKS.md: %w", writeErr)
+	}
+
+	return matchedTask, nil
+}
+
+// runComplete executes the complete command logic.
+func runComplete(cmd *cobra.Command, args []string) error {
+	matchedTask, err := CompleteTask(args[0], "")
+	if err != nil {
+		return err
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()

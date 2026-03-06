@@ -19,13 +19,14 @@ func newTestServer(t *testing.T) (*Server, string) {
 		t.Fatalf("mkdir: %v", err)
 	}
 	files := map[string]string{
-		config.FileConstitution: "# Constitution\n\n- Rule 1: Never break things\n",
-		config.FileTask:         "# Tasks\n\n- [ ] Build MCP server\n- [ ] Write tests\n",
-		config.FileDecision:     "# Decisions\n",
-		config.FileConvention:   "# Conventions\n\n- Use Go idioms\n",
-		config.FileLearning:     "# Learnings\n",
-		config.FileArchitecture: "# Architecture\n",
-		config.FileGlossary:     "# Glossary\n",
+		config.FileConstitution:  "# Constitution\n\n- Rule 1: Never break things\n",
+		config.FileTask:          "# Tasks\n\n- [ ] Build MCP server\n- [ ] Write tests\n",
+		config.FileDecision:      "# Decisions\n",
+		config.FileConvention:    "# Conventions\n\n- Use Go idioms\n",
+		config.FileLearning:      "# Learnings\n",
+		config.FileArchitecture:  "# Architecture\n",
+		config.FileGlossary:      "# Glossary\n",
+		config.FileAgentPlaybook: "# Agent Playbook\n\nRead context files first.\n",
 	}
 	for name, content := range files {
 		p := filepath.Join(contextDir, name)
@@ -129,8 +130,8 @@ func TestResourcesList(t *testing.T) {
 	if err := json.Unmarshal(raw, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if len(result.Resources) != 8 {
-		t.Errorf("resource count = %d, want 8", len(result.Resources))
+	if len(result.Resources) != 9 {
+		t.Errorf("resource count = %d, want 9", len(result.Resources))
 	}
 	found := false
 	for _, r := range result.Resources {
@@ -288,6 +289,105 @@ func TestToolDrift(t *testing.T) {
 	}
 	if !strings.Contains(result.Content[0].Text, "Status:") {
 		t.Errorf("expected Status in drift output, got: %s", result.Content[0].Text)
+	}
+}
+
+func TestToolAdd(t *testing.T) {
+	tests := []struct {
+		name         string
+		args         map[string]interface{}
+		wantErr      bool
+		wantFile     string
+		wantContains string
+	}{
+		{
+			name:         "add task",
+			args:         map[string]interface{}{"type": "task", "content": "Test task"},
+			wantFile:     config.FileTask,
+			wantContains: "Test task",
+		},
+		{
+			name:         "add convention",
+			args:         map[string]interface{}{"type": "convention", "content": "Use tabs"},
+			wantFile:     config.FileConvention,
+			wantContains: "Use tabs",
+		},
+		{
+			name: "add decision",
+			args: map[string]interface{}{
+				"type":         "decision",
+				"content":      "Use Redis",
+				"context":      "Need caching",
+				"rationale":    "Fast and simple",
+				"consequences": "Ops must manage Redis",
+			},
+			wantFile:     config.FileDecision,
+			wantContains: "Use Redis",
+		},
+		{
+			name: "add learning",
+			args: map[string]interface{}{
+				"type":        "learning",
+				"content":     "Go embed requires same package",
+				"context":     "Tried parent dir",
+				"lesson":      "Only same or child dirs",
+				"application": "Keep files in internal",
+			},
+			wantFile:     config.FileLearning,
+			wantContains: "Go embed",
+		},
+		{
+			name:    "decision missing rationale",
+			args:    map[string]interface{}{"type": "decision", "content": "X", "context": "Y"},
+			wantErr: true,
+		},
+		{
+			name:    "learning missing lesson",
+			args:    map[string]interface{}{"type": "learning", "content": "X", "context": "Y"},
+			wantErr: true,
+		},
+		{
+			name:    "missing content",
+			args:    map[string]interface{}{"type": "task"},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			srv, contextDir := newTestServer(t)
+			resp := request(t, srv, "tools/call", CallToolParams{
+				Name:      "ctx_add",
+				Arguments: tt.args,
+			})
+			if resp.Error != nil {
+				t.Fatalf("unexpected error: %v", resp.Error.Message)
+			}
+			raw, _ := json.Marshal(resp.Result)
+			var result CallToolResult
+			if err := json.Unmarshal(raw, &result); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+
+			if tt.wantErr {
+				if !result.IsError {
+					t.Fatalf("expected tool error, got success: %s", result.Content[0].Text)
+				}
+				return
+			}
+
+			if result.IsError {
+				t.Fatalf("unexpected tool error: %s", result.Content[0].Text)
+			}
+
+			content, err := os.ReadFile(filepath.Join(contextDir, tt.wantFile))
+			if err != nil {
+				t.Fatalf("read %s: %v", tt.wantFile, err)
+			}
+			if !strings.Contains(string(content), tt.wantContains) {
+				t.Errorf("expected %q in %s, got: %s", tt.wantContains, tt.wantFile, string(content))
+			}
+		})
 	}
 }
 

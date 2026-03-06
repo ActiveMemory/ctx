@@ -14,6 +14,7 @@ import (
 	"os"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Server is an MCP server that exposes ctx context over JSON-RPC 2.0.
@@ -21,10 +22,11 @@ import (
 // It reads JSON-RPC requests from stdin and writes responses to stdout,
 // following the Model Context Protocol specification.
 type Server struct {
-	contextDir string
-	version    string
-	out        io.Writer
-	in         io.Reader
+	contextDir  string
+	version     string
+	tokenBudget int
+	out         io.Writer
+	in          io.Reader
 }
 
 // NewServer creates a new MCP server for the given context directory.
@@ -36,10 +38,11 @@ type Server struct {
 //   - *Server: A configured MCP server ready to serve
 func NewServer(contextDir string) *Server {
 	return &Server{
-		contextDir: contextDir,
-		version:    config.BinaryVersion,
-		out:        os.Stdout,
-		in:         os.Stdin,
+		contextDir:  contextDir,
+		version:     config.BinaryVersion,
+		tokenBudget: rc.TokenBudget(),
+		out:         os.Stdout,
+		in:          os.Stdin,
 	}
 }
 
@@ -75,7 +78,9 @@ func (s *Server) Serve() error {
 			s.writeError(nil, errCodeInternal, "failed to marshal response")
 			continue
 		}
-		_, _ = fmt.Fprintf(s.out, "%s\n", out) //nolint:gosec // G705: stdout, not HTTP response
+		if _, writeErr := s.out.Write(append(out, '\n')); writeErr != nil {
+			return writeErr
+		}
 	}
 
 	return scanner.Err()
@@ -168,6 +173,8 @@ func (s *Server) error(id json.RawMessage, code int, msg string) *Response {
 func (s *Server) writeError(id json.RawMessage, code int, msg string) {
 	resp := s.error(id, code, msg)
 	if out, err := json.Marshal(resp); err == nil {
-		_, _ = fmt.Fprintf(s.out, "%s\n", out) //nolint:gosec // G705: stdout, not HTTP response
+		// Best-effort: writeError is a last-resort fallback; nowhere
+		// to report a write failure from here.
+		_, _ = s.out.Write(append(out, '\n'))
 	}
 }

@@ -9,16 +9,13 @@ package mcp
 import (
 	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add"
+	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
-	"github.com/ActiveMemory/ctx/internal/task"
 )
 
 // toolDefs defines all available MCP tools.
@@ -27,6 +24,7 @@ var toolDefs = []Tool{
 		Name:        "ctx_status",
 		Description: "Show context health: file count, token estimate, and file summaries",
 		InputSchema: InputSchema{Type: "object"},
+		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name:        "ctx_add",
@@ -71,6 +69,7 @@ var toolDefs = []Tool{
 			},
 			Required: []string{"type", "content"},
 		},
+		Annotations: &ToolAnnotations{},
 	},
 	{
 		Name:        "ctx_complete",
@@ -85,11 +84,13 @@ var toolDefs = []Tool{
 			},
 			Required: []string{"query"},
 		},
+		Annotations: &ToolAnnotations{IdempotentHint: true},
 	},
 	{
 		Name:        "ctx_drift",
 		Description: "Detect stale or invalid context: dead paths, missing files, staleness",
 		InputSchema: InputSchema{Type: "object"},
+		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 }
 
@@ -156,8 +157,9 @@ func (s *Server) toolAdd(
 	}
 
 	params := add.EntryParams{
-		Type:    entryType,
-		Content: content,
+		Type:       entryType,
+		Content:    content,
+		ContextDir: s.contextDir,
 	}
 
 	// Optional fields.
@@ -202,65 +204,12 @@ func (s *Server) toolComplete(
 		return s.toolError(id, "query is required")
 	}
 
-	filePath := filepath.Join(s.contextDir, config.FileTask)
-
-	content, err := os.ReadFile(filepath.Clean(filePath))
+	completedTask, err := complete.CompleteTask(query, s.contextDir)
 	if err != nil {
-		return s.toolError(id, "TASKS.md not found")
+		return s.toolError(id, err.Error())
 	}
 
-	lines := strings.Split(string(content), config.NewlineLF)
-
-	var taskNumber int
-	isNumber := false
-	if num, parseErr := strconv.Atoi(query); parseErr == nil {
-		taskNumber = num
-		isNumber = true
-	}
-
-	currentTaskNum := 0
-	matchedLine := -1
-	matchedTask := ""
-
-	for i, line := range lines {
-		match := config.RegExTask.FindStringSubmatch(line)
-		if match != nil && task.Pending(match) {
-			currentTaskNum++
-			taskText := task.Content(match)
-
-			if isNumber && currentTaskNum == taskNumber {
-				matchedLine = i
-				matchedTask = taskText
-				break
-			}
-
-			if !isNumber && strings.Contains(
-				strings.ToLower(taskText), strings.ToLower(query),
-			) {
-				if matchedLine != -1 {
-					return s.toolError(id,
-						fmt.Sprintf("multiple tasks match %q; be more specific or use task number", query))
-				}
-				matchedLine = i
-				matchedTask = taskText
-			}
-		}
-	}
-
-	if matchedLine == -1 {
-		return s.toolError(id, fmt.Sprintf("no task matching %q found", query))
-	}
-
-	lines[matchedLine] = config.RegExTask.ReplaceAllString(
-		lines[matchedLine], "$1- [x] $3",
-	)
-
-	newContent := strings.Join(lines, config.NewlineLF)
-	if wErr := os.WriteFile(filePath, []byte(newContent), config.PermFile); wErr != nil {
-		return s.toolError(id, fmt.Sprintf("failed to write TASKS.md: %v", wErr))
-	}
-
-	return s.toolOK(id, fmt.Sprintf("Completed: %s", matchedTask))
+	return s.toolOK(id, fmt.Sprintf("Completed: %s", completedTask))
 }
 
 // toolDrift runs drift detection and returns the report.

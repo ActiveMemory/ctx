@@ -133,11 +133,19 @@ type ReadResourceResult struct {
 
 // --- Tool types ---
 
+// ToolAnnotations provides hints about a tool's behavior.
+type ToolAnnotations struct {
+	ReadOnlyHint    bool `json:"readOnlyHint,omitempty"`
+	DestructiveHint bool `json:"destructiveHint,omitempty"`
+	IdempotentHint  bool `json:"idempotentHint,omitempty"`
+}
+
 // Tool describes a single MCP tool.
 type Tool struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description,omitempty"`
-	InputSchema InputSchema `json:"inputSchema"`
+	Name        string           `json:"name"`
+	Description string           `json:"description,omitempty"`
+	InputSchema InputSchema      `json:"inputSchema"`
+	Annotations *ToolAnnotations `json:"annotations,omitempty"`
 }
 
 // InputSchema describes the JSON Schema for tool inputs.

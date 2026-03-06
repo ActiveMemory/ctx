@@ -12,36 +12,36 @@
         <meta name="author" content="Jose Alekhinne <alekhinejose@gmail.com>">
       
       
-        <link rel="canonical" href="https://ctx.ist/security/">
+        <link rel="canonical" href="https://ctx.ist/cli/mcp/">
       
       
-        <link rel="prev" href="../operations/autonomous-loop/">
+        <link rel="prev" href="../doctor/">
       
       
-        <link rel="next" href="./agent-security/">
+        <link rel="next" href="../system/">
       
       
         
       
       
-      <link rel="icon" href="../images/favicon-32.png">
+      <link rel="icon" href="../../images/favicon-32.png">
       <meta name="generator" content="zensical-0.0.24">
     
     
       
-        <title>Security - ctx: do you remember?</title>
+        <title>MCP Server - ctx: do you remember?</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.28978c9b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.28978c9b.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -60,9 +60,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#securing-ai-agents" class="md-skip">
+        <a href="#ctx-mcp" class="md-skip">
           Skip to content
         </a>
       
@@ -103,9 +103,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="./.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-header__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Security
+              MCP Server
             
           </span>
         </div>
@@ -200,7 +200,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   Manifesto
@@ -216,7 +216,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../thesis/" class="md-tabs__link">
+      <a href="../../thesis/" class="md-tabs__link">
         
   
   The Thesis
@@ -234,7 +234,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../blog/" class="md-tabs__link">
+        <a href="../../blog/" class="md-tabs__link">
           
   
   Blog
@@ -253,7 +253,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../home/" class="md-tabs__link">
+        <a href="../../home/" class="md-tabs__link">
           
   
   Home
@@ -279,7 +279,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../recipes/guide-your-agent/" class="md-tabs__link">
+        <a href="../../recipes/guide-your-agent/" class="md-tabs__link">
           
   
   Recipes
@@ -297,11 +297,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../cli/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   CLI
@@ -320,7 +322,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../reference/" class="md-tabs__link">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   Reference
@@ -339,7 +341,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../operations/" class="md-tabs__link">
+        <a href="../../operations/" class="md-tabs__link">
           
   
   Operations
@@ -354,13 +356,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="././" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../security/" class="md-tabs__link">
           
   
   Security
@@ -399,9 +399,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="./.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
+    <a href="../.." title="ctx: do you remember?" class="md-nav__button md-logo" aria-label="ctx: do you remember?" data-md-component="logo">
       
-  <img src="../images/ctx-favicon-32.png" alt="logo">
+  <img src="../../images/ctx-favicon-32.png" alt="logo">
 
     </a>
     ctx: do you remember?
@@ -428,7 +428,7 @@
   
   
     <li class="md-nav__item">
-      <a href="./.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -457,7 +457,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../thesis/" class="md-nav__link">
+      <a href="../../thesis/" class="md-nav__link">
         
   
   
@@ -509,7 +509,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../blog/" class="md-nav__link ">
+            <a href="../../blog/" class="md-nav__link ">
               
   
   
@@ -608,7 +608,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../home/" class="md-nav__link ">
+            <a href="../../home/" class="md-nav__link ">
               
   
   
@@ -654,7 +654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/about/" class="md-nav__link">
+      <a href="../../home/about/" class="md-nav__link">
         
   
   
@@ -684,7 +684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/is-ctx-right/" class="md-nav__link">
+      <a href="../../home/is-ctx-right/" class="md-nav__link">
         
   
   
@@ -714,7 +714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/community/" class="md-nav__link">
+      <a href="../../home/community/" class="md-nav__link">
         
   
   
@@ -744,7 +744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/contributing/" class="md-nav__link">
+      <a href="../../home/contributing/" class="md-nav__link">
         
   
   
@@ -774,7 +774,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/getting-started/" class="md-nav__link">
+      <a href="../../home/getting-started/" class="md-nav__link">
         
   
   
@@ -804,7 +804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/first-session/" class="md-nav__link">
+      <a href="../../home/first-session/" class="md-nav__link">
         
   
   
@@ -834,7 +834,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/common-workflows/" class="md-nav__link">
+      <a href="../../home/common-workflows/" class="md-nav__link">
         
   
   
@@ -864,7 +864,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/context-files/" class="md-nav__link">
+      <a href="../../home/context-files/" class="md-nav__link">
         
   
   
@@ -894,7 +894,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/configuration/" class="md-nav__link">
+      <a href="../../home/configuration/" class="md-nav__link">
         
   
   
@@ -924,7 +924,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/prompting-guide/" class="md-nav__link">
+      <a href="../../home/prompting-guide/" class="md-nav__link">
         
   
   
@@ -954,7 +954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/repeated-mistakes/" class="md-nav__link">
+      <a href="../../home/repeated-mistakes/" class="md-nav__link">
         
   
   
@@ -984,7 +984,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/joining-a-project/" class="md-nav__link">
+      <a href="../../home/joining-a-project/" class="md-nav__link">
         
   
   
@@ -1014,7 +1014,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/keeping-ai-honest/" class="md-nav__link">
+      <a href="../../home/keeping-ai-honest/" class="md-nav__link">
         
   
   
@@ -1044,7 +1044,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../home/faq/" class="md-nav__link">
+      <a href="../../home/faq/" class="md-nav__link">
         
   
   
@@ -1207,7 +1207,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/guide-your-agent/" class="md-nav__link">
+      <a href="../../recipes/guide-your-agent/" class="md-nav__link">
         
   
   
@@ -1237,7 +1237,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/multi-tool-setup/" class="md-nav__link">
+      <a href="../../recipes/multi-tool-setup/" class="md-nav__link">
         
   
   
@@ -1267,7 +1267,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/external-context/" class="md-nav__link">
+      <a href="../../recipes/external-context/" class="md-nav__link">
         
   
   
@@ -1369,7 +1369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-lifecycle/" class="md-nav__link">
+      <a href="../../recipes/session-lifecycle/" class="md-nav__link">
         
   
   
@@ -1399,7 +1399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-ceremonies/" class="md-nav__link">
+      <a href="../../recipes/session-ceremonies/" class="md-nav__link">
         
   
   
@@ -1429,7 +1429,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-archaeology/" class="md-nav__link">
+      <a href="../../recipes/session-archaeology/" class="md-nav__link">
         
   
   
@@ -1459,7 +1459,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-reminders/" class="md-nav__link">
+      <a href="../../recipes/session-reminders/" class="md-nav__link">
         
   
   
@@ -1489,7 +1489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/session-pause/" class="md-nav__link">
+      <a href="../../recipes/session-pause/" class="md-nav__link">
         
   
   
@@ -1595,7 +1595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/knowledge-capture/" class="md-nav__link">
+      <a href="../../recipes/knowledge-capture/" class="md-nav__link">
         
   
   
@@ -1625,7 +1625,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/task-management/" class="md-nav__link">
+      <a href="../../recipes/task-management/" class="md-nav__link">
         
   
   
@@ -1655,7 +1655,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/import-plans/" class="md-nav__link">
+      <a href="../../recipes/import-plans/" class="md-nav__link">
         
   
   
@@ -1685,7 +1685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/design-before-coding/" class="md-nav__link">
+      <a href="../../recipes/design-before-coding/" class="md-nav__link">
         
   
   
@@ -1715,7 +1715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/scratchpad-with-claude/" class="md-nav__link">
+      <a href="../../recipes/scratchpad-with-claude/" class="md-nav__link">
         
   
   
@@ -1745,7 +1745,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/scratchpad-sync/" class="md-nav__link">
+      <a href="../../recipes/scratchpad-sync/" class="md-nav__link">
         
   
   
@@ -1775,7 +1775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/memory-bridge/" class="md-nav__link">
+      <a href="../../recipes/memory-bridge/" class="md-nav__link">
         
   
   
@@ -1875,7 +1875,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/hook-output-patterns/" class="md-nav__link">
+      <a href="../../recipes/hook-output-patterns/" class="md-nav__link">
         
   
   
@@ -1905,7 +1905,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/customizing-hook-messages/" class="md-nav__link">
+      <a href="../../recipes/customizing-hook-messages/" class="md-nav__link">
         
   
   
@@ -1935,7 +1935,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/webhook-notifications/" class="md-nav__link">
+      <a href="../../recipes/webhook-notifications/" class="md-nav__link">
         
   
   
@@ -1965,7 +1965,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/system-hooks-audit/" class="md-nav__link">
+      <a href="../../recipes/system-hooks-audit/" class="md-nav__link">
         
   
   
@@ -2067,7 +2067,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/context-health/" class="md-nav__link">
+      <a href="../../recipes/context-health/" class="md-nav__link">
         
   
   
@@ -2097,7 +2097,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/troubleshooting/" class="md-nav__link">
+      <a href="../../recipes/troubleshooting/" class="md-nav__link">
         
   
   
@@ -2127,7 +2127,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/claude-code-permissions/" class="md-nav__link">
+      <a href="../../recipes/claude-code-permissions/" class="md-nav__link">
         
   
   
@@ -2157,7 +2157,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/permission-snapshots/" class="md-nav__link">
+      <a href="../../recipes/permission-snapshots/" class="md-nav__link">
         
   
   
@@ -2187,7 +2187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/publishing/" class="md-nav__link">
+      <a href="../../recipes/publishing/" class="md-nav__link">
         
   
   
@@ -2289,7 +2289,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/building-skills/" class="md-nav__link">
+      <a href="../../recipes/building-skills/" class="md-nav__link">
         
   
   
@@ -2319,7 +2319,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/autonomous-loops/" class="md-nav__link">
+      <a href="../../recipes/autonomous-loops/" class="md-nav__link">
         
   
   
@@ -2349,7 +2349,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/when-to-use-agent-teams/" class="md-nav__link">
+      <a href="../../recipes/when-to-use-agent-teams/" class="md-nav__link">
         
   
   
@@ -2379,7 +2379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/parallel-worktrees/" class="md-nav__link">
+      <a href="../../recipes/parallel-worktrees/" class="md-nav__link">
         
   
   
@@ -2409,7 +2409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../recipes/prompt-templates/" class="md-nav__link">
+      <a href="../../recipes/prompt-templates/" class="md-nav__link">
         
   
   
@@ -2451,6 +2451,8 @@
       
   
   
+    
+  
   
   
     
@@ -2480,20 +2482,23 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../cli/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -2513,13 +2518,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2539,7 +2544,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/init-status/" class="md-nav__link">
+      <a href="../init-status/" class="md-nav__link">
         
   
   
@@ -2569,7 +2574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/context/" class="md-nav__link">
+      <a href="../context/" class="md-nav__link">
         
   
   
@@ -2599,7 +2604,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/recall/" class="md-nav__link">
+      <a href="../recall/" class="md-nav__link">
         
   
   
@@ -2629,7 +2634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/tools/" class="md-nav__link">
+      <a href="../tools/" class="md-nav__link">
         
   
   
@@ -2659,7 +2664,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/config/" class="md-nav__link">
+      <a href="../config/" class="md-nav__link">
         
   
   
@@ -2689,7 +2694,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/doctor/" class="md-nav__link">
+      <a href="../doctor/" class="md-nav__link">
         
   
   
@@ -2716,10 +2721,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../cli/mcp/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-plug" viewBox="0 0 24 24"><path d="M12 22v-5M15 8V2M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1zM9 8V2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2737,6 +2769,175 @@
   
 
       </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ctx-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx mcp
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ctx mcp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-mcp-serve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx mcp serve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cursor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs-code-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VS Code (Copilot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_add" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_add
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_complete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_drift
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2749,7 +2950,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/system/" class="md-nav__link">
+      <a href="../system/" class="md-nav__link">
         
   
   
@@ -2821,7 +3022,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -2867,7 +3068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/design-invariants/" class="md-nav__link">
+      <a href="../../reference/design-invariants/" class="md-nav__link">
         
   
   
@@ -2897,7 +3098,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/skills/" class="md-nav__link">
+      <a href="../../reference/skills/" class="md-nav__link">
         
   
   
@@ -2927,7 +3128,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/comparison/" class="md-nav__link">
+      <a href="../../reference/comparison/" class="md-nav__link">
         
   
   
@@ -2957,7 +3158,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/session-journal/" class="md-nav__link">
+      <a href="../../reference/session-journal/" class="md-nav__link">
         
   
   
@@ -2987,7 +3188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/scratchpad/" class="md-nav__link">
+      <a href="../../reference/scratchpad/" class="md-nav__link">
         
   
   
@@ -3017,7 +3218,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/versions/" class="md-nav__link">
+      <a href="../../reference/versions/" class="md-nav__link">
         
   
   
@@ -3085,7 +3286,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../operations/" class="md-nav__link ">
+            <a href="../../operations/" class="md-nav__link ">
               
   
   
@@ -3131,7 +3332,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/migration/" class="md-nav__link">
+      <a href="../../operations/migration/" class="md-nav__link">
         
   
   
@@ -3161,7 +3362,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/upgrading/" class="md-nav__link">
+      <a href="../../operations/upgrading/" class="md-nav__link">
         
   
   
@@ -3191,7 +3392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/integrations/" class="md-nav__link">
+      <a href="../../operations/integrations/" class="md-nav__link">
         
   
   
@@ -3221,7 +3422,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operations/autonomous-loop/" class="md-nav__link">
+      <a href="../../operations/autonomous-loop/" class="md-nav__link">
         
   
   
@@ -3255,8 +3456,6 @@
       
   
   
-    
-  
   
   
     
@@ -3274,23 +3473,20 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="././" class="md-nav__link md-nav__link--active">
+            <a href="../../security/" class="md-nav__link ">
               
   
   
@@ -3310,13 +3506,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_9" id="__nav_9_label" tabindex="">
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             
@@ -3336,7 +3532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="./agent-security/" class="md-nav__link">
+      <a href="../../security/agent-security/" class="md-nav__link">
         
   
   
@@ -3366,7 +3562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="./reporting/" class="md-nav__link">
+      <a href="../../security/reporting/" class="md-nav__link">
         
   
   
@@ -3422,10 +3618,88 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#securing-ai-agents" class="md-nav__link">
+  <a href="#ctx-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Securing AI Agents
+        ctx mcp
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ctx mcp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx-mcp-serve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx mcp serve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cursor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs-code-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VS Code (Copilot)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
       
     </span>
   </a>
@@ -3433,13 +3707,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-policy" class="md-nav__link">
+  <a href="#tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security Policy
+        Tools
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ctx_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_add" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_add
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_complete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctx_drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ctx_drift
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3468,7 +3792,7 @@
   
   
     <li class="md-path__item">
-      <a href="./.." class="md-path__link">
+      <a href="../.." class="md-path__link">
         
   <span class="md-ellipsis">
     Manifesto
@@ -3486,10 +3810,10 @@
     
     
       <li class="md-path__item">
-        <a href="././" class="md-path__link">
+        <a href="../" class="md-path__link">
           
   <span class="md-ellipsis">
-    Security
+    CLI
   </span>
 
         </a>
@@ -3509,18 +3833,215 @@
   
 
 
-  <h1>Security</h1>
+  <h1>MCP Server</h1>
 
-<p><img alt="ctx" src="../images/ctx-banner.png" /></p>
-<p>Security model, <strong>agent hardening</strong>, and <strong>vulnerability reporting</strong>.</p>
+<h2 id="ctx-mcp"><code>ctx mcp</code><a class="headerlink" href="#ctx-mcp" title="Permanent link">&para;</a></h2>
+<p>Run ctx as a <a href="https://modelcontextprotocol.io">Model Context Protocol</a>
+(MCP) server. MCP is a standard protocol that lets AI tools discover
+and consume context from external sources via JSON-RPC 2.0 over
+stdin/stdout.</p>
+<p>This makes ctx accessible to <strong>any MCP-compatible AI tool</strong> without
+custom hooks or integrations:</p>
+<ul>
+<li>Claude Desktop</li>
+<li>Cursor</li>
+<li>Windsurf</li>
+<li>VS Code Copilot</li>
+<li>Any tool supporting MCP</li>
+</ul>
+<h3 id="ctx-mcp-serve"><code>ctx mcp serve</code><a class="headerlink" href="#ctx-mcp-serve" title="Permanent link">&para;</a></h3>
+<p>Start the MCP server. This command reads JSON-RPC 2.0 requests from
+stdin and writes responses to stdout. It is intended to be launched
+by MCP clients, not run directly.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ctx mcp serve
+</span></code></pre></div>
+<p><strong>Flags:</strong> None. The server uses the configured context directory
+(from <code>--context-dir</code>, <code>CTX_DIR</code>, <code>.ctxrc</code>, or the default <code>.context</code>).</p>
 <hr />
-<h3 id="securing-ai-agents"><a href="agent-security/">Securing AI Agents</a><a class="headerlink" href="#securing-ai-agents" title="Permanent link">&para;</a></h3>
-<p><strong>Defense in depth</strong> for unattended AI agents: five layers of
-protection, each with a known bypass, strength in combination.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="claude-desktop">Claude Desktop<a class="headerlink" href="#claude-desktop" title="Permanent link">&para;</a></h3>
+<p>Add to <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;ctx&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;serve&quot;</span><span class="p">]</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="cursor">Cursor<a class="headerlink" href="#cursor" title="Permanent link">&para;</a></h3>
+<p>Add to <code>.cursor/mcp.json</code> in your project:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;ctx&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;serve&quot;</span><span class="p">]</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="vs-code-copilot">VS Code (Copilot)<a class="headerlink" href="#vs-code-copilot" title="Permanent link">&para;</a></h3>
+<p>Add to <code>.vscode/mcp.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;ctx&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;serve&quot;</span><span class="p">]</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+</span></code></pre></div>
 <hr />
-<h3 id="security-policy"><a href="reporting/">Security Policy</a><a class="headerlink" href="#security-policy" title="Permanent link">&para;</a></h3>
-<p><strong>Trust model</strong>, vulnerability reporting, permission hygiene,
-and <strong>security design principles</strong>.</p>
+<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
+<p>Resources expose context files as read-only content. Each resource
+has a URI, name, and returns Markdown text.</p>
+<table>
+<thead>
+<tr>
+<th>URI</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx://context/constitution</code></td>
+<td>constitution</td>
+<td>Hard rules that must never be violated</td>
+</tr>
+<tr>
+<td><code>ctx://context/tasks</code></td>
+<td>tasks</td>
+<td>Current work items and their status</td>
+</tr>
+<tr>
+<td><code>ctx://context/conventions</code></td>
+<td>conventions</td>
+<td>Code patterns and standards</td>
+</tr>
+<tr>
+<td><code>ctx://context/architecture</code></td>
+<td>architecture</td>
+<td>System architecture documentation</td>
+</tr>
+<tr>
+<td><code>ctx://context/decisions</code></td>
+<td>decisions</td>
+<td>Architectural decisions with rationale</td>
+</tr>
+<tr>
+<td><code>ctx://context/learnings</code></td>
+<td>learnings</td>
+<td>Gotchas, tips, and lessons learned</td>
+</tr>
+<tr>
+<td><code>ctx://context/glossary</code></td>
+<td>glossary</td>
+<td>Project-specific terminology</td>
+</tr>
+<tr>
+<td><code>ctx://context/agent</code></td>
+<td>agent</td>
+<td>All files assembled in priority read order</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>agent</code> resource assembles all non-empty context files into a
+single Markdown document, ordered by the configured read priority.</p>
+<hr />
+<h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
+<p>Tools expose ctx commands as callable operations. Each tool accepts
+JSON arguments and returns text results.</p>
+<h3 id="ctx_status"><code>ctx_status</code><a class="headerlink" href="#ctx_status" title="Permanent link">&para;</a></h3>
+<p>Show context health: file count, token estimate, and per-file summary.</p>
+<p><strong>Arguments:</strong> None.</p>
+<h3 id="ctx_add"><code>ctx_add</code><a class="headerlink" href="#ctx_add" title="Permanent link">&para;</a></h3>
+<p>Add a task, decision, learning, or convention to the context.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Entry type: task, decision, learning, convention</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Title or main content</td>
+</tr>
+<tr>
+<td><code>priority</code></td>
+<td>string</td>
+<td>No</td>
+<td>Priority level (tasks only): high, medium, low</td>
+</tr>
+<tr>
+<td><code>context</code></td>
+<td>string</td>
+<td>Conditional</td>
+<td>Context field (decisions and learnings)</td>
+</tr>
+<tr>
+<td><code>rationale</code></td>
+<td>string</td>
+<td>Conditional</td>
+<td>Rationale (decisions only)</td>
+</tr>
+<tr>
+<td><code>consequences</code></td>
+<td>string</td>
+<td>Conditional</td>
+<td>Consequences (decisions only)</td>
+</tr>
+<tr>
+<td><code>lesson</code></td>
+<td>string</td>
+<td>Conditional</td>
+<td>Lesson learned (learnings only)</td>
+</tr>
+<tr>
+<td><code>application</code></td>
+<td>string</td>
+<td>Conditional</td>
+<td>How to apply (learnings only)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ctx_complete"><code>ctx_complete</code><a class="headerlink" href="#ctx_complete" title="Permanent link">&para;</a></h3>
+<p>Mark a task as done by number or text match.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Task number (e.g. "1") or search text</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ctx_drift"><code>ctx_drift</code><a class="headerlink" href="#ctx_drift" title="Permanent link">&para;</a></h3>
+<p>Detect stale or invalid context. Returns violations, warnings, and
+passed checks.</p>
+<p><strong>Arguments:</strong> None.</p>
 
 
 
@@ -3563,7 +4084,7 @@ and <strong>security design principles</strong>.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../operations/autonomous-loop/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Autonomous Loops">
+          <a href="../doctor/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Doctor">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
@@ -3573,20 +4094,20 @@ and <strong>security design principles</strong>.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Autonomous Loops
+                Doctor
               </div>
             </div>
           </a>
         
         
           
-          <a href="./agent-security/" class="md-footer__link md-footer__link--next" aria-label="Next: Securing AI Agents">
+          <a href="../system/" class="md-footer__link md-footer__link--next" aria-label="Next: System">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Securing AI Agents
+                System
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3666,10 +4187,10 @@ The documentation on this website is distributed under
       
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      <script src="../../assets/javascripts/bundle.16f8adc2.min.js"></script>
       
     
   </body>
