@@ -112,7 +112,7 @@ func handlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 			return fmt.Errorf("failed to read input: %w", err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
-		if response != "y" && response != "yes" { //nolint:goconst // trivial user input check
+		if response != config.ConfirmShort && response != config.ConfirmLong {
 			cmd.Println(fmt.Sprintf("  %s %s (skipped)", yellow("○"), config.FilePromptMd))
 			return nil
 		}

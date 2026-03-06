@@ -1,291 +1,55 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
 package recall
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
+	"github.com/ActiveMemory/ctx/internal/parse"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// parseDate parses a YYYY-MM-DD string into a time.Time at midnight UTC.
-func parseDate(s string) (time.Time, error) {
-	if s == "" {
-		return time.Time{}, nil
-	}
-	return time.Parse("2006-01-02", s)
-}
-
-// exportOpts holds all flag values for the export command.
-type exportOpts struct {
-	all, allProjects, force, regenerate, yes, dryRun bool
-	keepFrontmatter                                  bool
-}
-
-// discardFrontmatter reports whether frontmatter should be discarded
-// during regeneration, based on the combination of --keep-frontmatter
-// and the deprecated --force flag.
-func (o exportOpts) discardFrontmatter() bool {
-	return !o.keepFrontmatter || o.force
-}
-
-// exportAction describes what will happen to a given file.
-type exportAction int
-
-const (
-	actionNew        exportAction = iota // file does not exist yet
-	actionRegenerate                     // file exists and will be rewritten
-	actionSkip                           // file exists and will be left alone
-	actionLocked                         // file is locked — never overwritten
-)
-
-// fileAction describes the planned action for a single export file (one part
-// of one session).
-type fileAction struct {
-	session    *parser.Session
-	filename   string
-	path       string
-	part       int
-	totalParts int
-	startIdx   int
-	endIdx     int
-	action     exportAction
-	messages   []parser.Message
-	slug       string
-	title      string
-	baseName   string
-}
-
-// exportPlan is the result of planExport: a list of per-file actions plus
-// aggregate counters and any renames that need to happen first.
-type exportPlan struct {
-	actions     []fileAction
-	newCount    int
-	regenCount  int
-	skipCount   int
-	lockedCount int
-	renameOps   []renameOp
-}
-
-// renameOp describes a dedup rename (old slug → new slug).
-type renameOp struct {
-	oldBase  string
-	newBase  string
-	numParts int
-}
-
-// findSessions returns sessions for the current project, or all projects if
-// allProjects is true.
-func findSessions(allProjects bool) ([]*parser.Session, error) {
-	if allProjects {
-		return parser.FindSessions()
-	}
-	cwd, err := os.Getwd()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get working directory: %w", err)
-	}
-	return parser.FindSessionsForCWD(cwd)
-}
-
-// validateExportFlags checks for invalid flag combinations.
-func validateExportFlags(args []string, opts exportOpts) error {
-	if len(args) > 0 && opts.all {
-		return fmt.Errorf("cannot use --all with a session ID; use one or the other")
-	}
-	if opts.regenerate && !opts.all {
-		return fmt.Errorf("--regenerate requires --all (single-session export always writes)")
-	}
-	return nil
-}
-
-// planExport builds an exportPlan without writing any files.
-func planExport(
-	sessions []*parser.Session,
-	journalDir string,
-	sessionIndex map[string]string,
-	jstate *state.JournalState,
-	opts exportOpts,
-	singleSession bool,
-) exportPlan {
-	var plan exportPlan
-
-	for _, s := range sessions {
-		// Collect non-empty messages.
-		var nonEmptyMsgs []parser.Message
-		for _, msg := range s.Messages {
-			if !emptyMessage(msg) {
-				nonEmptyMsgs = append(nonEmptyMsgs, msg)
-			}
-		}
-
-		totalMsgs := len(nonEmptyMsgs)
-		numParts := (totalMsgs + maxMessagesPerPart - 1) / maxMessagesPerPart
-		if numParts < 1 {
-			numParts = 1
-		}
-
-		// Determine title-based slug.
-		var existingTitle string
-		if oldFile := lookupSessionFile(sessionIndex, s.ID); oldFile != "" {
-			oldPath := filepath.Join(journalDir, oldFile)
-			if data, readErr := os.ReadFile(filepath.Clean(oldPath)); readErr == nil {
-				existingTitle = extractFrontmatterField(string(data), "title")
-			}
-		}
-		slug, title := titleSlug(s, existingTitle)
-
-		baseFilename := formatJournalFilename(s, slug)
-		baseName := strings.TrimSuffix(baseFilename, config.ExtMarkdown)
-
-		// Detect renames (dedup: old slug → new slug).
-		if oldFile := lookupSessionFile(sessionIndex, s.ID); oldFile != "" {
-			oldBase := strings.TrimSuffix(oldFile, config.ExtMarkdown)
-			if oldBase != baseName {
-				plan.renameOps = append(plan.renameOps, renameOp{
-					oldBase:  oldBase,
-					newBase:  baseName,
-					numParts: numParts,
-				})
-			}
-		}
-
-		// Plan each part.
-		for part := 1; part <= numParts; part++ {
-			filename := baseFilename
-			if numParts > 1 && part > 1 {
-				filename = fmt.Sprintf("%s-p%d.md", baseName, part)
-			}
-			path := filepath.Join(journalDir, filename)
-
-			startIdx := (part - 1) * maxMessagesPerPart
-			endIdx := startIdx + maxMessagesPerPart
-			if endIdx > totalMsgs {
-				endIdx = totalMsgs
-			}
-
-			_, statErr := os.Stat(path)
-			fileExists := statErr == nil
-
-			var action exportAction
-			switch {
-			case !fileExists:
-				action = actionNew
-				plan.newCount++
-			case jstate.Locked(filename):
-				action = actionLocked
-				plan.lockedCount++
-			case frontmatterHasLocked(path):
-				// Frontmatter says locked — promote to state so future
-				// operations skip the file without re-parsing.
-				jstate.Mark(filename, "locked")
-				action = actionLocked
-				plan.lockedCount++
-			case singleSession || opts.regenerate || opts.discardFrontmatter():
-				action = actionRegenerate
-				plan.regenCount++
-			default:
-				action = actionSkip
-				plan.skipCount++
-			}
-
-			plan.actions = append(plan.actions, fileAction{
-				session:    s,
-				filename:   filename,
-				path:       path,
-				part:       part,
-				totalParts: numParts,
-				startIdx:   startIdx,
-				endIdx:     endIdx,
-				action:     action,
-				messages:   nonEmptyMsgs,
-				slug:       slug,
-				title:      title,
-				baseName:   baseName,
-			})
-		}
-	}
-
-	return plan
-}
-
-// printExportSummary prints what the export will (or would) do.
-func printExportSummary(cmd *cobra.Command, plan exportPlan, isDryRun bool) {
-	verb := "Will"
-	if isDryRun {
-		verb = "Would"
-	}
-	parts := []string{}
-	if plan.newCount > 0 {
-		parts = append(parts, fmt.Sprintf("export %d new", plan.newCount))
-	}
-	if plan.regenCount > 0 {
-		parts = append(parts, fmt.Sprintf("regenerate %d existing", plan.regenCount))
-	}
-	if plan.skipCount > 0 {
-		parts = append(parts, fmt.Sprintf("skip %d existing", plan.skipCount))
-	}
-	if plan.lockedCount > 0 {
-		parts = append(parts, fmt.Sprintf("skip %d locked", plan.lockedCount))
-	}
-	if len(parts) == 0 {
-		cmd.Println("Nothing to export.")
-		return
-	}
-	cmd.Println(fmt.Sprintf("%s %s.", verb, strings.Join(parts, ", ")))
-}
-
-// confirmExport prints the plan summary and prompts for confirmation.
-// Returns true if the user confirms (or if there's nothing to confirm).
-func confirmExport(cmd *cobra.Command, plan exportPlan) (bool, error) {
-	printExportSummary(cmd, plan, false)
-	cmd.Print("Proceed? [y/N] ")
-	reader := bufio.NewReader(os.Stdin)
-	response, err := reader.ReadString('\n')
-	if err != nil {
-		return false, fmt.Errorf("failed to read input: %w", err)
-	}
-	response = strings.TrimSpace(strings.ToLower(response))
-	return response == "y" || response == "yes", nil //nolint:goconst // trivial user input check
-}
-
-// executeExport writes files according to the plan. It returns counters for
-// the final summary.
+// executeExport writes files according to the plan.
+//
+// Parameters:
+//   - cmd: Cobra command for output.
+//   - plan: the export plan with file actions.
+//   - jstate: journal state to update as files are exported.
+//   - opts: export flag values.
+//
+// Returns:
+//   - exported: number of new files written.
+//   - updated: number of existing files updated (frontmatter preserved).
+//   - skipped: number of files skipped (existing or locked).
 func executeExport(
 	cmd *cobra.Command,
 	plan exportPlan,
 	jstate *state.JournalState,
 	opts exportOpts,
 ) (exported, updated, skipped int) {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-	dim := color.New(color.FgHiBlack)
-
 	for _, fa := range plan.actions {
 		if fa.action == actionLocked {
 			skipped++
-			_, _ = dim.Fprintf(cmd.OutOrStdout(),
-				"  skip %s (locked)\n", fa.filename)
+			write.SkipFile(cmd, fa.filename, config.FrontmatterLocked)
 			continue
 		}
 		if fa.action == actionSkip {
 			skipped++
-			_, _ = dim.Fprintf(cmd.OutOrStdout(),
-				"  skip %s (exists)\n", fa.filename)
+			write.SkipFile(cmd, fa.filename, config.ReasonExists)
 			continue
 		}
 
@@ -295,12 +59,12 @@ func executeExport(
 				fa.session, fa.messages[fa.startIdx:fa.endIdx],
 				fa.startIdx, fa.part, fa.totalParts, fa.baseName, fa.title,
 			),
-			"...",
+			config.Ellipsis,
 		)
 
 		fileExists := fa.action == actionRegenerate
 
-		// Preserve enriched YAML frontmatter from existing file.
+		// Preserve enriched YAML frontmatter from the existing file.
 		discard := opts.discardFrontmatter()
 		if fileExists && !discard {
 			existing, readErr := os.ReadFile(filepath.Clean(fa.path))
@@ -320,17 +84,19 @@ func executeExport(
 		}
 
 		// Write file.
-		if err := os.WriteFile(fa.path, []byte(content), config.PermFile); err != nil {
-			cmd.PrintErrln(fmt.Sprintf("  %s failed to write %s: %v", yellow("!"), fa.filename, err))
+		if writeErr := os.WriteFile(
+			fa.path, []byte(content), config.PermFile,
+		); writeErr != nil {
+			write.WarnFileErr(cmd, fa.filename, writeErr)
 			continue
 		}
 
 		jstate.MarkExported(fa.filename)
 
 		if fileExists && !discard {
-			cmd.Println(fmt.Sprintf("  %s %s (updated, frontmatter preserved)", green("✓"), fa.filename))
+			write.ExportedFile(cmd, fa.filename, config.ReasonUpdated)
 		} else {
-			cmd.Println(fmt.Sprintf("  %s %s", green("✓"), fa.filename))
+			write.ExportedFile(cmd, fa.filename, "")
 		}
 	}
 
@@ -338,15 +104,24 @@ func executeExport(
 }
 
 // runRecallExport handles the recall export command.
+//
+// Parameters:
+//   - cmd: Cobra command for output.
+//   - args: positional arguments (optional session ID).
+//   - opts: export flag values.
+//
+// Returns:
+//   - error: non-nil on validation, scan, or write failures.
 func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
-	// --keep-frontmatter=false implies --regenerate (can't discard without regenerating).
+	// --keep-frontmatter=false implies --regenerate
+	// (can't discard without regenerating).
 	if !opts.keepFrontmatter {
 		opts.regenerate = true
 	}
 
 	// 1. Validate flags.
-	if err := validateExportFlags(args, opts); err != nil {
-		return err
+	if validateErr := validateExportFlags(args, opts); validateErr != nil {
+		return validateErr
 	}
 
 	// 2. Bare export (no args, no --all) → show help (T2.8).
@@ -355,17 +130,13 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 	}
 
 	// 3. Resolve sessions.
-	sessions, err := findSessions(opts.allProjects)
-	if err != nil {
-		return fmt.Errorf("failed to find sessions: %w", err)
+	sessions, scanErr := findSessions(opts.allProjects)
+	if scanErr != nil {
+		return ctxerr.FindSessions(scanErr)
 	}
 
 	if len(sessions) == 0 {
-		if opts.allProjects {
-			cmd.Println("No sessions found.")
-		} else {
-			cmd.Println("No sessions found for this project. Use --all-projects to see all.")
-		}
+		write.NoSessionsForProject(cmd, opts.allProjects)
 		return nil
 	}
 
@@ -382,15 +153,12 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 			}
 		}
 		if len(toExport) == 0 {
-			return fmt.Errorf("session not found: %s", args[0])
+			return ctxerr.SessionNotFound(args[0])
 		}
 		if len(toExport) > 1 {
-			cmd.PrintErrln(fmt.Sprintf("Multiple sessions match '%s':", args[0]))
-			for _, m := range toExport {
-				cmd.PrintErrln(fmt.Sprintf("  %s (%s) - %s",
-					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04")))
-			}
-			return fmt.Errorf("ambiguous query, use a more specific ID")
+			lines := formatSessionMatchLines(toExport)
+			write.AmbiguousSessionMatch(cmd, args[0], lines)
+			return ctxerr.AmbiguousQuery()
 		}
 		singleSession = true
 	}
@@ -398,13 +166,13 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 	// 4. Ensure journal directory exists.
 	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
 	if mkErr := os.MkdirAll(journalDir, config.PermExec); mkErr != nil {
-		return fmt.Errorf("failed to create journal directory: %w", mkErr)
+		return ctxerr.Mkdir(config.DirJournal, mkErr)
 	}
 
 	// 5. Load state + build index.
-	jstate, err := state.Load(journalDir)
-	if err != nil {
-		return fmt.Errorf("load journal state: %w", err)
+	jstate, loadErr := state.Load(journalDir)
+	if loadErr != nil {
+		return ctxerr.LoadJournalState(loadErr)
 	}
 	sessionIndex := buildSessionIndex(journalDir)
 
@@ -415,13 +183,15 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 	renamed := 0
 	for _, rop := range plan.renameOps {
 		renameJournalFiles(journalDir, rop.oldBase, rop.newBase, rop.numParts)
-		jstate.Rename(rop.oldBase+config.ExtMarkdown, rop.newBase+config.ExtMarkdown)
+		jstate.Rename(
+			rop.oldBase+config.ExtMarkdown, rop.newBase+config.ExtMarkdown,
+		)
 		renamed++
 	}
 
 	// 8. Dry-run → print summary and return.
 	if opts.dryRun {
-		printExportSummary(cmd, plan, true)
+		write.ExportSummary(cmd, planCounts(plan), true)
 		return nil
 	}
 
@@ -432,7 +202,7 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 			return promptErr
 		}
 		if !ok {
-			cmd.Println("Aborted.")
+			write.Aborted(cmd)
 			return nil
 		}
 	}
@@ -441,25 +211,12 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 	exported, updated, skipped := executeExport(cmd, plan, jstate, opts)
 
 	// 11. Persist journal state.
-	if err := jstate.Save(journalDir); err != nil {
-		cmd.PrintErrln(fmt.Sprintf("warning: failed to save journal state: %v", err))
+	if saveErr := jstate.Save(journalDir); saveErr != nil {
+		write.WarnFileErr(cmd, config.FileJournalState, saveErr)
 	}
 
 	// 12. Print final summary.
-	cmd.Println()
-	if exported > 0 {
-		cmd.Println(fmt.Sprintf("Exported %d new session(s) to %s", exported, journalDir))
-	}
-	if updated > 0 {
-		cmd.Println(fmt.Sprintf("Updated %d existing session(s) (YAML frontmatter preserved)", updated))
-	}
-	if renamed > 0 {
-		cmd.Println(fmt.Sprintf("Renamed %d session(s) to title-based filenames", renamed))
-	}
-	dim := color.New(color.FgHiBlack)
-	if skipped > 0 {
-		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Skipped %d existing file(s).\n", skipped)
-	}
+	write.ExportFinalSummary(cmd, exported, updated, renamed, skipped)
 
 	return nil
 }
@@ -471,49 +228,50 @@ func runRecallExport(cmd *cobra.Command, args []string, opts exportOpts) error {
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - limit: Maximum sessions to display (0 for unlimited)
-//   - project: Filter by project name (case-insensitive substring match)
-//   - tool: Filter by tool identifier (exact match)
-//   - allProjects: If true, include sessions from all projects
+//   - limit: maximum sessions to display (0 for unlimited)
+//   - project: filter by project name (case-insensitive substring match)
+//   - tool: filter by tool identifier (exact match)
+//   - since: inclusive start date filter (YYYY-MM-DD)
+//   - until: inclusive end date filter (YYYY-MM-DD)
+//   - allProjects: if true, include sessions from all projects
 //
 // Returns:
-//   - error: Non-nil if session scanning fails
-func runRecallList(cmd *cobra.Command, limit int, project, tool, since, until string, allProjects bool) error {
+//   - error: non-nil if date parsing or session scanning fails
+func runRecallList(
+	cmd *cobra.Command, limit int, project, tool,
+	since, until string,
+	allProjects bool,
+) error {
 	// Parse date filters
-	sinceTime, sinceErr := parseDate(since)
+	sinceTime, sinceErr := parse.Date(since)
 	if since != "" && sinceErr != nil {
-		return fmt.Errorf("invalid --since date %q (expected YYYY-MM-DD): %w", since, sinceErr)
+		return ctxerr.InvalidDate(config.FlagSince, since, sinceErr)
 	}
-	untilTime, untilErr := parseDate(until)
+	untilTime, untilErr := parse.Date(until)
 	if until != "" && untilErr != nil {
-		return fmt.Errorf("invalid --until date %q (expected YYYY-MM-DD): %w", until, untilErr)
+		return ctxerr.InvalidDate(config.FlagUntil, until, untilErr)
 	}
-	// --until is inclusive: advance to end of day
-	if until != "" && untilErr == nil {
-		untilTime = untilTime.Add(24*time.Hour - time.Second)
+	// --until is inclusive: advance to the end of the day
+	if until != "" {
+		untilTime = untilTime.Add(config.InclusiveUntilOffset)
 	}
 
-	sessions, err := findSessions(allProjects)
-	if err != nil {
-		return fmt.Errorf("failed to find sessions: %w", err)
+	sessions, scanErr := findSessions(allProjects)
+	if scanErr != nil {
+		return ctxerr.FindSessions(scanErr)
 	}
 
 	if len(sessions) == 0 {
-		if allProjects {
-			cmd.Println("No sessions found.")
-			cmd.Println("")
-			cmd.Println("Sessions are stored in ~/.claude/projects/")
-		} else {
-			cmd.Println("No sessions found for this project.")
-			cmd.Println("Use --all-projects to see sessions from all projects.")
-		}
+		write.NoSessionsWithHint(cmd, allProjects)
 		return nil
 	}
 
 	// Apply filters
 	var filtered []*parser.Session
 	for _, s := range sessions {
-		if project != "" && !strings.Contains(strings.ToLower(s.Project), strings.ToLower(project)) {
+		if project != "" && !strings.Contains(
+			strings.ToLower(s.Project), strings.ToLower(project),
+		) {
 			continue
 		}
 		if tool != "" && s.Tool != tool {
@@ -529,7 +287,7 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool, since, until st
 	}
 
 	if len(filtered) == 0 {
-		_, _ = fmt.Fprintln(cmd.OutOrStdout(), "No sessions match the filters.")
+		write.NoFiltersMatch(cmd)
 		return nil
 	}
 
@@ -538,21 +296,16 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool, since, until st
 		filtered = filtered[:limit]
 	}
 
-	// Print header
-	header := color.New(color.Bold)
-	dim := color.New(color.FgHiBlack)
-
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Found %d sessions", len(sessions))
+	shown := 0
 	if project != "" || tool != "" {
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), " (%d shown)", len(filtered))
+		shown = len(filtered)
 	}
-	_, _ = fmt.Fprintln(cmd.OutOrStdout())
-	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+	write.SessionListHeader(cmd, len(sessions), shown)
 
 	// Compute dynamic column widths from data.
-	slugW, projW := len("Slug"), len("Project")
+	slugW, projW := len(config.ColSlug), len(config.ColProject)
 	for _, s := range filtered {
-		slug := truncate(s.Slug, 36)
+		slug := truncate(s.Slug, config.SlugMaxLen)
 		if len(slug) > slugW {
 			slugW = len(slug)
 		}
@@ -562,28 +315,26 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool, since, until st
 	}
 
 	// Print column header.
-	rowFmt := fmt.Sprintf("  %%-%ds  %%-%ds  %%-17s  %%8s  %%5s  %%7s\n", slugW, projW)
-	_, _ = header.Fprintf(cmd.OutOrStdout(), rowFmt,
-		"Slug", "Project", "Date", "Duration", "Turns", "Tokens")
+	rowFmt := fmt.Sprintf(config.TplRecallListRow, slugW, projW)
+	write.SessionListRow(cmd, rowFmt,
+		config.ColSlug, config.ColProject, config.ColDate,
+		config.ColDuration, config.ColTurns, config.ColTokens)
 
 	// Print sessions.
 	for _, s := range filtered {
-		slug := truncate(s.Slug, 36)
-		dateStr := s.StartTime.Local().Format("2006-01-02 15:04")
+		slug := truncate(s.Slug, config.SlugMaxLen)
+		dateStr := s.StartTime.Local().Format(config.DateTimeFormat)
 		dur := formatDuration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""
 		if s.TotalTokens > 0 {
 			tokens = formatTokens(s.TotalTokens)
 		}
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), rowFmt,
+		write.SessionListRow(cmd, rowFmt,
 			slug, s.Project, dateStr, dur, turns, tokens)
 	}
 
-	_, _ = fmt.Fprintln(cmd.OutOrStdout())
-	if len(sessions) > len(filtered) {
-		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Use --limit to see more sessions\n")
-	}
+	write.SessionListFooter(cmd, len(sessions) > len(filtered))
 
 	return nil
 }
@@ -595,24 +346,26 @@ func runRecallList(cmd *cobra.Command, limit int, project, tool, since, until st
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - args: Session ID or slug to show (ignored if latest is true)
-//   - latest: If true, show the most recent session
-//   - full: If true, show complete conversation instead of preview
-//   - allProjects: If true, search sessions from all projects
+//   - args: session ID or slug to show (ignored if latest is true)
+//   - latest: if true, show the most recent session
+//   - full: if true, show complete conversation instead of preview
+//   - allProjects: if true, search sessions from all projects
 //
 // Returns:
-//   - error: Non-nil if session not found or scanning fails
-func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects bool) error {
-	sessions, err := findSessions(allProjects)
-	if err != nil {
-		return fmt.Errorf("failed to find sessions: %w", err)
+//   - error: non-nil if session not found or scanning fails
+func runRecallShow(
+	cmd *cobra.Command, args []string, latest, full, allProjects bool,
+) error {
+	sessions, scanErr := findSessions(allProjects)
+	if scanErr != nil {
+		return ctxerr.FindSessions(scanErr)
 	}
 
 	if len(sessions) == 0 {
 		if allProjects {
-			return fmt.Errorf("no sessions found")
+			return ctxerr.NoSessionsFound("")
 		}
-		return fmt.Errorf("no sessions found for this project; use --all-projects to search all")
+		return ctxerr.NoSessionsFound(config.HintUseAllProjects)
 	}
 
 	var session *parser.Session
@@ -621,7 +374,7 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 	case latest:
 		session = sessions[0]
 	case len(args) == 0:
-		return fmt.Errorf("please provide a session ID or use --latest")
+		return ctxerr.SessionIDRequired()
 	default:
 		query := strings.ToLower(args[0])
 		var matches []*parser.Session
@@ -632,48 +385,53 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 			}
 		}
 		if len(matches) == 0 {
-			return fmt.Errorf("session not found: %s", args[0])
+			return ctxerr.SessionNotFound(args[0])
 		}
 		if len(matches) > 1 {
-			_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "Multiple sessions match '%s':\n", args[0])
-			for _, m := range matches {
-				_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "  %s (%s) - %s\n",
-					m.Slug, m.ID[:8], m.StartTime.Format("2006-01-02 15:04"))
-			}
-			_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "\nUse a more specific ID (e.g., ctx recall show %s)\n", matches[0].ID[:12])
-			return fmt.Errorf("ambiguous query")
+			lines := formatSessionMatchLines(matches)
+			write.AmbiguousSessionMatchWithHint(
+				cmd, args[0], lines, matches[0].ID[:config.SessionIDHintLen],
+			)
+			return ctxerr.AmbiguousQuery()
 		}
 		session = matches[0]
 	}
 
 	// Print session details
-	header := color.New(color.Bold)
-	dim := color.New(color.FgHiBlack)
+	write.SectionHeader(cmd, 1, session.Slug)
 
-	_, _ = header.Fprintf(cmd.OutOrStdout(), "# %s\n", session.Slug)
-	_, _ = fmt.Fprintln(cmd.OutOrStdout())
-
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**ID**: %s\n", session.ID)
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Tool**: %s\n", session.Tool)
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), config.MetadataProject+" %s\n", session.Project)
+	write.SessionDetail(cmd, config.MetadataID, session.ID)
+	write.SessionDetail(cmd, config.MetadataTool, session.Tool)
+	write.SessionDetail(cmd, config.MetadataProject, session.Project)
 	if session.GitBranch != "" {
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Branch**: %s\n", session.GitBranch)
+		write.SessionDetail(cmd, config.MetadataBranch, session.GitBranch)
 	}
 	if session.Model != "" {
-		_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Model**: %s\n", session.Model)
+		write.SessionDetail(cmd, config.MetadataModel, session.Model)
 	}
-	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+	write.BlankLine(cmd)
 
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Started**: %s\n", session.StartTime.Format("2006-01-02 15:04:05"))
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Duration**: %s\n", formatDuration(session.Duration))
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Turns**: %d\n", session.TurnCount)
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Messages**: %d\n", len(session.Messages))
-	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+	write.SessionDetail(
+		cmd, config.MetadataStarted,
+		session.StartTime.Format(config.DateTimePreciseFormat),
+	)
+	write.SessionDetail(
+		cmd, config.MetadataDuration, formatDuration(session.Duration),
+	)
+	write.SessionDetailInt(cmd, config.MetadataTurns, session.TurnCount)
+	write.SessionDetailInt(cmd, config.MetadataMessages, len(session.Messages))
+	write.BlankLine(cmd)
 
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Tokens In**: %s\n", formatTokens(session.TotalTokensIn))
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Tokens Out**: %s\n", formatTokens(session.TotalTokensOut))
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "**Total**: %s\n", formatTokens(session.TotalTokens))
-	_, _ = fmt.Fprintln(cmd.OutOrStdout())
+	write.SessionDetail(
+		cmd, config.MetadataInputUsage, formatTokens(session.TotalTokensIn),
+	)
+	write.SessionDetail(
+		cmd, config.MetadataOutputUsage, formatTokens(session.TotalTokensOut),
+	)
+	write.SessionDetail(
+		cmd, config.MetadataTotal, formatTokens(session.TotalTokens),
+	)
+	write.BlankLine(cmd)
 
 	// Tool usage summary
 	tools := session.AllToolUses()
@@ -683,85 +441,72 @@ func runRecallShow(cmd *cobra.Command, args []string, latest, full, allProjects 
 			toolCounts[t.Name]++
 		}
 
-		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Tool Usage\n")
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
+		write.SectionHeader(cmd, 2, config.SectionToolUsage)
 		for name, count := range toolCounts {
-			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "- %s: %d\n", name, count)
+			write.ListItem(cmd, "%s: %d", name, count)
 		}
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
+		write.BlankLine(cmd)
 	}
 
 	// Messages
 	if full {
-		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Conversation\n")
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
+		write.SectionHeader(cmd, 2, config.SectionConversation)
 
 		for i, msg := range session.Messages {
-			role := "User"
-			roleColor := color.New(color.FgCyan, color.Bold)
+			role := config.LabelRoleUser
 			if msg.BelongsToAssistant() {
-				role = "Assistant"
-				roleColor = color.New(color.FgGreen, color.Bold)
+				role = config.LabelRoleAssistant
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-				// User messages with only tool results are system responses
-				role = "Tool Output"
-				roleColor = color.New(color.FgYellow)
+				role = config.LabelToolOutput
 			}
 
-			_, _ = roleColor.Fprintf(cmd.OutOrStdout(), "### %d. %s ", i+1, role)
-			_, _ = dim.Fprintf(cmd.OutOrStdout(), "(%s)\n", msg.Timestamp.Format("15:04:05"))
-			_, _ = fmt.Fprintln(cmd.OutOrStdout())
+			write.ConversationTurn(
+				cmd, i+1, role, msg.Timestamp.Format(config.TimeFormat),
+			)
 
-			// Show full text content - no truncation
 			if msg.Text != "" {
-				_, _ = fmt.Fprintln(cmd.OutOrStdout(), msg.Text)
-				_, _ = fmt.Fprintln(cmd.OutOrStdout())
+				write.TextBlock(cmd, msg.Text)
 			}
 
-			// Show tool uses with details
 			for _, t := range msg.ToolUses {
 				toolInfo := formatToolUse(t)
-				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "🔧 **%s**\n", toolInfo)
+				write.SessionDetail(cmd, config.LabelTool, toolInfo)
 			}
 
-			// Show tool results
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					_, _ = color.New(color.FgRed).Fprintln(cmd.OutOrStdout(), "❌ Error:")
+					write.Hint(cmd, config.LabelError)
 				}
 				if tr.Content != "" {
-					// Strip line number prefixes and show content
 					content := stripLineNumbers(tr.Content)
-					_, _ = fmt.Fprintf(cmd.OutOrStdout(), "```\n%s\n```\n", content)
+					write.CodeBlock(cmd, content)
 				}
 			}
 
 			if len(msg.ToolUses) > 0 || len(msg.ToolResults) > 0 {
-				_, _ = fmt.Fprintln(cmd.OutOrStdout())
+				write.BlankLine(cmd)
 			}
 		}
 	} else {
-		// Show first few user messages as preview
-		_, _ = header.Fprintf(cmd.OutOrStdout(), "## Conversation Preview\n")
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
+		write.SectionHeader(cmd, 2, config.SectionConversationPreview)
 
 		count := 0
 		for _, msg := range session.Messages {
 			if msg.BelongsToUser() && msg.Text != "" {
 				count++
-				if count > 5 {
-					_, _ = dim.Fprintf(cmd.OutOrStdout(), "... and %d more turns\n", session.TurnCount-5)
+				if count > config.PreviewMaxTurns {
+					write.MoreTurns(cmd, session.TurnCount-config.PreviewMaxTurns)
 					break
 				}
 				text := msg.Text
-				if len(text) > 100 {
-					text = text[:100] + "..."
+				if len(text) > config.PreviewMaxTextLen {
+					text = text[:config.PreviewMaxTextLen] + config.Ellipsis
 				}
-				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%d. %s\n", count, text)
+				write.NumberedItem(cmd, count, text)
 			}
 		}
-		_, _ = fmt.Fprintln(cmd.OutOrStdout())
-		_, _ = dim.Fprintf(cmd.OutOrStdout(), "Use --full to see all messages\n")
+		write.BlankLine(cmd)
+		write.Hint(cmd, config.HintUseFullFlag)
 	}
 
 	return nil

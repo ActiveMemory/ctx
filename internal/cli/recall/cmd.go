@@ -10,11 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// maxMessagesPerPart is the maximum number of messages per exported file.
-// Sessions with more messages are split into multiple parts for browser
-// performance.
-const maxMessagesPerPart = 200
-
 // recallExportCmd returns the recall export subcommand.
 //
 // Returns:

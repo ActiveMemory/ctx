@@ -50,7 +50,7 @@ func newTestCmd() *cobra.Command {
 // --- checkCtxInPath tests ---
 
 func TestCheckCtxInPath_SkipEnv(t *testing.T) {
-	t.Setenv("CTX_SKIP_PATH_CHECK", "1")
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
 	cmd := newTestCmd()
 	if err := checkCtxInPath(cmd); err != nil {
 		t.Errorf("expected nil error with skip env, got %v", err)
@@ -58,7 +58,7 @@ func TestCheckCtxInPath_SkipEnv(t *testing.T) {
 }
 
 func TestCheckCtxInPath_NotFound(t *testing.T) {
-	t.Setenv("CTX_SKIP_PATH_CHECK", "")
+	t.Setenv(config.EnvSkipPathCheck, "")
 	t.Setenv("PATH", "/nonexistent")
 	cmd := newTestCmd()
 	err := checkCtxInPath(cmd)
@@ -1252,7 +1252,7 @@ func TestCmd_Flags(t *testing.T) {
 func TestRunInit_Minimal(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
-	t.Setenv("CTX_SKIP_PATH_CHECK", "1")
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"--minimal"})
@@ -1282,7 +1282,7 @@ func TestRunInit_Minimal(t *testing.T) {
 func TestRunInit_Ralph(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
-	t.Setenv("CTX_SKIP_PATH_CHECK", "1")
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"--ralph"})
@@ -1301,7 +1301,7 @@ func TestRunInit_Ralph(t *testing.T) {
 func TestRunInit_Force(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
-	t.Setenv("CTX_SKIP_PATH_CHECK", "1")
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
 
 	// Run once to create files
 	cmd := Cmd()
@@ -1337,7 +1337,7 @@ func TestRunInit_Force(t *testing.T) {
 func TestRunInit_Merge(t *testing.T) {
 	_, cleanup := helper(t)
 	defer cleanup()
-	t.Setenv("CTX_SKIP_PATH_CHECK", "1")
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
 
 	// Create existing CLAUDE.md
 	if err := os.WriteFile(config.FileClaudeMd, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {

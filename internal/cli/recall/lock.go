@@ -12,10 +12,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -113,16 +113,14 @@ func runLockUnlock(
 		return cmd.Help()
 	}
 	if len(args) > 0 && all {
-		return fmt.Errorf(
-			"cannot use --all with a pattern; use one or the other",
-		)
+		return ctxerr.AllWithArgument("a pattern")
 	}
 
 	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return fmt.Errorf("load journal state: %w", loadErr)
+		return ctxerr.LoadJournalState(loadErr)
 	}
 
 	// Collect matching .md files.
@@ -134,15 +132,12 @@ func runLockUnlock(
 		if all {
 			cmd.Println("No journal entries found.")
 		} else {
-			return fmt.Errorf(
-				"no journal entries match: %s", strings.Join(args, ", "),
-			)
+			return ctxerr.NoEntriesMatch(strings.Join(args, ", "))
 		}
 		return nil
 	}
 
-	green := color.New(color.FgGreen).SprintFunc()
-	verb := "locked"
+	verb := config.FrontmatterLocked
 	if !lock {
 		verb = "unlocked"
 	}
@@ -159,21 +154,21 @@ func runLockUnlock(
 
 		// Update state.
 		if lock {
-			jstate.Mark(filename, "locked")
+			jstate.Mark(filename, config.FrontmatterLocked)
 		} else {
-			jstate.Clear(filename, "locked")
+			jstate.Clear(filename, config.FrontmatterLocked)
 		}
 
 		// Update frontmatter for human visibility.
 		path := filepath.Join(journalDir, filename)
 		updateLockFrontmatter(path, lock)
 
-		cmd.Println(fmt.Sprintf("  %s %s (%s)", green("✓"), filename, verb))
+		cmd.Println(fmt.Sprintf("  ok %s (%s)", filename, verb))
 		count++
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return fmt.Errorf("save journal state: %w", saveErr)
+		return ctxerr.SaveJournalState(saveErr)
 	}
 
 	if count == 0 {
@@ -207,7 +202,7 @@ func matchJournalFiles(
 		if os.IsNotExist(readErr) {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("read journal directory: %w", readErr)
+		return nil, ctxerr.ReadDir("journal directory", readErr)
 	}
 
 	// Collect all .md filenames.
@@ -306,7 +301,7 @@ func updateLockFrontmatter(path string, lock bool) {
 
 	if lock {
 		// Already has locked line?
-		if strings.Contains(fmBlock, "locked:") {
+		if strings.Contains(fmBlock, config.FrontmatterLocked+":") {
 			return
 		}
 		// Insert before closing ---.
@@ -319,7 +314,7 @@ func updateLockFrontmatter(path string, lock bool) {
 		var filtered []string
 		for _, line := range lines {
 			trimmed := strings.TrimSpace(line)
-			if strings.HasPrefix(trimmed, "locked:") {
+			if strings.HasPrefix(trimmed, config.FrontmatterLocked+":") {
 				continue
 			}
 			filtered = append(filtered, line)

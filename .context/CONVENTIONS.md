@@ -153,3 +153,5 @@
 - Always stage site/ when committing docs/ changes — the generated HTML is tracked in git with no CI build step.
 
 - Zero //nolint:errcheck policy — handle errors, don't suppress them. In test code: use t.Fatal(err) for setup errors, _ = os.Chdir(orig) for cleanup. In production code: use defer func() { _ = f.Close() }() for best-effort close. For gosec false positives: prefer config-level exclusions in .golangci.yml.
+
+- Error constructors belong in internal/err, never in per-package err.go files — eliminates the broken-window pattern where agents add local errors when they see a local err.go exists.

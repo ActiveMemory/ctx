@@ -470,6 +470,19 @@ Spec: `specs/ctx-map.md`
 - [x] DK.2: Add consolidation cross-link to `knowledge-capture.md` "See also"
       section. #priority:low #added:2026-02-21 — already present #done:2026-03-05
 
+### Phase WC: Write Consolidation
+
+Baseline commit: `4ec5999` (Auto-prune state directory on session start).
+Goal: consolidate user-facing messages into `internal/write/` as the central
+output package. All CLI commands should route printed output through this package.
+
+- [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
+- [ ] Audit fatih/color removal across ~35 files — removed from recall/run.go, recall/lock.go, write/validate.go; ~30 files remain. Separate consolidation pass. #added:2026-03-06-050140
+
+- [ ] Audit remaining 2006-01-02 usages across codebase — 5+ files still use the literal instead of config.DateFormat. Incremental migration. #added:2026-03-06-050140
+
+- [ ] WC.2: Audit CLI packages for direct fmt.Print/Println usage — candidates for migration #added:2026-03-06
+
 ## Later
 
 ### Phase PR: State Pruning (`ctx system prune`)

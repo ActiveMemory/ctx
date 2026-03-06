@@ -76,6 +76,14 @@ const (
 	// Args: baseName, part.
 	TplRecallPartFilename = "%s-p%d.md"
 
+	// TplRecallListRow is the printf meta-format for recall list table rows.
+	// Args: slugWidth, projectWidth. Produces a format string for 6 columns.
+	TplRecallListRow = "  %%-%ds  %%-%ds  %%-17s  %%8s  %%5s  %%7s\n"
+
+	// TplSessionMatch formats a session match line for ambiguous queries.
+	// Args: slug, shortID, dateTime.
+	TplSessionMatch = "%s (%s) - %s"
+
 	// TplMetaDetailsOpen opens a collapsible details block with an HTML table.
 	// Markdown tables don't render inside <details> in Zensical, so we use HTML.
 	// Args: summary text.

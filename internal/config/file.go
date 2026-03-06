@@ -9,6 +9,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"time"
 )
 
 // AnnotationSkipInit is the cobra.Command annotation key that exempts
@@ -82,6 +83,23 @@ const (
 	EnvBackupSMBURL = "CTX_BACKUP_SMB_URL"
 	// EnvBackupSMBSubdir is the environment variable for the SMB share subdirectory.
 	EnvBackupSMBSubdir = "CTX_BACKUP_SMB_SUBDIR"
+	// EnvSkipPathCheck is the environment variable that skips the PATH
+	// validation during init. Set to EnvTrue in tests.
+	EnvSkipPathCheck = "CTX_SKIP_PATH_CHECK"
+)
+
+// Environment toggle values.
+const (
+	// EnvTrue is the canonical truthy value for environment variable toggles.
+	EnvTrue = "1"
+)
+
+// User confirmation input values.
+const (
+	// ConfirmShort is the short affirmative response for y/N prompts.
+	ConfirmShort = "y"
+	// ConfirmLong is the long affirmative response for y/N prompts.
+	ConfirmLong = "yes"
 )
 
 // Backup configuration.
@@ -92,10 +110,53 @@ const (
 	BackupMarkerFile = "ctx-last-backup"
 )
 
+// Date and time format constants.
+const (
+	// DateFormat is the canonical YYYY-MM-DD date layout for time.Parse.
+	DateFormat = "2006-01-02"
+	// DateTimeFormat is DateFormat with hours and minutes (HH:MM).
+	DateTimeFormat = "2006-01-02 15:04"
+	// DateTimePreciseFormat is DateFormat with hours, minutes, and seconds.
+	DateTimePreciseFormat = "2006-01-02 15:04:05"
+	// TimeFormat is the hours:minutes:seconds layout for timestamps.
+	TimeFormat = "15:04:05"
+)
+
+// InclusiveUntilOffset is the duration added to an --until date to make
+// it inclusive of the entire day (23:59:59).
+const InclusiveUntilOffset = 24*time.Hour - time.Second
+
 // Parser configuration.
 const (
 	// ParserPeekLines is the number of lines to scan when detecting file format.
 	ParserPeekLines = 50
+)
+
+// Export configuration.
+const (
+	// MaxMessagesPerPart is the maximum number of messages per exported
+	// journal file. Sessions with more messages are split into multiple
+	// parts for browser performance.
+	MaxMessagesPerPart = 200
+)
+
+// Recall show/list display limits.
+const (
+	// PreviewMaxTurns is the maximum number of user turns shown in
+	// the conversation preview of recall show.
+	PreviewMaxTurns = 5
+	// PreviewMaxTextLen is the maximum character length for a single
+	// turn in the conversation preview.
+	PreviewMaxTextLen = 100
+	// SlugMaxLen is the maximum display length for session slugs in
+	// recall list output.
+	SlugMaxLen = 36
+	// SessionIDShortLen is the prefix length for short session IDs
+	// in summary output.
+	SessionIDShortLen = 8
+	// SessionIDHintLen is the prefix length for session IDs in
+	// disambiguation hints (longer than short for uniqueness).
+	SessionIDHintLen = 12
 )
 
 // Claude API content block types.
@@ -225,11 +286,17 @@ const (
 
 // Memory bridge file constants for .context/memory/ directory.
 const (
+	// FileMemorySource is the Claude Code auto memory filename.
+	FileMemorySource = "MEMORY.md"
 	// FileMemoryMirror is the raw copy of Claude Code's MEMORY.md.
 	FileMemoryMirror = "mirror.md"
 	// FileMemoryState is the sync/import tracking state file.
 	FileMemoryState = "memory-import.json"
 )
+
+// PathMemoryMirror is the relative path from the project root to the
+// memory mirror file. Constructed from directory and file constants.
+var PathMemoryMirror = filepath.Join(DirContext, DirMemory, FileMemoryMirror)
 
 // Event log constants for .context/state/ directory.
 const (
