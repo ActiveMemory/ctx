@@ -7,6 +7,7 @@
 package system
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -69,7 +70,7 @@ func runCheckResources(cmd *cobra.Command, stdin *os.File) error {
 	var alertMessages string
 	for _, a := range alerts {
 		if a.Severity == sysinfo.SeverityDanger {
-			alertMessages += "\u2716 " + a.Message + "\n"
+			alertMessages += "\u2716 " + a.Message + config.NewlineLF
 		}
 	}
 
@@ -87,7 +88,7 @@ func runCheckResources(cmd *cobra.Command, stdin *os.File) error {
 		"\u250c\u2500 Resource Alert \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "\u2502 " + line + "\n"
+		msg += "\u2502 " + line + config.NewlineLF
 	}
 	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
 	cmd.Println(msg)

@@ -53,7 +53,7 @@ func createEntryTemplates(
 
 		// Check if the file exists and --force not set
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			cmd.Printf("  %s templates/%s (exists, skipped)\n", yellow("○"), name)
+			cmd.Println(fmt.Sprintf("  %s templates/%s (exists, skipped)", yellow("○"), name))
 			continue
 		}
 
@@ -66,7 +66,7 @@ func createEntryTemplates(
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
 
-		cmd.Printf("  %s templates/%s\n", green("✓"), name)
+		cmd.Println(fmt.Sprintf("  %s templates/%s", green("✓"), name))
 	}
 
 	return nil

@@ -7,6 +7,7 @@
 package system
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -46,6 +47,6 @@ func runPause(cmd *cobra.Command, stdin *os.File) error {
 
 	path := pauseMarkerPath(sessionID)
 	writeCounter(path, 0)
-	cmd.Printf("Context hooks paused for session %s\n", sessionID)
+	cmd.Println(fmt.Sprintf("Context hooks paused for session %s", sessionID))
 	return nil
 }

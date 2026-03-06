@@ -8,6 +8,7 @@ package prompt
 
 import (
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"path/filepath"
 
@@ -31,7 +32,7 @@ func rmCmd() *cobra.Command {
 
 // runRm deletes a prompt template by name.
 func runRm(cmd *cobra.Command, name string) error {
-	path := filepath.Join(promptsDir(), name+".md")
+	path := filepath.Join(promptsDir(), name+config.ExtMarkdown)
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return fmt.Errorf("prompt %q not found", name)
@@ -41,6 +42,6 @@ func runRm(cmd *cobra.Command, name string) error {
 		return fmt.Errorf("remove prompt: %w", err)
 	}
 
-	cmd.Printf("Removed prompt %q.\n", name)
+	cmd.Println(fmt.Sprintf("Removed prompt %q.", name))
 	return nil
 }

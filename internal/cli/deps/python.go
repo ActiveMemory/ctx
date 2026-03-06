@@ -8,6 +8,7 @@ package deps
 
 import (
 	"bufio"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"sort"
 	"strings"
@@ -148,7 +149,7 @@ func buildPyprojectGraph(includeDevDeps bool) (map[string][]string, error) {
 // parsePyprojectDeps extracts dependency names from a TOML array section.
 // Looks for [project.dependencies], [tool.poetry.dependencies], etc.
 func parsePyprojectDeps(content string, sectionSuffix string) []string {
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, config.NewlineLF)
 	var deps []string
 	inSection := false
 	inArray := false

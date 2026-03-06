@@ -96,19 +96,19 @@ func runMessageList(cmd *cobra.Command) error {
 	}
 
 	// Table output
-	cmd.Printf("%-24s %-20s %-16s %s\n", "Hook", "Variant", "Category", "Override")
-	cmd.Printf("%-24s %-20s %-16s %s\n",
+	cmd.Println(fmt.Sprintf("%-24s %-20s %-16s %s", "Hook", "Variant", "Category", "Override"))
+	cmd.Println(fmt.Sprintf("%-24s %-20s %-16s %s",
 		strings.Repeat("\u2500", 22),
 		strings.Repeat("\u2500", 18),
 		strings.Repeat("\u2500", 14),
-		strings.Repeat("\u2500", 8))
+		strings.Repeat("\u2500", 8)))
 
 	for _, e := range entries {
 		override := ""
 		if e.HasOverride {
 			override = "override"
 		}
-		cmd.Printf("%-24s %-20s %-16s %s\n", e.Hook, e.Variant, e.Category, override)
+		cmd.Println(fmt.Sprintf("%-24s %-20s %-16s %s", e.Hook, e.Variant, e.Category, override))
 	}
 
 	return nil
@@ -135,7 +135,7 @@ func runMessageShow(cmd *cobra.Command, hook, variant string) error {
 	// Check user override first
 	overridePath := overridePath(hook, variant)
 	if data, readErr := os.ReadFile(overridePath); readErr == nil { //nolint:gosec // project-local override path
-		cmd.Printf("Source: user override (%s)\n", overridePath)
+		cmd.Println(fmt.Sprintf("Source: user override (%s)", overridePath))
 		printTemplateVars(cmd, info)
 		cmd.Println()
 		cmd.Print(string(data))
@@ -211,7 +211,7 @@ func runMessageEdit(cmd *cobra.Command, hook, variant string) error {
 		return fmt.Errorf("failed to write override %s: %w", oPath, writeErr)
 	}
 
-	cmd.Printf("Override created at %s\n", oPath)
+	cmd.Println(fmt.Sprintf("Override created at %s", oPath))
 	cmd.Println("Edit this file to customize the message.")
 	printTemplateVars(cmd, info)
 
@@ -240,7 +240,7 @@ func runMessageReset(cmd *cobra.Command, hook, variant string) error {
 
 	if removeErr := os.Remove(oPath); removeErr != nil {
 		if os.IsNotExist(removeErr) {
-			cmd.Printf("No override found for %s/%s. Already using embedded default.\n", hook, variant)
+			cmd.Println(fmt.Sprintf("No override found for %s/%s. Already using embedded default.", hook, variant))
 			return nil
 		}
 		return fmt.Errorf("failed to remove override %s: %w", oPath, removeErr)
@@ -252,7 +252,7 @@ func runMessageReset(cmd *cobra.Command, hook, variant string) error {
 	messagesDir := filepath.Dir(hookDir)
 	_ = os.Remove(messagesDir) // only succeeds if empty
 
-	cmd.Printf("Override removed for %s/%s. Using embedded default.\n", hook, variant)
+	cmd.Println(fmt.Sprintf("Override removed for %s/%s. Using embedded default.", hook, variant))
 	return nil
 }
 
@@ -286,5 +286,5 @@ func printTemplateVars(cmd *cobra.Command, info *messages.HookMessageInfo) {
 	for i, v := range info.TemplateVars {
 		formatted[i] = "{{." + v + "}}"
 	}
-	cmd.Printf("Template variables: %s\n", strings.Join(formatted, ", "))
+	cmd.Println(fmt.Sprintf("Template variables: %s", strings.Join(formatted, ", ")))
 }

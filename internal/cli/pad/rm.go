@@ -7,6 +7,7 @@
 package pad
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -48,6 +49,6 @@ func runRm(cmd *cobra.Command, n int) error {
 		return err
 	}
 
-	cmd.Printf("Removed entry %d.\n", n)
+	cmd.Println(fmt.Sprintf("Removed entry %d.", n))
 	return nil
 }

@@ -132,7 +132,7 @@ func runAdd(cmd *cobra.Command, message, after string) error {
 	if r.After != nil {
 		suffix = fmt.Sprintf("  (after %s)", *r.After)
 	}
-	cmd.Printf("  + [%d] %s%s\n", r.ID, r.Message, suffix)
+	cmd.Println(fmt.Sprintf("  + [%d] %s%s", r.ID, r.Message, suffix))
 	return nil
 }
 
@@ -155,7 +155,7 @@ func runList(cmd *cobra.Command) error {
 				annotation = fmt.Sprintf("  (after %s, not yet due)", *r.After)
 			}
 		}
-		cmd.Printf("  [%d] %s%s\n", r.ID, r.Message, annotation)
+		cmd.Println(fmt.Sprintf("  [%d] %s%s", r.ID, r.Message, annotation))
 	}
 
 	return nil
@@ -184,7 +184,7 @@ func runDismiss(cmd *cobra.Command, idStr string) error {
 		return fmt.Errorf("no reminder with ID %d", id)
 	}
 
-	cmd.Printf("  - [%d] %s\n", reminders[found].ID, reminders[found].Message)
+	cmd.Println(fmt.Sprintf("  - [%d] %s", reminders[found].ID, reminders[found].Message))
 	reminders = append(reminders[:found], reminders[found+1:]...)
 	return WriteReminders(reminders)
 }
@@ -201,9 +201,9 @@ func runDismissAll(cmd *cobra.Command) error {
 	}
 
 	for _, r := range reminders {
-		cmd.Printf("  - [%d] %s\n", r.ID, r.Message)
+		cmd.Println(fmt.Sprintf("  - [%d] %s", r.ID, r.Message))
 	}
-	cmd.Printf("Dismissed %d reminders.\n", len(reminders))
+	cmd.Println(fmt.Sprintf("Dismissed %d reminders.", len(reminders)))
 
 	return WriteReminders([]Reminder{})
 }

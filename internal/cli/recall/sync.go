@@ -94,11 +94,11 @@ func runSync(cmd *cobra.Command) error {
 		switch {
 		case fmLocked && !stateLocked:
 			jstate.Mark(filename, "locked")
-			cmd.Printf("  %s %s (locked)\n", green("✓"), filename)
+			cmd.Println(fmt.Sprintf("  %s %s (locked)", green("✓"), filename))
 			locked++
 		case !fmLocked && stateLocked:
 			jstate.Clear(filename, "locked")
-			cmd.Printf("  %s %s (unlocked)\n", yellow("✓"), filename)
+			cmd.Println(fmt.Sprintf("  %s %s (unlocked)", yellow("✓"), filename))
 			unlocked++
 		}
 	}
@@ -111,10 +111,10 @@ func runSync(cmd *cobra.Command) error {
 		cmd.Println("No changes — state already matches frontmatter.")
 	} else {
 		if locked > 0 {
-			cmd.Printf("\nLocked %d entry(s).\n", locked)
+			cmd.Println(fmt.Sprintf("\nLocked %d entry(s).", locked))
 		}
 		if unlocked > 0 {
-			cmd.Printf("\nUnlocked %d entry(s).\n", unlocked)
+			cmd.Println(fmt.Sprintf("\nUnlocked %d entry(s).", unlocked))
 		}
 	}
 

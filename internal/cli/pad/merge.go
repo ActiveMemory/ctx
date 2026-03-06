@@ -100,21 +100,21 @@ func runMerge(
 		for _, entry := range entries {
 			if seen[entry] {
 				dupes++
-				cmd.Printf(
+				cmd.Println(fmt.Sprintf(
 					"  = %-40s (duplicate, skipped)\n",
 					displayEntry(entry),
-				)
+				))
 				continue
 			}
 			seen[entry] = true
 			checkBlobConflict(cmd, entry, blobLabels)
 			newEntries = append(newEntries, entry)
 			added++
-			cmd.Printf(
+			cmd.Println(fmt.Sprintf(
 				"  + %-40s (from %s)\n",
 				displayEntry(entry),
 				file,
-			)
+			))
 		}
 	}
 
@@ -124,22 +124,22 @@ func runMerge(
 	}
 
 	if added == 0 {
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"No new entries to merge (%d %s skipped).\n",
 			dupes,
 			pluralize("duplicate", dupes),
-		)
+		))
 		return nil
 	}
 
 	if dryRun {
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"Would merge %d new %s (%d %s skipped).\n",
 			added,
 			pluralize("entry", added),
 			dupes,
 			pluralize("duplicate", dupes),
-		)
+		))
 		return nil
 	}
 
@@ -150,13 +150,13 @@ func runMerge(
 		return writeErr
 	}
 
-	cmd.Printf(
+	cmd.Println(fmt.Sprintf(
 		"Merged %d new %s (%d %s skipped).\n",
 		added,
 		pluralize("entry", added),
 		dupes,
 		pluralize("duplicate", dupes),
-	)
+	))
 	return nil
 }
 
@@ -254,10 +254,10 @@ func checkBlobConflict(
 
 	existing, found := blobLabels[label]
 	if found && existing != entry {
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"  ! blob %q has different content across sources; both kept\n",
 			label,
-		)
+		))
 	}
 
 	blobLabels[label] = entry
@@ -273,11 +273,11 @@ func checkBlobConflict(
 func warnIfBinary(cmd *cobra.Command, file string, entries []string) {
 	for _, entry := range entries {
 		if !utf8.ValidString(entry) {
-			cmd.Printf(
+			cmd.Println(fmt.Sprintf(
 				"  ! %s appears to contain binary data;"+
 					" it may be encrypted (use --key)\n",
 				file,
-			)
+			))
 			return
 		}
 	}

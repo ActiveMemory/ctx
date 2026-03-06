@@ -83,7 +83,7 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		if val == "" {
 			return fmt.Errorf("%s: %s not set", filename, stage)
 		}
-		cmd.Printf("%s: %s = %s\n", filename, stage, val)
+		cmd.Println(fmt.Sprintf("%s: %s = %s", filename, stage, val))
 		return nil
 	}
 
@@ -95,6 +95,6 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		return fmt.Errorf("save journal state: %w", err)
 	}
 
-	cmd.Printf("%s: marked %s\n", filename, stage)
+	cmd.Println(fmt.Sprintf("%s: marked %s", filename, stage))
 	return nil
 }

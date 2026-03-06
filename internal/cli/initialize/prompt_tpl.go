@@ -50,7 +50,7 @@ func createPromptTemplates(
 
 		// Check if the file exists and --force not set
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			cmd.Printf("  %s prompts/%s (exists, skipped)\n", yellow("○"), name)
+			cmd.Println(fmt.Sprintf("  %s prompts/%s (exists, skipped)", yellow("○"), name))
 			continue
 		}
 
@@ -63,7 +63,7 @@ func createPromptTemplates(
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
 
-		cmd.Printf("  %s prompts/%s\n", green("✓"), name)
+		cmd.Println(fmt.Sprintf("  %s prompts/%s", green("✓"), name))
 	}
 
 	return nil

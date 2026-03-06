@@ -12,6 +12,7 @@
 package pause
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -35,7 +36,7 @@ Resume with: ctx resume`,
 				sessionID = system.ReadSessionID(os.Stdin)
 			}
 			system.Pause(sessionID)
-			cmd.Printf("Context hooks paused for session %s\n", sessionID)
+			cmd.Println(fmt.Sprintf("Context hooks paused for session %s", sessionID))
 			return nil
 		},
 	}

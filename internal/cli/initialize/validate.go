@@ -37,13 +37,13 @@ func checkCtxInPath(cmd *cobra.Command) error {
 		red := color.New(color.FgRed).SprintFunc()
 		yellow := color.New(color.FgYellow).SprintFunc()
 
-		cmd.PrintErrf("%s ctx is not in your PATH\n\n", red("Error:"))
+		cmd.PrintErrln(fmt.Sprintf("%s ctx is not in your PATH", red("Error:")))
 		cmd.PrintErrln(
 			"The hooks created by 'ctx init' require ctx to be in your PATH.",
 		)
 		cmd.PrintErrln("Without this, Claude Code hooks will fail silently.")
 		cmd.PrintErrln()
-		cmd.PrintErrf("%s\n", yellow("To fix this:"))
+		cmd.PrintErrln(yellow("To fix this:"))
 		cmd.PrintErrln("  1. Build:   make build")
 		cmd.PrintErrln("  2. Install: sudo make install")
 		cmd.PrintErrln()

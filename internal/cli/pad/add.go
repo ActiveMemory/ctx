@@ -50,7 +50,7 @@ func runAdd(cmd *cobra.Command, text string) error {
 		return err
 	}
 
-	cmd.Printf("Added entry %d.\n", len(entries))
+	cmd.Println(fmt.Sprintf("Added entry %d.", len(entries)))
 	return nil
 }
 
@@ -76,6 +76,6 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 		return err
 	}
 
-	cmd.Printf("Added entry %d.\n", len(entries))
+	cmd.Println(fmt.Sprintf("Added entry %d.", len(entries)))
 	return nil
 }

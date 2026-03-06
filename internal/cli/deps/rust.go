@@ -14,10 +14,12 @@ import (
 	"sort"
 )
 
+const rustEcosystem = "rust"
+
 // rustBuilder implements GraphBuilder for Rust projects.
 type rustBuilder struct{}
 
-func (r *rustBuilder) Name() string { return "rust" }
+func (r *rustBuilder) Name() string { return rustEcosystem }
 
 func (r *rustBuilder) Detect() bool {
 	_, err := os.Stat("Cargo.toml")
@@ -49,7 +51,7 @@ type cargoPackage struct {
 
 // cargoDep represents a dependency entry in cargo metadata.
 type cargoDep struct {
-	Name string `json:"name"`
+	Name string  `json:"name"`
 	Kind *string `json:"kind"`
 }
 

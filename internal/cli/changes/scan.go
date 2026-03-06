@@ -7,6 +7,7 @@
 package changes
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"os/exec"
 	"sort"
@@ -40,7 +41,7 @@ func FindContextChanges(refTime time.Time) ([]ContextChange, error) {
 
 	var changes []ContextChange
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), ".md") {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), config.ExtMarkdown) {
 			continue
 		}
 		info, infoErr := e.Info()
@@ -78,7 +79,7 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 	if lines == "" {
 		return summary, nil
 	}
-	commitLines := strings.Split(lines, "\n")
+	commitLines := strings.Split(lines, config.NewlineLF)
 	summary.CommitCount = len(commitLines)
 
 	// Latest commit message (first line of oneline output).
@@ -110,7 +111,7 @@ func SummarizeCodeChanges(refTime time.Time) (CodeSummary, error) {
 // uniqueTopDirs extracts unique top-level directories from file paths.
 func uniqueTopDirs(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(output), config.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
@@ -133,7 +134,7 @@ func uniqueTopDirs(output string) []string {
 // uniqueLines returns unique non-empty lines from output.
 func uniqueLines(output string) []string {
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(output), config.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line != "" {
 			seen[line] = true

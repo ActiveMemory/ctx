@@ -12,6 +12,7 @@ package assets
 import (
 	"embed"
 	"encoding/json"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"strings"
 	"sync"
 )
@@ -330,7 +331,7 @@ func ListHookVariants(hook string) ([]string, error) {
 //   - []byte: Document content from why/
 //   - error: Non-nil if the file is not found or read fails
 func WhyDoc(name string) ([]byte, error) {
-	return FS.ReadFile("why/" + name + ".md")
+	return FS.ReadFile("why/" + name + config.ExtMarkdown)
 }
 
 // ListWhyDocs returns available "why" document names (without extension).
@@ -348,7 +349,7 @@ func ListWhyDocs() ([]string, error) {
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			name := entry.Name()
-			if len(name) > 3 && name[len(name)-3:] == ".md" {
+			if len(name) > 3 && name[len(name)-3:] == config.ExtMarkdown {
 				names = append(names, name[:len(name)-3])
 			}
 		}
@@ -378,7 +379,7 @@ var (
 // Lines are trimmed; empty lines and lines starting with '#' are skipped.
 func parsePermissions(data []byte) []string {
 	var result []string
-	for _, line := range strings.Split(string(data), "\n") {
+	for _, line := range strings.Split(string(data), config.NewlineLF) {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue

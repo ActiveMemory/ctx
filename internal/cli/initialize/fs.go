@@ -33,7 +33,7 @@ import (
 // Returns:
 //   - int: Byte position where ctx content should be inserted
 func findInsertionPoint(content string) int {
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, config.NewlineLF)
 	pos := 0
 
 	for i, line := range lines {
@@ -135,16 +135,16 @@ func updateCtxSection(
 	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
-	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
+	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
 
 	if err := os.WriteFile(
 		config.FileClaudeMd, []byte(newContent), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to update %s: %w", config.FileClaudeMd, err)
 	}
-	cmd.Printf(
+	cmd.Println(fmt.Sprintf(
 		"  %s %s (updated ctx section)\n", green("✓"), config.FileClaudeMd,
-	)
+	))
 
 	return nil
 }

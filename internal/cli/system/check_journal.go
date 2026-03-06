@@ -8,6 +8,7 @@ package system
 
 import (
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"path/filepath"
 	"strings"
@@ -73,7 +74,7 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Stage 1: Unexported sessions
-	newestJournal := newestMtime(jDir, ".md")
+	newestJournal := newestMtime(jDir, config.ExtMarkdown)
 	unexported := countNewerFiles(claudeProjectsDir, ".jsonl", newestJournal)
 
 	// Stage 2: Unenriched entries
@@ -114,7 +115,7 @@ func runCheckJournal(cmd *cobra.Command, stdin *os.File) error {
 		"┌─ Journal Reminder ─────────────────────────────\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "│ " + line + "\n"
+		msg += "│ " + line + config.NewlineLF
 	}
 	msg += "└────────────────────────────────────────────────"
 	cmd.Println(msg)

@@ -7,6 +7,7 @@
 package system
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -45,6 +46,6 @@ func runResume(cmd *cobra.Command, stdin *os.File) error {
 
 	path := pauseMarkerPath(sessionID)
 	_ = os.Remove(path)
-	cmd.Printf("Context hooks resumed for session %s\n", sessionID)
+	cmd.Println(fmt.Sprintf("Context hooks resumed for session %s", sessionID))
 	return nil
 }

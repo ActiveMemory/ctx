@@ -118,7 +118,7 @@ func runCheckKnowledge(cmd *cobra.Command, stdin *os.File) error {
 	if convThreshold > 0 {
 		convPath := filepath.Join(contextDir, config.FileConvention)
 		if data, err := os.ReadFile(convPath); err == nil { //nolint:gosec // project-local path
-			lineCount := bytes.Count(data, []byte("\n"))
+			lineCount := bytes.Count(data, []byte(config.NewlineLF))
 			if lineCount > convThreshold {
 				findings = append(findings, finding{
 					file: config.FileConvention, count: lineCount, threshold: convThreshold, unit: "lines",
@@ -153,7 +153,7 @@ func runCheckKnowledge(cmd *cobra.Command, stdin *os.File) error {
 		"\u250c\u2500 Knowledge File Growth \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "\u2502 " + line + "\n"
+		msg += "\u2502 " + line + config.NewlineLF
 	}
 	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
 	cmd.Println(msg)

@@ -7,6 +7,7 @@
 package add
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -201,7 +202,7 @@ func runAdd(cmd *cobra.Command, args []string, flags addConfig) error {
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
-	cmd.Printf("%s Added to %s\n", green("✓"), fName)
+	cmd.Println(fmt.Sprintf("%s Added to %s", green("✓"), fName))
 
 	return nil
 }

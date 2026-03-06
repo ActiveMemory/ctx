@@ -39,8 +39,8 @@ func createProjectDirs(cmd *cobra.Command) error {
 
 	for _, dir := range projectDirs {
 		if _, statErr := os.Stat(dir); statErr == nil {
-			cmd.Printf("  %s %s/ (exists, skipped)\n",
-				color.YellowString("○"), dir)
+			cmd.Println(fmt.Sprintf("  %s %s/ (exists, skipped)",
+				color.YellowString("○"), dir))
 			continue
 		}
 
@@ -59,7 +59,7 @@ func createProjectDirs(cmd *cobra.Command) error {
 			return fmt.Errorf("failed to write %s: %w", readmePath, writeErr)
 		}
 
-		cmd.Printf("  %s %s/\n", green("✓"), dir)
+		cmd.Println(fmt.Sprintf("  %s %s/", green("✓"), dir))
 	}
 
 	return nil

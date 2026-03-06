@@ -114,7 +114,7 @@ func detectFromEvents() (time.Time, bool) {
 		return time.Time{}, false
 	}
 
-	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+	lines := strings.Split(strings.TrimSpace(string(data)), config.NewlineLF)
 	// Scan in reverse for last context-load-gate event.
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]

@@ -8,6 +8,7 @@ package prompt
 
 import (
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"path/filepath"
 
@@ -31,7 +32,7 @@ func showCmd() *cobra.Command {
 
 // runShow reads and prints a prompt template by name.
 func runShow(cmd *cobra.Command, name string) error {
-	path := filepath.Join(promptsDir(), name+".md")
+	path := filepath.Join(promptsDir(), name+config.ExtMarkdown)
 
 	content, err := os.ReadFile(path) //nolint:gosec // user-provided name is intentional
 	if err != nil {

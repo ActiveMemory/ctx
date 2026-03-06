@@ -68,14 +68,14 @@ func runResolve(cmd *cobra.Command) error {
 	if errOurs == nil {
 		cmd.Println("=== OURS ===")
 		for i, entry := range ours {
-			cmd.Printf("  %d. %s\n", i+1, displayEntry(entry))
+			cmd.Println(fmt.Sprintf("  %d. %s", i+1, displayEntry(entry)))
 		}
 	}
 
 	if errTheirs == nil {
 		cmd.Println("=== THEIRS ===")
 		for i, entry := range theirs {
-			cmd.Printf("  %d. %s\n", i+1, displayEntry(entry))
+			cmd.Println(fmt.Sprintf("  %d. %s", i+1, displayEntry(entry)))
 		}
 	}
 

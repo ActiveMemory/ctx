@@ -54,7 +54,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 		return fmt.Errorf("create prompts directory: %w", err)
 	}
 
-	path := filepath.Join(dir, name+".md")
+	path := filepath.Join(dir, name+config.ExtMarkdown)
 
 	// Check if file already exists.
 	if _, err := os.Stat(path); err == nil {
@@ -72,7 +72,7 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 	} else {
 		// Try to load from embedded starter templates.
 		var err error
-		content, err = assets.PromptTemplate(name + ".md")
+		content, err = assets.PromptTemplate(name + config.ExtMarkdown)
 		if err != nil {
 			return fmt.Errorf("no embedded template %q — use --stdin to provide content", name)
 		}
@@ -82,6 +82,6 @@ func runAdd(cmd *cobra.Command, name string, fromStdin bool) error {
 		return fmt.Errorf("write prompt: %w", err)
 	}
 
-	cmd.Printf("Created prompt %q.\n", name)
+	cmd.Println(fmt.Sprintf("Created prompt %q.", name))
 	return nil
 }

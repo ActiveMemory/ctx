@@ -87,10 +87,10 @@ func runList(cmd *cobra.Command) error {
 	var found bool
 	for _, entry := range entries {
 		name := entry.Name()
-		if entry.IsDir() || !strings.HasSuffix(name, ".md") {
+		if entry.IsDir() || !strings.HasSuffix(name, config.ExtMarkdown) {
 			continue
 		}
-		cmd.Printf("  %s\n", strings.TrimSuffix(name, ".md"))
+		cmd.Println(fmt.Sprintf("  %s", strings.TrimSuffix(name, config.ExtMarkdown)))
 		found = true
 	}
 

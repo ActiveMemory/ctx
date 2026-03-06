@@ -7,6 +7,7 @@
 package pad
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -61,6 +62,6 @@ func runMv(cmd *cobra.Command, n, m int) error {
 		return err
 	}
 
-	cmd.Printf("Moved entry %d to %d.\n", n, m)
+	cmd.Println(fmt.Sprintf("Moved entry %d to %d.", n, m))
 	return nil
 }

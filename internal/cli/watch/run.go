@@ -59,7 +59,7 @@ func runWatch(cmd *cobra.Command, _ []string) error {
 		defer func(file *os.File) {
 			err := file.Close()
 			if err != nil {
-				cmd.Printf("failed to close log file: %v\n", err)
+				cmd.Println(fmt.Sprintf("failed to close log file: %v", err))
 			}
 		}(file)
 		reader = file

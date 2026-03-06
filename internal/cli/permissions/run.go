@@ -9,6 +9,7 @@ package permissions
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -37,7 +38,7 @@ func runSnapshot(cmd *cobra.Command) error {
 		return errWriteFile(config.FileSettingsGolden, err)
 	}
 
-	cmd.Printf("%s golden image: %s\n", verb, config.FileSettingsGolden)
+	cmd.Println(fmt.Sprintf("%s golden image: %s", verb, config.FileSettingsGolden))
 	return nil
 }
 
@@ -83,27 +84,27 @@ func runRestore(cmd *cobra.Command) error {
 	denyRestored, denyDropped := diffStringSlices(golden.Permissions.Deny, local.Permissions.Deny)
 
 	if len(dropped) > 0 {
-		cmd.Printf("Dropped %d session allow permission(s):\n", len(dropped))
+		cmd.Println(fmt.Sprintf("Dropped %d session allow permission(s):", len(dropped)))
 		for _, p := range dropped {
-			cmd.Printf("  - %s\n", p)
+			cmd.Println(fmt.Sprintf("  - %s", p))
 		}
 	}
 	if len(restored) > 0 {
-		cmd.Printf("Restored %d allow permission(s):\n", len(restored))
+		cmd.Println(fmt.Sprintf("Restored %d allow permission(s):", len(restored)))
 		for _, p := range restored {
-			cmd.Printf("  + %s\n", p)
+			cmd.Println(fmt.Sprintf("  + %s", p))
 		}
 	}
 	if len(denyDropped) > 0 {
-		cmd.Printf("Dropped %d session deny rule(s):\n", len(denyDropped))
+		cmd.Println(fmt.Sprintf("Dropped %d session deny rule(s):", len(denyDropped)))
 		for _, p := range denyDropped {
-			cmd.Printf("  - %s\n", p)
+			cmd.Println(fmt.Sprintf("  - %s", p))
 		}
 	}
 	if len(denyRestored) > 0 {
-		cmd.Printf("Restored %d deny rule(s):\n", len(denyRestored))
+		cmd.Println(fmt.Sprintf("Restored %d deny rule(s):", len(denyRestored)))
 		for _, p := range denyRestored {
-			cmd.Printf("  + %s\n", p)
+			cmd.Println(fmt.Sprintf("  + %s", p))
 		}
 	}
 	allEmpty := len(dropped) == 0 && len(restored) == 0 && len(denyDropped) == 0 && len(denyRestored) == 0

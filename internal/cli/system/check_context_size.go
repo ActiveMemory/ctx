@@ -173,10 +173,10 @@ func emitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens
 		"┌─ Context Checkpoint (prompt #%d) ────────────────\n", count)
 	msg += boxLines(content)
 	if tokens > 0 {
-		msg += "│ " + tokenUsageLine(tokens, pct, windowSize) + "\n"
+		msg += "│ " + tokenUsageLine(tokens, pct, windowSize) + config.NewlineLF
 	}
 	if line := contextDirLine(); line != "" {
-		msg += "│ " + line + "\n"
+		msg += "│ " + line + config.NewlineLF
 	}
 	msg += appendOversizeNudge()
 	msg += boxBottom
@@ -205,7 +205,7 @@ func emitWindowWarning(cmd *cobra.Command, logFile, sessionID string, count, tok
 		"┌─ Context Window Warning ─────────────────────────\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "│ " + line + "\n"
+		msg += "│ " + line + config.NewlineLF
 	}
 	msg += boxBottom
 	cmd.Println(msg)
@@ -285,7 +285,7 @@ func emitBillingWarning(cmd *cobra.Command, logFile, sessionID string, count, to
 		"┌─ Billing Threshold ──────────────────────────────\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "│ " + line + "\n"
+		msg += "│ " + line + config.NewlineLF
 	}
 	msg += boxBottom
 	cmd.Println(msg)
