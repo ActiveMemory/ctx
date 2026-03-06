@@ -94,6 +94,7 @@ nav = [
     "cli/tools.md",
     "cli/config.md",
     "cli/doctor.md",
+    "cli/mcp.md",
     "cli/system.md",
   ]},
   { "Reference" = [

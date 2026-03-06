@@ -51,7 +51,7 @@ upward from them. The `rc` package mediates config resolution;
 | `internal/crypto`  | AES-256-GCM encryption (stdlib only)            | `Encrypt()`, `Decrypt()`, `GenerateKey()`         |
 | `internal/sysinfo` | OS metrics with platform build tags             | `Collect()`, `Evaluate()`, `MaxSeverity()`        |
 
-<!-- drift-check: ls -d internal/rc internal/context internal/drift internal/index internal/task internal/validation internal/recall/parser internal/claude internal/notify internal/journal/state 2>/dev/null | wc -l -->
+<!-- drift-check: ls -d internal/rc internal/context internal/drift internal/index internal/task internal/validation internal/recall/parser internal/claude internal/notify internal/journal/state internal/mcp 2>/dev/null | wc -l -->
 ### Core Packages
 
 | Package                  | Purpose                                                | Key Exports                                |
@@ -66,6 +66,7 @@ upward from them. The `rc` package mediates config resolution;
 | `internal/claude`        | Claude Code integration types and skill access         | `Skills()`, `SkillContent()`               |
 | `internal/notify`        | Webhook notifications with encrypted URL storage       | `Send()`, `LoadWebhook()`, `SaveWebhook()` |
 | `internal/journal/state` | Journal processing pipeline state (JSON)               | `Load()`, `Save()`, `Mark*()`              |
+| `internal/mcp`           | MCP server (JSON-RPC 2.0 over stdin/stdout)            | `NewServer()`, `Serve()`                   |
 | `internal/memory`        | Memory bridge: discover, mirror, diff MEMORY.md        | `DiscoverMemoryPath()`, `Sync()`, `Diff()` |
 
 <!-- drift-check: ls -d internal/cli/*/ | wc -l -->
@@ -105,6 +106,7 @@ upward from them. The `rc` package mediates config resolution;
 | `system`      | System diagnostics, resource monitoring, hook plumbing                          |
 | `task`        | Task archival and snapshots                                                     |
 | `watch`       | Monitor stdin for context-update tags and apply them                            |
+| `mcp`         | MCP server for AI tool integration (stdin/stdout JSON-RPC)                      |
 
 ## Data Flow Diagrams
 
