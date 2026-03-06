@@ -113,7 +113,7 @@ func runCheckVersion(cmd *cobra.Command, stdin *os.File) error {
 		"┌─ Version Mismatch ─────────────────────────────\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "│ " + line + "\n"
+		msg += "│ " + line + config.NewlineLF
 	}
 	msg += "└────────────────────────────────────────────────"
 	cmd.Println(msg)
@@ -163,7 +163,7 @@ func checkKeyAge(cmd *cobra.Command, sessionID string) {
 		"┌─ Key Rotation ──────────────────────────────────┐\n"
 	keyMsg += boxLines(keyContent)
 	if line := contextDirLine(); line != "" {
-		keyMsg += "│ " + line + "\n"
+		keyMsg += "│ " + line + config.NewlineLF
 	}
 	keyMsg += "└──────────────────────────────────────────────────┘"
 	cmd.Println(keyMsg)

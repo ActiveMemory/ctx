@@ -141,4 +141,3 @@ func readMtime(path string) int64 {
 func writeMtime(path string, mtime int64) {
 	_ = os.WriteFile(path, []byte(strconv.FormatInt(mtime, 10)), 0o600)
 }
-

@@ -9,6 +9,7 @@ package deps
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"sort"
 	"strings"
 )
@@ -57,7 +58,7 @@ func renderTable(graph map[string][]string) string {
 // renderJSON produces a machine-readable JSON adjacency list.
 func renderJSON(graph map[string][]string) string {
 	data, _ := json.MarshalIndent(graph, "", "  ")
-	return string(data) + "\n"
+	return string(data) + config.NewlineLF
 }
 
 // sortedKeys returns the keys of a map sorted alphabetically.

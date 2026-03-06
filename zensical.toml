@@ -63,6 +63,7 @@ nav = [
       "recipes/design-before-coding.md",
       "recipes/scratchpad-with-claude.md",
       "recipes/scratchpad-sync.md",
+      "recipes/memory-bridge.md",
     ]},
     { "Hooks and Notifications" = [
       "recipes/hook-output-patterns.md",
@@ -82,6 +83,7 @@ nav = [
       "recipes/autonomous-loops.md",
       "recipes/when-to-use-agent-teams.md",
       "recipes/parallel-worktrees.md",
+      "recipes/prompt-templates.md",
     ]},
   ]},
   { "CLI" = [

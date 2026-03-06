@@ -96,7 +96,7 @@ func runImport(cmd *cobra.Command, file string) error {
 		return err
 	}
 
-	cmd.Printf("Imported %d entries.\n", count)
+	cmd.Println(fmt.Sprintf("Imported %d entries.", count))
 	return nil
 }
 
@@ -133,20 +133,20 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 
 		data, fileErr := os.ReadFile(filePath) //nolint:gosec // user-provided path is intentional
 		if fileErr != nil {
-			cmd.PrintErrf("  ! skipped: %s (%v)\n", name, fileErr)
+			cmd.PrintErrln(fmt.Sprintf("  ! skipped: %s (%v)", name, fileErr))
 			skipped++
 			continue
 		}
 
 		if len(data) > MaxBlobSize {
-			cmd.PrintErrf("  ! skipped: %s (exceeds %d byte limit)\n",
-				name, MaxBlobSize)
+			cmd.PrintErrln(fmt.Sprintf("  ! skipped: %s (exceeds %d byte limit)",
+				name, MaxBlobSize))
 			skipped++
 			continue
 		}
 
 		entries = append(entries, makeBlob(name, data))
-		cmd.Printf("  + %s\n", name)
+		cmd.Println(fmt.Sprintf("  + %s", name))
 		added++
 	}
 
@@ -161,6 +161,6 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 		}
 	}
 
-	cmd.Printf("Done. Added %d, skipped %d.\n", added, skipped)
+	cmd.Println(fmt.Sprintf("Done. Added %d, skipped %d.", added, skipped))
 	return nil
 }

@@ -96,6 +96,7 @@ ctx/
 │   ├── drift/          # Drift detection
 │   ├── index/          # Context file indexing
 │   ├── journal/        # Journal site generation
+│   ├── memory/         # Memory bridge (discover, mirror, import, publish)
 │   ├── notify/         # Webhook notifications
 │   ├── rc/             # .ctxrc parsing
 │   ├── recall/         # Session history and parsers
@@ -147,6 +148,57 @@ never distributed to users.
 Six skills previously in this list have been promoted to bundled plugin skills
 and are now available to all ctx users: `/ctx-brainstorm`, `/ctx-check-links`,
 `/ctx-sanitize-permissions`, `/ctx-skill-creator`, `/ctx-spec`, `/ctx-verify`.
+
+----
+
+## How To Add Things
+
+### Adding a New CLI Command
+
+1. Create a package under `internal/cli/<name>/`;
+2. Implement `Cmd() *cobra.Command` as the entry point;
+3. Register it in `internal/bootstrap/bootstrap.go` (add import + call in `Initialize`);
+4. Use `cmd.Printf`/`cmd.Println` for output (not `fmt.Print`);
+5. Add tests in the same package (`<name>_test.go`);
+6. Add a section to the appropriate CLI doc page in `docs/cli/`.
+
+Pattern to follow: `internal/cli/pad/pad.go` (parent with subcommands) or
+`internal/cli/complete/complete.go` (single command).
+
+### Adding a New Session Parser
+
+The recall system uses a `SessionParser` interface. To add support for a
+new AI tool (e.g. Aider, Cursor):
+
+1. Create `internal/recall/parser/<tool>.go`;
+2. Implement parsing logic that returns `[]*Session`;
+3. Register the parser in `FindSessions()` / `FindSessionsForCWD()`;
+4. Use `config.Tool*` constants for the tool identifier;
+5. Add test fixtures and parser tests.
+
+Pattern to follow: the Claude Code JSONL parser in `internal/recall/parser/`.
+
+### Adding a Bundled Skill
+
+1. Create `internal/assets/claude/skills/<skill-name>/SKILL.md`;
+2. Follow the skill format: trigger, negative triggers, steps, quality gate;
+3. Run `make plugin-reload` and restart Claude Code to test;
+4. Add a `Skill` entry to `.claude-plugin/plugin.json` if user-invocable;
+5. Document in `docs/reference/skills.md`.
+
+Pattern to follow: any skill in `internal/assets/claude/skills/ctx-status/`.
+
+### Test Expectations
+
+- **Unit tests**: colocated with source (`foo.go` → `foo_test.go`);
+- **Test helpers**: use `t.Helper()` so failures point to callers;
+- **HOME isolation**: use `t.TempDir()` + `t.Setenv("HOME", ...)` for
+  tests that touch `~/.claude/` or `~/.ctx/`;
+- **rc.Reset()**: call after `os.Chdir` in tests that change working
+  directory (rc caches on first access);
+- **No network**: all tests run offline, use fixtures.
+
+Run `make test` before submitting. Target: no failures, no skips.
 
 ----
 

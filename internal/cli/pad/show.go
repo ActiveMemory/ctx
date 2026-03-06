@@ -79,7 +79,7 @@ func runShow(cmd *cobra.Command, n int, outPath string) error {
 			if err := os.WriteFile(outPath, data, 0600); err != nil {
 				return fmt.Errorf("write file: %w", err)
 			}
-			cmd.Printf("Wrote %d bytes to %s\n", len(data), outPath)
+			cmd.Println(fmt.Sprintf("Wrote %d bytes to %s", len(data), outPath))
 			return nil
 		}
 		cmd.Print(string(data))

@@ -147,6 +147,17 @@ simultaneously.
 
 ---
 
+### [Bridging Claude Code Auto Memory](memory-bridge.md)
+
+Mirror Claude Code's **auto memory** (MEMORY.md) into `.context/` for
+**version control**, **portability**, and **drift detection**. Import
+entries into structured context files with heuristic classification.
+
+**Uses**: `ctx memory sync`, `ctx memory status`, `ctx memory diff`,
+`ctx memory import`, `ctx memory publish`, `ctx system check-memory-drift`
+
+---
+
 ## Hooks & Notifications
 
 ### [Hook Output Patterns](hook-output-patterns.md)
@@ -205,6 +216,16 @@ claims match agent instructions.
 **Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
 `/ctx-drift`, `/ctx-alignment-audit`, `/ctx-status`,
 `/ctx-prompt-audit`
+
+---
+
+### [State Directory Maintenance](state-maintenance.md)
+
+Clean up session tombstones from `.context/state/`. Prune old
+per-session files, identify stale global markers, and keep the
+state directory lean.
+
+**Uses**: `ctx system prune`
 
 ---
 
@@ -322,3 +343,13 @@ file overlap, work in parallel, merge back.
 
 **Uses**: `/ctx-worktree`, `/ctx-next`, `git worktree`,
 `git merge`
+
+---
+
+### [Reusable Prompt Templates](prompt-templates.md)
+
+Store and reuse **prompt templates** in `.context/prompts/` for
+repeating tasks. Manage templates via CLI, reference them in skills
+and loop scripts.
+
+**Uses**: `ctx prompt`, `ctx prompt list`, `ctx prompt show`

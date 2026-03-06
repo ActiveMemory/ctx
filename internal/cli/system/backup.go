@@ -126,10 +126,10 @@ func runBackup(cmd *cobra.Command) error {
 	}
 
 	for _, r := range results {
-		cmd.Printf("%s: %s (%s)",
-			r.Scope, r.Archive, formatSize(r.Size))
+		cmd.Print(fmt.Sprintf("%s: %s (%s)",
+			r.Scope, r.Archive, formatSize(r.Size)))
 		if r.SMBDest != "" {
-			cmd.Printf(" → %s", r.SMBDest)
+			cmd.Print(fmt.Sprintf(" → %s", r.SMBDest))
 		}
 		cmd.Println()
 	}
@@ -248,7 +248,7 @@ func addEntry(tw *tar.Writer, entry archiveEntry, cmd *cobra.Command) error {
 	info, statErr := os.Stat(entry.SourcePath)
 	if os.IsNotExist(statErr) {
 		if entry.Optional {
-			cmd.PrintErrf("skipping %s (not found)\n", entry.Prefix)
+			cmd.PrintErrln(fmt.Sprintf("skipping %s (not found)", entry.Prefix))
 			return nil
 		}
 		return fmt.Errorf("source not found: %s", entry.SourcePath)

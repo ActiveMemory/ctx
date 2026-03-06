@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-06 | Create internal/parse for shared text-to-typed-value conversions |
+| 2026-03-06 | Centralize errors in internal/err, not per-package err.go files |
+| 2026-03-05 | Gitignore .context/memory/ for this project |
 | 2026-03-05 | Memory bridge design: three-phase architecture with hook nudge + on-demand |
 | 2026-03-05 | Revised strategic analysis: blog-first execution order, bidirectional sync as top-level section |
 | 2026-03-04 | Interface-based GraphBuilder for multi-ecosystem ctx deps |
@@ -24,6 +27,48 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-06-050132] Create internal/parse for shared text-to-typed-value conversions
+
+**Status**: Accepted
+
+**Context**: parseDate with 2006-01-02 duplicated in 5+ files; needed a home that is not internal/utils or internal/strings (collides with stdlib)
+
+**Decision**: Create internal/parse for shared text-to-typed-value conversions
+
+**Rationale**: internal/parse scopes to convert text to typed values without becoming a junk drawer. Name invites sibling functions (duration, identifier parsing) naturally.
+
+**Consequences**: parse.Date() is the first function; config.DateFormat holds the layout constant. Other time.Parse callers can migrate incrementally.
+
+---
+
+## [2026-03-06-050131] Centralize errors in internal/err, not per-package err.go files
+
+**Status**: Accepted
+
+**Context**: Duplicate error constructors across 5+ CLI packages; agents copying the pattern when they see a local err.go
+
+**Decision**: Centralize errors in internal/err, not per-package err.go files
+
+**Rationale**: Single location makes duplicates visible, enables future sentinel errors, and prevents broken-window accumulation
+
+**Consequences**: All CLI err.go files migrated and deleted. New errors go to internal/err/errors.go exclusively.
+
+---
+
+## [2026-03-05-205424] Gitignore .context/memory/ for this project
+
+**Status**: Accepted
+
+**Context**: Memory mirror contains copies of MEMORY.md which holds strategic analysis and session notes
+
+**Decision**: Gitignore .context/memory/ for this project
+
+**Rationale**: Strategic content should not be in git history. Docs updated to say 'often git-tracked' for the general recommendation — this project is the exception.
+
+**Consequences**: Mirror and archives are local-only for this project. Other projects can still track them. Sync and drift detection work the same way regardless.
+
+---
 
 ## [2026-03-05-042154] Memory bridge design: three-phase architecture with hook nudge + on-demand
 

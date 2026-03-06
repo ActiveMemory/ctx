@@ -66,7 +66,7 @@ func readPersistenceState(path string) (persistenceState, bool) {
 	}
 
 	var state persistenceState
-	for _, line := range strings.Split(strings.TrimSpace(string(data)), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(string(data)), config.NewlineLF) {
 		parts := strings.SplitN(line, "=", 2)
 		if len(parts) != 2 {
 			continue
@@ -107,7 +107,7 @@ func getLatestContextMtime(contextDir string) int64 {
 
 	var latest int64
 	for _, entry := range entries {
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".md") {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), config.ExtMarkdown) {
 			continue
 		}
 		info, err := entry.Info()
@@ -181,7 +181,7 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 			"Have you discovered learnings, made decisions,\n" +
 			"established conventions, or completed tasks\n" +
 			"worth persisting?\n" +
-			"\n" +
+			config.NewlineLF +
 			"Run /ctx-wrap-up to capture session context."
 		content := loadMessage("check-persistence", "nudge",
 			map[string]any{
@@ -197,7 +197,7 @@ func runCheckPersistence(cmd *cobra.Command, stdin *os.File) error {
 			"┌─ Persistence Checkpoint (prompt #%d) ───────────\n", state.Count)
 		msg += boxLines(content)
 		if line := contextDirLine(); line != "" {
-			msg += "│ " + line + "\n"
+			msg += "│ " + line + config.NewlineLF
 		}
 		msg += config.NudgeBoxBottom
 		cmd.Println(msg)

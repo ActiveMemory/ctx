@@ -121,6 +121,8 @@ Users rarely invoke skills explicitly. Recognize natural language:
 | "That's worth remembering" / "Any gotchas?"     | `/ctx-add-learning`                                    |
 | "Record that convention"                        | `/ctx-add-convention`                                  |
 | "Add a task for that"                           | `/ctx-add-task`                                        |
+| "Sync memory" / "What's in auto memory?"        | `ctx memory sync` / `ctx memory status`                |
+| "Import from memory"                            | `ctx memory import --dry-run` then `ctx memory import` |
 | "Let's wrap up"                                 | Reflect → persist outstanding items → present together |
 
 ## Proactive Persistence

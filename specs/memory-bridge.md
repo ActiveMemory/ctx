@@ -1,9 +1,13 @@
 # Spec: Memory Bridge Foundation (`ctx memory`)
 
 Mirror Claude Code's auto memory (MEMORY.md) into `.context/` with
-drift detection. Foundation for future import and publish features.
+drift detection, heuristic import, and bidirectional publish.
 
-Future phases: `ideas/spec-memory-import.md`, `ideas/spec-memory-publish.md`
+All three phases are implemented:
+
+- **Foundation** (this spec): discovery, mirror, drift hook
+- **Import**: `specs/memory-import.md` — classify and promote entries
+- **Publish**: `specs/memory-publish.md` — push curated context back
 
 ## Problem
 

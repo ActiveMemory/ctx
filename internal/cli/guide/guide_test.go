@@ -113,7 +113,7 @@ func TestParseSkillFrontmatter(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid frontmatter",
+			name:  "valid frontmatter",
 			input: "---\nname: ctx-test\ndescription: \"A test skill.\"\n---\nBody text.",
 			want:  skillMeta{Name: "ctx-test", Description: "A test skill."},
 		},

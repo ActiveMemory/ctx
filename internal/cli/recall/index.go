@@ -21,7 +21,7 @@ import (
 // Two-pass matching:
 //  1. Parse YAML frontmatter for a session_id field (authoritative).
 //  2. For files without session_id, extract the last 8 characters before
-//     ".md" and treat them as a short ID candidate (migration path for
+//     config.ExtMarkdown and treat them as a short ID candidate (migration path for
 //     legacy exports).
 //
 // Parameters:
@@ -62,7 +62,7 @@ func buildSessionIndex(journalDir string) map[string]string {
 		// Pass 2: extract short ID from filename as fallback.
 		// Filename format: YYYY-MM-DD-slug-SHORTID.md or ...-pN.md
 		name := e.Name()
-		// Strip multipart suffix (e.g., "-p2.md" → ".md").
+		// Strip multipart suffix (e.g., "-p2.md" → config.ExtMarkdown).
 		baseName := strings.TrimSuffix(name, config.ExtMarkdown)
 		if idx := strings.LastIndex(baseName, "-p"); idx > 0 {
 			suffix := baseName[idx+2:]

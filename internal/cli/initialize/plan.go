@@ -60,7 +60,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 			return fmt.Errorf(
 				"failed to write %s: %w", config.FileImplementationPlan, err)
 		}
-		cmd.Printf("  %s %s\n", green("✓"), config.FileImplementationPlan)
+		cmd.Println(fmt.Sprintf("  %s %s", green("✓"), config.FileImplementationPlan))
 		return nil
 	}
 
@@ -71,10 +71,10 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	if hasCtxMarkers {
 		// Already has ctx content
 		if !force {
-			cmd.Printf(
+			cmd.Println(fmt.Sprintf(
 				"  %s %s (ctx content exists, skipped)\n", yellow("○"),
 				config.FileImplementationPlan,
-			)
+			))
 			return nil
 		}
 		// Force update: replace the existing ctx section
@@ -84,10 +84,10 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	// No ctx markers: need to merge
 	if !autoMerge {
 		// Prompt user
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"\n%s exists but has no ctx content.\n",
 			config.FileImplementationPlan,
-		)
+		))
 		cmd.Println(
 			"Would you like to merge ctx implementation plan template?",
 		)
@@ -98,9 +98,9 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 			return fmt.Errorf("failed to read input: %w", err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
-		if response != "y" && response != "yes" { //nolint:goconst // trivial user input check
-			cmd.Printf(
-				"  %s %s (skipped)\n", yellow("○"), config.FileImplementationPlan)
+		if response != config.ConfirmShort && response != config.ConfirmLong {
+			cmd.Println(fmt.Sprintf(
+				"  %s %s (skipped)\n", yellow("○"), config.FileImplementationPlan))
 			return nil
 		}
 	}
@@ -112,7 +112,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
-	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
+	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
 
 	// Find the best insertion point (after the H1 title, or at the top)
 	insertPos := findInsertionPoint(existingStr)
@@ -121,11 +121,11 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	var mergedContent string
 	if insertPos == 0 {
 		// Insert at top
-		mergedContent = string(templateContent) + "\n" + existingStr
+		mergedContent = string(templateContent) + config.NewlineLF + existingStr
 	} else {
 		// Insert after H1 heading
-		mergedContent = existingStr[:insertPos] + "\n" +
-			string(templateContent) + "\n" + existingStr[insertPos:]
+		mergedContent = existingStr[:insertPos] + config.NewlineLF +
+			string(templateContent) + config.NewlineLF + existingStr[insertPos:]
 	}
 
 	if err := os.WriteFile(
@@ -133,7 +133,7 @@ func handleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 		return fmt.Errorf(
 			"failed to write merged %s: %w", config.FileImplementationPlan, err)
 	}
-	cmd.Printf("  %s %s (merged)\n", green("✓"), config.FileImplementationPlan)
+	cmd.Println(fmt.Sprintf("  %s %s (merged)", green("✓"), config.FileImplementationPlan))
 
 	return nil
 }
@@ -187,7 +187,7 @@ func updatePlanSection(
 	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
-	cmd.Printf("  %s %s (backup)\n", green("✓"), backupName)
+	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
 
 	if err := os.WriteFile(
 		config.FileImplementationPlan, []byte(newContent), config.PermFile,
@@ -195,10 +195,10 @@ func updatePlanSection(
 		return fmt.Errorf(
 			"failed to update %s: %w", config.FileImplementationPlan, err)
 	}
-	cmd.Printf(
+	cmd.Println(fmt.Sprintf(
 		"  %s %s (updated plan section)\n",
 		green("✓"), config.FileImplementationPlan,
-	)
+	))
 
 	return nil
 }

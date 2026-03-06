@@ -9,6 +9,7 @@ package guide
 import (
 	"bytes"
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -32,11 +33,11 @@ func parseSkillFrontmatter(content []byte) (skillMeta, error) {
 	const sep = "---"
 
 	text := string(content)
-	if !strings.HasPrefix(text, sep+"\n") {
+	if !strings.HasPrefix(text, sep+config.NewlineLF) {
 		return skillMeta{}, nil
 	}
 
-	end := strings.Index(text[4:], "\n"+sep)
+	end := strings.Index(text[4:], config.NewlineLF+sep)
 	if end < 0 {
 		return skillMeta{}, nil
 	}

@@ -7,12 +7,14 @@
 package initialize
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // checkCtxInPath verifies that ctx is available in PATH.
@@ -25,34 +27,16 @@ import (
 //   - cmd: Cobra command for error output stream
 //
 // Returns:
-//   - error: Non-nil if ctx is not found in PATH
+//   - error: non-nil if ctx is not found in PATH
 func checkCtxInPath(cmd *cobra.Command) error {
-	// Allow skipping for tests
-	if os.Getenv("CTX_SKIP_PATH_CHECK") == "1" {
+	if os.Getenv(config.EnvSkipPathCheck) == config.EnvTrue {
 		return nil
 	}
 
 	_, err := exec.LookPath("ctx")
 	if err != nil {
-		red := color.New(color.FgRed).SprintFunc()
-		yellow := color.New(color.FgYellow).SprintFunc()
-
-		cmd.PrintErrf("%s ctx is not in your PATH\n\n", red("Error:"))
-		cmd.PrintErrln(
-			"The hooks created by 'ctx init' require ctx to be in your PATH.",
-		)
-		cmd.PrintErrln("Without this, Claude Code hooks will fail silently.")
-		cmd.PrintErrln()
-		cmd.PrintErrf("%s\n", yellow("To fix this:"))
-		cmd.PrintErrln("  1. Build:   make build")
-		cmd.PrintErrln("  2. Install: sudo make install")
-		cmd.PrintErrln()
-		cmd.PrintErrln("Or manually:")
-		cmd.PrintErrln("  sudo cp ./ctx /usr/local/bin/")
-		cmd.PrintErrln()
-		cmd.PrintErrln("Then run 'ctx init' again.")
-
-		return fmt.Errorf("ctx not found in PATH")
+		write.ErrCtxNotInPath(cmd)
+		return ctxerr.CtxNotInPath()
 	}
 	return nil
 }

@@ -38,7 +38,7 @@ func showMenu(cmd *cobra.Command) error {
       ctx -> why`)
 	cmd.Println()
 	for i, doc := range docOrder {
-		cmd.Printf("  [%d] %s\n", i+1, doc.label)
+		cmd.Println(fmt.Sprintf("  [%d] %s", i+1, doc.label))
 	}
 	cmd.Print("\nSelect a document (1-3): ")
 

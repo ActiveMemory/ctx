@@ -101,6 +101,10 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 	// the agent makes multiple parallel tool calls.
 	touchFile(marker)
 
+	// Auto-prune stale session state files (best-effort, silent).
+	// Runs once per session at startup — fast directory scan.
+	autoPrune(7)
+
 	dir := rc.ContextDir()
 	var content strings.Builder
 	var totalTokens int
@@ -156,12 +160,12 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 		ctxChanges, _ := changes.FindContextChanges(refTime)
 		codeChanges, _ := changes.SummarizeCodeChanges(refTime)
 		if len(ctxChanges) > 0 || codeChanges.CommitCount > 0 {
-			content.WriteString("\n" + changes.RenderChangesForHook(
+			content.WriteString(config.NewlineLF + changes.RenderChangesForHook(
 				refLabel, ctxChanges, codeChanges))
 		}
 	}
 
-	content.WriteString(strings.Repeat("=", 80) + "\n")
+	content.WriteString(strings.Repeat("=", 80) + config.NewlineLF)
 	content.WriteString(fmt.Sprintf(
 		"Context: %d files loaded (~%d tokens). "+
 			"Order follows config.FileReadOrder.\n\n"+
@@ -201,7 +205,7 @@ func writeOversizeFlag(contextDir string, totalTokens int, perFile []fileTokenEn
 
 	var flag strings.Builder
 	flag.WriteString("Context injection oversize warning\n")
-	flag.WriteString(strings.Repeat("=", 35) + "\n")
+	flag.WriteString(strings.Repeat("=", 35) + config.NewlineLF)
 	flag.WriteString(fmt.Sprintf("Timestamp: %s\n", time.Now().UTC().Format(time.RFC3339)))
 	flag.WriteString(fmt.Sprintf("Injected:  %d tokens (threshold: %d)\n\n", totalTokens, threshold))
 	flag.WriteString("Per-file breakdown:\n")

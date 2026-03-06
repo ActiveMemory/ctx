@@ -9,6 +9,7 @@ package system
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"path/filepath"
 	"sort"
@@ -151,7 +152,7 @@ func listContextFiles(dir string) []string {
 		if e.IsDir() {
 			continue
 		}
-		if strings.EqualFold(filepath.Ext(e.Name()), ".md") {
+		if strings.EqualFold(filepath.Ext(e.Name()), config.ExtMarkdown) {
 			files = append(files, e.Name())
 		}
 	}
@@ -189,5 +190,5 @@ func wrapFileList(files []string, maxWidth int, indent string) string {
 		}
 	}
 	lines = append(lines, current)
-	return strings.Join(lines, "\n")
+	return strings.Join(lines, config.NewlineLF)
 }

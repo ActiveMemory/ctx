@@ -1535,6 +1535,8 @@
       
         
       
+        
+      
     
     
     
@@ -1747,6 +1749,36 @@
     
   
     Syncing Scratchpad Notes Across Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="memory-bridge/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-brain" viewBox="0 0 24 24"><path d="M12 18V5M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Bridging Claude Code Auto Memory
   
 
     
@@ -2197,6 +2229,8 @@
       
         
       
+        
+      
     
     
     
@@ -2349,6 +2383,36 @@
     
   
     Parallel Agent Development with Git Worktrees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="prompt-templates/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-message-square-text" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2zM7 11h10M7 15h6M7 7h8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable Prompt Templates
   
 
     
@@ -3492,6 +3556,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#bridging-claude-code-auto-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridging Claude Code Auto Memory
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3575,6 +3650,17 @@
     <span class="md-ellipsis">
       
         Detecting and Fixing Drift
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-directory-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Directory Maintenance
       
     </span>
   </a>
@@ -3708,6 +3794,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#reusable-prompt-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusable Prompt Templates
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3833,6 +3930,13 @@ notes via git, and resolve merge conflicts when two machines edit
 simultaneously.</p>
 <p><strong>Uses</strong>: <code>ctx init</code>, <code>ctx pad</code>, <code>ctx pad resolve</code>, <code>scp</code></p>
 <hr />
+<h3 id="bridging-claude-code-auto-memory"><a href="memory-bridge/">Bridging Claude Code Auto Memory</a><a class="headerlink" href="#bridging-claude-code-auto-memory" title="Permanent link">&para;</a></h3>
+<p>Mirror Claude Code's <strong>auto memory</strong> (MEMORY.md) into <code>.context/</code> for
+<strong>version control</strong>, <strong>portability</strong>, and <strong>drift detection</strong>. Import
+entries into structured context files with heuristic classification.</p>
+<p><strong>Uses</strong>: <code>ctx memory sync</code>, <code>ctx memory status</code>, <code>ctx memory diff</code>,
+<code>ctx memory import</code>, <code>ctx memory publish</code>, <code>ctx system check-memory-drift</code></p>
+<hr />
 <h2 id="hooks-notifications">Hooks &amp; Notifications<a class="headerlink" href="#hooks-notifications" title="Permanent link">&para;</a></h2>
 <h3 id="hook-output-patterns"><a href="hook-output-patterns/">Hook Output Patterns</a><a class="headerlink" href="#hook-output-patterns" title="Permanent link">&para;</a></h3>
 <p>Choose the right output pattern for your Claude Code hooks: <code>VERBATIM</code>
@@ -3871,6 +3975,12 @@ claims match agent instructions.</p>
 <p><strong>Uses</strong>: <code>ctx drift</code>, <code>ctx sync</code>, <code>ctx compact</code>, <code>ctx status</code>,
 <code>/ctx-drift</code>, <code>/ctx-alignment-audit</code>, <code>/ctx-status</code>,
 <code>/ctx-prompt-audit</code></p>
+<hr />
+<h3 id="state-directory-maintenance"><a href="state-maintenance/">State Directory Maintenance</a><a class="headerlink" href="#state-directory-maintenance" title="Permanent link">&para;</a></h3>
+<p>Clean up session tombstones from <code>.context/state/</code>. Prune old
+per-session files, identify stale global markers, and keep the
+state directory lean.</p>
+<p><strong>Uses</strong>: <code>ctx system prune</code></p>
 <hr />
 <h3 id="troubleshooting"><a href="troubleshooting/">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
 <p>Diagnose hook failures, noisy nudges, stale context, and configuration
@@ -3944,6 +4054,12 @@ each on its own branch and working directory. Group tasks by
 file overlap, work in parallel, merge back.</p>
 <p><strong>Uses</strong>: <code>/ctx-worktree</code>, <code>/ctx-next</code>, <code>git worktree</code>,
 <code>git merge</code></p>
+<hr />
+<h3 id="reusable-prompt-templates"><a href="prompt-templates/">Reusable Prompt Templates</a><a class="headerlink" href="#reusable-prompt-templates" title="Permanent link">&para;</a></h3>
+<p>Store and reuse <strong>prompt templates</strong> in <code>.context/prompts/</code> for
+repeating tasks. Manage templates via CLI, reference them in skills
+and loop scripts.</p>
+<p><strong>Uses</strong>: <code>ctx prompt</code>, <code>ctx prompt list</code>, <code>ctx prompt show</code></p>
 
 
 

@@ -1,0 +1,9 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+// Package context loads and manages .context/ files with token counting
+// and metadata.
+package context

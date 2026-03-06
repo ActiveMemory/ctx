@@ -56,7 +56,7 @@ func statusCmd() *cobra.Command {
 		Use:         "status",
 		Short:       "Show active .ctxrc profile",
 		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
-		Args:  cobra.NoArgs,
+		Args:        cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			root, rootErr := gitRoot()
 			if rootErr != nil {
@@ -99,7 +99,7 @@ func runSwitch(cmd *cobra.Command, root string, args []string) error {
 func switchTo(cmd *cobra.Command, root, profile string) error {
 	current := detectProfile(root)
 	if current == profile {
-		cmd.Printf("already on %s profile\n", profile)
+		cmd.Println(fmt.Sprintf("already on %s profile", profile))
 		return nil
 	}
 
@@ -115,9 +115,9 @@ func switchTo(cmd *cobra.Command, root, profile string) error {
 	}
 
 	if current == "" {
-		cmd.Printf("created %s from %s profile\n", fileCtxRC, profile)
+		cmd.Println(fmt.Sprintf("created %s from %s profile", fileCtxRC, profile))
 	} else {
-		cmd.Printf("switched to %s profile\n", profile)
+		cmd.Println(fmt.Sprintf("switched to %s profile", profile))
 	}
 	return nil
 }
@@ -130,7 +130,7 @@ func runStatus(cmd *cobra.Command, root string) error {
 	case profileBase:
 		cmd.Println("active: base (defaults)")
 	default:
-		cmd.Printf("active: none (%s does not exist)\n", fileCtxRC)
+		cmd.Println(fmt.Sprintf("active: none (%s does not exist)", fileCtxRC))
 	}
 	return nil
 }
@@ -143,7 +143,7 @@ func detectProfile(root string) string {
 		return ""
 	}
 
-	for _, line := range strings.Split(string(data), "\n") {
+	for _, line := range strings.Split(string(data), internalConfig.NewlineLF) {
 		if strings.HasPrefix(strings.TrimSpace(line), "notify:") {
 			return profileDev
 		}

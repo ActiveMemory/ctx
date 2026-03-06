@@ -3,6 +3,10 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-06 | nolint:goconst for trivial values normalizes magic strings |
+| 2026-03-06 | Package-local err.go files invite broken windows from future agents |
+| 2026-03-05 | State directory accumulates silently without auto-prune |
+| 2026-03-05 | Global tombstones suppress hooks across all sessions |
 | 2026-03-05 | Claude Code has two separate memory systems behind feature flags |
 | 2026-03-05 | Blog post editorial feedback is higher-leverage than drafting |
 | 2026-03-04 | CONSTITUTION hook compliance is non-negotiable — don't work around it |
@@ -48,6 +52,46 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-06-050126] nolint:goconst for trivial values normalizes magic strings
+
+**Context**: Found 5 callsites suppressing goconst with nolint:goconst trivial user input check for y/yes comparisons
+
+**Lesson**: Suppressing a linter with a trivial justification sets precedent for other agents to do the same. The fix (two constants) costs less than the accumulated tech debt.
+
+**Application**: Use config.ConfirmShort/config.ConfirmLong instead of suppressing goconst. Prefer constants over nolint directives.
+
+---
+
+## [2026-03-06-050125] Package-local err.go files invite broken windows from future agents
+
+**Context**: Found err.go files in 5 CLI packages with heavily duplicated error constructors (errFileWrite, errMkdir, errZensicalNotFound repeated across packages)
+
+**Lesson**: Centralizing errors in internal/err eliminates duplication and prevents agents from continuing the pattern of adding local err.go files when they see one exists
+
+**Application**: New error constructors go to internal/err/errors.go. No err.go files in CLI packages.
+
+---
+
+## [2026-03-05-205422] State directory accumulates silently without auto-prune
+
+**Context**: Found 234 files in .context/state/ from weeks of sessions with no cleanup mechanism
+
+**Lesson**: Session tombstones are write-only. Without auto-prune, the state directory grows unbounded. Added autoPrune(7) to context-load-gate so cleanup happens once per session at startup.
+
+**Application**: Auto-prune is now wired into session start via context-load-gate. Manual prune still available via ctx system prune for aggressive cleanup.
+
+---
+
+## [2026-03-05-205419] Global tombstones suppress hooks across all sessions
+
+**Context**: Memory drift nudge used memory-drift-nudged with no session ID in filename
+
+**Lesson**: Any tombstone file intended to be session-scoped must include the session ID in its filename, otherwise it suppresses across all concurrent and future sessions. Use the UUID pattern so prune can clean them up.
+
+**Application**: Audit all tombstone files for session-scoping; fixed memory-drift, but backup-reminded, ceremony-reminded, check-knowledge, journal-reminded, version-checked, ctx-wrapped-up still have this bug
 
 ---
 

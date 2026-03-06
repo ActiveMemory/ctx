@@ -48,6 +48,7 @@
           {"type": "command", "command": "ctx system check-resources"},
           {"type": "command", "command": "ctx system check-knowledge"},
           {"type": "command", "command": "ctx system check-map-staleness"},
+          {"type": "command", "command": "ctx system check-memory-drift"},
           {"type": "command", "command": "ctx system heartbeat"}
         ]
       }

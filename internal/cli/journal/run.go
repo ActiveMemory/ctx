@@ -17,8 +17,10 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 //go:embed extra.css
@@ -36,7 +38,7 @@ func runZensical(dir, command string) error {
 	// Check if zensical is available
 	_, err := exec.LookPath(config.BinZensical)
 	if err != nil {
-		return errZensicalNotFound()
+		return ctxerr.ZensicalNotFound()
 	}
 
 	cmd := exec.Command(config.BinZensical, command) //nolint:gosec // G204: binary is a constant, command is from caller
@@ -68,7 +70,7 @@ func runJournalSite(
 
 	// Check if the journal directory exists
 	if _, err := os.Stat(journalDir); os.IsNotExist(err) {
-		return errNoJournalDir(journalDir)
+		return ctxerr.NoJournalDir(journalDir)
 	}
 
 	// Load journal state for per-file processing flags
@@ -80,11 +82,11 @@ func runJournalSite(
 	// Scan journal files
 	entries, err := scanJournalEntries(journalDir)
 	if err != nil {
-		return errScanJournal(err)
+		return ctxerr.ScanJournal(err)
 	}
 
 	if len(entries) == 0 {
-		return errNoEntries(journalDir)
+		return ctxerr.NoJournalEntries(journalDir)
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
@@ -92,19 +94,19 @@ func runJournalSite(
 	// Create output directory structure
 	docsDir := filepath.Join(output, config.JournalDirDocs)
 	if err = os.MkdirAll(docsDir, config.PermExec); err != nil {
-		return errMkdir(docsDir, err)
+		return ctxerr.Mkdir(docsDir, err)
 	}
 
 	// Write stylesheet for <pre> overflow control
 	stylesDir := filepath.Join(docsDir, "stylesheets")
 	if err = os.MkdirAll(stylesDir, config.PermExec); err != nil {
-		return errMkdir(stylesDir, err)
+		return ctxerr.Mkdir(stylesDir, err)
 	}
 	cssPath := filepath.Join(stylesDir, "extra.css")
 	if err = os.WriteFile(
 		cssPath, extraCSS, config.PermFile,
 	); err != nil {
-		return errFileWrite(cssPath, err)
+		return ctxerr.FileWrite(cssPath, err)
 	}
 
 	// Write README
@@ -113,7 +115,7 @@ func runJournalSite(
 		readmePath,
 		[]byte(generateSiteReadme(journalDir)), config.PermFile,
 	); err != nil {
-		return errFileWrite(readmePath, err)
+		return ctxerr.FileWrite(readmePath, err)
 	}
 
 	// Soft-wrap source journal files in-place, then copy to docs/
@@ -124,7 +126,7 @@ func runJournalSite(
 		var content []byte
 		content, err = os.ReadFile(filepath.Clean(src))
 		if err != nil {
-			warnFileErr(cmd, entry.Filename, err)
+			write.WarnFileErr(cmd, entry.Filename, err)
 			continue
 		}
 
@@ -144,7 +146,7 @@ func runJournalSite(
 			if err = os.WriteFile(
 				src, []byte(normalized), config.PermFile,
 			); err != nil {
-				warnFileErr(cmd, entry.Filename, err)
+				write.WarnFileErr(cmd, entry.Filename, err)
 			}
 		}
 
@@ -158,7 +160,7 @@ func runJournalSite(
 		if err = os.WriteFile(
 			dst, []byte(siteContent), config.PermFile,
 		); err != nil {
-			warnFileErr(cmd, entry.Filename, err)
+			write.WarnFileErr(cmd, entry.Filename, err)
 			continue
 		}
 	}
@@ -187,7 +189,7 @@ func runJournalSite(
 	if err = os.WriteFile(
 		indexPath, []byte(indexContent), config.PermFile,
 	); err != nil {
-		return errFileWrite(indexPath, err)
+		return ctxerr.FileWrite(indexPath, err)
 	}
 
 	// Generate topic pages
@@ -215,7 +217,7 @@ func runJournalSite(
 						pagePath, []byte(generateTopicPage(t)),
 						config.PermFile,
 					); writeErr != nil {
-						warnFileErr(cmd, pagePath, writeErr)
+						write.WarnFileErr(cmd, pagePath, writeErr)
 					}
 				}
 			}); err != nil {
@@ -250,7 +252,7 @@ func runJournalSite(
 							generateKeyFilePage(kf)),
 						config.PermFile,
 					); writeErr != nil {
-						warnFileErr(cmd, pagePath, writeErr)
+						write.WarnFileErr(cmd, pagePath, writeErr)
 					}
 				}
 			}); err != nil {
@@ -281,7 +283,7 @@ func runJournalSite(
 						pagePath,
 						[]byte(generateTypePage(st)), config.PermFile,
 					); writeErr != nil {
-						warnFileErr(cmd, pagePath, writeErr)
+						write.WarnFileErr(cmd, pagePath, writeErr)
 					}
 				}
 			}); err != nil {
@@ -298,7 +300,7 @@ func runJournalSite(
 		tomlPath,
 		[]byte(tomlContent), config.PermFile,
 	); err != nil {
-		return errFileWrite(tomlPath, err)
+		return ctxerr.FileWrite(tomlPath, err)
 	}
 
 	cmd.Println(fmt.Sprintf(

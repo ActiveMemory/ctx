@@ -8,6 +8,7 @@ package changes
 
 import (
 	"fmt"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"strings"
 )
 
@@ -24,7 +25,7 @@ func RenderChanges(refLabel string, ctxChanges []ContextChange, code CodeSummary
 			b.WriteString(fmt.Sprintf("- `%s` — modified %s\n",
 				c.Name, c.ModTime.Format("2006-01-02 15:04")))
 		}
-		b.WriteString("\n")
+		b.WriteString(config.NewlineLF)
 	}
 
 	if code.CommitCount > 0 {
@@ -42,7 +43,7 @@ func RenderChanges(refLabel string, ctxChanges []ContextChange, code CodeSummary
 			b.WriteString(fmt.Sprintf("- **Authors**: %s\n",
 				strings.Join(code.Authors, ", ")))
 		}
-		b.WriteString("\n")
+		b.WriteString(config.NewlineLF)
 	}
 
 	if len(ctxChanges) == 0 && code.CommitCount == 0 {
@@ -77,5 +78,5 @@ func RenderChangesForHook(refLabel string, ctxChanges []ContextChange, code Code
 		return ""
 	}
 
-	return "Changes since last session: " + strings.Join(parts, ". ") + "\n"
+	return "Changes since last session: " + strings.Join(parts, ". ") + config.NewlineLF
 }

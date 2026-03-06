@@ -1387,7 +1387,7 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 	projDir := filepath.Join(
 		tmpDir, ".claude", "projects", "-home-test-multipart",
 	)
-	// 110 pairs = 220 messages, exceeding maxMessagesPerPart (200) → 2 parts.
+	// 110 pairs = 220 messages, exceeding config.MaxMessagesPerPart (200) → 2 parts.
 	createLargeTestSessionJSONL(
 		t, projDir, "sess-multi-031", "multipart-fm", "/home/test/multipart", 110,
 	)
@@ -1464,3 +1464,5 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 		t.Error("part 2 should contain session_id in frontmatter")
 	}
 }
+
+// TestParseDate moved to internal/parse/date_test.go.

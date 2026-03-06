@@ -354,6 +354,36 @@ Consult specific sections when working on a module.
 
 ---
 
+## internal/memory
+
+**Purpose**: Bridge Claude Code's auto memory (MEMORY.md) into .context/ with discovery, mirroring, archival, and drift detection.
+
+**Key types**: `State` (sync/import tracking with timestamps), `SyncResult` (outcome of a mirror operation)
+
+**Exported API**:
+- `DiscoverMemoryPath(projectRoot string) (string, error)` — locates MEMORY.md via Claude Code's slug encoding
+- `ProjectSlug(absPath string) string` — encodes absolute path to Claude Code project slug
+- `Sync(contextDir, sourcePath string) (SyncResult, error)` — copies source to mirror, archives previous
+- `Archive(contextDir string) (string, error)` — snapshots current mirror to timestamped archive
+- `Diff(contextDir, sourcePath string) (string, error)` — line-based diff between mirror and source
+- `HasDrift(contextDir, sourcePath string) bool` — mtime comparison for drift detection
+- `ArchiveCount(contextDir string) int` — counts archived mirror snapshots
+- `LoadState(contextDir string) (State, error)` — reads sync state (returns zero-value if missing)
+- `SaveState(contextDir string, s State) error` — writes sync state as JSON
+- `(*State).MarkSynced()` — updates LastSync to now
+
+**Data flow**: Project root → slug encoding → `~/.claude/projects/<slug>/memory/MEMORY.md` → copy to `.context/memory/mirror.md` → archive previous to `.context/memory/archive/mirror-<ts>.md` → update state in `.context/state/memory-import.json`
+
+**Edge cases**:
+- MEMORY.md may not exist (auto memory not triggered) — DiscoverMemoryPath returns error
+- First sync has no prior mirror — no archive created
+- Empty MEMORY.md syncs to empty mirror (valid)
+- Symlinks in project path may produce different slugs across machines
+
+**Dependencies**: `internal/config`
+
+---
+
 ## internal/bootstrap
 
 **Purpose**: Create root Cobra command, register global flags, attach all subcommands.
@@ -640,6 +670,27 @@ Consult specific sections when working on a module.
 **Data flow**: Read prompt file → generate shell script with tool-specific invocation + completion signal check → write to output file
 
 **Dependencies**: `internal/config`
+
+---
+
+## internal/cli/memory
+
+**Purpose**: Bridge Claude Code auto memory into .context/ via CLI subcommands.
+
+**Exported API**:
+- `Cmd() *cobra.Command` — subcommands: sync, status, diff
+
+**Data flow**:
+- `sync`: Discover MEMORY.md → archive existing mirror → copy source to mirror → update sync state → report line counts
+- `status`: Discover source → read mirror → compare mtimes → show drift indicator, line counts, archive count, last sync time
+- `diff`: Discover source → compare mirror vs source → output line-based diff
+
+**Edge cases**:
+- MEMORY.md not found: sync exits 1, status reports "not active", diff returns error
+- `--dry-run` on sync: reports plan without writing files
+- status exit code 2 for drift detected (spec-defined)
+
+**Dependencies**: `internal/memory`, `internal/rc`, `internal/config`
 
 ---
 

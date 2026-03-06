@@ -26,11 +26,11 @@ see [DETAILED_DESIGN.md](DETAILED_DESIGN.md).
 
 ## Package Dependency Graph
 
-Entry point `cmd/ctx` → `bootstrap` (root Cobra command) → 23 CLI
+Entry point `cmd/ctx` → `bootstrap` (root Cobra command) → 24 CLI
 command packages under `internal/cli/*`. Commands select from shared
 packages: `context`, `drift`, `index`, `task`, `validation`,
-`recall/parser`, `claude`, `notify`, `journal/state`, `crypto`,
-`sysinfo`. Foundation packages (`config`, `assets`, `crypto`,
+`recall/parser`, `claude`, `notify`, `journal/state`, `memory`,
+`crypto`, `sysinfo`. Foundation packages (`config`, `assets`, `crypto`,
 `sysinfo`) have zero internal dependencies — everything else builds
 upward from them. The `rc` package mediates config resolution;
 `context` depends on `rc` and `config`; `drift` depends on `context`,
@@ -68,13 +68,14 @@ upward from them. The `rc` package mediates config resolution;
 | `internal/journal/state` | Journal processing pipeline state (JSON)               | `Load()`, `Save()`, `Mark*()`              |
 | `internal/mcp`           | MCP server (JSON-RPC 2.0 over stdin/stdout)            | `NewServer()`, `Serve()`                   |
 | `internal/eventlog`      | Append-only JSONL event logging for hook diagnostics   | `Append()`, `Rotate()`                     |
+| `internal/memory`        | Memory bridge: discover, mirror, diff MEMORY.md        | `DiscoverMemoryPath()`, `Sync()`, `Diff()` |
 
 <!-- drift-check: ls -d internal/cli/*/ | wc -l -->
 ### Entry Point
 
 | Package              | Purpose                                                    |
 |----------------------|------------------------------------------------------------|
-| `internal/bootstrap` | Create root Cobra command, register 23 subcommands         |
+| `internal/bootstrap` | Create root Cobra command, register 24 subcommands         |
 
 <!-- drift-check: ls -d internal/cli/*/ | wc -l -->
 ### CLI Commands (`internal/cli/*`)
@@ -93,6 +94,7 @@ upward from them. The `rc` package mediates config resolution;
 | `learnings`   | Manage LEARNINGS.md (reindex)                                                   |
 | `load`        | Output assembled context in priority order                                      |
 | `loop`        | Generate Ralph loop scripts for autonomous iteration                            |
+| `memory`      | Bridge Claude Code auto memory into .context/ (sync, status, diff)              |
 | `notify`      | Send fire-and-forget webhook notifications                                      |
 | `pad`         | Encrypted scratchpad CRUD with blob support and merge                           |
 | `permissions` | Permission snapshot/restore (golden images) for Claude Code                     |
@@ -135,9 +137,9 @@ Five core flows define how data moves through the system:
 
 <!-- drift-check: grep -c 'ctx system check-' internal/assets/claude/hooks/hooks.json -->
 5. **Hook lifecycle**: Claude Code plugin fires hooks at 3 lifecycle
-   points — `UserPromptSubmit` (10 checks: context size, ceremonies,
+   points — `UserPromptSubmit` (11 checks: context size, ceremonies,
    persistence, journal, reminders, version, resources, knowledge,
-   map staleness, heartbeat), `PreToolUse` (block-non-path-ctx for
+   map staleness, memory drift, heartbeat), `PreToolUse` (block-non-path-ctx for
    Bash, qa-reminder for Bash, context-load-gate for all tools,
    specs-nudge for EnterPlanMode, agent context for all tools),
    `PostToolUse` (post-commit for Bash). All hooks execute
@@ -277,8 +279,8 @@ checks for drift between them.
 ### Hook Architecture
 
 The Claude Code plugin uses three lifecycle hooks defined in
-`internal/assets/claude/hooks/hooks.json`: `UserPromptSubmit` (10
-checks), `PreToolUse` (5 matchers), `PostToolUse` (1 matcher).
+`internal/assets/claude/hooks/hooks.json`: `UserPromptSubmit` (11
+checks), `PreToolUse` (5 matchers), `PostToolUse` (3 matchers).
 Hooks execute synchronously; failures softened with `|| true`
 where appropriate.
 
@@ -310,8 +312,8 @@ Top-level: `cmd/ctx/` (entry point), `internal/` (all packages),
 `docs/` (site source), `site/` (generated static site), `hack/`
 (build scripts), `editors/vscode/` (VS Code extension), `specs/`
 (feature specs). Under `internal/`: `bootstrap/`, `claude/`,
-`cli/` (23 command packages), `config/`, `context/`, `crypto/`,
-`drift/`, `index/`, `journal/state/`, `notify/`, `rc/`,
+`cli/` (24 command packages), `config/`, `context/`, `crypto/`,
+`drift/`, `index/`, `journal/state/`, `memory/`, `notify/`, `rc/`,
 `recall/parser/`, `sysinfo/`, `task/`, `assets/` (embedded
 templates, hooks, skills), `validation/`. Project context lives
 in `.context/` with its own journal, sessions, and archive

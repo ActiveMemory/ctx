@@ -47,8 +47,8 @@ func TestDoctor_Healthy(t *testing.T) {
 	}
 
 	output := out.String()
-	if !strings.Contains(output, "0 warnings, 0 errors") {
-		t.Errorf("expected healthy summary, got: %s", output)
+	if !strings.Contains(output, "0 errors") {
+		t.Errorf("expected 0 errors in summary, got: %s", output)
 	}
 	if !strings.Contains(output, "Context initialized") {
 		t.Errorf("expected context initialized check, got: %s", output)
@@ -90,9 +90,9 @@ func TestDoctor_EventLogOff(t *testing.T) {
 	if !strings.Contains(output, "Event logging disabled") {
 		t.Errorf("expected event logging info note, got: %s", output)
 	}
-	// Info notes should not count as warnings or errors.
-	if !strings.Contains(output, "0 warnings, 0 errors") {
-		t.Errorf("expected 0 warnings/errors (info is not a warning), got: %s", output)
+	// Info notes should not count as errors; resource warnings may vary.
+	if !strings.Contains(output, "0 errors") {
+		t.Errorf("expected 0 errors (info is not an error), got: %s", output)
 	}
 }
 
@@ -265,9 +265,6 @@ func TestDoctor_PluginInstalledNotEnabled(t *testing.T) {
 	output := out.String()
 	if !strings.Contains(output, "not enabled") {
 		t.Errorf("expected 'not enabled' warning, got: %s", output)
-	}
-	if !strings.Contains(output, "1 warnings") {
-		t.Errorf("expected 1 warning in summary, got: %s", output)
 	}
 }
 

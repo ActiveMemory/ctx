@@ -31,6 +31,10 @@ const (
 	DirSpecs = "specs"
 	// DirIdeas is the project-root directory for early-stage ideas and explorations.
 	DirIdeas = "ideas"
+	// DirMemory is the subdirectory for memory bridge files within .context/.
+	DirMemory = "memory"
+	// DirMemoryArchive is the archive subdirectory within .context/memory/.
+	DirMemoryArchive = "memory/archive"
 )
 
 // GitignoreEntries lists the recommended .gitignore entries added by ctx init.

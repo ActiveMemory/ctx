@@ -125,7 +125,7 @@ func parseStatsFile(path, sid string) ([]statsEntry, error) {
 	}
 
 	var entries []statsEntry
-	for _, line := range strings.Split(strings.TrimSpace(string(data)), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(string(data)), config.NewlineLF) {
 		if line == "" {
 			continue
 		}
@@ -230,7 +230,7 @@ func readNewLines(path string, offset int64, sid string) []statsEntry {
 	}
 
 	var entries []statsEntry
-	for _, line := range strings.Split(strings.TrimSpace(string(buf[:n])), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(string(buf[:n])), config.NewlineLF) {
 		if line == "" {
 			continue
 		}
@@ -257,10 +257,10 @@ func outputStatsJSON(cmd *cobra.Command, entries []statsEntry) error {
 
 // printStatsHeader prints the column header for human output.
 func printStatsHeader(cmd *cobra.Command) {
-	cmd.Printf("%-19s  %-8s  %6s  %8s  %4s  %-12s\n",
-		"TIME", "SESSION", "PROMPT", "TOKENS", "PCT", "EVENT")
-	cmd.Printf("%-19s  %-8s  %6s  %8s  %4s  %-12s\n",
-		"-------------------", "--------", "------", "--------", "----", "------------")
+	cmd.Println(fmt.Sprintf("%-19s  %-8s  %6s  %8s  %4s  %-12s",
+		"TIME", "SESSION", "PROMPT", "TOKENS", "PCT", "EVENT"))
+	cmd.Println(fmt.Sprintf("%-19s  %-8s  %6s  %8s  %4s  %-12s",
+		"-------------------", "--------", "------", "--------", "----", "------------"))
 }
 
 // printStatsLine prints a single stats entry in human-readable format.
@@ -271,8 +271,8 @@ func printStatsLine(cmd *cobra.Command, e *statsEntry) {
 		sid = sid[:8]
 	}
 	tokens := formatTokenCount(e.Tokens)
-	cmd.Printf("%-19s  %-8s  %6d  %7s  %3d%%  %-12s\n",
-		ts, sid, e.Prompt, tokens, e.Pct, e.Event)
+	cmd.Println(fmt.Sprintf("%-19s  %-8s  %6d  %7s  %3d%%  %-12s",
+		ts, sid, e.Prompt, tokens, e.Pct, e.Event))
 }
 
 // formatStatsTimestamp converts an RFC3339 timestamp to local time display.
