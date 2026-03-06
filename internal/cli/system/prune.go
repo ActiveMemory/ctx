@@ -9,6 +9,7 @@ package system
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"time"
 
@@ -100,7 +101,7 @@ func runPrune(cmd *cobra.Command, days int, dryRun bool) error {
 			continue
 		}
 
-		path := dir + "/" + name
+		path := filepath.Join(dir, name)
 		if rmErr := os.Remove(path); rmErr != nil {
 			cmd.PrintErrln(fmt.Sprintf("  error removing %s: %v", name, rmErr))
 			continue
@@ -118,6 +119,48 @@ func runPrune(cmd *cobra.Command, days int, dryRun bool) error {
 	}
 
 	return nil
+}
+
+// autoPrune silently removes session-scoped state files older than the
+// given number of days. Called from context-load-gate on session start.
+// Returns the number of files removed. Errors are swallowed — auto-prune
+// is best-effort and must never block session startup.
+func autoPrune(days int) int {
+	dir := stateDir()
+
+	entries, readErr := os.ReadDir(dir)
+	if readErr != nil {
+		return 0
+	}
+
+	cutoff := time.Now().Add(-time.Duration(days) * 24 * time.Hour)
+	var pruned int
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+
+		if !uuidPattern.MatchString(entry.Name()) {
+			continue
+		}
+
+		info, statErr := entry.Info()
+		if statErr != nil {
+			continue
+		}
+
+		if info.ModTime().After(cutoff) {
+			continue
+		}
+
+		path := filepath.Join(dir, entry.Name())
+		if rmErr := os.Remove(path); rmErr == nil {
+			pruned++
+		}
+	}
+
+	return pruned
 }
 
 func formatAge(t time.Time) string {

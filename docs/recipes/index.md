@@ -219,6 +219,16 @@ claims match agent instructions.
 
 ---
 
+### [State Directory Maintenance](state-maintenance.md)
+
+Clean up session tombstones from `.context/state/`. Prune old
+per-session files, identify stale global markers, and keep the
+state directory lean.
+
+**Uses**: `ctx system prune`
+
+---
+
 ### [Troubleshooting](troubleshooting.md)
 
 Diagnose hook failures, noisy nudges, stale context, and configuration
