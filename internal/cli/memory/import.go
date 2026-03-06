@@ -85,8 +85,9 @@ func runImport(cmd *cobra.Command, dryRun bool) error {
 		return fmt.Errorf("loading state: %w", loadErr)
 	}
 
-	cmd.Printf("Scanning MEMORY.md for new entries...\n")
-	cmd.Printf("  Found %d entries\n\n", len(entries))
+	cmd.Println("Scanning MEMORY.md for new entries...")
+	cmd.Println(fmt.Sprintf("  Found %d entries", len(entries)))
+	cmd.Println()
 
 	var result importResult
 
@@ -104,7 +105,9 @@ func runImport(cmd *cobra.Command, dryRun bool) error {
 		if classification.Target == mem.TargetSkip {
 			result.skipped++
 			if dryRun {
-				cmd.Printf("  -> %q\n     Classified: skip\n\n", title)
+				cmd.Println(fmt.Sprintf("  -> %q", title))
+				cmd.Println("     Classified: skip")
+				cmd.Println()
 			}
 			continue
 		}
@@ -112,15 +115,19 @@ func runImport(cmd *cobra.Command, dryRun bool) error {
 		targetFile := config.FileType[classification.Target]
 
 		if dryRun {
-			cmd.Printf("  -> %q\n     Classified: %s (keywords: %s)\n\n",
-				title, targetFile, strings.Join(classification.Keywords, ", "))
+			cmd.Println(fmt.Sprintf("  -> %q", title))
+			cmd.Println(fmt.Sprintf("     Classified: %s (keywords: %s)",
+				targetFile, strings.Join(classification.Keywords, ", ")))
+			cmd.Println()
 		} else {
 			if promoteErr := mem.Promote(entry, classification); promoteErr != nil {
-				cmd.PrintErrf("  Error promoting to %s: %v\n", targetFile, promoteErr)
+				cmd.PrintErrln(fmt.Sprintf("  Error promoting to %s: %v", targetFile, promoteErr))
 				continue
 			}
 			state.MarkImported(hash, classification.Target)
-			cmd.Printf("  -> %q\n     Added to %s\n\n", title, targetFile)
+			cmd.Println(fmt.Sprintf("  -> %q", title))
+			cmd.Println(fmt.Sprintf("     Added to %s", targetFile))
+			cmd.Println()
 		}
 
 		switch classification.Target {
@@ -136,10 +143,11 @@ func runImport(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Summary
+	var summary string
 	if dryRun {
-		cmd.Printf("Dry run — would import: %d entries", result.total())
+		summary = fmt.Sprintf("Dry run — would import: %d entries", result.total())
 	} else {
-		cmd.Printf("Imported: %d entries", result.total())
+		summary = fmt.Sprintf("Imported: %d entries", result.total())
 	}
 
 	var parts []string
@@ -156,15 +164,15 @@ func runImport(cmd *cobra.Command, dryRun bool) error {
 		parts = append(parts, fmt.Sprintf("%d task", result.tasks))
 	}
 	if len(parts) > 0 {
-		cmd.Printf(" (%s)", strings.Join(parts, ", "))
+		summary += fmt.Sprintf(" (%s)", strings.Join(parts, ", "))
 	}
-	cmd.Println()
+	cmd.Println(summary)
 
 	if result.skipped > 0 {
-		cmd.Printf("Skipped: %d entries (session notes/unclassified)\n", result.skipped)
+		cmd.Println(fmt.Sprintf("Skipped: %d entries (session notes/unclassified)", result.skipped))
 	}
 	if result.dupes > 0 {
-		cmd.Printf("Duplicates: %d entries (already imported)\n", result.dupes)
+		cmd.Println(fmt.Sprintf("Duplicates: %d entries (already imported)", result.dupes))
 	}
 
 	if !dryRun && result.total() > 0 {
@@ -179,7 +187,7 @@ func runImport(cmd *cobra.Command, dryRun bool) error {
 
 func truncate(s string, max int) string {
 	// Use first line only
-	line := strings.SplitN(s, "\n", 2)[0]
+	line := strings.SplitN(s, config.NewlineLF, 2)[0]
 	if len(line) <= max {
 		return line
 	}

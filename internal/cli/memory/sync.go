@@ -52,8 +52,8 @@ func runSync(cmd *cobra.Command, dryRun bool) error {
 
 	if dryRun {
 		cmd.Println("Dry run — no files will be written.")
-		cmd.Printf("  Source: %s\n", sourcePath)
-		cmd.Printf("  Mirror: .context/memory/mirror.md\n")
+		cmd.Println(fmt.Sprintf("  Source: %s", sourcePath))
+		cmd.Println("  Mirror: .context/memory/mirror.md")
 		if memory.HasDrift(contextDir, sourcePath) {
 			cmd.Println("  Status: drift detected (source is newer)")
 		} else {
@@ -68,20 +68,20 @@ func runSync(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if result.ArchivedTo != "" {
-		cmd.Printf("Archived previous mirror to %s\n", filepath.Base(result.ArchivedTo))
+		cmd.Println(fmt.Sprintf("Archived previous mirror to %s", filepath.Base(result.ArchivedTo)))
 	}
 
-	cmd.Printf("Synced MEMORY.md -> .context/memory/mirror.md\n")
-	cmd.Printf("  Source: %s\n", result.SourcePath)
-	cmd.Printf("  Lines: %d", result.SourceLines)
+	cmd.Println("Synced MEMORY.md -> .context/memory/mirror.md")
+	cmd.Println(fmt.Sprintf("  Source: %s", result.SourcePath))
+	line := fmt.Sprintf("  Lines: %d", result.SourceLines)
 	if result.MirrorLines > 0 {
-		cmd.Printf(" (was %d)", result.MirrorLines)
+		line += fmt.Sprintf(" (was %d)", result.MirrorLines)
 	}
-	cmd.Println()
+	cmd.Println(line)
 
 	if result.SourceLines > result.MirrorLines {
-		cmd.Printf("  New content: %d lines since last sync\n",
-			result.SourceLines-result.MirrorLines)
+		cmd.Println(fmt.Sprintf("  New content: %d lines since last sync",
+			result.SourceLines-result.MirrorLines))
 	}
 
 	// Update sync state

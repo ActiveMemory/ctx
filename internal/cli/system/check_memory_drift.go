@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -51,8 +52,8 @@ func runCheckMemoryDrift(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	// Session tombstone — nudge once per session
-	tombstone := filepath.Join(stateDir(), "memory-drift-nudged")
+	// Session tombstone — nudge once per session per session ID
+	tombstone := filepath.Join(stateDir(), "memory-drift-nudged-"+sessionID)
 	if _, statErr := os.Stat(tombstone); statErr == nil {
 		return nil
 	}
@@ -75,7 +76,7 @@ func runCheckMemoryDrift(cmd *cobra.Command, stdin *os.File) error {
 		"\u2502 MEMORY.md has changed since last sync.\n" +
 		"\u2502 Run: ctx memory sync\n"
 	if line := contextDirLine(); line != "" {
-		msg += "\u2502 " + line + "\n"
+		msg += "\u2502 " + line + config.NewlineLF
 	}
 	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
 	cmd.Println(msg)

@@ -95,25 +95,26 @@ func runPrune(cmd *cobra.Command, days int, dryRun bool) error {
 		}
 
 		if dryRun {
-			cmd.Printf("  would prune: %s (age: %s)\n", name, formatAge(info.ModTime()))
+			cmd.Println(fmt.Sprintf("  would prune: %s (age: %s)", name, formatAge(info.ModTime())))
 			pruned++
 			continue
 		}
 
 		path := dir + "/" + name
 		if rmErr := os.Remove(path); rmErr != nil {
-			cmd.PrintErrf("  error removing %s: %v\n", name, rmErr)
+			cmd.PrintErrln(fmt.Sprintf("  error removing %s: %v", name, rmErr))
 			continue
 		}
 		pruned++
 	}
 
 	if dryRun {
-		cmd.Printf("\nDry run — would prune %d files (skip %d recent, preserve %d global)\n",
-			pruned, skipped, preserved)
+		cmd.Println()
+		cmd.Println(fmt.Sprintf("Dry run — would prune %d files (skip %d recent, preserve %d global)",
+			pruned, skipped, preserved))
 	} else {
-		cmd.Printf("Pruned %d files (skipped %d recent, preserved %d global)\n",
-			pruned, skipped, preserved)
+		cmd.Println(fmt.Sprintf("Pruned %d files (skipped %d recent, preserved %d global)",
+			pruned, skipped, preserved))
 	}
 
 	return nil

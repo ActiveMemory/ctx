@@ -52,6 +52,9 @@ dist/
 # Runtime state (flags, markers — ephemeral, not committed)
 .context/state/
 
+# Memory mirror and archives (may contain strategic content)
+.context/memory/
+
 # Journal entries (personal, potentially large)
 .context/journal/
 .context/journal.bak/

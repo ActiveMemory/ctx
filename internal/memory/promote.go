@@ -50,7 +50,7 @@ func Promote(entry Entry, classification Classification) error {
 // extractTitle returns the first meaningful line of an entry, cleaned of
 // Markdown heading markers and list item prefixes.
 func extractTitle(text string) string {
-	line := strings.SplitN(text, "\n", 2)[0]
+	line := strings.SplitN(text, config.NewlineLF, 2)[0]
 	line = strings.TrimSpace(line)
 	// Strip heading markers
 	line = strings.TrimLeft(line, "#")
@@ -67,7 +67,7 @@ func extractTitle(text string) string {
 // extractBody returns everything after the first line, or the first line
 // itself if there's only one line.
 func extractBody(text string) string {
-	parts := strings.SplitN(text, "\n", 2)
+	parts := strings.SplitN(text, config.NewlineLF, 2)
 	if len(parts) < 2 || strings.TrimSpace(parts[1]) == "" {
 		return extractTitle(text)
 	}

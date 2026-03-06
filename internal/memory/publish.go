@@ -86,38 +86,38 @@ func (r PublishResult) Format() string {
 	buf.WriteString("# Project Context (managed by ctx)\n\n")
 
 	if len(r.Tasks) > 0 {
-		buf.WriteString("## Pending Tasks\n")
+		buf.WriteString("## Pending Tasks" + config.NewlineLF)
 		for _, t := range r.Tasks {
-			buf.WriteString(t + "\n")
+			buf.WriteString(t + config.NewlineLF)
 		}
-		buf.WriteString("\n")
+		buf.WriteString(config.NewlineLF)
 	}
 
 	if len(r.Decisions) > 0 {
-		buf.WriteString("## Recent Decisions\n")
+		buf.WriteString("## Recent Decisions" + config.NewlineLF)
 		for _, d := range r.Decisions {
-			buf.WriteString("- " + d + "\n")
+			buf.WriteString("- " + d + config.NewlineLF)
 		}
-		buf.WriteString("\n")
+		buf.WriteString(config.NewlineLF)
 	}
 
 	if len(r.Conventions) > 0 {
-		buf.WriteString("## Key Conventions\n")
+		buf.WriteString("## Key Conventions" + config.NewlineLF)
 		for _, c := range r.Conventions {
-			buf.WriteString(c + "\n")
+			buf.WriteString(c + config.NewlineLF)
 		}
-		buf.WriteString("\n")
+		buf.WriteString(config.NewlineLF)
 	}
 
 	if len(r.Learnings) > 0 {
-		buf.WriteString("## Recent Learnings\n")
+		buf.WriteString("## Recent Learnings" + config.NewlineLF)
 		for _, l := range r.Learnings {
-			buf.WriteString("- " + l + "\n")
+			buf.WriteString("- " + l + config.NewlineLF)
 		}
-		buf.WriteString("\n")
+		buf.WriteString(config.NewlineLF)
 	}
 
-	return strings.TrimRight(buf.String(), "\n") + "\n"
+	return strings.TrimRight(buf.String(), config.NewlineLF) + config.NewlineLF
 }
 
 // MergePublished inserts or replaces the marker block in existing MEMORY.md content.
@@ -125,7 +125,7 @@ func (r PublishResult) Format() string {
 // If markers exist, replaces everything between them. If markers are missing,
 // appends the block at the end (recovery). Returns (merged content, markers were missing).
 func MergePublished(existing, published string) (string, bool) {
-	block := MarkerStart + "\n" + published + MarkerEnd + "\n"
+	block := MarkerStart + config.NewlineLF + published + MarkerEnd + config.NewlineLF
 
 	startIdx := strings.Index(existing, MarkerStart)
 	endIdx := strings.Index(existing, MarkerEnd)
@@ -135,14 +135,14 @@ func MergePublished(existing, published string) (string, bool) {
 		before := existing[:startIdx]
 		after := existing[endIdx+len(MarkerEnd):]
 		// Trim trailing newline from after to avoid double blank lines
-		after = strings.TrimPrefix(after, "\n")
+		after = strings.TrimPrefix(after, config.NewlineLF)
 		return before + block + after, false
 	}
 
 	// Markers missing — append
-	sep := "\n"
-	if !strings.HasSuffix(existing, "\n") {
-		sep = "\n\n"
+	sep := config.NewlineLF
+	if !strings.HasSuffix(existing, config.NewlineLF) {
+		sep = config.NewlineLF + config.NewlineLF
 	}
 	return existing + sep + block, startIdx < 0
 }
@@ -159,13 +159,13 @@ func RemovePublished(content string) (string, bool) {
 
 	before := content[:startIdx]
 	after := content[endIdx+len(MarkerEnd):]
-	after = strings.TrimPrefix(after, "\n")
+	after = strings.TrimPrefix(after, config.NewlineLF)
 
-	result := strings.TrimRight(before, "\n")
+	result := strings.TrimRight(before, config.NewlineLF)
 	if after != "" {
-		result += "\n" + after
+		result += config.NewlineLF + after
 	} else {
-		result += "\n"
+		result += config.NewlineLF
 	}
 
 	return result, true
@@ -203,7 +203,7 @@ func (r *PublishResult) trimToBudget(budget int) {
 // extractPendingTasks finds unchecked task items from TASKS.md.
 func extractPendingTasks(content string, max int) []string {
 	var tasks []string
-	for _, line := range strings.Split(content, "\n") {
+	for _, line := range strings.Split(content, config.NewlineLF) {
 		trimmed := strings.TrimSpace(line)
 		if strings.HasPrefix(trimmed, "- [ ] ") {
 			tasks = append(tasks, trimmed)
@@ -235,7 +235,7 @@ func extractRecentEntries(content string, max int) []string {
 // extractConventionItems returns the first N list items from CONVENTIONS.md.
 func extractConventionItems(content string, max int) []string {
 	var items []string
-	for _, line := range strings.Split(content, "\n") {
+	for _, line := range strings.Split(content, config.NewlineLF) {
 		trimmed := strings.TrimSpace(line)
 		if strings.HasPrefix(trimmed, "- ") || strings.HasPrefix(trimmed, "* ") {
 			items = append(items, trimmed)

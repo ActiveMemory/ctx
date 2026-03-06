@@ -108,8 +108,8 @@ func Diff(contextDir, sourcePath string) (string, error) {
 		return "", nil
 	}
 
-	mirrorLines := strings.Split(string(mirrorData), "\n")
-	sourceLines := strings.Split(string(sourceData), "\n")
+	mirrorLines := strings.Split(string(mirrorData), config.NewlineLF)
+	sourceLines := strings.Split(string(sourceData), config.NewlineLF)
 
 	return simpleDiff(mirrorPath, sourcePath, mirrorLines, sourceLines), nil
 }
@@ -152,7 +152,7 @@ func countLines(data []byte) int {
 	if len(data) == 0 {
 		return 0
 	}
-	return bytes.Count(data, []byte("\n"))
+	return bytes.Count(data, []byte(config.NewlineLF))
 }
 
 // simpleDiff produces a minimal unified-style diff header with added/removed lines.
@@ -172,12 +172,12 @@ func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
 
 	for _, l := range oldLines {
 		if !newSet[l] {
-			buf.WriteString("-" + l + "\n")
+			buf.WriteString("-" + l + config.NewlineLF)
 		}
 	}
 	for _, l := range newLines {
 		if !oldSet[l] {
-			buf.WriteString("+" + l + "\n")
+			buf.WriteString("+" + l + config.NewlineLF)
 		}
 	}
 

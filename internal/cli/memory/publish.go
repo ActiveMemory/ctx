@@ -60,24 +60,24 @@ func runPublish(cmd *cobra.Command, budget int, dryRun bool) error {
 
 	cmd.Println("Publishing .context/ -> MEMORY.md...")
 	cmd.Println()
-	cmd.Printf("  Source files: TASKS.md, DECISIONS.md, CONVENTIONS.md, LEARNINGS.md\n")
-	cmd.Printf("  Budget: %d lines\n", budget)
+	cmd.Println("  Source files: TASKS.md, DECISIONS.md, CONVENTIONS.md, LEARNINGS.md")
+	cmd.Println(fmt.Sprintf("  Budget: %d lines", budget))
 	cmd.Println()
 	cmd.Println("  Published block:")
 	if len(result.Tasks) > 0 {
-		cmd.Printf("    %d pending tasks (from TASKS.md)\n", len(result.Tasks))
+		cmd.Println(fmt.Sprintf("    %d pending tasks (from TASKS.md)", len(result.Tasks)))
 	}
 	if len(result.Decisions) > 0 {
-		cmd.Printf("    %d recent decisions (from DECISIONS.md)\n", len(result.Decisions))
+		cmd.Println(fmt.Sprintf("    %d recent decisions (from DECISIONS.md)", len(result.Decisions)))
 	}
 	if len(result.Conventions) > 0 {
-		cmd.Printf("    %d key conventions (from CONVENTIONS.md)\n", len(result.Conventions))
+		cmd.Println(fmt.Sprintf("    %d key conventions (from CONVENTIONS.md)", len(result.Conventions)))
 	}
 	if len(result.Learnings) > 0 {
-		cmd.Printf("    %d recent learnings (from LEARNINGS.md)\n", len(result.Learnings))
+		cmd.Println(fmt.Sprintf("    %d recent learnings (from LEARNINGS.md)", len(result.Learnings)))
 	}
 	cmd.Println()
-	cmd.Printf("  Total: %d lines (within %d-line budget)\n", result.TotalLines, budget)
+	cmd.Println(fmt.Sprintf("  Total: %d lines (within %d-line budget)", result.TotalLines, budget))
 
 	if dryRun {
 		cmd.Println()

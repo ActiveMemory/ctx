@@ -8,6 +8,8 @@ package memory
 
 import (
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // EntryKind identifies how an entry was delimited in MEMORY.md.
@@ -42,7 +44,7 @@ func ParseEntries(content string) []Entry {
 		return nil
 	}
 
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, config.NewlineLF)
 	var entries []Entry
 	var current []string
 	var currentKind EntryKind
@@ -50,7 +52,7 @@ func ParseEntries(content string) []Entry {
 	inEntry := false
 
 	flush := func() {
-		text := strings.TrimSpace(strings.Join(current, "\n"))
+		text := strings.TrimSpace(strings.Join(current, config.NewlineLF))
 		if text != "" {
 			entries = append(entries, Entry{
 				Text:      text,

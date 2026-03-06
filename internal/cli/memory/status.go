@@ -50,15 +50,15 @@ func runStatus(cmd *cobra.Command) error {
 	mirrorPath := filepath.Join(contextDir, config.DirMemory, config.FileMemoryMirror)
 
 	cmd.Println("Memory Bridge Status")
-	cmd.Printf("  Source:      %s\n", sourcePath)
-	cmd.Printf("  Mirror:      .context/%s/%s\n", config.DirMemory, config.FileMemoryMirror)
+	cmd.Println(fmt.Sprintf("  Source:      %s", sourcePath))
+	cmd.Println(fmt.Sprintf("  Mirror:      .context/%s/%s", config.DirMemory, config.FileMemoryMirror))
 
 	// Last sync time
 	state, _ := mem.LoadState(contextDir)
 	if state.LastSync != nil {
 		ago := time.Since(*state.LastSync).Truncate(time.Minute)
-		cmd.Printf("  Last sync:   %s (%s ago)\n",
-			state.LastSync.Local().Format("2006-01-02 15:04"), formatDuration(ago))
+		cmd.Println(fmt.Sprintf("  Last sync:   %s (%s ago)",
+			state.LastSync.Local().Format("2006-01-02 15:04"), formatDuration(ago)))
 	} else {
 		cmd.Println("  Last sync:   never")
 	}
@@ -67,16 +67,16 @@ func runStatus(cmd *cobra.Command) error {
 
 	// Source line count
 	if sourceData, readErr := os.ReadFile(sourcePath); readErr == nil { //nolint:gosec // discovered path
-		cmd.Printf("  MEMORY.md:  %d lines", countFileLines(sourceData))
+		line := fmt.Sprintf("  MEMORY.md:  %d lines", countFileLines(sourceData))
 		if mem.HasDrift(contextDir, sourcePath) {
-			cmd.Print(" (modified since last sync)")
+			line += " (modified since last sync)"
 		}
-		cmd.Println()
+		cmd.Println(line)
 	}
 
 	// Mirror line count
 	if mirrorData, readErr := os.ReadFile(mirrorPath); readErr == nil { //nolint:gosec // project-local path
-		cmd.Printf("  Mirror:     %d lines\n", countFileLines(mirrorData))
+		cmd.Println(fmt.Sprintf("  Mirror:     %d lines", countFileLines(mirrorData)))
 	} else {
 		cmd.Println("  Mirror:     not yet synced")
 	}
@@ -91,7 +91,7 @@ func runStatus(cmd *cobra.Command) error {
 
 	// Archives
 	count := mem.ArchiveCount(contextDir)
-	cmd.Printf("  Archives:   %d snapshots in .context/%s/\n", count, config.DirMemoryArchive)
+	cmd.Println(fmt.Sprintf("  Archives:   %d snapshots in .context/%s/", count, config.DirMemoryArchive))
 
 	if hasDrift {
 		// Exit code 2 for drift
