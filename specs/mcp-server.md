@@ -255,7 +255,7 @@ internal/cli/mcp/
 
 ## Phase Plan
 
-### v0.1 — Foundation (Present)
+### v0.1 - Foundation (Present)
 
 **Goal**: Ship a correct, **minimally-delightful** MCP server that any tool
 can use to read `ctx` context and perform validated writes.
@@ -475,12 +475,12 @@ replacement) that duplicates what `internal/task` and
 *Resolution*: Refactor `toolComplete` to call the existing
 completion code path. If the existing package API doesn't support
 being called with an explicit `contextDir` (i.e., it uses
-`rc.ContextDir()` internally), extend the package API — don't
+`rc.ContextDir()` internally), extend the package API: don't
 copy the logic.
 
 *Justification*:
 
-* `CONVENTIONS.md`: "Non-test code: apply the rule of three —
+* `CONVENTIONS.md`: "Non-test code: apply the rule of three:
   extract when a block appears 3+ times." This is appearance
   number two, but the logic is complex enough that even two
   copies will drift (task regex changes, checkbox format changes,
@@ -551,7 +551,7 @@ in the commit.
 
 ---
 
-### v0.2 — Behavioral (Near Future)
+### v0.2 - Behavioral (Near Future)
 
 **Goal**: Bring `ctx`'s behavioral discipline to MCP clients via
 Prompts and session-aware advisory responses.
@@ -575,7 +575,7 @@ truth: Edit the skill, the MCP prompt updates automatically.
 embedded MCP prompt definitions against the live skill content.
 If a skill with `mcp_prompt: true` has changed since the last
 build (content hash mismatch), drift reports a warning:
-"MCP prompt for ctx-reflect is stale — rebuild to sync."
+"MCP prompt for ctx-reflect is stale: rebuild to sync."
 The `/ctx-skill-audit` skill also checks for this.
 
 | Prompt               | Arguments           | Returns                                                                      |
@@ -647,7 +647,7 @@ Advisory rules: Soft signals appended to tool response text:
 | First tool call, no resources read yet           | "Tip: Load context first with resources/read for ctx://context/agent"  |
 | 3+ tasks completed, 0 learnings added            | "You've completed N tasks. Consider capturing learnings."              |
 | 10+ tool calls, no resources read                | "No context loaded this session. Decisions may miss existing context." |
-| `ctx_add(decision)` without context/rationale    | Structural validation rejects — this is a hard error, not advisory     |
+| `ctx_add(decision)` without context/rationale    | Structural validation rejects: this is a hard error, not advisory      |
 
 Advisory text is **appended to the normal response**, not returned as
 errors. The AI reads it and decides whether to act. This matches how
@@ -664,7 +664,7 @@ text in tool responses: same as hooks going silent during a pause.
 The server checks pause state (via `.context/state/`) before
 appending advisory messages. Agents that find advisories noisy
 call `ctx pause`; `ctx resume` re-enables them. No new config key
-needed — this reuses an established pattern already documented in
+needed: this reuses an established pattern already documented in
 the AGENT_PLAYBOOK.
 
 #### Resource Templates
@@ -719,11 +719,11 @@ ctx mcp config cursor           # Outputs JSON for .cursor/mcp.json
 ctx mcp config vscode           # Outputs JSON for .vscode/mcp.json
 ```
 
-This replaces manual configuration — users copy-paste the output.
+This replaces manual configuration: Users copy-paste the output.
 
 ---
 
-### v0.3 — Convergence (Far Future)
+### v0.3 - Convergence (Far Future)
 
 **Goal**: MCP becomes **the primary integration channel**, with hooks
 as a Claude Code-specific optimization layer on top.
@@ -759,7 +759,7 @@ model* to perform work. Use cases:
 * **Session summary**: at session end (or after N tool calls), the
   server asks the model to summarize what happened
 
-This is powerful but intrusive — it means the server initiates
+This is powerful but intrusive: it means the server initiates
 computation. Design with explicit opt-in.
 
 #### `ctx hook generate mcp`
@@ -814,8 +814,8 @@ UserPromptSubmit → "Have you loaded context?" (context-load-gate)
                  → "Context is 80% full" (check-context-size)
                  → "You have pending reminders" (reminders)
 
-PostToolUse      → "Commit detected — did you capture learnings?" (post-commit)
-                 → "3 tasks done — consider reflecting" (task-completion-nudge)
+PostToolUse      → "Commit detected: did you capture learnings?" (post-commit)
+                 → "3 tasks done: consider reflecting" (task-completion-nudge)
 ```
 
 Hooks fire *automatically* at lifecycle points. The agent doesn't
@@ -872,15 +872,15 @@ it. This is strictly advisory: the operation already succeeded.
 ### The Discipline Stack
 
 ```
-Layer 3: Hooks (Claude Code only)        — automatic, lifecycle-triggered
-Layer 2: Prompts (any MCP client)        — invoked, workflow-encoded
-Layer 1: Advisory (any MCP client)       — passive, response-embedded
-Layer 0: Structural validation (always)  — hard enforcement, rejects invalid input
+Layer 3: Hooks (Claude Code only)        # automatic, lifecycle-triggered
+Layer 2: Prompts (any MCP client)        # invoked, workflow-encoded
+Layer 1: Advisory (any MCP client)       # passive, response-embedded
+Layer 0: Structural validation (always)  # hard enforcement, rejects invalid input
 ```
 
 Each layer catches what the layer below misses. Layer 0 is always
 active. Layers 1-2 require an MCP client. Layer 3 requires Claude
-Code. The more layers active, the more disciplined the session — but
+Code. The more layers active, the more disciplined the session, but
 even Layer 0 alone prevents garbage writes.
 
 ---
