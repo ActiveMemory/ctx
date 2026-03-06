@@ -1012,7 +1012,7 @@ parameter), the package API is extended: the logic is not copied.
 * **MCP client implementation**: ctx is an MCP *server*. It does not
   consume MCP services from other servers.
 * **Network transport**: MCP supports SSE (HTTP-based) transport.
-  ctx uses stdio exclusively — this is a permanent design choice,
+  ctx uses stdio exclusively: This is a permanent design choice,
   not a "start here, add HTTP later" plan. See Design Invariants.
 * **Authentication**: not needed. The machine boundary is the trust
   boundary. See Design Invariants.
