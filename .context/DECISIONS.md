@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-05 | Gitignore .context/memory/ for this project |
 | 2026-03-05 | Memory bridge design: three-phase architecture with hook nudge + on-demand |
 | 2026-03-05 | Revised strategic analysis: blog-first execution order, bidirectional sync as top-level section |
 | 2026-03-04 | Interface-based GraphBuilder for multi-ecosystem ctx deps |
@@ -24,6 +25,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-05-205424] Gitignore .context/memory/ for this project
+
+**Status**: Accepted
+
+**Context**: Memory mirror contains copies of MEMORY.md which holds strategic analysis and session notes
+
+**Decision**: Gitignore .context/memory/ for this project
+
+**Rationale**: Strategic content should not be in git history. Docs updated to say 'often git-tracked' for the general recommendation — this project is the exception.
+
+**Consequences**: Mirror and archives are local-only for this project. Other projects can still track them. Sync and drift detection work the same way regardless.
+
+---
 
 ## [2026-03-05-042154] Memory bridge design: three-phase architecture with hook nudge + on-demand
 

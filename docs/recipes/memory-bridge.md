@@ -129,7 +129,7 @@ ctx memory sync --dry-run
 ```
 .context/
 ├── memory/
-│   ├── mirror.md                          # Raw copy of MEMORY.md (git-tracked)
+│   ├── mirror.md                          # Raw copy of MEMORY.md (often git-tracked)
 │   └── archive/
 │       ├── mirror-2026-03-05-143022.md    # Timestamped pre-sync snapshots
 │       └── mirror-2026-03-04-220015.md

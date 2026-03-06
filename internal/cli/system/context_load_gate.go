@@ -101,6 +101,10 @@ func runContextLoadGate(cmd *cobra.Command, stdin *os.File) error {
 	// the agent makes multiple parallel tool calls.
 	touchFile(marker)
 
+	// Auto-prune stale session state files (best-effort, silent).
+	// Runs once per session at startup — fast directory scan.
+	autoPrune(7)
+
 	dir := rc.ContextDir()
 	var content strings.Builder
 	var totalTokens int

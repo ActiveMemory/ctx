@@ -493,6 +493,10 @@ age-based — prune files older than N days (default 7).
       DoD: clean build, system.go help updated
       #priority:medium #added:2026-03-05 #done:2026-03-05
 
+- [ ] Regenerate site/ for state-maintenance recipe (docs/recipes/state-maintenance.md added but site not rebuilt) #added:2026-03-05-205425
+
+- [ ] Audit remaining global tombstones for session-scoping: backup-reminded, ceremony-reminded, check-knowledge, journal-reminded, version-checked, ctx-wrapped-up all have the same cross-session suppression bug as memory-drift-nudged #added:2026-03-05-205425
+
 - [ ] F.2: ctx recall import — import Claude Code session JSONLs from local or remote (~/.claude/projects/) into local ~/.claude/projects/. Pure Go: local copy with os.CopyFS-style walk, remote via os/exec ssh+scp (no rsync dependency). --source flag accepts local path or user@host. --dry-run shows what would be copied. Skips existing files (content-addressed by UUID filenames). Enables journal export from sessions that ran on other machines. #added:2026-03-05-141912
 
 - [ ] P0.5: Blog: "Building a Claude Code Marketplace Plugin" — narrative from session
