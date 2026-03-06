@@ -59,9 +59,9 @@ func mergeSettingsPermissions(cmd *cobra.Command) error {
 	denyDeduped := deduplicatePermissions(&settings.Permissions.Deny)
 
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"  %s %s (no changes needed)\n", yellow("○"), config.FileSettings,
-		)
+		))
 		return nil
 	}
 
@@ -88,18 +88,18 @@ func mergeSettingsPermissions(cmd *cobra.Command) error {
 		merged := allowModified || denyModified
 		switch {
 		case merged && deduped:
-			cmd.Printf("  %s %s (added ctx permissions, removed duplicates)\n", green("✓"), config.FileSettings)
+			cmd.Println(fmt.Sprintf("  %s %s (added ctx permissions, removed duplicates)", green("✓"), config.FileSettings))
 		case deduped:
-			cmd.Printf("  %s %s (removed duplicate permissions)\n", green("✓"), config.FileSettings)
+			cmd.Println(fmt.Sprintf("  %s %s (removed duplicate permissions)", green("✓"), config.FileSettings))
 		case allowModified && denyModified:
-			cmd.Printf("  %s %s (added ctx allow + deny permissions)\n", green("✓"), config.FileSettings)
+			cmd.Println(fmt.Sprintf("  %s %s (added ctx allow + deny permissions)", green("✓"), config.FileSettings))
 		case denyModified:
-			cmd.Printf("  %s %s (added ctx deny permissions)\n", green("✓"), config.FileSettings)
+			cmd.Println(fmt.Sprintf("  %s %s (added ctx deny permissions)", green("✓"), config.FileSettings))
 		default:
-			cmd.Printf("  %s %s (added ctx permissions)\n", green("✓"), config.FileSettings)
+			cmd.Println(fmt.Sprintf("  %s %s (added ctx permissions)", green("✓"), config.FileSettings))
 		}
 	} else {
-		cmd.Printf("  %s %s\n", green("✓"), config.FileSettings)
+		cmd.Println(fmt.Sprintf("  %s %s", green("✓"), config.FileSettings))
 	}
 
 	return nil

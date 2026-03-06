@@ -350,9 +350,9 @@ func generateAtom(
 		entryURL := blogURL + slug + "/"
 
 		entry := AtomEntry{
-			Title: p.title,
-			Links: []AtomLink{{Href: entryURL}},
-			ID:    entryURL,
+			Title:   p.title,
+			Links:   []AtomLink{{Href: entryURL}},
+			ID:      entryURL,
 			Updated: p.date + "T00:00:00Z",
 		}
 

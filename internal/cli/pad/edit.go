@@ -132,7 +132,7 @@ func runEdit(cmd *cobra.Command, n int, text string) error {
 		return err
 	}
 
-	cmd.Printf("Updated entry %d.\n", n)
+	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
 	return nil
 }
 
@@ -158,7 +158,7 @@ func runEditAppend(cmd *cobra.Command, n int, text string) error {
 		return err
 	}
 
-	cmd.Printf("Updated entry %d.\n", n)
+	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
 	return nil
 }
 
@@ -184,7 +184,7 @@ func runEditPrepend(cmd *cobra.Command, n int, text string) error {
 		return err
 	}
 
-	cmd.Printf("Updated entry %d.\n", n)
+	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
 	return nil
 }
 
@@ -228,6 +228,6 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 		return err
 	}
 
-	cmd.Printf("Updated entry %d.\n", n)
+	cmd.Println(fmt.Sprintf("Updated entry %d.", n))
 	return nil
 }

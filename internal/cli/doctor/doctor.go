@@ -635,12 +635,12 @@ func outputDoctorHuman(cmd *cobra.Command, report *Report) error {
 		cmd.Println(cat)
 		for _, r := range results {
 			icon := statusIcon(r.Status)
-			cmd.Printf("  %s %s\n", icon, r.Message)
+			cmd.Println(fmt.Sprintf("  %s %s", icon, r.Message))
 		}
 		cmd.Println()
 	}
 
-	cmd.Printf("Summary: %d warnings, %d errors\n", report.Warnings, report.Errors)
+	cmd.Println(fmt.Sprintf("Summary: %d warnings, %d errors", report.Warnings, report.Errors))
 	return nil
 }
 

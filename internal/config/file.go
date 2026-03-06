@@ -308,4 +308,3 @@ var Packages = map[string]string{
 	"requirements.txt": "Python dependencies",
 	"Gemfile":          "Ruby dependencies",
 }
-

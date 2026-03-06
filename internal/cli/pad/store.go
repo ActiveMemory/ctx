@@ -98,17 +98,17 @@ func ensureGitignore(contextDir, filename string) error {
 		return err
 	}
 
-	for _, line := range strings.Split(string(content), "\n") {
+	for _, line := range strings.Split(string(content), config.NewlineLF) {
 		if strings.TrimSpace(line) == entry {
 			return nil
 		}
 	}
 
 	sep := ""
-	if len(content) > 0 && !strings.HasSuffix(string(content), "\n") {
-		sep = "\n"
+	if len(content) > 0 && !strings.HasSuffix(string(content), config.NewlineLF) {
+		sep = config.NewlineLF
 	}
-	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+"\n"), config.PermFile)
+	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+config.NewlineLF), config.PermFile)
 }
 
 // readEntries reads the scratchpad and returns its entries.
@@ -197,7 +197,7 @@ func parseEntries(data []byte) []string {
 	if len(data) == 0 {
 		return nil
 	}
-	lines := strings.Split(string(data), "\n")
+	lines := strings.Split(string(data), config.NewlineLF)
 	var entries []string
 	for _, line := range lines {
 		if line != "" {
@@ -212,5 +212,5 @@ func formatEntries(entries []string) []byte {
 	if len(entries) == 0 {
 		return nil
 	}
-	return []byte(strings.Join(entries, "\n") + "\n")
+	return []byte(strings.Join(entries, config.NewlineLF) + config.NewlineLF)
 }

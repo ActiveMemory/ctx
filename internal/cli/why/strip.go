@@ -7,6 +7,7 @@
 package why
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config"
 	"regexp"
 	"strings"
 )
@@ -33,7 +34,7 @@ var imageRe = regexp.MustCompile(`^\s*!\[.*\]\(.*\)\s*$`)
 // Returns:
 //   - string: Cleaned Markdown suitable for terminal display
 func StripMkDocs(content string) string {
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, config.NewlineLF)
 	var result []string
 
 	// Strip YAML frontmatter.
@@ -107,7 +108,7 @@ func StripMkDocs(content string) string {
 		result = append(result, line)
 	}
 
-	return strings.Join(result, "\n")
+	return strings.Join(result, config.NewlineLF)
 }
 
 // extractAdmonitionTitle pulls the quoted title from an admonition line.

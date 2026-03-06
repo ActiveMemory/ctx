@@ -7,6 +7,7 @@
 package system
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"path/filepath"
 	"sort"
@@ -109,7 +110,7 @@ func recentJournalFiles(dir string, n int) []string {
 
 	var names []string
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), ".md") {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), config.ExtMarkdown) {
 			continue
 		}
 		names = append(names, e.Name())
@@ -160,28 +161,28 @@ func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) string {
 		boxTitle = "Session Ceremonies"
 		fallback = "Your last 3 sessions didn't use /ctx-remember or\n" +
 			"/ctx-wrap-up.\n" +
-			"\n" +
+			config.NewlineLF +
 			"Start sessions with:  /ctx-remember\n" +
 			"  → Loads context, shows active tasks, picks up\n" +
 			"    where you left off. No re-explaining needed.\n" +
-			"\n" +
+			config.NewlineLF +
 			"End sessions with:    /ctx-wrap-up\n" +
 			"  → Captures learnings and decisions so the next\n" +
 			"    session starts informed, not from scratch.\n" +
-			"\n" +
+			config.NewlineLF +
 			"These take seconds and save minutes."
 	case !remember:
 		variant = "remember"
 		boxTitle = "Session Start"
 		fallback = "Try starting this session with /ctx-remember\n" +
-			"\n" +
+			config.NewlineLF +
 			"It loads your context, shows active tasks, and\n" +
 			"picks up where you left off — no re-explaining."
 	case !wrapup:
 		variant = "wrapup"
 		boxTitle = "Session End"
 		fallback = "Your last 3 sessions didn't end with /ctx-wrap-up\n" +
-			"\n" +
+			config.NewlineLF +
 			"It captures learnings and decisions so the next\n" +
 			"session starts informed, not from scratch."
 	}
@@ -192,10 +193,10 @@ func emitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) string {
 	}
 
 	msg := "IMPORTANT: Relay this session tip to the user VERBATIM before answering their question.\n\n" +
-		"┌─ " + boxTitle + " " + strings.Repeat("─", 51-len(boxTitle)) + "\n"
+		"┌─ " + boxTitle + " " + strings.Repeat("─", 51-len(boxTitle)) + config.NewlineLF
 	msg += boxLines(content)
 	if dirFooter := contextDirLine(); dirFooter != "" {
-		msg += "│ " + dirFooter + "\n"
+		msg += "│ " + dirFooter + config.NewlineLF
 	}
 	msg += "└───────────────────────────────────────────────────"
 

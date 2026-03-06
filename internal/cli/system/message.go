@@ -8,6 +8,7 @@ package system
 
 import (
 	"bytes"
+	"github.com/ActiveMemory/ctx/internal/config"
 	"os"
 	"path/filepath"
 	"strings"
@@ -81,10 +82,10 @@ const sessionUnknown = "unknown"
 // an empty trailing box line.
 func boxLines(content string) string {
 	var b strings.Builder
-	for _, line := range strings.Split(strings.TrimRight(content, "\n"), "\n") {
+	for _, line := range strings.Split(strings.TrimRight(content, config.NewlineLF), config.NewlineLF) {
 		b.WriteString("│ ")
 		b.WriteString(line)
-		b.WriteString("\n")
+		b.WriteString(config.NewlineLF)
 	}
 	return b.String()
 }

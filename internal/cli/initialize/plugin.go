@@ -57,10 +57,10 @@ func enablePluginGlobally(cmd *cobra.Command) error {
 	installedPath := filepath.Join(claudeDir, config.FileInstalledPlugins)
 	installedData, readErr := os.ReadFile(installedPath) //nolint:gosec // G304: path from os.UserHomeDir
 	if readErr != nil {
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"  %s Plugin enablement skipped (plugin not installed)\n",
 			yellow("○"),
-		)
+		))
 		return nil
 	}
 
@@ -70,10 +70,10 @@ func enablePluginGlobally(cmd *cobra.Command) error {
 	}
 
 	if _, found := installed.Plugins[config.PluginID]; !found {
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"  %s Plugin enablement skipped (plugin not installed)\n",
 			yellow("○"),
-		)
+		))
 		return nil
 	}
 
@@ -99,10 +99,10 @@ func enablePluginGlobally(cmd *cobra.Command) error {
 		var enabled map[string]bool
 		if parseErr := json.Unmarshal(raw, &enabled); parseErr == nil {
 			if enabled[config.PluginID] {
-				cmd.Printf(
+				cmd.Println(fmt.Sprintf(
 					"  %s Plugin already enabled globally\n",
 					yellow("○"),
-				)
+				))
 				return nil
 			}
 		}
@@ -139,7 +139,7 @@ func enablePluginGlobally(cmd *cobra.Command) error {
 		return fmt.Errorf("failed to write %s: %w", settingsPath, writeErr)
 	}
 
-	cmd.Printf("  %s Plugin enabled globally in %s\n", green("✓"), settingsPath)
+	cmd.Println(fmt.Sprintf("  %s Plugin enabled globally in %s", green("✓"), settingsPath))
 	return nil
 }
 

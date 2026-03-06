@@ -117,7 +117,7 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 	fallback := fmt.Sprintf("ARCHITECTURE.md hasn't been refreshed since %s\n", dateStr) +
 		fmt.Sprintf("and there are commits touching %d modules.\n", moduleCommits) +
 		"/ctx-map keeps architecture docs drift-free.\n" +
-		"\n" +
+		config.NewlineLF +
 		"Want me to run /ctx-map to refresh?"
 	content := loadMessage("check-map-staleness", "stale",
 		map[string]any{
@@ -132,7 +132,7 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 		"\u250c\u2500 Architecture Map Stale \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
 	msg += boxLines(content)
 	if line := contextDirLine(); line != "" {
-		msg += "\u2502 " + line + "\n"
+		msg += "\u2502 " + line + config.NewlineLF
 	}
 	msg += "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
 	cmd.Println(msg)
@@ -158,5 +158,5 @@ func countModuleCommits(since string) int {
 	if lines == "" {
 		return 0
 	}
-	return len(strings.Split(lines, "\n"))
+	return len(strings.Split(lines, config.NewlineLF))
 }

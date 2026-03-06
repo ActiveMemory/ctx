@@ -11,6 +11,7 @@
 package resume
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -32,7 +33,7 @@ The session ID is read from stdin JSON (same as hooks) or --session-id flag.`,
 				sessionID = system.ReadSessionID(os.Stdin)
 			}
 			system.Resume(sessionID)
-			cmd.Printf("Context hooks resumed for session %s\n", sessionID)
+			cmd.Println(fmt.Sprintf("Context hooks resumed for session %s", sessionID))
 			return nil
 		},
 	}

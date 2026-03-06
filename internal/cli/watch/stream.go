@@ -77,21 +77,21 @@ func processStream(cmd *cobra.Command, reader io.Reader) error {
 				}
 
 				if watchDryRun {
-					cmd.Printf(
+					cmd.Println(fmt.Sprintf(
 						"%s Would apply: [%s] %s\n", yellow("○"),
 						update.Type, update.Content,
-					)
+					))
 				} else {
 					err := applyUpdate(update)
 					if err != nil {
-						cmd.Printf(
+						cmd.Println(fmt.Sprintf(
 							"%s Failed to apply [%s]: %v\n", color.RedString("✗"),
 							update.Type, err,
-						)
+						))
 					} else {
-						cmd.Printf(
+						cmd.Println(fmt.Sprintf(
 							"%s Applied: [%s] %s\n", green("✓"), update.Type, update.Content,
-						)
+						))
 						updateCount++
 					}
 				}

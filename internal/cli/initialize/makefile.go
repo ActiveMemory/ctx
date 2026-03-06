@@ -53,47 +53,47 @@ func handleMakefileCtx(cmd *cobra.Command) error {
 			"failed to write %s: %w", config.FileMakefileCtx, err,
 		)
 	}
-	cmd.Printf("  %s %s\n", green("✓"), config.FileMakefileCtx)
+	cmd.Println(fmt.Sprintf("  %s %s", green("✓"), config.FileMakefileCtx))
 
 	// Ensure the user's Makefile includes Makefile.ctx
 	existing, err := os.ReadFile("Makefile")
 	if err != nil {
 		// No Makefile — create a minimal one
-		minimal := includeDirective + "\n"
+		minimal := includeDirective + config.NewlineLF
 		if err := os.WriteFile(
 			"Makefile", []byte(minimal), config.PermFile,
 		); err != nil {
 			return fmt.Errorf("failed to create Makefile: %w", err)
 		}
-		cmd.Printf("  %s Makefile (created with ctx include)\n", green("✓"))
+		cmd.Println(fmt.Sprintf("  %s Makefile (created with ctx include)", green("✓")))
 		return nil
 	}
 
 	// Makefile exists — check if it already includes Makefile.ctx
 	if strings.Contains(string(existing), includeDirective) {
-		cmd.Printf(
+		cmd.Println(fmt.Sprintf(
 			"  %s Makefile (already includes %s)\n",
 			yellow("○"), config.FileMakefileCtx,
-		)
+		))
 		return nil
 	}
 
 	// Append the include directive
 	amended := string(existing)
-	if !strings.HasSuffix(amended, "\n") {
-		amended += "\n"
+	if !strings.HasSuffix(amended, config.NewlineLF) {
+		amended += config.NewlineLF
 	}
-	amended += "\n" + includeDirective + "\n"
+	amended += config.NewlineLF + includeDirective + config.NewlineLF
 
 	if err := os.WriteFile(
 		"Makefile", []byte(amended), config.PermFile,
 	); err != nil {
 		return fmt.Errorf("failed to amend Makefile: %w", err)
 	}
-	cmd.Printf(
+	cmd.Println(fmt.Sprintf(
 		"  %s Makefile (appended %s include)\n",
 		green("✓"), config.FileMakefileCtx,
-	)
+	))
 
 	return nil
 }
