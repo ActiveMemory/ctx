@@ -39,9 +39,12 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
 func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, caller string) error {
-	// Check if ctx is in PATH (required for hooks to work)
-	if err := core.CheckCtxInPath(cmd); err != nil {
-		return err
+	// Check if ctx is in PATH (required for hooks to work).
+	// Skip when a caller is set — the caller manages its own binary path.
+	if caller == "" {
+		if err := core.CheckCtxInPath(cmd); err != nil {
+			return err
+		}
 	}
 
 	contextDir := rc.ContextDir()
@@ -184,19 +187,32 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, 
 		cmd.Println(fmt.Sprintf("  ⚠ .gitignore: %v", err))
 	}
 
-	cmd.Println("\nNext steps:")
-	cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
-	cmd.Println("  2. Run 'ctx status' to see context summary")
-	cmd.Println("  3. Run 'ctx agent' to get AI-ready context packet")
-	cmd.Println()
-	cmd.Println("Claude Code users: install the ctx plugin for hooks & skills:")
-	cmd.Println("  /plugin marketplace add ActiveMemory/ctx")
-	cmd.Println("  /plugin install ctx@activememory-ctx")
-	cmd.Println()
-	cmd.Println("Note: local plugin installs are not auto-enabled globally.")
-	cmd.Println("Run 'ctx init' again after installing the plugin to enable it,")
-	cmd.Println("or manually add to ~/.claude/settings.json:")
-	cmd.Println("  {\"enabledPlugins\": {\"ctx@activememory-ctx\": true}}")
+	// Claude Code specific setup — skip when called from another editor
+	if caller == "" {
+		cmd.Println("\nNext steps:")
+		cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
+		cmd.Println("  2. Run 'ctx status' to see context summary")
+		cmd.Println("  3. Run 'ctx agent' to get AI-ready context packet")
+		cmd.Println()
+		cmd.Println("Claude Code users: install the ctx plugin for hooks & skills:")
+		cmd.Println("  /plugin marketplace add ActiveMemory/ctx")
+		cmd.Println("  /plugin install ctx@activememory-ctx")
+		cmd.Println()
+		cmd.Println("Note: local plugin installs are not auto-enabled globally.")
+		cmd.Println("Run 'ctx init' again after installing the plugin to enable it,")
+		cmd.Println("or manually add to ~/.claude/settings.json:")
+		cmd.Println("  {\"enabledPlugins\": {\"ctx@activememory-ctx\": true}}")
+	} else {
+		// VS Code / other editor specific setup
+		cmd.Println("\nSetting up editor integration...")
+		if err := core.CreateVSCodeArtifacts(cmd); err != nil {
+			cmd.Println(fmt.Sprintf("  ⚠ VS Code artifacts: %v", err))
+		}
+
+		cmd.Println("\nNext steps:")
+		cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
+		cmd.Println("  2. Run '@ctx /status' to see context summary")
+	}
 
 	return nil
 }

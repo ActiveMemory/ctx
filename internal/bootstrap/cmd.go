@@ -50,6 +50,7 @@ func RootCmd() *cobra.Command {
 		Long:          long,
 		Version:       version,
 		SilenceErrors: true,
+		SilenceUsage:  true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			// Apply global flag values
 			if contextDir != "" {

@@ -2,7 +2,7 @@
   "name": "ctx-context",
   "displayName": "ctx — Persistent Context for AI",
   "description": "Chat participant (@ctx) for persistent project context across AI coding sessions",
-  "version": "0.7.0",
+  "version": "0.9.0",
   "publisher": "activememory",
   "license": "Apache-2.0",
   "homepage": "https://github.com/ActiveMemory/ctx",
@@ -108,6 +108,122 @@
           {
             "name": "system",
             "description": "System diagnostics and bootstrap"
+          },
+          {
+            "name": "wrapup",
+            "description": "End-of-session wrap-up with status and drift summary"
+          },
+          {
+            "name": "remember",
+            "description": "Recall recent AI sessions for this project"
+          },
+          {
+            "name": "next",
+            "description": "Show the next open task from TASKS.md"
+          },
+          {
+            "name": "brainstorm",
+            "description": "Browse and develop ideas from ideas/"
+          },
+          {
+            "name": "reflect",
+            "description": "Reflect on session — surface items worth persisting"
+          },
+          {
+            "name": "spec",
+            "description": "List or scaffold feature specs from templates"
+          },
+          {
+            "name": "implement",
+            "description": "Show the implementation plan"
+          },
+          {
+            "name": "verify",
+            "description": "Run verification checks (doctor + drift)"
+          },
+          {
+            "name": "map",
+            "description": "Show dependency map (go.mod, package.json)"
+          },
+          {
+            "name": "prompt",
+            "description": "Browse and view prompt templates"
+          },
+          {
+            "name": "blog",
+            "description": "Draft a blog post from recent context"
+          },
+          {
+            "name": "changelog",
+            "description": "Show recent commits for changelog"
+          },
+          {
+            "name": "check-links",
+            "description": "Audit local links in context files"
+          },
+          {
+            "name": "journal",
+            "description": "View journal entries"
+          },
+          {
+            "name": "consolidate",
+            "description": "Find duplicate entries in context files"
+          },
+          {
+            "name": "audit",
+            "description": "Alignment audit — drift + convention check"
+          },
+          {
+            "name": "worktree",
+            "description": "Git worktree management (list, add)"
+          },
+          {
+            "name": "pause",
+            "description": "Save session state for later"
+          },
+          {
+            "name": "resume",
+            "description": "Restore a paused session"
+          },
+          {
+            "name": "memory",
+            "description": "Claude Code memory bridge (sync, status, diff, import, publish)"
+          },
+          {
+            "name": "decisions",
+            "description": "List or reindex project decisions"
+          },
+          {
+            "name": "learnings",
+            "description": "List or reindex project learnings"
+          },
+          {
+            "name": "config",
+            "description": "Manage config profiles (switch, status, schema)"
+          },
+          {
+            "name": "permissions",
+            "description": "Backup or restore Claude settings (snapshot, restore)"
+          },
+          {
+            "name": "changes",
+            "description": "Show what changed since last session (--since duration)"
+          },
+          {
+            "name": "deps",
+            "description": "Show package dependency graph (--format mermaid|table|json)"
+          },
+          {
+            "name": "guide",
+            "description": "Quick-reference cheat sheet for ctx (--skills, --commands)"
+          },
+          {
+            "name": "reindex",
+            "description": "Regenerate indices for DECISIONS.md and LEARNINGS.md"
+          },
+          {
+            "name": "why",
+            "description": "Read the philosophy behind ctx (manifesto, about, invariants)"
           }
         ],
         "disambiguation": [
@@ -126,6 +242,53 @@
           }
         ]
       }
+    ],
+    "commands": [
+      { "command": "ctx.init", "title": "Init", "category": "ctx" },
+      { "command": "ctx.status", "title": "Status", "category": "ctx" },
+      { "command": "ctx.agent", "title": "Agent", "category": "ctx" },
+      { "command": "ctx.drift", "title": "Drift", "category": "ctx" },
+      { "command": "ctx.recall", "title": "Recall", "category": "ctx" },
+      { "command": "ctx.hook", "title": "Hook", "category": "ctx" },
+      { "command": "ctx.add", "title": "Add", "category": "ctx" },
+      { "command": "ctx.load", "title": "Load", "category": "ctx" },
+      { "command": "ctx.compact", "title": "Compact", "category": "ctx" },
+      { "command": "ctx.sync", "title": "Sync", "category": "ctx" },
+      { "command": "ctx.complete", "title": "Complete Task", "category": "ctx" },
+      { "command": "ctx.remind", "title": "Remind", "category": "ctx" },
+      { "command": "ctx.tasks", "title": "Tasks", "category": "ctx" },
+      { "command": "ctx.pad", "title": "Pad", "category": "ctx" },
+      { "command": "ctx.notify", "title": "Notify", "category": "ctx" },
+      { "command": "ctx.system", "title": "System", "category": "ctx" },
+      { "command": "ctx.wrapup", "title": "Wrapup", "category": "ctx" },
+      { "command": "ctx.remember", "title": "Remember", "category": "ctx" },
+      { "command": "ctx.next", "title": "Next Task", "category": "ctx" },
+      { "command": "ctx.brainstorm", "title": "Brainstorm", "category": "ctx" },
+      { "command": "ctx.reflect", "title": "Reflect", "category": "ctx" },
+      { "command": "ctx.spec", "title": "Spec", "category": "ctx" },
+      { "command": "ctx.implement", "title": "Implement", "category": "ctx" },
+      { "command": "ctx.verify", "title": "Verify", "category": "ctx" },
+      { "command": "ctx.map", "title": "Map", "category": "ctx" },
+      { "command": "ctx.prompt", "title": "Prompt", "category": "ctx" },
+      { "command": "ctx.blog", "title": "Blog", "category": "ctx" },
+      { "command": "ctx.changelog", "title": "Changelog", "category": "ctx" },
+      { "command": "ctx.checkLinks", "title": "Check Links", "category": "ctx" },
+      { "command": "ctx.journal", "title": "Journal", "category": "ctx" },
+      { "command": "ctx.consolidate", "title": "Consolidate", "category": "ctx" },
+      { "command": "ctx.audit", "title": "Audit", "category": "ctx" },
+      { "command": "ctx.worktree", "title": "Worktree", "category": "ctx" },
+      { "command": "ctx.pause", "title": "Pause", "category": "ctx" },
+      { "command": "ctx.resume", "title": "Resume", "category": "ctx" },
+      { "command": "ctx.memory", "title": "Memory", "category": "ctx" },
+      { "command": "ctx.decisions", "title": "Decisions", "category": "ctx" },
+      { "command": "ctx.learnings", "title": "Learnings", "category": "ctx" },
+      { "command": "ctx.config", "title": "Config", "category": "ctx" },
+      { "command": "ctx.permissions", "title": "Permissions", "category": "ctx" },
+      { "command": "ctx.changes", "title": "Changes", "category": "ctx" },
+      { "command": "ctx.deps", "title": "Deps", "category": "ctx" },
+      { "command": "ctx.guide", "title": "Guide", "category": "ctx" },
+      { "command": "ctx.reindex", "title": "Reindex", "category": "ctx" },
+      { "command": "ctx.why", "title": "Why", "category": "ctx" }
     ],
     "configuration": {
       "title": "ctx",
