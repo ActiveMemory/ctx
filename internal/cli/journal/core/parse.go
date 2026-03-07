@@ -164,7 +164,7 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	// Strip Claude Code internal markup tags from titles
 	entry.Title = strings.TrimSpace(config.RegExClaudeTag.ReplaceAllString(entry.Title, ""))
 
-	// Sanitize characters that break markdown link text: angle brackets
+	// Sanitize characters that break Markdown link text: angle brackets
 	// become HTML entities; backticks and # are stripped (they add no
 	// meaning inside [...] link labels).
 	entry.Title = strings.NewReplacer(

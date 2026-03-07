@@ -16,7 +16,7 @@ import (
 )
 
 // RegexMarkdownLink matches Markdown links: [display](target)
-var RegexMarkdownLink = regexp.MustCompile(`\[([^\]]+)\]\(([^)]+)\)`)
+var RegexMarkdownLink = regexp.MustCompile(`\[([^]]+)]\(([^)]+)\)`)
 
 // ConvertMarkdownLinks replaces internal Markdown links with Obsidian
 // wikilinks. External links (http/https) are left unchanged.

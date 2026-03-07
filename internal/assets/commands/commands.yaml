@@ -1196,3 +1196,33 @@ why:
       aider        - Aider AI coding assistant
       copilot      - GitHub Copilot
       windsurf     - Windsurf IDE
+"_text.journal.moc.session-link":
+  short: "- [%s](%s%s) (%d sessions)%s"
+"_text.journal.moc.nav-description":
+  short: "Navigation hub for all journal entries."
+"_text.journal.moc.browse-by":
+  short: "## Browse by"
+"_text.journal.moc.topics-description":
+  short: "— sessions grouped by topic"
+"_text.journal.moc.files-description":
+  short: "— sessions grouped by file touched"
+"_text.journal.moc.types-description":
+  short: "— sessions grouped by type"
+"_text.journal.moc.topic-stats":
+  short: "**%d topics** across **%d sessions** — **%d popular**, **%d long-tail**"
+"_text.journal.moc.file-stats":
+  short: "**%d files** across **%d sessions** — **%d popular**, **%d long-tail**"
+"_text.journal.moc.type-stats":
+  short: "**%d types** across **%d sessions**"
+"_text.journal.moc.topic-page-stats":
+  short: "**%d sessions** with this topic."
+"_text.journal.moc.file-page-stats":
+  short: "**%d sessions** touching this file."
+"_text.journal.moc.type-page-stats":
+  short: "**%d sessions** of type *%s*."
+"_text.journal.moc.topics-label":
+  short: "**Topics**: "
+"_text.journal.moc.type-label":
+  short: "**Type**: "
+"_text.journal.moc.see-also":
+  short: "**See also**:"

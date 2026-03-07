@@ -14,20 +14,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// ObsidianFrontmatter represents the YAML frontmatter for Obsidian vault
-// entries. Extends JournalFrontmatter with Obsidian-specific fields.
-type ObsidianFrontmatter struct {
-	Title        string   `yaml:"title"`
-	Date         string   `yaml:"date"`
-	Type         string   `yaml:"type,omitempty"`
-	Outcome      string   `yaml:"outcome,omitempty"`
-	Tags         []string `yaml:"tags,omitempty"`
-	Technologies []string `yaml:"technologies,omitempty"`
-	KeyFiles     []string `yaml:"key_files,omitempty"`
-	Aliases      []string `yaml:"aliases,omitempty"`
-	SourceFile   string   `yaml:"source_file,omitempty"`
-}
-
 // TransformFrontmatter converts journal frontmatter to Obsidian format.
 //
 // Changes applied:
@@ -68,24 +54,24 @@ func TransformFrontmatter(content, sourcePath string) string {
 	// Build the Obsidian frontmatter
 	ofm := ObsidianFrontmatter{}
 
-	if v, ok := raw["title"].(string); ok {
+	if v, ok := raw[config.FrontmatterTitle].(string); ok {
 		ofm.Title = v
 	}
-	if v, ok := raw["date"].(string); ok {
+	if v, ok := raw[config.FrontmatterDate].(string); ok {
 		ofm.Date = v
 	}
-	if v, ok := raw["type"].(string); ok {
+	if v, ok := raw[config.FrontmatterType].(string); ok {
 		ofm.Type = v
 	}
-	if v, ok := raw["outcome"].(string); ok {
+	if v, ok := raw[config.FrontmatterOutcome].(string); ok {
 		ofm.Outcome = v
 	}
 
 	// topics -> tags
-	ofm.Tags = ExtractStringSlice(raw, "topics")
+	ofm.Tags = ExtractStringSlice(raw, config.FrontmatterTopics)
 
-	ofm.Technologies = ExtractStringSlice(raw, "technologies")
-	ofm.KeyFiles = ExtractStringSlice(raw, "key_files")
+	ofm.Technologies = ExtractStringSlice(raw, config.FrontmatterTechnologies)
+	ofm.KeyFiles = ExtractStringSlice(raw, config.FrontmatterKeyFiles)
 
 	// Add aliases from title
 	if ofm.Title != "" {

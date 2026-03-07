@@ -56,6 +56,18 @@ const (
 const (
 	// FrontmatterTitle is the YAML frontmatter key for the entry title.
 	FrontmatterTitle = "title"
+	// FrontmatterDate is the YAML frontmatter key for the entry date.
+	FrontmatterDate = "date"
+	// FrontmatterType is the YAML frontmatter key for the session type.
+	FrontmatterType = "type"
+	// FrontmatterOutcome is the YAML frontmatter key for the session outcome.
+	FrontmatterOutcome = "outcome"
+	// FrontmatterTopics is the YAML frontmatter key for the topics list.
+	FrontmatterTopics = "topics"
+	// FrontmatterTechnologies is the YAML frontmatter key for the technologies list.
+	FrontmatterTechnologies = "technologies"
+	// FrontmatterKeyFiles is the YAML frontmatter key for the key files list.
+	FrontmatterKeyFiles = "key_files"
 	// FrontmatterLocked is the YAML frontmatter key and journal state
 	// marker for locked entries.
 	FrontmatterLocked = "locked"
