@@ -128,6 +128,28 @@ func writeTasksJSON(cmd *cobra.Command) error {
 				},
 				"problemMatcher": []interface{}{},
 			},
+			{
+				"label":   "ctx: journal",
+				"type":    "shell",
+				"command": "ctx recall export --all && ctx journal site --build",
+				"group":   "none",
+				"presentation": map[string]interface{}{
+					"reveal": "always",
+					"panel":  "shared",
+				},
+				"problemMatcher": []interface{}{},
+			},
+			{
+				"label":   "ctx: journal-serve",
+				"type":    "shell",
+				"command": "ctx journal site --serve",
+				"group":   "none",
+				"presentation": map[string]interface{}{
+					"reveal": "always",
+					"panel":  "shared",
+				},
+				"problemMatcher": []interface{}{},
+			},
 		},
 	}
 	data, _ := json.MarshalIndent(tasks, "", "  ")

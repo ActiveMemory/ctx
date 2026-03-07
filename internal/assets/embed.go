@@ -251,6 +251,18 @@ func ClaudeMd() ([]byte, error) {
 	return FS.ReadFile("claude/CLAUDE.md")
 }
 
+// ClaudeMdForCaller reads a caller-specific CLAUDE.md override if available,
+// falling back to the default claude/CLAUDE.md template.
+func ClaudeMdForCaller(caller string) ([]byte, error) {
+	if caller != "" {
+		override, err := FS.ReadFile("overrides/" + caller + "/CLAUDE.md")
+		if err == nil {
+			return override, nil
+		}
+	}
+	return ClaudeMd()
+}
+
 // RalphTemplate reads a Ralph-mode template file by name.
 //
 // Ralph mode templates are designed for autonomous loop operation,
