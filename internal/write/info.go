@@ -121,6 +121,25 @@ func InfoDepsNoDeps(cmd *cobra.Command) {
 	cmd.Println(tplDepsNoDeps)
 }
 
+// InfoSkillsHeader prints the skills list heading.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoSkillsHeader(cmd *cobra.Command) {
+	cmd.Println(tplSkillsHeader)
+	cmd.Println()
+}
+
+// InfoSkillLine prints a single skill entry.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - name: Skill name
+//   - description: Truncated skill description
+func InfoSkillLine(cmd *cobra.Command, name, description string) {
+	sprintf(cmd, tplSkillLine, name, description)
+}
+
 // InfoExistsWritingAsAlternative reports that a file already exists and the
 // content is being written to an alternative filename instead.
 //
