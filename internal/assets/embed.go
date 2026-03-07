@@ -251,8 +251,8 @@ func ClaudeMd() ([]byte, error) {
 	return FS.ReadFile("claude/CLAUDE.md")
 }
 
-// ClaudeMdForCaller reads a caller-specific CLAUDE.md override if available,
-// falling back to the default claude/CLAUDE.md template.
+// ClaudeMdForCaller reads the CLAUDE.md template, using a caller-specific override if available.
+// Falls back to the default CLAUDE.md when no override exists for the caller.
 func ClaudeMdForCaller(caller string) ([]byte, error) {
 	if caller != "" {
 		override, err := FS.ReadFile("overrides/" + caller + "/CLAUDE.md")
