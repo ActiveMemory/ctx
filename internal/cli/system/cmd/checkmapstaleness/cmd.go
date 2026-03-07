@@ -144,6 +144,9 @@ func runCheckMapStaleness(cmd *cobra.Command, stdin *os.File) error {
 
 // countModuleCommits counts git commits touching internal/ since the given date.
 func countModuleCommits(since string) int {
+	if _, lookErr := exec.LookPath("git"); lookErr != nil {
+		return 0
+	}
 	out, gitErr := exec.Command("git", "log", "--oneline", "--since="+since, "--", "internal/").Output() //nolint:gosec // date string from JSON
 	if gitErr != nil {
 		return 0

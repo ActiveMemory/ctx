@@ -519,3 +519,45 @@ func TaskNotFound(query string) error {
 func ReadEmbeddedSchema(cause error) error {
 	return fmt.Errorf("read embedded schema: %w", cause)
 }
+
+// UnknownProfile returns an error for an unrecognized config profile name.
+//
+// Parameters:
+//   - name: the profile name that was not recognized
+//
+// Returns:
+//   - error: "unknown profile <name>: must be dev, base, or prod"
+func UnknownProfile(name string) error {
+	return fmt.Errorf("unknown profile %q: must be dev, base, or prod", name)
+}
+
+// ReadProfile wraps a failure to read a profile file.
+//
+// Parameters:
+//   - name: profile filename
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "read <name>: <cause>"
+func ReadProfile(name string, cause error) error {
+	return fmt.Errorf("read %s: %w", name, cause)
+}
+
+// GitNotFound returns an error when git is not installed.
+//
+// Returns:
+//   - error: "git not found in PATH"
+func GitNotFound() error {
+	return fmt.Errorf("git not found in PATH")
+}
+
+// NotInGitRepo wraps a failure from git rev-parse.
+//
+// Parameters:
+//   - cause: the underlying exec error
+//
+// Returns:
+//   - error: "not in a git repository: <cause>"
+func NotInGitRepo(cause error) error {
+	return fmt.Errorf("not in a git repository: %w", cause)
+}

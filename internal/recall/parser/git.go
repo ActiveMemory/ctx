@@ -35,6 +35,10 @@ func gitRemote(dir string) string {
 		return ""
 	}
 
+	if _, lookErr := exec.LookPath("git"); lookErr != nil {
+		return ""
+	}
+
 	cmd := exec.Command("git", "-C", dir, "remote", "get-url", "origin")
 	output, cmdErr := cmd.Output()
 	if cmdErr != nil {
