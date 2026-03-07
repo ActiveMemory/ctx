@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-06 | Spawned agents reliably create new files but consistently fail to delete old ones — always audit for stale files, duplicate function definitions, and orphaned imports after agent-driven refactoring |
+| 2026-03-06 | Import cycle avoidance: when package A imports package B for logic, B must own shared types — A aliases them. entry imports add/core for insert logic, so add/core owns EntryParams and entry aliases it as entry.Params |
 | 2026-03-06 | Stale directory inodes cause invisible files over SSH |
 | 2026-03-06 | Stats sort uses string comparison on RFC3339 timestamps with mixed timezones |
 | 2026-03-06 | Claude Code supports PreCompact and SessionStart hooks that ctx does not use |
@@ -55,6 +57,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-06-200319] Spawned agents reliably create new files but consistently fail to delete old ones — always audit for stale files, duplicate function definitions, and orphaned imports after agent-driven refactoring
+
+**Context**: Multiple agent batches across cmd/ restructuring, color removal, and flag externalization left stale files, duplicate run.go, and unupdated parent imports
+
+**Lesson**: Agent cleanup is a known gap — budget 5-10 minutes for post-agent audit per batch
+
+**Application**: After every agent batch: grep for stale package declarations, check parent imports point to cmd/root not cmd/, verify old files are deleted
+
+---
+
+## [2026-03-06-200237] Import cycle avoidance: when package A imports package B for logic, B must own shared types — A aliases them. entry imports add/core for insert logic, so add/core owns EntryParams and entry aliases it as entry.Params
+
+**Context**: Extracting entry.Params as a standalone struct in internal/entry created a cycle because entry/write.go imports add/core for AppendEntry
+
+**Lesson**: The package that provides implementation logic must own the types; the facade package aliases them
+
+**Application**: When extracting shared types from implementation packages, check the import direction first — the type lives where the logic lives
 
 ---
 

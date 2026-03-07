@@ -5,3 +5,33 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 package root
+
+import (
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config"
+)
+
+// Cmd returns the "ctx doctor" command.
+//
+// Flags:
+//   - --json, -j: Machine-readable JSON output
+//
+// Returns:
+//   - *cobra.Command: Configured doctor command with flags registered
+func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("doctor")
+	cmd := &cobra.Command{
+		Use:         "doctor",
+		Short:       short,
+		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Long:        long,
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			jsonOut, _ := cmd.Flags().GetBool("json")
+			return Run(cmd, jsonOut)
+		},
+	}
+	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc("doctor.json"))
+	return cmd
+}

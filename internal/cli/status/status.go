@@ -9,42 +9,10 @@ package status
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/assets"
 	statusroot "github.com/ActiveMemory/ctx/internal/cli/status/cmd/root"
 )
 
 // Cmd returns the status command.
-//
-// Flags:
-//   - --json: Output as JSON for machine parsing
-//   - --verbose, -v: Include file content previews
-//
-// Returns:
-//   - *cobra.Command: Configured status command with flags registered
 func Cmd() *cobra.Command {
-	var (
-		jsonOutput bool
-		verbose    bool
-	)
-
-	short, long := assets.CommandDesc("status")
-
-	cmd := &cobra.Command{
-		Use:   "status",
-		Short: short,
-		Long:  long,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return statusroot.Run(cmd, jsonOutput, verbose)
-		},
-	}
-
-	cmd.Flags().BoolVar(
-		&jsonOutput,
-		"json", false, assets.FlagDesc("status.json"),
-	)
-	cmd.Flags().BoolVarP(
-		&verbose, "verbose", "v", false, assets.FlagDesc("status.verbose"),
-	)
-
-	return cmd
+	return statusroot.Cmd()
 }

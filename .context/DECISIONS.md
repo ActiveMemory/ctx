@@ -3,6 +3,10 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-06 | Drop fatih/color dependency — Unicode symbols are sufficient for terminal output, color was redundant |
+| 2026-03-06 | Externalize all command descriptions to embedded YAML for i18n readiness — commands.yaml holds Short/Long for 105 commands plus flag descriptions, loaded via assets.CommandDesc() and assets.FlagDesc() |
+| 2026-03-06 | cmd/root + core taxonomy for all CLI packages — single-command packages use cmd/root/{cmd.go,run.go}, multi-subcommand packages use cmd/<sub>/{cmd.go,run.go}, shared helpers in core/ |
+| 2026-03-06 | Shared entry types and API live in internal/entry, not in CLI packages — domain types that multiple packages consume (mcp, watch, memory) belong in a domain package, not a CLI subpackage |
 | 2026-03-06 | PR #27 (MCP server) meets v0.1 spec requirements — merge-ready pending 3 compliance fixes |
 | 2026-03-06 | Skills stay CLI-based; MCP Prompts are the protocol equivalent |
 | 2026-03-06 | Peer MCP model for external tool integration |
@@ -30,6 +34,62 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-06-200306] Drop fatih/color dependency — Unicode symbols are sufficient for terminal output, color was redundant
+
+**Status**: Accepted
+
+**Context**: fatih/color was used in 32 files for green checkmarks, yellow warnings, cyan headings, dim text
+
+**Decision**: Drop fatih/color dependency — Unicode symbols are sufficient for terminal output, color was redundant
+
+**Rationale**: Every colored output already had a semantic symbol (✓, ⚠, ○) that conveyed the same meaning; color added visual noise in non-terminal contexts (logs, pipes)
+
+**Consequences**: Removed --no-color flag (only existed for color.NoColor); one fewer external dependency; FlagNoColor retained in config for CLI compatibility
+
+---
+
+## [2026-03-06-200257] Externalize all command descriptions to embedded YAML for i18n readiness — commands.yaml holds Short/Long for 105 commands plus flag descriptions, loaded via assets.CommandDesc() and assets.FlagDesc()
+
+**Status**: Accepted
+
+**Context**: Command descriptions were inline strings scattered across 105 cobra.Command definitions
+
+**Decision**: Externalize all command descriptions to embedded YAML for i18n readiness — commands.yaml holds Short/Long for 105 commands plus flag descriptions, loaded via assets.CommandDesc() and assets.FlagDesc()
+
+**Rationale**: Centralizing user-facing text in a single translatable file prepares for i18n without runtime cost (embedded at compile time)
+
+**Consequences**: System's 30 hidden hook subcommands excluded (not user-facing); flag descriptions use _flags.scope.name convention
+
+---
+
+## [2026-03-06-200247] cmd/root + core taxonomy for all CLI packages — single-command packages use cmd/root/{cmd.go,run.go}, multi-subcommand packages use cmd/<sub>/{cmd.go,run.go}, shared helpers in core/
+
+**Status**: Accepted
+
+**Context**: 35 CLI packages had inconsistent flat structures mixing Cmd(), run logic, helpers, and types in the same directory
+
+**Decision**: cmd/root + core taxonomy for all CLI packages — single-command packages use cmd/root/{cmd.go,run.go}, multi-subcommand packages use cmd/<sub>/{cmd.go,run.go}, shared helpers in core/
+
+**Rationale**: Taxonomical symmetry: every package has the same predictable shape, making navigation instant and agent-friendly
+
+**Consequences**: cmd/ contains only cmd.go + run.go; helpers go to core/; 474 files changed in initial restructuring
+
+---
+
+## [2026-03-06-200227] Shared entry types and API live in internal/entry, not in CLI packages — domain types that multiple packages consume (mcp, watch, memory) belong in a domain package, not a CLI subpackage
+
+**Status**: Accepted
+
+**Context**: External consumers were importing cli/add for EntryParams/ValidateEntry/WriteEntry, creating a leaky abstraction
+
+**Decision**: Shared entry types and API live in internal/entry, not in CLI packages — domain types that multiple packages consume (mcp, watch, memory) belong in a domain package, not a CLI subpackage
+
+**Rationale**: Domain types in CLI packages force consumers to depend on CLI internals; internal/entry provides a clean boundary
+
+**Consequences**: entry aliases Params from add/core to avoid import cycle (entry imports add/core for insert logic); future work may move insert logic to entry to eliminate the cycle
+
+---
 
 ## [2026-03-06-141507] PR #27 (MCP server) meets v0.1 spec requirements — merge-ready pending 3 compliance fixes
 
