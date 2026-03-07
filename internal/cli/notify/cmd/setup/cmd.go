@@ -10,6 +10,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx notify setup" subcommand.
@@ -17,13 +19,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured setup subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("notify.setup")
 	return &cobra.Command{
 		Use:   "setup",
-		Short: "Configure webhook URL",
-		Long: `Prompts for a webhook URL and encrypts it using the scratchpad key.
-
-The URL is stored in .context/.notify.enc (encrypted, safe to commit).
-The key lives at ~/.ctx/.ctx.key (user-level, never committed).`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return RunSetup(cmd, os.Stdin)
 		},

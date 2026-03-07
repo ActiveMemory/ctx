@@ -8,6 +8,8 @@ package list
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the prompt list subcommand.
@@ -15,9 +17,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
+	short, _ := assets.CommandDesc("prompt.list")
+
 	return &cobra.Command{
 		Use:   "list",
-		Short: "List available prompt templates",
+		Short: short,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return RunList(cmd)

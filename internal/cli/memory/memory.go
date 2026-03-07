@@ -10,25 +10,17 @@ package memory
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx memory" parent command.
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("memory")
 	cmd := &cobra.Command{
 		Use:   "memory",
-		Short: "Bridge Claude Code auto memory into .context/",
-		Long: `Bridge Claude Code's auto memory (MEMORY.md) into .context/.
-
-Discovers MEMORY.md from ~/.claude/projects/, mirrors it into
-.context/memory/mirror.md (git-tracked), and detects drift.
-
-Subcommands:
-  sync       Copy MEMORY.md to mirror, archive previous version
-  status     Show drift, timestamps, and entry counts
-  diff       Show what changed since last sync
-  import     Classify and promote entries to .context/ files
-  publish    Push curated .context/ content to MEMORY.md
-  unpublish  Remove published block from MEMORY.md`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(

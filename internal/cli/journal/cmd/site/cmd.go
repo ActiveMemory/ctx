@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -25,24 +26,11 @@ func Cmd() *cobra.Command {
 		build  bool
 	)
 
+	short, long := assets.CommandDesc("journal.site")
 	cmd := &cobra.Command{
 		Use:   "site",
-		Short: "Generate a static site from journal entries",
-		Long: `Generate a zensical-compatible static site from .context/journal/ entries.
-
-Creates a site structure with:
-  - Index page with all sessions listed by date
-  - Individual pages for each journal entry
-  - Navigation and search support
-
-Requires zensical to be installed for building/serving:
-  pipx install zensical
-
-Examples:
-  ctx journal site                    # Generate in .context/journal-site/
-  ctx journal site --output ~/public  # Custom output directory
-  ctx journal site --build            # Generate and build HTML
-  ctx journal site --serve            # Generate and serve locally`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runJournalSite(cmd, output, build, serve)
 		},

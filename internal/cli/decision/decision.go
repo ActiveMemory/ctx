@@ -10,6 +10,7 @@ package decision
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/decision/cmd/reindex"
 )
 
@@ -21,19 +22,11 @@ import (
 // Returns:
 //   - *cobra.Command: The decisions command with subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("decision")
 	cmd := &cobra.Command{
 		Use:   "decisions",
-		Short: "Manage DECISIONS.md file",
-		Long: `Manage the DECISIONS.md file and its quick-reference index.
-
-The decisions file maintains an auto-generated index at the top for quick
-scanning. Use the subcommands to manage this index.
-
-Subcommands:
-  reindex    Regenerate the quick-reference index
-
-Examples:
-  ctx decisions reindex`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(reindex.Cmd())

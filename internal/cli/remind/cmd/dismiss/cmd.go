@@ -10,6 +10,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the remind dismiss subcommand.
@@ -19,10 +21,12 @@ import (
 func Cmd() *cobra.Command {
 	var allFlag bool
 
+	short, _ := assets.CommandDesc("remind.dismiss")
+
 	cmd := &cobra.Command{
 		Use:     "dismiss [ID]",
 		Aliases: []string{"rm"},
-		Short:   "Dismiss one or all reminders",
+		Short:   short,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if allFlag {
 				return runDismissAll(cmd)

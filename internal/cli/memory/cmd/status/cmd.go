@@ -9,6 +9,8 @@ package status
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the memory status subcommand.
@@ -16,16 +18,11 @@ import (
 // Returns:
 //   - *cobra.Command: command for showing memory bridge status.
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("memory.status")
 	return &cobra.Command{
 		Use:   "status",
-		Short: "Show drift, timestamps, and entry counts",
-		Long: `Show memory bridge status: source location, last sync time,
-line counts, drift indicator, and archive count.
-
-Exit codes:
-  0  No drift
-  1  MEMORY.md not found
-  2  Drift detected (MEMORY.md changed since last sync)`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runStatus(cmd)
 		},

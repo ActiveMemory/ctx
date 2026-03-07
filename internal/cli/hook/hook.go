@@ -9,6 +9,7 @@ package hook
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	hookroot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -26,26 +27,13 @@ import (
 func Cmd() *cobra.Command {
 	var write bool
 
+	short, long := assets.CommandDesc("hook")
 	cmd := &cobra.Command{
 		Use:         "hook <tool>",
-		Short:       "Generate AI tool integration configs",
+		Short:       short,
 		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
-		Long: `Generate configuration and instructions
-for integrating Context with AI tools.
-
-Supported tools:
-  claude-code  - Anthropic's Claude Code CLI (use plugin instead)
-  cursor       - Cursor IDE
-  aider        - Aider AI coding assistant
-  copilot      - GitHub Copilot
-  windsurf     - Windsurf IDE
-
-Use --write to generate the configuration file directly:
-  ctx hook copilot --write    # Creates .github/copilot-instructions.md
-
-Example:
-  ctx hook cursor`,
-		Args: cobra.ExactArgs(1),
+		Long:        long,
+		Args:        cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return hookroot.Run(cmd, args, write)
 		},

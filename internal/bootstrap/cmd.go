@@ -15,6 +15,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
@@ -22,7 +23,7 @@ import (
 
 // version is set at build time via ldflags:
 //
-//	-X github.com/ActiveMemory/ctx/internal/bootstrap.version=0.2.0
+//	-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$(cat VERSION)
 var version = "dev"
 
 // RootCmd creates and returns the root cobra command for the ctx CLI.
@@ -43,15 +44,12 @@ func RootCmd() *cobra.Command {
 	var noColor bool
 	var allowOutsideCwd bool
 
-	cmd := &cobra.Command{
-		Use:   "ctx",
-		Short: "Context - persistent context for AI coding assistants",
-		Long: `ctx (Context) maintains persistent context files that help
-  AI coding assistants understand your project's architecture, conventions,
-  decisions, and current tasks.
+	short, long := assets.CommandDesc("ctx")
 
-  Use 'ctx init' to create a .context/ directory in your project,
-  then use 'ctx status', 'ctx load', and 'ctx agent' to work with context.`,
+	cmd := &cobra.Command{
+		Use:     "ctx",
+		Short:   short,
+		Long:    long,
 		Version: version,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			// Apply global flag values
@@ -63,7 +61,7 @@ func RootCmd() *cobra.Command {
 			}
 
 			// Validate that the context directory stays within the project root.
-			// Skip if CLI flag is set or .ctxrc has allow_outside_cwd: true.
+			// Skip if the CLI flag is set or .ctxrc has allow_outside_cwd: true.
 			if !allowOutsideCwd && !rc.AllowOutsideCwd() {
 				if validateErr := validation.ValidateBoundary(rc.ContextDir()); validateErr != nil {
 					return fmt.Errorf("%w\nUse --allow-outside-cwd to override this check", validateErr)

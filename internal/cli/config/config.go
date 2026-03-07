@@ -9,6 +9,7 @@ package config
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/schema"
 	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/status"
 	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/switchcmd"
@@ -19,15 +20,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured config command with subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("config")
+
 	cmd := &cobra.Command{
 		Use:   "config",
-		Short: "Manage runtime configuration",
-		Long: `Manage runtime configuration profiles.
-
-Subcommands:
-  switch [dev|base]    Switch .ctxrc profile (no arg = toggle)
-  status               Show active .ctxrc profile
-  schema               Print JSON Schema for .ctxrc`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(

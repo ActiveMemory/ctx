@@ -9,6 +9,7 @@ package loop
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	looproot "github.com/ActiveMemory/ctx/internal/cli/loop/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -38,21 +39,11 @@ func Cmd() *cobra.Command {
 		outputFile    string
 	)
 
+	short, long := assets.CommandDesc("loop")
 	cmd := &cobra.Command{
 		Use:   "loop",
-		Short: "Generate a Ralph loop script",
-		Long: `Generate a ready-to-use shell script for running a Ralph loop.
-
-A Ralph loop continuously runs an AI assistant with the same prompt until
-a completion signal is detected. This enables iterative development where
-the AI can build on its previous work.
-
-Examples:
-  ctx loop                           # Generate loop.sh for Claude
-  ctx loop --tool aider              # Generate for Aider
-  ctx loop --prompt TASKS.md         # Use custom prompt file
-  ctx loop --max-iterations 10       # Limit to 10 iterations
-  ctx loop -o my-loop.sh             # Output to custom file`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return looproot.Run(
 				cmd, promptFile, tool, maxIterations, completionMsg, outputFile,

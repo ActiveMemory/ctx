@@ -9,6 +9,7 @@ package load
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	loadroot "github.com/ActiveMemory/ctx/internal/cli/load/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -30,24 +31,11 @@ func Cmd() *cobra.Command {
 		raw    bool
 	)
 
+	short, long := assets.CommandDesc("load")
 	cmd := &cobra.Command{
 		Use:   "load",
-		Short: "Output assembled context Markdown",
-		Long: `Load and display the assembled context
-as it would be provided to an AI.
-
-The context files are assembled in the recommended read order:
-  1. CONSTITUTION.md
-  2. TASKS.md
-  3. CONVENTIONS.md
-  4. ARCHITECTURE.md
-  5. DECISIONS.md
-  6. LEARNINGS.md
-  7. GLOSSARY.md
-  8. AGENT_PLAYBOOK.md
-
-Use --raw to output raw file contents without headers or assembly.
-Use --budget to limit output to a specific token count (default from .ctxrc or 8000).`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Use configured budget if flag not explicitly set
 			if !cmd.Flags().Changed("budget") {

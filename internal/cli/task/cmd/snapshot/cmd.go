@@ -8,6 +8,8 @@ package snapshot
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the tasks snapshot subcommand.
@@ -22,17 +24,14 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("task.snapshot")
+
 	cmd := &cobra.Command{
 		Use:   "snapshot [name]",
-		Short: "Create point-in-time snapshot of TASKS.md",
-		Long: `Create a point-in-time snapshot of TASKS.md without modifying the original.
-
-Snapshots are stored in .context/archive/ with timestamped names:
-  .context/archive/tasks-snapshot-YYYY-MM-DD-HHMM.md
-
-Unlike archive, snapshot copies the entire file as-is.`,
-		Args: cobra.MaximumNArgs(1),
-		RunE: runSnapshot,
+		Short: short,
+		Long:  long,
+		Args:  cobra.MaximumNArgs(1),
+		RunE:  runSnapshot,
 	}
 
 	return cmd

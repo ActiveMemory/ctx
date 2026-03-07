@@ -8,6 +8,8 @@ package show
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the prompt show subcommand.
@@ -15,9 +17,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured show subcommand
 func Cmd() *cobra.Command {
+	short, _ := assets.CommandDesc("prompt.show")
+
 	return &cobra.Command{
 		Use:   "show NAME",
-		Short: "Print a prompt template to stdout",
+		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runShow(cmd, args[0])

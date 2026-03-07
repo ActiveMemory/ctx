@@ -9,6 +9,8 @@ package sync
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the memory sync subcommand.
@@ -18,17 +20,11 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
+	short, long := assets.CommandDesc("memory.sync")
 	cmd := &cobra.Command{
 		Use:   "sync",
-		Short: "Copy MEMORY.md to mirror, archive previous version",
-		Long: `Copy Claude Code's MEMORY.md to .context/memory/mirror.md.
-
-Archives the previous mirror before overwriting. Reports line counts
-and drift since last sync.
-
-Exit codes:
-  0  Synced successfully
-  1  MEMORY.md not found (auto memory not active)`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runSync(cmd, dryRun)
 		},

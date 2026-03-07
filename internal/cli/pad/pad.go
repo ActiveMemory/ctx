@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/edit"
 	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/export"
@@ -30,32 +31,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pad command with subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("pad")
 	cmd := &cobra.Command{
 		Use:   "pad",
-		Short: "Encrypted scratchpad for sensitive one-liners",
-		Long: `Manage an encrypted scratchpad stored in .context/.
-
-Entries are short one-liners encrypted with AES-256-GCM. The key is
-stored at ~/.ctx/.ctx.key (global, user-level). The encrypted file
-(.context/scratchpad.enc) is committed to git.
-
-File blobs can be stored as entries using "add --file". Blob entries use
-the format "label:::base64data" and are shown as "label [BLOB]" in the
-list view. Use "show N" to decode or "show N --out file" to write to disk.
-
-When invoked without a subcommand, lists all entries.
-
-Subcommands:
-  show     Output raw text of an entry by number
-  add      Append a new entry
-  rm       Remove an entry by number
-  edit     Replace an entry by number
-  mv       Move an entry to a different position
-  resolve  Show both sides of a merge conflict
-  import   Bulk-import lines from a file
-  export   Export blob entries to a directory as files
-  merge    Merge entries from scratchpad files`,
-		Args: cobra.NoArgs,
+		Short: short,
+		Long:  long,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runList(cmd)
 		},

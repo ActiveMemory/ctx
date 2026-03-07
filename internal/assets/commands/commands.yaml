@@ -1,0 +1,767 @@
+# Command descriptions for ctx CLI.
+# Used by assets.CommandDesc() to populate cobra Short/Long fields.
+# Keys use dot notation: parent.subcommand (e.g., pad.show)
+
+add:
+  long: "Add a new decision, task, learning, or convention\nto the appropriate context file.\n\nTypes:\n  decision    Add\
+    \ to DECISIONS.md (requires --context, --rationale, --consequences)\n  learning    Add to LEARNINGS.md (requires --context,\
+    \ --lesson, --application)\n  task        Add to TASKS.md\n  convention  Add to CONVENTIONS.md\n\nContent can be provided\
+    \ as:\n  - Command argument: ctx add learning \"title here\"\n  - File: ctx add learning --file /path/to/content.md\n\
+    \  - Stdin: echo \"title\" | ctx add learning\n\nExamples:\n  ctx add decision \"Use PostgreSQL\" \\\n    --context \"\
+    Need a reliable database for production\" \\\n    --rationale \"PostgreSQL offers ACID compliance and JSON support\" \\\
+    \n    --consequences \"Team needs PostgreSQL training\"\n  ctx add learning \"Go embed requires files in same package\"\
+    \ \\\n    --context \"Tried to embed files from parent directory\" \\\n    --lesson \"go:embed only works with files in\
+    \ same or child directories\" \\\n    --application \"Keep embedded files in internal/templates/, not project root\"\n\
+    \  ctx add task \"Implement user authentication\" --priority high"
+  short: Add a new item to a context file
+agent:
+  long: "Print a concise context packet optimized for AI consumption.\n\nThe output is designed to be copy-pasted into an\
+    \ AI chat\nor piped to a system prompt. It includes:\n  - Constitution rules (NEVER VIOLATE)\n  - Current tasks (budget-capped)\n\
+    \  - Key conventions (budget-capped)\n  - Recent decisions (scored by relevance, full body)\n  - Key learnings (scored\
+    \ by relevance, full body)\n\nThe --budget flag controls content selection. Entries are scored by\nrecency and relevance\
+    \ to active tasks, then included in priority order\nuntil the budget is consumed. Entries that don't fit get title-only\n\
+    summaries in an \"Also Noted\" section.\n\nUse --budget to set token budget (default from .ctxrc or 8000).\nUse --format\
+    \ to choose between Markdown (md) or JSON output.\n\nCooldown (for hooks and automation):\n  --session identifies the\
+    \ caller (e.g., $PPID). Without it, cooldown\n  is disabled and every call produces output. When --session is set,\n \
+    \ repeated calls within the --cooldown window (default 10m) are suppressed.\n\nExamples:\n  ctx agent                \
+    \              # Default budget, Markdown output\n  ctx agent --budget 4000                # Smaller context packet\n\
+    \  ctx agent --format json                # JSON output for programmatic use\n  ctx agent --session $PPID            \
+    \  # Cooldown scoped to calling process"
+  short: Print AI-ready context packet
+changes:
+  long: "Show changes in context files and code since the last AI session.\n\nAutomatically detects the last session boundary\
+    \ from state markers.\nUse --since to specify a custom time range (duration like \"24h\" or\ndate like \"2026-03-01\"\
+    ).\n\nExamples:\n  ctx changes                     # changes since last session\n  ctx changes --since 24h         # changes\
+    \ in last 24 hours\n  ctx changes --since 2026-03-01  # changes since specific date"
+  short: Show what changed since last session
+compact:
+  long: "Consolidate and clean up context files.\n\nActions performed:\n  - Move completed tasks to \"Completed (Recent)\"\
+    \ section\n  - Archive old completed tasks (with --archive)\n  - Archive old decisions and learnings (with --archive)\n\
+    \  - Remove empty sections from context files\n  - Report on potential duplicates\n\nUse --archive to create .context/archive/\
+    \ for old content.\n\nExamples:\n  ctx compact                  # Clean up context, move completed tasks\n  ctx compact\
+    \ --archive        # Also archive old tasks, decisions, and learnings"
+  short: Archive completed tasks and clean up context
+complete:
+  long: "Mark a task as completed in TASKS.md.\n\nYou can specify a task by:\n  - Task number (e.g., \"ctx complete 3\")\n\
+    \  - Partial text match (e.g., \"ctx complete auth\")\n  - Full task text (e.g., \"ctx complete 'Implement user authentication'\"\
+    )\n\nThe task will be marked with [x] \nand optionally moved to the Completed section."
+  short: Mark a task as completed
+config:
+  long: "Manage runtime configuration profiles.\n\nSubcommands:\n  switch [dev|base]    Switch .ctxrc profile (no arg = toggle)\n\
+    \  status               Show active .ctxrc profile\n  schema               Print JSON Schema for .ctxrc"
+  short: Manage runtime configuration
+config.schema:
+  long: "Print the JSON Schema for .ctxrc to stdout.\n\nPipe-friendly — redirect to a file for IDE integration:\n\n  ctx config\
+    \ schema > .ctxrc.schema.json\n\nVS Code integration (requires redhat.vscode-yaml extension):\n\n  // .vscode/settings.json\n\
+    \  {\n    \"yaml.schemas\": {\n      \"./.ctxrc.schema.json\": \".ctxrc\"\n    }\n  }"
+  short: Print JSON Schema for .ctxrc
+config.status:
+  short: Show active .ctxrc profile
+config.switchcmd:
+  long: 'Switch between .ctxrc configuration profiles.
+
+
+    With no argument, toggles between dev and base.
+
+    Accepts "prod" as an alias for "base".
+
+
+    Source files (.ctxrc.base, .ctxrc.dev) are committed to git.
+
+    The working copy (.ctxrc) is gitignored.'
+  short: Switch .ctxrc profile
+ctx:
+  long: "ctx (Context) maintains persistent context files that help\n  AI coding assistants understand your project's architecture,\
+    \ conventions,\n  decisions, and current tasks.\n\n  Use 'ctx init' to create a .context/ directory in your project,\n\
+    \  then use 'ctx status', 'ctx load', and 'ctx agent' to work with context."
+  short: Context - persistent context for AI coding assistants
+decision:
+  long: "Manage the DECISIONS.md file and its quick-reference index.\n\nThe decisions file maintains an auto-generated index\
+    \ at the top for quick\nscanning. Use the subcommands to manage this index.\n\nSubcommands:\n  reindex    Regenerate the\
+    \ quick-reference index\n\nExamples:\n  ctx decisions reindex"
+  short: Manage DECISIONS.md file
+decision.reindex:
+  long: "Regenerate the quick-reference index at the top of DECISIONS.md.\n\nThe index is a compact table showing date and\
+    \ title for each decision,\nallowing AI agents to quickly scan entries without reading the full file.\n\nThis command\
+    \ is useful after manual edits to DECISIONS.md or when\nmigrating existing files to use the index format.\n\nExamples:\n\
+    \  ctx decisions reindex"
+  short: Regenerate the quick-reference index
+deps:
+  long: "Generate a dependency graph from source code.\n\nOutputs a Mermaid graph of internal package dependencies by default.\n\
+    Use --external to include external module dependencies.\n\nSupported project types: Go, Node.js, Python, Rust.\nAuto-detected\
+    \ from manifest files (go.mod, package.json,\nrequirements.txt/pyproject.toml, Cargo.toml). Use --type to override.\n\n\
+    Output formats:\n  mermaid   Mermaid graph definition (default)\n  table     Package | Imports table\n  json      Machine-readable\
+    \ adjacency list"
+  short: Show package dependency graph
+doctor:
+  long: "Run mechanical health checks across context, hooks, and configuration.\n\nChecks:\n  - Context initialized and required\
+    \ files present\n  - .ctxrc validation (unknown fields, typos)\n  - Drift detected (stale paths, missing files)\n  - Plugin\
+    \ installed and enabled\n  - Event logging status\n  - Webhook configured\n  - Pending reminders\n  - Task completion\
+    \ ratio\n  - Context token size\n  - System resources (memory, swap, disk, load)\n\nUse --json for machine-readable output."
+  short: Structural health check
+drift:
+  long: "Run drift detection to find stale paths,\nbroken references, and constitution violations.\n\nChecks performed:\n\
+    \  - Path references in ARCHITECTURE.md and CONVENTIONS.md exist\n  - Staleness indicators (many completed tasks)\n  -\
+    \ Constitution rule violations (potential secrets)\n  - Required files are present\n\nUse --json for machine-readable\
+    \ output."
+  short: Detect stale or invalid context
+guide:
+  long: 'Use-case-oriented cheat sheet for ctx.
+
+
+    Shows core commands grouped by workflow, key skills, and common recipes.
+
+    Default output fits one screen.
+
+
+    Use --skills to list all available slash-command skills.
+
+    Use --commands to list all CLI commands.'
+  short: Quick-reference cheat sheet for ctx
+hook:
+  long: "Generate configuration and instructions\nfor integrating Context with AI tools.\n\nSupported tools:\n  claude-code\
+    \  - Anthropic's Claude Code CLI (use plugin instead)\n  cursor       - Cursor IDE\n  aider        - Aider AI coding assistant\n\
+    \  copilot      - GitHub Copilot\n  windsurf     - Windsurf IDE\n\nUse --write to generate the configuration file directly:\n\
+    \  ctx hook copilot --write    # Creates .github/copilot-instructions.md\n\nExample:\n  ctx hook cursor"
+  short: Generate AI tool integration configs
+initialize:
+  long: "Initialize a new .context/ directory with template files for\nmaintaining persistent context for AI coding assistants.\n\
+    \nThe following files are created:\n  - CONSTITUTION.md  — Hard invariants that must never be violated\n  - TASKS.md \
+    \        — Current and planned work\n  - DECISIONS.md     — Architectural decisions with rationale\n  - LEARNINGS.md \
+    \    — Lessons learned, gotchas, tips\n  - CONVENTIONS.md   — Project patterns and standards\n  - ARCHITECTURE.md  — System\
+    \ overview\n  - GLOSSARY.md      — Domain terms and abbreviations\n  - AGENT_PLAYBOOK.md — How AI agents should use this\
+    \ system\n\nAdditionally, in the project root:\n  - PROMPT.md              — Session prompt for AI agents\n  - IMPLEMENTATION_PLAN.md\
+    \ — High-level project direction\n  - CLAUDE.md              — Claude Code configuration\n\nUse --minimal to only create\
+    \ essential files\n(TASKS.md, DECISIONS.md, CONSTITUTION.md).\n\nUse --ralph for autonomous loop mode where the agent\
+    \ works without\nasking clarifying questions, uses completion signals, and follows\none-task-per-iteration discipline.\n\
+    \nBy default (without --ralph), the agent is encouraged to ask questions\nwhen requirements are unclear — better for collaborative\
+    \ sessions.\n\nIf the ctx Claude Code plugin is installed, init auto-enables it in\n~/.claude/settings.json so it works\
+    \ across all projects.\nUse --no-plugin-enable to skip this step.\n\nExamples:\n  ctx init           # Collaborative mode\
+    \ (agent asks questions)\n  ctx init --ralph   # Autonomous mode (agent works independently)\n  ctx init --minimal # Only\
+    \ essential files (TASKS, DECISIONS, CONSTITUTION)\n  ctx init --force   # Overwrite existing files without prompting\n\
+    \  ctx init --merge   # Auto-merge ctx content into existing files"
+  short: Initialize a new .context/ directory with template files
+journal:
+  long: "Work with exported session files in .context/journal/.\n\nThe journal system provides tools for analyzing, enriching,\
+    \ and\npublishing your AI session history.\n\nSubcommands:\n  site      Generate a static site from journal entries\n\
+    \  obsidian  Generate an Obsidian vault from journal entries\n\nExamples:\n  ctx journal site                    # Generate\
+    \ site in .context/journal-site/\n  ctx journal site --output ~/public  # Custom output directory\n  ctx journal site\
+    \ --serve            # Generate and serve locally\n  ctx journal obsidian                # Generate Obsidian vault"
+  short: Analyze and synthesize exported sessions
+journal.obsidian:
+  long: "Generate an Obsidian-compatible vault from .context/journal/ entries.\n\nCreates a vault structure with:\n  - Wikilinks\
+    \ for internal navigation\n  - MOC (Map of Content) pages for topics, files, and types\n  - Related sessions footer for\
+    \ graph connectivity\n  - Minimal .obsidian/ configuration\n\nExamples:\n  ctx journal obsidian                      \
+    \    # Generate in .context/journal-obsidian/\n  ctx journal obsidian --output ~/vaults/ctx    # Custom output directory"
+  short: Generate an Obsidian vault from journal entries
+journal.site:
+  long: "Generate a zensical-compatible static site from .context/journal/ entries.\n\nCreates a site structure with:\n  -\
+    \ Index page with all sessions listed by date\n  - Individual pages for each journal entry\n  - Navigation and search\
+    \ support\n\nRequires zensical to be installed for building/serving:\n  pipx install zensical\n\nExamples:\n  ctx journal\
+    \ site                    # Generate in .context/journal-site/\n  ctx journal site --output ~/public  # Custom output\
+    \ directory\n  ctx journal site --build            # Generate and build HTML\n  ctx journal site --serve            #\
+    \ Generate and serve locally"
+  short: Generate a static site from journal entries
+learnings:
+  long: "Manage the LEARNINGS.md file and its quick-reference index.\n\nThe learnings file maintains an auto-generated index\
+    \ at the top for quick\nscanning. Use the subcommands to manage this index.\n\nSubcommands:\n  reindex    Regenerate the\
+    \ quick-reference index\n\nExamples:\n  ctx learnings reindex"
+  short: Manage LEARNINGS.md file
+learnings.reindex:
+  long: "Regenerate the quick-reference index at the top of LEARNINGS.md.\n\nThe index is a compact table showing date and\
+    \ title for each learning,\nallowing AI agents to quickly scan entries without reading the full file.\n\nThis command\
+    \ is useful after manual edits to LEARNINGS.md or when\nmigrating existing files to use the index format.\n\nExamples:\n\
+    \  ctx learnings reindex"
+  short: Regenerate the quick-reference index
+load:
+  long: "Load and display the assembled context\nas it would be provided to an AI.\n\nThe context files are assembled in the\
+    \ recommended read order:\n  1. CONSTITUTION.md\n  2. TASKS.md\n  3. CONVENTIONS.md\n  4. ARCHITECTURE.md\n  5. DECISIONS.md\n\
+    \  6. LEARNINGS.md\n  7. GLOSSARY.md\n  8. AGENT_PLAYBOOK.md\n\nUse --raw to output raw file contents without headers\
+    \ or assembly.\nUse --budget to limit output to a specific token count (default from .ctxrc or 8000)."
+  short: Output assembled context Markdown
+loop:
+  long: "Generate a ready-to-use shell script for running a Ralph loop.\n\nA Ralph loop continuously runs an AI assistant\
+    \ with the same prompt until\na completion signal is detected. This enables iterative development where\nthe AI can build\
+    \ on its previous work.\n\nExamples:\n  ctx loop                           # Generate loop.sh for Claude\n  ctx loop --tool\
+    \ aider              # Generate for Aider\n  ctx loop --prompt TASKS.md         # Use custom prompt file\n  ctx loop --max-iterations\
+    \ 10       # Limit to 10 iterations\n  ctx loop -o my-loop.sh             # Output to custom file"
+  short: Generate a Ralph loop script
+mcp:
+  short: Model Context Protocol server
+memory:
+  long: "Bridge Claude Code's auto memory (MEMORY.md) into .context/.\n\nDiscovers MEMORY.md from ~/.claude/projects/, mirrors\
+    \ it into\n.context/memory/mirror.md (git-tracked), and detects drift.\n\nSubcommands:\n  sync       Copy MEMORY.md to\
+    \ mirror, archive previous version\n  status     Show drift, timestamps, and entry counts\n  diff       Show what changed\
+    \ since last sync\n  import     Classify and promote entries to .context/ files\n  publish    Push curated .context/ content\
+    \ to MEMORY.md\n  unpublish  Remove published block from MEMORY.md"
+  short: Bridge Claude Code auto memory into .context/
+memory.status:
+  long: "Show memory bridge status: source location, last sync time,\nline counts, drift indicator, and archive count.\n\n\
+    Exit codes:\n  0  No drift\n  1  MEMORY.md not found\n  2  Drift detected (MEMORY.md changed since last sync)"
+  short: Show drift, timestamps, and entry counts
+memory.sync:
+  long: "Copy Claude Code's MEMORY.md to .context/memory/mirror.md.\n\nArchives the previous mirror before overwriting. Reports\
+    \ line counts\nand drift since last sync.\n\nExit codes:\n  0  Synced successfully\n  1  MEMORY.md not found (auto memory\
+    \ not active)"
+  short: Copy MEMORY.md to mirror, archive previous version
+notify:
+  long: "Send a fire-and-forget webhook notification.\n\nRequires a configured webhook URL (see \"ctx notify setup\").\nSilent\
+    \ noop when no webhook is configured or the event is filtered.\n\nExamples:\n  ctx notify --event loop \"Loop completed\
+    \ after 5 iterations\"\n  ctx notify -e nudge -s session-abc \"Context checkpoint at prompt #20\"\n  ctx notify -e relay\
+    \ --hook check-version --variant mismatch \"Version mismatch\""
+  short: Send a webhook notification
+notify.setup:
+  long: 'Prompts for a webhook URL and encrypts it using the scratchpad key.
+
+
+    The URL is stored in .context/.notify.enc (encrypted, safe to commit).
+
+    The key lives at ~/.ctx/.ctx.key (user-level, never committed).'
+  short: Configure webhook URL
+notify.test:
+  long: Sends a test notification to the configured webhook and reports the HTTP status.
+  short: Send a test notification
+pad:
+  long: "Manage an encrypted scratchpad stored in .context/.\n\nEntries are short one-liners encrypted with AES-256-GCM. The\
+    \ key is\nstored at ~/.ctx/.ctx.key (global, user-level). The encrypted file\n(.context/scratchpad.enc) is committed to\
+    \ git.\n\nFile blobs can be stored as entries using \"add --file\". Blob entries use\nthe format \"label:::base64data\"\
+    \ and are shown as \"label [BLOB]\" in the\nlist view. Use \"show N\" to decode or \"show N --out file\" to write to disk.\n\
+    \nWhen invoked without a subcommand, lists all entries.\n\nSubcommands:\n  show     Output raw text of an entry by number\n\
+    \  add      Append a new entry\n  rm       Remove an entry by number\n  edit     Replace an entry by number\n  mv    \
+    \   Move an entry to a different position\n  resolve  Show both sides of a merge conflict\n  import   Bulk-import lines\
+    \ from a file\n  export   Export blob entries to a directory as files\n  merge    Merge entries from scratchpad files"
+  short: Encrypted scratchpad for sensitive one-liners
+pad.add:
+  short: Append a new entry to the scratchpad
+pad.edit:
+  long: "Replace, append to, or prepend to an entry by number.\n\nBy default, replaces the entire entry with the positional\
+    \ TEXT argument.\nUse --append to add text to the end of an existing entry, or --prepend\nto add text to the beginning.\n\
+    \nFor blob entries, use --file to replace file content and/or --label to\nchange the label.\n\nExamples:\n  ctx pad edit\
+    \ 2 \"new text\"           # replace entry 2\n  ctx pad edit 2 --append \"suffix\"    # append to entry 2\n  ctx pad edit\
+    \ 2 --prepend \"prefix\"   # prepend to entry 2\n  ctx pad edit 2 --file ./v2.md       # replace blob file content\n \
+    \ ctx pad edit 2 --label \"new name\"   # rename blob label\n  ctx pad edit 2 --file ./v2.md --label \"new\"  # replace\
+    \ both"
+  short: Replace, append to, or prepend to an entry by number
+pad.export:
+  long: "Export all blob entries from the scratchpad to a directory as files.\nEach blob's label becomes the filename. Non-blob\
+    \ entries are skipped.\n\nWhen a file already exists, a unix timestamp is prepended to avoid\ncollisions. Use --force\
+    \ to overwrite instead.\n\nExamples:\n  ctx pad export\n  ctx pad export ./ideas\n  ctx pad export --dry-run\n  ctx pad\
+    \ export --force ./backup"
+  short: Export blob entries to a directory as files
+pad.imp:
+  long: "Import lines from a file into the scratchpad. Each non-empty line\nbecomes a separate entry. Use \"-\" to read from\
+    \ stdin.\n\nWith --blobs, import all first-level files from a directory as blob entries.\nEach file becomes a blob with\
+    \ the filename as its label. Subdirectories and\nnon-regular files are skipped.\n\nExamples:\n  ctx pad import notes.txt\n\
+    \  grep pattern file | ctx pad import -\n  ctx pad import --blobs ./ideas/"
+  short: Bulk-import lines from a file into the scratchpad
+pad.merge:
+  long: "Merge entries from one or more scratchpad files into the current pad.\n\nEach input file is auto-detected as encrypted\
+    \ or plaintext: decryption is\nattempted first, and on failure the file is parsed as plain text. Entries\nare deduplicated\
+    \ by exact content — position does not matter.\n\nUse --key to provide a key file for encrypted pads from other projects.\n\
+    \nExamples:\n  ctx pad merge worktree/.context/scratchpad.enc\n  ctx pad merge notes.md backup.enc\n  ctx pad merge --key\
+    \ /other/.ctx.key foreign.enc\n  ctx pad merge --dry-run pad-a.enc pad-b.md"
+  short: Merge entries from scratchpad files into the current pad
+pad.mv:
+  short: Move an entry from position N to position M
+pad.resolve:
+  long: 'Decrypt and display both sides of a merge conflict for the scratchpad.
+
+
+    Git stores conflict versions as .context/scratchpad.enc.ours and
+
+    .context/scratchpad.enc.theirs during a merge conflict. This command
+
+    decrypts both and displays them for manual resolution.'
+  short: Show both sides of a merge conflict
+pad.rm:
+  short: Remove an entry by number
+pad.show:
+  long: "Output the raw text of entry N with no numbering prefix.\n\nDesigned for unix pipe composability. The output contains\
+    \ just the entry\ntext followed by a single trailing newline.\n\nFor blob entries, the decoded file content is printed\
+    \ (or written to disk\nwith --out).\n\nExamples:\n  ctx pad show 3\n  ctx pad show 3 --out ./recovered.md\n  ctx pad edit\
+    \ 1 --append \"$(ctx pad show 3)\""
+  short: Output raw text of an entry by number
+pause:
+  long: 'Pause all context nudge and reminder hooks for the current session.
+
+    Security hooks (dangerous command blocking) and housekeeping hooks still fire.
+
+
+    The session ID is read from stdin JSON (same as hooks) or --session-id flag.
+
+    Resume with: ctx resume'
+  short: Pause context hooks for this session
+permissions:
+  long: "Manage Claude Code permission snapshots.\n\nSave a curated settings.local.json as a golden image, then restore\n\
+    at session start to automatically drop session-accumulated permissions.\n\nSubcommands:\n  snapshot  Save settings.local.json\
+    \ as golden image\n  restore   Reset settings.local.json from golden image"
+  short: Manage permission snapshots
+permissions.restore:
+  long: 'Replace .claude/settings.local.json with the golden image.
+
+
+    Prints a diff of dropped (session-accumulated) and restored permissions.
+
+    No-op if the files already match.'
+  short: Reset settings.local.json from golden image
+permissions.snapshot:
+  long: 'Save .claude/settings.local.json as the golden image.
+
+
+    The golden file (.claude/settings.golden.json) is a byte-for-byte copy
+
+    of the current settings. It is meant to be committed to version control
+
+    and shared with the team.
+
+
+    Overwrites any existing golden file.'
+  short: Save settings.local.json as golden image
+prompt:
+  long: "Manage prompt templates stored in .context/prompts/.\n\nPrompt templates are plain markdown files — no frontmatter,\
+    \ no build step.\nUse them as lightweight, reusable instructions for common tasks like\ncode reviews, refactoring, or\
+    \ explaining code.\n\nWhen invoked without a subcommand, lists all available prompts.\n\nSubcommands:\n  list     List\
+    \ available prompt templates\n  show     Print a prompt template to stdout\n  add      Create a new prompt from embedded\
+    \ template or stdin\n  rm       Remove a prompt template"
+  short: Manage reusable prompt templates
+prompt.add:
+  long: "Create a new prompt template in .context/prompts/.\n\nBy default, creates from an embedded starter template if one\
+    \ exists\nwith the given name. Use --stdin to read content from standard input.\n\nExamples:\n  ctx prompt add code-review\n\
+    \  echo \"# My Prompt\" | ctx prompt add my-prompt --stdin"
+  short: Create a new prompt from embedded template or stdin
+prompt.list:
+  short: List available prompt templates
+prompt.rm:
+  short: Remove a prompt template
+prompt.show:
+  short: Print a prompt template to stdout
+recall:
+  long: "Browse and search AI session history from Claude Code and other tools.\n\nThe recall system parses JSONL session\
+    \ files and provides commands to\nlist sessions, view details, and search across your conversation history.\n\nSubcommands:\n\
+    \  list    List all parsed sessions\n  show    Show details of a specific session\n  export  Export sessions to editable\
+    \ journal files\n  lock    Protect journal entries from export regeneration\n  unlock  Remove lock protection from journal\
+    \ entries\n  sync    Sync lock state from journal frontmatter to state file\n\nExamples:\n  ctx recall list\n  ctx recall\
+    \ list --limit 5\n  ctx recall show abc123\n  ctx recall show --latest\n  ctx recall export --all\n  ctx recall lock 2026-01-21-session-abc12345.md\n\
+    \  ctx recall unlock --all\n  ctx recall sync"
+  short: Browse and search AI session history
+recall.export:
+  long: "Export AI sessions to .context/journal/ as editable Markdown files.\n\nExported files include session metadata, tool\
+    \ usage summary, and the full\nconversation. You can edit these files to add notes, highlight key moments,\nor clean up\
+    \ the transcript.\n\nBy default, only sessions from the current project are exported. Use\n--all-projects to include sessions\
+    \ from all projects.\n\nSafe by default: --all only exports new sessions. Existing files are\nskipped. Use --regenerate\
+    \ to re-export existing files (preserves YAML\nfrontmatter by default). Use --keep-frontmatter=false to discard\nenriched\
+    \ frontmatter during regeneration.\n\nLocked entries (via \"ctx recall lock\") are always skipped, regardless\nof flags.\n\
+    \nExamples:\n  ctx recall export abc123                              # Export one session\n  ctx recall export --all \
+    \                              # Export only new\n  ctx recall export --all --dry-run                     # Preview changes\n\
+    \  ctx recall export --all --regenerate                  # Re-export (prompts)\n  ctx recall export --all --regenerate\
+    \ -y               # Re-export, no prompt\n  ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard\
+    \ frontmatter"
+  short: Export sessions to editable journal files
+recall.list:
+  long: "List AI sessions from the current project.\n\nSessions are sorted by date (newest first) and display:\n  - Session\
+    \ slug (human-friendly name)\n  - Project name\n  - Start time and duration\n  - Turn count (user messages)\n  - Token\
+    \ usage\n\nBy default, only sessions from the current project are shown.\nUse --all-projects to see sessions from all\
+    \ projects.\n\nDate filtering: --since and --until accept YYYY-MM-DD format.\nBoth are inclusive.\n\nExamples:\n  ctx\
+    \ recall list\n  ctx recall list --limit 5\n  ctx recall list --all-projects\n  ctx recall list --project ctx\n  ctx recall\
+    \ list --tool claude-code\n  ctx recall list --since 2026-03-01\n  ctx recall list --since 2026-03-01 --until 2026-03-05"
+  short: List all parsed sessions
+recall.lock:
+  long: "Lock journal entries to prevent export --regenerate from overwriting them.\n\nLocked entries are skipped during export\
+    \ regardless of --regenerate or --force.\nUse \"ctx recall unlock\" to remove the protection.\n\nThe pattern matches against\
+    \ filenames by slug, date, or short ID (same\nmatching as export). Locking a multi-part entry locks all parts.\n\nThe\
+    \ lock is recorded in .context/journal/.state.json (source of truth) and\na \"locked: true\" line is added to the file's\
+    \ YAML frontmatter for visibility.\n\nExamples:\n  ctx recall lock 2026-01-21-session-abc12345.md\n  ctx recall lock abc12345\n\
+    \  ctx recall lock --all"
+  short: Protect journal entries from export regeneration
+recall.show:
+  long: "Show detailed information about a specific session.\n\nThe session ID can be:\n  - Full session UUID\n  - Partial\
+    \ match (first few characters)\n  - Session slug name\n\nUse --latest to show the most recent session.\nBy default, only\
+    \ searches sessions from the current project.\n\nExamples:\n  ctx recall show abc123\n  ctx recall show gleaming-wobbling-sutherland\n\
+    \  ctx recall show --latest\n  ctx recall show --latest --full\n  ctx recall show abc123 --all-projects"
+  short: Show details of a specific session
+recall.sync:
+  long: "Scan journal markdowns and sync their lock state to .state.json.\n\nThis is the sister command to \"ctx recall lock\"\
+    . Instead of marking files\nlocked in state and updating frontmatter, it reads \"locked: true\" from\neach file's YAML\
+    \ frontmatter and updates .state.json to match.\n\nTypical workflow:\n  1. Enrich journal entries (add \"locked: true\"\
+    \ to frontmatter)\n  2. Run \"ctx recall sync\" to propagate lock state to .state.json\n\nFiles with \"locked: true\"\
+    \ in frontmatter will be marked locked in state.\nFiles without a \"locked:\" line (or with \"locked: false\") will have\
+    \ their\nlock cleared if one exists in state.\n\nExamples:\n  ctx recall sync"
+  short: Sync lock state from journal frontmatter to state file
+recall.unlock:
+  long: "Unlock journal entries to allow export --regenerate to overwrite them.\n\nThe pattern matches against filenames by\
+    \ slug, date, or short ID (same\nmatching as export). Unlocking a multi-part entry unlocks all parts.\n\nExamples:\n \
+    \ ctx recall unlock 2026-01-21-session-abc12345.md\n  ctx recall unlock abc12345\n  ctx recall unlock --all"
+  short: Remove lock protection from journal entries
+reindex:
+  long: "Regenerate the quick-reference index at the top of both DECISIONS.md\nand LEARNINGS.md in a single invocation.\n\n\
+    This is a convenience wrapper around:\n  ctx decisions reindex\n  ctx learnings reindex\n\nThe index is a compact table\
+    \ showing date and title for each entry,\nallowing AI agents to quickly scan entries without reading the full file.\n\n\
+    Run this after manual edits to either file or when migrating existing\nfiles to use the index format.\n\nExamples:\n \
+    \ ctx reindex"
+  short: Regenerate indices for DECISIONS.md and LEARNINGS.md
+remind:
+  long: "Manage session-scoped reminders stored in .context/reminders.json.\n\nReminders surface verbatim at session start\
+    \ and repeat every session until\ndismissed. Use --after to gate a reminder until a specific date.\n\nWhen invoked with\
+    \ a text argument, adds a reminder (equivalent to \"remind add\").\nWhen invoked with no arguments, lists all reminders.\n\
+    \nSubcommands:\n  add      Add a reminder (default action)\n  list     Show all pending reminders\n  dismiss  Dismiss\
+    \ one or all reminders"
+  short: Session-scoped reminders
+remind.add:
+  short: Add a reminder
+remind.dismiss:
+  short: Dismiss one or all reminders
+remind.list:
+  short: Show all pending reminders
+resume:
+  long: 'Resume context hooks after a pause. Silent no-op if not paused.
+
+
+    The session ID is read from stdin JSON (same as hooks) or --session-id flag.'
+  short: Resume context hooks for this session
+serve:
+  long: "Serve a static site using zensical.\n\nIf no directory is specified, serves the journal site (.context/journal-site).\n\
+    \nRequires zensical to be installed:\n  pipx install zensical\n\nExamples:\n  ctx serve                           # Serve\
+    \ journal site\n  ctx serve .context/journal-site     # Serve specific directory\n  ctx serve ./docs                 \
+    \   # Serve docs folder"
+  short: Serve a static site locally via zensical
+site:
+  long: "Manage the ctx.ist static site.\n\nSubcommands:\n  feed    Generate an Atom 1.0 feed from blog posts\n\nExamples:\n\
+    \  ctx site feed                              # Generate site/feed.xml\n  ctx site feed --out /tmp/feed.xml          #\
+    \ Custom output path\n  ctx site feed --base-url https://example.com"
+  short: Site management commands
+site.feed:
+  long: "Generate an Atom 1.0 feed from finalized blog posts in docs/blog/.\n\nParses YAML frontmatter for title, date, author,\
+    \ and topics. Extracts\na summary from the first paragraph after the heading. Only posts with\nreviewed_and_finalized:\
+    \ true are included.\n\nExamples:\n  ctx site feed\n  ctx site feed --out /tmp/feed.xml\n  ctx site feed --base-url https://example.com"
+  short: Generate an Atom 1.0 feed from blog posts
+status:
+  long: "Display a summary of the current .context/ directory including:\n  - Number of context files\n  - Estimated token\
+    \ count\n  - Status of each file\n  - Recent activity\n\nUse --verbose to include content previews for each file."
+  short: Show context summary with token estimate
+sync:
+  long: "Scan the codebase and reconcile context files with current state.\n\nActions performed:\n  - Scan for new directories\
+    \ that should be in ARCHITECTURE.md\n  - Check for package.json/go.mod changes\n  - Identify stale references\n  - Suggest\
+    \ updates to context files\n\nUse --dry-run to see what would change without modifying files."
+  short: Reconcile context with codebase
+system:
+  short: System diagnostics and hook commands
+system.backup:
+  long: "Create timestamped tar.gz archives of project context and/or global\nClaude Code data. Optionally copies archives\
+    \ to an SMB share.\n\nScopes:\n  project  .context/, .claude/, ideas/, ~/.bashrc\n  global   ~/.claude/ (excludes todos/)\n\
+    \  all      Both project and global (default)\n\nEnvironment:\n  CTX_BACKUP_SMB_URL    - SMB share URL (e.g. smb://host/share)\n\
+    \  CTX_BACKUP_SMB_SUBDIR - Subdirectory on share (default: ctx-sessions)"
+  short: Backup context and Claude data
+system.blockdangerouscommands:
+  long: 'Regex safety net for commands that the deny-list cannot express.
+
+    Catches mid-command sudo, mid-command git push, and binary installs
+
+    to bin directories.
+
+
+    Hook event: PreToolUse (Bash)
+
+    Output: {"decision":"block","reason":"..."} or silent
+
+    Silent when: command doesn''t match any dangerous pattern'
+  short: Block dangerous command patterns (regex safety net)
+system.blocknonpathctx:
+  long: 'Blocks ./ctx, go run ./cmd/ctx, and absolute-path ctx invocations.
+
+    Enforces the CONSTITUTION.md rule: always use ctx from PATH.
+
+    Outputs a JSON block decision that prevents the tool call.
+
+
+    Hook event: PreToolUse (Bash)
+
+    Output: {"decision":"block","reason":"..."} or silent
+
+    Silent when: command doesn''t invoke ctx via a non-PATH route'
+  short: Block non-PATH ctx invocations
+system.bootstrap:
+  short: Print context location for AI agents
+system.checkbackupage:
+  long: "Checks if the .context backup is stale (>2 days old) or the SMB share\nis unmounted. Outputs a VERBATIM relay warning\
+    \ when issues are found.\nThrottled to once per day.\n\nEnvironment:\n  CTX_BACKUP_SMB_URL - SMB share URL (e.g. smb://myhost/myshare).\n\
+    \                       If unset, the SMB mount check is skipped.\n\nHook event: UserPromptSubmit\nOutput: VERBATIM relay\
+    \ with warning box, silent otherwise\nSilent when: backup is fresh, or already checked today"
+  short: Backup staleness check hook
+system.checkceremonies:
+  long: 'Scans the last 3 journal entries for /ctx-remember and /ctx-wrap-up
+
+    usage. If either is missing, emits a VERBATIM relay nudge encouraging
+
+    adoption. Throttled to once per day.
+
+
+    Hook event: UserPromptSubmit
+
+    Output: VERBATIM relay (when ceremonies missing), silent otherwise
+
+    Silent when: both ceremonies found in recent sessions'
+  short: Session ceremony nudge hook
+system.checkcontextsize:
+  long: "Counts prompts per session and emits VERBATIM relay reminders at\nadaptive intervals, prompting the user to consider\
+    \ wrapping up.\n\n  Prompts  1-15: silent\n  Prompts 16-30: every 5th prompt\n  Prompts   30+: every 3rd prompt\n\nAlso\
+    \ monitors actual context window token usage from session JSONL data.\nFires an independent warning when context window\
+    \ exceeds 80%, regardless\nof prompt count.\n\nHook event: UserPromptSubmit\nOutput: VERBATIM relay (when triggered),\
+    \ silent otherwise\nSilent when: early in session or between checkpoints"
+  short: Context size checkpoint hook
+system.checkjournal:
+  long: 'Detects unexported Claude Code sessions and unenriched journal entries,
+
+    then prints actionable commands. Throttled to once per day.
+
+
+    Hook event: UserPromptSubmit
+
+    Output: VERBATIM relay with export/enrich commands, silent otherwise
+
+    Silent when: no unexported sessions and no unenriched entries'
+  short: Journal export/enrich reminder hook
+system.checkknowledge:
+  long: "Counts entries in DECISIONS.md and LEARNINGS.md and lines in\nCONVENTIONS.md, and outputs a VERBATIM relay nudge\
+    \ when any file exceeds\nthe configured threshold. Throttled to once per day.\n\n  Learnings threshold:   entry_count_learnings\
+    \   (default 30)\n  Decisions threshold:   entry_count_decisions    (default 20)\n  Conventions threshold: convention_line_count\
+    \    (default 200)\n\nHook event: UserPromptSubmit\nOutput: VERBATIM relay (when thresholds exceeded), silent otherwise\n\
+    Silent when: below thresholds, already nudged today, or uninitialized"
+  short: Knowledge file growth nudge
+system.checkmapstaleness:
+  long: 'Checks whether map-tracking.json is stale (>30 days) and there are
+
+    commits touching internal/ since the last map refresh. Outputs a VERBATIM
+
+    relay nudge suggesting /ctx-map when both conditions are met.
+
+
+    Hook event: UserPromptSubmit
+
+    Output: VERBATIM relay (when stale and modules changed), silent otherwise
+
+    Silent when: map-tracking.json missing or fresh, opted out, no module
+
+    commits, already nudged today, or uninitialized'
+  short: Architecture map staleness nudge
+system.checkmemorydrift:
+  short: Memory drift nudge
+system.checkpersistence:
+  long: "Tracks prompts since the last .context/ file modification and nudges\nthe agent to persist learnings, decisions,\
+    \ or task updates.\n\n  Prompts  1-10: silent (too early)\n  Prompts 11-25: nudge once at prompt 20 since last modification\n\
+    \  Prompts   25+: every 15th prompt since last modification\n\nHook event: UserPromptSubmit\nOutput: agent directive (when\
+    \ triggered), silent otherwise\nSilent when: context files were recently modified"
+  short: Persistence nudge hook
+system.checkreminders:
+  short: Surface pending reminders at session start
+system.checkresources:
+  long: "Collects system resource metrics (memory, swap, disk, load) and outputs\na VERBATIM relay warning when any resource\
+    \ hits DANGER severity.\nSilent at WARNING level and below.\n\n  Memory DANGER: >= 90% used    Swap DANGER: >= 75% used\n\
+    \  Disk DANGER:   >= 95% full    Load DANGER: >= 1.5x CPUs\n\nFor full resource stats at any severity, use: ctx system\
+    \ resources\n\nHook event: UserPromptSubmit\nOutput: VERBATIM relay (DANGER only), silent otherwise\nSilent when: all\
+    \ resources below DANGER thresholds"
+  short: Resource pressure hook
+system.checktaskcompletion:
+  long: 'Counts Edit/Write tool calls and periodically nudges the agent
+
+    to check whether any tasks should be marked done in TASKS.md.
+
+
+    Hook event: PostToolUse (Edit, Write)
+
+    Output: agent directive every N edits, silent otherwise
+
+    Silent when: counter below threshold, interval is 0, or session is paused'
+  short: Task completion nudge after edits
+system.checkversion:
+  long: 'Compares the ctx binary version against the embedded plugin version.
+
+    Warns when the binary is older than the plugin expects, which happens
+
+    when the marketplace plugin updates but the binary hasn''t been
+
+    reinstalled. Throttled to once per day. Skipped for dev builds.
+
+
+    Hook event: UserPromptSubmit
+
+    Output: VERBATIM relay with reinstall command, silent otherwise
+
+    Silent when: versions match, dev build, or already checked today'
+  short: Binary/plugin version drift detection hook
+system.contextloadgate:
+  long: 'Auto-injects project context into the agent''s context window.
+
+    Fires on the first tool use per session via PreToolUse hook. Subsequent
+
+    tool calls in the same session are silent (tracked by session marker file).
+
+
+    Reads context files directly and injects content — no delegation to
+
+    bootstrap command, no agent compliance required.
+
+    See specs/context-load-gate-v2.md for design rationale.
+
+
+    Hook event: PreToolUse (.*)
+
+    Output: JSON HookResponse (additionalContext) on first tool use, silent otherwise
+
+    Silent when: marker exists for session_id, or context not initialized'
+  short: Auto-inject project context on first tool use
+system.events:
+  long: "Query the local event log (requires event_log: true in .ctxrc).\n\nReads events from .context/state/events.jsonl\
+    \ and outputs them in\nhuman-readable or raw JSONL format. All filter flags use intersection\n(AND) logic.\n\nFlags:\n\
+    \  --hook       Filter by hook name\n  --session    Filter by session ID\n  --event      Filter by event type (relay,\
+    \ nudge)\n  --last       Show last N events (default 50)\n  --json       Output raw JSONL (for piping to jq)\n  --all\
+    \        Include rotated log file"
+  short: Query the local hook event log
+system.heartbeat:
+  long: 'Sends a heartbeat webhook notification on every prompt, providing
+
+    continuous session-alive visibility with metadata (prompt count, session ID,
+
+    context modification status).
+
+
+    Unlike other hooks, the heartbeat never produces stdout — the agent never
+
+    sees it. It only fires a webhook and writes to the event log.
+
+
+    Hook event: UserPromptSubmit
+
+    Output: none (webhook + event log only)
+
+    Silent when: not initialized, paused, or no webhook configured'
+  short: Session heartbeat webhook
+system.markjournal:
+  short: Update journal processing state
+system.markwrappedup:
+  long: 'Write a marker file that suppresses context checkpoint nudges
+
+    for 2 hours. Called by /ctx-wrap-up after persisting context.
+
+
+    The check-context-size hook checks this marker before emitting
+
+    a checkpoint. If the marker exists and is less than 2 hours old,
+
+    the nudge is suppressed.
+
+
+    This is a plumbing command — use /ctx-wrap-up instead.'
+  short: Suppress checkpoint nudges after wrap-up
+system.message:
+  long: "Manage hook message templates.\n\nHook messages control what text hooks emit. The hook logic (when to\nfire, counting,\
+    \ state tracking) is universal. The messages are opinions\nthat can be customized per-project.\n\nSubcommands:\n  list\
+    \     Show all hook messages with category and override status\n  show     Print the effective message template for a\
+    \ hook/variant\n  edit     Copy the embedded default to .context/ for editing\n  reset    Delete a user override and revert\
+    \ to embedded default"
+  short: Manage hook message templates
+system.pause:
+  long: 'Creates a session-scoped pause marker. While paused, all nudge
+
+    and reminder hooks no-op. Security and housekeeping hooks still fire.
+
+
+    The session ID is read from stdin JSON (same as hooks) or --session-id flag.'
+  short: Pause context hooks for this session
+system.postcommit:
+  long: 'Detects git commit commands and nudges the agent to offer context
+
+    capture (decision or learning) and suggest running lints/tests.
+
+    Skips amend commits.
+
+
+    Hook event: PostToolUse (Bash)
+
+    Output: agent directive after git commits, silent otherwise
+
+    Silent when: command is not a git commit, or is an amend'
+  short: Post-commit context capture nudge
+system.prune:
+  long: "Remove per-session state files from .context/state/ that are\nolder than the specified age. Session state files are\
+    \ identified by\nUUID suffixes (e.g. context-check-<session-id>, heartbeat-<session-id>).\n\nGlobal files without session\
+    \ IDs (events.jsonl, memory-import.json, etc.)\nare always preserved.\n\nExamples:\n  ctx system prune              #\
+    \ Prune files older than 7 days\n  ctx system prune --days 3     # Prune files older than 3 days\n  ctx system prune --dry-run\
+    \    # Show what would be pruned"
+  short: Clean stale per-session state files
+system.qareminder:
+  long: 'Emits a hard reminder to lint and test the entire project before
+
+    committing. Fires on Bash tool use when the command contains "git",
+
+    placing reinforcement at the commit sequence rather than during edits.
+
+
+    Hook event: PreToolUse (Bash)
+
+    Output: agent directive (when command contains "git" and .context/ is initialized)
+
+    Silent when: .context/ not initialized or command does not contain "git"'
+  short: QA reminder hook
+system.resources:
+  short: Show system resource usage (memory, swap, disk, load)
+system.resume:
+  long: 'Removes the session-scoped pause marker. Hooks resume normal
+
+    behavior. Silent no-op if not paused.
+
+
+    The session ID is read from stdin JSON (same as hooks) or --session-id flag.'
+  short: Resume context hooks for this session
+system.specsnudge:
+  long: 'Emits a directive reminding the agent to save plans to specs/
+
+    for release tracking. Fires on EnterPlanMode tool use.
+
+
+    Hook event: PreToolUse (EnterPlanMode)
+
+    Output: agent directive (always, when .context/ is initialized)
+
+    Silent when: .context/ not initialized'
+  short: Plan-to-specs directory nudge
+system.stats:
+  long: "Display per-session token usage statistics from stats JSONL files.\n\nBy default, shows the last 20 entries across\
+    \ all sessions. Use --follow\nto stream new entries as they arrive (like tail -f).\n\nFlags:\n  --follow, -f   Stream\
+    \ new entries as they arrive\n  --session, -s  Filter by session ID (prefix match)\n  --last, -n     Show last N entries\
+    \ (default 20)\n  --json, -j     Output raw JSONL"
+  short: Show session token usage stats
+task:
+  long: "Manage task archival and snapshots.\n\nTasks can be archived to move completed items out of TASKS.md while\npreserving\
+    \ them for historical reference. Snapshots create point-in-time\ncopies without modifying the original.\n\nSubcommands:\n\
+    \  archive   Move completed tasks to timestamped archive file\n  snapshot  Create point-in-time snapshot of TASKS.md"
+  short: Manage task archival and snapshots
+task.archive:
+  long: "Move completed tasks from TASKS.md to an archive file.\n\nArchive files are stored in .context/archive/ with timestamped\
+    \ names:\n  .context/archive/tasks-YYYY-MM-DD.md\n\nThe archive preserves Phase structure for traceability. Completed\
+    \ tasks\n(marked with [x]) are moved; pending tasks ([ ]) remain in TASKS.md.\n\nUse --dry-run to preview changes without\
+    \ modifying files."
+  short: Move completed tasks to timestamped archive file
+task.snapshot:
+  long: "Create a point-in-time snapshot of TASKS.md without modifying the original.\n\nSnapshots are stored in .context/archive/\
+    \ with timestamped names:\n  .context/archive/tasks-snapshot-YYYY-MM-DD-HHMM.md\n\nUnlike archive, snapshot copies the\
+    \ entire file as-is."
+  short: Create point-in-time snapshot of TASKS.md
+watch:
+  long: "Watch stdin or a log file for <context-update>\ncommands and apply them.\n\nThis command parses AI output looking\
+    \ for structured update commands:\n\n  Simple formats (tasks, conventions, complete):\n    <context-update type=\"task\"\
+    >Implement user auth</context-update>\n    <context-update type=\"convention\">Use kebab-case for files</context-update>\n\
+    \    <context-update type=\"complete\">user auth</context-update>\n\n  Structured formats (learnings, decisions) - all\
+    \ attributes required:\n    <context-update type=\"learning\" context=\"Debugging hooks\"\n      lesson=\"Hooks receive\
+    \ JSON via stdin\"\n      application=\"Use jq to parse\">Title here</context-update>\n\n    <context-update type=\"decision\"\
+    \ context=\"Need caching\"\n      rationale=\"Redis is fast and well-supported\"\n      consequences=\"Team needs Redis\
+    \ training\">Use Redis</context-update>\n\nLearnings require: context, lesson, application attributes.\nDecisions require:\
+    \ context, rationale, consequences attributes.\nUpdates missing required attributes will be rejected with an error.\n\n\
+    Use --log to watch a specific file instead of stdin.\nUse --dry-run to see what would be updated without making changes.\n\
+    \nPress Ctrl+C to stop watching."
+  short: Watch for context-update commands in AI output
+why:
+  long: "Surface ctx's philosophy documents in the terminal.\n\nDocuments:\n  manifesto    The ctx Manifesto — creation, not\
+    \ code\n  about        About ctx — what it is and why it exists\n  invariants   Design invariants — properties that must\
+    \ hold\n\nUsage:\n  ctx why              Interactive numbered menu\n  ctx why manifesto    Show the manifesto directly\n\
+    \  ctx why about        Show the about page\n  ctx why invariants   Show the design invariants"
+  short: Read the philosophy behind ctx

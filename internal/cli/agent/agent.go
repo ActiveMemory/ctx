@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	agentroot "github.com/ActiveMemory/ctx/internal/cli/agent/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -39,37 +40,12 @@ func Cmd() *cobra.Command {
 		session  string
 	)
 
+	short, long := assets.CommandDesc("agent")
+
 	cmd := &cobra.Command{
 		Use:   "agent",
-		Short: "Print AI-ready context packet",
-		Long: `Print a concise context packet optimized for AI consumption.
-
-The output is designed to be copy-pasted into an AI chat
-or piped to a system prompt. It includes:
-  - Constitution rules (NEVER VIOLATE)
-  - Current tasks (budget-capped)
-  - Key conventions (budget-capped)
-  - Recent decisions (scored by relevance, full body)
-  - Key learnings (scored by relevance, full body)
-
-The --budget flag controls content selection. Entries are scored by
-recency and relevance to active tasks, then included in priority order
-until the budget is consumed. Entries that don't fit get title-only
-summaries in an "Also Noted" section.
-
-Use --budget to set token budget (default from .ctxrc or 8000).
-Use --format to choose between Markdown (md) or JSON output.
-
-Cooldown (for hooks and automation):
-  --session identifies the caller (e.g., $PPID). Without it, cooldown
-  is disabled and every call produces output. When --session is set,
-  repeated calls within the --cooldown window (default 10m) are suppressed.
-
-Examples:
-  ctx agent                              # Default budget, Markdown output
-  ctx agent --budget 4000                # Smaller context packet
-  ctx agent --format json                # JSON output for programmatic use
-  ctx agent --session $PPID              # Cooldown scoped to calling process`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !cmd.Flags().Changed("budget") {
 				budget = rc.TokenBudget()

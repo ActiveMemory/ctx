@@ -8,6 +8,8 @@ package unlock
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx recall unlock" subcommand.
@@ -20,18 +22,12 @@ import (
 func Cmd() *cobra.Command {
 	var all bool
 
+	short, long := assets.CommandDesc("recall.unlock")
+
 	cmd := &cobra.Command{
 		Use:   "unlock <pattern>",
-		Short: "Remove lock protection from journal entries",
-		Long: `Unlock journal entries to allow export --regenerate to overwrite them.
-
-The pattern matches against filenames by slug, date, or short ID (same
-matching as export). Unlocking a multi-part entry unlocks all parts.
-
-Examples:
-  ctx recall unlock 2026-01-21-session-abc12345.md
-  ctx recall unlock abc12345
-  ctx recall unlock --all`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runUnlock(cmd, args, all)
 		},

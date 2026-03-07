@@ -9,6 +9,7 @@ package permissions
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions/cmd/restore"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions/cmd/snapshot"
 )
@@ -23,17 +24,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured permissions command with subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("permissions")
+
 	cmd := &cobra.Command{
 		Use:   "permissions",
-		Short: "Manage permission snapshots",
-		Long: `Manage Claude Code permission snapshots.
-
-Save a curated settings.local.json as a golden image, then restore
-at session start to automatically drop session-accumulated permissions.
-
-Subcommands:
-  snapshot  Save settings.local.json as golden image
-  restore   Reset settings.local.json from golden image`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(snapshot.Cmd())

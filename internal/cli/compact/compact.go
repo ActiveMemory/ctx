@@ -9,6 +9,7 @@ package compact
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	compactroot "github.com/ActiveMemory/ctx/internal/cli/compact/cmd/root"
 )
 
@@ -26,24 +27,12 @@ import (
 func Cmd() *cobra.Command {
 	var archive bool
 
+	short, long := assets.CommandDesc("compact")
+
 	cmd := &cobra.Command{
 		Use:   "compact",
-		Short: "Archive completed tasks and clean up context",
-		Long: `Consolidate and clean up context files.
-
-Actions performed:
-  - Move completed tasks to "Completed (Recent)" section
-  - Archive old completed tasks (with --archive)
-  - Archive old decisions and learnings (with --archive)
-  - Remove empty sections from context files
-  - Report on potential duplicates
-
-Use --archive to create .context/archive/ for old content.
-
-Examples:
-  ctx compact                  # Clean up context, move completed tasks
-  ctx compact --archive        # Also archive old tasks, decisions, and learnings
-`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return compactroot.Run(cmd, archive)
 		},

@@ -9,6 +9,7 @@ package site
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/site/cmd/feed"
 )
 
@@ -20,18 +21,12 @@ import (
 // Returns:
 //   - *cobra.Command: Parent command with site management subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("site")
+
 	cmd := &cobra.Command{
 		Use:   "site",
-		Short: "Site management commands",
-		Long: `Manage the ctx.ist static site.
-
-Subcommands:
-  feed    Generate an Atom 1.0 feed from blog posts
-
-Examples:
-  ctx site feed                              # Generate site/feed.xml
-  ctx site feed --out /tmp/feed.xml          # Custom output path
-  ctx site feed --base-url https://example.com`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(feed.Cmd())

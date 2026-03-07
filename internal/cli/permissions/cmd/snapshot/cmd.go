@@ -8,6 +8,8 @@ package snapshot
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx permissions snapshot" subcommand.
@@ -15,16 +17,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured snapshot subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("permissions.snapshot")
+
 	return &cobra.Command{
 		Use:   "snapshot",
-		Short: "Save settings.local.json as golden image",
-		Long: `Save .claude/settings.local.json as the golden image.
-
-The golden file (.claude/settings.golden.json) is a byte-for-byte copy
-of the current settings. It is meant to be committed to version control
-and shared with the team.
-
-Overwrites any existing golden file.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return RunSnapshot(cmd)
 		},

@@ -9,6 +9,7 @@ package recall
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/export"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/list"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/lock"
@@ -25,31 +26,12 @@ import (
 // Returns:
 //   - *cobra.Command: The recall command with list, show, and serve subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("recall")
+
 	cmd := &cobra.Command{
 		Use:   "recall",
-		Short: "Browse and search AI session history",
-		Long: `Browse and search AI session history from Claude Code and other tools.
-
-The recall system parses JSONL session files and provides commands to
-list sessions, view details, and search across your conversation history.
-
-Subcommands:
-  list    List all parsed sessions
-  show    Show details of a specific session
-  export  Export sessions to editable journal files
-  lock    Protect journal entries from export regeneration
-  unlock  Remove lock protection from journal entries
-  sync    Sync lock state from journal frontmatter to state file
-
-Examples:
-  ctx recall list
-  ctx recall list --limit 5
-  ctx recall show abc123
-  ctx recall show --latest
-  ctx recall export --all
-  ctx recall lock 2026-01-21-session-abc12345.md
-  ctx recall unlock --all
-  ctx recall sync`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(list.Cmd())

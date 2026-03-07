@@ -8,6 +8,8 @@ package list
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the recall list subcommand.
@@ -24,32 +26,12 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
+	short, long := assets.CommandDesc("recall.list")
+
 	cmd := &cobra.Command{
 		Use:   "list",
-		Short: "List all parsed sessions",
-		Long: `List AI sessions from the current project.
-
-Sessions are sorted by date (newest first) and display:
-  - Session slug (human-friendly name)
-  - Project name
-  - Start time and duration
-  - Turn count (user messages)
-  - Token usage
-
-By default, only sessions from the current project are shown.
-Use --all-projects to see sessions from all projects.
-
-Date filtering: --since and --until accept YYYY-MM-DD format.
-Both are inclusive.
-
-Examples:
-  ctx recall list
-  ctx recall list --limit 5
-  ctx recall list --all-projects
-  ctx recall list --project ctx
-  ctx recall list --tool claude-code
-  ctx recall list --since 2026-03-01
-  ctx recall list --since 2026-03-01 --until 2026-03-05`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runList(cmd, limit, project, tool, since, until, allProjects)
 		},

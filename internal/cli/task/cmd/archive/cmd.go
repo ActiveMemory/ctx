@@ -8,6 +8,8 @@ package archive
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the tasks archive subcommand.
@@ -24,18 +26,12 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
+	short, long := assets.CommandDesc("task.archive")
+
 	cmd := &cobra.Command{
 		Use:   "archive",
-		Short: "Move completed tasks to timestamped archive file",
-		Long: `Move completed tasks from TASKS.md to an archive file.
-
-Archive files are stored in .context/archive/ with timestamped names:
-  .context/archive/tasks-YYYY-MM-DD.md
-
-The archive preserves Phase structure for traceability. Completed tasks
-(marked with [x]) are moved; pending tasks ([ ]) remain in TASKS.md.
-
-Use --dry-run to preview changes without modifying files.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runArchive(cmd, dryRun)
 		},

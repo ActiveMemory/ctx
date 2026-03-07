@@ -9,6 +9,7 @@ package why
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	whyroot "github.com/ActiveMemory/ctx/internal/cli/why/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -18,25 +19,16 @@ import (
 // Returns:
 //   - *cobra.Command: Configured why command with document aliases
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("why")
+
 	cmd := &cobra.Command{
 		Use:         "why [DOCUMENT]",
-		Short:       "Read the philosophy behind ctx",
+		Short:       short,
 		Annotations: map[string]string{config.AnnotationSkipInit: ""},
 		ValidArgs:   []string{"manifesto", "about", "invariants"},
-		Long: `Surface ctx's philosophy documents in the terminal.
-
-Documents:
-  manifesto    The ctx Manifesto — creation, not code
-  about        About ctx — what it is and why it exists
-  invariants   Design invariants — properties that must hold
-
-Usage:
-  ctx why              Interactive numbered menu
-  ctx why manifesto    Show the manifesto directly
-  ctx why about        Show the about page
-  ctx why invariants   Show the design invariants`,
-		Args: cobra.MaximumNArgs(1),
-		RunE: whyroot.Run,
+		Long:        long,
+		Args:        cobra.MaximumNArgs(1),
+		RunE:        whyroot.Run,
 	}
 
 	return cmd

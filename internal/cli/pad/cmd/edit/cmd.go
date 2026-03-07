@@ -11,6 +11,8 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the pad edit subcommand.
@@ -34,26 +36,12 @@ func Cmd() *cobra.Command {
 	var filePath string
 	var labelText string
 
+	short, long := assets.CommandDesc("pad.edit")
 	cmd := &cobra.Command{
 		Use:   "edit N [TEXT]",
-		Short: "Replace, append to, or prepend to an entry by number",
-		Long: `Replace, append to, or prepend to an entry by number.
-
-By default, replaces the entire entry with the positional TEXT argument.
-Use --append to add text to the end of an existing entry, or --prepend
-to add text to the beginning.
-
-For blob entries, use --file to replace file content and/or --label to
-change the label.
-
-Examples:
-  ctx pad edit 2 "new text"           # replace entry 2
-  ctx pad edit 2 --append "suffix"    # append to entry 2
-  ctx pad edit 2 --prepend "prefix"   # prepend to entry 2
-  ctx pad edit 2 --file ./v2.md       # replace blob file content
-  ctx pad edit 2 --label "new name"   # rename blob label
-  ctx pad edit 2 --file ./v2.md --label "new"  # replace both`,
-		Args: cobra.RangeArgs(1, 2),
+		Short: short,
+		Long:  long,
+		Args:  cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])
 			if err != nil {

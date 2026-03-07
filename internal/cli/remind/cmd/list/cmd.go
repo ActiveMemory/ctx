@@ -8,6 +8,8 @@ package list
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the remind list subcommand.
@@ -15,10 +17,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
+	short, _ := assets.CommandDesc("remind.list")
+
 	return &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
-		Short:   "Show all pending reminders",
+		Short:   short,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return RunList(cmd)
 		},

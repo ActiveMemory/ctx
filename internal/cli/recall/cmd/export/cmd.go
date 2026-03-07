@@ -9,6 +9,7 @@ package export
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 )
 
@@ -19,33 +20,12 @@ import (
 func Cmd() *cobra.Command {
 	var opts core.ExportOpts
 
+	short, long := assets.CommandDesc("recall.export")
+
 	cmd := &cobra.Command{
 		Use:   "export [session-id]",
-		Short: "Export sessions to editable journal files",
-		Long: `Export AI sessions to .context/journal/ as editable Markdown files.
-
-Exported files include session metadata, tool usage summary, and the full
-conversation. You can edit these files to add notes, highlight key moments,
-or clean up the transcript.
-
-By default, only sessions from the current project are exported. Use
---all-projects to include sessions from all projects.
-
-Safe by default: --all only exports new sessions. Existing files are
-skipped. Use --regenerate to re-export existing files (preserves YAML
-frontmatter by default). Use --keep-frontmatter=false to discard
-enriched frontmatter during regeneration.
-
-Locked entries (via "ctx recall lock") are always skipped, regardless
-of flags.
-
-Examples:
-  ctx recall export abc123                              # Export one session
-  ctx recall export --all                               # Export only new
-  ctx recall export --all --dry-run                     # Preview changes
-  ctx recall export --all --regenerate                  # Re-export (prompts)
-  ctx recall export --all --regenerate -y               # Re-export, no prompt
-  ctx recall export --all --regenerate --keep-frontmatter=false -y  # Discard frontmatter`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runExport(cmd, args, opts)
 		},

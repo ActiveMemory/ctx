@@ -9,6 +9,7 @@ package changes
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	changesroot "github.com/ActiveMemory/ctx/internal/cli/changes/cmd/root"
 )
 
@@ -19,19 +20,12 @@ import (
 func Cmd() *cobra.Command {
 	var since string
 
+	short, long := assets.CommandDesc("changes")
+
 	cmd := &cobra.Command{
 		Use:   "changes",
-		Short: "Show what changed since last session",
-		Long: `Show changes in context files and code since the last AI session.
-
-Automatically detects the last session boundary from state markers.
-Use --since to specify a custom time range (duration like "24h" or
-date like "2026-03-01").
-
-Examples:
-  ctx changes                     # changes since last session
-  ctx changes --since 24h         # changes in last 24 hours
-  ctx changes --since 2026-03-01  # changes since specific date`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return changesroot.Run(cmd, since)
 		},

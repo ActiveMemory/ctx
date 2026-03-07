@@ -9,6 +9,7 @@ package pause
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	pauseroot "github.com/ActiveMemory/ctx/internal/cli/pause/cmd/root"
 )
 
@@ -17,14 +18,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pause command
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("pause")
 	cmd := &cobra.Command{
 		Use:   "pause",
-		Short: "Pause context hooks for this session",
-		Long: `Pause all context nudge and reminder hooks for the current session.
-Security hooks (dangerous command blocking) and housekeeping hooks still fire.
-
-The session ID is read from stdin JSON (same as hooks) or --session-id flag.
-Resume with: ctx resume`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			sessionID, _ := cmd.Flags().GetString("session-id")
 			return pauseroot.Run(cmd, sessionID)

@@ -8,6 +8,8 @@ package show
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the recall show subcommand.
@@ -21,25 +23,12 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
+	short, long := assets.CommandDesc("recall.show")
+
 	cmd := &cobra.Command{
 		Use:   "show [session-id]",
-		Short: "Show details of a specific session",
-		Long: `Show detailed information about a specific session.
-
-The session ID can be:
-  - Full session UUID
-  - Partial match (first few characters)
-  - Session slug name
-
-Use --latest to show the most recent session.
-By default, only searches sessions from the current project.
-
-Examples:
-  ctx recall show abc123
-  ctx recall show gleaming-wobbling-sutherland
-  ctx recall show --latest
-  ctx recall show --latest --full
-  ctx recall show abc123 --all-projects`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runShow(cmd, args, latest, full, allProjects)
 		},
