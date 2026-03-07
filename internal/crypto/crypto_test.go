@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -145,8 +146,10 @@ func TestSaveKey_LoadKey_RoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Stat() error: %v", err)
 	}
-	if perm := info.Mode().Perm(); perm != 0600 {
-		t.Errorf("key file permissions = %o, want 0600", perm)
+	if runtime.GOOS != "windows" {
+		if perm := info.Mode().Perm(); perm != 0600 {
+			t.Errorf("key file permissions = %o, want 0600", perm)
+		}
 	}
 
 	loaded, err := LoadKey(path)

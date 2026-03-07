@@ -7,7 +7,6 @@
 package parser
 
 import (
-	"path/filepath"
 	"strings"
 )
 
@@ -21,13 +20,14 @@ func getPathRelativeToHome(path string) string {
 	// Handle common home directory patterns
 	// /home/username/... -> strip /home/username
 	// /Users/username/... -> strip /Users/username (macOS)
-	parts := strings.Split(path, string(filepath.Separator))
+	// Always split on "/" because input paths originate from Unix-based systems.
+	parts := strings.Split(path, "/")
 
 	for i, part := range parts {
 		if part == "home" || part == "Users" {
 			// Next part is username, rest is relative path
 			if i+2 < len(parts) {
-				return filepath.Join(parts[i+2:]...)
+				return strings.Join(parts[i+2:], "/")
 			}
 			return ""
 		}

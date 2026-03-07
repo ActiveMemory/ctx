@@ -9,6 +9,7 @@ package serve
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -58,7 +59,7 @@ func TestCmd_AcceptsArgs(t *testing.T) {
 }
 
 func TestRunServe_DirNotFound(t *testing.T) {
-	err := serveroot.Run([]string{"/tmp/nonexistent-dir-ctx-test-xyz"})
+	err := serveroot.Run([]string{filepath.Join(os.TempDir(), "nonexistent-dir-ctx-test-xyz")})
 	if err == nil {
 		t.Fatal("expected error for nonexistent directory")
 	}
@@ -196,17 +197,28 @@ func TestRunServe_WithMockZensical(t *testing.T) {
 	if err := os.MkdirAll(binDir, 0750); err != nil {
 		t.Fatalf("failed to create bin dir: %v", err)
 	}
-	fakeZensical := filepath.Join(binDir, "zensical")
-	if err := os.WriteFile(fakeZensical, []byte("#!/bin/sh\nexit 0\n"), 0600); err != nil {
-		t.Fatalf("failed to create fake zensical: %v", err)
-	}
-	if err := os.Chmod(fakeZensical, 0755); err != nil { //nolint:gosec // test needs executable
-		t.Fatalf("failed to chmod fake zensical: %v", err)
+	if runtime.GOOS == "windows" {
+		fakeZensical := filepath.Join(binDir, "zensical.bat")
+		if err := os.WriteFile(fakeZensical, []byte("@exit /b 0\n"), 0600); err != nil {
+			t.Fatalf("failed to create fake zensical: %v", err)
+		}
+	} else {
+		fakeZensical := filepath.Join(binDir, "zensical")
+		if err := os.WriteFile(fakeZensical, []byte("#!/bin/sh\nexit 0\n"), 0600); err != nil {
+			t.Fatalf("failed to create fake zensical: %v", err)
+		}
+		if err := os.Chmod(fakeZensical, 0755); err != nil { //nolint:gosec // test needs executable
+			t.Fatalf("failed to chmod fake zensical: %v", err)
+		}
 	}
 
 	// Set PATH to include our fake binary
 	origPath := os.Getenv("PATH")
-	t.Setenv("PATH", binDir+":"+origPath)
+	pathSep := ":"
+	if runtime.GOOS == "windows" {
+		pathSep = ";"
+	}
+	t.Setenv("PATH", binDir+pathSep+origPath)
 
 	serveErr := serveroot.Run([]string{tmpDir})
 	if serveErr != nil {
@@ -218,7 +230,7 @@ func TestCmd_RunE(t *testing.T) {
 	// Test that Cmd().RunE actually invokes serveroot.Run via the command
 	cmd := Cmd()
 	// Set args to a nonexistent dir so we get a predictable error
-	cmd.SetArgs([]string{"/tmp/nonexistent-ctx-test-xyz"})
+	cmd.SetArgs([]string{filepath.Join(os.TempDir(), "nonexistent-ctx-test-xyz")})
 	cmd.SilenceUsage = true
 	cmd.SilenceErrors = true
 
