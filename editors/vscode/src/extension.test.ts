@@ -263,7 +263,7 @@ describe("handleComplete", () => {
     await handleComplete(stream as never, "Fix login bug", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["complete", "Fix login bug", "--no-color"],
+      ["complete", "Fix login bug"],
       expect.anything(),
       expect.any(Function)
     );
@@ -288,7 +288,7 @@ describe("handleRemind", () => {
     await handleRemind(stream as never, "", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["remind", "list", "--no-color"],
+      ["remind", "list"],
       expect.anything(),
       expect.any(Function)
     );
@@ -301,7 +301,7 @@ describe("handleRemind", () => {
     await handleRemind(stream as never, "add Check CI status", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["remind", "add", "Check CI status", "--no-color"],
+      ["remind", "add", "Check CI status"],
       expect.anything(),
       expect.any(Function)
     );
@@ -314,7 +314,7 @@ describe("handleRemind", () => {
     await handleRemind(stream as never, "Check CI status", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["remind", "add", "Check CI status", "--no-color"],
+      ["remind", "add", "Check CI status"],
       expect.anything(),
       expect.any(Function)
     );
@@ -327,7 +327,7 @@ describe("handleRemind", () => {
     await handleRemind(stream as never, "list", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["remind", "list", "--no-color"],
+      ["remind", "list"],
       expect.anything(),
       expect.any(Function)
     );
@@ -340,7 +340,7 @@ describe("handleRemind", () => {
     await handleRemind(stream as never, "dismiss 2", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["remind", "dismiss", "2", "--no-color"],
+      ["remind", "dismiss", "2"],
       expect.anything(),
       expect.any(Function)
     );
@@ -353,7 +353,7 @@ describe("handleRemind", () => {
     await handleRemind(stream as never, "dismiss", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["remind", "dismiss", "--all", "--no-color"],
+      ["remind", "dismiss", "--all"],
       expect.anything(),
       expect.any(Function)
     );
@@ -394,7 +394,7 @@ describe("handleTasks", () => {
     await handleTasks(stream as never, "archive", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["tasks", "archive", "--no-color"],
+      ["tasks", "archive"],
       expect.anything(),
       expect.any(Function)
     );
@@ -408,7 +408,7 @@ describe("handleTasks", () => {
     await handleTasks(stream as never, "snapshot pre-refactor", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["tasks", "snapshot", "pre-refactor", "--no-color"],
+      ["tasks", "snapshot", "pre-refactor"],
       expect.anything(),
       expect.any(Function)
     );
@@ -421,7 +421,7 @@ describe("handleTasks", () => {
     await handleTasks(stream as never, "snapshot", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["tasks", "snapshot", "--no-color"],
+      ["tasks", "snapshot"],
       expect.anything(),
       expect.any(Function)
     );
@@ -454,7 +454,7 @@ describe("handlePad", () => {
     await handlePad(stream as never, "", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["pad", "--no-color"],
+      ["pad"],
       expect.anything(),
       expect.any(Function)
     );
@@ -467,7 +467,7 @@ describe("handlePad", () => {
     await handlePad(stream as never, "add my secret note", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["pad", "add", "my secret note", "--no-color"],
+      ["pad", "add", "my secret note"],
       expect.anything(),
       expect.any(Function)
     );
@@ -487,7 +487,7 @@ describe("handlePad", () => {
     await handlePad(stream as never, "show 1", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["pad", "show", "1", "--no-color"],
+      ["pad", "show", "1"],
       expect.anything(),
       expect.any(Function)
     );
@@ -500,7 +500,7 @@ describe("handlePad", () => {
     await handlePad(stream as never, "rm 2", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["pad", "rm", "2", "--no-color"],
+      ["pad", "rm", "2"],
       expect.anything(),
       expect.any(Function)
     );
@@ -520,7 +520,7 @@ describe("handlePad", () => {
     await handlePad(stream as never, "edit 1 new text", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["pad", "edit", "1", "new", "text", "--no-color"],
+      ["pad", "edit", "1", "new", "text"],
       expect.anything(),
       expect.any(Function)
     );
@@ -533,7 +533,7 @@ describe("handlePad", () => {
     await handlePad(stream as never, "mv 1 3", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["pad", "mv", "1", "3", "--no-color"],
+      ["pad", "mv", "1", "3"],
       expect.anything(),
       expect.any(Function)
     );
@@ -574,7 +574,7 @@ describe("handleNotify", () => {
     await handleNotify(stream as never, "setup", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["notify", "setup", "--no-color"],
+      ["notify", "setup"],
       expect.anything(),
       expect.any(Function)
     );
@@ -588,7 +588,7 @@ describe("handleNotify", () => {
     await handleNotify(stream as never, "test", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["notify", "test", "--no-color"],
+      ["notify", "test"],
       expect.anything(),
       expect.any(Function)
     );
@@ -601,7 +601,7 @@ describe("handleNotify", () => {
     await handleNotify(stream as never, "build done --event build", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["notify", "build", "done", "--event", "build", "--no-color"],
+      ["notify", "build", "done", "--event", "build"],
       expect.anything(),
       expect.any(Function)
     );
@@ -650,7 +650,7 @@ describe("handleSystem", () => {
     await handleSystem(stream as never, "resources", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["system", "resources", "--no-color"],
+      ["system", "resources"],
       expect.anything(),
       expect.any(Function)
     );
@@ -664,7 +664,7 @@ describe("handleSystem", () => {
     await handleSystem(stream as never, "bootstrap", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["system", "bootstrap", "--no-color"],
+      ["system", "bootstrap"],
       expect.anything(),
       expect.any(Function)
     );
@@ -678,7 +678,7 @@ describe("handleSystem", () => {
     await handleSystem(stream as never, "message list", "/test", token);
     expect(cp.execFile).toHaveBeenCalledWith(
       "ctx",
-      ["system", "message", "list", "--no-color"],
+      ["system", "message", "list"],
       expect.anything(),
       expect.any(Function)
     );

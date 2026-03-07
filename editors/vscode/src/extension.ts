@@ -339,7 +339,7 @@ async function handleInit(
 ): Promise<CtxResult> {
   stream.progress("Initializing .context/ directory...");
   try {
-    const { stdout, stderr } = await runCtx(["init", "--caller", "vscode", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(["init", "--caller", "vscode"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
@@ -350,7 +350,7 @@ async function handleInit(
     stream.progress("Generating Copilot instructions...");
     try {
       const hookResult = await runCtx(
-        ["hook", "copilot", "--write", "--no-color"],
+        ["hook", "copilot", "--write"],
         cwd,
         token
       );
@@ -379,7 +379,7 @@ async function handleInit(
     }
 
     // Fire session-start since activate() missed it (no .context/ at activation time)
-    runCtx(["system", "session-event", "--type", "start", "--caller", "vscode", "--no-color"], cwd).catch(() => {});
+    runCtx(["system", "session-event", "--type", "start", "--caller", "vscode"], cwd).catch(() => {});
   } catch (err: unknown) {
     stream.markdown(
       `**Error:** Failed to initialize context.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
@@ -395,7 +395,7 @@ async function handleStatus(
 ): Promise<CtxResult> {
   stream.progress("Checking context status...");
   try {
-    const { stdout, stderr } = await runCtx(["status", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(["status"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     stream.markdown("```\n" + output + "\n```");
   } catch (err: unknown) {
@@ -414,7 +414,7 @@ async function handleAgent(
 ): Promise<CtxResult> {
   stream.progress("Generating AI-ready context packet...");
   try {
-    const args = ["agent", "--no-color"];
+    const args = ["agent"];
     const budgetMatch = prompt.match(/(?:--budget\s+|budget\s+)(\d+)/);
     if (budgetMatch) {
       args.splice(1, 0, "--budget", budgetMatch[1]);
@@ -437,7 +437,7 @@ async function handleDrift(
 ): Promise<CtxResult> {
   stream.progress("Detecting context drift...");
   try {
-    const { stdout, stderr } = await runCtx(["drift", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(["drift"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     stream.markdown("```\n" + output + "\n```");
   } catch (err: unknown) {
@@ -513,7 +513,6 @@ async function handleRecall(
       break;
     }
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -546,7 +545,6 @@ async function handleHook(
   if (!preview) {
     args.push("--write");
   }
-  args.push("--no-color");
 
   stream.progress(
     preview
@@ -620,7 +618,7 @@ async function handleLoad(
 ): Promise<CtxResult> {
   stream.progress("Loading assembled context...");
   try {
-    const { stdout, stderr } = await runCtx(["load", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(["load"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     stream.markdown(output);
   } catch (err: unknown) {
@@ -638,7 +636,7 @@ async function handleCompact(
 ): Promise<CtxResult> {
   stream.progress("Compacting context...");
   try {
-    const { stdout, stderr } = await runCtx(["compact", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(["compact"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
@@ -660,7 +658,7 @@ async function handleSync(
 ): Promise<CtxResult> {
   stream.progress("Syncing context with codebase...");
   try {
-    const { stdout, stderr } = await runCtx(["sync", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(["sync"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
@@ -693,7 +691,7 @@ async function handleComplete(
   stream.progress("Marking task as completed...");
   try {
     const { stdout, stderr } = await runCtx(
-      ["complete", taskRef, "--no-color"],
+      ["complete", taskRef],
       cwd,
       token
     );
@@ -750,7 +748,6 @@ async function handleRemind(
       }
       break;
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -802,7 +799,6 @@ async function handleTasks(
       );
       return { metadata: { command: "tasks" } };
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -897,7 +893,6 @@ async function handlePad(
       progressMsg = "Listing scratchpad...";
       break;
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -957,7 +952,6 @@ async function handleNotify(
       break;
     }
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -1040,7 +1034,6 @@ async function handleSystem(
       );
       return { metadata: { command: "system" } };
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -1068,8 +1061,8 @@ async function handleWrapup(
   try {
     // Gather status + drift in parallel for a comprehensive wrap-up
     const [statusResult, driftResult] = await Promise.all([
-      runCtx(["status", "--no-color"], cwd, token),
-      runCtx(["drift", "--no-color"], cwd, token),
+      runCtx(["status"], cwd, token),
+      runCtx(["drift"], cwd, token),
     ]);
     const statusOutput = mergeOutput(statusResult.stdout, statusResult.stderr);
     const driftOutput = mergeOutput(driftResult.stdout, driftResult.stderr);
@@ -1130,7 +1123,7 @@ async function handleWrapup(
     } catch { /* non-fatal */ }
 
     // Record session end
-    runCtx(["system", "session-event", "--type", "end", "--caller", "vscode", "--no-color"], cwd).catch(() => {});
+    runCtx(["system", "session-event", "--type", "end", "--caller", "vscode"], cwd).catch(() => {});
   } catch (err: unknown) {
     stream.markdown(
       `**Error:** Wrap-up failed.\n\n\`\`\`\n${err instanceof Error ? err.message : String(err)}\n\`\`\``
@@ -1147,7 +1140,7 @@ async function handleRemember(
 ): Promise<CtxResult> {
   stream.progress("Loading recent sessions...");
   try {
-    const args = ["recall", "list", "--no-color"];
+    const args = ["recall", "list"];
     const limitMatch = prompt.match(/(?:--limit\s+|limit\s+)(\d+)/);
     args.push("--limit", limitMatch ? limitMatch[1] : "3");
     const { stdout, stderr } = await runCtx(args, cwd, token);
@@ -1253,8 +1246,8 @@ async function handleReflect(
   stream.progress("Reflecting on session...");
   try {
     const [statusResult, driftResult] = await Promise.all([
-      runCtx(["status", "--no-color"], cwd, token),
-      runCtx(["drift", "--no-color"], cwd, token),
+      runCtx(["status"], cwd, token),
+      runCtx(["drift"], cwd, token),
     ]);
     const statusOutput = mergeOutput(statusResult.stdout, statusResult.stderr);
     const driftOutput = mergeOutput(driftResult.stdout, driftResult.stderr);
@@ -1419,13 +1412,13 @@ async function handleVerify(
   try {
     const results: string[] = [];
     try {
-      const { stdout, stderr } = await runCtx(["doctor", "--no-color"], cwd, token);
+      const { stdout, stderr } = await runCtx(["doctor"], cwd, token);
       results.push("### Context Health\n```\n" + mergeOutput(stdout, stderr) + "\n```");
     } catch (err: unknown) {
       results.push("### Context Health\n```\nFailed: " + (err instanceof Error ? err.message : String(err)) + "\n```");
     }
     try {
-      const { stdout, stderr } = await runCtx(["drift", "--no-color"], cwd, token);
+      const { stdout, stderr } = await runCtx(["drift"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       if (output) { results.push("### Drift\n```\n" + output + "\n```"); }
     } catch { /* non-fatal */ }
@@ -1493,7 +1486,7 @@ async function handlePromptTpl(
         stream.markdown("**Usage:** `@ctx /prompt add <file-path>`\n\nAdds a file as a prompt template.");
         return { metadata: { command: "prompt" } };
       }
-      const args = ["prompt", "add", rest, "--no-color"];
+      const args = ["prompt", "add", rest];
       const { stdout, stderr } = await runCtx(args, cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : `Template **${rest}** added.`);
@@ -1505,7 +1498,7 @@ async function handlePromptTpl(
         stream.markdown("**Usage:** `@ctx /prompt rm <name>`");
         return { metadata: { command: "prompt" } };
       }
-      const args = ["prompt", "rm", rest, "--no-color"];
+      const args = ["prompt", "rm", rest];
       const { stdout, stderr } = await runCtx(args, cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : `Template **${rest}** removed.`);
@@ -1658,7 +1651,6 @@ async function handleJournal(
     } else if (prompt.trim()) {
       args.push(...parts);
     }
-    args.push("--no-color");
     if (progressOverride) { stream.progress(progressOverride); }
     const { stdout, stderr } = await runCtx(args, cwd, token);
     const output = mergeOutput(stdout, stderr);
@@ -1736,7 +1728,7 @@ async function handleAudit(
 ): Promise<CtxResult> {
   stream.progress("Running alignment audit...");
   try {
-    const { stdout: driftOut, stderr: driftErr } = await runCtx(["drift", "--no-color"], cwd, token);
+    const { stdout: driftOut, stderr: driftErr } = await runCtx(["drift"], cwd, token);
     stream.markdown("## Alignment Audit\n\n### Drift\n```\n" + mergeOutput(driftOut, driftErr) + "\n```\n\n");
     const convPath = path.join(cwd, ".context", "CONVENTIONS.md");
     if (fs.existsSync(convPath)) {
@@ -1806,7 +1798,7 @@ async function handlePause(
   try {
     const stateDir = path.join(cwd, ".context", "state");
     if (!fs.existsSync(stateDir)) { fs.mkdirSync(stateDir, { recursive: true }); }
-    const { stdout } = await runCtx(["status", "--no-color"], cwd, token);
+    const { stdout } = await runCtx(["status"], cwd, token);
     const state = { paused_at: new Date().toISOString(), status: stdout.trim(), cwd };
     fs.writeFileSync(path.join(stateDir, "paused-session.json"), JSON.stringify(state, null, 2), "utf-8");
     stream.markdown("Session paused. State saved to `.context/state/paused-session.json`.\n\nResume with `@ctx /resume`.");
@@ -1832,7 +1824,7 @@ async function handleResume(
     stream.markdown("## Resuming Session\n\n" + `Paused at: ${state.paused_at}\n\n` +
       "### Status at pause\n```\n" + state.status + "\n```\n\n");
     try {
-      const { stdout } = await runCtx(["status", "--no-color"], cwd, token);
+      const { stdout } = await runCtx(["status"], cwd, token);
       stream.markdown("### Current Status\n```\n" + stdout.trim() + "\n```\n");
     } catch { /* non-fatal */ }
     fs.unlinkSync(statePath);
@@ -1896,7 +1888,6 @@ async function handleMemory(
       );
       return { metadata: { command: "memory" } };
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -1926,7 +1917,7 @@ async function handleDecisions(
   if (subcmd === "reindex") {
     stream.progress("Reindexing decisions...");
     try {
-      const { stdout, stderr } = await runCtx(["decisions", "reindex", "--no-color"], cwd, token);
+      const { stdout, stderr } = await runCtx(["decisions", "reindex"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "Decision index rebuilt.");
     } catch (err: unknown) {
@@ -1935,7 +1926,7 @@ async function handleDecisions(
   } else {
     stream.progress("Loading decisions...");
     try {
-      const { stdout, stderr } = await runCtx(["decisions", "--no-color"], cwd, token);
+      const { stdout, stderr } = await runCtx(["decisions"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "No decisions found.");
     } catch (err: unknown) {
@@ -1956,7 +1947,7 @@ async function handleLearnings(
   if (subcmd === "reindex") {
     stream.progress("Reindexing learnings...");
     try {
-      const { stdout, stderr } = await runCtx(["learnings", "reindex", "--no-color"], cwd, token);
+      const { stdout, stderr } = await runCtx(["learnings", "reindex"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "Learning index rebuilt.");
     } catch (err: unknown) {
@@ -1965,7 +1956,7 @@ async function handleLearnings(
   } else {
     stream.progress("Loading learnings...");
     try {
-      const { stdout, stderr } = await runCtx(["learnings", "--no-color"], cwd, token);
+      const { stdout, stderr } = await runCtx(["learnings"], cwd, token);
       const output = mergeOutput(stdout, stderr);
       stream.markdown(output ? "```\n" + output + "\n```" : "No learnings found.");
     } catch (err: unknown) {
@@ -2017,7 +2008,6 @@ async function handleConfig(
       );
       return { metadata: { command: "config" } };
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -2067,7 +2057,6 @@ async function handlePermissions(
       );
       return { metadata: { command: "permissions" } };
   }
-  args.push("--no-color");
 
   stream.progress(progressMsg);
   try {
@@ -2099,7 +2088,6 @@ async function handleChanges(
     if (sinceMatch) {
       args.push("--since", sinceMatch[1]);
     }
-    args.push("--no-color");
     const { stdout, stderr } = await runCtx(args, cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
@@ -2131,7 +2119,6 @@ async function handleDeps(
     if (prompt.includes("--external")) {
       args.push("--external");
     }
-    args.push("--no-color");
     const { stdout, stderr } = await runCtx(args, cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
@@ -2161,7 +2148,6 @@ async function handleGuide(
     } else if (prompt.includes("--commands")) {
       args.push("--commands");
     }
-    args.push("--no-color");
     const { stdout, stderr } = await runCtx(args, cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
@@ -2184,7 +2170,7 @@ async function handleReindex(
 ): Promise<CtxResult> {
   stream.progress("Regenerating indices...");
   try {
-    const { stdout, stderr } = await runCtx(["reindex", "--no-color"], cwd, token);
+    const { stdout, stderr } = await runCtx(["reindex"], cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
@@ -2211,7 +2197,6 @@ async function handleWhy(
     if (prompt.trim()) {
       args.push(prompt.trim());
     }
-    args.push("--no-color");
     const { stdout, stderr } = await runCtx(args, cwd, token);
     const output = mergeOutput(stdout, stderr);
     if (output) {
@@ -2855,7 +2840,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
       return;
     }
     // Fire and forget — non-blocking background check
-    runCtx(["system", "check-task-completion", "--no-color"], cwd).catch(
+    runCtx(["system", "check-task-completion"], cwd).catch(
       () => {}
     );
   });
@@ -2932,7 +2917,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
       if (hasContextDir(cwd)) {
         updateReminderStatus(cwd);
         // Re-generate copilot-instructions.md when context files change
-        runCtx(["hook", "copilot", "--write", "--no-color"], cwd).catch(() => {});
+        runCtx(["hook", "copilot", "--write"], cwd).catch(() => {});
       }
     };
     contextWatcher.onDidChange(onContextChange);
@@ -2986,7 +2971,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
 
     // 2.12: Session start ceremony
     runCtx(
-      ["system", "session-event", "--type", "start", "--caller", "vscode", "--no-color"],
+      ["system", "session-event", "--type", "start", "--caller", "vscode"],
       cwd
     ).catch(() => {});
   }
@@ -2999,7 +2984,7 @@ function updateReminderStatus(cwd: string): void {
   if (!bootstrapDone || !reminderStatusBar) {
     return;
   }
-  runCtx(["system", "check-reminders", "--no-color"], cwd)
+  runCtx(["system", "check-reminders"], cwd)
     .then(({ stdout }) => {
       const trimmed = stdout.trim();
       if (trimmed && !trimmed.includes("no reminders")) {
@@ -3045,7 +3030,7 @@ export function deactivate() {
   const cwd = getWorkspaceRoot();
   if (cwd && hasContextDir(cwd)) {
     runCtx(
-      ["system", "session-event", "--type", "end", "--caller", "vscode", "--no-color"],
+      ["system", "session-event", "--type", "end", "--caller", "vscode"],
       cwd
     ).catch(() => {});
   }
