@@ -14,6 +14,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/permissions/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
@@ -74,9 +75,9 @@ func TestSnapshotCreatesGoldenFile(t *testing.T) {
 	}
 
 	// Verify golden file is a byte-for-byte copy.
-	golden, err := os.ReadFile(config.FileSettingsGolden)
-	if err != nil {
-		t.Fatal(err)
+	golden, readErr := os.ReadFile(config.FileSettingsGolden)
+	if readErr != nil {
+		t.Fatal(readErr)
 	}
 	if string(golden) != settings {
 		t.Errorf("golden = %q, want %q", string(golden), settings)
@@ -97,9 +98,9 @@ func TestSnapshotOverwritesExisting(t *testing.T) {
 		t.Errorf("output = %q, want 'Updated'", out)
 	}
 
-	golden, err := os.ReadFile(config.FileSettingsGolden)
-	if err != nil {
-		t.Fatal(err)
+	golden, readErr := os.ReadFile(config.FileSettingsGolden)
+	if readErr != nil {
+		t.Fatal(readErr)
 	}
 	if !strings.Contains(string(golden), `"A"`) {
 		t.Error("golden should contain new content")
@@ -138,9 +139,9 @@ func TestRestoreFromGolden(t *testing.T) {
 	}
 
 	// Verify settings file now matches golden.
-	data, err := os.ReadFile(config.FileSettings)
-	if err != nil {
-		t.Fatal(err)
+	data, readErr := os.ReadFile(config.FileSettings)
+	if readErr != nil {
+		t.Fatal(readErr)
 	}
 	if string(data) != golden {
 		t.Errorf("settings = %q, want %q", string(data), golden)
@@ -225,9 +226,9 @@ func TestRestoreNoLocalFile(t *testing.T) {
 	}
 
 	// Verify settings file was created from golden.
-	data, err := os.ReadFile(config.FileSettings)
-	if err != nil {
-		t.Fatal(err)
+	data, readErr := os.ReadFile(config.FileSettings)
+	if readErr != nil {
+		t.Fatal(readErr)
 	}
 	if string(data) != golden {
 		t.Errorf("settings = %q, want %q", string(data), golden)
@@ -295,7 +296,7 @@ func TestDiffStringSlices(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restored, dropped := diffStringSlices(tt.golden, tt.local)
+			restored, dropped := core.DiffStringSlices(tt.golden, tt.local)
 			if !reflect.DeepEqual(restored, tt.wantRestored) {
 				t.Errorf("restored = %v, want %v", restored, tt.wantRestored)
 			}
@@ -315,9 +316,9 @@ func settingsJSON(t *testing.T, allow []string) string {
 	type settings struct {
 		Permissions perms `json:"permissions"`
 	}
-	b, err := json.Marshal(settings{Permissions: perms{Allow: allow}})
-	if err != nil {
-		t.Fatal(err)
+	b, marshalErr := json.Marshal(settings{Permissions: perms{Allow: allow}})
+	if marshalErr != nil {
+		t.Fatal(marshalErr)
 	}
 	return string(b)
 }
@@ -332,9 +333,9 @@ func settingsJSONWithDeny(t *testing.T, allow, deny []string) string {
 	type settings struct {
 		Permissions perms `json:"permissions"`
 	}
-	b, err := json.Marshal(settings{Permissions: perms{Allow: allow, Deny: deny}})
-	if err != nil {
-		t.Fatal(err)
+	b, marshalErr := json.Marshal(settings{Permissions: perms{Allow: allow, Deny: deny}})
+	if marshalErr != nil {
+		t.Fatal(marshalErr)
 	}
 	return string(b)
 }
@@ -380,9 +381,9 @@ func TestSnapshotPreservesExactBytes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	golden, err := os.ReadFile(config.FileSettingsGolden)
-	if err != nil {
-		t.Fatal(err)
+	golden, readErr := os.ReadFile(config.FileSettingsGolden)
+	if readErr != nil {
+		t.Fatal(readErr)
 	}
 	if string(golden) != content {
 		t.Error("golden should be byte-for-byte identical to source")
@@ -401,9 +402,9 @@ func TestRestorePreservesExactBytes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	data, err := os.ReadFile(config.FileSettings)
-	if err != nil {
-		t.Fatal(err)
+	data, readErr := os.ReadFile(config.FileSettings)
+	if readErr != nil {
+		t.Fatal(readErr)
 	}
 	if string(data) != goldenContent {
 		t.Error("restored settings should be byte-for-byte identical to golden")

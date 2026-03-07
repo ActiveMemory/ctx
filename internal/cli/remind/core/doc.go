@@ -1,0 +1,10 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+// Package core provides shared reminder types and storage operations used
+// by all remind subcommand packages. Subcommands import core, never each
+// other.
+package core

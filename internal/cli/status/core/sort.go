@@ -1,0 +1,50 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package core
+
+import (
+	"sort"
+
+	"github.com/ActiveMemory/ctx/internal/context"
+	"github.com/ActiveMemory/ctx/internal/rc"
+)
+
+// SortFilesByPriority sorts files in-place by the recommended read order.
+//
+// Uses rc.FilePriority to determine ordering (CONSTITUTION first,
+// then TASKS, CONVENTIONS, etc.).
+//
+// Parameters:
+//   - files: Slice of files to sort (modified in place)
+func SortFilesByPriority(files []context.FileInfo) {
+	sort.Slice(files, func(i, j int) bool {
+		return rc.FilePriority(
+			files[i].Name,
+		) < rc.FilePriority(files[j].Name)
+	})
+}
+
+// GetRecentFiles returns the n most recently modified files.
+//
+// Parameters:
+//   - files: Source files to select from
+//   - n: Maximum number of files to return
+//
+// Returns:
+//   - []context.FileInfo: Up to n files sorted by modification time
+//     (newest first)
+func GetRecentFiles(files []context.FileInfo, n int) []context.FileInfo {
+	sorted := make([]context.FileInfo, len(files))
+	copy(sorted, files)
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i].ModTime.After(sorted[j].ModTime)
+	})
+	if len(sorted) > n {
+		sorted = sorted[:n]
+	}
+	return sorted
+}

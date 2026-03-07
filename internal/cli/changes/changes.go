@@ -7,12 +7,15 @@
 package changes
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+
+	changesroot "github.com/ActiveMemory/ctx/internal/cli/changes/cmd/root"
 )
 
 // Cmd returns the changes command.
+//
+// Returns:
+//   - *cobra.Command: Configured changes command with flags registered
 func Cmd() *cobra.Command {
 	var since string
 
@@ -30,24 +33,11 @@ Examples:
   ctx changes --since 24h         # changes in last 24 hours
   ctx changes --since 2026-03-01  # changes since specific date`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runChanges(cmd, since)
+			return changesroot.Run(cmd, since)
 		},
 	}
 
 	cmd.Flags().StringVar(&since, "since", "", "Time reference: duration (24h) or date (2026-03-01)")
 
 	return cmd
-}
-
-func runChanges(cmd *cobra.Command, since string) error {
-	refTime, refLabel, err := DetectReferenceTime(since)
-	if err != nil {
-		return fmt.Errorf("detecting reference time: %w", err)
-	}
-
-	ctxChanges, _ := FindContextChanges(refTime)
-	codeChanges, _ := SummarizeCodeChanges(refTime)
-
-	cmd.Print(RenderChanges(refLabel, ctxChanges, codeChanges))
-	return nil
 }

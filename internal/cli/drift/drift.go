@@ -8,6 +8,8 @@ package drift
 
 import (
 	"github.com/spf13/cobra"
+
+	driftroot "github.com/ActiveMemory/ctx/internal/cli/drift/cmd/root"
 )
 
 // Cmd returns the "ctx drift" command for detecting stale context.
@@ -41,7 +43,7 @@ Checks performed:
 
 Use --json for machine-readable output.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runDrift(cmd, jsonOutput, fix)
+			return driftroot.Run(cmd, jsonOutput, fix)
 		},
 	}
 

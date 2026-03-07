@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -55,12 +56,12 @@ func TestSeparateTasks(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, stats := separateTasks(tt.input)
-			if stats.completed != tt.expectedCompleted {
-				t.Errorf("separateTasks() completed = %d, want %d", stats.completed, tt.expectedCompleted)
+			_, _, stats := core.SeparateTasks(tt.input)
+			if stats.Completed != tt.expectedCompleted {
+				t.Errorf("SeparateTasks() completed = %d, want %d", stats.Completed, tt.expectedCompleted)
 			}
-			if stats.pending != tt.expectedPending {
-				t.Errorf("separateTasks() pending = %d, want %d", stats.pending, tt.expectedPending)
+			if stats.Pending != tt.expectedPending {
+				t.Errorf("SeparateTasks() pending = %d, want %d", stats.Pending, tt.expectedPending)
 			}
 		})
 	}
@@ -172,13 +173,13 @@ func TestSeparateTasks_WithSubtasks(t *testing.T) {
   - [ ] Subtask of pending (should remain)
 `
 
-	remaining, archived, stats := separateTasks(content)
+	remaining, archived, stats := core.SeparateTasks(content)
 
-	if stats.completed != 1 {
-		t.Errorf("completed = %d, want 1", stats.completed)
+	if stats.Completed != 1 {
+		t.Errorf("completed = %d, want 1", stats.Completed)
 	}
-	if stats.pending != 1 {
-		t.Errorf("pending = %d, want 1", stats.pending)
+	if stats.Pending != 1 {
+		t.Errorf("pending = %d, want 1", stats.Pending)
 	}
 
 	// Archived should contain the completed parent and its subtasks
@@ -210,13 +211,13 @@ func TestSeparateTasks_MultiplePhases(t *testing.T) {
 - [ ] Phase 2 pending
 `
 
-	remaining, archived, stats := separateTasks(content)
+	remaining, archived, stats := core.SeparateTasks(content)
 
-	if stats.completed != 2 {
-		t.Errorf("completed = %d, want 2", stats.completed)
+	if stats.Completed != 2 {
+		t.Errorf("completed = %d, want 2", stats.Completed)
 	}
-	if stats.pending != 2 {
-		t.Errorf("pending = %d, want 2", stats.pending)
+	if stats.Pending != 2 {
+		t.Errorf("pending = %d, want 2", stats.Pending)
 	}
 
 	// Each phase header should appear in archived since both have completed tasks
@@ -246,7 +247,7 @@ func TestSeparateTasks_PhaseWithNoCompletedTasks(t *testing.T) {
 - [x] Only completed
 `
 
-	_, archived, _ := separateTasks(content)
+	_, archived, _ := core.SeparateTasks(content)
 
 	// Phase 1 should NOT appear in archived (no completed tasks)
 	lines := strings.Split(archived, "\n")
@@ -271,7 +272,7 @@ Some description text.
 More notes.
 `
 
-	remaining, _, _ := separateTasks(content)
+	remaining, _, _ := core.SeparateTasks(content)
 
 	if !strings.Contains(remaining, "Some description text.") {
 		t.Error("non-task lines should remain")
@@ -316,9 +317,9 @@ func TestCountPendingTasks(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			count := countPendingTasks(tt.lines)
+			count := core.CountPendingTasks(tt.lines)
 			if count != tt.expected {
-				t.Errorf("countPendingTasks() = %d, want %d", count, tt.expected)
+				t.Errorf("CountPendingTasks() = %d, want %d", count, tt.expected)
 			}
 		})
 	}
@@ -327,18 +328,18 @@ func TestCountPendingTasks(t *testing.T) {
 func TestTasksFilePath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := tasksFilePath()
+	path := core.TasksFilePath()
 	if !strings.Contains(path, config.FileTask) {
-		t.Errorf("tasksFilePath() = %q, want to contain %q", path, config.FileTask)
+		t.Errorf("TasksFilePath() = %q, want to contain %q", path, config.FileTask)
 	}
 }
 
 func TestArchiveDirPath(t *testing.T) {
 	setupTaskDir(t)
 
-	path := archiveDirPath()
+	path := core.ArchiveDirPath()
 	if !strings.Contains(path, config.DirArchive) {
-		t.Errorf("archiveDirPath() = %q, want to contain %q", path, config.DirArchive)
+		t.Errorf("ArchiveDirPath() = %q, want to contain %q", path, config.DirArchive)
 	}
 }
 
@@ -550,8 +551,8 @@ func TestArchiveCommand_DryRunFlag(t *testing.T) {
 }
 
 func TestSeparateTasks_EmptyContent(t *testing.T) {
-	remaining, archived, stats := separateTasks("")
-	if stats.completed != 0 || stats.pending != 0 {
+	remaining, archived, stats := core.SeparateTasks("")
+	if stats.Completed != 0 || stats.Pending != 0 {
 		t.Errorf("stats = %+v, want zero for empty content", stats)
 	}
 	_ = remaining

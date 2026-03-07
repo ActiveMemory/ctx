@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-06 | Stale directory inodes cause invisible files over SSH |
+| 2026-03-06 | Stats sort uses string comparison on RFC3339 timestamps with mixed timezones |
+| 2026-03-06 | Claude Code supports PreCompact and SessionStart hooks that ctx does not use |
 | 2026-03-06 | nolint:goconst for trivial values normalizes magic strings |
 | 2026-03-06 | Package-local err.go files invite broken windows from future agents |
 | 2026-03-05 | State directory accumulates silently without auto-prune |
@@ -52,6 +55,36 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-06-141506] Stale directory inodes cause invisible files over SSH
+
+**Context**: Files created by Claude Code hooks were visible inside the VM but not from the SSH terminal
+
+**Lesson**: If a directory is recreated (e.g. by auto-prune), an SSH shell holding the old directory inode will not see new files — ls returns no such file even though cat with the full path works from other shells
+
+**Application**: After ctx system prune or any state directory recreation, SSH sessions need cd-dot or re-login to pick up the new inode
+
+---
+
+## [2026-03-06-141504] Stats sort uses string comparison on RFC3339 timestamps with mixed timezones
+
+**Context**: ctx system stats showed only old sessions, hiding the current one
+
+**Lesson**: RFC3339 string comparison breaks when entries mix UTC (Z) and offset (-08:00) formats — 13:00-08:00 sorts before 18:00Z lexicographically despite being later in absolute time
+
+**Application**: Always parse to time.Time before comparing RFC3339 timestamps; never rely on lexicographic sort
+
+---
+
+## [2026-03-06-184820] Claude Code supports PreCompact and SessionStart hooks that ctx does not use
+
+**Context**: context-mode proves both hooks work in production across 5 platforms
+
+**Lesson**: ctx's hook architecture only uses UserPromptSubmit, PreToolUse, and PostToolUse — two lifecycle events are untapped
+
+**Application**: PreCompact snapshot plus SessionStart re-injection would eliminate post-compaction disorientation without any new persistence layer since ctx agent already generates the content
 
 ---
 

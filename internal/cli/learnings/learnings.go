@@ -8,6 +8,8 @@ package learnings
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/learnings/cmd/reindex"
 )
 
 // Cmd returns the learnings command with subcommands.
@@ -33,7 +35,7 @@ Examples:
   ctx learnings reindex`,
 	}
 
-	cmd.AddCommand(reindexCmd())
+	cmd.AddCommand(reindex.Cmd())
 
 	return cmd
 }

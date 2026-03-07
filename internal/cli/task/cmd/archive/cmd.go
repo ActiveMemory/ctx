@@ -1,0 +1,52 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package archive
+
+import (
+	"github.com/spf13/cobra"
+)
+
+// Cmd returns the tasks archive subcommand.
+//
+// The archive command moves completed tasks (marked with [x]) from TASKS.md
+// to a timestamped archive file in .context/archive/. Pending tasks ([ ])
+// remain in TASKS.md.
+//
+// Flags:
+//   - --dry-run: Preview changes without modifying files
+//
+// Returns:
+//   - *cobra.Command: Configured archive subcommand
+func Cmd() *cobra.Command {
+	var dryRun bool
+
+	cmd := &cobra.Command{
+		Use:   "archive",
+		Short: "Move completed tasks to timestamped archive file",
+		Long: `Move completed tasks from TASKS.md to an archive file.
+
+Archive files are stored in .context/archive/ with timestamped names:
+  .context/archive/tasks-YYYY-MM-DD.md
+
+The archive preserves Phase structure for traceability. Completed tasks
+(marked with [x]) are moved; pending tasks ([ ]) remain in TASKS.md.
+
+Use --dry-run to preview changes without modifying files.`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runArchive(cmd, dryRun)
+		},
+	}
+
+	cmd.Flags().BoolVar(
+		&dryRun,
+		"dry-run",
+		false,
+		"Preview changes without modifying files",
+	)
+
+	return cmd
+}

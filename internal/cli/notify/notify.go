@@ -4,8 +4,6 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package notify implements the "ctx notify" CLI command for webhook
-// notifications.
 package notify
 
 import (
@@ -14,10 +12,15 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
+	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/test"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 )
 
 // Cmd returns the "ctx notify" parent command.
+//
+// Returns:
+//   - *cobra.Command: Configured notify command with subcommands
 func Cmd() *cobra.Command {
 	var event string
 	var sessionID string
@@ -58,8 +61,8 @@ Examples:
 	cmd.Flags().StringVar(&hook, "hook", "", "Hook name for structured detail (optional)")
 	cmd.Flags().StringVar(&variant, "variant", "", "Template variant for structured detail (optional)")
 
-	cmd.AddCommand(setupCmd())
-	cmd.AddCommand(testCmd())
+	cmd.AddCommand(setup.Cmd())
+	cmd.AddCommand(test.Cmd())
 
 	return cmd
 }

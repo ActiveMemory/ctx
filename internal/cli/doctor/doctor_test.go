@@ -14,6 +14,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/doctor/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/sysinfo"
@@ -107,7 +108,7 @@ func TestDoctor_JSON(t *testing.T) {
 		t.Fatalf("doctor --json failed: %v", runErr)
 	}
 
-	var report Report
+	var report core.Report
 	if unmarshalErr := json.Unmarshal(out.Bytes(), &report); unmarshalErr != nil {
 		t.Fatalf("output is not valid JSON: %v\noutput: %s", unmarshalErr, out.String())
 	}
@@ -194,7 +195,7 @@ func TestDoctor_ContextSizeJSON(t *testing.T) {
 		t.Fatalf("doctor --json failed: %v", runErr)
 	}
 
-	var report Report
+	var report core.Report
 	if unmarshalErr := json.Unmarshal(out.Bytes(), &report); unmarshalErr != nil {
 		t.Fatalf("output is not valid JSON: %v", unmarshalErr)
 	}
@@ -317,14 +318,14 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 		},
 	}
 
-	report := &Report{}
-	addResourceResults(report, snap)
+	report := &core.Report{}
+	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 4 {
 		t.Fatalf("expected 4 results (memory, swap, disk, load), got %d", len(report.Results))
 	}
 	for _, r := range report.Results {
-		if r.Status != statusOK {
+		if r.Status != core.StatusOK {
 			t.Errorf("result %s: expected ok, got %s", r.Name, r.Status)
 		}
 		if r.Category != "Resources" {
@@ -337,15 +338,15 @@ func TestAddResourceResults_MemoryWarning(t *testing.T) {
 	snap := sysinfo.Snapshot{
 		Memory: sysinfo.MemInfo{
 			TotalBytes: 1000,
-			UsedBytes:  820, // 82% → WARNING
+			UsedBytes:  820, // 82% -> WARNING
 			Supported:  true,
 		},
 		Disk: sysinfo.DiskInfo{Supported: false},
 		Load: sysinfo.LoadInfo{Supported: false},
 	}
 
-	report := &Report{}
-	addResourceResults(report, snap)
+	report := &core.Report{}
+	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result (memory only), got %d", len(report.Results))
@@ -353,7 +354,7 @@ func TestAddResourceResults_MemoryWarning(t *testing.T) {
 	if report.Results[0].Name != "resource_memory" {
 		t.Errorf("expected resource_memory, got %s", report.Results[0].Name)
 	}
-	if report.Results[0].Status != statusWarning {
+	if report.Results[0].Status != core.StatusWarning {
 		t.Errorf("expected warning for 82%% memory, got %s", report.Results[0].Status)
 	}
 }
@@ -362,31 +363,31 @@ func TestAddResourceResults_DangerMapsToError(t *testing.T) {
 	snap := sysinfo.Snapshot{
 		Memory: sysinfo.MemInfo{
 			TotalBytes:     1000,
-			UsedBytes:      920, // 92% → DANGER
+			UsedBytes:      920, // 92% -> DANGER
 			SwapTotalBytes: 1000,
-			SwapUsedBytes:  760, // 76% → DANGER
+			SwapUsedBytes:  760, // 76% -> DANGER
 			Supported:      true,
 		},
 		Disk: sysinfo.DiskInfo{
 			TotalBytes: 1000,
-			UsedBytes:  960, // 96% → DANGER
+			UsedBytes:  960, // 96% -> DANGER
 			Supported:  true,
 		},
 		Load: sysinfo.LoadInfo{
 			Load1:     12.0,
-			NumCPU:    8, // 1.5x → DANGER
+			NumCPU:    8, // 1.5x -> DANGER
 			Supported: true,
 		},
 	}
 
-	report := &Report{}
-	addResourceResults(report, snap)
+	report := &core.Report{}
+	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 4 {
 		t.Fatalf("expected 4 results, got %d", len(report.Results))
 	}
 	for _, r := range report.Results {
-		if r.Status != statusError {
+		if r.Status != core.StatusError {
 			t.Errorf("result %s: expected error for danger severity, got %s", r.Name, r.Status)
 		}
 	}
@@ -399,8 +400,8 @@ func TestAddResourceResults_UnsupportedSkipped(t *testing.T) {
 		Load:   sysinfo.LoadInfo{Supported: false},
 	}
 
-	report := &Report{}
-	addResourceResults(report, snap)
+	report := &core.Report{}
+	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 0 {
 		t.Errorf("expected 0 results for unsupported metrics, got %d", len(report.Results))
@@ -420,8 +421,8 @@ func TestAddResourceResults_NoSwapWhenZeroTotal(t *testing.T) {
 		Load: sysinfo.LoadInfo{Supported: false},
 	}
 
-	report := &Report{}
-	addResourceResults(report, snap)
+	report := &core.Report{}
+	core.AddResourceResults(report, snap)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result (memory only, no swap), got %d", len(report.Results))
@@ -446,8 +447,8 @@ func TestAddResourceResults_MessageFormat(t *testing.T) {
 		},
 	}
 
-	report := &Report{}
-	addResourceResults(report, snap)
+	report := &core.Report{}
+	core.AddResourceResults(report, snap)
 
 	for _, r := range report.Results {
 		switch r.Name {
@@ -497,14 +498,14 @@ func TestCheckCtxrcValidation_NoFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	report := &Report{}
-	checkCtxrcValidation(report)
+	report := &core.Report{}
+	core.CheckCtxrcValidation(report)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
 	}
 	r := report.Results[0]
-	if r.Status != statusOK {
+	if r.Status != core.StatusOK {
 		t.Errorf("expected ok, got %s", r.Status)
 	}
 	if !strings.Contains(r.Message, "using defaults") {
@@ -530,14 +531,14 @@ func TestCheckCtxrcValidation_ValidFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	report := &Report{}
-	checkCtxrcValidation(report)
+	report := &core.Report{}
+	core.CheckCtxrcValidation(report)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
 	}
 	r := report.Results[0]
-	if r.Status != statusOK {
+	if r.Status != core.StatusOK {
 		t.Errorf("expected ok, got %s", r.Status)
 	}
 	if !strings.Contains(r.Message, "valid") {
@@ -563,14 +564,14 @@ func TestCheckCtxrcValidation_Typo(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
 
-	report := &Report{}
-	checkCtxrcValidation(report)
+	report := &core.Report{}
+	core.CheckCtxrcValidation(report)
 
 	if len(report.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(report.Results))
 	}
 	r := report.Results[0]
-	if r.Status != statusWarning {
+	if r.Status != core.StatusWarning {
 		t.Errorf("expected warning, got %s", r.Status)
 	}
 	if !strings.Contains(r.Message, "unknown") {

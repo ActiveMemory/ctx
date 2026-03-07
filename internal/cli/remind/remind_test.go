@@ -16,6 +16,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -72,13 +73,13 @@ func TestAdd_Basic(t *testing.T) {
 	}
 
 	// Verify JSON file content.
-	data, err := os.ReadFile(RemindersPath())
-	if err != nil {
-		t.Fatalf("read reminders file: %v", err)
+	data, readErr := os.ReadFile(core.RemindersPath())
+	if readErr != nil {
+		t.Fatalf("read reminders file: %v", readErr)
 	}
-	var reminders []Reminder
-	if err := json.Unmarshal(data, &reminders); err != nil {
-		t.Fatalf("parse reminders: %v", err)
+	var reminders []core.Reminder
+	if parseErr := json.Unmarshal(data, &reminders); parseErr != nil {
+		t.Fatalf("parse reminders: %v", parseErr)
 	}
 	if len(reminders) != 1 {
 		t.Fatalf("got %d reminders, want 1", len(reminders))
@@ -105,9 +106,9 @@ func TestAdd_WithAfter(t *testing.T) {
 		t.Errorf("output = %q, want date annotation", out)
 	}
 
-	reminders, err := ReadReminders()
-	if err != nil {
-		t.Fatalf("read reminders: %v", err)
+	reminders, readErr := core.ReadReminders()
+	if readErr != nil {
+		t.Fatalf("read reminders: %v", readErr)
 	}
 	if reminders[0].After == nil {
 		t.Fatal("After is nil, want date string")
@@ -211,9 +212,9 @@ func TestDismiss_ByID(t *testing.T) {
 	}
 
 	// Verify only one remains.
-	reminders, err := ReadReminders()
-	if err != nil {
-		t.Fatalf("read reminders: %v", err)
+	reminders, readErr := core.ReadReminders()
+	if readErr != nil {
+		t.Fatalf("read reminders: %v", readErr)
 	}
 	if len(reminders) != 1 {
 		t.Fatalf("got %d reminders, want 1", len(reminders))
@@ -250,9 +251,9 @@ func TestDismiss_All(t *testing.T) {
 	}
 
 	// Verify file is empty array.
-	reminders, err := ReadReminders()
-	if err != nil {
-		t.Fatalf("read reminders: %v", err)
+	reminders, readErr := core.ReadReminders()
+	if readErr != nil {
+		t.Fatalf("read reminders: %v", readErr)
 	}
 	if len(reminders) != 0 {
 		t.Errorf("got %d reminders, want 0", len(reminders))

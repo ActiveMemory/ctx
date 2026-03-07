@@ -9,27 +9,14 @@ package why
 import (
 	"github.com/spf13/cobra"
 
+	whyroot "github.com/ActiveMemory/ctx/internal/cli/why/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// docAliases maps user-facing names to embedded asset names.
-var docAliases = map[string]string{
-	"manifesto":  "manifesto",
-	"about":      "about",
-	"invariants": "design-invariants",
-}
-
-// docOrder defines the display order for the interactive menu.
-var docOrder = []struct {
-	alias string
-	label string
-}{
-	{"manifesto", "The ctx Manifesto"},
-	{"about", "About ctx"},
-	{"invariants", "Design Invariants"},
-}
-
 // Cmd returns the "ctx why" cobra command.
+//
+// Returns:
+//   - *cobra.Command: Configured why command with document aliases
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "why [DOCUMENT]",
@@ -49,7 +36,7 @@ Usage:
   ctx why about        Show the about page
   ctx why invariants   Show the design invariants`,
 		Args: cobra.MaximumNArgs(1),
-		RunE: runWhy,
+		RunE: whyroot.Run,
 	}
 
 	return cmd

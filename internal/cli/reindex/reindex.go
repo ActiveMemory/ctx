@@ -8,6 +8,8 @@ package reindex
 
 import (
 	"github.com/spf13/cobra"
+
+	reindexroot "github.com/ActiveMemory/ctx/internal/cli/reindex/cmd/root"
 )
 
 // Cmd returns the reindex convenience command.
@@ -36,6 +38,6 @@ files to use the index format.
 
 Examples:
   ctx reindex`,
-		RunE: runReindex,
+		RunE: reindexroot.Run,
 	}
 }

@@ -477,6 +477,14 @@ Goal: consolidate user-facing messages into `internal/write/` as the central
 output package. All CLI commands should route printed output through this package.
 
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
+- [ ] Fix 3 CI compliance issues from PR #27 after merge: missing copyright header on internal/mcp/server_test.go, missing doc.go for internal/cli/mcp/, literal newlines in internal/mcp/resources.go and tools.go #added:2026-03-06-141508
+
+- [ ] Add PostToolUse session event capture. Append lightweight event records (tool name, files touched, timestamp) to .context/state/session-events.jsonl on significant PostToolUse events (file edits, git operations, errors). Not SQLite — just JSONL append. This feeds the PreCompact snapshot hook with richer input so it can report what the agent was actively working on, not just static file state. #added:2026-03-06-185126
+
+- [ ] Add next-step hints to ctx agent and ctx status output. Append actionable suggestions based on context health (e.g. stale tasks, high completion ratio, drift findings). Pattern learned from GitNexus self-guiding agent workflows. #added:2026-03-06-184829
+
+- [ ] Implement PreCompact and SessionStart hooks for session continuity across compaction. Wire ctx agent --budget 4000 to both events: PreCompact outputs context packet before compaction so compactor preserves key info; SessionStart re-injects context packet so fresh/post-compact sessions start oriented. Two thin ctx system subcommands, two entries in hooks.json. See ideas/gitnexus-contextmode-analysis.md for design rationale. #added:2026-03-06-184825
+
 - [ ] Audit fatih/color removal across ~35 files — removed from recall/run.go, recall/lock.go, write/validate.go; ~30 files remain. Separate consolidation pass. #added:2026-03-06-050140
 
 - [ ] Audit remaining 2006-01-02 usages across codebase — 5+ files still use the literal instead of config.DateFormat. Incremental migration. #added:2026-03-06-050140

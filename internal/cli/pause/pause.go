@@ -4,23 +4,18 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package pause provides the top-level "ctx pause" command.
-//
-// Pauses all context nudge hooks for the current session. Security and
-// housekeeping hooks are unaffected. Delegates to the session-scoped
-// pause marker in .context/state/.
 package pause
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system"
+	pauseroot "github.com/ActiveMemory/ctx/internal/cli/pause/cmd/root"
 )
 
 // Cmd returns the top-level "ctx pause" command.
+//
+// Returns:
+//   - *cobra.Command: Configured pause command
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "pause",
@@ -32,12 +27,7 @@ The session ID is read from stdin JSON (same as hooks) or --session-id flag.
 Resume with: ctx resume`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			sessionID, _ := cmd.Flags().GetString("session-id")
-			if sessionID == "" {
-				sessionID = system.ReadSessionID(os.Stdin)
-			}
-			system.Pause(sessionID)
-			cmd.Println(fmt.Sprintf("Context hooks paused for session %s", sessionID))
-			return nil
+			return pauseroot.Run(cmd, sessionID)
 		},
 	}
 	cmd.Flags().String("session-id", "", "Session ID (overrides stdin)")

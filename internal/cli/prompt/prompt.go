@@ -7,15 +7,12 @@
 package prompt
 
 import (
-	"fmt"
-	"os"
-	"path/filepath"
-	"strings"
-
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/add"
+	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/list"
+	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/rm"
+	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/show"
 )
 
 // Cmd returns the prompt command with subcommands.
@@ -42,61 +39,14 @@ Subcommands:
   add      Create a new prompt from embedded template or stdin
   rm       Remove a prompt template`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runList(cmd)
+			return list.RunList(cmd)
 		},
 	}
 
-	cmd.AddCommand(listCmd())
-	cmd.AddCommand(showCmd())
-	cmd.AddCommand(addCmd())
-	cmd.AddCommand(rmCmd())
+	cmd.AddCommand(list.Cmd())
+	cmd.AddCommand(show.Cmd())
+	cmd.AddCommand(add.Cmd())
+	cmd.AddCommand(rm.Cmd())
 
 	return cmd
-}
-
-// promptsDir returns the path to the prompts directory.
-func promptsDir() string {
-	return filepath.Join(rc.ContextDir(), config.DirPrompts)
-}
-
-// listCmd returns the prompt list subcommand.
-func listCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "list",
-		Short: "List available prompt templates",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runList(cmd)
-		},
-	}
-}
-
-// runList prints all available prompt template names.
-func runList(cmd *cobra.Command) error {
-	dir := promptsDir()
-
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		if os.IsNotExist(err) {
-			cmd.Println("No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.")
-			return nil
-		}
-		return fmt.Errorf("read prompts directory: %w", err)
-	}
-
-	var found bool
-	for _, entry := range entries {
-		name := entry.Name()
-		if entry.IsDir() || !strings.HasSuffix(name, config.ExtMarkdown) {
-			continue
-		}
-		cmd.Println(fmt.Sprintf("  %s", strings.TrimSuffix(name, config.ExtMarkdown)))
-		found = true
-	}
-
-	if !found {
-		cmd.Println("No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.")
-	}
-
-	return nil
 }

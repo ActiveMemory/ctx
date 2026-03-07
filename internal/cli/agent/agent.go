@@ -11,6 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	agentroot "github.com/ActiveMemory/ctx/internal/cli/agent/cmd/root"
+	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -72,7 +74,7 @@ Examples:
 			if !cmd.Flags().Changed("budget") {
 				budget = rc.TokenBudget()
 			}
-			return runAgent(cmd, budget, format, cooldown, session)
+			return agentroot.Run(cmd, budget, format, cooldown, session)
 		},
 	}
 
@@ -84,7 +86,7 @@ Examples:
 		&format, "format", config.FormatMarkdown, "Output format: md or json",
 	)
 	cmd.Flags().DurationVar(
-		&cooldown, "cooldown", defaultCooldown,
+		&cooldown, "cooldown", core.DefaultCooldown,
 		"Suppress repeated output within this duration (0 to disable)",
 	)
 	cmd.Flags().StringVar(

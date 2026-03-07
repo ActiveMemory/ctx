@@ -34,10 +34,6 @@ linters:
       - linters: [gosec]
         text: "G30[16]"
         path: "_test\\.go"
-      # git log args built from time.Format — not user input
-      - linters: [gosec]
-        text: "G204"
-        path: "changes/scan\\.go"
 
 run:
   timeout: 5m

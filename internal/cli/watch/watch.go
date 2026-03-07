@@ -8,11 +8,8 @@ package watch
 
 import (
 	"github.com/spf13/cobra"
-)
 
-var (
-	watchLog    string
-	watchDryRun bool
+	watchroot "github.com/ActiveMemory/ctx/internal/cli/watch/cmd/root"
 )
 
 // Cmd returns the watch command.
@@ -24,6 +21,11 @@ var (
 // Returns:
 //   - *cobra.Command: Configured watch command with flags registered
 func Cmd() *cobra.Command {
+	var (
+		logPath string
+		dryRun  bool
+	)
+
 	cmd := &cobra.Command{
 		Use:   "watch",
 		Short: "Watch for context-update commands in AI output",
@@ -54,14 +56,16 @@ Use --log to watch a specific file instead of stdin.
 Use --dry-run to see what would be updated without making changes.
 
 Press Ctrl+C to stop watching.`,
-		RunE: runWatch,
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return watchroot.Run(cmd, logPath, dryRun)
+		},
 	}
 
 	cmd.Flags().StringVar(
-		&watchLog, "log", "", "Log file to watch (default: stdin)",
+		&logPath, "log", "", "Log file to watch (default: stdin)",
 	)
 	cmd.Flags().BoolVar(
-		&watchDryRun, "dry-run", false, "Show updates without applying",
+		&dryRun, "dry-run", false, "Show updates without applying",
 	)
 
 	return cmd

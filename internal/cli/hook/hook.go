@@ -9,6 +9,7 @@ package hook
 import (
 	"github.com/spf13/cobra"
 
+	hookroot "github.com/ActiveMemory/ctx/internal/cli/hook/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
@@ -46,7 +47,7 @@ Example:
   ctx hook cursor`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runHook(cmd, args, write)
+			return hookroot.Run(cmd, args, write)
 		},
 	}
 

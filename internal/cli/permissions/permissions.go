@@ -8,6 +8,9 @@ package permissions
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/permissions/cmd/restore"
+	"github.com/ActiveMemory/ctx/internal/cli/permissions/cmd/snapshot"
 )
 
 // Cmd returns the permissions command with subcommands.
@@ -33,41 +36,8 @@ Subcommands:
   restore   Reset settings.local.json from golden image`,
 	}
 
-	cmd.AddCommand(snapshotCmd())
-	cmd.AddCommand(restoreCmd())
+	cmd.AddCommand(snapshot.Cmd())
+	cmd.AddCommand(restore.Cmd())
 
 	return cmd
-}
-
-// snapshotCmd returns the permissions snapshot subcommand.
-func snapshotCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "snapshot",
-		Short: "Save settings.local.json as golden image",
-		Long: `Save .claude/settings.local.json as the golden image.
-
-The golden file (.claude/settings.golden.json) is a byte-for-byte copy
-of the current settings. It is meant to be committed to version control
-and shared with the team.
-
-Overwrites any existing golden file.`,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runSnapshot(cmd)
-		},
-	}
-}
-
-// restoreCmd returns the permissions restore subcommand.
-func restoreCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "restore",
-		Short: "Reset settings.local.json from golden image",
-		Long: `Replace .claude/settings.local.json with the golden image.
-
-Prints a diff of dropped (session-accumulated) and restored permissions.
-No-op if the files already match.`,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runRestore(cmd)
-		},
-	}
 }

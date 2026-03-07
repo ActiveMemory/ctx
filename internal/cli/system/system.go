@@ -8,6 +8,37 @@ package system
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/backup"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/blockdangerouscommands"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/blocknonpathctx"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/bootstrap"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkbackupage"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkceremonies"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkcontextsize"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkjournal"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkknowledge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkmapstaleness"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkmemorydrift"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkpersistence"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkreminders"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkresources"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checktaskcompletion"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/checkversion"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/contextloadgate"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/events"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/heartbeat"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/markjournal"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/markwrappedup"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/message"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/pause"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/postcommit"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/prune"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/qareminder"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resources"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specsnudge"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/stats"
 )
 
 // Cmd returns the "ctx system" parent command.
@@ -70,36 +101,36 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 	}
 
 	cmd.AddCommand(
-		backupCmd(),
-		resourcesCmd(),
-		statsCmd(),
-		bootstrapCmd(),
-		messageCmd(),
-		markJournalCmd(),
-		markWrappedUpCmd(),
-		pauseCmd(),
-		resumeCmd(),
-		pruneCmd(),
-		eventsCmd(),
-		contextLoadGateCmd(),
-		checkContextSizeCmd(),
-		checkPersistenceCmd(),
-		checkJournalCmd(),
-		checkCeremoniesCmd(),
-		checkRemindersCmd(),
-		checkVersionCmd(),
-		blockNonPathCtxCmd(),
-		checkTaskCompletionCmd(),
-		postCommitCmd(),
-		qaReminderCmd(),
-		checkResourcesCmd(),
-		checkKnowledgeCmd(),
-		checkMapStalenessCmd(),
-		blockDangerousCommandsCmd(),
-		checkBackupAgeCmd(),
-		specsNudgeCmd(),
-		checkMemoryDriftCmd(),
-		heartbeatCmd(),
+		backup.Cmd(),
+		resources.Cmd(),
+		stats.Cmd(),
+		bootstrap.Cmd(),
+		message.Cmd(),
+		markjournal.Cmd(),
+		markwrappedup.Cmd(),
+		pause.Cmd(),
+		resume.Cmd(),
+		prune.Cmd(),
+		events.Cmd(),
+		contextloadgate.Cmd(),
+		checkcontextsize.Cmd(),
+		checkpersistence.Cmd(),
+		checkjournal.Cmd(),
+		checkceremonies.Cmd(),
+		checkreminders.Cmd(),
+		checkversion.Cmd(),
+		blocknonpathctx.Cmd(),
+		checktaskcompletion.Cmd(),
+		postcommit.Cmd(),
+		qareminder.Cmd(),
+		checkresources.Cmd(),
+		checkknowledge.Cmd(),
+		checkmapstaleness.Cmd(),
+		blockdangerouscommands.Cmd(),
+		checkbackupage.Cmd(),
+		specsnudge.Cmd(),
+		checkmemorydrift.Cmd(),
+		heartbeat.Cmd(),
 	)
 
 	return cmd

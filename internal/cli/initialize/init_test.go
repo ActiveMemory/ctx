@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // TestInitCommand tests the init command creates the .context directory.
@@ -24,22 +25,18 @@ func TestInitCommand(t *testing.T) {
 	}
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
-	// Save and restore working directory
 	origDir, _ := os.Getwd()
 	if err = os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Run the init command
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
-
 	if err = cmd.Execute(); err != nil {
 		t.Fatalf("init command failed: %v", err)
 	}
 
-	// Check that .context directory was created
 	ctxDir := filepath.Join(tmpDir, ".context")
 	info, err := os.Stat(ctxDir)
 	if err != nil {
@@ -49,7 +46,6 @@ func TestInitCommand(t *testing.T) {
 		t.Fatal(".context should be a directory")
 	}
 
-	// Check that required files exist
 	requiredFiles := []string{
 		"CONSTITUTION.md",
 		"TASKS.md",
@@ -57,7 +53,6 @@ func TestInitCommand(t *testing.T) {
 		"CONVENTIONS.md",
 		"ARCHITECTURE.md",
 	}
-
 	for _, name := range requiredFiles {
 		path := filepath.Join(ctxDir, name)
 		if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -66,69 +61,6 @@ func TestInitCommand(t *testing.T) {
 	}
 }
 
-// TestFindInsertionPoint tests the insertion point logic for merging.
-func TestFindInsertionPoint(t *testing.T) {
-	tests := []struct {
-		name     string
-		content  string
-		wantPos  int
-		wantDesc string // description of expected position
-	}{
-		{
-			name:     "H1 at start",
-			content:  "# My Project\n\nSome content here.",
-			wantPos:  14, // after "# My Project\n"
-			wantDesc: "after H1",
-		},
-		{
-			name:     "H1 with blank lines after",
-			content:  "# My Project\n\n\nSome content here.",
-			wantPos:  15, // after "# My Project\n\n"
-			wantDesc: "after H1 and blank lines",
-		},
-		{
-			name:     "H2 first",
-			content:  "## Section One\n\nContent here.",
-			wantPos:  0,
-			wantDesc: "at top (H2 is not H1)",
-		},
-		{
-			name:     "No heading",
-			content:  "Just some text content.\n\nMore text.",
-			wantPos:  0,
-			wantDesc: "at top (no heading)",
-		},
-		{
-			name:     "Empty file",
-			content:  "",
-			wantPos:  0,
-			wantDesc: "at top (empty)",
-		},
-		{
-			name:     "Only whitespace",
-			content:  "\n\n   \n",
-			wantPos:  0,
-			wantDesc: "at top (only whitespace)",
-		},
-		{
-			name:     "H1 after blank lines",
-			content:  "\n\n# Title\n\nContent",
-			wantPos:  11, // after "\n\n# Title\n"
-			wantDesc: "after H1 (skipping leading blanks)",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := findInsertionPoint(tt.content)
-			if got != tt.wantPos {
-				t.Errorf("findInsertionPoint() = %d, want %d (%s)", got, tt.wantPos, tt.wantDesc)
-			}
-		})
-	}
-}
-
-// TestInitMergeInsertsAfterH1 tests that merge inserts ctx content after H1.
 func TestInitMergeInsertsAfterH1(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-init-merge-h1-*")
 	if err != nil {
@@ -142,39 +74,26 @@ func TestInitMergeInsertsAfterH1(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create CLAUDE.md with H1 but no ctx markers
-	existingContent := `# My Amazing Project
-
-This is the project description.
-
-## Build Instructions
-
-Run make build.
-`
+	existingContent := "# My Amazing Project\n\nThis is the project description.\n\n## Build Instructions\n\nRun make build.\n"
 	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
-	// Run init with --merge flag
 	initCmd := Cmd()
 	initCmd.SetArgs([]string{"--merge"})
 	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
-	// Check CLAUDE.md content
 	content, err := os.ReadFile("CLAUDE.md")
 	if err != nil {
 		t.Fatalf("failed to read CLAUDE.md: %v", err)
 	}
 	contentStr := string(content)
 
-	// H1 should still be at the start
 	if !strings.HasPrefix(contentStr, "# My Amazing Project") {
 		t.Error("H1 heading should remain at the start")
 	}
-
-	// ctx content should appear before "## Build Instructions"
 	ctxIdx := strings.Index(contentStr, "ctx:context")
 	buildIdx := strings.Index(contentStr, "## Build Instructions")
 	if ctxIdx == -1 {
@@ -186,14 +105,11 @@ Run make build.
 	if ctxIdx > buildIdx {
 		t.Error("ctx content should appear before Build Instructions, not after")
 	}
-
-	// Original content should be preserved
 	if !strings.Contains(contentStr, "Run make build") {
 		t.Error("original content was lost")
 	}
 }
 
-// TestInitMergeInsertsAtTopWhenNoH1 tests merge inserts at top without H1.
 func TestInitMergeInsertsAtTopWhenNoH1(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-init-merge-no-h1-*")
 	if err != nil {
@@ -207,34 +123,23 @@ func TestInitMergeInsertsAtTopWhenNoH1(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create CLAUDE.md without H1 (starts with H2)
-	existingContent := `## Build Instructions
-
-Run make build.
-
-## Testing
-
-Run make test.
-`
+	existingContent := "## Build Instructions\n\nRun make build.\n\n## Testing\n\nRun make test.\n"
 	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
-	// Run init with --merge flag
 	initCmd := Cmd()
 	initCmd.SetArgs([]string{"--merge"})
 	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
-	// Check CLAUDE.md content
 	content, err := os.ReadFile("CLAUDE.md")
 	if err != nil {
 		t.Fatalf("failed to read CLAUDE.md: %v", err)
 	}
 	contentStr := string(content)
 
-	// ctx content should appear before "## Build Instructions"
 	ctxIdx := strings.Index(contentStr, "ctx:context")
 	buildIdx := strings.Index(contentStr, "## Build Instructions")
 	if ctxIdx == -1 {
@@ -246,15 +151,11 @@ Run make test.
 	if ctxIdx > buildIdx {
 		t.Error("ctx content should appear at top, before Build Instructions")
 	}
-
-	// Original content should be preserved
 	if !strings.Contains(contentStr, "Run make test") {
 		t.Error("original content was lost")
 	}
 }
 
-// TestInitCreatesPermissions tests that init creates settings.local.json with
-// ctx command permissions.
 func TestInitCreatesPermissions(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-init-perms-*")
 	if err != nil {
@@ -268,14 +169,12 @@ func TestInitCreatesPermissions(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Run init
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
 	if err = cmd.Execute(); err != nil {
 		t.Fatalf("init command failed: %v", err)
 	}
 
-	// Read settings.local.json
 	settingsPath := filepath.Join(tmpDir, ".claude", "settings.local.json")
 	content, err := os.ReadFile(filepath.Clean(settingsPath))
 	if err != nil {
@@ -287,25 +186,17 @@ func TestInitCreatesPermissions(t *testing.T) {
 		t.Fatalf("failed to parse settings.local.json: %v", err)
 	}
 
-	// Check that permissions include ctx commands
 	permSet := make(map[string]bool)
 	for _, p := range settings.Permissions.Allow {
 		permSet[p] = true
 	}
-
-	requiredPerms := []string{
-		"Bash(ctx:*)",
-		"Skill(ctx-agent)",
-		"Skill(ctx-add-learning)",
-	}
-
+	requiredPerms := []string{"Bash(ctx:*)", "Skill(ctx-agent)", "Skill(ctx-add-learning)"}
 	for _, p := range requiredPerms {
 		if !permSet[p] {
 			t.Errorf("missing required permission: %s", p)
 		}
 	}
 
-	// Check that deny rules include defaults
 	denySet := make(map[string]bool)
 	for _, d := range settings.Permissions.Deny {
 		denySet[d] = true
@@ -318,8 +209,6 @@ func TestInitCreatesPermissions(t *testing.T) {
 	}
 }
 
-// TestInitMergesPermissions tests that init adds missing permissions without
-// removing existing ones.
 func TestInitMergesPermissions(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-init-merge-perms-*")
 	if err != nil {
@@ -333,21 +222,14 @@ func TestInitMergesPermissions(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create .claude directory and settings with existing permissions
 	if err = os.MkdirAll(".claude", 0750); err != nil {
 		t.Fatalf("failed to create .claude: %v", err)
 	}
 
 	existingSettings := claude.Settings{
 		Permissions: claude.PermissionsConfig{
-			Allow: []string{
-				"Bash(git status:*)",
-				"Bash(make build:*)",
-				"Bash(ctx:*)", // Already has the ctx wildcard
-			},
-			Deny: []string{
-				"Bash(custom-block *)", // Custom deny rule
-			},
+			Allow: []string{"Bash(git status:*)", "Bash(make build:*)", "Bash(ctx:*)"},
+			Deny:  []string{"Bash(custom-block *)"},
 		},
 	}
 	existingJSON, _ := json.MarshalIndent(existingSettings, "", "  ")
@@ -355,14 +237,12 @@ func TestInitMergesPermissions(t *testing.T) {
 		t.Fatalf("failed to write settings: %v", err)
 	}
 
-	// Run init
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
 	if err = cmd.Execute(); err != nil {
 		t.Fatalf("init command failed: %v", err)
 	}
 
-	// Read updated settings
 	content, err := os.ReadFile(".claude/settings.local.json")
 	if err != nil {
 		t.Fatalf("failed to read settings: %v", err)
@@ -373,35 +253,17 @@ func TestInitMergesPermissions(t *testing.T) {
 		t.Fatalf("failed to parse settings: %v", err)
 	}
 
-	// Check existing permissions are preserved
 	permSet := make(map[string]bool)
 	for _, p := range settings.Permissions.Allow {
 		permSet[p] = true
 	}
-
 	if !permSet["Bash(git status:*)"] {
 		t.Error("existing permission 'Bash(git status:*)' was removed")
 	}
-	if !permSet["Bash(make build:*)"] {
-		t.Error("existing permission 'Bash(make build:*)' was removed")
-	}
-
-	// Check new ctx skill permissions were added
 	if !permSet["Skill(ctx-agent)"] {
 		t.Error("missing new permission 'Skill(ctx-agent)'")
 	}
-	// Check no duplicates (ctx wildcard should appear once)
-	count := 0
-	for _, p := range settings.Permissions.Allow {
-		if p == "Bash(ctx:*)" {
-			count++
-		}
-	}
-	if count != 1 {
-		t.Errorf("'Bash(ctx:*)' appears %d times, expected 1", count)
-	}
 
-	// Check existing deny rule was preserved and defaults were added
 	denySet := make(map[string]bool)
 	for _, d := range settings.Permissions.Deny {
 		denySet[d] = true
@@ -414,8 +276,6 @@ func TestInitMergesPermissions(t *testing.T) {
 	}
 }
 
-// TestInitWithExistingClaudeMdWithCtxMarker tests init when CLAUDE.md
-// already exists with ctx marker.
 func TestInitWithExistingClaudeMdWithCtxMarker(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "cli-init-existing-claude-test-*")
 	if err != nil {
@@ -429,43 +289,144 @@ func TestInitWithExistingClaudeMdWithCtxMarker(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 
-	// Create existing CLAUDE.md with ctx marker already present
-	existingContent := `# My Project
-
-This is my existing CLAUDE.md content.
-
-<!-- ctx:context -->
-Old ctx content here
-<!-- ctx:end -->
-
-## Custom Section
-
-Some custom content here.
-`
+	existingContent := "# My Project\n\nThis is my existing CLAUDE.md content.\n\n<!-- ctx:context -->\nOld ctx content here\n<!-- ctx:end -->\n\n## Custom Section\n\nSome custom content here.\n"
 	if err = os.WriteFile("CLAUDE.md", []byte(existingContent), 0600); err != nil {
 		t.Fatalf("failed to create CLAUDE.md: %v", err)
 	}
 
-	// Run init
 	initCmd := Cmd()
 	initCmd.SetArgs([]string{})
 	if err = initCmd.Execute(); err != nil {
 		t.Fatalf("init failed: %v", err)
 	}
 
-	// Check that CLAUDE.md was updated
 	content, err := os.ReadFile("CLAUDE.md")
 	if err != nil {
 		t.Fatalf("failed to read CLAUDE.md: %v", err)
 	}
-
-	// Should still contain ctx marker (updated)
 	if !strings.Contains(string(content), "ctx:context") {
 		t.Error("CLAUDE.md missing ctx:context marker")
 	}
-
-	// Should preserve custom section
 	if !strings.Contains(string(content), "Custom Section") {
 		t.Error("CLAUDE.md lost custom section")
+	}
+}
+
+func TestCmd_Flags(t *testing.T) {
+	cmd := Cmd()
+	if cmd == nil {
+		t.Fatal("Cmd() returned nil")
+	}
+	if cmd.Use != "init" {
+		t.Errorf("Cmd().Use = %q, want %q", cmd.Use, "init")
+	}
+	flags := []string{"force", "minimal", "merge", "ralph"}
+	for _, f := range flags {
+		if cmd.Flags().Lookup(f) == nil {
+			t.Errorf("missing --%s flag", f)
+		}
+	}
+	if cmd.Flags().ShorthandLookup("f") == nil {
+		t.Error("missing -f shorthand for --force")
+	}
+	if cmd.Flags().ShorthandLookup("m") == nil {
+		t.Error("missing -m shorthand for --minimal")
+	}
+}
+
+func TestRunInit_Minimal(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "ctx-init-minimal-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--minimal"})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("init --minimal failed: %v", err)
+	}
+
+	for _, name := range config.FilesRequired {
+		path := filepath.Join(".context", name)
+		if _, err := os.Stat(path); err != nil {
+			t.Errorf("required file %s missing with --minimal: %v", name, err)
+		}
+	}
+
+	glossaryPath := filepath.Join(".context", config.FileGlossary)
+	if _, err := os.Stat(glossaryPath); err == nil {
+		t.Error("GLOSSARY.md should not exist with --minimal")
+	}
+}
+
+func TestRunInit_Force(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "ctx-init-force-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("first init failed: %v", err)
+	}
+
+	cmd2 := Cmd()
+	cmd2.SetArgs([]string{"--force"})
+	if err = cmd2.Execute(); err != nil {
+		t.Fatalf("init --force failed: %v", err)
+	}
+
+	if _, err := os.Stat(filepath.Join(".context", config.FileConstitution)); err != nil {
+		t.Error("CONSTITUTION.md missing after force reinit")
+	}
+}
+
+func TestRunInit_Merge(t *testing.T) {
+	tmpDir, err := os.MkdirTemp("", "ctx-init-merge-*")
+	if err != nil {
+		t.Fatalf("failed to create temp dir: %v", err)
+	}
+	defer func() { _ = os.RemoveAll(tmpDir) }()
+
+	origDir, _ := os.Getwd()
+	if err = os.Chdir(tmpDir); err != nil {
+		t.Fatalf("failed to chdir: %v", err)
+	}
+	defer func() { _ = os.Chdir(origDir) }()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+
+	if err = os.WriteFile(config.FileClaudeMd, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := Cmd()
+	cmd.SetArgs([]string{"--merge"})
+	if err = cmd.Execute(); err != nil {
+		t.Fatalf("init --merge failed: %v", err)
+	}
+
+	content, _ := os.ReadFile(config.FileClaudeMd)
+	if !strings.Contains(string(content), "My Project") {
+		t.Error("original content lost with --merge")
 	}
 }

@@ -6,7 +6,11 @@
 
 package err
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"os"
+)
 
 // MemoryNotFound returns an error indicating that MEMORY.md was not
 // discovered. Used by all memory subcommands (sync, status, diff).
@@ -312,4 +316,64 @@ func ZensicalNotFound() error {
 	return fmt.Errorf(
 		"zensical not found. Install with: pipx install zensical (requires Python >= 3.10)",
 	)
+}
+
+// LoadKey classifies a key-loading failure.
+//
+// If the underlying error is os.ErrNotExist, returns NoKeyAt(keyPath).
+// Otherwise wraps the cause as a generic load-key error.
+//
+// Parameters:
+//   - cause: the underlying error from crypto.LoadKey
+//   - keyPath: the resolved key path that was checked
+//
+// Returns:
+//   - error: NoKeyAt or "load key: <cause>"
+func LoadKey(cause error, keyPath string) error {
+	if errors.Is(cause, os.ErrNotExist) {
+		return NoKeyAt(keyPath)
+	}
+	return fmt.Errorf("load key: %w", cause)
+}
+
+// EncryptFailed wraps an encryption failure.
+//
+// Parameters:
+//   - cause: the underlying error from crypto.Encrypt.
+//
+// Returns:
+//   - error: "encrypt: <cause>"
+func EncryptFailed(cause error) error {
+	return fmt.Errorf("encrypt: %w", cause)
+}
+
+// DecryptFailed returns an error indicating decryption failure.
+//
+// Returns:
+//   - error: "decryption failed: wrong key?"
+func DecryptFailed() error {
+	return fmt.Errorf("decryption failed: wrong key?")
+}
+
+// NoKeyAt returns an error indicating a missing encryption key.
+//
+// Parameters:
+//   - path: the resolved key path that was checked.
+//
+// Returns:
+//   - error: "encrypted scratchpad found but no key at <path>"
+func NoKeyAt(path string) error {
+	return fmt.Errorf("encrypted scratchpad found but no key at %s", path)
+}
+
+// EntryRange returns an error for an out-of-range scratchpad entry.
+//
+// Parameters:
+//   - n: the requested entry number.
+//   - total: the total number of entries.
+//
+// Returns:
+//   - error: "entry <n> does not exist, scratchpad has <total> entries"
+func EntryRange(n, total int) error {
+	return fmt.Errorf("entry %d does not exist, scratchpad has %d entries", n, total)
 }
