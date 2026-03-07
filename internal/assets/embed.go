@@ -21,7 +21,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml commands/text/*.yaml journal/*.css overrides/*/*.md
 var FS embed.FS
 
 const (
@@ -1178,6 +1178,18 @@ const (
 //   - error: Non-nil if the file is not found or read fails
 func Template(name string) ([]byte, error) {
 	return FS.ReadFile("context/" + name)
+}
+
+// TemplateForCaller reads a template, using a caller-specific override if available.
+// Falls back to the default template when no override exists for the caller.
+func TemplateForCaller(name, caller string) ([]byte, error) {
+	if caller != "" {
+		override, err := FS.ReadFile("overrides/" + caller + "/" + name)
+		if err == nil {
+			return override, nil
+		}
+	}
+	return Template(name)
 }
 
 // List returns all available template file names.

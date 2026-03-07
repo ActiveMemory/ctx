@@ -45,10 +45,11 @@ const gitignoreHeader = "# ctx managed entries"
 //   - merge: If true, auto-merge ctx content into existing files
 //   - ralph: If true, use autonomous loop templates (no questions, signals)
 //   - noPluginEnable: If true, skip auto-enabling the plugin globally
+//   - caller: Identifies the calling tool (e.g. "vscode") for template overrides
 //
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
-func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) error {
+func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, caller string) error {
 	// Check if ctx is in PATH (required for hooks to work)
 	if err := core.CheckCtxInPath(cmd); err != nil {
 		return err
@@ -103,7 +104,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			continue
 		}
 
-		content, err := assets.Template(name)
+		content, err := assets.TemplateForCaller(name, caller)
 		if err != nil {
 			return ctxerr.ReadTemplate(name, err)
 		}
