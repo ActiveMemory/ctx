@@ -60,7 +60,7 @@ func TestSwitch_DevToBase(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if switchErr := RunSwitch(cmd, root, []string{"base"}); switchErr != nil {
+	if switchErr := Run(cmd, root, []string{"base"}); switchErr != nil {
 		t.Fatalf("unexpected error: %v", switchErr)
 	}
 
@@ -83,7 +83,7 @@ func TestSwitch_BaseToDev(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if switchErr := RunSwitch(cmd, root, []string{"dev"}); switchErr != nil {
+	if switchErr := Run(cmd, root, []string{"dev"}); switchErr != nil {
 		t.Fatalf("unexpected error: %v", switchErr)
 	}
 
@@ -106,7 +106,7 @@ func TestSwitch_AlreadyOnProfile(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if switchErr := RunSwitch(cmd, root, []string{"dev"}); switchErr != nil {
+	if switchErr := Run(cmd, root, []string{"dev"}); switchErr != nil {
 		t.Fatalf("unexpected error: %v", switchErr)
 	}
 
@@ -125,7 +125,7 @@ func TestSwitch_ProdAlias(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if switchErr := RunSwitch(cmd, root, []string{"prod"}); switchErr != nil {
+	if switchErr := Run(cmd, root, []string{"prod"}); switchErr != nil {
 		t.Fatalf("unexpected error: %v", switchErr)
 	}
 
@@ -144,7 +144,7 @@ func TestSwitch_Toggle_DevToBase(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if switchErr := RunSwitch(cmd, root, nil); switchErr != nil {
+	if switchErr := Run(cmd, root, nil); switchErr != nil {
 		t.Fatalf("unexpected error: %v", switchErr)
 	}
 
@@ -162,7 +162,7 @@ func TestSwitch_Toggle_BaseToDev(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if switchErr := RunSwitch(cmd, root, nil); switchErr != nil {
+	if switchErr := Run(cmd, root, nil); switchErr != nil {
 		t.Fatalf("unexpected error: %v", switchErr)
 	}
 
@@ -175,7 +175,7 @@ func TestSwitch_Toggle_MissingCtxrc(t *testing.T) {
 	root := setupProfiles(t)
 
 	cmd := newTestCmd()
-	if switchErr := RunSwitch(cmd, root, nil); switchErr != nil {
+	if switchErr := Run(cmd, root, nil); switchErr != nil {
 		t.Fatalf("unexpected error: %v", switchErr)
 	}
 
@@ -188,7 +188,7 @@ func TestSwitch_InvalidProfile(t *testing.T) {
 	root := setupProfiles(t)
 
 	cmd := newTestCmd()
-	switchErr := RunSwitch(cmd, root, []string{"invalid"})
+	switchErr := Run(cmd, root, []string{"invalid"})
 	if switchErr == nil {
 		t.Fatal("expected error for invalid profile")
 	}

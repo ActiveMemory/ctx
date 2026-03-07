@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 			if rootErr != nil {
 				return rootErr
 			}
-			return RunSwitch(cmd, root, args)
+			return Run(cmd, root, args)
 		},
 	}
 }

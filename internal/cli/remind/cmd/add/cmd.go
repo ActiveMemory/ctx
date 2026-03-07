@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return RunAdd(cmd, args[0], afterFlag)
+			return Run(cmd, args[0], afterFlag)
 		},
 	}
 

@@ -34,9 +34,9 @@ func Cmd() *cobra.Command {
 		Args:  cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
-				return add.RunAdd(cmd, args[0], afterFlag)
+				return add.Run(cmd, args[0], afterFlag)
 			}
-			return list.RunList(cmd)
+			return list.Run(cmd)
 		},
 	}
 

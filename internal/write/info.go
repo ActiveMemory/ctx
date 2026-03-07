@@ -68,6 +68,40 @@ func InfoArchivedTasks(cmd *cobra.Command, count int, archiveFile string, days i
 	sprintf(cmd, tplArchivedTasks, count, archiveFile, days)
 }
 
+// InfoCompletedTask reports a task marked complete.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - taskText: The completed task description
+func InfoCompletedTask(cmd *cobra.Command, taskText string) {
+	sprintf(cmd, tplCompletedTask, taskText)
+}
+
+// InfoConfigProfileDev reports that the dev profile is active.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoConfigProfileDev(cmd *cobra.Command) {
+	cmd.Println(tplConfigProfileDev)
+}
+
+// InfoConfigProfileBase reports that the base profile is active.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoConfigProfileBase(cmd *cobra.Command) {
+	cmd.Println(tplConfigProfileBase)
+}
+
+// InfoConfigProfileNone reports that no profile exists.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - filename: The .ctxrc filename
+func InfoConfigProfileNone(cmd *cobra.Command, filename string) {
+	sprintf(cmd, tplConfigProfileNone, filename)
+}
+
 // InfoExistsWritingAsAlternative reports that a file already exists and the
 // content is being written to an alternative filename instead.
 //

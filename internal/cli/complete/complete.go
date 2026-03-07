@@ -12,8 +12,12 @@ import (
 	completeroot "github.com/ActiveMemory/ctx/internal/cli/complete/cmd/root"
 )
 
-// CompleteTask finds a task and marks it complete. Re-exported from cmd/root.
-var CompleteTask = completeroot.CompleteTask
+// Task finds a task by number or text and marks it complete.
+//
+// Re-exported from cmd/root for the MCP server, which needs programmatic
+// task completion without going through cobra. No other consumer should
+// use this — CLI callers go through Cmd().
+var Task = completeroot.CompleteTask
 
 // Cmd returns the "ctx complete" command for marking tasks as done.
 func Cmd() *cobra.Command {

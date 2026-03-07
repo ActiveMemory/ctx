@@ -43,7 +43,7 @@ func TestStatus_Dev(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if statusErr := RunStatus(cmd, root); statusErr != nil {
+	if statusErr := Run(cmd, root); statusErr != nil {
 		t.Fatalf("unexpected error: %v", statusErr)
 	}
 
@@ -62,7 +62,7 @@ func TestStatus_Base(t *testing.T) {
 	}
 
 	cmd := newTestCmd()
-	if statusErr := RunStatus(cmd, root); statusErr != nil {
+	if statusErr := Run(cmd, root); statusErr != nil {
 		t.Fatalf("unexpected error: %v", statusErr)
 	}
 
@@ -76,7 +76,7 @@ func TestStatus_Missing(t *testing.T) {
 	root := t.TempDir()
 
 	cmd := newTestCmd()
-	if statusErr := RunStatus(cmd, root); statusErr != nil {
+	if statusErr := Run(cmd, root); statusErr != nil {
 		t.Fatalf("unexpected error: %v", statusErr)
 	}
 

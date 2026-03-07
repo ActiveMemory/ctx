@@ -16,14 +16,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// RunSnapshot saves settings.local.json as the golden image.
+// Run saves settings.local.json as the golden image.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil on read/write failure or missing settings file
-func RunSnapshot(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	content, readErr := os.ReadFile(config.FileSettings)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {

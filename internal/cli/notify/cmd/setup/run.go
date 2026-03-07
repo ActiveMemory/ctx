@@ -17,7 +17,7 @@ import (
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 )
 
-// RunSetup prompts for a webhook URL and saves it encrypted.
+// Run prompts for a webhook URL and saves it encrypted.
 //
 // Exported for testability (tests inject a mock stdin).
 //
@@ -27,7 +27,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on empty input or save failure
-func RunSetup(cmd *cobra.Command, stdin *os.File) error {
+func Run(cmd *cobra.Command, stdin *os.File) error {
 	cmd.Print("Enter webhook URL: ")
 
 	scanner := bufio.NewScanner(stdin)

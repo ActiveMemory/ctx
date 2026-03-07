@@ -19,14 +19,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// RunRestore resets settings.local.json from the golden image.
+// Run resets settings.local.json from the golden image.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil on read/write/parse failure or missing golden file
-func RunRestore(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	goldenBytes, goldenReadErr := os.ReadFile(config.FileSettingsGolden)
 	if goldenReadErr != nil {
 		if os.IsNotExist(goldenReadErr) {

@@ -7,7 +7,6 @@
 package root
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -16,8 +15,10 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CompleteTask finds a task in TASKS.md by number or text match and marks
@@ -40,13 +41,13 @@ func CompleteTask(query, contextDir string) (string, error) {
 
 	// Check if the file exists
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
-		return "", fmt.Errorf("TASKS.md not found")
+		return "", ctxerr.TaskFileNotFound()
 	}
 
 	// Read existing content
 	content, readErr := os.ReadFile(filepath.Clean(filePath))
 	if readErr != nil {
-		return "", fmt.Errorf("failed to read TASKS.md: %w", readErr)
+		return "", ctxerr.TaskFileRead(readErr)
 	}
 
 	// Parse tasks and find matching one
@@ -81,10 +82,7 @@ func CompleteTask(query, contextDir string) (string, error) {
 				strings.ToLower(taskText), strings.ToLower(query),
 			) {
 				if matchedLine != -1 {
-					return "", fmt.Errorf(
-						"multiple tasks match %q; be more specific or use task number",
-						query,
-					)
+					return "", ctxerr.TaskMultipleMatches(query)
 				}
 				matchedLine = i
 				matchedTask = taskText
@@ -93,18 +91,18 @@ func CompleteTask(query, contextDir string) (string, error) {
 	}
 
 	if matchedLine == -1 {
-		return "", fmt.Errorf("no task matching %q found", query)
+		return "", ctxerr.TaskNotFound(query)
 	}
 
 	// Mark the task as complete
 	lines[matchedLine] = config.RegExTask.ReplaceAllString(
-		lines[matchedLine], "$1- [x] $3",
+		lines[matchedLine], config.TaskCompleteReplace,
 	)
 
 	// Write back
 	newContent := strings.Join(lines, config.NewlineLF)
 	if writeErr := os.WriteFile(filePath, []byte(newContent), config.PermFile); writeErr != nil {
-		return "", fmt.Errorf("failed to write TASKS.md: %w", writeErr)
+		return "", ctxerr.TaskFileWrite(writeErr)
 	}
 
 	return matchedTask, nil
@@ -124,7 +122,7 @@ func Run(cmd *cobra.Command, args []string) error {
 		return completeErr
 	}
 
-	cmd.Println(fmt.Sprintf("✓ Completed: %s", matchedTask))
+	write.InfoCompletedTask(cmd, matchedTask)
 
 	return nil
 }

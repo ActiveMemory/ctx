@@ -17,14 +17,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// RunList prints all available prompt template names.
+// Run prints all available prompt template names.
 //
 // Parameters:
 //   - cmd: Cobra command for output
 //
 // Returns:
 //   - error: Non-nil on read failure
-func RunList(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	dir := core.PromptsDir()
 
 	entries, readErr := os.ReadDir(dir)

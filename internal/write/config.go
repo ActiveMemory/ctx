@@ -70,3 +70,17 @@ const tplSkippingTask = "! Skipping (has incomplete children): %s"
 // tplArchivedTasks is a format template for archived tasks summary.
 // Arguments: count, archive file path, days threshold.
 const tplArchivedTasks = "✓ Archived %d tasks to %s (older than %d days)"
+
+// tplCompletedTask is a format template for a task marked complete.
+// Arguments: task text.
+const tplCompletedTask = "✓ Completed: %s"
+
+// tplConfigProfileDev is the status output for dev profile.
+const tplConfigProfileDev = "active: dev (verbose logging enabled)"
+
+// tplConfigProfileBase is the status output for base profile.
+const tplConfigProfileBase = "active: base (defaults)"
+
+// tplConfigProfileNone is the status output when no profile exists.
+// Arguments: ctxrc filename.
+const tplConfigProfileNone = "active: none (%s does not exist)"

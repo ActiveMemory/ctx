@@ -14,7 +14,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
 )
 
-// RunSwitch executes the profile switch logic.
+// Run executes the profile switch logic.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -23,7 +23,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on unknown profile or copy failure
-func RunSwitch(cmd *cobra.Command, root string, args []string) error {
+func Run(cmd *cobra.Command, root string, args []string) error {
 	var target string
 	if len(args) > 0 {
 		target = args[0]

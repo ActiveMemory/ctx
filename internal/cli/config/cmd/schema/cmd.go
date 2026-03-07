@@ -7,11 +7,10 @@
 package schema
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Cmd returns the "ctx config schema" subcommand.
@@ -29,7 +28,7 @@ func Cmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			data, readErr := assets.Schema()
 			if readErr != nil {
-				return fmt.Errorf("read embedded schema: %w", readErr)
+				return ctxerr.ReadEmbeddedSchema(readErr)
 			}
 			cmd.Print(string(data))
 			return nil

@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
 )
 
-// RunAdd creates a new reminder and prints confirmation.
+// Run creates a new reminder and prints confirmation.
 //
 // Exported for reuse by the parent command's default action.
 //
@@ -26,7 +26,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on read/write failure or invalid date
-func RunAdd(cmd *cobra.Command, message, after string) error {
+func Run(cmd *cobra.Command, message, after string) error {
 	reminders, readErr := core.ReadReminders()
 	if readErr != nil {
 		return readErr

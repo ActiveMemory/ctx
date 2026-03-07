@@ -7,14 +7,13 @@
 package status
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// RunStatus prints the active .ctxrc profile.
+// Run prints the active .ctxrc profile.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -22,15 +21,15 @@ import (
 //
 // Returns:
 //   - error: Always nil (included for RunE compatibility)
-func RunStatus(cmd *cobra.Command, root string) error {
+func Run(cmd *cobra.Command, root string) error {
 	profile := core.DetectProfile(root)
 	switch profile {
 	case core.ProfileDev:
-		cmd.Println("active: dev (verbose logging enabled)")
+		write.InfoConfigProfileDev(cmd)
 	case core.ProfileBase:
-		cmd.Println("active: base (defaults)")
+		write.InfoConfigProfileBase(cmd)
 	default:
-		cmd.Println(fmt.Sprintf("active: none (%s does not exist)", core.FileCtxRC))
+		write.InfoConfigProfileNone(cmd, core.FileCtxRC)
 	}
 	return nil
 }

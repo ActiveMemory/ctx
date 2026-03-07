@@ -114,9 +114,9 @@ func TestSetup_WithMockStdin(t *testing.T) {
 	cmd.SetOut(&buf)
 	cmd.SetErr(&buf)
 
-	err = setup.RunSetup(cmd, tmpFile)
+	err = setup.Run(cmd, tmpFile)
 	if err != nil {
-		t.Fatalf("setup.RunSetup() error = %v", err)
+		t.Fatalf("setup.Run() error = %v", err)
 	}
 
 	output := buf.String()
@@ -165,7 +165,7 @@ func TestSetup_EmptyInput(t *testing.T) {
 	cmd.SetOut(&buf)
 	cmd.SetErr(&buf)
 
-	setupErr := setup.RunSetup(cmd, tmpFile)
+	setupErr := setup.Run(cmd, tmpFile)
 	if setupErr == nil {
 		t.Fatal("expected error for empty webhook URL input")
 	}

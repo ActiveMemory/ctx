@@ -24,7 +24,7 @@ func Cmd() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   short,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return RunList(cmd)
+			return Run(cmd)
 		},
 	}
 }

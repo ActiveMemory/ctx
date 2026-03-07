@@ -146,6 +146,8 @@ const (
 	TplArchiveFilename = "%s-%s" + ExtMarkdown
 	// ArchiveDateSep is the separator between heading and date in archive headers.
 	ArchiveDateSep = " - "
+	// TaskCompleteReplace is the regex replacement string for marking a task done.
+	TaskCompleteReplace = "$1- [x] $3"
 
 	// EnvBackupSMBURL is the environment variable for the SMB share URL.
 	EnvBackupSMBURL = "CTX_BACKUP_SMB_URL"

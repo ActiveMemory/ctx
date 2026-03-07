@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return list.RunList(cmd)
+			return list.Run(cmd)
 		},
 	}
 

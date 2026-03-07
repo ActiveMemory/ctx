@@ -204,7 +204,7 @@ func (s *Server) toolComplete(
 		return s.toolError(id, "query is required")
 	}
 
-	completedTask, err := complete.CompleteTask(query, s.contextDir)
+	completedTask, err := complete.Task(query, s.contextDir)
 	if err != nil {
 		return s.toolError(id, err.Error())
 	}

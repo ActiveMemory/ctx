@@ -15,7 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
 )
 
-// RunList prints all pending reminders with date annotations.
+// Run prints all pending reminders with date annotations.
 //
 // Exported for reuse by the parent command's default action.
 //
@@ -24,7 +24,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on read failure
-func RunList(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	reminders, readErr := core.ReadReminders()
 	if readErr != nil {
 		return readErr

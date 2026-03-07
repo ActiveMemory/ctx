@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 			if rootErr != nil {
 				return rootErr
 			}
-			return RunStatus(cmd, root)
+			return Run(cmd, root)
 		},
 	}
 }

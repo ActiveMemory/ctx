@@ -24,7 +24,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return RunSnapshot(cmd)
+			return Run(cmd)
 		},
 	}
 }
