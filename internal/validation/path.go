@@ -9,6 +9,7 @@ package validation
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -43,10 +44,23 @@ func ValidateBoundary(dir string) error {
 		resolvedDir = filepath.Clean(absDir)
 	}
 
+	// On Windows, path comparisons must be case-insensitive because
+	// filepath.EvalSymlinks resolves to actual disk casing while
+	// os.Getwd preserves the casing from the caller (e.g. VS Code
+	// passes a lowercase drive letter via fsPath).
+	equal := func(a, b string) bool { return a == b }
+	hasPrefix := strings.HasPrefix
+	if runtime.GOOS == "windows" {
+		equal = strings.EqualFold
+		hasPrefix = func(s, prefix string) bool {
+			return len(s) >= len(prefix) && strings.EqualFold(s[:len(prefix)], prefix)
+		}
+	}
+
 	// Ensure the resolved dir is equal to or nested under the project root.
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
 	root := resolvedCwd + string(os.PathSeparator)
-	if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
+	if !equal(resolvedDir, resolvedCwd) && !hasPrefix(resolvedDir, root) {
 		return ctxerr.ContextOutsideRoot(dir, resolvedCwd)
 	}
 

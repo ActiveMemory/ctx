@@ -349,6 +349,7 @@ func TestRunInit_Minimal(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -383,6 +384,7 @@ func TestRunInit_Force(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	cmd := Cmd()
@@ -415,6 +417,7 @@ func TestRunInit_Merge(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	t.Setenv(env.SkipPathCheck, env.True)
 
 	if err = os.WriteFile(claude2.Md, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {

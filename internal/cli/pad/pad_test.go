@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -37,6 +38,7 @@ func setupEncrypted(t *testing.T) string {
 		t.Fatal(err)
 	}
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -76,6 +78,7 @@ func setupPlaintext(t *testing.T) string {
 		t.Fatal(err)
 	}
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -481,6 +484,7 @@ func TestMv_OutOfRange(t *testing.T) {
 func TestNoKey_EncryptedFileExists(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	origDir, _ := os.Getwd()
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatal(err)
@@ -804,7 +808,7 @@ func TestKeyPath(t *testing.T) {
 	if !strings.HasSuffix(path, ".key") {
 		t.Errorf("core.KeyPath() = %q, want suffix %q", path, ".key")
 	}
-	if !strings.Contains(path, ".ctx/") {
+	if !strings.Contains(path, ".ctx"+string(filepath.Separator)) {
 		t.Errorf("core.KeyPath() = %q, want global path containing .ctx/", path)
 	}
 }
@@ -826,6 +830,7 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -861,6 +866,7 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
 	t.Cleanup(func() {
 		_ = os.Chdir(origDir)
 		rc.Reset()
@@ -2344,6 +2350,9 @@ func TestExport_Encrypted(t *testing.T) {
 }
 
 func TestExport_FilePermissions(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("file permission bits not supported on Windows")
+	}
 	tmpDir := setupPlaintext(t)
 
 	f := filepath.Join(tmpDir, "file.txt")

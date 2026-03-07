@@ -14,6 +14,14 @@ import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
+// setLocalUTC forces time.Local to UTC for the duration of the test.
+// On Windows, t.Setenv("TZ", "UTC") does not affect time.Local.
+func setLocalUTC(t *testing.T) {
+	orig := time.Local
+	time.Local = time.UTC
+	t.Cleanup(func() { time.Local = orig })
+}
+
 // stubDuration implements the interface{ Minutes() float64 } used by FormatDuration.
 type stubDuration struct{ mins float64 }
 
@@ -342,7 +350,7 @@ func TestFormatPartNavigation(t *testing.T) {
 // --- FormatJournalEntryPart tests ---
 
 func TestFormatJournalEntryPart_SinglePart(t *testing.T) {
-	t.Setenv("TZ", "UTC")
+	setLocalUTC(t)
 
 	s := &parser.Session{
 		ID:             "abc12345-session-id",
@@ -409,7 +417,7 @@ func TestFormatJournalEntryPart_SinglePart(t *testing.T) {
 }
 
 func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
-	t.Setenv("TZ", "UTC")
+	setLocalUTC(t)
 
 	s := &parser.Session{
 		ID:             "multi-session-id-12345678",
@@ -468,7 +476,7 @@ func TestFormatJournalEntryPart_MultiPart(t *testing.T) {
 }
 
 func TestFormatJournalEntryPart_WithToolUse(t *testing.T) {
-	t.Setenv("TZ", "UTC")
+	setLocalUTC(t)
 
 	s := &parser.Session{
 		ID:        "tool-session-id-1234",
@@ -546,7 +554,7 @@ func TestFormatJournalEntryPart_WithToolUse(t *testing.T) {
 }
 
 func TestFormatJournalFilename_WithSlugOverride(t *testing.T) {
-	t.Setenv("TZ", "UTC")
+	setLocalUTC(t)
 
 	s := &parser.Session{
 		ID:        "abc12345-full-session-uuid",
@@ -568,7 +576,7 @@ func TestFormatJournalFilename_WithSlugOverride(t *testing.T) {
 }
 
 func TestFormatJournalEntryPart_SessionIDInFrontmatter(t *testing.T) {
-	t.Setenv("TZ", "UTC")
+	setLocalUTC(t)
 
 	s := &parser.Session{
 		ID:        "abc12345-full-session-uuid",
@@ -592,7 +600,7 @@ func TestFormatJournalEntryPart_SessionIDInFrontmatter(t *testing.T) {
 }
 
 func TestFormatJournalEntryPart_TitleInFrontmatterAndHeading(t *testing.T) {
-	t.Setenv("TZ", "UTC")
+	setLocalUTC(t)
 
 	s := &parser.Session{
 		ID:        "abc12345-full-session-uuid",
@@ -625,7 +633,7 @@ func TestFormatJournalEntryPart_TitleInFrontmatterAndHeading(t *testing.T) {
 }
 
 func TestFormatJournalEntryPart_NoTitleUsesSlug(t *testing.T) {
-	t.Setenv("TZ", "UTC")
+	setLocalUTC(t)
 
 	s := &parser.Session{
 		ID:        "abc12345-full-session-uuid",

@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/config/crypto"
@@ -148,8 +149,10 @@ func TestSaveKey_LoadKey_RoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Stat() error: %v", err)
 	}
-	if perm := info.Mode().Perm(); perm != fs.PermSecret {
-		t.Errorf("key file permissions = %o, want %o", perm, fs.PermSecret)
+	if runtime.GOOS != "windows" {
+		if perm := info.Mode().Perm(); perm != fs.PermSecret {
+			t.Errorf("key file permissions = %o, want %o", perm, fs.PermSecret)
+		}
 	}
 
 	loaded, err := LoadKey(path)

@@ -168,9 +168,10 @@ func InjectSourceLink(content, sourcePath string) string {
 	if pathErr != nil {
 		absPath = sourcePath
 	}
-	relPath := filepath.Join(
+	absPath = filepath.ToSlash(absPath)
+	relPath := filepath.ToSlash(filepath.Join(
 		dir.Context, dir.Journal, filepath.Base(absPath),
-	)
+	))
 	link := fmt.Sprintf(assets.TplJournalSourceLink+nl+nl,
 		absPath, relPath, relPath)
 
@@ -214,19 +215,19 @@ func GenerateZensicalToml(
 	if len(topics) > 0 {
 		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
 			assets.JournalLabelTopics,
-			filepath.Join(dir.JournTopics, file.Index)),
+			filepath.ToSlash(filepath.Join(dir.JournTopics, file.Index))),
 		)
 	}
 	if len(keyFiles) > 0 {
 		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
 			assets.JournalLabelFiles,
-			filepath.Join(dir.JournalFiles, file.Index)),
+			filepath.ToSlash(filepath.Join(dir.JournalFiles, file.Index))),
 		)
 	}
 	if len(sessionTypes) > 0 {
 		sb.WriteString(fmt.Sprintf(assets.TplJournalNavItem+nl,
 			assets.JournalLabelTypes,
-			filepath.Join(dir.JournalTypes, file.Index)),
+			filepath.ToSlash(filepath.Join(dir.JournalTypes, file.Index))),
 		)
 	}
 
