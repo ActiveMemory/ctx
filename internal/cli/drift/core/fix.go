@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/cli/compact"
+	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
@@ -152,7 +152,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 		archiveContent += config.PrefixTaskDone + " " + t + nl
 	}
 
-	archiveFile, writeErr := compact.WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent)
+	archiveFile, writeErr := compactcore.WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent)
 	if writeErr != nil {
 		return writeErr
 	}

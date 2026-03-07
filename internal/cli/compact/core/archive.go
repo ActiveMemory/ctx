@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -29,27 +30,28 @@ import (
 // Returns the path to the written archive file.
 func WriteArchive(prefix, heading, content string) (string, error) {
 	archiveDir := filepath.Join(rc.ContextDir(), config.DirArchive)
-	if err := os.MkdirAll(archiveDir, config.PermExec); err != nil {
-		return "", fmt.Errorf("failed to create archive directory: %w", err)
+	if mkErr := os.MkdirAll(archiveDir, config.PermExec); mkErr != nil {
+		return "", ctxerr.CreateArchiveDir(mkErr)
 	}
 
 	now := time.Now()
+	dateStr := now.Format(config.DateFormat)
 	archiveFile := filepath.Join(
 		archiveDir,
-		fmt.Sprintf("%s-%s.md", prefix, now.Format("2006-01-02")),
+		fmt.Sprintf(config.TplArchiveFilename, prefix, dateStr),
 	)
 
 	nl := config.NewlineLF
 	var finalContent string
-	if existing, err := os.ReadFile(filepath.Clean(archiveFile)); err == nil {
+	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
 		finalContent = string(existing) + nl + content
 	} else {
-		finalContent = heading + " - " +
-			now.Format("2006-01-02") + nl + nl + content
+		finalContent = heading + config.ArchiveDateSep +
+			dateStr + nl + nl + content
 	}
 
-	if err := os.WriteFile(archiveFile, []byte(finalContent), config.PermFile); err != nil {
-		return "", fmt.Errorf("failed to write archive: %w", err)
+	if writeErr := os.WriteFile(archiveFile, []byte(finalContent), config.PermFile); writeErr != nil {
+		return "", ctxerr.WriteArchive(writeErr)
 	}
 
 	return archiveFile, nil

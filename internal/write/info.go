@@ -39,6 +39,35 @@ func InfoAddedTo(cmd *cobra.Command, filename string) {
 	sprintf(cmd, tplAddedTo, filename)
 }
 
+// InfoMovingTask reports a completed task being moved.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - taskText: Truncated task description
+func InfoMovingTask(cmd *cobra.Command, taskText string) {
+	sprintf(cmd, tplMovingTask, taskText)
+}
+
+// InfoSkippingTask reports a task skipped due to incomplete children.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - taskText: Truncated task description
+func InfoSkippingTask(cmd *cobra.Command, taskText string) {
+	sprintf(cmd, tplSkippingTask, taskText)
+}
+
+// InfoArchivedTasks reports the number of tasks archived.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - count: Number of tasks archived
+//   - archiveFile: Path to the archive file
+//   - days: Age threshold in days
+func InfoArchivedTasks(cmd *cobra.Command, count int, archiveFile string, days int) {
+	sprintf(cmd, tplArchivedTasks, count, archiveFile, days)
+}
+
 // InfoExistsWritingAsAlternative reports that a file already exists and the
 // content is being written to an alternative filename instead.
 //

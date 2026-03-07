@@ -479,6 +479,8 @@ output package. All CLI commands should route printed output through this packag
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
 - [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
 
+- [ ] Fix 19 doc.go quality issues: system (13 missing subcmds), agent (phantom refs), load/loop (header typo), claude (stale migration note), 13 minimal descriptions (pause, resume, task, notify, decision, learnings, remind, context, eventlog, index, rc, recall/parser, task/core) #added:2026-03-07-075741
+
 - [ ] Move cmd.Print* output strings in compact/cmd/root/run.go to internal/write per convention #added:2026-03-07-074737
 
 - [ ] Extract changes format.go rendering templates to assets — headings, labels, and format strings are user-facing text for i18n #added:2026-03-07-074719
