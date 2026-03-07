@@ -6,12 +6,14 @@
 
 package core
 
-// Status constants for check results.
+import "github.com/ActiveMemory/ctx/internal/config"
+
+// Status constants — aliased from config for local use.
 const (
-	StatusOK      = "ok"
-	StatusWarning = "warning"
-	StatusError   = "error"
-	StatusInfo    = "info"
+	StatusOK      = config.StatusOK
+	StatusWarning = config.StatusWarning
+	StatusError   = config.StatusError
+	StatusInfo    = config.StatusInfo
 )
 
 // Result represents a single check outcome.

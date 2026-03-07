@@ -19,6 +19,14 @@ const AnnotationSkipInit = "skipInitCheck"
 // AnnotationTrue is the canonical value for boolean cobra annotations.
 const AnnotationTrue = "true"
 
+// Check result status constants used by doctor, drift, and other health checks.
+const (
+	StatusOK      = "ok"
+	StatusWarning = "warning"
+	StatusError   = "error"
+	StatusInfo    = "info"
+)
+
 // CmdCompletion is the name of Cobra's built-in completion parent command.
 const CmdCompletion = "completion"
 
@@ -368,6 +376,68 @@ const (
 const (
 	// FileReminders is the session-scoped reminders file.
 	FileReminders = "reminders.json"
+)
+
+// Doctor check name constants — used as Result.Name values.
+const (
+	// DoctorCheckContextInit identifies the context initialization check.
+	DoctorCheckContextInit = "context_initialized"
+	// DoctorCheckRequiredFiles identifies the required files check.
+	DoctorCheckRequiredFiles = "required_files"
+	// DoctorCheckCtxrcValidation identifies the .ctxrc validation check.
+	DoctorCheckCtxrcValidation = "ctxrc_validation"
+	// DoctorCheckDrift identifies the drift detection check.
+	DoctorCheckDrift = "drift"
+	// DoctorCheckPluginInstalled identifies the plugin installation check.
+	DoctorCheckPluginInstalled = "plugin_installed"
+	// DoctorCheckPluginEnabledGlobal identifies the global plugin enablement check.
+	DoctorCheckPluginEnabledGlobal = "plugin_enabled_global"
+	// DoctorCheckPluginEnabledLocal identifies the local plugin enablement check.
+	DoctorCheckPluginEnabledLocal = "plugin_enabled_local"
+	// DoctorCheckPluginEnabled identifies the plugin enablement check (when neither scope is active).
+	DoctorCheckPluginEnabled = "plugin_enabled"
+	// DoctorCheckEventLogging identifies the event logging check.
+	DoctorCheckEventLogging = "event_logging"
+	// DoctorCheckWebhook identifies the webhook configuration check.
+	DoctorCheckWebhook = "webhook"
+	// DoctorCheckReminders identifies the pending reminders check.
+	DoctorCheckReminders = "reminders"
+	// DoctorCheckTaskCompletion identifies the task completion check.
+	DoctorCheckTaskCompletion = "task_completion"
+	// DoctorCheckContextSize identifies the context token size check.
+	DoctorCheckContextSize = "context_size"
+	// DoctorCheckContextFilePrefix is the prefix for per-file context size results.
+	DoctorCheckContextFilePrefix = "context_file_"
+	// DoctorCheckRecentEvents identifies the recent event log check.
+	DoctorCheckRecentEvents = "recent_events"
+	// DoctorCheckResourceMemory identifies the memory resource check.
+	DoctorCheckResourceMemory = "resource_memory"
+	// DoctorCheckResourceSwap identifies the swap resource check.
+	DoctorCheckResourceSwap = "resource_swap"
+	// DoctorCheckResourceDisk identifies the disk resource check.
+	DoctorCheckResourceDisk = "resource_disk"
+	// DoctorCheckResourceLoad identifies the load resource check.
+	DoctorCheckResourceLoad = "resource_load"
+)
+
+// Doctor category constants — used as Result.Category values.
+const (
+	// DoctorCategoryStructure groups context directory and file checks.
+	DoctorCategoryStructure = "Structure"
+	// DoctorCategoryQuality groups drift and content quality checks.
+	DoctorCategoryQuality = "Quality"
+	// DoctorCategoryPlugin groups plugin installation and enablement checks.
+	DoctorCategoryPlugin = "Plugin"
+	// DoctorCategoryHooks groups hook configuration checks.
+	DoctorCategoryHooks = "Hooks"
+	// DoctorCategoryState groups runtime state checks.
+	DoctorCategoryState = "State"
+	// DoctorCategorySize groups token size and budget checks.
+	DoctorCategorySize = "Size"
+	// DoctorCategoryResources groups system resource checks.
+	DoctorCategoryResources = "Resources"
+	// DoctorCategoryEvents groups event log checks.
+	DoctorCategoryEvents = "Events"
 )
 
 // Memory bridge file constants for .context/memory/ directory.

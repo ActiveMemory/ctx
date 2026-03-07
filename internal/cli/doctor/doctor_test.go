@@ -328,7 +328,7 @@ func TestAddResourceResults_AllHealthy(t *testing.T) {
 		if r.Status != core.StatusOK {
 			t.Errorf("result %s: expected ok, got %s", r.Name, r.Status)
 		}
-		if r.Category != "Resources" {
+		if r.Category != config.DoctorCategoryResources {
 			t.Errorf("result %s: expected Resources category, got %s", r.Name, r.Category)
 		}
 	}
