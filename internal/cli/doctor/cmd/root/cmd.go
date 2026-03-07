@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured doctor command with flags registered
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("doctor")
+	short, long := assets.CommandDesc(assets.CmdDescKeyDoctor)
 	cmd := &cobra.Command{
 		Use:         "doctor",
 		Short:       short,

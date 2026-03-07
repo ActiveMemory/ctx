@@ -24,7 +24,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured permissions command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("permissions")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPermissions)
 
 	cmd := &cobra.Command{
 		Use:   "permissions",

@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for syncing lock state from frontmatter
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("recall.sync")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallSync)
 
 	cmd := &cobra.Command{
 		Use:   "sync",

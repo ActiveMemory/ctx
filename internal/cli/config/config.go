@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured config command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("config")
+	short, long := assets.CommandDesc(assets.CmdDescKeyConfig)
 
 	cmd := &cobra.Command{
 		Use:   "config",

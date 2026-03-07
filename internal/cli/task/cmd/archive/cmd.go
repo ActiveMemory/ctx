@@ -26,7 +26,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := assets.CommandDesc("task.archive")
+	short, long := assets.CommandDesc(assets.CmdDescKeyTaskArchive)
 
 	cmd := &cobra.Command{
 		Use:   "archive",

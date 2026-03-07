@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for regenerating the LEARNINGS.md index
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("learnings.reindex")
+	short, long := assets.CommandDesc(assets.CmdDescKeyLearningsReindex)
 	return &cobra.Command{
 		Use:   "reindex",
 		Short: short,

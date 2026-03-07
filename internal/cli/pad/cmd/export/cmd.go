@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	var force, dryRun bool
 
-	short, long := assets.CommandDesc("pad.export")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadExport)
 	cmd := &cobra.Command{
 		Use:   "export [DIR]",
 		Short: short,

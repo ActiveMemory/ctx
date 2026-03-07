@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resume command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("resume")
+	short, long := assets.CommandDesc(assets.CmdDescKeyResume)
 
 	cmd := &cobra.Command{
 		Use:   "resume",

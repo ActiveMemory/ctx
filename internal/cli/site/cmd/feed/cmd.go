@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 		baseURL string
 	)
 
-	short, long := assets.CommandDesc("site.feed")
+	short, long := assets.CommandDesc(assets.CmdDescKeySiteFeed)
 
 	cmd := &cobra.Command{
 		Use:   "feed",

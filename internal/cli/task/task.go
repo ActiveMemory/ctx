@@ -32,7 +32,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured tasks command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("task")
+	short, long := assets.CommandDesc(assets.CmdDescKeyTask)
 
 	cmd := &cobra.Command{
 		Use:   "tasks",

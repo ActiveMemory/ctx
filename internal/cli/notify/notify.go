@@ -28,7 +28,7 @@ func Cmd() *cobra.Command {
 	var hook string
 	var variant string
 
-	short, long := assets.CommandDesc("notify")
+	short, long := assets.CommandDesc(assets.CmdDescKeyNotify)
 	cmd := &cobra.Command{
 		Use:   "notify [message]",
 		Short: short,

@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 		noPluginEnable bool
 	)
 
-	short, long := assets.CommandDesc("initialize")
+	short, long := assets.CommandDesc(assets.CmdDescKeyInitialize)
 	cmd := &cobra.Command{
 		Use:         "init",
 		Short:       short,

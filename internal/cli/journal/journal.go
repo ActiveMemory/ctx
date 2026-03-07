@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - *cobra.Command: The journal command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("journal")
+	short, long := assets.CommandDesc(assets.CmdDescKeyJournal)
 	cmd := &cobra.Command{
 		Use:   "journal",
 		Short: short,

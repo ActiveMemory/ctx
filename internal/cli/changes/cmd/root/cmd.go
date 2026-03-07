@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	var since string
 
-	short, long := assets.CommandDesc("changes")
+	short, long := assets.CommandDesc(assets.CmdDescKeyChanges)
 
 	cmd := &cobra.Command{
 		Use:   "changes",

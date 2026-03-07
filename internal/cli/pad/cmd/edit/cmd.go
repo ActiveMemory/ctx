@@ -36,7 +36,7 @@ func Cmd() *cobra.Command {
 	var filePath string
 	var labelText string
 
-	short, long := assets.CommandDesc("pad.edit")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadEdit)
 	cmd := &cobra.Command{
 		Use:   "edit N [TEXT]",
 		Short: short,

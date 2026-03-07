@@ -28,7 +28,7 @@ func Cmd() *cobra.Command {
 		projType string
 	)
 
-	short, long := assets.CommandDesc("deps")
+	short, long := assets.CommandDesc(assets.CmdDescKeyDeps)
 	cmd := &cobra.Command{
 		Use:   "deps",
 		Short: short,

@@ -19,7 +19,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml journal/*.css
 var FS embed.FS
 
 const (
@@ -135,6 +135,138 @@ const (
 	FlagDescKeyTaskArchiveDryRun           = "task.archive.dry-run"
 	FlagDescKeyWatchDryRun                 = "watch.dry-run"
 	FlagDescKeyWatchLog                    = "watch.log"
+)
+
+const (
+	CmdDescKeyAdd                 = "add"
+	CmdDescKeyAgent               = "agent"
+	CmdDescKeyChanges             = "changes"
+	CmdDescKeyCompact             = "compact"
+	CmdDescKeyComplete            = "complete"
+	CmdDescKeyConfig              = "config"
+	CmdDescKeyConfigSchema        = "config.schema"
+	CmdDescKeyConfigStatus        = "config.status"
+	CmdDescKeyConfigSwitch        = "config.switch"
+	CmdDescKeyCtx                 = "ctx"
+	CmdDescKeyDecision            = "decision"
+	CmdDescKeyDecisionReindex     = "decision.reindex"
+	CmdDescKeyDeps                = "deps"
+	CmdDescKeyDoctor              = "doctor"
+	CmdDescKeyDrift               = "drift"
+	CmdDescKeyGuide               = "guide"
+	CmdDescKeyHook                = "hook"
+	CmdDescKeyInitialize          = "initialize"
+	CmdDescKeyJournal             = "journal"
+	CmdDescKeyJournalObsidian     = "journal.obsidian"
+	CmdDescKeyLearnings           = "learnings"
+	CmdDescKeyLearningsReindex    = "learnings.reindex"
+	CmdDescKeyLoad                = "load"
+	CmdDescKeyLoop                = "loop"
+	CmdDescKeyMcp                 = "mcp"
+	CmdDescKeyMemory              = "memory"
+	CmdDescKeyMemoryStatus        = "memory.status"
+	CmdDescKeyMemorySync          = "memory.sync"
+	CmdDescKeyNotify              = "notify"
+	CmdDescKeyNotifySetup         = "notify.setup"
+	CmdDescKeyNotifyTest          = "notify.test"
+	CmdDescKeyPad                 = "pad"
+	CmdDescKeyPadAdd              = "pad.add"
+	CmdDescKeyPadEdit             = "pad.edit"
+	CmdDescKeyPadExport           = "pad.export"
+	CmdDescKeyPadImp              = "pad.imp"
+	CmdDescKeyPadMerge            = "pad.merge"
+	CmdDescKeyPadMv               = "pad.mv"
+	CmdDescKeyPadResolve          = "pad.resolve"
+	CmdDescKeyPadRm               = "pad.rm"
+	CmdDescKeyPadShow             = "pad.show"
+	CmdDescKeyPause               = "pause"
+	CmdDescKeyPermissions         = "permissions"
+	CmdDescKeyPermissionsRestore  = "permissions.restore"
+	CmdDescKeyPermissionsSnapshot = "permissions.snapshot"
+	CmdDescKeyPrompt              = "prompt"
+	CmdDescKeyPromptAdd           = "prompt.add"
+	CmdDescKeyPromptList          = "prompt.list"
+	CmdDescKeyPromptRm            = "prompt.rm"
+	CmdDescKeyPromptShow          = "prompt.show"
+	CmdDescKeyRecall              = "recall"
+	CmdDescKeyRecallExport        = "recall.export"
+	CmdDescKeyRecallList          = "recall.list"
+	CmdDescKeyRecallLock          = "recall.lock"
+	CmdDescKeyRecallShow          = "recall.show"
+	CmdDescKeyRecallSync          = "recall.sync"
+	CmdDescKeyRecallUnlock        = "recall.unlock"
+	CmdDescKeyReindex             = "reindex"
+	CmdDescKeyRemind              = "remind"
+	CmdDescKeyRemindAdd           = "remind.add"
+	CmdDescKeyRemindDismiss       = "remind.dismiss"
+	CmdDescKeyRemindList          = "remind.list"
+	CmdDescKeyResume              = "resume"
+	CmdDescKeyServe               = "serve"
+	CmdDescKeySite                = "site"
+	CmdDescKeySiteFeed            = "site.feed"
+	CmdDescKeyStatus              = "status"
+	CmdDescKeySync                = "sync"
+	CmdDescKeyTask                = "task"
+	CmdDescKeyTaskArchive         = "task.archive"
+	CmdDescKeyTaskSnapshot        = "task.snapshot"
+	CmdDescKeyWatch               = "watch"
+	CmdDescKeyWhy                 = "why"
+)
+
+const (
+	TextDescKeyAgentInstruction                  = "agent.instruction"
+	TextDescKeyChangesFallbackLabel              = "changes.fallback-label"
+	TextDescKeyChangesSincePrefix                = "changes.since-prefix"
+	TextDescKeyDoctorContextFileFormat           = "doctor.context-file.format"
+	TextDescKeyDoctorContextInitializedError     = "doctor.context-initialized.error"
+	TextDescKeyDoctorContextInitializedOk        = "doctor.context-initialized.ok"
+	TextDescKeyDoctorContextSizeFormat           = "doctor.context-size.format"
+	TextDescKeyDoctorContextSizeWarningSuffix    = "doctor.context-size.warning-suffix"
+	TextDescKeyDoctorCtxrcValidationError        = "doctor.ctxrc-validation.error"
+	TextDescKeyDoctorCtxrcValidationOk           = "doctor.ctxrc-validation.ok"
+	TextDescKeyDoctorCtxrcValidationOkNoFile     = "doctor.ctxrc-validation.ok-no-file"
+	TextDescKeyDoctorCtxrcValidationWarning      = "doctor.ctxrc-validation.warning"
+	TextDescKeyDoctorDriftDetected               = "doctor.drift.detected"
+	TextDescKeyDoctorDriftOk                     = "doctor.drift.ok"
+	TextDescKeyDoctorDriftViolations             = "doctor.drift.violations"
+	TextDescKeyDoctorDriftWarningLoad            = "doctor.drift.warning-load"
+	TextDescKeyDoctorDriftWarnings               = "doctor.drift.warnings"
+	TextDescKeyDoctorEventLoggingInfo            = "doctor.event-logging.info"
+	TextDescKeyDoctorEventLoggingOk              = "doctor.event-logging.ok"
+	TextDescKeyDoctorOutputHeader                = "doctor.output.header"
+	TextDescKeyDoctorOutputResultLine            = "doctor.output.result-line"
+	TextDescKeyDoctorOutputSeparator             = "doctor.output.separator"
+	TextDescKeyDoctorOutputSummary               = "doctor.output.summary"
+	TextDescKeyDoctorPluginEnabledGlobalOk       = "doctor.plugin-enabled-global.ok"
+	TextDescKeyDoctorPluginEnabledLocalOk        = "doctor.plugin-enabled-local.ok"
+	TextDescKeyDoctorPluginEnabledWarning        = "doctor.plugin-enabled.warning"
+	TextDescKeyDoctorPluginInstalledInfo         = "doctor.plugin-installed.info"
+	TextDescKeyDoctorPluginInstalledOk           = "doctor.plugin-installed.ok"
+	TextDescKeyDoctorRecentEventsInfo            = "doctor.recent-events.info"
+	TextDescKeyDoctorRecentEventsOk              = "doctor.recent-events.ok"
+	TextDescKeyDoctorRemindersInfo               = "doctor.reminders.info"
+	TextDescKeyDoctorRemindersOk                 = "doctor.reminders.ok"
+	TextDescKeyDoctorRequiredFilesError          = "doctor.required-files.error"
+	TextDescKeyDoctorRequiredFilesOk             = "doctor.required-files.ok"
+	TextDescKeyDoctorResourceDiskFormat          = "doctor.resource-disk.format"
+	TextDescKeyDoctorResourceLoadFormat          = "doctor.resource-load.format"
+	TextDescKeyDoctorResourceMemoryFormat        = "doctor.resource-memory.format"
+	TextDescKeyDoctorResourceSwapFormat          = "doctor.resource-swap.format"
+	TextDescKeyDoctorTaskCompletionFormat        = "doctor.task-completion.format"
+	TextDescKeyDoctorTaskCompletionWarningSuffix = "doctor.task-completion.warning-suffix"
+	TextDescKeyDoctorWebhookInfo                 = "doctor.webhook.info"
+	TextDescKeyDoctorWebhookOk                   = "doctor.webhook.ok"
+	TextDescKeyHookAider                         = "hook.aider"
+	TextDescKeyHookClaude                        = "hook.claude"
+	TextDescKeyHookCopilot                       = "hook.copilot"
+	TextDescKeyHookCursor                        = "hook.cursor"
+	TextDescKeyHookSupportedTools                = "hook.supported-tools"
+	TextDescKeyHookWindsurf                      = "hook.windsurf"
+	TextDescKeyTimeAgo                           = "time.ago"
+	TextDescKeyTimeDay                           = "time.day"
+	TextDescKeyTimeHour                          = "time.hour"
+	TextDescKeyTimeJustNow                       = "time.just-now"
+	TextDescKeyTimeMinute                        = "time.minute"
 )
 
 const (
@@ -404,6 +536,15 @@ func HookMessageRegistry() ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func CopilotInstructions() ([]byte, error) {
 	return FS.ReadFile("hooks/copilot-instructions.md")
+}
+
+// JournalExtraCSS reads the embedded extra.css for journal site generation.
+//
+// Returns:
+//   - []byte: CSS content
+//   - error: Non-nil if the file is not found or read fails
+func JournalExtraCSS() ([]byte, error) {
+	return FS.ReadFile("journal/extra.css")
 }
 
 // ListHookMessages returns available hook message directory names.

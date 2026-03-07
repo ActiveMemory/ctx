@@ -42,7 +42,7 @@ func RootCmd() *cobra.Command {
 	var contextDir string
 	var allowOutsideCwd bool
 
-	short, long := assets.CommandDesc("ctx")
+	short, long := assets.CommandDesc(assets.CmdDescKeyCtx)
 
 	cmd := &cobra.Command{
 		Use:     "ctx",

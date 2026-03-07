@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("prompt.list")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPromptList)
 
 	return &cobra.Command{
 		Use:   "list",

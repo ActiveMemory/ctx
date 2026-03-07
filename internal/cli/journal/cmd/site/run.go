@@ -7,14 +7,13 @@
 package site
 
 import (
-	_ "embed"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
@@ -22,9 +21,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
-
-//go:embed extra.css
-var extraCSS []byte
 
 // runZensical executes zensical build or serve in the output directory.
 //
@@ -76,7 +72,7 @@ func runJournalSite(
 	// Load journal state for per-file processing flags
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return fmt.Errorf("load journal state: %w", loadErr)
+		return ctxerr.LoadJournalStateErr(loadErr)
 	}
 
 	// Scan journal files
@@ -96,13 +92,17 @@ func runJournalSite(
 	}
 
 	// Write stylesheet for <pre> overflow control
-	stylesDir := filepath.Join(docsDir, "stylesheets")
+	stylesDir := filepath.Join(docsDir, config.DirStylesheets)
 	if mkErr := os.MkdirAll(stylesDir, config.PermExec); mkErr != nil {
 		return ctxerr.Mkdir(stylesDir, mkErr)
 	}
-	cssPath := filepath.Join(stylesDir, "extra.css")
+	cssPath := filepath.Join(stylesDir, config.FileExtraCSS)
+	cssData, cssReadErr := assets.JournalExtraCSS()
+	if cssReadErr != nil {
+		return cssReadErr
+	}
 	if writeErr := os.WriteFile(
-		cssPath, extraCSS, config.PermFile,
+		cssPath, cssData, config.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(cssPath, writeErr)
 	}
@@ -175,7 +175,7 @@ func runJournalSite(
 			}
 			orphanPath := filepath.Join(docsDir, f.Name())
 			if rmErr := os.Remove(orphanPath); rmErr == nil {
-				cmd.Println(fmt.Sprintf("  removed orphan: %s", f.Name()))
+				write.InfoJournalOrphanRemoved(cmd, f.Name())
 			}
 		}
 	}
@@ -300,27 +300,15 @@ func runJournalSite(
 		return ctxerr.FileWrite(tomlPath, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(
-		"\u2713 Generated site with %d entries in %s",
-		len(entries), output,
-	))
-
-	// Build or serve if requested
 	if serve {
-		cmd.Println()
-		cmd.Println("Starting local server...")
+		write.InfoJournalSiteStarting(cmd)
 		return runZensical(output, "serve")
 	} else if build {
-		cmd.Println()
-		cmd.Println("Building site...")
+		write.InfoJournalSiteBuilding(cmd)
 		return runZensical(output, "build")
 	}
 
-	cmd.Println()
-	cmd.Println("Next steps:")
-	cmd.Println(fmt.Sprintf("  cd %s && %s serve", output, config.BinZensical))
-	cmd.Println("  or")
-	cmd.Println("  ctx journal site --serve")
+	write.InfoJournalSiteGenerated(cmd, len(entries), output, config.BinZensical)
 
 	return nil
 }

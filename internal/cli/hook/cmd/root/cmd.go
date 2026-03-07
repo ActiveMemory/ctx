@@ -26,7 +26,7 @@ import (
 func Cmd() *cobra.Command {
 	var write bool
 
-	short, long := assets.CommandDesc("hook")
+	short, long := assets.CommandDesc(assets.CmdDescKeyHook)
 	cmd := &cobra.Command{
 		Use:         "hook <tool>",
 		Short:       short,

@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: command for showing memory bridge status.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("memory.status")
+	short, long := assets.CommandDesc(assets.CmdDescKeyMemoryStatus)
 	return &cobra.Command{
 		Use:   "status",
 		Short: short,

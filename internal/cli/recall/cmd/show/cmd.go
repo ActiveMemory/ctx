@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := assets.CommandDesc("recall.show")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallShow)
 
 	cmd := &cobra.Command{
 		Use:   "show [session-id]",

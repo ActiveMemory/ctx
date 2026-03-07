@@ -37,19 +37,19 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 
 	switch tool {
 	case "claude-code", "claude":
-		write.InfoHookTool(cmd, assets.TextDesc("hook.claude"))
+		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookClaude))
 
 	case "cursor":
-		write.InfoHookTool(cmd, assets.TextDesc("hook.cursor"))
+		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookCursor))
 
 	case "aider":
-		write.InfoHookTool(cmd, assets.TextDesc("hook.aider"))
+		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookAider))
 
 	case "copilot":
 		if writeFile {
 			return WriteCopilotInstructions(cmd)
 		}
-		write.InfoHookTool(cmd, assets.TextDesc("hook.copilot"))
+		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookCopilot))
 		cmd.Println()
 		content, readErr := assets.CopilotInstructions()
 		if readErr != nil {
@@ -58,11 +58,11 @@ func Run(cmd *cobra.Command, args []string, writeFile bool) error {
 		cmd.Print(string(content))
 
 	case "windsurf":
-		write.InfoHookTool(cmd, assets.TextDesc("hook.windsurf"))
+		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookWindsurf))
 
 	default:
 		write.InfoHookUnknownTool(cmd, tool)
-		write.InfoHookTool(cmd, assets.TextDesc("hook.supported-tools"))
+		write.InfoHookTool(cmd, assets.TextDesc(assets.TextDescKeyHookSupportedTools))
 		return ctxerr.UnsupportedTool(tool)
 	}
 

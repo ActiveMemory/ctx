@@ -20,7 +20,7 @@ func Cmd() *cobra.Command {
 	var keyFile string
 	var dryRun bool
 
-	short, long := assets.CommandDesc("pad.merge")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadMerge)
 	cmd := &cobra.Command{
 		Use:   "merge FILE...",
 		Short: short,

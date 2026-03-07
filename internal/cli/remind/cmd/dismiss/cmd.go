@@ -21,7 +21,7 @@ import (
 func Cmd() *cobra.Command {
 	var allFlag bool
 
-	short, _ := assets.CommandDesc("remind.dismiss")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyRemindDismiss)
 
 	cmd := &cobra.Command{
 		Use:     "dismiss [ID]",

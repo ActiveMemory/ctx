@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - *cobra.Command: The decisions command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("decision")
+	short, long := assets.CommandDesc(assets.CmdDescKeyDecision)
 	cmd := &cobra.Command{
 		Use:   "decisions",
 		Short: short,

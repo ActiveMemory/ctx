@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		allProjects bool
 	)
 
-	short, long := assets.CommandDesc("recall.list")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallList)
 
 	cmd := &cobra.Command{
 		Use:   "list",

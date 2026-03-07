@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		dryRun  bool
 	)
 
-	short, long := assets.CommandDesc("watch")
+	short, long := assets.CommandDesc(assets.CmdDescKeyWatch)
 
 	cmd := &cobra.Command{
 		Use:   "watch",

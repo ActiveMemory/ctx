@@ -24,7 +24,7 @@ import (
 func Cmd() *cobra.Command {
 	var output string
 
-	short, long := assets.CommandDesc("journal.obsidian")
+	short, long := assets.CommandDesc(assets.CmdDescKeyJournalObsidian)
 	cmd := &cobra.Command{
 		Use:   "obsidian",
 		Short: short,

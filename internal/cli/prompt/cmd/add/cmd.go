@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	var fromStdin bool
 
-	short, long := assets.CommandDesc("prompt.add")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPromptAdd)
 
 	cmd := &cobra.Command{
 		Use:   "add NAME",

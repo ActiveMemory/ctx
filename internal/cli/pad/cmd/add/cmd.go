@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	var filePath string
 
-	short, _ := assets.CommandDesc("pad.add")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPadAdd)
 	cmd := &cobra.Command{
 		Use:   "add TEXT",
 		Short: short,

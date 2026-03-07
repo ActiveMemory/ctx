@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	var blobs bool
 
-	short, long := assets.CommandDesc("pad.imp")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadImp)
 	cmd := &cobra.Command{
 		Use:   "import FILE",
 		Short: short,

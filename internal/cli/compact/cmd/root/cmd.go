@@ -26,7 +26,7 @@ import (
 func Cmd() *cobra.Command {
 	var archive bool
 
-	short, long := assets.CommandDesc("compact")
+	short, long := assets.CommandDesc(assets.CmdDescKeyCompact)
 
 	cmd := &cobra.Command{
 		Use:   "compact",

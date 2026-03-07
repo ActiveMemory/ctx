@@ -39,7 +39,7 @@ func Cmd() *cobra.Command {
 		session  string
 	)
 
-	short, long := assets.CommandDesc("agent")
+	short, long := assets.CommandDesc(assets.CmdDescKeyAgent)
 
 	cmd := &cobra.Command{
 		Use:   "agent",

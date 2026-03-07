@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured why command with document aliases
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("why")
+	short, long := assets.CommandDesc(assets.CmdDescKeyWhy)
 
 	cmd := &cobra.Command{
 		Use:         "why [DOCUMENT]",
