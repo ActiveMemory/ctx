@@ -479,6 +479,10 @@ output package. All CLI commands should route printed output through this packag
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
 - [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
 
+- [ ] Move drift/cmd/root/run.go cmd.Print* output strings to internal/write per convention #added:2026-03-07-084152
+
+- [ ] Extract doctor/core/checks.go strings — 105 inline Name/Category/Message values to assets (i18n) and config (Name/Category constants) #added:2026-03-07-083428
+
 - [ ] Split deps/core builders into per-ecosystem packages — go.go, node.go, python.go, rust.go are specific enough for their own packages under deps/core/ or deps/builders/ #added:2026-03-07-082827
 
 - [ ] Audit git graceful degradation — verify all exec.Command(git) call sites degrade gracefully when git is absent, per project guide recommendation #added:2026-03-07-081625

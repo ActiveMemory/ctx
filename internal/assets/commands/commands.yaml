@@ -1029,3 +1029,81 @@ why:
   short: "hour"
 "_text.time.day":
   short: "day"
+"_text.doctor.context-initialized.ok":
+  short: "Context initialized (.context/)"
+"_text.doctor.context-initialized.error":
+  short: "Context not initialized — run ctx init"
+"_text.doctor.required-files.ok":
+  short: "Required files present (%d/%d)"
+"_text.doctor.required-files.error":
+  short: "Missing required files (%d/%d): %s"
+"_text.doctor.ctxrc-validation.ok-no-file":
+  short: "No .ctxrc file (using defaults)"
+"_text.doctor.ctxrc-validation.error":
+  short: ".ctxrc parse error: %v"
+"_text.doctor.ctxrc-validation.warning":
+  short: ".ctxrc has unknown fields: %s"
+"_text.doctor.ctxrc-validation.ok":
+  short: ".ctxrc valid"
+"_text.doctor.drift.warning-load":
+  short: "Could not load context for drift check: %v"
+"_text.doctor.drift.ok":
+  short: "No drift detected"
+"_text.doctor.drift.detected":
+  short: "Drift: %s — run ctx drift for details"
+"_text.doctor.plugin-installed.info":
+  short: "ctx plugin not installed"
+"_text.doctor.plugin-installed.ok":
+  short: "ctx plugin installed"
+"_text.doctor.plugin-enabled-global.ok":
+  short: "Plugin enabled globally (~/.claude/settings.json)"
+"_text.doctor.plugin-enabled-local.ok":
+  short: "Plugin enabled locally (.claude/settings.local.json)"
+"_text.doctor.plugin-enabled.warning":
+  short: "Plugin installed but not enabled — run 'ctx init' to auto-enable, or add {\"enabledPlugins\": {\"%s\": true}} to ~/.claude/settings.json"
+"_text.doctor.event-logging.ok":
+  short: "Event logging enabled"
+"_text.doctor.event-logging.info":
+  short: "Event logging disabled (enable with event_log: true in .ctxrc)"
+"_text.doctor.webhook.ok":
+  short: "Webhook configured"
+"_text.doctor.webhook.info":
+  short: "No webhook configured (optional — use ctx notify setup)"
+"_text.doctor.reminders.ok":
+  short: "No pending reminders"
+"_text.doctor.reminders.info":
+  short: "%d pending reminders"
+"_text.doctor.task-completion.warning-suffix":
+  short: " — consider archiving with ctx tasks archive"
+"_text.doctor.task-completion.format":
+  short: "Tasks: %d/%d completed (%d%%)"
+"_text.doctor.context-size.format":
+  short: "Context size: ~%d tokens (window: %d)"
+"_text.doctor.context-size.warning-suffix":
+  short: " — consider ctx compact"
+"_text.doctor.context-file.format":
+  short: "%-22s ~%d tokens"
+"_text.doctor.recent-events.info":
+  short: "No events in log"
+"_text.doctor.recent-events.ok":
+  short: "Last event: %s"
+"_text.doctor.resource-memory.format":
+  short: "Memory %d%% (%s / %s GB)"
+"_text.doctor.resource-swap.format":
+  short: "Swap %d%% (%s / %s GB)"
+"_text.doctor.resource-disk.format":
+  short: "Disk %d%% (%s / %s GB)"
+"_text.doctor.resource-load.format":
+  short: "Load %.2fx (%.1f / %d CPUs)"
+"_text.doctor.drift.violations":
+  short: "%d violations"
+"_text.doctor.drift.warnings":
+  short: "%d warnings"
+"_text.doctor.output.header":
+  short: "ctx doctor"
+"_text.doctor.output.separator":
+  short: "=========="
+"_text.doctor.output.result-line":
+  short: "  %s %s"
+"_text.doctor.output.summary":
+  short: "Summary: %d warnings, %d errors"
