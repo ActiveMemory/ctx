@@ -263,6 +263,21 @@ async function bootstrap(): Promise<void> {
   return bootstrapPromise;
 }
 
+/**
+ * Merge stdout and stderr without duplicating lines that appear in both.
+ * Cobra prints errors to both streams — naive concatenation doubles them.
+ */
+function mergeOutput(stdout: string, stderr: string): string {
+  const out = stdout.trim();
+  const err = stderr.trim();
+  if (!out) return err;
+  if (!err) return out;
+  // If stderr content already appears in stdout, skip it
+  if (out.includes(err)) return out;
+  if (err.includes(out)) return err;
+  return out + "\n" + err;
+}
+
 function runCtx(
   args: string[],
   cwd?: string,
@@ -315,7 +330,7 @@ async function handleInit(
   stream.progress("Initializing .context/ directory...");
   try {
     const { stdout, stderr } = await runCtx(["init", "--no-color"], cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     }
@@ -329,7 +344,7 @@ async function handleInit(
         cwd,
         token
       );
-      const hookOutput = (hookResult.stdout + hookResult.stderr).trim();
+      const hookOutput = mergeOutput(hookResult.stdout, hookResult.stderr);
       if (hookOutput) {
         stream.markdown(
           "\n**Copilot integration:**\n```\n" + hookOutput + "\n```"
@@ -368,7 +383,7 @@ async function handleStatus(
   stream.progress("Checking context status...");
   try {
     const { stdout, stderr } = await runCtx(["status", "--no-color"], cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     stream.markdown("```\n" + output + "\n```");
   } catch (err: unknown) {
     stream.markdown(
@@ -386,7 +401,7 @@ async function handleAgent(
   stream.progress("Generating AI-ready context packet...");
   try {
     const { stdout, stderr } = await runCtx(["agent", "--no-color"], cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     stream.markdown(output);
   } catch (err: unknown) {
     stream.markdown(
@@ -404,7 +419,7 @@ async function handleDrift(
   stream.progress("Detecting context drift...");
   try {
     const { stdout, stderr } = await runCtx(["drift", "--no-color"], cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     stream.markdown("```\n" + output + "\n```");
   } catch (err: unknown) {
     stream.markdown(
@@ -427,7 +442,7 @@ async function handleRecall(
       args.push("--query", prompt.trim());
     }
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -464,7 +479,7 @@ async function handleHook(
   );
   try {
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -508,7 +523,7 @@ async function handleAdd(
       args.push(content);
     }
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -530,7 +545,7 @@ async function handleLoad(
   stream.progress("Loading assembled context...");
   try {
     const { stdout, stderr } = await runCtx(["load", "--no-color"], cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     stream.markdown(output);
   } catch (err: unknown) {
     stream.markdown(
@@ -548,7 +563,7 @@ async function handleCompact(
   stream.progress("Compacting context...");
   try {
     const { stdout, stderr } = await runCtx(["compact", "--no-color"], cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -570,7 +585,7 @@ async function handleSync(
   stream.progress("Syncing context with codebase...");
   try {
     const { stdout, stderr } = await runCtx(["sync", "--no-color"], cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -606,7 +621,7 @@ async function handleComplete(
       cwd,
       token
     );
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -664,7 +679,7 @@ async function handleRemind(
   stream.progress(progressMsg);
   try {
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -716,7 +731,7 @@ async function handleTasks(
   stream.progress(progressMsg);
   try {
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -791,7 +806,7 @@ async function handlePad(
   stream.progress(progressMsg);
   try {
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -851,7 +866,7 @@ async function handleNotify(
   stream.progress(progressMsg);
   try {
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
@@ -913,7 +928,7 @@ async function handleSystem(
   stream.progress(progressMsg);
   try {
     const { stdout, stderr } = await runCtx(args, cwd, token);
-    const output = (stdout + stderr).trim();
+    const output = mergeOutput(stdout, stderr);
     if (output) {
       stream.markdown("```\n" + output + "\n```");
     } else {
