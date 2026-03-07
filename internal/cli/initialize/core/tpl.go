@@ -7,7 +7,6 @@
 package core
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -15,6 +14,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CreateEntryTemplates creates entry template files in .context/templates/.
@@ -29,26 +30,26 @@ import (
 func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) error {
 	templatesDir := filepath.Join(contextDir, "templates")
 	if err := os.MkdirAll(templatesDir, config.PermExec); err != nil {
-		return fmt.Errorf("failed to create %s: %w", templatesDir, err)
+		return ctxerr.Mkdir(templatesDir, err)
 	}
 	entryTemplates, err := assets.ListEntry()
 	if err != nil {
-		return fmt.Errorf("failed to list entry templates: %w", err)
+		return ctxerr.ListEntryTemplates(err)
 	}
 	for _, name := range entryTemplates {
 		targetPath := filepath.Join(templatesDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			cmd.Println(fmt.Sprintf("  ○ templates/%s (exists, skipped)", name))
+			write.InitSkipped(cmd, "templates/"+name)
 			continue
 		}
 		content, err := assets.Entry(name)
 		if err != nil {
-			return fmt.Errorf("failed to read entry template %s: %w", name, err)
+			return ctxerr.ReadEntryTemplate(name, err)
 		}
 		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
-			return fmt.Errorf("failed to write %s: %w", targetPath, err)
+			return ctxerr.FileWrite(targetPath, err)
 		}
-		cmd.Println(fmt.Sprintf("  ✓ templates/%s", name))
+		write.InitCreated(cmd, "templates/"+name)
 	}
 	return nil
 }

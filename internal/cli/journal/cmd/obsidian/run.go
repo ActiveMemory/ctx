@@ -42,7 +42,7 @@ const ObsidianMaxRelated = 5
 //
 // Returns:
 //   - error: Non-nil if generation fails
-func runJournalObsidian(cmd *cobra.Command, output string) error {
+func Run(cmd *cobra.Command, output string) error {
 	return BuildObsidianVault(cmd, filepath.Join(rc.ContextDir(), config.DirJournal), output)
 }
 
@@ -244,13 +244,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 		return ctxerr.FileWrite(homePath, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf(
-		"\u2713 Generated Obsidian vault with %d entries in %s",
-		len(entries), output,
-	))
-	cmd.Println()
-	cmd.Println("Next steps:")
-	cmd.Println("  Open Obsidian \u2192 Open folder as vault \u2192 Select " + output)
+	write.InfoObsidianGenerated(cmd, len(entries), output)
 
 	return nil
 }

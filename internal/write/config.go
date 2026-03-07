@@ -287,3 +287,11 @@ const tplInitCreatedWith = "  ✓ %s%s"
 // tplInitSkippedPlain reports a file skipped without detail.
 // Arguments: path.
 const tplInitSkippedPlain = "  ○ %s (skipped)"
+
+// tplObsidianGenerated reports successful Obsidian vault generation.
+// Arguments: entry count, output directory.
+const tplObsidianGenerated = "✓ Generated Obsidian vault with %d entries in %s"
+
+// tplObsidianNextSteps is the post-generation guidance.
+// Arguments: output directory.
+const tplObsidianNextSteps = "  Open Obsidian → Open folder as vault → Select %s"

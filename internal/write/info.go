@@ -286,3 +286,16 @@ func InfoInitNextSteps(cmd *cobra.Command) {
 	cmd.Println()
 	cmd.Println(tplInitPluginNote)
 }
+
+// InfoObsidianGenerated reports successful Obsidian vault generation.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - count: Number of entries generated
+//   - output: Output directory path
+func InfoObsidianGenerated(cmd *cobra.Command, count int, output string) {
+	sprintf(cmd, tplObsidianGenerated, count, output)
+	cmd.Println()
+	cmd.Println("Next steps:")
+	sprintf(cmd, tplObsidianNextSteps, output)
+}

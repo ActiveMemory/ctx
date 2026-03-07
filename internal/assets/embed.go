@@ -137,6 +137,10 @@ const (
 	FlagDescKeyWatchLog                    = "watch.log"
 )
 
+const (
+	AssetKeyJournalSite = "journal.site"
+)
+
 // Template reads a template file by name from the embedded filesystem.
 //
 // Parameters:

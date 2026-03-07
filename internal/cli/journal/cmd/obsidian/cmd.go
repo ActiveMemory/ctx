@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runJournalObsidian(cmd, output)
+			return Run(cmd, output)
 		},
 	}
 
