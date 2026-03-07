@@ -23,7 +23,7 @@ import (
 //   - args: Command arguments (unused)
 //
 // Returns:
-//   - error: Non-nil if file read/write fails
+//   - error: Non-nil if the file read/write fails
 func run(cmd *cobra.Command, _ []string) error {
 	filePath := filepath.Join(rc.ContextDir(), config.FileDecision)
 	return index.ReindexFile(

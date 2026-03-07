@@ -149,6 +149,16 @@ const (
 	// TaskCompleteReplace is the regex replacement string for marking a task done.
 	TaskCompleteReplace = "$1- [x] $3"
 
+	// Profile file names and identifiers for .ctxrc management.
+	FileCtxRC     = ".ctxrc"
+	FileCtxRCBase = ".ctxrc.base"
+	FileCtxRCDev  = ".ctxrc.dev"
+	ProfileDev    = "dev"
+	ProfileBase   = "base"
+	ProfileProd   = "prod" // Alias for ProfileBase
+	// ProfileDetectKey is the .ctxrc key that distinguishes dev from base profile.
+	ProfileDetectKey = "notify:"
+
 	// EnvBackupSMBURL is the environment variable for the SMB share URL.
 	EnvBackupSMBURL = "CTX_BACKUP_SMB_URL"
 	// EnvBackupSMBSubdir is the environment variable for the SMB share subdirectory.

@@ -7,11 +7,10 @@
 package switchcmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the profile switch logic.
@@ -30,51 +29,32 @@ func Run(cmd *cobra.Command, root string, args []string) error {
 	}
 
 	// Normalize "prod" alias.
-	if target == "prod" {
+	if target == core.ProfileProd {
 		target = core.ProfileBase
 	}
 
+	var profile string
 	switch target {
 	case core.ProfileDev:
-		return switchTo(cmd, root, core.ProfileDev)
+		profile = core.ProfileDev
 	case core.ProfileBase:
-		return switchTo(cmd, root, core.ProfileBase)
+		profile = core.ProfileBase
 	case "":
 		// Toggle.
 		current := core.DetectProfile(root)
 		if current == core.ProfileDev {
-			return switchTo(cmd, root, core.ProfileBase)
+			profile = core.ProfileBase
+		} else {
+			profile = core.ProfileDev
 		}
-		return switchTo(cmd, root, core.ProfileDev)
 	default:
-		return fmt.Errorf(
-			"unknown profile %q: must be dev, base, or prod", target)
-	}
-}
-
-// switchTo copies the requested profile and prints a status message.
-func switchTo(cmd *cobra.Command, root, profile string) error {
-	current := core.DetectProfile(root)
-	if current == profile {
-		cmd.Println(fmt.Sprintf("already on %s profile", profile))
-		return nil
+		return ctxerr.UnknownProfile(target)
 	}
 
-	var srcFile string
-	if profile == core.ProfileDev {
-		srcFile = core.FileCtxRCDev
-	} else {
-		srcFile = core.FileCtxRCBase
+	msg, switchErr := core.SwitchTo(root, profile)
+	if switchErr != nil {
+		return switchErr
 	}
-
-	if copyErr := core.CopyProfile(root, srcFile); copyErr != nil {
-		return copyErr
-	}
-
-	if current == "" {
-		cmd.Println(fmt.Sprintf("created %s from %s profile", core.FileCtxRC, profile))
-	} else {
-		cmd.Println(fmt.Sprintf("switched to %s profile", profile))
-	}
+	cmd.Println(msg)
 	return nil
 }
