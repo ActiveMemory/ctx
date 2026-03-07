@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// run regenerates the DECISIONS.md index.
+// Run regenerates the DECISIONS.md index.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -24,7 +24,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if the file read/write fails
-func run(cmd *cobra.Command, _ []string) error {
+func Run(cmd *cobra.Command, _ []string) error {
 	filePath := filepath.Join(rc.ContextDir(), config.FileDecision)
 	return index.ReindexFile(
 		cmd.OutOrStdout(),
