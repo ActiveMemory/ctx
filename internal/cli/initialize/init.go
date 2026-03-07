@@ -55,6 +55,7 @@ func Cmd() *cobra.Command {
 		merge          bool
 		ralph          bool
 		noPluginEnable bool
+		caller         string
 	)
 
 	short, long := assets.CommandDesc("initialize")
@@ -64,7 +65,7 @@ func Cmd() *cobra.Command {
 		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return initroot.Run(cmd, force, minimal, merge, ralph, noPluginEnable)
+			return initroot.Run(cmd, force, minimal, merge, ralph, noPluginEnable, caller)
 		},
 	}
 
@@ -88,6 +89,10 @@ func Cmd() *cobra.Command {
 	cmd.Flags().BoolVar(
 		&noPluginEnable, "no-plugin-enable", false,
 		"Skip auto-enabling the ctx plugin in global Claude Code settings",
+	)
+	cmd.Flags().StringVar(
+		&caller, "caller", "",
+		"Identify the calling tool (e.g. vscode) to tailor output",
 	)
 
 	return cmd
