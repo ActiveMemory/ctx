@@ -25,11 +25,12 @@ import (
 //   - cmd: Cobra command for output
 //   - force: If true, overwrite existing ctx section
 //   - autoMerge: If true, skip interactive confirmation
+//   - caller: Editor caller ID (e.g. "vscode"); empty for CLI/Claude Code
 //
 // Returns:
 //   - error: Non-nil if file operations fail
-func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
-	templateContent, err := assets.ClaudeMd()
+func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool, caller string) error {
+	templateContent, err := assets.ClaudeMdForCaller(caller)
 	if err != nil {
 		return fmt.Errorf("failed to read CLAUDE.md template: %w", err)
 	}

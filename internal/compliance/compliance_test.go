@@ -863,3 +863,99 @@ func TestPermissionConstants(t *testing.T) {
 		}
 	})
 }
+
+// allSourceFiles returns all source files (.go, .ts, .js) under the project
+// root, excluding vendor/, node_modules/, dist/, site/, and .git/.
+func allSourceFiles(t *testing.T, root string) []string {
+	t.Helper()
+	sourceExts := map[string]bool{
+		".go": true,
+		".ts": true,
+		".js": true,
+	}
+	var files []string
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() && (info.Name() == "vendor" || info.Name() == ".git" ||
+			info.Name() == "dist" || info.Name() == "site" || info.Name() == "node_modules") {
+			return filepath.SkipDir
+		}
+		if !info.IsDir() && sourceExts[filepath.Ext(path)] {
+			files = append(files, path)
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("failed to walk project: %v", err)
+	}
+	return files
+}
+
+// ---------------------------------------------------------------------------
+// 21. No UTF-8 BOM — source files must not start with a byte-order mark
+// ---------------------------------------------------------------------------
+
+// TestNoUTF8BOM detects the UTF-8 BOM (0xEF 0xBB 0xBF) that Windows editors
+// sometimes insert. BOM causes subtle issues with Go tooling and TypeScript
+// compilers and should never appear in source files.
+func TestNoUTF8BOM(t *testing.T) {
+	root := projectRoot(t)
+	bom := []byte{0xEF, 0xBB, 0xBF}
+
+	for _, p := range allSourceFiles(t, root) {
+		rel, _ := filepath.Rel(root, p)
+		t.Run(rel, func(t *testing.T) {
+			data, err := os.ReadFile(filepath.Clean(p))
+			if err != nil {
+				t.Fatalf("read: %v", err)
+			}
+			if bytes.HasPrefix(data, bom) {
+				t.Errorf("file starts with UTF-8 BOM (0xEF 0xBB 0xBF); remove it")
+			}
+		})
+	}
+}
+
+// ---------------------------------------------------------------------------
+// 22. No mojibake — detect double-encoded UTF-8 (encoding corruption)
+// ---------------------------------------------------------------------------
+
+// TestNoMojibake catches the classic Windows encoding corruption where UTF-8
+// bytes are misread as Windows-1252/Latin-1 and re-encoded as UTF-8.
+// Example: em dash U+2014 becomes a 6-byte garbled sequence starting with
+// 0xC3 0xA2. We detect that signature to catch double-encoded files.
+func TestNoMojibake(t *testing.T) {
+	root := projectRoot(t)
+	// 0xC3 0xA2 is UTF-8 for U+00E2 (Latin small letter a with circumflex).
+	// In mojibake, it always appears followed by 0xE2 as part of a garbled
+	// multi-byte sequence (e.g., em dash becomes 0xC3 0xA2 0xE2 0x82 ...).
+	// We match that three-byte signature: 0xC3 0xA2 0xE2.
+	mojibakePattern := []byte{0xC3, 0xA2, 0xE2}
+
+	for _, p := range allSourceFiles(t, root) {
+		rel, _ := filepath.Rel(root, p)
+		t.Run(rel, func(t *testing.T) {
+			data, err := os.ReadFile(filepath.Clean(p))
+			if err != nil {
+				t.Fatalf("read: %v", err)
+			}
+			if idx := bytes.Index(data, mojibakePattern); idx >= 0 {
+				// Show context around the corruption
+				start := idx
+				if start > 20 {
+					start = idx - 20
+				}
+				end := idx + 30
+				if end > len(data) {
+					end = len(data)
+				}
+				t.Errorf("double-encoded UTF-8 (mojibake) detected at byte %d: %q\n"+
+					"This usually means a Windows editor re-encoded the file.\n"+
+					"Fix: restore from git (git checkout HEAD -- %s) and re-apply changes with a UTF-8-aware editor.",
+					idx, data[start:end], rel)
+			}
+		})
+	}
+}

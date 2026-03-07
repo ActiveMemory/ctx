@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -43,9 +44,18 @@ func ValidateBoundary(dir string) error {
 
 	// Ensure the resolved dir is equal to or nested under the project root.
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
+	// On Windows, use case-insensitive comparison since NTFS paths are
+	// case-insensitive but EvalSymlinks normalizes casing only for the
+	// existing cwd, not the non-existent target — creating a mismatch.
 	root := resolvedCwd + string(os.PathSeparator)
-	if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
-		return fmt.Errorf("context directory %q resolves outside project root %q", dir, resolvedCwd)
+	if runtime.GOOS == "windows" {
+		if !strings.EqualFold(resolvedDir, resolvedCwd) && !strings.HasPrefix(strings.ToLower(resolvedDir), strings.ToLower(root)) {
+			return fmt.Errorf("context directory %q resolves outside project root %q", dir, resolvedCwd)
+		}
+	} else {
+		if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
+			return fmt.Errorf("context directory %q resolves outside project root %q", dir, resolvedCwd)
+		}
 	}
 
 	return nil
