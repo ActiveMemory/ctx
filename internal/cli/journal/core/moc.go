@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
@@ -32,24 +33,27 @@ func GenerateHomeMOC(
 	var sb strings.Builder
 	nl := config.NewlineLF
 
-	sb.WriteString("# Session Journal" + nl + nl)
-	sb.WriteString("Navigation hub for all journal entries." + nl + nl)
+	sb.WriteString(config.JournalHeadingSessionJournal + nl + nl)
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyJournalMocNavDescription) + nl + nl)
 
-	sb.WriteString("## Browse by" + nl + nl)
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyJournalMocBrowseBy) + nl + nl)
 	if hasTopics {
 		sb.WriteString(fmt.Sprintf(
-			"- %s — sessions grouped by topic"+nl,
-			FormatWikilink("_Topics", "Topics")))
+			"- %s %s"+nl,
+			FormatWikilink("_Topics", "Topics"),
+			assets.TextDesc(assets.TextDescKeyJournalMocTopicsDesc)))
 	}
 	if hasFiles {
 		sb.WriteString(fmt.Sprintf(
-			"- %s — sessions grouped by file touched"+nl,
-			FormatWikilink("_Key Files", "Key Files")))
+			"- %s %s"+nl,
+			FormatWikilink("_Key Files", "Key Files"),
+			assets.TextDesc(assets.TextDescKeyJournalMocFilesDesc)))
 	}
 	if hasTypes {
 		sb.WriteString(fmt.Sprintf(
-			"- %s — sessions grouped by type"+nl,
-			FormatWikilink("_Session Types", "Session Types")))
+			"- %s %s"+nl,
+			FormatWikilink("_Session Types", "Session Types"),
+			assets.TextDesc(assets.TextDescKeyJournalMocTypesDesc)))
 	}
 	sb.WriteString(nl)
 
@@ -59,7 +63,7 @@ func GenerateHomeMOC(
 		recent = recent[:config.JournalMaxRecentSessions]
 	}
 
-	sb.WriteString("## Recent Sessions" + nl + nl)
+	sb.WriteString(config.HeadingLevelTwoStart + config.JournalHeadingRecentSessions + nl + nl)
 	for _, e := range recent {
 		sb.WriteString(FormatWikilinkEntry(e) + nl)
 	}

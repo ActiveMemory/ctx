@@ -63,18 +63,18 @@ func WriteMonthSections(
 ) {
 	nl := config.NewlineLF
 	for _, month := range monthOrder {
-		fmt.Fprintf(sb, config.TplJournalMonthHeading+nl+nl, month)
+		_, _ = fmt.Fprintf(sb, config.TplJournalMonthHeading+nl+nl, month)
 		for _, e := range months[month] {
 			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
 			timeStr := ""
 			if e.Time != "" && len(e.Time) >= config.JournalTimePrefixLen {
 				timeStr = e.Time[:config.JournalTimePrefixLen] + " "
 			}
-			fmt.Fprintf(sb,
+			_, _ = fmt.Fprintf(sb,
 				config.TplJournalSubpageEntry+nl,
 				timeStr, e.Title, linkPrefix, link)
 			if e.Summary != "" {
-				fmt.Fprintf(sb, config.TplJournalIndexSummary+nl, e.Summary)
+				_, _ = fmt.Fprintf(sb, config.TplJournalIndexSummary+nl, e.Summary)
 			}
 		}
 		sb.WriteString(nl)
@@ -140,7 +140,7 @@ func WritePopularAndLongtail(
 		for i := range ltCount {
 			label, e := ltItem(i)
 			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
-			fmt.Fprintf(sb, ltTpl+nl, label, e.Title, link)
+			_, _ = fmt.Fprintf(sb, ltTpl+nl, label, e.Title, link)
 		}
 		sb.WriteString(nl)
 	}
