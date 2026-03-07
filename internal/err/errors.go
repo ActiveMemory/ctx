@@ -431,3 +431,25 @@ func SkillRead(name string, cause error) error {
 func DetectReferenceTime(cause error) error {
 	return fmt.Errorf("detecting reference time: %w", cause)
 }
+
+// CreateArchiveDir wraps a failure to create the archive directory.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to create archive directory: <cause>"
+func CreateArchiveDir(cause error) error {
+	return fmt.Errorf("failed to create archive directory: %w", cause)
+}
+
+// WriteArchive wraps a failure to write an archive file.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to write archive: <cause>"
+func WriteArchive(cause error) error {
+	return fmt.Errorf("failed to write archive: %w", cause)
+}

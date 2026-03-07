@@ -14,7 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/compact"
+	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
@@ -49,10 +49,10 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	lines := strings.Split(string(content), nl)
 
 	// Parse task blocks using block-based parsing
-	blocks := compact.ParseTaskBlocks(lines)
+	blocks := compactcore.ParseTaskBlocks(lines)
 
 	// Filter to only archivable blocks (completed with no incomplete children)
-	var archivableBlocks []compact.TaskBlock
+	var archivableBlocks []compactcore.TaskBlock
 	var skippedCount int
 	for _, block := range blocks {
 		if block.IsArchivable {
@@ -104,13 +104,13 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := compact.WriteArchive("tasks", config.HeadingArchivedTasks, archivedContent.String())
+	archiveFilePath, writeErr := compactcore.WriteArchive("tasks", config.HeadingArchivedTasks, archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}
 
 	// Remove archived blocks from lines and write back
-	newLines := compact.RemoveBlocksFromLines(lines, archivableBlocks)
+	newLines := compactcore.RemoveBlocksFromLines(lines, archivableBlocks)
 	newContent := strings.Join(newLines, nl)
 
 	if updateErr := os.WriteFile(

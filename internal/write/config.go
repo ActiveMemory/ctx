@@ -58,3 +58,15 @@ const tplNewContent = "  New content: %d lines since last sync"
 // tplAddedTo is a format template for confirming an entry was added.
 // Arguments: filename.
 const tplAddedTo = "✓ Added to %s"
+
+// tplMovingTask is a format template for a task being moved to completed.
+// Arguments: truncated task text.
+const tplMovingTask = "✓ Moving completed task: %s"
+
+// tplSkippingTask is a format template for a task skipped due to
+// incomplete children. Arguments: truncated task text.
+const tplSkippingTask = "! Skipping (has incomplete children): %s"
+
+// tplArchivedTasks is a format template for archived tasks summary.
+// Arguments: count, archive file path, days threshold.
+const tplArchivedTasks = "✓ Archived %d tasks to %s (older than %d days)"

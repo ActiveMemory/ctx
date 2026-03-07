@@ -7,7 +7,6 @@
 package core
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -16,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // CompactTasks moves completed tasks to the "Completed" section in TASKS.md.
@@ -53,15 +53,9 @@ func CompactTasks(
 	for _, block := range blocks {
 		if block.IsArchivable {
 			archivableBlocks = append(archivableBlocks, block)
-			cmd.Println(fmt.Sprintf(
-				"✓ Moving completed task: %s",
-				TruncateString(block.ParentTaskText(), 50),
-			))
+			write.InfoMovingTask(cmd, TruncateString(block.ParentTaskText(), 50))
 		} else {
-			cmd.Println(fmt.Sprintf(
-				"! Skipping (has incomplete children): %s",
-				TruncateString(block.ParentTaskText(), 50),
-			))
+			write.InfoSkippingTask(cmd, TruncateString(block.ParentTaskText(), 50))
 		}
 	}
 
@@ -113,11 +107,8 @@ func CompactTasks(
 			for _, block := range blocksToArchive {
 				archiveContent += block.BlockContent() + nl + nl
 			}
-			if archiveFile, err := WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent); err == nil {
-				cmd.Println(fmt.Sprintf(
-					"✓ Archived %d tasks to %s (older than %d days)",
-					len(blocksToArchive), archiveFile, archiveDays,
-				))
+			if archiveFile, archiveErr := WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent); archiveErr == nil {
+				write.InfoArchivedTasks(cmd, len(blocksToArchive), archiveFile, archiveDays)
 			}
 		}
 	}
