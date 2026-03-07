@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/drift"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // OutputDriftText writes the drift report as formatted text with colors.
@@ -116,7 +117,7 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	case drift.StatusViolation:
 		cmd.Println()
 		cmd.Println("Status: VIOLATION — Constitution violations detected")
-		return ErrViolationsFound()
+		return ctxerr.DriftViolations()
 	case drift.StatusWarning:
 		cmd.Println()
 		cmd.Println("Status: WARNING — Issues detected that should be addressed")

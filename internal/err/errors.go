@@ -585,3 +585,31 @@ func UnknownFormat(format, supported string) error {
 func UnknownProjectType(projType, supported string) error {
 	return fmt.Errorf("unknown project type %q (supported: %s)", projType, supported)
 }
+
+// NoCompletedTasks returns an error when there are no completed tasks to archive.
+//
+// Returns:
+//   - error: "no completed tasks to archive"
+func NoCompletedTasks() error {
+	return fmt.Errorf("no completed tasks to archive")
+}
+
+// NoTemplate wraps a failure to find an embedded template.
+//
+// Parameters:
+//   - filename: Name of the file without a template
+//   - cause: the underlying read error
+//
+// Returns:
+//   - error: "no template available for <filename>: <cause>"
+func NoTemplate(filename string, cause error) error {
+	return fmt.Errorf("no template available for %s: %w", filename, cause)
+}
+
+// DriftViolations returns an error when drift detection found violations.
+//
+// Returns:
+//   - error: "drift detection found violations"
+func DriftViolations() error {
+	return fmt.Errorf("drift detection found violations")
+}

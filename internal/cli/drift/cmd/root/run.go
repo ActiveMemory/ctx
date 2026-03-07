@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the drift command logic.
@@ -35,7 +36,7 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 	if err != nil {
 		var notFoundError *context.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return core.ErrNoContext()
+			return ctxerr.NotInitialized()
 		}
 		return err
 	}

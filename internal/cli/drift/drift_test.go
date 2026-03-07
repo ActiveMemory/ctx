@@ -104,7 +104,7 @@ func TestRunDrift_NoContext(t *testing.T) {
 	if runErr == nil {
 		t.Fatal("expected error when no .context/ exists")
 	}
-	if !strings.Contains(runErr.Error(), "no .context/ directory found") {
+	if !strings.Contains(runErr.Error(), "not initialized") {
 		t.Errorf("unexpected error: %v", runErr)
 	}
 }
