@@ -28,6 +28,7 @@ type EntryParams struct {
 	Consequences string
 	Lesson       string
 	Application  string
+	ContextDir   string
 }
 
 // Config holds all flags for the add command.

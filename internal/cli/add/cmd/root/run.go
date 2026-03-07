@@ -83,7 +83,11 @@ func WriteEntry(params EntryParams) error {
 		return core.ErrUnknownType(fType)
 	}
 
-	filePath := filepath.Join(rc.ContextDir(), fileName)
+	contextDir := params.ContextDir
+	if contextDir == "" {
+		contextDir = rc.ContextDir()
+	}
+	filePath := filepath.Join(contextDir, fileName)
 
 	// Check if the file exists
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {

@@ -12,6 +12,9 @@ import (
 	completeroot "github.com/ActiveMemory/ctx/internal/cli/complete/cmd/root"
 )
 
+// CompleteTask finds a task and marks it complete. Re-exported from cmd/root.
+var CompleteTask = completeroot.CompleteTask
+
 // Cmd returns the "ctx complete" command for marking tasks as done.
 //
 // Tasks can be specified by number, partial text match, or full text.
