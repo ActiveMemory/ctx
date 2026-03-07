@@ -5,6 +5,6 @@
 //                 SPDX-License-Identifier: Apache-2.0
 
 // Package config provides the "ctx config" command for managing runtime
-// configuration profiles. Subcommands include switching between dev and base
-// .ctxrc profiles and displaying the active profile status.
+// configuration profiles. Subcommands live in cmd/ subpackages; shared
+// helpers live in core/.
 package config

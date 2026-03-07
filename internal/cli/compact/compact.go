@@ -8,6 +8,8 @@ package compact
 
 import (
 	"github.com/spf13/cobra"
+
+	compactroot "github.com/ActiveMemory/ctx/internal/cli/compact/cmd/root"
 )
 
 // Cmd returns the "ctx compact" command for cleaning up context files.
@@ -43,7 +45,7 @@ Examples:
   ctx compact --archive        # Also archive old tasks, decisions, and learnings
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runCompact(cmd, archive)
+			return compactroot.Run(cmd, archive)
 		},
 	}
 

@@ -10,9 +10,14 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+
+	guideroot "github.com/ActiveMemory/ctx/internal/cli/guide/cmd/root"
 )
 
 // Cmd returns the "ctx guide" cobra command.
+//
+// Returns:
+//   - *cobra.Command: Configured guide command with flags registered
 func Cmd() *cobra.Command {
 	var (
 		showSkills   bool
@@ -31,7 +36,7 @@ Default output fits one screen.
 Use --skills to list all available slash-command skills.
 Use --commands to list all CLI commands.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runGuide(cmd, showSkills, showCommands)
+			return guideroot.Run(cmd, showSkills, showCommands)
 		},
 	}
 

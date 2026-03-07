@@ -3,6 +3,9 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-06 | PR #27 (MCP server) meets v0.1 spec requirements — merge-ready pending 3 compliance fixes |
+| 2026-03-06 | Skills stay CLI-based; MCP Prompts are the protocol equivalent |
+| 2026-03-06 | Peer MCP model for external tool integration |
 | 2026-03-06 | Create internal/parse for shared text-to-typed-value conversions |
 | 2026-03-06 | Centralize errors in internal/err, not per-package err.go files |
 | 2026-03-05 | Gitignore .context/memory/ for this project |
@@ -27,6 +30,48 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-06-141507] PR #27 (MCP server) meets v0.1 spec requirements — merge-ready pending 3 compliance fixes
+
+**Status**: Accepted
+
+**Context**: Reviewed PR against specs/mcp-server.md; all 7 action items addressed, CI fails on 3 mechanical compliance issues
+
+**Decision**: PR #27 (MCP server) meets v0.1 spec requirements — merge-ready pending 3 compliance fixes
+
+**Rationale**: All spec requirements met; CI failures are trivial and low-risk; keeping PR open risks merge conflicts during active refactoring
+
+**Consequences**: Merge and fix compliance issues in follow-up commit on main
+
+---
+
+## [2026-03-06-184816] Skills stay CLI-based; MCP Prompts are the protocol equivalent
+
+**Status**: Accepted
+
+**Context**: Question arose whether skills should switch from ctx CLI (Bash) to MCP tool calls once the MCP server ships
+
+**Decision**: Skills stay CLI-based; MCP Prompts are the protocol equivalent
+
+**Rationale**: CLI is always available (PATH prerequisite); MCP requires optional configuration. Hooks will always be CLI (shell commands). Two access patterns in the same tool is gratuitous complexity.
+
+**Consequences**: Skills call CLI. MCP Prompts call MCP Tools. Hooks call CLI. Clean layer separation; no replacement, only parallel access paths.
+
+---
+
+## [2026-03-06-184812] Peer MCP model for external tool integration
+
+**Status**: Accepted
+
+**Context**: Evaluated three integration models (orchestrator, peer, hub) for how ctx relates to GitNexus and context-mode
+
+**Decision**: Peer MCP model for external tool integration
+
+**Rationale**: Peer model (side-by-side MCP servers, each queried independently by the agent) respects ctx's markdown-on-filesystem invariant and avoids coupling. ctx provides behavioral scaffolding; external tools provide their specialties.
+
+**Consequences**: ctx MCP Prompts can reference external tools by convention without tight coupling. No plugin registry needed.
+
+---
 
 ## [2026-03-06-050132] Create internal/parse for shared text-to-typed-value conversions
 

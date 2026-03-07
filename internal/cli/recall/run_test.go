@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,7 @@ import (
 
 	"github.com/fatih/color"
 
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -224,9 +225,9 @@ func TestRunRecallExport_SingleSession(t *testing.T) {
 	// Filename is now title-based (derived from FirstUserMsg "hello from test").
 	for _, e := range entries {
 		if strings.Contains(e.Name(), "hello-from-test") {
-			content, err := os.ReadFile(filepath.Join(journalDir, e.Name())) //nolint:gosec // test temp path
-			if err != nil {
-				t.Fatalf("read journal file: %v", err)
+			content, readErr := os.ReadFile(filepath.Join(journalDir, e.Name())) //nolint:gosec // test temp path
+			if readErr != nil {
+				t.Fatalf("read journal file: %v", readErr)
 			}
 			if !strings.Contains(string(content), "hello from test") {
 				t.Error("journal file missing user message")
@@ -304,7 +305,7 @@ func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
 	}
 
 	// The old file should be gone.
-	if _, err := os.Stat(filepath.Join(journalDir, oldFilename)); err == nil {
+	if _, statErr := os.Stat(filepath.Join(journalDir, oldFilename)); statErr == nil {
 		t.Error("old file should have been renamed")
 	}
 
@@ -377,7 +378,7 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read original: %v", err)
 	}
-	origTitle := extractFrontmatterField(string(origData), "title")
+	origTitle := core.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter — keep the same title to avoid rename
 	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
@@ -430,7 +431,7 @@ func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read original: %v", err)
 	}
-	origTitle := extractFrontmatterField(string(origData), "title")
+	origTitle := core.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter — keep the same title to avoid rename
 	enrichedFM := fmt.Sprintf("---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"A curated summary\"\ntags:\n  - enriched\n---\n", origTitle)
@@ -870,12 +871,8 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-lockskip",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-lock-016", "lock-skip", "/home/test/lockskip",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-lockskip")
+	createTestSessionJSONL(t, projDir, "sess-lock-016", "lock-skip", "/home/test/lockskip")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -924,12 +921,8 @@ func TestRunRecallExport_LockedSkippedByForce(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-lockforce",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-lock-017", "lock-force", "/home/test/lockforce",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-lockforce")
+	createTestSessionJSONL(t, projDir, "sess-lock-017", "lock-force", "/home/test/lockforce")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -978,12 +971,8 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-keepfm",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-keepfm-018", "keepfm-test", "/home/test/keepfm",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-keepfm")
+	createTestSessionJSONL(t, projDir, "sess-keepfm-018", "keepfm-test", "/home/test/keepfm")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1005,7 +994,7 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 	if readErr != nil {
 		t.Fatalf("read original: %v", readErr)
 	}
-	origTitle := extractFrontmatterField(string(origData), "title")
+	origTitle := core.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter.
 	enrichedFM := fmt.Sprintf(
@@ -1044,12 +1033,8 @@ func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-keepdef",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-keepdef-019", "keepdef-test", "/home/test/keepdef",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-keepdef")
+	createTestSessionJSONL(t, projDir, "sess-keepdef-019", "keepdef-test", "/home/test/keepdef")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1070,7 +1055,7 @@ func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 	if readErr != nil {
 		t.Fatalf("read original: %v", readErr)
 	}
-	origTitle := extractFrontmatterField(string(origData), "title")
+	origTitle := core.ExtractFrontmatterField(string(origData), "title")
 
 	// Inject enriched frontmatter.
 	enrichedFM := fmt.Sprintf(
@@ -1100,12 +1085,8 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-drylocked",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-drylk-020", "drylk-test", "/home/test/drylocked",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-drylocked")
+	createTestSessionJSONL(t, projDir, "sess-drylk-020", "drylk-test", "/home/test/drylocked")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1153,35 +1134,35 @@ func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 func TestDiscardFrontmatter(t *testing.T) {
 	tests := []struct {
 		name string
-		opts exportOpts
+		opts core.ExportOpts
 		want bool
 	}{
 		{
 			name: "defaults",
-			opts: exportOpts{keepFrontmatter: true},
+			opts: core.ExportOpts{KeepFrontmatter: true},
 			want: false,
 		},
 		{
 			name: "keep-frontmatter=false",
-			opts: exportOpts{keepFrontmatter: false},
+			opts: core.ExportOpts{KeepFrontmatter: false},
 			want: true,
 		},
 		{
 			name: "force overrides keep-frontmatter",
-			opts: exportOpts{keepFrontmatter: true, force: true},
+			opts: core.ExportOpts{KeepFrontmatter: true, Force: true},
 			want: true,
 		},
 		{
 			name: "both false and force",
-			opts: exportOpts{keepFrontmatter: false, force: true},
+			opts: core.ExportOpts{KeepFrontmatter: false, Force: true},
 			want: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.opts.discardFrontmatter()
+			got := tt.opts.DiscardFrontmatter()
 			if got != tt.want {
-				t.Errorf("discardFrontmatter() = %v, want %v", got, tt.want)
+				t.Errorf("DiscardFrontmatter() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -1191,12 +1172,8 @@ func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) 
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-fmlock",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-fmlock-022", "fmlock-test", "/home/test/fmlock",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-fmlock")
+	createTestSessionJSONL(t, projDir, "sess-fmlock-022", "fmlock-test", "/home/test/fmlock")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1260,12 +1237,8 @@ func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-implyregen",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-implyregen-021", "implyregen-test", "/home/test/implyregen",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-implyregen")
+	createTestSessionJSONL(t, projDir, "sess-implyregen-021", "implyregen-test", "/home/test/implyregen")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1304,12 +1277,8 @@ func TestRunRecallExport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-malformed",
-	)
-	createTestSessionJSONL(
-		t, projDir, "sess-malformed-030", "malformed-fm", "/home/test/malformed",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-malformed")
+	createTestSessionJSONL(t, projDir, "sess-malformed-030", "malformed-fm", "/home/test/malformed")
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1384,13 +1353,9 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 
-	projDir := filepath.Join(
-		tmpDir, ".claude", "projects", "-home-test-multipart",
-	)
+	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-multipart")
 	// 110 pairs = 220 messages, exceeding config.MaxMessagesPerPart (200) → 2 parts.
-	createLargeTestSessionJSONL(
-		t, projDir, "sess-multi-031", "multipart-fm", "/home/test/multipart", 110,
-	)
+	createLargeTestSessionJSONL(t, projDir, "sess-multi-031", "multipart-fm", "/home/test/multipart", 110)
 
 	contextDir := filepath.Join(tmpDir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -1426,13 +1391,13 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 	if readErr != nil {
 		t.Fatalf("read part1: %v", readErr)
 	}
-	origTitle := extractFrontmatterField(string(origData), "title")
+	origTitle := core.ExtractFrontmatterField(string(origData), "title")
 
 	enrichedFM := fmt.Sprintf(
 		"---\ndate: \"2026-01-20\"\ntitle: %q\nsummary: \"Multipart curated summary\"\ntags:\n  - multipart-enriched\n---\n",
 		origTitle,
 	)
-	body := stripFrontmatter(string(origData))
+	body := core.StripFrontmatter(string(origData))
 	if writeErr := os.WriteFile(part1Path, []byte(enrichedFM+"\n"+body), 0600); writeErr != nil {
 		t.Fatal(writeErr)
 	}
@@ -1464,5 +1429,3 @@ func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 		t.Error("part 2 should contain session_id in frontmatter")
 	}
 }
-
-// TestParseDate moved to internal/parse/date_test.go.

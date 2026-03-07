@@ -51,6 +51,40 @@ func ValidateBoundary(dir string) error {
 	return nil
 }
 
+// SafeReadFile resolves filename within baseDir, verifies the result stays
+// within the base directory boundary, and reads the file content.
+//
+// Use this instead of raw os.ReadFile when the path is constructed from
+// a base directory and a filename component, to prove containment
+// statically and avoid per-site nolint directives.
+//
+// Parameters:
+//   - baseDir: Trusted root directory
+//   - filename: File name (or relative path) to join and validate
+//
+// Returns:
+//   - []byte: File content
+//   - error: Non-nil if resolution fails, path escapes baseDir, or read fails
+func SafeReadFile(baseDir, filename string) ([]byte, error) {
+	absBase, absErr := filepath.Abs(baseDir)
+	if absErr != nil {
+		return nil, fmt.Errorf("resolve base: %w", absErr)
+	}
+
+	safe := filepath.Join(absBase, filepath.Base(filename))
+
+	if !strings.HasPrefix(safe, absBase+string(os.PathSeparator)) {
+		return nil, fmt.Errorf("path escapes base directory: %s", filename)
+	}
+
+	data, readErr := os.ReadFile(safe) //nolint:gosec // validated by boundary check above
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	return data, nil
+}
+
 // CheckSymlinks checks whether dir itself or any of its immediate children
 // are symlinks. Returns an error describing the first symlink found.
 func CheckSymlinks(dir string) error {

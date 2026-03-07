@@ -10,6 +10,17 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/add"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/edit"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/export"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/imp"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/merge"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/mv"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/resolve"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/rm"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/cmd/show"
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 )
 
 // Cmd returns the pad command with subcommands.
@@ -50,42 +61,40 @@ Subcommands:
 		},
 	}
 
-	cmd.AddCommand(showCmd())
-	cmd.AddCommand(addCmd())
-	cmd.AddCommand(rmCmd())
-	cmd.AddCommand(editCmd())
-	cmd.AddCommand(mvCmd())
-	cmd.AddCommand(resolveCmd())
-	cmd.AddCommand(importCmd())
-	cmd.AddCommand(exportCmd())
-	cmd.AddCommand(mergeCmd())
+	cmd.AddCommand(show.Cmd())
+	cmd.AddCommand(add.Cmd())
+	cmd.AddCommand(rm.Cmd())
+	cmd.AddCommand(edit.Cmd())
+	cmd.AddCommand(mv.Cmd())
+	cmd.AddCommand(resolve.Cmd())
+	cmd.AddCommand(imp.Cmd())
+	cmd.AddCommand(export.Cmd())
+	cmd.AddCommand(merge.Cmd())
 
 	return cmd
 }
 
 // runList prints all scratchpad entries numbered 1-based.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//
+// Returns:
+//   - error: Non-nil on read failure
 func runList(cmd *cobra.Command) error {
-	entries, err := readEntries()
+	entries, err := core.ReadEntries()
 	if err != nil {
 		return err
 	}
 
 	if len(entries) == 0 {
-		cmd.Println(msgEmpty)
+		cmd.Println(core.MsgEmpty)
 		return nil
 	}
 
 	for i, entry := range entries {
-		cmd.Println(fmt.Sprintf("  %d. %s", i+1, displayEntry(entry)))
+		cmd.Println(fmt.Sprintf("  %d. %s", i+1, core.DisplayEntry(entry)))
 	}
 
-	return nil
-}
-
-// validateIndex checks that n is a valid 1-based index into entries.
-func validateIndex(n int, entries []string) error {
-	if n < 1 || n > len(entries) {
-		return fmt.Errorf("%s", errEntryRange(n, len(entries)))
-	}
 	return nil
 }

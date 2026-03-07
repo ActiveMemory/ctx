@@ -13,6 +13,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -39,7 +40,7 @@ func TestCmd(t *testing.T) {
 func TestCmd_HasSubcommands(t *testing.T) {
 	cmd := Cmd()
 
-	expectedSubs := []string{"list", "show", "export", "lock", "unlock"}
+	expectedSubs := []string{"list", "show", "export", "lock", "unlock", "sync"}
 	subs := make(map[string]bool)
 
 	for _, sub := range cmd.Commands() {
@@ -158,9 +159,9 @@ func TestExtractFrontmatter(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := extractFrontmatter(tt.content)
+			got := core.ExtractFrontmatter(tt.content)
 			if got != tt.want {
-				t.Errorf("extractFrontmatter() = %q, want %q", got, tt.want)
+				t.Errorf("ExtractFrontmatter() = %q, want %q", got, tt.want)
 			}
 		})
 	}
@@ -173,7 +174,7 @@ func TestFormatJournalFilename(t *testing.T) {
 		StartTime: time.Date(2026, 1, 21, 14, 30, 0, 0, time.UTC),
 	}
 
-	filename := formatJournalFilename(session, "")
+	filename := core.FormatJournalFilename(session, "")
 
 	// Should contain slug
 	if !strings.Contains(filename, "gleaming-wobbling-sutherland") {
@@ -225,9 +226,9 @@ func TestIsEmptyMessage(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := emptyMessage(tt.msg)
+			got := core.EmptyMessage(tt.msg)
 			if got != tt.want {
-				t.Errorf("emptyMessage() = %v, want %v", got, tt.want)
+				t.Errorf("EmptyMessage() = %v, want %v", got, tt.want)
 			}
 		})
 	}

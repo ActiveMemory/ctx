@@ -1,0 +1,83 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package root
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/fatih/color"
+	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
+	"github.com/ActiveMemory/ctx/internal/context"
+)
+
+// Run executes the sync command logic.
+//
+// Loads context, detects discrepancies between codebase and documentation,
+// and displays suggested actions. In dry-run mode, only shows what would
+// be suggested without prompting for changes.
+//
+// Parameters:
+//   - cmd: Cobra command for output stream
+//   - dryRun: If true, only show suggestions without prompting for changes
+//
+// Returns:
+//   - error: Non-nil if context loading fails or .context/ is not found
+func Run(cmd *cobra.Command, dryRun bool) error {
+	ctx, err := context.Load("")
+	if err != nil {
+		var notFoundError *context.NotFoundError
+		if errors.As(err, &notFoundError) {
+			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
+		}
+		return err
+	}
+
+	actions := core.DetectSyncActions(ctx)
+
+	if len(actions) == 0 {
+		green := color.New(color.FgGreen).SprintFunc()
+		cmd.Println(fmt.Sprintf("%s Context is in sync with codebase", green("✓")))
+		return nil
+	}
+
+	cyan := color.New(color.FgCyan).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+
+	cmd.Println(cyan("Sync Analysis"))
+	cmd.Println(cyan("============="))
+	cmd.Println()
+
+	if dryRun {
+		cmd.Println(yellow("DRY RUN — No changes will be made"))
+		cmd.Println()
+	}
+
+	for i, action := range actions {
+		cmd.Println(fmt.Sprintf("%d. [%s] %s", i+1, action.Type, action.Description))
+		if action.Suggestion != "" {
+			cmd.Println(fmt.Sprintf("   Suggestion: %s", action.Suggestion))
+		}
+		cmd.Println()
+	}
+
+	if dryRun {
+		cmd.Println(fmt.Sprintf(
+			"Found %d items to sync. Run without --dry-run to apply suggestions.",
+			len(actions),
+		))
+	} else {
+		cmd.Println(fmt.Sprintf(
+			"Found %d items. Review and update context files manually.",
+			len(actions),
+		))
+	}
+
+	return nil
+}

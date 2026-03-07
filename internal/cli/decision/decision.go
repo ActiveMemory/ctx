@@ -9,6 +9,8 @@ package decision
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/decision/cmd/reindex"
 )
 
 // Cmd returns the decisions command with subcommands.
@@ -34,7 +36,7 @@ Examples:
   ctx decisions reindex`,
 	}
 
-	cmd.AddCommand(reindexCmd())
+	cmd.AddCommand(reindex.Cmd())
 
 	return cmd
 }

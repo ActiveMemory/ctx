@@ -8,9 +8,16 @@ package config
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/schema"
+	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/status"
+	"github.com/ActiveMemory/ctx/internal/cli/config/cmd/switchcmd"
 )
 
 // Cmd returns the "ctx config" parent command.
+//
+// Returns:
+//   - *cobra.Command: Configured config command with subcommands
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
@@ -24,9 +31,9 @@ Subcommands:
 	}
 
 	cmd.AddCommand(
-		switchCmd(),
-		statusCmd(),
-		schemaCmd(),
+		switchcmd.Cmd(),
+		status.Cmd(),
+		schema.Cmd(),
 	)
 
 	return cmd

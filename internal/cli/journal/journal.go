@@ -8,6 +8,9 @@ package journal
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/obsidian"
+	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/site"
 )
 
 // Cmd returns the journal command with subcommands.
@@ -37,8 +40,8 @@ Examples:
   ctx journal obsidian                # Generate Obsidian vault`,
 	}
 
-	cmd.AddCommand(journalSiteCmd())
-	cmd.AddCommand(journalObsidianCmd())
+	cmd.AddCommand(site.Cmd())
+	cmd.AddCommand(obsidian.Cmd())
 
 	return cmd
 }

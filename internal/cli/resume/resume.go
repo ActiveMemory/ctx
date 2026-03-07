@@ -4,22 +4,18 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-// Package resume provides the top-level "ctx resume" command.
-//
-// Removes the session-scoped pause marker, restoring normal hook behavior.
-// Silent no-op if the session is not currently paused.
 package resume
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/system"
+	resumeroot "github.com/ActiveMemory/ctx/internal/cli/resume/cmd/root"
 )
 
 // Cmd returns the top-level "ctx resume" command.
+//
+// Returns:
+//   - *cobra.Command: Configured resume command
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "resume",
@@ -29,12 +25,7 @@ func Cmd() *cobra.Command {
 The session ID is read from stdin JSON (same as hooks) or --session-id flag.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			sessionID, _ := cmd.Flags().GetString("session-id")
-			if sessionID == "" {
-				sessionID = system.ReadSessionID(os.Stdin)
-			}
-			system.Resume(sessionID)
-			cmd.Println(fmt.Sprintf("Context hooks resumed for session %s", sessionID))
-			return nil
+			return resumeroot.Run(cmd, sessionID)
 		},
 	}
 	cmd.Flags().String("session-id", "", "Session ID (overrides stdin)")

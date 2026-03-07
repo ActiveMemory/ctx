@@ -8,6 +8,8 @@ package complete
 
 import (
 	"github.com/spf13/cobra"
+
+	completeroot "github.com/ActiveMemory/ctx/internal/cli/complete/cmd/root"
 )
 
 // Cmd returns the "ctx complete" command for marking tasks as done.
@@ -31,7 +33,7 @@ You can specify a task by:
 The task will be marked with [x] 
 and optionally moved to the Completed section.`,
 		Args: cobra.ExactArgs(1),
-		RunE: runComplete,
+		RunE: completeroot.Run,
 	}
 
 	return cmd

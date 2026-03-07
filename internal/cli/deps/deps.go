@@ -7,13 +7,20 @@
 package deps
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/spf13/cobra"
+
+	depsroot "github.com/ActiveMemory/ctx/internal/cli/deps/cmd/root"
 )
 
 // Cmd returns the deps command.
+//
+// Flags:
+//   - --format: Output format (mermaid, table, json)
+//   - --external: Include external module dependencies
+//   - --type: Force project type override
+//
+// Returns:
+//   - *cobra.Command: Configured deps command with flags registered
 func Cmd() *cobra.Command {
 	var (
 		format   string
@@ -38,58 +45,13 @@ Output formats:
   table     Package | Imports table
   json      Machine-readable adjacency list`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runDeps(cmd, format, external, projType)
+			return depsroot.Run(cmd, format, external, projType)
 		},
 	}
 
 	cmd.Flags().StringVar(&format, "format", "mermaid", "Output format: mermaid, table, json")
 	cmd.Flags().BoolVar(&external, "external", false, "Include external module dependencies")
-	cmd.Flags().StringVar(&projType, "type", "", "Force project type: "+strings.Join(builderNames(), ", "))
+	cmd.Flags().StringVar(&projType, "type", "", "Force project type: go, node, python, rust")
 
 	return cmd
-}
-
-func runDeps(cmd *cobra.Command, format string, external bool, projType string) error {
-	switch format {
-	case "mermaid", "table", "json":
-	default:
-		return fmt.Errorf("unknown format %q (supported: mermaid, table, json)", format)
-	}
-
-	var builder GraphBuilder
-	if projType != "" {
-		builder = findBuilder(projType)
-		if builder == nil {
-			return fmt.Errorf("unknown project type %q (supported: %s)", projType, strings.Join(builderNames(), ", "))
-		}
-	} else {
-		builder = detectBuilder()
-		if builder == nil {
-			cmd.Println("No supported project detected.")
-			cmd.Println("Looking for: go.mod, package.json, requirements.txt, pyproject.toml, Cargo.toml")
-			cmd.Println("Use --type to force: " + strings.Join(builderNames(), ", "))
-			return nil
-		}
-	}
-
-	graph, buildErr := builder.Build(external)
-	if buildErr != nil {
-		return buildErr
-	}
-
-	if len(graph) == 0 {
-		cmd.Println("No dependencies found.")
-		return nil
-	}
-
-	switch format {
-	case "mermaid":
-		cmd.Print(renderMermaid(graph))
-	case "table":
-		cmd.Print(renderTable(graph))
-	case "json":
-		cmd.Print(renderJSON(graph))
-	}
-
-	return nil
 }

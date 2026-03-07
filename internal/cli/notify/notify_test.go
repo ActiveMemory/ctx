@@ -15,6 +15,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/config"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -113,9 +114,9 @@ func TestSetup_WithMockStdin(t *testing.T) {
 	cmd.SetOut(&buf)
 	cmd.SetErr(&buf)
 
-	err = runSetup(cmd, tmpFile)
+	err = setup.RunSetup(cmd, tmpFile)
 	if err != nil {
-		t.Fatalf("runSetup() error = %v", err)
+		t.Fatalf("setup.RunSetup() error = %v", err)
 	}
 
 	output := buf.String()
@@ -138,9 +139,9 @@ func TestMaskURL(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := maskURL(tc.input)
+		got := setup.MaskURL(tc.input)
 		if got != tc.want {
-			t.Errorf("maskURL(%q) = %q, want %q", tc.input, got, tc.want)
+			t.Errorf("setup.MaskURL(%q) = %q, want %q", tc.input, got, tc.want)
 		}
 	}
 }
@@ -164,7 +165,7 @@ func TestSetup_EmptyInput(t *testing.T) {
 	cmd.SetOut(&buf)
 	cmd.SetErr(&buf)
 
-	setupErr := runSetup(cmd, tmpFile)
+	setupErr := setup.RunSetup(cmd, tmpFile)
 	if setupErr == nil {
 		t.Fatal("expected error for empty webhook URL input")
 	}

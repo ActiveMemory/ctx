@@ -8,6 +8,8 @@ package status
 
 import (
 	"github.com/spf13/cobra"
+
+	statusroot "github.com/ActiveMemory/ctx/internal/cli/status/cmd/root"
 )
 
 // Cmd returns the status command.
@@ -35,7 +37,7 @@ func Cmd() *cobra.Command {
 
 Use --verbose to include content previews for each file.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runStatus(cmd, jsonOutput, verbose)
+			return statusroot.Run(cmd, jsonOutput, verbose)
 		},
 	}
 

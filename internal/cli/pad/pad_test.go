@@ -17,8 +17,10 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/crypto"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -116,8 +118,8 @@ func TestList_Empty(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(out, msgEmpty) {
-		t.Errorf("output = %q, want %q", out, msgEmpty)
+	if !strings.Contains(out, core.MsgEmpty) {
+		t.Errorf("output = %q, want %q", out, core.MsgEmpty)
 	}
 }
 
@@ -563,19 +565,19 @@ func TestPlaintext_ListFormat(t *testing.T) {
 }
 
 func TestParseEntries_EmptyInput(t *testing.T) {
-	entries := parseEntries(nil)
+	entries := core.ParseEntries(nil)
 	if entries != nil {
-		t.Errorf("parseEntries(nil) = %v, want nil", entries)
+		t.Errorf("core.ParseEntries(nil) = %v, want nil", entries)
 	}
 
-	entries = parseEntries([]byte{})
+	entries = core.ParseEntries([]byte{})
 	if entries != nil {
-		t.Errorf("parseEntries(empty) = %v, want nil", entries)
+		t.Errorf("core.ParseEntries(empty) = %v, want nil", entries)
 	}
 }
 
 func TestParseEntries_SkipsEmpty(t *testing.T) {
-	entries := parseEntries([]byte("a\n\nb\n"))
+	entries := core.ParseEntries([]byte("a\n\nb\n"))
 	if len(entries) != 2 {
 		t.Fatalf("len = %d, want 2", len(entries))
 	}
@@ -585,14 +587,14 @@ func TestParseEntries_SkipsEmpty(t *testing.T) {
 }
 
 func TestFormatEntries_Empty(t *testing.T) {
-	data := formatEntries(nil)
+	data := core.FormatEntries(nil)
 	if data != nil {
-		t.Errorf("formatEntries(nil) = %v, want nil", data)
+		t.Errorf("core.FormatEntries(nil) = %v, want nil", data)
 	}
 }
 
 func TestFormatEntries_TrailingNewline(t *testing.T) {
-	data := formatEntries([]string{"a", "b"})
+	data := core.FormatEntries([]string{"a", "b"})
 	if string(data) != "a\nb\n" {
 		t.Errorf("formatEntries = %q, want %q", string(data), "a\nb\n")
 	}
@@ -603,30 +605,31 @@ func TestValidateIndex(t *testing.T) {
 
 	// Valid indices
 	for _, n := range []int{1, 2, 3} {
-		if err := validateIndex(n, entries); err != nil {
-			t.Errorf("validateIndex(%d) should be valid: %v", n, err)
+		if err := core.ValidateIndex(n, entries); err != nil {
+			t.Errorf("core.ValidateIndex(%d) should be valid: %v", n, err)
 		}
 	}
 
 	// Invalid indices
 	for _, n := range []int{0, -1, 4, 100} {
-		if err := validateIndex(n, entries); err == nil {
-			t.Errorf("validateIndex(%d) should be invalid", n)
+		if err := core.ValidateIndex(n, entries); err == nil {
+			t.Errorf("core.ValidateIndex(%d) should be invalid", n)
 		}
 	}
 }
 
 func TestValidateIndex_EmptySlice(t *testing.T) {
-	err := validateIndex(1, nil)
+	err := core.ValidateIndex(1, nil)
 	if err == nil {
 		t.Error("validateIndex on nil slice should fail")
 	}
 }
 
 func TestErrEntryRange(t *testing.T) {
-	msg := errEntryRange(5, 3)
+	err := ctxerr.EntryRange(5, 3)
+	msg := err.Error()
 	if !strings.Contains(msg, "5") || !strings.Contains(msg, "3") {
-		t.Errorf("errEntryRange = %q, want indices 5 and 3 mentioned", msg)
+		t.Errorf("EntryRange = %q, want indices 5 and 3 mentioned", msg)
 	}
 }
 
@@ -707,7 +710,7 @@ func TestEnsureGitignore_NewFile(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	err := ensureGitignore(".context", ".ctx.key")
+	err := core.EnsureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -734,7 +737,7 @@ func TestEnsureGitignore_AlreadyPresent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := ensureGitignore(".context", ".ctx.key")
+	err := core.EnsureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -760,7 +763,7 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := ensureGitignore(".context", ".ctx.key")
+	err := core.EnsureGitignore(".context", ".ctx.key")
 	if err != nil {
 		t.Fatalf("ensureGitignore error: %v", err)
 	}
@@ -777,30 +780,30 @@ func TestEnsureGitignore_AppendToExisting(t *testing.T) {
 func TestScratchpadPath_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
-	path := scratchpadPath()
+	path := core.ScratchpadPath()
 	if !strings.HasSuffix(path, config.FileScratchpadMd) {
-		t.Errorf("scratchpadPath() = %q, want suffix %q", path, config.FileScratchpadMd)
+		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, config.FileScratchpadMd)
 	}
 }
 
 func TestScratchpadPath_Encrypted(t *testing.T) {
 	setupEncrypted(t)
 
-	path := scratchpadPath()
+	path := core.ScratchpadPath()
 	if !strings.HasSuffix(path, config.FileScratchpadEnc) {
-		t.Errorf("scratchpadPath() = %q, want suffix %q", path, config.FileScratchpadEnc)
+		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, config.FileScratchpadEnc)
 	}
 }
 
 func TestKeyPath(t *testing.T) {
 	setupEncrypted(t)
 
-	path := keyPath()
+	path := core.KeyPath()
 	if !strings.HasSuffix(path, ".key") {
-		t.Errorf("keyPath() = %q, want suffix %q", path, ".key")
+		t.Errorf("core.KeyPath() = %q, want suffix %q", path, ".key")
 	}
 	if !strings.Contains(path, ".ctx/") {
-		t.Errorf("keyPath() = %q, want global path containing .ctx/", path)
+		t.Errorf("core.KeyPath() = %q, want global path containing .ctx/", path)
 	}
 }
 
@@ -808,7 +811,7 @@ func TestEnsureKey_KeyAlreadyExists(t *testing.T) {
 	setupEncrypted(t)
 
 	// Key already exists from setup
-	err := ensureKey()
+	err := core.EnsureKey()
 	if err != nil {
 		t.Fatalf("ensureKey should succeed when key already exists: %v", err)
 	}
@@ -840,7 +843,7 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := ensureKey()
+	err := core.EnsureKey()
 	if err == nil {
 		t.Fatal("expected error when enc file exists without key")
 	}
@@ -870,7 +873,7 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 	}
 
 	// No key, no enc file -- should generate at user-level path.
-	err := ensureKey()
+	err := core.EnsureKey()
 	if err != nil {
 		t.Fatalf("ensureKey error: %v", err)
 	}
@@ -885,11 +888,11 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
 	entries := []string{"one", "two"}
-	if err := writeEntries(entries); err != nil {
+	if err := core.WriteEntries(entries); err != nil {
 		t.Fatalf("writeEntries error: %v", err)
 	}
 
-	path := scratchpadPath()
+	path := core.ScratchpadPath()
 	data, err := os.ReadFile(path) //nolint:gosec // test temp path
 	if err != nil {
 		t.Fatal(err)
@@ -902,12 +905,12 @@ func TestWriteEntries_Plaintext(t *testing.T) {
 func TestReadEntries_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
-	path := scratchpadPath()
+	path := core.ScratchpadPath()
 	if err := os.WriteFile(path, []byte("alpha\nbeta\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
-	entries, err := readEntries()
+	entries, err := core.ReadEntries()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -919,7 +922,7 @@ func TestReadEntries_Plaintext(t *testing.T) {
 func TestReadEntries_NoFile(t *testing.T) {
 	setupEncrypted(t)
 
-	entries, err := readEntries()
+	entries, err := core.ReadEntries()
 	if err != nil {
 		t.Fatalf("readEntries with no file should return nil, nil: %v", err)
 	}
@@ -1060,7 +1063,7 @@ func TestList_PlaintextEmpty(t *testing.T) {
 	if err != nil {
 		t.Fatalf("list error: %v", err)
 	}
-	if !strings.Contains(out, msgEmpty) {
+	if !strings.Contains(out, core.MsgEmpty) {
 		t.Errorf("output = %q, want empty message", out)
 	}
 }
@@ -1110,12 +1113,11 @@ func TestEdit_PrependOutOfRange(t *testing.T) {
 func TestDecryptFile_BadData(t *testing.T) {
 	key, _ := crypto.GenerateKey()
 	dir := t.TempDir()
-	path := filepath.Join(dir, "bad.enc")
-	if err := os.WriteFile(path, []byte("not-encrypted"), 0600); err != nil {
-		t.Fatal(err)
+	if writeErr := os.WriteFile(filepath.Join(dir, "bad.enc"), []byte("not-encrypted"), 0600); writeErr != nil {
+		t.Fatal(writeErr)
 	}
 
-	_, err := decryptFile(key, path)
+	_, err := core.DecryptFile(key, dir, "bad.enc")
 	if err == nil {
 		t.Fatal("expected decryption error for bad data")
 	}
@@ -1126,8 +1128,9 @@ func TestDecryptFile_BadData(t *testing.T) {
 
 func TestDecryptFile_MissingFile(t *testing.T) {
 	key, _ := crypto.GenerateKey()
+	dir := t.TempDir()
 
-	_, err := decryptFile(key, "/nonexistent/path")
+	_, err := core.DecryptFile(key, dir, "nonexistent.enc")
 	if err == nil {
 		t.Fatal("expected error for missing file")
 	}
@@ -1136,19 +1139,17 @@ func TestDecryptFile_MissingFile(t *testing.T) {
 func TestDecryptFile_ValidData(t *testing.T) {
 	key, _ := crypto.GenerateKey()
 	dir := t.TempDir()
-	path := filepath.Join(dir, "good.enc")
 
 	plaintext := []byte("entry1\nentry2\n")
-	ciphertext, err := crypto.Encrypt(key, plaintext)
-	if err != nil {
-		t.Fatal(err)
+	ciphertext, encErr := crypto.Encrypt(key, plaintext)
+	if encErr != nil {
+		t.Fatal(encErr)
 	}
-	err = os.WriteFile(path, ciphertext, 0600)
-	if err != nil {
-		t.Fatal(err)
+	if writeErr := os.WriteFile(filepath.Join(dir, "good.enc"), ciphertext, 0600); writeErr != nil {
+		t.Fatal(writeErr)
 	}
 
-	entries, err := decryptFile(key, path)
+	entries, err := core.DecryptFile(key, dir, "good.enc")
 	if err != nil {
 		t.Fatalf("decryptFile error: %v", err)
 	}
@@ -1249,10 +1250,10 @@ func TestMv_Plaintext(t *testing.T) {
 // --- Blob helper tests ---
 
 func TestIsBlob(t *testing.T) {
-	if !isBlob("my plan:::SGVsbG8=") {
+	if !core.IsBlob("my plan:::SGVsbG8=") {
 		t.Error("expected isBlob to return true for blob entry")
 	}
-	if isBlob("just a plain entry") {
+	if core.IsBlob("just a plain entry") {
 		t.Error("expected isBlob to return false for plain entry")
 	}
 }
@@ -1260,9 +1261,9 @@ func TestIsBlob(t *testing.T) {
 func TestSplitBlob_Valid(t *testing.T) {
 	data := []byte("hello world")
 	encoded := base64.StdEncoding.EncodeToString(data)
-	entry := "my label" + BlobSep + encoded
+	entry := "my label" + core.BlobSep + encoded
 
-	label, decoded, ok := splitBlob(entry)
+	label, decoded, ok := core.SplitBlob(entry)
 	if !ok {
 		t.Fatal("splitBlob returned ok=false for valid blob")
 	}
@@ -1275,14 +1276,14 @@ func TestSplitBlob_Valid(t *testing.T) {
 }
 
 func TestSplitBlob_NonBlob(t *testing.T) {
-	_, _, ok := splitBlob("just a plain entry")
+	_, _, ok := core.SplitBlob("just a plain entry")
 	if ok {
 		t.Error("splitBlob should return ok=false for non-blob entry")
 	}
 }
 
 func TestSplitBlob_MalformedBase64(t *testing.T) {
-	_, _, ok := splitBlob("label:::not-valid-base64!!!")
+	_, _, ok := core.SplitBlob("label:::not-valid-base64!!!")
 	if ok {
 		t.Error("splitBlob should return ok=false for malformed base64")
 	}
@@ -1290,9 +1291,9 @@ func TestSplitBlob_MalformedBase64(t *testing.T) {
 
 func TestMakeBlob_Roundtrip(t *testing.T) {
 	original := []byte("secret file content\nwith newlines\n")
-	entry := makeBlob("my file", original)
+	entry := core.MakeBlob("my file", original)
 
-	label, data, ok := splitBlob(entry)
+	label, data, ok := core.SplitBlob(entry)
 	if !ok {
 		t.Fatal("splitBlob failed on makeBlob output")
 	}
@@ -1305,8 +1306,8 @@ func TestMakeBlob_Roundtrip(t *testing.T) {
 }
 
 func TestDisplayEntry_Blob(t *testing.T) {
-	entry := makeBlob("my plan", []byte("content"))
-	display := displayEntry(entry)
+	entry := core.MakeBlob("my plan", []byte("content"))
+	display := core.DisplayEntry(entry)
 	if display != "my plan [BLOB]" {
 		t.Errorf("displayEntry = %q, want %q", display, "my plan [BLOB]")
 	}
@@ -1314,7 +1315,7 @@ func TestDisplayEntry_Blob(t *testing.T) {
 
 func TestDisplayEntry_Plain(t *testing.T) {
 	entry := "just a note"
-	display := displayEntry(entry)
+	display := core.DisplayEntry(entry)
 	if display != entry {
 		t.Errorf("displayEntry = %q, want %q", display, entry)
 	}
@@ -1354,14 +1355,14 @@ func TestAdd_BlobTooLarge(t *testing.T) {
 	dir := setupEncrypted(t)
 
 	testFile := filepath.Join(dir, "big.bin")
-	data := make([]byte, MaxBlobSize+1)
+	data := make([]byte, core.MaxBlobSize+1)
 	if err := os.WriteFile(testFile, data, 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	_, err := runCmd(newPadCmd("add", "--file", testFile, "big blob"))
 	if err == nil {
-		t.Fatal("expected error for file exceeding MaxBlobSize")
+		t.Fatal("expected error for file exceeding core.MaxBlobSize")
 	}
 	if !strings.Contains(err.Error(), "file too large") {
 		t.Errorf("error = %q, want 'file too large'", err.Error())
@@ -1942,7 +1943,7 @@ func TestImportBlobs_SkipsTooLarge(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Oversized file
-	big := make([]byte, MaxBlobSize+1)
+	big := make([]byte, core.MaxBlobSize+1)
 	if err := os.WriteFile(filepath.Join(blobDir, "huge.bin"),
 		big, 0600); err != nil {
 		t.Fatal(err)
@@ -2080,7 +2081,7 @@ func TestImportBlobs_BlobContent(t *testing.T) {
 	}
 
 	// Read entries and verify splitBlob roundtrip
-	entries, readErr := readEntries()
+	entries, readErr := core.ReadEntries()
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -2088,7 +2089,7 @@ func TestImportBlobs_BlobContent(t *testing.T) {
 		t.Fatalf("got %d entries, want 1", len(entries))
 	}
 
-	label, data, ok := splitBlob(entries[0])
+	label, data, ok := core.SplitBlob(entries[0])
 	if !ok {
 		t.Fatal("entry is not a valid blob")
 	}
@@ -2631,13 +2632,13 @@ func TestMerge_CustomKey(t *testing.T) {
 func TestMerge_BlobEntries(t *testing.T) {
 	dir := setupPlaintext(t)
 
-	blobEntry := makeBlob("test.txt", []byte("hello world"))
+	blobEntry := core.MakeBlob("test.txt", []byte("hello world"))
 	if _, err := runCmd(newPadCmd("add", "text-entry")); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create file with same blob + a new blob.
-	newBlob := makeBlob("new.txt", []byte("new content"))
+	newBlob := core.MakeBlob("new.txt", []byte("new content"))
 	mergeFile := filepath.Join(dir, "blobs.md")
 	writePlaintextPad(t, mergeFile, []string{blobEntry, newBlob})
 
@@ -2657,7 +2658,7 @@ func TestMerge_BlobConflict(t *testing.T) {
 	dir := setupPlaintext(t)
 
 	// Add a blob with label "config.json".
-	blob1 := makeBlob("config.json", []byte(`{"v":1}`))
+	blob1 := core.MakeBlob("config.json", []byte(`{"v":1}`))
 	mergeFile1 := filepath.Join(dir, "first.md")
 	writePlaintextPad(t, mergeFile1, []string{blob1})
 	if _, err := runCmd(newPadCmd("merge", mergeFile1)); err != nil {
@@ -2665,7 +2666,7 @@ func TestMerge_BlobConflict(t *testing.T) {
 	}
 
 	// Merge a different blob with the same label.
-	blob2 := makeBlob("config.json", []byte(`{"v":2}`))
+	blob2 := core.MakeBlob("config.json", []byte(`{"v":2}`))
 	mergeFile2 := filepath.Join(dir, "second.md")
 	writePlaintextPad(t, mergeFile2, []string{blob2})
 
@@ -2819,7 +2820,7 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 	dir := setupEncrypted(t)
 
 	// Add a blob to the current pad.
-	blob := makeBlob("readme.md", []byte("# README"))
+	blob := core.MakeBlob("readme.md", []byte("# README"))
 	f := filepath.Join(dir, "tmp-readme.md")
 	if err := os.WriteFile(f, []byte("# README"), 0600); err != nil {
 		t.Fatal(err)
@@ -2845,30 +2846,6 @@ func TestMerge_EncryptedWithBlobDedup(t *testing.T) {
 	// blob is duplicate, "new-text" is new.
 	if !strings.Contains(out, "Merged 1 new entry (1 duplicate skipped).") {
 		t.Errorf("output = %q, want encrypted blob dedup", out)
-	}
-}
-
-func TestPluralize(t *testing.T) {
-	tests := []struct {
-		word  string
-		count int
-		want  string
-	}{
-		{"entry", 1, "entry"},
-		{"entry", 0, "entries"},
-		{"entry", 2, "entries"},
-		{"duplicate", 1, "duplicate"},
-		{"duplicate", 3, "duplicates"},
-	}
-
-	for _, tt := range tests {
-		got := pluralize(tt.word, tt.count)
-		if got != tt.want {
-			t.Errorf(
-				"pluralize(%q, %d) = %q, want %q",
-				tt.word, tt.count, got, tt.want,
-			)
-		}
 	}
 }
 

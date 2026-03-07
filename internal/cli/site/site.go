@@ -8,6 +8,8 @@ package site
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/site/cmd/feed"
 )
 
 // Cmd returns the "ctx site" parent command.
@@ -32,7 +34,7 @@ Examples:
   ctx site feed --base-url https://example.com`,
 	}
 
-	cmd.AddCommand(feedCmd())
+	cmd.AddCommand(feed.Cmd())
 
 	return cmd
 }

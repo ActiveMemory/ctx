@@ -12,6 +12,7 @@ import (
 	"strings"
 	"testing"
 
+	serveroot "github.com/ActiveMemory/ctx/internal/cli/serve/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
@@ -57,7 +58,7 @@ func TestCmd_AcceptsArgs(t *testing.T) {
 }
 
 func TestRunServe_DirNotFound(t *testing.T) {
-	err := runServe([]string{"/tmp/nonexistent-dir-ctx-test-xyz"})
+	err := serveroot.Run([]string{"/tmp/nonexistent-dir-ctx-test-xyz"})
 	if err == nil {
 		t.Fatal("expected error for nonexistent directory")
 	}
@@ -74,7 +75,7 @@ func TestRunServe_NotADirectory(t *testing.T) {
 	defer func() { _ = os.Remove(tmpFile.Name()) }()
 	_ = tmpFile.Close()
 
-	serveErr := runServe([]string{tmpFile.Name()})
+	serveErr := serveroot.Run([]string{tmpFile.Name()})
 	if serveErr == nil {
 		t.Fatal("expected error for non-directory path")
 	}
@@ -90,7 +91,7 @@ func TestRunServe_NoSiteConfig(t *testing.T) {
 	}
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
-	serveErr := runServe([]string{tmpDir})
+	serveErr := serveroot.Run([]string{tmpDir})
 	if serveErr == nil {
 		t.Fatal("expected error for missing zensical.toml")
 	}
@@ -115,7 +116,7 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 	// Ensure zensical is not in PATH
 	t.Setenv("PATH", "")
 
-	serveErr := runServe([]string{tmpDir})
+	serveErr := serveroot.Run([]string{tmpDir})
 	if serveErr == nil {
 		t.Fatal("expected error for missing zensical binary")
 	}
@@ -125,9 +126,9 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 }
 
 func TestRunServe_DefaultDir(t *testing.T) {
-	// When no args are given, runServe uses the default journal-site directory
+	// When no args are given, serveroot.Run uses the default journal-site directory
 	// which won't exist in test, so we expect directory not found
-	err := runServe([]string{})
+	err := serveroot.Run([]string{})
 	if err == nil {
 		t.Fatal("expected error when default dir doesn't exist")
 	}
@@ -139,7 +140,7 @@ func TestRunServe_DefaultDir(t *testing.T) {
 }
 
 func TestErrDirNotFound(t *testing.T) {
-	err := errDirNotFound("/some/path")
+	err := serveroot.ErrDirNotFound("/some/path")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -152,7 +153,7 @@ func TestErrDirNotFound(t *testing.T) {
 }
 
 func TestErrNotDir(t *testing.T) {
-	err := errNotDir("/some/file")
+	err := serveroot.ErrNotDir("/some/file")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -165,7 +166,7 @@ func TestErrNotDir(t *testing.T) {
 }
 
 func TestErrNoSiteConfig(t *testing.T) {
-	err := errNoSiteConfig("/some/dir")
+	err := serveroot.ErrNoSiteConfig("/some/dir")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -207,14 +208,14 @@ func TestRunServe_WithMockZensical(t *testing.T) {
 	origPath := os.Getenv("PATH")
 	t.Setenv("PATH", binDir+":"+origPath)
 
-	serveErr := runServe([]string{tmpDir})
+	serveErr := serveroot.Run([]string{tmpDir})
 	if serveErr != nil {
 		t.Errorf("unexpected error: %v", serveErr)
 	}
 }
 
 func TestCmd_RunE(t *testing.T) {
-	// Test that Cmd().RunE actually invokes runServe via the command
+	// Test that Cmd().RunE actually invokes serveroot.Run via the command
 	cmd := Cmd()
 	// Set args to a nonexistent dir so we get a predictable error
 	cmd.SetArgs([]string{"/tmp/nonexistent-ctx-test-xyz"})
@@ -231,7 +232,7 @@ func TestCmd_RunE(t *testing.T) {
 }
 
 func TestErrZensicalNotFound(t *testing.T) {
-	err := errZensicalNotFound()
+	err := serveroot.ErrZensicalNotFound()
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}

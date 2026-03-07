@@ -1,0 +1,239 @@
+//   /    ctx:                         https://ctx.ist
+// ,'`./    do you remember?
+// `.,'\
+//   \    Copyright 2026-present Context contributors.
+//                 SPDX-License-Identifier: Apache-2.0
+
+package core
+
+import (
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+	"time"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/rc"
+)
+
+// DetectReferenceTime determines the reference time for change detection.
+//
+// Priority:
+//  1. --since flag (duration like "24h" or date like "2026-03-01")
+//  2. ctx-loaded-* marker files (second most recent by mtime)
+//  3. events.jsonl (last context-load-gate event)
+//  4. Fallback to 24h ago
+//
+// Parameters:
+//   - since: User-provided time reference, or empty for auto-detection
+//
+// Returns:
+//   - time.Time: The determined reference time
+//   - string: Human-readable label describing the reference point
+//   - error: Non-nil if the --since value cannot be parsed
+func DetectReferenceTime(since string) (time.Time, string, error) {
+	if since != "" {
+		return ParseSinceFlag(since)
+	}
+
+	// Try marker files.
+	if t, ok := DetectFromMarkers(); ok {
+		return t, HumanAgo(time.Since(t)), nil
+	}
+
+	// Try events.jsonl.
+	if t, ok := DetectFromEvents(); ok {
+		return t, HumanAgo(time.Since(t)), nil
+	}
+
+	// Fallback: 24h ago.
+	t := time.Now().Add(-24 * time.Hour)
+	return t, "24 hour(s) ago (default)", nil
+}
+
+// ParseSinceFlag parses a duration (like "24h") or date (like "2026-03-01").
+//
+// Parameters:
+//   - since: Time reference string to parse
+//
+// Returns:
+//   - time.Time: Parsed time
+//   - string: Human-readable label
+//   - error: Non-nil if parsing fails
+func ParseSinceFlag(since string) (time.Time, string, error) {
+	// Try duration first.
+	if d, err := time.ParseDuration(since); err == nil {
+		t := time.Now().Add(-d)
+		return t, HumanAgo(d), nil
+	}
+
+	// Try date.
+	if t, err := time.Parse("2006-01-02", since); err == nil {
+		return t, "since " + since, nil
+	}
+
+	// Try RFC3339.
+	if t, err := time.Parse(time.RFC3339, since); err == nil {
+		return t, HumanAgo(time.Since(t)), nil
+	}
+
+	return time.Time{}, "", os.ErrInvalid
+}
+
+// DetectFromMarkers finds the second most recent ctx-loaded-* marker file.
+// The most recent is the current session's marker.
+//
+// Returns:
+//   - time.Time: Marker file modification time
+//   - bool: True if a valid marker was found
+func DetectFromMarkers() (time.Time, bool) {
+	stateDir := filepath.Join(rc.ContextDir(), config.DirState)
+	entries, err := os.ReadDir(stateDir)
+	if err != nil {
+		return time.Time{}, false
+	}
+
+	type markerInfo struct {
+		modTime time.Time
+	}
+
+	var markers []markerInfo
+	for _, e := range entries {
+		if !strings.HasPrefix(e.Name(), "ctx-loaded-") {
+			continue
+		}
+		info, infoErr := e.Info()
+		if infoErr != nil {
+			continue
+		}
+		markers = append(markers, markerInfo{modTime: info.ModTime()})
+	}
+
+	if len(markers) < 2 {
+		return time.Time{}, false
+	}
+
+	// Sort by modtime descending.
+	sort.Slice(markers, func(i, j int) bool {
+		return markers[i].modTime.After(markers[j].modTime)
+	})
+
+	// Second most recent = previous session.
+	return markers[1].modTime, true
+}
+
+// DetectFromEvents scans events.jsonl in reverse for the last
+// context-load-gate event.
+//
+// Returns:
+//   - time.Time: Event timestamp
+//   - bool: True if a valid event was found
+func DetectFromEvents() (time.Time, bool) {
+	eventsPath := filepath.Join(rc.ContextDir(), config.DirState, "events.jsonl")
+	data, err := os.ReadFile(eventsPath) //nolint:gosec // state dir path
+	if err != nil {
+		return time.Time{}, false
+	}
+
+	lines := strings.Split(strings.TrimSpace(string(data)), config.NewlineLF)
+	// Scan in reverse for last context-load-gate event.
+	for i := len(lines) - 1; i >= 0; i-- {
+		line := lines[i]
+		if !strings.Contains(line, "context-load-gate") {
+			continue
+		}
+		if t, ok := ExtractTimestamp(line); ok {
+			return t, true
+		}
+	}
+
+	return time.Time{}, false
+}
+
+// ExtractTimestamp extracts a timestamp from a JSON line without full unmarshal.
+// Looks for "timestamp":"..." and parses as RFC3339.
+//
+// Parameters:
+//   - jsonLine: JSON string to extract timestamp from
+//
+// Returns:
+//   - time.Time: Parsed timestamp
+//   - bool: True if extraction succeeded
+func ExtractTimestamp(jsonLine string) (time.Time, bool) {
+	const key = `"timestamp":"`
+	idx := strings.Index(jsonLine, key)
+	if idx < 0 {
+		return time.Time{}, false
+	}
+	start := idx + len(key)
+	end := strings.Index(jsonLine[start:], `"`)
+	if end < 0 {
+		return time.Time{}, false
+	}
+	t, err := time.Parse(time.RFC3339, jsonLine[start:start+end])
+	if err != nil {
+		return time.Time{}, false
+	}
+	return t, true
+}
+
+// HumanAgo returns a human-readable "ago" string from a duration.
+//
+// Parameters:
+//   - d: Duration to format
+//
+// Returns:
+//   - string: Human-readable time description
+func HumanAgo(d time.Duration) string {
+	switch {
+	case d < time.Minute:
+		return "just now"
+	case d < time.Hour:
+		m := int(d.Minutes())
+		return Pluralize(m, "minute") + " ago"
+	case d < 24*time.Hour:
+		h := int(d.Hours())
+		return Pluralize(h, "hour") + " ago"
+	default:
+		days := int(d.Hours() / 24)
+		return Pluralize(days, "day") + " ago"
+	}
+}
+
+// Pluralize returns "N unit" or "N units".
+//
+// Parameters:
+//   - n: Count
+//   - unit: Singular unit name
+//
+// Returns:
+//   - string: Pluralized string
+func Pluralize(n int, unit string) string {
+	if n == 1 {
+		return "1 " + unit
+	}
+	return Itoa(n) + " " + unit + "s"
+}
+
+// Itoa is a minimal int-to-string without importing strconv.
+//
+// Parameters:
+//   - n: Integer to convert
+//
+// Returns:
+//   - string: String representation
+func Itoa(n int) string {
+	if n == 0 {
+		return "0"
+	}
+	if n < 0 {
+		return "-" + Itoa(-n)
+	}
+	var digits []byte
+	for n > 0 {
+		digits = append([]byte{byte('0' + n%10)}, digits...)
+		n /= 10
+	}
+	return string(digits)
+}

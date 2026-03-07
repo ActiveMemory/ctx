@@ -9,6 +9,7 @@ package load
 import (
 	"github.com/spf13/cobra"
 
+	loadroot "github.com/ActiveMemory/ctx/internal/cli/load/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -32,7 +33,7 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "load",
 		Short: "Output assembled context Markdown",
-		Long: `Load and display the assembled context 
+		Long: `Load and display the assembled context
 as it would be provided to an AI.
 
 The context files are assembled in the recommended read order:
@@ -52,7 +53,7 @@ Use --budget to limit output to a specific token count (default from .ctxrc or 8
 			if !cmd.Flags().Changed("budget") {
 				budget = rc.TokenBudget()
 			}
-			return runLoad(cmd, budget, raw)
+			return loadroot.Run(cmd, budget, raw)
 		},
 	}
 

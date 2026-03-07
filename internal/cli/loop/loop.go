@@ -9,6 +9,7 @@ package loop
 import (
 	"github.com/spf13/cobra"
 
+	looproot "github.com/ActiveMemory/ctx/internal/cli/loop/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
@@ -53,7 +54,7 @@ Examples:
   ctx loop --max-iterations 10       # Limit to 10 iterations
   ctx loop -o my-loop.sh             # Output to custom file`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runLoop(
+			return looproot.Run(
 				cmd, promptFile, tool, maxIterations, completionMsg, outputFile,
 			)
 		},

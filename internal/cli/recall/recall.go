@@ -1,6 +1,6 @@
 //   /    ctx:                         https://ctx.ist
 // ,'`./    do you remember?
-// `.,'\\
+// `.,'\
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
@@ -8,6 +8,13 @@ package recall
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/export"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/list"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/lock"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/show"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/sync"
+	"github.com/ActiveMemory/ctx/internal/cli/recall/cmd/unlock"
 )
 
 // Cmd returns the recall command with subcommands.
@@ -45,109 +52,12 @@ Examples:
   ctx recall sync`,
 	}
 
-	cmd.AddCommand(recallListCmd())
-	cmd.AddCommand(recallShowCmd())
-	cmd.AddCommand(recallExportCmd())
-	cmd.AddCommand(recallLockCmd())
-	cmd.AddCommand(recallUnlockCmd())
-	cmd.AddCommand(recallSyncCmd())
-
-	return cmd
-}
-
-// recallListCmd returns the recall list subcommand.
-//
-// Returns:
-//   - *cobra.Command: Command for listing parsed sessions
-func recallListCmd() *cobra.Command {
-	var (
-		limit       int
-		project     string
-		tool        string
-		since       string
-		until       string
-		allProjects bool
-	)
-
-	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "List all parsed sessions",
-		Long: `List AI sessions from the current project.
-
-Sessions are sorted by date (newest first) and display:
-  - Session slug (human-friendly name)
-  - Project name
-  - Start time and duration
-  - Turn count (user messages)
-  - Token usage
-
-By default, only sessions from the current project are shown.
-Use --all-projects to see sessions from all projects.
-
-Date filtering: --since and --until accept YYYY-MM-DD format.
-Both are inclusive.
-
-Examples:
-  ctx recall list
-  ctx recall list --limit 5
-  ctx recall list --all-projects
-  ctx recall list --project ctx
-  ctx recall list --tool claude-code
-  ctx recall list --since 2026-03-01
-  ctx recall list --since 2026-03-01 --until 2026-03-05`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRecallList(cmd, limit, project, tool, since, until, allProjects)
-		},
-	}
-
-	cmd.Flags().IntVarP(&limit, "limit", "n", 20, "Maximum sessions to display")
-	cmd.Flags().StringVarP(&project, "project", "p", "", "Filter by project name")
-	cmd.Flags().StringVarP(&tool, "tool", "t", "", "Filter by tool (e.g., claude-code)")
-	cmd.Flags().StringVar(&since, "since", "", "Show sessions on or after this date (YYYY-MM-DD)")
-	cmd.Flags().StringVar(&until, "until", "", "Show sessions on or before this date (YYYY-MM-DD)")
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false, "Include sessions from all projects")
-
-	return cmd
-}
-
-// recallShowCmd returns the recall show subcommand.
-//
-// Returns:
-//   - *cobra.Command: Command for showing session details
-func recallShowCmd() *cobra.Command {
-	var (
-		latest      bool
-		full        bool
-		allProjects bool
-	)
-
-	cmd := &cobra.Command{
-		Use:   "show [session-id]",
-		Short: "Show details of a specific session",
-		Long: `Show detailed information about a specific session.
-
-The session ID can be:
-  - Full session UUID
-  - Partial match (first few characters)
-  - Session slug name
-
-Use --latest to show the most recent session.
-By default, only searches sessions from the current project.
-
-Examples:
-  ctx recall show abc123
-  ctx recall show gleaming-wobbling-sutherland
-  ctx recall show --latest
-  ctx recall show --latest --full
-  ctx recall show abc123 --all-projects`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runRecallShow(cmd, args, latest, full, allProjects)
-		},
-	}
-
-	cmd.Flags().BoolVar(&latest, "latest", false, "Show the most recent session")
-	cmd.Flags().BoolVar(&full, "full", false, "Show full message content")
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false, "Search sessions from all projects")
+	cmd.AddCommand(list.Cmd())
+	cmd.AddCommand(show.Cmd())
+	cmd.AddCommand(export.Cmd())
+	cmd.AddCommand(lock.Cmd())
+	cmd.AddCommand(unlock.Cmd())
+	cmd.AddCommand(sync.Cmd())
 
 	return cmd
 }

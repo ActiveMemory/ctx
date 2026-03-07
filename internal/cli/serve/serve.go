@@ -8,6 +8,8 @@ package serve
 
 import (
 	"github.com/spf13/cobra"
+
+	serveroot "github.com/ActiveMemory/ctx/internal/cli/serve/cmd/root"
 )
 
 // Cmd returns the serve command.
@@ -33,7 +35,7 @@ Examples:
   ctx serve ./docs                    # Serve docs folder`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
-			return runServe(args)
+			return serveroot.Run(args)
 		},
 	}
 
