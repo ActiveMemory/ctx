@@ -186,24 +186,6 @@ func TestRenderChanges_NoChanges(t *testing.T) {
 	}
 }
 
-func TestItoa(t *testing.T) {
-	tests := []struct {
-		n    int
-		want string
-	}{
-		{0, "0"},
-		{1, "1"},
-		{42, "42"},
-		{-5, "-5"},
-		{100, "100"},
-	}
-	for _, tt := range tests {
-		if got := Itoa(tt.n); got != tt.want {
-			t.Errorf("Itoa(%d) = %q, want %q", tt.n, got, tt.want)
-		}
-	}
-}
-
 func TestDetectReferenceTime_SinceFlag(t *testing.T) {
 	_, label, detectErr := DetectReferenceTime("6h")
 	if detectErr != nil {

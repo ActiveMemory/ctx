@@ -19,7 +19,7 @@ import (
 // WriteArchive writes content to a dated archive file in .context/archive/.
 //
 // Creates the archive directory if needed. If a file for today already exists,
-// the new content is appended. Otherwise a new file is created with a header.
+// the new content is appended. Otherwise, a new file is created with a header.
 //
 // Parameters:
 //   - prefix: File name prefix (e.g., "tasks", "decisions", "learnings")

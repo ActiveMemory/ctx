@@ -1011,3 +1011,21 @@ why:
   short: "  ctx add convention \"Use camelCase for function names\"\n  ctx add convention \"All API responses use JSON\""
 "_examples.default":
   short: "  ctx add <type> \"your content here\""
+"_text.agent.instruction":
+  short: "Before starting work, confirm to the user: \"I have read the required context files and I'm following project conventions.\""
+"_text.stopwords":
+  short: "the and for that this with from are was were been have has had but not you all can her his she its our they will each make like use way may any into when which their about would there what also should after before than then them could more some other only just see add new update how"
+"_text.changes.fallback-label":
+  short: "24 hour(s) ago (default)"
+"_text.changes.since-prefix":
+  short: "since "
+"_text.time.just-now":
+  short: "just now"
+"_text.time.ago":
+  short: " ago"
+"_text.time.minute":
+  short: "minute"
+"_text.time.hour":
+  short: "hour"
+"_text.time.day":
+  short: "day"

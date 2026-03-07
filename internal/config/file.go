@@ -107,6 +107,40 @@ const (
 	EnvCtxDir = "CTX_DIR"
 	// EnvCtxTokenBudget is the environment variable for overriding the token budget.
 	EnvCtxTokenBudget = "CTX_TOKEN_BUDGET" //nolint:gosec // G101: env var name, not a credential
+
+	// TaskBudgetPct is the fraction of the token budget allocated to tasks.
+	TaskBudgetPct = 0.40
+	// ConventionBudgetPct is the fraction of the token budget allocated to conventions.
+	ConventionBudgetPct = 0.20
+	// DefaultAgentCooldown is the default cooldown between agent context packet emissions.
+	DefaultAgentCooldown = 10 * time.Minute
+	// PrefixAgentTombstone is the filename prefix for agent cooldown tombstone files.
+	PrefixAgentTombstone = "ctx-agent-"
+
+	// RecencyDaysWeek is the threshold for "recent" entries (0-7 days).
+	RecencyDaysWeek = 7
+	// RecencyDaysMonth is the threshold for "this month" entries (8-30 days).
+	RecencyDaysMonth = 30
+	// RecencyDaysQuarter is the threshold for "this quarter" entries (31-90 days).
+	RecencyDaysQuarter = 90
+	// RecencyScoreWeek is the recency score for entries within a week.
+	RecencyScoreWeek = 1.0
+	// RecencyScoreMonth is the recency score for entries within a month.
+	RecencyScoreMonth = 0.7
+	// RecencyScoreQuarter is the recency score for entries within a quarter.
+	RecencyScoreQuarter = 0.4
+	// RecencyScoreOld is the recency score for entries older than a quarter.
+	RecencyScoreOld = 0.2
+	// RelevanceMatchCap is the keyword match count that yields maximum relevance (1.0).
+	RelevanceMatchCap = 3
+
+	// PrefixCtxLoaded is the filename prefix for session-loaded marker files.
+	PrefixCtxLoaded = "ctx-loaded-"
+	// EventContextLoadGate is the event name for context load gate hook events.
+	EventContextLoadGate = "context-load-gate"
+	// JSONKeyTimestamp is the JSON key for timestamp extraction in event logs.
+	JSONKeyTimestamp = `"timestamp":"`
+
 	// EnvBackupSMBURL is the environment variable for the SMB share URL.
 	EnvBackupSMBURL = "CTX_BACKUP_SMB_URL"
 	// EnvBackupSMBSubdir is the environment variable for the SMB share subdirectory.

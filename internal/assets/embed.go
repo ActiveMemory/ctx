@@ -453,6 +453,49 @@ func ExampleDesc(name string) string {
 	return entry.Short
 }
 
+// TextDesc returns a user-facing text string by key.
+//
+// Keys use the format "_text.<scope>.<name>" (e.g., "_text.agent.instruction").
+// Returns an empty string if the key is not found.
+//
+// Parameters:
+//   - name: Text key (without the _text. prefix)
+//
+// Returns:
+//   - string: Text content
+func TextDesc(name string) string {
+	loadCommands()
+	entry, ok := commandsMap["_text."+name]
+	if !ok {
+		return ""
+	}
+	return entry.Short
+}
+
+var (
+	stopWordsOnce sync.Once
+	stopWordsMap  map[string]bool
+)
+
+// StopWords returns the default set of stop words for keyword extraction.
+//
+// Loaded from the embedded commands.yaml asset under "_text.stopwords".
+// The result is cached after the first call.
+//
+// Returns:
+//   - map[string]bool: Set of lowercase stop words
+func StopWords() map[string]bool {
+	stopWordsOnce.Do(func() {
+		raw := TextDesc("stopwords")
+		words := strings.Fields(raw)
+		stopWordsMap = make(map[string]bool, len(words))
+		for _, w := range words {
+			stopWordsMap[w] = true
+		}
+	})
+	return stopWordsMap
+}
+
 var (
 	allowOnce  sync.Once
 	allowPerms []string
