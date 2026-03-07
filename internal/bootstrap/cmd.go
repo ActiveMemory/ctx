@@ -48,10 +48,11 @@ func RootCmd() *cobra.Command {
 	short, long := assets.CommandDesc(assets.CmdDescKeyCtx)
 
 	cmd := &cobra.Command{
-		Use:     "ctx",
-		Short:   short,
-		Long:    long,
-		Version: version,
+		Use:           "ctx",
+		Short:         short,
+		Long:          long,
+		Version:       version,
+		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			// Apply global flag values
 			if contextDir != "" {

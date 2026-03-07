@@ -9,6 +9,7 @@ package validation
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	fserr "github.com/ActiveMemory/ctx/internal/err/fs"
@@ -45,9 +46,18 @@ func ValidateBoundary(dir string) error {
 
 	// Ensure the resolved dir is equal to or nested under the project root.
 	// Append os.PathSeparator to avoid "/foo/bar" matching "/foo/b".
+	// On Windows, use case-insensitive comparison since NTFS paths are
+	// case-insensitive but EvalSymlinks normalizes casing only for the
+	// existing cwd, not the non-existent target — creating a mismatch.
 	root := resolvedCwd + string(os.PathSeparator)
-	if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
-		return ctxerr.ContextOutsideRoot(dir, resolvedCwd)
+	if runtime.GOOS == "windows" {
+		if !strings.EqualFold(resolvedDir, resolvedCwd) && !strings.HasPrefix(strings.ToLower(resolvedDir), strings.ToLower(root)) {
+			return ctxerr.ContextOutsideRoot(dir, resolvedCwd)
+		}
+	} else {
+		if resolvedDir != resolvedCwd && !strings.HasPrefix(resolvedDir, root) {
+			return ctxerr.ContextOutsideRoot(dir, resolvedCwd)
+		}
 	}
 
 	return nil
