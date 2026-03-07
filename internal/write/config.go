@@ -97,3 +97,10 @@ const tplDepsUseType = "Use --type to force: %s"
 
 // tplDepsNoDeps is printed when no dependencies are found.
 const tplDepsNoDeps = "No dependencies found."
+
+// tplSkillsHeader is the heading for the skills list.
+const tplSkillsHeader = "Available Skills:"
+
+// tplSkillLine formats a single skill entry.
+// Arguments: name, description.
+const tplSkillLine = "  /%-22s %s"
