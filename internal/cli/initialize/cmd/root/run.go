@@ -50,9 +50,12 @@ const gitignoreHeader = "# ctx managed entries"
 // Returns:
 //   - error: Non-nil if directory creation or file operations fail
 func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, caller string) error {
-	// Check if ctx is in PATH (required for hooks to work)
-	if err := core.CheckCtxInPath(cmd); err != nil {
-		return err
+	// Check if ctx is in PATH (required for hooks to work).
+	// Skip when a caller is set — the caller manages its own binary path.
+	if caller == "" {
+		if err := core.CheckCtxInPath(cmd); err != nil {
+			return err
+		}
 	}
 
 	contextDir := rc.ContextDir()
@@ -188,7 +191,21 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, 
 		write.InfoInitWarnNonFatal(cmd, ".gitignore", err)
 	}
 
-	write.InfoInitNextSteps(cmd)
+	// Caller-specific setup — skip Claude Code instructions when called
+	// from another editor.
+	if caller == "" {
+		write.InfoInitNextSteps(cmd)
+	} else {
+		// VS Code / other editor specific setup
+		cmd.Println("\nSetting up editor integration...")
+		if err := core.CreateVSCodeArtifacts(cmd); err != nil {
+			write.InfoInitWarnNonFatal(cmd, "VS Code artifacts", err)
+		}
+
+		cmd.Println("\nNext steps:")
+		cmd.Println("  1. Edit .context/TASKS.md to add your current tasks")
+		cmd.Println("  2. Run '@ctx /status' to see context summary")
+	}
 
 	return nil
 }
