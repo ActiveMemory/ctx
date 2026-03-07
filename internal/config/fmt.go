@@ -12,4 +12,8 @@ const (
 	FormatJSON = "json"
 	// FormatMarkdown selects Markdown output.
 	FormatMarkdown = "md"
+	// FormatMermaid selects Mermaid diagram output.
+	FormatMermaid = "mermaid"
+	// FormatTable selects plain text table output.
+	FormatTable = "table"
 )

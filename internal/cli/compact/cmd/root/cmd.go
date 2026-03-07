@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 		&archive,
 		"archive",
 		false,
-		assets.FlagDesc("compact.archive"),
+		assets.FlagDesc(assets.FlagDescKeyCompactArchive),
 	)
 
 	return cmd

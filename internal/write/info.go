@@ -102,6 +102,25 @@ func InfoConfigProfileNone(cmd *cobra.Command, filename string) {
 	sprintf(cmd, tplConfigProfileNone, filename)
 }
 
+// InfoDepsNoProject reports that no supported project was detected.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - builderNames: Comma-separated list of supported project types
+func InfoDepsNoProject(cmd *cobra.Command, builderNames string) {
+	cmd.Println(tplDepsNoProject)
+	cmd.Println(tplDepsLookingFor)
+	sprintf(cmd, tplDepsUseType, builderNames)
+}
+
+// InfoDepsNoDeps reports that no dependencies were found.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoDepsNoDeps(cmd *cobra.Command) {
+	cmd.Println(tplDepsNoDeps)
+}
+
 // InfoExistsWritingAsAlternative reports that a file already exists and the
 // content is being written to an alternative filename instead.
 //

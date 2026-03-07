@@ -42,7 +42,7 @@ Examples:
 		},
 	}
 
-	cmd.Flags().Bool("check", false, assets.FlagDesc("system.markjournal.check"))
+	cmd.Flags().Bool("check", false, assets.FlagDesc(assets.FlagDescKeySystemMarkjournalCheck))
 
 	return cmd
 }

@@ -33,7 +33,7 @@ The session ID is read from stdin JSON (same as hooks) or --session-id flag.`,
 			return runPause(cmd, os.Stdin)
 		},
 	}
-	cmd.Flags().String("session-id", "", assets.FlagDesc("system.pause.session-id"))
+	cmd.Flags().String("session-id", "", assets.FlagDesc(assets.FlagDescKeySystemPauseSessionId))
 	return cmd
 }
 

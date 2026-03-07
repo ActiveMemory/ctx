@@ -38,8 +38,8 @@ Exit codes:
 		},
 	}
 
-	cmd.Flags().IntVar(&budget, "budget", mem.DefaultPublishBudget, assets.FlagDesc("memory.publish.budget"))
-	cmd.Flags().BoolVar(&dryRun, "dry-run", false, assets.FlagDesc("memory.publish.dry-run"))
+	cmd.Flags().IntVar(&budget, "budget", mem.DefaultPublishBudget, assets.FlagDesc(assets.FlagDescKeyMemoryPublishBudget))
+	cmd.Flags().BoolVar(&dryRun, "dry-run", false, assets.FlagDesc(assets.FlagDescKeyMemoryPublishDryRun))
 
 	return cmd
 }

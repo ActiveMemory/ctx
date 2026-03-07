@@ -25,13 +25,13 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "doctor",
 		Short:       short,
-		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Annotations: map[string]string{config.AnnotationSkipInit: config.AnnotationTrue},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			jsonOut, _ := cmd.Flags().GetBool("json")
 			return Run(cmd, jsonOut)
 		},
 	}
-	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc("doctor.json"))
+	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc(assets.FlagDescKeyDoctorJson))
 	return cmd
 }

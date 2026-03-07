@@ -34,9 +34,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&latest, "latest", false, assets.FlagDesc("recall.show.latest"))
-	cmd.Flags().BoolVar(&full, "full", false, assets.FlagDesc("recall.show.full"))
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false, assets.FlagDesc("recall.show.all-projects"))
+	cmd.Flags().BoolVar(&latest, "latest", false, assets.FlagDesc(assets.FlagDescKeyRecallShowLatest))
+	cmd.Flags().BoolVar(&full, "full", false, assets.FlagDesc(assets.FlagDescKeyRecallShowFull))
+	cmd.Flags().BoolVar(&allProjects, "all-projects", false, assets.FlagDesc(assets.FlagDescKeyRecallShowAllProjects))
 
 	return cmd
 }

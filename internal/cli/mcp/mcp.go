@@ -36,7 +36,7 @@ func serveCmd() *cobra.Command {
 		Use:          "serve",
 		Short:        "Start the MCP server (stdin/stdout)",
 		Long:         "Start the MCP server, communicating via JSON-RPC 2.0 over stdin/stdout.\n\nThis command is intended to be invoked by MCP clients (AI tools), not\nrun directly by users. Configure your AI tool to run 'ctx mcp serve'\nas an MCP server.",
-		Annotations:  map[string]string{config.AnnotationSkipInit: "true"},
+		Annotations:  map[string]string{config.AnnotationSkipInit: config.AnnotationTrue},
 		SilenceUsage: true,
 		RunE: func(_ *cobra.Command, _ []string) error {
 			srv := internalmcp.NewServer(rc.ContextDir())

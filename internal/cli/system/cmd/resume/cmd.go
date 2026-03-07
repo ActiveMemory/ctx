@@ -33,7 +33,7 @@ The session ID is read from stdin JSON (same as hooks) or --session-id flag.`,
 			return runResume(cmd, os.Stdin)
 		},
 	}
-	cmd.Flags().String("session-id", "", assets.FlagDesc("system.resume.session-id"))
+	cmd.Flags().String("session-id", "", assets.FlagDesc(assets.FlagDescKeySystemResumeSessionId))
 	return cmd
 }
 

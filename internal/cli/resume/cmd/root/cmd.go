@@ -28,6 +28,6 @@ func Cmd() *cobra.Command {
 			return Run(cmd, sessionID)
 		},
 	}
-	cmd.Flags().String("session-id", "", assets.FlagDesc("resume.session-id"))
+	cmd.Flags().String("session-id", "", assets.FlagDesc(assets.FlagDescKeyResumeSessionId))
 	return cmd
 }

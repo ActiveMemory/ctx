@@ -22,7 +22,7 @@ type GraphBuilder interface {
 }
 
 // Builders is the ordered registry of graph builders.
-// Detection walks this list; first match wins.
+// Detection walks this list; the first match wins.
 var Builders = []GraphBuilder{
 	&GoBuilder{},
 	&NodeBuilder{},

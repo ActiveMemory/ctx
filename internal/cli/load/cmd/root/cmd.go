@@ -45,10 +45,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVar(
-		&budget, "budget", rc.DefaultTokenBudget, assets.FlagDesc("load.budget"),
+		&budget, "budget", rc.DefaultTokenBudget, assets.FlagDesc(assets.FlagDescKeyLoadBudget),
 	)
 	cmd.Flags().BoolVar(
-		&raw, "raw", false, assets.FlagDesc("load.raw"),
+		&raw, "raw", false, assets.FlagDesc(assets.FlagDescKeyLoadRaw),
 	)
 
 	return cmd
