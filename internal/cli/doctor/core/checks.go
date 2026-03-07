@@ -33,14 +33,14 @@ func CheckContextInitialized(report *Report) {
 			Name:     config.DoctorCheckContextInit,
 			Category: config.DoctorCategoryStructure,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.context-initialized.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorContextInitializedOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     config.DoctorCheckContextInit,
 			Category: config.DoctorCategoryStructure,
 			Status:   StatusError,
-			Message:  assets.TextDesc("doctor.context-initialized.error"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorContextInitializedError),
 		})
 	}
 }
@@ -67,14 +67,14 @@ func CheckRequiredFiles(report *Report) {
 			Name:     config.DoctorCheckRequiredFiles,
 			Category: config.DoctorCategoryStructure,
 			Status:   StatusOK,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.required-files.ok"), present, total),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRequiredFilesOk), present, total),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     config.DoctorCheckRequiredFiles,
 			Category: config.DoctorCategoryStructure,
 			Status:   StatusError,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.required-files.error"), present, total, strings.Join(missing, ", ")),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRequiredFilesError), present, total, strings.Join(missing, ", ")),
 		})
 	}
 }
@@ -91,7 +91,7 @@ func CheckCtxrcValidation(report *Report) {
 			Name:     config.DoctorCheckCtxrcValidation,
 			Category: config.DoctorCategoryStructure,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.ctxrc-validation.ok-no-file"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationOkNoFile),
 		})
 		return
 	}
@@ -102,7 +102,7 @@ func CheckCtxrcValidation(report *Report) {
 			Name:     config.DoctorCheckCtxrcValidation,
 			Category: config.DoctorCategoryStructure,
 			Status:   StatusError,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.ctxrc-validation.error"), validateErr),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationError), validateErr),
 		})
 		return
 	}
@@ -112,7 +112,7 @@ func CheckCtxrcValidation(report *Report) {
 			Name:     config.DoctorCheckCtxrcValidation,
 			Category: config.DoctorCategoryStructure,
 			Status:   StatusWarning,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.ctxrc-validation.warning"), strings.Join(warnings, "; ")),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationWarning), strings.Join(warnings, "; ")),
 		})
 		return
 	}
@@ -121,7 +121,7 @@ func CheckCtxrcValidation(report *Report) {
 		Name:     config.DoctorCheckCtxrcValidation,
 		Category: config.DoctorCategoryStructure,
 		Status:   StatusOK,
-		Message:  assets.TextDesc("doctor.ctxrc-validation.ok"),
+		Message:  assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationOk),
 	})
 }
 
@@ -140,7 +140,7 @@ func CheckDrift(report *Report) {
 			Name:     config.DoctorCheckDrift,
 			Category: config.DoctorCategoryQuality,
 			Status:   StatusWarning,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.drift.warning-load"), loadErr),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftWarningLoad), loadErr),
 		})
 		return
 	}
@@ -154,17 +154,17 @@ func CheckDrift(report *Report) {
 			Name:     config.DoctorCheckDrift,
 			Category: config.DoctorCategoryQuality,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.drift.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorDriftOk),
 		})
 		return
 	}
 
 	var parts []string
 	if violCount > 0 {
-		parts = append(parts, fmt.Sprintf(assets.TextDesc("doctor.drift.violations"), violCount))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftViolations), violCount))
 	}
 	if warnCount > 0 {
-		parts = append(parts, fmt.Sprintf(assets.TextDesc("doctor.drift.warnings"), warnCount))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftWarnings), warnCount))
 	}
 
 	status := StatusWarning
@@ -176,7 +176,7 @@ func CheckDrift(report *Report) {
 		Name:     config.DoctorCheckDrift,
 		Category: config.DoctorCategoryQuality,
 		Status:   status,
-		Message:  fmt.Sprintf(assets.TextDesc("doctor.drift.detected"), strings.Join(parts, ", ")),
+		Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftDetected), strings.Join(parts, ", ")),
 	})
 }
 
@@ -191,7 +191,7 @@ func CheckPluginEnablement(report *Report) {
 			Name:     config.DoctorCheckPluginInstalled,
 			Category: config.DoctorCategoryPlugin,
 			Status:   StatusInfo,
-			Message:  assets.TextDesc("doctor.plugin-installed.info"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginInstalledInfo),
 		})
 		return
 	}
@@ -200,7 +200,7 @@ func CheckPluginEnablement(report *Report) {
 		Name:     config.DoctorCheckPluginInstalled,
 		Category: config.DoctorCategoryPlugin,
 		Status:   StatusOK,
-		Message:  assets.TextDesc("doctor.plugin-installed.ok"),
+		Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginInstalledOk),
 	})
 
 	globalEnabled := initialize.PluginEnabledGlobally()
@@ -211,7 +211,7 @@ func CheckPluginEnablement(report *Report) {
 			Name:     config.DoctorCheckPluginEnabledGlobal,
 			Category: config.DoctorCategoryPlugin,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.plugin-enabled-global.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledGlobalOk),
 		})
 	}
 
@@ -220,7 +220,7 @@ func CheckPluginEnablement(report *Report) {
 			Name:     config.DoctorCheckPluginEnabledLocal,
 			Category: config.DoctorCategoryPlugin,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.plugin-enabled-local.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledLocalOk),
 		})
 	}
 
@@ -229,7 +229,7 @@ func CheckPluginEnablement(report *Report) {
 			Name:     config.DoctorCheckPluginEnabled,
 			Category: config.DoctorCategoryPlugin,
 			Status:   StatusWarning,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.plugin-enabled.warning"), config.PluginID),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledWarning), config.PluginID),
 		})
 	}
 }
@@ -244,14 +244,14 @@ func CheckEventLogging(report *Report) {
 			Name:     config.DoctorCheckEventLogging,
 			Category: config.DoctorCategoryHooks,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.event-logging.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorEventLoggingOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     config.DoctorCheckEventLogging,
 			Category: config.DoctorCategoryHooks,
 			Status:   StatusInfo,
-			Message:  assets.TextDesc("doctor.event-logging.info"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorEventLoggingInfo),
 		})
 	}
 }
@@ -268,14 +268,14 @@ func CheckWebhook(report *Report) {
 			Name:     config.DoctorCheckWebhook,
 			Category: config.DoctorCategoryHooks,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.webhook.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorWebhookOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     config.DoctorCheckWebhook,
 			Category: config.DoctorCategoryHooks,
 			Status:   StatusInfo,
-			Message:  assets.TextDesc("doctor.webhook.info"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorWebhookInfo),
 		})
 	}
 }
@@ -293,7 +293,7 @@ func CheckReminders(report *Report) {
 			Name:     config.DoctorCheckReminders,
 			Category: config.DoctorCategoryState,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.reminders.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
 		return
 	}
@@ -304,7 +304,7 @@ func CheckReminders(report *Report) {
 			Name:     config.DoctorCheckReminders,
 			Category: config.DoctorCategoryState,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.reminders.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
 		return
 	}
@@ -315,14 +315,14 @@ func CheckReminders(report *Report) {
 			Name:     config.DoctorCheckReminders,
 			Category: config.DoctorCategoryState,
 			Status:   StatusOK,
-			Message:  assets.TextDesc("doctor.reminders.ok"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
 			Name:     config.DoctorCheckReminders,
 			Category: config.DoctorCategoryState,
 			Status:   StatusInfo,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.reminders.info"), count),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRemindersInfo), count),
 		})
 	}
 }
@@ -355,14 +355,14 @@ func CheckTaskCompletion(report *Report) {
 	}
 
 	ratio := completed * 100 / total
-	msg := fmt.Sprintf(assets.TextDesc("doctor.task-completion.format"), completed, total, ratio)
+	msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorTaskCompletionFormat), completed, total, ratio)
 
 	if ratio >= 80 && completed > 5 {
 		report.Results = append(report.Results, Result{
 			Name:     config.DoctorCheckTaskCompletion,
 			Category: config.DoctorCategoryState,
 			Status:   StatusWarning,
-			Message:  msg + assets.TextDesc("doctor.task-completion.warning-suffix"),
+			Message:  msg + assets.TextDesc(assets.TextDescKeyDoctorTaskCompletionWarningSuffix),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
@@ -409,7 +409,7 @@ func CheckContextTokenSize(report *Report) {
 	}
 
 	window := rc.ContextWindow()
-	msg := fmt.Sprintf(assets.TextDesc("doctor.context-size.format"), totalTokens, window)
+	msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorContextSizeFormat), totalTokens, window)
 
 	warnThreshold := window / 5 // 20% of context window
 	if totalTokens > warnThreshold {
@@ -417,7 +417,7 @@ func CheckContextTokenSize(report *Report) {
 			Name:     config.DoctorCheckContextSize,
 			Category: config.DoctorCategorySize,
 			Status:   StatusWarning,
-			Message:  msg + assets.TextDesc("doctor.context-size.warning-suffix"),
+			Message:  msg + assets.TextDesc(assets.TextDescKeyDoctorContextSizeWarningSuffix),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
@@ -434,7 +434,7 @@ func CheckContextTokenSize(report *Report) {
 			Name:     config.DoctorCheckContextFilePrefix + ft.name,
 			Category: config.DoctorCategorySize,
 			Status:   StatusInfo,
-			Message:  fmt.Sprintf(assets.TextDesc("doctor.context-file.format"), ft.name, ft.tokens),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorContextFileFormat), ft.name, ft.tokens),
 		})
 	}
 }
@@ -454,7 +454,7 @@ func CheckRecentEventActivity(report *Report) {
 			Name:     config.DoctorCheckRecentEvents,
 			Category: config.DoctorCategoryEvents,
 			Status:   StatusInfo,
-			Message:  assets.TextDesc("doctor.recent-events.info"),
+			Message:  assets.TextDesc(assets.TextDescKeyDoctorRecentEventsInfo),
 		})
 		return
 	}
@@ -463,7 +463,7 @@ func CheckRecentEventActivity(report *Report) {
 		Name:     config.DoctorCheckRecentEvents,
 		Category: config.DoctorCategoryEvents,
 		Status:   StatusOK,
-		Message:  fmt.Sprintf(assets.TextDesc("doctor.recent-events.ok"), events[len(events)-1].Timestamp),
+		Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRecentEventsOk), events[len(events)-1].Timestamp),
 	})
 }
 
@@ -494,7 +494,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Memory.
 	if snap.Memory.Supported && snap.Memory.TotalBytes > 0 {
 		pct := ResourcePct(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
-		msg := fmt.Sprintf(assets.TextDesc("doctor.resource-memory.format"),
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceMemoryFormat),
 			pct,
 			sysinfo.FormatGiB(snap.Memory.UsedBytes),
 			sysinfo.FormatGiB(snap.Memory.TotalBytes))
@@ -509,7 +509,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Swap (only when swap is configured).
 	if snap.Memory.Supported && snap.Memory.SwapTotalBytes > 0 {
 		pct := ResourcePct(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
-		msg := fmt.Sprintf(assets.TextDesc("doctor.resource-swap.format"),
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceSwapFormat),
 			pct,
 			sysinfo.FormatGiB(snap.Memory.SwapUsedBytes),
 			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes))
@@ -524,7 +524,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Disk.
 	if snap.Disk.Supported && snap.Disk.TotalBytes > 0 {
 		pct := ResourcePct(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
-		msg := fmt.Sprintf(assets.TextDesc("doctor.resource-disk.format"),
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceDiskFormat),
 			pct,
 			sysinfo.FormatGiB(snap.Disk.UsedBytes),
 			sysinfo.FormatGiB(snap.Disk.TotalBytes))
@@ -539,7 +539,7 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 	// Load (1-minute average relative to CPU count).
 	if snap.Load.Supported && snap.Load.NumCPU > 0 {
 		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
-		msg := fmt.Sprintf(assets.TextDesc("doctor.resource-load.format"),
+		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceLoadFormat),
 			ratio, snap.Load.Load1, snap.Load.NumCPU)
 		report.Results = append(report.Results, Result{
 			Name:     config.DoctorCheckResourceLoad,

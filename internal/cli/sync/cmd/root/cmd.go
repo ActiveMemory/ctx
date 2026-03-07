@@ -26,7 +26,7 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
-	short, long := assets.CommandDesc("sync")
+	short, long := assets.CommandDesc(assets.CmdDescKeySync)
 
 	cmd := &cobra.Command{
 		Use:   "sync",

@@ -18,7 +18,7 @@ import (
 
 // Cmd returns the mcp command group.
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("mcp")
+	short, long := assets.CommandDesc(assets.CmdDescKeyMcp)
 	cmd := &cobra.Command{
 		Use:   "mcp",
 		Short: short,

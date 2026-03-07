@@ -20,7 +20,7 @@ import (
 func Cmd() *cobra.Command {
 	var opts core.ExportOpts
 
-	short, long := assets.CommandDesc("recall.export")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallExport)
 
 	cmd := &cobra.Command{
 		Use:   "export [session-id]",

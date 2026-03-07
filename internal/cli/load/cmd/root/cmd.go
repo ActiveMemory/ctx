@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 		raw    bool
 	)
 
-	short, long := assets.CommandDesc("load")
+	short, long := assets.CommandDesc(assets.CmdDescKeyLoad)
 	cmd := &cobra.Command{
 		Use:   "load",
 		Short: short,

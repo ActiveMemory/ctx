@@ -41,8 +41,8 @@ func OutputJSON(cmd *cobra.Command, report *Report) error {
 // Returns:
 //   - error: Always nil (satisfies interface)
 func OutputHuman(cmd *cobra.Command, report *Report) error {
-	cmd.Println(assets.TextDesc("doctor.output.header"))
-	cmd.Println(assets.TextDesc("doctor.output.separator"))
+	cmd.Println(assets.TextDesc(assets.TextDescKeyDoctorOutputHeader))
+	cmd.Println(assets.TextDesc(assets.TextDescKeyDoctorOutputSeparator))
 	cmd.Println()
 
 	// Group by category.
@@ -69,12 +69,12 @@ func OutputHuman(cmd *cobra.Command, report *Report) error {
 		cmd.Println(cat)
 		for _, r := range results {
 			icon := statusIcon(r.Status)
-			cmd.Println(fmt.Sprintf(assets.TextDesc("doctor.output.result-line"), icon, r.Message))
+			cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorOutputResultLine), icon, r.Message))
 		}
 		cmd.Println()
 	}
 
-	cmd.Println(fmt.Sprintf(assets.TextDesc("doctor.output.summary"), report.Warnings, report.Errors))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorOutputSummary), report.Warnings, report.Errors))
 	return nil
 }
 

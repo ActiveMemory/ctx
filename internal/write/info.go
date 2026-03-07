@@ -299,3 +299,46 @@ func InfoObsidianGenerated(cmd *cobra.Command, count int, output string) {
 	cmd.Println("Next steps:")
 	sprintf(cmd, tplObsidianNextSteps, output)
 }
+
+// InfoJournalOrphanRemoved reports a removed orphan file.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - name: Filename that was removed
+func InfoJournalOrphanRemoved(cmd *cobra.Command, name string) {
+	sprintf(cmd, tplJournalOrphanRemoved, name)
+}
+
+// InfoJournalSiteGenerated reports successful site generation with next steps.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - count: Number of entries generated
+//   - output: Output directory path
+//   - zensicalBin: Zensical binary name
+func InfoJournalSiteGenerated(cmd *cobra.Command, count int, output, zensicalBin string) {
+	sprintf(cmd, tplJournalSiteGenerated, count, output)
+	cmd.Println()
+	cmd.Println("Next steps:")
+	sprintf(cmd, tplJournalSiteNextSteps, output, zensicalBin)
+	cmd.Println("  or")
+	cmd.Println(tplJournalSiteAlt)
+}
+
+// InfoJournalSiteStarting reports the server is starting.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoJournalSiteStarting(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(tplJournalSiteStarting)
+}
+
+// InfoJournalSiteBuilding reports a build is in progress.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoJournalSiteBuilding(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(tplJournalSiteBuilding)
+}

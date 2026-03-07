@@ -57,7 +57,7 @@ func ConsolidateToolRuns(content string) string {
 
 		if count > 1 {
 			out = append(out, header, "", body, "",
-				fmt.Sprintf("(\u00d7%d)", count), "",
+				fmt.Sprintf("(×%d)", count), "",
 			)
 		} else {
 			// Keep original lines (preserves blank lines as-is)

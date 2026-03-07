@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured show subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("prompt.show")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPromptShow)
 
 	return &cobra.Command{
 		Use:   "show NAME",

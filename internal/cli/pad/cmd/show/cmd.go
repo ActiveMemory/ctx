@@ -27,7 +27,7 @@ import (
 func Cmd() *cobra.Command {
 	var outPath string
 
-	short, long := assets.CommandDesc("pad.show")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPadShow)
 	cmd := &cobra.Command{
 		Use:   "show N",
 		Short: short,

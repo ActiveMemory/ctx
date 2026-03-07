@@ -22,7 +22,7 @@ import (
 func Cmd() *cobra.Command {
 	var all bool
 
-	short, long := assets.CommandDesc("recall.unlock")
+	short, long := assets.CommandDesc(assets.CmdDescKeyRecallUnlock)
 
 	cmd := &cobra.Command{
 		Use:   "unlock <pattern>",

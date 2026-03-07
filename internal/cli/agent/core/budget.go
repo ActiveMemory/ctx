@@ -63,7 +63,7 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 	now := time.Now()
 	pkt := &AssembledPacket{
 		Budget:      budget,
-		Instruction: assets.TextDesc("agent.instruction"),
+		Instruction: assets.TextDesc(assets.TextDescKeyAgentInstruction),
 	}
 
 	remaining := budget

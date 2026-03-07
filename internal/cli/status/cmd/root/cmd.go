@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		verbose    bool
 	)
 
-	short, long := assets.CommandDesc("status")
+	short, long := assets.CommandDesc(assets.CmdDescKeyStatus)
 
 	cmd := &cobra.Command{
 		Use:   "status",

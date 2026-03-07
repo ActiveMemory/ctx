@@ -23,7 +23,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured prompt command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("prompt")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPrompt)
 
 	cmd := &cobra.Command{
 		Use:   "prompt",

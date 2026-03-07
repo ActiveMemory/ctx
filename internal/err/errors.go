@@ -520,6 +520,17 @@ func ReadEmbeddedSchema(cause error) error {
 	return fmt.Errorf("read embedded schema: %w", cause)
 }
 
+// LoadJournalStateErr wraps a failure to load journal processing state.
+//
+// Parameters:
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "load journal state: <cause>"
+func LoadJournalStateErr(cause error) error {
+	return fmt.Errorf("load journal state: %w", cause)
+}
+
 // UnknownProfile returns an error for an unrecognized config profile name.
 //
 // Parameters:

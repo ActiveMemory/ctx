@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured list subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("remind.list")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyRemindList)
 
 	return &cobra.Command{
 		Use:     "list",

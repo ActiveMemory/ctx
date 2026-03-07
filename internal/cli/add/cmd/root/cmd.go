@@ -43,7 +43,7 @@ func Cmd() *cobra.Command {
 		application  string
 	)
 
-	short, long := assets.CommandDesc("add")
+	short, long := assets.CommandDesc(assets.CmdDescKeyAdd)
 
 	cmd := &cobra.Command{
 		Use:       "add <type> [content]",

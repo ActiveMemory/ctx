@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Command for regenerating the DECISIONS.md index
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("decision.reindex")
+	short, long := assets.CommandDesc(assets.CmdDescKeyDecisionReindex)
 	return &cobra.Command{
 		Use:   "reindex",
 		Short: short,

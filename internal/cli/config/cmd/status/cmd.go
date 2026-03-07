@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured status subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("config.status")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyConfigStatus)
 
 	return &cobra.Command{
 		Use:         "status",

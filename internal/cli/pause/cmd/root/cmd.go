@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pause command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("pause")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPause)
 	cmd := &cobra.Command{
 		Use:   "pause",
 		Short: short,

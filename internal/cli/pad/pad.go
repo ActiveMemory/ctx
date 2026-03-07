@@ -31,7 +31,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured pad command with subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("pad")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPad)
 	cmd := &cobra.Command{
 		Use:   "pad",
 		Short: short,

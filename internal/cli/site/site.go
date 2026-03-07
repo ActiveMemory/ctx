@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - *cobra.Command: Parent command with site management subcommands
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("site")
+	short, long := assets.CommandDesc(assets.CmdDescKeySite)
 
 	cmd := &cobra.Command{
 		Use:   "site",

@@ -295,3 +295,24 @@ const tplObsidianGenerated = "✓ Generated Obsidian vault with %d entries in %s
 // tplObsidianNextSteps is the post-generation guidance.
 // Arguments: output directory.
 const tplObsidianNextSteps = "  Open Obsidian → Open folder as vault → Select %s"
+
+// tplJournalOrphanRemoved reports a removed orphan file.
+// Arguments: filename.
+const tplJournalOrphanRemoved = "  removed orphan: %s"
+
+// tplJournalSiteGenerated reports successful site generation.
+// Arguments: entry count, output directory.
+const tplJournalSiteGenerated = "✓ Generated site with %d entries in %s"
+
+// tplJournalSiteStarting reports the server is starting.
+const tplJournalSiteStarting = "Starting local server..."
+
+// tplJournalSiteBuilding reports a build is in progress.
+const tplJournalSiteBuilding = "Building site..."
+
+// tplJournalSiteNextSteps shows post-generation guidance.
+// Arguments: output directory, zensical binary name.
+const tplJournalSiteNextSteps = "  cd %s && %s serve"
+
+// tplJournalSiteAlt is the alternative command hint.
+const tplJournalSiteAlt = "  ctx journal site --serve"

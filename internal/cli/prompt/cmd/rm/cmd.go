@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured rm subcommand
 func Cmd() *cobra.Command {
-	short, _ := assets.CommandDesc("prompt.rm")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyPromptRm)
 
 	return &cobra.Command{
 		Use:   "rm NAME",

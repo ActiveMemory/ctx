@@ -38,7 +38,7 @@ func Cmd() *cobra.Command {
 		outputFile    string
 	)
 
-	short, long := assets.CommandDesc("loop")
+	short, long := assets.CommandDesc(assets.CmdDescKeyLoop)
 	cmd := &cobra.Command{
 		Use:   "loop",
 		Short: short,

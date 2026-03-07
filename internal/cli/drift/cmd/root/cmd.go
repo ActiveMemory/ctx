@@ -29,7 +29,7 @@ func Cmd() *cobra.Command {
 		fix        bool
 	)
 
-	short, long := assets.CommandDesc("drift")
+	short, long := assets.CommandDesc(assets.CmdDescKeyDrift)
 	cmd := &cobra.Command{
 		Use:   "drift",
 		Short: short,

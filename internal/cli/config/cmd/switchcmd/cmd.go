@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured switch subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("config.switch")
+	short, long := assets.CommandDesc(assets.CmdDescKeyConfigSwitch)
 
 	return &cobra.Command{
 		Use:         "switch [dev|base]",

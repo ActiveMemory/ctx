@@ -20,7 +20,7 @@ import (
 // Returns:
 //   - *cobra.Command: The reindex command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("reindex")
+	short, long := assets.CommandDesc(assets.CmdDescKeyReindex)
 
 	return &cobra.Command{
 		Use:   "reindex",

@@ -19,7 +19,7 @@ import (
 // Returns:
 //   - *cobra.Command: The serve command
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("serve")
+	short, long := assets.CommandDesc(assets.CmdDescKeyServe)
 
 	cmd := &cobra.Command{
 		Use:   "serve [directory]",

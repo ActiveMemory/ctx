@@ -17,7 +17,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured restore subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("permissions.restore")
+	short, long := assets.CommandDesc(assets.CmdDescKeyPermissionsRestore)
 
 	return &cobra.Command{
 		Use:   "restore",

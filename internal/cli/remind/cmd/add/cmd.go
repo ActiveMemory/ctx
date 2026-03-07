@@ -19,7 +19,7 @@ import (
 func Cmd() *cobra.Command {
 	var afterFlag string
 
-	short, _ := assets.CommandDesc("remind.add")
+	short, _ := assets.CommandDesc(assets.CmdDescKeyRemindAdd)
 
 	cmd := &cobra.Command{
 		Use:   "add TEXT",

@@ -97,6 +97,10 @@ const (
 	FileZensicalToml = "zensical.toml"
 	// BinZensical is the zensical binary name.
 	BinZensical = "zensical"
+	// DirStylesheets is the subdirectory for CSS stylesheets in site output.
+	DirStylesheets = "stylesheets"
+	// FileExtraCSS is the custom CSS filename for journal sites.
+	FileExtraCSS = "extra.css"
 )
 
 // Session defaults.

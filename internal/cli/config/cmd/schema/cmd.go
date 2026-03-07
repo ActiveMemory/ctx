@@ -18,7 +18,7 @@ import (
 // Returns:
 //   - *cobra.Command: Configured schema subcommand
 func Cmd() *cobra.Command {
-	short, long := assets.CommandDesc("config.schema")
+	short, long := assets.CommandDesc(assets.CmdDescKeyConfigSchema)
 
 	return &cobra.Command{
 		Use:   "schema",

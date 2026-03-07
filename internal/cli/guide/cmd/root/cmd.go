@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 		showCommands bool
 	)
 
-	short, long := assets.CommandDesc("guide")
+	short, long := assets.CommandDesc(assets.CmdDescKeyGuide)
 	cmd := &cobra.Command{
 		Use:         "guide",
 		Short:       short,
