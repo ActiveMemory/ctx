@@ -33,7 +33,7 @@ func ExtractBulletItems(content string, limit int) []string {
 		}
 		text := strings.TrimSpace(m[1])
 		// Skip empty or header-only items
-		if text != "" && !strings.HasPrefix(text, "#") {
+		if text != "" && !strings.HasPrefix(text, config.PrefixHeading) {
 			items = append(items, text)
 		}
 	}

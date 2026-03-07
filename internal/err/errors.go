@@ -420,3 +420,14 @@ func SkillList(cause error) error {
 func SkillRead(name string, cause error) error {
 	return fmt.Errorf("failed to read skill %s: %w", name, cause)
 }
+
+// DetectReferenceTime wraps a failure to detect the reference time for changes.
+//
+// Parameters:
+//   - cause: the underlying detection error
+//
+// Returns:
+//   - error: "detecting reference time: <cause>"
+func DetectReferenceTime(cause error) error {
+	return fmt.Errorf("detecting reference time: %w", cause)
+}

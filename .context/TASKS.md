@@ -479,6 +479,22 @@ output package. All CLI commands should route printed output through this packag
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
 - [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
 
+- [ ] Move cmd.Print* output strings in compact/cmd/root/run.go to internal/write per convention #added:2026-03-07-074737
+
+- [ ] Extract changes format.go rendering templates to assets — headings, labels, and format strings are user-facing text for i18n #added:2026-03-07-074719
+
+- [ ] Lift HumanAgo and Pluralize to a common package — reusable time formatting, used by changes and potentially status/recall #added:2026-03-07-074649
+
+- [ ] Extract isAlnum predicate for localization — currently ASCII-only in agent keyword extraction (score.go:141) #added:2026-03-07-073900
+
+- [ ] Make stopwords configurable via .ctxrc — currently embedded in assets, domain users need custom terms #added:2026-03-07-073900
+
+- [ ] Make recency scoring thresholds and relevance match cap configurable via .ctxrc — currently hardcoded in config (7/30/90 days, cap 3) #added:2026-03-07-073900
+
+- [ ] Make DefaultAgentCooldown configurable via .ctxrc — currently hardcoded at 10 minutes in config #added:2026-03-07-073106
+
+- [ ] Make TaskBudgetPct and ConventionBudgetPct configurable via .ctxrc — currently hardcoded at 0.40 and 0.20 in config #added:2026-03-07-072714
+
 - [ ] Localization inventory: audit config constants, write package templates, and assets YAML for i18n mapping — low priority, most users are English-first developers #added:2026-03-06-192419
 
 - [ ] Consider indexing tasks and conventions in TASKS.md and CONVENTIONS.md (currently only decisions and learnings have index tables) #added:2026-03-06-190225
