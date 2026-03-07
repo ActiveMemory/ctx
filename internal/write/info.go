@@ -7,6 +7,7 @@
 package write
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -154,4 +155,134 @@ func InfoExistsWritingAsAlternative(
 		return
 	}
 	sprintf(cmd, tplExistsWritingAsAlternative, path, alternative)
+}
+
+// InfoInitOverwritePrompt prints the overwrite confirmation prompt.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - contextDir: path to the existing .context/ directory
+func InfoInitOverwritePrompt(cmd *cobra.Command, contextDir string) {
+	cmd.Print(fmt.Sprintf(tplInitOverwritePrompt, contextDir))
+}
+
+// InfoInitAborted reports that the user cancelled the init operation.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoInitAborted(cmd *cobra.Command) {
+	cmd.Println(tplInitAborted)
+}
+
+// InfoInitExistsSkipped reports a template file skipped because it exists.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - name: the template filename that was skipped
+func InfoInitExistsSkipped(cmd *cobra.Command, name string) {
+	sprintf(cmd, tplInitExistsSkipped, name)
+}
+
+// InfoInitFileCreated reports a template file that was created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - name: the template filename that was created
+func InfoInitFileCreated(cmd *cobra.Command, name string) {
+	sprintf(cmd, tplInitFileCreated, name)
+}
+
+// InfoInitialized reports successful context directory initialization.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - contextDir: the path to the initialized .context/ directory
+func InfoInitialized(cmd *cobra.Command, contextDir string) {
+	cmd.Println()
+	sprintf(cmd, tplInitialized, contextDir)
+}
+
+// InfoInitWarnNonFatal reports a non-fatal warning during init.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - label: short description of what failed (e.g. "CLAUDE.md")
+//   - err: the non-fatal error
+func InfoInitWarnNonFatal(cmd *cobra.Command, label string, err error) {
+	sprintf(cmd, tplInitWarnNonFatal, label, err)
+}
+
+// InfoInitScratchpadPlaintext reports a plaintext scratchpad was created.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - path: the scratchpad file path
+func InfoInitScratchpadPlaintext(cmd *cobra.Command, path string) {
+	sprintf(cmd, tplInitScratchpadPlaintext, path)
+}
+
+// InfoInitScratchpadNoKey warns about a missing key for an encrypted scratchpad.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - keyPath: the expected key path
+func InfoInitScratchpadNoKey(cmd *cobra.Command, keyPath string) {
+	sprintf(cmd, tplInitScratchpadNoKey, keyPath)
+}
+
+// InfoInitScratchpadKeyCreated reports a scratchpad key was generated.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - keyPath: the path where the key was saved
+func InfoInitScratchpadKeyCreated(cmd *cobra.Command, keyPath string) {
+	sprintf(cmd, tplInitScratchpadKeyCreated, keyPath)
+}
+
+// InfoInitCreatingRootFiles prints the heading before root file creation.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoInitCreatingRootFiles(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(tplInitCreatingRootFiles)
+}
+
+// InfoInitSettingUpPermissions prints the heading before permissions setup.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoInitSettingUpPermissions(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(tplInitSettingUpPermissions)
+}
+
+// InfoInitGitignoreUpdated reports .gitignore entries were added.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - count: number of entries added
+func InfoInitGitignoreUpdated(cmd *cobra.Command, count int) {
+	sprintf(cmd, tplInitGitignoreUpdated, count)
+}
+
+// InfoInitGitignoreReview hints how to review changes.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoInitGitignoreReview(cmd *cobra.Command) {
+	cmd.Println(tplInitGitignoreReview)
+}
+
+// InfoInitNextSteps prints the post-init guidance block.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+func InfoInitNextSteps(cmd *cobra.Command) {
+	cmd.Println()
+	cmd.Println(tplInitNextSteps)
+	cmd.Println()
+	cmd.Println(tplInitPluginInfo)
+	cmd.Println()
+	cmd.Println(tplInitPluginNote)
 }

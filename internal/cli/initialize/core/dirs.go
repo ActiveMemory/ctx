@@ -7,7 +7,6 @@
 package core
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -15,6 +14,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ProjectDirs lists the project-root directories created by ctx init,
@@ -36,26 +37,25 @@ var ProjectDirs = []string{
 func CreateProjectDirs(cmd *cobra.Command) error {
 	for _, dir := range ProjectDirs {
 		if _, statErr := os.Stat(dir); statErr == nil {
-			cmd.Println(fmt.Sprintf("  ○ %s/ (exists, skipped)", dir))
+			write.InitSkippedDir(cmd, dir)
 			continue
 		}
 
 		if mkdirErr := os.MkdirAll(dir, config.PermExec); mkdirErr != nil {
-			return fmt.Errorf("failed to create %s/: %w", dir, mkdirErr)
+			return ctxerr.Mkdir(dir+"/", mkdirErr)
 		}
 
 		readme, readErr := assets.ProjectReadme(dir)
 		if readErr != nil {
-			return fmt.Errorf("failed to read %s README template: %w",
-				dir, readErr)
+			return ctxerr.ReadProjectReadme(dir, readErr)
 		}
 
 		readmePath := filepath.Join(dir, config.FilenameReadme)
 		if writeErr := os.WriteFile(readmePath, readme, config.PermFile); writeErr != nil {
-			return fmt.Errorf("failed to write %s: %w", readmePath, writeErr)
+			return ctxerr.FileWrite(readmePath, writeErr)
 		}
 
-		cmd.Println(fmt.Sprintf("  ✓ %s/", dir))
+		write.InitCreatedDir(cmd, dir)
 	}
 
 	return nil

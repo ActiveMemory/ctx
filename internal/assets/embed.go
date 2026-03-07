@@ -19,7 +19,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml
 var FS embed.FS
 
 const (
@@ -391,6 +391,15 @@ func HookMessage(hook, filename string) ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func HookMessageRegistry() ([]byte, error) {
 	return FS.ReadFile("hooks/messages/registry.yaml")
+}
+
+// CopilotInstructions reads the embedded Copilot instructions template.
+//
+// Returns:
+//   - []byte: Template content from hooks/copilot-instructions.md
+//   - error: Non-nil if the file is not found or read fails
+func CopilotInstructions() ([]byte, error) {
+	return FS.ReadFile("hooks/copilot-instructions.md")
 }
 
 // ListHookMessages returns available hook message directory names.

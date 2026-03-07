@@ -30,6 +30,14 @@ const (
 	PromptMarkerEnd = "<!-- ctx:prompt:end -->"
 )
 
+// Copilot block markers for .github/copilot-instructions.md.
+const (
+	// CopilotMarkerStart marks the beginning of ctx-managed Copilot content.
+	CopilotMarkerStart = "<!-- ctx:copilot -->"
+	// CopilotMarkerEnd marks the end of ctx-managed Copilot content.
+	CopilotMarkerEnd = "<!-- ctx:copilot:end -->"
+)
+
 // Plan block markers for IMPLEMENTATION_PLAN.md.
 const (
 	// PlanMarkerStart marks the beginning of the plan block.

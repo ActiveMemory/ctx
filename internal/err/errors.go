@@ -606,10 +606,284 @@ func NoTemplate(filename string, cause error) error {
 	return fmt.Errorf("no template available for %s: %w", filename, cause)
 }
 
+// UnsupportedTool returns an error for an unrecognized AI tool name.
+//
+// Parameters:
+//   - tool: the tool name that was not recognized
+//
+// Returns:
+//   - error: "unsupported tool: <tool>"
+func UnsupportedTool(tool string) error {
+	return fmt.Errorf("unsupported tool: %s", tool)
+}
+
 // DriftViolations returns an error when drift detection found violations.
 //
 // Returns:
 //   - error: "drift detection found violations"
 func DriftViolations() error {
 	return fmt.Errorf("drift detection found violations")
+}
+
+// ListTemplates wraps a failure to list embedded templates.
+//
+// Parameters:
+//   - cause: the underlying error from the list operation
+//
+// Returns:
+//   - error: "failed to list templates: <cause>"
+func ListTemplates(cause error) error {
+	return fmt.Errorf("failed to list templates: %w", cause)
+}
+
+// ReadTemplate wraps a failure to read an embedded template.
+//
+// Parameters:
+//   - name: template name that failed to read
+//   - cause: the underlying error from the read operation
+//
+// Returns:
+//   - error: "failed to read template <name>: <cause>"
+func ReadTemplate(name string, cause error) error {
+	return fmt.Errorf("failed to read template %s: %w", name, cause)
+}
+
+// GenerateKey wraps a failure to generate an encryption key.
+//
+// Parameters:
+//   - cause: the underlying error from key generation
+//
+// Returns:
+//   - error: "failed to generate scratchpad key: <cause>"
+func GenerateKey(cause error) error {
+	return fmt.Errorf("failed to generate scratchpad key: %w", cause)
+}
+
+// SaveKey wraps a failure to save an encryption key.
+//
+// Parameters:
+//   - cause: the underlying error from key saving
+//
+// Returns:
+//   - error: "failed to save scratchpad key: <cause>"
+func SaveKey(cause error) error {
+	return fmt.Errorf("failed to save scratchpad key: %w", cause)
+}
+
+// MkdirKeyDir wraps a failure to create the key directory.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to create key dir: <cause>"
+func MkdirKeyDir(cause error) error {
+	return fmt.Errorf("failed to create key dir: %w", cause)
+}
+
+// CreateBackup wraps a failure to create a backup file.
+//
+// Parameters:
+//   - name: backup filename that could not be created
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to create backup <name>: <cause>"
+func CreateBackup(name string, cause error) error {
+	return fmt.Errorf("failed to create backup %s: %w", name, cause)
+}
+
+// CreateBackupGeneric wraps a generic backup creation failure.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to create backup: <cause>"
+func CreateBackupGeneric(cause error) error {
+	return fmt.Errorf("failed to create backup: %w", cause)
+}
+
+// WriteMerged wraps a failure to write a merged file.
+//
+// Parameters:
+//   - path: file path that could not be written
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to write merged <path>: <cause>"
+func WriteMerged(path string, cause error) error {
+	return fmt.Errorf("failed to write merged %s: %w", path, cause)
+}
+
+// MarkerNotFound returns an error when a section marker is missing.
+//
+// Parameters:
+//   - kind: marker kind (e.g. "ctx", "plan", "prompt")
+//
+// Returns:
+//   - error: "<kind> start marker not found"
+func MarkerNotFound(kind string) error {
+	return fmt.Errorf("%s start marker not found", kind)
+}
+
+// TemplateMissingMarkers returns an error when a template lacks markers.
+//
+// Parameters:
+//   - kind: marker kind (e.g. "ctx", "plan", "prompt")
+//
+// Returns:
+//   - error: "template missing <kind> markers"
+func TemplateMissingMarkers(kind string) error {
+	return fmt.Errorf("template missing %s markers", kind)
+}
+
+// FileUpdate wraps a failure to update a file.
+//
+// Parameters:
+//   - path: file path that could not be updated
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to update <path>: <cause>"
+func FileUpdate(path string, cause error) error {
+	return fmt.Errorf("failed to update %s: %w", path, cause)
+}
+
+// ParseFile wraps a failure to parse a file.
+//
+// Parameters:
+//   - path: file path that could not be parsed
+//   - cause: the underlying parse error
+//
+// Returns:
+//   - error: "failed to parse %s: <cause>"
+func ParseFile(path string, cause error) error {
+	return fmt.Errorf("failed to parse %s: %w", path, cause)
+}
+
+// MarshalSettings wraps a failure to marshal settings JSON.
+//
+// Parameters:
+//   - cause: the underlying marshal error
+//
+// Returns:
+//   - error: "failed to marshal settings: <cause>"
+func MarshalSettings(cause error) error {
+	return fmt.Errorf("failed to marshal settings: %w", cause)
+}
+
+// ListPromptTemplates wraps a failure to list prompt templates.
+//
+// Parameters:
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to list prompt templates: <cause>"
+func ListPromptTemplates(cause error) error {
+	return fmt.Errorf("failed to list prompt templates: %w", cause)
+}
+
+// ReadPromptTemplate wraps a failure to read a prompt template.
+//
+// Parameters:
+//   - name: template name that failed to read
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to read prompt template <name>: <cause>"
+func ReadPromptTemplate(name string, cause error) error {
+	return fmt.Errorf("failed to read prompt template %s: %w", name, cause)
+}
+
+// ListEntryTemplates wraps a failure to list entry templates.
+//
+// Parameters:
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to list entry templates: <cause>"
+func ListEntryTemplates(cause error) error {
+	return fmt.Errorf("failed to list entry templates: %w", cause)
+}
+
+// ReadEntryTemplate wraps a failure to read an entry template.
+//
+// Parameters:
+//   - name: template name that failed to read
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to read entry template <name>: <cause>"
+func ReadEntryTemplate(name string, cause error) error {
+	return fmt.Errorf("failed to read entry template %s: %w", name, cause)
+}
+
+// HomeDir wraps a failure to determine the home directory.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "cannot determine home directory: <cause>"
+func HomeDir(cause error) error {
+	return fmt.Errorf("cannot determine home directory: %w", cause)
+}
+
+// MarshalPlugins wraps a failure to marshal enabledPlugins JSON.
+//
+// Parameters:
+//   - cause: the underlying marshal error
+//
+// Returns:
+//   - error: "failed to marshal enabledPlugins: <cause>"
+func MarshalPlugins(cause error) error {
+	return fmt.Errorf("failed to marshal enabledPlugins: %w", cause)
+}
+
+// FileAmend wraps a failure to amend an existing file.
+//
+// Parameters:
+//   - path: file path that could not be amended
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to amend <path>: <cause>"
+func FileAmend(path string, cause error) error {
+	return fmt.Errorf("failed to amend %s: %w", path, cause)
+}
+
+// ReadProjectReadme wraps a failure to read a project README template.
+//
+// Parameters:
+//   - dir: directory name whose README failed to read
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to read <dir> README template: <cause>"
+func ReadProjectReadme(dir string, cause error) error {
+	return fmt.Errorf("failed to read %s README template: %w", dir, cause)
+}
+
+// ReadInitTemplate wraps a failure to read an init template file.
+//
+// Parameters:
+//   - name: template filename that failed to read
+//   - cause: the underlying error
+//
+// Returns:
+//   - error: "failed to read <name> template: <cause>"
+func ReadInitTemplate(name string, cause error) error {
+	return fmt.Errorf("failed to read %s template: %w", name, cause)
+}
+
+// CreateMakefile wraps a failure to create a new Makefile.
+//
+// Parameters:
+//   - cause: the underlying OS error
+//
+// Returns:
+//   - error: "failed to create Makefile: <cause>"
+func CreateMakefile(cause error) error {
+	return fmt.Errorf("failed to create Makefile: %w", cause)
 }

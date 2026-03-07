@@ -17,6 +17,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // HandleImplementationPlan creates or merges IMPLEMENTATION_PLAN.md.
@@ -31,47 +33,47 @@ import (
 func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	templateContent, err := assets.ProjectFile(config.FileImplementationPlan)
 	if err != nil {
-		return fmt.Errorf("failed to read IMPLEMENTATION_PLAN.md template: %w", err)
+		return ctxerr.ReadInitTemplate("IMPLEMENTATION_PLAN.md", err)
 	}
 	existingContent, err := os.ReadFile(config.FileImplementationPlan)
 	fileExists := err == nil
 	if !fileExists {
 		if err := os.WriteFile(config.FileImplementationPlan, templateContent, config.PermFile); err != nil {
-			return fmt.Errorf("failed to write %s: %w", config.FileImplementationPlan, err)
+			return ctxerr.FileWrite(config.FileImplementationPlan, err)
 		}
-		cmd.Println(fmt.Sprintf("  ✓ %s", config.FileImplementationPlan))
+		write.InitCreated(cmd, config.FileImplementationPlan)
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, config.PlanMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			cmd.Println(fmt.Sprintf("  ○ %s (ctx content exists, skipped)\n", config.FileImplementationPlan))
+			write.InitCtxContentExists(cmd, config.FileImplementationPlan)
 			return nil
 		}
 		return UpdatePlanSection(cmd, existingStr, templateContent)
 	}
 	if !autoMerge {
-		cmd.Println(fmt.Sprintf("\n%s exists but has no ctx content.\n", config.FileImplementationPlan))
+		write.InitFileExistsNoCtx(cmd, config.FileImplementationPlan)
 		cmd.Println("Would you like to merge ctx implementation plan template?")
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		if err != nil {
-			return fmt.Errorf("failed to read input: %w", err)
+			return ctxerr.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != config.ConfirmShort && response != config.ConfirmLong {
-			cmd.Println(fmt.Sprintf("  ○ %s (skipped)\n", config.FileImplementationPlan))
+			write.InitSkippedPlain(cmd, config.FileImplementationPlan)
 			return nil
 		}
 	}
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", config.FileImplementationPlan, timestamp)
 	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
-		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
+		return ctxerr.CreateBackup(backupName, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
+	write.InitBackup(cmd, backupName)
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
@@ -80,9 +82,9 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 		mergedContent = existingStr[:insertPos] + config.NewlineLF + string(templateContent) + config.NewlineLF + existingStr[insertPos:]
 	}
 	if err := os.WriteFile(config.FileImplementationPlan, []byte(mergedContent), config.PermFile); err != nil {
-		return fmt.Errorf("failed to write merged %s: %w", config.FileImplementationPlan, err)
+		return ctxerr.WriteMerged(config.FileImplementationPlan, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (merged)", config.FileImplementationPlan))
+	write.InitMerged(cmd, config.FileImplementationPlan)
 	return nil
 }
 
@@ -99,7 +101,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
 	startIdx := strings.Index(existing, config.PlanMarkerStart)
 	if startIdx == -1 {
-		return fmt.Errorf("plan start marker not found")
+		return ctxerr.MarkerNotFound("plan")
 	}
 	endIdx := strings.Index(existing, config.PlanMarkerEnd)
 	if endIdx == -1 {
@@ -111,19 +113,19 @@ func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) 
 	templateStart := strings.Index(templateStr, config.PlanMarkerStart)
 	templateEnd := strings.Index(templateStr, config.PlanMarkerEnd)
 	if templateStart == -1 || templateEnd == -1 {
-		return fmt.Errorf("template missing plan markers")
+		return ctxerr.TemplateMissingMarkers("plan")
 	}
 	planContent := templateStr[templateStart : templateEnd+len(config.PlanMarkerEnd)]
 	newContent := existing[:startIdx] + planContent + existing[endIdx:]
 	timestamp := time.Now().Unix()
 	backupName := fmt.Sprintf("%s.%d.bak", config.FileImplementationPlan, timestamp)
 	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
-		return fmt.Errorf("failed to create backup: %w", err)
+		return ctxerr.CreateBackupGeneric(err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
+	write.InitBackup(cmd, backupName)
 	if err := os.WriteFile(config.FileImplementationPlan, []byte(newContent), config.PermFile); err != nil {
-		return fmt.Errorf("failed to update %s: %w", config.FileImplementationPlan, err)
+		return ctxerr.FileUpdate(config.FileImplementationPlan, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s (updated plan section)\n", config.FileImplementationPlan))
+	write.InitUpdatedPlanSection(cmd, config.FileImplementationPlan)
 	return nil
 }

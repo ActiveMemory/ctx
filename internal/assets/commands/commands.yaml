@@ -1107,3 +1107,92 @@ why:
   short: "  %s %s"
 "_text.doctor.output.summary":
   short: "Summary: %d warnings, %d errors"
+"_text.hook.claude":
+  short: |
+    Claude Code Integration
+    =======================
+
+    Claude Code integration is now provided via the ctx plugin.
+
+    Install the plugin:
+      /plugin marketplace add ActiveMemory/ctx
+      /plugin install ctx@activememory-ctx
+
+    The plugin provides hooks (context monitoring, persistence
+    nudges, post-commit capture) and 25 skills automatically.
+"_text.hook.cursor":
+  short: |
+    Cursor IDE Integration
+    ======================
+
+    Add to your .cursorrules file:
+
+    ```markdown
+    # Project Context
+
+    Always read these files before making changes:
+    - .context/CONSTITUTION.md (NEVER violate these rules)
+    - .context/TASKS.md (current work)
+    - .context/CONVENTIONS.md (how we write code)
+    - .context/ARCHITECTURE.md (system structure)
+
+    Run 'ctx agent' for a context summary.
+    Run 'ctx drift' to check for stale context.
+    ```
+"_text.hook.aider":
+  short: |
+    Aider Integration
+    =================
+
+    Add to your .aider.conf.yml:
+
+    ```yaml
+    read:
+      - .context/CONSTITUTION.md
+      - .context/TASKS.md
+      - .context/CONVENTIONS.md
+      - .context/ARCHITECTURE.md
+      - .context/DECISIONS.md
+    ```
+
+    Or pass context via command line:
+
+    ```bash
+    ctx agent | aider --message "$(cat -)"
+    ```
+"_text.hook.copilot":
+  short: |
+    GitHub Copilot Integration
+    ==========================
+
+    Add the following to .github/copilot-instructions.md,
+    or run with --write to generate the file directly:
+
+      ctx hook copilot --write
+"_text.hook.windsurf":
+  short: |
+    Windsurf Integration
+    ====================
+
+    Add to your .windsurfrules file:
+
+    ```markdown
+    # Context
+
+    Read order for context:
+    1. .context/CONSTITUTION.md
+    2. .context/TASKS.md
+    3. .context/CONVENTIONS.md
+    4. .context/ARCHITECTURE.md
+    5. .context/DECISIONS.md
+
+    Run 'ctx agent' for AI-ready context packet.
+    ```
+"_text.hook.supported-tools":
+  short: |
+    Supported tools:
+      claude-code  - Anthropic's Claude Code CLI (use plugin instead)
+      cursor       - Cursor IDE
+      aider        - Aider AI coding assistant
+      copilot      - GitHub Copilot
+      windsurf     - Windsurf IDE

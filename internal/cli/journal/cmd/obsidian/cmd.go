@@ -36,7 +36,8 @@ func Cmd() *cobra.Command {
 
 	defaultOutput := filepath.Join(rc.ContextDir(), config.ObsidianDirName)
 	cmd.Flags().StringVarP(
-		&output, "output", "o", defaultOutput, assets.FlagDesc(assets.FlagDescKeyJournalObsidianOutput),
+		&output, "output", "o",
+		defaultOutput, assets.FlagDesc(assets.FlagDescKeyJournalObsidianOutput),
 	)
 
 	return cmd

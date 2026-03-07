@@ -7,7 +7,6 @@
 package core
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -15,6 +14,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // IncludeDirective is the line appended to the user's Makefile to pull
@@ -31,23 +32,23 @@ const IncludeDirective = "-include Makefile.ctx"
 func HandleMakefileCtx(cmd *cobra.Command) error {
 	content, err := assets.MakefileCtx()
 	if err != nil {
-		return fmt.Errorf("failed to read Makefile.ctx template: %w", err)
+		return ctxerr.ReadInitTemplate("Makefile.ctx", err)
 	}
 	if err = os.WriteFile(config.FileMakefileCtx, content, config.PermFile); err != nil {
-		return fmt.Errorf("failed to write %s: %w", config.FileMakefileCtx, err)
+		return ctxerr.FileWrite(config.FileMakefileCtx, err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ %s", config.FileMakefileCtx))
+	write.InitCreated(cmd, config.FileMakefileCtx)
 	existing, err := os.ReadFile("Makefile")
 	if err != nil {
 		minimal := IncludeDirective + config.NewlineLF
 		if err := os.WriteFile("Makefile", []byte(minimal), config.PermFile); err != nil {
-			return fmt.Errorf("failed to create Makefile: %w", err)
+			return ctxerr.CreateMakefile(err)
 		}
-		cmd.Println("  ✓ Makefile (created with ctx include)")
+		write.InitMakefileCreated(cmd)
 		return nil
 	}
 	if strings.Contains(string(existing), IncludeDirective) {
-		cmd.Println(fmt.Sprintf("  ○ Makefile (already includes %s)\n", config.FileMakefileCtx))
+		write.InitMakefileIncludes(cmd, config.FileMakefileCtx)
 		return nil
 	}
 	amended := string(existing)
@@ -56,8 +57,8 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	}
 	amended += config.NewlineLF + IncludeDirective + config.NewlineLF
 	if err := os.WriteFile("Makefile", []byte(amended), config.PermFile); err != nil {
-		return fmt.Errorf("failed to amend Makefile: %w", err)
+		return ctxerr.FileAmend("Makefile", err)
 	}
-	cmd.Println(fmt.Sprintf("  ✓ Makefile (appended %s include)\n", config.FileMakefileCtx))
+	write.InitMakefileAppended(cmd, config.FileMakefileCtx)
 	return nil
 }
