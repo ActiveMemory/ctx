@@ -10,17 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/cmd/root"
-	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 )
-
-// EntryParams is the public type for entry parameters, re-exported from core.
-type EntryParams = core.EntryParams
-
-// ValidateEntry checks required fields for a given entry type.
-var ValidateEntry = root.ValidateEntry
-
-// WriteEntry formats and writes an entry to the appropriate context file.
-var WriteEntry = root.WriteEntry
 
 // Cmd returns the "ctx add" command.
 //

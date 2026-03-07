@@ -7,17 +7,6 @@
 package core
 
 // EntryParams contains all parameters needed to add an entry to a context file.
-//
-// Fields:
-//   - Type: Entry type (decision, learning, task, convention)
-//   - Content: Title or main content
-//   - Section: Target section (for tasks)
-//   - Priority: Priority level (for tasks)
-//   - Context: Context field (for decisions/learnings)
-//   - Rationale: Rationale (for decisions)
-//   - Consequences: Consequences (for decisions)
-//   - Lesson: Lesson (for learnings)
-//   - Application: Application (for learnings)
 type EntryParams struct {
 	Type         string
 	Content      string

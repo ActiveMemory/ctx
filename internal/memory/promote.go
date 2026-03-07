@@ -9,8 +9,8 @@ package memory
 import (
 	"strings"
 
-	cliadd "github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxentry "github.com/ActiveMemory/ctx/internal/entry"
 )
 
 const importSource = "auto-memory import"
@@ -21,7 +21,7 @@ func Promote(entry Entry, classification Classification) error {
 	// Extract a title from the entry text (first line, trimmed of Markdown markers)
 	title := extractTitle(entry.Text)
 
-	params := cliadd.EntryParams{
+	params := ctxentry.Params{
 		Type:    classification.Target,
 		Content: title,
 	}
@@ -44,7 +44,7 @@ func Promote(entry Entry, classification Classification) error {
 		// Conventions just need content — FormatConvention handles the rest
 	}
 
-	return cliadd.WriteEntry(params)
+	return ctxentry.Write(params)
 }
 
 // extractTitle returns the first meaningful line of an entry, cleaned of

@@ -477,9 +477,13 @@ Goal: consolidate user-facing messages into `internal/write/` as the central
 output package. All CLI commands should route printed output through this package.
 
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
+- [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
+
+- [ ] Localization inventory: audit config constants, write package templates, and assets YAML for i18n mapping — low priority, most users are English-first developers #added:2026-03-06-192419
+
 - [ ] Consider indexing tasks and conventions in TASKS.md and CONVENTIONS.md (currently only decisions and learnings have index tables) #added:2026-03-06-190225
 
-- [ ] Move internal/cli/add/core/err.go error constructors to internal/err — 12 functions, update all callers #added:2026-03-06-190220
+- [x] Move internal/cli/add/core/err.go error constructors to internal/err — 12 functions, update all callers #added:2026-03-06-190220
 
 - [ ] Remove FlagNoColor and fatih/color dependency — replace with stdlib terminal coloring or plain output #added:2026-03-06-182831
 

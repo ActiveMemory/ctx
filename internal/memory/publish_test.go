@@ -147,7 +147,7 @@ func TestSelectContent(t *testing.T) {
 	}
 
 	// Create DECISIONS.md with a recent entry
-	ts := time.Now().Format("2006-01-02-150405")
+	ts := time.Now().Format(config.TimestampCompact)
 	decisions := fmt.Sprintf("# Decisions\n\n## [%s] Use SQLite\n\nContext: testing\n", ts)
 	if writeErr := os.WriteFile(filepath.Join(contextDir, config.FileDecision), []byte(decisions), 0o644); writeErr != nil {
 		t.Fatal(writeErr)

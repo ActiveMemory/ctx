@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	cliadd "github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/entry"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -62,7 +62,7 @@ func ApplyUpdate(update ContextUpdate) error {
 //   - error: Non-nil if validation fails, type is unknown,
 //     or file operations fail
 func RunAddSilent(update ContextUpdate) error {
-	params := cliadd.EntryParams{
+	params := entry.Params{
 		Type:         update.Type,
 		Content:      update.Content,
 		Context:      update.Context,
@@ -73,13 +73,13 @@ func RunAddSilent(update ContextUpdate) error {
 	}
 
 	// Validate required fields (same as ctx add)
-	if err := cliadd.ValidateEntry(params); err != nil {
+	if err := entry.Validate(params, nil); err != nil {
 		return err
 	}
 
 	// Write using the shared function
 	// (handles formatting, append, and index update)
-	return cliadd.WriteEntry(params)
+	return entry.Write(params)
 }
 
 // RunCompleteSilent marks a task as complete without output.

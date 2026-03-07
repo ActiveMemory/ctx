@@ -1001,3 +1001,13 @@ why:
   short: "Line budget for published content"
 "_flags.memory.publish.dry-run":
   short: "Show what would be published without writing"
+"_examples.decision":
+  short: "  ctx add decision \"Use PostgreSQL for primary database\"\n  ctx add decision \"Adopt Go 1.22 for range-over-func support\""
+"_examples.task":
+  short: "  ctx add task \"Implement user authentication\"\n  ctx add task \"Fix login bug\" --priority high"
+"_examples.learning":
+  short: "  ctx add learning \"Go embed requires files in same package\" \\\n    --context \"Tried to embed files from parent directory\" \\\n    --lesson \"go:embed only works with files in same or child directories\" \\\n    --application \"Keep embedded files in internal/templates/\""
+"_examples.convention":
+  short: "  ctx add convention \"Use camelCase for function names\"\n  ctx add convention \"All API responses use JSON\""
+"_examples.default":
+  short: "  ctx add <type> \"your content here\""

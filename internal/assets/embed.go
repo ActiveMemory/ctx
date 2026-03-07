@@ -434,6 +434,25 @@ func FlagDesc(name string) string {
 	return entry.Short
 }
 
+// ExampleDesc returns example usage text for a given key.
+//
+// Keys use the format "_examples.<type>" (e.g., "_examples.decision").
+// Returns an empty string if the key is not found.
+//
+// Parameters:
+//   - name: Example key (without the _examples. prefix)
+//
+// Returns:
+//   - string: Example text
+func ExampleDesc(name string) string {
+	loadCommands()
+	entry, ok := commandsMap["_examples."+name]
+	if !ok {
+		return ""
+	}
+	return entry.Short
+}
+
 var (
 	allowOnce  sync.Once
 	allowPerms []string

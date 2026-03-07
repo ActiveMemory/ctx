@@ -6,6 +6,8 @@
 
 package core
 
+import "github.com/ActiveMemory/ctx/internal/config"
+
 // SkipNewline advances pos past a newline (CRLF or LF) if present.
 //
 // Parameters:
@@ -18,11 +20,12 @@ func SkipNewline(s string, pos int) int {
 	if pos >= len(s) {
 		return pos
 	}
-	if pos+1 < len(s) && s[pos] == '\r' && s[pos+1] == '\n' {
-		return pos + 2
+	if pos+len(config.NewlineCRLF) <= len(s) &&
+		s[pos] == config.NewlineCRLF[0] && s[pos+1] == config.NewlineCRLF[1] {
+		return pos + len(config.NewlineCRLF)
 	}
-	if s[pos] == '\n' {
-		return pos + 1
+	if s[pos] == config.NewlineLF[0] {
+		return pos + len(config.NewlineLF)
 	}
 	return pos
 }
@@ -39,7 +42,7 @@ func SkipWhitespace(s string, pos int) int {
 	for pos < len(s) {
 		if n := SkipNewline(s, pos); n > pos {
 			pos = n
-		} else if s[pos] == ' ' || s[pos] == '\t' {
+		} else if s[pos] == config.Space[0] || s[pos] == config.Tab[0] {
 			pos++
 		} else {
 			break
@@ -54,13 +57,14 @@ func SkipWhitespace(s string, pos int) int {
 //   - s: String to search
 //
 // Returns:
-//   - int: Index of first newline (-1 if not found)
+//   - int: Index of the first newline (-1 if not found)
 func FindNewline(s string) int {
 	for i := 0; i < len(s); i++ {
-		if i+1 < len(s) && s[i] == '\r' && s[i+1] == '\n' {
+		if i+len(config.NewlineCRLF) <= len(s) &&
+			s[i] == config.NewlineCRLF[0] && s[i+1] == config.NewlineCRLF[1] {
 			return i
 		}
-		if s[i] == '\n' {
+		if s[i] == config.NewlineLF[0] {
 			return i
 		}
 	}

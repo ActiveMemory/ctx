@@ -193,32 +193,7 @@ func IsInsideHTMLComment(content string, idx int) bool {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func InsertDecision(content, entry, header string) []byte {
-	// Walk through all "## [" occurrences, skipping those inside HTML comments
-	// (e.g. the template example inside <!-- DECISION FORMATS ... -->).
-	search := content
-	offset := 0
-	for {
-		rel := strings.Index(search, "## [")
-		if rel == -1 {
-			break
-		}
-		entryIdx := offset + rel
-		if !IsInsideHTMLComment(content, entryIdx) {
-			// Found a real entry — insert before it.
-			return []byte(
-				content[:entryIdx] + entry +
-					config.NewlineLF + config.Separator +
-					config.NewlineLF + config.NewlineLF +
-					content[entryIdx:],
-			)
-		}
-		// This match is inside a comment — skip past it and keep looking.
-		offset = entryIdx + len("## [")
-		search = content[offset:]
-	}
-
-	// No existing real entries - find the header and insert after it
-	return InsertAfterHeader(content, entry, header)
+	return insertBeforeFirstEntry(content, entry, header)
 }
 
 // InsertLearning inserts a learning entry before existing entries.
@@ -234,27 +209,5 @@ func InsertDecision(content, entry, header string) []byte {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func InsertLearning(content, entry string) []byte {
-	// Walk through all "## [" occurrences, skipping those inside HTML comments.
-	search := content
-	offset := 0
-	for {
-		rel := strings.Index(search, config.HeadingLearningStart)
-		if rel == -1 {
-			break
-		}
-		entryIdx := offset + rel
-		if !IsInsideHTMLComment(content, entryIdx) {
-			return []byte(
-				content[:entryIdx] + entry + config.NewlineLF +
-					config.Separator + config.NewlineLF + config.NewlineLF +
-					content[entryIdx:],
-			)
-		}
-		// This match is inside a comment — skip past it and keep looking.
-		offset = entryIdx + len(config.HeadingLearningStart)
-		search = content[offset:]
-	}
-
-	// No existing entries - find the header and insert after it
-	return InsertAfterHeader(content, entry, config.HeadingLearnings)
+	return insertBeforeFirstEntry(content, entry, config.HeadingLearnings)
 }

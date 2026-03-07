@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package write
 
 import (
 	"fmt"
@@ -12,8 +12,6 @@ import (
 )
 
 // ErrNoContent returns a simple error when no content source is available.
-// Callers that know the entry type should use ErrNoContentProvided(fType)
-// instead for a richer message.
 //
 // Returns:
 //   - error: "no content provided"
@@ -77,11 +75,11 @@ Example:
 //
 // Parameters:
 //   - fType: Entry type (e.g., "decision", "task") for contextual examples
+//   - examples: Type-specific example text
 //
 // Returns:
 //   - error: Formatted error showing input methods and type-specific examples
-func ErrNoContentProvided(fType string) error {
-	examples := ExamplesForType(fType)
+func ErrNoContentProvided(fType, examples string) error {
 	return fmt.Errorf(`no content provided
 
 Usage:
@@ -97,47 +95,47 @@ Examples:
 //
 // Parameters:
 //   - path: File path that failed to read
-//   - err: Underlying error from the read operation
+//   - cause: Underlying error from the read operation
 //
 // Returns:
-//   - error: Wrapped error with format "failed to read <path>: <cause>"
-func ErrFileRead(path string, err error) error {
-	return fmt.Errorf("failed to read %s: %w", path, err)
+//   - error: "failed to read <path>: <cause>"
+func ErrFileRead(path string, cause error) error {
+	return fmt.Errorf("failed to read %s: %w", path, cause)
 }
 
-// ErrFileWrite wraps a file write failure with the file path.
+// ErrFileWriteAdd wraps a file write failure with the file path.
 //
 // Parameters:
 //   - path: File path that failed to write
-//   - err: Underlying error from the write operation
+//   - cause: Underlying error from the write operation
 //
 // Returns:
-//   - error: Wrapped error with format "failed to write <path>: <cause>"
-func ErrFileWrite(path string, err error) error {
-	return fmt.Errorf("failed to write %s: %w", path, err)
+//   - error: "failed to write <path>: <cause>"
+func ErrFileWriteAdd(path string, cause error) error {
+	return fmt.Errorf("failed to write %s: %w", path, cause)
 }
 
 // ErrStdinRead wraps a failure to read from standard input.
 //
 // Parameters:
-//   - err: Underlying error from the stdin read
+//   - cause: Underlying error from the stdin read
 //
 // Returns:
-//   - error: Wrapped error with format "failed to read from stdin: <cause>"
-func ErrStdinRead(err error) error {
-	return fmt.Errorf("failed to read from stdin: %w", err)
+//   - error: "failed to read from stdin: <cause>"
+func ErrStdinRead(cause error) error {
+	return fmt.Errorf("failed to read from stdin: %w", cause)
 }
 
 // ErrIndexUpdate wraps a failure to update the index in a context file.
 //
 // Parameters:
 //   - path: File path where the index update failed
-//   - err: Underlying error from the write operation
+//   - cause: Underlying error from the write operation
 //
 // Returns:
-//   - error: Wrapped error with format "failed to update index in <path>: <cause>"
-func ErrIndexUpdate(path string, err error) error {
-	return fmt.Errorf("failed to update index in %s: %w", path, err)
+//   - error: "failed to update index in <path>: <cause>"
+func ErrIndexUpdate(path string, cause error) error {
+	return fmt.Errorf("failed to update index in %s: %w", path, cause)
 }
 
 // ErrUnknownType returns an error for an unrecognized entry type.

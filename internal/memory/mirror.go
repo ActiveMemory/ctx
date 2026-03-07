@@ -79,7 +79,7 @@ func Archive(contextDir string) (string, error) {
 		return "", fmt.Errorf("creating archive directory: %w", mkErr)
 	}
 
-	ts := time.Now().Format("2006-01-02-150405")
+	ts := time.Now().Format(config.TimestampCompact)
 	archivePath := filepath.Join(archiveDir, "mirror-"+ts+config.ExtMarkdown)
 
 	if writeErr := os.WriteFile(archivePath, data, config.PermFile); writeErr != nil {

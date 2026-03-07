@@ -15,6 +15,10 @@ const (
 	NewlineLF = "\n"
 	// Whitespace is the set of inline whitespace characters (space and tab).
 	Whitespace = " \t"
+	// Space is a single space character.
+	Space = " "
+	// Tab is a horizontal tab character.
+	Tab = "\t"
 	// Separator is a Markdown horizontal rule used between sections.
 	Separator = "---"
 	// Ellipsis is a Markdown ellipsis.

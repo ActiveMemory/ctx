@@ -11,11 +11,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	"github.com/ActiveMemory/ctx/internal/entry"
 )
 
 // toolDefs defines all available MCP tools.
@@ -156,7 +156,7 @@ func (s *Server) toolAdd(
 		return s.toolError(id, "type and content are required")
 	}
 
-	params := add.EntryParams{
+	params := entry.Params{
 		Type:       entryType,
 		Content:    content,
 		ContextDir: s.contextDir,
@@ -183,11 +183,11 @@ func (s *Server) toolAdd(
 	}
 
 	// Validate required fields.
-	if vErr := add.ValidateEntry(params); vErr != nil {
+	if vErr := entry.Validate(params, nil); vErr != nil {
 		return s.toolError(id, vErr.Error())
 	}
 
-	if wErr := add.WriteEntry(params); wErr != nil {
+	if wErr := entry.Write(params); wErr != nil {
 		return s.toolError(id, fmt.Sprintf("write failed: %v", wErr))
 	}
 

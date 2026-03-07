@@ -26,7 +26,7 @@ import (
 //   - string: Formatted task line with trailing newline
 func FormatTask(content string, priority string) string {
 	// Use YYYY-MM-DD-HHMMSS timestamp for session correlation
-	timestamp := time.Now().Format("2006-01-02-150405")
+	timestamp := time.Now().Format(config.TimestampCompact)
 	var priorityTag string
 	if priority != "" {
 		priorityTag = fmt.Sprintf(config.TplTaskPriority, priority)
@@ -48,7 +48,7 @@ func FormatTask(content string, priority string) string {
 // Returns:
 //   - string: Formatted learning section with all fields
 func FormatLearning(title, context, lesson, application string) string {
-	timestamp := time.Now().Format("2006-01-02-150405")
+	timestamp := time.Now().Format(config.TimestampCompact)
 	return fmt.Sprintf(
 		config.TplLearning, timestamp, title, context, lesson, application,
 	)
@@ -81,7 +81,7 @@ func FormatConvention(content string) string {
 // Returns:
 //   - string: Formatted decision section with all ADR fields
 func FormatDecision(title, context, rationale, consequences string) string {
-	timestamp := time.Now().Format("2006-01-02-150405")
+	timestamp := time.Now().Format(config.TimestampCompact)
 	return fmt.Sprintf(
 		config.TplDecision,
 		timestamp, title, context, title, rationale, consequences,

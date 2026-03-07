@@ -18,6 +18,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/entry"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ---------------------------------------------------------------------------
@@ -25,7 +27,7 @@ import (
 // ---------------------------------------------------------------------------
 
 func TestErrNoContent(t *testing.T) {
-	err := core.ErrNoContent()
+	err := write.ErrNoContent()
 	if err == nil || err.Error() != "no content provided" {
 		t.Errorf("ErrNoContent() = %v, want 'no content provided'", err)
 	}
@@ -34,7 +36,7 @@ func TestErrNoContent(t *testing.T) {
 func TestErrNoContentProvided(t *testing.T) {
 	for _, fType := range []string{"decision", "task", "learning", "convention", "unknown"} {
 		t.Run(fType, func(t *testing.T) {
-			err := core.ErrNoContentProvided(fType)
+			err := write.ErrNoContentProvided(fType, core.ExamplesForType(fType))
 			if err == nil {
 				t.Fatal("expected non-nil error")
 			}
@@ -50,7 +52,7 @@ func TestErrNoContentProvided(t *testing.T) {
 }
 
 func TestErrFileRead(t *testing.T) {
-	err := core.ErrFileRead("/some/path", os.ErrNotExist)
+	err := write.ErrFileRead("/some/path", os.ErrNotExist)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -60,7 +62,7 @@ func TestErrFileRead(t *testing.T) {
 }
 
 func TestErrFileWrite(t *testing.T) {
-	err := core.ErrFileWrite("/some/path", os.ErrPermission)
+	err := write.ErrFileWriteAdd("/some/path", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -70,7 +72,7 @@ func TestErrFileWrite(t *testing.T) {
 }
 
 func TestErrStdinRead(t *testing.T) {
-	err := core.ErrStdinRead(os.ErrClosed)
+	err := write.ErrStdinRead(os.ErrClosed)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -80,7 +82,7 @@ func TestErrStdinRead(t *testing.T) {
 }
 
 func TestErrIndexUpdate(t *testing.T) {
-	err := core.ErrIndexUpdate("/some/file", os.ErrPermission)
+	err := write.ErrIndexUpdate("/some/file", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -90,7 +92,7 @@ func TestErrIndexUpdate(t *testing.T) {
 }
 
 func TestErrUnknownType(t *testing.T) {
-	err := core.ErrUnknownType("foobar")
+	err := write.ErrUnknownType("foobar")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -104,7 +106,7 @@ func TestErrUnknownType(t *testing.T) {
 }
 
 func TestErrFileNotFound(t *testing.T) {
-	err := core.ErrFileNotFound("/missing/file")
+	err := write.ErrFileNotFound("/missing/file")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -118,7 +120,7 @@ func TestErrFileNotFound(t *testing.T) {
 }
 
 func TestErrMissingFields(t *testing.T) {
-	err := core.ErrMissingFields("decision", []string{"context", "rationale"})
+	err := write.ErrMissingFields("decision", []string{"context", "rationale"})
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -481,7 +483,7 @@ func TestExtractContent_NoContent(t *testing.T) {
 
 func TestValidateEntry(t *testing.T) {
 	t.Run("empty content", func(t *testing.T) {
-		err := root.ValidateEntry(root.EntryParams{Type: "task", Content: ""})
+		err := entry.Validate(entry.Params{Type: "task", Content: ""}, nil)
 		if err == nil {
 			t.Fatal("expected error for empty content")
 		}
@@ -491,24 +493,24 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("valid task", func(t *testing.T) {
-		err := root.ValidateEntry(root.EntryParams{Type: "task", Content: "Do something"})
+		err := entry.Validate(entry.Params{Type: "task", Content: "Do something"}, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
 	})
 
 	t.Run("valid convention", func(t *testing.T) {
-		err := root.ValidateEntry(root.EntryParams{Type: "convention", Content: "Use camelCase"})
+		err := entry.Validate(entry.Params{Type: "convention", Content: "Use camelCase"}, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
 	})
 
 	t.Run("decision missing fields", func(t *testing.T) {
-		err := root.ValidateEntry(root.EntryParams{
+		err := entry.Validate(entry.Params{
 			Type:    "decision",
 			Content: "Some decision",
-		})
+		}, nil)
 		if err == nil {
 			t.Fatal("expected error for missing decision fields")
 		}
@@ -519,23 +521,23 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("decision valid", func(t *testing.T) {
-		err := root.ValidateEntry(root.EntryParams{
+		err := entry.Validate(entry.Params{
 			Type:         "decision",
 			Content:      "Use Go",
 			Context:      "Need a language",
 			Rationale:    "Go is fast",
 			Consequences: "Need training",
-		})
+		}, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
 	})
 
 	t.Run("learning missing fields", func(t *testing.T) {
-		err := root.ValidateEntry(root.EntryParams{
+		err := entry.Validate(entry.Params{
 			Type:    "learning",
 			Content: "Some learning",
-		})
+		}, nil)
 		if err == nil {
 			t.Fatal("expected error for missing learning fields")
 		}
@@ -546,13 +548,13 @@ func TestValidateEntry(t *testing.T) {
 	})
 
 	t.Run("learning valid", func(t *testing.T) {
-		err := root.ValidateEntry(root.EntryParams{
+		err := entry.Validate(entry.Params{
 			Type:        "learning",
 			Content:     "Go embed",
 			Context:     "Tried embedding",
 			Lesson:      "Same dir only",
 			Application: "Keep files local",
-		})
+		}, nil)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
@@ -564,7 +566,7 @@ func TestValidateEntry(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestWriteEntry_UnknownType(t *testing.T) {
-	err := root.WriteEntry(root.EntryParams{
+	err := entry.Write(entry.Params{
 		Type:    "foobar",
 		Content: "something",
 	})
@@ -585,7 +587,7 @@ func TestWriteEntry_FileNotFound(t *testing.T) {
 	defer func() { _ = os.Chdir(origDir) }()
 
 	// No .context/ directory, so files won't exist
-	err := root.WriteEntry(root.EntryParams{
+	err := entry.Write(entry.Params{
 		Type:    "task",
 		Content: "something",
 	})

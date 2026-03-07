@@ -148,6 +148,9 @@ const (
 	DateTimePreciseFormat = "2006-01-02 15:04:05"
 	// TimeFormat is the hours:minutes:seconds layout for timestamps.
 	TimeFormat = "15:04:05"
+	// TimestampCompact is the YYYYMMDD-HHMMSS layout used in entry headers
+	// and task timestamps (e.g., 2026-01-28-143022).
+	TimestampCompact = "2006-01-02-150405"
 )
 
 // InclusiveUntilOffset is the duration added to an --until date to make

@@ -12,20 +12,13 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// NormalizeTargetSection ensures a section heading has a proper Markdown
-// format.
-//
-// Prepends "## " if the section string does not already start with "##".
-// Callers must not pass an empty string; the empty case is handled by
-// InsertTask before this function is reached.
+// CheckRequired returns the names of any fields whose values are empty.
 //
 // Parameters:
-//   - section: Raw section name from user input (non-empty)
+//   - fields: Pairs of [name, value] to check
 //
 // Returns:
-//   - string: Normalized section heading (e.g., "## Phase 1")
-//
-// CheckRequired returns the names of any fields whose values are empty.
+//   - []string: Names of fields with empty values
 func CheckRequired(fields [][2]string) []string {
 	var missing []string
 	for _, f := range fields {
@@ -36,6 +29,17 @@ func CheckRequired(fields [][2]string) []string {
 	return missing
 }
 
+// NormalizeTargetSection ensures a section heading has proper Markdown format.
+//
+// Prepends "## " if the section string does not already start with "##".
+// Callers must not pass an empty string; the empty case is handled by
+// InsertTask before this function is reached.
+//
+// Parameters:
+//   - section: Raw section name from user input (non-empty)
+//
+// Returns:
+//   - string: Normalized section heading (e.g., "## Phase 1")
 func NormalizeTargetSection(section string) string {
 	if !strings.HasPrefix(section, config.HeadingLevelTwoStart) {
 		return config.HeadingLevelTwoStart + section
