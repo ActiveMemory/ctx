@@ -38,12 +38,12 @@ Flags:
 		},
 	}
 
-	cmd.Flags().StringP("hook", "k", "", assets.FlagDesc("system.events.hook"))
-	cmd.Flags().StringP("session", "s", "", assets.FlagDesc("system.events.session"))
-	cmd.Flags().StringP("event", "e", "", assets.FlagDesc("system.events.event"))
-	cmd.Flags().IntP("last", "n", 50, assets.FlagDesc("system.events.last"))
-	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc("system.events.json"))
-	cmd.Flags().BoolP("all", "a", false, assets.FlagDesc("system.events.all"))
+	cmd.Flags().StringP("hook", "k", "", assets.FlagDesc(assets.FlagDescKeySystemEventsHook))
+	cmd.Flags().StringP("session", "s", "", assets.FlagDesc(assets.FlagDescKeySystemEventsSession))
+	cmd.Flags().StringP("event", "e", "", assets.FlagDesc(assets.FlagDescKeySystemEventsEvent))
+	cmd.Flags().IntP("last", "n", 50, assets.FlagDesc(assets.FlagDescKeySystemEventsLast))
+	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc(assets.FlagDescKeySystemEventsJson))
+	cmd.Flags().BoolP("all", "a", false, assets.FlagDesc(assets.FlagDescKeySystemEventsAll))
 
 	return cmd
 }

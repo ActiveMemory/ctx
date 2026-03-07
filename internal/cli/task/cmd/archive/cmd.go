@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 		&dryRun,
 		"dry-run",
 		false,
-		assets.FlagDesc("task.archive.dry-run"),
+		assets.FlagDesc(assets.FlagDescKeyTaskArchiveDryRun),
 	)
 
 	return cmd

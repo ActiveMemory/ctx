@@ -45,8 +45,8 @@ Examples:
 		},
 	}
 
-	cmd.Flags().IntVar(&days, "days", 7, assets.FlagDesc("system.prune.days"))
-	cmd.Flags().BoolVar(&dryRun, "dry-run", false, assets.FlagDesc("system.prune.dry-run"))
+	cmd.Flags().IntVar(&days, "days", 7, assets.FlagDesc(assets.FlagDescKeySystemPruneDays))
+	cmd.Flags().BoolVar(&dryRun, "dry-run", false, assets.FlagDesc(assets.FlagDescKeySystemPruneDryRun))
 
 	return cmd
 }

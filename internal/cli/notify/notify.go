@@ -50,10 +50,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&event, "event", "e", "", assets.FlagDesc("notify.event"))
-	cmd.Flags().StringVarP(&sessionID, "session-id", "s", "", assets.FlagDesc("notify.session-id"))
-	cmd.Flags().StringVar(&hook, "hook", "", assets.FlagDesc("notify.hook"))
-	cmd.Flags().StringVar(&variant, "variant", "", assets.FlagDesc("notify.variant"))
+	cmd.Flags().StringVarP(&event, "event", "e", "", assets.FlagDesc(assets.FlagDescKeyNotifyEvent))
+	cmd.Flags().StringVarP(&sessionID, "session-id", "s", "", assets.FlagDesc(assets.FlagDescKeyNotifySessionId))
+	cmd.Flags().StringVar(&hook, "hook", "", assets.FlagDesc(assets.FlagDescKeyNotifyHook))
+	cmd.Flags().StringVar(&variant, "variant", "", assets.FlagDesc(assets.FlagDescKeyNotifyVariant))
 
 	cmd.AddCommand(setup.Cmd())
 	cmd.AddCommand(test.Cmd())

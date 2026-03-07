@@ -32,9 +32,9 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&keyFile, "key", "k", "",
-		assets.FlagDesc("pad.merge.key"))
+		assets.FlagDesc(assets.FlagDescKeyPadMergeKey))
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false,
-		assets.FlagDesc("pad.merge.dry-run"))
+		assets.FlagDesc(assets.FlagDescKeyPadMergeDryRun))
 
 	return cmd
 }

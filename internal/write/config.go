@@ -84,3 +84,16 @@ const tplConfigProfileBase = "active: base (defaults)"
 // tplConfigProfileNone is the status output when no profile exists.
 // Arguments: ctxrc filename.
 const tplConfigProfileNone = "active: none (%s does not exist)"
+
+// tplDepsNoProject is printed when no supported project is detected.
+const tplDepsNoProject = "No supported project detected."
+
+// tplDepsLookingFor is printed with the list of files checked.
+const tplDepsLookingFor = "Looking for: go.mod, package.json, requirements.txt, pyproject.toml, Cargo.toml"
+
+// tplDepsUseType hints at the --type flag.
+// Arguments: comma-separated list of builder names.
+const tplDepsUseType = "Use --type to force: %s"
+
+// tplDepsNoDeps is printed when no dependencies are found.
+const tplDepsNoDeps = "No dependencies found."

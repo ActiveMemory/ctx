@@ -39,7 +39,7 @@ Exit codes:
 
 	cmd.Flags().BoolVar(
 		&dryRun, "dry-run", false,
-		assets.FlagDesc("memory.import.dry-run"),
+		assets.FlagDesc(assets.FlagDescKeyMemoryImportDryRun),
 	)
 
 	return cmd

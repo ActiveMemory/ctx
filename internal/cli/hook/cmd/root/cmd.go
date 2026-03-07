@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "hook <tool>",
 		Short:       short,
-		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
+		Annotations: map[string]string{config.AnnotationSkipInit: config.AnnotationTrue},
 		Long:        long,
 		Args:        cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&write, "write", "w", false,
-		assets.FlagDesc("hook.write"),
+		assets.FlagDesc(assets.FlagDescKeyHookWrite),
 	)
 
 	return cmd

@@ -24,7 +24,7 @@ func Cmd() *cobra.Command {
 			return runBootstrap(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, assets.FlagDesc("system.bootstrap.json"))
-	cmd.Flags().BoolP("quiet", "q", false, assets.FlagDesc("system.bootstrap.quiet"))
+	cmd.Flags().Bool("json", false, assets.FlagDesc(assets.FlagDescKeySystemBootstrapJson))
+	cmd.Flags().BoolP("quiet", "q", false, assets.FlagDesc(assets.FlagDescKeySystemBootstrapQuiet))
 	return cmd
 }

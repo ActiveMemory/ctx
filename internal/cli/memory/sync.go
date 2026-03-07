@@ -32,7 +32,7 @@ Exit codes:
 	}
 
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, assets.FlagDesc("memory.sync.dry-run"),
+		&dryRun, "dry-run", false, assets.FlagDesc(assets.FlagDescKeyMemorySyncDryRun),
 	)
 
 	return cmd

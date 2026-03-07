@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&afterFlag, "after", "a", "", assets.FlagDesc("remind.add.after"))
+	cmd.Flags().StringVarP(&afterFlag, "after", "a", "", assets.FlagDesc(assets.FlagDescKeyRemindAddAfter))
 
 	return cmd
 }

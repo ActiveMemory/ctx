@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&filePath, "file", "f", "", assets.FlagDesc("pad.add.file"))
+	cmd.Flags().StringVarP(&filePath, "file", "f", "", assets.FlagDesc(assets.FlagDescKeyPadAddFile))
 
 	return cmd
 }

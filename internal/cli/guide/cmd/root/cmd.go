@@ -34,8 +34,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&showSkills, "skills", false, assets.FlagDesc("guide.skills"))
-	cmd.Flags().BoolVar(&showCommands, "commands", false, assets.FlagDesc("guide.commands"))
+	cmd.Flags().BoolVar(&showSkills, "skills", false, assets.FlagDesc(assets.FlagDescKeyGuideSkills))
+	cmd.Flags().BoolVar(&showCommands, "commands", false, assets.FlagDesc(assets.FlagDescKeyGuideCommands))
 
 	return cmd
 }

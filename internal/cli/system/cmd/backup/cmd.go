@@ -35,7 +35,7 @@ Environment:
 			return runBackup(cmd)
 		},
 	}
-	cmd.Flags().String("scope", scopeAll, assets.FlagDesc("system.backup.scope"))
-	cmd.Flags().Bool("json", false, assets.FlagDesc("system.backup.json"))
+	cmd.Flags().String("scope", scopeAll, assets.FlagDesc(assets.FlagDescKeySystemBackupScope))
+	cmd.Flags().Bool("json", false, assets.FlagDesc(assets.FlagDescKeySystemBackupJson))
 	return cmd
 }

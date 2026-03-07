@@ -38,9 +38,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&format, "format", "mermaid", assets.FlagDesc("deps.format"))
-	cmd.Flags().BoolVar(&external, "external", false, assets.FlagDesc("deps.external"))
-	cmd.Flags().StringVar(&projType, "type", "", assets.FlagDesc("deps.type"))
+	cmd.Flags().StringVar(&format, "format", "mermaid", assets.FlagDesc(assets.FlagDescKeyDepsFormat))
+	cmd.Flags().BoolVar(&external, "external", false, assets.FlagDesc(assets.FlagDescKeyDepsExternal))
+	cmd.Flags().StringVar(&projType, "type", "", assets.FlagDesc(assets.FlagDescKeyDepsType))
 
 	return cmd
 }

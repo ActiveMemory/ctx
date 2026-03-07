@@ -42,7 +42,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&outPath, "out", "", assets.FlagDesc("pad.show.out"))
+	cmd.Flags().StringVar(&outPath, "out", "", assets.FlagDesc(assets.FlagDescKeyPadShowOut))
 
 	return cmd
 }

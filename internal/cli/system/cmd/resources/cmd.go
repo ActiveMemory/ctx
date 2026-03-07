@@ -24,6 +24,6 @@ func Cmd() *cobra.Command {
 			return runResources(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, assets.FlagDesc("system.resources.json"))
+	cmd.Flags().Bool("json", false, assets.FlagDesc(assets.FlagDescKeySystemResourcesJson))
 	return cmd
 }

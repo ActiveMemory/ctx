@@ -51,24 +51,24 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&promptFile,
-		"prompt", "p", config.FilePromptMd, assets.FlagDesc("loop.prompt"),
+		"prompt", "p", config.FilePromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
 	)
 	cmd.Flags().StringVarP(
-		&tool, "tool", "t", "claude", assets.FlagDesc("loop.tool"),
+		&tool, "tool", "t", "claude", assets.FlagDesc(assets.FlagDescKeyLoopTool),
 	)
 	cmd.Flags().IntVarP(
 		&maxIterations,
 		"max-iterations", "n",
-		0, assets.FlagDesc("loop.max-iterations"),
+		0, assets.FlagDesc(assets.FlagDescKeyLoopMaxIterations),
 	)
 	cmd.Flags().StringVarP(
 		&completionMsg,
-		"completion", "c", "SYSTEM_CONVERGED", assets.FlagDesc("loop.completion"),
+		"completion", "c", "SYSTEM_CONVERGED", assets.FlagDesc(assets.FlagDescKeyLoopCompletion),
 	)
 	cmd.Flags().StringVarP(
 		&outputFile,
 		"output", "o",
-		"loop.sh", assets.FlagDesc("loop.output"),
+		"loop.sh", assets.FlagDesc(assets.FlagDescKeyLoopOutput),
 	)
 
 	return cmd

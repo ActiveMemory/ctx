@@ -16,6 +16,9 @@ import (
 // a command from the PersistentPreRunE initialization guard.
 const AnnotationSkipInit = "skipInitCheck"
 
+// AnnotationTrue is the canonical value for boolean cobra annotations.
+const AnnotationTrue = "true"
+
 // CmdCompletion is the name of Cobra's built-in completion parent command.
 const CmdCompletion = "completion"
 

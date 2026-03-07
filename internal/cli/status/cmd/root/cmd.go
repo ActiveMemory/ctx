@@ -39,10 +39,10 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&jsonOutput,
-		"json", false, assets.FlagDesc("status.json"),
+		"json", false, assets.FlagDesc(assets.FlagDescKeyStatusJson),
 	)
 	cmd.Flags().BoolVarP(
-		&verbose, "verbose", "v", false, assets.FlagDesc("status.verbose"),
+		&verbose, "verbose", "v", false, assets.FlagDesc(assets.FlagDescKeyStatusVerbose),
 	)
 
 	return cmd
