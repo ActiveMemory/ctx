@@ -40,9 +40,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&jsonOutput, "json", false, "Output as JSON")
+	cmd.Flags().BoolVar(&jsonOutput, "json", false, assets.FlagDesc("drift.json"))
 	cmd.Flags().BoolVar(&fix,
-		"fix", false, "Auto-fix supported issues (staleness, missing files)",
+		"fix", false, assets.FlagDesc("drift.fix"),
 	)
 
 	return cmd

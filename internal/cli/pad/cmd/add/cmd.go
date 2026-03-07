@@ -32,7 +32,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&filePath, "file", "f", "", "ingest a file as a blob entry")
+	cmd.Flags().StringVarP(&filePath, "file", "f", "", assets.FlagDesc("pad.add.file"))
 
 	return cmd
 }

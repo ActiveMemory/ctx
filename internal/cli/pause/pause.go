@@ -28,6 +28,6 @@ func Cmd() *cobra.Command {
 			return pauseroot.Run(cmd, sessionID)
 		},
 	}
-	cmd.Flags().String("session-id", "", "Session ID (overrides stdin)")
+	cmd.Flags().String("session-id", "", assets.FlagDesc("pause.session-id"))
 	return cmd
 }

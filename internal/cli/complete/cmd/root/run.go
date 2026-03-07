@@ -13,7 +13,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -125,8 +124,7 @@ func Run(cmd *cobra.Command, args []string) error {
 		return completeErr
 	}
 
-	green := color.New(color.FgGreen).SprintFunc()
-	cmd.Println(fmt.Sprintf("%s Completed: %s", green("✓"), matchedTask))
+	cmd.Println(fmt.Sprintf("✓ Completed: %s", matchedTask))
 
 	return nil
 }

@@ -14,6 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 )
 
@@ -44,8 +45,8 @@ Examples:
 		},
 	}
 
-	cmd.Flags().IntVar(&days, "days", 7, "Prune files older than this many days")
-	cmd.Flags().BoolVar(&dryRun, "dry-run", false, "Show what would be pruned without deleting")
+	cmd.Flags().IntVar(&days, "days", 7, assets.FlagDesc("system.prune.days"))
+	cmd.Flags().BoolVar(&dryRun, "dry-run", false, assets.FlagDesc("system.prune.dry-run"))
 
 	return cmd
 }

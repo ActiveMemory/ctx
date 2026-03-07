@@ -13,7 +13,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -29,8 +28,6 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func MergeSettingsPermissions(cmd *cobra.Command) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	var settings claude.Settings
 	existingContent, err := os.ReadFile(config.FileSettings)
 	fileExists := err == nil
@@ -44,7 +41,7 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
 	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
-		cmd.Println(fmt.Sprintf("  %s %s (no changes needed)\n", yellow("○"), config.FileSettings))
+		cmd.Println(fmt.Sprintf("  ○ %s (no changes needed)\n", config.FileSettings))
 		return nil
 	}
 	if err := os.MkdirAll(config.DirClaude, config.PermExec); err != nil {
@@ -65,18 +62,18 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 		merged := allowModified || denyModified
 		switch {
 		case merged && deduped:
-			cmd.Println(fmt.Sprintf("  %s %s (added ctx permissions, removed duplicates)", green("✓"), config.FileSettings))
+			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx permissions, removed duplicates)", config.FileSettings))
 		case deduped:
-			cmd.Println(fmt.Sprintf("  %s %s (removed duplicate permissions)", green("✓"), config.FileSettings))
+			cmd.Println(fmt.Sprintf("  ✓ %s (removed duplicate permissions)", config.FileSettings))
 		case allowModified && denyModified:
-			cmd.Println(fmt.Sprintf("  %s %s (added ctx allow + deny permissions)", green("✓"), config.FileSettings))
+			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx allow + deny permissions)", config.FileSettings))
 		case denyModified:
-			cmd.Println(fmt.Sprintf("  %s %s (added ctx deny permissions)", green("✓"), config.FileSettings))
+			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx deny permissions)", config.FileSettings))
 		default:
-			cmd.Println(fmt.Sprintf("  %s %s (added ctx permissions)", green("✓"), config.FileSettings))
+			cmd.Println(fmt.Sprintf("  ✓ %s (added ctx permissions)", config.FileSettings))
 		}
 	} else {
-		cmd.Println(fmt.Sprintf("  %s %s", green("✓"), config.FileSettings))
+		cmd.Println(fmt.Sprintf("  ✓ %s", config.FileSettings))
 	}
 	return nil
 }

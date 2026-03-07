@@ -42,7 +42,7 @@ func Cmd() *cobra.Command {
 		&archive,
 		"archive",
 		false,
-		"Create .context/archive/ for old content",
+		assets.FlagDesc("compact.archive"),
 	)
 
 	return cmd

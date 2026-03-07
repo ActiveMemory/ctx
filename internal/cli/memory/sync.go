@@ -8,6 +8,8 @@ package memory
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 func syncCmd() *cobra.Command {
@@ -30,7 +32,7 @@ Exit codes:
 	}
 
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, "Show what would happen without writing",
+		&dryRun, "dry-run", false, assets.FlagDesc("memory.sync.dry-run"),
 	)
 
 	return cmd

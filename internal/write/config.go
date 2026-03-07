@@ -54,3 +54,7 @@ const tplLinesPrevious = " (was %d)"
 // tplNewContent is a format template for reporting new content since last sync.
 // Arguments: line count.
 const tplNewContent = "  New content: %d lines since last sync"
+
+// tplAddedTo is a format template for confirming an entry was added.
+// Arguments: filename.
+const tplAddedTo = "✓ Added to %s"

@@ -34,7 +34,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&blobs, "blobs", false,
-		"import first-level files from a directory as blob entries")
+		assets.FlagDesc("pad.imp.blobs"))
 
 	return cmd
 }

@@ -28,7 +28,7 @@ func messageListCmd() *cobra.Command {
 			return runMessageList(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, "Output in JSON format")
+	cmd.Flags().Bool("json", false, assets.FlagDesc("system.message.json"))
 	return cmd
 }
 

@@ -12,7 +12,6 @@ import (
 	"io"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -54,9 +53,6 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 	buf := make([]byte, 0, 64*1024)
 	scanner.Buffer(buf, 1024*1024)
 
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-
 	updateCount := 0
 
 	for scanner.Scan() {
@@ -79,19 +75,19 @@ func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 
 				if dryRun {
 					cmd.Println(fmt.Sprintf(
-						"%s Would apply: [%s] %s\n", yellow("○"),
+						"○ Would apply: [%s] %s\n",
 						update.Type, update.Content,
 					))
 				} else {
 					err := ApplyUpdate(update)
 					if err != nil {
 						cmd.Println(fmt.Sprintf(
-							"%s Failed to apply [%s]: %v\n", color.RedString("✗"),
+							"✗ Failed to apply [%s]: %v\n",
 							update.Type, err,
 						))
 					} else {
 						cmd.Println(fmt.Sprintf(
-							"%s Applied: [%s] %s\n", green("✓"), update.Type, update.Content,
+							"✓ Applied: [%s] %s\n", update.Type, update.Content,
 						))
 						updateCount++
 					}

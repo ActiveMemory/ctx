@@ -377,3 +377,46 @@ func NoKeyAt(path string) error {
 func EntryRange(n, total int) error {
 	return fmt.Errorf("entry %d does not exist, scratchpad has %d entries", n, total)
 }
+
+// BoundaryViolation wraps a boundary validation error with a hint
+// to use --allow-outside-cwd.
+//
+// Parameters:
+//   - cause: the underlying validation error
+//
+// Returns:
+//   - error: "<cause>\nUse --allow-outside-cwd to override this check"
+func BoundaryViolation(cause error) error {
+	return fmt.Errorf("%w\nUse --allow-outside-cwd to override this check", cause)
+}
+
+// NotInitialized returns an error indicating ctx has not been initialized.
+//
+// Returns:
+//   - error: "ctx: not initialized — run \"ctx init\" first"
+func NotInitialized() error {
+	return fmt.Errorf("ctx: not initialized — run \"ctx init\" first")
+}
+
+// SkillList wraps a failure to list embedded skill directories.
+//
+// Parameters:
+//   - cause: the underlying error from the list operation
+//
+// Returns:
+//   - error: "failed to list skills: <cause>"
+func SkillList(cause error) error {
+	return fmt.Errorf("failed to list skills: %w", cause)
+}
+
+// SkillRead wraps a failure to read a skill's content.
+//
+// Parameters:
+//   - name: Skill directory name that failed to read
+//   - cause: the underlying error from the read operation
+//
+// Returns:
+//   - error: "failed to read skill <name>: <cause>"
+func SkillRead(name string, cause error) error {
+	return fmt.Errorf("failed to read skill %s: %w", name, cause)
+}

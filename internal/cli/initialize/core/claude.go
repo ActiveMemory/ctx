@@ -13,7 +13,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -30,8 +29,6 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	templateContent, err := assets.ClaudeMd()
 	if err != nil {
 		return fmt.Errorf("failed to read CLAUDE.md template: %w", err)
@@ -42,14 +39,14 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		if err := os.WriteFile(config.FileClaudeMd, templateContent, config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", config.FileClaudeMd, err)
 		}
-		cmd.Println(fmt.Sprintf("  %s %s", green("✓"), config.FileClaudeMd))
+		cmd.Println(fmt.Sprintf("  ✓ %s", config.FileClaudeMd))
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, config.CtxMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			cmd.Println(fmt.Sprintf("  %s %s (ctx content exists, skipped)\n", yellow("○"), config.FileClaudeMd))
+			cmd.Println(fmt.Sprintf("  ○ %s (ctx content exists, skipped)\n", config.FileClaudeMd))
 			return nil
 		}
 		return UpdateCtxSection(cmd, existingStr, templateContent)
@@ -65,7 +62,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != config.ConfirmShort && response != config.ConfirmLong {
-			cmd.Println(fmt.Sprintf("  %s %s (skipped)", yellow("○"), config.FileClaudeMd))
+			cmd.Println(fmt.Sprintf("  ○ %s (skipped)", config.FileClaudeMd))
 			return nil
 		}
 	}
@@ -74,7 +71,7 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
+	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
@@ -85,6 +82,6 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	if err := os.WriteFile(config.FileClaudeMd, []byte(mergedContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write merged %s: %w", config.FileClaudeMd, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (merged)", green("✓"), config.FileClaudeMd))
+	cmd.Println(fmt.Sprintf("  ✓ %s (merged)", config.FileClaudeMd))
 	return nil
 }

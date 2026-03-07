@@ -415,6 +415,25 @@ func CommandDesc(key string) (short, long string) {
 	return entry.Short, entry.Long
 }
 
+// FlagDesc returns the description for a global flag.
+//
+// Keys use the format "_flags.<flag-name>" (e.g., "_flags.context-dir").
+// Returns an empty string if the key is not found.
+//
+// Parameters:
+//   - name: Flag name (without the _flags. prefix)
+//
+// Returns:
+//   - string: Flag description
+func FlagDesc(name string) string {
+	loadCommands()
+	entry, ok := commandsMap["_flags."+name]
+	if !ok {
+		return ""
+	}
+	return entry.Short
+}
+
 var (
 	allowOnce  sync.Once
 	allowPerms []string

@@ -38,11 +38,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(
 		&out, "out", "o", filepath.Join("site", "feed.xml"),
-		"Output path for the generated feed",
+		assets.FlagDesc("site.feed.out"),
 	)
 	cmd.Flags().StringVar(
 		&baseURL, "base-url", "https://ctx.ist",
-		"Base URL for entry links",
+		assets.FlagDesc("site.feed.base-url"),
 	)
 
 	return cmd

@@ -765,3 +765,239 @@ why:
     \ hold\n\nUsage:\n  ctx why              Interactive numbered menu\n  ctx why manifesto    Show the manifesto directly\n\
     \  ctx why about        Show the about page\n  ctx why invariants   Show the design invariants"
   short: Read the philosophy behind ctx
+
+# Global flag descriptions (prefix with _flags.)
+"_flags.context-dir":
+  short: "Override context directory path (default: .context)"
+"_flags.no-color":
+  short: "Disable colored output"
+"_flags.allow-outside-cwd":
+  short: "Allow context directory outside current working directory"
+"_flags.add.priority":
+  short: "Priority level for tasks (high, medium, low)"
+"_flags.add.section":
+  short: "Target section within file"
+"_flags.add.file":
+  short: "Read content from file instead of argument"
+"_flags.add.context":
+  short: "Context for decisions: what prompted this decision (required for decisions)"
+"_flags.add.rationale":
+  short: "Rationale for decisions: why this choice over alternatives (required for decisions)"
+"_flags.add.consequences":
+  short: "Consequences for decisions: what changes as a result (required for decisions)"
+"_flags.add.lesson":
+  short: "Lesson for learnings: the key insight (required for learnings)"
+"_flags.add.application":
+  short: "Application for learnings: how to apply this going forward (required for learnings)"
+"_flags.agent.budget":
+  short: "Token budget for context packet"
+"_flags.agent.cooldown":
+  short: "Suppress repeated output within this duration (0 to disable)"
+"_flags.agent.format":
+  short: "Output format: md or json"
+"_flags.agent.session":
+  short: "Session identifier for cooldown isolation (e.g., $PPID)"
+"_flags.changes.since":
+  short: "Time reference: duration (24h) or date (2026-03-01)"
+"_flags.compact.archive":
+  short: "Create .context/archive/ for old content"
+"_flags.deps.external":
+  short: "Include external module dependencies"
+"_flags.deps.format":
+  short: "Output format: mermaid, table, json"
+"_flags.deps.type":
+  short: "Force project type: go, node, python, rust"
+"_flags.doctor.json":
+  short: "Machine-readable JSON output"
+"_flags.drift.fix":
+  short: "Auto-fix supported issues (staleness, missing files)"
+"_flags.drift.json":
+  short: "Output as JSON"
+"_flags.guide.commands":
+  short: "List all CLI commands"
+"_flags.guide.skills":
+  short: "List all available skills"
+"_flags.hook.write":
+  short: "Write the configuration file instead of printing"
+"_flags.initialize.force":
+  short: "Overwrite existing context files"
+"_flags.initialize.merge":
+  short: "Auto-merge ctx content into existing CLAUDE.md and PROMPT.md"
+"_flags.initialize.minimal":
+  short: "Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)"
+"_flags.initialize.no-plugin-enable":
+  short: "Skip auto-enabling the ctx plugin in global Claude Code settings"
+"_flags.initialize.ralph":
+  short: "Agent works autonomously without asking questions"
+"_flags.journal.obsidian.output":
+  short: "Output directory for vault"
+"_flags.journal.site.build":
+  short: "Run zensical build after generating"
+"_flags.journal.site.output":
+  short: "Output directory for site"
+"_flags.journal.site.serve":
+  short: "Run zensical serve after generating"
+"_flags.load.budget":
+  short: "Token budget for assembly"
+"_flags.load.raw":
+  short: "Output raw file contents without assembly"
+"_flags.loop.completion":
+  short: "Completion signal to detect"
+"_flags.loop.max-iterations":
+  short: "Maximum iterations (0 = unlimited)"
+"_flags.loop.output":
+  short: "Output script filename"
+"_flags.loop.prompt":
+  short: "Prompt file to use"
+"_flags.loop.tool":
+  short: "AI tool: claude, aider, or generic"
+"_flags.memory.budget":
+  short: "Line budget for published content"
+"_flags.memory.dry-run":
+  short: "Show classification plan without writing"
+"_flags.memory.sync.dry-run":
+  short: "Show what would happen without writing"
+"_flags.notify.event":
+  short: "Event name (required)"
+"_flags.notify.hook":
+  short: "Hook name for structured detail (optional)"
+"_flags.notify.session-id":
+  short: "Session ID (optional)"
+"_flags.notify.variant":
+  short: "Template variant for structured detail (optional)"
+"_flags.pad.add.file":
+  short: "ingest a file as a blob entry"
+"_flags.pad.edit.append":
+  short: "append text to the end of the entry"
+"_flags.pad.edit.file":
+  short: "replace blob file content"
+"_flags.pad.edit.label":
+  short: "replace blob label"
+"_flags.pad.edit.prepend":
+  short: "prepend text to the beginning of the entry"
+"_flags.pad.export.dry-run":
+  short: "print what would be exported without writing"
+"_flags.pad.export.force":
+  short: "overwrite existing files instead of timestamping"
+"_flags.pad.imp.blobs":
+  short: "import first-level files from a directory as blob entries"
+"_flags.pad.merge.dry-run":
+  short: "print what would be merged without writing"
+"_flags.pad.merge.key":
+  short: "path to key file for decrypting input files"
+"_flags.pad.show.out":
+  short: "write blob content to a file"
+"_flags.prompt.add.stdin":
+  short: "read prompt content from stdin"
+"_flags.recall.export.all":
+  short: "Export all sessions from current project"
+"_flags.recall.export.all-projects":
+  short: "Include sessions from all projects"
+"_flags.recall.export.dry-run":
+  short: "Show what would be exported without writing files"
+"_flags.recall.export.force":
+  short: "Overwrite existing files completely (discard frontmatter)"
+"_flags.recall.export.keep-frontmatter":
+  short: "Preserve enriched YAML frontmatter during regeneration"
+"_flags.recall.export.regenerate":
+  short: "Re-export existing files (preserves YAML frontmatter by default)"
+"_flags.recall.export.skip-existing":
+  short: "Skip files that already exist"
+"_flags.recall.export.yes":
+  short: "Skip confirmation prompt"
+"_flags.recall.list.all-projects":
+  short: "Include sessions from all projects"
+"_flags.recall.list.limit":
+  short: "Maximum sessions to display"
+"_flags.recall.list.project":
+  short: "Filter by project name"
+"_flags.recall.list.since":
+  short: "Show sessions on or after this date (YYYY-MM-DD)"
+"_flags.recall.list.tool":
+  short: "Filter by tool (e.g., claude-code)"
+"_flags.recall.list.until":
+  short: "Show sessions on or before this date (YYYY-MM-DD)"
+"_flags.recall.lock.all":
+  short: "Lock all journal entries"
+"_flags.recall.show.all-projects":
+  short: "Search sessions from all projects"
+"_flags.recall.show.full":
+  short: "Show full message content"
+"_flags.recall.show.latest":
+  short: "Show the most recent session"
+"_flags.recall.unlock.all":
+  short: "Unlock all journal entries"
+"_flags.remind.add.after":
+  short: "Don't surface until this date (YYYY-MM-DD)"
+"_flags.remind.after":
+  short: "Don't surface until this date (YYYY-MM-DD)"
+"_flags.remind.dismiss.all":
+  short: "Dismiss all reminders"
+"_flags.site.feed.base-url":
+  short: "Base URL for entry links"
+"_flags.site.feed.out":
+  short: "Output path for the generated feed"
+"_flags.status.json":
+  short: "Output as JSON"
+"_flags.status.verbose":
+  short: "Include file content previews"
+"_flags.sync.dry-run":
+  short: "Show what would change without modifying"
+"_flags.system.bootstrap.quiet":
+  short: "Output only the context directory path"
+"_flags.system.events.all":
+  short: "Include rotated log file"
+"_flags.system.events.event":
+  short: "Filter by event type"
+"_flags.system.events.hook":
+  short: "Filter by hook name"
+"_flags.system.events.json":
+  short: "Output raw JSONL"
+"_flags.system.events.last":
+  short: "Show last N events"
+"_flags.system.events.session":
+  short: "Filter by session ID"
+"_flags.system.prune.days":
+  short: "Prune files older than this many days"
+"_flags.system.prune.dry-run":
+  short: "Show what would be pruned without deleting"
+"_flags.system.stats.follow":
+  short: "Stream new entries as they arrive"
+"_flags.system.stats.json":
+  short: "Output raw JSONL"
+"_flags.system.stats.last":
+  short: "Show last N entries"
+"_flags.system.stats.session":
+  short: "Filter by session ID (prefix match)"
+"_flags.task.archive.dry-run":
+  short: "Preview changes without modifying files"
+"_flags.watch.dry-run":
+  short: "Show updates without applying"
+"_flags.watch.log":
+  short: "Log file to watch (default: stdin)"
+"_flags.pause.session-id":
+  short: "Session ID (overrides stdin)"
+"_flags.resume.session-id":
+  short: "Session ID (overrides stdin)"
+"_flags.system.pause.session-id":
+  short: "Session ID (overrides stdin)"
+"_flags.system.resume.session-id":
+  short: "Session ID (overrides stdin)"
+"_flags.system.backup.scope":
+  short: "Backup scope: project, global, or all"
+"_flags.system.backup.json":
+  short: "Output results as JSON"
+"_flags.system.bootstrap.json":
+  short: "Output in JSON format"
+"_flags.system.resources.json":
+  short: "Output in JSON format"
+"_flags.system.message.json":
+  short: "Output in JSON format"
+"_flags.system.markjournal.check":
+  short: "Check if stage is set (exit 1 if not)"
+"_flags.memory.import.dry-run":
+  short: "Show classification plan without writing"
+"_flags.memory.publish.budget":
+  short: "Line budget for published content"
+"_flags.memory.publish.dry-run":
+  short: "Show what would be published without writing"

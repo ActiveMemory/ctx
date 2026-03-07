@@ -13,7 +13,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -84,14 +83,13 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	}
 
 	// Create template files
-	green := color.New(color.FgGreen).SprintFunc()
 	for _, name := range templatesToCreate {
 		targetPath := filepath.Join(contextDir, name)
 
 		// Check if the file exists and --force not set
 		if _, err := os.Stat(targetPath); err == nil && !force {
 			cmd.Println(fmt.Sprintf(
-				"  %s %s (exists, skipped)\n", color.YellowString("○"), name,
+				"  ○ %s (exists, skipped)\n", name,
 			))
 			continue
 		}
@@ -105,21 +103,21 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
 
-		cmd.Println(fmt.Sprintf("  %s %s", green("✓"), name))
+		cmd.Println(fmt.Sprintf("  ✓ %s", name))
 	}
 
-	cmd.Println(fmt.Sprintf("\n%s initialized in %s/", green("Context"), contextDir))
+	cmd.Println(fmt.Sprintf("\nContext initialized in %s/", contextDir))
 
 	// Create entry templates in .context/templates/
 	if err := core.CreateEntryTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Println(fmt.Sprintf("  %s Entry templates: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ Entry templates: %v", err))
 	}
 
 	// Create prompt templates in .context/prompts/
 	if err := core.CreatePromptTemplates(cmd, contextDir, force); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Println(fmt.Sprintf("  %s Prompt templates: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ Prompt templates: %v", err))
 	}
 
 	// Migrate legacy key files and promote to global path.
@@ -128,7 +126,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Println(fmt.Sprintf("  %s Scratchpad: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ Scratchpad: %v", err))
 	}
 
 	// Create project root files
@@ -136,20 +134,20 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 
 	// Create specs/ and ideas/ directories with README.md
 	if err := core.CreateProjectDirs(cmd); err != nil {
-		cmd.Println(fmt.Sprintf("  %s Project dirs: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ Project dirs: %v", err))
 	}
 
 	// Create PROMPT.md (uses ralph template if --ralph flag set)
 	if err := core.HandlePromptMd(cmd, force, merge, ralph); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Println(fmt.Sprintf("  %s PROMPT.md: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ PROMPT.md: %v", err))
 	}
 
 	// Create IMPLEMENTATION_PLAN.md
 	if err := core.HandleImplementationPlan(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
 		cmd.Println(fmt.Sprintf(
-			"  %s IMPLEMENTATION_PLAN.md: %v\n", color.YellowString("⚠"), err,
+			"  ⚠ IMPLEMENTATION_PLAN.md: %v\n", err,
 		))
 	}
 
@@ -157,32 +155,32 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	cmd.Println("\nSetting up Claude Code permissions...")
 	if err := core.MergeSettingsPermissions(cmd); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Println(fmt.Sprintf("  %s Permissions: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ Permissions: %v", err))
 	}
 
 	// Auto-enable plugin globally unless suppressed
 	if !noPluginEnable {
 		if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
 			// Non-fatal: warn but continue
-			cmd.Println(fmt.Sprintf("  %s Plugin enablement: %v", color.YellowString("⚠"), pluginErr))
+			cmd.Println(fmt.Sprintf("  ⚠ Plugin enablement: %v", pluginErr))
 		}
 	}
 
 	// Handle CLAUDE.md creation/merge
 	if err := core.HandleClaudeMd(cmd, force, merge); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Println(fmt.Sprintf("  %s CLAUDE.md: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ CLAUDE.md: %v", err))
 	}
 
 	// Deploy Makefile.ctx and amend user Makefile
 	if err := core.HandleMakefileCtx(cmd); err != nil {
 		// Non-fatal: warn but continue
-		cmd.Println(fmt.Sprintf("  %s Makefile: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ Makefile: %v", err))
 	}
 
 	// Update .gitignore with recommended entries
 	if err := ensureGitignoreEntries(cmd); err != nil {
-		cmd.Println(fmt.Sprintf("  %s .gitignore: %v", color.YellowString("⚠"), err))
+		cmd.Println(fmt.Sprintf("  ⚠ .gitignore: %v", err))
 	}
 
 	cmd.Println("\nNext steps:")
@@ -219,9 +217,6 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 // Returns:
 //   - error: Non-nil if key generation or file operations fail
 func initScratchpad(cmd *cobra.Command, contextDir string) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-
 	if !rc.ScratchpadEncrypt() {
 		// Plaintext mode: create empty scratchpad.md if not present
 		mdPath := filepath.Join(contextDir, config.FileScratchpadMd)
@@ -229,9 +224,9 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 			if err := os.WriteFile(mdPath, nil, config.PermFile); err != nil {
 				return fmt.Errorf("failed to create %s: %w", mdPath, err)
 			}
-			cmd.Println(fmt.Sprintf("  %s %s (plaintext scratchpad)", green("✓"), mdPath))
+			cmd.Println(fmt.Sprintf("  ✓ %s (plaintext scratchpad)", mdPath))
 		} else {
-			cmd.Println(fmt.Sprintf("  %s %s (exists, skipped)", yellow("○"), mdPath))
+			cmd.Println(fmt.Sprintf("  ○ %s (exists, skipped)", mdPath))
 		}
 		return nil
 	}
@@ -242,14 +237,14 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 
 	// Check if key already exists (idempotent)
 	if _, err := os.Stat(kPath); err == nil {
-		cmd.Println(fmt.Sprintf("  %s %s (exists, skipped)", yellow("○"), kPath))
+		cmd.Println(fmt.Sprintf("  ○ %s (exists, skipped)", kPath))
 		return nil
 	}
 
 	// Warn if encrypted file exists but no key
 	if _, err := os.Stat(encPath); err == nil {
-		cmd.Println(fmt.Sprintf("  %s Encrypted scratchpad found but no key at %s",
-			yellow("⚠"), kPath))
+		cmd.Println(fmt.Sprintf("  ⚠ Encrypted scratchpad found but no key at %s",
+			kPath))
 		return nil
 	}
 
@@ -267,7 +262,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	if err := crypto.SaveKey(kPath, key); err != nil {
 		return fmt.Errorf("failed to save scratchpad key: %w", err)
 	}
-	cmd.Println(fmt.Sprintf("  %s Scratchpad key created at %s", green("✓"), kPath))
+	cmd.Println(fmt.Sprintf("  ✓ Scratchpad key created at %s", kPath))
 
 	return nil
 }
@@ -327,8 +322,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		return err
 	}
 
-	green := color.New(color.FgGreen).SprintFunc()
-	cmd.Println(fmt.Sprintf("  %s .gitignore updated (%d entries added)", green("✓"), len(missing)))
+	cmd.Println(fmt.Sprintf("  ✓ .gitignore updated (%d entries added)", len(missing)))
 	cmd.Println("  Review with: cat .gitignore")
 	return nil
 }

@@ -32,9 +32,9 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&keyFile, "key", "k", "",
-		"path to key file for decrypting input files")
+		assets.FlagDesc("pad.merge.key"))
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false,
-		"print what would be merged without writing")
+		assets.FlagDesc("pad.merge.dry-run"))
 
 	return cmd
 }

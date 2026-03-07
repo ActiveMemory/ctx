@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
@@ -33,8 +32,6 @@ import (
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func runArchive(cmd *cobra.Command, dryRun bool) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	tasksPath := core.TasksFilePath()
 	nl := config.NewlineLF
 
@@ -63,8 +60,8 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 		} else {
 			skippedCount++
 			cmd.Println(fmt.Sprintf(
-				"%s Skipping (has incomplete children): %s",
-				yellow("!"), block.ParentTaskText(),
+				"! Skipping (has incomplete children): %s",
+				block.ParentTaskText(),
 			))
 		}
 	}
@@ -92,7 +89,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	if dryRun {
-		cmd.Println(yellow("Dry run - no files modified"))
+		cmd.Println("Dry run - no files modified")
 		cmd.Println()
 		cmd.Println(fmt.Sprintf(
 			"Would archive %d completed tasks (keeping %d pending)",
@@ -123,8 +120,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	cmd.Println(fmt.Sprintf(
-		"%s Archived %d completed tasks to %s",
-		green("✓"),
+		"✓ Archived %d completed tasks to %s",
 		len(archivableBlocks),
 		archiveFilePath,
 	))

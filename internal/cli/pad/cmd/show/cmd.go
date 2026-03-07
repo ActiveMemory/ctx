@@ -42,7 +42,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&outPath, "out", "", "write blob content to a file")
+	cmd.Flags().StringVar(&outPath, "out", "", assets.FlagDesc("pad.show.out"))
 
 	return cmd
 }

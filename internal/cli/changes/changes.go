@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&since, "since", "", "Time reference: duration (24h) or date (2026-03-01)")
+	cmd.Flags().StringVar(&since, "since", "", assets.FlagDesc("changes.since"))
 
 	return cmd
 }

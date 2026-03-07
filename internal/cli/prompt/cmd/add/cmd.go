@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&fromStdin, "stdin", false, "read prompt content from stdin")
+	cmd.Flags().BoolVar(&fromStdin, "stdin", false, assets.FlagDesc("prompt.add.stdin"))
 
 	return cmd
 }

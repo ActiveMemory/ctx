@@ -34,9 +34,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&latest, "latest", false, "Show the most recent session")
-	cmd.Flags().BoolVar(&full, "full", false, "Show full message content")
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false, "Search sessions from all projects")
+	cmd.Flags().BoolVar(&latest, "latest", false, assets.FlagDesc("recall.show.latest"))
+	cmd.Flags().BoolVar(&full, "full", false, assets.FlagDesc("recall.show.full"))
+	cmd.Flags().BoolVar(&allProjects, "all-projects", false, assets.FlagDesc("recall.show.all-projects"))
 
 	return cmd
 }

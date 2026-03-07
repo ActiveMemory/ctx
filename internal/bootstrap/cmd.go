@@ -9,14 +9,13 @@
 package bootstrap
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -33,7 +32,7 @@ var version = "dev"
 //
 // Global flags:
 //   - --context-dir: Override the context directory path (default: .context)
-//   - --no-color: Disable colored output
+//   - --allow-outside-cwd: Allow context directory outside project root
 //
 // Returns:
 //   - *cobra.Command: The configured root command with usage and version info
@@ -41,7 +40,6 @@ func RootCmd() *cobra.Command {
 	config.BinaryVersion = version
 
 	var contextDir string
-	var noColor bool
 	var allowOutsideCwd bool
 
 	short, long := assets.CommandDesc("ctx")
@@ -56,25 +54,23 @@ func RootCmd() *cobra.Command {
 			if contextDir != "" {
 				rc.OverrideContextDir(contextDir)
 			}
-			if noColor {
-				color.NoColor = true
-			}
-
 			// Validate that the context directory stays within the project root.
 			// Skip if the CLI flag is set or .ctxrc has allow_outside_cwd: true.
 			if !allowOutsideCwd && !rc.AllowOutsideCwd() {
-				if validateErr := validation.ValidateBoundary(rc.ContextDir()); validateErr != nil {
-					return fmt.Errorf("%w\nUse --allow-outside-cwd to override this check", validateErr)
+				if validateErr := validation.ValidateBoundary(
+					rc.ContextDir(),
+				); validateErr != nil {
+					return ctxerr.BoundaryViolation(validateErr)
 				}
 			}
 
 			// Skip init check for hidden commands (hooks have their own guards)
 			// and cobra's built-in completion subcommands (bash, zsh, fish,
-			// powershell) which must work in any directory.
+			// PowerShell) which must work in any directory.
 			if cmd.Hidden {
 				return nil
 			}
-			if p := cmd.Parent(); p != nil && p.Name() == "completion" {
+			if p := cmd.Parent(); p != nil && p.Name() == config.CmdCompletion {
 				return nil
 			}
 
@@ -90,7 +86,7 @@ func RootCmd() *cobra.Command {
 
 			// Require initialization.
 			if !config.Initialized(rc.ContextDir()) {
-				return fmt.Errorf("ctx: not initialized — run \"ctx init\" first")
+				return ctxerr.NotInitialized()
 			}
 
 			return nil
@@ -98,28 +94,22 @@ func RootCmd() *cobra.Command {
 	}
 
 	// Cobra's cmd.Print() defaults to stderr (OutOrStderr). Set stdout
-	// explicitly so all subcommands inherit correct output and shell
+	// explicitly so all subcommands inherit the correct output, and shell
 	// redirection (>) works as expected.
 	cmd.SetOut(os.Stdout)
 
 	// Global flags available to all subcommands
 	cmd.PersistentFlags().StringVar(
 		&contextDir,
-		"context-dir",
+		config.FlagContextDir,
 		"",
-		"Override context directory path (default: .context)",
-	)
-	cmd.PersistentFlags().BoolVar(
-		&noColor,
-		"no-color",
-		false,
-		"Disable colored output",
+		assets.FlagDesc(config.FlagContextDir),
 	)
 	cmd.PersistentFlags().BoolVar(
 		&allowOutsideCwd,
-		"allow-outside-cwd",
+		config.FlagAllowOutsideCwd,
 		false,
-		"Allow context directory outside current working directory",
+		assets.FlagDesc(config.FlagAllowOutsideCwd),
 	)
 
 	return cmd

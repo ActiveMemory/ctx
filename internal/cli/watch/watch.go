@@ -39,10 +39,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(
-		&logPath, "log", "", "Log file to watch (default: stdin)",
+		&logPath, "log", "", assets.FlagDesc("watch.log"),
 	)
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, "Show updates without applying",
+		&dryRun, "dry-run", false, assets.FlagDesc("watch.dry-run"),
 	)
 
 	return cmd

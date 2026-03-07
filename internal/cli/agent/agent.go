@@ -56,18 +56,18 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().IntVar(
 		&budget,
-		"budget", rc.DefaultTokenBudget, "Token budget for context packet",
+		"budget", rc.DefaultTokenBudget, assets.FlagDesc("agent.budget"),
 	)
 	cmd.Flags().StringVar(
-		&format, "format", config.FormatMarkdown, "Output format: md or json",
+		&format, "format", config.FormatMarkdown, assets.FlagDesc("agent.format"),
 	)
 	cmd.Flags().DurationVar(
 		&cooldown, "cooldown", core.DefaultCooldown,
-		"Suppress repeated output within this duration (0 to disable)",
+		assets.FlagDesc("agent.cooldown"),
 	)
 	cmd.Flags().StringVar(
 		&session, "session", "",
-		"Session identifier for cooldown isolation (e.g., $PPID)",
+		assets.FlagDesc("agent.session"),
 	)
 
 	return cmd

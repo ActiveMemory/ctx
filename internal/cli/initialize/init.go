@@ -70,24 +70,24 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&force,
-		"force", "f", false, "Overwrite existing context files",
+		"force", "f", false, assets.FlagDesc("initialize.force"),
 	)
 	cmd.Flags().BoolVarP(
 		&minimal,
 		"minimal", "m", false,
-		"Only create essential files (TASKS.md, DECISIONS.md, CONSTITUTION.md)",
+		assets.FlagDesc("initialize.minimal"),
 	)
 	cmd.Flags().BoolVar(
 		&merge, "merge", false,
-		"Auto-merge ctx content into existing CLAUDE.md and PROMPT.md",
+		assets.FlagDesc("initialize.merge"),
 	)
 	cmd.Flags().BoolVar(
 		&ralph, "ralph", false,
-		"Agent works autonomously without asking questions",
+		assets.FlagDesc("initialize.ralph"),
 	)
 	cmd.Flags().BoolVar(
 		&noPluginEnable, "no-plugin-enable", false,
-		"Skip auto-enabling the ctx plugin in global Claude Code settings",
+		assets.FlagDesc("initialize.no-plugin-enable"),
 	)
 
 	return cmd

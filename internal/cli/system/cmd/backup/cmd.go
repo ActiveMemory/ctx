@@ -8,6 +8,8 @@ package backup
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system backup" subcommand.
@@ -33,7 +35,7 @@ Environment:
 			return runBackup(cmd)
 		},
 	}
-	cmd.Flags().String("scope", scopeAll, "Backup scope: project, global, or all")
-	cmd.Flags().Bool("json", false, "Output results as JSON")
+	cmd.Flags().String("scope", scopeAll, assets.FlagDesc("system.backup.scope"))
+	cmd.Flags().Bool("json", false, assets.FlagDesc("system.backup.json"))
 	return cmd
 }

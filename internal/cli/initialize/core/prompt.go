@@ -13,7 +13,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -31,8 +30,6 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	var templateContent []byte
 	var err error
 	if ralph {
@@ -56,14 +53,14 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		if ralph {
 			mode = " (ralph mode)"
 		}
-		cmd.Println(fmt.Sprintf("  %s %s%s", green("✓"), config.FilePromptMd, mode))
+		cmd.Println(fmt.Sprintf("  ✓ %s%s", config.FilePromptMd, mode))
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, config.PromptMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			cmd.Println(fmt.Sprintf("  %s %s (ctx content exists, skipped)\n", yellow("○"), config.FilePromptMd))
+			cmd.Println(fmt.Sprintf("  ○ %s (ctx content exists, skipped)\n", config.FilePromptMd))
 			return nil
 		}
 		return UpdatePromptSection(cmd, existingStr, templateContent)
@@ -79,7 +76,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != config.ConfirmShort && response != config.ConfirmLong {
-			cmd.Println(fmt.Sprintf("  %s %s (skipped)", yellow("○"), config.FilePromptMd))
+			cmd.Println(fmt.Sprintf("  ○ %s (skipped)", config.FilePromptMd))
 			return nil
 		}
 	}
@@ -88,7 +85,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
+	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
@@ -99,7 +96,7 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	if err := os.WriteFile(config.FilePromptMd, []byte(mergedContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write merged %s: %w", config.FilePromptMd, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (merged)", green("✓"), config.FilePromptMd))
+	cmd.Println(fmt.Sprintf("  ✓ %s (merged)", config.FilePromptMd))
 	return nil
 }
 
@@ -114,7 +111,6 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
 func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	green := color.New(color.FgGreen).SprintFunc()
 	startIdx := strings.Index(existing, config.PromptMarkerStart)
 	if startIdx == -1 {
 		return fmt.Errorf("prompt start marker not found")
@@ -138,10 +134,10 @@ func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte
 	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
+	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
 	if err := os.WriteFile(config.FilePromptMd, []byte(newContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to update %s: %w", config.FilePromptMd, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (updated prompt section)\n", green("✓"), config.FilePromptMd))
+	cmd.Println(fmt.Sprintf("  ✓ %s (updated prompt section)\n", config.FilePromptMd))
 	return nil
 }

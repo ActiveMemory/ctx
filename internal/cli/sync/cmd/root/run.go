@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
@@ -42,20 +41,16 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	actions := core.DetectSyncActions(ctx)
 
 	if len(actions) == 0 {
-		green := color.New(color.FgGreen).SprintFunc()
-		cmd.Println(fmt.Sprintf("%s Context is in sync with codebase", green("✓")))
+		cmd.Println("✓ Context is in sync with codebase")
 		return nil
 	}
 
-	cyan := color.New(color.FgCyan).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-
-	cmd.Println(cyan("Sync Analysis"))
-	cmd.Println(cyan("============="))
+	cmd.Println("Sync Analysis")
+	cmd.Println("=============")
 	cmd.Println()
 
 	if dryRun {
-		cmd.Println(yellow("DRY RUN — No changes will be made"))
+		cmd.Println("DRY RUN — No changes will be made")
 		cmd.Println()
 	}
 

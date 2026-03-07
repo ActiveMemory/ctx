@@ -8,6 +8,8 @@ package memory
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // importCmd returns the memory import subcommand.
@@ -37,7 +39,7 @@ Exit codes:
 
 	cmd.Flags().BoolVar(
 		&dryRun, "dry-run", false,
-		"Show classification plan without writing",
+		assets.FlagDesc("memory.import.dry-run"),
 	)
 
 	return cmd

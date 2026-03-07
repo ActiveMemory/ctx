@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&dryRun, "dry-run", false, "Show what would happen without writing",
+		&dryRun, "dry-run", false, assets.FlagDesc("memory.sync.dry-run"),
 	)
 
 	return cmd

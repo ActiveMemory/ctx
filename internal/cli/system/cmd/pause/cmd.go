@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
 )
 
@@ -32,7 +33,7 @@ The session ID is read from stdin JSON (same as hooks) or --session-id flag.`,
 			return runPause(cmd, os.Stdin)
 		},
 	}
-	cmd.Flags().String("session-id", "", "Session ID (overrides stdin)")
+	cmd.Flags().String("session-id", "", assets.FlagDesc("system.pause.session-id"))
 	return cmd
 }
 

@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/context"
@@ -75,13 +74,8 @@ func OutputStatusJSON(
 func OutputStatusText(
 	cmd *cobra.Command, ctx *context.Context, verbose bool,
 ) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-	cyan := color.New(color.FgCyan).SprintFunc()
-	dim := color.New(color.Faint).SprintFunc()
-
-	cmd.Println(cyan("Context Status"))
-	cmd.Println(cyan("===================="))
+	cmd.Println("Context Status")
+	cmd.Println("====================")
 	cmd.Println()
 
 	cmd.Println(fmt.Sprintf("Context Directory: %s", ctx.Dir))
@@ -102,10 +96,10 @@ func OutputStatusText(
 		var status string
 		var indicator string
 		if f.IsEmpty {
-			indicator = yellow("○")
-			status = yellow("empty")
+			indicator = "○"
+			status = "empty"
 		} else {
-			indicator = green("✓")
+			indicator = "✓"
 			status = f.Summary
 		}
 
@@ -119,7 +113,7 @@ func OutputStatusText(
 			if !f.IsEmpty {
 				preview := ContentPreview(string(f.Content), 3)
 				for _, line := range preview {
-					cmd.Println(fmt.Sprintf("      %s", dim(line)))
+					cmd.Println(fmt.Sprintf("      (%s)", line))
 				}
 			}
 		} else {

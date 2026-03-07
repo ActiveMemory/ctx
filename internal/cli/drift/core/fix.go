@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -41,8 +40,6 @@ func ApplyFixes(
 	cmd *cobra.Command, ctx *context.Context, report *drift.Report,
 ) *FixResult {
 	result := &FixResult{}
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 
 	// Process warnings (staleness, missing_file, dead_path)
 	for _, issue := range report.Warnings {
@@ -54,8 +51,8 @@ func ApplyFixes(
 			} else {
 				cmd.Println(
 					fmt.Sprintf(
-						"%s Fixed staleness in %s (archived completed tasks)",
-						green("✓"), issue.File),
+						"✓ Fixed staleness in %s (archived completed tasks)",
+						issue.File),
 				)
 				result.Fixed++
 			}
@@ -66,19 +63,19 @@ func ApplyFixes(
 					fmt.Sprintf("missing %s: %v", issue.File, fixErr))
 			} else {
 				cmd.Println(
-					fmt.Sprintf("%s Created missing file: %s", green("✓"), issue.File),
+					fmt.Sprintf("✓ Created missing file: %s", issue.File),
 				)
 				result.Fixed++
 			}
 
 		case drift.IssueDeadPath:
-			cmd.Println(fmt.Sprintf("%s Cannot auto-fix dead path in %s:%d (%s)",
-				yellow("○"), issue.File, issue.Line, issue.Path))
+			cmd.Println(fmt.Sprintf("○ Cannot auto-fix dead path in %s:%d (%s)",
+				issue.File, issue.Line, issue.Path))
 			result.Skipped++
 
 		case drift.IssueStaleAge:
-			cmd.Println(fmt.Sprintf("%s Cannot auto-fix file age: %s",
-				yellow("○"), issue.File))
+			cmd.Println(fmt.Sprintf("○ Cannot auto-fix file age: %s",
+				issue.File))
 			result.Skipped++
 		}
 	}
@@ -86,8 +83,8 @@ func ApplyFixes(
 	// Process violations (potential_secret) - never auto-fix
 	for _, issue := range report.Violations {
 		if issue.Type == drift.IssueSecret {
-			cmd.Println(fmt.Sprintf("%s Cannot auto-fix potential secret: %s",
-				yellow("○"), issue.File))
+			cmd.Println(fmt.Sprintf("○ Cannot auto-fix potential secret: %s",
+				issue.File))
 			result.Skipped++
 		}
 	}

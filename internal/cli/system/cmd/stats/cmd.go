@@ -8,6 +8,8 @@ package stats
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system stats" subcommand.
@@ -33,10 +35,10 @@ Flags:
 		},
 	}
 
-	cmd.Flags().BoolP("follow", "f", false, "Stream new entries as they arrive")
-	cmd.Flags().StringP("session", "s", "", "Filter by session ID (prefix match)")
-	cmd.Flags().IntP("last", "n", 20, "Show last N entries")
-	cmd.Flags().BoolP("json", "j", false, "Output raw JSONL")
+	cmd.Flags().BoolP("follow", "f", false, assets.FlagDesc("system.stats.follow"))
+	cmd.Flags().StringP("session", "s", "", assets.FlagDesc("system.stats.session"))
+	cmd.Flags().IntP("last", "n", 20, assets.FlagDesc("system.stats.last"))
+	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc("system.stats.json"))
 
 	return cmd
 }

@@ -36,11 +36,11 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&force, "force", "f", false,
-		"overwrite existing files instead of timestamping",
+		assets.FlagDesc("pad.export.force"),
 	)
 	cmd.Flags().BoolVar(
 		&dryRun, "dry-run", false,
-		"print what would be exported without writing",
+		assets.FlagDesc("pad.export.dry-run"),
 	)
 
 	return cmd

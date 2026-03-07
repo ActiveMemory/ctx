@@ -13,7 +13,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -30,8 +29,6 @@ import (
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	templateContent, err := assets.ProjectFile(config.FileImplementationPlan)
 	if err != nil {
 		return fmt.Errorf("failed to read IMPLEMENTATION_PLAN.md template: %w", err)
@@ -42,14 +39,14 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 		if err := os.WriteFile(config.FileImplementationPlan, templateContent, config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", config.FileImplementationPlan, err)
 		}
-		cmd.Println(fmt.Sprintf("  %s %s", green("✓"), config.FileImplementationPlan))
+		cmd.Println(fmt.Sprintf("  ✓ %s", config.FileImplementationPlan))
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, config.PlanMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			cmd.Println(fmt.Sprintf("  %s %s (ctx content exists, skipped)\n", yellow("○"), config.FileImplementationPlan))
+			cmd.Println(fmt.Sprintf("  ○ %s (ctx content exists, skipped)\n", config.FileImplementationPlan))
 			return nil
 		}
 		return UpdatePlanSection(cmd, existingStr, templateContent)
@@ -65,7 +62,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
 		if response != config.ConfirmShort && response != config.ConfirmLong {
-			cmd.Println(fmt.Sprintf("  %s %s (skipped)\n", yellow("○"), config.FileImplementationPlan))
+			cmd.Println(fmt.Sprintf("  ○ %s (skipped)\n", config.FileImplementationPlan))
 			return nil
 		}
 	}
@@ -74,7 +71,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup %s: %w", backupName, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
+	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
 	insertPos := FindInsertionPoint(existingStr)
 	var mergedContent string
 	if insertPos == 0 {
@@ -85,7 +82,7 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 	if err := os.WriteFile(config.FileImplementationPlan, []byte(mergedContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to write merged %s: %w", config.FileImplementationPlan, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (merged)", green("✓"), config.FileImplementationPlan))
+	cmd.Println(fmt.Sprintf("  ✓ %s (merged)", config.FileImplementationPlan))
 	return nil
 }
 
@@ -100,7 +97,6 @@ func HandleImplementationPlan(cmd *cobra.Command, force, autoMerge bool) error {
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
 func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	green := color.New(color.FgGreen).SprintFunc()
 	startIdx := strings.Index(existing, config.PlanMarkerStart)
 	if startIdx == -1 {
 		return fmt.Errorf("plan start marker not found")
@@ -124,10 +120,10 @@ func UpdatePlanSection(cmd *cobra.Command, existing string, newTemplate []byte) 
 	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
+	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
 	if err := os.WriteFile(config.FileImplementationPlan, []byte(newContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to update %s: %w", config.FileImplementationPlan, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (updated plan section)\n", green("✓"), config.FileImplementationPlan))
+	cmd.Println(fmt.Sprintf("  ✓ %s (updated plan section)\n", config.FileImplementationPlan))
 	return nil
 }

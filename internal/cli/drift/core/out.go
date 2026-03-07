@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/drift"
@@ -29,19 +28,14 @@ import (
 // Returns:
 //   - error: Non-nil if violations were detected
 func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
-	yellow := color.New(color.FgYellow).SprintFunc()
-	red := color.New(color.FgRed).SprintFunc()
-	green := color.New(color.FgGreen).SprintFunc()
-	cyan := color.New(color.FgCyan).SprintFunc()
-
-	cmd.Println(cyan("Drift Detection Report"))
-	cmd.Println(cyan("======================"))
+	cmd.Println("Drift Detection Report")
+	cmd.Println("======================")
 	cmd.Println()
 
 	// Violations
 	if len(report.Violations) > 0 {
 		cmd.Println(fmt.Sprintf(
-			"%s VIOLATIONS (%d)", red("❌"), len(report.Violations)),
+			"❌ VIOLATIONS (%d)", len(report.Violations)),
 		)
 		cmd.Println()
 		for _, v := range report.Violations {
@@ -60,7 +54,7 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	// Warnings
 	if len(report.Warnings) > 0 {
 		cmd.Println(
-			fmt.Sprintf("%s WARNINGS (%d)", yellow("⚠️ "), len(report.Warnings)),
+			fmt.Sprintf("⚠️  WARNINGS (%d)", len(report.Warnings)),
 		)
 		cmd.Println()
 
@@ -109,7 +103,7 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 
 	// Passed
 	if len(report.Passed) > 0 {
-		cmd.Println(fmt.Sprintf("%s PASSED (%d)", green("✅"), len(report.Passed)))
+		cmd.Println(fmt.Sprintf("✅ PASSED (%d)", len(report.Passed)))
 		for _, p := range report.Passed {
 			cmd.Println(fmt.Sprintf("  - %s", FormatCheckName(p)))
 		}
@@ -121,19 +115,14 @@ func OutputDriftText(cmd *cobra.Command, report *drift.Report) error {
 	switch status {
 	case drift.StatusViolation:
 		cmd.Println()
-		cmd.Println(fmt.Sprintf(
-			"Status: %s — Constitution violations detected", red("VIOLATION")),
-		)
+		cmd.Println("Status: VIOLATION — Constitution violations detected")
 		return ErrViolationsFound()
 	case drift.StatusWarning:
 		cmd.Println()
-		cmd.Println(fmt.Sprintf(
-			"Status: %s — Issues detected that should be addressed",
-			yellow("WARNING")),
-		)
+		cmd.Println("Status: WARNING — Issues detected that should be addressed")
 	default:
 		cmd.Println()
-		cmd.Println(fmt.Sprintf("Status: %s — No drift detected", green("OK")))
+		cmd.Println("Status: OK — No drift detected")
 	}
 
 	return nil

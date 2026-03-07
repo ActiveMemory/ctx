@@ -11,7 +11,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -30,8 +29,6 @@ const IncludeDirective = "-include Makefile.ctx"
 // Returns:
 //   - error: Non-nil if file operations fail
 func HandleMakefileCtx(cmd *cobra.Command) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	content, err := assets.MakefileCtx()
 	if err != nil {
 		return fmt.Errorf("failed to read Makefile.ctx template: %w", err)
@@ -39,18 +36,18 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	if err = os.WriteFile(config.FileMakefileCtx, content, config.PermFile); err != nil {
 		return fmt.Errorf("failed to write %s: %w", config.FileMakefileCtx, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s", green("✓"), config.FileMakefileCtx))
+	cmd.Println(fmt.Sprintf("  ✓ %s", config.FileMakefileCtx))
 	existing, err := os.ReadFile("Makefile")
 	if err != nil {
 		minimal := IncludeDirective + config.NewlineLF
 		if err := os.WriteFile("Makefile", []byte(minimal), config.PermFile); err != nil {
 			return fmt.Errorf("failed to create Makefile: %w", err)
 		}
-		cmd.Println(fmt.Sprintf("  %s Makefile (created with ctx include)", green("✓")))
+		cmd.Println("  ✓ Makefile (created with ctx include)")
 		return nil
 	}
 	if strings.Contains(string(existing), IncludeDirective) {
-		cmd.Println(fmt.Sprintf("  %s Makefile (already includes %s)\n", yellow("○"), config.FileMakefileCtx))
+		cmd.Println(fmt.Sprintf("  ○ Makefile (already includes %s)\n", config.FileMakefileCtx))
 		return nil
 	}
 	amended := string(existing)
@@ -61,6 +58,6 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	if err := os.WriteFile("Makefile", []byte(amended), config.PermFile); err != nil {
 		return fmt.Errorf("failed to amend Makefile: %w", err)
 	}
-	cmd.Println(fmt.Sprintf("  %s Makefile (appended %s include)\n", green("✓"), config.FileMakefileCtx))
+	cmd.Println(fmt.Sprintf("  ✓ Makefile (appended %s include)\n", config.FileMakefileCtx))
 	return nil
 }

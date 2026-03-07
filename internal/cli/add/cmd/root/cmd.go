@@ -68,45 +68,48 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringVarP(
 		&priority,
 		"priority", "p", "",
-		"Priority level for tasks (high, medium, low)",
+		assets.FlagDesc("add.priority"),
 	)
-	_ = cmd.RegisterFlagCompletionFunc("priority", func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
-		return []string{"high", "medium", "low"}, cobra.ShellCompDirectiveNoFileComp
-	})
+	_ = cmd.RegisterFlagCompletionFunc(
+		"priority", func(_ *cobra.Command, _ []string, _ string) (
+			[]string, cobra.ShellCompDirective,
+		) {
+			return []string{"high", "medium", "low"}, cobra.ShellCompDirectiveNoFileComp
+		})
 	cmd.Flags().StringVarP(
 		&section,
 		"section", "s", "",
-		"Target section within file",
+		assets.FlagDesc("add.section"),
 	)
 	cmd.Flags().StringVarP(
 		&fromFile,
 		"file", "f", "",
-		"Read content from file instead of argument",
+		assets.FlagDesc("add.file"),
 	)
 	cmd.Flags().StringVarP(
 		&context,
 		"context", "c", "",
-		"Context for decisions: what prompted this decision (required for decisions)",
+		assets.FlagDesc("add.context"),
 	)
 	cmd.Flags().StringVarP(
 		&rationale,
 		"rationale", "r", "",
-		"Rationale for decisions: why this choice over alternatives (required for decisions)",
+		assets.FlagDesc("add.rationale"),
 	)
 	cmd.Flags().StringVar(
 		&consequences,
 		"consequences", "",
-		"Consequences for decisions: what changes as a result (required for decisions)",
+		assets.FlagDesc("add.consequences"),
 	)
 	cmd.Flags().StringVarP(
 		&lesson,
 		"lesson", "l", "",
-		"Lesson for learnings: the key insight (required for learnings)",
+		assets.FlagDesc("add.lesson"),
 	)
 	cmd.Flags().StringVarP(
 		&application,
 		"application", "a", "",
-		"Application for learnings: how to apply this going forward (required for learnings)",
+		assets.FlagDesc("add.application"),
 	)
 
 	return cmd

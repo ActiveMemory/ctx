@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 		&dryRun,
 		"dry-run",
 		false,
-		"Preview changes without modifying files",
+		assets.FlagDesc("task.archive.dry-run"),
 	)
 
 	return cmd

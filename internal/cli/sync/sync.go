@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(
 		&dryRun,
-		"dry-run", false, "Show what would change without modifying",
+		"dry-run", false, assets.FlagDesc("sync.dry-run"),
 	)
 
 	return cmd

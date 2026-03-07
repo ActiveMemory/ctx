@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/compact/core"
@@ -46,12 +45,8 @@ func Run(cmd *cobra.Command, archive bool) error {
 		archive = true
 	}
 
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-	cyan := color.New(color.FgCyan).SprintFunc()
-
-	cmd.Println(cyan("Compact Analysis"))
-	cmd.Println(cyan("================"))
+	cmd.Println("Compact Analysis")
+	cmd.Println("================")
 	cmd.Println()
 
 	changes := 0
@@ -59,7 +54,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 	// Process TASKS.md
 	tasksChanges, err := core.CompactTasks(cmd, ctx, archive)
 	if err != nil {
-		cmd.Println(fmt.Sprintf("%s Error processing TASKS.md: %v", yellow("⚠"), err))
+		cmd.Println(fmt.Sprintf("⚠ Error processing TASKS.md: %v", err))
 	} else {
 		changes += tasksChanges
 	}
@@ -73,7 +68,7 @@ func Run(cmd *cobra.Command, archive bool) error {
 		if count > 0 {
 			if err := os.WriteFile(f.Path, []byte(cleaned), config.PermFile); err == nil {
 				cmd.Println(
-					fmt.Sprintf("%s Removed %d empty sections from %s", green("✓"), count, f.Name),
+					fmt.Sprintf("✓ Removed %d empty sections from %s", count, f.Name),
 				)
 				changes += count
 			}
@@ -81,10 +76,10 @@ func Run(cmd *cobra.Command, archive bool) error {
 	}
 
 	if changes == 0 {
-		cmd.Println(fmt.Sprintf("%s Nothing to compact — context is already clean", green("✓")))
+		cmd.Println("✓ Nothing to compact — context is already clean")
 	} else {
 		cmd.Println()
-		cmd.Println(fmt.Sprintf("%s Compacted %d items", green("✓"), changes))
+		cmd.Println(fmt.Sprintf("✓ Compacted %d items", changes))
 	}
 
 	return nil

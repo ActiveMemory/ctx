@@ -37,12 +37,12 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVarP(&limit, "limit", "n", 20, "Maximum sessions to display")
-	cmd.Flags().StringVarP(&project, "project", "p", "", "Filter by project name")
-	cmd.Flags().StringVarP(&tool, "tool", "t", "", "Filter by tool (e.g., claude-code)")
-	cmd.Flags().StringVar(&since, "since", "", "Show sessions on or after this date (YYYY-MM-DD)")
-	cmd.Flags().StringVar(&until, "until", "", "Show sessions on or before this date (YYYY-MM-DD)")
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false, "Include sessions from all projects")
+	cmd.Flags().IntVarP(&limit, "limit", "n", 20, assets.FlagDesc("recall.list.limit"))
+	cmd.Flags().StringVarP(&project, "project", "p", "", assets.FlagDesc("recall.list.project"))
+	cmd.Flags().StringVarP(&tool, "tool", "t", "", assets.FlagDesc("recall.list.tool"))
+	cmd.Flags().StringVar(&since, "since", "", assets.FlagDesc("recall.list.since"))
+	cmd.Flags().StringVar(&until, "until", "", assets.FlagDesc("recall.list.until"))
+	cmd.Flags().BoolVar(&allProjects, "all-projects", false, assets.FlagDesc("recall.list.all-projects"))
 
 	return cmd
 }

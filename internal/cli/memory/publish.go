@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -37,8 +38,8 @@ Exit codes:
 		},
 	}
 
-	cmd.Flags().IntVar(&budget, "budget", mem.DefaultPublishBudget, "Line budget for published content")
-	cmd.Flags().BoolVar(&dryRun, "dry-run", false, "Show what would be published without writing")
+	cmd.Flags().IntVar(&budget, "budget", mem.DefaultPublishBudget, assets.FlagDesc("memory.publish.budget"))
+	cmd.Flags().BoolVar(&dryRun, "dry-run", false, assets.FlagDesc("memory.publish.dry-run"))
 
 	return cmd
 }

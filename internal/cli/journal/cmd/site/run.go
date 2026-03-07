@@ -13,7 +13,6 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
@@ -89,8 +88,6 @@ func runJournalSite(
 	if len(entries) == 0 {
 		return ctxerr.NoJournalEntries(journalDir)
 	}
-
-	green := color.New(color.FgGreen).SprintFunc()
 
 	// Create output directory structure
 	docsDir := filepath.Join(output, config.JournalDirDocs)
@@ -304,8 +301,8 @@ func runJournalSite(
 	}
 
 	cmd.Println(fmt.Sprintf(
-		"%s Generated site with %d entries in %s",
-		green("\u2713"), len(entries), output,
+		"\u2713 Generated site with %d entries in %s",
+		len(entries), output,
 	))
 
 	// Build or serve if requested
