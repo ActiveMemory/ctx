@@ -34,7 +34,9 @@
     "copilot",
     "chat"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onChatParticipant:ctx.participant"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "chatParticipants": [
@@ -108,6 +110,54 @@
           {
             "name": "system",
             "description": "System diagnostics and bootstrap"
+          },
+          {
+            "name": "changes",
+            "description": "Show what changed since last session"
+          },
+          {
+            "name": "config",
+            "description": "Manage runtime configuration profiles"
+          },
+          {
+            "name": "doctor",
+            "description": "Structural health check"
+          },
+          {
+            "name": "guide",
+            "description": "Quick-reference cheat sheet"
+          },
+          {
+            "name": "why",
+            "description": "Read the philosophy behind ctx"
+          },
+          {
+            "name": "memory",
+            "description": "Bridge Claude Code auto memory into .context/"
+          },
+          {
+            "name": "prompt",
+            "description": "Manage reusable prompt templates"
+          },
+          {
+            "name": "decisions",
+            "description": "Manage DECISIONS.md file"
+          },
+          {
+            "name": "learnings",
+            "description": "Manage LEARNINGS.md file"
+          },
+          {
+            "name": "deps",
+            "description": "Show package dependency graph"
+          },
+          {
+            "name": "journal",
+            "description": "Analyze exported AI sessions"
+          },
+          {
+            "name": "reindex",
+            "description": "Regenerate indices for DECISIONS.md and LEARNINGS.md"
           }
         ],
         "disambiguation": [

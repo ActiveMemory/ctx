@@ -14,10 +14,28 @@ Type `@ctx` in the VS Code Chat view, then use slash commands:
 | `@ctx /drift` | Detect stale or invalid context |
 | `@ctx /recall` | Browse and search AI session history |
 | `@ctx /hook` | Generate AI tool integration configs |
-| `@ctx /add` | Add a task, decision, or learning |
+| `@ctx /add` | Add a task, decision, learning, or convention |
 | `@ctx /load` | Output assembled context Markdown |
 | `@ctx /compact` | Archive completed tasks and clean up |
 | `@ctx /sync` | Reconcile context with codebase |
+| `@ctx /complete` | Mark a task as completed |
+| `@ctx /remind` | Manage session-scoped reminders |
+| `@ctx /tasks` | Archive or snapshot tasks |
+| `@ctx /pad` | Encrypted scratchpad for sensitive notes |
+| `@ctx /notify` | Send webhook notifications |
+| `@ctx /system` | System diagnostics and bootstrap |
+| `@ctx /changes` | Show what changed since last session |
+| `@ctx /config` | Manage runtime configuration profiles |
+| `@ctx /doctor` | Structural health check |
+| `@ctx /guide` | Quick-reference cheat sheet |
+| `@ctx /why` | Read the philosophy behind ctx |
+| `@ctx /memory` | Bridge Claude Code auto memory into .context/ |
+| `@ctx /prompt` | Manage reusable prompt templates |
+| `@ctx /decisions` | Manage DECISIONS.md file |
+| `@ctx /learnings` | Manage LEARNINGS.md file |
+| `@ctx /deps` | Show package dependency graph |
+| `@ctx /journal` | Analyze exported AI sessions |
+| `@ctx /reindex` | Regenerate indices for DECISIONS.md and LEARNINGS.md |
 
 ## Prerequisites
 
