@@ -9,6 +9,7 @@ package status
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	internalConfig "github.com/ActiveMemory/ctx/internal/config"
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
@@ -19,9 +20,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured status subcommand
 func Cmd() *cobra.Command {
+	short, _ := assets.CommandDesc("config.status")
+
 	return &cobra.Command{
 		Use:         "status",
-		Short:       "Show active .ctxrc profile",
+		Short:       short,
 		Annotations: map[string]string{internalConfig.AnnotationSkipInit: ""},
 		Args:        cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {

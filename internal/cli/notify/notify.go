@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/setup"
 	"github.com/ActiveMemory/ctx/internal/cli/notify/cmd/test"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
@@ -27,19 +28,12 @@ func Cmd() *cobra.Command {
 	var hook string
 	var variant string
 
+	short, long := assets.CommandDesc("notify")
 	cmd := &cobra.Command{
 		Use:   "notify [message]",
-		Short: "Send a webhook notification",
-		Long: `Send a fire-and-forget webhook notification.
-
-Requires a configured webhook URL (see "ctx notify setup").
-Silent noop when no webhook is configured or the event is filtered.
-
-Examples:
-  ctx notify --event loop "Loop completed after 5 iterations"
-  ctx notify -e nudge -s session-abc "Context checkpoint at prompt #20"
-  ctx notify -e relay --hook check-version --variant mismatch "Version mismatch"`,
-		Args: cobra.MinimumNArgs(0),
+		Short: short,
+		Long:  long,
+		Args:  cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if event == "" {
 				return fmt.Errorf("required flag \"event\" not set")

@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -23,20 +24,11 @@ import (
 func Cmd() *cobra.Command {
 	var output string
 
+	short, long := assets.CommandDesc("journal.obsidian")
 	cmd := &cobra.Command{
 		Use:   "obsidian",
-		Short: "Generate an Obsidian vault from journal entries",
-		Long: `Generate an Obsidian-compatible vault from .context/journal/ entries.
-
-Creates a vault structure with:
-  - Wikilinks for internal navigation
-  - MOC (Map of Content) pages for topics, files, and types
-  - Related sessions footer for graph connectivity
-  - Minimal .obsidian/ configuration
-
-Examples:
-  ctx journal obsidian                          # Generate in .context/journal-obsidian/
-  ctx journal obsidian --output ~/vaults/ctx    # Custom output directory`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runJournalObsidian(cmd, output)
 		},

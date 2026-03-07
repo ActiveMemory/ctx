@@ -9,6 +9,7 @@ package deps
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	depsroot "github.com/ActiveMemory/ctx/internal/cli/deps/cmd/root"
 )
 
@@ -28,22 +29,11 @@ func Cmd() *cobra.Command {
 		projType string
 	)
 
+	short, long := assets.CommandDesc("deps")
 	cmd := &cobra.Command{
 		Use:   "deps",
-		Short: "Show package dependency graph",
-		Long: `Generate a dependency graph from source code.
-
-Outputs a Mermaid graph of internal package dependencies by default.
-Use --external to include external module dependencies.
-
-Supported project types: Go, Node.js, Python, Rust.
-Auto-detected from manifest files (go.mod, package.json,
-requirements.txt/pyproject.toml, Cargo.toml). Use --type to override.
-
-Output formats:
-  mermaid   Mermaid graph definition (default)
-  table     Package | Imports table
-  json      Machine-readable adjacency list`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return depsroot.Run(cmd, format, external, projType)
 		},

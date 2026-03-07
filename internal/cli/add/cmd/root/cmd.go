@@ -9,6 +9,7 @@ package root
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 )
 
@@ -42,33 +43,12 @@ func Cmd() *cobra.Command {
 		application  string
 	)
 
+	short, long := assets.CommandDesc("add")
+
 	cmd := &cobra.Command{
-		Use:   "add <type> [content]",
-		Short: "Add a new item to a context file",
-		Long: `Add a new decision, task, learning, or convention
-to the appropriate context file.
-
-Types:
-  decision    Add to DECISIONS.md (requires --context, --rationale, --consequences)
-  learning    Add to LEARNINGS.md (requires --context, --lesson, --application)
-  task        Add to TASKS.md
-  convention  Add to CONVENTIONS.md
-
-Content can be provided as:
-  - Command argument: ctx add learning "title here"
-  - File: ctx add learning --file /path/to/content.md
-  - Stdin: echo "title" | ctx add learning
-
-Examples:
-  ctx add decision "Use PostgreSQL" \
-    --context "Need a reliable database for production" \
-    --rationale "PostgreSQL offers ACID compliance and JSON support" \
-    --consequences "Team needs PostgreSQL training"
-  ctx add learning "Go embed requires files in same package" \
-    --context "Tried to embed files from parent directory" \
-    --lesson "go:embed only works with files in same or child directories" \
-    --application "Keep embedded files in internal/templates/, not project root"
-  ctx add task "Implement user authentication" --priority high`,
+		Use:       "add <type> [content]",
+		Short:     short,
+		Long:      long,
 		Args:      cobra.MinimumNArgs(1),
 		ValidArgs: []string{"task", "decision", "learning", "convention"},
 		RunE: func(cmd *cobra.Command, args []string) error {

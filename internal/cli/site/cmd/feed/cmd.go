@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx site feed" subcommand.
@@ -23,19 +25,12 @@ func Cmd() *cobra.Command {
 		baseURL string
 	)
 
+	short, long := assets.CommandDesc("site.feed")
+
 	cmd := &cobra.Command{
 		Use:   "feed",
-		Short: "Generate an Atom 1.0 feed from blog posts",
-		Long: `Generate an Atom 1.0 feed from finalized blog posts in docs/blog/.
-
-Parses YAML frontmatter for title, date, author, and topics. Extracts
-a summary from the first paragraph after the heading. Only posts with
-reviewed_and_finalized: true are included.
-
-Examples:
-  ctx site feed
-  ctx site feed --out /tmp/feed.xml
-  ctx site feed --base-url https://example.com`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runFeed(cmd, "docs/blog", out, baseURL)
 		},

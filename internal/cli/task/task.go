@@ -18,6 +18,7 @@ package task
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/archive"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/snapshot"
 )
@@ -31,18 +32,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured tasks command with subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("task")
+
 	cmd := &cobra.Command{
 		Use:   "tasks",
-		Short: "Manage task archival and snapshots",
-		Long: `Manage task archival and snapshots.
-
-Tasks can be archived to move completed items out of TASKS.md while
-preserving them for historical reference. Snapshots create point-in-time
-copies without modifying the original.
-
-Subcommands:
-  archive   Move completed tasks to timestamped archive file
-  snapshot  Create point-in-time snapshot of TASKS.md`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(archive.Cmd())

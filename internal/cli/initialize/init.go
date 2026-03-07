@@ -9,6 +9,7 @@ package initialize
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	initroot "github.com/ActiveMemory/ctx/internal/cli/initialize/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -56,48 +57,12 @@ func Cmd() *cobra.Command {
 		noPluginEnable bool
 	)
 
+	short, long := assets.CommandDesc("initialize")
 	cmd := &cobra.Command{
 		Use:         "init",
-		Short:       "Initialize a new .context/ directory with template files",
+		Short:       short,
 		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
-		Long: `Initialize a new .context/ directory with template files for
-maintaining persistent context for AI coding assistants.
-
-The following files are created:
-  - CONSTITUTION.md  — Hard invariants that must never be violated
-  - TASKS.md         — Current and planned work
-  - DECISIONS.md     — Architectural decisions with rationale
-  - LEARNINGS.md     — Lessons learned, gotchas, tips
-  - CONVENTIONS.md   — Project patterns and standards
-  - ARCHITECTURE.md  — System overview
-  - GLOSSARY.md      — Domain terms and abbreviations
-  - AGENT_PLAYBOOK.md — How AI agents should use this system
-
-Additionally, in the project root:
-  - PROMPT.md              — Session prompt for AI agents
-  - IMPLEMENTATION_PLAN.md — High-level project direction
-  - CLAUDE.md              — Claude Code configuration
-
-Use --minimal to only create essential files
-(TASKS.md, DECISIONS.md, CONSTITUTION.md).
-
-Use --ralph for autonomous loop mode where the agent works without
-asking clarifying questions, uses completion signals, and follows
-one-task-per-iteration discipline.
-
-By default (without --ralph), the agent is encouraged to ask questions
-when requirements are unclear — better for collaborative sessions.
-
-If the ctx Claude Code plugin is installed, init auto-enables it in
-~/.claude/settings.json so it works across all projects.
-Use --no-plugin-enable to skip this step.
-
-Examples:
-  ctx init           # Collaborative mode (agent asks questions)
-  ctx init --ralph   # Autonomous mode (agent works independently)
-  ctx init --minimal # Only essential files (TASKS, DECISIONS, CONSTITUTION)
-  ctx init --force   # Overwrite existing files without prompting
-  ctx init --merge   # Auto-merge ctx content into existing files`,
+		Long:        long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return initroot.Run(cmd, force, minimal, merge, ralph, noPluginEnable)
 		},

@@ -10,6 +10,8 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the pad mv subcommand.
@@ -17,9 +19,10 @@ import (
 // Returns:
 //   - *cobra.Command: Configured mv subcommand
 func Cmd() *cobra.Command {
+	short, _ := assets.CommandDesc("pad.mv")
 	return &cobra.Command{
 		Use:   "mv N M",
-		Short: "Move an entry from position N to position M",
+		Short: short,
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			n, err := strconv.Atoi(args[0])

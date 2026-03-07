@@ -9,6 +9,7 @@ package status
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	statusroot "github.com/ActiveMemory/ctx/internal/cli/status/cmd/root"
 )
 
@@ -26,16 +27,12 @@ func Cmd() *cobra.Command {
 		verbose    bool
 	)
 
+	short, long := assets.CommandDesc("status")
+
 	cmd := &cobra.Command{
 		Use:   "status",
-		Short: "Show context summary with token estimate",
-		Long: `Display a summary of the current .context/ directory including:
-  - Number of context files
-  - Estimated token count
-  - Status of each file
-  - Recent activity
-
-Use --verbose to include content previews for each file.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return statusroot.Run(cmd, jsonOutput, verbose)
 		},

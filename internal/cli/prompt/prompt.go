@@ -9,6 +9,7 @@ package prompt
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/list"
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/cmd/rm"
@@ -22,22 +23,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured prompt command with subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("prompt")
+
 	cmd := &cobra.Command{
 		Use:   "prompt",
-		Short: "Manage reusable prompt templates",
-		Long: `Manage prompt templates stored in .context/prompts/.
-
-Prompt templates are plain markdown files — no frontmatter, no build step.
-Use them as lightweight, reusable instructions for common tasks like
-code reviews, refactoring, or explaining code.
-
-When invoked without a subcommand, lists all available prompts.
-
-Subcommands:
-  list     List available prompt templates
-  show     Print a prompt template to stdout
-  add      Create a new prompt from embedded template or stdin
-  rm       Remove a prompt template`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return list.RunList(cmd)
 		},

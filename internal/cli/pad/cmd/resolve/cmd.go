@@ -8,6 +8,8 @@ package resolve
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the pad resolve subcommand.
@@ -15,14 +17,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured resolve subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("pad.resolve")
 	return &cobra.Command{
 		Use:   "resolve",
-		Short: "Show both sides of a merge conflict",
-		Long: `Decrypt and display both sides of a merge conflict for the scratchpad.
-
-Git stores conflict versions as .context/scratchpad.enc.ours and
-.context/scratchpad.enc.theirs during a merge conflict. This command
-decrypts both and displays them for manual resolution.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runResolve(cmd)
 		},

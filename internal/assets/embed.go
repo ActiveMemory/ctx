@@ -12,12 +12,14 @@ package assets
 import (
 	"embed"
 	"encoding/json"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"strings"
 	"sync"
+
+	"github.com/ActiveMemory/ctx/internal/config"
+	"gopkg.in/yaml.v3"
 )
 
-//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -364,6 +366,53 @@ func ListWhyDocs() ([]string, error) {
 //   - error: Non-nil if the file is not found or read fails
 func Schema() ([]byte, error) {
 	return FS.ReadFile("schema/ctxrc.schema.json")
+}
+
+var (
+	commandsOnce sync.Once
+	commandsMap  map[string]commandEntry
+)
+
+type commandEntry struct {
+	Short string `yaml:"short"`
+	Long  string `yaml:"long"`
+}
+
+// loadCommands parses the embedded commands.yaml once.
+func loadCommands() {
+	commandsOnce.Do(func() {
+		data, readErr := FS.ReadFile("commands/commands.yaml")
+		if readErr != nil {
+			commandsMap = make(map[string]commandEntry)
+			return
+		}
+		m := make(map[string]commandEntry)
+		if parseErr := yaml.Unmarshal(data, &m); parseErr != nil {
+			commandsMap = make(map[string]commandEntry)
+			return
+		}
+		commandsMap = m
+	})
+}
+
+// CommandDesc returns the Short and Long descriptions for a command.
+//
+// Keys use dot notation: "pad", "pad.show", "system.bootstrap".
+// Returns empty strings if the key is not found.
+//
+// Parameters:
+//   - key: Command key in dot notation
+//
+// Returns:
+//   - short: One-line description
+//   - long: Multi-line help text (may be empty)
+func CommandDesc(key string) (short, long string) {
+	loadCommands()
+	entry, ok := commandsMap[key]
+	if !ok {
+		return "", ""
+	}
+	return entry.Short, entry.Long
 }
 
 var (

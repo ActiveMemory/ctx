@@ -8,6 +8,8 @@ package rm
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the prompt rm subcommand.
@@ -15,9 +17,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured rm subcommand
 func Cmd() *cobra.Command {
+	short, _ := assets.CommandDesc("prompt.rm")
+
 	return &cobra.Command{
 		Use:   "rm NAME",
-		Short: "Remove a prompt template",
+		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRm(cmd, args[0])

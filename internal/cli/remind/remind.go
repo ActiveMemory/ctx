@@ -9,6 +9,7 @@ package remind
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/add"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/dismiss"
 	"github.com/ActiveMemory/ctx/internal/cli/remind/cmd/list"
@@ -24,22 +25,13 @@ import (
 func Cmd() *cobra.Command {
 	var afterFlag string
 
+	short, long := assets.CommandDesc("remind")
+
 	cmd := &cobra.Command{
 		Use:   "remind [TEXT]",
-		Short: "Session-scoped reminders",
-		Long: `Manage session-scoped reminders stored in .context/reminders.json.
-
-Reminders surface verbatim at session start and repeat every session until
-dismissed. Use --after to gate a reminder until a specific date.
-
-When invoked with a text argument, adds a reminder (equivalent to "remind add").
-When invoked with no arguments, lists all reminders.
-
-Subcommands:
-  add      Add a reminder (default action)
-  list     Show all pending reminders
-  dismiss  Dismiss one or all reminders`,
-		Args: cobra.ArbitraryArgs,
+		Short: short,
+		Long:  long,
+		Args:  cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return add.RunAdd(cmd, args[0], afterFlag)

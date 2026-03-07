@@ -23,7 +23,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/changes"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
 	"github.com/ActiveMemory/ctx/internal/cli/complete"
-	cliconfig "github.com/ActiveMemory/ctx/internal/cli/config"
+	"github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/deps"
 	"github.com/ActiveMemory/ctx/internal/cli/doctor"
@@ -35,8 +35,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/learnings"
 	"github.com/ActiveMemory/ctx/internal/cli/load"
 	"github.com/ActiveMemory/ctx/internal/cli/loop"
-	climcp "github.com/ActiveMemory/ctx/internal/cli/mcp"
-	climemory "github.com/ActiveMemory/ctx/internal/cli/memory"
+	"github.com/ActiveMemory/ctx/internal/cli/mcp"
+	"github.com/ActiveMemory/ctx/internal/cli/memory"
 	"github.com/ActiveMemory/ctx/internal/cli/notify"
 	"github.com/ActiveMemory/ctx/internal/cli/pad"
 	"github.com/ActiveMemory/ctx/internal/cli/pause"
@@ -70,28 +70,25 @@ import (
 //   - *cobra.Command: The same command with all subcommands registered
 func Initialize(cmd *cobra.Command) *cobra.Command {
 	for _, c := range []func() *cobra.Command{
-		initialize.Cmd,
-		status.Cmd,
-		load.Cmd,
 		add.Cmd,
-		complete.Cmd,
 		agent.Cmd,
-		drift.Cmd,
-		guide.Cmd,
-		sync.Cmd,
 		changes.Cmd,
 		compact.Cmd,
-		cliconfig.Cmd,
+		complete.Cmd,
+		config.Cmd,
 		decision.Cmd,
 		deps.Cmd,
 		doctor.Cmd,
-		watch.Cmd,
+		drift.Cmd,
+		guide.Cmd,
 		hook.Cmd,
+		initialize.Cmd,
+		journal.Cmd,
 		learnings.Cmd,
-		task.Cmd,
+		load.Cmd,
 		loop.Cmd,
-		climcp.Cmd,
-		climemory.Cmd,
+		mcp.Cmd,
+		memory.Cmd,
 		notify.Cmd,
 		pad.Cmd,
 		pause.Cmd,
@@ -101,10 +98,13 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		reindex.Cmd,
 		remind.Cmd,
 		resume.Cmd,
-		journal.Cmd,
 		serve.Cmd,
 		site.Cmd,
+		status.Cmd,
+		sync.Cmd,
 		system.Cmd,
+		task.Cmd,
+		watch.Cmd,
 		why.Cmd,
 	} {
 		cmd.AddCommand(c())

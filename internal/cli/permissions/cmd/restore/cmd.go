@@ -8,6 +8,8 @@ package restore
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx permissions restore" subcommand.
@@ -15,13 +17,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured restore subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("permissions.restore")
+
 	return &cobra.Command{
 		Use:   "restore",
-		Short: "Reset settings.local.json from golden image",
-		Long: `Replace .claude/settings.local.json with the golden image.
-
-Prints a diff of dropped (session-accumulated) and restored permissions.
-No-op if the files already match.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return RunRestore(cmd)
 		},

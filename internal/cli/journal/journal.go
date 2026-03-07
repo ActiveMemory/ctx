@@ -9,6 +9,7 @@ package journal
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/obsidian"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/cmd/site"
 )
@@ -21,23 +22,11 @@ import (
 // Returns:
 //   - *cobra.Command: The journal command with subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("journal")
 	cmd := &cobra.Command{
 		Use:   "journal",
-		Short: "Analyze and synthesize exported sessions",
-		Long: `Work with exported session files in .context/journal/.
-
-The journal system provides tools for analyzing, enriching, and
-publishing your AI session history.
-
-Subcommands:
-  site      Generate a static site from journal entries
-  obsidian  Generate an Obsidian vault from journal entries
-
-Examples:
-  ctx journal site                    # Generate site in .context/journal-site/
-  ctx journal site --output ~/public  # Custom output directory
-  ctx journal site --serve            # Generate and serve locally
-  ctx journal obsidian                # Generate Obsidian vault`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(site.Cmd())

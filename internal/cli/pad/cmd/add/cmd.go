@@ -8,6 +8,8 @@ package add
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the pad add subcommand.
@@ -17,9 +19,10 @@ import (
 func Cmd() *cobra.Command {
 	var filePath string
 
+	short, _ := assets.CommandDesc("pad.add")
 	cmd := &cobra.Command{
 		Use:   "add TEXT",
-		Short: "Append a new entry to the scratchpad",
+		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if filePath != "" {

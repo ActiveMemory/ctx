@@ -10,6 +10,7 @@ package mcp
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 	internalmcp "github.com/ActiveMemory/ctx/internal/mcp"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -17,10 +18,11 @@ import (
 
 // Cmd returns the mcp command group.
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("mcp")
 	cmd := &cobra.Command{
 		Use:   "mcp",
-		Short: "Model Context Protocol server",
-		Long:  "Run ctx as an MCP server over stdin/stdout.\n\nThe MCP server exposes context files as resources and ctx commands as tools,\nenabling any MCP-compatible AI tool to access project context.",
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(serveCmd())

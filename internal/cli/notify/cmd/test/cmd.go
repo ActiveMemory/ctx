@@ -8,6 +8,8 @@ package test
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx notify test" subcommand.
@@ -15,10 +17,11 @@ import (
 // Returns:
 //   - *cobra.Command: Configured test subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("notify.test")
 	return &cobra.Command{
 		Use:   "test",
-		Short: "Send a test notification",
-		Long:  `Sends a test notification to the configured webhook and reports the HTTP status.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runTest(cmd)
 		},

@@ -9,9 +9,9 @@ package guide
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
-
+	"github.com/ActiveMemory/ctx/internal/assets"
 	guideroot "github.com/ActiveMemory/ctx/internal/cli/guide/cmd/root"
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx guide" cobra command.
@@ -24,17 +24,12 @@ func Cmd() *cobra.Command {
 		showCommands bool
 	)
 
+	short, long := assets.CommandDesc("guide")
 	cmd := &cobra.Command{
 		Use:         "guide",
-		Short:       "Quick-reference cheat sheet for ctx",
+		Short:       short,
 		Annotations: map[string]string{config.AnnotationSkipInit: ""},
-		Long: `Use-case-oriented cheat sheet for ctx.
-
-Shows core commands grouped by workflow, key skills, and common recipes.
-Default output fits one screen.
-
-Use --skills to list all available slash-command skills.
-Use --commands to list all CLI commands.`,
+		Long:        long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return guideroot.Run(cmd, showSkills, showCommands)
 		},

@@ -477,6 +477,8 @@ Goal: consolidate user-facing messages into `internal/write/` as the central
 output package. All CLI commands should route printed output through this package.
 
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
+- [ ] Validate .ctxrc against ctxrc.schema.json at load time — schema is embedded but never enforced, doctor does field-level checks without using it #added:2026-03-06-174851
+
 - [ ] Fix 3 CI compliance issues from PR #27 after merge: missing copyright header on internal/mcp/server_test.go, missing doc.go for internal/cli/mcp/, literal newlines in internal/mcp/resources.go and tools.go #added:2026-03-06-141508
 
 - [ ] Add PostToolUse session event capture. Append lightweight event records (tool name, files touched, timestamp) to .context/state/session-events.jsonl on significant PostToolUse events (file edits, git operations, errors). Not SQLite — just JSONL append. This feeds the PreCompact snapshot hook with richer input so it can report what the agent was actively working on, not just static file state. #added:2026-03-06-185126

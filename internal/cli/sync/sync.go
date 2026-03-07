@@ -9,6 +9,7 @@ package sync
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	syncroot "github.com/ActiveMemory/ctx/internal/cli/sync/cmd/root"
 )
 
@@ -26,18 +27,12 @@ import (
 func Cmd() *cobra.Command {
 	var dryRun bool
 
+	short, long := assets.CommandDesc("sync")
+
 	cmd := &cobra.Command{
 		Use:   "sync",
-		Short: "Reconcile context with codebase",
-		Long: `Scan the codebase and reconcile context files with current state.
-
-Actions performed:
-  - Scan for new directories that should be in ARCHITECTURE.md
-  - Check for package.json/go.mod changes
-  - Identify stale references
-  - Suggest updates to context files
-
-Use --dry-run to see what would change without modifying files.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return syncroot.Run(cmd, dryRun)
 		},

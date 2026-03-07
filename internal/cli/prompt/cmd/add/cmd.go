@@ -8,6 +8,8 @@ package add
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the prompt add subcommand.
@@ -17,18 +19,13 @@ import (
 func Cmd() *cobra.Command {
 	var fromStdin bool
 
+	short, long := assets.CommandDesc("prompt.add")
+
 	cmd := &cobra.Command{
 		Use:   "add NAME",
-		Short: "Create a new prompt from embedded template or stdin",
-		Long: `Create a new prompt template in .context/prompts/.
-
-By default, creates from an embedded starter template if one exists
-with the given name. Use --stdin to read content from standard input.
-
-Examples:
-  ctx prompt add code-review
-  echo "# My Prompt" | ctx prompt add my-prompt --stdin`,
-		Args: cobra.ExactArgs(1),
+		Short: short,
+		Long:  long,
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runAdd(cmd, args[0], fromStdin)
 		},

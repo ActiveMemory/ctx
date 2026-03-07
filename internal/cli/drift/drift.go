@@ -9,6 +9,7 @@ package drift
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	driftroot "github.com/ActiveMemory/ctx/internal/cli/drift/cmd/root"
 )
 
@@ -29,19 +30,11 @@ func Cmd() *cobra.Command {
 		fix        bool
 	)
 
+	short, long := assets.CommandDesc("drift")
 	cmd := &cobra.Command{
 		Use:   "drift",
-		Short: "Detect stale or invalid context",
-		Long: `Run drift detection to find stale paths,
-broken references, and constitution violations.
-
-Checks performed:
-  - Path references in ARCHITECTURE.md and CONVENTIONS.md exist
-  - Staleness indicators (many completed tasks)
-  - Constitution rule violations (potential secrets)
-  - Required files are present
-
-Use --json for machine-readable output.`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return driftroot.Run(cmd, jsonOutput, fix)
 		},

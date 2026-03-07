@@ -8,6 +8,8 @@ package export
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the pad export subcommand.
@@ -17,21 +19,12 @@ import (
 func Cmd() *cobra.Command {
 	var force, dryRun bool
 
+	short, long := assets.CommandDesc("pad.export")
 	cmd := &cobra.Command{
 		Use:   "export [DIR]",
-		Short: "Export blob entries to a directory as files",
-		Long: `Export all blob entries from the scratchpad to a directory as files.
-Each blob's label becomes the filename. Non-blob entries are skipped.
-
-When a file already exists, a unix timestamp is prepended to avoid
-collisions. Use --force to overwrite instead.
-
-Examples:
-  ctx pad export
-  ctx pad export ./ideas
-  ctx pad export --dry-run
-  ctx pad export --force ./backup`,
-		Args: cobra.MaximumNArgs(1),
+		Short: short,
+		Long:  long,
+		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dir := "."
 			if len(args) > 0 {

@@ -8,6 +8,8 @@ package sync
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx recall sync" subcommand.
@@ -19,25 +21,12 @@ import (
 // Returns:
 //   - *cobra.Command: Command for syncing lock state from frontmatter
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc("recall.sync")
+
 	cmd := &cobra.Command{
 		Use:   "sync",
-		Short: "Sync lock state from journal frontmatter to state file",
-		Long: `Scan journal markdowns and sync their lock state to .state.json.
-
-This is the sister command to "ctx recall lock". Instead of marking files
-locked in state and updating frontmatter, it reads "locked: true" from
-each file's YAML frontmatter and updates .state.json to match.
-
-Typical workflow:
-  1. Enrich journal entries (add "locked: true" to frontmatter)
-  2. Run "ctx recall sync" to propagate lock state to .state.json
-
-Files with "locked: true" in frontmatter will be marked locked in state.
-Files without a "locked:" line (or with "locked: false") will have their
-lock cleared if one exists in state.
-
-Examples:
-  ctx recall sync`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runSync(cmd)
 		},
