@@ -8,6 +8,8 @@ package bootstrap
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system bootstrap" subcommand.
@@ -22,7 +24,7 @@ func Cmd() *cobra.Command {
 			return runBootstrap(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, "Output in JSON format")
-	cmd.Flags().BoolP("quiet", "q", false, "Output only the context directory path")
+	cmd.Flags().Bool("json", false, assets.FlagDesc("system.bootstrap.json"))
+	cmd.Flags().BoolP("quiet", "q", false, assets.FlagDesc("system.bootstrap.quiet"))
 	return cmd
 }

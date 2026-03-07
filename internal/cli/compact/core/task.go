@@ -11,7 +11,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -46,9 +45,6 @@ func CompactTasks(
 	content := string(tasksFile.Content)
 	lines := strings.Split(content, config.NewlineLF)
 
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-
 	// Parse task blocks
 	blocks := ParseTaskBlocks(lines)
 
@@ -58,12 +54,12 @@ func CompactTasks(
 		if block.IsArchivable {
 			archivableBlocks = append(archivableBlocks, block)
 			cmd.Println(fmt.Sprintf(
-				"%s Moving completed task: %s", green("✓"),
+				"✓ Moving completed task: %s",
 				TruncateString(block.ParentTaskText(), 50),
 			))
 		} else {
 			cmd.Println(fmt.Sprintf(
-				"%s Skipping (has incomplete children): %s", yellow("!"),
+				"! Skipping (has incomplete children): %s",
 				TruncateString(block.ParentTaskText(), 50),
 			))
 		}
@@ -119,7 +115,7 @@ func CompactTasks(
 			}
 			if archiveFile, err := WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent); err == nil {
 				cmd.Println(fmt.Sprintf(
-					"%s Archived %d tasks to %s (older than %d days)", green("✓"),
+					"✓ Archived %d tasks to %s (older than %d days)",
 					len(blocksToArchive), archiveFile, archiveDays,
 				))
 			}

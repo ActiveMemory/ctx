@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
@@ -32,7 +31,6 @@ import (
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func runSnapshot(cmd *cobra.Command, args []string) error {
-	green := color.New(color.FgGreen).SprintFunc()
 	tasksPath := core.TasksFilePath()
 	archivePath := core.ArchiveDirPath()
 
@@ -79,7 +77,7 @@ func runSnapshot(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to write snapshot: %w", writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("%s Snapshot saved to %s", green("✓"), snapshotPath))
+	cmd.Println(fmt.Sprintf("✓ Snapshot saved to %s", snapshotPath))
 
 	return nil
 }

@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/drift/core"
@@ -45,9 +44,6 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 
 	// Apply fixes if requested
 	if fix && (len(report.Warnings) > 0 || len(report.Violations) > 0) {
-		green := color.New(color.FgGreen).SprintFunc()
-		yellow := color.New(color.FgYellow).SprintFunc()
-
 		cmd.Println("Applying fixes...")
 		cmd.Println()
 
@@ -55,14 +51,14 @@ func Run(cmd *cobra.Command, jsonOutput, fix bool) error {
 
 		cmd.Println()
 		if result.Fixed > 0 {
-			cmd.Println(fmt.Sprintf("%s Fixed %d issue(s)", green("✓"), result.Fixed))
+			cmd.Println(fmt.Sprintf("✓ Fixed %d issue(s)", result.Fixed))
 		}
 		if result.Skipped > 0 {
-			cmd.Println(fmt.Sprintf("%s Skipped %d issue(s) (cannot auto-fix)",
-				yellow("○"), result.Skipped))
+			cmd.Println(fmt.Sprintf("○ Skipped %d issue(s) (cannot auto-fix)",
+				result.Skipped))
 		}
 		for _, errMsg := range result.Errors {
-			cmd.Println(fmt.Sprintf("%s Error: %s", yellow("⚠"), errMsg))
+			cmd.Println(fmt.Sprintf("⚠ Error: %s", errMsg))
 		}
 
 		// Re-run detection to show the updated status

@@ -46,10 +46,10 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVar(
-		&budget, "budget", rc.DefaultTokenBudget, "Token budget for assembly",
+		&budget, "budget", rc.DefaultTokenBudget, assets.FlagDesc("load.budget"),
 	)
 	cmd.Flags().BoolVar(
-		&raw, "raw", false, "Output raw file contents without assembly",
+		&raw, "raw", false, assets.FlagDesc("load.raw"),
 	)
 
 	return cmd

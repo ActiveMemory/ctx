@@ -16,6 +16,34 @@ import (
 // a command from the PersistentPreRunE initialization guard.
 const AnnotationSkipInit = "skipInitCheck"
 
+// CmdCompletion is the name of Cobra's built-in completion parent command.
+const CmdCompletion = "completion"
+
+// Global CLI flag names.
+const (
+	FlagContextDir      = "context-dir"
+	FlagNoColor         = "no-color" // Retained for CLI compatibility
+	FlagAllowOutsideCwd = "allow-outside-cwd"
+)
+
+// CLI flag prefixes for display formatting.
+const (
+	FlagPrefixShort = "-"
+	FlagPrefixLong  = "--"
+)
+
+// Add command flag names — used for both flag registration and error display.
+const (
+	FlagContext      = "context"
+	FlagRationale    = "rationale"
+	FlagConsequences = "consequences"
+	FlagLesson       = "lesson"
+	FlagApplication  = "application"
+	FlagPriority     = "priority"
+	FlagSection      = "section"
+	FlagFile         = "file"
+)
+
 // Initialized reports whether the context directory contains all required files.
 func Initialized(contextDir string) bool {
 	for _, f := range FilesRequired {

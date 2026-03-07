@@ -11,7 +11,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
@@ -37,11 +36,9 @@ func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 		return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
 	}
 
-	cyan := color.New(color.FgCyan).SprintFunc()
-	cmd.Println(cyan("Watching for context updates..."))
+	cmd.Println("Watching for context updates...")
 	if dryRun {
-		yellow := color.New(color.FgYellow).SprintFunc()
-		cmd.Println(yellow("DRY RUN — No changes will be made"))
+		cmd.Println("DRY RUN — No changes will be made")
 	}
 	cmd.Println("Press Ctrl+C to stop")
 	cmd.Println()

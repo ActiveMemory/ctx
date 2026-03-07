@@ -39,9 +39,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&format, "format", "mermaid", "Output format: mermaid, table, json")
-	cmd.Flags().BoolVar(&external, "external", false, "Include external module dependencies")
-	cmd.Flags().StringVar(&projType, "type", "", "Force project type: go, node, python, rust")
+	cmd.Flags().StringVar(&format, "format", "mermaid", assets.FlagDesc("deps.format"))
+	cmd.Flags().BoolVar(&external, "external", false, assets.FlagDesc("deps.external"))
+	cmd.Flags().StringVar(&projType, "type", "", assets.FlagDesc("deps.type"))
 
 	return cmd
 }

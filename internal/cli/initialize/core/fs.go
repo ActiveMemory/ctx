@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -70,7 +69,6 @@ func FindInsertionPoint(content string) int {
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
 func UpdateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	green := color.New(color.FgGreen).SprintFunc()
 	startIdx := strings.Index(existing, config.CtxMarkerStart)
 	if startIdx == -1 {
 		return fmt.Errorf("ctx start marker not found")
@@ -94,10 +92,10 @@ func UpdateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) e
 	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
 		return fmt.Errorf("failed to create backup: %w", err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (backup)", green("✓"), backupName))
+	cmd.Println(fmt.Sprintf("  ✓ %s (backup)", backupName))
 	if err := os.WriteFile(config.FileClaudeMd, []byte(newContent), config.PermFile); err != nil {
 		return fmt.Errorf("failed to update %s: %w", config.FileClaudeMd, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s (updated ctx section)\n", green("✓"), config.FileClaudeMd))
+	cmd.Println(fmt.Sprintf("  ✓ %s (updated ctx section)\n", config.FileClaudeMd))
 	return nil
 }

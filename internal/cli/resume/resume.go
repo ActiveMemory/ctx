@@ -29,6 +29,6 @@ func Cmd() *cobra.Command {
 			return resumeroot.Run(cmd, sessionID)
 		},
 	}
-	cmd.Flags().String("session-id", "", "Session ID (overrides stdin)")
+	cmd.Flags().String("session-id", "", assets.FlagDesc("resume.session-id"))
 	return cmd
 }

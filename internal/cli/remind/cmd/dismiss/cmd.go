@@ -38,7 +38,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&allFlag, "all", false, "Dismiss all reminders")
+	cmd.Flags().BoolVar(&allFlag, "all", false, assets.FlagDesc("remind.dismiss.all"))
 
 	return cmd
 }

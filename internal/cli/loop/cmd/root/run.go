@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -37,8 +36,6 @@ func Run(
 	maxIterations int,
 	completionMsg, outputFile string,
 ) error {
-	green := color.New(color.FgGreen).SprintFunc()
-
 	// Validate tool
 	validTools := map[string]bool{"claude": true, "aider": true, "generic": true}
 	if !validTools[tool] {
@@ -57,7 +54,7 @@ func Run(
 		return fmt.Errorf("failed to write %s: %w", outputFile, err)
 	}
 
-	cmd.Println(fmt.Sprintf("%s Generated %s", green("✓"), outputFile))
+	cmd.Println(fmt.Sprintf("✓ Generated %s", outputFile))
 	cmd.Println()
 	cmd.Println(config.LoopHeadingStart)
 	cmd.Println(fmt.Sprintf("  ./%s", outputFile))

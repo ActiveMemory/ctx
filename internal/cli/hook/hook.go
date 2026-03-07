@@ -41,7 +41,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().BoolVarP(
 		&write, "write", "w", false,
-		"Write the configuration file instead of printing",
+		assets.FlagDesc("hook.write"),
 	)
 
 	return cmd

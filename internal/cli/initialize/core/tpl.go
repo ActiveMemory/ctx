@@ -11,7 +11,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -28,8 +27,6 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	templatesDir := filepath.Join(contextDir, "templates")
 	if err := os.MkdirAll(templatesDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", templatesDir, err)
@@ -41,7 +38,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 	for _, name := range entryTemplates {
 		targetPath := filepath.Join(templatesDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			cmd.Println(fmt.Sprintf("  %s templates/%s (exists, skipped)", yellow("○"), name))
+			cmd.Println(fmt.Sprintf("  ○ templates/%s (exists, skipped)", name))
 			continue
 		}
 		content, err := assets.Entry(name)
@@ -51,7 +48,7 @@ func CreateEntryTemplates(cmd *cobra.Command, contextDir string, force bool) err
 		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
-		cmd.Println(fmt.Sprintf("  %s templates/%s", green("✓"), name))
+		cmd.Println(fmt.Sprintf("  ✓ templates/%s", name))
 	}
 	return nil
 }

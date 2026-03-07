@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
@@ -41,7 +42,7 @@ Examples:
 		},
 	}
 
-	cmd.Flags().Bool("check", false, "Check if stage is set (exit 1 if not)")
+	cmd.Flags().Bool("check", false, assets.FlagDesc("system.markjournal.check"))
 
 	return cmd
 }

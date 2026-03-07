@@ -11,7 +11,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
@@ -70,8 +69,6 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	if len(entries) == 0 {
 		return ctxerr.NoJournalEntries(journalDir)
 	}
-
-	green := color.New(color.FgGreen).SprintFunc()
 
 	// Create output directory structure
 	dirs := []string{
@@ -248,8 +245,8 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	}
 
 	cmd.Println(fmt.Sprintf(
-		"%s Generated Obsidian vault with %d entries in %s",
-		green("\u2713"), len(entries), output,
+		"\u2713 Generated Obsidian vault with %d entries in %s",
+		len(entries), output,
 	))
 	cmd.Println()
 	cmd.Println("Next steps:")

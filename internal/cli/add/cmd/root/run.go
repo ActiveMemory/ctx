@@ -7,18 +7,17 @@
 package root
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // EntryParams is an alias for core.EntryParams, kept for backward
@@ -74,7 +73,8 @@ func ValidateEntry(params EntryParams) error {
 //   - params: EntryParams containing type, content, and optional fields
 //
 // Returns:
-//   - error: Non-nil if type is unknown, the file doesn't exist, or write fails
+//   - error: Non-nil if the type is unknown, the file doesn't exist, or
+//     write fails
 func WriteEntry(params EntryParams) error {
 	fType := strings.ToLower(params.Type)
 
@@ -122,7 +122,9 @@ func WriteEntry(params EntryParams) error {
 	// Append to file
 	newContent := core.AppendEntry(existing, entry, fType, params.Section)
 
-	if writeErr := os.WriteFile(filePath, newContent, config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(
+		filePath, newContent, config.PermFile,
+	); writeErr != nil {
 		return core.ErrFileWrite(filePath, writeErr)
 	}
 
@@ -131,12 +133,16 @@ func WriteEntry(params EntryParams) error {
 	switch config.UserInputToEntry(fType) {
 	case config.EntryDecision:
 		indexed := index.UpdateDecisions(string(newContent))
-		if indexErr := os.WriteFile(filePath, []byte(indexed), config.PermFile); indexErr != nil {
+		if indexErr := os.WriteFile(
+			filePath, []byte(indexed), config.PermFile,
+		); indexErr != nil {
 			return core.ErrIndexUpdate(filePath, indexErr)
 		}
 	case config.EntryLearning:
 		indexed := index.UpdateLearnings(string(newContent))
-		if indexErr := os.WriteFile(filePath, []byte(indexed), config.PermFile); indexErr != nil {
+		if indexErr := os.WriteFile(
+			filePath, []byte(indexed), config.PermFile,
+		); indexErr != nil {
 			return core.ErrIndexUpdate(filePath, indexErr)
 		}
 	case config.EntryTask, config.EntryConvention:
@@ -187,17 +193,17 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 	switch config.UserInputToEntry(fType) {
 	case config.EntryDecision:
 		if m := core.CheckRequired([][2]string{
-			{"--context", flags.Context},
-			{"--rationale", flags.Rationale},
-			{"--consequences", flags.Consequences},
+			{config.FlagPrefixLong + config.FlagContext, flags.Context},
+			{config.FlagPrefixLong + config.FlagRationale, flags.Rationale},
+			{config.FlagPrefixLong + config.FlagConsequences, flags.Consequences},
 		}); len(m) > 0 {
 			return core.ErrMissingDecision(m)
 		}
 	case config.EntryLearning:
 		if m := core.CheckRequired([][2]string{
-			{"--context", flags.Context},
-			{"--lesson", flags.Lesson},
-			{"--application", flags.Application},
+			{config.FlagPrefixLong + config.FlagContext, flags.Context},
+			{config.FlagPrefixLong + config.FlagLesson, flags.Lesson},
+			{config.FlagPrefixLong + config.FlagApplication, flags.Application},
 		}); len(m) > 0 {
 			return core.ErrMissingLearning(m)
 		}
@@ -214,8 +220,7 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 		return writeErr
 	}
 
-	green := color.New(color.FgGreen).SprintFunc()
-	cmd.Println(fmt.Sprintf("%s Added to %s", green("✓"), fName))
+	write.InfoAddedTo(cmd, fName)
 
 	return nil
 }

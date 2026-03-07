@@ -8,6 +8,8 @@ package resources
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system resources" subcommand.
@@ -22,6 +24,6 @@ func Cmd() *cobra.Command {
 			return runResources(cmd)
 		},
 	}
-	cmd.Flags().Bool("json", false, "Output in JSON format")
+	cmd.Flags().Bool("json", false, assets.FlagDesc("system.resources.json"))
 	return cmd
 }

@@ -14,8 +14,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fatih/color"
-
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
@@ -42,8 +40,6 @@ func createTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string) {
 }
 
 func init() {
-	// Disable color output in all tests to avoid ANSI codes in assertions.
-	color.NoColor = true
 }
 
 func TestRunRecallExport_ArgValidation(t *testing.T) {

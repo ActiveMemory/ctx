@@ -94,10 +94,10 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&appendText, "append", "", "append text to the end of the entry")
-	cmd.Flags().StringVar(&prependText, "prepend", "", "prepend text to the beginning of the entry")
-	cmd.Flags().StringVarP(&filePath, "file", "f", "", "replace blob file content")
-	cmd.Flags().StringVar(&labelText, "label", "", "replace blob label")
+	cmd.Flags().StringVar(&appendText, "append", "", assets.FlagDesc("pad.edit.append"))
+	cmd.Flags().StringVar(&prependText, "prepend", "", assets.FlagDesc("pad.edit.prepend"))
+	cmd.Flags().StringVarP(&filePath, "file", "f", "", assets.FlagDesc("pad.edit.file"))
+	cmd.Flags().StringVar(&labelText, "label", "", assets.FlagDesc("pad.edit.label"))
 
 	return cmd
 }

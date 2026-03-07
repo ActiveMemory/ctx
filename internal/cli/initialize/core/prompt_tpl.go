@@ -11,7 +11,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -28,8 +27,6 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	promptDir := filepath.Join(contextDir, config.DirPrompts)
 	if err := os.MkdirAll(promptDir, config.PermExec); err != nil {
 		return fmt.Errorf("failed to create %s: %w", promptDir, err)
@@ -41,7 +38,7 @@ func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) er
 	for _, name := range promptTemplates {
 		targetPath := filepath.Join(promptDir, name)
 		if _, err := os.Stat(targetPath); err == nil && !force {
-			cmd.Println(fmt.Sprintf("  %s prompts/%s (exists, skipped)", yellow("○"), name))
+			cmd.Println(fmt.Sprintf("  ○ prompts/%s (exists, skipped)", name))
 			continue
 		}
 		content, err := assets.PromptTemplate(name)
@@ -51,7 +48,7 @@ func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) er
 		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", targetPath, err)
 		}
-		cmd.Println(fmt.Sprintf("  %s prompts/%s", green("✓"), name))
+		cmd.Println(fmt.Sprintf("  ✓ prompts/%s", name))
 	}
 	return nil
 }

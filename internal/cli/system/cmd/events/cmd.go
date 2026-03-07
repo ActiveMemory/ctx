@@ -8,6 +8,8 @@ package events
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system events" subcommand.
@@ -36,12 +38,12 @@ Flags:
 		},
 	}
 
-	cmd.Flags().StringP("hook", "k", "", "Filter by hook name")
-	cmd.Flags().StringP("session", "s", "", "Filter by session ID")
-	cmd.Flags().StringP("event", "e", "", "Filter by event type")
-	cmd.Flags().IntP("last", "n", 50, "Show last N events")
-	cmd.Flags().BoolP("json", "j", false, "Output raw JSONL")
-	cmd.Flags().BoolP("all", "a", false, "Include rotated log file")
+	cmd.Flags().StringP("hook", "k", "", assets.FlagDesc("system.events.hook"))
+	cmd.Flags().StringP("session", "s", "", assets.FlagDesc("system.events.session"))
+	cmd.Flags().StringP("event", "e", "", assets.FlagDesc("system.events.event"))
+	cmd.Flags().IntP("last", "n", 50, assets.FlagDesc("system.events.last"))
+	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc("system.events.json"))
+	cmd.Flags().BoolP("all", "a", false, assets.FlagDesc("system.events.all"))
 
 	return cmd
 }

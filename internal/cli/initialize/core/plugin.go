@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -33,8 +32,6 @@ type globalSettings map[string]json.RawMessage
 // Returns:
 //   - error: Non-nil if file operations fail
 func EnablePluginGlobally(cmd *cobra.Command) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
 	homeDir, homeErr := os.UserHomeDir()
 	if homeErr != nil {
 		return fmt.Errorf("cannot determine home directory: %w", homeErr)
@@ -43,7 +40,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	installedPath := filepath.Join(claudeDir, config.FileInstalledPlugins)
 	installedData, readErr := os.ReadFile(installedPath) //nolint:gosec // G304: path from os.UserHomeDir
 	if readErr != nil {
-		cmd.Println(fmt.Sprintf("  %s Plugin enablement skipped (plugin not installed)\n", yellow("○")))
+		cmd.Println("  ○ Plugin enablement skipped (plugin not installed)")
 		return nil
 	}
 	var installed installedPlugins
@@ -51,7 +48,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 		return fmt.Errorf("failed to parse %s: %w", installedPath, parseErr)
 	}
 	if _, found := installed.Plugins[config.PluginID]; !found {
-		cmd.Println(fmt.Sprintf("  %s Plugin enablement skipped (plugin not installed)\n", yellow("○")))
+		cmd.Println("  ○ Plugin enablement skipped (plugin not installed)")
 		return nil
 	}
 	settingsPath := filepath.Join(claudeDir, config.FileGlobalSettings)
@@ -71,7 +68,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 		var enabled map[string]bool
 		if parseErr := json.Unmarshal(raw, &enabled); parseErr == nil {
 			if enabled[config.PluginID] {
-				cmd.Println(fmt.Sprintf("  %s Plugin already enabled globally\n", yellow("○")))
+				cmd.Println("  ○ Plugin already enabled globally")
 				return nil
 			}
 		}
@@ -100,7 +97,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	if writeErr := os.WriteFile(settingsPath, buf.Bytes(), config.PermFile); writeErr != nil {
 		return fmt.Errorf("failed to write %s: %w", settingsPath, writeErr)
 	}
-	cmd.Println(fmt.Sprintf("  %s Plugin enabled globally in %s", green("✓"), settingsPath))
+	cmd.Println(fmt.Sprintf("  ✓ Plugin enabled globally in %s", settingsPath))
 	return nil
 }
 

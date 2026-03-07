@@ -30,6 +30,15 @@ func InfoPathConversionExists(
 	sprintf(cmd, tplPathExists, oldPath, filepath.Join(rootDir, newPath))
 }
 
+// InfoAddedTo confirms an entry was added to a context file.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - filename: Name of the file the entry was added to
+func InfoAddedTo(cmd *cobra.Command, filename string) {
+	sprintf(cmd, tplAddedTo, filename)
+}
+
 // InfoExistsWritingAsAlternative reports that a file already exists and the
 // content is being written to an alternative filename instead.
 //

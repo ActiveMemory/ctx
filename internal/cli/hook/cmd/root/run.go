@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -155,30 +154,27 @@ var ToolConfigFiles = map[string]string{
 func Run(cmd *cobra.Command, args []string, write bool) error {
 	tool := strings.ToLower(args[0])
 
-	cyan := color.New(color.FgCyan).SprintFunc()
-	green := color.New(color.FgGreen).SprintFunc()
-
 	switch tool {
 	case "claude-code", "claude":
-		cmd.Println(cyan("Claude Code Integration"))
-		cmd.Println(cyan("======================="))
+		cmd.Println("Claude Code Integration")
+		cmd.Println("=======================")
 		cmd.Println()
 		cmd.Println("Claude Code integration is now provided via the ctx plugin.")
 		cmd.Println()
 		cmd.Println("Install the plugin:")
-		cmd.Println(green("  /plugin marketplace add ActiveMemory/ctx"))
-		cmd.Println(green("  /plugin install ctx@activememory-ctx"))
+		cmd.Println("  /plugin marketplace add ActiveMemory/ctx")
+		cmd.Println("  /plugin install ctx@activememory-ctx")
 		cmd.Println()
 		cmd.Println("The plugin provides hooks (context monitoring, persistence")
 		cmd.Println("nudges, post-commit capture) and 25 skills automatically.")
 
 	case "cursor":
-		cmd.Println(cyan("Cursor IDE Integration"))
-		cmd.Println(cyan("======================"))
+		cmd.Println("Cursor IDE Integration")
+		cmd.Println("======================")
 		cmd.Println()
 		cmd.Println("Add to your .cursorrules file:")
 		cmd.Println()
-		cmd.Println(green("```markdown"))
+		cmd.Println("```markdown")
 		cmd.Print(`# Project Context
 
 Always read these files before making changes:
@@ -190,50 +186,50 @@ Always read these files before making changes:
 Run 'ctx agent' for a context summary.
 Run 'ctx drift' to check for stale context.
 `)
-		cmd.Println(green("```"))
+		cmd.Println("```")
 
 	case "aider":
-		cmd.Println(cyan("Aider Integration"))
-		cmd.Println(cyan("================="))
+		cmd.Println("Aider Integration")
+		cmd.Println("=================")
 		cmd.Println()
 		cmd.Println("Add to your .aider.conf.yml:")
 		cmd.Println()
-		cmd.Println(green("```yaml"))
+		cmd.Println("```yaml")
 		cmd.Println(`read:
   - .context/CONSTITUTION.md
   - .context/TASKS.md
   - .context/CONVENTIONS.md
   - .context/ARCHITECTURE.md
   - .context/DECISIONS.md`)
-		cmd.Println(green("```"))
+		cmd.Println("```")
 		cmd.Println()
 		cmd.Println("Or pass context via command line:")
 		cmd.Println()
-		cmd.Println(green("```bash"))
+		cmd.Println("```bash")
 		cmd.Println(`ctx agent | aider --message "$(cat -)"`)
-		cmd.Println(green("```"))
+		cmd.Println("```")
 
 	case "copilot":
 		if write {
 			return WriteCopilotInstructions(cmd)
 		}
-		cmd.Println(cyan("GitHub Copilot Integration"))
-		cmd.Println(cyan("=========================="))
+		cmd.Println("GitHub Copilot Integration")
+		cmd.Println("==========================")
 		cmd.Println()
 		cmd.Println("Add the following to .github/copilot-instructions.md,")
 		cmd.Println("or run with --write to generate the file directly:")
 		cmd.Println()
-		cmd.Println(green("  ctx hook copilot --write"))
+		cmd.Println("  ctx hook copilot --write")
 		cmd.Println()
 		cmd.Print(CopilotInstructions)
 
 	case "windsurf":
-		cmd.Println(cyan("Windsurf Integration"))
-		cmd.Println(cyan("===================="))
+		cmd.Println("Windsurf Integration")
+		cmd.Println("====================")
 		cmd.Println()
 		cmd.Println("Add to your .windsurfrules file:")
 		cmd.Println()
-		cmd.Println(green("```markdown"))
+		cmd.Println("```markdown")
 		cmd.Print(`# Context
 
 Read order for context:
@@ -245,7 +241,7 @@ Read order for context:
 
 Run 'ctx agent' for AI-ready context packet.
 `)
-		cmd.Println(green("```"))
+		cmd.Println("```")
 
 	default:
 		cmd.Println(fmt.Sprintf("Unknown tool: %s\n", tool))
@@ -273,9 +269,6 @@ Run 'ctx agent' for AI-ready context packet.
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func WriteCopilotInstructions(cmd *cobra.Command) error {
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-
 	targetDir := ".github"
 	targetFile := filepath.Join(targetDir, "copilot-instructions.md")
 
@@ -292,7 +285,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 		existingStr := string(existingContent)
 		if strings.Contains(existingStr, "<!-- ctx:copilot -->") {
 			cmd.Println(fmt.Sprintf(
-				"  %s %s (ctx content exists, skipped)", yellow("○"), targetFile,
+				"  ○ %s (ctx content exists, skipped)", targetFile,
 			))
 			cmd.Println("  Use --force to overwrite (not yet implemented).")
 			return nil
@@ -303,7 +296,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 		if err := os.WriteFile(targetFile, []byte(merged), config.PermFile); err != nil {
 			return fmt.Errorf("failed to write %s: %w", targetFile, err)
 		}
-		cmd.Println(fmt.Sprintf("  %s %s (merged)", green("✓"), targetFile))
+		cmd.Println(fmt.Sprintf("  ✓ %s (merged)", targetFile))
 		return nil
 	}
 
@@ -313,16 +306,16 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	); err != nil {
 		return fmt.Errorf("failed to write %s: %w", targetFile, err)
 	}
-	cmd.Println(fmt.Sprintf("  %s %s", green("✓"), targetFile))
+	cmd.Println(fmt.Sprintf("  ✓ %s", targetFile))
 
 	// Also create .context/sessions/ if it doesn't exist
 	sessionsDir := filepath.Join(config.DirContext, config.DirSessions)
 	if err := os.MkdirAll(sessionsDir, config.PermExec); err != nil {
 		cmd.Println(fmt.Sprintf(
-			"  %s %s: %v", yellow("⚠"), sessionsDir, err,
+			"  ⚠ %s: %v", sessionsDir, err,
 		))
 	} else {
-		cmd.Println(fmt.Sprintf("  %s %s/", green("✓"), sessionsDir))
+		cmd.Println(fmt.Sprintf("  ✓ %s/", sessionsDir))
 	}
 
 	cmd.Println()

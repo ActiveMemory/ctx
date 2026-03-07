@@ -40,7 +40,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&afterFlag, "after", "a", "", "Don't surface until this date (YYYY-MM-DD)")
+	cmd.Flags().StringVarP(&afterFlag, "after", "a", "", assets.FlagDesc("remind.after"))
 
 	cmd.AddCommand(add.Cmd())
 	cmd.AddCommand(list.Cmd())

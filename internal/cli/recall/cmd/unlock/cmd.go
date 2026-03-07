@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&all, "all", false, "Unlock all journal entries")
+	cmd.Flags().BoolVar(&all, "all", false, assets.FlagDesc("recall.unlock.all"))
 
 	return cmd
 }

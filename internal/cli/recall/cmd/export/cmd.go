@@ -32,43 +32,43 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(
-		&opts.All, "all", false, "Export all sessions from current project",
+		&opts.All, "all", false, assets.FlagDesc("recall.export.all"),
 	)
 	cmd.Flags().BoolVar(
-		&opts.AllProjects, "all-projects", false, "Include sessions from all projects",
+		&opts.AllProjects, "all-projects", false, assets.FlagDesc("recall.export.all-projects"),
 	)
 	cmd.Flags().BoolVar(
 		&opts.Regenerate,
 		"regenerate", false,
-		"Re-export existing files (preserves YAML frontmatter by default)",
+		assets.FlagDesc("recall.export.regenerate"),
 	)
 	cmd.Flags().BoolVar(
 		&opts.KeepFrontmatter,
 		"keep-frontmatter", true,
-		"Preserve enriched YAML frontmatter during regeneration",
+		assets.FlagDesc("recall.export.keep-frontmatter"),
 	)
 
 	// Deprecated: --force is replaced by --keep-frontmatter=false.
 	cmd.Flags().BoolVar(
 		&opts.Force,
 		"force", false,
-		"Overwrite existing files completely (discard frontmatter)",
+		assets.FlagDesc("recall.export.force"),
 	)
 	_ = cmd.Flags().MarkDeprecated("force", "use --keep-frontmatter=false instead")
 	cmd.Flags().BoolVarP(
 		&opts.Yes,
 		"yes", "y", false,
-		"Skip confirmation prompt",
+		assets.FlagDesc("recall.export.yes"),
 	)
 	cmd.Flags().BoolVar(
 		&opts.DryRun,
 		"dry-run", false,
-		"Show what would be exported without writing files",
+		assets.FlagDesc("recall.export.dry-run"),
 	)
 
 	// Deprecated: --skip-existing is now the default behavior for --all.
 	var skipExisting bool
-	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, "Skip files that already exist")
+	cmd.Flags().BoolVar(&skipExisting, "skip-existing", false, assets.FlagDesc("recall.export.skip-existing"))
 	_ = cmd.Flags().MarkDeprecated("skip-existing", "this is now the default behavior for --all")
 
 	return cmd

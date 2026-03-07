@@ -35,6 +35,6 @@ func Cmd() *cobra.Command {
 			return root.Run(cmd, jsonOut)
 		},
 	}
-	cmd.Flags().BoolP("json", "j", false, "Machine-readable JSON output")
+	cmd.Flags().BoolP("json", "j", false, assets.FlagDesc("doctor.json"))
 	return cmd
 }

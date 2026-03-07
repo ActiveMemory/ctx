@@ -38,13 +38,13 @@ func Cmd() *cobra.Command {
 
 	defaultOutput := filepath.Join(rc.ContextDir(), "journal-site")
 	cmd.Flags().StringVarP(
-		&output, "output", "o", defaultOutput, "Output directory for site",
+		&output, "output", "o", defaultOutput, assets.FlagDesc("journal.site.output"),
 	)
 	cmd.Flags().BoolVar(
-		&build, "build", false, "Run zensical build after generating",
+		&build, "build", false, assets.FlagDesc("journal.site.build"),
 	)
 	cmd.Flags().BoolVar(
-		&serve, "serve", false, "Run zensical serve after generating",
+		&serve, "serve", false, assets.FlagDesc("journal.site.serve"),
 	)
 
 	return cmd

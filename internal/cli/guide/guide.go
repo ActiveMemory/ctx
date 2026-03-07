@@ -35,8 +35,8 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&showSkills, "skills", false, "List all available skills")
-	cmd.Flags().BoolVar(&showCommands, "commands", false, "List all CLI commands")
+	cmd.Flags().BoolVar(&showSkills, "skills", false, assets.FlagDesc("guide.skills"))
+	cmd.Flags().BoolVar(&showCommands, "commands", false, assets.FlagDesc("guide.commands"))
 
 	return cmd
 }

@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
@@ -44,9 +43,6 @@ func runSync(cmd *cobra.Command) error {
 		return nil
 	}
 
-	green := color.New(color.FgGreen).SprintFunc()
-	yellow := color.New(color.FgYellow).SprintFunc()
-
 	locked, unlocked := 0, 0
 
 	for _, filename := range files {
@@ -57,11 +53,11 @@ func runSync(cmd *cobra.Command) error {
 		switch {
 		case fmLocked && !stateLocked:
 			jstate.Mark(filename, "locked")
-			cmd.Println(fmt.Sprintf("  %s %s (locked)", green("✓"), filename))
+			cmd.Println(fmt.Sprintf("  ✓ %s (locked)", filename))
 			locked++
 		case !fmLocked && stateLocked:
 			jstate.Clear(filename, "locked")
-			cmd.Println(fmt.Sprintf("  %s %s (unlocked)", yellow("✓"), filename))
+			cmd.Println(fmt.Sprintf("  ✓ %s (unlocked)", filename))
 			unlocked++
 		}
 	}

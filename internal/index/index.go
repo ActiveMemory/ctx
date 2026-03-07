@@ -13,8 +13,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
-
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
@@ -238,17 +236,16 @@ func ReindexFile(
 	}
 
 	entries := ParseHeaders(string(content))
-	green := color.New(color.FgGreen).SprintFunc()
 	if len(entries) == 0 {
 		_, err := fmt.Fprintf(
-			w, "%s Index cleared (no %s found)\n", green("✓"), entryType)
+			w, "✓ Index cleared (no %s found)\n", entryType)
 		if err != nil {
 			return err
 		}
 	} else {
 		_, err := fmt.Fprintf(
 			w,
-			"%s Index regenerated with %d entries\n", green("✓"), len(entries),
+			"✓ Index regenerated with %d entries\n", len(entries),
 		)
 		if err != nil {
 			return err

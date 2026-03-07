@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 func TestSkills(t *testing.T) {
@@ -97,29 +98,29 @@ func TestSettingsStructure(t *testing.T) {
 
 func TestErrSkillList(t *testing.T) {
 	cause := errors.New("read dir failed")
-	err := errSkillList(cause)
+	err := ctxerr.SkillList(cause)
 	if err == nil {
-		t.Fatal("errSkillList() returned nil")
+		t.Fatal("ctxerr.SkillList() returned nil")
 	}
 	if !strings.Contains(err.Error(), "failed to list skills") {
-		t.Errorf("errSkillList() error missing prefix: %v", err)
+		t.Errorf("ctxerr.SkillList() error missing prefix: %v", err)
 	}
 	if !errors.Is(err, cause) {
-		t.Error("errSkillList() does not wrap the cause error")
+		t.Error("ctxerr.SkillList() does not wrap the cause error")
 	}
 }
 
 func TestErrSkillRead(t *testing.T) {
 	cause := errors.New("not found")
-	err := errSkillRead("my-skill", cause)
+	err := ctxerr.SkillRead("my-skill", cause)
 	if err == nil {
-		t.Fatal("errSkillRead() returned nil")
+		t.Fatal("ctxerr.SkillRead() returned nil")
 	}
 	if !strings.Contains(err.Error(), "my-skill") {
-		t.Errorf("errSkillRead() error missing skill name: %v", err)
+		t.Errorf("ctxerr.SkillRead() error missing skill name: %v", err)
 	}
 	if !errors.Is(err, cause) {
-		t.Error("errSkillRead() does not wrap the cause error")
+		t.Error("ctxerr.SkillRead() does not wrap the cause error")
 	}
 }
 

@@ -11,7 +11,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -35,12 +34,9 @@ var ProjectDirs = []string{
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func CreateProjectDirs(cmd *cobra.Command) error {
-	green := color.New(color.FgGreen).SprintFunc()
-
 	for _, dir := range ProjectDirs {
 		if _, statErr := os.Stat(dir); statErr == nil {
-			cmd.Println(fmt.Sprintf("  %s %s/ (exists, skipped)",
-				color.YellowString("○"), dir))
+			cmd.Println(fmt.Sprintf("  ○ %s/ (exists, skipped)", dir))
 			continue
 		}
 
@@ -59,7 +55,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 			return fmt.Errorf("failed to write %s: %w", readmePath, writeErr)
 		}
 
-		cmd.Println(fmt.Sprintf("  %s %s/", green("✓"), dir))
+		cmd.Println(fmt.Sprintf("  ✓ %s/", dir))
 	}
 
 	return nil

@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -43,15 +42,11 @@ func TestRootCmd(t *testing.T) {
 	}
 
 	// Check global flags exist
-	contextDirFlag := cmd.PersistentFlags().Lookup("context-dir")
+	contextDirFlag := cmd.PersistentFlags().Lookup(config.FlagContextDir)
 	if contextDirFlag == nil {
 		t.Error("--context-dir flag not found")
 	}
 
-	noColorFlag := cmd.PersistentFlags().Lookup("no-color")
-	if noColorFlag == nil {
-		t.Error("--no-color flag not found")
-	}
 }
 
 func TestInitialize(t *testing.T) {
@@ -114,36 +109,12 @@ func TestRootCmdVersion(t *testing.T) {
 func TestRootCmdAllowOutsideCwdFlag(t *testing.T) {
 	cmd := RootCmd()
 
-	flag := cmd.PersistentFlags().Lookup("allow-outside-cwd")
+	flag := cmd.PersistentFlags().Lookup(config.FlagAllowOutsideCwd)
 	if flag == nil {
 		t.Fatal("--allow-outside-cwd flag not found")
 	}
 	if flag.DefValue != "false" {
 		t.Errorf("--allow-outside-cwd default = %q, want %q", flag.DefValue, "false")
-	}
-}
-
-func TestRootCmdPersistentPreRun_NoColor(t *testing.T) {
-	cmd := RootCmd()
-	// Set --no-color and --allow-outside-cwd so boundary check doesn't fail
-	cmd.SetArgs([]string{"--no-color", "--allow-outside-cwd"})
-
-	// Add a dummy subcommand so Execute doesn't just print help
-	dummy := &cobra.Command{
-		Use:         "dummy",
-		Annotations: map[string]string{config.AnnotationSkipInit: "true"},
-		Run:         func(cmd *cobra.Command, args []string) {},
-	}
-	cmd.AddCommand(dummy)
-	cmd.SetArgs([]string{"--no-color", "--allow-outside-cwd", "dummy"})
-
-	err := cmd.Execute()
-	if err != nil {
-		t.Fatalf("Execute() error: %v", err)
-	}
-
-	if !color.NoColor {
-		t.Error("expected color.NoColor to be true after --no-color")
 	}
 }
 
