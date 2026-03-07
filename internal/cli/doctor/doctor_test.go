@@ -216,7 +216,9 @@ func TestDoctor_PluginNotInstalled(t *testing.T) {
 	setupContextDir(t)
 
 	// Set HOME to a temp dir with no plugin files.
-	t.Setenv("HOME", t.TempDir())
+	tmpHome0 := t.TempDir()
+	t.Setenv("HOME", tmpHome0)
+	t.Setenv("USERPROFILE", tmpHome0)
 
 	cmd := Cmd()
 	var out bytes.Buffer
@@ -238,6 +240,7 @@ func TestDoctor_PluginInstalledNotEnabled(t *testing.T) {
 
 	tmpHome := t.TempDir()
 	t.Setenv("HOME", tmpHome)
+	t.Setenv("USERPROFILE", tmpHome)
 
 	// Create installed_plugins.json with ctx plugin.
 	pluginsDir := filepath.Join(tmpHome, ".claude", "plugins")

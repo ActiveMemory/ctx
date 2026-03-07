@@ -45,6 +45,12 @@ func DiscoverMemoryPath(projectRoot string) (string, error) {
 //
 // Example: /home/jose/WORKSPACE/ctx → -home-jose-WORKSPACE-ctx
 func ProjectSlug(absPath string) string {
+	// Normalise to forward-slash so the slug is platform-independent.
+	normalized := filepath.ToSlash(absPath)
+	// On Windows, strip the "X:" drive prefix.
+	if len(normalized) >= 2 && normalized[1] == ':' {
+		normalized = normalized[2:]
+	}
 	// Strip leading "/" then replace remaining "/" with "-", prefix with "-"
-	return "-" + strings.ReplaceAll(absPath[1:], "/", "-")
+	return "-" + strings.ReplaceAll(normalized[1:], "/", "-")
 }

@@ -7,6 +7,7 @@
 package core
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -62,10 +63,14 @@ func TestGenerateIndex(t *testing.T) {
 }
 
 func TestInjectSourceLink_WithFrontmatter(t *testing.T) {
-	content := "---\ntitle: Test\n---\n\n# Heading\n"
-	result := InjectSourceLink(content, "/home/user/.context/journal/test.md")
+	// Use a real temp path so filepath.Abs() is a no-op on all platforms.
+	srcPath := filepath.Join(t.TempDir(), ".context", "journal", "test.md")
+	wantAbs := filepath.ToSlash(srcPath)
 
-	if !strings.Contains(result, "[View source](file:///home/user/.context/journal/test.md)") {
+	content := "---\ntitle: Test\n---\n\n# Heading\n"
+	result := InjectSourceLink(content, srcPath)
+
+	if !strings.Contains(result, "[View source](file://"+wantAbs+")") {
 		t.Errorf("missing file:// link:\n%s", result)
 	}
 	if !strings.Contains(result, ".context/journal/test.md") {
@@ -77,10 +82,14 @@ func TestInjectSourceLink_WithFrontmatter(t *testing.T) {
 }
 
 func TestInjectSourceLink_NoFrontmatter(t *testing.T) {
-	content := "# Heading\n\nSome text.\n"
-	result := InjectSourceLink(content, "/path/to/file.md")
+	// Use a real temp path so filepath.Abs() is a no-op on all platforms.
+	srcPath := filepath.Join(t.TempDir(), "file.md")
+	wantAbs := filepath.ToSlash(srcPath)
 
-	if !strings.HasPrefix(result, "*[View source](file:///path/to/file.md)") {
+	content := "# Heading\n\nSome text.\n"
+	result := InjectSourceLink(content, srcPath)
+
+	if !strings.HasPrefix(result, "*[View source](file://"+wantAbs+")") {
 		t.Errorf("source link not at top:\n%s", result)
 	}
 	if !strings.Contains(result, ".context/journal/file.md") {
