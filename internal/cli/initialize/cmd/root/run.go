@@ -159,35 +159,42 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool, 
 		write.InfoInitWarnNonFatal(cmd, "IMPLEMENTATION_PLAN.md", err)
 	}
 
-	// Merge permissions into settings.local.json (no hook scaffolding)
-	write.InfoInitSettingUpPermissions(cmd)
-	if err := core.MergeSettingsPermissions(cmd); err != nil {
-		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "Permissions", err)
-	}
-
-	// Auto-enable plugin globally unless suppressed
-	if !noPluginEnable {
-		if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
+	// Claude Code specific artifacts — skip when called from another editor.
+	// These create .claude/settings.local.json, enable the plugin,
+	// and deploy Makefile.ctx — none of which are used by VS Code.
+	if caller == "" {
+		// Merge permissions into settings.local.json (no hook scaffolding)
+		write.InfoInitSettingUpPermissions(cmd)
+		if err := core.MergeSettingsPermissions(cmd); err != nil {
 			// Non-fatal: warn but continue
-			write.InfoInitWarnNonFatal(cmd, "Plugin enablement", pluginErr)
+			write.InfoInitWarnNonFatal(cmd, "Permissions", err)
+		}
+
+		// Auto-enable plugin globally unless suppressed
+		if !noPluginEnable {
+			if pluginErr := core.EnablePluginGlobally(cmd); pluginErr != nil {
+				// Non-fatal: warn but continue
+				write.InfoInitWarnNonFatal(cmd, "Plugin enablement", pluginErr)
+			}
 		}
 	}
 
-	// Handle CLAUDE.md creation/merge
-	if err := core.HandleClaudeMd(cmd, force, merge); err != nil {
+	// Handle CLAUDE.md creation/merge (uses caller-specific override when available)
+	if err := core.HandleClaudeMd(cmd, force, merge, caller); err != nil {
 		// Non-fatal: warn but continue
 		write.InfoInitWarnNonFatal(cmd, "CLAUDE.md", err)
 	}
 
-	// Deploy Makefile.ctx and amend user Makefile
-	if err := core.HandleMakefileCtx(cmd); err != nil {
-		// Non-fatal: warn but continue
-		write.InfoInitWarnNonFatal(cmd, "Makefile", err)
+	// Deploy Makefile.ctx and amend user Makefile (Claude Code only)
+	if caller == "" {
+		if err := core.HandleMakefileCtx(cmd); err != nil {
+			// Non-fatal: warn but continue
+			write.InfoInitWarnNonFatal(cmd, "Makefile", err)
+		}
 	}
 
 	// Update .gitignore with recommended entries
-	if err := ensureGitignoreEntries(cmd); err != nil {
+	if err := ensureGitignoreEntries(cmd, caller); err != nil {
 		write.InfoInitWarnNonFatal(cmd, ".gitignore", err)
 	}
 
@@ -291,7 +298,10 @@ func hasEssentialFiles(contextDir string) bool {
 
 // ensureGitignoreEntries appends recommended .gitignore entries that are not
 // already present. Creates .gitignore if it does not exist.
-func ensureGitignoreEntries(cmd *cobra.Command) error {
+//
+// When caller is non-empty (editor integration), Claude Code-specific
+// entries like .claude/settings.local.json are skipped.
+func ensureGitignoreEntries(cmd *cobra.Command, caller string) error {
 	gitignorePath := ".gitignore"
 
 	content, err := os.ReadFile(gitignorePath)
@@ -305,9 +315,13 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		existing[strings.TrimSpace(line)] = true
 	}
 
-	// Collect missing entries.
+	// Collect missing entries, skipping Claude Code-specific ones for editors.
 	var missing []string
 	for _, entry := range file.Gitignore {
+		// .claude/ entries are only relevant when running without a caller
+		if caller != "" && strings.HasPrefix(entry, ".claude/") {
+			continue
+		}
 		if !existing[entry] {
 			missing = append(missing, entry)
 		}
