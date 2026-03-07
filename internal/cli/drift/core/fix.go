@@ -19,6 +19,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -107,7 +108,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	tasksFile := ctx.File(config.FileTask)
 
 	if tasksFile == nil {
-		return ErrTasksNotFound()
+		return ctxerr.TaskFileNotFound()
 	}
 
 	nl := config.NewlineLF
@@ -143,7 +144,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	if len(completedTasks) == 0 {
-		return ErrNoCompletedTasks()
+		return ctxerr.NoCompletedTasks()
 	}
 
 	// Build archive content
@@ -162,7 +163,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	if writeErr := os.WriteFile(
 		tasksFile.Path, []byte(newContent), config.PermFile,
 	); writeErr != nil {
-		return ErrFileWrite(tasksFile.Path, writeErr)
+		return ctxerr.TaskFileWrite(writeErr)
 	}
 
 	cmd.Println(fmt.Sprintf("  Archived %d completed tasks to %s",
@@ -181,20 +182,20 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 func FixMissingFile(filename string) error {
 	content, err := assets.Template(filename)
 	if err != nil {
-		return ErrNoTemplate(filename, err)
+		return ctxerr.NoTemplate(filename, err)
 	}
 
 	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
 	if mkErr := os.MkdirAll(rc.ContextDir(), config.PermExec); mkErr != nil {
-		return ErrMkdir(rc.ContextDir(), mkErr)
+		return ctxerr.Mkdir(rc.ContextDir(), mkErr)
 	}
 
 	if writeErr := os.WriteFile(
 		targetPath, content, config.PermFile,
 	); writeErr != nil {
-		return ErrFileWrite(targetPath, writeErr)
+		return ctxerr.FileWrite(targetPath, writeErr)
 	}
 
 	return nil
