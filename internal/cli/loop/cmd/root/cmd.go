@@ -51,7 +51,8 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&promptFile,
-		"prompt", "p", config.FilePromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
+		"prompt", "p",
+		config.FilePromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
 	)
 	cmd.Flags().StringVarP(
 		&tool, "tool", "t", "claude", assets.FlagDesc(assets.FlagDescKeyLoopTool),
@@ -63,7 +64,8 @@ func Cmd() *cobra.Command {
 	)
 	cmd.Flags().StringVarP(
 		&completionMsg,
-		"completion", "c", "SYSTEM_CONVERGED", assets.FlagDesc(assets.FlagDescKeyLoopCompletion),
+		"completion", "c", config.DefaultCompletionSignal,
+		assets.FlagDesc(assets.FlagDescKeyLoopCompletion),
 	)
 	cmd.Flags().StringVarP(
 		&outputFile,

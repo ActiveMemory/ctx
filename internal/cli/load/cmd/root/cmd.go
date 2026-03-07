@@ -45,7 +45,9 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVar(
-		&budget, "budget", rc.DefaultTokenBudget, assets.FlagDesc(assets.FlagDescKeyLoadBudget),
+		&budget, "budget",
+		rc.DefaultTokenBudget,
+		assets.FlagDesc(assets.FlagDescKeyLoadBudget),
 	)
 	cmd.Flags().BoolVar(
 		&raw, "raw", false, assets.FlagDesc(assets.FlagDescKeyLoadRaw),

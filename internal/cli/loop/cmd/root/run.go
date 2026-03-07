@@ -7,12 +7,13 @@
 package root
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the loop command logic.
@@ -36,37 +37,23 @@ func Run(
 	maxIterations int,
 	completionMsg, outputFile string,
 ) error {
-	// Validate tool
 	validTools := map[string]bool{"claude": true, "aider": true, "generic": true}
 	if !validTools[tool] {
-		return fmt.Errorf(
-			"invalid tool %q: must be claude, aider, or generic", tool,
-		)
+		return ctxerr.InvalidTool(tool)
 	}
 
-	// Generate the script
 	script := GenerateLoopScript(promptFile, tool, maxIterations, completionMsg)
 
-	// Write to the file
-	if err := os.WriteFile(
+	if writeErr := os.WriteFile(
 		outputFile, []byte(script), config.PermExec,
-	); err != nil {
-		return fmt.Errorf("failed to write %s: %w", outputFile, err)
+	); writeErr != nil {
+		return ctxerr.FileWrite(outputFile, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("✓ Generated %s", outputFile))
-	cmd.Println()
-	cmd.Println(config.LoopHeadingStart)
-	cmd.Println(fmt.Sprintf("  ./%s", outputFile))
-	cmd.Println()
-	cmd.Println(fmt.Sprintf("Tool: %s", tool))
-	cmd.Println(fmt.Sprintf("Prompt: %s", promptFile))
-	if maxIterations > 0 {
-		cmd.Println(fmt.Sprintf("Max iterations: %d", maxIterations))
-	} else {
-		cmd.Println("Max iterations: unlimited")
-	}
-	cmd.Println(fmt.Sprintf("Completion signal: %s", completionMsg))
+	write.InfoLoopGenerated(
+		cmd, outputFile, config.LoopHeadingStart,
+		tool, promptFile, maxIterations, completionMsg,
+	)
 
 	return nil
 }

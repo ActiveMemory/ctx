@@ -11,9 +11,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/cli/mcp/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
-	internalmcp "github.com/ActiveMemory/ctx/internal/mcp"
-	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // Cmd returns the mcp command group.
@@ -32,15 +31,13 @@ func Cmd() *cobra.Command {
 
 // serveCmd returns the mcp serve subcommand.
 func serveCmd() *cobra.Command {
+	serveShort, serveLong := assets.CommandDesc(assets.CmdDescKeyMcpServe)
 	return &cobra.Command{
 		Use:          "serve",
-		Short:        "Start the MCP server (stdin/stdout)",
-		Long:         "Start the MCP server, communicating via JSON-RPC 2.0 over stdin/stdout.\n\nThis command is intended to be invoked by MCP clients (AI tools), not\nrun directly by users. Configure your AI tool to run 'ctx mcp serve'\nas an MCP server.",
+		Short:        serveShort,
+		Long:         serveLong,
 		Annotations:  map[string]string{config.AnnotationSkipInit: config.AnnotationTrue},
 		SilenceUsage: true,
-		RunE: func(_ *cobra.Command, _ []string) error {
-			srv := internalmcp.NewServer(rc.ContextDir())
-			return srv.Serve()
-		},
+		RunE:         root.Cmd,
 	}
 }

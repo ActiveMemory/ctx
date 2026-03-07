@@ -1226,3 +1226,6 @@ why:
   short: "**Type**: "
 "_text.journal.moc.see-also":
   short: "**See also**:"
+mcp.serve:
+  long: "Start the MCP server, communicating via JSON-RPC 2.0 over stdin/stdout.\n\nThis command is intended to be invoked by MCP clients (AI tools), not\nrun directly by users. Configure your AI tool to run 'ctx mcp serve'\nas an MCP server."
+  short: "Start the MCP server (stdin/stdout)"

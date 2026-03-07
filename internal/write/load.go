@@ -4,7 +4,7 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package core
+package write
 
 import (
 	"fmt"
@@ -16,21 +16,18 @@ import (
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
-// OutputRaw outputs context files without assembly or headers.
+// LoadRaw outputs context files without assembly or headers.
 //
-// Files are output in read order (see [config.FileReadOrder]), separated
-// by blank lines. Content is printed as-is without modification.
+// Files are output in read order, separated by blank lines.
+// Content is printed as-is without modification.
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - ctx: Loaded context containing files to output
+//   - files: Context files sorted by read order
 //
 // Returns:
 //   - error: Always nil (included for interface consistency)
-func OutputRaw(cmd *cobra.Command, ctx *context.Context) error {
-	// Sort files by read order
-	files := SortByReadOrder(ctx.Files)
-
+func LoadRaw(cmd *cobra.Command, files []context.FileInfo) error {
 	for i, f := range files {
 		if i > 0 {
 			cmd.Println()
@@ -40,7 +37,7 @@ func OutputRaw(cmd *cobra.Command, ctx *context.Context) error {
 	return nil
 }
 
-// OutputAssembled outputs context as formatted Markdown with token budgeting.
+// LoadAssembled outputs context as formatted Markdown with token budgeting.
 //
 // Assembles context files into a single Markdown document with headers,
 // respecting the token budget. Files are included in read order until the
@@ -48,53 +45,41 @@ func OutputRaw(cmd *cobra.Command, ctx *context.Context) error {
 //
 // Parameters:
 //   - cmd: Cobra command for output stream
-//   - ctx: Loaded context containing files to assemble
+//   - files: Context files sorted by read order
 //   - budget: Maximum token count for the output
+//   - totalTokens: Total available tokens in context
+//   - titleFn: Function to convert filename to display title
 //
 // Returns:
 //   - error: Always nil (included for interface consistency)
-func OutputAssembled(
-	cmd *cobra.Command, ctx *context.Context, budget int,
+func LoadAssembled(
+	cmd *cobra.Command,
+	files []context.FileInfo,
+	budget, totalTokens int,
+	titleFn func(string) string,
 ) error {
 	var sb strings.Builder
 	nl := config.NewlineLF
 	sep := config.Separator
 
-	// Header
 	sb.WriteString(config.LoadHeadingContext + nl + nl)
-	sb.WriteString(
-		fmt.Sprintf(
-			config.TplLoadBudget+nl+nl,
-			budget, ctx.TotalTokens,
-		),
-	)
+	_, _ = fmt.Fprintf(&sb, config.TplLoadBudget+nl+nl, budget, totalTokens)
 	sb.WriteString(sep + nl + nl)
-
-	// Sort files by read order
-	files := SortByReadOrder(ctx.Files)
 
 	tokensUsed := context.EstimateTokensString(sb.String())
 
 	for _, f := range files {
-		// Skip empty files
 		if f.IsEmpty {
 			continue
 		}
 
-		// Check if we have the budget for this file
 		fileTokens := f.Tokens
 		if tokensUsed+fileTokens > budget {
-			// Add a truncation notice
-			sb.WriteString(
-				fmt.Sprintf(nl+sep+nl+nl+config.TplLoadTruncated+nl, f.Name),
-			)
+			_, _ = fmt.Fprintf(&sb, nl+sep+nl+nl+config.TplLoadTruncated+nl, f.Name)
 			break
 		}
 
-		// Add the file section
-		sb.WriteString(fmt.Sprintf(
-			config.TplLoadSectionHeading+nl+nl, FileNameToTitle(f.Name)),
-		)
+		_, _ = fmt.Fprintf(&sb, config.TplLoadSectionHeading+nl+nl, titleFn(f.Name))
 		sb.Write(f.Content)
 		if !strings.HasSuffix(string(f.Content), nl) {
 			sb.WriteString(nl)

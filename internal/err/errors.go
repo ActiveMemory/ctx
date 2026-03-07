@@ -597,6 +597,17 @@ func UnknownProjectType(projType, supported string) error {
 	return fmt.Errorf("unknown project type %q (supported: %s)", projType, supported)
 }
 
+// InvalidTool returns an error for an unsupported AI tool name.
+//
+// Parameters:
+//   - tool: the tool name that was not recognized
+//
+// Returns:
+//   - error: "invalid tool <tool>: must be claude, aider, or generic"
+func InvalidTool(tool string) error {
+	return fmt.Errorf("invalid tool %q: must be claude, aider, or generic", tool)
+}
+
 // NoCompletedTasks returns an error when there are no completed tasks to archive.
 //
 // Returns:

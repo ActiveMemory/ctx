@@ -37,7 +37,8 @@ func runZensical(dir, command string) error {
 		return ctxerr.ZensicalNotFound()
 	}
 
-	cmd := exec.Command(config.BinZensical, command) //nolint:gosec // G204: binary is a constant, command is from caller
+	// G204: binary is a constant, command is from the caller
+	cmd := exec.Command(config.BinZensical, command) //nolint:gosec
 	cmd.Dir = dir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -91,7 +92,7 @@ func runJournalSite(
 		return ctxerr.Mkdir(docsDir, mkErr)
 	}
 
-	// Write stylesheet for <pre> overflow control
+	// Write the stylesheet for <pre> overflow control
 	stylesDir := filepath.Join(docsDir, config.DirStylesheets)
 	if mkErr := os.MkdirAll(stylesDir, config.PermExec); mkErr != nil {
 		return ctxerr.Mkdir(stylesDir, mkErr)

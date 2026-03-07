@@ -316,3 +316,30 @@ const tplJournalSiteNextSteps = "  cd %s && %s serve"
 
 // tplJournalSiteAlt is the alternative command hint.
 const tplJournalSiteAlt = "  ctx journal site --serve"
+
+// tplLoopGenerated reports successful loop script generation.
+// Arguments: output file path.
+const tplLoopGenerated = "✓ Generated %s"
+
+// tplLoopRunCmd shows how to run the generated script.
+// Arguments: output file path.
+const tplLoopRunCmd = "  ./%s"
+
+// tplLoopTool shows the selected tool.
+// Arguments: tool name.
+const tplLoopTool = "Tool: %s"
+
+// tplLoopPrompt shows the prompt file.
+// Arguments: prompt file path.
+const tplLoopPrompt = "Prompt: %s"
+
+// tplLoopMaxIterations shows the max iterations setting.
+// Arguments: count.
+const tplLoopMaxIterations = "Max iterations: %d"
+
+// tplLoopUnlimited shows unlimited iterations.
+const tplLoopUnlimited = "Max iterations: unlimited"
+
+// tplLoopCompletion shows the completion signal.
+// Arguments: signal string.
+const tplLoopCompletion = "Completion signal: %s"

@@ -342,3 +342,34 @@ func InfoJournalSiteBuilding(cmd *cobra.Command) {
 	cmd.Println()
 	cmd.Println(tplJournalSiteBuilding)
 }
+
+// InfoLoopGenerated reports successful loop script generation with details.
+//
+// Parameters:
+//   - cmd: Cobra command for output
+//   - outputFile: Generated script path
+//   - heading: Start heading text
+//   - tool: Selected AI tool
+//   - promptFile: Prompt file path
+//   - maxIterations: Max iterations (0 = unlimited)
+//   - completionMsg: Completion signal string
+func InfoLoopGenerated(
+	cmd *cobra.Command,
+	outputFile, heading, tool, promptFile string,
+	maxIterations int,
+	completionMsg string,
+) {
+	sprintf(cmd, tplLoopGenerated, outputFile)
+	cmd.Println()
+	cmd.Println(heading)
+	sprintf(cmd, tplLoopRunCmd, outputFile)
+	cmd.Println()
+	sprintf(cmd, tplLoopTool, tool)
+	sprintf(cmd, tplLoopPrompt, promptFile)
+	if maxIterations > 0 {
+		sprintf(cmd, tplLoopMaxIterations, maxIterations)
+	} else {
+		cmd.Println(tplLoopUnlimited)
+	}
+	sprintf(cmd, tplLoopCompletion, completionMsg)
+}

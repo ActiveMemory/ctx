@@ -101,6 +101,8 @@ const (
 	DirStylesheets = "stylesheets"
 	// FileExtraCSS is the custom CSS filename for journal sites.
 	FileExtraCSS = "extra.css"
+	// DefaultCompletionSignal is the default loop completion signal string.
+	DefaultCompletionSignal = "SYSTEM_CONVERGED"
 )
 
 // Session defaults.

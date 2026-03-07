@@ -163,6 +163,7 @@ const (
 	CmdDescKeyLoad                = "load"
 	CmdDescKeyLoop                = "loop"
 	CmdDescKeyMcp                 = "mcp"
+	CmdDescKeyMcpServe            = "mcp.serve"
 	CmdDescKeyMemory              = "memory"
 	CmdDescKeyMemoryStatus        = "memory.status"
 	CmdDescKeyMemorySync          = "memory.sync"
@@ -274,15 +275,6 @@ const (
 	TextDescKeyJournalMocTopicsDesc     = "journal.moc.topics-description"
 	TextDescKeyJournalMocFilesDesc      = "journal.moc.files-description"
 	TextDescKeyJournalMocTypesDesc      = "journal.moc.types-description"
-	TextDescKeyJournalMocTopicStats     = "journal.moc.topic-stats"
-	TextDescKeyJournalMocFileStats      = "journal.moc.file-stats"
-	TextDescKeyJournalMocTypeStats      = "journal.moc.type-stats"
-	TextDescKeyJournalMocTopicPageStats = "journal.moc.topic-page-stats"
-	TextDescKeyJournalMocFilePageStats  = "journal.moc.file-page-stats"
-	TextDescKeyJournalMocTypePageStats  = "journal.moc.type-page-stats"
-	TextDescKeyJournalMocTopicsLabel    = "journal.moc.topics-label"
-	TextDescKeyJournalMocTypeLabel      = "journal.moc.type-label"
-	TextDescKeyJournalMocSeeAlso        = "journal.moc.see-also"
 )
 
 const (

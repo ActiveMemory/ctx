@@ -73,7 +73,7 @@ func TransformFrontmatter(content, sourcePath string) string {
 	ofm.Technologies = ExtractStringSlice(raw, config.FrontmatterTechnologies)
 	ofm.KeyFiles = ExtractStringSlice(raw, config.FrontmatterKeyFiles)
 
-	// Add aliases from title
+	// Add aliases from the title
 	if ofm.Title != "" {
 		ofm.Aliases = []string{ofm.Title}
 	}
