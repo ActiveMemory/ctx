@@ -479,6 +479,30 @@ output package. All CLI commands should route printed output through this packag
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
 - [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
 
+- [ ] Add configurable assets layer: allow users to plug their own YAML files for localization (language selection, custom text overrides). Currently all user-facing text is hardcoded in commands.yaml; need a mechanism to load user-provided YAML that overlays or replaces built-in text. This enables i18n without forking. #priority:low #added:2026-03-07-233756
+
+- [ ] Cleanup internal/cli/system/core/persistence.go: move 10 (base for ParseInt) to config constant #priority:low #added:2026-03-07-220825
+
+- [ ] Cleanup internal/cli/system/core/session_tokens.go: move SessionStats from state.go to types.go #priority:low #added:2026-03-07-220825
+
+- [ ] Cleanup internal/cli/system/core/wrapup.go: line 18 constant should go to config; make WrappedUpExpiry configurable via ctxrc #priority:low #added:2026-03-07-220825
+
+- [ ] Cleanup internal/cli/system/core/version.go: line 81 newline should come from config #priority:low #added:2026-03-07-220819
+
+- [ ] Add taxonomy to internal/cli/system/core/ — currently an unstructured bag of files; group by domain (backup, hooks, session, knowledge, etc.) #priority:medium #added:2026-03-07-220819
+
+- [ ] Cleanup internal/cli/system/core/version_drift.go: line 53 string formatting should use assets #priority:medium #added:2026-03-07-220819
+
+- [ ] Cleanup internal/cli/system/core/state.go: magic permissions (0o750), magic strings ('Context: ' prefix, etc.) #priority:medium #added:2026-03-07-220819
+
+- [ ] Cleanup internal/cli/system/core/smb.go: errors should come from internal/err; lines 101, 116, 111 need assets text #priority:medium #added:2026-03-07-220819
+
+- [ ] Make AutoPruneStaleDays configurable via ctxrc. Currently hardcoded to 7 days in config.AutoPruneStaleDays; add a ctxrc key (e.g., auto_prune_days) and fallback to the default. #priority:low #added:2026-03-07-220512
+
+- [ ] Refactor check_backup_age/run.go: move consts (lines 23-24) to config, magic directories (line 59) to config, symbolic constants for strings (line 72), messages to assets (lines 79, 90-91), extract non-Run functions to system/core, fix docstrings #priority:medium #added:2026-03-07-180020
+
+- [ ] Add ctxrc support for recall.list.limit to make the default --limit for recall list configurable. Currently hardcoded as config.DefaultRecallListLimit (20). #priority:low #added:2026-03-07-164342
+
 - [ ] Extract journal/core into a standalone journal parser package — functionally isolated enough for its own package rather than remaining as core/ #added:2026-03-07-093815
 
 - [ ] Move PluginInstalled/PluginEnabledGlobally/PluginEnabledLocally from initialize to internal/claude — these are Claude Code plugin detection functions, not init-specific #added:2026-03-07-091656

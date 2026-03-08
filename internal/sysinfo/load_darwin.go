@@ -15,6 +15,14 @@ import (
 	"strings"
 )
 
+// collectLoad queries system load averages on macOS via sysctl.
+//
+// Parses the output of `sysctl -n vm.loadavg` (format: "{ 0.52 0.41 0.38 }")
+// into 1-, 5-, and 15-minute load averages. Returns a LoadInfo with
+// Supported=false if the command fails or output cannot be parsed.
+//
+// Returns:
+//   - LoadInfo: System load averages and CPU count
 func collectLoad() LoadInfo {
 	out, err := exec.Command("sysctl", "-n", "vm.loadavg").Output()
 	if err != nil {

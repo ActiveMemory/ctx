@@ -27,7 +27,7 @@ func Cmd() *cobra.Command {
 		Long:  long,
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runMerge(cmd, args, keyFile, dryRun)
+			return Run(cmd, args, keyFile, dryRun)
 		},
 	}
 

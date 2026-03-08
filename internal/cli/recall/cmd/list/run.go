@@ -20,7 +20,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runList handles the recall list command.
+// Run handles the recall list command.
 //
 // Finds all sessions, applies optional filters, and displays them in a
 // formatted list with project, time, turn count, and preview.
@@ -36,7 +36,7 @@ import (
 //
 // Returns:
 //   - error: non-nil if date parsing or session scanning fails
-func runList(
+func Run(
 	cmd *cobra.Command, limit int, project, tool,
 	since, until string,
 	allProjects bool,

@@ -10,7 +10,11 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/write/config"
+	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // InfoPathConversionExists reports that a path conversion target already
@@ -28,7 +32,7 @@ func InfoPathConversionExists(
 	if cmd == nil {
 		return
 	}
-	sprintf(cmd, tplPathExists, oldPath, filepath.Join(rootDir, newPath))
+	io.sprintf(cmd, config.tplPathExists, oldPath, filepath.Join(rootDir, newPath))
 }
 
 // InfoAddedTo confirms an entry was added to a context file.
@@ -37,7 +41,7 @@ func InfoPathConversionExists(
 //   - cmd: Cobra command for output
 //   - filename: Name of the file the entry was added to
 func InfoAddedTo(cmd *cobra.Command, filename string) {
-	sprintf(cmd, tplAddedTo, filename)
+	io.sprintf(cmd, config.tplAddedTo, filename)
 }
 
 // InfoMovingTask reports a completed task being moved.
@@ -46,7 +50,7 @@ func InfoAddedTo(cmd *cobra.Command, filename string) {
 //   - cmd: Cobra command for output
 //   - taskText: Truncated task description
 func InfoMovingTask(cmd *cobra.Command, taskText string) {
-	sprintf(cmd, tplMovingTask, taskText)
+	io.sprintf(cmd, config.tplMovingTask, taskText)
 }
 
 // InfoSkippingTask reports a task skipped due to incomplete children.
@@ -55,7 +59,7 @@ func InfoMovingTask(cmd *cobra.Command, taskText string) {
 //   - cmd: Cobra command for output
 //   - taskText: Truncated task description
 func InfoSkippingTask(cmd *cobra.Command, taskText string) {
-	sprintf(cmd, tplSkippingTask, taskText)
+	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskArchiveSkipping), taskText)
 }
 
 // InfoArchivedTasks reports the number of tasks archived.
@@ -66,7 +70,7 @@ func InfoSkippingTask(cmd *cobra.Command, taskText string) {
 //   - archiveFile: Path to the archive file
 //   - days: Age threshold in days
 func InfoArchivedTasks(cmd *cobra.Command, count int, archiveFile string, days int) {
-	sprintf(cmd, tplArchivedTasks, count, archiveFile, days)
+	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskArchiveSuccessWithAge), count, archiveFile, days)
 }
 
 // InfoCompletedTask reports a task marked complete.
@@ -75,7 +79,7 @@ func InfoArchivedTasks(cmd *cobra.Command, count int, archiveFile string, days i
 //   - cmd: Cobra command for output
 //   - taskText: The completed task description
 func InfoCompletedTask(cmd *cobra.Command, taskText string) {
-	sprintf(cmd, tplCompletedTask, taskText)
+	io.sprintf(cmd, config.tplCompletedTask, taskText)
 }
 
 // InfoConfigProfileDev reports that the dev profile is active.
@@ -83,7 +87,7 @@ func InfoCompletedTask(cmd *cobra.Command, taskText string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoConfigProfileDev(cmd *cobra.Command) {
-	cmd.Println(tplConfigProfileDev)
+	cmd.Println(config.tplConfigProfileDev)
 }
 
 // InfoConfigProfileBase reports that the base profile is active.
@@ -91,7 +95,7 @@ func InfoConfigProfileDev(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoConfigProfileBase(cmd *cobra.Command) {
-	cmd.Println(tplConfigProfileBase)
+	cmd.Println(config.tplConfigProfileBase)
 }
 
 // InfoConfigProfileNone reports that no profile exists.
@@ -100,7 +104,7 @@ func InfoConfigProfileBase(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - filename: The .ctxrc filename
 func InfoConfigProfileNone(cmd *cobra.Command, filename string) {
-	sprintf(cmd, tplConfigProfileNone, filename)
+	io.sprintf(cmd, config.tplConfigProfileNone, filename)
 }
 
 // InfoDepsNoProject reports that no supported project was detected.
@@ -109,9 +113,9 @@ func InfoConfigProfileNone(cmd *cobra.Command, filename string) {
 //   - cmd: Cobra command for output
 //   - builderNames: Comma-separated list of supported project types
 func InfoDepsNoProject(cmd *cobra.Command, builderNames string) {
-	cmd.Println(tplDepsNoProject)
-	cmd.Println(tplDepsLookingFor)
-	sprintf(cmd, tplDepsUseType, builderNames)
+	cmd.Println(config.tplDepsNoProject)
+	cmd.Println(config.tplDepsLookingFor)
+	io.sprintf(cmd, config.tplDepsUseType, builderNames)
 }
 
 // InfoDepsNoDeps reports that no dependencies were found.
@@ -119,7 +123,7 @@ func InfoDepsNoProject(cmd *cobra.Command, builderNames string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoDepsNoDeps(cmd *cobra.Command) {
-	cmd.Println(tplDepsNoDeps)
+	cmd.Println(config.tplDepsNoDeps)
 }
 
 // InfoSkillsHeader prints the skills list heading.
@@ -127,7 +131,7 @@ func InfoDepsNoDeps(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoSkillsHeader(cmd *cobra.Command) {
-	cmd.Println(tplSkillsHeader)
+	cmd.Println(config.tplSkillsHeader)
 	cmd.Println()
 }
 
@@ -138,7 +142,7 @@ func InfoSkillsHeader(cmd *cobra.Command) {
 //   - name: Skill name
 //   - description: Truncated skill description
 func InfoSkillLine(cmd *cobra.Command, name, description string) {
-	sprintf(cmd, tplSkillLine, name, description)
+	io.sprintf(cmd, config.tplSkillLine, name, description)
 }
 
 // InfoExistsWritingAsAlternative reports that a file already exists and the
@@ -154,7 +158,7 @@ func InfoExistsWritingAsAlternative(
 	if cmd == nil {
 		return
 	}
-	sprintf(cmd, tplExistsWritingAsAlternative, path, alternative)
+	io.sprintf(cmd, config.tplExistsWritingAsAlternative, path, alternative)
 }
 
 // InfoInitOverwritePrompt prints the overwrite confirmation prompt.
@@ -163,7 +167,7 @@ func InfoExistsWritingAsAlternative(
 //   - cmd: Cobra command for output
 //   - contextDir: path to the existing .context/ directory
 func InfoInitOverwritePrompt(cmd *cobra.Command, contextDir string) {
-	cmd.Print(fmt.Sprintf(tplInitOverwritePrompt, contextDir))
+	cmd.Print(fmt.Sprintf(config.tplInitOverwritePrompt, contextDir))
 }
 
 // InfoInitAborted reports that the user cancelled the init operation.
@@ -171,7 +175,7 @@ func InfoInitOverwritePrompt(cmd *cobra.Command, contextDir string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoInitAborted(cmd *cobra.Command) {
-	cmd.Println(tplInitAborted)
+	cmd.Println(config.tplInitAborted)
 }
 
 // InfoInitExistsSkipped reports a template file skipped because it exists.
@@ -180,7 +184,7 @@ func InfoInitAborted(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - name: the template filename that was skipped
 func InfoInitExistsSkipped(cmd *cobra.Command, name string) {
-	sprintf(cmd, tplInitExistsSkipped, name)
+	io.sprintf(cmd, config.tplInitExistsSkipped, name)
 }
 
 // InfoInitFileCreated reports a template file that was created.
@@ -189,7 +193,7 @@ func InfoInitExistsSkipped(cmd *cobra.Command, name string) {
 //   - cmd: Cobra command for output
 //   - name: the template filename that was created
 func InfoInitFileCreated(cmd *cobra.Command, name string) {
-	sprintf(cmd, tplInitFileCreated, name)
+	io.sprintf(cmd, config.tplInitFileCreated, name)
 }
 
 // InfoInitialized reports successful context directory initialization.
@@ -199,7 +203,7 @@ func InfoInitFileCreated(cmd *cobra.Command, name string) {
 //   - contextDir: the path to the initialized .context/ directory
 func InfoInitialized(cmd *cobra.Command, contextDir string) {
 	cmd.Println()
-	sprintf(cmd, tplInitialized, contextDir)
+	io.sprintf(cmd, config.tplInitialized, contextDir)
 }
 
 // InfoInitWarnNonFatal reports a non-fatal warning during init.
@@ -209,7 +213,7 @@ func InfoInitialized(cmd *cobra.Command, contextDir string) {
 //   - label: short description of what failed (e.g. "CLAUDE.md")
 //   - err: the non-fatal error
 func InfoInitWarnNonFatal(cmd *cobra.Command, label string, err error) {
-	sprintf(cmd, tplInitWarnNonFatal, label, err)
+	io.sprintf(cmd, config.tplInitWarnNonFatal, label, err)
 }
 
 // InfoInitScratchpadPlaintext reports a plaintext scratchpad was created.
@@ -218,7 +222,7 @@ func InfoInitWarnNonFatal(cmd *cobra.Command, label string, err error) {
 //   - cmd: Cobra command for output
 //   - path: the scratchpad file path
 func InfoInitScratchpadPlaintext(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitScratchpadPlaintext, path)
+	io.sprintf(cmd, config.tplInitScratchpadPlaintext, path)
 }
 
 // InfoInitScratchpadNoKey warns about a missing key for an encrypted scratchpad.
@@ -227,7 +231,7 @@ func InfoInitScratchpadPlaintext(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - keyPath: the expected key path
 func InfoInitScratchpadNoKey(cmd *cobra.Command, keyPath string) {
-	sprintf(cmd, tplInitScratchpadNoKey, keyPath)
+	io.sprintf(cmd, config.tplInitScratchpadNoKey, keyPath)
 }
 
 // InfoInitScratchpadKeyCreated reports a scratchpad key was generated.
@@ -236,7 +240,7 @@ func InfoInitScratchpadNoKey(cmd *cobra.Command, keyPath string) {
 //   - cmd: Cobra command for output
 //   - keyPath: the path where the key was saved
 func InfoInitScratchpadKeyCreated(cmd *cobra.Command, keyPath string) {
-	sprintf(cmd, tplInitScratchpadKeyCreated, keyPath)
+	io.sprintf(cmd, config.tplInitScratchpadKeyCreated, keyPath)
 }
 
 // InfoInitCreatingRootFiles prints the heading before root file creation.
@@ -245,7 +249,7 @@ func InfoInitScratchpadKeyCreated(cmd *cobra.Command, keyPath string) {
 //   - cmd: Cobra command for output
 func InfoInitCreatingRootFiles(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(tplInitCreatingRootFiles)
+	cmd.Println(config.tplInitCreatingRootFiles)
 }
 
 // InfoInitSettingUpPermissions prints the heading before permissions setup.
@@ -254,7 +258,7 @@ func InfoInitCreatingRootFiles(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 func InfoInitSettingUpPermissions(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(tplInitSettingUpPermissions)
+	cmd.Println(config.tplInitSettingUpPermissions)
 }
 
 // InfoInitGitignoreUpdated reports .gitignore entries were added.
@@ -263,7 +267,7 @@ func InfoInitSettingUpPermissions(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - count: number of entries added
 func InfoInitGitignoreUpdated(cmd *cobra.Command, count int) {
-	sprintf(cmd, tplInitGitignoreUpdated, count)
+	io.sprintf(cmd, config.tplInitGitignoreUpdated, count)
 }
 
 // InfoInitGitignoreReview hints how to review changes.
@@ -271,7 +275,7 @@ func InfoInitGitignoreUpdated(cmd *cobra.Command, count int) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InfoInitGitignoreReview(cmd *cobra.Command) {
-	cmd.Println(tplInitGitignoreReview)
+	cmd.Println(config.tplInitGitignoreReview)
 }
 
 // InfoInitNextSteps prints the post-init guidance block.
@@ -280,11 +284,11 @@ func InfoInitGitignoreReview(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 func InfoInitNextSteps(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(tplInitNextSteps)
+	cmd.Println(config.tplInitNextSteps)
 	cmd.Println()
-	cmd.Println(tplInitPluginInfo)
+	cmd.Println(config.tplInitPluginInfo)
 	cmd.Println()
-	cmd.Println(tplInitPluginNote)
+	cmd.Println(config.tplInitPluginNote)
 }
 
 // InfoObsidianGenerated reports successful Obsidian vault generation.
@@ -294,10 +298,10 @@ func InfoInitNextSteps(cmd *cobra.Command) {
 //   - count: Number of entries generated
 //   - output: Output directory path
 func InfoObsidianGenerated(cmd *cobra.Command, count int, output string) {
-	sprintf(cmd, tplObsidianGenerated, count, output)
+	io.sprintf(cmd, config.tplObsidianGenerated, count, output)
 	cmd.Println()
 	cmd.Println("Next steps:")
-	sprintf(cmd, tplObsidianNextSteps, output)
+	io.sprintf(cmd, config.tplObsidianNextSteps, output)
 }
 
 // InfoJournalOrphanRemoved reports a removed orphan file.
@@ -306,7 +310,7 @@ func InfoObsidianGenerated(cmd *cobra.Command, count int, output string) {
 //   - cmd: Cobra command for output
 //   - name: Filename that was removed
 func InfoJournalOrphanRemoved(cmd *cobra.Command, name string) {
-	sprintf(cmd, tplJournalOrphanRemoved, name)
+	io.sprintf(cmd, config.tplJournalOrphanRemoved, name)
 }
 
 // InfoJournalSiteGenerated reports successful site generation with next steps.
@@ -317,12 +321,12 @@ func InfoJournalOrphanRemoved(cmd *cobra.Command, name string) {
 //   - output: Output directory path
 //   - zensicalBin: Zensical binary name
 func InfoJournalSiteGenerated(cmd *cobra.Command, count int, output, zensicalBin string) {
-	sprintf(cmd, tplJournalSiteGenerated, count, output)
+	io.sprintf(cmd, config.tplJournalSiteGenerated, count, output)
 	cmd.Println()
 	cmd.Println("Next steps:")
-	sprintf(cmd, tplJournalSiteNextSteps, output, zensicalBin)
+	io.sprintf(cmd, config.tplJournalSiteNextSteps, output, zensicalBin)
 	cmd.Println("  or")
-	cmd.Println(tplJournalSiteAlt)
+	cmd.Println(config.tplJournalSiteAlt)
 }
 
 // InfoJournalSiteStarting reports the server is starting.
@@ -331,7 +335,7 @@ func InfoJournalSiteGenerated(cmd *cobra.Command, count int, output, zensicalBin
 //   - cmd: Cobra command for output
 func InfoJournalSiteStarting(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(tplJournalSiteStarting)
+	cmd.Println(config.tplJournalSiteStarting)
 }
 
 // InfoJournalSiteBuilding reports a build is in progress.
@@ -340,7 +344,7 @@ func InfoJournalSiteStarting(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 func InfoJournalSiteBuilding(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(tplJournalSiteBuilding)
+	cmd.Println(config.tplJournalSiteBuilding)
 }
 
 // InfoLoopGenerated reports successful loop script generation with details.
@@ -359,17 +363,17 @@ func InfoLoopGenerated(
 	maxIterations int,
 	completionMsg string,
 ) {
-	sprintf(cmd, tplLoopGenerated, outputFile)
+	io.sprintf(cmd, config.tplLoopGenerated, outputFile)
 	cmd.Println()
 	cmd.Println(heading)
-	sprintf(cmd, tplLoopRunCmd, outputFile)
+	io.sprintf(cmd, config.tplLoopRunCmd, outputFile)
 	cmd.Println()
-	sprintf(cmd, tplLoopTool, tool)
-	sprintf(cmd, tplLoopPrompt, promptFile)
+	io.sprintf(cmd, config.tplLoopTool, tool)
+	io.sprintf(cmd, config.tplLoopPrompt, promptFile)
 	if maxIterations > 0 {
-		sprintf(cmd, tplLoopMaxIterations, maxIterations)
+		io.sprintf(cmd, config.tplLoopMaxIterations, maxIterations)
 	} else {
-		cmd.Println(tplLoopUnlimited)
+		cmd.Println(config.tplLoopUnlimited)
 	}
-	sprintf(cmd, tplLoopCompletion, completionMsg)
+	io.sprintf(cmd, config.tplLoopCompletion, completionMsg)
 }

@@ -168,12 +168,49 @@ func Send(event, message, sessionID string, detail *TemplateRef) error {
 		return nil
 	}
 
-	client := &http.Client{Timeout: 5 * time.Second}
-	resp, err := client.Post(url, "application/json", bytes.NewReader(body)) //nolint:gosec // URL is user-configured via encrypted storage
+	resp, err := PostJSON(url, body)
 	if err != nil {
 		return nil // fire-and-forget
 	}
 	_ = resp.Body.Close()
 
 	return nil
+}
+
+// PostJSON sends a JSON payload to a webhook URL and returns the response.
+// The URL is always user-configured via encrypted storage.
+//
+// Parameters:
+//   - url: webhook endpoint.
+//   - body: JSON-encoded payload bytes.
+//
+// Returns:
+//   - *http.Response: the HTTP response (caller must close Body).
+//   - error: on HTTP failure.
+func PostJSON(url string, body []byte) (*http.Response, error) {
+	client := &http.Client{Timeout: 5 * time.Second}
+	return client.Post(url, "application/json", bytes.NewReader(body)) //nolint:gosec // URL is user-configured via encrypted storage
+}
+
+// MaskURL shows the scheme + host and masks everything after the path start.
+//
+// Parameters:
+//   - url: full webhook URL.
+//
+// Returns:
+//   - string: masked URL safe for display.
+func MaskURL(url string) string {
+	count := 0
+	for i, c := range url {
+		if c == '/' {
+			count++
+			if count == 3 {
+				return url[:i] + "/***"
+			}
+		}
+	}
+	if len(url) > 20 {
+		return url[:20] + "***"
+	}
+	return url
 }

@@ -16,6 +16,12 @@ import (
 	"strings"
 )
 
+// collectMemory reads physical and swap memory usage from /proc/meminfo on Linux.
+//
+// Returns a MemInfo with Supported=false if /proc/meminfo cannot be opened.
+//
+// Returns:
+//   - MemInfo: Physical and swap memory statistics
 func collectMemory() MemInfo {
 	f, err := os.Open("/proc/meminfo")
 	if err != nil {
@@ -26,7 +32,16 @@ func collectMemory() MemInfo {
 }
 
 // parseMeminfo parses /proc/meminfo content into a MemInfo struct.
-// Exported-in-tests via parse_linux_test.go.
+//
+// Reads key-value pairs in "Key: value kB" format. Used memory is
+// computed as Total - Available (with a fallback to Free + Buffers +
+// Cached for kernels before 3.14 that lack MemAvailable).
+//
+// Parameters:
+//   - r: Reader providing /proc/meminfo content
+//
+// Returns:
+//   - MemInfo: Parsed memory and swap statistics
 func parseMeminfo(r io.Reader) MemInfo {
 	vals := make(map[string]uint64)
 	scanner := bufio.NewScanner(r)

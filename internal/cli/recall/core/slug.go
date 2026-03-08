@@ -30,7 +30,7 @@ const SlugMaxLen = 50
 //   - string: Slugified string (may be empty if input is empty or all punctuation)
 func SlugifyTitle(title string) string {
 	// Strip the "..." truncation suffix from FirstUserMsg if present.
-	title = strings.TrimSuffix(title, "...")
+	title = strings.TrimSuffix(title, config.Ellipsis)
 
 	var sb strings.Builder
 	prevHyphen := false
@@ -75,12 +75,12 @@ func SlugifyTitle(title string) string {
 // Returns:
 //   - string: Cleaned title string
 func CleanTitle(s string) string {
-	s = strings.TrimSuffix(s, "...")
+	s = strings.TrimSuffix(s, config.Ellipsis)
 	s = config.RegExClaudeTag.ReplaceAllString(s, "")
 	var sb strings.Builder
 	prevSpace := false
 	for _, r := range s {
-		if r == '\n' || r == '\r' || r == '\t' {
+		if r == rune(config.NewlineLF[0]) || r == rune(config.NewlineCRLF[0]) || r == rune(config.Tab[0]) {
 			r = ' '
 		}
 		if r == ' ' {

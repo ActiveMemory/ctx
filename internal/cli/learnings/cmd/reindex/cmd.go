@@ -23,6 +23,6 @@ func Cmd() *cobra.Command {
 		Use:   "reindex",
 		Short: short,
 		Long:  long,
-		RunE:  run,
+		RunE:  Run,
 	}
 }

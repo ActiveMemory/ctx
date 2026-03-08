@@ -149,7 +149,7 @@ func runJournalSite(
 		}
 
 		// Generate site copy with Markdown fixes
-		fv := jstate.IsFencesVerified(entry.Filename)
+		fv := jstate.FencesVerified(entry.Filename)
 		withLinks := core.InjectSourceLink(normalized, src)
 		if entry.Summary != "" {
 			withLinks = core.InjectSummary(withLinks, entry.Summary)

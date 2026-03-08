@@ -118,8 +118,8 @@ func TestList_Empty(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(out, core.MsgEmpty) {
-		t.Errorf("output = %q, want %q", out, core.MsgEmpty)
+	if !strings.Contains(out, "Scratchpad is empty.") {
+		t.Errorf("output = %q, want %q", out, "Scratchpad is empty.")
 	}
 }
 
@@ -1063,7 +1063,7 @@ func TestList_PlaintextEmpty(t *testing.T) {
 	if err != nil {
 		t.Fatalf("list error: %v", err)
 	}
-	if !strings.Contains(out, core.MsgEmpty) {
+	if !strings.Contains(out, "Scratchpad is empty.") {
 		t.Errorf("output = %q, want empty message", out)
 	}
 }
@@ -1261,7 +1261,7 @@ func TestIsBlob(t *testing.T) {
 func TestSplitBlob_Valid(t *testing.T) {
 	data := []byte("hello world")
 	encoded := base64.StdEncoding.EncodeToString(data)
-	entry := "my label" + core.BlobSep + encoded
+	entry := "my label" + config.BlobSep + encoded
 
 	label, decoded, ok := core.SplitBlob(entry)
 	if !ok {
@@ -1355,14 +1355,14 @@ func TestAdd_BlobTooLarge(t *testing.T) {
 	dir := setupEncrypted(t)
 
 	testFile := filepath.Join(dir, "big.bin")
-	data := make([]byte, core.MaxBlobSize+1)
+	data := make([]byte, config.MaxBlobSize+1)
 	if err := os.WriteFile(testFile, data, 0600); err != nil {
 		t.Fatal(err)
 	}
 
 	_, err := runCmd(newPadCmd("add", "--file", testFile, "big blob"))
 	if err == nil {
-		t.Fatal("expected error for file exceeding core.MaxBlobSize")
+		t.Fatal("expected error for file exceeding config.MaxBlobSize")
 	}
 	if !strings.Contains(err.Error(), "file too large") {
 		t.Errorf("error = %q, want 'file too large'", err.Error())
@@ -1943,7 +1943,7 @@ func TestImportBlobs_SkipsTooLarge(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Oversized file
-	big := make([]byte, core.MaxBlobSize+1)
+	big := make([]byte, config.MaxBlobSize+1)
 	if err := os.WriteFile(filepath.Join(blobDir, "huge.bin"),
 		big, 0600); err != nil {
 		t.Fatal(err)

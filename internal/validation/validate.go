@@ -26,12 +26,12 @@ func SanitizeFilename(s string) string {
 	// Replace spaces and special chars with hyphens
 	s = config.RegExNonFileNameChar.ReplaceAllString(s, "-")
 	// Remove leading/trailing hyphens
-	s = strings.Trim(s, "-")
+	s = strings.Trim(s, config.Dash)
 	// Convert to lowercase
 	s = strings.ToLower(s)
 	// Limit length
-	if len(s) > 50 {
-		s = s[:50]
+	if len(s) > config.MaxFilenameLen {
+		s = s[:config.MaxFilenameLen]
 	}
 	if s == "" {
 		s = config.DefaultSessionFilename

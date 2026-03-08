@@ -7,14 +7,13 @@
 package mv
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runMv moves entry from 1-based position n to 1-based position m.
+// Run moves entry from 1-based position n to 1-based position m.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -23,7 +22,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on invalid index or read/write failure
-func runMv(cmd *cobra.Command, n, m int) error {
+func Run(cmd *cobra.Command, n, m int) error {
 	entries, err := core.ReadEntries()
 	if err != nil {
 		return err
@@ -48,6 +47,6 @@ func runMv(cmd *cobra.Command, n, m int) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Moved entry %d to %d.", n, m))
+	write.PadEntryMoved(cmd, n, m)
 	return nil
 }

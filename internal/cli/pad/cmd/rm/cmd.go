@@ -29,7 +29,7 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return runRm(cmd, n)
+			return Run(cmd, n)
 		},
 	}
 }

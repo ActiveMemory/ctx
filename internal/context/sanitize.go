@@ -34,10 +34,10 @@ func effectivelyEmpty(content []byte) bool {
 		if len(trimmed) == 0 {
 			continue
 		}
-		if trimmed[0] == '#' {
+		if trimmed[0] == config.ByteHeading {
 			continue
 		}
-		if len(trimmed) > 0 && trimmed[0] == '-' && len(trimmed) < 5 {
+		if len(trimmed) > 0 && trimmed[0] == config.ByteDash && len(trimmed) < config.MaxSeparatorLen {
 			continue
 		}
 		// Check for HTML comment markers

@@ -7,7 +7,6 @@
 package root
 
 import (
-	"fmt"
 	"io"
 	"os"
 
@@ -15,6 +14,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/watch/core"
 	"github.com/ActiveMemory/ctx/internal/context"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run executes the watch command logic.
@@ -33,26 +34,25 @@ import (
 //     be opened, or stream processing fails
 func Run(cmd *cobra.Command, logPath string, dryRun bool) error {
 	if !context.Exists("") {
-		return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
+		return ctxerr.ContextNotInitialized()
 	}
 
-	cmd.Println("Watching for context updates...")
+	write.WatchWatching(cmd)
 	if dryRun {
-		cmd.Println("DRY RUN — No changes will be made")
+		write.WatchDryRun(cmd)
 	}
-	cmd.Println("Press Ctrl+C to stop")
+	write.WatchStopHint(cmd)
 	cmd.Println()
 
 	var reader io.Reader
 	if logPath != "" {
 		file, err := os.Open(logPath) //nolint:gosec // user-provided path via --log flag
 		if err != nil {
-			return fmt.Errorf("failed to open log file: %w", err)
+			return ctxerr.OpenLogFile(err)
 		}
 		defer func(file *os.File) {
-			err := file.Close()
-			if err != nil {
-				cmd.Println(fmt.Sprintf("failed to close log file: %v", err))
+			if closeErr := file.Close(); closeErr != nil {
+				write.WatchCloseLogError(cmd, closeErr)
 			}
 		}(file)
 		reader = file

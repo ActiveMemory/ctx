@@ -27,6 +27,8 @@ func Cmd() *cobra.Command {
 			return Run(cmd, sessionID)
 		},
 	}
-	cmd.Flags().String("session-id", "", assets.FlagDesc(assets.FlagDescKeyPauseSessionId))
+	cmd.Flags().String("session-id", "",
+		assets.FlagDesc(assets.FlagDescKeyPauseSessionId),
+	)
 	return cmd
 }

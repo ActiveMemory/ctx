@@ -71,6 +71,8 @@ const (
 	// FrontmatterLocked is the YAML frontmatter key and journal state
 	// marker for locked entries.
 	FrontmatterLocked = "locked"
+	// LabelUnlocked is the display label for unlocked entries.
+	LabelUnlocked = "unlocked"
 )
 
 // Additional bold metadata field prefixes for session show output.
@@ -101,6 +103,63 @@ const (
 	ColTurns = "Turns"
 	// ColTokens is the column header for token counts.
 	ColTokens = "Tokens"
+)
+
+// Claude Code tool names used in session transcripts.
+const (
+	ToolRead      = "Read"
+	ToolWrite     = "Write"
+	ToolEdit      = "Edit"
+	ToolBash      = "Bash"
+	ToolGrep      = "Grep"
+	ToolGlob      = "Glob"
+	ToolWebFetch  = "WebFetch"
+	ToolWebSearch = "WebSearch"
+	ToolTask      = "Task"
+)
+
+// Plain-text metadata labels used in HTML table rows.
+const (
+	MetaLabelID       = "ID"
+	MetaLabelDate     = "Date"
+	MetaLabelTime     = "Time"
+	MetaLabelDuration = "Duration"
+	MetaLabelTool     = "Tool"
+	MetaLabelProject  = "Project"
+	MetaLabelBranch   = "Branch"
+	MetaLabelModel    = "Model"
+	MetaLabelTurns    = "Turns"
+	MetaLabelTokens   = "Tokens"
+	MetaLabelParts    = "Parts"
+)
+
+// YAML frontmatter field keys for journal export.
+const (
+	FmKeyDate      = "date"
+	FmKeyTime      = "time"
+	FmKeyProject   = "project"
+	FmKeyBranch    = "branch"
+	FmKeyModel     = "model"
+	FmKeyTokensIn  = "tokens_in"
+	FmKeyTokensOut = "tokens_out"
+	FmKeySessionID = "session_id"
+	FmKeyTitle     = "title"
+)
+
+// Claude Code tool input JSON keys for display formatting.
+const (
+	ToolInputFilePath    = "file_path"
+	ToolInputCommand     = "command"
+	ToolInputPattern     = "pattern"
+	ToolInputURL         = "url"
+	ToolInputQuery       = "query"
+	ToolInputDescription = "description"
+)
+
+// Tool display limits.
+const (
+	// ToolDisplayMaxLen is the max length for tool parameter display before truncation.
+	ToolDisplayMaxLen = 100
 )
 
 // CLI flag names used in multiple commands.

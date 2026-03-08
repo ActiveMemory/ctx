@@ -29,11 +29,13 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runUnlock(cmd, args, all)
+			return Run(cmd, args, all)
 		},
 	}
 
-	cmd.Flags().BoolVar(&all, "all", false, assets.FlagDesc(assets.FlagDescKeyRecallUnlockAll))
+	cmd.Flags().BoolVar(&all, "all", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallUnlockAll),
+	)
 
 	return cmd
 }

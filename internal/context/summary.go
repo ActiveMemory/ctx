@@ -11,10 +11,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
-
-const summaryEmpty = "empty"
 
 // summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
 //
@@ -32,9 +31,9 @@ func summarizeConstitution(content []byte) string {
 			content, []byte(config.PrefixTaskDone),
 		)
 	if count == 0 {
-		return "loaded"
+		return assets.TextDesc(assets.TextDescKeySummaryLoaded)
 	}
-	return fmt.Sprintf("%d invariants", count)
+	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryInvariants), count)
 }
 
 // summarizeTasks counts active and completed tasks in TASKS.md.
@@ -50,15 +49,15 @@ func summarizeTasks(content []byte) string {
 	completed := bytes.Count(content, []byte(config.PrefixTaskDone))
 
 	if active == 0 && completed == 0 {
-		return summaryEmpty
+		return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 	}
 
 	var parts []string
 	if active > 0 {
-		parts = append(parts, fmt.Sprintf("%d active", active))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryActive), active))
 	}
 	if completed > 0 {
-		parts = append(parts, fmt.Sprintf("%d completed", completed))
+		parts = append(parts, fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryCompleted), completed))
 	}
 	return strings.Join(parts, ", ")
 }
@@ -76,12 +75,12 @@ func summarizeDecisions(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return summaryEmpty
+		return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return "1 decision"
+		return assets.TextDesc(assets.TextDescKeySummaryDecision)
 	}
-	return fmt.Sprintf("%d decisions", count)
+	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryDecisions), count)
 }
 
 // summarizeGlossary counts term definitions (**term**) in GLOSSARY.md.
@@ -96,12 +95,12 @@ func summarizeGlossary(content []byte) string {
 	count := len(matches)
 
 	if count == 0 {
-		return summaryEmpty
+		return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 	}
 	if count == 1 {
-		return "1 term"
+		return assets.TextDesc(assets.TextDescKeySummaryTerm)
 	}
-	return fmt.Sprintf("%d terms", count)
+	return fmt.Sprintf(assets.TextDesc(assets.TextDescKeySummaryTerms), count)
 }
 
 // generateSummary creates a brief summary for a context file based on its
@@ -125,8 +124,8 @@ func generateSummary(name string, content []byte) string {
 		return summarizeGlossary(content)
 	default:
 		if len(content) == 0 || effectivelyEmpty(content) {
-			return summaryEmpty
+			return assets.TextDesc(assets.TextDescKeySummaryEmpty)
 		}
-		return "loaded"
+		return assets.TextDesc(assets.TextDescKeySummaryLoaded)
 	}
 }

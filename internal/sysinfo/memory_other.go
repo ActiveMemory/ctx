@@ -8,6 +8,10 @@
 
 package sysinfo
 
+// collectMemory is a no-op stub for unsupported platforms.
+//
+// Returns:
+//   - MemInfo: Always returns Supported=false
 func collectMemory() MemInfo {
 	return MemInfo{Supported: false}
 }

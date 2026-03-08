@@ -16,7 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
-// run regenerates the LEARNINGS.md index.
+// Run regenerates the LEARNINGS.md index.
 //
 // Parameters:
 //   - cmd: Cobra command for output messages
@@ -24,7 +24,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil if file read/write fails
-func run(cmd *cobra.Command, _ []string) error {
+func Run(cmd *cobra.Command, _ []string) error {
 	filePath := filepath.Join(rc.ContextDir(), config.FileLearning)
 	return index.ReindexFile(
 		cmd.OutOrStdout(),

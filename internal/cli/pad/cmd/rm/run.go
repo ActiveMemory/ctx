@@ -7,14 +7,13 @@
 package rm
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runRm removes entry at 1-based position n.
+// Run removes entry at 1-based position n.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -22,7 +21,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on invalid index or read/write failure
-func runRm(cmd *cobra.Command, n int) error {
+func Run(cmd *cobra.Command, n int) error {
 	entries, err := core.ReadEntries()
 	if err != nil {
 		return err
@@ -38,6 +37,6 @@ func runRm(cmd *cobra.Command, n int) error {
 		return writeErr
 	}
 
-	cmd.Println(fmt.Sprintf("Removed entry %d.", n))
+	write.PadEntryRemoved(cmd, n)
 	return nil
 }

@@ -16,24 +16,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
-
-// DocAliases maps user-facing names to embedded asset names.
-var DocAliases = map[string]string{
-	"manifesto":  "manifesto",
-	"about":      "about",
-	"invariants": "design-invariants",
-}
-
-// DocOrder defines the display order for the interactive menu.
-var DocOrder = []struct {
-	Alias string
-	Label string
-}{
-	{"manifesto", "The ctx Manifesto"},
-	{"about", "About ctx"},
-	{"invariants", "Design Invariants"},
-}
 
 // Run dispatches to the interactive menu or direct document display.
 //
@@ -52,19 +36,12 @@ func Run(cmd *cobra.Command, args []string) error {
 
 // showMenu presents a numbered menu and reads user selection from stdin.
 func showMenu(cmd *cobra.Command) error {
-	bt := "`"
-	cmd.Println(`
-   /    ctx:                         https://ctx.ist
- ,'` + bt + `./    do you remember?
- ` + bt + `.,'\
-   \
-      {}  -> what
-      ctx -> why`)
+	write.WhyBanner(cmd)
 	cmd.Println()
 	for i, doc := range DocOrder {
-		cmd.Println(fmt.Sprintf("  [%d] %s", i+1, doc.Label))
+		write.WhyMenuItem(cmd, i+1, doc.Label)
 	}
-	cmd.Print("\nSelect a document (1-3): ")
+	write.WhyMenuPrompt(cmd)
 
 	reader := bufio.NewReader(os.Stdin)
 	input, readErr := reader.ReadString('\n')

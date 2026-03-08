@@ -262,11 +262,11 @@ func WriteSessionStats(sessionID string, stats SessionStats) {
 //   - stdin: File to read input from
 //
 // Returns:
-//   - string: Session ID or SessionUnknown
+//   - string: Session ID or config.SessionUnknown
 func ReadSessionID(stdin *os.File) string {
 	input := ReadInput(stdin)
 	if input.SessionID == "" {
-		return SessionUnknown
+		return config.SessionUnknown
 	}
 	return input.SessionID
 }
@@ -282,4 +282,19 @@ func ContextDirLine() string {
 		return ""
 	}
 	return "Context: " + dir
+}
+
+// AppendContextDir appends a bracketed context directory footer to msg
+// if a context directory is available. Returns msg unchanged otherwise.
+//
+// Parameters:
+//   - msg: the message to append to
+//
+// Returns:
+//   - string: msg with " [Context: <dir>]" appended, or msg unchanged
+func AppendContextDir(msg string) string {
+	if line := ContextDirLine(); line != "" {
+		return msg + " [" + line + "]"
+	}
+	return msg
 }

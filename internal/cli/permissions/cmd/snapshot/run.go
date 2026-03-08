@@ -7,13 +7,13 @@
 package snapshot
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/cli/permissions/core"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run saves settings.local.json as the golden image.
@@ -27,21 +27,22 @@ func Run(cmd *cobra.Command) error {
 	content, readErr := os.ReadFile(config.FileSettings)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			return core.ErrSettingsNotFound()
+			return ctxerr.SettingsNotFound()
 		}
-		return core.ErrReadFile(config.FileSettings, readErr)
+		return ctxerr.FileRead(config.FileSettings, readErr)
 	}
 
-	// Determine message based on whether golden already exists.
-	verb := "Saved"
+	updated := false
 	if _, statErr := os.Stat(config.FileSettingsGolden); statErr == nil {
-		verb = "Updated"
+		updated = true
 	}
 
-	if writeErr := os.WriteFile(config.FileSettingsGolden, content, config.PermFile); writeErr != nil {
-		return core.ErrWriteFile(config.FileSettingsGolden, writeErr)
+	if writeErr := os.WriteFile(
+		config.FileSettingsGolden, content, config.PermFile,
+	); writeErr != nil {
+		return ctxerr.FileWrite(config.FileSettingsGolden, writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("%s golden image: %s", verb, config.FileSettingsGolden))
+	write.SnapshotDone(cmd, updated, config.FileSettingsGolden)
 	return nil
 }

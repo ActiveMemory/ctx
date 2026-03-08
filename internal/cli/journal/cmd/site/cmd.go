@@ -26,7 +26,7 @@ func Cmd() *cobra.Command {
 		build  bool
 	)
 
-	short, long := assets.CommandDesc(assets.AssetKeyJournalSite)
+	short, long := assets.CommandDesc(assets.CmdDescKeyJournalSite)
 	cmd := &cobra.Command{
 		Use:   "site",
 		Short: short,

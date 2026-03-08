@@ -8,6 +8,27 @@ package parser
 
 import "time"
 
+// SessionParser defines the interface for tool-specific session parsers.
+//
+// Each AI tool (Claude Code, Aider, Cursor) implements this interface
+// to parse its specific format into the common Session type.
+type SessionParser interface {
+	// ParseFile reads a session file and returns all sessions found.
+	// A single file may contain multiple sessions (grouped by session ID).
+	ParseFile(path string) ([]*Session, error)
+
+	// ParseLine parses a single line from a session file.
+	// Returns nil if the line should be skipped (e.g., non-message lines).
+	ParseLine(line []byte) (*Message, string, error) // message, sessionID, error
+
+	// Matches returns true if this parser can handle the given file.
+	// Implementations may check file extension, peek at content, etc.
+	Matches(path string) bool
+
+	// Tool returns the tool identifier (e.g., "claude-code", "aider").
+	Tool() string
+}
+
 // Session represents a reconstructed conversation session.
 //
 // This is the tool-agnostic output type that all parsers produce.

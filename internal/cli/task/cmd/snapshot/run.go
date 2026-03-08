@@ -16,10 +16,12 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runSnapshot executes the snapshot subcommand logic.
+// Run executes the snapshot subcommand logic.
 //
 // Creates a point-in-time copy of TASKS.md in the archive directory.
 // The snapshot includes a header with the name and timestamp.
@@ -30,54 +32,51 @@ import (
 //
 // Returns:
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
-func runSnapshot(cmd *cobra.Command, args []string) error {
+func Run(cmd *cobra.Command, args []string) error {
 	tasksPath := core.TasksFilePath()
 	archivePath := core.ArchiveDirPath()
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
-		return fmt.Errorf("no TASKS.md found")
+		return ctxerr.TaskFileNotFound()
 	}
 
 	// Read TASKS.md
 	content, readErr := os.ReadFile(filepath.Clean(tasksPath))
 	if readErr != nil {
-		return fmt.Errorf("failed to read TASKS.md: %w", readErr)
+		return ctxerr.TaskFileRead(readErr)
 	}
 
 	// Ensure the archive directory exists
 	if mkdirErr := os.MkdirAll(archivePath, config.PermExec); mkdirErr != nil {
-		return fmt.Errorf("failed to create archive directory: %w", mkdirErr)
+		return ctxerr.CreateArchiveDir(mkdirErr)
 	}
 
 	// Generate snapshot filename
 	now := time.Now()
-	name := "snapshot"
+	name := config.DefaultSnapshotName
 	if len(args) > 0 {
 		name = validation.SanitizeFilename(args[0])
 	}
 	snapshotFilename := fmt.Sprintf(
-		"tasks-%s-%s.md", name, now.Format("2006-01-02-1504"),
+		config.SnapshotFilenameFormat, name, now.Format(config.SnapshotTimeFormat),
 	)
 	snapshotPath := filepath.Join(archivePath, snapshotFilename)
 
-	// Add snapshot header
+	// Build snapshot content
 	nl := config.NewlineLF
-	snapshotContent := fmt.Sprintf(
-		"# TASKS.md Snapshot — %s"+
-			nl+nl+
-			"Created: %s"+nl+nl+config.Separator+nl+nl+"%s",
-		name, now.Format(time.RFC3339), string(content),
+	snapshotContent := write.SnapshotContent(
+		name, now.Format(time.RFC3339), config.Separator, nl, string(content),
 	)
 
 	// Write snapshot
 	if writeErr := os.WriteFile(
 		snapshotPath, []byte(snapshotContent), config.PermFile,
 	); writeErr != nil {
-		return fmt.Errorf("failed to write snapshot: %w", writeErr)
+		return ctxerr.SnapshotWrite(writeErr)
 	}
 
-	cmd.Println(fmt.Sprintf("✓ Snapshot saved to %s", snapshotPath))
+	write.SnapshotSaved(cmd, snapshotPath)
 
 	return nil
 }

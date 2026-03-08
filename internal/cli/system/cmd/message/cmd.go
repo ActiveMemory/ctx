@@ -8,6 +8,8 @@ package message
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/assets"
 )
 
 // Cmd returns the "ctx system message" subcommand.
@@ -15,20 +17,12 @@ import (
 // Returns:
 //   - *cobra.Command: Configured message subcommand with sub-subcommands
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc(assets.CmdDescKeySystemMessage)
+
 	cmd := &cobra.Command{
 		Use:   "message",
-		Short: "Manage hook message templates",
-		Long: `Manage hook message templates.
-
-Hook messages control what text hooks emit. The hook logic (when to
-fire, counting, state tracking) is universal. The messages are opinions
-that can be customized per-project.
-
-Subcommands:
-  list     Show all hook messages with category and override status
-  show     Print the effective message template for a hook/variant
-  edit     Copy the embedded default to .context/ for editing
-  reset    Delete a user override and revert to embedded default`,
+		Short: short,
+		Long:  long,
 	}
 
 	cmd.AddCommand(
@@ -39,4 +33,61 @@ Subcommands:
 	)
 
 	return cmd
+}
+
+// messageListCmd returns the "ctx system message list" subcommand.
+func messageListCmd() *cobra.Command {
+	short, _ := assets.CommandDesc(assets.CmdDescKeySystemMessageList)
+
+	cmd := &cobra.Command{
+		Use:   "list",
+		Short: short,
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return RunMessageList(cmd)
+		},
+	}
+	cmd.Flags().Bool("json", false, assets.FlagDesc(assets.FlagDescKeySystemMessageJson))
+	return cmd
+}
+
+// messageShowCmd returns the "ctx system message show" subcommand.
+func messageShowCmd() *cobra.Command {
+	short, _ := assets.CommandDesc(assets.CmdDescKeySystemMessageShow)
+
+	return &cobra.Command{
+		Use:   "show <hook> <variant>",
+		Short: short,
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunMessageShow(cmd, args[0], args[1])
+		},
+	}
+}
+
+// messageEditCmd returns the "ctx system message edit" subcommand.
+func messageEditCmd() *cobra.Command {
+	short, _ := assets.CommandDesc(assets.CmdDescKeySystemMessageEdit)
+
+	return &cobra.Command{
+		Use:   "edit <hook> <variant>",
+		Short: short,
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunMessageEdit(cmd, args[0], args[1])
+		},
+	}
+}
+
+// messageResetCmd returns the "ctx system message reset" subcommand.
+func messageResetCmd() *cobra.Command {
+	short, _ := assets.CommandDesc(assets.CmdDescKeySystemMessageReset)
+
+	return &cobra.Command{
+		Use:   "reset <hook> <variant>",
+		Short: short,
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunMessageReset(cmd, args[0], args[1])
+		},
+	}
 }

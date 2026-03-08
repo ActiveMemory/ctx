@@ -8,12 +8,12 @@ package root
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/status/core"
 	"github.com/ActiveMemory/ctx/internal/context"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the status command logic.
@@ -30,7 +30,7 @@ func Run(cmd *cobra.Command, jsonOutput, verbose bool) error {
 	if err != nil {
 		var notFoundError *context.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
+			return ctxerr.ContextNotInitialized()
 		}
 		return err
 	}

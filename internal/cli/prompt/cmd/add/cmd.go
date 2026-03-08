@@ -31,7 +31,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&fromStdin, "stdin", false, assets.FlagDesc(assets.FlagDescKeyPromptAddStdin))
+	cmd.Flags().BoolVar(&fromStdin,
+		"stdin", false, assets.FlagDesc(assets.FlagDescKeyPromptAddStdin),
+	)
 
 	return cmd
 }

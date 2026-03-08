@@ -12,7 +12,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 )
 
-// runUnlock delegates to core.RunLockUnlock with lock=false.
+// Run delegates to core.RunLockUnlock with lock=false.
 //
 // Parameters:
 //   - cmd: Cobra command for output
@@ -21,7 +21,7 @@ import (
 //
 // Returns:
 //   - error: Non-nil on validation or I/O failure
-func runUnlock(
+func Run(
 	cmd *cobra.Command,
 	args []string,
 	all bool,

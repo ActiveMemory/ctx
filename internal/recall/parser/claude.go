@@ -9,13 +9,13 @@ package parser
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // ClaudeCodeParser parses Claude Code JSONL session files.
@@ -80,7 +80,8 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 
 		// Claude Code messages have sessionId and type (user/assistant)
 		// Note: slug field was removed in newer Claude Code versions
-		if raw.SessionID != "" && (raw.Type == config.RoleUser || raw.Type == config.RoleAssistant) {
+		if raw.SessionID != "" && (raw.Type == config.RoleUser ||
+			raw.Type == config.RoleAssistant) {
 			return true
 		}
 	}
@@ -103,7 +104,7 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 	file, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
-		return nil, fmt.Errorf("open file: %w", openErr)
+		return nil, ctxerr.ParserOpenFile(openErr)
 	}
 	defer func() { _ = file.Close() }()
 
@@ -112,8 +113,8 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 
 	scanner := bufio.NewScanner(file)
 	// Increase buffer size for large lines
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 1024*1024) // 1MB max line size
+	buf := make([]byte, 0, config.ParserBufInitSize)
+	scanner.Buffer(buf, config.ParserBufMaxSize)
 
 	lineNum := 0
 	for scanner.Scan() {
@@ -142,7 +143,7 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 	}
 
 	if scanErr := scanner.Err(); scanErr != nil {
-		return nil, fmt.Errorf("scan file: %w", scanErr)
+		return nil, ctxerr.ParserScanFile(scanErr)
 	}
 
 	// Convert to sessions
@@ -182,7 +183,7 @@ func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
 
 	var raw claudeRawMessage
 	if unmarshalErr := json.Unmarshal(line, &raw); unmarshalErr != nil {
-		return nil, "", fmt.Errorf("unmarshal: %w", unmarshalErr)
+		return nil, "", ctxerr.ParserUnmarshal(unmarshalErr)
 	}
 
 	// Skip non-message lines

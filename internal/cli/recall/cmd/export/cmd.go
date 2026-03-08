@@ -27,7 +27,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runExport(cmd, args, opts)
+			return Run(cmd, args, opts)
 		},
 	}
 
@@ -35,7 +35,8 @@ func Cmd() *cobra.Command {
 		&opts.All, "all", false, assets.FlagDesc(assets.FlagDescKeyRecallExportAll),
 	)
 	cmd.Flags().BoolVar(
-		&opts.AllProjects, "all-projects", false, assets.FlagDesc(assets.FlagDescKeyRecallExportAllProjects),
+		&opts.AllProjects, "all-projects", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallExportAllProjects),
 	)
 	cmd.Flags().BoolVar(
 		&opts.Regenerate,
@@ -48,13 +49,6 @@ func Cmd() *cobra.Command {
 		assets.FlagDesc(assets.FlagDescKeyRecallExportKeepFrontmatter),
 	)
 
-	// Deprecated: --force is replaced by --keep-frontmatter=false.
-	cmd.Flags().BoolVar(
-		&opts.Force,
-		"force", false,
-		assets.FlagDesc(assets.FlagDescKeyRecallExportForce),
-	)
-	_ = cmd.Flags().MarkDeprecated("force", "use --keep-frontmatter=false instead")
 	cmd.Flags().BoolVarP(
 		&opts.Yes,
 		"yes", "y", false,

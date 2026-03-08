@@ -12,21 +12,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// EntryBlock represents a parsed entry block from a knowledge file
-// (DECISIONS.md or LEARNINGS.md).
-//
-// Fields:
-//   - Entry: The parsed header metadata (timestamp, date, title)
-//   - Lines: All lines belonging to this entry (header + body)
-//   - StartIndex: Zero-based line index where this entry starts
-//   - EndIndex: Zero-based line index where this entry ends (exclusive)
-type EntryBlock struct {
-	Entry      Entry
-	Lines      []string
-	StartIndex int
-	EndIndex   int
-}
-
 // ParseEntryBlocks splits file content into discrete entry blocks.
 //
 // Each block starts at a "## [YYYY-MM-DD-HHMMSS] Title" header and extends
@@ -54,11 +39,11 @@ func ParseEntryBlocks(content string) []EntryBlock {
 
 	for i, line := range lines {
 		matches := config.RegExEntryHeader.FindStringSubmatch(line)
-		if len(matches) == 4 {
+		if len(matches) == config.RegExEntryHeaderGroups {
 			headers = append(headers, headerPos{
 				lineIdx: i,
 				entry: Entry{
-					Timestamp: matches[1] + "-" + matches[2],
+					Timestamp: matches[1] + config.Dash + matches[2],
 					Date:      matches[1],
 					Title:     matches[3],
 				},
@@ -104,7 +89,7 @@ func ParseEntryBlocks(content string) []EntryBlock {
 func (eb *EntryBlock) IsSuperseded() bool {
 	for _, line := range eb.Lines {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "~~Superseded") {
+		if strings.HasPrefix(trimmed, config.PrefixSuperseded) {
 			return true
 		}
 	}

@@ -18,15 +18,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// State tracks memory bridge sync timestamps and (in future phases)
-// import/publish progress.
-type State struct {
-	LastSync       *time.Time `json:"last_sync"`
-	LastImport     *time.Time `json:"last_import"`
-	LastPublish    *time.Time `json:"last_publish"`
-	ImportedHashes []string   `json:"imported_hashes"`
-}
-
 // LoadState reads the sync state from .context/state/memory-import.json.
 // Returns a zero-value State if the file does not exist.
 func LoadState(contextDir string) (State, error) {
@@ -61,7 +52,7 @@ func SaveState(contextDir string, s State) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	data = append(data, '\n')
+	data = append(data, config.ByteNewline)
 	return os.WriteFile(path, data, config.PermFile)
 }
 
@@ -81,7 +72,7 @@ func EntryHash(text string) string {
 // Imported reports whether an entry hash has already been imported.
 // Stored entries use format "hash:target:date"; matches on hash prefix.
 func (s *State) Imported(hash string) bool {
-	prefix := hash + ":"
+	prefix := hash + config.Colon
 	for _, h := range s.ImportedHashes {
 		if h == hash || len(h) > len(hash) && h[:len(prefix)] == prefix {
 			return true
@@ -92,7 +83,7 @@ func (s *State) Imported(hash string) bool {
 
 // MarkImported records an entry hash with its target and date.
 func (s *State) MarkImported(hash, target string) {
-	date := time.Now().Format("2006-01-02")
+	date := time.Now().Format(config.DateFormat)
 	entry := fmt.Sprintf("%s:%s:%s", hash, target, date)
 	s.ImportedHashes = append(s.ImportedHashes, entry)
 }

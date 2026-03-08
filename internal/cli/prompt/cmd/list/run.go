@@ -7,7 +7,6 @@
 package list
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -15,6 +14,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run prints all available prompt template names.
@@ -30,10 +31,10 @@ func Run(cmd *cobra.Command) error {
 	entries, readErr := os.ReadDir(dir)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {
-			cmd.Println("No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.")
+			write.PromptNone(cmd)
 			return nil
 		}
-		return fmt.Errorf("read prompts directory: %w", readErr)
+		return ctxerr.ReadDirectory(dir, readErr)
 	}
 
 	var found bool
@@ -42,12 +43,12 @@ func Run(cmd *cobra.Command) error {
 		if entry.IsDir() || !strings.HasSuffix(name, config.ExtMarkdown) {
 			continue
 		}
-		cmd.Println(fmt.Sprintf("  %s", strings.TrimSuffix(name, config.ExtMarkdown)))
+		write.PromptItem(cmd, strings.TrimSuffix(name, config.ExtMarkdown))
 		found = true
 	}
 
 	if !found {
-		cmd.Println("No prompts found. Run 'ctx init' or 'ctx prompt add' to create prompts.")
+		write.PromptNone(cmd)
 	}
 
 	return nil

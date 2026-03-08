@@ -13,6 +13,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
@@ -28,7 +29,7 @@ func loadRC() *CtxRC {
 	data, err := os.ReadFile(config.FileContextRC)
 	if err == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
-			fmt.Fprintf(os.Stderr, "ctx: warning: failed to parse %s: %v (using defaults)\n",
+			_, _ = fmt.Fprintf(os.Stderr, assets.TextDesc(assets.TextDescKeyRcParseWarning)+config.NewlineLF,
 				config.FileContextRC, yamlErr)
 		}
 	}

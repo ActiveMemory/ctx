@@ -8,12 +8,13 @@ package root
 
 import (
 	"errors"
-	"fmt"
 
+	"github.com/ActiveMemory/ctx/internal/write/sync"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/sync/core"
 	"github.com/ActiveMemory/ctx/internal/context"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Run executes the sync command logic.
@@ -33,7 +34,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	if err != nil {
 		var notFoundError *context.NotFoundError
 		if errors.As(err, &notFoundError) {
-			return fmt.Errorf("no .context/ directory found. Run 'ctx init' first")
+			return ctxerr.ContextNotInitialized()
 		}
 		return err
 	}
@@ -41,38 +42,17 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 	actions := core.DetectSyncActions(ctx)
 
 	if len(actions) == 0 {
-		cmd.Println("✓ Context is in sync with codebase")
+		sync.CtxSyncInSync(cmd)
 		return nil
 	}
 
-	cmd.Println("Sync Analysis")
-	cmd.Println("=============")
-	cmd.Println()
-
-	if dryRun {
-		cmd.Println("DRY RUN — No changes will be made")
-		cmd.Println()
-	}
+	sync.CtxSyncHeader(cmd, dryRun)
 
 	for i, action := range actions {
-		cmd.Println(fmt.Sprintf("%d. [%s] %s", i+1, action.Type, action.Description))
-		if action.Suggestion != "" {
-			cmd.Println(fmt.Sprintf("   Suggestion: %s", action.Suggestion))
-		}
-		cmd.Println()
+		sync.CtxSyncAction(cmd, i+1, action.Type, action.Description, action.Suggestion)
 	}
 
-	if dryRun {
-		cmd.Println(fmt.Sprintf(
-			"Found %d items to sync. Run without --dry-run to apply suggestions.",
-			len(actions),
-		))
-	} else {
-		cmd.Println(fmt.Sprintf(
-			"Found %d items. Review and update context files manually.",
-			len(actions),
-		))
-	}
+	sync.CtxSyncSummary(cmd, len(actions), dryRun)
 
 	return nil
 }

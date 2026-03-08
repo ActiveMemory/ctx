@@ -18,7 +18,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runShow handles the recall show command.
+// Run handles the recall show command.
 //
 // Displays detailed information about a session including metadata, token
 // usage, tool usage summary, and optionally the full conversation.
@@ -32,7 +32,7 @@ import (
 //
 // Returns:
 //   - error: non-nil if session not found or scanning fails
-func runShow(
+func Run(
 	cmd *cobra.Command, args []string, latest, full, allProjects bool,
 ) error {
 	sessions, scanErr := core.FindSessions(allProjects)
@@ -76,41 +76,22 @@ func runShow(
 		session = matches[0]
 	}
 
-	// Print session details
-	write.SectionHeader(cmd, 1, session.Slug)
-
-	write.SessionDetail(cmd, config.MetadataID, session.ID)
-	write.SessionDetail(cmd, config.MetadataTool, session.Tool)
-	write.SessionDetail(cmd, config.MetadataProject, session.Project)
-	if session.GitBranch != "" {
-		write.SessionDetail(cmd, config.MetadataBranch, session.GitBranch)
-	}
-	if session.Model != "" {
-		write.SessionDetail(cmd, config.MetadataModel, session.Model)
-	}
-	write.BlankLine(cmd)
-
-	write.SessionDetail(
-		cmd, config.MetadataStarted,
-		session.StartTime.Format(config.DateTimePreciseFormat),
-	)
-	write.SessionDetail(
-		cmd, config.MetadataDuration, core.FormatDuration(session.Duration),
-	)
-	write.SessionDetailInt(cmd, config.MetadataTurns, session.TurnCount)
-	write.SessionDetailInt(cmd, config.MetadataMessages, len(session.Messages))
-	write.BlankLine(cmd)
-
-	write.SessionDetail(
-		cmd, config.MetadataInputUsage, core.FormatTokens(session.TotalTokensIn),
-	)
-	write.SessionDetail(
-		cmd, config.MetadataOutputUsage, core.FormatTokens(session.TotalTokensOut),
-	)
-	write.SessionDetail(
-		cmd, config.MetadataTotal, core.FormatTokens(session.TotalTokens),
-	)
-	write.BlankLine(cmd)
+	// Print session details.
+	write.SessionMetadata(cmd, write.SessionInfo{
+		Slug:      session.Slug,
+		ID:        session.ID,
+		Tool:      session.Tool,
+		Project:   session.Project,
+		Branch:    session.GitBranch,
+		Model:     session.Model,
+		Started:   session.StartTime.Format(config.DateTimePreciseFormat),
+		Duration:  core.FormatDuration(session.Duration),
+		Turns:     session.TurnCount,
+		Messages:  len(session.Messages),
+		TokensIn:  core.FormatTokens(session.TotalTokensIn),
+		TokensOut: core.FormatTokens(session.TotalTokensOut),
+		TokensAll: core.FormatTokens(session.TotalTokens),
+	})
 
 	// Tool usage summary
 	tools := session.AllToolUses()

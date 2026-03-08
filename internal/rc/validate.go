@@ -8,6 +8,7 @@ package rc
 
 import (
 	"bytes"
+	"errors"
 	"io"
 
 	"gopkg.in/yaml.v3"
@@ -36,7 +37,8 @@ func Validate(data []byte) (warnings []string, err error) {
 		}
 
 		// yaml.v3 returns *yaml.TypeError for unknown fields.
-		if te, ok := decErr.(*yaml.TypeError); ok {
+		var te *yaml.TypeError
+		if errors.As(decErr, &te) {
 			return te.Errors, nil
 		}
 

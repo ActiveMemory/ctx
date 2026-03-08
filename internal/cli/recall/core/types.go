@@ -8,7 +8,6 @@ package core
 
 import (
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ExportAction describes what will happen to a given file.
@@ -23,18 +22,17 @@ const (
 
 // ExportOpts holds all flag values for the export command.
 type ExportOpts struct {
-	All, AllProjects, Force, Regenerate, Yes, DryRun bool
-	KeepFrontmatter                                  bool
+	All, AllProjects, Regenerate, Yes, DryRun bool
+	KeepFrontmatter                           bool
 }
 
 // DiscardFrontmatter reports whether frontmatter should be discarded
-// during regeneration, based on the combination of --keep-frontmatter
-// and the deprecated --force flag.
+// during regeneration.
 //
 // Returns:
 //   - bool: True if frontmatter should be discarded
 func (o ExportOpts) DiscardFrontmatter() bool {
-	return !o.KeepFrontmatter || o.Force
+	return !o.KeepFrontmatter
 }
 
 // FileAction describes the planned action for a single export file (one part
@@ -70,20 +68,4 @@ type RenameOp struct {
 	OldBase  string
 	NewBase  string
 	NumParts int
-}
-
-// PlanCounts converts an ExportPlan's counters to write.ExportCounts.
-//
-// Parameters:
-//   - p: Export plan with counters
-//
-// Returns:
-//   - write.ExportCounts: Formatted counters for output
-func PlanCounts(p ExportPlan) write.ExportCounts {
-	return write.ExportCounts{
-		New:    p.NewCount,
-		Regen:  p.RegenCount,
-		Skip:   p.SkipCount,
-		Locked: p.LockedCount,
-	}
 }

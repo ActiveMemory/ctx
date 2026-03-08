@@ -13,33 +13,9 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+
+	"github.com/ActiveMemory/ctx/internal/config"
 )
-
-// HookInput represents the JSON payload that Claude Code sends to hook
-// commands via stdin.
-type HookInput struct {
-	SessionID string    `json:"session_id"`
-	ToolInput ToolInput `json:"tool_input"`
-}
-
-// ToolInput contains the tool-specific fields from a Claude Code hook
-// invocation. For Bash hooks, Command holds the shell command.
-type ToolInput struct {
-	Command string `json:"command"`
-}
-
-// HookResponse is the JSON output format for Claude Code hooks.
-// Using structured JSON ensures the agent processes the output as a directive
-// rather than treating it as ignorable plain text.
-type HookResponse struct {
-	HookSpecificOutput *HookSpecificOutput `json:"hookSpecificOutput,omitempty"`
-}
-
-// HookSpecificOutput carries event-specific fields inside a HookResponse.
-type HookSpecificOutput struct {
-	HookEventName     string `json:"hookEventName"`
-	AdditionalContext string `json:"additionalContext,omitempty"`
-}
 
 // PrintHookContext emits a JSON HookResponse with additionalContext for the
 // given hook event. This is the standard way for non-blocking hooks to inject
@@ -58,6 +34,26 @@ func PrintHookContext(cmd *cobra.Command, event, context string) {
 	}
 	data, _ := json.Marshal(resp)
 	cmd.Println(string(data))
+}
+
+// HookPreamble reads hook input, resolves the session ID, and checks the
+// pause state. Most hooks share this exact preamble sequence.
+//
+// Parameters:
+//   - stdin: standard input for hook JSON
+//
+// Returns:
+//   - input: parsed hook input
+//   - sessionID: resolved session identifier (falls back to config.SessionUnknown)
+//   - paused: true if the session is currently paused
+func HookPreamble(stdin *os.File) (input HookInput, sessionID string, paused bool) {
+	input = ReadInput(stdin)
+	sessionID = input.SessionID
+	if sessionID == "" {
+		sessionID = config.SessionUnknown
+	}
+	paused = Paused(sessionID) > 0
+	return
 }
 
 // ReadInput reads and parses the JSON hook input from r.

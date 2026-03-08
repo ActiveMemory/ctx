@@ -139,9 +139,9 @@ func TestMaskURL(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := setup.MaskURL(tc.input)
+		got := notifylib.MaskURL(tc.input)
 		if got != tc.want {
-			t.Errorf("setup.MaskURL(%q) = %q, want %q", tc.input, got, tc.want)
+			t.Errorf("notifylib.MaskURL(%q) = %q, want %q", tc.input, got, tc.want)
 		}
 	}
 }

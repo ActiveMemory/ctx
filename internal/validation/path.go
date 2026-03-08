@@ -85,6 +85,55 @@ func SafeReadFile(baseDir, filename string) ([]byte, error) {
 	return data, nil
 }
 
+// OpenUserFile opens a file at a user-provided path for reading.
+//
+// Use this instead of raw os.Open when the path comes directly from
+// user input. Centralises the gosec suppression.
+//
+// Parameters:
+//   - path: user-provided file path.
+//
+// Returns:
+//   - *os.File: open file handle (caller must close).
+//   - error: non-nil on open failure.
+func OpenUserFile(path string) (*os.File, error) {
+	clean := filepath.Clean(path)
+	return os.Open(clean) //nolint:gosec // user-provided path is intentional
+}
+
+// ReadUserFile reads a file at a user-provided path.
+//
+// Use this instead of raw os.ReadFile when the path comes directly from
+// user input (CLI argument, flag, or interactive prompt). Centralises
+// the gosec suppression so call sites stay clean.
+//
+// Parameters:
+//   - path: user-provided file path.
+//
+// Returns:
+//   - []byte: file content.
+//   - error: non-nil on read failure.
+func ReadUserFile(path string) ([]byte, error) {
+	clean := filepath.Clean(path)
+	return os.ReadFile(clean) //nolint:gosec // user-provided path is intentional
+}
+
+// WriteFile writes data to a cleaned file path.
+//
+// This centralises the gosec suppression for WriteFile calls where the
+// path is constructed internally but flagged by the linter.
+//
+// Parameters:
+//   - path: file path (will be cleaned).
+//   - data: content to write.
+//   - perm: file permission bits.
+//
+// Returns:
+//   - error: non-nil on write failure.
+func WriteFile(path string, data []byte, perm os.FileMode) error {
+	return os.WriteFile(filepath.Clean(path), data, perm) //nolint:gosec // path is internally constructed
+}
+
 // CheckSymlinks checks whether dir itself or any of its immediate children
 // are symlinks. Returns an error describing the first symlink found.
 func CheckSymlinks(dir string) error {

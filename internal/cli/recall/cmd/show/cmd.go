@@ -30,13 +30,19 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runShow(cmd, args, latest, full, allProjects)
+			return Run(cmd, args, latest, full, allProjects)
 		},
 	}
 
-	cmd.Flags().BoolVar(&latest, "latest", false, assets.FlagDesc(assets.FlagDescKeyRecallShowLatest))
-	cmd.Flags().BoolVar(&full, "full", false, assets.FlagDesc(assets.FlagDescKeyRecallShowFull))
-	cmd.Flags().BoolVar(&allProjects, "all-projects", false, assets.FlagDesc(assets.FlagDescKeyRecallShowAllProjects))
+	cmd.Flags().BoolVar(&latest, "latest", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallShowLatest),
+	)
+	cmd.Flags().BoolVar(&full, "full", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallShowFull),
+	)
+	cmd.Flags().BoolVar(&allProjects, "all-projects", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallShowAllProjects),
+	)
 
 	return cmd
 }

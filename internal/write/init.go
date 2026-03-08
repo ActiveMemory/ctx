@@ -7,6 +7,8 @@
 package write
 
 import (
+	"github.com/ActiveMemory/ctx/internal/write/config"
+	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +18,7 @@ import (
 //   - cmd: Cobra command for output
 //   - path: created file path
 func InitCreated(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitFileCreated, path)
+	io.sprintf(cmd, config.tplInitFileCreated, path)
 }
 
 // InitCreatedWith reports a file created with a qualifier (e.g. " (ralph mode)").
@@ -26,7 +28,7 @@ func InitCreated(cmd *cobra.Command, path string) {
 //   - path: created file path
 //   - qualifier: additional info appended after the path
 func InitCreatedWith(cmd *cobra.Command, path, qualifier string) {
-	sprintf(cmd, tplInitCreatedWith, path, qualifier)
+	io.sprintf(cmd, config.tplInitCreatedWith, path, qualifier)
 }
 
 // InitSkipped reports a file skipped because it already exists.
@@ -35,7 +37,7 @@ func InitCreatedWith(cmd *cobra.Command, path, qualifier string) {
 //   - cmd: Cobra command for output
 //   - path: skipped file path
 func InitSkipped(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitExistsSkipped, path)
+	io.sprintf(cmd, config.tplInitExistsSkipped, path)
 }
 
 // InitSkippedPlain reports a file skipped without detail.
@@ -44,7 +46,7 @@ func InitSkipped(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: skipped file path
 func InitSkippedPlain(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitSkippedPlain, path)
+	io.sprintf(cmd, config.tplInitSkippedPlain, path)
 }
 
 // InitCtxContentExists reports a file skipped because ctx content exists.
@@ -53,7 +55,7 @@ func InitSkippedPlain(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: skipped file path
 func InitCtxContentExists(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitCtxContentExists, path)
+	io.sprintf(cmd, config.tplInitCtxContentExists, path)
 }
 
 // InitMerged reports a file merged during init.
@@ -62,7 +64,7 @@ func InitCtxContentExists(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: merged file path
 func InitMerged(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitMerged, path)
+	io.sprintf(cmd, config.tplInitMerged, path)
 }
 
 // InitBackup reports a backup file created.
@@ -71,7 +73,7 @@ func InitMerged(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: backup file path
 func InitBackup(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitBackup, path)
+	io.sprintf(cmd, config.tplInitBackup, path)
 }
 
 // InitUpdatedCtxSection reports a file whose ctx section was updated.
@@ -80,7 +82,7 @@ func InitBackup(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: updated file path
 func InitUpdatedCtxSection(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitUpdatedCtxSection, path)
+	io.sprintf(cmd, config.tplInitUpdatedCtxSection, path)
 }
 
 // InitUpdatedPlanSection reports a file whose plan section was updated.
@@ -89,7 +91,7 @@ func InitUpdatedCtxSection(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: updated file path
 func InitUpdatedPlanSection(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitUpdatedPlanSection, path)
+	io.sprintf(cmd, config.tplInitUpdatedPlanSection, path)
 }
 
 // InitUpdatedPromptSection reports a file whose prompt section was updated.
@@ -98,7 +100,7 @@ func InitUpdatedPlanSection(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: updated file path
 func InitUpdatedPromptSection(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitUpdatedPromptSection, path)
+	io.sprintf(cmd, config.tplInitUpdatedPromptSection, path)
 }
 
 // InitFileExistsNoCtx reports a file exists without ctx content.
@@ -107,7 +109,7 @@ func InitUpdatedPromptSection(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: file path
 func InitFileExistsNoCtx(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitFileExistsNoCtx, path)
+	io.sprintf(cmd, config.tplInitFileExistsNoCtx, path)
 }
 
 // InitNoChanges reports a settings file with no changes needed.
@@ -116,7 +118,7 @@ func InitFileExistsNoCtx(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func InitNoChanges(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitNoChanges, path)
+	io.sprintf(cmd, config.tplInitNoChanges, path)
 }
 
 // InitPermsMergedDeduped reports permissions merged and deduped.
@@ -125,7 +127,7 @@ func InitNoChanges(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func InitPermsMergedDeduped(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitPermsMergedDeduped, path)
+	io.sprintf(cmd, config.tplInitPermsMergedDeduped, path)
 }
 
 // InitPermsDeduped reports duplicate permissions removed.
@@ -134,7 +136,7 @@ func InitPermsMergedDeduped(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func InitPermsDeduped(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitPermsDeduped, path)
+	io.sprintf(cmd, config.tplInitPermsDeduped, path)
 }
 
 // InitPermsAllowDeny reports allow+deny permissions added.
@@ -143,7 +145,7 @@ func InitPermsDeduped(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func InitPermsAllowDeny(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitPermsAllowDeny, path)
+	io.sprintf(cmd, config.tplInitPermsAllowDeny, path)
 }
 
 // InitPermsDeny reports deny permissions added.
@@ -152,7 +154,7 @@ func InitPermsAllowDeny(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func InitPermsDeny(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitPermsDeny, path)
+	io.sprintf(cmd, config.tplInitPermsDeny, path)
 }
 
 // InitPermsAllow reports ctx permissions added.
@@ -161,7 +163,7 @@ func InitPermsDeny(cmd *cobra.Command, path string) {
 //   - cmd: Cobra command for output
 //   - path: settings file path
 func InitPermsAllow(cmd *cobra.Command, path string) {
-	sprintf(cmd, tplInitPermsAllow, path)
+	io.sprintf(cmd, config.tplInitPermsAllow, path)
 }
 
 // InitMakefileCreated reports a new Makefile created with ctx include.
@@ -169,7 +171,7 @@ func InitPermsAllow(cmd *cobra.Command, path string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InitMakefileCreated(cmd *cobra.Command) {
-	cmd.Println(tplInitMakefileCreated)
+	cmd.Println(config.tplInitMakefileCreated)
 }
 
 // InitMakefileIncludes reports Makefile already includes the directive.
@@ -178,7 +180,7 @@ func InitMakefileCreated(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - filename: included filename
 func InitMakefileIncludes(cmd *cobra.Command, filename string) {
-	sprintf(cmd, tplInitMakefileIncludes, filename)
+	io.sprintf(cmd, config.tplInitMakefileIncludes, filename)
 }
 
 // InitMakefileAppended reports an include appended to Makefile.
@@ -187,7 +189,7 @@ func InitMakefileIncludes(cmd *cobra.Command, filename string) {
 //   - cmd: Cobra command for output
 //   - filename: included filename
 func InitMakefileAppended(cmd *cobra.Command, filename string) {
-	sprintf(cmd, tplInitMakefileAppended, filename)
+	io.sprintf(cmd, config.tplInitMakefileAppended, filename)
 }
 
 // InitPluginSkipped reports plugin enablement was skipped.
@@ -195,7 +197,7 @@ func InitMakefileAppended(cmd *cobra.Command, filename string) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InitPluginSkipped(cmd *cobra.Command) {
-	cmd.Println(tplInitPluginSkipped)
+	cmd.Println(config.tplInitPluginSkipped)
 }
 
 // InitPluginAlreadyEnabled reports plugin is already enabled globally.
@@ -203,7 +205,7 @@ func InitPluginSkipped(cmd *cobra.Command) {
 // Parameters:
 //   - cmd: Cobra command for output
 func InitPluginAlreadyEnabled(cmd *cobra.Command) {
-	cmd.Println(tplInitPluginAlreadyEnabled)
+	cmd.Println(config.tplInitPluginAlreadyEnabled)
 }
 
 // InitPluginEnabled reports plugin enabled globally.
@@ -212,7 +214,7 @@ func InitPluginAlreadyEnabled(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - settingsPath: path to the settings file
 func InitPluginEnabled(cmd *cobra.Command, settingsPath string) {
-	sprintf(cmd, tplInitPluginEnabled, settingsPath)
+	io.sprintf(cmd, config.tplInitPluginEnabled, settingsPath)
 }
 
 // InitSkippedDir reports a directory skipped because it exists.
@@ -221,7 +223,7 @@ func InitPluginEnabled(cmd *cobra.Command, settingsPath string) {
 //   - cmd: Cobra command for output
 //   - dir: directory name
 func InitSkippedDir(cmd *cobra.Command, dir string) {
-	sprintf(cmd, tplInitSkippedDir, dir)
+	io.sprintf(cmd, config.tplInitSkippedDir, dir)
 }
 
 // InitCreatedDir reports a directory created during init.
@@ -230,5 +232,5 @@ func InitSkippedDir(cmd *cobra.Command, dir string) {
 //   - cmd: Cobra command for output
 //   - dir: directory name
 func InitCreatedDir(cmd *cobra.Command, dir string) {
-	sprintf(cmd, tplInitCreatedDir, dir)
+	io.sprintf(cmd, config.tplInitCreatedDir, dir)
 }

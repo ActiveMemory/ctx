@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
@@ -53,11 +54,13 @@ func CheckPackageFiles(ctx *context.Context) []Action {
 					Type: "DEPS",
 					File: config.FileArchitecture,
 					Description: fmt.Sprintf(
-						"Found %s (%s) but no dependency documentation", file, desc,
+						assets.TextDesc(assets.TextDescKeySyncDepsDescription),
+						file, desc,
 					),
-					Suggestion: "Consider documenting key dependencies " +
-						"in " + config.FileArchitecture + " or create " +
-						config.FileDependency,
+					Suggestion: fmt.Sprintf(
+						assets.TextDesc(assets.TextDescKeySyncDepsSuggestion),
+						config.FileArchitecture, config.FileDependency,
+					),
 				})
 			}
 		}
@@ -96,11 +99,12 @@ func CheckConfigFiles(ctx *context.Context) []Action {
 					Type: "CONFIG",
 					File: config.FileConvention,
 					Description: fmt.Sprintf(
-						"Found %s but %s not documented", matches[0], cfg.Topic,
+						assets.TextDesc(assets.TextDescKeySyncConfigDescription),
+						matches[0], cfg.Topic,
 					),
-					Suggestion: fmt.Sprintf("Document %s in %s",
-						cfg.Topic,
-						config.FileConvention,
+					Suggestion: fmt.Sprintf(
+						assets.TextDesc(assets.TextDescKeySyncConfigSuggestion),
+						cfg.Topic, config.FileConvention,
 					),
 				})
 			}
@@ -170,10 +174,12 @@ func CheckNewDirectories(ctx *context.Context) []Action {
 				Type: "NEW_DIR",
 				File: config.FileArchitecture,
 				Description: fmt.Sprintf(
-					"Directory '%s/' exists but not documented", name,
+					assets.TextDesc(assets.TextDescKeySyncDirDescription),
+					name,
 				),
 				Suggestion: fmt.Sprintf(
-					"Add '%s/' to %s with description", name, config.FileArchitecture,
+					assets.TextDesc(assets.TextDescKeySyncDirSuggestion),
+					name, config.FileArchitecture,
 				),
 			})
 		}

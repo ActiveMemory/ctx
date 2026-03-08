@@ -157,3 +157,7 @@
 - Error constructors belong in internal/err, never in per-package err.go files — eliminates the broken-window pattern where agents add local errors when they see a local err.go exists.
 
 - CLI package taxonomy: every package under internal/cli/ follows the same structure — parent.go (Cmd wiring), doc.go, cmd/root/ or cmd/<sub>/ (implementation), core/ (shared helpers). cmd/ directories contain only cmd.go + run.go; all other helpers belong in core/
+
+- All structs in a core/ package are consolidated into a single types.go file
+
+- All user-facing text is routed through internal/assets with YAML-backed TextDescKeys — no inline strings in core/ or cmd/ packages

@@ -55,7 +55,9 @@ func ContentPreview(content string, n int) []string {
 		// Truncate long lines
 		if utf8.RuneCountInString(trimmed) > config.MaxPreviewLen {
 			runes := []rune(trimmed)
-			truncateAt := config.MaxPreviewLen - utf8.RuneCountInString(config.Ellipsis)
+			truncateAt := config.MaxPreviewLen - utf8.RuneCountInString(
+				config.Ellipsis,
+			)
 			trimmed = string(runes[:truncateAt]) + config.Ellipsis
 		}
 

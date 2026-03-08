@@ -8,13 +8,15 @@ package setup
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	notifylib "github.com/ActiveMemory/ctx/internal/notify"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // Run prompts for a webhook URL and saves it encrypted.
@@ -28,51 +30,22 @@ import (
 // Returns:
 //   - error: Non-nil on empty input or save failure
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	cmd.Print("Enter webhook URL: ")
+	write.SetupPrompt(cmd)
 
 	scanner := bufio.NewScanner(stdin)
 	if !scanner.Scan() {
-		return fmt.Errorf("no input received")
+		return ctxerr.NoInput()
 	}
 	url := strings.TrimSpace(scanner.Text())
 	if url == "" {
-		return fmt.Errorf("webhook URL cannot be empty")
+		return ctxerr.WebhookEmpty()
 	}
 
 	if saveErr := notifylib.SaveWebhook(url); saveErr != nil {
-		return fmt.Errorf("save webhook: %w", saveErr)
+		return ctxerr.SaveWebhook(saveErr)
 	}
 
-	masked := MaskURL(url)
-	cmd.Println("Webhook configured: " + masked)
-	cmd.Println("Encrypted at: .context/.notify.enc")
+	write.SetupDone(cmd, notifylib.MaskURL(url), config.FileNotifyEnc)
 
 	return nil
-}
-
-// MaskURL shows the scheme + host and masks everything after.
-//
-// Exported for testability.
-//
-// Parameters:
-//   - url: Full webhook URL
-//
-// Returns:
-//   - string: Masked URL safe for display
-func MaskURL(url string) string {
-	// Find the third slash (end of scheme://host)
-	count := 0
-	for i, c := range url {
-		if c == '/' {
-			count++
-			if count == 3 {
-				return url[:i] + "/***"
-			}
-		}
-	}
-	// No path — show as-is but with masked end
-	if len(url) > 20 {
-		return url[:20] + "***"
-	}
-	return url
 }

@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // BuildSessionIndex scans journal .md files in journalDir and returns a
@@ -119,8 +120,9 @@ func ExtractSessionID(content string) string {
 
 	for _, line := range strings.Split(fmBlock, nl) {
 		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "session_id:") {
-			val := strings.TrimSpace(strings.TrimPrefix(line, "session_id:"))
+		prefix := config.FmKeySessionID + config.Colon
+		if strings.HasPrefix(line, prefix) {
+			val := strings.TrimSpace(strings.TrimPrefix(line, prefix))
 			// Strip surrounding quotes.
 			val = strings.Trim(val, `"'`)
 			return val
@@ -175,7 +177,7 @@ func ExtractFrontmatterField(content, field string) string {
 	}
 	fmBlock := content[len(fmOpen) : len(fmOpen)+end]
 
-	prefix := field + ":"
+	prefix := field + config.Colon
 	for _, line := range strings.Split(fmBlock, nl) {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, prefix) {
@@ -209,8 +211,8 @@ func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 
 	// Rename multipart files and update nav links.
 	for p := 2; p <= numParts; p++ {
-		oldPart := filepath.Join(journalDir, fmt.Sprintf("%s-p%d%s", oldBase, p, config.ExtMarkdown))
-		newPart := filepath.Join(journalDir, fmt.Sprintf("%s-p%d%s", newBase, p, config.ExtMarkdown))
+		oldPart := filepath.Join(journalDir, fmt.Sprintf(config.TplRecallPartFilename, oldBase, p))
+		newPart := filepath.Join(journalDir, fmt.Sprintf(config.TplRecallPartFilename, newBase, p))
 		if _, statErr := os.Stat(oldPart); statErr == nil {
 			_ = os.Rename(oldPart, newPart)
 		}
@@ -236,7 +238,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 	files := []string{filepath.Join(journalDir, newBase+config.ExtMarkdown)}
 	for p := 2; p <= numParts; p++ {
 		files = append(files, filepath.Join(journalDir,
-			fmt.Sprintf("%s-p%d%s", newBase, p, config.ExtMarkdown)))
+			fmt.Sprintf(config.TplRecallPartFilename, newBase, p)))
 	}
 
 	for _, f := range files {
@@ -246,7 +248,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 		}
 		updated := strings.ReplaceAll(string(data), oldBase, newBase)
 		if updated != string(data) {
-			_ = os.WriteFile(f, []byte(updated), config.PermFile) //nolint:gosec // same permissions
+			_ = validation.WriteFile(f, []byte(updated), config.PermFile)
 		}
 	}
 }
