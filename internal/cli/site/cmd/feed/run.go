@@ -22,13 +22,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-const (
-	atomNS        = "http://www.w3.org/2005/Atom"
-	feedTitle     = "ctx blog"
-	defaultAuthor = "Context contributors"
-	xmlHeader     = `<?xml version="1.0" encoding="utf-8"?>` + "\n"
-)
-
 // blogDatePattern matches filenames like 2026-02-25-slug.md.
 var blogDatePattern = regexp.MustCompile(
 	`^\d{4}-\d{2}-\d{2}-.+\.md$`,
@@ -338,8 +331,8 @@ func generateAtom(
 	}
 
 	feed := core.AtomFeed{
-		NS:    atomNS,
-		Title: feedTitle,
+		NS:    config.FeedAtomNS,
+		Title: config.FeedTitle,
 		Links: []core.AtomLink{
 			{Href: blogURL},
 			{Href: feedURL, Rel: "self"},
@@ -369,7 +362,7 @@ func generateAtom(
 
 		author := p.author
 		if author == "" {
-			author = defaultAuthor
+			author = config.FeedDefaultAuthor
 		}
 		entry.Author = &core.AtomAuthor{Name: author}
 
@@ -393,7 +386,7 @@ func generateAtom(
 		return fmt.Errorf("cannot marshal feed: %w", marshalErr)
 	}
 
-	output := []byte(xmlHeader)
+	output := []byte(config.FeedXMLHeader)
 	output = append(output, xmlData...)
 	output = append(output, '\n')
 

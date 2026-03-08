@@ -12,12 +12,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// Classification is the result of heuristic entry classification.
-type Classification struct {
-	Target   string   // config.Entry* constant or "skip"
-	Keywords []string // Keywords that triggered the match
-}
-
 // TargetSkip indicates an entry that doesn't match any classification rule.
 const TargetSkip = "skip"
 

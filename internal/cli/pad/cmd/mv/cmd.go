@@ -33,7 +33,7 @@ func Cmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return runMv(cmd, n, m)
+			return Run(cmd, n, m)
 		},
 	}
 }

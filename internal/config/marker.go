@@ -67,6 +67,37 @@ const (
 	MarkTaskComplete = "x"
 )
 
+// Published block markers for MEMORY.md.
+const (
+	// PublishMarkerStart begins the ctx-published block in MEMORY.md.
+	PublishMarkerStart = "<!-- ctx:published -->"
+	// PublishMarkerEnd ends the ctx-published block in MEMORY.md.
+	PublishMarkerEnd = "<!-- ctx:end -->"
+)
+
+// Publish budget and limits.
+const (
+	// DefaultPublishBudget is the default line budget for published content.
+	DefaultPublishBudget = 80
+	// PublishMaxTasks is the maximum number of pending tasks to publish.
+	PublishMaxTasks = 10
+	// PublishMaxDecisions is the maximum number of recent decisions to publish.
+	PublishMaxDecisions = 5
+	// PublishMaxConventions is the maximum number of convention items to publish.
+	PublishMaxConventions = 10
+	// PublishMaxLearnings is the maximum number of recent learnings to publish.
+	PublishMaxLearnings = 5
+	// PublishRecentDays is the lookback window in days for recent entries.
+	PublishRecentDays = 7
+)
+
+// Entry status markers for knowledge files.
+const (
+	// PrefixSuperseded is the strikethrough prefix that marks an entry as
+	// superseded by a newer entry.
+	PrefixSuperseded = "~~Superseded"
+)
+
 // System reminder tags injected by Claude Code into tool results.
 const (
 	// TagSystemReminderOpen is the opening tag for system reminders.

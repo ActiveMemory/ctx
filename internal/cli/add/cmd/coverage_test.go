@@ -13,13 +13,13 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/cmd/root"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/entry"
-	"github.com/ActiveMemory/ctx/internal/write"
 )
 
 // ---------------------------------------------------------------------------
@@ -27,7 +27,7 @@ import (
 // ---------------------------------------------------------------------------
 
 func TestErrNoContent(t *testing.T) {
-	err := write.ErrNoContent()
+	err := add.ErrNoContent()
 	if err == nil || err.Error() != "no content provided" {
 		t.Errorf("ErrNoContent() = %v, want 'no content provided'", err)
 	}
@@ -36,7 +36,7 @@ func TestErrNoContent(t *testing.T) {
 func TestErrNoContentProvided(t *testing.T) {
 	for _, fType := range []string{"decision", "task", "learning", "convention", "unknown"} {
 		t.Run(fType, func(t *testing.T) {
-			err := write.ErrNoContentProvided(fType, core.ExamplesForType(fType))
+			err := add.ErrNoContentProvided(fType, core.ExamplesForType(fType))
 			if err == nil {
 				t.Fatal("expected non-nil error")
 			}
@@ -52,7 +52,7 @@ func TestErrNoContentProvided(t *testing.T) {
 }
 
 func TestErrFileRead(t *testing.T) {
-	err := write.ErrFileRead("/some/path", os.ErrNotExist)
+	err := add.ErrFileRead("/some/path", os.ErrNotExist)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -62,7 +62,7 @@ func TestErrFileRead(t *testing.T) {
 }
 
 func TestErrFileWrite(t *testing.T) {
-	err := write.ErrFileWriteAdd("/some/path", os.ErrPermission)
+	err := add.ErrFileWriteAdd("/some/path", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -72,7 +72,7 @@ func TestErrFileWrite(t *testing.T) {
 }
 
 func TestErrStdinRead(t *testing.T) {
-	err := write.ErrStdinRead(os.ErrClosed)
+	err := add.ErrStdinRead(os.ErrClosed)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -82,7 +82,7 @@ func TestErrStdinRead(t *testing.T) {
 }
 
 func TestErrIndexUpdate(t *testing.T) {
-	err := write.ErrIndexUpdate("/some/file", os.ErrPermission)
+	err := add.ErrIndexUpdate("/some/file", os.ErrPermission)
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -92,7 +92,7 @@ func TestErrIndexUpdate(t *testing.T) {
 }
 
 func TestErrUnknownType(t *testing.T) {
-	err := write.ErrUnknownType("foobar")
+	err := add.ErrUnknownType("foobar")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -106,7 +106,7 @@ func TestErrUnknownType(t *testing.T) {
 }
 
 func TestErrFileNotFound(t *testing.T) {
-	err := write.ErrFileNotFound("/missing/file")
+	err := add.ErrFileNotFound("/missing/file")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -120,7 +120,7 @@ func TestErrFileNotFound(t *testing.T) {
 }
 
 func TestErrMissingFields(t *testing.T) {
-	err := write.ErrMissingFields("decision", []string{"context", "rationale"})
+	err := add.ErrMissingFields("decision", []string{"context", "rationale"})
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}

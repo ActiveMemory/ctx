@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-07 | Use composite directory path constants for multi-segment paths |
 | 2026-03-06 | Drop fatih/color dependency — Unicode symbols are sufficient for terminal output, color was redundant |
 | 2026-03-06 | Externalize all command descriptions to embedded YAML for i18n readiness — commands.yaml holds Short/Long for 105 commands plus flag descriptions, loaded via assets.CommandDesc() and assets.FlagDesc() |
 | 2026-03-06 | cmd/root + core taxonomy for all CLI packages — single-command packages use cmd/root/{cmd.go,run.go}, multi-subcommand packages use cmd/<sub>/{cmd.go,run.go}, shared helpers in core/ |
@@ -34,6 +35,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-07-221155] Use composite directory path constants for multi-segment paths
+
+**Status**: Accepted
+
+**Context**: Needed a constant for hooks/messages path used in message.go and message_cmd.go
+
+**Decision**: Use composite directory path constants for multi-segment paths
+
+**Rationale**: Matches existing pattern of DirClaudeHooks = '.claude/hooks' — keeps filepath.Join calls cleaner and avoids scattering path segments
+
+**Consequences**: New multi-segment directory paths should be single constants (e.g. DirHooksMessages, DirMemoryArchive) rather than joined from individual segment constants
+
+---
 
 ## [2026-03-06-200306] Drop fatih/color dependency — Unicode symbols are sufficient for terminal output, color was redundant
 

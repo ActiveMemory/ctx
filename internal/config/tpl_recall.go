@@ -95,4 +95,20 @@ const (
 	// TplMetaRow formats a single row in an HTML metadata table.
 	// Args: label, value.
 	TplMetaRow = "<tr><td><strong>%s</strong></td><td>%s</td></tr>"
+
+	// TplFmQuoted formats a YAML frontmatter quoted string field.
+	// Args: key, value.
+	TplFmQuoted = "%s: %q"
+
+	// TplFmString formats a YAML frontmatter bare string field.
+	// Args: key, value.
+	TplFmString = "%s: %s"
+
+	// TplFmInt formats a YAML frontmatter integer field.
+	// Args: key, value.
+	TplFmInt = "%s: %d"
+
+	// TplToolDisplay formats a tool name with its key parameter.
+	// Args: tool name, parameter value.
+	TplToolDisplay = "%s: %s"
 )

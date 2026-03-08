@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx system backup" subcommand.
@@ -17,25 +18,23 @@ import (
 // Returns:
 //   - *cobra.Command: Configured backup subcommand
 func Cmd() *cobra.Command {
+	short, long := assets.CommandDesc(assets.CmdDescKeySystemBackup)
+
 	cmd := &cobra.Command{
 		Use:   "backup",
-		Short: "Backup context and Claude data",
-		Long: `Create timestamped tar.gz archives of project context and/or global
-Claude Code data. Optionally copies archives to an SMB share.
-
-Scopes:
-  project  .context/, .claude/, ideas/, ~/.bashrc
-  global   ~/.claude/ (excludes todos/)
-  all      Both project and global (default)
-
-Environment:
-  CTX_BACKUP_SMB_URL    - SMB share URL (e.g. smb://host/share)
-  CTX_BACKUP_SMB_SUBDIR - Subdirectory on share (default: ctx-sessions)`,
+		Short: short,
+		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runBackup(cmd)
+			return Run(cmd)
 		},
 	}
-	cmd.Flags().String("scope", scopeAll, assets.FlagDesc(assets.FlagDescKeySystemBackupScope))
-	cmd.Flags().Bool("json", false, assets.FlagDesc(assets.FlagDescKeySystemBackupJson))
+
+	cmd.Flags().String("scope", config.BackupScopeAll,
+		assets.FlagDesc(assets.FlagDescKeySystemBackupScope),
+	)
+	cmd.Flags().Bool("json", false,
+		assets.FlagDesc(assets.FlagDescKeySystemBackupJson),
+	)
+
 	return cmd
 }

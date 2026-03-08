@@ -27,6 +27,10 @@ const (
 	StatusInfo    = "info"
 )
 
+// TimeOlderFormat is the Go time layout for dates older than a week.
+// Exported because callers must format the fallback date before calling FormatTimeAgo.
+const TimeOlderFormat = "Jan 2, 2006"
+
 // CmdCompletion is the name of Cobra's built-in completion parent command.
 const CmdCompletion = "completion"
 
@@ -71,6 +75,8 @@ const (
 	PermFile = 0644
 	// PermExec is the standard permission for directories and executable files.
 	PermExec = 0755
+	// PermRestrictedDir is the permission for internal directories (owner rwx, group rx).
+	PermRestrictedDir = 0750
 	// PermSecret is the permission for secret files (owner rw only).
 	PermSecret = 0600
 )
@@ -79,6 +85,8 @@ const (
 const (
 	// ExtMarkdown is the Markdown file extension.
 	ExtMarkdown = ".md"
+	// ExtTxt is the plain text file extension.
+	ExtTxt = ".txt"
 	// ExtJSONL is the JSON Lines file extension.
 	ExtJSONL = ".jsonl"
 )
@@ -89,6 +97,24 @@ const (
 	FilenameReadme = "README.md"
 	// FilenameIndex is the standard index filename for generated sites.
 	FilenameIndex = "index.md"
+)
+
+// Site feed defaults.
+const (
+	// DefaultFeedInputDir is the default blog source directory.
+	DefaultFeedInputDir = "docs/blog"
+	// DefaultFeedOutPath is the default output path for the Atom feed.
+	DefaultFeedOutPath = "site/feed.xml"
+	// DefaultFeedBaseURL is the default base URL for feed entry links.
+	DefaultFeedBaseURL = "https://ctx.ist"
+	// FeedAtomNS is the Atom XML namespace URI.
+	FeedAtomNS = "http://www.w3.org/2005/Atom"
+	// FeedTitle is the default feed title.
+	FeedTitle = "ctx blog"
+	// FeedDefaultAuthor is the default author for feed entries.
+	FeedDefaultAuthor = "Context contributors"
+	// FeedXMLHeader is the XML declaration prepended to feed output.
+	FeedXMLHeader = `<?xml version="1.0" encoding="utf-8"?>` + "\n"
 )
 
 // Journal site configuration.
@@ -110,6 +136,39 @@ const (
 	// DefaultSessionFilename is the fallback filename component when
 	// sanitization produces an empty string.
 	DefaultSessionFilename = "session"
+	// MaxFilenameLen is the maximum character length for sanitized filename components.
+	MaxFilenameLen = 50
+	// DefaultRecallListLimit is the default number of sessions shown by recall list.
+	DefaultRecallListLimit = 20
+)
+
+// Crypto constants.
+const (
+	// CryptoKeySize is the required key length in bytes (256 bits).
+	CryptoKeySize = 32
+	// CryptoNonceSize is the GCM nonce length in bytes.
+	CryptoNonceSize = 12
+)
+
+// Task archive/snapshot constants.
+const (
+	// ArchiveScopeTasks is the scope identifier for task archives.
+	ArchiveScopeTasks = "tasks"
+	// DefaultSnapshotName is the default name when no snapshot name is provided.
+	DefaultSnapshotName = "snapshot"
+	// SnapshotFilenameFormat is the filename template for task snapshots.
+	// Args: name, formatted timestamp.
+	SnapshotFilenameFormat = "tasks-%s-%s" + ExtMarkdown
+	// SnapshotTimeFormat is the compact timestamp layout for snapshot filenames.
+	SnapshotTimeFormat = "2006-01-02-1504"
+)
+
+// Stream scanner buffer sizes.
+const (
+	// StreamScannerInitCap is the initial capacity for the scanner buffer.
+	StreamScannerInitCap = 64 * 1024
+	// StreamScannerMaxSize is the maximum size for the scanner buffer.
+	StreamScannerMaxSize = 1024 * 1024
 )
 
 // Runtime configuration constants.
@@ -120,6 +179,8 @@ const (
 
 // Environment configuration.
 const (
+	// EnvHome is the environment variable for the user's home directory.
+	EnvHome = "HOME"
 	// EnvCtxDir is the environment variable for overriding the context directory.
 	EnvCtxDir = "CTX_DIR"
 	// EnvCtxTokenBudget is the environment variable for overriding the token budget.
@@ -155,6 +216,12 @@ const (
 	PrefixCtxLoaded = "ctx-loaded-"
 	// EventContextLoadGate is the event name for context load gate hook events.
 	EventContextLoadGate = "context-load-gate"
+	// ContextLoadSeparatorChar is the character used for header/footer separators.
+	ContextLoadSeparatorChar = "="
+	// ContextLoadSeparatorWidth is the width of header/footer separator lines.
+	ContextLoadSeparatorWidth = 80
+	// ContextLoadIndexSuffix is the suffix appended to filenames for index entries.
+	ContextLoadIndexSuffix = " (idx)"
 	// JSONKeyTimestamp is the JSON key for timestamp extraction in event logs.
 	JSONKeyTimestamp = `"timestamp":"`
 
@@ -205,6 +272,479 @@ const (
 	BackupDefaultSubdir = "ctx-sessions"
 	// BackupMarkerFile is the state file touched on successful project backup.
 	BackupMarkerFile = "ctx-last-backup"
+	// BackupScopeProject backs up only the project context.
+	BackupScopeProject = "project"
+	// BackupScopeGlobal backs up only global Claude data.
+	BackupScopeGlobal = "global"
+	// BackupScopeAll backs up both project and global.
+	BackupScopeAll = "all"
+	// BackupTplProjectArchive is the filename template for project archives.
+	// Argument: timestamp.
+	BackupTplProjectArchive = "ctx-backup-%s.tar.gz"
+	// BackupTplGlobalArchive is the filename template for global archives.
+	// Argument: timestamp.
+	BackupTplGlobalArchive = "claude-global-backup-%s.tar.gz"
+	// BackupTimestampFormat is the compact timestamp layout for backup filenames.
+	BackupTimestampFormat = "20060102-150405"
+	// BackupExcludeTodos is the directory name excluded from global backups.
+	BackupExcludeTodos = "todos"
+	// BackupMarkerDir is the XDG state directory for the backup marker.
+	BackupMarkerDir = ".local/state"
+	// BackupMaxAgeDays is the threshold in days before a backup is considered stale.
+	BackupMaxAgeDays = 2
+	// BackupThrottleID is the state file name for daily throttle of backup age checks.
+	BackupThrottleID = "backup-reminded"
+	// FileBashrc is the user's bash configuration file.
+	FileBashrc = ".bashrc"
+)
+
+// Hook name constants — used for LoadMessage, NewTemplateRef, notify.Send,
+// and eventlog.Append to avoid magic strings.
+const (
+	// HookBlockDangerousCommands is the hook name for blocking dangerous commands.
+	HookBlockDangerousCommands = "block-dangerous-commands"
+	// HookBlockNonPathCtx is the hook name for blocking non-PATH ctx invocations.
+	HookBlockNonPathCtx = "block-non-path-ctx"
+	// HookCheckBackupAge is the hook name for backup staleness checks.
+	HookCheckBackupAge = "check-backup-age"
+	// HookCheckCeremonies is the hook name for ceremony usage checks.
+	HookCheckCeremonies = "check-ceremonies"
+	// HookCheckContextSize is the hook name for context window size checks.
+	HookCheckContextSize = "check-context-size"
+	// HookCheckJournal is the hook name for journal health checks.
+	HookCheckJournal = "check-journal"
+	// HookCheckKnowledge is the hook name for knowledge file health checks.
+	HookCheckKnowledge = "check-knowledge"
+	// HookCheckMapStaleness is the hook name for architecture map staleness checks.
+	HookCheckMapStaleness = "check-map-staleness"
+	// HookCheckMemoryDrift is the hook name for memory drift checks.
+	HookCheckMemoryDrift = "check-memory-drift"
+	// MemoryDriftThrottlePrefix is the state file prefix for per-session
+	// memory drift nudge tombstones.
+	MemoryDriftThrottlePrefix = "memory-drift-nudged-"
+	// HookCheckPersistence is the hook name for context persistence nudges.
+	HookCheckPersistence = "check-persistence"
+	// HookCheckReminders is the hook name for session reminder checks.
+	HookCheckReminders = "check-reminders"
+	// HookCheckResources is the hook name for resource usage checks.
+	HookCheckResources = "check-resources"
+	// HookCheckTaskCompletion is the hook name for task completion nudges.
+	HookCheckTaskCompletion = "check-task-completion"
+	// HookCheckVersion is the hook name for version mismatch checks.
+	HookCheckVersion = "check-version"
+	// HookHeartbeat is the hook name for session heartbeat events.
+	HookHeartbeat = "heartbeat"
+	// HookPostCommit is the hook name for post-commit nudges.
+	HookPostCommit = "post-commit"
+	// HookQAReminder is the hook name for QA reminder gates.
+	HookQAReminder = "qa-reminder"
+	// HookSpecsNudge is the hook name for specs directory nudges.
+	HookSpecsNudge = "specs-nudge"
+	// HookVersionDrift is the hook name for version drift nudges.
+	HookVersionDrift = "version-drift"
+)
+
+// Hook event names (Claude Code hook lifecycle stages).
+const (
+	// HookEventPreToolUse is the hook event for pre-tool-use hooks.
+	HookEventPreToolUse = "PreToolUse"
+	// HookEventPostToolUse is the hook event for post-tool-use hooks.
+	HookEventPostToolUse = "PostToolUse"
+)
+
+// Notification channel names.
+const (
+	// NotifyChannelHeartbeat is the notification channel for heartbeat events.
+	NotifyChannelHeartbeat = "heartbeat"
+	// NotifyChannelNudge is the notification channel for nudge messages.
+	NotifyChannelNudge = "nudge"
+	// NotifyChannelRelay is the notification channel for relay messages.
+	NotifyChannelRelay = "relay"
+)
+
+// Bootstrap display constants.
+const (
+	// BootstrapFileListWidth is the character width at which the file list wraps.
+	BootstrapFileListWidth = 55
+	// BootstrapFileListIndent is the indentation prefix for file list lines.
+	BootstrapFileListIndent = "  "
+)
+
+// Task parsing constants.
+const (
+	// SubTaskMinIndent is the minimum indent length (in spaces) for a line
+	// to be considered a subtask rather than a top-level task.
+	SubTaskMinIndent = 2
+)
+
+// Numbered list parsing constants.
+const (
+	// NumberedListSep is the separator between the number and text in numbered lists (e.g. "1. item").
+	NumberedListSep = ". "
+	// NumberedListMaxDigits is the maximum index position for the separator to be recognized as a prefix.
+	NumberedListMaxDigits = 2
+)
+
+// Hook decision constants — JSON values returned by PreToolUse hooks.
+const (
+	// HookDecisionBlock is the decision value that prevents tool execution.
+	HookDecisionBlock = "block"
+)
+
+// Hook variant constants — template selectors passed to LoadMessage and
+// NewTemplateRef to choose the appropriate message for each trigger type.
+const (
+	// VariantMidSudo selects the mid-command sudo block message.
+	VariantMidSudo = "mid-sudo"
+	// VariantMidGitPush selects the mid-command git push block message.
+	VariantMidGitPush = "mid-git-push"
+	// VariantCpToBin selects the cp/mv to bin block message.
+	VariantCpToBin = "cp-to-bin"
+	// VariantInstallToLocalBin selects the install to ~/.local/bin block message.
+	VariantInstallToLocalBin = "install-to-local-bin"
+	// VariantDotSlash selects the relative path (./ctx) block message.
+	VariantDotSlash = "dot-slash"
+	// VariantGoRun selects the go run block message.
+	VariantGoRun = "go-run"
+	// VariantAbsolutePath selects the absolute path block message.
+	VariantAbsolutePath = "absolute-path"
+	// VariantBoth selects the template for both ceremonies missing.
+	VariantBoth = "both"
+	// VariantRemember selects the template for missing /ctx-remember.
+	VariantRemember = "remember"
+	// VariantWrapup selects the template for missing /ctx-wrap-up.
+	VariantWrapup = "wrapup"
+	// VariantUnexported selects the unexported journal entries variant.
+	VariantUnexported = "unexported"
+	// VariantUnenriched selects the unenriched journal entries variant.
+	VariantUnenriched = "unenriched"
+	// VariantWarning selects the generic warning variant.
+	VariantWarning = "warning"
+	// VariantAlert selects the alert variant.
+	VariantAlert = "alert"
+	// VariantBilling selects the billing threshold variant.
+	VariantBilling = "billing"
+	// VariantCheckpoint selects the checkpoint variant.
+	VariantCheckpoint = "checkpoint"
+	// VariantGate selects the gate variant.
+	VariantGate = "gate"
+	// VariantKeyRotation selects the key rotation variant.
+	VariantKeyRotation = "key-rotation"
+	// VariantMismatch selects the version mismatch variant.
+	VariantMismatch = "mismatch"
+	// VariantNudge selects the generic nudge variant.
+	VariantNudge = "nudge"
+	// VariantOversize selects the oversize threshold variant.
+	VariantOversize = "oversize"
+	// VariantPulse selects the heartbeat pulse variant.
+	VariantPulse = "pulse"
+	// VariantReminders selects the reminders variant.
+	VariantReminders = "reminders"
+	// VariantStale selects the staleness variant.
+	VariantStale = "stale"
+	// VariantWindow selects the context window variant.
+	VariantWindow = "window"
+)
+
+// Template variable key constants — used as map keys in template.Execute
+// data maps to avoid magic strings in hook and display code.
+const (
+	// TplVarAlertMessages is the template variable for resource alert messages.
+	TplVarAlertMessages = "AlertMessages"
+
+	// TplVarUnenrichedCount is the template variable for unenriched entry count.
+	TplVarUnenrichedCount = "UnenrichedCount"
+
+	// TplVarUnexportedCount is the template variable for unexported session count.
+	TplVarUnexportedCount = "UnexportedCount"
+
+	// TplVarBinaryVersion is the template variable for the binary version string.
+	TplVarBinaryVersion = "BinaryVersion"
+
+	// TplVarFileWarnings is the template variable for knowledge file warnings.
+	TplVarFileWarnings = "FileWarnings"
+
+	// TplVarKeyAgeDays is the template variable for API key age in days.
+	TplVarKeyAgeDays = "KeyAgeDays"
+
+	// TplVarLastRefreshDate is the template variable for the last map refresh date.
+	TplVarLastRefreshDate = "LastRefreshDate"
+
+	// TplVarModuleCount is the template variable for the number of changed modules.
+	TplVarModuleCount = "ModuleCount"
+
+	// TplVarPercentage is the template variable for context window percentage.
+	TplVarPercentage = "Percentage"
+
+	// TplVarPluginVersion is the template variable for the plugin version string.
+	TplVarPluginVersion = "PluginVersion"
+
+	// TplVarPromptCount is the template variable for the prompt counter.
+	TplVarPromptCount = "PromptCount"
+
+	// TplVarPromptsSinceNudge is the template variable for prompts since last nudge.
+	TplVarPromptsSinceNudge = "PromptsSinceNudge"
+
+	// TplVarReminderList is the template variable for formatted reminder list.
+	TplVarReminderList = "ReminderList"
+
+	// TplVarThreshold is the template variable for a token threshold value.
+	TplVarThreshold = "Threshold"
+
+	// TplVarTokenCount is the template variable for a token count value.
+	TplVarTokenCount = "TokenCount"
+
+	// TplVarWarnings is the template variable for backup warning messages.
+	TplVarWarnings = "Warnings"
+
+	// TplVarHeartbeatPromptCount is the heartbeat field for prompt count.
+	TplVarHeartbeatPromptCount = "prompt_count"
+	// TplVarHeartbeatSessionID is the heartbeat field for session identifier.
+	TplVarHeartbeatSessionID = "session_id"
+	// TplVarHeartbeatContextModified is the heartbeat field for context modification flag.
+	TplVarHeartbeatContextModified = "context_modified"
+	// TplVarHeartbeatTokens is the heartbeat field for token count.
+	TplVarHeartbeatTokens = "tokens"
+	// TplVarHeartbeatContextWindow is the heartbeat field for context window size.
+	TplVarHeartbeatContextWindow = "context_window"
+	// TplVarHeartbeatUsagePct is the heartbeat field for usage percentage.
+	TplVarHeartbeatUsagePct = "usage_pct"
+)
+
+// Auto-prune configuration.
+const (
+	// HoursPerDay is the number of hours in a day for duration calculations.
+	HoursPerDay = 24
+	// AutoPruneStaleDays is the number of days after which session state
+	// files are eligible for auto-pruning during context load.
+	AutoPruneStaleDays = 7
+)
+
+// Stats display configuration.
+const (
+	// StatsFilePrefix is the filename prefix for per-session stats JSONL files.
+	StatsFilePrefix = "stats-"
+	// StatsReadBufSize is the byte buffer size for reading new lines
+	// from stats files during follow/stream mode.
+	StatsReadBufSize = 8192
+	// StatsHeaderTime is the column header label for timestamp.
+	StatsHeaderTime = "TIME"
+	// StatsHeaderSession is the column header label for session ID.
+	StatsHeaderSession = "SESSION"
+	// StatsHeaderPrompt is the column header label for prompt count.
+	StatsHeaderPrompt = "PROMPT"
+	// StatsHeaderTokens is the column header label for token count.
+	StatsHeaderTokens = "TOKENS"
+	// StatsHeaderPct is the column header label for percentage.
+	StatsHeaderPct = "PCT"
+	// StatsHeaderEvent is the column header label for event type.
+	StatsHeaderEvent = "EVENT"
+	// StatsSepTime is the column separator for the time field.
+	StatsSepTime = "-------------------"
+	// StatsSepSession is the column separator for the session field.
+	StatsSepSession = "--------"
+	// StatsSepPrompt is the column separator for the prompt field.
+	StatsSepPrompt = "------"
+	// StatsSepTokens is the column separator for the tokens field.
+	StatsSepTokens = "--------"
+	// StatsSepPct is the column separator for the percentage field.
+	StatsSepPct = "----"
+	// StatsSepEvent is the column separator for the event field.
+	StatsSepEvent = "------------"
+)
+
+// Events display configuration.
+const (
+	// EventsMessageMaxLen is the maximum character length for event messages
+	// in human-readable output before truncation.
+	EventsMessageMaxLen = 60
+	// EventsHookFallback is the placeholder displayed when no hook name
+	// can be determined from an event payload.
+	EventsHookFallback = "-"
+	// EventsTruncationSuffix is appended to truncated event messages.
+	EventsTruncationSuffix = "..."
+)
+
+// Heartbeat state file prefixes.
+const (
+	// HeartbeatCounterPrefix is the state file prefix for per-session
+	// heartbeat prompt counters.
+	HeartbeatCounterPrefix = "heartbeat-"
+	// HeartbeatMtimePrefix is the state file prefix for per-session
+	// heartbeat context mtime tracking.
+	HeartbeatMtimePrefix = "heartbeat-mtime-"
+	// HeartbeatLogFile is the log filename for heartbeat events.
+	HeartbeatLogFile = "heartbeat.log"
+)
+
+// Message table formatting.
+const (
+	// MessageColHook is the column width for the Hook field in message list output.
+	MessageColHook = 24
+	// MessageColVariant is the column width for the Variant field in message list output.
+	MessageColVariant = 20
+	// MessageColCategory is the column width for the Category field in message list output.
+	MessageColCategory = 16
+	// MessageSepHook is the separator width for the Hook column underline.
+	MessageSepHook = 22
+	// MessageSepVariant is the separator width for the Variant column underline.
+	MessageSepVariant = 18
+	// MessageSepCategory is the separator width for the Category column underline.
+	MessageSepCategory = 14
+	// MessageSepOverride is the separator width for the Override column underline.
+	MessageSepOverride = 8
+)
+
+// Resources display formatting.
+const (
+	// ResourcesStatusCol is the column where the status indicator starts
+	// in the resources text output.
+	ResourcesStatusCol = 52
+)
+
+// Resource threshold constants for health evaluation.
+const (
+	// ThresholdMemoryWarnPct is the memory usage percentage that triggers a warning.
+	ThresholdMemoryWarnPct = 80
+	// ThresholdMemoryDangerPct is the memory usage percentage that triggers a danger alert.
+	ThresholdMemoryDangerPct = 90
+	// ThresholdSwapWarnPct is the swap usage percentage that triggers a warning.
+	ThresholdSwapWarnPct = 50
+	// ThresholdSwapDangerPct is the swap usage percentage that triggers a danger alert.
+	ThresholdSwapDangerPct = 75
+	// ThresholdDiskWarnPct is the disk usage percentage that triggers a warning.
+	ThresholdDiskWarnPct = 85
+	// ThresholdDiskDangerPct is the disk usage percentage that triggers a danger alert.
+	ThresholdDiskDangerPct = 95
+	// ThresholdLoadWarnRatio is the load-to-CPU ratio that triggers a warning.
+	ThresholdLoadWarnRatio = 0.8
+	// ThresholdLoadDangerRatio is the load-to-CPU ratio that triggers a danger alert.
+	ThresholdLoadDangerRatio = 1.5
+	// BytesPerGiB is the number of bytes in one gibibyte.
+	BytesPerGiB = 1 << 30
+)
+
+// Ceremony configuration.
+const (
+	// CeremonyThrottleID is the state file name for daily throttle of ceremony checks.
+	CeremonyThrottleID = "ceremony-reminded"
+	// CeremonyJournalLookback is the number of recent journal files to scan for ceremony usage.
+	CeremonyJournalLookback = 3
+	// CeremonyRememberCmd is the command name scanned in journals for /ctx-remember usage.
+	CeremonyRememberCmd = "ctx-remember"
+	// CeremonyWrapUpCmd is the command name scanned in journals for /ctx-wrap-up usage.
+	CeremonyWrapUpCmd = "ctx-wrap-up"
+)
+
+// Check-journal configuration.
+const (
+	// CheckJournalThrottleID is the state file name for daily throttle of journal checks.
+	CheckJournalThrottleID = "journal-reminded"
+	// CheckJournalClaudeProjectsSubdir is the relative path under $HOME to
+	// the Claude Code projects directory scanned for unexported sessions.
+	CheckJournalClaudeProjectsSubdir = ".claude/projects"
+)
+
+// Check-task-completion configuration.
+const (
+	// TaskNudgePrefix is the state file prefix for per-session
+	// task completion nudge counters.
+	TaskNudgePrefix = "task-nudge-"
+)
+
+// Check-resources configuration.
+const (
+	// CheckResourcesDangerMarker is the unicode cross marker for danger alerts.
+	CheckResourcesDangerMarker = "\u2716 "
+)
+
+// Check-persistence configuration.
+const (
+	// PersistenceNudgePrefix is the state file prefix for per-session
+	// persistence nudge counters.
+	PersistenceNudgePrefix = "persistence-nudge-"
+	// PersistenceEarlyMin is the minimum prompt count before nudging begins.
+	PersistenceEarlyMin = 11
+	// PersistenceEarlyMax is the upper bound for the early nudge window.
+	PersistenceEarlyMax = 25
+	// PersistenceEarlyInterval is the number of prompts between nudges
+	// during the early window (prompts 11-25).
+	PersistenceEarlyInterval = 20
+	// PersistenceLateInterval is the number of prompts between nudges
+	// after the early window (prompts 25+).
+	PersistenceLateInterval = 15
+	// PersistenceLogFile is the log filename for persistence check events.
+	PersistenceLogFile = "check-persistence.log"
+	// PersistenceKeyCount is the state file key for prompt count.
+	PersistenceKeyCount = "count"
+	// PersistenceKeyLastNudge is the state file key for last nudge prompt number.
+	PersistenceKeyLastNudge = "last_nudge"
+	// PersistenceKeyLastMtime is the state file key for last modification time.
+	PersistenceKeyLastMtime = "last_mtime"
+)
+
+// Check-version configuration.
+const (
+	// VersionThrottleID is the state file name for daily throttle of version checks.
+	VersionThrottleID = "version-checked"
+	// VersionDevBuild is the version string used for development builds.
+	VersionDevBuild = "dev"
+)
+
+// Context-size event names.
+const (
+	// EventSuppressed is the event name for suppressed prompts.
+	EventSuppressed = "suppressed"
+	// EventSilent is the event name for silent (no-action) prompts.
+	EventSilent = "silent"
+	// EventCheckpoint is the event name for context checkpoint emissions.
+	EventCheckpoint = "checkpoint"
+	// EventWindowWarning is the event name for context window warning emissions.
+	EventWindowWarning = "window-warning"
+)
+
+// PercentMultiplier is the multiplier for converting ratios to percentages.
+const PercentMultiplier = 100
+
+// Context size hook configuration.
+const (
+	// ContextSizeCounterPrefix is the state file prefix for per-session prompt counters.
+	ContextSizeCounterPrefix = "context-check-"
+	// ContextSizeLogFile is the log file name within .context/logs/.
+	ContextSizeLogFile = "check-context-size.log"
+	// ContextWindowThresholdPct is the percentage of context window usage
+	// that triggers an independent warning, regardless of prompt count.
+	ContextWindowThresholdPct = 80
+	// ContextSizeBillingWarnedPrefix is the state file prefix for the one-shot billing warning guard.
+	ContextSizeBillingWarnedPrefix = "billing-warned-"
+	// ContextSizeInjectionOversizeFlag is the state file name for the injection-oversize one-shot flag.
+	ContextSizeInjectionOversizeFlag = "injection-oversize"
+	// JsonlPathCachePrefix is the state file prefix for cached JSONL file paths.
+	JsonlPathCachePrefix = "jsonl-path-"
+	// ContextSizeOversizeSepLen is the separator length for the oversize flag file header.
+	ContextSizeOversizeSepLen = 35
+)
+
+// Knowledge hook configuration.
+const (
+	// KnowledgeThrottleID is the state file name for daily throttle of knowledge checks.
+	KnowledgeThrottleID = "check-knowledge"
+)
+
+// Map staleness hook configuration.
+const (
+	// MapStaleDays is the threshold in days before a map refresh is considered stale.
+	MapStaleDays = 30
+	// MapStalenessThrottleID is the state file name for daily throttle of map staleness checks.
+	MapStalenessThrottleID = "check-map-staleness"
+)
+
+// Wrap-up marker configuration.
+const (
+	// WrappedUpMarker is the state file name for the wrap-up suppression marker.
+	WrappedUpMarker = "ctx-wrapped-up"
+	// WrappedUpContent is the content written to the wrap-up marker file.
+	WrappedUpContent = "wrapped-up"
 )
 
 // Date and time format constants.
@@ -230,6 +770,9 @@ const InclusiveUntilOffset = 24*time.Hour - time.Second
 const (
 	// ParserPeekLines is the number of lines to scan when detecting file format.
 	ParserPeekLines = 50
+	// DirSubagents is the directory name for sidechain sessions that share
+	// the parent sessionId and would cause duplicates if scanned.
+	DirSubagents = "subagents"
 )
 
 // Export configuration.
@@ -358,6 +901,20 @@ const (
 	FileJournalState = ".state.json"
 )
 
+// Journal processing stage names.
+const (
+	// StageExported marks a journal entry as exported from Claude Code.
+	StageExported = "exported"
+	// StageEnriched marks a journal entry as enriched with metadata.
+	StageEnriched = "enriched"
+	// StageNormalized marks a journal entry as normalized for rendering.
+	StageNormalized = "normalized"
+	// StageFencesVerified marks a journal entry as having verified code fences.
+	StageFencesVerified = "fences_verified"
+	// StageLocked marks a journal entry as locked (read-only).
+	StageLocked = "locked"
+)
+
 // Architecture mapping file constants for .context/ directory.
 const (
 	// FileDetailedDesign is the deep per-module architecture reference.
@@ -376,6 +933,16 @@ const (
 	FileContextKey = ".ctx.key"
 	// FileNotifyEnc is the encrypted webhook URL file.
 	FileNotifyEnc = ".notify.enc"
+)
+
+// Scratchpad blob constants.
+const (
+	// BlobSep separates the label from the base64-encoded file content.
+	BlobSep = ":::"
+	// MaxBlobSize is the maximum file size (pre-encoding) allowed for blob entries.
+	MaxBlobSize = 64 * 1024
+	// BlobTag is the display tag appended to blob labels.
+	BlobTag = " [BLOB]"
 )
 
 // Reminder file constants for .context/ directory.
@@ -529,6 +1096,26 @@ var FileReadOrder = []string{
 
 // Packages maps dependency manifest files to their descriptions.
 //
+// Nudge box drawing constants.
+const (
+	// BoxTop is the top-left corner of a nudge box.
+	BoxTop = "┌─ "
+	// BoxLinePrefix is the left border prefix for nudge box content lines.
+	BoxLinePrefix = "│ "
+	// BoxBottom is the bottom border of a nudge box.
+	BoxBottom = "└──────────────────────────────────────────────────"
+	// NudgeBoxWidth is the inner character width of the nudge box border.
+	NudgeBoxWidth = 51
+)
+
+// Session and template constants.
+const (
+	// SessionUnknown is the fallback session ID when input lacks one.
+	SessionUnknown = "unknown"
+	// TemplateName is the name used for Go text/template instances.
+	TemplateName = "msg"
+)
+
 // Used by sync to detect projects and suggest dependency documentation.
 var Packages = map[string]string{
 	"package.json":     "Node.js dependencies",

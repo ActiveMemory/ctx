@@ -33,7 +33,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVar(&all, "all", false, assets.FlagDesc(assets.FlagDescKeyRecallLockAll))
+	cmd.Flags().BoolVar(&all, "all", false,
+		assets.FlagDesc(assets.FlagDescKeyRecallLockAll),
+	)
 
 	return cmd
 }

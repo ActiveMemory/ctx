@@ -7,13 +7,13 @@
 package core
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/entry"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -43,7 +43,7 @@ func ApplyUpdate(update ContextUpdate) error {
 	case config.EntryComplete:
 		return RunCompleteSilent([]string{update.Content})
 	default:
-		return fmt.Errorf("unknown update type: %s", update.Type)
+		return ctxerr.UnknownUpdateType(update.Type)
 	}
 }
 
@@ -97,7 +97,7 @@ func RunAddSilent(update ContextUpdate) error {
 //     or file operations fail
 func RunCompleteSilent(args []string) error {
 	if len(args) < 1 {
-		return fmt.Errorf("no task specified")
+		return ctxerr.NoTaskSpecified()
 	}
 
 	query := args[0]
@@ -126,11 +126,11 @@ func RunCompleteSilent(args []string) error {
 	}
 
 	if matchedLine == -1 {
-		return fmt.Errorf("no task matching %q found", query)
+		return ctxerr.NoTaskMatch(query)
 	}
 
 	lines[matchedLine] = config.RegExTask.ReplaceAllString(
-		lines[matchedLine], "$1- [x] $3",
+		lines[matchedLine], config.TaskCompleteReplace,
 	)
 	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), config.PermFile)
 }

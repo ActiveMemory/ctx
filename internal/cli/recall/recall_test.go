@@ -120,7 +120,7 @@ func TestRecallExportCmd_Flags(t *testing.T) {
 	// Check flags (includes deprecated flags for backward compatibility).
 	flags := []string{
 		"all", "all-projects", "regenerate", "keep-frontmatter",
-		"yes", "dry-run", "force", "skip-existing",
+		"yes", "dry-run", "skip-existing",
 	}
 	for _, f := range flags {
 		if exportCmd.Flags().Lookup(f) == nil {

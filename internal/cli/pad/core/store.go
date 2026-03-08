@@ -13,17 +13,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
-)
-
-// Output messages matching the spec.
-const (
-	MsgEmpty      = "Scratchpad is empty."
-	MsgKeyCreated = "Scratchpad key created at %s\n"
 )
 
 // ScratchpadPath returns the full path to the scratchpad file.
@@ -74,19 +69,18 @@ func EnsureKey() error {
 	// First use: generate key.
 	key, genErr := crypto.GenerateKey()
 	if genErr != nil {
-		return fmt.Errorf("generate scratchpad key: %w", genErr)
+		return ctxerr.GenerateKey(genErr)
 	}
 
-	// Ensure parent directory exists (user-level or project-local).
 	if mkErr := os.MkdirAll(filepath.Dir(kp), config.PermKeyDir); mkErr != nil {
-		return fmt.Errorf("create key dir: %w", mkErr)
+		return ctxerr.MkdirKeyDir(mkErr)
 	}
 
 	if saveErr := crypto.SaveKey(kp, key); saveErr != nil {
-		return fmt.Errorf("save scratchpad key: %w", saveErr)
+		return ctxerr.SaveKey(saveErr)
 	}
 
-	fmt.Fprintf(os.Stderr, MsgKeyCreated, kp)
+	fmt.Fprintln(os.Stderr, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyPadKeyCreated), kp)) //nolint:errcheck // best-effort notice
 	return nil
 }
 
@@ -138,14 +132,13 @@ func ReadEntries() ([]string, error) {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("read scratchpad: %w", err)
+		return nil, ctxerr.ReadScratchpad(err)
 	}
 
 	if !rc.ScratchpadEncrypt() {
 		return ParseEntries(data), nil
 	}
 
-	// Encrypted mode: load key and decrypt
 	kp := KeyPath()
 	key, loadErr := crypto.LoadKey(kp)
 	if loadErr != nil {
@@ -178,7 +171,6 @@ func WriteEntries(entries []string) error {
 		return os.WriteFile(path, plaintext, config.PermFile)
 	}
 
-	// Encrypted mode: ensure key exists (auto-generate on first use).
 	if err := EnsureKey(); err != nil {
 		return err
 	}

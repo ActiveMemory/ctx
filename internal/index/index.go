@@ -13,20 +13,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
-
-// Entry represents a parsed entry header from a context file.
-//
-// Fields:
-//   - Timestamp: Full timestamp (YYYY-MM-DD-HHMMSS)
-//   - Date: Date only (YYYY-MM-DD)
-//   - Title: Entry title
-type Entry struct {
-	Timestamp string
-	Date      string
-	Title     string
-}
 
 // ParseHeaders extracts all entries from file content.
 //
@@ -43,12 +33,12 @@ func ParseHeaders(content string) []Entry {
 
 	matches := config.RegExEntryHeader.FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
-		if len(match) == 4 {
+		if len(match) == config.RegExEntryHeaderGroups {
 			date := match[1]
 			time := match[2]
 			title := match[3]
 			entries = append(entries, Entry{
-				Timestamp: date + "-" + time,
+				Timestamp: date + config.Dash + time,
 				Date:      date,
 				Title:     title,
 			})
@@ -221,31 +211,31 @@ func ReindexFile(
 	entryType string,
 ) error {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return fmt.Errorf("%s not found. Run 'ctx init' first", fileName)
+		return ctxerr.ReindexFileNotFound(fileName)
 	}
 
 	content, err := os.ReadFile(filePath) //nolint:gosec // G304: filePath is constructed from known config paths
 	if err != nil {
-		return fmt.Errorf("failed to read %s: %w", filePath, err)
+		return ctxerr.ReindexFileRead(filePath, err)
 	}
 
 	updated := updateFunc(string(content))
 
 	if err := os.WriteFile(filePath, []byte(updated), config.PermFile); err != nil {
-		return fmt.Errorf("failed to write %s: %w", filePath, err)
+		return ctxerr.ReindexFileWrite(filePath, err)
 	}
 
 	entries := ParseHeaders(string(content))
 	if len(entries) == 0 {
 		_, err := fmt.Fprintf(
-			w, "✓ Index cleared (no %s found)\n", entryType)
+			w, assets.TextDesc(assets.TextDescKeyDriftCleared)+config.NewlineLF, entryType)
 		if err != nil {
 			return err
 		}
 	} else {
 		_, err := fmt.Fprintf(
 			w,
-			"✓ Index regenerated with %d entries\n", len(entries),
+			assets.TextDesc(assets.TextDescKeyDriftRegenerated)+config.NewlineLF, len(entries),
 		)
 		if err != nil {
 			return err

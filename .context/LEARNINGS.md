@@ -3,6 +3,8 @@
 <!-- INDEX:START -->
 | Date | Learning |
 |------|--------|
+| 2026-03-07 | Always search for existing constants before adding new ones |
+| 2026-03-07 | SafeReadFile requires split base+filename paths |
 | 2026-03-06 | Spawned agents reliably create new files but consistently fail to delete old ones — always audit for stale files, duplicate function definitions, and orphaned imports after agent-driven refactoring |
 | 2026-03-06 | Import cycle avoidance: when package A imports package B for logic, B must own shared types — A aliases them. entry imports add/core for insert logic, so add/core owns EntryParams and entry aliases it as entry.Params |
 | 2026-03-06 | Stale directory inodes cause invisible files over SSH |
@@ -57,6 +59,26 @@
 | 2026-02-19 | Feature can be code-complete but invisible to users |
 | 2026-01-28 | IDE is already the UI |
 <!-- INDEX:END -->
+
+---
+
+## [2026-03-07-221151] Always search for existing constants before adding new ones
+
+**Context**: Added ExtJsonl constant to config/file.go but ExtJSONL already existed with the same value, causing a duplicate
+
+**Lesson**: Grep for the value (e.g. '.jsonl') across config/ before creating a new constant — naming variations (camelCase vs ALLCAPS) make duplicates easy to miss
+
+**Application**: Before adding any new constant to internal/config, search by value not just by name
+
+---
+
+## [2026-03-07-221148] SafeReadFile requires split base+filename paths
+
+**Context**: During system/core cleanup, persistence.go passed a full path to validation.SafeReadFile which expects (baseDir, filename) separately
+
+**Lesson**: Use filepath.Dir(path) and filepath.Base(path) to split full paths when adapting os.ReadFile calls to SafeReadFile
+
+**Application**: When converting os.ReadFile to SafeReadFile, always check whether the existing code has a full path or separate components
 
 ---
 

@@ -12,25 +12,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config"
 )
 
-// EntryKind identifies how an entry was delimited in MEMORY.md.
-type EntryKind int
-
-const (
-	// EntryHeader is a Markdown heading (## or ###).
-	EntryHeader EntryKind = iota
-	// EntryParagraph is a blank-line-separated paragraph.
-	EntryParagraph
-	// EntryList is one or more consecutive list items.
-	EntryList
-)
-
-// Entry is a discrete block parsed from MEMORY.md.
-type Entry struct {
-	Text      string    // Raw text of the entry (trimmed)
-	StartLine int       // 1-based line number where the entry begins
-	Kind      EntryKind // How the entry was delimited
-}
-
 // ParseEntries splits MEMORY.md content into discrete entries.
 //
 // Entry boundaries:
@@ -69,7 +50,7 @@ func ParseEntries(content string) []Entry {
 		trimmed := strings.TrimSpace(line)
 
 		// Skip top-level heading
-		if strings.HasPrefix(trimmed, "# ") && !strings.HasPrefix(trimmed, "## ") {
+		if strings.HasPrefix(trimmed, config.HeadingLevelOneStart) && !strings.HasPrefix(trimmed, config.HeadingLevelTwoStart) {
 			if inEntry {
 				flush()
 			}
@@ -77,7 +58,7 @@ func ParseEntries(content string) []Entry {
 		}
 
 		// Section header (## or ###) starts a new entry
-		if strings.HasPrefix(trimmed, "## ") || strings.HasPrefix(trimmed, "### ") {
+		if strings.HasPrefix(trimmed, config.HeadingLevelTwoStart) || strings.HasPrefix(trimmed, config.HeadingLevelThreeStart) {
 			if inEntry {
 				flush()
 			}
@@ -97,7 +78,7 @@ func ParseEntries(content string) []Entry {
 		}
 
 		// List item — each top-level item is a separate entry for classification
-		if strings.HasPrefix(trimmed, "- ") || strings.HasPrefix(trimmed, "* ") {
+		if strings.HasPrefix(trimmed, config.PrefixListDash) || strings.HasPrefix(trimmed, config.PrefixListStar) {
 			if inEntry {
 				flush()
 			}

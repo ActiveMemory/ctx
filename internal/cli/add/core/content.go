@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // ExtractContent retrieves content from various sources for adding entries.
@@ -34,7 +34,7 @@ func ExtractContent(args []string, flags Config) (string, error) {
 		// Read from the file
 		fileContent, err := os.ReadFile(flags.FromFile)
 		if err != nil {
-			return "", write.ErrFileRead(flags.FromFile, err)
+			return "", add.ErrFileRead(flags.FromFile, err)
 		}
 		return strings.TrimSpace(string(fileContent)), nil
 	}
@@ -54,9 +54,9 @@ func ExtractContent(args []string, flags Config) (string, error) {
 			lines = append(lines, scanner.Text())
 		}
 		if err := scanner.Err(); err != nil {
-			return "", write.ErrStdinRead(err)
+			return "", add.ErrStdinRead(err)
 		}
 		return strings.TrimSpace(strings.Join(lines, config.NewlineLF)), nil
 	}
-	return "", write.ErrNoContent()
+	return "", add.ErrNoContent()
 }

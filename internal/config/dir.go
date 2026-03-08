@@ -35,6 +35,12 @@ const (
 	DirMemory = "memory"
 	// DirMemoryArchive is the archive subdirectory within .context/memory/.
 	DirMemoryArchive = "memory/archive"
+	// DirHooksMessages is the subdirectory path for hook message overrides within .context/.
+	DirHooksMessages = "hooks/messages"
+	// DirProjects is the projects subdirectory within .claude/.
+	DirProjects = "projects"
+	// LogsDir is the subdirectory name for log files within the context directory.
+	LogsDir = "logs"
 )
 
 // GitignoreEntries lists the recommended .gitignore entries added by ctx init.

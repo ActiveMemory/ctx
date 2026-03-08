@@ -8,13 +8,14 @@ package parser
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // MarkdownSessionParser parses Markdown session files written by AI agents.
@@ -108,7 +109,7 @@ func (p *MarkdownSessionParser) Matches(path string) bool {
 func (p *MarkdownSessionParser) ParseFile(path string) ([]*Session, error) {
 	content, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
-		return nil, fmt.Errorf("read file: %w", err)
+		return nil, ctxerr.ParserReadFile(err)
 	}
 
 	session := p.parseMarkdownSession(string(content), path)
@@ -184,7 +185,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	var bodyParts []string
 	for _, sec := range sections {
 		if sec.body != "" {
-			bodyParts = append(bodyParts, "## "+sec.heading+config.NewlineLF+sec.body)
+			bodyParts = append(bodyParts, config.HeadingLevelTwoStart+sec.heading+config.NewlineLF+sec.body)
 		}
 	}
 
@@ -242,7 +243,6 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 // Recognized formats:
 //   - "# Session: YYYY-MM-DD — Topic"
 //   - "# Session: YYYY-MM-DD - Topic"
-//   - "# Oturum: YYYY-MM-DD — Topic" (Turkish)
 //   - "# YYYY-MM-DD — Topic"
 //   - "# YYYY-MM-DD - Topic"
 //
@@ -252,17 +252,15 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 // Returns:
 //   - bool: True if the line matches a session header pattern
 func isSessionHeader(line string) bool {
-	if !strings.HasPrefix(line, "# ") {
+	if !strings.HasPrefix(line, config.HeadingLevelOneStart) {
 		return false
 	}
 
-	rest := line[2:]
+	rest := line[len(config.HeadingLevelOneStart):]
 
-	// Check for "Session:" or "Oturum:" prefix
-	for _, prefix := range []string{"Session:", "Oturum:"} {
-		if strings.HasPrefix(rest, prefix) {
-			return true
-		}
+	// Check for "Session:" prefix
+	if strings.HasPrefix(rest, assets.TextDesc(assets.TextDescKeyParserSessionPrefix)) {
+		return true
 	}
 
 	// Check for direct date pattern (YYYY-MM-DD)
@@ -283,17 +281,17 @@ func isSessionHeader(line string) bool {
 //   - string: The topic portion (e.g., "Fix API")
 func parseSessionHeader(line string) (string, string) {
 	// Remove "# " prefix
-	rest := strings.TrimPrefix(line, "# ")
+	rest := strings.TrimPrefix(line, config.HeadingLevelOneStart)
 
-	// Remove "Session: " or "Oturum: " prefix if present
-	for _, prefix := range []string{"Session: ", "Oturum: ", "Session:", "Oturum:"} {
-		rest = strings.TrimPrefix(rest, prefix)
-	}
+	// Remove "Session: " or "Session:" prefix if present
+	prefix := assets.TextDesc(assets.TextDescKeyParserSessionPrefix)
+	rest = strings.TrimPrefix(rest, prefix+config.Space)
+	rest = strings.TrimPrefix(rest, prefix)
 
 	rest = strings.TrimSpace(rest)
 
 	// Split on " — " (em dash) or " - " (hyphen)
-	for _, sep := range []string{" \u2014 ", " - "} {
+	for _, sep := range []string{" — ", " - "} {
 		if idx := strings.Index(rest, sep); idx >= 0 {
 			return strings.TrimSpace(rest[:idx]), strings.TrimSpace(rest[idx+len(sep):])
 		}
@@ -313,7 +311,7 @@ func parseSessionHeader(line string) (string, string) {
 // Returns:
 //   - time.Time: Parsed time, or zero value on failure
 func parseSessionDate(dateStr string) time.Time {
-	t, err := time.Parse("2006-01-02", dateStr)
+	t, err := time.Parse(config.DateFormat, dateStr)
 	if err != nil {
 		return time.Time{}
 	}
@@ -342,7 +340,7 @@ func extractSections(lines []string) []section {
 
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "## ") {
+		if strings.HasPrefix(trimmed, config.HeadingLevelTwoStart) {
 			// Save previous section
 			if currentHeading != "" {
 				sections = append(sections, section{
@@ -352,7 +350,7 @@ func extractSections(lines []string) []section {
 					),
 				})
 			}
-			currentHeading = strings.TrimPrefix(trimmed, "## ")
+			currentHeading = strings.TrimPrefix(trimmed, config.HeadingLevelTwoStart)
 			currentBody = nil
 			continue
 		}

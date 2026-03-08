@@ -7,18 +7,19 @@
 package sync
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
+	"github.com/ActiveMemory/ctx/internal/write"
 )
 
-// runSync scans all journal markdowns and syncs frontmatter lock state
+// Run scans all journal markdowns and syncs frontmatter lock state
 // to .state.json.
 //
 // Parameters:
@@ -26,12 +27,12 @@ import (
 //
 // Returns:
 //   - error: Non-nil on I/O failure
-func runSync(cmd *cobra.Command) error {
+func Run(cmd *cobra.Command) error {
 	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
-		return fmt.Errorf("load journal state: %w", loadErr)
+		return ctxerr.LoadJournalState(loadErr)
 	}
 
 	files, matchErr := core.MatchJournalFiles(journalDir, nil, true)
@@ -39,7 +40,7 @@ func runSync(cmd *cobra.Command) error {
 		return matchErr
 	}
 	if len(files) == 0 {
-		cmd.Println("No journal entries found.")
+		write.JournalSyncNone(cmd)
 		return nil
 	}
 
@@ -52,30 +53,21 @@ func runSync(cmd *cobra.Command) error {
 
 		switch {
 		case fmLocked && !stateLocked:
-			jstate.Mark(filename, "locked")
-			cmd.Println(fmt.Sprintf("  ✓ %s (locked)", filename))
+			jstate.Mark(filename, config.StageLocked)
+			write.JournalSyncLocked(cmd, filename)
 			locked++
 		case !fmLocked && stateLocked:
-			jstate.Clear(filename, "locked")
-			cmd.Println(fmt.Sprintf("  ✓ %s (unlocked)", filename))
+			jstate.Clear(filename, config.StageLocked)
+			write.JournalSyncUnlocked(cmd, filename)
 			unlocked++
 		}
 	}
 
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		return fmt.Errorf("save journal state: %w", saveErr)
+		return ctxerr.SaveJournalState(saveErr)
 	}
 
-	if locked == 0 && unlocked == 0 {
-		cmd.Println("No changes — state already matches frontmatter.")
-	} else {
-		if locked > 0 {
-			cmd.Println(fmt.Sprintf("\nLocked %d entry(s).", locked))
-		}
-		if unlocked > 0 {
-			cmd.Println(fmt.Sprintf("\nUnlocked %d entry(s).", unlocked))
-		}
-	}
+	write.JournalSyncSummary(cmd, locked, unlocked)
 
 	return nil
 }

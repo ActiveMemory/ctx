@@ -8,11 +8,10 @@
 package feed
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx site feed" subcommand.
@@ -32,16 +31,16 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runFeed(cmd, "docs/blog", out, baseURL)
+			return runFeed(cmd, config.DefaultFeedInputDir, out, baseURL)
 		},
 	}
 
 	cmd.Flags().StringVarP(
-		&out, "out", "o", filepath.Join("site", "feed.xml"),
+		&out, "out", "o", config.DefaultFeedOutPath,
 		assets.FlagDesc(assets.FlagDescKeySiteFeedOut),
 	)
 	cmd.Flags().StringVar(
-		&baseURL, "base-url", "https://ctx.ist",
+		&baseURL, "base-url", config.DefaultFeedBaseURL,
 		assets.FlagDesc(assets.FlagDescKeySiteFeedBaseUrl),
 	)
 

@@ -93,5 +93,5 @@ func Content(match []string) string {
 // Returns:
 //   - bool: True if indent is 2+ spaces
 func SubTask(match []string) bool {
-	return len(Indent(match)) >= 2
+	return len(Indent(match)) >= config.SubTaskMinIndent
 }

@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
@@ -123,7 +124,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 						File:    f.Name,
 						Line:    lineNum + 1,
 						Type:    IssueDeadPath,
-						Message: "references path that does not exist",
+						Message: assets.TextDesc(assets.TextDescKeyDriftDeadPath),
 						Path:    path,
 					})
 					foundDeadPaths = true
@@ -150,12 +151,12 @@ func checkStaleness(ctx *context.Context, report *Report) {
 
 	if f := ctx.File(config.FileTask); f != nil {
 		// Count completed tasks
-		completedCount := strings.Count(string(f.Content), "- [x]")
+		completedCount := strings.Count(string(f.Content), config.PrefixTaskDone)
 		if completedCount > 10 {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleness,
-				Message: "has many completed items (consider archiving)",
+				Message: assets.TextDesc(assets.TextDescKeyDriftStaleness),
 				Path:    "",
 			})
 			staleness = true
@@ -179,14 +180,7 @@ func checkConstitution(_ *context.Context, report *Report) {
 	// Basic heuristic checks for constitution violations
 	// Check for potential secrets in common config files
 
-	secretPatterns := []string{
-		".env",
-		"credentials",
-		"secret",
-		"api_key",
-		"apikey",
-		"password",
-	}
+	secretPatterns := config.SecretPatterns
 
 	// Look for common secret file patterns in the working directory
 	entries, readErr := os.ReadDir(".")
@@ -213,7 +207,7 @@ func checkConstitution(_ *context.Context, report *Report) {
 					report.Violations = append(report.Violations, Issue{
 						File:    entry.Name(),
 						Type:    IssueSecret,
-						Message: "may contain secrets (constitution violation)",
+						Message: assets.TextDesc(assets.TextDescKeyDriftSecret),
 						Rule:    "no_secrets",
 					})
 					foundViolation = true
@@ -247,7 +241,7 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
 				Type:    IssueMissing,
-				Message: "required context file is missing",
+				Message: assets.TextDesc(assets.TextDescKeyDriftMissingFile),
 			})
 			allPresent = false
 		}
@@ -287,7 +281,7 @@ func checkFileAge(ctx *context.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueStaleAge,
-				Message: fmt.Sprintf("last modified %d days ago", days),
+				Message: fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDriftStaleAge), days),
 			})
 			foundStale = true
 		}
@@ -330,7 +324,7 @@ func checkEntryCount(ctx *context.Context, report *Report) {
 				File: f.Name,
 				Type: IssueEntryCount,
 				Message: fmt.Sprintf(
-					"has %d entries (recommended: ≤%d)",
+					assets.TextDesc(assets.TextDescKeyDriftEntryCount),
 					len(blocks), c.threshold,
 				),
 			})
@@ -386,7 +380,7 @@ func checkMissingPackages(ctx *context.Context, report *Report) {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    f.Name,
 				Type:    IssueMissingPackage,
-				Message: fmt.Sprintf("package %s is not documented", pkg),
+				Message: fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDriftMissingPackage), pkg),
 				Path:    pkg,
 			})
 			found = true
@@ -422,16 +416,7 @@ func normalizeInternalPkg(path string) string {
 //   - bool: True if content contains template markers
 func isTemplateFile(content []byte) bool {
 	s := string(content)
-	// Check for common template markers
-	templateMarkers := []string{
-		"YOUR_",
-		"<your",
-		"{{",
-		"REPLACE_",
-		"TODO",
-		"CHANGEME",
-		"FIXME",
-	}
+	templateMarkers := config.TemplateMarkers
 	for _, marker := range templateMarkers {
 		if strings.Contains(strings.ToUpper(s), marker) {
 			return true

@@ -14,6 +14,7 @@ import (
 
 	serveroot "github.com/ActiveMemory/ctx/internal/cli/serve/cmd/root"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 func TestCmd(t *testing.T) {
@@ -140,7 +141,7 @@ func TestRunServe_DefaultDir(t *testing.T) {
 }
 
 func TestErrDirNotFound(t *testing.T) {
-	err := serveroot.ErrDirNotFound("/some/path")
+	err := ctxerr.DirNotFound("/some/path")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -153,7 +154,7 @@ func TestErrDirNotFound(t *testing.T) {
 }
 
 func TestErrNotDir(t *testing.T) {
-	err := serveroot.ErrNotDir("/some/file")
+	err := ctxerr.NotDirectory("/some/file")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -166,7 +167,7 @@ func TestErrNotDir(t *testing.T) {
 }
 
 func TestErrNoSiteConfig(t *testing.T) {
-	err := serveroot.ErrNoSiteConfig("/some/dir")
+	err := ctxerr.NoSiteConfig("/some/dir")
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}
@@ -232,7 +233,7 @@ func TestCmd_RunE(t *testing.T) {
 }
 
 func TestErrZensicalNotFound(t *testing.T) {
-	err := serveroot.ErrZensicalNotFound()
+	err := ctxerr.ZensicalNotFound()
 	if err == nil {
 		t.Fatal("expected non-nil error")
 	}

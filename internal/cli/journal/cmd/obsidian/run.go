@@ -24,7 +24,7 @@ import (
 // related sessions footer.
 const ObsidianMaxRelated = 5
 
-// runJournalObsidian generates an Obsidian vault from journal entries.
+// Run generates an Obsidian vault from journal entries.
 //
 // Pipeline:
 //  1. Scan entries (reuse core.ScanJournalEntries)

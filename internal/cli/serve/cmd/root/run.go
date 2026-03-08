@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -35,25 +36,35 @@ func Run(args []string) error {
 	// Verify directory exists
 	info, statErr := os.Stat(dir)
 	if statErr != nil {
-		return ErrDirNotFound(dir)
+		return ctxerr.DirNotFound(dir)
 	}
 	if !info.IsDir() {
-		return ErrNotDir(dir)
+		return ctxerr.NotDirectory(dir)
 	}
 
 	// Check zensical.toml exists
 	tomlPath := filepath.Join(dir, config.FileZensicalToml)
 	if _, statErr = os.Stat(tomlPath); os.IsNotExist(statErr) {
-		return ErrNoSiteConfig(dir)
+		return ctxerr.NoSiteConfig(dir)
 	}
 
 	// Check if zensical is available
 	_, lookErr := exec.LookPath(config.BinZensical)
 	if lookErr != nil {
-		return ErrZensicalNotFound()
+		return ctxerr.ZensicalNotFound()
 	}
 
-	// Run zensical serve
+	return runZensical(dir)
+}
+
+// runZensical launches zensical serve in the given directory.
+//
+// Parameters:
+//   - dir: Working directory for the zensical process
+//
+// Returns:
+//   - error: Non-nil if the process fails
+func runZensical(dir string) error {
 	zensical := exec.Command(config.BinZensical, "serve") //nolint:gosec // G204: args are constants
 	zensical.Dir = dir
 	zensical.Stdout = os.Stdout

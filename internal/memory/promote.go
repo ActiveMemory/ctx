@@ -9,11 +9,10 @@ package memory
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
 	ctxentry "github.com/ActiveMemory/ctx/internal/entry"
 )
-
-const importSource = "auto-memory import"
 
 // Promote writes a classified entry to the appropriate .context/ file.
 // Uses the add package's WriteEntry for consistent formatting and indexing.
@@ -28,14 +27,14 @@ func Promote(entry Entry, classification Classification) error {
 
 	switch classification.Target {
 	case config.EntryDecision:
-		params.Context = importSource
+		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)
 		params.Rationale = extractBody(entry.Text)
-		params.Consequences = "Imported from MEMORY.md — review and update as needed"
+		params.Consequences = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
 
 	case config.EntryLearning:
-		params.Context = importSource
+		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)
 		params.Lesson = extractBody(entry.Text)
-		params.Application = "Imported from MEMORY.md — review and update as needed"
+		params.Application = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
 
 	case config.EntryTask:
 		// Tasks just need content — FormatTask handles the rest
@@ -53,13 +52,13 @@ func extractTitle(text string) string {
 	line := strings.SplitN(text, config.NewlineLF, 2)[0]
 	line = strings.TrimSpace(line)
 	// Strip heading markers
-	line = strings.TrimLeft(line, "#")
+	line = strings.TrimLeft(line, config.PrefixHeading)
 	line = strings.TrimSpace(line)
 	// Strip list item markers
-	if strings.HasPrefix(line, "- ") {
-		line = line[2:]
-	} else if strings.HasPrefix(line, "* ") {
-		line = line[2:]
+	if strings.HasPrefix(line, config.PrefixListDash) {
+		line = line[len(config.PrefixListDash):]
+	} else if strings.HasPrefix(line, config.PrefixListStar) {
+		line = line[len(config.PrefixListStar):]
 	}
 	return strings.TrimSpace(line)
 }

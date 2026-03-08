@@ -62,7 +62,7 @@ func (p *ClaudeCodeParser) buildSession(
 				// Truncate preview
 				preview := msg.Text
 				if len(preview) > 100 {
-					preview = preview[:100] + "..."
+					preview = preview[:100] + config.Ellipsis
 				}
 				session.FirstUserMsg = preview
 			}

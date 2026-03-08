@@ -152,27 +152,27 @@ func TestQueryHelpers(t *testing.T) {
 		},
 	}
 
-	if !s.IsExported("full.md") {
+	if !s.Exported("full.md") {
 		t.Error("full.md should be exported")
 	}
-	if !s.IsEnriched("full.md") {
+	if !s.Enriched("full.md") {
 		t.Error("full.md should be enriched")
 	}
-	if !s.IsNormalized("full.md") {
+	if !s.Normalized("full.md") {
 		t.Error("full.md should be normalized")
 	}
-	if !s.IsFencesVerified("full.md") {
+	if !s.FencesVerified("full.md") {
 		t.Error("full.md should have fences verified")
 	}
 
-	if !s.IsExported("partial.md") {
+	if !s.Exported("partial.md") {
 		t.Error("partial.md should be exported")
 	}
-	if s.IsEnriched("partial.md") {
+	if s.Enriched("partial.md") {
 		t.Error("partial.md should not be enriched")
 	}
 
-	if s.IsExported("missing.md") {
+	if s.Exported("missing.md") {
 		t.Error("missing.md should not be exported")
 	}
 }
@@ -188,17 +188,17 @@ func TestClearEnriched(t *testing.T) {
 		},
 	}
 
-	if !s.IsEnriched("test.md") {
+	if !s.Enriched("test.md") {
 		t.Fatal("should be enriched before clear")
 	}
 
 	s.ClearEnriched("test.md")
 
-	if s.IsEnriched("test.md") {
+	if s.Enriched("test.md") {
 		t.Error("should not be enriched after ClearEnriched")
 	}
 	// Other fields should be untouched
-	if !s.IsExported("test.md") {
+	if !s.Exported("test.md") {
 		t.Error("exported should be preserved after ClearEnriched")
 	}
 }
@@ -213,7 +213,7 @@ func TestClearEnriched_NoOp(t *testing.T) {
 
 	// Should not panic on file that isn't enriched
 	s.ClearEnriched("test.md")
-	if s.IsEnriched("test.md") {
+	if s.Enriched("test.md") {
 		t.Error("should remain unenriched")
 	}
 
@@ -227,10 +227,10 @@ func TestMark(t *testing.T) {
 		Entries: make(map[string]FileState),
 	}
 
-	if ok := s.Mark("test.md", "exported"); !ok {
+	if ok := s.Mark("test.md", config.StageExported); !ok {
 		t.Error("Mark exported should succeed")
 	}
-	if !s.IsExported("test.md") {
+	if !s.Exported("test.md") {
 		t.Error("test.md should be exported after Mark")
 	}
 
@@ -270,17 +270,17 @@ func TestClear(t *testing.T) {
 		},
 	}
 
-	if ok := s.Clear("test.md", "locked"); !ok {
+	if ok := s.Clear("test.md", config.StageLocked); !ok {
 		t.Error("Clear locked should succeed")
 	}
 	if s.Locked("test.md") {
 		t.Error("should not be locked after Clear")
 	}
 	// Other fields preserved.
-	if !s.IsExported("test.md") {
+	if !s.Exported("test.md") {
 		t.Error("exported should be preserved after Clear locked")
 	}
-	if !s.IsEnriched("test.md") {
+	if !s.Enriched("test.md") {
 		t.Error("enriched should be preserved after Clear locked")
 	}
 
@@ -322,12 +322,12 @@ func TestLocked(t *testing.T) {
 		t.Error("should not be locked initially")
 	}
 
-	s.Mark("test.md", "locked")
+	s.Mark("test.md", config.StageLocked)
 	if !s.Locked("test.md") {
 		t.Error("should be locked after Mark")
 	}
 
-	s.Clear("test.md", "locked")
+	s.Clear("test.md", config.StageLocked)
 	if s.Locked("test.md") {
 		t.Error("should not be locked after Clear")
 	}

@@ -53,7 +53,7 @@ func findSessionsWithFilter(
 	// Check Claude Code default location
 	home, err := os.UserHomeDir()
 	if err == nil {
-		scanOnce(filepath.Join(home, ".claude", "projects"))
+		scanOnce(filepath.Join(home, config.DirClaude, config.DirProjects))
 	}
 
 	// Check .context/sessions/ in the current working directory

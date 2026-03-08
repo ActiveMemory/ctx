@@ -14,17 +14,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
-
-// SyncResult holds the outcome of a Sync operation.
-type SyncResult struct {
-	SourcePath  string
-	MirrorPath  string
-	ArchivedTo  string // empty if no prior mirror existed
-	SourceLines int
-	MirrorLines int // lines in the previous mirror (0 if first sync)
-}
 
 // Sync copies sourcePath to .context/memory/mirror.md, archiving the
 // previous mirror if one exists. Creates directories as needed.
@@ -34,7 +27,7 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 
 	sourceData, readErr := os.ReadFile(sourcePath) //nolint:gosec // caller-provided path
 	if readErr != nil {
-		return SyncResult{}, fmt.Errorf("reading source: %w", readErr)
+		return SyncResult{}, ctxerr.MemoryReadSource(readErr)
 	}
 
 	result := SyncResult{
@@ -48,17 +41,17 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 		result.MirrorLines = countLines(existingData)
 		archivePath, archiveErr := Archive(contextDir)
 		if archiveErr != nil {
-			return SyncResult{}, fmt.Errorf("archiving previous mirror: %w", archiveErr)
+			return SyncResult{}, ctxerr.MemoryArchivePrevious(archiveErr)
 		}
 		result.ArchivedTo = archivePath
 	}
 
 	if mkErr := os.MkdirAll(mirrorDir, config.PermExec); mkErr != nil {
-		return SyncResult{}, fmt.Errorf("creating memory directory: %w", mkErr)
+		return SyncResult{}, ctxerr.MemoryCreateDir(mkErr)
 	}
 
 	if writeErr := os.WriteFile(mirrorPath, sourceData, config.PermFile); writeErr != nil {
-		return SyncResult{}, fmt.Errorf("writing mirror: %w", writeErr)
+		return SyncResult{}, ctxerr.MemoryWriteMirror(writeErr)
 	}
 
 	return result, nil
@@ -72,18 +65,18 @@ func Archive(contextDir string) (string, error) {
 
 	data, readErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
 	if readErr != nil {
-		return "", fmt.Errorf("reading mirror for archive: %w", readErr)
+		return "", ctxerr.MemoryReadMirrorArchive(readErr)
 	}
 
 	if mkErr := os.MkdirAll(archiveDir, config.PermExec); mkErr != nil {
-		return "", fmt.Errorf("creating archive directory: %w", mkErr)
+		return "", ctxerr.MemoryCreateArchiveDir(mkErr)
 	}
 
 	ts := time.Now().Format(config.TimestampCompact)
-	archivePath := filepath.Join(archiveDir, "mirror-"+ts+config.ExtMarkdown)
+	archivePath := filepath.Join(archiveDir, config.MemoryMirrorPrefix+ts+config.ExtMarkdown)
 
 	if writeErr := os.WriteFile(archivePath, data, config.PermFile); writeErr != nil {
-		return "", fmt.Errorf("writing archive: %w", writeErr)
+		return "", ctxerr.MemoryWriteArchive(writeErr)
 	}
 
 	return archivePath, nil
@@ -96,12 +89,12 @@ func Diff(contextDir, sourcePath string) (string, error) {
 
 	mirrorData, mirrorErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
 	if mirrorErr != nil {
-		return "", fmt.Errorf("reading mirror: %w", mirrorErr)
+		return "", ctxerr.MemoryReadMirror(mirrorErr)
 	}
 
 	sourceData, sourceErr := os.ReadFile(sourcePath) //nolint:gosec // caller-provided path
 	if sourceErr != nil {
-		return "", fmt.Errorf("reading source: %w", sourceErr)
+		return "", ctxerr.MemoryReadDiffSource(sourceErr)
 	}
 
 	if bytes.Equal(mirrorData, sourceData) {
@@ -141,7 +134,7 @@ func ArchiveCount(contextDir string) int {
 	}
 	count := 0
 	for _, e := range entries {
-		if !e.IsDir() && strings.HasPrefix(e.Name(), "mirror-") {
+		if !e.IsDir() && strings.HasPrefix(e.Name(), config.MemoryMirrorPrefix) {
 			count++
 		}
 	}
@@ -158,8 +151,8 @@ func countLines(data []byte) int {
 // simpleDiff produces a minimal unified-style diff header with added/removed lines.
 func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
 	var buf strings.Builder
-	buf.WriteString(fmt.Sprintf("--- %s (mirror)\n", oldPath))
-	buf.WriteString(fmt.Sprintf("+++ %s (source)\n", newPath))
+	_, _ = fmt.Fprintf(&buf, assets.TextDesc(assets.TextDescKeyMemoryDiffOldFormat), oldPath)
+	_, _ = fmt.Fprintf(&buf, assets.TextDesc(assets.TextDescKeyMemoryDiffNewFormat), newPath)
 
 	oldSet := make(map[string]bool, len(oldLines))
 	for _, l := range oldLines {

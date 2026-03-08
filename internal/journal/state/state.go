@@ -23,22 +23,6 @@ import (
 // CurrentVersion is the schema version for the state file.
 const CurrentVersion = 1
 
-// JournalState is the top-level state file structure.
-type JournalState struct {
-	Version int                  `json:"version"`
-	Entries map[string]FileState `json:"entries"`
-}
-
-// FileState tracks processing stages for a single journal entry.
-// Values are date strings (YYYY-MM-DD) indicating when the stage completed.
-type FileState struct {
-	Exported       string `json:"exported,omitempty"`
-	Enriched       string `json:"enriched,omitempty"`
-	Normalized     string `json:"normalized,omitempty"`
-	FencesVerified string `json:"fences_verified,omitempty"`
-	Locked         string `json:"locked,omitempty"`
-}
-
 // Load reads the state file from the journal directory. If the file does
 // not exist, an empty state is returned (not an error).
 func Load(journalDir string) (*JournalState, error) {
@@ -128,15 +112,15 @@ func (s *JournalState) MarkFencesVerified(filename string) {
 func (s *JournalState) Mark(filename, stage string) bool {
 	fs := s.Entries[filename]
 	switch stage {
-	case "exported":
+	case config.StageExported:
 		fs.Exported = today()
-	case "enriched":
+	case config.StageEnriched:
 		fs.Enriched = today()
-	case "normalized":
+	case config.StageNormalized:
 		fs.Normalized = today()
-	case "fences_verified":
+	case config.StageFencesVerified:
 		fs.FencesVerified = today()
-	case "locked":
+	case config.StageLocked:
 		fs.Locked = today()
 	default:
 		return false
@@ -156,15 +140,15 @@ func (s *JournalState) Mark(filename, stage string) bool {
 func (s *JournalState) Clear(filename, stage string) bool {
 	fs := s.Entries[filename]
 	switch stage {
-	case "exported":
+	case config.StageExported:
 		fs.Exported = ""
-	case "enriched":
+	case config.StageEnriched:
 		fs.Enriched = ""
-	case "normalized":
+	case config.StageNormalized:
 		fs.Normalized = ""
-	case "fences_verified":
+	case config.StageFencesVerified:
 		fs.FencesVerified = ""
-	case "locked":
+	case config.StageLocked:
 		fs.Locked = ""
 	default:
 		return false
@@ -203,23 +187,23 @@ func (s *JournalState) ClearEnriched(filename string) {
 	s.Entries[filename] = fs
 }
 
-// IsEnriched reports whether the file has been enriched.
-func (s *JournalState) IsEnriched(filename string) bool {
+// Enriched reports whether the file has been enriched.
+func (s *JournalState) Enriched(filename string) bool {
 	return s.Entries[filename].Enriched != ""
 }
 
-// IsNormalized reports whether the file has been normalized.
-func (s *JournalState) IsNormalized(filename string) bool {
+// Normalized reports whether the file has been normalized.
+func (s *JournalState) Normalized(filename string) bool {
 	return s.Entries[filename].Normalized != ""
 }
 
-// IsFencesVerified reports whether the file's fences have been verified.
-func (s *JournalState) IsFencesVerified(filename string) bool {
+// FencesVerified reports whether the file's fences have been verified.
+func (s *JournalState) FencesVerified(filename string) bool {
 	return s.Entries[filename].FencesVerified != ""
 }
 
-// IsExported reports whether the file has been exported.
-func (s *JournalState) IsExported(filename string) bool {
+// Exported reports whether the file has been exported.
+func (s *JournalState) Exported(filename string) bool {
 	return s.Entries[filename].Exported != ""
 }
 
@@ -236,7 +220,7 @@ func (s *JournalState) CountUnenriched(journalDir string) int {
 		if entry.IsDir() || filepath.Ext(entry.Name()) != config.ExtMarkdown {
 			continue
 		}
-		if !s.IsEnriched(entry.Name()) {
+		if !s.Enriched(entry.Name()) {
 			count++
 		}
 	}
@@ -245,5 +229,5 @@ func (s *JournalState) CountUnenriched(journalDir string) int {
 
 // ValidStages lists the recognized stage names for Mark() and Clear().
 var ValidStages = []string{
-	"exported", "enriched", "normalized", "fences_verified", "locked",
+	config.StageExported, config.StageEnriched, config.StageNormalized, config.StageFencesVerified, config.StageLocked,
 }

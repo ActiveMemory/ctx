@@ -18,6 +18,10 @@ var RegExEntryHeader = regexp.MustCompile(
 	`## \[(\d{4}-\d{2}-\d{2})-(\d{6})] (.+)`,
 )
 
+// RegExEntryHeaderGroups is the expected number of groups (including full
+// match) returned by RegExEntryHeader.FindStringSubmatch.
+const RegExEntryHeaderGroups = 4
+
 // RegExLineNumber matches Claude Code's line number prefixes like "     1→".
 var RegExLineNumber = regexp.MustCompile(`(?m)^\s*\d+→`)
 
@@ -180,3 +184,53 @@ var RegExListStart = regexp.MustCompile(`^(\d+\.|[-*]) `)
 func RegExFromAttrName(name string) *regexp.Regexp {
 	return regexp.MustCompile(name + `="([^"]*)"`)
 }
+
+// Hook: block-dangerous-commands patterns.
+
+// RegExMidSudo matches mid-command sudo after && || ;
+var RegExMidSudo = regexp.MustCompile(`(;|&&|\|\|)\s*sudo\s`)
+
+// RegExMidGitPush matches mid-command git push after && || ;
+var RegExMidGitPush = regexp.MustCompile(`(;|&&|\|\|)\s*git\s+push`)
+
+// RegExCpMvToBin matches cp/mv to bin directories.
+var RegExCpMvToBin = regexp.MustCompile(`(cp|mv)\s+\S+\s+(/usr/local/bin|/usr/bin|~/go/bin|~/.local/bin|/home/\S+/go/bin|/home/\S+/.local/bin)`)
+
+// RegExInstallToLocalBin matches cp/install to ~/.local/bin.
+var RegExInstallToLocalBin = regexp.MustCompile(`(cp|install)\s.*~/\.local/bin`)
+
+// Hook: block-non-path-ctx patterns.
+
+// RegExRelativeCtxStart matches ./ctx or ./dist/ctx at start of command.
+var RegExRelativeCtxStart = regexp.MustCompile(`^\s*(\./ctx(\s|$)|\./dist/ctx)`)
+
+// RegExRelativeCtxSep matches ./ctx or ./dist/ctx after command separator.
+var RegExRelativeCtxSep = regexp.MustCompile(`(&&|;|\|\||\|)\s*(\./ctx(\s|$)|\./dist/ctx)`)
+
+// RegExGoRunCtx matches go run ./cmd/ctx.
+var RegExGoRunCtx = regexp.MustCompile(`go run \./cmd/ctx`)
+
+// RegExAbsoluteCtxStart matches absolute paths to ctx at start of command.
+var RegExAbsoluteCtxStart = regexp.MustCompile(`^\s*(/home/|/tmp/|/var/)\S*/ctx(\s|$)`)
+
+// RegExAbsoluteCtxSep matches absolute paths to ctx after command separator.
+var RegExAbsoluteCtxSep = regexp.MustCompile(`(&&|;|\|\||\|)\s*(/home/|/tmp/|/var/)\S*/ctx(\s|$)`)
+
+// RegExCtxTestException matches /tmp/ctx-test for integration test exemption.
+var RegExCtxTestException = regexp.MustCompile(`/tmp/ctx-test`)
+
+// Hook: check-context-size patterns.
+
+// RegExOversizeTokens matches "Injected:  NNNNN tokens" in the injection-oversize flag file.
+//
+// Groups:
+//   - 1: token count digits
+var RegExOversizeTokens = regexp.MustCompile(`Injected:\s+(\d+)\s+tokens`)
+
+// MkDocs stripping patterns (used by "ctx why" to clean embedded docs).
+
+// RegExMdLink matches Markdown links with relative .md targets.
+var RegExMdLink = regexp.MustCompile(`\[([^\]]+)\]\([^\)]*\.md[^\)]*\)`)
+
+// RegExMdImage matches Markdown image lines.
+var RegExMdImage = regexp.MustCompile(`^\s*!\[.*\]\(.*\)\s*$`)

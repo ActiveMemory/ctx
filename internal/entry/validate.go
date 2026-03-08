@@ -8,7 +8,7 @@ package entry
 
 import (
 	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
 // Validate checks that required fields are present for the given entry type.
@@ -26,7 +26,7 @@ func Validate(params Params, examplesFn func(string) string) error {
 		if examplesFn != nil {
 			examples = examplesFn(params.Type)
 		}
-		return write.ErrNoContentProvided(params.Type, examples)
+		return add.ErrNoContentProvided(params.Type, examples)
 	}
 
 	switch config.UserInputToEntry(params.Type) {
@@ -36,7 +36,7 @@ func Validate(params Params, examplesFn func(string) string) error {
 			{config.FlagPrefixLong + config.FlagRationale, params.Rationale},
 			{config.FlagPrefixLong + config.FlagConsequences, params.Consequences},
 		}); len(m) > 0 {
-			return write.ErrMissingFields(config.EntryDecision, m)
+			return add.ErrMissingFields(config.EntryDecision, m)
 		}
 
 	case config.EntryLearning:
@@ -45,7 +45,7 @@ func Validate(params Params, examplesFn func(string) string) error {
 			{config.FlagPrefixLong + config.FlagLesson, params.Lesson},
 			{config.FlagPrefixLong + config.FlagApplication, params.Application},
 		}); len(m) > 0 {
-			return write.ErrMissingFields(config.EntryLearning, m)
+			return add.ErrMissingFields(config.EntryLearning, m)
 		}
 	}
 

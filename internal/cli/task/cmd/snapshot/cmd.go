@@ -31,7 +31,7 @@ func Cmd() *cobra.Command {
 		Short: short,
 		Long:  long,
 		Args:  cobra.MaximumNArgs(1),
-		RunE:  runSnapshot,
+		RunE:  Run,
 	}
 
 	return cmd

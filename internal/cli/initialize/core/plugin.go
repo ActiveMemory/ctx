@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -56,7 +57,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	var settings globalSettings
 	existingData, readErr := os.ReadFile(settingsPath) //nolint:gosec // G304: path from os.UserHomeDir
 	if readErr != nil && !os.IsNotExist(readErr) {
-		return write.ErrFileRead(settingsPath, readErr)
+		return add.ErrFileRead(settingsPath, readErr)
 	}
 	if readErr == nil {
 		if parseErr := json.Unmarshal(existingData, &settings); parseErr != nil {
