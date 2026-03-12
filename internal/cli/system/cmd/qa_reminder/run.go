@@ -10,11 +10,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -42,17 +42,17 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	fallback := assets.TextDesc(assets.TextDescKeyQaReminderFallback)
 	msg := core.LoadMessage(
-		config.HookQAReminder, config.VariantGate, nil, fallback,
+		file.HookQAReminder, file.VariantGate, nil, fallback,
 	)
 	if msg == "" {
 		return nil
 	}
 	msg = core.AppendContextDir(msg)
 
-	core.PrintHookContext(cmd, config.HookEventPreToolUse, msg)
+	core.PrintHookContext(cmd, file.HookEventPreToolUse, msg)
 
-	ref := notify.NewTemplateRef(config.HookQAReminder, config.VariantGate, nil)
-	core.Relay(config.HookQAReminder+": "+
+	ref := notify.NewTemplateRef(file.HookQAReminder, file.VariantGate, nil)
+	core.Relay(file.HookQAReminder+": "+
 		assets.TextDesc(assets.TextDescKeyQaReminderRelayMessage),
 		input.SessionID, ref,
 	)

@@ -10,10 +10,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Run executes the check-knowledge hook logic.
@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	markerPath := filepath.Join(core.StateDir(), config.KnowledgeThrottleID)
+	markerPath := filepath.Join(core.StateDir(), file.KnowledgeThrottleID)
 	if core.IsDailyThrottled(markerPath) {
 		return nil
 	}

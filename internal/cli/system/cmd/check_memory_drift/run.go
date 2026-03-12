@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -33,7 +34,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Session tombstone: nudge once per session, per session ID
-	tombstone := filepath.Join(core.StateDir(), config.MemoryDriftThrottlePrefix+sessionID)
+	tombstone := filepath.Join(core.StateDir(), file.MemoryDriftThrottlePrefix+sessionID)
 	if _, statErr := os.Stat(tombstone); statErr == nil {
 		return nil
 	}

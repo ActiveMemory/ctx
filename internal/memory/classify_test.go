@@ -9,7 +9,7 @@ package memory
 import (
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 )
 
 func TestClassify(t *testing.T) {
@@ -21,52 +21,52 @@ func TestClassify(t *testing.T) {
 		{
 			name:   "convention: always use",
 			text:   "always use bun for this project",
-			target: config.EntryConvention,
+			target: entry.Convention,
 		},
 		{
 			name:   "convention: prefer",
 			text:   "prefer filepath.Join over string concatenation",
-			target: config.EntryConvention,
+			target: entry.Convention,
 		},
 		{
 			name:   "convention: never use",
 			text:   "never use global state in handlers",
-			target: config.EntryConvention,
+			target: entry.Convention,
 		},
 		{
 			name:   "decision: decided",
 			text:   "decided to use SQLite over Postgres for local storage",
-			target: config.EntryDecision,
+			target: entry.Decision,
 		},
 		{
 			name:   "decision: chose",
 			text:   "chose marker-based merge for bidirectional sync",
-			target: config.EntryDecision,
+			target: entry.Decision,
 		},
 		{
 			name:   "learning: learned",
 			text:   "learned that golangci-lint v2 ignores inline nolint",
-			target: config.EntryLearning,
+			target: entry.Learning,
 		},
 		{
 			name:   "learning: gotcha",
 			text:   "gotcha: symlinks in project path produce different slugs",
-			target: config.EntryLearning,
+			target: entry.Learning,
 		},
 		{
 			name:   "learning: watch out",
 			text:   "watch out for race conditions in concurrent map access",
-			target: config.EntryLearning,
+			target: entry.Learning,
 		},
 		{
 			name:   "task: need to",
 			text:   "need to add tests for the import command",
-			target: config.EntryTask,
+			target: entry.Task,
 		},
 		{
 			name:   "task: todo",
 			text:   "todo: wire up the publish command",
-			target: config.EntryTask,
+			target: entry.Task,
 		},
 		{
 			name:   "skip: session notes",
@@ -81,12 +81,12 @@ func TestClassify(t *testing.T) {
 		{
 			name:   "case insensitive",
 			text:   "ALWAYS USE ctx from PATH",
-			target: config.EntryConvention,
+			target: entry.Convention,
 		},
 		{
 			name:   "convention wins over decision (priority order)",
 			text:   "always use the approach we decided on",
-			target: config.EntryConvention,
+			target: entry.Convention,
 		},
 	}
 

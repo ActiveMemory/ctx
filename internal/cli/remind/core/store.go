@@ -12,7 +12,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
@@ -58,7 +59,7 @@ func WriteReminders(reminders []Reminder) error {
 	if marshalErr != nil {
 		return marshalErr
 	}
-	return validation.WriteFile(RemindersPath(), data, config.PermFile)
+	return validation.WriteFile(RemindersPath(), data, fs.PermFile)
 }
 
 // NextID returns the next available reminder ID (max existing + 1).
@@ -83,5 +84,5 @@ func NextID(reminders []Reminder) int {
 // Returns:
 //   - string: Absolute path to reminders.json
 func RemindersPath() string {
-	return filepath.Join(rc.ContextDir(), config.FileReminders)
+	return filepath.Join(rc.ContextDir(), file.FileReminders)
 }

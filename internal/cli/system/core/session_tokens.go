@@ -16,6 +16,11 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -35,7 +40,7 @@ const MaxTailBytes = 32768
 //   - SessionTokenInfo: Token count and model from the last assistant message
 //   - error: Non-nil only on unexpected I/O errors
 func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
-	if sessionID == "" || sessionID == config.SessionUnknown {
+	if sessionID == "" || sessionID == file.SessionUnknown {
 		return SessionTokenInfo{}, nil
 	}
 
@@ -61,7 +66,7 @@ func ReadSessionTokenInfo(sessionID string) (SessionTokenInfo, error) {
 //   - error: Non-nil only on unexpected errors
 func FindJSONLPath(sessionID string) (string, error) {
 	// Check cache first
-	cacheFile := filepath.Join(StateDir(), config.JsonlPathCachePrefix+sessionID)
+	cacheFile := filepath.Join(StateDir(), stats.JsonlPathCachePrefix+sessionID)
 	if data, readErr := os.ReadFile(cacheFile); readErr == nil { //nolint:gosec // state dir path
 		cached := strings.TrimSpace(string(data))
 		if cached != "" {
@@ -76,7 +81,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 		return "", nil
 	}
 
-	pattern := filepath.Join(home, config.DirClaude, config.DirProjects, "*", sessionID+config.ExtJSONL)
+	pattern := filepath.Join(home, dir.Claude, dir.Projects, "*", sessionID+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return "", globErr
@@ -87,7 +92,7 @@ func FindJSONLPath(sessionID string) (string, error) {
 	}
 
 	// Cache the result for subsequent calls this session
-	_ = os.WriteFile(cacheFile, []byte(matches[0]), config.PermSecret)
+	_ = os.WriteFile(cacheFile, []byte(matches[0]), fs.PermSecret)
 	return matches[0], nil
 }
 
@@ -149,7 +154,7 @@ func ParseLastUsageAndModel(path string) (SessionTokenInfo, error) {
 			continue
 		}
 
-		if msg.Message.Role != config.RoleAssistant {
+		if msg.Message.Role != claude.RoleAssistant {
 			continue
 		}
 
@@ -231,7 +236,7 @@ func ClaudeSettingsHas1M() bool {
 	if homeErr != nil {
 		return false
 	}
-	data, readErr := os.ReadFile(filepath.Join(home, config.DirClaude, config.FileGlobalSettings)) //nolint:gosec // user home config
+	data, readErr := os.ReadFile(filepath.Join(home, dir.Claude, file.FileGlobalSettings)) //nolint:gosec // user home config
 	if readErr != nil {
 		return false
 	}

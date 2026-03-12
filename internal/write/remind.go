@@ -10,7 +10,6 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -27,9 +26,9 @@ func ReminderAdded(cmd *cobra.Command, id int, message string, after *string) {
 	}
 	suffix := ""
 	if after != nil {
-		suffix = fmt.Sprintf(config.tplReminderAfterSuffix, *after)
+		suffix = fmt.Sprintf(config.TplReminderAfterSuffix, *after)
 	}
-	io.sprintf(cmd, config.tplReminderAdded, id, message, suffix)
+	cmd.Println(fmt.Sprintf(config.TplReminderAdded, id, message, suffix))
 }
 
 // ReminderItem prints a single reminder in the list.
@@ -46,9 +45,9 @@ func ReminderItem(cmd *cobra.Command, id int, message string, after *string, tod
 	}
 	annotation := ""
 	if after != nil && *after > today {
-		annotation = fmt.Sprintf(config.tplReminderNotDue, *after)
+		annotation = fmt.Sprintf(config.TplReminderNotDue, *after)
 	}
-	io.sprintf(cmd, config.tplReminderItem, id, message, annotation)
+	cmd.Println(fmt.Sprintf(config.TplReminderItem, id, message, annotation))
 }
 
 // ReminderDismissed prints the confirmation for a dismissed reminder.
@@ -61,7 +60,7 @@ func ReminderDismissed(cmd *cobra.Command, id int, message string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplReminderDismissed, id, message)
+	cmd.Println(fmt.Sprintf(config.TplReminderDismissed, id, message))
 }
 
 // ReminderNone prints the message when there are no reminders.
@@ -72,7 +71,7 @@ func ReminderNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplReminderNone)
+	cmd.Println(config.TplReminderNone)
 }
 
 // ReminderDismissedAll prints the summary after dismissing all reminders.
@@ -84,5 +83,5 @@ func ReminderDismissedAll(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplReminderDismissedAll, count)
+	cmd.Println(fmt.Sprintf(config.TplReminderDismissedAll, count))
 }

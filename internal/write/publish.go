@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func UnpublishNotFound(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplUnpublishNotFound, filename)
+	cmd.Println(fmt.Sprintf(config.TplUnpublishNotFound, filename))
 }
 
 // UnpublishDone prints that the published block was removed.
@@ -33,7 +33,7 @@ func UnpublishDone(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplUnpublishDone, filename)
+	cmd.Println(fmt.Sprintf(config.TplUnpublishDone, filename))
 }
 
 // PublishPlan prints the full publish plan: header, source files,
@@ -54,26 +54,26 @@ func PublishPlan(
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplPublishHeader)
+	cmd.Println(config.TplPublishHeader)
 	cmd.Println()
-	cmd.Println(config.tplPublishSourceFiles)
-	io.sprintf(cmd, config.tplPublishBudget, budget)
+	cmd.Println(config.TplPublishSourceFiles)
+	cmd.Println(fmt.Sprintf(config.TplPublishBudget, budget))
 	cmd.Println()
-	cmd.Println(config.tplPublishBlock)
+	cmd.Println(config.TplPublishBlock)
 	if tasks > 0 {
-		io.sprintf(cmd, config.tplPublishTasks, tasks)
+		cmd.Println(fmt.Sprintf(config.TplPublishTasks, tasks))
 	}
 	if decisions > 0 {
-		io.sprintf(cmd, config.tplPublishDecisions, decisions)
+		cmd.Println(fmt.Sprintf(config.TplPublishDecisions, decisions))
 	}
 	if conventions > 0 {
-		io.sprintf(cmd, config.tplPublishConventions, conventions)
+		cmd.Println(fmt.Sprintf(config.TplPublishConventions, conventions))
 	}
 	if learnings > 0 {
-		io.sprintf(cmd, config.tplPublishLearnings, learnings)
+		cmd.Println(fmt.Sprintf(config.TplPublishLearnings, learnings))
 	}
 	cmd.Println()
-	io.sprintf(cmd, config.tplPublishTotal, totalLines, budget)
+	cmd.Println(fmt.Sprintf(config.TplPublishTotal, totalLines, budget))
 }
 
 // PublishDryRun prints the dry-run notice.
@@ -85,7 +85,7 @@ func PublishDryRun(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(config.tplPublishDryRun)
+	cmd.Println(config.TplPublishDryRun)
 }
 
 // PublishDone prints the success message with marker info.
@@ -97,5 +97,5 @@ func PublishDone(cmd *cobra.Command) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(config.tplPublishDone)
+	cmd.Println(config.TplPublishDone)
 }

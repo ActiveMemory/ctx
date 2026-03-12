@@ -15,6 +15,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -53,12 +56,12 @@ func WriteOversizeFlag(
 		return
 	}
 
-	sd := filepath.Join(contextDir, config.DirState)
-	_ = os.MkdirAll(sd, config.PermRestrictedDir)
+	sd := filepath.Join(contextDir, dir.State)
+	_ = os.MkdirAll(sd, fs.PermRestrictedDir)
 
 	var flag strings.Builder
 	flag.WriteString(assets.TextDesc(assets.TextDescKeyContextLoadGateOversizeHeader))
-	flag.WriteString(strings.Repeat("=", config.ContextSizeOversizeSepLen) + config.NewlineLF)
+	flag.WriteString(strings.Repeat("=", stats.ContextSizeOversizeSepLen) + config.NewlineLF)
 	flag.WriteString(fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyContextLoadGateOversizeTimestamp),
 		time.Now().UTC().Format(time.RFC3339)))
@@ -75,6 +78,6 @@ func WriteOversizeFlag(
 	flag.WriteString(assets.TextDesc(assets.TextDescKeyContextLoadGateOversizeAction))
 
 	_ = os.WriteFile(
-		filepath.Join(sd, config.ContextSizeInjectionOversizeFlag),
-		[]byte(flag.String()), config.PermSecret)
+		filepath.Join(sd, stats.ContextSizeInjectionOversizeFlag),
+		[]byte(flag.String()), fs.PermSecret)
 }

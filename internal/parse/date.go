@@ -9,7 +9,7 @@ package parse
 import (
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 )
 
 // Date parses a YYYY-MM-DD string into a time.Time at midnight UTC.
@@ -25,5 +25,5 @@ func Date(s string) (time.Time, error) {
 	if s == "" {
 		return time.Time{}, nil
 	}
-	return time.Parse(config.DateFormat, s)
+	return time.Parse(time2.DateFormat, s)
 }

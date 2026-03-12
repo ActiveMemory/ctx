@@ -12,11 +12,13 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -40,7 +42,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	input := core.ReadInput(stdin)
 	sessionID := input.SessionID
 	if sessionID == "" {
-		sessionID = config.SessionUnknown
+		sessionID = file.SessionUnknown
 	}
 
 	// Pause check — this hook is the designated single emitter
@@ -50,8 +52,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	counterFile := filepath.Join(tmpDir, config.ContextSizeCounterPrefix+sessionID)
-	logFile := filepath.Join(rc.ContextDir(), config.LogsDir, config.ContextSizeLogFile)
+	counterFile := filepath.Join(tmpDir, stats.ContextSizeCounterPrefix+sessionID)
+	logFile := filepath.Join(rc.ContextDir(), dir.Logs, stats.ContextSizeLogFile)
 
 	// Increment counter
 	count := core.ReadCounter(counterFile) + 1
@@ -63,7 +65,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	windowSize := core.EffectiveContextWindow(info.Model)
 	pct := 0
 	if windowSize > 0 && tokens > 0 {
-		pct = tokens * config.PercentMultiplier / windowSize
+		pct = tokens * stats.PercentMultiplier / windowSize
 	}
 
 	// Billing threshold: one-shot warning when tokens exceed the
@@ -87,7 +89,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			Pct:        pct,
 			WindowSize: windowSize,
 			Model:      info.Model,
-			Event:      config.EventSuppressed,
+			Event:      file.EventSuppressed,
 		})
 		return nil
 	}
@@ -100,15 +102,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		counterTriggered = count%5 == 0
 	}
 
-	windowTrigger := pct >= config.ContextWindowThresholdPct
+	windowTrigger := pct >= stats.ContextWindowThresholdPct
 
-	event := config.EventSilent
+	event := file.EventSilent
 	switch {
 	case counterTriggered:
-		event = config.EventCheckpoint
+		event = file.EventCheckpoint
 		core.EmitCheckpoint(cmd, logFile, sessionID, count, tokens, pct, windowSize)
 	case windowTrigger:
-		event = config.EventWindowWarning
+		event = file.EventWindowWarning
 		core.EmitWindowWarning(cmd, logFile, sessionID, count, tokens, pct)
 	default:
 		core.LogMessage(logFile, sessionID,

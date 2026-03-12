@@ -11,7 +11,8 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
@@ -43,20 +44,20 @@ type ScoredEntry struct {
 // Returns:
 //   - float64: Recency score between 0.2 and 1.0
 func RecencyScore(eb *index.EntryBlock, now time.Time) float64 {
-	entryDate, err := time.ParseInLocation(config.DateFormat, eb.Entry.Date, time.Local)
+	entryDate, err := time.ParseInLocation(time2.DateFormat, eb.Entry.Date, time.Local)
 	if err != nil {
 		return 0.2
 	}
 	days := int(now.Sub(entryDate).Hours() / 24)
 	switch {
-	case days <= config.RecencyDaysWeek:
-		return config.RecencyScoreWeek
-	case days <= config.RecencyDaysMonth:
-		return config.RecencyScoreMonth
-	case days <= config.RecencyDaysQuarter:
-		return config.RecencyScoreQuarter
+	case days <= file.RecencyDaysWeek:
+		return file.RecencyScoreWeek
+	case days <= file.RecencyDaysMonth:
+		return file.RecencyScoreMonth
+	case days <= file.RecencyDaysQuarter:
+		return file.RecencyScoreQuarter
 	default:
-		return config.RecencyScoreOld
+		return file.RecencyScoreOld
 	}
 }
 
@@ -82,10 +83,10 @@ func RelevanceScore(eb *index.EntryBlock, keywords []string) float64 {
 			matches++
 		}
 	}
-	if matches >= config.RelevanceMatchCap {
+	if matches >= file.RelevanceMatchCap {
 		return 1.0
 	}
-	return float64(matches) / float64(config.RelevanceMatchCap)
+	return float64(matches) / float64(file.RelevanceMatchCap)
 }
 
 // ScoreEntry computes the combined relevance score for an entry block.

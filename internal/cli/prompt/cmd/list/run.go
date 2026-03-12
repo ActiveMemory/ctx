@@ -10,10 +10,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -40,10 +40,10 @@ func Run(cmd *cobra.Command) error {
 	var found bool
 	for _, entry := range entries {
 		name := entry.Name()
-		if entry.IsDir() || !strings.HasSuffix(name, config.ExtMarkdown) {
+		if entry.IsDir() || !strings.HasSuffix(name, file.ExtMarkdown) {
 			continue
 		}
-		write.PromptItem(cmd, strings.TrimSuffix(name, config.ExtMarkdown))
+		write.PromptItem(cmd, strings.TrimSuffix(name, file.ExtMarkdown))
 		found = true
 	}
 

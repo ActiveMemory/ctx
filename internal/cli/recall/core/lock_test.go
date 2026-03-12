@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 func TestMultipartBase(t *testing.T) {
@@ -57,7 +57,7 @@ func TestMatchJournalFiles_All(t *testing.T) {
 	dir := t.TempDir()
 	for _, name := range []string{"a.md", "b.md", "c.md", "state.json"} {
 		if writeErr := os.WriteFile(
-			filepath.Join(dir, name), []byte("x"), config.PermFile,
+			filepath.Join(dir, name), []byte("x"), fs.PermFile,
 		); writeErr != nil {
 			t.Fatal(writeErr)
 		}
@@ -80,7 +80,7 @@ func TestMatchJournalFiles_Pattern(t *testing.T) {
 	}
 	for _, name := range names {
 		if writeErr := os.WriteFile(
-			filepath.Join(dir, name), []byte("x"), config.PermFile,
+			filepath.Join(dir, name), []byte("x"), fs.PermFile,
 		); writeErr != nil {
 			t.Fatal(writeErr)
 		}
@@ -108,7 +108,7 @@ func TestMatchJournalFiles_MultipartExpands(t *testing.T) {
 	}
 	for _, name := range names {
 		if writeErr := os.WriteFile(
-			filepath.Join(dir, name), []byte("x"), config.PermFile,
+			filepath.Join(dir, name), []byte("x"), fs.PermFile,
 		); writeErr != nil {
 			t.Fatal(writeErr)
 		}
@@ -138,7 +138,7 @@ func TestUpdateLockFrontmatter_Lock(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.md")
 	content := "---\ndate: \"2026-01-21\"\ntitle: \"Test\"\n---\n\n# Body\n"
-	if writeErr := os.WriteFile(path, []byte(content), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -161,7 +161,7 @@ func TestUpdateLockFrontmatter_Unlock(t *testing.T) {
 	path := filepath.Join(dir, "test.md")
 	content := "---\ndate: \"2026-01-21\"\n" +
 		LockedFrontmatterLine + "\ntitle: \"Test\"\n---\n\n# Body\n"
-	if writeErr := os.WriteFile(path, []byte(content), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -183,7 +183,7 @@ func TestUpdateLockFrontmatter_NoFrontmatter(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.md")
 	content := "# No frontmatter here\n\nJust a body.\n"
-	if writeErr := os.WriteFile(path, []byte(content), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -203,7 +203,7 @@ func TestUpdateLockFrontmatter_IdempotentLock(t *testing.T) {
 	path := filepath.Join(dir, "test.md")
 	content := "---\ndate: \"2026-01-21\"\n" +
 		LockedFrontmatterLine + "\n---\n\n# Body\n"
-	if writeErr := os.WriteFile(path, []byte(content), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
@@ -267,7 +267,7 @@ func TestFrontmatterHasLocked(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			dir := t.TempDir()
 			path := filepath.Join(dir, "test.md")
-			if writeErr := os.WriteFile(path, []byte(tt.content), config.PermFile); writeErr != nil {
+			if writeErr := os.WriteFile(path, []byte(tt.content), fs.PermFile); writeErr != nil {
 				t.Fatal(writeErr)
 			}
 

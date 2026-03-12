@@ -11,6 +11,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -24,7 +28,7 @@ import (
 // LockedFrontmatterLine is the YAML line inserted into frontmatter when
 // a journal entry is locked.
 var LockedFrontmatterLine = config.FrontmatterLocked + config.Colon + " " +
-	config.AnnotationTrue + "  # managed by ctx"
+	cli.AnnotationTrue + "  # managed by ctx"
 
 // MatchJournalFiles returns journal .md filenames matching the given
 // patterns. If all is true, returns every .md file in the directory.
@@ -54,7 +58,7 @@ func MatchJournalFiles(
 	// Collect all .md filenames.
 	var mdFiles []string
 	for _, e := range entries {
-		if !e.IsDir() && strings.HasSuffix(e.Name(), config.ExtMarkdown) {
+		if !e.IsDir() && strings.HasSuffix(e.Name(), file.ExtMarkdown) {
 			mdFiles = append(mdFiles, e.Name())
 		}
 	}
@@ -98,7 +102,7 @@ func MatchJournalFiles(
 // Returns:
 //   - string: Base filename (without -pN suffix)
 func MultipartBase(filename string) string {
-	base := strings.TrimSuffix(filename, config.ExtMarkdown)
+	base := strings.TrimSuffix(filename, file.ExtMarkdown)
 	if idx := strings.LastIndex(base, "-p"); idx > 0 {
 		suffix := base[idx+2:]
 		allDigits := true
@@ -109,7 +113,7 @@ func MultipartBase(filename string) string {
 			}
 		}
 		if allDigits && len(suffix) > 0 {
-			return base[:idx] + config.ExtMarkdown
+			return base[:idx] + file.ExtMarkdown
 		}
 	}
 	return filename
@@ -156,7 +160,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 		// Insert before closing ---.
 		updated := content[:fmEnd] + nl + LockedFrontmatterLine +
 			content[fmEnd:]
-		_ = validation.WriteFile(path, []byte(updated), config.PermFile)
+		_ = validation.WriteFile(path, []byte(updated), fs.PermFile)
 	} else {
 		// Remove the locked line.
 		lines := strings.Split(fmBlock, nl)
@@ -170,7 +174,7 @@ func UpdateLockFrontmatter(path string, lock bool) {
 		}
 		newFM := strings.Join(filtered, nl)
 		updated := content[:len(fmOpen)] + newFM + content[fmEnd:]
-		_ = validation.WriteFile(path, []byte(updated), config.PermFile)
+		_ = validation.WriteFile(path, []byte(updated), fs.PermFile)
 	}
 }
 
@@ -213,7 +217,7 @@ func FrontmatterHasLocked(path string) bool {
 		if idx := strings.Index(val, "#"); idx >= 0 {
 			val = strings.TrimSpace(val[:idx])
 		}
-		return val == config.AnnotationTrue
+		return val == cli.AnnotationTrue
 	}
 
 	return false
@@ -241,7 +245,7 @@ func RunLockUnlock(
 		return ctxerr.AllWithPattern()
 	}
 
-	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
+	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {

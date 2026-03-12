@@ -15,7 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -26,7 +28,7 @@ import (
 // Returns:
 //   - string: Absolute path to the journal directory
 func ResolvedJournalDir() string {
-	return filepath.Join(rc.ContextDir(), config.DirJournal)
+	return filepath.Join(rc.ContextDir(), dir.Journal)
 }
 
 // StateDir returns the project-scoped runtime state directory
@@ -36,7 +38,7 @@ func ResolvedJournalDir() string {
 // Returns:
 //   - string: Absolute path to the state directory
 func StateDir() string {
-	dir := filepath.Join(rc.ContextDir(), config.DirState)
+	dir := filepath.Join(rc.ContextDir(), dir.State)
 	_ = os.MkdirAll(dir, 0o750)
 	return dir
 }
@@ -110,7 +112,7 @@ func RotateLog(logFile string) {
 	if statErr != nil {
 		return
 	}
-	if info.Size() < int64(config.LogMaxBytes) {
+	if info.Size() < int64(file.LogMaxBytes) {
 		return
 	}
 	prev := logFile + ".1"
@@ -151,7 +153,7 @@ func TouchFile(path string) {
 // Returns:
 //   - bool: True if context directory is initialized
 func IsInitialized() bool {
-	return config.Initialized(rc.ContextDir())
+	return ctxcontext.Initialized(rc.ContextDir())
 }
 
 // PauseMarkerPath returns the path to the session pause marker file.
@@ -266,7 +268,7 @@ func WriteSessionStats(sessionID string, stats SessionStats) {
 func ReadSessionID(stdin *os.File) string {
 	input := ReadInput(stdin)
 	if input.SessionID == "" {
-		return config.SessionUnknown
+		return file.SessionUnknown
 	}
 	return input.SessionID
 }

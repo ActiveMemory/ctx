@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/time"
 )
 
 // RenderChanges renders the full CLI output for `ctx changes`.
@@ -34,7 +35,7 @@ func RenderChanges(
 		b.WriteString("### Context File Changes\n")
 		for _, c := range ctxChanges {
 			b.WriteString(fmt.Sprintf("- `%s` — modified %s\n",
-				c.Name, c.ModTime.Format(config.DateTimeFormat)))
+				c.Name, c.ModTime.Format(time.DateTimeFormat)))
 		}
 		b.WriteString(config.NewlineLF)
 	}

@@ -7,8 +7,9 @@
 package write
 
 import (
+	"fmt"
+
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +21,7 @@ func PadEmpty(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplPadEmpty)
+	cmd.Println(config.TplPadEmpty)
 }
 
 // PadKeyCreated prints a key creation notice to stderr.
@@ -32,7 +33,7 @@ func PadKeyCreated(cmd *cobra.Command, path string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintfErr(cmd, config.tplPadKeyCreated, path)
+	cmd.PrintErrln(fmt.Sprintf(config.TplPadKeyCreated, path))
 }
 
 // PadEntryAdded prints confirmation that a pad entry was added.
@@ -44,7 +45,7 @@ func PadEntryAdded(cmd *cobra.Command, n int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadEntryAdded, n)
+	cmd.Println(fmt.Sprintf(config.TplPadEntryAdded, n))
 }
 
 // PadEntryUpdated prints confirmation that a pad entry was updated.
@@ -56,7 +57,7 @@ func PadEntryUpdated(cmd *cobra.Command, n int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadEntryUpdated, n)
+	cmd.Println(fmt.Sprintf(config.TplPadEntryUpdated, n))
 }
 
 // PadExportPlan prints a dry-run export line.
@@ -69,7 +70,7 @@ func PadExportPlan(cmd *cobra.Command, label, outPath string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadExportPlan, label, outPath)
+	cmd.Println(fmt.Sprintf(config.TplPadExportPlan, label, outPath))
 }
 
 // PadExportDone prints a successfully exported blob line.
@@ -81,7 +82,7 @@ func PadExportDone(cmd *cobra.Command, label string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadExportDone, label)
+	cmd.Println(fmt.Sprintf(config.TplPadExportDone, label))
 }
 
 // ErrPadExportWrite prints a blob write failure to stderr.
@@ -94,7 +95,7 @@ func ErrPadExportWrite(cmd *cobra.Command, label string, cause error) {
 	if cmd == nil {
 		return
 	}
-	io.sprintfErr(cmd, config.tplPadExportWriteFailed, label, cause)
+	cmd.PrintErrln(fmt.Sprintf(config.TplPadExportWriteFailed, label, cause))
 }
 
 // PadBlobWritten prints confirmation that a blob was written to a file.
@@ -107,7 +108,7 @@ func PadBlobWritten(cmd *cobra.Command, size int, path string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadBlobWritten, size, path)
+	cmd.Println(fmt.Sprintf(config.TplPadBlobWritten, size, path))
 }
 
 // PadEntryRemoved prints confirmation that a pad entry was removed.
@@ -119,7 +120,7 @@ func PadEntryRemoved(cmd *cobra.Command, n int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadEntryRemoved, n)
+	cmd.Println(fmt.Sprintf(config.TplPadEntryRemoved, n))
 }
 
 // PadResolveSide prints a conflict side block: header and numbered entries.
@@ -132,9 +133,9 @@ func PadResolveSide(cmd *cobra.Command, side string, entries []string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadResolveHeader, side)
+	cmd.Println(fmt.Sprintf(config.TplPadResolveHeader, side))
 	for i, entry := range entries {
-		io.sprintf(cmd, config.tplPadResolveEntry, i+1, entry)
+		cmd.Println(fmt.Sprintf(config.TplPadResolveEntry, i+1, entry))
 	}
 }
 
@@ -148,7 +149,7 @@ func PadEntryMoved(cmd *cobra.Command, from, to int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadEntryMoved, from, to)
+	cmd.Println(fmt.Sprintf(config.TplPadEntryMoved, from, to))
 }
 
 // PadImportNone prints the message when no entries were found to import.
@@ -159,7 +160,7 @@ func PadImportNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplPadImportNone)
+	cmd.Println(config.TplPadImportNone)
 }
 
 // PadImportDone prints the successful line import count.
@@ -171,7 +172,7 @@ func PadImportDone(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadImportDone, count)
+	cmd.Println(fmt.Sprintf(config.TplPadImportDone, count))
 }
 
 // PadImportBlobAdded prints a successfully imported blob line.
@@ -183,7 +184,7 @@ func PadImportBlobAdded(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadImportBlobAdded, name)
+	cmd.Println(fmt.Sprintf(config.TplPadImportBlobAdded, name))
 }
 
 // ErrPadImportBlobSkipped prints a skipped blob to stderr.
@@ -196,7 +197,7 @@ func ErrPadImportBlobSkipped(cmd *cobra.Command, name string, cause error) {
 	if cmd == nil {
 		return
 	}
-	io.sprintfErr(cmd, config.tplPadImportBlobSkipped, name, cause)
+	cmd.PrintErrln(fmt.Sprintf(config.TplPadImportBlobSkipped, name, cause))
 }
 
 // ErrPadImportBlobTooLarge prints a too-large blob skip to stderr.
@@ -209,7 +210,7 @@ func ErrPadImportBlobTooLarge(cmd *cobra.Command, name string, max int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintfErr(cmd, config.tplPadImportBlobTooLarge, name, max)
+	cmd.PrintErrln(fmt.Sprintf(config.TplPadImportBlobTooLarge, name, max))
 }
 
 // PadImportBlobSummary prints the blob import summary or "no files" message.
@@ -223,10 +224,10 @@ func PadImportBlobSummary(cmd *cobra.Command, added, skipped int) {
 		return
 	}
 	if added == 0 && skipped == 0 {
-		cmd.Println(config.tplPadImportBlobNone)
+		cmd.Println(config.TplPadImportBlobNone)
 		return
 	}
-	io.sprintf(cmd, config.tplPadImportBlobSummary, added, skipped)
+	cmd.Println(fmt.Sprintf(config.TplPadImportBlobSummary, added, skipped))
 }
 
 // ErrPadImportCloseWarning prints a file close warning to stderr.
@@ -239,7 +240,7 @@ func ErrPadImportCloseWarning(cmd *cobra.Command, name string, cause error) {
 	if cmd == nil {
 		return
 	}
-	io.sprintfErr(cmd, config.tplPadImportCloseWarning, name, cause)
+	cmd.PrintErrln(fmt.Sprintf(config.TplPadImportCloseWarning, name, cause))
 }
 
 // PadMergeDupe prints a duplicate-skipped line during merge.
@@ -251,7 +252,7 @@ func PadMergeDupe(cmd *cobra.Command, display string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadMergeDupe, display)
+	cmd.Println(fmt.Sprintf(config.TplPadMergeDupe, display))
 }
 
 // PadMergeAdded prints a newly added entry line during merge.
@@ -264,7 +265,7 @@ func PadMergeAdded(cmd *cobra.Command, display, file string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadMergeAdded, display, file)
+	cmd.Println(fmt.Sprintf(config.TplPadMergeAdded, display, file))
 }
 
 // PadMergeBlobConflict prints a blob label conflict warning.
@@ -276,7 +277,7 @@ func PadMergeBlobConflict(cmd *cobra.Command, label string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadMergeBlobConflict, label)
+	cmd.Println(fmt.Sprintf(config.TplPadMergeBlobConflict, label))
 }
 
 // PadMergeBinaryWarning prints a binary data warning for a source file.
@@ -288,7 +289,7 @@ func PadMergeBinaryWarning(cmd *cobra.Command, file string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPadMergeBinaryWarning, file)
+	cmd.Println(fmt.Sprintf(config.TplPadMergeBinaryWarning, file))
 }
 
 // PadMergeSummary prints the merge summary based on counts and mode.
@@ -303,22 +304,22 @@ func PadMergeSummary(cmd *cobra.Command, added, dupes int, dryRun bool) {
 		return
 	}
 	if added == 0 && dupes == 0 {
-		cmd.Println(config.tplPadMergeNone)
+		cmd.Println(config.TplPadMergeNone)
 		return
 	}
 	if added == 0 {
-		io.sprintf(cmd, config.tplPadMergeNoneNew, dupes, padPluralize("duplicate", dupes))
+		cmd.Println(fmt.Sprintf(config.TplPadMergeNoneNew, dupes, padPluralize("duplicate", dupes)))
 		return
 	}
 	if dryRun {
-		io.sprintf(cmd, config.tplPadMergeDryRun,
+		cmd.Println(fmt.Sprintf(config.TplPadMergeDryRun,
 			added, padPluralize("entry", added),
-			dupes, padPluralize("duplicate", dupes))
+			dupes, padPluralize("duplicate", dupes)))
 		return
 	}
-	io.sprintf(cmd, config.tplPadMergeDone,
+	cmd.Println(fmt.Sprintf(config.TplPadMergeDone,
 		added, padPluralize("entry", added),
-		dupes, padPluralize("duplicate", dupes))
+		dupes, padPluralize("duplicate", dupes)))
 }
 
 // padPluralize is an internal helper matching core.Pluralize for write templates.
@@ -343,12 +344,12 @@ func PadExportSummary(cmd *cobra.Command, count int, dryRun bool) {
 		return
 	}
 	if count == 0 {
-		cmd.Println(config.tplPadExportNone)
+		cmd.Println(config.TplPadExportNone)
 		return
 	}
-	verb := config.tplPadExportVerbDone
+	verb := config.TplPadExportVerbDone
 	if dryRun {
-		verb = config.tplPadExportVerbDryRun
+		verb = config.TplPadExportVerbDryRun
 	}
-	io.sprintf(cmd, config.tplPadExportSummary, verb, count)
+	cmd.Println(fmt.Sprintf(config.TplPadExportSummary, verb, count))
 }

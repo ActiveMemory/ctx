@@ -10,6 +10,9 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 func TestMigrateKeyFile_GlobalExists_Noop(t *testing.T) {
@@ -21,8 +24,8 @@ func TestMigrateKeyFile_GlobalExists_Noop(t *testing.T) {
 	if err := os.MkdirAll(globalDir, PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
-	globalKey := filepath.Join(globalDir, FileContextKey)
-	if err := os.WriteFile(globalKey, []byte("global-key"), PermSecret); err != nil {
+	globalKey := filepath.Join(globalDir, file.FileContextKey)
+	if err := os.WriteFile(globalKey, []byte("global-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 
@@ -54,8 +57,8 @@ func TestMigrateKeyFile_LegacyLocal_WarnsOnly(t *testing.T) {
 	}
 
 	// Create legacy project-local key.
-	localKey := filepath.Join(contextDir, FileContextKey)
-	if err := os.WriteFile(localKey, []byte("local-key"), PermSecret); err != nil {
+	localKey := filepath.Join(contextDir, file.FileContextKey)
+	if err := os.WriteFile(localKey, []byte("local-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 
@@ -84,7 +87,7 @@ func TestMigrateKeyFile_LegacyUserLevel_WarnsOnly(t *testing.T) {
 		t.Fatal(err)
 	}
 	legacyKey := filepath.Join(legacyKeyDir, "some-project--abcd1234.key")
-	if err := os.WriteFile(legacyKey, []byte("user-level-data"), PermSecret); err != nil {
+	if err := os.WriteFile(legacyKey, []byte("user-level-data"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 

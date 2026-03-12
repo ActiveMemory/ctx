@@ -7,10 +7,10 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx doctor" command.
@@ -25,7 +25,7 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "doctor",
 		Short:       short,
-		Annotations: map[string]string{config.AnnotationSkipInit: config.AnnotationTrue},
+		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			jsonOut, _ := cmd.Flags().GetBool("json")

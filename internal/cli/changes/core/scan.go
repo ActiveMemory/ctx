@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -49,7 +50,7 @@ func FindContextChanges(refTime time.Time) ([]ContextChange, error) {
 
 	var changes []ContextChange
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), config.ExtMarkdown) {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), file.ExtMarkdown) {
 			continue
 		}
 		info, infoErr := e.Info()

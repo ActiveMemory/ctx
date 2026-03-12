@@ -15,6 +15,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/rss"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
@@ -331,8 +332,8 @@ func generateAtom(
 	}
 
 	feed := core.AtomFeed{
-		NS:    config.FeedAtomNS,
-		Title: config.FeedTitle,
+		NS:    rss.FeedAtomNS,
+		Title: rss.FeedTitle,
 		Links: []core.AtomLink{
 			{Href: blogURL},
 			{Href: feedURL, Rel: "self"},
@@ -362,7 +363,7 @@ func generateAtom(
 
 		author := p.author
 		if author == "" {
-			author = config.FeedDefaultAuthor
+			author = rss.FeedDefaultAuthor
 		}
 		entry.Author = &core.AtomAuthor{Name: author}
 
@@ -386,7 +387,7 @@ func generateAtom(
 		return fmt.Errorf("cannot marshal feed: %w", marshalErr)
 	}
 
-	output := []byte(config.FeedXMLHeader)
+	output := []byte(rss.FeedXMLHeader)
 	output = append(output, xmlData...)
 	output = append(output, '\n')
 

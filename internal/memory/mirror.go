@@ -16,14 +16,18 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
 // Sync copies sourcePath to .context/memory/mirror.md, archiving the
 // previous mirror if one exists. Creates directories as needed.
 func Sync(contextDir, sourcePath string) (SyncResult, error) {
-	mirrorDir := filepath.Join(contextDir, config.DirMemory)
-	mirrorPath := filepath.Join(mirrorDir, config.FileMemoryMirror)
+	mirrorDir := filepath.Join(contextDir, dir.Memory)
+	mirrorPath := filepath.Join(mirrorDir, file.FileMemoryMirror)
 
 	sourceData, readErr := os.ReadFile(sourcePath) //nolint:gosec // caller-provided path
 	if readErr != nil {
@@ -46,11 +50,11 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 		result.ArchivedTo = archivePath
 	}
 
-	if mkErr := os.MkdirAll(mirrorDir, config.PermExec); mkErr != nil {
+	if mkErr := os.MkdirAll(mirrorDir, fs.PermExec); mkErr != nil {
 		return SyncResult{}, ctxerr.MemoryCreateDir(mkErr)
 	}
 
-	if writeErr := os.WriteFile(mirrorPath, sourceData, config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(mirrorPath, sourceData, fs.PermFile); writeErr != nil {
 		return SyncResult{}, ctxerr.MemoryWriteMirror(writeErr)
 	}
 
@@ -60,22 +64,22 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 // Archive copies the current mirror.md to archive/mirror-<timestamp>.md.
 // Returns the archive path. Returns an error if no mirror exists.
 func Archive(contextDir string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, config.DirMemory, config.FileMemoryMirror)
-	archiveDir := filepath.Join(contextDir, config.DirMemoryArchive)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, file.FileMemoryMirror)
+	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 
 	data, readErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
 	if readErr != nil {
 		return "", ctxerr.MemoryReadMirrorArchive(readErr)
 	}
 
-	if mkErr := os.MkdirAll(archiveDir, config.PermExec); mkErr != nil {
+	if mkErr := os.MkdirAll(archiveDir, fs.PermExec); mkErr != nil {
 		return "", ctxerr.MemoryCreateArchiveDir(mkErr)
 	}
 
-	ts := time.Now().Format(config.TimestampCompact)
-	archivePath := filepath.Join(archiveDir, config.MemoryMirrorPrefix+ts+config.ExtMarkdown)
+	ts := time.Now().Format(time2.TimestampCompact)
+	archivePath := filepath.Join(archiveDir, config.MemoryMirrorPrefix+ts+file.ExtMarkdown)
 
-	if writeErr := os.WriteFile(archivePath, data, config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(archivePath, data, fs.PermFile); writeErr != nil {
 		return "", ctxerr.MemoryWriteArchive(writeErr)
 	}
 
@@ -85,7 +89,7 @@ func Archive(contextDir string) (string, error) {
 // Diff returns a simple line-based diff between the mirror and the source.
 // Returns empty string when files are identical.
 func Diff(contextDir, sourcePath string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, config.DirMemory, config.FileMemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, file.FileMemoryMirror)
 
 	mirrorData, mirrorErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
 	if mirrorErr != nil {
@@ -110,7 +114,7 @@ func Diff(contextDir, sourcePath string) (string, error) {
 // HasDrift checks whether MEMORY.md has been modified since the last sync.
 // Returns false if either file is missing (no drift to report).
 func HasDrift(contextDir, sourcePath string) bool {
-	mirrorPath := filepath.Join(contextDir, config.DirMemory, config.FileMemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, file.FileMemoryMirror)
 
 	sourceInfo, sourceErr := os.Stat(sourcePath)
 	if sourceErr != nil {
@@ -127,7 +131,7 @@ func HasDrift(contextDir, sourcePath string) bool {
 
 // ArchiveCount returns the number of archived mirror snapshots.
 func ArchiveCount(contextDir string) int {
-	archiveDir := filepath.Join(contextDir, config.DirMemoryArchive)
+	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 	entries, readErr := os.ReadDir(archiveDir)
 	if readErr != nil {
 		return 0

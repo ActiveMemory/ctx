@@ -18,7 +18,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -28,7 +29,7 @@ import (
 //   - []byte: A 32-byte random key
 //   - error: Non-nil if the system random source fails
 func GenerateKey() ([]byte, error) {
-	key := make([]byte, config.CryptoKeySize)
+	key := make([]byte, crypto.KeySize)
 	if _, err := io.ReadFull(rand.Reader, key); err != nil {
 		return nil, ctxerr.CryptoGenerateKey(err)
 	}
@@ -59,7 +60,7 @@ func Encrypt(key, plaintext []byte) ([]byte, error) {
 		return nil, ctxerr.CryptoCreateGCM(err)
 	}
 
-	nonce := make([]byte, config.CryptoNonceSize)
+	nonce := make([]byte, crypto.NonceSize)
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		return nil, ctxerr.CryptoGenerateNonce(err)
 	}
@@ -79,7 +80,7 @@ func Encrypt(key, plaintext []byte) ([]byte, error) {
 //   - error: Non-nil if key is wrong, ciphertext is too short, or
 //     authentication fails
 func Decrypt(key, ciphertext []byte) ([]byte, error) {
-	if len(ciphertext) < config.CryptoNonceSize {
+	if len(ciphertext) < crypto.NonceSize {
 		return nil, ctxerr.CryptoCiphertextTooShort()
 	}
 
@@ -93,8 +94,8 @@ func Decrypt(key, ciphertext []byte) ([]byte, error) {
 		return nil, ctxerr.CryptoCreateGCM(err)
 	}
 
-	nonce := ciphertext[:config.CryptoNonceSize]
-	data := ciphertext[config.CryptoNonceSize:]
+	nonce := ciphertext[:crypto.NonceSize]
+	data := ciphertext[crypto.NonceSize:]
 
 	plaintext, err := gcm.Open(nil, nonce, data, nil)
 	if err != nil {
@@ -117,8 +118,8 @@ func LoadKey(path string) ([]byte, error) {
 	if err != nil {
 		return nil, ctxerr.CryptoReadKey(err)
 	}
-	if len(key) != config.CryptoKeySize {
-		return nil, ctxerr.CryptoInvalidKeySize(len(key), config.CryptoKeySize)
+	if len(key) != crypto.KeySize {
+		return nil, ctxerr.CryptoInvalidKeySize(len(key), crypto.KeySize)
 	}
 	return key, nil
 }
@@ -132,7 +133,7 @@ func LoadKey(path string) ([]byte, error) {
 // Returns:
 //   - error: Non-nil if the file cannot be written
 func SaveKey(path string, key []byte) error {
-	if err := os.WriteFile(path, key, config.PermSecret); err != nil {
+	if err := os.WriteFile(path, key, fs.PermSecret); err != nil {
 		return ctxerr.CryptoWriteKey(err)
 	}
 	return nil

@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -37,5 +38,5 @@ func ConfirmExport(cmd *cobra.Command, plan ExportPlan) (bool, error) {
 		return false, ctxerr.ReadInput(readErr)
 	}
 	response = strings.TrimSpace(strings.ToLower(response))
-	return response == config.ConfirmShort || response == config.ConfirmLong, nil
+	return response == file.ConfirmShort || response == file.ConfirmLong, nil
 }

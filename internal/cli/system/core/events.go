@@ -12,10 +12,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -33,7 +34,7 @@ func FormatEventTimestamp(ts string) string {
 	if parseErr != nil {
 		return ts
 	}
-	return t.Local().Format(config.DateTimePreciseFormat)
+	return t.Local().Format(time2.DateTimePreciseFormat)
 }
 
 // ExtractHookName gets the hook name from an event payload's detail field.
@@ -52,7 +53,7 @@ func ExtractHookName(e notify.Payload) string {
 	if idx := strings.Index(e.Message, ":"); idx > 0 {
 		return e.Message[:idx]
 	}
-	return config.EventsHookFallback
+	return file.EventsHookFallback
 }
 
 // TruncateMessage limits message length for display, appending a
@@ -68,8 +69,8 @@ func TruncateMessage(msg string, maxLen int) string {
 	if len(msg) <= maxLen {
 		return msg
 	}
-	return msg[:maxLen-len(config.EventsTruncationSuffix)] +
-		config.EventsTruncationSuffix
+	return msg[:maxLen-len(file.EventsTruncationSuffix)] +
+		file.EventsTruncationSuffix
 }
 
 // OutputEventsJSON writes events as raw JSONL to the command output.
@@ -104,7 +105,7 @@ func OutputEventsHuman(cmd *cobra.Command, evts []notify.Payload) error {
 	for _, e := range evts {
 		ts := FormatEventTimestamp(e.Timestamp)
 		hookName := ExtractHookName(e)
-		msg := TruncateMessage(e.Message, config.EventsMessageMaxLen)
+		msg := TruncateMessage(e.Message, file.EventsMessageMaxLen)
 		cmd.Println(fmt.Sprintf(fmtStr, ts, e.Event, hookName, msg))
 	}
 	return nil

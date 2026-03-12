@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -42,7 +43,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	markerFile := filepath.Join(tmpDir, config.VersionThrottleID)
+	markerFile := filepath.Join(tmpDir, file.VersionThrottleID)
 
 	if core.IsDailyThrottled(markerFile) {
 		return nil
@@ -51,7 +52,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	binaryVer := config.BinaryVersion
 
 	// Skip check for dev builds
-	if binaryVer == config.VersionDevBuild {
+	if binaryVer == file.VersionDevBuild {
 		core.TouchFile(markerFile)
 		return nil
 	}
@@ -78,10 +79,10 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	fallback := fmt.Sprintf(assets.TextDesc(
 		assets.TextDescKeyCheckVersionFallback), binaryVer, pluginVer,
 	)
-	content := core.LoadMessage(config.HookCheckVersion, config.VariantMismatch,
+	content := core.LoadMessage(file.HookCheckVersion, file.VariantMismatch,
 		map[string]any{
-			config.TplVarBinaryVersion: binaryVer,
-			config.TplVarPluginVersion: pluginVer,
+			file.TplVarBinaryVersion: binaryVer,
+			file.TplVarPluginVersion: pluginVer,
 		}, fallback)
 	if content == "" {
 		core.TouchFile(markerFile)
@@ -93,12 +94,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
-	ref := notify.NewTemplateRef(config.HookCheckVersion, config.VariantMismatch,
+	ref := notify.NewTemplateRef(file.HookCheckVersion, file.VariantMismatch,
 		map[string]any{
-			config.TplVarBinaryVersion: binaryVer,
-			config.TplVarPluginVersion: pluginVer,
+			file.TplVarBinaryVersion: binaryVer,
+			file.TplVarPluginVersion: pluginVer,
 		})
-	versionMsg := config.HookCheckVersion + ": " +
+	versionMsg := file.HookCheckVersion + ": " +
 		fmt.Sprintf(
 			assets.TextDesc(
 				assets.TextDescKeyCheckVersionMismatchRelayFormat,

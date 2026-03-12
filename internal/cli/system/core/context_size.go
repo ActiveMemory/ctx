@@ -12,6 +12,9 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -34,7 +37,7 @@ import (
 func TokenUsageLine(tokens, pct, windowSize int) string {
 	icon := assets.TextDesc(assets.TextDescKeyCheckContextSizeTokenNormal)
 	suffix := ""
-	if pct >= config.ContextWindowThresholdPct {
+	if pct >= stats.ContextWindowThresholdPct {
 		icon = assets.TextDesc(assets.TextDescKeyCheckContextSizeTokenLow)
 		suffix = assets.TextDesc(assets.TextDescKeyCheckContextSizeRunningLowSuffix)
 	}
@@ -48,17 +51,17 @@ func TokenUsageLine(tokens, pct, windowSize int) string {
 // Returns:
 //   - string: raw oversize nudge content, or empty string if no flag
 func OversizeNudgeContent() string {
-	baseDir := filepath.Join(rc.ContextDir(), config.DirState)
-	flagPath := filepath.Join(baseDir, config.ContextSizeInjectionOversizeFlag)
-	data, readErr := validation.SafeReadFile(baseDir, config.ContextSizeInjectionOversizeFlag)
+	baseDir := filepath.Join(rc.ContextDir(), dir.State)
+	flagPath := filepath.Join(baseDir, stats.ContextSizeInjectionOversizeFlag)
+	data, readErr := validation.SafeReadFile(baseDir, stats.ContextSizeInjectionOversizeFlag)
 	if readErr != nil {
 		return ""
 	}
 
 	tokenCount := ExtractOversizeTokens(data)
 	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeOversizeFallback), tokenCount)
-	content := LoadMessage(config.HookCheckContextSize, config.VariantOversize,
-		map[string]any{config.TplVarTokenCount: tokenCount}, fallback)
+	content := LoadMessage(file.HookCheckContextSize, file.VariantOversize,
+		map[string]any{file.TplVarTokenCount: tokenCount}, fallback)
 	if content == "" {
 		_ = os.Remove(flagPath) // silenced, still consume the flag
 		return ""
@@ -99,7 +102,7 @@ func ExtractOversizeTokens(data []byte) int {
 //   - windowSize: total context window size
 func EmitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens, pct, windowSize int) {
 	fallback := assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointFallback)
-	content := LoadMessage(config.HookCheckContextSize, config.VariantCheckpoint, nil, fallback)
+	content := LoadMessage(file.HookCheckContextSize, file.VariantCheckpoint, nil, fallback)
 	if content == "" {
 		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeSilencedCheckpointLog), count))
 		return
@@ -117,8 +120,8 @@ func EmitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens
 		content))
 	cmd.Println()
 	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointLogFormat), count, tokens, pct))
-	ref := notify.NewTemplateRef(config.HookCheckContextSize, config.VariantCheckpoint, nil)
-	checkpointMsg := config.HookCheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointRelayFormat), count)
+	ref := notify.NewTemplateRef(file.HookCheckContextSize, file.VariantCheckpoint, nil)
+	checkpointMsg := file.HookCheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeCheckpointRelayFormat), count)
 	NudgeAndRelay(checkpointMsg, sessionID, ref)
 }
 
@@ -133,8 +136,8 @@ func EmitCheckpoint(cmd *cobra.Command, logFile, sessionID string, count, tokens
 //   - pct: context window usage percentage
 func EmitWindowWarning(cmd *cobra.Command, logFile, sessionID string, count, tokens, pct int) {
 	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowFallback), pct, FormatTokenCount(tokens))
-	content := LoadMessage(config.HookCheckContextSize, config.VariantWindow,
-		map[string]any{config.TplVarPercentage: pct, config.TplVarTokenCount: FormatTokenCount(tokens)}, fallback)
+	content := LoadMessage(file.HookCheckContextSize, file.VariantWindow,
+		map[string]any{file.TplVarPercentage: pct, file.TplVarTokenCount: FormatTokenCount(tokens)}, fallback)
 	if content == "" {
 		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeSilencedWindowLog), count, pct))
 		return
@@ -145,9 +148,9 @@ func EmitWindowWarning(cmd *cobra.Command, logFile, sessionID string, count, tok
 		content))
 	cmd.Println()
 	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowLogFormat), count, tokens, pct))
-	ref := notify.NewTemplateRef(config.HookCheckContextSize, config.VariantWindow,
-		map[string]any{config.TplVarPercentage: pct, config.TplVarTokenCount: FormatTokenCount(tokens)})
-	windowMsg := config.HookCheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowRelayFormat), pct)
+	ref := notify.NewTemplateRef(file.HookCheckContextSize, file.VariantWindow,
+		map[string]any{file.TplVarPercentage: pct, file.TplVarTokenCount: FormatTokenCount(tokens)})
+	windowMsg := file.HookCheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeWindowRelayFormat), pct)
 	NudgeAndRelay(windowMsg, sessionID, ref)
 }
 
@@ -163,15 +166,15 @@ func EmitWindowWarning(cmd *cobra.Command, logFile, sessionID string, count, tok
 //   - threshold: billing token warning threshold
 func EmitBillingWarning(cmd *cobra.Command, logFile, sessionID string, count, tokens, threshold int) {
 	// One-shot guard: skip if already warned this session.
-	warnedFile := filepath.Join(StateDir(), config.ContextSizeBillingWarnedPrefix+sessionID)
+	warnedFile := filepath.Join(StateDir(), stats.ContextSizeBillingWarnedPrefix+sessionID)
 	if _, statErr := os.Stat(warnedFile); statErr == nil {
 		return // already fired
 	}
 
 	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingFallback),
 		FormatTokenCount(tokens), FormatTokenCount(threshold))
-	content := LoadMessage(config.HookCheckContextSize, config.VariantBilling,
-		map[string]any{config.TplVarTokenCount: FormatTokenCount(tokens), config.TplVarThreshold: FormatTokenCount(threshold)}, fallback)
+	content := LoadMessage(file.HookCheckContextSize, file.VariantBilling,
+		map[string]any{file.TplVarTokenCount: FormatTokenCount(tokens), file.TplVarThreshold: FormatTokenCount(threshold)}, fallback)
 	if content == "" {
 		LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeSilencedBillingLog), count, tokens, threshold))
 		TouchFile(warnedFile) // silenced counts as fired
@@ -186,9 +189,9 @@ func EmitBillingWarning(cmd *cobra.Command, logFile, sessionID string, count, to
 
 	TouchFile(warnedFile) // one-shot: mark as fired
 	LogMessage(logFile, sessionID, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingLogFormat), count, tokens, threshold))
-	ref := notify.NewTemplateRef(config.HookCheckContextSize, config.VariantBilling,
-		map[string]any{config.TplVarTokenCount: FormatTokenCount(tokens), config.TplVarThreshold: FormatTokenCount(threshold)})
-	billingMsg := config.HookCheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingRelayFormat),
+	ref := notify.NewTemplateRef(file.HookCheckContextSize, file.VariantBilling,
+		map[string]any{file.TplVarTokenCount: FormatTokenCount(tokens), file.TplVarThreshold: FormatTokenCount(threshold)})
+	billingMsg := file.HookCheckContextSize + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckContextSizeBillingRelayFormat),
 		FormatTokenCount(tokens), FormatTokenCount(threshold))
 	NudgeAndRelay(billingMsg, sessionID, ref)
 }

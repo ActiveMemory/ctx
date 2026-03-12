@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +20,7 @@ func RestoreNoLocal(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplRestoreNoLocal)
+	cmd.Println(config.TplRestoreNoLocal)
 }
 
 // RestoreMatch prints the message when settings already match golden.
@@ -31,7 +31,7 @@ func RestoreMatch(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplRestoreMatch)
+	cmd.Println(config.TplRestoreMatch)
 }
 
 // RestoreDiff prints the permission diff block: dropped/restored
@@ -50,14 +50,14 @@ func RestoreDiff(
 	if cmd == nil {
 		return
 	}
-	printSection(cmd, config.tplRestoreDroppedHeader, config.tplRestoreRemoved, dropped)
-	printSection(cmd, config.tplRestoreRestoredHeader, config.tplRestoreAdded, restored)
-	printSection(cmd, config.tplRestoreDenyDroppedHeader, config.tplRestoreRemoved, denyDropped)
-	printSection(cmd, config.tplRestoreDenyRestoredHeader, config.tplRestoreAdded, denyRestored)
+	printSection(cmd, config.TplRestoreDroppedHeader, config.TplRestoreRemoved, dropped)
+	printSection(cmd, config.TplRestoreRestoredHeader, config.TplRestoreAdded, restored)
+	printSection(cmd, config.TplRestoreDenyDroppedHeader, config.TplRestoreRemoved, denyDropped)
+	printSection(cmd, config.TplRestoreDenyRestoredHeader, config.TplRestoreAdded, denyRestored)
 
 	if len(dropped) == 0 && len(restored) == 0 &&
 		len(denyDropped) == 0 && len(denyRestored) == 0 {
-		cmd.Println(config.tplRestorePermMatch)
+		cmd.Println(config.TplRestorePermMatch)
 	}
 }
 
@@ -69,7 +69,7 @@ func RestoreDone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplRestoreDone)
+	cmd.Println(config.TplRestoreDone)
 }
 
 // SnapshotDone prints the golden image save/update confirmation.
@@ -83,9 +83,9 @@ func SnapshotDone(cmd *cobra.Command, updated bool, path string) {
 		return
 	}
 	if updated {
-		io.sprintf(cmd, config.tplSnapshotUpdated, path)
+		cmd.Println(fmt.Sprintf(config.TplSnapshotUpdated, path))
 	} else {
-		io.sprintf(cmd, config.tplSnapshotSaved, path)
+		cmd.Println(fmt.Sprintf(config.TplSnapshotSaved, path))
 	}
 }
 
@@ -94,8 +94,8 @@ func printSection(cmd *cobra.Command, headerTpl, itemTpl string, items []string)
 	if len(items) == 0 {
 		return
 	}
-	io.sprintf(cmd, headerTpl, len(items))
+	cmd.Println(fmt.Sprintf(headerTpl, len(items)))
 	for _, item := range items {
-		io.sprintf(cmd, itemTpl, item)
+		cmd.Println(fmt.Sprintf(itemTpl, item))
 	}
 }

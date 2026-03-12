@@ -13,6 +13,8 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
@@ -39,7 +41,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 	}
 
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), config.ExtMarkdown) {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), file.ExtMarkdown) {
 			continue
 		}
 
@@ -64,7 +66,7 @@ func BuildSessionIndex(journalDir string) map[string]string {
 		// Filename format: YYYY-MM-DD-slug-SHORTID.md or ...-pN.md
 		name := e.Name()
 		// Strip multipart suffix (e.g., "-p2.md" → config.ExtMarkdown).
-		baseName := strings.TrimSuffix(name, config.ExtMarkdown)
+		baseName := strings.TrimSuffix(name, file.ExtMarkdown)
 		if idx := strings.LastIndex(baseName, "-p"); idx > 0 {
 			suffix := baseName[idx+2:]
 			allDigits := true
@@ -203,8 +205,8 @@ func ExtractFrontmatterField(content, field string) string {
 //   - numParts: Expected number of parts (used for nav link updates)
 func RenameJournalFiles(journalDir, oldBase, newBase string, numParts int) {
 	// Rename base file.
-	oldPath := filepath.Join(journalDir, oldBase+config.ExtMarkdown)
-	newPath := filepath.Join(journalDir, newBase+config.ExtMarkdown)
+	oldPath := filepath.Join(journalDir, oldBase+file.ExtMarkdown)
+	newPath := filepath.Join(journalDir, newBase+file.ExtMarkdown)
 	if _, statErr := os.Stat(oldPath); statErr == nil {
 		_ = os.Rename(oldPath, newPath)
 	}
@@ -235,7 +237,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 		return
 	}
 
-	files := []string{filepath.Join(journalDir, newBase+config.ExtMarkdown)}
+	files := []string{filepath.Join(journalDir, newBase+file.ExtMarkdown)}
 	for p := 2; p <= numParts; p++ {
 		files = append(files, filepath.Join(journalDir,
 			fmt.Sprintf(config.TplRecallPartFilename, newBase, p)))
@@ -248,7 +250,7 @@ func UpdateNavLinks(journalDir, newBase, oldBase string, numParts int) {
 		}
 		updated := strings.ReplaceAll(string(data), oldBase, newBase)
 		if updated != string(data) {
-			_ = validation.WriteFile(f, []byte(updated), config.PermFile)
+			_ = validation.WriteFile(f, []byte(updated), fs.PermFile)
 		}
 	}
 }

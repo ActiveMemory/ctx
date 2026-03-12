@@ -13,6 +13,8 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -51,7 +53,7 @@ func FenceForContent(content string) string {
 // Returns:
 //   - string: Filename like "2026-01-15-fix-auth-bug-abc12345.md"
 func FormatJournalFilename(s *parser.Session, slugOverride string) string {
-	date := s.StartTime.Local().Format(config.DateFormat)
+	date := s.StartTime.Local().Format(time.DateFormat)
 	shortID := s.ID
 	if len(shortID) > config.RecallShortIDLen {
 		shortID = shortID[:config.RecallShortIDLen]
@@ -92,8 +94,8 @@ func FormatJournalEntryPart(
 	// Metadata (YAML frontmatter + HTML details) - only on part 1
 	if part == 1 {
 		localStart := s.StartTime.Local()
-		dateStr := localStart.Format(config.DateFormat)
-		timeStr := localStart.Format(config.TimeFormat)
+		dateStr := localStart.Format(time.DateFormat)
+		timeStr := localStart.Format(time.Format)
 		durationStr := FormatDuration(s.Duration)
 
 		// Basic YAML frontmatter
@@ -211,7 +213,7 @@ func FormatJournalEntryPart(
 
 		localTime := msg.Timestamp.Local()
 		sb.WriteString(fmt.Sprintf(config.TplRecallTurnHeader+nl+nl,
-			msgNum, role, localTime.Format(config.TimeFormat)))
+			msgNum, role, localTime.Format(time.Format)))
 
 		if msg.Text != "" {
 			text := msg.Text
@@ -322,7 +324,7 @@ func FormatPartNavigation(part, totalParts int, baseName string) string {
 
 	// Previous link
 	if part > 1 {
-		prevFile := baseName + config.ExtMarkdown
+		prevFile := baseName + file.ExtMarkdown
 		if part > 2 {
 			prevFile = fmt.Sprintf(config.TplRecallPartFilename, baseName, part-1)
 		}

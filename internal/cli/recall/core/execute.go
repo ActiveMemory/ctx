@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -80,7 +81,7 @@ func ExecuteExport(
 
 		// Write file.
 		if writeErr := os.WriteFile(
-			fa.Path, []byte(content), config.PermFile,
+			fa.Path, []byte(content), fs.PermFile,
 		); writeErr != nil {
 			write.WarnFileErr(cmd, fa.Filename, writeErr)
 			continue

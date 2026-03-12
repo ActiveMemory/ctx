@@ -7,10 +7,10 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx guide" cobra command.
@@ -27,7 +27,7 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "guide",
 		Short:       short,
-		Annotations: map[string]string{config.AnnotationSkipInit: ""},
+		Annotations: map[string]string{cli.AnnotationSkipInit: ""},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, showSkills, showCommands)

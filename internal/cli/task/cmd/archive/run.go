@@ -10,6 +10,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
@@ -89,7 +91,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := compactcore.WriteArchive(config.ArchiveScopeTasks, config.HeadingArchivedTasks, archivedContent.String())
+	archiveFilePath, writeErr := compactcore.WriteArchive(file.ArchiveScopeTasks, config.HeadingArchivedTasks, archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}
@@ -99,7 +101,7 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 	newContent := strings.Join(newLines, nl)
 
 	if updateErr := os.WriteFile(
-		tasksPath, []byte(newContent), config.PermFile,
+		tasksPath, []byte(newContent), fs.PermFile,
 	); updateErr != nil {
 		return ctxerr.TaskFileWrite(updateErr)
 	}

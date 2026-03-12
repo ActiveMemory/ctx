@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // RegexMarkdownLink matches Markdown links: [display](target)
@@ -45,7 +46,7 @@ func ConvertMarkdownLinks(content string) string {
 
 		// Strip path prefix (e.g., "../topics/", "../") and .md extension
 		target = filepath.Base(target)
-		target = strings.TrimSuffix(target, config.ExtMarkdown)
+		target = strings.TrimSuffix(target, file.ExtMarkdown)
 
 		return FormatWikilink(target, display)
 	})
@@ -79,7 +80,7 @@ func FormatWikilink(target, display string) string {
 // Returns:
 //   - string: Formatted list item with wikilink
 func FormatWikilinkEntry(e JournalEntry) string {
-	link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+	link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 
 	var meta []string
 	if e.Type != "" {

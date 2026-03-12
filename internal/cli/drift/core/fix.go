@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -105,7 +107,7 @@ func ApplyFixes(
 // Returns:
 //   - error: Non-nil if file operations fail
 func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
-	tasksFile := ctx.File(config.FileTask)
+	tasksFile := ctx.File(file.FileTask)
 
 	if tasksFile == nil {
 		return ctxerr.TaskFileNotFound()
@@ -161,7 +163,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	// Write updated TASKS.md
 	newContent := strings.Join(newLines, nl)
 	if writeErr := os.WriteFile(
-		tasksFile.Path, []byte(newContent), config.PermFile,
+		tasksFile.Path, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.TaskFileWrite(writeErr)
 	}
@@ -188,12 +190,12 @@ func FixMissingFile(filename string) error {
 	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
-	if mkErr := os.MkdirAll(rc.ContextDir(), config.PermExec); mkErr != nil {
+	if mkErr := os.MkdirAll(rc.ContextDir(), fs.PermExec); mkErr != nil {
 		return ctxerr.Mkdir(rc.ContextDir(), mkErr)
 	}
 
 	if writeErr := os.WriteFile(
-		targetPath, content, config.PermFile,
+		targetPath, content, fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(targetPath, writeErr)
 	}

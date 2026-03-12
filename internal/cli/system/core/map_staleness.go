@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -27,7 +28,7 @@ import (
 // Returns:
 //   - *MapTrackingInfo: parsed tracking info, or nil if not found or invalid
 func ReadMapTracking() *MapTrackingInfo {
-	data, readErr := validation.SafeReadFile(rc.ContextDir(), config.FileMapTracking)
+	data, readErr := validation.SafeReadFile(rc.ContextDir(), file.FileMapTracking)
 	if readErr != nil {
 		return nil
 	}
@@ -72,10 +73,10 @@ func CountModuleCommits(since string) int {
 //   - moduleCommits: number of commits touching modules since last refresh
 func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, moduleCommits int) {
 	fallback := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckMapStalenessFallback), dateStr, moduleCommits)
-	content := LoadMessage(config.HookCheckMapStaleness, config.VariantStale,
+	content := LoadMessage(file.HookCheckMapStaleness, file.VariantStale,
 		map[string]any{
-			config.TplVarLastRefreshDate: dateStr,
-			config.TplVarModuleCount:     moduleCommits,
+			file.TplVarLastRefreshDate: dateStr,
+			file.TplVarModuleCount:     moduleCommits,
 		}, fallback)
 	if content == "" {
 		return
@@ -86,8 +87,8 @@ func EmitMapStalenessWarning(cmd *cobra.Command, sessionID, dateStr string, modu
 		assets.TextDesc(assets.TextDescKeyCheckMapStalenessBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(config.HookCheckMapStaleness, config.VariantStale,
-		map[string]any{config.TplVarLastRefreshDate: dateStr, config.TplVarModuleCount: moduleCommits})
-	notifyMsg := config.HookCheckMapStaleness + ": " + assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayMessage)
+	ref := notify.NewTemplateRef(file.HookCheckMapStaleness, file.VariantStale,
+		map[string]any{file.TplVarLastRefreshDate: dateStr, file.TplVarModuleCount: moduleCommits})
+	notifyMsg := file.HookCheckMapStaleness + ": " + assets.TextDesc(assets.TextDescKeyCheckMapStalenessRelayMessage)
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }

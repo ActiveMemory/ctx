@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
@@ -44,15 +44,15 @@ func runMarkJournal(cmd *cobra.Command, filename, stage string) error {
 		fs := jstate.Entries[filename]
 		var val string
 		switch stage {
-		case config.StageExported:
+		case file.StageExported:
 			val = fs.Exported
-		case config.StageEnriched:
+		case file.StageEnriched:
 			val = fs.Enriched
-		case config.StageNormalized:
+		case file.StageNormalized:
 			val = fs.Normalized
-		case config.StageFencesVerified:
+		case file.StageFencesVerified:
 			val = fs.FencesVerified
-		case config.StageLocked:
+		case file.StageLocked:
 			val = fs.Locked
 		default:
 			return ctxerr.UnknownStage(stage, strings.Join(state.ValidStages, ", "))

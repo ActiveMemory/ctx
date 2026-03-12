@@ -12,14 +12,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
 func TestRunSync_LocksFromFrontmatter(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -27,7 +27,7 @@ func TestRunSync_LocksFromFrontmatter(t *testing.T) {
 	filename := "2026-01-21-test-abc12345.md"
 	content := "---\ndate: \"2026-01-21\"\nlocked: true  # managed by ctx\n---\n\n# Test\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, filename), []byte(content), config.PermFile,
+		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func TestRunSync_LocksFromFrontmatter(t *testing.T) {
 func TestRunSync_UnlocksFromFrontmatter(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -73,7 +73,7 @@ func TestRunSync_UnlocksFromFrontmatter(t *testing.T) {
 	filename := "2026-01-21-test-abc12345.md"
 	content := "---\ndate: \"2026-01-21\"\ntitle: \"Test\"\n---\n\n# Test\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, filename), []byte(content), config.PermFile,
+		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -122,7 +122,7 @@ func TestRunSync_UnlocksFromFrontmatter(t *testing.T) {
 func TestRunSync_NoChanges(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -130,7 +130,7 @@ func TestRunSync_NoChanges(t *testing.T) {
 	filename := "2026-01-21-test-abc12345.md"
 	content := "---\ndate: \"2026-01-21\"\nlocked: true\n---\n\n# Test\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, filename), []byte(content), config.PermFile,
+		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -169,7 +169,7 @@ func TestRunSync_NoChanges(t *testing.T) {
 func TestRunSync_EmptyDir(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -197,7 +197,7 @@ func TestRunSync_EmptyDir(t *testing.T) {
 func TestRunSync_MixedFiles(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -205,7 +205,7 @@ func TestRunSync_MixedFiles(t *testing.T) {
 	fileA := "2026-01-21-test-aaa11111.md"
 	contentA := "---\ndate: \"2026-01-21\"\nlocked: true\n---\n\n# A\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, fileA), []byte(contentA), config.PermFile,
+		filepath.Join(journalDir, fileA), []byte(contentA), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -214,7 +214,7 @@ func TestRunSync_MixedFiles(t *testing.T) {
 	fileB := "2026-01-22-test-bbb22222.md"
 	contentB := "---\ndate: \"2026-01-22\"\n---\n\n# B\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, fileB), []byte(contentB), config.PermFile,
+		filepath.Join(journalDir, fileB), []byte(contentB), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -223,7 +223,7 @@ func TestRunSync_MixedFiles(t *testing.T) {
 	fileC := "2026-01-23-test-ccc33333.md"
 	contentC := "# C\n\nNo frontmatter.\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, fileC), []byte(contentC), config.PermFile,
+		filepath.Join(journalDir, fileC), []byte(contentC), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}

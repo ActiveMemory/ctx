@@ -7,7 +7,7 @@
 package write
 
 import (
-	"github.com/ActiveMemory/ctx/internal/write/io"
+	"fmt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -55,7 +55,7 @@ func WatchCloseLogError(cmd *cobra.Command, err error) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyWatchCloseLogError), err)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWatchCloseLogError), err))
 }
 
 // WatchDryRunPreview prints a dry-run preview of an update that would be applied.
@@ -68,7 +68,7 @@ func WatchDryRunPreview(cmd *cobra.Command, updateType, content string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyWatchDryRunPreview), updateType, content)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWatchDryRunPreview), updateType, content))
 }
 
 // WatchApplyFailed prints a failure message for an update that could not be applied.
@@ -81,7 +81,7 @@ func WatchApplyFailed(cmd *cobra.Command, updateType string, err error) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyWatchApplyFailed), updateType, err)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWatchApplyFailed), updateType, err))
 }
 
 // WatchApplySuccess prints a success message for an applied update.
@@ -94,5 +94,5 @@ func WatchApplySuccess(cmd *cobra.Command, updateType, content string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyWatchApplySuccess), updateType, content)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWatchApplySuccess), updateType, content))
 }

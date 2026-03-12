@@ -12,10 +12,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -39,7 +40,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 		return ctxerr.HomeDir(homeErr)
 	}
 	claudeDir := filepath.Join(homeDir, ".claude")
-	installedPath := filepath.Join(claudeDir, config.FileInstalledPlugins)
+	installedPath := filepath.Join(claudeDir, file.FileInstalledPlugins)
 	installedData, readErr := os.ReadFile(installedPath) //nolint:gosec // G304: path from os.UserHomeDir
 	if readErr != nil {
 		write.InitPluginSkipped(cmd)
@@ -49,11 +50,11 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	if parseErr := json.Unmarshal(installedData, &installed); parseErr != nil {
 		return ctxerr.ParseFile(installedPath, parseErr)
 	}
-	if _, found := installed.Plugins[config.PluginID]; !found {
+	if _, found := installed.Plugins[file.PluginID]; !found {
 		write.InitPluginSkipped(cmd)
 		return nil
 	}
-	settingsPath := filepath.Join(claudeDir, config.FileGlobalSettings)
+	settingsPath := filepath.Join(claudeDir, file.FileGlobalSettings)
 	var settings globalSettings
 	existingData, readErr := os.ReadFile(settingsPath) //nolint:gosec // G304: path from os.UserHomeDir
 	if readErr != nil && !os.IsNotExist(readErr) {
@@ -69,7 +70,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	if raw, ok := settings["enabledPlugins"]; ok {
 		var enabled map[string]bool
 		if parseErr := json.Unmarshal(raw, &enabled); parseErr == nil {
-			if enabled[config.PluginID] {
+			if enabled[file.PluginID] {
 				write.InitPluginAlreadyEnabled(cmd)
 				return nil
 			}
@@ -83,7 +84,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	} else {
 		enabled = make(map[string]bool)
 	}
-	enabled[config.PluginID] = true
+	enabled[file.PluginID] = true
 	enabledJSON, marshalErr := json.Marshal(enabled)
 	if marshalErr != nil {
 		return ctxerr.MarshalPlugins(marshalErr)
@@ -96,7 +97,7 @@ func EnablePluginGlobally(cmd *cobra.Command) error {
 	if encodeErr := encoder.Encode(settings); encodeErr != nil {
 		return ctxerr.MarshalSettings(encodeErr)
 	}
-	if writeErr := os.WriteFile(settingsPath, buf.Bytes(), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(settingsPath, buf.Bytes(), fs.PermFile); writeErr != nil {
 		return ctxerr.FileWrite(settingsPath, writeErr)
 	}
 	write.InitPluginEnabled(cmd, settingsPath)
@@ -110,7 +111,7 @@ func PluginInstalled() bool {
 	if homeErr != nil {
 		return false
 	}
-	installedPath := filepath.Join(homeDir, ".claude", config.FileInstalledPlugins)
+	installedPath := filepath.Join(homeDir, ".claude", file.FileInstalledPlugins)
 	data, readErr := os.ReadFile(installedPath) //nolint:gosec // G304: path from os.UserHomeDir
 	if readErr != nil {
 		return false
@@ -119,7 +120,7 @@ func PluginInstalled() bool {
 	if parseErr := json.Unmarshal(data, &installed); parseErr != nil {
 		return false
 	}
-	_, found := installed.Plugins[config.PluginID]
+	_, found := installed.Plugins[file.PluginID]
 	return found
 }
 
@@ -130,7 +131,7 @@ func PluginEnabledGlobally() bool {
 	if homeErr != nil {
 		return false
 	}
-	settingsPath := filepath.Join(homeDir, ".claude", config.FileGlobalSettings)
+	settingsPath := filepath.Join(homeDir, ".claude", file.FileGlobalSettings)
 	data, readErr := os.ReadFile(settingsPath) //nolint:gosec // G304: path from os.UserHomeDir
 	if readErr != nil {
 		return false
@@ -147,13 +148,13 @@ func PluginEnabledGlobally() bool {
 	if parseErr := json.Unmarshal(raw, &enabled); parseErr != nil {
 		return false
 	}
-	return enabled[config.PluginID]
+	return enabled[file.PluginID]
 }
 
 // PluginEnabledLocally reports whether the ctx plugin is enabled in
 // .claude/settings.local.json in the current project.
 func PluginEnabledLocally() bool {
-	data, readErr := os.ReadFile(config.FileSettings)
+	data, readErr := os.ReadFile(file.FileSettings)
 	if readErr != nil {
 		return false
 	}
@@ -169,5 +170,5 @@ func PluginEnabledLocally() bool {
 	if parseErr := json.Unmarshal(epRaw, &enabled); parseErr != nil {
 		return false
 	}
-	return enabled[config.PluginID]
+	return enabled[file.PluginID]
 }

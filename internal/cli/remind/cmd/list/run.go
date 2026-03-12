@@ -9,10 +9,10 @@ package list
 import (
 	"time"
 
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -36,7 +36,7 @@ func Run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	today := time.Now().Format(config.DateFormat)
+	today := time.Now().Format(time2.DateFormat)
 	for _, r := range reminders {
 		write.ReminderItem(cmd, r.ID, r.Message, r.After, today)
 	}

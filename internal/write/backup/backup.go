@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/write/config"
 	"github.com/spf13/cobra"
 )
 
@@ -25,9 +26,9 @@ func BackupResultLine(cmd *cobra.Command, scope, archive string, size int64, smb
 	if cmd == nil {
 		return
 	}
-	line := fmt.Sprintf(write.tplBackupResult, scope, archive, write.FormatBytes(size))
+	line := fmt.Sprintf(config.TplBackupResult, scope, archive, write.FormatBytes(size))
 	if smbDest != "" {
-		line += fmt.Sprintf(write.tplBackupSMBDest, smbDest)
+		line += fmt.Sprintf(config.TplBackupSMBDest, smbDest)
 	}
 	cmd.Println(line)
 }

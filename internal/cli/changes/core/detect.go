@@ -16,6 +16,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -71,7 +74,7 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 	}
 
 	// Try date.
-	if t, err := time.Parse(config.DateFormat, since); err == nil {
+	if t, err := time.Parse(time2.DateFormat, since); err == nil {
 		return t, assets.TextDesc(assets.TextDescKeyChangesSincePrefix) + since, nil
 	}
 
@@ -90,7 +93,7 @@ func ParseSinceFlag(since string) (time.Time, string, error) {
 //   - time.Time: Marker file modification time
 //   - bool: True if a valid marker was found
 func DetectFromMarkers() (time.Time, bool) {
-	stateDir := filepath.Join(rc.ContextDir(), config.DirState)
+	stateDir := filepath.Join(rc.ContextDir(), dir.State)
 	entries, err := os.ReadDir(stateDir)
 	if err != nil {
 		return time.Time{}, false
@@ -102,7 +105,7 @@ func DetectFromMarkers() (time.Time, bool) {
 
 	var markers []markerInfo
 	for _, e := range entries {
-		if !strings.HasPrefix(e.Name(), config.PrefixCtxLoaded) {
+		if !strings.HasPrefix(e.Name(), file.PrefixCtxLoaded) {
 			continue
 		}
 		info, infoErr := e.Info()
@@ -132,7 +135,7 @@ func DetectFromMarkers() (time.Time, bool) {
 //   - time.Time: Event timestamp
 //   - bool: True if a valid event was found
 func DetectFromEvents() (time.Time, bool) {
-	eventsPath := filepath.Join(rc.ContextDir(), config.DirState, "events.jsonl")
+	eventsPath := filepath.Join(rc.ContextDir(), dir.State, "events.jsonl")
 	data, err := os.ReadFile(eventsPath) //nolint:gosec // state dir path
 	if err != nil {
 		return time.Time{}, false
@@ -142,7 +145,7 @@ func DetectFromEvents() (time.Time, bool) {
 	// Scan in reverse for last context-load-gate event.
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]
-		if !strings.Contains(line, config.EventContextLoadGate) {
+		if !strings.Contains(line, file.EventContextLoadGate) {
 			continue
 		}
 		if t, ok := ExtractTimestamp(line); ok {
@@ -163,7 +166,7 @@ func DetectFromEvents() (time.Time, bool) {
 //   - time.Time: Parsed timestamp
 //   - bool: True if extraction succeeded
 func ExtractTimestamp(jsonLine string) (time.Time, bool) {
-	key := config.JSONKeyTimestamp
+	key := file.JSONKeyTimestamp
 	idx := strings.Index(jsonLine, key)
 	if idx < 0 {
 		return time.Time{}, false

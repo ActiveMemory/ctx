@@ -12,7 +12,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 func TestGenerateKey(t *testing.T) {
@@ -20,8 +21,8 @@ func TestGenerateKey(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GenerateKey() error: %v", err)
 	}
-	if len(key) != config.CryptoKeySize {
-		t.Errorf("key length = %d, want %d", len(key), config.CryptoKeySize)
+	if len(key) != crypto.KeySize {
+		t.Errorf("key length = %d, want %d", len(key), crypto.KeySize)
 	}
 
 	// Two keys should be different
@@ -122,7 +123,7 @@ func TestDecrypt_TamperedCiphertext(t *testing.T) {
 	}
 
 	// Tamper with the ciphertext (flip a byte after the nonce)
-	ciphertext[config.CryptoNonceSize+1] ^= 0xFF
+	ciphertext[crypto.NonceSize+1] ^= 0xFF
 
 	_, err = Decrypt(key, ciphertext)
 	if err == nil {
@@ -147,8 +148,8 @@ func TestSaveKey_LoadKey_RoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Stat() error: %v", err)
 	}
-	if perm := info.Mode().Perm(); perm != config.PermSecret {
-		t.Errorf("key file permissions = %o, want %o", perm, config.PermSecret)
+	if perm := info.Mode().Perm(); perm != fs.PermSecret {
+		t.Errorf("key file permissions = %o, want %o", perm, fs.PermSecret)
 	}
 
 	loaded, err := LoadKey(path)
@@ -163,7 +164,7 @@ func TestSaveKey_LoadKey_RoundTrip(t *testing.T) {
 
 func TestLoadKey_WrongSize(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "bad.key")
-	if err := os.WriteFile(path, []byte("too short"), config.PermSecret); err != nil {
+	if err := os.WriteFile(path, []byte("too short"), fs.PermSecret); err != nil {
 		t.Fatalf("WriteFile() error: %v", err)
 	}
 

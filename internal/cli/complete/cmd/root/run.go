@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -37,7 +39,7 @@ func CompleteTask(query, contextDir string) (string, error) {
 		contextDir = rc.ContextDir()
 	}
 
-	filePath := filepath.Join(contextDir, config.FileTask)
+	filePath := filepath.Join(contextDir, file.FileTask)
 
 	// Check if the file exists
 	if _, statErr := os.Stat(filePath); os.IsNotExist(statErr) {
@@ -96,12 +98,12 @@ func CompleteTask(query, contextDir string) (string, error) {
 
 	// Mark the task as complete
 	lines[matchedLine] = config.RegExTask.ReplaceAllString(
-		lines[matchedLine], config.TaskCompleteReplace,
+		lines[matchedLine], file.TaskCompleteReplace,
 	)
 
 	// Write back
 	newContent := strings.Join(lines, config.NewlineLF)
-	if writeErr := os.WriteFile(filePath, []byte(newContent), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(filePath, []byte(newContent), fs.PermFile); writeErr != nil {
 		return "", ctxerr.TaskFileWrite(writeErr)
 	}
 

@@ -12,9 +12,9 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -65,7 +65,7 @@ func runTest(cmd *cobra.Command) error {
 	}
 	defer func() { _ = resp.Body.Close() }()
 
-	write.TestResult(cmd, resp.StatusCode, config.FileNotifyEnc)
+	write.TestResult(cmd, resp.StatusCode, file.FileNotifyEnc)
 
 	return nil
 }

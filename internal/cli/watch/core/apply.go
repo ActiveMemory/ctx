@@ -12,6 +12,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -32,15 +35,15 @@ import (
 //   - error: Non-nil if type is unknown or the handler fails
 func ApplyUpdate(update ContextUpdate) error {
 	switch update.Type {
-	case config.EntryTask:
+	case entry2.Task:
 		return RunAddSilent(update)
-	case config.EntryDecision:
+	case entry2.Decision:
 		return RunAddSilent(update)
-	case config.EntryLearning:
+	case entry2.Learning:
 		return RunAddSilent(update)
-	case config.EntryConvention:
+	case entry2.Convention:
 		return RunAddSilent(update)
-	case config.EntryComplete:
+	case entry2.Complete:
 		return RunCompleteSilent([]string{update.Content})
 	default:
 		return ctxerr.UnknownUpdateType(update.Type)
@@ -101,7 +104,7 @@ func RunCompleteSilent(args []string) error {
 	}
 
 	query := args[0]
-	filePath := filepath.Join(rc.ContextDir(), config.FileTask)
+	filePath := filepath.Join(rc.ContextDir(), file.FileTask)
 	nl := config.NewlineLF
 
 	content, err := os.ReadFile(filepath.Clean(filePath))
@@ -130,7 +133,7 @@ func RunCompleteSilent(args []string) error {
 	}
 
 	lines[matchedLine] = config.RegExTask.ReplaceAllString(
-		lines[matchedLine], config.TaskCompleteReplace,
+		lines[matchedLine], file.TaskCompleteReplace,
 	)
-	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), config.PermFile)
+	return os.WriteFile(filePath, []byte(strings.Join(lines, nl)), fs.PermFile)
 }

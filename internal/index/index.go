@@ -15,6 +15,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -221,7 +222,7 @@ func ReindexFile(
 
 	updated := updateFunc(string(content))
 
-	if err := os.WriteFile(filePath, []byte(updated), config.PermFile); err != nil {
+	if err := os.WriteFile(filePath, []byte(updated), fs.PermFile); err != nil {
 		return ctxerr.ReindexFileWrite(filePath, err)
 	}
 

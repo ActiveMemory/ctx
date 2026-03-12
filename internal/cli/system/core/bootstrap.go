@@ -15,6 +15,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // PluginWarning returns a warning string if the ctx plugin is installed
@@ -50,7 +51,7 @@ func ListContextFiles(dir string) []string {
 		if e.IsDir() {
 			continue
 		}
-		if strings.EqualFold(filepath.Ext(e.Name()), config.ExtMarkdown) {
+		if strings.EqualFold(filepath.Ext(e.Name()), file.ExtMarkdown) {
 			files = append(files, e.Name())
 		}
 	}
@@ -117,9 +118,9 @@ func ParseNumberedLines(text string) []string {
 		if line == "" {
 			continue
 		}
-		if idx := strings.Index(line, config.NumberedListSep); idx >= 0 &&
-			idx <= config.NumberedListMaxDigits {
-			line = line[idx+len(config.NumberedListSep):]
+		if idx := strings.Index(line, file.NumberedListSep); idx >= 0 &&
+			idx <= file.NumberedListMaxDigits {
+			line = line[idx+len(file.NumberedListSep):]
 		}
 		items = append(items, line)
 	}

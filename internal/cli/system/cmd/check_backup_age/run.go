@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -37,7 +38,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	throttleFile := filepath.Join(tmpDir, config.BackupThrottleID)
+	throttleFile := filepath.Join(tmpDir, file.BackupThrottleID)
 
 	if core.IsDailyThrottled(throttleFile) {
 		return nil
@@ -51,12 +52,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var warnings []string
 
 	// Check 1: Is the SMB share mounted?
-	if smbURL := os.Getenv(config.EnvBackupSMBURL); smbURL != "" {
+	if smbURL := os.Getenv(file.EnvBackupSMBURL); smbURL != "" {
 		warnings = core.CheckSMBMountWarnings(smbURL, warnings)
 	}
 
 	// Check 2: Is the backup stale?
-	markerPath := filepath.Join(home, config.BackupMarkerDir, config.BackupMarkerFile)
+	markerPath := filepath.Join(home, file.BackupMarkerDir, file.BackupMarkerFile)
 	warnings = core.CheckBackupMarker(markerPath, warnings)
 
 	if len(warnings) == 0 {
@@ -69,8 +70,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		warningText += w + config.NewlineLF
 	}
 
-	vars := map[string]any{config.TplVarWarnings: warningText}
-	content := core.LoadMessage(config.HookCheckBackupAge, config.VariantWarning, vars, warningText)
+	vars := map[string]any{file.TplVarWarnings: warningText}
+	content := core.LoadMessage(file.HookCheckBackupAge, file.VariantWarning, vars, warningText)
 	if content == "" {
 		return nil
 	}
@@ -81,8 +82,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		assets.TextDesc(assets.TextDescKeyBackupBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(config.HookCheckBackupAge, config.VariantWarning, vars)
-	core.NudgeAndRelay(config.HookCheckBackupAge+": "+
+	ref := notify.NewTemplateRef(file.HookCheckBackupAge, file.VariantWarning, vars)
+	core.NudgeAndRelay(file.HookCheckBackupAge+": "+
 		assets.TextDesc(assets.TextDescKeyBackupRelayMessage),
 		input.SessionID, ref,
 	)

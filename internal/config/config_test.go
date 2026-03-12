@@ -10,54 +10,11 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
-
-func TestUserInputToEntry(t *testing.T) {
-	tests := []struct {
-		input string
-		want  string
-	}{
-		// Task variations
-		{"task", EntryTask},
-		{"tasks", EntryTask},
-		{"Task", EntryTask},
-		{"TASKS", EntryTask},
-
-		// Decision variations
-		{"decision", EntryDecision},
-		{"decisions", EntryDecision},
-		{"Decision", EntryDecision},
-		{"DECISION", EntryDecision},
-
-		// Learning variations
-		{"learning", EntryLearning},
-		{"learnings", EntryLearning},
-		{"Learning", EntryLearning},
-		{"LEARNINGS", EntryLearning},
-
-		// Convention variations
-		{"convention", EntryConvention},
-		{"conventions", EntryConvention},
-		{"Convention", EntryConvention},
-		{"CONVENTIONS", EntryConvention},
-
-		// Unknown inputs
-		{"", EntryUnknown},
-		{"unknown", EntryUnknown},
-		{"foo", EntryUnknown},
-		{"taskss", EntryUnknown},
-		{"learn", EntryUnknown},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.input, func(t *testing.T) {
-			got := UserInputToEntry(tt.input)
-			if got != tt.want {
-				t.Errorf("UserInputToEntry(%q) = %q, want %q", tt.input, got, tt.want)
-			}
-		})
-	}
-}
 
 func TestRegExFromAttrName(t *testing.T) {
 	tests := []struct {
@@ -429,15 +386,15 @@ func TestRegExPath(t *testing.T) {
 func TestFileTypeMap(t *testing.T) {
 	// Verify FileType map contains expected mappings
 	expected := map[string]string{
-		EntryDecision:   FileDecision,
-		EntryTask:       FileTask,
-		EntryLearning:   FileLearning,
-		EntryConvention: FileConvention,
+		entry.Decision:   file.FileDecision,
+		entry.Task:       file.FileTask,
+		entry.Learning:   file.FileLearning,
+		entry.Convention: file.FileConvention,
 	}
 
 	for entry, file := range expected {
-		if FileType[entry] != file {
-			t.Errorf("FileType[%q] = %q, want %q", entry, FileType[entry], file)
+		if file.FileType[entry] != file {
+			t.Errorf("FileType[%q] = %q, want %q", entry, file.FileType[entry], file)
 		}
 	}
 }
@@ -445,12 +402,12 @@ func TestFileTypeMap(t *testing.T) {
 func TestRequiredFiles(t *testing.T) {
 	// Verify FilesRequired contains essential files
 	required := map[string]bool{
-		FileConstitution: false,
-		FileTask:         false,
-		FileDecision:     false,
+		file.FileConstitution: false,
+		file.FileTask:         false,
+		file.FileDecision:     false,
 	}
 
-	for _, f := range FilesRequired {
+	for _, f := range file.FilesRequired {
 		if _, ok := required[f]; ok {
 			required[f] = true
 		}
@@ -465,41 +422,20 @@ func TestRequiredFiles(t *testing.T) {
 
 func TestFileReadOrder(t *testing.T) {
 	// Verify FileReadOrder has expected files in order
-	if len(FileReadOrder) == 0 {
+	if len(file.FileReadOrder) == 0 {
 		t.Error("FileReadOrder is empty")
 	}
 
 	// Constitution should be first (most important)
-	if FileReadOrder[0] != FileConstitution {
+	if file.FileReadOrder[0] != file.FileConstitution {
 		t.Errorf("FileReadOrder[0] = %q, want %q (constitution should be first)",
-			FileReadOrder[0], FileConstitution)
+			file.FileReadOrder[0], file.FileConstitution)
 	}
 
 	// Tasks should be second (what to work on)
-	if FileReadOrder[1] != FileTask {
+	if file.FileReadOrder[1] != file.FileTask {
 		t.Errorf("FileReadOrder[1] = %q, want %q (tasks should be second)",
-			FileReadOrder[1], FileTask)
-	}
-}
-
-func TestEntryPlural(t *testing.T) {
-	tests := []struct {
-		entry string
-		want  string
-	}{
-		{EntryTask, "tasks"},
-		{EntryDecision, "decisions"},
-		{EntryLearning, "learnings"},
-		{EntryConvention, "conventions"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.entry, func(t *testing.T) {
-			got := EntryPlural[tt.entry]
-			if got != tt.want {
-				t.Errorf("EntryPlural[%q] = %q, want %q", tt.entry, got, tt.want)
-			}
-		})
+			file.FileReadOrder[1], file.FileTask)
 	}
 }
 
@@ -510,11 +446,11 @@ func TestConstants(t *testing.T) {
 		got  string
 		want string
 	}{
-		{"DirContext", DirContext, ".context"},
-		{"DirClaude", DirClaude, ".claude"},
-		{"FileTask", FileTask, "TASKS.md"},
-		{"FileDecision", FileDecision, "DECISIONS.md"},
-		{"FileLearning", FileLearning, "LEARNINGS.md"},
+		{"Context", dir.Context, ".context"},
+		{"Claude", dir.Claude, ".claude"},
+		{"FileTask", file.FileTask, "TASKS.md"},
+		{"FileDecision", file.FileDecision, "DECISIONS.md"},
+		{"FileLearning", file.FileLearning, "LEARNINGS.md"},
 		{"PrefixTaskUndone", PrefixTaskUndone, "- [ ]"},
 		{"PrefixTaskDone", PrefixTaskDone, "- [x]"},
 		{"IndexStart", IndexStart, "<!-- INDEX:START -->"},
@@ -527,39 +463,5 @@ func TestConstants(t *testing.T) {
 				t.Errorf("%s = %q, want %q", tt.name, tt.got, tt.want)
 			}
 		})
-	}
-}
-
-func TestInitialized_AllFilesPresent(t *testing.T) {
-	tmp := t.TempDir()
-	for _, f := range FilesRequired {
-		path := filepath.Join(tmp, f)
-		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
-			t.Fatalf("setup: %v", writeErr)
-		}
-	}
-	if !Initialized(tmp) {
-		t.Error("Initialized() = false, want true when all required files present")
-	}
-}
-
-func TestInitialized_MissingFile(t *testing.T) {
-	tmp := t.TempDir()
-	// Create all but the last required file.
-	for _, f := range FilesRequired[:len(FilesRequired)-1] {
-		path := filepath.Join(tmp, f)
-		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
-			t.Fatalf("setup: %v", writeErr)
-		}
-	}
-	if Initialized(tmp) {
-		t.Error("Initialized() = true, want false when a required file is missing")
-	}
-}
-
-func TestInitialized_EmptyDir(t *testing.T) {
-	tmp := t.TempDir()
-	if Initialized(tmp) {
-		t.Error("Initialized() = true, want false for empty directory")
 	}
 }

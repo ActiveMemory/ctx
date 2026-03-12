@@ -11,6 +11,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // MigrateKeyFile warns about legacy key files that should be moved
@@ -36,7 +38,7 @@ func MigrateKeyFile(contextDir string) {
 	var found string
 
 	// Legacy project-local names.
-	for _, name := range []string{FileContextKey, ".context.key", ".scratchpad.key"} {
+	for _, name := range []string{file.FileContextKey, ".context.key", ".scratchpad.key"} {
 		candidate := filepath.Join(contextDir, name)
 		if _, err := os.Stat(candidate); err == nil {
 			found = candidate

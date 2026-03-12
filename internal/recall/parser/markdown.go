@@ -15,6 +15,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/parser"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -54,7 +59,7 @@ func NewMarkdownSessionParser() *MarkdownSessionParser {
 // Returns:
 //   - string: The identifier "markdown"
 func (p *MarkdownSessionParser) Tool() string {
-	return config.ToolMarkdown
+	return file.ToolMarkdown
 }
 
 // Matches returns true if the file appears to be a Markdown session file.
@@ -68,24 +73,24 @@ func (p *MarkdownSessionParser) Tool() string {
 // Returns:
 //   - bool: True if this parser can handle the file
 func (p *MarkdownSessionParser) Matches(path string) bool {
-	if !strings.HasSuffix(path, config.ExtMarkdown) {
+	if !strings.HasSuffix(path, file.ExtMarkdown) {
 		return false
 	}
 
 	// Skip README.md files
 	base := filepath.Base(path)
-	if strings.EqualFold(base, config.FilenameReadme) {
+	if strings.EqualFold(base, file.Readme) {
 		return false
 	}
 
-	file, err := os.Open(filepath.Clean(path))
+	f, err := os.Open(filepath.Clean(path))
 	if err != nil {
 		return false
 	}
-	defer func() { _ = file.Close() }()
+	defer func() { _ = f.Close() }()
 
-	scanner := bufio.NewScanner(file)
-	for i := 0; i < config.ParserPeekLines && scanner.Scan(); i++ {
+	scanner := bufio.NewScanner(f)
+	for i := 0; i < parser.LinesToPeek && scanner.Scan(); i++ {
 		line := strings.TrimSpace(scanner.Text())
 		if isSessionHeader(line) {
 			return true
@@ -161,7 +166,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 
 	// Derive a session ID from the filename (stable, OS-agnostic)
 	base := filepath.Base(sourcePath)
-	sessionID := strings.TrimSuffix(base, config.ExtMarkdown)
+	sessionID := strings.TrimSuffix(base, file.ExtMarkdown)
 
 	// Parse date from header or fall back to file modification time
 	startTime := parseSessionDate(date)
@@ -193,7 +198,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 		messages = append(messages, Message{
 			ID:        sessionID + "-summary",
 			Timestamp: startTime,
-			Role:      config.RoleAssistant,
+			Role:      claude.RoleAssistant,
 			Text:      strings.Join(bodyParts, config.NewlineLF+config.NewlineLF),
 		})
 	}
@@ -204,7 +209,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 		messages = append([]Message{{
 			ID:        sessionID + "-topic",
 			Timestamp: startTime,
-			Role:      config.RoleUser,
+			Role:      claude.RoleUser,
 			Text:      topic,
 		}}, messages...)
 	}
@@ -212,10 +217,10 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	cwd := ""
 	project := ""
 	// Try to infer project from the path (look for .context/sessions/ pattern)
-	dir := filepath.Dir(sourcePath)
-	if filepath.Base(dir) == "sessions" {
-		contextDir := filepath.Dir(dir)
-		if filepath.Base(contextDir) == config.DirContext {
+	d := filepath.Dir(sourcePath)
+	if filepath.Base(d) == "sessions" {
+		contextDir := filepath.Dir(d)
+		if filepath.Base(contextDir) == dir.Context {
 			projectDir := filepath.Dir(contextDir)
 			project = filepath.Base(projectDir)
 			cwd = projectDir
@@ -225,7 +230,7 @@ func (p *MarkdownSessionParser) parseMarkdownSession(
 	return &Session{
 		ID:           sessionID,
 		Slug:         sessionID,
-		Tool:         config.ToolMarkdown,
+		Tool:         file.ToolMarkdown,
 		SourceFile:   sourcePath,
 		CWD:          cwd,
 		Project:      project,
@@ -311,7 +316,7 @@ func parseSessionHeader(line string) (string, string) {
 // Returns:
 //   - time.Time: Parsed time, or zero value on failure
 func parseSessionDate(dateStr string) time.Time {
-	t, err := time.Parse(config.DateFormat, dateStr)
+	t, err := time.Parse(time2.DateFormat, dateStr)
 	if err != nil {
 		return time.Time{}
 	}

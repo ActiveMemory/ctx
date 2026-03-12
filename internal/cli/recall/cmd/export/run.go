@@ -11,10 +11,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -83,9 +85,9 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	}
 
 	// 4. Ensure journal directory exists.
-	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
-	if mkErr := os.MkdirAll(journalDir, config.PermExec); mkErr != nil {
-		return ctxerr.Mkdir(config.DirJournal, mkErr)
+	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
+	if mkErr := os.MkdirAll(journalDir, fs.PermExec); mkErr != nil {
+		return ctxerr.Mkdir(dir.Journal, mkErr)
 	}
 
 	// 5. Load state + build index.
@@ -103,7 +105,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 	for _, rop := range plan.RenameOps {
 		core.RenameJournalFiles(journalDir, rop.OldBase, rop.NewBase, rop.NumParts)
 		jstate.Rename(
-			rop.OldBase+config.ExtMarkdown, rop.NewBase+config.ExtMarkdown,
+			rop.OldBase+file.ExtMarkdown, rop.NewBase+file.ExtMarkdown,
 		)
 		renamed++
 	}
@@ -131,7 +133,7 @@ func Run(cmd *cobra.Command, args []string, opts core.ExportOpts) error {
 
 	// 11. Persist journal state.
 	if saveErr := jstate.Save(journalDir); saveErr != nil {
-		write.WarnFileErr(cmd, config.FileJournalState, saveErr)
+		write.WarnFileErr(cmd, file.FileJournalState, saveErr)
 	}
 
 	// 12. Print final summary.

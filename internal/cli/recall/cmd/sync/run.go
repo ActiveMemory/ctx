@@ -9,10 +9,11 @@ package sync
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -28,7 +29,7 @@ import (
 // Returns:
 //   - error: Non-nil on I/O failure
 func Run(cmd *cobra.Command) error {
-	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
+	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 
 	jstate, loadErr := state.Load(journalDir)
 	if loadErr != nil {
@@ -53,11 +54,11 @@ func Run(cmd *cobra.Command) error {
 
 		switch {
 		case fmLocked && !stateLocked:
-			jstate.Mark(filename, config.StageLocked)
+			jstate.Mark(filename, file.StageLocked)
 			write.JournalSyncLocked(cmd, filename)
 			locked++
 		case !fmLocked && stateLocked:
-			jstate.Clear(filename, config.StageLocked)
+			jstate.Clear(filename, file.StageLocked)
 			write.JournalSyncUnlocked(cmd, filename)
 			unlocked++
 		}

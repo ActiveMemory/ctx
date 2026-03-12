@@ -14,10 +14,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -35,9 +35,9 @@ func setup(t *testing.T) string {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
+	rc.OverrideContextDir(dir.DirContext)
 
-	ctxDir := filepath.Join(dir, config.DirContext)
+	ctxDir := filepath.Join(dir, dir.DirContext)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}

@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	config2 "github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -27,7 +26,7 @@ func SkipFile(cmd *cobra.Command, filename, reason string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, "  skip %s (%s)", filename, reason)
+	cmd.Println(fmt.Sprintf("  skip %s (%s)", filename, reason))
 }
 
 // ExportedFile prints that a file was exported or updated.
@@ -42,9 +41,9 @@ func ExportedFile(cmd *cobra.Command, filename, suffix string) {
 		return
 	}
 	if suffix != "" {
-		io.sprintf(cmd, "  ok %s (%s)", filename, suffix)
+		cmd.Println(fmt.Sprintf("  ok %s (%s)", filename, suffix))
 	} else {
-		io.sprintf(cmd, "  ok %s", filename)
+		cmd.Println(fmt.Sprintf("  ok %s", filename))
 	}
 }
 
@@ -142,16 +141,16 @@ func ExportFinalSummary(cmd *cobra.Command, exported, updated, renamed, skipped 
 	}
 	cmd.Println()
 	if exported > 0 {
-		io.sprintf(cmd, "Exported %d new session(s)", exported)
+		cmd.Println(fmt.Sprintf("Exported %d new session(s)", exported))
 	}
 	if updated > 0 {
-		io.sprintf(cmd, "Updated %d existing session(s) (YAML frontmatter preserved)", updated)
+		cmd.Println(fmt.Sprintf("Updated %d existing session(s) (YAML frontmatter preserved)", updated))
 	}
 	if renamed > 0 {
-		io.sprintf(cmd, "Renamed %d session(s) to title-based filenames", renamed)
+		cmd.Println(fmt.Sprintf("Renamed %d session(s) to title-based filenames", renamed))
 	}
 	if skipped > 0 {
-		io.sprintf(cmd, "Skipped %d existing file(s).", skipped)
+		cmd.Println(fmt.Sprintf("Skipped %d existing file(s).", skipped))
 	}
 }
 
@@ -413,7 +412,7 @@ func LockUnlockNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config2.tplJournalSyncNone)
+	cmd.Println(config2.TplJournalSyncNone)
 }
 
 // LockUnlockEntry prints the confirmation for a single locked/unlocked entry.
@@ -426,7 +425,7 @@ func LockUnlockEntry(cmd *cobra.Command, filename, verb string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config2.tplLockUnlockEntry, filename, verb)
+	cmd.Println(fmt.Sprintf(config2.TplLockUnlockEntry, filename, verb))
 }
 
 // LockUnlockSummary prints the lock/unlock summary.
@@ -440,10 +439,10 @@ func LockUnlockSummary(cmd *cobra.Command, verb string, count int) {
 		return
 	}
 	if count == 0 {
-		io.sprintf(cmd, config2.tplLockUnlockNoChanges, verb)
+		cmd.Println(fmt.Sprintf(config2.TplLockUnlockNoChanges, verb))
 		return
 	}
-	io.sprintf(cmd, config2.tplLockUnlockSummary, strings.Title(verb), count) //nolint:staticcheck // strings.Title is fine for single words
+	cmd.Println(fmt.Sprintf(config2.TplLockUnlockSummary, strings.Title(verb), count)) //nolint:staticcheck // strings.Title is fine for single words
 }
 
 // JournalSyncNone prints the message when no journal entries are found.
@@ -454,7 +453,7 @@ func JournalSyncNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config2.tplJournalSyncNone)
+	cmd.Println(config2.TplJournalSyncNone)
 }
 
 // JournalSyncLocked prints a single locked-entry confirmation.
@@ -466,7 +465,7 @@ func JournalSyncLocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config2.tplJournalSyncLocked, filename)
+	cmd.Println(fmt.Sprintf(config2.TplJournalSyncLocked, filename))
 }
 
 // JournalSyncUnlocked prints a single unlocked-entry confirmation.
@@ -478,7 +477,7 @@ func JournalSyncUnlocked(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config2.tplJournalSyncUnlocked, filename)
+	cmd.Println(fmt.Sprintf(config2.TplJournalSyncUnlocked, filename))
 }
 
 // JournalSyncSummary prints the sync summary: match, locked count,
@@ -493,13 +492,13 @@ func JournalSyncSummary(cmd *cobra.Command, locked, unlocked int) {
 		return
 	}
 	if locked == 0 && unlocked == 0 {
-		cmd.Println(config2.tplJournalSyncMatch)
+		cmd.Println(config2.TplJournalSyncMatch)
 		return
 	}
 	if locked > 0 {
-		io.sprintf(cmd, config2.tplJournalSyncLockedCount, locked)
+		cmd.Println(fmt.Sprintf(config2.TplJournalSyncLockedCount, locked))
 	}
 	if unlocked > 0 {
-		io.sprintf(cmd, config2.tplJournalSyncUnlockedCount, unlocked)
+		cmd.Println(fmt.Sprintf(config2.TplJournalSyncUnlockedCount, unlocked))
 	}
 }

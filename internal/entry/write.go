@@ -12,7 +12,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write/add"
@@ -31,7 +33,7 @@ import (
 func Write(params Params) error {
 	fType := strings.ToLower(params.Type)
 
-	fileName, ok := config.FileType[fType]
+	fileName, ok := file.FileType[fType]
 	if !ok {
 		return add.ErrUnknownType(fType)
 	}
@@ -52,18 +54,18 @@ func Write(params Params) error {
 	}
 
 	var formatted string
-	switch config.UserInputToEntry(fType) {
-	case config.EntryDecision:
+	switch fType {
+	case entry.Decision:
 		formatted = core.FormatDecision(
 			params.Content, params.Context, params.Rationale, params.Consequences,
 		)
-	case config.EntryTask:
+	case entry.Task:
 		formatted = core.FormatTask(params.Content, params.Priority)
-	case config.EntryLearning:
+	case entry.Learning:
 		formatted = core.FormatLearning(
 			params.Content, params.Context, params.Lesson, params.Application,
 		)
-	case config.EntryConvention:
+	case entry.Convention:
 		formatted = core.FormatConvention(params.Content)
 	default:
 		return add.ErrUnknownType(fType)
@@ -72,27 +74,27 @@ func Write(params Params) error {
 	newContent := core.AppendEntry(existing, formatted, fType, params.Section)
 
 	if writeErr := os.WriteFile(
-		filePath, newContent, config.PermFile,
+		filePath, newContent, fs.PermFile,
 	); writeErr != nil {
 		return add.ErrFileWriteAdd(filePath, writeErr)
 	}
 
-	switch config.UserInputToEntry(fType) {
-	case config.EntryDecision:
+	switch fType {
+	case entry.Decision:
 		indexed := index.UpdateDecisions(string(newContent))
 		if indexErr := os.WriteFile(
-			filePath, []byte(indexed), config.PermFile,
+			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
 			return add.ErrIndexUpdate(filePath, indexErr)
 		}
-	case config.EntryLearning:
+	case entry.Learning:
 		indexed := index.UpdateLearnings(string(newContent))
 		if indexErr := os.WriteFile(
-			filePath, []byte(indexed), config.PermFile,
+			filePath, []byte(indexed), fs.PermFile,
 		); indexErr != nil {
 			return add.ErrIndexUpdate(filePath, indexErr)
 		}
-	case config.EntryTask, config.EntryConvention:
+	case entry.Task, entry.Convention:
 		// No index to update for these types
 	}
 

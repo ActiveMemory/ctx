@@ -12,11 +12,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -65,7 +66,7 @@ func PrintTemplateVars(cmd *cobra.Command, info *messages.HookMessageInfo) {
 // Returns:
 //   - string: full filesystem path to the override file
 func OverridePath(hook, variant string) string {
-	return filepath.Join(rc.ContextDir(), config.DirHooksMessages, hook, variant+config.ExtTxt)
+	return filepath.Join(rc.ContextDir(), dir.HooksMessages, hook, variant+file.ExtTxt)
 }
 
 // HasOverride checks whether a user override file exists.

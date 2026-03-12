@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -62,7 +64,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 				return ctxerr.ReadInput(err)
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
-			if response != config.ConfirmShort && response != config.ConfirmLong {
+			if response != file.ConfirmShort && response != file.ConfirmLong {
 				write.InfoInitAborted(cmd)
 				return nil
 			}
@@ -70,14 +72,14 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	}
 
 	// Create .context/ directory
-	if err := os.MkdirAll(contextDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(contextDir, fs.PermExec); err != nil {
 		return ctxerr.Mkdir(contextDir, err)
 	}
 
 	// Get the list of templates to create
 	var templatesToCreate []string
 	if minimal {
-		templatesToCreate = config.FilesRequired
+		templatesToCreate = file.FilesRequired
 	} else {
 		var listErr error
 		templatesToCreate, listErr = assets.List()
@@ -101,7 +103,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 			return ctxerr.ReadTemplate(name, err)
 		}
 
-		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
+		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
 			return ctxerr.FileWrite(targetPath, err)
 		}
 
@@ -207,9 +209,9 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	if !rc.ScratchpadEncrypt() {
 		// Plaintext mode: create empty scratchpad.md if not present
-		mdPath := filepath.Join(contextDir, config.FileScratchpadMd)
+		mdPath := filepath.Join(contextDir, file.FileScratchpadMd)
 		if _, err := os.Stat(mdPath); err != nil {
-			if err := os.WriteFile(mdPath, nil, config.PermFile); err != nil {
+			if err := os.WriteFile(mdPath, nil, fs.PermFile); err != nil {
 				return ctxerr.Mkdir(mdPath, err)
 			}
 			write.InfoInitScratchpadPlaintext(cmd, mdPath)
@@ -221,7 +223,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 
 	// Encrypted mode
 	kPath := rc.KeyPath()
-	encPath := filepath.Join(contextDir, config.FileScratchpadEnc)
+	encPath := filepath.Join(contextDir, file.FileScratchpadEnc)
 
 	// Check if key already exists (idempotent)
 	if _, err := os.Stat(kPath); err == nil {
@@ -259,7 +261,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 // directory with only logs/ or other non-essential content is considered
 // uninitialized.
 func hasEssentialFiles(contextDir string) bool {
-	for _, f := range config.FilesRequired {
+	for _, f := range file.FilesRequired {
 		if _, err := os.Stat(filepath.Join(contextDir, f)); err == nil {
 			return true
 		}
@@ -285,7 +287,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 
 	// Collect missing entries.
 	var missing []string
-	for _, entry := range config.GitignoreEntries {
+	for _, entry := range file.Gitignore {
 		if !existing[entry] {
 			missing = append(missing, entry)
 		}
@@ -305,7 +307,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 		sb.WriteString(entry + config.NewlineLF)
 	}
 
-	if err := os.WriteFile(gitignorePath, append(content, []byte(sb.String())...), config.PermFile); err != nil {
+	if err := os.WriteFile(gitignorePath, append(content, []byte(sb.String())...), fs.PermFile); err != nil {
 		return err
 	}
 

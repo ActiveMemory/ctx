@@ -11,10 +11,12 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	mem "github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -43,14 +45,14 @@ func Run(cmd *cobra.Command) error {
 
 	write.MemoryBridgeHeader(cmd)
 	write.MemorySource(cmd, sourcePath)
-	write.MemoryMirror(cmd, config.PathMemoryMirror)
+	write.MemoryMirror(cmd, file.PathMemoryMirror)
 
 	// Last sync time
 	state, _ := mem.LoadState(contextDir)
 	if state.LastSync != nil {
 		ago := time.Since(*state.LastSync).Truncate(time.Minute)
 		write.MemoryLastSync(cmd,
-			state.LastSync.Local().Format(config.DateTimeFormat),
+			state.LastSync.Local().Format(time2.DateTimeFormat),
 			core.FormatDuration(ago))
 	} else {
 		write.MemoryLastSyncNever(cmd)
@@ -67,9 +69,9 @@ func Run(cmd *cobra.Command) error {
 	}
 
 	// Mirror line count
-	memoryDir := filepath.Join(contextDir, config.DirMemory)
+	memoryDir := filepath.Join(contextDir, dir.Memory)
 	if mirrorData, readErr := validation.SafeReadFile(
-		memoryDir, config.FileMemoryMirror,
+		memoryDir, file.FileMemoryMirror,
 	); readErr == nil {
 		write.MemoryMirrorLines(cmd, core.CountFileLines(mirrorData))
 	} else {
@@ -85,7 +87,7 @@ func Run(cmd *cobra.Command) error {
 
 	// Archives
 	count := mem.ArchiveCount(contextDir)
-	write.MemoryArchives(cmd, count, config.DirMemoryArchive)
+	write.MemoryArchives(cmd, count, dir.MemoryArchive)
 
 	if hasDrift {
 		// Exit code 2 for drift

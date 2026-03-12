@@ -12,11 +12,13 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -30,11 +32,11 @@ import (
 //   - error: Non-nil if file operations fail
 func MergeSettingsPermissions(cmd *cobra.Command) error {
 	var settings claude.Settings
-	existingContent, err := os.ReadFile(config.FileSettings)
+	existingContent, err := os.ReadFile(file.FileSettings)
 	fileExists := err == nil
 	if fileExists {
 		if err := json.Unmarshal(existingContent, &settings); err != nil {
-			return ctxerr.ParseFile(config.FileSettings, err)
+			return ctxerr.ParseFile(file.FileSettings, err)
 		}
 	}
 	allowModified := MergePermissions(&settings.Permissions.Allow, assets.DefaultAllowPermissions())
@@ -42,11 +44,11 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
 	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
-		write.InitNoChanges(cmd, config.FileSettings)
+		write.InitNoChanges(cmd, file.FileSettings)
 		return nil
 	}
-	if err := os.MkdirAll(config.DirClaude, config.PermExec); err != nil {
-		return ctxerr.Mkdir(config.DirClaude, err)
+	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
+		return ctxerr.Mkdir(dir.Claude, err)
 	}
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
@@ -55,26 +57,26 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	if err := encoder.Encode(settings); err != nil {
 		return ctxerr.MarshalSettings(err)
 	}
-	if err := os.WriteFile(config.FileSettings, buf.Bytes(), config.PermFile); err != nil {
-		return ctxerr.FileWrite(config.FileSettings, err)
+	if err := os.WriteFile(file.FileSettings, buf.Bytes(), fs.PermFile); err != nil {
+		return ctxerr.FileWrite(file.FileSettings, err)
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped
 		merged := allowModified || denyModified
 		switch {
 		case merged && deduped:
-			write.InitPermsMergedDeduped(cmd, config.FileSettings)
+			write.InitPermsMergedDeduped(cmd, file.FileSettings)
 		case deduped:
-			write.InitPermsDeduped(cmd, config.FileSettings)
+			write.InitPermsDeduped(cmd, file.FileSettings)
 		case allowModified && denyModified:
-			write.InitPermsAllowDeny(cmd, config.FileSettings)
+			write.InitPermsAllowDeny(cmd, file.FileSettings)
 		case denyModified:
-			write.InitPermsDeny(cmd, config.FileSettings)
+			write.InitPermsDeny(cmd, file.FileSettings)
 		default:
-			write.InitPermsAllow(cmd, config.FileSettings)
+			write.InitPermsAllow(cmd, file.FileSettings)
 		}
 	} else {
-		write.InitCreated(cmd, config.FileSettings)
+		write.InitCreated(cmd, file.FileSettings)
 	}
 	return nil
 }

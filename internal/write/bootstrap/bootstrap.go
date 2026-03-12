@@ -8,8 +8,9 @@ package bootstrap
 
 import (
 	"encoding/json"
+	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/ActiveMemory/ctx/internal/write/config"
 	"github.com/spf13/cobra"
 )
 
@@ -32,27 +33,27 @@ type BootstrapJSONOutput struct {
 //   - nextSteps: ordered next-step strings (numbered automatically).
 //   - warning: optional warning string (empty string skips).
 func BootstrapText(cmd *cobra.Command, dir string, fileList string, rules []string, nextSteps []string, warning string) {
-	cmd.Println(write.tplBootstrapTitle)
-	cmd.Println(write.tplBootstrapSep)
+	cmd.Println(config.TplBootstrapTitle)
+	cmd.Println(config.TplBootstrapSep)
 	cmd.Println()
-	write.sprintf(cmd, write.tplBootstrapDir, dir)
+	cmd.Println(fmt.Sprintf(config.TplBootstrapDir, dir))
 	cmd.Println()
-	cmd.Println(write.tplBootstrapFiles)
+	cmd.Println(config.TplBootstrapFiles)
 	cmd.Println(fileList)
 	cmd.Println()
-	cmd.Println(write.tplBootstrapRules)
+	cmd.Println(config.TplBootstrapRules)
 	for i, r := range rules {
-		write.sprintf(cmd, write.tplBootstrapNumbered, i+1, r)
+		cmd.Println(fmt.Sprintf(config.TplBootstrapNumbered, i+1, r))
 	}
 	cmd.Println()
-	cmd.Println(write.tplBootstrapNextSteps)
+	cmd.Println(config.TplBootstrapNextSteps)
 	for i, s := range nextSteps {
-		write.sprintf(cmd, write.tplBootstrapNumbered, i+1, s)
+		cmd.Println(fmt.Sprintf(config.TplBootstrapNumbered, i+1, s))
 	}
 
 	if warning != "" {
 		cmd.Println()
-		write.sprintf(cmd, write.tplBootstrapWarning, warning)
+		cmd.Println(fmt.Sprintf(config.TplBootstrapWarning, warning))
 	}
 }
 

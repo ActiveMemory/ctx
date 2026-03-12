@@ -9,7 +9,7 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // FileNameToTitle converts a context file name to a human-readable title.
@@ -25,7 +25,7 @@ import (
 //   - string: Title case representation of the file name
 func FileNameToTitle(name string) string {
 	// Remove .md extension
-	name = strings.TrimSuffix(name, config.ExtMarkdown)
+	name = strings.TrimSuffix(name, file.ExtMarkdown)
 	// Convert SCREAMING_SNAKE to Title Case
 	name = strings.ReplaceAll(name, "_", " ")
 	// Title case each word

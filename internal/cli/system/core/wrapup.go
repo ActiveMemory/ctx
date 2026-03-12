@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // WrappedUpExpiry is how long the marker suppresses nudges.
@@ -25,7 +25,7 @@ const WrappedUpExpiry = 2 * time.Hour
 // Returns:
 //   - bool: True if wrap-up marker is fresh
 func WrappedUpRecently() bool {
-	markerPath := filepath.Join(StateDir(), config.WrappedUpMarker)
+	markerPath := filepath.Join(StateDir(), file.WrappedUpMarker)
 
 	info, statErr := os.Stat(markerPath)
 	if statErr != nil {

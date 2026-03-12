@@ -17,7 +17,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -43,7 +45,7 @@ func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 
 	// Ensure state directory exists.
 	stateDir := filepath.Dir(logPath)
-	if mkErr := os.MkdirAll(stateDir, config.PermExec); mkErr != nil {
+	if mkErr := os.MkdirAll(stateDir, fs.PermExec); mkErr != nil {
 		return
 	}
 
@@ -71,7 +73,7 @@ func Append(event, message, sessionID string, detail *notify.TemplateRef) {
 	line = append(line, '\n')
 
 	//nolint:gosec // project-local state path
-	f, openErr := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, config.PermFile)
+	f, openErr := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fs.PermFile)
 	if openErr != nil {
 		return
 	}
@@ -190,7 +192,7 @@ func rotate(logPath string) {
 	if statErr != nil {
 		return // file doesn't exist yet, nothing to rotate
 	}
-	if info.Size() < int64(config.EventLogMaxBytes) {
+	if info.Size() < int64(file.EventLogMaxBytes) {
 		return
 	}
 
@@ -201,10 +203,10 @@ func rotate(logPath string) {
 
 // logFilePath returns the path to the current event log.
 func logFilePath() string {
-	return filepath.Join(rc.ContextDir(), config.DirState, config.FileEventLog)
+	return filepath.Join(rc.ContextDir(), dir.State, file.FileEventLog)
 }
 
 // prevLogFilePath returns the path to the rotated event log.
 func prevLogFilePath() string {
-	return filepath.Join(rc.ContextDir(), config.DirState, config.FileEventLogPrev)
+	return filepath.Join(rc.ContextDir(), dir.State, file.FileEventLogPrev)
 }

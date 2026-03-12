@@ -12,9 +12,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // PrintHookContext emits a JSON HookResponse with additionalContext for the
@@ -50,7 +49,7 @@ func HookPreamble(stdin *os.File) (input HookInput, sessionID string, paused boo
 	input = ReadInput(stdin)
 	sessionID = input.SessionID
 	if sessionID == "" {
-		sessionID = config.SessionUnknown
+		sessionID = file.SessionUnknown
 	}
 	paused = Paused(sessionID) > 0
 	return

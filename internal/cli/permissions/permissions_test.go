@@ -15,7 +15,9 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/permissions/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 // setupDir creates a temp dir with .claude/, chdirs into it, and returns cleanup.
@@ -28,7 +30,7 @@ func setupDir(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = os.Chdir(origDir) })
 
-	if err := os.MkdirAll(config.DirClaude, config.PermExec); err != nil {
+	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -36,7 +38,7 @@ func setupDir(t *testing.T) {
 // writeSettings writes JSON content to settings.local.json.
 func writeSettings(t *testing.T, content string) {
 	t.Helper()
-	if err := os.WriteFile(config.FileSettings, []byte(content), config.PermFile); err != nil {
+	if err := os.WriteFile(file.FileSettings, []byte(content), fs.PermFile); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -44,7 +46,7 @@ func writeSettings(t *testing.T, content string) {
 // writeGolden writes JSON content to settings.golden.json.
 func writeGolden(t *testing.T, content string) {
 	t.Helper()
-	if err := os.WriteFile(config.FileSettingsGolden, []byte(content), config.PermFile); err != nil {
+	if err := os.WriteFile(file.FileSettingsGolden, []byte(content), fs.PermFile); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -75,7 +77,7 @@ func TestSnapshotCreatesGoldenFile(t *testing.T) {
 	}
 
 	// Verify golden file is a byte-for-byte copy.
-	golden, readErr := os.ReadFile(config.FileSettingsGolden)
+	golden, readErr := os.ReadFile(file.FileSettingsGolden)
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -98,7 +100,7 @@ func TestSnapshotOverwritesExisting(t *testing.T) {
 		t.Errorf("output = %q, want 'Updated'", out)
 	}
 
-	golden, readErr := os.ReadFile(config.FileSettingsGolden)
+	golden, readErr := os.ReadFile(file.FileSettingsGolden)
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -139,7 +141,7 @@ func TestRestoreFromGolden(t *testing.T) {
 	}
 
 	// Verify settings file now matches golden.
-	data, readErr := os.ReadFile(config.FileSettings)
+	data, readErr := os.ReadFile(file.FileSettings)
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -226,7 +228,7 @@ func TestRestoreNoLocalFile(t *testing.T) {
 	}
 
 	// Verify settings file was created from golden.
-	data, readErr := os.ReadFile(config.FileSettings)
+	data, readErr := os.ReadFile(file.FileSettings)
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -381,7 +383,7 @@ func TestSnapshotPreservesExactBytes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	golden, readErr := os.ReadFile(config.FileSettingsGolden)
+	golden, readErr := os.ReadFile(file.FileSettingsGolden)
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -402,7 +404,7 @@ func TestRestorePreservesExactBytes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	data, readErr := os.ReadFile(config.FileSettings)
+	data, readErr := os.ReadFile(file.FileSettings)
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -431,7 +433,7 @@ func TestCmdHasSubcommands(t *testing.T) {
 
 // Verify golden file path is under .claude/ (not .context/).
 func TestGoldenFilePath(t *testing.T) {
-	if !strings.HasPrefix(config.FileSettingsGolden, config.DirClaude+"/") {
-		t.Errorf("FileSettingsGolden = %q, want prefix %q", config.FileSettingsGolden, config.DirClaude+"/")
+	if !strings.HasPrefix(file.FileSettingsGolden, dir.Claude+"/") {
+		t.Errorf("FileSettingsGolden = %q, want prefix %q", file.FileSettingsGolden, dir.Claude+"/")
 	}
 }

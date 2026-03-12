@@ -7,10 +7,10 @@
 package resolve
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -37,11 +37,11 @@ func Run(cmd *cobra.Command) error {
 
 	dir := rc.ContextDir()
 
-	ours, errOurs := core.DecryptFile(key, dir, config.FileScratchpadEnc+".ours")
-	theirs, errTheirs := core.DecryptFile(key, dir, config.FileScratchpadEnc+".theirs")
+	ours, errOurs := core.DecryptFile(key, dir, file.FileScratchpadEnc+".ours")
+	theirs, errTheirs := core.DecryptFile(key, dir, file.FileScratchpadEnc+".theirs")
 
 	if errOurs != nil && errTheirs != nil {
-		return ctxerr.NoConflictFiles(config.FileScratchpadEnc)
+		return ctxerr.NoConflictFiles(file.FileScratchpadEnc)
 	}
 
 	if errOurs == nil {

@@ -11,11 +11,14 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -32,13 +35,13 @@ import (
 //   - error: Non-nil if zensical is not found or fails
 func runZensical(dir, command string) error {
 	// Check if zensical is available
-	_, lookErr := exec.LookPath(config.BinZensical)
+	_, lookErr := exec.LookPath(zensical.Bin)
 	if lookErr != nil {
 		return ctxerr.ZensicalNotFound()
 	}
 
 	// G204: binary is a constant, command is from the caller
-	cmd := exec.Command(config.BinZensical, command) //nolint:gosec
+	cmd := exec.Command(zensical.Bin, command) //nolint:gosec
 	cmd.Dir = dir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -63,7 +66,7 @@ func runZensical(dir, command string) error {
 func runJournalSite(
 	cmd *cobra.Command, output string, build, serve bool,
 ) error {
-	journalDir := filepath.Join(rc.ContextDir(), config.DirJournal)
+	journalDir := filepath.Join(rc.ContextDir(), dir.Journal)
 
 	// Check if the journal directory exists
 	if _, statErr := os.Stat(journalDir); os.IsNotExist(statErr) {
@@ -87,32 +90,32 @@ func runJournalSite(
 	}
 
 	// Create output directory structure
-	docsDir := filepath.Join(output, config.JournalDirDocs)
-	if mkErr := os.MkdirAll(docsDir, config.PermExec); mkErr != nil {
+	docsDir := filepath.Join(output, dir.JournalDocs)
+	if mkErr := os.MkdirAll(docsDir, fs.PermExec); mkErr != nil {
 		return ctxerr.Mkdir(docsDir, mkErr)
 	}
 
 	// Write the stylesheet for <pre> overflow control
-	stylesDir := filepath.Join(docsDir, config.DirStylesheets)
-	if mkErr := os.MkdirAll(stylesDir, config.PermExec); mkErr != nil {
+	stylesDir := filepath.Join(docsDir, zensical.Stylesheets)
+	if mkErr := os.MkdirAll(stylesDir, fs.PermExec); mkErr != nil {
 		return ctxerr.Mkdir(stylesDir, mkErr)
 	}
-	cssPath := filepath.Join(stylesDir, config.FileExtraCSS)
+	cssPath := filepath.Join(stylesDir, zensical.ExtraCSS)
 	cssData, cssReadErr := assets.JournalExtraCSS()
 	if cssReadErr != nil {
 		return cssReadErr
 	}
 	if writeErr := os.WriteFile(
-		cssPath, cssData, config.PermFile,
+		cssPath, cssData, fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(cssPath, writeErr)
 	}
 
 	// Write README
-	readmePath := filepath.Join(output, config.FilenameReadme)
+	readmePath := filepath.Join(output, file.Readme)
 	if writeErr := os.WriteFile(
 		readmePath,
-		[]byte(core.GenerateSiteReadme(journalDir)), config.PermFile,
+		[]byte(core.GenerateSiteReadme(journalDir)), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(readmePath, writeErr)
 	}
@@ -142,7 +145,7 @@ func runJournalSite(
 		)
 		if normalized != string(content) {
 			if writeErr := os.WriteFile(
-				src, []byte(normalized), config.PermFile,
+				src, []byte(normalized), fs.PermFile,
 			); writeErr != nil {
 				write.WarnFileErr(cmd, entry.Filename, writeErr)
 			}
@@ -156,7 +159,7 @@ func runJournalSite(
 		}
 		siteContent := core.NormalizeContent(withLinks, fv)
 		if writeErr := os.WriteFile(
-			dst, []byte(siteContent), config.PermFile,
+			dst, []byte(siteContent), fs.PermFile,
 		); writeErr != nil {
 			write.WarnFileErr(cmd, entry.Filename, writeErr)
 			continue
@@ -165,7 +168,7 @@ func runJournalSite(
 
 	// Remove orphan site files — entries whose source was renamed or deleted.
 	knownFiles := make(map[string]bool, len(entries)+1)
-	knownFiles[config.FilenameIndex] = true
+	knownFiles[file.Index] = true
 	for _, e := range entries {
 		knownFiles[e.Filename] = true
 	}
@@ -183,9 +186,9 @@ func runJournalSite(
 
 	// Generate index.md
 	indexContent := core.GenerateIndex(entries)
-	indexPath := filepath.Join(docsDir, config.FilenameIndex)
+	indexPath := filepath.Join(docsDir, file.Index)
 	if writeErr := os.WriteFile(
-		indexPath, []byte(indexContent), config.PermFile,
+		indexPath, []byte(indexContent), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(indexPath, writeErr)
 	}
@@ -203,17 +206,17 @@ func runJournalSite(
 
 	if len(topics) > 0 {
 		if writeErr := core.WriteSection(
-			docsDir, config.JournalDirTopics,
+			docsDir, dir.JournTopics,
 			core.GenerateTopicsIndex(topics),
 			func(dir string) {
 				for _, t := range topics {
 					if !t.Popular {
 						continue
 					}
-					pagePath := filepath.Join(dir, t.Name+config.ExtMarkdown)
+					pagePath := filepath.Join(dir, t.Name+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
 						pagePath, []byte(core.GenerateTopicPage(t)),
-						config.PermFile,
+						fs.PermFile,
 					); pageErr != nil {
 						write.WarnFileErr(cmd, pagePath, pageErr)
 					}
@@ -236,7 +239,7 @@ func runJournalSite(
 
 	if len(keyFiles) > 0 {
 		if writeErr := core.WriteSection(
-			docsDir, config.JournalDirFiles,
+			docsDir, dir.JournalFiles,
 			core.GenerateKeyFilesIndex(keyFiles),
 			func(dir string) {
 				for _, kf := range keyFiles {
@@ -244,11 +247,11 @@ func runJournalSite(
 						continue
 					}
 					slug := core.KeyFileSlug(kf.Path)
-					pagePath := filepath.Join(dir, slug+config.ExtMarkdown)
+					pagePath := filepath.Join(dir, slug+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
 						pagePath, []byte(
 							core.GenerateKeyFilePage(kf)),
-						config.PermFile,
+						fs.PermFile,
 					); pageErr != nil {
 						write.WarnFileErr(cmd, pagePath, pageErr)
 					}
@@ -272,14 +275,14 @@ func runJournalSite(
 	if len(sessionTypes) > 0 {
 		if writeErr := core.WriteSection(
 			docsDir,
-			config.JournalDirTypes,
+			dir.JournalTypes,
 			core.GenerateTypesIndex(sessionTypes),
 			func(dir string) {
 				for _, st := range sessionTypes {
-					pagePath := filepath.Join(dir, st.Name+config.ExtMarkdown)
+					pagePath := filepath.Join(dir, st.Name+file.ExtMarkdown)
 					if pageErr := os.WriteFile(
 						pagePath,
-						[]byte(core.GenerateTypePage(st)), config.PermFile,
+						[]byte(core.GenerateTypePage(st)), fs.PermFile,
 					); pageErr != nil {
 						write.WarnFileErr(cmd, pagePath, pageErr)
 					}
@@ -293,10 +296,10 @@ func runJournalSite(
 	tomlContent := core.GenerateZensicalToml(
 		entries, topics, keyFiles, sessionTypes,
 	)
-	tomlPath := filepath.Join(output, config.FileZensicalToml)
+	tomlPath := filepath.Join(output, zensical.Toml)
 	if writeErr := os.WriteFile(
 		tomlPath,
-		[]byte(tomlContent), config.PermFile,
+		[]byte(tomlContent), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(tomlPath, writeErr)
 	}
@@ -309,7 +312,7 @@ func runJournalSite(
 		return runZensical(output, "build")
 	}
 
-	write.InfoJournalSiteGenerated(cmd, len(entries), output, config.BinZensical)
+	write.InfoJournalSiteGenerated(cmd, len(entries), output, zensical.Bin)
 
 	return nil
 }

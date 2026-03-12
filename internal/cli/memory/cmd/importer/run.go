@@ -9,10 +9,11 @@ package importer
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/memory"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -49,7 +50,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	entries := memory.ParseEntries(string(sourceData))
 	if len(entries) == 0 {
-		write.ImportNoEntries(cmd, config.FileMemorySource)
+		write.ImportNoEntries(cmd, file.FileMemorySource)
 		return nil
 	}
 
@@ -58,20 +59,20 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return ctxerr.LoadState(loadErr)
 	}
 
-	write.ImportScanHeader(cmd, config.FileMemorySource, len(entries))
+	write.ImportScanHeader(cmd, file.FileMemorySource, len(entries))
 
 	var result core.ImportResult
 
-	for _, entry := range entries {
-		hash := memory.EntryHash(entry.Text)
+	for _, e := range entries {
+		hash := memory.EntryHash(e.Text)
 
 		if state.Imported(hash) {
 			result.Dupes++
 			continue
 		}
 
-		classification := memory.Classify(entry)
-		title := core.Truncate(entry.Text, 60)
+		classification := memory.Classify(e)
+		title := core.Truncate(e.Text, 60)
 
 		if classification.Target == memory.TargetSkip {
 			result.Skipped++
@@ -81,12 +82,12 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 			continue
 		}
 
-		targetFile := config.FileType[classification.Target]
+		targetFile := file.FileType[classification.Target]
 
 		if dryRun {
 			write.ImportEntryClassified(cmd, title, targetFile, classification.Keywords)
 		} else {
-			if promoteErr := memory.Promote(entry, classification); promoteErr != nil {
+			if promoteErr := memory.Promote(e, classification); promoteErr != nil {
 				write.ErrImportPromote(cmd, targetFile, promoteErr)
 				continue
 			}
@@ -95,13 +96,13 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		}
 
 		switch classification.Target {
-		case config.EntryConvention:
+		case entry.Convention:
 			result.Conventions++
-		case config.EntryDecision:
+		case entry.Decision:
 			result.Decisions++
-		case config.EntryLearning:
+		case entry.Learning:
 			result.Learnings++
-		case config.EntryTask:
+		case entry.Task:
 			result.Tasks++
 		}
 	}

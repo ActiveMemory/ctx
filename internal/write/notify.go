@@ -7,10 +7,10 @@
 package write
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +22,7 @@ func SetupPrompt(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Print(config.tplSetupPrompt)
+	cmd.Print(config.TplSetupPrompt)
 }
 
 // SetupDone prints the success block after saving a webhook:
@@ -36,7 +36,7 @@ func SetupDone(cmd *cobra.Command, maskedURL, encPath string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplSetupDone, maskedURL, encPath)
+	cmd.Println(fmt.Sprintf(config.TplSetupDone, maskedURL, encPath))
 }
 
 // TestNoWebhook prints the message when no webhook is configured.
@@ -47,7 +47,7 @@ func TestNoWebhook(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplTestNoWebhook)
+	cmd.Println(config.TplTestNoWebhook)
 }
 
 // TestFiltered prints the notice when the test event is filtered.
@@ -58,7 +58,7 @@ func TestFiltered(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplTestFiltered)
+	cmd.Println(config.TplTestFiltered)
 }
 
 // TestResult prints the webhook test response block: status line
@@ -72,8 +72,8 @@ func TestResult(cmd *cobra.Command, statusCode int, encPath string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplTestResult, statusCode, http.StatusText(statusCode))
+	cmd.Println(fmt.Sprintf(config.TplTestResult, statusCode, http.StatusText(statusCode)))
 	if statusCode >= 200 && statusCode < 300 {
-		io.sprintf(cmd, config.tplTestWorking, encPath)
+		cmd.Println(fmt.Sprintf(config.TplTestWorking, encPath))
 	}
 }

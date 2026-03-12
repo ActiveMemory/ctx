@@ -16,6 +16,10 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 )
 
 // LoadState reads the sync state from .context/state/memory-import.json.
@@ -44,7 +48,7 @@ func LoadState(contextDir string) (State, error) {
 func SaveState(contextDir string, s State) error {
 	path := statePath(contextDir)
 	dir := filepath.Dir(path)
-	if mkErr := os.MkdirAll(dir, config.PermExec); mkErr != nil {
+	if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
 		return mkErr
 	}
 
@@ -53,7 +57,7 @@ func SaveState(contextDir string, s State) error {
 		return marshalErr
 	}
 	data = append(data, config.ByteNewline)
-	return os.WriteFile(path, data, config.PermFile)
+	return os.WriteFile(path, data, fs.PermFile)
 }
 
 // MarkSynced updates the state with the current timestamp.
@@ -83,7 +87,7 @@ func (s *State) Imported(hash string) bool {
 
 // MarkImported records an entry hash with its target and date.
 func (s *State) MarkImported(hash, target string) {
-	date := time.Now().Format(config.DateFormat)
+	date := time.Now().Format(time2.DateFormat)
 	entry := fmt.Sprintf("%s:%s:%s", hash, target, date)
 	s.ImportedHashes = append(s.ImportedHashes, entry)
 }
@@ -95,5 +99,5 @@ func (s *State) MarkImportedDone() {
 }
 
 func statePath(contextDir string) string {
-	return filepath.Join(contextDir, config.DirState, config.FileMemoryState)
+	return filepath.Join(contextDir, dir.State, file.FileMemoryState)
 }

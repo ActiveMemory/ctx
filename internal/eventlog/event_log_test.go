@@ -13,7 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -25,7 +26,7 @@ func setupTestDir(t *testing.T, enableLog bool) string {
 	dir := t.TempDir()
 
 	rc.Reset()
-	rc.OverrideContextDir(filepath.Join(dir, config.DirContext))
+	rc.OverrideContextDir(filepath.Join(dir, dir.DirContext))
 
 	// Write .ctxrc to control event_log.
 	rcContent := "event_log: false\n"
@@ -33,7 +34,7 @@ func setupTestDir(t *testing.T, enableLog bool) string {
 		rcContent = "event_log: true\n"
 	}
 	if writeErr := os.WriteFile(
-		filepath.Join(dir, config.FileContextRC), []byte(rcContent), config.PermFile,
+		filepath.Join(dir, file.FileContextRC), []byte(rcContent), fs.PermFile,
 	); writeErr != nil {
 		t.Fatalf("failed to write .ctxrc: %v", writeErr)
 	}
@@ -55,7 +56,7 @@ func setupTestDir(t *testing.T, enableLog bool) string {
 
 func TestAppend_Disabled(t *testing.T) {
 	dir := setupTestDir(t, false)
-	logPath := filepath.Join(dir, config.DirContext, config.DirState, config.FileEventLog)
+	logPath := filepath.Join(dir, dir.DirContext, dir.DirState, file.FileEventLog)
 
 	Append("relay", "test message", "session-1", nil)
 
@@ -66,7 +67,7 @@ func TestAppend_Disabled(t *testing.T) {
 
 func TestAppend_Basic(t *testing.T) {
 	dir := setupTestDir(t, true)
-	logPath := filepath.Join(dir, config.DirContext, config.DirState, config.FileEventLog)
+	logPath := filepath.Join(dir, dir.DirContext, dir.DirState, file.FileEventLog)
 
 	detail := notify.NewTemplateRef("qa-reminder", "gate", nil)
 	Append("relay", "QA gate reminder", "session-1", detail)
@@ -100,7 +101,7 @@ func TestAppend_Basic(t *testing.T) {
 
 func TestAppend_CreatesStateDir(t *testing.T) {
 	dir := setupTestDir(t, true)
-	stateDir := filepath.Join(dir, config.DirContext, config.DirState)
+	stateDir := filepath.Join(dir, dir.DirContext, dir.DirState)
 
 	// Verify state dir doesn't exist yet.
 	if _, statErr := os.Stat(stateDir); !os.IsNotExist(statErr) {
@@ -116,17 +117,17 @@ func TestAppend_CreatesStateDir(t *testing.T) {
 
 func TestAppend_Rotation(t *testing.T) {
 	dir := setupTestDir(t, true)
-	logPath := filepath.Join(dir, config.DirContext, config.DirState, config.FileEventLog)
-	prevPath := filepath.Join(dir, config.DirContext, config.DirState, config.FileEventLogPrev)
+	logPath := filepath.Join(dir, dir.DirContext, dir.DirState, file.FileEventLog)
+	prevPath := filepath.Join(dir, dir.DirContext, dir.DirState, file.FileEventLogPrev)
 
 	// Create state dir and write a file that exceeds the max size.
-	stateDir := filepath.Join(dir, config.DirContext, config.DirState)
-	if mkErr := os.MkdirAll(stateDir, config.PermExec); mkErr != nil {
+	stateDir := filepath.Join(dir, dir.DirContext, dir.DirState)
+	if mkErr := os.MkdirAll(stateDir, fs.PermExec); mkErr != nil {
 		t.Fatalf("failed to create state dir: %v", mkErr)
 	}
 
 	bigContent := strings.Repeat(`{"event":"relay","message":"filler"}`+"\n", 40000)
-	if writeErr := os.WriteFile(logPath, []byte(bigContent), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(logPath, []byte(bigContent), fs.PermFile); writeErr != nil {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
@@ -150,22 +151,22 @@ func TestAppend_Rotation(t *testing.T) {
 
 func TestAppend_RotationOverwrite(t *testing.T) {
 	dir := setupTestDir(t, true)
-	logPath := filepath.Join(dir, config.DirContext, config.DirState, config.FileEventLog)
-	prevPath := filepath.Join(dir, config.DirContext, config.DirState, config.FileEventLogPrev)
+	logPath := filepath.Join(dir, dir.DirContext, dir.DirState, file.FileEventLog)
+	prevPath := filepath.Join(dir, dir.DirContext, dir.DirState, file.FileEventLogPrev)
 
-	stateDir := filepath.Join(dir, config.DirContext, config.DirState)
-	if mkErr := os.MkdirAll(stateDir, config.PermExec); mkErr != nil {
+	stateDir := filepath.Join(dir, dir.DirContext, dir.DirState)
+	if mkErr := os.MkdirAll(stateDir, fs.PermExec); mkErr != nil {
 		t.Fatalf("failed to create state dir: %v", mkErr)
 	}
 
 	// Create an existing .1 file.
-	if writeErr := os.WriteFile(prevPath, []byte("old rotated content\n"), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(prevPath, []byte("old rotated content\n"), fs.PermFile); writeErr != nil {
 		t.Fatalf("failed to write old .1 file: %v", writeErr)
 	}
 
 	// Write oversized current log.
 	bigContent := strings.Repeat(`{"event":"relay","message":"filler"}`+"\n", 40000)
-	if writeErr := os.WriteFile(logPath, []byte(bigContent), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(logPath, []byte(bigContent), fs.PermFile); writeErr != nil {
 		t.Fatalf("failed to write big log: %v", writeErr)
 	}
 
@@ -246,15 +247,15 @@ func TestQuery_Last(t *testing.T) {
 
 func TestQuery_IncludeRotated(t *testing.T) {
 	dir := setupTestDir(t, true)
-	stateDir := filepath.Join(dir, config.DirContext, config.DirState)
-	if mkErr := os.MkdirAll(stateDir, config.PermExec); mkErr != nil {
+	stateDir := filepath.Join(dir, dir.DirContext, dir.DirState)
+	if mkErr := os.MkdirAll(stateDir, fs.PermExec); mkErr != nil {
 		t.Fatalf("failed to create state dir: %v", mkErr)
 	}
 
 	// Write events to rotated file.
-	prevPath := filepath.Join(stateDir, config.FileEventLogPrev)
+	prevPath := filepath.Join(stateDir, file.FileEventLogPrev)
 	prevLine := `{"event":"relay","message":"old event","timestamp":"2026-01-01T00:00:00Z","project":"test"}` + "\n"
-	if writeErr := os.WriteFile(prevPath, []byte(prevLine), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(prevPath, []byte(prevLine), fs.PermFile); writeErr != nil {
 		t.Fatalf("failed to write .1 file: %v", writeErr)
 	}
 
@@ -281,17 +282,17 @@ func TestQuery_IncludeRotated(t *testing.T) {
 
 func TestQuery_CorruptLine(t *testing.T) {
 	dir := setupTestDir(t, true)
-	stateDir := filepath.Join(dir, config.DirContext, config.DirState)
-	if mkErr := os.MkdirAll(stateDir, config.PermExec); mkErr != nil {
+	stateDir := filepath.Join(dir, dir.DirContext, dir.DirState)
+	if mkErr := os.MkdirAll(stateDir, fs.PermExec); mkErr != nil {
 		t.Fatalf("failed to create state dir: %v", mkErr)
 	}
 
-	logPath := filepath.Join(stateDir, config.FileEventLog)
+	logPath := filepath.Join(stateDir, file.FileEventLog)
 	content := `{"event":"relay","message":"good","timestamp":"2026-01-01T00:00:00Z","project":"test"}
 not valid json
 {"event":"nudge","message":"also good","timestamp":"2026-01-02T00:00:00Z","project":"test"}
 `
-	if writeErr := os.WriteFile(logPath, []byte(content), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(logPath, []byte(content), fs.PermFile); writeErr != nil {
 		t.Fatalf("failed to write log: %v", writeErr)
 	}
 

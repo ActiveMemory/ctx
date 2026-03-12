@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -33,7 +34,7 @@ func ScanJournalEntries(journalDir string) ([]JournalEntry, error) {
 
 	var entries []JournalEntry
 	for _, f := range files {
-		if f.IsDir() || !strings.HasSuffix(f.Name(), config.ExtMarkdown) {
+		if f.IsDir() || !strings.HasSuffix(f.Name(), file.ExtMarkdown) {
 			continue
 		}
 
@@ -75,7 +76,7 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	// Read the file to extract metadata
 	content, readErr := os.ReadFile(filepath.Clean(path))
 	if readErr != nil {
-		entry.Title = strings.TrimSuffix(filename, config.ExtMarkdown)
+		entry.Title = strings.TrimSuffix(filename, file.ExtMarkdown)
 		return entry
 	}
 
@@ -158,7 +159,7 @@ func ParseJournalEntry(path, filename string) JournalEntry {
 	}
 
 	if entry.Title == "" {
-		entry.Title = strings.TrimSuffix(filename, config.ExtMarkdown)
+		entry.Title = strings.TrimSuffix(filename, file.ExtMarkdown)
 	}
 
 	// Strip Claude Code internal markup tags from titles

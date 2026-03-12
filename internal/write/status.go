@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -39,14 +39,14 @@ func StatusHeader(cmd *cobra.Command, dir string, fileCount, totalTokens int) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplStatusTitle)
-	cmd.Println(config.tplStatusSeparator)
+	cmd.Println(config.TplStatusTitle)
+	cmd.Println(config.TplStatusSeparator)
 	cmd.Println()
-	io.sprintf(cmd, config.tplStatusDir, dir)
-	io.sprintf(cmd, config.tplStatusFiles, fileCount)
-	io.sprintf(cmd, config.tplStatusTokens, FormatNumber(totalTokens))
+	cmd.Println(fmt.Sprintf(config.TplStatusDir, dir))
+	cmd.Println(fmt.Sprintf(config.TplStatusFiles, fileCount))
+	cmd.Println(fmt.Sprintf(config.TplStatusTokens, FormatNumber(totalTokens)))
 	cmd.Println()
-	cmd.Println(config.tplStatusFilesHeader)
+	cmd.Println(config.TplStatusFilesHeader)
 }
 
 // StatusFileItem prints a single file entry in the status list.
@@ -60,14 +60,14 @@ func StatusFileItem(cmd *cobra.Command, f StatusFileInfo, verbose bool) {
 		return
 	}
 	if verbose {
-		io.sprintf(cmd, config.tplStatusFileVerbose,
+		cmd.Println(fmt.Sprintf(config.TplStatusFileVerbose,
 			f.Indicator, f.Name, f.Status,
-			FormatNumber(f.Tokens), FormatBytes(f.Size))
+			FormatNumber(f.Tokens), FormatBytes(f.Size)))
 		for _, line := range f.Preview {
-			io.sprintf(cmd, config.tplStatusPreviewLine, line)
+			cmd.Println(fmt.Sprintf(config.TplStatusPreviewLine, line))
 		}
 	} else {
-		io.sprintf(cmd, config.tplStatusFileCompact, f.Indicator, f.Name, f.Status)
+		cmd.Println(fmt.Sprintf(config.TplStatusFileCompact, f.Indicator, f.Name, f.Status))
 	}
 }
 
@@ -81,8 +81,8 @@ func StatusActivity(cmd *cobra.Command, entries []StatusActivityInfo) {
 		return
 	}
 	cmd.Println()
-	cmd.Println(config.tplStatusActivityHeader)
+	cmd.Println(config.TplStatusActivityHeader)
 	for _, e := range entries {
-		io.sprintf(cmd, config.tplStatusActivityItem, e.Name, e.Ago)
+		cmd.Println(fmt.Sprintf(config.TplStatusActivityItem, e.Name, e.Ago))
 	}
 }

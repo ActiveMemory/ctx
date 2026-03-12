@@ -12,6 +12,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -20,8 +23,8 @@ import (
 func TestRunJournalObsidianIntegration(t *testing.T) {
 	// Create a temporary journal directory with test entries
 	tmpDir := t.TempDir()
-	journalDir := filepath.Join(tmpDir, config.DirContext, config.DirJournal)
-	if mkErr := os.MkdirAll(journalDir, config.PermExec); mkErr != nil {
+	journalDir := filepath.Join(tmpDir, dir.Context, dir.Journal)
+	if mkErr := os.MkdirAll(journalDir, fs.PermExec); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 
@@ -82,7 +85,7 @@ Just a plain session without enrichment.
 
 	for name, content := range entries {
 		path := filepath.Join(journalDir, name)
-		if writeErr := os.WriteFile(path, []byte(content), config.PermFile); writeErr != nil {
+		if writeErr := os.WriteFile(path, []byte(content), fs.PermFile); writeErr != nil {
 			t.Fatal(writeErr)
 		}
 	}
@@ -103,7 +106,7 @@ Just a plain session without enrichment.
 	// Verify vault structure
 	assertFileExists(t, filepath.Join(outputDir, config.ObsidianConfigDir, config.ObsidianAppConfigFile))
 	assertFileExists(t, filepath.Join(outputDir, config.ObsidianHomeMOC))
-	assertFileExists(t, filepath.Join(outputDir, config.FilenameReadme))
+	assertFileExists(t, filepath.Join(outputDir, file.Readme))
 
 	// Verify entries were written
 	assertFileExists(t, filepath.Join(outputDir, config.ObsidianDirEntries, "2026-02-14-add-caching-abc12345.md"))
@@ -163,7 +166,7 @@ Just a plain session without enrichment.
 
 	// Verify popular topic page was created
 	assertFileExists(t, filepath.Join(
-		outputDir, config.JournalDirTopics, "caching.md"))
+		outputDir, dir.JournTopics, "caching.md"))
 }
 
 func assertFileExists(t *testing.T, path string) {

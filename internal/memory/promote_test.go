@@ -12,7 +12,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -24,15 +26,15 @@ func setupContextDir(t *testing.T) (string, func()) {
 	_ = os.Chdir(workDir)
 	rc.Reset()
 
-	contextDir := filepath.Join(workDir, config.DirContext)
+	contextDir := filepath.Join(workDir, dir.Context)
 	if mkErr := os.MkdirAll(contextDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 
 	// Create required context files
 	for _, f := range []string{
-		config.FileConstitution, config.FileTask, config.FileDecision,
-		config.FileLearning, config.FileConvention,
+		file.FileConstitution, file.FileTask, file.FileDecision,
+		file.FileLearning, file.FileConvention,
 	} {
 		content := "# " + strings.TrimSuffix(f, ".md") + "\n\n"
 		if writeErr := os.WriteFile(filepath.Join(contextDir, f), []byte(content), 0o644); writeErr != nil {
@@ -48,13 +50,13 @@ func TestPromote_Convention(t *testing.T) {
 	defer cleanup()
 
 	entry := Entry{Text: "always use bun for this project", Kind: EntryList}
-	classification := Classification{Target: config.EntryConvention, Keywords: []string{"always use"}}
+	classification := Classification{Target: entry.EntryConvention, Keywords: []string{"always use"}}
 
 	if promoteErr := Promote(entry, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, config.FileConvention))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileConvention))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -68,13 +70,13 @@ func TestPromote_Learning(t *testing.T) {
 	defer cleanup()
 
 	entry := Entry{Text: "learned that nolint is ignored in v2", Kind: EntryParagraph}
-	classification := Classification{Target: config.EntryLearning, Keywords: []string{"learned"}}
+	classification := Classification{Target: entry.EntryLearning, Keywords: []string{"learned"}}
 
 	if promoteErr := Promote(entry, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, config.FileLearning))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileLearning))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -88,13 +90,13 @@ func TestPromote_Decision(t *testing.T) {
 	defer cleanup()
 
 	entry := Entry{Text: "decided to use SQLite over Postgres", Kind: EntryParagraph}
-	classification := Classification{Target: config.EntryDecision, Keywords: []string{"decided"}}
+	classification := Classification{Target: entry.EntryDecision, Keywords: []string{"decided"}}
 
 	if promoteErr := Promote(entry, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, config.FileDecision))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileDecision))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
@@ -108,13 +110,13 @@ func TestPromote_Task(t *testing.T) {
 	defer cleanup()
 
 	entry := Entry{Text: "need to add tests for import", Kind: EntryList}
-	classification := Classification{Target: config.EntryTask, Keywords: []string{"need to"}}
+	classification := Classification{Target: entry.EntryTask, Keywords: []string{"need to"}}
 
 	if promoteErr := Promote(entry, classification); promoteErr != nil {
 		t.Fatalf("Promote: %v", promoteErr)
 	}
 
-	data, readErr := os.ReadFile(filepath.Join(contextDir, config.FileTask))
+	data, readErr := os.ReadFile(filepath.Join(contextDir, file.FileTask))
 	if readErr != nil {
 		t.Fatal(readErr)
 	}

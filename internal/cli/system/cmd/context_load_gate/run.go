@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -52,7 +53,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	marker := filepath.Join(tmpDir, config.PrefixCtxLoaded+input.SessionID)
+	marker := filepath.Join(tmpDir, file.PrefixCtxLoaded+input.SessionID)
 
 	if _, statErr := os.Stat(marker); statErr == nil {
 		return nil // already fired this session
@@ -64,7 +65,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	// Auto-prune stale session state files (best-effort, silent).
 	// Runs once per session at startup — fast directory scan.
-	core.AutoPrune(config.AutoPruneStaleDays)
+	core.AutoPrune(file.AutoPruneStaleDays)
 
 	dir := rc.ContextDir()
 	var content strings.Builder
@@ -75,13 +76,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	content.WriteString(
 		assets.TextDesc(assets.TextDescKeyContextLoadGateHeader) +
 			strings.Repeat(
-				config.ContextLoadSeparatorChar, config.ContextLoadSeparatorWidth,
+				file.ContextLoadSeparatorChar, file.ContextLoadSeparatorWidth,
 			) +
 			config.NewlineLF + config.NewlineLF,
 	)
 
-	for _, f := range config.FileReadOrder {
-		if f == config.FileGlossary {
+	for _, f := range file.FileReadOrder {
+		if f == file.FileGlossary {
 			continue
 		}
 
@@ -91,11 +92,11 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		}
 
 		switch f {
-		case config.FileTask:
+		case file.FileTask:
 			// One-liner mention in footer, don't inject content
 			continue
 
-		case config.FileDecision, config.FileLearning:
+		case file.FileDecision, file.FileLearning:
 			idx := core.ExtractIndex(string(data))
 			if idx == "" {
 				idx = assets.TextDesc(assets.TextDescKeyContextLoadGateIndexFallback)
@@ -105,7 +106,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			tokens := context.EstimateTokensString(idx)
 			totalTokens += tokens
 			perFile = append(perFile, core.FileTokenEntry{
-				Name:   f + config.ContextLoadIndexSuffix,
+				Name:   f + file.ContextLoadIndexSuffix,
 				Tokens: tokens,
 			})
 			filesLoaded++
@@ -134,13 +135,13 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	content.WriteString(
 		strings.Repeat(
-			config.ContextLoadSeparatorChar, config.ContextLoadSeparatorWidth,
+			file.ContextLoadSeparatorChar, file.ContextLoadSeparatorWidth,
 		) + config.NewlineLF)
 	content.WriteString(fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyContextLoadGateFooter),
 		filesLoaded, totalTokens))
 
-	core.PrintHookContext(cmd, config.HookEventPreToolUse, content.String())
+	core.PrintHookContext(cmd, file.HookEventPreToolUse, content.String())
 
 	// Webhook: metadata only — never send file content externally
 	webhookMsg := fmt.Sprintf(

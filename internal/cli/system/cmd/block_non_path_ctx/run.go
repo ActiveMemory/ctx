@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -43,38 +44,38 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	if config.RegExRelativeCtxStart.MatchString(command) ||
 		config.RegExRelativeCtxSep.MatchString(command) {
-		variant = config.VariantDotSlash
+		variant = file.VariantDotSlash
 		fallback = assets.TextDesc(assets.TextDescKeyBlockDotSlash)
 	}
 
 	if config.RegExGoRunCtx.MatchString(command) {
-		variant = config.VariantGoRun
+		variant = file.VariantGoRun
 		fallback = assets.TextDesc(assets.TextDescKeyBlockGoRun)
 	}
 
 	if variant == "" && (config.RegExAbsoluteCtxStart.MatchString(command) ||
 		config.RegExAbsoluteCtxSep.MatchString(command)) {
 		if !config.RegExCtxTestException.MatchString(command) {
-			variant = config.VariantAbsolutePath
+			variant = file.VariantAbsolutePath
 			fallback = assets.TextDesc(assets.TextDescKeyBlockAbsolutePath)
 		}
 	}
 
 	var reason string
 	if variant != "" {
-		reason = core.LoadMessage(config.HookBlockNonPathCtx, variant, nil, fallback)
+		reason = core.LoadMessage(file.HookBlockNonPathCtx, variant, nil, fallback)
 	}
 
 	if reason != "" {
 		resp := core.BlockResponse{
-			Decision: config.HookDecisionBlock,
+			Decision: file.HookDecisionBlock,
 			Reason: reason + config.NewlineLF + config.NewlineLF +
 				assets.TextDesc(assets.TextDescKeyBlockConstitutionSuffix),
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		blockRef := notify.NewTemplateRef(config.HookBlockNonPathCtx, variant, nil)
-		core.Relay(config.HookBlockNonPathCtx+": "+
+		blockRef := notify.NewTemplateRef(file.HookBlockNonPathCtx, variant, nil)
+		core.Relay(file.HookBlockNonPathCtx+": "+
 			assets.TextDesc(assets.TextDescKeyBlockNonPathRelayMessage),
 			input.SessionID, blockRef,
 		)

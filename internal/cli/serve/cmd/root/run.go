@@ -11,7 +11,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -25,36 +26,36 @@ import (
 //   - error: Non-nil if directory is invalid, config is missing,
 //     or zensical is not found
 func Run(args []string) error {
-	var dir string
+	var d string
 
 	if len(args) > 0 {
-		dir = args[0]
+		d = args[0]
 	} else {
-		dir = filepath.Join(rc.ContextDir(), config.DirJournalSite)
+		d = filepath.Join(rc.ContextDir(), dir.JournalSite)
 	}
 
 	// Verify directory exists
-	info, statErr := os.Stat(dir)
+	info, statErr := os.Stat(d)
 	if statErr != nil {
-		return ctxerr.DirNotFound(dir)
+		return ctxerr.DirNotFound(d)
 	}
 	if !info.IsDir() {
-		return ctxerr.NotDirectory(dir)
+		return ctxerr.NotDirectory(d)
 	}
 
 	// Check zensical.toml exists
-	tomlPath := filepath.Join(dir, config.FileZensicalToml)
+	tomlPath := filepath.Join(d, zensical.Toml)
 	if _, statErr = os.Stat(tomlPath); os.IsNotExist(statErr) {
-		return ctxerr.NoSiteConfig(dir)
+		return ctxerr.NoSiteConfig(d)
 	}
 
 	// Check if zensical is available
-	_, lookErr := exec.LookPath(config.BinZensical)
+	_, lookErr := exec.LookPath(zensical.Bin)
 	if lookErr != nil {
 		return ctxerr.ZensicalNotFound()
 	}
 
-	return runZensical(dir)
+	return runZensical(d)
 }
 
 // runZensical launches zensical serve in the given directory.
@@ -65,11 +66,11 @@ func Run(args []string) error {
 // Returns:
 //   - error: Non-nil if the process fails
 func runZensical(dir string) error {
-	zensical := exec.Command(config.BinZensical, "serve") //nolint:gosec // G204: args are constants
-	zensical.Dir = dir
-	zensical.Stdout = os.Stdout
-	zensical.Stderr = os.Stderr
-	zensical.Stdin = os.Stdin
+	z := exec.Command(zensical.Bin, "serve") //nolint:gosec // G204: args are constants
+	z.Dir = dir
+	z.Stdout = os.Stdout
+	z.Stderr = os.Stderr
+	z.Stdin = os.Stdin
 
-	return zensical.Run()
+	return z.Run()
 }

@@ -11,7 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 func TestLoad_MissingFile(t *testing.T) {
@@ -70,12 +71,12 @@ func TestCountUnenriched(t *testing.T) {
 
 	// Create some .md files
 	for _, name := range []string{"a.md", "b.md", "c.md"} {
-		if err := os.WriteFile(filepath.Join(dir, name), []byte("content"), config.PermFile); err != nil {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte("content"), fs.PermFile); err != nil {
 			t.Fatal(err)
 		}
 	}
 	// Create a non-md file that should be ignored
-	if err := os.WriteFile(filepath.Join(dir, "state.json"), []byte("{}"), config.PermFile); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "state.json"), []byte("{}"), fs.PermFile); err != nil {
 		t.Fatal(err)
 	}
 
@@ -227,7 +228,7 @@ func TestMark(t *testing.T) {
 		Entries: make(map[string]FileState),
 	}
 
-	if ok := s.Mark("test.md", config.StageExported); !ok {
+	if ok := s.Mark("test.md", file.StageExported); !ok {
 		t.Error("Mark exported should succeed")
 	}
 	if !s.Exported("test.md") {
@@ -270,7 +271,7 @@ func TestClear(t *testing.T) {
 		},
 	}
 
-	if ok := s.Clear("test.md", config.StageLocked); !ok {
+	if ok := s.Clear("test.md", file.StageLocked); !ok {
 		t.Error("Clear locked should succeed")
 	}
 	if s.Locked("test.md") {
@@ -322,12 +323,12 @@ func TestLocked(t *testing.T) {
 		t.Error("should not be locked initially")
 	}
 
-	s.Mark("test.md", config.StageLocked)
+	s.Mark("test.md", file.StageLocked)
 	if !s.Locked("test.md") {
 		t.Error("should be locked after Mark")
 	}
 
-	s.Clear("test.md", config.StageLocked)
+	s.Clear("test.md", file.StageLocked)
 	if s.Locked("test.md") {
 		t.Error("should not be locked after Clear")
 	}

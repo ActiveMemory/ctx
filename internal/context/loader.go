@@ -11,7 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -66,7 +66,7 @@ func Load(dir string) (*Context, error) {
 		}
 
 		name := entry.Name()
-		if filepath.Ext(name) != config.ExtMarkdown {
+		if filepath.Ext(name) != file.ExtMarkdown {
 			continue
 		}
 

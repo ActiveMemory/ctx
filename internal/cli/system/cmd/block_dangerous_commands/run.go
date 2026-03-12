@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -41,41 +42,41 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var variant, fallback string
 
 	if config.RegExMidSudo.MatchString(command) {
-		variant = config.VariantMidSudo
+		variant = file.VariantMidSudo
 		fallback = assets.TextDesc(assets.TextDescKeyBlockMidSudo)
 	}
 
 	if variant == "" && config.RegExMidGitPush.MatchString(command) {
-		variant = config.VariantMidGitPush
+		variant = file.VariantMidGitPush
 		fallback = assets.TextDesc(assets.TextDescKeyBlockMidGitPush)
 	}
 
 	if variant == "" && config.RegExCpMvToBin.MatchString(command) {
-		variant = config.VariantCpToBin
+		variant = file.VariantCpToBin
 		fallback = assets.TextDesc(assets.TextDescKeyBlockCpToBin)
 	}
 
 	if variant == "" && config.RegExInstallToLocalBin.MatchString(command) {
-		variant = config.VariantInstallToLocalBin
+		variant = file.VariantInstallToLocalBin
 		fallback = assets.TextDesc(assets.TextDescKeyBlockInstallToLocalBin)
 	}
 
 	var reason string
 	if variant != "" {
 		reason = core.LoadMessage(
-			config.HookBlockDangerousCommands, variant, nil, fallback,
+			file.HookBlockDangerousCommands, variant, nil, fallback,
 		)
 	}
 
 	if reason != "" {
 		resp := core.BlockResponse{
-			Decision: config.HookDecisionBlock,
+			Decision: file.HookDecisionBlock,
 			Reason:   reason,
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		ref := notify.NewTemplateRef(config.HookBlockDangerousCommands, variant, nil)
-		core.Relay(config.HookBlockDangerousCommands+": "+reason, input.SessionID, ref)
+		ref := notify.NewTemplateRef(file.HookBlockDangerousCommands, variant, nil)
+		core.Relay(file.HookBlockDangerousCommands+": "+reason, input.SessionID, ref)
 	}
 
 	return nil

@@ -15,6 +15,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/flag"
+	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
@@ -37,6 +40,8 @@ var version = "dev"
 // Returns:
 //   - *cobra.Command: The configured root command with usage and version info
 func RootCmd() *cobra.Command {
+	const completionCmd = "completion"
+
 	config.BinaryVersion = version
 
 	var contextDir string
@@ -70,12 +75,12 @@ func RootCmd() *cobra.Command {
 			if cmd.Hidden {
 				return nil
 			}
-			if p := cmd.Parent(); p != nil && p.Name() == config.CmdCompletion {
+			if p := cmd.Parent(); p != nil && p.Name() == completionCmd {
 				return nil
 			}
 
 			// Skip init check for annotated commands.
-			if _, ok := cmd.Annotations[config.AnnotationSkipInit]; ok {
+			if _, ok := cmd.Annotations[cli.AnnotationSkipInit]; ok {
 				return nil
 			}
 
@@ -85,7 +90,7 @@ func RootCmd() *cobra.Command {
 			}
 
 			// Require initialization.
-			if !config.Initialized(rc.ContextDir()) {
+			if !ctxcontext.Initialized(rc.ContextDir()) {
 				return ctxerr.NotInitialized()
 			}
 
@@ -101,15 +106,15 @@ func RootCmd() *cobra.Command {
 	// Global flags available to all subcommands
 	cmd.PersistentFlags().StringVar(
 		&contextDir,
-		config.FlagContextDir,
+		flag.ContextDir,
 		"",
-		assets.FlagDesc(config.FlagContextDir),
+		assets.FlagDesc(flag.ContextDir),
 	)
 	cmd.PersistentFlags().BoolVar(
 		&allowOutsideCwd,
-		config.FlagAllowOutsideCwd,
+		flag.AllowOutsideCwd,
 		false,
-		assets.FlagDesc(config.FlagAllowOutsideCwd),
+		assets.FlagDesc(flag.AllowOutsideCwd),
 	)
 
 	return cmd

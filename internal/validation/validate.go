@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // SanitizeFilename converts a topic string to a safe filename component.
@@ -30,11 +31,11 @@ func SanitizeFilename(s string) string {
 	// Convert to lowercase
 	s = strings.ToLower(s)
 	// Limit length
-	if len(s) > config.MaxFilenameLen {
-		s = s[:config.MaxFilenameLen]
+	if len(s) > file.MaxNameLen {
+		s = s[:file.MaxNameLen]
 	}
 	if s == "" {
-		s = config.DefaultSessionFilename
+		s = file.DefaultSessionFilename
 	}
 	return s
 }

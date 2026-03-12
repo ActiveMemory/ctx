@@ -9,7 +9,7 @@ package core
 import (
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -18,5 +18,5 @@ import (
 // Returns:
 //   - string: Absolute path to .context/prompts/
 func PromptsDir() string {
-	return filepath.Join(rc.ContextDir(), config.DirPrompts)
+	return filepath.Join(rc.ContextDir(), dir.Prompts)
 }

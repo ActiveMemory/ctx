@@ -8,11 +8,11 @@
 package mcp
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/mcp/cmd/root"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the mcp command group.
@@ -36,7 +36,7 @@ func serveCmd() *cobra.Command {
 		Use:          "serve",
 		Short:        serveShort,
 		Long:         serveLong,
-		Annotations:  map[string]string{config.AnnotationSkipInit: config.AnnotationTrue},
+		Annotations:  map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		SilenceUsage: true,
 		RunE:         root.Cmd,
 	}

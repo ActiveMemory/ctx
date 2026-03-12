@@ -15,6 +15,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/parser"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -38,7 +41,7 @@ func NewClaudeCodeParser() *ClaudeCodeParser {
 // Returns:
 //   - string: The identifier "claude-code"
 func (p *ClaudeCodeParser) Tool() string {
-	return config.ToolClaudeCode
+	return file.ToolClaudeCode
 }
 
 // Matches returns true if the file appears to be a Claude Code session file.
@@ -53,21 +56,21 @@ func (p *ClaudeCodeParser) Tool() string {
 //   - bool: True if this parser can handle the file
 func (p *ClaudeCodeParser) Matches(path string) bool {
 	// Check extension
-	if !strings.HasSuffix(path, config.ExtJSONL) {
+	if !strings.HasSuffix(path, file.ExtJSONL) {
 		return false
 	}
 
 	// Peek at the first few lines to detect the Claude Code format
-	file, openErr := os.Open(filepath.Clean(path))
+	f, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return false
 	}
-	defer func() { _ = file.Close() }()
+	defer func() { _ = f.Close() }()
 
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(f)
 	// Check the first N lines for Claude Code message structure
 	// (early lines can be file-history-snapshot which should be skipped)
-	for i := 0; i < config.ParserPeekLines && scanner.Scan(); i++ {
+	for i := 0; i < parser.LinesToPeek && scanner.Scan(); i++ {
 		line := scanner.Bytes()
 		if len(line) == 0 {
 			continue
@@ -80,8 +83,8 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 
 		// Claude Code messages have sessionId and type (user/assistant)
 		// Note: slug field was removed in newer Claude Code versions
-		if raw.SessionID != "" && (raw.Type == config.RoleUser ||
-			raw.Type == config.RoleAssistant) {
+		if raw.SessionID != "" && (raw.Type == claude.RoleUser ||
+			raw.Type == claude.RoleAssistant) {
 			return true
 		}
 	}
@@ -102,16 +105,16 @@ func (p *ClaudeCodeParser) Matches(path string) bool {
 //   - []*Session: All sessions found in the file, sorted by start time
 //   - error: Non-nil if the file cannot be opened or read
 func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
-	file, openErr := os.Open(filepath.Clean(path))
+	f, openErr := os.Open(filepath.Clean(path))
 	if openErr != nil {
 		return nil, ctxerr.ParserOpenFile(openErr)
 	}
-	defer func() { _ = file.Close() }()
+	defer func() { _ = f.Close() }()
 
 	// Group messages by session ID
 	sessionMsgs := make(map[string][]claudeRawMessage)
 
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(f)
 	// Increase buffer size for large lines
 	buf := make([]byte, 0, config.ParserBufInitSize)
 	scanner.Buffer(buf, config.ParserBufMaxSize)
@@ -131,7 +134,7 @@ func (p *ClaudeCodeParser) ParseFile(path string) ([]*Session, error) {
 		}
 
 		// Skip non-message lines (e.g., file-history-snapshot)
-		if raw.Type != config.RoleUser && raw.Type != config.RoleAssistant {
+		if raw.Type != claude.RoleUser && raw.Type != claude.RoleAssistant {
 			continue
 		}
 
@@ -187,7 +190,7 @@ func (p *ClaudeCodeParser) ParseLine(line []byte) (*Message, string, error) {
 	}
 
 	// Skip non-message lines
-	if raw.Type != config.RoleUser && raw.Type != config.RoleAssistant {
+	if raw.Type != claude.RoleUser && raw.Type != claude.RoleAssistant {
 		return nil, "", nil
 	}
 
