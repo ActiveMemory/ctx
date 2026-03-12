@@ -11,6 +11,8 @@ import (
 	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // Default returns a new CtxRC with hardcoded default values.
@@ -20,7 +22,7 @@ import (
 //     (8000 token budget, 7-day archive, etc.)
 func Default() *CtxRC {
 	return &CtxRC{
-		ContextDir:          config.DirContext,
+		ContextDir:          dir.Context,
 		TokenBudget:         DefaultTokenBudget,
 		PriorityOrder:       nil, // nil means use config.FileReadOrder
 		AutoArchive:         true,
@@ -301,7 +303,7 @@ func FilePriority(name string) int {
 	}
 
 	// Use the default priority from config.FileReadOrder
-	for i, fName := range config.FileReadOrder {
+	for i, fName := range file.FileReadOrder {
 		if fName == name {
 			return i + 1
 		}

@@ -9,10 +9,10 @@ package resume
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -34,7 +34,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		sessionID = input.SessionID
 	}
 	if sessionID == "" {
-		sessionID = config.SessionUnknown
+		sessionID = file.SessionUnknown
 	}
 
 	path := core.PauseMarkerPath(sessionID)

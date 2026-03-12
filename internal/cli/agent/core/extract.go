@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -66,7 +67,7 @@ func ExtractCheckboxItems(content string) []string {
 // Returns:
 //   - []string: List of constitution rules; nil if the file is not found
 func ExtractConstitutionRules(ctx *context.Context) []string {
-	if f := ctx.File(config.FileConstitution); f != nil {
+	if f := ctx.File(file.FileConstitution); f != nil {
 		return ExtractCheckboxItems(string(f.Content))
 	}
 	return nil
@@ -102,7 +103,7 @@ func ExtractUncheckedTasks(content string) []string {
 //   - []string: List of active tasks with "- [ ]" prefix; nil if
 //     the file is not found
 func ExtractActiveTasks(ctx *context.Context) []string {
-	if f := ctx.File(config.FileTask); f != nil {
+	if f := ctx.File(file.FileTask); f != nil {
 		return ExtractUncheckedTasks(string(f.Content))
 	}
 	return nil

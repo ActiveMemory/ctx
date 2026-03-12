@@ -11,11 +11,12 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
 	"github.com/ActiveMemory/ctx/internal/cli/permissions/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -28,26 +29,26 @@ import (
 // Returns:
 //   - error: Non-nil on read/write/parse failure or missing golden file
 func Run(cmd *cobra.Command) error {
-	goldenBytes, goldenReadErr := os.ReadFile(config.FileSettingsGolden)
+	goldenBytes, goldenReadErr := os.ReadFile(file.FileSettingsGolden)
 	if goldenReadErr != nil {
 		if os.IsNotExist(goldenReadErr) {
 			return ctxerr.GoldenNotFound()
 		}
-		return ctxerr.FileRead(config.FileSettingsGolden, goldenReadErr)
+		return ctxerr.FileRead(file.FileSettingsGolden, goldenReadErr)
 	}
 
-	localBytes, localReadErr := os.ReadFile(config.FileSettings)
+	localBytes, localReadErr := os.ReadFile(file.FileSettings)
 	if localReadErr != nil {
 		if os.IsNotExist(localReadErr) {
 			if writeErr := os.WriteFile(
-				config.FileSettings, goldenBytes, config.PermFile,
+				file.FileSettings, goldenBytes, fs.PermFile,
 			); writeErr != nil {
-				return ctxerr.FileWrite(config.FileSettings, writeErr)
+				return ctxerr.FileWrite(file.FileSettings, writeErr)
 			}
 			write.RestoreNoLocal(cmd)
 			return nil
 		}
-		return ctxerr.FileRead(config.FileSettings, localReadErr)
+		return ctxerr.FileRead(file.FileSettings, localReadErr)
 	}
 
 	if bytes.Equal(goldenBytes, localBytes) {
@@ -57,10 +58,10 @@ func Run(cmd *cobra.Command) error {
 
 	var golden, local claude.Settings
 	if goldenParseErr := json.Unmarshal(goldenBytes, &golden); goldenParseErr != nil {
-		return ctxerr.ParseFile(config.FileSettingsGolden, goldenParseErr)
+		return ctxerr.ParseFile(file.FileSettingsGolden, goldenParseErr)
 	}
 	if localParseErr := json.Unmarshal(localBytes, &local); localParseErr != nil {
-		return ctxerr.ParseFile(config.FileSettings, localParseErr)
+		return ctxerr.ParseFile(file.FileSettings, localParseErr)
 	}
 
 	restored, dropped := core.DiffStringSlices(
@@ -73,9 +74,9 @@ func Run(cmd *cobra.Command) error {
 	write.RestoreDiff(cmd, dropped, restored, denyDropped, denyRestored)
 
 	if writeErr := os.WriteFile(
-		config.FileSettings, goldenBytes, config.PermFile,
+		file.FileSettings, goldenBytes, fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(config.FileSettings, writeErr)
+		return ctxerr.FileWrite(file.FileSettings, writeErr)
 	}
 
 	write.RestoreDone(cmd)

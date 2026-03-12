@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -85,7 +87,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 	targetFile := filepath.Join(targetDir, "copilot-instructions.md")
 
 	// Create .github/ directory if needed
-	if err := os.MkdirAll(targetDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(targetDir, fs.PermExec); err != nil {
 		return ctxerr.Mkdir(targetDir, err)
 	}
 
@@ -108,7 +110,7 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 
 		// File exists without ctx markers: append ctx content
 		merged := existingStr + config.NewlineLF + string(instructions)
-		if writeErr := os.WriteFile(targetFile, []byte(merged), config.PermFile); writeErr != nil {
+		if writeErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); writeErr != nil {
 			return ctxerr.FileWrite(targetFile, writeErr)
 		}
 		write.InfoHookCopilotMerged(cmd, targetFile)
@@ -117,15 +119,15 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 
 	// File doesn't exist: create it
 	if writeErr := os.WriteFile(
-		targetFile, instructions, config.PermFile,
+		targetFile, instructions, fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(targetFile, writeErr)
 	}
 	write.InfoHookCopilotCreated(cmd, targetFile)
 
 	// Also create .context/sessions/ if it doesn't exist
-	sessionsDir := filepath.Join(config.DirContext, config.DirSessions)
-	if mkErr := os.MkdirAll(sessionsDir, config.PermExec); mkErr != nil {
+	sessionsDir := filepath.Join(dir.Context, dir.Sessions)
+	if mkErr := os.MkdirAll(sessionsDir, fs.PermExec); mkErr != nil {
 		write.WarnFileErr(cmd, sessionsDir, mkErr)
 	} else {
 		write.InfoHookCopilotSessionsDir(cmd, sessionsDir)

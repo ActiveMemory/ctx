@@ -9,11 +9,11 @@ package root
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/add/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/entry"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 		return validateErr
 	}
 
-	fName, ok := config.FileType[fType]
+	fName, ok := file.FileType[fType]
 	if !ok {
 		return add.ErrUnknownType(fType)
 	}

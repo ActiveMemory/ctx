@@ -7,10 +7,10 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx why" cobra command.
@@ -23,7 +23,7 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "why [DOCUMENT]",
 		Short:       short,
-		Annotations: map[string]string{config.AnnotationSkipInit: ""},
+		Annotations: map[string]string{cli.AnnotationSkipInit: ""},
 		ValidArgs:   []string{"manifesto", "about", "invariants"},
 		Long:        long,
 		Args:        cobra.MaximumNArgs(1),

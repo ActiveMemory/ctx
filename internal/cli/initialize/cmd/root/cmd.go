@@ -7,10 +7,10 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx init" command for initializing a .context/ directory.
@@ -44,7 +44,7 @@ func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "init",
 		Short:       short,
-		Annotations: map[string]string{config.AnnotationSkipInit: config.AnnotationTrue},
+		Annotations: map[string]string{cli.AnnotationSkipInit: cli.AnnotationTrue},
 		Long:        long,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return Run(cmd, force, minimal, merge, ralph, noPluginEnable)

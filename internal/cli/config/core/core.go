@@ -14,18 +14,20 @@ import (
 	"strings"
 
 	internalConfig "github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
 // Profile file names and identifiers — aliased from internal/config.
 const (
-	FileCtxRC     = internalConfig.FileCtxRC
-	FileCtxRCBase = internalConfig.FileCtxRCBase
-	FileCtxRCDev  = internalConfig.FileCtxRCDev
-	ProfileDev    = internalConfig.ProfileDev
-	ProfileBase   = internalConfig.ProfileBase
-	ProfileProd   = internalConfig.ProfileProd
+	FileCtxRC     = file.FileCtxRC
+	FileCtxRCBase = file.FileCtxRCBase
+	FileCtxRCDev  = file.FileCtxRCDev
+	ProfileDev    = file.ProfileDev
+	ProfileBase   = file.ProfileBase
+	ProfileProd   = file.ProfileProd
 )
 
 // DetectProfile reads .ctxrc and returns "dev" or "base" based on the
@@ -43,7 +45,7 @@ func DetectProfile(root string) string {
 	}
 
 	for _, line := range strings.Split(string(data), internalConfig.NewlineLF) {
-		if strings.HasPrefix(strings.TrimSpace(line), internalConfig.ProfileDetectKey) {
+		if strings.HasPrefix(strings.TrimSpace(line), file.ProfileDetectKey) {
 			return ProfileDev
 		}
 	}
@@ -65,7 +67,7 @@ func CopyProfile(root, srcFile string) error {
 	}
 
 	dst := filepath.Join(root, FileCtxRC)
-	return os.WriteFile(dst, data, internalConfig.PermFile)
+	return os.WriteFile(dst, data, fs.PermFile)
 }
 
 // GitRoot returns the git repository root directory.

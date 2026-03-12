@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/recall"
+	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
@@ -52,7 +54,7 @@ func Run(
 	}
 	// --until is inclusive: advance to the end of the day
 	if until != "" {
-		untilTime = untilTime.Add(config.InclusiveUntilOffset)
+		untilTime = untilTime.Add(time.InclusiveUntilOffset)
 	}
 
 	sessions, scanErr := core.FindSessions(allProjects)
@@ -104,7 +106,7 @@ func Run(
 	// Compute dynamic column widths from data.
 	slugW, projW := len(config.ColSlug), len(config.ColProject)
 	for _, s := range filtered {
-		slug := core.Truncate(s.Slug, config.SlugMaxLen)
+		slug := core.Truncate(s.Slug, recall.SlugMaxLen)
 		if len(slug) > slugW {
 			slugW = len(slug)
 		}
@@ -121,8 +123,8 @@ func Run(
 
 	// Print sessions.
 	for _, s := range filtered {
-		slug := core.Truncate(s.Slug, config.SlugMaxLen)
-		dateStr := s.StartTime.Local().Format(config.DateTimeFormat)
+		slug := core.Truncate(s.Slug, recall.SlugMaxLen)
+		dateStr := s.StartTime.Local().Format(time.DateTimeFormat)
 		dur := core.FormatDuration(s.Duration)
 		turns := fmt.Sprintf("%d", s.TurnCount)
 		tokens := ""

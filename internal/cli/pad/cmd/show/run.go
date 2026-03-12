@@ -9,10 +9,10 @@ package show
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command, n int, outPath string) error {
 	if _, data, ok := core.SplitBlob(entry); ok {
 		if outPath != "" {
 			if writeErr := os.WriteFile(
-				outPath, data, config.PermSecret,
+				outPath, data, fs.PermSecret,
 			); writeErr != nil {
 				return ctxerr.WriteFileFailed(writeErr)
 			}

@@ -7,10 +7,10 @@
 package add
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -55,8 +55,8 @@ func runAddBlob(cmd *cobra.Command, label, filePath string) error {
 		return ctxerr.ReadFile(err)
 	}
 
-	if len(data) > config.MaxBlobSize {
-		return ctxerr.FileTooLarge(len(data), config.MaxBlobSize)
+	if len(data) > file.MaxBlobSize {
+		return ctxerr.FileTooLarge(len(data), file.MaxBlobSize)
 	}
 
 	entries, readErr := core.ReadEntries()

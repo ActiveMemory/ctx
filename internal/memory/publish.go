@@ -14,6 +14,9 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
@@ -26,25 +29,25 @@ func SelectContent(contextDir string, budget int) (PublishResult, error) {
 	var result PublishResult
 
 	// Pending tasks
-	taskPath := filepath.Join(contextDir, config.FileTask)
+	taskPath := filepath.Join(contextDir, file.FileTask)
 	if data, readErr := os.ReadFile(taskPath); readErr == nil { //nolint:gosec // project-local path
 		result.Tasks = extractPendingTasks(string(data), config.PublishMaxTasks)
 	}
 
 	// Recent decisions
-	decPath := filepath.Join(contextDir, config.FileDecision)
+	decPath := filepath.Join(contextDir, file.FileDecision)
 	if data, readErr := os.ReadFile(decPath); readErr == nil { //nolint:gosec // project-local path
 		result.Decisions = extractRecentEntries(string(data), config.PublishMaxDecisions)
 	}
 
 	// Key conventions (first N lines that are list items)
-	convPath := filepath.Join(contextDir, config.FileConvention)
+	convPath := filepath.Join(contextDir, file.FileConvention)
 	if data, readErr := os.ReadFile(convPath); readErr == nil { //nolint:gosec // project-local path
 		result.Conventions = extractConventionItems(string(data), config.PublishMaxConventions)
 	}
 
 	// Recent learnings
-	lrnPath := filepath.Join(contextDir, config.FileLearning)
+	lrnPath := filepath.Join(contextDir, file.FileLearning)
 	if data, readErr := os.ReadFile(lrnPath); readErr == nil { //nolint:gosec // project-local path
 		result.Learnings = extractRecentEntries(string(data), config.PublishMaxLearnings)
 	}
@@ -194,7 +197,7 @@ func extractPendingTasks(content string, max int) []string {
 // extractRecentEntries returns titles of entries from the last N days.
 func extractRecentEntries(content string, max int) []string {
 	blocks := index.ParseEntryBlocks(content)
-	cutoff := time.Now().AddDate(0, 0, -config.PublishRecentDays).Format(config.DateFormat)
+	cutoff := time.Now().AddDate(0, 0, -config.PublishRecentDays).Format(time2.DateFormat)
 
 	var titles []string
 	for _, b := range blocks {
@@ -240,7 +243,7 @@ func Publish(contextDir, memoryPath string, budget int) (PublishResult, error) {
 
 	merged, _ := MergePublished(string(existing), formatted)
 
-	if writeErr := os.WriteFile(memoryPath, []byte(merged), config.PermFile); writeErr != nil {
+	if writeErr := os.WriteFile(memoryPath, []byte(merged), fs.PermFile); writeErr != nil {
 		return PublishResult{}, ctxerr.MemoryWriteMemory(writeErr)
 	}
 

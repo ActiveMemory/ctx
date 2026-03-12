@@ -16,6 +16,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -23,7 +24,7 @@ import (
 
 const staleAgeDays = 30
 
-var staleAgeExclude = []string{config.FileConstitution}
+var staleAgeExclude = []string{file.FileConstitution}
 
 // Status returns the overall status of the report.
 //
@@ -93,7 +94,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 	foundDeadPaths := false
 
 	for _, f := range ctx.Files {
-		if f.Name != config.FileArchitecture && f.Name != config.FileConvention {
+		if f.Name != file.FileArchitecture && f.Name != file.FileConvention {
 			continue
 		}
 
@@ -149,7 +150,7 @@ func checkPathReferences(ctx *context.Context, report *Report) {
 func checkStaleness(ctx *context.Context, report *Report) {
 	staleness := false
 
-	if f := ctx.File(config.FileTask); f != nil {
+	if f := ctx.File(file.FileTask); f != nil {
 		// Count completed tasks
 		completedCount := strings.Count(string(f.Content), config.PrefixTaskDone)
 		if completedCount > 10 {
@@ -236,7 +237,7 @@ func checkRequiredFiles(ctx *context.Context, report *Report) {
 		existingFiles[f.Name] = true
 	}
 
-	for _, name := range config.FilesRequired {
+	for _, name := range file.FilesRequired {
 		if !existingFiles[name] {
 			report.Warnings = append(report.Warnings, Issue{
 				File:    name,
@@ -305,8 +306,8 @@ func checkEntryCount(ctx *context.Context, report *Report) {
 		file      string
 		threshold int
 	}{
-		{config.FileLearning, rc.EntryCountLearnings()},
-		{config.FileDecision, rc.EntryCountDecisions()},
+		{file.FileLearning, rc.EntryCountLearnings()},
+		{file.FileDecision, rc.EntryCountDecisions()},
 	}
 
 	found := false
@@ -351,7 +352,7 @@ var reInternalPkg = regexp.MustCompile("`(internal/[^`]+)`")
 //   - ctx: Loaded context containing files to scan
 //   - report: Report to append warnings to (modified in place)
 func checkMissingPackages(ctx *context.Context, report *Report) {
-	f := ctx.File(config.FileArchitecture)
+	f := ctx.File(file.FileArchitecture)
 	if f == nil {
 		return
 	}

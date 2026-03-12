@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"gopkg.in/yaml.v3"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,19 +27,19 @@ func loadRC() *CtxRC {
 	cfg := Default()
 
 	// Try to load .ctxrc from the current directory
-	data, err := os.ReadFile(config.FileContextRC)
+	data, err := os.ReadFile(file.FileContextRC)
 	if err == nil {
 		if yamlErr := yaml.Unmarshal(data, cfg); yamlErr != nil {
 			_, _ = fmt.Fprintf(os.Stderr, assets.TextDesc(assets.TextDescKeyRcParseWarning)+config.NewlineLF,
-				config.FileContextRC, yamlErr)
+				file.FileContextRC, yamlErr)
 		}
 	}
 
 	// Apply environment variable overrides
-	if envDir := os.Getenv(config.EnvCtxDir); envDir != "" {
+	if envDir := os.Getenv(file.EnvCtxDir); envDir != "" {
 		cfg.ContextDir = envDir
 	}
-	if envBudget := os.Getenv(config.EnvCtxTokenBudget); envBudget != "" {
+	if envBudget := os.Getenv(file.EnvCtxTokenBudget); envBudget != "" {
 		if budget, err := strconv.Atoi(envBudget); err == nil && budget > 0 {
 			cfg.TokenBudget = budget
 		}

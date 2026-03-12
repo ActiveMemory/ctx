@@ -14,6 +14,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -38,10 +40,10 @@ import (
 // Returns:
 //   - string: Rendered message or empty string for intentional silence
 func LoadMessage(hook, variant string, vars map[string]any, fallback string) string {
-	filename := variant + config.ExtTxt
+	filename := variant + file.ExtTxt
 
 	// 1. User override in .context/
-	overrideDir := filepath.Join(rc.ContextDir(), config.DirHooksMessages, hook)
+	overrideDir := filepath.Join(rc.ContextDir(), dir.HooksMessages, hook)
 	if data, readErr := validation.SafeReadFile(overrideDir, filename); readErr == nil {
 		return renderTemplate(string(data), vars, fallback)
 	}
@@ -64,7 +66,7 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 		return "" // intentional silence
 	}
 
-	t, parseErr := template.New(config.TemplateName).Parse(tmpl)
+	t, parseErr := template.New(file.TemplateName).Parse(tmpl)
 	if parseErr != nil {
 		return fallback
 	}
@@ -88,7 +90,7 @@ func renderTemplate(tmpl string, vars map[string]any, fallback string) string {
 func BoxLines(content string) string {
 	var b strings.Builder
 	for _, line := range strings.Split(strings.TrimRight(content, config.NewlineLF), config.NewlineLF) {
-		b.WriteString(config.BoxLinePrefix)
+		b.WriteString(file.BoxLinePrefix)
 		b.WriteString(line)
 		b.WriteString(config.NewlineLF)
 	}
@@ -107,16 +109,16 @@ func BoxLines(content string) string {
 // Returns:
 //   - string: fully formatted nudge box
 func NudgeBox(relayPrefix, title, content string) string {
-	pad := config.NudgeBoxWidth - len(title)
+	pad := file.NudgeBoxWidth - len(title)
 	if pad < 0 {
 		pad = 0
 	}
 	msg := relayPrefix + config.NewlineLF + config.NewlineLF +
-		config.BoxTop + title + " " + strings.Repeat("─", pad) + config.NewlineLF
+		file.BoxTop + title + " " + strings.Repeat("─", pad) + config.NewlineLF
 	msg += BoxLines(content)
 	if line := ContextDirLine(); line != "" {
-		msg += config.BoxLinePrefix + line + config.NewlineLF
+		msg += file.BoxLinePrefix + line + config.NewlineLF
 	}
-	msg += config.BoxBottom
+	msg += file.BoxBottom
 	return msg
 }

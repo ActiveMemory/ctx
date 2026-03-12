@@ -10,7 +10,7 @@ import (
 	"encoding/base64"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // IsBlob returns true if the entry contains the blob separator.
@@ -21,7 +21,7 @@ import (
 // Returns:
 //   - bool: True if entry is a blob
 func IsBlob(entry string) bool {
-	return strings.Contains(entry, config.BlobSep)
+	return strings.Contains(entry, file.BlobSep)
 }
 
 // SplitBlob parses a blob entry into its label and decoded data.
@@ -34,13 +34,13 @@ func IsBlob(entry string) bool {
 //   - data: Decoded file content
 //   - ok: False for non-blob entries or malformed base64
 func SplitBlob(entry string) (label string, data []byte, ok bool) {
-	idx := strings.Index(entry, config.BlobSep)
+	idx := strings.Index(entry, file.BlobSep)
 	if idx < 0 {
 		return "", nil, false
 	}
 
 	label = entry[:idx]
-	encoded := entry[idx+len(config.BlobSep):]
+	encoded := entry[idx+len(file.BlobSep):]
 
 	data, err := base64.StdEncoding.DecodeString(encoded)
 	if err != nil {
@@ -59,7 +59,7 @@ func SplitBlob(entry string) (label string, data []byte, ok bool) {
 // Returns:
 //   - string: Formatted blob entry
 func MakeBlob(label string, data []byte) string {
-	return label + config.BlobSep + base64.StdEncoding.EncodeToString(data)
+	return label + file.BlobSep + base64.StdEncoding.EncodeToString(data)
 }
 
 // DisplayEntry returns a display-friendly version of an entry.
@@ -73,7 +73,7 @@ func MakeBlob(label string, data []byte) string {
 //   - string: Human-readable entry representation
 func DisplayEntry(entry string) string {
 	if label, _, ok := SplitBlob(entry); ok {
-		return label + config.BlobTag
+		return label + file.BlobTag
 	}
 	return entry
 }

@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -24,13 +24,13 @@ func SyncDryRun(cmd *cobra.Command, sourcePath, mirrorPath string, hasDrift bool
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplDryRun)
-	io.sprintf(cmd, config.tplSource, sourcePath)
-	io.sprintf(cmd, config.tplMirror, mirrorPath)
+	cmd.Println(config.TplDryRun)
+	cmd.Println(fmt.Sprintf(config.TplSource, sourcePath))
+	cmd.Println(fmt.Sprintf(config.TplMirror, mirrorPath))
 	if hasDrift {
-		cmd.Println(config.tplStatusDrift)
+		cmd.Println(config.TplStatusDrift)
 	} else {
-		cmd.Println(config.tplStatusNoDrift)
+		cmd.Println(config.TplStatusNoDrift)
 	}
 }
 
@@ -54,21 +54,21 @@ func SyncResult(
 		return
 	}
 	if archivedTo != "" {
-		io.sprintf(cmd, config.tplArchived, archivedTo)
+		cmd.Println(fmt.Sprintf(config.TplArchived, archivedTo))
 	}
-	io.sprintf(cmd, config.tplSynced, sourceLabel, mirrorPath)
-	io.sprintf(cmd, config.tplSource, sourcePath)
+	cmd.Println(fmt.Sprintf(config.TplSynced, sourceLabel, mirrorPath))
+	cmd.Println(fmt.Sprintf(config.TplSource, sourcePath))
 
-	line := config.tplLines
+	line := config.TplLines
 	if mirrorLines > 0 {
-		line += config.tplLinesPrevious
-		io.sprintf(cmd, line, sourceLines, mirrorLines)
+		line += config.TplLinesPrevious
+		cmd.Println(fmt.Sprintf(line, sourceLines, mirrorLines))
 	} else {
-		io.sprintf(cmd, line, sourceLines)
+		cmd.Println(fmt.Sprintf(line, sourceLines))
 	}
 
 	if sourceLines > mirrorLines {
-		io.sprintf(cmd, config.tplNewContent, sourceLines-mirrorLines)
+		cmd.Println(fmt.Sprintf(config.TplNewContent, sourceLines-mirrorLines))
 	}
 }
 

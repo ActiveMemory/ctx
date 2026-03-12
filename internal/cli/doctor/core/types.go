@@ -6,14 +6,16 @@
 
 package core
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import (
+	"github.com/ActiveMemory/ctx/internal/config/stats"
+)
 
 // Status constants — aliased from config for local use.
 const (
-	StatusOK      = config.StatusOK
-	StatusWarning = config.StatusWarning
-	StatusError   = config.StatusError
-	StatusInfo    = config.StatusInfo
+	StatusOK      = stats.StatusOK
+	StatusWarning = stats.StatusWarning
+	StatusError   = stats.StatusError
+	StatusInfo    = stats.StatusInfo
 )
 
 // Result represents a single check outcome.

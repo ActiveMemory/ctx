@@ -12,10 +12,10 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // RecentJournalFiles returns the n most recent markdown files in the given
@@ -36,7 +36,7 @@ func RecentJournalFiles(dir string, n int) []string {
 
 	var names []string
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), config.ExtMarkdown) {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), file.ExtMarkdown) {
 			continue
 		}
 		names = append(names, e.Name())
@@ -71,10 +71,10 @@ func ScanJournalsForCeremonies(files []string) (remember, wrapup bool) {
 			continue
 		}
 		content := string(data)
-		if !remember && strings.Contains(content, config.CeremonyRememberCmd) {
+		if !remember && strings.Contains(content, file.CeremonyRememberCmd) {
 			remember = true
 		}
-		if !wrapup && strings.Contains(content, config.CeremonyWrapUpCmd) {
+		if !wrapup && strings.Contains(content, file.CeremonyWrapUpCmd) {
 			wrapup = true
 		}
 		if remember && wrapup {
@@ -100,15 +100,15 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 
 	switch {
 	case !remember && !wrapup:
-		variant = config.VariantBoth
+		variant = file.VariantBoth
 		boxTitleKey = assets.TextDescKeyCeremonyBoxBoth
 		fallbackKey = assets.TextDescKeyCeremonyFallbackBoth
 	case !remember:
-		variant = config.VariantRemember
+		variant = file.VariantRemember
 		boxTitleKey = assets.TextDescKeyCeremonyBoxRemember
 		fallbackKey = assets.TextDescKeyCeremonyFallbackRemember
 	case !wrapup:
-		variant = config.VariantWrapup
+		variant = file.VariantWrapup
 		boxTitleKey = assets.TextDescKeyCeremonyBoxWrapup
 		fallbackKey = assets.TextDescKeyCeremonyFallbackWrapup
 	}
@@ -116,7 +116,7 @@ func EmitCeremonyNudge(cmd *cobra.Command, remember, wrapup bool) (msg, variant 
 	boxTitle := assets.TextDesc(boxTitleKey)
 	fallback := assets.TextDesc(fallbackKey)
 
-	content := LoadMessage(config.HookCheckCeremonies, variant, nil, fallback)
+	content := LoadMessage(file.HookCheckCeremonies, variant, nil, fallback)
 	if content == "" {
 		return "", variant
 	}

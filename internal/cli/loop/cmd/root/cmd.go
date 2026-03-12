@@ -7,10 +7,11 @@
 package root
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Cmd returns the "ctx loop" command for generating Ralph loop scripts.
@@ -52,7 +53,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&promptFile,
 		"prompt", "p",
-		config.FilePromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
+		file.FilePromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
 	)
 	cmd.Flags().StringVarP(
 		&tool, "tool", "t", "claude", assets.FlagDesc(assets.FlagDescKeyLoopTool),
@@ -64,7 +65,7 @@ func Cmd() *cobra.Command {
 	)
 	cmd.Flags().StringVarP(
 		&completionMsg,
-		"completion", "c", config.DefaultCompletionSignal,
+		"completion", "c", loop.DefaultCompletionSignal,
 		assets.FlagDesc(assets.FlagDescKeyLoopCompletion),
 	)
 	cmd.Flags().StringVarP(

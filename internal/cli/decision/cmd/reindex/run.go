@@ -9,9 +9,9 @@ package reindex
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/index"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -25,12 +25,12 @@ import (
 // Returns:
 //   - error: Non-nil if the file read/write fails
 func Run(cmd *cobra.Command, _ []string) error {
-	filePath := filepath.Join(rc.ContextDir(), config.FileDecision)
+	filePath := filepath.Join(rc.ContextDir(), file.FileDecision)
 	return index.ReindexFile(
 		cmd.OutOrStdout(),
 		filePath,
-		config.FileDecision,
+		file.FileDecision,
 		index.UpdateDecisions,
-		config.EntryPlural[config.EntryDecision],
+		"decisions",
 	)
 }

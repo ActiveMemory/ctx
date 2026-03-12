@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -35,26 +37,26 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	if err != nil {
 		return ctxerr.ReadInitTemplate("CLAUDE.md", err)
 	}
-	existingContent, err := os.ReadFile(config.FileClaudeMd)
+	existingContent, err := os.ReadFile(file.FileClaudeMd)
 	fileExists := err == nil
 	if !fileExists {
-		if err := os.WriteFile(config.FileClaudeMd, templateContent, config.PermFile); err != nil {
-			return ctxerr.FileWrite(config.FileClaudeMd, err)
+		if err := os.WriteFile(file.FileClaudeMd, templateContent, fs.PermFile); err != nil {
+			return ctxerr.FileWrite(file.FileClaudeMd, err)
 		}
-		write.InitCreated(cmd, config.FileClaudeMd)
+		write.InitCreated(cmd, file.FileClaudeMd)
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, config.CtxMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			write.InitCtxContentExists(cmd, config.FileClaudeMd)
+			write.InitCtxContentExists(cmd, file.FileClaudeMd)
 			return nil
 		}
 		return UpdateCtxSection(cmd, existingStr, templateContent)
 	}
 	if !autoMerge {
-		write.InitFileExistsNoCtx(cmd, config.FileClaudeMd)
+		write.InitFileExistsNoCtx(cmd, file.FileClaudeMd)
 		cmd.Println("Would you like to append ctx context management instructions?")
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
@@ -63,14 +65,14 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 			return ctxerr.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
-		if response != config.ConfirmShort && response != config.ConfirmLong {
-			write.InitSkippedPlain(cmd, config.FileClaudeMd)
+		if response != file.ConfirmShort && response != file.ConfirmLong {
+			write.InitSkippedPlain(cmd, file.FileClaudeMd)
 			return nil
 		}
 	}
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", config.FileClaudeMd, timestamp)
-	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
+	backupName := fmt.Sprintf("%s.%d.bak", file.FileClaudeMd, timestamp)
+	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
 		return ctxerr.CreateBackup(backupName, err)
 	}
 	write.InitBackup(cmd, backupName)
@@ -81,9 +83,9 @@ func HandleClaudeMd(cmd *cobra.Command, force, autoMerge bool) error {
 	} else {
 		mergedContent = existingStr[:insertPos] + config.NewlineLF + string(templateContent) + config.NewlineLF + existingStr[insertPos:]
 	}
-	if err := os.WriteFile(config.FileClaudeMd, []byte(mergedContent), config.PermFile); err != nil {
-		return ctxerr.WriteMerged(config.FileClaudeMd, err)
+	if err := os.WriteFile(file.FileClaudeMd, []byte(mergedContent), fs.PermFile); err != nil {
+		return ctxerr.WriteMerged(file.FileClaudeMd, err)
 	}
-	write.InitMerged(cmd, config.FileClaudeMd)
+	write.InitMerged(cmd, file.FileClaudeMd)
 	return nil
 }

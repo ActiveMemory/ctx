@@ -12,6 +12,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // GenerateHomeMOC creates the root navigation hub for the Obsidian vault.
@@ -114,7 +115,7 @@ func GenerateObsidianTopicsMOC(topics []TopicData) string {
 		sb.WriteString("## Long-tail Topics" + nl + nl)
 		for _, t := range longtail {
 			e := t.Entries[0]
-			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- **%s** — %s"+nl,
 				t.Name, FormatWikilink(link, e.Title)))
 		}
@@ -191,7 +192,7 @@ func GenerateObsidianFilesMOC(keyFiles []KeyFileData) string {
 		sb.WriteString("## Single Session" + nl + nl)
 		for _, kf := range longtail {
 			e := kf.Entries[0]
-			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- `%s` — %s"+nl,
 				kf.Path, FormatWikilink(link, e.Title)))
 		}
@@ -344,7 +345,7 @@ func GenerateRelatedFooter(
 	if len(related) > 0 {
 		sb.WriteString(config.ObsidianSeeAlso + nl)
 		for _, rel := range related {
-			link := strings.TrimSuffix(rel.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(rel.Filename, file.ExtMarkdown)
 			sb.WriteString(fmt.Sprintf("- %s"+nl,
 				FormatWikilink(link, rel.Title)))
 		}

@@ -10,10 +10,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -27,7 +27,7 @@ import (
 // Returns:
 //   - error: Non-nil on missing template or remove failure
 func Run(cmd *cobra.Command, name string) error {
-	path := filepath.Join(core.PromptsDir(), name+config.ExtMarkdown)
+	path := filepath.Join(core.PromptsDir(), name+file.ExtMarkdown)
 
 	if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
 		return ctxerr.PromptNotFound(name)

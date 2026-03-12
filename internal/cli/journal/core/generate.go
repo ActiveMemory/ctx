@@ -13,6 +13,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // GenerateSiteReadme creates a README for the journal-site directory.
@@ -92,7 +94,7 @@ func GenerateIndex(entries []JournalEntry) string {
 // Returns:
 //   - string: Formatted line (e.g., "- 14:30 [title](link.md) (project) `1.2KB`")
 func FormatIndexEntry(e JournalEntry, nl string) string {
-	link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+	link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 
 	timeStr := ""
 	if e.Time != "" && len(e.Time) >= config.JournalTimePrefixLen {
@@ -164,7 +166,7 @@ func InjectSourceLink(content, sourcePath string) string {
 		absPath = sourcePath
 	}
 	relPath := filepath.Join(
-		config.DirContext, config.DirJournal, filepath.Base(absPath),
+		dir.Context, dir.Journal, filepath.Base(absPath),
 	)
 	link := fmt.Sprintf(config.TplJournalSourceLink+nl+nl,
 		absPath, relPath, relPath)
@@ -205,23 +207,23 @@ func GenerateZensicalToml(
 	// Build navigation
 	sb.WriteString(config.TomlNavOpen + nl)
 	sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
-		config.JournalLabelHome, config.FilenameIndex))
+		config.JournalLabelHome, file.Index))
 	if len(topics) > 0 {
 		sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
 			config.JournalLabelTopics,
-			filepath.Join(config.JournalDirTopics, config.FilenameIndex)),
+			filepath.Join(dir.JournTopics, file.Index)),
 		)
 	}
 	if len(keyFiles) > 0 {
 		sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
 			config.JournalLabelFiles,
-			filepath.Join(config.JournalDirFiles, config.FilenameIndex)),
+			filepath.Join(dir.JournalFiles, file.Index)),
 		)
 	}
 	if len(sessionTypes) > 0 {
 		sb.WriteString(fmt.Sprintf(config.TplJournalNavItem+nl,
 			config.JournalLabelTypes,
-			filepath.Join(config.JournalDirTypes, config.FilenameIndex)),
+			filepath.Join(dir.JournalTypes, file.Index)),
 		)
 	}
 

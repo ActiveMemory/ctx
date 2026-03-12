@@ -20,6 +20,8 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -56,7 +58,7 @@ func LoadWebhook() (string, error) {
 	contextDir := rc.ContextDir()
 	config.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
+	encPath := filepath.Join(contextDir, file.FileNotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -89,7 +91,7 @@ func SaveWebhook(url string) error {
 	contextDir := rc.ContextDir()
 	config.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, config.FileNotifyEnc)
+	encPath := filepath.Join(contextDir, file.FileNotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -111,7 +113,7 @@ func SaveWebhook(url string) error {
 		return err
 	}
 
-	return os.WriteFile(encPath, ciphertext, config.PermSecret)
+	return os.WriteFile(encPath, ciphertext, fs.PermSecret)
 }
 
 // EventAllowed reports whether the given event passes the filter.

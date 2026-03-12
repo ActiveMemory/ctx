@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +20,7 @@ func MemoryNoChanges(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplMemoryNoChanges)
+	cmd.Println(config.TplMemoryNoChanges)
 }
 
 // MemoryBridgeHeader prints the "Memory Bridge Status" heading.
@@ -31,7 +31,7 @@ func MemoryBridgeHeader(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplMemoryBridgeHeader)
+	cmd.Println(config.TplMemoryBridgeHeader)
 }
 
 // MemorySourceNotActive prints that auto memory is not active.
@@ -42,7 +42,7 @@ func MemorySourceNotActive(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplMemorySourceNotActive)
+	cmd.Println(config.TplMemorySourceNotActive)
 }
 
 // MemorySource prints the source path.
@@ -54,7 +54,7 @@ func MemorySource(cmd *cobra.Command, path string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplMemorySource, path)
+	cmd.Println(fmt.Sprintf(config.TplMemorySource, path))
 }
 
 // MemoryMirror prints the mirror relative path.
@@ -66,7 +66,7 @@ func MemoryMirror(cmd *cobra.Command, relativePath string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplMemoryMirror, relativePath)
+	cmd.Println(fmt.Sprintf(config.TplMemoryMirror, relativePath))
 }
 
 // MemoryLastSync prints the last sync timestamp with age.
@@ -79,7 +79,7 @@ func MemoryLastSync(cmd *cobra.Command, formatted, ago string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplMemoryLastSync, formatted, ago)
+	cmd.Println(fmt.Sprintf(config.TplMemoryLastSync, formatted, ago))
 }
 
 // MemoryLastSyncNever prints that no sync has occurred.
@@ -90,7 +90,7 @@ func MemoryLastSyncNever(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplMemoryLastSyncNever)
+	cmd.Println(config.TplMemoryLastSyncNever)
 }
 
 // MemorySourceLines prints the MEMORY.md line count.
@@ -104,10 +104,10 @@ func MemorySourceLines(cmd *cobra.Command, count int, drifted bool) {
 		return
 	}
 	if drifted {
-		io.sprintf(cmd, config.tplMemorySourceLinesDrift, count)
+		cmd.Println(fmt.Sprintf(config.TplMemorySourceLinesDrift, count))
 		return
 	}
-	io.sprintf(cmd, config.tplMemorySourceLines, count)
+	cmd.Println(fmt.Sprintf(config.TplMemorySourceLines, count))
 }
 
 // MemoryMirrorLines prints the mirror line count.
@@ -119,7 +119,7 @@ func MemoryMirrorLines(cmd *cobra.Command, count int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplMemoryMirrorLines, count)
+	cmd.Println(fmt.Sprintf(config.TplMemoryMirrorLines, count))
 }
 
 // MemoryMirrorNotSynced prints that the mirror has not been synced yet.
@@ -130,7 +130,7 @@ func MemoryMirrorNotSynced(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplMemoryMirrorNotSynced)
+	cmd.Println(config.TplMemoryMirrorNotSynced)
 }
 
 // MemoryDriftDetected prints that drift was detected.
@@ -141,7 +141,7 @@ func MemoryDriftDetected(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplMemoryDriftDetected)
+	cmd.Println(config.TplMemoryDriftDetected)
 }
 
 // MemoryDriftNone prints that no drift was detected.
@@ -152,7 +152,7 @@ func MemoryDriftNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplMemoryDriftNone)
+	cmd.Println(config.TplMemoryDriftNone)
 }
 
 // MemoryArchives prints the archive snapshot count.
@@ -165,5 +165,5 @@ func MemoryArchives(cmd *cobra.Command, count int, dir string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplMemoryArchives, count, dir)
+	cmd.Println(fmt.Sprintf(config.TplMemoryArchives, count, dir))
 }

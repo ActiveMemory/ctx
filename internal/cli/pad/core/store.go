@@ -15,6 +15,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -27,9 +29,9 @@ import (
 //   - string: Encrypted or plaintext path based on rc.ScratchpadEncrypt()
 func ScratchpadPath() string {
 	if rc.ScratchpadEncrypt() {
-		return filepath.Join(rc.ContextDir(), config.FileScratchpadEnc)
+		return filepath.Join(rc.ContextDir(), file.FileScratchpadEnc)
 	}
-	return filepath.Join(rc.ContextDir(), config.FileScratchpadMd)
+	return filepath.Join(rc.ContextDir(), file.FileScratchpadMd)
 }
 
 // KeyPath returns the full path to the encryption key file.
@@ -111,7 +113,7 @@ func EnsureGitignore(contextDir, filename string) error {
 	if len(content) > 0 && !strings.HasSuffix(string(content), config.NewlineLF) {
 		sep = config.NewlineLF
 	}
-	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+config.NewlineLF), config.PermFile)
+	return os.WriteFile(gitignorePath, []byte(string(content)+sep+entry+config.NewlineLF), fs.PermFile)
 }
 
 // ReadEntries reads the scratchpad and returns its entries.
@@ -168,7 +170,7 @@ func WriteEntries(entries []string) error {
 	plaintext := FormatEntries(entries)
 
 	if !rc.ScratchpadEncrypt() {
-		return os.WriteFile(path, plaintext, config.PermFile)
+		return os.WriteFile(path, plaintext, fs.PermFile)
 	}
 
 	if err := EnsureKey(); err != nil {
@@ -186,5 +188,5 @@ func WriteEntries(entries []string) error {
 		return ctxerr.EncryptFailed(encErr)
 	}
 
-	return os.WriteFile(path, ciphertext, config.PermFile)
+	return os.WriteFile(path, ciphertext, fs.PermFile)
 }

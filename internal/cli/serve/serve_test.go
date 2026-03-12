@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	serveroot "github.com/ActiveMemory/ctx/internal/cli/serve/cmd/root"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/zensical"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -109,7 +109,7 @@ func TestRunServe_ZensicalNotFound(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	// Create a zensical.toml so we pass the config check
-	tomlPath := filepath.Join(tmpDir, config.FileZensicalToml)
+	tomlPath := filepath.Join(tmpDir, zensical.Toml)
 	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0600); err != nil {
 		t.Fatalf("failed to create zensical.toml: %v", err)
 	}
@@ -187,7 +187,7 @@ func TestRunServe_WithMockZensical(t *testing.T) {
 	}
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
-	tomlPath := filepath.Join(tmpDir, config.FileZensicalToml)
+	tomlPath := filepath.Join(tmpDir, zensical.Toml)
 	if err := os.WriteFile(tomlPath, []byte("[site]\n"), 0600); err != nil {
 		t.Fatalf("failed to create zensical.toml: %v", err)
 	}

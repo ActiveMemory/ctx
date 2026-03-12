@@ -7,10 +7,10 @@
 package edit
 
 import (
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -148,8 +148,8 @@ func runEditBlob(cmd *cobra.Command, n int, filePath, labelText string) error {
 		if readErr != nil {
 			return ctxerr.ReadFile(readErr)
 		}
-		if len(data) > config.MaxBlobSize {
-			return ctxerr.FileTooLarge(len(data), config.MaxBlobSize)
+		if len(data) > file.MaxBlobSize {
+			return ctxerr.FileTooLarge(len(data), file.MaxBlobSize)
 		}
 		newData = data
 	}

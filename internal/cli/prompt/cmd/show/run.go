@@ -9,10 +9,10 @@ package show
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/prompt/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
@@ -27,7 +27,7 @@ import (
 //   - error: Non-nil on read failure or missing template
 func Run(cmd *cobra.Command, name string) error {
 	content, readErr := validation.SafeReadFile(
-		core.PromptsDir(), name+config.ExtMarkdown,
+		core.PromptsDir(), name+file.ExtMarkdown,
 	)
 	if readErr != nil {
 		if os.IsNotExist(readErr) {

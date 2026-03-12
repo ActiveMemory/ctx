@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -23,7 +23,7 @@ func SessionPaused(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPaused, sessionID)
+	cmd.Println(fmt.Sprintf(config.TplPaused, sessionID))
 }
 
 // SessionResumed prints confirmation that hooks were resumed.
@@ -35,7 +35,7 @@ func SessionResumed(cmd *cobra.Command, sessionID string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplResumed, sessionID)
+	cmd.Println(fmt.Sprintf(config.TplResumed, sessionID))
 }
 
 // SessionWrappedUp prints confirmation that the wrap-up marker was written.

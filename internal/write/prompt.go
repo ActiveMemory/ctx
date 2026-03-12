@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func PromptCreated(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPromptCreated, name)
+	cmd.Println(fmt.Sprintf(config.TplPromptCreated, name))
 }
 
 // PromptNone prints the message when no prompts are found.
@@ -32,7 +32,7 @@ func PromptNone(cmd *cobra.Command) {
 	if cmd == nil {
 		return
 	}
-	cmd.Println(config.tplPromptNone)
+	cmd.Println(config.TplPromptNone)
 }
 
 // PromptRemoved prints the confirmation after removing a prompt template.
@@ -44,7 +44,7 @@ func PromptRemoved(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPromptRemoved, name)
+	cmd.Println(fmt.Sprintf(config.TplPromptRemoved, name))
 }
 
 // PromptItem prints a single prompt name in the list.
@@ -56,5 +56,5 @@ func PromptItem(cmd *cobra.Command, name string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplPromptItem, name)
+	cmd.Println(fmt.Sprintf(config.TplPromptItem, name))
 }

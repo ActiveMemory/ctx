@@ -16,6 +16,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
 	"github.com/ActiveMemory/ctx/internal/eventlog"
@@ -30,15 +31,15 @@ import (
 func CheckContextInitialized(report *Report) {
 	if context.Exists("") {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckContextInit,
-			Category: config.DoctorCategoryStructure,
+			Name:     file.DoctorCheckContextInit,
+			Category: file.DoctorCategoryStructure,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorContextInitializedOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckContextInit,
-			Category: config.DoctorCategoryStructure,
+			Name:     file.DoctorCheckContextInit,
+			Category: file.DoctorCategoryStructure,
 			Status:   StatusError,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorContextInitializedError),
 		})
@@ -52,27 +53,27 @@ func CheckContextInitialized(report *Report) {
 func CheckRequiredFiles(report *Report) {
 	dir := rc.ContextDir()
 	var missing []string
-	for _, f := range config.FilesRequired {
+	for _, f := range file.FilesRequired {
 		path := filepath.Join(dir, f)
 		if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
 			missing = append(missing, f)
 		}
 	}
 
-	total := len(config.FilesRequired)
+	total := len(file.FilesRequired)
 	present := total - len(missing)
 
 	if len(missing) == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckRequiredFiles,
-			Category: config.DoctorCategoryStructure,
+			Name:     file.DoctorCheckRequiredFiles,
+			Category: file.DoctorCategoryStructure,
 			Status:   StatusOK,
 			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRequiredFilesOk), present, total),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckRequiredFiles,
-			Category: config.DoctorCategoryStructure,
+			Name:     file.DoctorCheckRequiredFiles,
+			Category: file.DoctorCategoryStructure,
 			Status:   StatusError,
 			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRequiredFilesError), present, total, strings.Join(missing, ", ")),
 		})
@@ -84,12 +85,12 @@ func CheckRequiredFiles(report *Report) {
 // Parameters:
 //   - report: Report to append the result to
 func CheckCtxrcValidation(report *Report) {
-	data, readErr := os.ReadFile(config.FileContextRC) //nolint:gosec // project-local config file
+	data, readErr := os.ReadFile(file.FileContextRC) //nolint:gosec // project-local config file
 	if readErr != nil {
 		// No .ctxrc is fine — defaults are used.
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckCtxrcValidation,
-			Category: config.DoctorCategoryStructure,
+			Name:     file.DoctorCheckCtxrcValidation,
+			Category: file.DoctorCategoryStructure,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationOkNoFile),
 		})
@@ -99,8 +100,8 @@ func CheckCtxrcValidation(report *Report) {
 	warnings, validateErr := rc.Validate(data)
 	if validateErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckCtxrcValidation,
-			Category: config.DoctorCategoryStructure,
+			Name:     file.DoctorCheckCtxrcValidation,
+			Category: file.DoctorCategoryStructure,
 			Status:   StatusError,
 			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationError), validateErr),
 		})
@@ -109,8 +110,8 @@ func CheckCtxrcValidation(report *Report) {
 
 	if len(warnings) > 0 {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckCtxrcValidation,
-			Category: config.DoctorCategoryStructure,
+			Name:     file.DoctorCheckCtxrcValidation,
+			Category: file.DoctorCategoryStructure,
 			Status:   StatusWarning,
 			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationWarning), strings.Join(warnings, "; ")),
 		})
@@ -118,8 +119,8 @@ func CheckCtxrcValidation(report *Report) {
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     config.DoctorCheckCtxrcValidation,
-		Category: config.DoctorCategoryStructure,
+		Name:     file.DoctorCheckCtxrcValidation,
+		Category: file.DoctorCategoryStructure,
 		Status:   StatusOK,
 		Message:  assets.TextDesc(assets.TextDescKeyDoctorCtxrcValidationOk),
 	})
@@ -137,8 +138,8 @@ func CheckDrift(report *Report) {
 	ctx, loadErr := context.Load("")
 	if loadErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckDrift,
-			Category: config.DoctorCategoryQuality,
+			Name:     file.DoctorCheckDrift,
+			Category: file.DoctorCategoryQuality,
 			Status:   StatusWarning,
 			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftWarningLoad), loadErr),
 		})
@@ -151,8 +152,8 @@ func CheckDrift(report *Report) {
 
 	if warnCount == 0 && violCount == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckDrift,
-			Category: config.DoctorCategoryQuality,
+			Name:     file.DoctorCheckDrift,
+			Category: file.DoctorCategoryQuality,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorDriftOk),
 		})
@@ -173,8 +174,8 @@ func CheckDrift(report *Report) {
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     config.DoctorCheckDrift,
-		Category: config.DoctorCategoryQuality,
+		Name:     file.DoctorCheckDrift,
+		Category: file.DoctorCategoryQuality,
 		Status:   status,
 		Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorDriftDetected), strings.Join(parts, ", ")),
 	})
@@ -188,8 +189,8 @@ func CheckPluginEnablement(report *Report) {
 	installed := initialize.PluginInstalled()
 	if !installed {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckPluginInstalled,
-			Category: config.DoctorCategoryPlugin,
+			Name:     file.DoctorCheckPluginInstalled,
+			Category: file.DoctorCategoryPlugin,
 			Status:   StatusInfo,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginInstalledInfo),
 		})
@@ -197,8 +198,8 @@ func CheckPluginEnablement(report *Report) {
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     config.DoctorCheckPluginInstalled,
-		Category: config.DoctorCategoryPlugin,
+		Name:     file.DoctorCheckPluginInstalled,
+		Category: file.DoctorCategoryPlugin,
 		Status:   StatusOK,
 		Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginInstalledOk),
 	})
@@ -208,8 +209,8 @@ func CheckPluginEnablement(report *Report) {
 
 	if globalEnabled {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckPluginEnabledGlobal,
-			Category: config.DoctorCategoryPlugin,
+			Name:     file.DoctorCheckPluginEnabledGlobal,
+			Category: file.DoctorCategoryPlugin,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledGlobalOk),
 		})
@@ -217,8 +218,8 @@ func CheckPluginEnablement(report *Report) {
 
 	if localEnabled {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckPluginEnabledLocal,
-			Category: config.DoctorCategoryPlugin,
+			Name:     file.DoctorCheckPluginEnabledLocal,
+			Category: file.DoctorCategoryPlugin,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledLocalOk),
 		})
@@ -226,10 +227,10 @@ func CheckPluginEnablement(report *Report) {
 
 	if !globalEnabled && !localEnabled {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckPluginEnabled,
-			Category: config.DoctorCategoryPlugin,
+			Name:     file.DoctorCheckPluginEnabled,
+			Category: file.DoctorCategoryPlugin,
 			Status:   StatusWarning,
-			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledWarning), config.PluginID),
+			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorPluginEnabledWarning), file.PluginID),
 		})
 	}
 }
@@ -241,15 +242,15 @@ func CheckPluginEnablement(report *Report) {
 func CheckEventLogging(report *Report) {
 	if rc.EventLog() {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckEventLogging,
-			Category: config.DoctorCategoryHooks,
+			Name:     file.DoctorCheckEventLogging,
+			Category: file.DoctorCategoryHooks,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorEventLoggingOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckEventLogging,
-			Category: config.DoctorCategoryHooks,
+			Name:     file.DoctorCheckEventLogging,
+			Category: file.DoctorCategoryHooks,
 			Status:   StatusInfo,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorEventLoggingInfo),
 		})
@@ -262,18 +263,18 @@ func CheckEventLogging(report *Report) {
 //   - report: Report to append the result to
 func CheckWebhook(report *Report) {
 	dir := rc.ContextDir()
-	encPath := filepath.Join(dir, config.FileNotifyEnc)
+	encPath := filepath.Join(dir, file.FileNotifyEnc)
 	if _, statErr := os.Stat(encPath); statErr == nil {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckWebhook,
-			Category: config.DoctorCategoryHooks,
+			Name:     file.DoctorCheckWebhook,
+			Category: file.DoctorCategoryHooks,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorWebhookOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckWebhook,
-			Category: config.DoctorCategoryHooks,
+			Name:     file.DoctorCheckWebhook,
+			Category: file.DoctorCategoryHooks,
 			Status:   StatusInfo,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorWebhookInfo),
 		})
@@ -286,12 +287,12 @@ func CheckWebhook(report *Report) {
 //   - report: Report to append the result to
 func CheckReminders(report *Report) {
 	dir := rc.ContextDir()
-	remindersPath := filepath.Join(dir, config.FileReminders)
+	remindersPath := filepath.Join(dir, file.FileReminders)
 	data, readErr := os.ReadFile(remindersPath) //nolint:gosec // project-local path
 	if readErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckReminders,
-			Category: config.DoctorCategoryState,
+			Name:     file.DoctorCheckReminders,
+			Category: file.DoctorCategoryState,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
@@ -301,8 +302,8 @@ func CheckReminders(report *Report) {
 	var reminders []any
 	if unmarshalErr := json.Unmarshal(data, &reminders); unmarshalErr != nil {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckReminders,
-			Category: config.DoctorCategoryState,
+			Name:     file.DoctorCheckReminders,
+			Category: file.DoctorCategoryState,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
@@ -312,15 +313,15 @@ func CheckReminders(report *Report) {
 	count := len(reminders)
 	if count == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckReminders,
-			Category: config.DoctorCategoryState,
+			Name:     file.DoctorCheckReminders,
+			Category: file.DoctorCategoryState,
 			Status:   StatusOK,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorRemindersOk),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckReminders,
-			Category: config.DoctorCategoryState,
+			Name:     file.DoctorCheckReminders,
+			Category: file.DoctorCategoryState,
 			Status:   StatusInfo,
 			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRemindersInfo), count),
 		})
@@ -333,7 +334,7 @@ func CheckReminders(report *Report) {
 //   - report: Report to append the result to
 func CheckTaskCompletion(report *Report) {
 	dir := rc.ContextDir()
-	tasksPath := filepath.Join(dir, config.FileTask)
+	tasksPath := filepath.Join(dir, file.FileTask)
 	data, readErr := os.ReadFile(tasksPath) //nolint:gosec // project-local path
 	if readErr != nil {
 		return // no tasks file, skip
@@ -359,15 +360,15 @@ func CheckTaskCompletion(report *Report) {
 
 	if ratio >= 80 && completed > 5 {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckTaskCompletion,
-			Category: config.DoctorCategoryState,
+			Name:     file.DoctorCheckTaskCompletion,
+			Category: file.DoctorCategoryState,
 			Status:   StatusWarning,
 			Message:  msg + assets.TextDesc(assets.TextDescKeyDoctorTaskCompletionWarningSuffix),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckTaskCompletion,
-			Category: config.DoctorCategoryState,
+			Name:     file.DoctorCheckTaskCompletion,
+			Category: file.DoctorCategoryState,
 			Status:   StatusOK,
 			Message:  msg,
 		})
@@ -382,8 +383,8 @@ func CheckContextTokenSize(report *Report) {
 	// Only count files in FileReadOrder — these are the files actually
 	// loaded into agent context. Other .md files (DETAILED_DESIGN.md,
 	// map-tracking, etc.) exist on disk but aren't injected.
-	indexed := make(map[string]bool, len(config.FileReadOrder))
-	for _, f := range config.FileReadOrder {
+	indexed := make(map[string]bool, len(file.FileReadOrder))
+	for _, f := range file.FileReadOrder {
 		indexed[f] = true
 	}
 
@@ -414,15 +415,15 @@ func CheckContextTokenSize(report *Report) {
 	warnThreshold := window / 5 // 20% of context window
 	if totalTokens > warnThreshold {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckContextSize,
-			Category: config.DoctorCategorySize,
+			Name:     file.DoctorCheckContextSize,
+			Category: file.DoctorCategorySize,
 			Status:   StatusWarning,
 			Message:  msg + assets.TextDesc(assets.TextDescKeyDoctorContextSizeWarningSuffix),
 		})
 	} else {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckContextSize,
-			Category: config.DoctorCategorySize,
+			Name:     file.DoctorCheckContextSize,
+			Category: file.DoctorCategorySize,
 			Status:   StatusOK,
 			Message:  msg,
 		})
@@ -431,8 +432,8 @@ func CheckContextTokenSize(report *Report) {
 	// Add per-file breakdown as info results.
 	for _, ft := range breakdown {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckContextFilePrefix + ft.name,
-			Category: config.DoctorCategorySize,
+			Name:     file.DoctorCheckContextFilePrefix + ft.name,
+			Category: file.DoctorCategorySize,
 			Status:   StatusInfo,
 			Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorContextFileFormat), ft.name, ft.tokens),
 		})
@@ -451,8 +452,8 @@ func CheckRecentEventActivity(report *Report) {
 	events, queryErr := eventlog.Query(eventlog.QueryOpts{Last: 1})
 	if queryErr != nil || len(events) == 0 {
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckRecentEvents,
-			Category: config.DoctorCategoryEvents,
+			Name:     file.DoctorCheckRecentEvents,
+			Category: file.DoctorCategoryEvents,
 			Status:   StatusInfo,
 			Message:  assets.TextDesc(assets.TextDescKeyDoctorRecentEventsInfo),
 		})
@@ -460,8 +461,8 @@ func CheckRecentEventActivity(report *Report) {
 	}
 
 	report.Results = append(report.Results, Result{
-		Name:     config.DoctorCheckRecentEvents,
-		Category: config.DoctorCategoryEvents,
+		Name:     file.DoctorCheckRecentEvents,
+		Category: file.DoctorCategoryEvents,
 		Status:   StatusOK,
 		Message:  fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorRecentEventsOk), events[len(events)-1].Timestamp),
 	})
@@ -499,8 +500,8 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 			sysinfo.FormatGiB(snap.Memory.UsedBytes),
 			sysinfo.FormatGiB(snap.Memory.TotalBytes))
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckResourceMemory,
-			Category: config.DoctorCategoryResources,
+			Name:     file.DoctorCheckResourceMemory,
+			Category: file.DoctorCategoryResources,
 			Status:   SeverityToStatus(sevMap["memory"]),
 			Message:  msg,
 		})
@@ -514,8 +515,8 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 			sysinfo.FormatGiB(snap.Memory.SwapUsedBytes),
 			sysinfo.FormatGiB(snap.Memory.SwapTotalBytes))
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckResourceSwap,
-			Category: config.DoctorCategoryResources,
+			Name:     file.DoctorCheckResourceSwap,
+			Category: file.DoctorCategoryResources,
 			Status:   SeverityToStatus(sevMap["swap"]),
 			Message:  msg,
 		})
@@ -529,8 +530,8 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 			sysinfo.FormatGiB(snap.Disk.UsedBytes),
 			sysinfo.FormatGiB(snap.Disk.TotalBytes))
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckResourceDisk,
-			Category: config.DoctorCategoryResources,
+			Name:     file.DoctorCheckResourceDisk,
+			Category: file.DoctorCategoryResources,
 			Status:   SeverityToStatus(sevMap["disk"]),
 			Message:  msg,
 		})
@@ -542,8 +543,8 @@ func AddResourceResults(report *Report, snap sysinfo.Snapshot) {
 		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyDoctorResourceLoadFormat),
 			ratio, snap.Load.Load1, snap.Load.NumCPU)
 		report.Results = append(report.Results, Result{
-			Name:     config.DoctorCheckResourceLoad,
-			Category: config.DoctorCategoryResources,
+			Name:     file.DoctorCheckResourceLoad,
+			Category: file.DoctorCategoryResources,
 			Status:   SeverityToStatus(sevMap["load"]),
 			Message:  msg,
 		})

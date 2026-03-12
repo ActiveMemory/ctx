@@ -10,6 +10,8 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/recall"
+	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 )
 
@@ -26,8 +28,8 @@ func FormatSessionMatchLines(matches []*parser.Session) []string {
 		lines = append(lines, fmt.Sprintf(
 			config.TplSessionMatch,
 			m.Slug,
-			m.ID[:config.SessionIDShortLen],
-			m.StartTime.Format(config.DateTimeFormat)),
+			m.ID[:recall.SessionIDShortLen],
+			m.StartTime.Format(time.DateTimeFormat)),
 		)
 	}
 	return lines

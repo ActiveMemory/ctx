@@ -10,6 +10,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -34,21 +36,21 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	if err != nil {
 		return ctxerr.ReadInitTemplate("Makefile.ctx", err)
 	}
-	if err = os.WriteFile(config.FileMakefileCtx, content, config.PermFile); err != nil {
-		return ctxerr.FileWrite(config.FileMakefileCtx, err)
+	if err = os.WriteFile(file.FileMakefileCtx, content, fs.PermFile); err != nil {
+		return ctxerr.FileWrite(file.FileMakefileCtx, err)
 	}
-	write.InitCreated(cmd, config.FileMakefileCtx)
+	write.InitCreated(cmd, file.FileMakefileCtx)
 	existing, err := os.ReadFile("Makefile")
 	if err != nil {
 		minimal := IncludeDirective + config.NewlineLF
-		if err := os.WriteFile("Makefile", []byte(minimal), config.PermFile); err != nil {
+		if err := os.WriteFile("Makefile", []byte(minimal), fs.PermFile); err != nil {
 			return ctxerr.CreateMakefile(err)
 		}
 		write.InitMakefileCreated(cmd)
 		return nil
 	}
 	if strings.Contains(string(existing), IncludeDirective) {
-		write.InitMakefileIncludes(cmd, config.FileMakefileCtx)
+		write.InitMakefileIncludes(cmd, file.FileMakefileCtx)
 		return nil
 	}
 	amended := string(existing)
@@ -56,9 +58,9 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		amended += config.NewlineLF
 	}
 	amended += config.NewlineLF + IncludeDirective + config.NewlineLF
-	if err := os.WriteFile("Makefile", []byte(amended), config.PermFile); err != nil {
+	if err := os.WriteFile("Makefile", []byte(amended), fs.PermFile); err != nil {
 		return ctxerr.FileAmend("Makefile", err)
 	}
-	write.InitMakefileAppended(cmd, config.FileMakefileCtx)
+	write.InitMakefileAppended(cmd, file.FileMakefileCtx)
 	return nil
 }

@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -104,7 +104,7 @@ func TestCheckNewDirectories_DocumentedDirsIgnored(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Write ARCHITECTURE.md that mentions "src"
-	archPath := filepath.Join(dir, config.DirContext, config.FileArchitecture)
+	archPath := filepath.Join(dir, dir.DirContext, file.FileArchitecture)
 	if err := os.WriteFile(archPath, []byte("# Architecture\n\nThe src directory contains...\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -144,9 +144,9 @@ func TestCheckPackageFiles_WithPackageFile(t *testing.T) {
 	dir := setupSyncDir(t)
 
 	// Remove any existing dependency docs so the check triggers
-	archPath := filepath.Join(dir, config.DirContext, config.FileArchitecture)
+	archPath := filepath.Join(dir, dir.DirContext, file.FileArchitecture)
 	_ = os.WriteFile(archPath, []byte("# Architecture\n\nSimple app.\n"), 0600)
-	depsPath := filepath.Join(dir, config.DirContext, config.FileDependency)
+	depsPath := filepath.Join(dir, dir.DirContext, file.FileDependency)
 	_ = os.Remove(depsPath)
 
 	// Create a package.json
@@ -179,7 +179,7 @@ func TestCheckPackageFiles_WithDepsDoc(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"test"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
-	depsPath := filepath.Join(dir, config.DirContext, config.FileDependency)
+	depsPath := filepath.Join(dir, dir.DirContext, file.FileDependency)
 	if err := os.WriteFile(depsPath, []byte("# Dependencies\n\nAll documented.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -251,7 +251,7 @@ func TestCheckConfigFiles_DocumentedInConventions(t *testing.T) {
 	}
 
 	// Write CONVENTIONS.md mentioning tsconfig
-	convPath := filepath.Join(dir, config.DirContext, config.FileConvention)
+	convPath := filepath.Join(dir, dir.DirContext, file.FileConvention)
 	if err := os.WriteFile(convPath, []byte("# Conventions\n\ntsconfig.json is configured for strict mode.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -278,7 +278,7 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 	}
 
 	// Write ARCHITECTURE.md that mentions "dependencies"
-	archPath := filepath.Join(dir, config.DirContext, config.FileArchitecture)
+	archPath := filepath.Join(dir, dir.DirContext, file.FileArchitecture)
 	if err := os.WriteFile(archPath, []byte("# Architecture\n\nProject dependencies are managed via go.mod.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -299,11 +299,11 @@ func TestCheckPackageFiles_ArchContainsDependencies(t *testing.T) {
 func TestAction_Fields(t *testing.T) {
 	a := Action{
 		Type:        "NEW_DIR",
-		File:        config.FileArchitecture,
+		File:        file.FileArchitecture,
 		Description: "test description",
 		Suggestion:  "test suggestion",
 	}
-	if a.Type != "NEW_DIR" || a.File != config.FileArchitecture {
+	if a.Type != "NEW_DIR" || a.File != file.FileArchitecture {
 		t.Error("action fields should be set correctly")
 	}
 }

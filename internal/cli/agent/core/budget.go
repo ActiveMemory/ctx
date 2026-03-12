@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
@@ -83,7 +84,7 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 	}
 
 	// Tier 2: Tasks (up to 40% of the original budget)
-	taskCap := int(float64(budget) * config.TaskBudgetPct)
+	taskCap := int(float64(budget) * file.TaskBudgetPct)
 	allTasks := ExtractActiveTasks(ctx)
 	pkt.Tasks = FitItemsInBudget(allTasks, taskCap)
 	taskTokens := EstimateSliceTokens(pkt.Tasks)
@@ -95,7 +96,7 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 	}
 
 	// Tier 3: Conventions (up to 20% of the original budget)
-	convCap := int(float64(budget) * config.ConventionBudgetPct)
+	convCap := int(float64(budget) * file.ConventionBudgetPct)
 	allConventions := ExtractAllConventions(ctx)
 	pkt.Conventions = FitItemsInBudget(allConventions, convCap)
 	convTokens := EstimateSliceTokens(pkt.Conventions)
@@ -110,8 +111,8 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 	keywords := ExtractTaskKeywords(pkt.Tasks)
 
 	// Tier 4+5: Decisions + Learnings (share remaining budget)
-	decisionBlocks := ParseEntryBlocks(ctx, config.FileDecision)
-	learningBlocks := ParseEntryBlocks(ctx, config.FileLearning)
+	decisionBlocks := ParseEntryBlocks(ctx, file.FileDecision)
+	learningBlocks := ParseEntryBlocks(ctx, file.FileLearning)
 
 	scoredDecisions := ScoreEntries(decisionBlocks, keywords, now)
 	scoredLearnings := ScoreEntries(learningBlocks, keywords, now)
@@ -144,7 +145,7 @@ func AssembleBudgetPacket(ctx *context.Context, budget int) *AssembledPacket {
 // Returns:
 //   - []string: All convention bullet items; nil if the file is not found
 func ExtractAllConventions(ctx *context.Context) []string {
-	if f := ctx.File(config.FileConvention); f != nil {
+	if f := ctx.File(file.FileConvention); f != nil {
 		return ExtractBulletItems(string(f.Content), 1000)
 	}
 	return nil

@@ -14,7 +14,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/claude"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // TestInitCommand tests the init command creates the .context directory.
@@ -347,7 +347,7 @@ func TestRunInit_Minimal(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+	t.Setenv(file.EnvSkipPathCheck, file.EnvTrue)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{"--minimal"})
@@ -355,14 +355,14 @@ func TestRunInit_Minimal(t *testing.T) {
 		t.Fatalf("init --minimal failed: %v", err)
 	}
 
-	for _, name := range config.FilesRequired {
+	for _, name := range file.FilesRequired {
 		path := filepath.Join(".context", name)
 		if _, err := os.Stat(path); err != nil {
 			t.Errorf("required file %s missing with --minimal: %v", name, err)
 		}
 	}
 
-	glossaryPath := filepath.Join(".context", config.FileGlossary)
+	glossaryPath := filepath.Join(".context", file.FileGlossary)
 	if _, err := os.Stat(glossaryPath); err == nil {
 		t.Error("GLOSSARY.md should not exist with --minimal")
 	}
@@ -381,7 +381,7 @@ func TestRunInit_Force(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+	t.Setenv(file.EnvSkipPathCheck, file.EnvTrue)
 
 	cmd := Cmd()
 	cmd.SetArgs([]string{})
@@ -395,7 +395,7 @@ func TestRunInit_Force(t *testing.T) {
 		t.Fatalf("init --force failed: %v", err)
 	}
 
-	if _, err := os.Stat(filepath.Join(".context", config.FileConstitution)); err != nil {
+	if _, err := os.Stat(filepath.Join(".context", file.FileConstitution)); err != nil {
 		t.Error("CONSTITUTION.md missing after force reinit")
 	}
 }
@@ -413,9 +413,9 @@ func TestRunInit_Merge(t *testing.T) {
 	}
 	defer func() { _ = os.Chdir(origDir) }()
 	t.Setenv("HOME", tmpDir)
-	t.Setenv(config.EnvSkipPathCheck, config.EnvTrue)
+	t.Setenv(file.EnvSkipPathCheck, file.EnvTrue)
 
-	if err = os.WriteFile(config.FileClaudeMd, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
+	if err = os.WriteFile(file.FileClaudeMd, []byte("# My Project\n\nExisting.\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -425,7 +425,7 @@ func TestRunInit_Merge(t *testing.T) {
 		t.Fatalf("init --merge failed: %v", err)
 	}
 
-	content, _ := os.ReadFile(config.FileClaudeMd)
+	content, _ := os.ReadFile(file.FileClaudeMd)
 	if !strings.Contains(string(content), "My Project") {
 		t.Error("original content lost with --merge")
 	}

@@ -16,7 +16,8 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/add"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -329,8 +330,8 @@ func TestTasksFilePath(t *testing.T) {
 	setupTaskDir(t)
 
 	path := core.TasksFilePath()
-	if !strings.Contains(path, config.FileTask) {
-		t.Errorf("TasksFilePath() = %q, want to contain %q", path, config.FileTask)
+	if !strings.Contains(path, file.FileTask) {
+		t.Errorf("TasksFilePath() = %q, want to contain %q", path, file.FileTask)
 	}
 }
 
@@ -338,8 +339,8 @@ func TestArchiveDirPath(t *testing.T) {
 	setupTaskDir(t)
 
 	path := core.ArchiveDirPath()
-	if !strings.Contains(path, config.DirArchive) {
-		t.Errorf("ArchiveDirPath() = %q, want to contain %q", path, config.DirArchive)
+	if !strings.Contains(path, dir.Archive) {
+		t.Errorf("ArchiveDirPath() = %q, want to contain %q", path, dir.Archive)
 	}
 }
 
@@ -356,8 +357,8 @@ func TestSnapshotCommand_NoTasks(t *testing.T) {
 
 	// Create .context but no TASKS.md
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
-	if err := os.MkdirAll(config.DirContext, 0750); err != nil {
+	rc.OverrideContextDir(dir.Context)
+	if err := os.MkdirAll(dir.Context, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -389,7 +390,7 @@ func TestSnapshotCommand_DefaultName(t *testing.T) {
 	}
 
 	// Verify file was created with default name
-	entries, err := os.ReadDir(filepath.Join(config.DirContext, config.DirArchive))
+	entries, err := os.ReadDir(filepath.Join(dir.Context, dir.Archive))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -416,8 +417,8 @@ func TestArchiveCommand_NoTasks(t *testing.T) {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
-	if err := os.MkdirAll(config.DirContext, 0750); err != nil {
+	rc.OverrideContextDir(dir.Context)
+	if err := os.MkdirAll(dir.Context, 0750); err != nil {
 		t.Fatal(err)
 	}
 
@@ -457,7 +458,7 @@ func TestArchiveCommand_WithCompletedTasks(t *testing.T) {
 - [ ] Pending task 1
 - [x] Completed task 2
 `
-	tasksPath := filepath.Join(config.DirContext, config.FileTask)
+	tasksPath := filepath.Join(dir.Context, file.FileTask)
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -494,7 +495,7 @@ func TestArchiveCommand_DryRunWithCompleted(t *testing.T) {
 - [x] Done task
 - [ ] Not done task
 `
-	tasksPath := filepath.Join(config.DirContext, config.FileTask)
+	tasksPath := filepath.Join(dir.Context, file.FileTask)
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -563,7 +564,7 @@ func TestSnapshotCommand_SnapshotContentFormat(t *testing.T) {
 	setupTaskDir(t)
 
 	tasksContent := "# Tasks\n\n- [ ] My task\n"
-	tasksPath := filepath.Join(config.DirContext, config.FileTask)
+	tasksPath := filepath.Join(dir.Context, file.FileTask)
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -574,13 +575,13 @@ func TestSnapshotCommand_SnapshotContentFormat(t *testing.T) {
 	}
 
 	// Find the snapshot file and verify content
-	entries, err := os.ReadDir(filepath.Join(config.DirContext, config.DirArchive))
+	entries, err := os.ReadDir(filepath.Join(dir.Context, dir.Archive))
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, e := range entries {
 		if strings.Contains(e.Name(), "my-snap") {
-			data, err := os.ReadFile(filepath.Join(config.DirContext, config.DirArchive, e.Name()))
+			data, err := os.ReadFile(filepath.Join(dir.Context, dir.Archive, e.Name()))
 			if err != nil {
 				t.Fatal(err)
 			}

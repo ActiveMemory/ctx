@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -201,7 +201,7 @@ func TestDetectReferenceTime_Fallback(t *testing.T) {
 	t.Setenv("CTX_DIR", tmp)
 	rc.Reset()
 
-	stateDir := filepath.Join(tmp, config.DirState)
+	stateDir := filepath.Join(tmp, dir.State)
 	mkErr := os.MkdirAll(stateDir, 0o755)
 	if mkErr != nil {
 		t.Fatalf("MkdirAll: %v", mkErr)
@@ -221,7 +221,7 @@ func TestDetectReferenceTime_FromMarkers(t *testing.T) {
 	t.Setenv("CTX_DIR", tmp)
 	rc.Reset()
 
-	stateDir := filepath.Join(tmp, config.DirState)
+	stateDir := filepath.Join(tmp, dir.State)
 	mkErr := os.MkdirAll(stateDir, 0o755)
 	if mkErr != nil {
 		t.Fatalf("MkdirAll: %v", mkErr)

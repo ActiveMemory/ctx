@@ -6,14 +6,17 @@
 
 package parser
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import (
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
+)
 
 // BelongsToUser returns true if this is a user message.
 //
 // Returns:
 //   - bool: True if Role is "user"
 func (m *Message) BelongsToUser() bool {
-	return m.Role == config.RoleUser
+	return m.Role == claude.RoleUser
 }
 
 // BelongsToAssistant returns true if this is an assistant message.
@@ -21,7 +24,7 @@ func (m *Message) BelongsToUser() bool {
 // Returns:
 //   - bool: True if Role is "assistant"
 func (m *Message) BelongsToAssistant() bool {
-	return m.Role == config.RoleAssistant
+	return m.Role == claude.RoleAssistant
 }
 
 // UsesTools returns true if this message contains tool invocations.

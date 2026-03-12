@@ -16,6 +16,7 @@ import (
 	"sync"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"gopkg.in/yaml.v3"
 )
 
@@ -1189,7 +1190,7 @@ func ListHookVariants(hook string) ([]string, error) {
 //   - []byte: Document content from why/
 //   - error: Non-nil if the file is not found or read fails
 func WhyDoc(name string) ([]byte, error) {
-	return FS.ReadFile("why/" + name + config.ExtMarkdown)
+	return FS.ReadFile("why/" + name + file.ExtMarkdown)
 }
 
 // ListWhyDocs returns available "why" document names (without extension).
@@ -1207,7 +1208,7 @@ func ListWhyDocs() ([]string, error) {
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			name := entry.Name()
-			if len(name) > 3 && name[len(name)-3:] == config.ExtMarkdown {
+			if len(name) > 3 && name[len(name)-3:] == file.ExtMarkdown {
 				names = append(names, name[:len(name)-3])
 			}
 		}

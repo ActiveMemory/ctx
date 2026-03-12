@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -22,7 +22,7 @@ func setupStateDir(t *testing.T) string {
 	dir := t.TempDir()
 	t.Setenv("CTX_DIR", dir)
 	rc.Reset()
-	if mkErr := os.MkdirAll(filepath.Join(dir, config.DirState), 0o750); mkErr != nil {
+	if mkErr := os.MkdirAll(filepath.Join(dir, dir.DirState), 0o750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 	return dir

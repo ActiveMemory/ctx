@@ -9,10 +9,10 @@ package stats
 import (
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -31,7 +31,7 @@ func Run(cmd *cobra.Command) error {
 	last, _ := cmd.Flags().GetInt("last")
 	jsonOut, _ := cmd.Flags().GetBool("json")
 
-	dir := filepath.Join(rc.ContextDir(), config.DirState)
+	dir := filepath.Join(rc.ContextDir(), dir.State)
 
 	entries, readErr := core.ReadStatsDir(dir, session)
 	if readErr != nil {

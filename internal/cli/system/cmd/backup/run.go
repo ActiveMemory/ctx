@@ -11,11 +11,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/write/backup"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -35,7 +35,7 @@ func Run(cmd *cobra.Command) error {
 	jsonOut, _ := cmd.Flags().GetBool("json")
 
 	switch scope {
-	case config.BackupScopeProject, config.BackupScopeGlobal, config.BackupScopeAll:
+	case file.BackupScopeProject, file.BackupScopeGlobal, file.BackupScopeAll:
 	default:
 		return ctxerr.InvalidBackupScope(scope)
 	}
@@ -45,8 +45,8 @@ func Run(cmd *cobra.Command) error {
 		return ctxerr.HomeDir(homeErr)
 	}
 
-	smbURL := os.Getenv(config.EnvBackupSMBURL)
-	smbSubdir := os.Getenv(config.EnvBackupSMBSubdir)
+	smbURL := os.Getenv(file.EnvBackupSMBURL)
+	smbSubdir := os.Getenv(file.EnvBackupSMBSubdir)
 	var smb *core.SMBConfig
 	if smbURL != "" {
 		var smbErr error
@@ -56,10 +56,10 @@ func Run(cmd *cobra.Command) error {
 		}
 	}
 
-	timestamp := time.Now().Format(config.BackupTimestampFormat)
+	timestamp := time.Now().Format(file.BackupTimestampFormat)
 	var results []core.BackupResult
 
-	if scope == config.BackupScopeProject || scope == config.BackupScopeAll {
+	if scope == file.BackupScopeProject || scope == file.BackupScopeAll {
 		result, projErr := core.BackupProject(cmd, home, timestamp, smb)
 		if projErr != nil {
 			return ctxerr.BackupProject(projErr)
@@ -67,7 +67,7 @@ func Run(cmd *cobra.Command) error {
 		results = append(results, result)
 	}
 
-	if scope == config.BackupScopeGlobal || scope == config.BackupScopeAll {
+	if scope == file.BackupScopeGlobal || scope == file.BackupScopeAll {
 		result, globalErr := core.BackupGlobal(cmd, home, timestamp, smb)
 		if globalErr != nil {
 			return ctxerr.BackupGlobal(globalErr)

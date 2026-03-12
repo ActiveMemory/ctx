@@ -10,10 +10,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -21,8 +23,8 @@ import (
 // ProjectDirs lists the project-root directories created by ctx init,
 // each with an explanatory README.md.
 var ProjectDirs = []string{
-	config.DirSpecs,
-	config.DirIdeas,
+	dir.Specs,
+	dir.Ideas,
 }
 
 // CreateProjectDirs creates project-root directories (specs/, ideas/) with
@@ -41,7 +43,7 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 			continue
 		}
 
-		if mkdirErr := os.MkdirAll(dir, config.PermExec); mkdirErr != nil {
+		if mkdirErr := os.MkdirAll(dir, fs.PermExec); mkdirErr != nil {
 			return ctxerr.Mkdir(dir+"/", mkdirErr)
 		}
 
@@ -50,8 +52,8 @@ func CreateProjectDirs(cmd *cobra.Command) error {
 			return ctxerr.ReadProjectReadme(dir, readErr)
 		}
 
-		readmePath := filepath.Join(dir, config.FilenameReadme)
-		if writeErr := os.WriteFile(readmePath, readme, config.PermFile); writeErr != nil {
+		readmePath := filepath.Join(dir, file.Readme)
+		if writeErr := os.WriteFile(readmePath, readme, fs.PermFile); writeErr != nil {
 			return ctxerr.FileWrite(readmePath, writeErr)
 		}
 

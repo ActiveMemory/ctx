@@ -12,7 +12,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/parser"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -86,14 +86,14 @@ func ScanDirectoryWithErrors(dir string) ([]*Session, []error, error) {
 		if info.IsDir() {
 			// Skip subagents directories - they contain sidechain sessions
 			// that share the parent sessionId and would cause duplicates
-			if info.Name() == config.DirSubagents {
+			if info.Name() == parser.DirSubagents {
 				return filepath.SkipDir
 			}
 			return nil
 		}
 
 		// Skip files in paths containing /subagents/ (defensive check)
-		if strings.Contains(path, string(filepath.Separator)+config.DirSubagents+string(filepath.Separator)) {
+		if strings.Contains(path, string(filepath.Separator)+parser.DirSubagents+string(filepath.Separator)) {
 			return nil
 		}
 

@@ -11,6 +11,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -51,8 +52,8 @@ func ExtractAttribute(tag, attrName string) string {
 func ProcessStream(cmd *cobra.Command, reader io.Reader, dryRun bool) error {
 	scanner := bufio.NewScanner(reader)
 	// Use a larger buffer for long lines
-	buf := make([]byte, 0, config.StreamScannerInitCap)
-	scanner.Buffer(buf, config.StreamScannerMaxSize)
+	buf := make([]byte, 0, file.StreamScannerInitCap)
+	scanner.Buffer(buf, file.StreamScannerMaxSize)
 
 	updateCount := 0
 

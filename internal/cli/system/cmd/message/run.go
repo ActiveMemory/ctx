@@ -13,12 +13,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/assets/hooks/messages"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -60,17 +60,17 @@ func RunMessageList(cmd *cobra.Command) error {
 
 	// Table output
 	headerFmt := fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
-		config.MessageColHook, config.MessageColVariant, config.MessageColCategory)
+		file.MessageColHook, file.MessageColVariant, file.MessageColCategory)
 	cmd.Println(fmt.Sprintf(headerFmt,
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderHook),
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderVariant),
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderCategory),
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderOverride)))
 	cmd.Println(fmt.Sprintf(headerFmt,
-		strings.Repeat("\u2500", config.MessageSepHook),
-		strings.Repeat("\u2500", config.MessageSepVariant),
-		strings.Repeat("\u2500", config.MessageSepCategory),
-		strings.Repeat("\u2500", config.MessageSepOverride)))
+		strings.Repeat("\u2500", file.MessageSepHook),
+		strings.Repeat("\u2500", file.MessageSepVariant),
+		strings.Repeat("\u2500", file.MessageSepCategory),
+		strings.Repeat("\u2500", file.MessageSepOverride)))
 
 	for _, e := range entries {
 		override := ""
@@ -115,7 +115,7 @@ func RunMessageShow(cmd *cobra.Command, hook, variant string) error {
 	}
 
 	// Embedded default
-	data, readErr := assets.HookMessage(hook, variant+config.ExtTxt)
+	data, readErr := assets.HookMessage(hook, variant+file.ExtTxt)
 	if readErr != nil {
 		return ctxerr.EmbeddedTemplateNotFound(hook, variant)
 	}
@@ -163,7 +163,7 @@ func RunMessageEdit(cmd *cobra.Command, hook, variant string) error {
 	}
 
 	// Read embedded default
-	data, readErr := assets.HookMessage(hook, variant+config.ExtTxt)
+	data, readErr := assets.HookMessage(hook, variant+file.ExtTxt)
 	if readErr != nil {
 		return ctxerr.EmbeddedTemplateNotFound(hook, variant)
 	}

@@ -9,7 +9,7 @@ package core
 import (
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	ctxtime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
 
@@ -26,7 +26,7 @@ import (
 func FormatTimeAgo(t time.Time) string {
 	d := time.Since(t)
 	return write.FormatTimeAgo(
-		d.Hours(), int(d.Minutes()), t.Format(config.TimeOlderFormat),
+		d.Hours(), int(d.Minutes()), t.Format(ctxtime.OlderFormat),
 	)
 }
 

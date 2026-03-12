@@ -10,6 +10,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/config"
@@ -36,7 +38,7 @@ import (
 func CompactTasks(
 	cmd *cobra.Command, ctx *context.Context, archive bool,
 ) (int, error) {
-	tasksFile := ctx.File(config.FileTask)
+	tasksFile := ctx.File(file.FileTask)
 
 	if tasksFile == nil {
 		return 0, nil
@@ -117,7 +119,7 @@ func CompactTasks(
 	newContent := strings.Join(newLines, config.NewlineLF)
 	if newContent != content {
 		if err := os.WriteFile(
-			tasksFile.Path, []byte(newContent), config.PermFile,
+			tasksFile.Path, []byte(newContent), fs.PermFile,
 		); err != nil {
 			return 0, err
 		}

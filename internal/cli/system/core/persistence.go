@@ -15,6 +15,8 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
@@ -41,17 +43,17 @@ func ReadPersistenceState(path string) (PersistenceState, bool) {
 			continue
 		}
 		switch parts[0] {
-		case config.PersistenceKeyCount:
+		case file.PersistenceKeyCount:
 			n, parseErr := strconv.Atoi(parts[1])
 			if parseErr == nil {
 				ps.Count = n
 			}
-		case config.PersistenceKeyLastNudge:
+		case file.PersistenceKeyLastNudge:
 			n, parseErr := strconv.Atoi(parts[1])
 			if parseErr == nil {
 				ps.LastNudge = n
 			}
-		case config.PersistenceKeyLastMtime:
+		case file.PersistenceKeyLastMtime:
 			n, parseErr := strconv.ParseInt(parts[1], 10, 64)
 			if parseErr == nil {
 				ps.LastMtime = n
@@ -69,7 +71,7 @@ func ReadPersistenceState(path string) (PersistenceState, bool) {
 func WritePersistenceState(path string, s PersistenceState) {
 	content := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckPersistenceStateFormat),
 		s.Count, s.LastNudge, s.LastMtime)
-	_ = os.WriteFile(path, []byte(content), config.PermSecret)
+	_ = os.WriteFile(path, []byte(content), fs.PermSecret)
 }
 
 // PersistenceNudgeNeeded determines whether a persistence nudge should
@@ -82,10 +84,10 @@ func WritePersistenceState(path string, s PersistenceState) {
 // Returns:
 //   - bool: true if a nudge should be emitted
 func PersistenceNudgeNeeded(count, sinceNudge int) bool {
-	if count >= config.PersistenceEarlyMin && count <= config.PersistenceEarlyMax && sinceNudge >= config.PersistenceEarlyInterval {
+	if count >= file.PersistenceEarlyMin && count <= file.PersistenceEarlyMax && sinceNudge >= file.PersistenceEarlyInterval {
 		return true
 	}
-	if count > config.PersistenceEarlyMax && sinceNudge >= config.PersistenceLateInterval {
+	if count > file.PersistenceEarlyMax && sinceNudge >= file.PersistenceLateInterval {
 		return true
 	}
 	return false

@@ -10,7 +10,8 @@ import (
 	"fmt"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 )
 
 // Evaluate checks a snapshot against resource thresholds and returns any
@@ -35,11 +36,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		pct := percent(snap.Memory.UsedBytes, snap.Memory.TotalBytes)
 		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertMemory),
 			pct, FormatGiB(snap.Memory.UsedBytes), FormatGiB(snap.Memory.TotalBytes))
-		if pct >= config.ThresholdMemoryDangerPct {
+		if pct >= file.ThresholdMemoryDangerPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityDanger, Resource: "memory", Message: msg,
 			})
-		} else if pct >= config.ThresholdMemoryWarnPct {
+		} else if pct >= file.ThresholdMemoryWarnPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityWarning, Resource: "memory", Message: msg,
 			})
@@ -51,11 +52,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		pct := percent(snap.Memory.SwapUsedBytes, snap.Memory.SwapTotalBytes)
 		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertSwap),
 			pct, FormatGiB(snap.Memory.SwapUsedBytes), FormatGiB(snap.Memory.SwapTotalBytes))
-		if pct >= config.ThresholdSwapDangerPct {
+		if pct >= file.ThresholdSwapDangerPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityDanger, Resource: "swap", Message: msg,
 			})
-		} else if pct >= config.ThresholdSwapWarnPct {
+		} else if pct >= file.ThresholdSwapWarnPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityWarning, Resource: "swap", Message: msg,
 			})
@@ -67,11 +68,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 		pct := percent(snap.Disk.UsedBytes, snap.Disk.TotalBytes)
 		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertDisk),
 			pct, FormatGiB(snap.Disk.UsedBytes), FormatGiB(snap.Disk.TotalBytes))
-		if pct >= config.ThresholdDiskDangerPct {
+		if pct >= file.ThresholdDiskDangerPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityDanger, Resource: "disk", Message: msg,
 			})
-		} else if pct >= config.ThresholdDiskWarnPct {
+		} else if pct >= file.ThresholdDiskWarnPct {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityWarning, Resource: "disk", Message: msg,
 			})
@@ -82,11 +83,11 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 	if snap.Load.Supported && snap.Load.NumCPU > 0 {
 		ratio := snap.Load.Load1 / float64(snap.Load.NumCPU)
 		msg := fmt.Sprintf(assets.TextDesc(assets.TextDescKeyResourcesAlertLoad), ratio)
-		if ratio >= config.ThresholdLoadDangerRatio {
+		if ratio >= file.ThresholdLoadDangerRatio {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityDanger, Resource: "load", Message: msg,
 			})
-		} else if ratio >= config.ThresholdLoadWarnRatio {
+		} else if ratio >= file.ThresholdLoadWarnRatio {
 			alerts = append(alerts, ResourceAlert{
 				Severity: SeverityWarning, Resource: "load", Message: msg,
 			})
@@ -104,7 +105,7 @@ func Evaluate(snap Snapshot) []ResourceAlert {
 // Returns:
 //   - string: Formatted GiB string (e.g. "14.7")
 func FormatGiB(bytes uint64) string {
-	gib := float64(bytes) / config.BytesPerGiB
+	gib := float64(bytes) / file.BytesPerGiB
 	return fmt.Sprintf("%.1f", gib)
 }
 
@@ -122,5 +123,5 @@ func percent(used, total uint64) float64 {
 	if total == 0 {
 		return 0
 	}
-	return float64(used) / float64(total) * config.PercentMultiplier
+	return float64(used) / float64(total) * stats.PercentMultiplier
 }

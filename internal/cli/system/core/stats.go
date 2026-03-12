@@ -15,6 +15,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/recall"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -32,7 +35,7 @@ import (
 //   - []StatsEntry: sorted stats entries
 //   - error: non-nil on glob failure
 func ReadStatsDir(dir, sessionFilter string) ([]StatsEntry, error) {
-	pattern := filepath.Join(dir, config.StatsFilePrefix+"*"+config.ExtJSONL)
+	pattern := filepath.Join(dir, file.StatsFilePrefix+"*"+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return nil, ctxerr.StatsGlob(globErr)
@@ -72,8 +75,8 @@ func ReadStatsDir(dir, sessionFilter string) ([]StatsEntry, error) {
 // Returns:
 //   - string: session ID
 func ExtractStatsSessionID(basename string) string {
-	s := strings.TrimPrefix(basename, config.StatsFilePrefix)
-	return strings.TrimSuffix(s, config.ExtJSONL)
+	s := strings.TrimPrefix(basename, file.StatsFilePrefix)
+	return strings.TrimSuffix(s, file.ExtJSONL)
 }
 
 // ParseStatsFile reads all JSONL lines from a stats file.
@@ -163,13 +166,13 @@ func OutputStatsJSON(cmd *cobra.Command, entries []StatsEntry) error {
 func PrintStatsHeader(cmd *cobra.Command) {
 	fmtStr := assets.TextDesc(assets.TextDescKeyStatsHeaderFormat)
 	cmd.Println(fmt.Sprintf(fmtStr,
-		config.StatsHeaderTime, config.StatsHeaderSession,
-		config.StatsHeaderPrompt, config.StatsHeaderTokens,
-		config.StatsHeaderPct, config.StatsHeaderEvent))
+		file.StatsHeaderTime, file.StatsHeaderSession,
+		file.StatsHeaderPrompt, file.StatsHeaderTokens,
+		file.StatsHeaderPct, file.StatsHeaderEvent))
 	cmd.Println(fmt.Sprintf(fmtStr,
-		config.StatsSepTime, config.StatsSepSession,
-		config.StatsSepPrompt, config.StatsSepTokens,
-		config.StatsSepPct, config.StatsSepEvent))
+		file.StatsSepTime, file.StatsSepSession,
+		file.StatsSepPrompt, file.StatsSepTokens,
+		file.StatsSepPct, file.StatsSepEvent))
 }
 
 // PrintStatsLine prints a single stats entry in human-readable format.
@@ -180,8 +183,8 @@ func PrintStatsHeader(cmd *cobra.Command) {
 func PrintStatsLine(cmd *cobra.Command, e *StatsEntry) {
 	ts := FormatStatsTimestamp(e.Timestamp)
 	sid := e.Session
-	if len(sid) > config.SessionIDShortLen {
-		sid = sid[:config.SessionIDShortLen]
+	if len(sid) > recall.SessionIDShortLen {
+		sid = sid[:recall.SessionIDShortLen]
 	}
 	tokens := FormatTokenCount(e.Tokens)
 	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyStatsLineFormat),
@@ -202,7 +205,7 @@ func FormatStatsTimestamp(ts string) string {
 	if parseErr != nil {
 		return ts
 	}
-	return t.Local().Format(config.DateTimePreciseFormat)
+	return t.Local().Format(time2.DateTimePreciseFormat)
 }
 
 // ReadNewLines reads bytes from offset to end and parses JSONL lines.
@@ -225,7 +228,7 @@ func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
 		return nil
 	}
 
-	buf := make([]byte, config.StatsReadBufSize)
+	buf := make([]byte, file.StatsReadBufSize)
 	n, readErr := f.Read(buf)
 	if readErr != nil || n == 0 {
 		return nil
@@ -258,7 +261,7 @@ func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
 func StreamStats(cmd *cobra.Command, dir, sessionFilter string, jsonOut bool) error {
 	// Track file sizes to detect new content.
 	offsets := make(map[string]int64)
-	matches, _ := filepath.Glob(filepath.Join(dir, config.StatsFilePrefix+"*"+config.ExtJSONL))
+	matches, _ := filepath.Glob(filepath.Join(dir, file.StatsFilePrefix+"*"+file.ExtJSONL))
 	for _, path := range matches {
 		info, statErr := os.Stat(path)
 		if statErr == nil {
@@ -270,7 +273,7 @@ func StreamStats(cmd *cobra.Command, dir, sessionFilter string, jsonOut bool) er
 	defer ticker.Stop()
 
 	for range ticker.C {
-		matches, _ = filepath.Glob(filepath.Join(dir, config.StatsFilePrefix+"*"+config.ExtJSONL))
+		matches, _ = filepath.Glob(filepath.Join(dir, file.StatsFilePrefix+"*"+file.ExtJSONL))
 		for _, path := range matches {
 			sid := ExtractStatsSessionID(filepath.Base(path))
 			if sessionFilter != "" && !strings.HasPrefix(sid, sessionFilter) {

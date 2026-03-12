@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -54,5 +53,5 @@ func ExportSummary(
 		cmd.Println("Nothing to export.")
 		return
 	}
-	io.sprintf(cmd, "%s %s.", verb, strings.Join(parts, ", "))
+	cmd.Println(fmt.Sprintf("%s %s.", verb, strings.Join(parts, ", ")))
 }

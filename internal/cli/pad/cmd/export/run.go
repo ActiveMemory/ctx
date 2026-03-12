@@ -12,10 +12,10 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -37,7 +37,7 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 	}
 
 	if !dryRun {
-		if mkErr := os.MkdirAll(dir, config.PermExec); mkErr != nil {
+		if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
 			return ctxerr.Mkdir(dir, mkErr)
 		}
 	}
@@ -71,7 +71,7 @@ func runExport(cmd *cobra.Command, dir string, force, dryRun bool) error {
 			continue
 		}
 
-		if writeErr := os.WriteFile(outPath, data, config.PermSecret); writeErr != nil {
+		if writeErr := os.WriteFile(outPath, data, fs.PermSecret); writeErr != nil {
 			write.ErrPadExportWrite(cmd, label, writeErr)
 			continue
 		}

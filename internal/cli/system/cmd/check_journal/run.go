@@ -11,11 +11,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -41,9 +41,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	tmpDir := core.StateDir()
-	remindedFile := filepath.Join(tmpDir, config.CheckJournalThrottleID)
+	remindedFile := filepath.Join(tmpDir, file.CheckJournalThrottleID)
 	claudeProjectsDir := filepath.Join(
-		os.Getenv(config.EnvHome), config.CheckJournalClaudeProjectsSubdir,
+		os.Getenv(file.EnvHome), file.CheckJournalClaudeProjectsSubdir,
 	)
 
 	// Only remind once per day
@@ -61,9 +61,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	// Stage 1: Unexported sessions
-	newestJournal := core.NewestMtime(jDir, config.ExtMarkdown)
+	newestJournal := core.NewestMtime(jDir, file.ExtMarkdown)
 	unexported := core.CountNewerFiles(
-		claudeProjectsDir, config.ExtJSONL, newestJournal,
+		claudeProjectsDir, file.ExtJSONL, newestJournal,
 	)
 
 	// Stage 2: Unenriched entries
@@ -74,30 +74,30 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 
 	vars := map[string]any{
-		config.TplVarUnexportedCount: unexported,
-		config.TplVarUnenrichedCount: unenriched,
+		file.TplVarUnexportedCount: unexported,
+		file.TplVarUnenrichedCount: unenriched,
 	}
 
 	var variant, fallback string
 	switch {
 	case unexported > 0 && unenriched > 0:
-		variant = config.VariantBoth
+		variant = file.VariantBoth
 		fallback = fmt.Sprintf(assets.TextDesc(
 			assets.TextDescKeyCheckJournalFallbackBoth), unexported, unenriched,
 		)
 	case unexported > 0:
-		variant = config.VariantUnexported
+		variant = file.VariantUnexported
 		fallback = fmt.Sprintf(assets.TextDesc(
 			assets.TextDescKeyCheckJournalFallbackUnexported), unexported,
 		)
 	default:
-		variant = config.VariantUnenriched
+		variant = file.VariantUnenriched
 		fallback = fmt.Sprintf(assets.TextDesc(
 			assets.TextDescKeyCheckJournalFallbackUnenriched), unenriched,
 		)
 	}
 
-	content := core.LoadMessage(config.HookCheckJournal, variant, vars, fallback)
+	content := core.LoadMessage(file.HookCheckJournal, variant, vars, fallback)
 	if content == "" {
 		return nil
 	}
@@ -107,8 +107,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	cmd.Println(core.NudgeBox(relayPrefix, boxTitle, content))
 
-	ref := notify.NewTemplateRef(config.HookCheckJournal, variant, vars)
-	journalMsg := config.HookCheckJournal + ": " + fmt.Sprintf(
+	ref := notify.NewTemplateRef(file.HookCheckJournal, variant, vars)
+	journalMsg := file.HookCheckJournal + ": " + fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyCheckJournalRelayFormat),
 		unexported, unenriched,
 	)

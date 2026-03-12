@@ -13,6 +13,8 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -33,13 +35,13 @@ func WriteSection(
 	writePages func(dir string),
 ) error {
 	dir := filepath.Join(docsDir, subdir)
-	if mkErr := os.MkdirAll(dir, config.PermExec); mkErr != nil {
+	if mkErr := os.MkdirAll(dir, fs.PermExec); mkErr != nil {
 		return ctxerr.Mkdir(dir, mkErr)
 	}
 
-	indexPath := filepath.Join(dir, config.FilenameIndex)
+	indexPath := filepath.Join(dir, file.Index)
 	if writeErr := os.WriteFile(
-		indexPath, []byte(indexContent), config.PermFile,
+		indexPath, []byte(indexContent), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(indexPath, writeErr)
 	}
@@ -65,7 +67,7 @@ func WriteMonthSections(
 	for _, month := range monthOrder {
 		_, _ = fmt.Fprintf(sb, config.TplJournalMonthHeading+nl+nl, month)
 		for _, e := range months[month] {
-			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			timeStr := ""
 			if e.Time != "" && len(e.Time) >= config.JournalTimePrefixLen {
 				timeStr = e.Time[:config.JournalTimePrefixLen] + " "
@@ -139,7 +141,7 @@ func WritePopularAndLongtail(
 		sb.WriteString(ltHeading + nl + nl)
 		for i := range ltCount {
 			label, e := ltItem(i)
-			link := strings.TrimSuffix(e.Filename, config.ExtMarkdown)
+			link := strings.TrimSuffix(e.Filename, file.ExtMarkdown)
 			_, _ = fmt.Fprintf(sb, ltTpl+nl, label, e.Title, link)
 		}
 		sb.WriteString(nl)

@@ -9,10 +9,10 @@ package add
 import (
 	"time"
 
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/remind/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, message, after string) error {
 		Created: time.Now().UTC().Format(time.RFC3339),
 	}
 	if after != "" {
-		if _, parseErr := time.Parse(config.DateFormat, after); parseErr != nil {
+		if _, parseErr := time.Parse(time2.DateFormat, after); parseErr != nil {
 			return ctxerr.InvalidDateValue(after)
 		}
 		r.After = &after

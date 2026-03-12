@@ -8,7 +8,9 @@ package context
 
 import (
 	"os"
+	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -21,6 +23,23 @@ import (
 //
 // Returns:
 //   - bool: True if the directory exists and is a directory
+//
+// Initialized reports whether the context directory contains all required files.
+//
+// Parameters:
+//   - contextDir: Directory path to check
+//
+// Returns:
+//   - bool: True if all required context files exist
+func Initialized(contextDir string) bool {
+	for _, f := range file.FilesRequired {
+		if _, err := os.Stat(filepath.Join(contextDir, f)); err != nil {
+			return false
+		}
+	}
+	return true
+}
+
 func Exists(dir string) bool {
 	if dir == "" {
 		dir = rc.ContextDir()

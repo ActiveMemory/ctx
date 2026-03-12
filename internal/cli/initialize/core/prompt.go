@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -35,40 +37,40 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	var templateContent []byte
 	var err error
 	if ralph {
-		templateContent, err = assets.RalphTemplate(config.FilePromptMd)
+		templateContent, err = assets.RalphTemplate(file.FilePromptMd)
 		if err != nil {
 			return ctxerr.ReadInitTemplate("ralph PROMPT.md", err)
 		}
 	} else {
-		templateContent, err = assets.Template(config.FilePromptMd)
+		templateContent, err = assets.Template(file.FilePromptMd)
 		if err != nil {
 			return ctxerr.ReadInitTemplate("PROMPT.md", err)
 		}
 	}
-	existingContent, err := os.ReadFile(config.FilePromptMd)
+	existingContent, err := os.ReadFile(file.FilePromptMd)
 	fileExists := err == nil
 	if !fileExists {
-		if err := os.WriteFile(config.FilePromptMd, templateContent, config.PermFile); err != nil {
-			return ctxerr.FileWrite(config.FilePromptMd, err)
+		if err := os.WriteFile(file.FilePromptMd, templateContent, fs.PermFile); err != nil {
+			return ctxerr.FileWrite(file.FilePromptMd, err)
 		}
 		mode := ""
 		if ralph {
 			mode = " (ralph mode)"
 		}
-		write.InitCreatedWith(cmd, config.FilePromptMd, mode)
+		write.InitCreatedWith(cmd, file.FilePromptMd, mode)
 		return nil
 	}
 	existingStr := string(existingContent)
 	hasCtxMarkers := strings.Contains(existingStr, config.PromptMarkerStart)
 	if hasCtxMarkers {
 		if !force {
-			write.InitCtxContentExists(cmd, config.FilePromptMd)
+			write.InitCtxContentExists(cmd, file.FilePromptMd)
 			return nil
 		}
 		return UpdatePromptSection(cmd, existingStr, templateContent)
 	}
 	if !autoMerge {
-		write.InitFileExistsNoCtx(cmd, config.FilePromptMd)
+		write.InitFileExistsNoCtx(cmd, file.FilePromptMd)
 		cmd.Println("Would you like to merge ctx prompt instructions?")
 		cmd.Print("[y/N] ")
 		reader := bufio.NewReader(os.Stdin)
@@ -77,14 +79,14 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 			return ctxerr.ReadInput(err)
 		}
 		response = strings.TrimSpace(strings.ToLower(response))
-		if response != config.ConfirmShort && response != config.ConfirmLong {
-			write.InitSkippedPlain(cmd, config.FilePromptMd)
+		if response != file.ConfirmShort && response != file.ConfirmLong {
+			write.InitSkippedPlain(cmd, file.FilePromptMd)
 			return nil
 		}
 	}
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", config.FilePromptMd, timestamp)
-	if err := os.WriteFile(backupName, existingContent, config.PermFile); err != nil {
+	backupName := fmt.Sprintf("%s.%d.bak", file.FilePromptMd, timestamp)
+	if err := os.WriteFile(backupName, existingContent, fs.PermFile); err != nil {
 		return ctxerr.CreateBackup(backupName, err)
 	}
 	write.InitBackup(cmd, backupName)
@@ -95,10 +97,10 @@ func HandlePromptMd(cmd *cobra.Command, force, autoMerge, ralph bool) error {
 	} else {
 		mergedContent = existingStr[:insertPos] + config.NewlineLF + string(templateContent) + config.NewlineLF + existingStr[insertPos:]
 	}
-	if err := os.WriteFile(config.FilePromptMd, []byte(mergedContent), config.PermFile); err != nil {
-		return ctxerr.WriteMerged(config.FilePromptMd, err)
+	if err := os.WriteFile(file.FilePromptMd, []byte(mergedContent), fs.PermFile); err != nil {
+		return ctxerr.WriteMerged(file.FilePromptMd, err)
 	}
-	write.InitMerged(cmd, config.FilePromptMd)
+	write.InitMerged(cmd, file.FilePromptMd)
 	return nil
 }
 
@@ -132,14 +134,14 @@ func UpdatePromptSection(cmd *cobra.Command, existing string, newTemplate []byte
 	promptContent := templateStr[templateStart : templateEnd+len(config.PromptMarkerEnd)]
 	newContent := existing[:startIdx] + promptContent + existing[endIdx:]
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", config.FilePromptMd, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
+	backupName := fmt.Sprintf("%s.%d.bak", file.FilePromptMd, timestamp)
+	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
 		return ctxerr.CreateBackupGeneric(err)
 	}
 	write.InitBackup(cmd, backupName)
-	if err := os.WriteFile(config.FilePromptMd, []byte(newContent), config.PermFile); err != nil {
-		return ctxerr.FileUpdate(config.FilePromptMd, err)
+	if err := os.WriteFile(file.FilePromptMd, []byte(newContent), fs.PermFile); err != nil {
+		return ctxerr.FileUpdate(file.FilePromptMd, err)
 	}
-	write.InitUpdatedPromptSection(cmd, config.FilePromptMd)
+	write.InitUpdatedPromptSection(cmd, file.FilePromptMd)
 	return nil
 }

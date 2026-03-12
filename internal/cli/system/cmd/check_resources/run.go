@@ -9,6 +9,7 @@ package check_resources
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -48,7 +49,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	var alertMessages string
 	for _, a := range alerts {
 		if a.Severity == sysinfo.SeverityDanger {
-			alertMessages += config.CheckResourcesDangerMarker +
+			alertMessages += file.CheckResourcesDangerMarker +
 				a.Message + config.NewlineLF
 		}
 	}
@@ -60,9 +61,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 			assets.TextDescKeyCheckResourcesFallbackPersist) + config.NewlineLF +
 		assets.TextDesc(
 			assets.TextDescKeyCheckResourcesFallbackEnd)
-	vars := map[string]any{config.TplVarAlertMessages: alertMessages}
+	vars := map[string]any{file.TplVarAlertMessages: alertMessages}
 	content := core.LoadMessage(
-		config.HookCheckResources, config.VariantAlert, vars, fallback,
+		file.HookCheckResources, file.VariantAlert, vars, fallback,
 	)
 	if content == "" {
 		return nil
@@ -74,9 +75,9 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		content))
 
 	ref := notify.NewTemplateRef(
-		config.HookCheckResources, config.VariantAlert, vars,
+		file.HookCheckResources, file.VariantAlert, vars,
 	)
-	core.NudgeAndRelay(config.HookCheckResources+": "+
+	core.NudgeAndRelay(file.HookCheckResources+": "+
 		assets.TextDesc(assets.TextDescKeyCheckResourcesRelayMessage),
 		input.SessionID, ref,
 	)

@@ -11,14 +11,15 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 	ctxentry "github.com/ActiveMemory/ctx/internal/entry"
 )
 
 // Promote writes a classified entry to the appropriate .context/ file.
 // Uses the add package's WriteEntry for consistent formatting and indexing.
-func Promote(entry Entry, classification Classification) error {
+func Promote(e Entry, classification Classification) error {
 	// Extract a title from the entry text (first line, trimmed of Markdown markers)
-	title := extractTitle(entry.Text)
+	title := extractTitle(e.Text)
 
 	params := ctxentry.Params{
 		Type:    classification.Target,
@@ -26,20 +27,20 @@ func Promote(entry Entry, classification Classification) error {
 	}
 
 	switch classification.Target {
-	case config.EntryDecision:
+	case entry.Decision:
 		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)
-		params.Rationale = extractBody(entry.Text)
+		params.Rationale = extractBody(e.Text)
 		params.Consequences = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
 
-	case config.EntryLearning:
+	case entry.Learning:
 		params.Context = assets.TextDesc(assets.TextDescKeyMemoryImportSource)
-		params.Lesson = extractBody(entry.Text)
+		params.Lesson = extractBody(e.Text)
 		params.Application = assets.TextDesc(assets.TextDescKeyMemoryImportReview)
 
-	case config.EntryTask:
+	case entry.Task:
 		// Tasks just need content — FormatTask handles the rest
 
-	case config.EntryConvention:
+	case entry.Convention:
 		// Conventions just need content — FormatConvention handles the rest
 	}
 

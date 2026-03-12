@@ -11,6 +11,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -47,7 +49,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil // non-fatal: don't break session start
 	}
 
-	today := time.Now().Format(config.DateFormat)
+	today := time.Now().Format(time2.DateFormat)
 	var due []remindcore.Reminder
 	for _, r := range reminders {
 		if r.After == nil || *r.After <= today {
@@ -68,8 +70,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	fallback := reminderList +
 		config.NewlineLF + assets.TextDesc(assets.TextDescKeyCheckRemindersDismissHint) + config.NewlineLF +
 		assets.TextDesc(assets.TextDescKeyCheckRemindersDismissAllHint)
-	vars := map[string]any{config.TplVarReminderList: reminderList}
-	content := core.LoadMessage(config.HookCheckReminders, config.VariantReminders, vars, fallback)
+	vars := map[string]any{file.TplVarReminderList: reminderList}
+	content := core.LoadMessage(file.HookCheckReminders, file.VariantReminders, vars, fallback)
 	if content == "" {
 		return nil
 	}
@@ -79,8 +81,8 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		assets.TextDesc(assets.TextDescKeyCheckRemindersBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(config.HookCheckReminders, config.VariantReminders, vars)
-	nudgeMsg := config.HookCheckReminders + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersNudgeFormat), len(due))
+	ref := notify.NewTemplateRef(file.HookCheckReminders, file.VariantReminders, vars)
+	nudgeMsg := file.HookCheckReminders + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckRemindersNudgeFormat), len(due))
 	core.NudgeAndRelay(nudgeMsg, input.SessionID, ref)
 
 	return nil

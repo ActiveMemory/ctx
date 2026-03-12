@@ -12,10 +12,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -121,8 +121,8 @@ func runImportBlobs(cmd *cobra.Command, path string) error {
 			continue
 		}
 
-		if len(data) > config.MaxBlobSize {
-			write.ErrPadImportBlobTooLarge(cmd, name, config.MaxBlobSize)
+		if len(data) > file.MaxBlobSize {
+			write.ErrPadImportBlobTooLarge(cmd, name, file.MaxBlobSize)
 			skipped++
 			continue
 		}

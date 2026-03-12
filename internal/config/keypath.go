@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // PermKeyDir is the permission for the user-level key directory (owner rwx only).
@@ -24,7 +26,7 @@ func GlobalKeyPath() string {
 	if err != nil {
 		return ""
 	}
-	return filepath.Join(home, ".ctx", FileContextKey)
+	return filepath.Join(home, ".ctx", file.FileContextKey)
 }
 
 // ExpandHome expands a leading ~/ prefix to the user's home directory.
@@ -69,7 +71,7 @@ func ResolveKeyPath(contextDir, overridePath string) string {
 	}
 
 	// Tier 2: project-local key.
-	local := filepath.Join(contextDir, FileContextKey)
+	local := filepath.Join(contextDir, file.FileContextKey)
 	if _, err := os.Stat(local); err == nil {
 		return local
 	}

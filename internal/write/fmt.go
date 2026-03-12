@@ -26,24 +26,24 @@ import (
 func FormatTimeAgo(hours float64, mins int, fallbackDate string) string {
 	switch {
 	case hours < 1.0/60: // less than a minute
-		return config.tplTimeJustNow
+		return config.TplTimeJustNow
 	case hours < 1:
 		if mins == 1 {
-			return config.tplTimeMinuteAgo
+			return config.TplTimeMinuteAgo
 		}
-		return fmt.Sprintf(config.tplTimeMinutesAgo, mins)
+		return fmt.Sprintf(config.TplTimeMinutesAgo, mins)
 	case hours < 24:
 		h := int(hours)
 		if h == 1 {
-			return config.tplTimeHourAgo
+			return config.TplTimeHourAgo
 		}
-		return fmt.Sprintf(config.tplTimeHoursAgo, h)
+		return fmt.Sprintf(config.TplTimeHoursAgo, h)
 	case hours < 7*24:
 		days := int(hours / 24)
 		if days == 1 {
-			return config.tplTimeDayAgo
+			return config.TplTimeDayAgo
 		}
-		return fmt.Sprintf(config.tplTimeDaysAgo, days)
+		return fmt.Sprintf(config.TplTimeDaysAgo, days)
 	default:
 		return fallbackDate
 	}

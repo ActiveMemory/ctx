@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // summarizeConstitution counts checkbox items (invariants) in CONSTITUTION.md.
@@ -114,13 +115,13 @@ func summarizeGlossary(content []byte) string {
 //   - string: Summary string (e.g., "3 active, 2 completed" or "empty")
 func generateSummary(name string, content []byte) string {
 	switch name {
-	case config.FileConstitution:
+	case file.FileConstitution:
 		return summarizeConstitution(content)
-	case config.FileTask:
+	case file.FileTask:
 		return summarizeTasks(content)
-	case config.FileDecision:
+	case file.FileDecision:
 		return summarizeDecisions(content)
-	case config.FileGlossary:
+	case file.FileGlossary:
 		return summarizeGlossary(content)
 	default:
 		if len(content) == 0 || effectivelyEmpty(content) {

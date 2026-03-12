@@ -14,7 +14,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -135,32 +137,32 @@ func TestSelectContent(t *testing.T) {
 	rc.Reset()
 	defer func() { _ = os.Chdir(origDir) }()
 
-	contextDir := filepath.Join(workDir, config.DirContext)
+	contextDir := filepath.Join(workDir, dir.Context)
 	if mkErr := os.MkdirAll(contextDir, 0o755); mkErr != nil {
 		t.Fatal(mkErr)
 	}
 
 	// Create TASKS.md with pending items
 	tasks := "# Tasks\n\n- [x] done task\n- [ ] pending task one\n- [ ] pending task two\n"
-	if writeErr := os.WriteFile(filepath.Join(contextDir, config.FileTask), []byte(tasks), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(filepath.Join(contextDir, file.FileTask), []byte(tasks), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	// Create DECISIONS.md with a recent entry
-	ts := time.Now().Format(config.TimestampCompact)
+	ts := time.Now().Format(time2.TimestampCompact)
 	decisions := fmt.Sprintf("# Decisions\n\n## [%s] Use SQLite\n\nContext: testing\n", ts)
-	if writeErr := os.WriteFile(filepath.Join(contextDir, config.FileDecision), []byte(decisions), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(filepath.Join(contextDir, file.FileDecision), []byte(decisions), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	// Create CONVENTIONS.md
 	conventions := "# Conventions\n\n- Always use ctx from PATH\n- Prefer filepath.Join\n"
-	if writeErr := os.WriteFile(filepath.Join(contextDir, config.FileConvention), []byte(conventions), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(filepath.Join(contextDir, file.FileConvention), []byte(conventions), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 
 	// Create empty LEARNINGS.md
-	if writeErr := os.WriteFile(filepath.Join(contextDir, config.FileLearning), []byte("# Learnings\n"), 0o644); writeErr != nil {
+	if writeErr := os.WriteFile(filepath.Join(contextDir, file.FileLearning), []byte("# Learnings\n"), 0o644); writeErr != nil {
 		t.Fatal(writeErr)
 	}
 

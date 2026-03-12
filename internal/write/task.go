@@ -9,7 +9,6 @@ package write
 import (
 	"fmt"
 
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -25,7 +24,7 @@ func ArchiveSkipping(cmd *cobra.Command, taskText string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskArchiveSkipping), taskText)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyTaskArchiveSkipping), taskText))
 }
 
 // ArchiveSkipIncomplete prints a summary when no tasks could be archived
@@ -38,7 +37,7 @@ func ArchiveSkipIncomplete(cmd *cobra.Command, skippedCount int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskArchiveSkipIncomplete), skippedCount)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyTaskArchiveSkipIncomplete), skippedCount))
 }
 
 // ArchiveNoCompleted prints a message when there are no completed tasks
@@ -67,7 +66,7 @@ func ArchiveDryRun(cmd *cobra.Command, archivableCount, pendingCount int, previe
 	}
 	cmd.Println(assets.TextDesc(assets.TextDescKeyTaskArchiveDryRunHeader))
 	cmd.Println()
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskArchiveDryRunSummary), archivableCount, pendingCount)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyTaskArchiveDryRunSummary), archivableCount, pendingCount))
 	cmd.Println()
 	cmd.Println(assets.TextDesc(assets.TextDescKeyTaskArchiveContentPreview))
 	cmd.Println(separator)
@@ -86,8 +85,8 @@ func ArchiveSuccess(cmd *cobra.Command, archivedCount int, archiveFilePath strin
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskArchiveSuccess), archivedCount, archiveFilePath)
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskArchivePendingRemain), pendingCount)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyTaskArchiveSuccess), archivedCount, archiveFilePath))
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyTaskArchivePendingRemain), pendingCount))
 }
 
 // SnapshotSaved prints the result of a successful task snapshot.
@@ -99,7 +98,7 @@ func SnapshotSaved(cmd *cobra.Command, snapshotPath string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyTaskSnapshotSaved), snapshotPath)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyTaskSnapshotSaved), snapshotPath))
 }
 
 // SnapshotContent builds the snapshot file content with header and body.

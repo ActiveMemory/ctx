@@ -11,10 +11,11 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // Run executes the check-map-staleness hook logic.
@@ -39,7 +40,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if paused {
 		return nil
 	}
-	markerPath := filepath.Join(core.StateDir(), config.MapStalenessThrottleID)
+	markerPath := filepath.Join(core.StateDir(), file.MapStalenessThrottleID)
 	if core.IsDailyThrottled(markerPath) {
 		return nil
 	}
@@ -49,12 +50,12 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	lastRun, parseErr := time.Parse(config.DateFormat, info.LastRun)
+	lastRun, parseErr := time.Parse(time2.DateFormat, info.LastRun)
 	if parseErr != nil {
 		return nil
 	}
 
-	if time.Since(lastRun) < time.Duration(config.MapStaleDays)*24*time.Hour {
+	if time.Since(lastRun) < time.Duration(file.MapStaleDays)*24*time.Hour {
 		return nil
 	}
 
@@ -64,7 +65,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	dateStr := lastRun.Format(config.DateFormat)
+	dateStr := lastRun.Format(time2.DateFormat)
 	core.EmitMapStalenessWarning(cmd, input.SessionID, dateStr, moduleCommits)
 
 	core.TouchFile(markerPath)

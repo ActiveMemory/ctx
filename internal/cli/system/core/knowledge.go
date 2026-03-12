@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -38,33 +39,33 @@ func ScanKnowledgeFiles(
 	var findings []KnowledgeFinding
 
 	if decThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, config.FileDecision); readErr == nil {
+		if data, readErr := validation.SafeReadFile(contextDir, file.FileDecision); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > decThreshold {
 				findings = append(findings, KnowledgeFinding{
-					File: config.FileDecision, Count: count, Threshold: decThreshold, Unit: "entries",
+					File: file.FileDecision, Count: count, Threshold: decThreshold, Unit: "entries",
 				})
 			}
 		}
 	}
 
 	if lrnThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, config.FileLearning); readErr == nil {
+		if data, readErr := validation.SafeReadFile(contextDir, file.FileLearning); readErr == nil {
 			count := len(index.ParseEntryBlocks(string(data)))
 			if count > lrnThreshold {
 				findings = append(findings, KnowledgeFinding{
-					File: config.FileLearning, Count: count, Threshold: lrnThreshold, Unit: "entries",
+					File: file.FileLearning, Count: count, Threshold: lrnThreshold, Unit: "entries",
 				})
 			}
 		}
 	}
 
 	if convThreshold > 0 {
-		if data, readErr := validation.SafeReadFile(contextDir, config.FileConvention); readErr == nil {
+		if data, readErr := validation.SafeReadFile(contextDir, file.FileConvention); readErr == nil {
 			lineCount := bytes.Count(data, []byte(config.NewlineLF))
 			if lineCount > convThreshold {
 				findings = append(findings, KnowledgeFinding{
-					File: config.FileConvention, Count: lineCount, Threshold: convThreshold, Unit: "lines",
+					File: file.FileConvention, Count: lineCount, Threshold: convThreshold, Unit: "lines",
 				})
 			}
 		}
@@ -98,8 +99,8 @@ func FormatKnowledgeWarnings(findings []KnowledgeFinding) string {
 //   - fileWarnings: pre-formatted findings text
 func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
 	fallback := fileWarnings + "\n" + assets.TextDesc(assets.TextDescKeyCheckKnowledgeFallback)
-	content := LoadMessage(config.HookCheckKnowledge, config.VariantWarning,
-		map[string]any{config.TplVarFileWarnings: fileWarnings}, fallback)
+	content := LoadMessage(file.HookCheckKnowledge, file.VariantWarning,
+		map[string]any{file.TplVarFileWarnings: fileWarnings}, fallback)
 	if content == "" {
 		return
 	}
@@ -109,9 +110,9 @@ func EmitKnowledgeWarning(cmd *cobra.Command, sessionID, fileWarnings string) {
 		assets.TextDesc(assets.TextDescKeyCheckKnowledgeBoxTitle),
 		content))
 
-	ref := notify.NewTemplateRef(config.HookCheckKnowledge, config.VariantWarning,
-		map[string]any{config.TplVarFileWarnings: fileWarnings})
-	notifyMsg := config.HookCheckKnowledge + ": " + assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayMessage)
+	ref := notify.NewTemplateRef(file.HookCheckKnowledge, file.VariantWarning,
+		map[string]any{file.TplVarFileWarnings: fileWarnings})
+	notifyMsg := file.HookCheckKnowledge + ": " + assets.TextDesc(assets.TextDescKeyCheckKnowledgeRelayMessage)
 	NudgeAndRelay(notifyMsg, sessionID, ref)
 }
 

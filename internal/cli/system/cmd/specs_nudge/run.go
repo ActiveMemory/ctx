@@ -9,11 +9,11 @@ package specs_nudge
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -39,15 +39,15 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	}
 	fallback := assets.TextDesc(assets.TextDescKeySpecsNudgeFallback)
 	msg := core.LoadMessage(
-		config.HookSpecsNudge, config.VariantNudge, nil, fallback,
+		file.HookSpecsNudge, file.VariantNudge, nil, fallback,
 	)
 	if msg == "" {
 		return nil
 	}
 	msg = core.AppendContextDir(msg)
-	core.PrintHookContext(cmd, config.HookEventPreToolUse, msg)
+	core.PrintHookContext(cmd, file.HookEventPreToolUse, msg)
 	nudgeMsg := assets.TextDesc(assets.TextDescKeySpecsNudgeNudgeMessage)
-	ref := notify.NewTemplateRef(config.HookSpecsNudge, config.VariantNudge, nil)
-	core.Relay(config.HookSpecsNudge+": "+nudgeMsg, input.SessionID, ref)
+	ref := notify.NewTemplateRef(file.HookSpecsNudge, file.VariantNudge, nil)
+	core.Relay(file.HookSpecsNudge+": "+nudgeMsg, input.SessionID, ref)
 	return nil
 }

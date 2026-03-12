@@ -13,14 +13,14 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 )
 
 func TestRunLockUnlock_LockSingle(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -28,7 +28,7 @@ func TestRunLockUnlock_LockSingle(t *testing.T) {
 	filename := "2026-01-21-test-abc12345.md"
 	content := "---\ndate: \"2026-01-21\"\n---\n\n# Test\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, filename), []byte(content), config.PermFile,
+		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -72,7 +72,7 @@ func TestRunLockUnlock_LockSingle(t *testing.T) {
 func TestRunLockUnlock_UnlockSingle(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -80,7 +80,7 @@ func TestRunLockUnlock_UnlockSingle(t *testing.T) {
 	content := "---\ndate: \"2026-01-21\"\n" +
 		core.LockedFrontmatterLine + "\n---\n\n# Test\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, filename), []byte(content), config.PermFile,
+		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -133,7 +133,7 @@ func TestRunLockUnlock_UnlockSingle(t *testing.T) {
 func TestRunLockUnlock_LockAll(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -141,7 +141,7 @@ func TestRunLockUnlock_LockAll(t *testing.T) {
 	for _, f := range files {
 		content := "---\ndate: \"2026-01-21\"\n---\n\n# " + f + "\n"
 		if err := os.WriteFile(
-			filepath.Join(journalDir, f), []byte(content), config.PermFile,
+			filepath.Join(journalDir, f), []byte(content), fs.PermFile,
 		); err != nil {
 			t.Fatal(err)
 		}
@@ -176,7 +176,7 @@ func TestRunLockUnlock_LockAll(t *testing.T) {
 func TestRunLockUnlock_AlreadyLocked(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -184,7 +184,7 @@ func TestRunLockUnlock_AlreadyLocked(t *testing.T) {
 	content := "---\ndate: \"2026-01-21\"\n" +
 		core.LockedFrontmatterLine + "\n---\n\n# Test\n"
 	if err := os.WriteFile(
-		filepath.Join(journalDir, filename), []byte(content), config.PermFile,
+		filepath.Join(journalDir, filename), []byte(content), fs.PermFile,
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -253,7 +253,7 @@ func TestRunLockUnlock_AllWithPattern(t *testing.T) {
 func TestRunLockUnlock_LockMultipart(t *testing.T) {
 	dir := t.TempDir()
 	journalDir := filepath.Join(dir, ".context", "journal")
-	if err := os.MkdirAll(journalDir, config.PermExec); err != nil {
+	if err := os.MkdirAll(journalDir, fs.PermExec); err != nil {
 		t.Fatal(err)
 	}
 
@@ -262,7 +262,7 @@ func TestRunLockUnlock_LockMultipart(t *testing.T) {
 	for _, f := range []string{base, part2} {
 		content := "---\ndate: \"2026-01-21\"\n---\n\n# " + f + "\n"
 		if err := os.WriteFile(
-			filepath.Join(journalDir, f), []byte(content), config.PermFile,
+			filepath.Join(journalDir, f), []byte(content), fs.PermFile,
 		); err != nil {
 			t.Fatal(err)
 		}

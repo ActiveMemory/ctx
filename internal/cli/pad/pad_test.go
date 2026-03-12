@@ -15,6 +15,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/pad/core"
@@ -41,9 +43,9 @@ func setupEncrypted(t *testing.T) string {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
+	rc.OverrideContextDir(dir.DirContext)
 
-	ctxDir := filepath.Join(dir, config.DirContext)
+	ctxDir := filepath.Join(dir, dir.DirContext)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
@@ -87,7 +89,7 @@ func setupPlaintext(t *testing.T) string {
 
 	rc.Reset()
 
-	ctxDir := filepath.Join(dir, config.DirContext)
+	ctxDir := filepath.Join(dir, dir.DirContext)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
@@ -156,7 +158,7 @@ func TestAdd_Plaintext(t *testing.T) {
 	}
 
 	// Verify the file is plain text
-	path := filepath.Join(config.DirContext, config.FileScratchpadMd)
+	path := filepath.Join(dir.Context, file.FileScratchpadMd)
 	data, err := os.ReadFile(path) //nolint:gosec // test reads a known test file path
 	if err != nil {
 		t.Fatalf("ReadFile() error: %v", err)
@@ -489,16 +491,16 @@ func TestNoKey_EncryptedFileExists(t *testing.T) {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
+	rc.OverrideContextDir(dir.DirContext)
 
-	ctxDir := filepath.Join(dir, config.DirContext)
+	ctxDir := filepath.Join(dir, dir.DirContext)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create an encrypted file but no key
 	if err := os.WriteFile(
-		filepath.Join(ctxDir, config.FileScratchpadEnc),
+		filepath.Join(ctxDir, file.FileScratchpadEnc),
 		[]byte("encrypted data here but dummy"),
 		0600,
 	); err != nil {
@@ -781,8 +783,8 @@ func TestScratchpadPath_Plaintext(t *testing.T) {
 	setupPlaintext(t)
 
 	path := core.ScratchpadPath()
-	if !strings.HasSuffix(path, config.FileScratchpadMd) {
-		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, config.FileScratchpadMd)
+	if !strings.HasSuffix(path, file.FileScratchpadMd) {
+		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, file.FileScratchpadMd)
 	}
 }
 
@@ -790,8 +792,8 @@ func TestScratchpadPath_Encrypted(t *testing.T) {
 	setupEncrypted(t)
 
 	path := core.ScratchpadPath()
-	if !strings.HasSuffix(path, config.FileScratchpadEnc) {
-		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, config.FileScratchpadEnc)
+	if !strings.HasSuffix(path, file.FileScratchpadEnc) {
+		t.Errorf("core.ScratchpadPath() = %q, want suffix %q", path, file.FileScratchpadEnc)
 	}
 }
 
@@ -830,15 +832,15 @@ func TestEnsureKey_EncFileExistsNoKey(t *testing.T) {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
+	rc.OverrideContextDir(dir.DirContext)
 
-	ctxDir := filepath.Join(dir, config.DirContext)
+	ctxDir := filepath.Join(dir, dir.DirContext)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create enc file but no key
-	encPath := filepath.Join(ctxDir, config.FileScratchpadEnc)
+	encPath := filepath.Join(ctxDir, file.FileScratchpadEnc)
 	if err := os.WriteFile(encPath, []byte("data"), 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -865,9 +867,9 @@ func TestEnsureKey_GeneratesNewKey(t *testing.T) {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(config.DirContext)
+	rc.OverrideContextDir(dir.DirContext)
 
-	ctxDir := filepath.Join(dir, config.DirContext)
+	ctxDir := filepath.Join(dir, dir.DirContext)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
@@ -970,7 +972,7 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	oursPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".ours")
+	oursPath := filepath.Join(dir.Context, file.FileScratchpadEnc+".ours")
 	err = os.WriteFile(oursPath, oursCipher, 0600)
 	if err != nil {
 		t.Fatal(err)
@@ -982,7 +984,7 @@ func TestResolve_WithConflictFiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	theirsPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".theirs")
+	theirsPath := filepath.Join(dir.Context, file.FileScratchpadEnc+".theirs")
 	err = os.WriteFile(theirsPath, theirsCipher, 0600)
 	if err != nil {
 		t.Fatal(err)
@@ -1019,7 +1021,7 @@ func TestResolve_OnlyOursFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	oursPath := filepath.Join(config.DirContext, config.FileScratchpadEnc+".ours")
+	oursPath := filepath.Join(dir.Context, file.FileScratchpadEnc+".ours")
 	err = os.WriteFile(oursPath, oursCipher, 0600)
 	if err != nil {
 		t.Fatal(err)
@@ -1261,7 +1263,7 @@ func TestIsBlob(t *testing.T) {
 func TestSplitBlob_Valid(t *testing.T) {
 	data := []byte("hello world")
 	encoded := base64.StdEncoding.EncodeToString(data)
-	entry := "my label" + config.BlobSep + encoded
+	entry := "my label" + file.BlobSep + encoded
 
 	label, decoded, ok := core.SplitBlob(entry)
 	if !ok {
@@ -1355,7 +1357,7 @@ func TestAdd_BlobTooLarge(t *testing.T) {
 	dir := setupEncrypted(t)
 
 	testFile := filepath.Join(dir, "big.bin")
-	data := make([]byte, config.MaxBlobSize+1)
+	data := make([]byte, file.MaxBlobSize+1)
 	if err := os.WriteFile(testFile, data, 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -1943,7 +1945,7 @@ func TestImportBlobs_SkipsTooLarge(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Oversized file
-	big := make([]byte, config.MaxBlobSize+1)
+	big := make([]byte, file.MaxBlobSize+1)
 	if err := os.WriteFile(filepath.Join(blobDir, "huge.bin"),
 		big, 0600); err != nil {
 		t.Fatal(err)
@@ -2744,7 +2746,7 @@ func TestMerge_PlaintextMode(t *testing.T) {
 	}
 
 	// Verify the scratchpad.md file is plaintext.
-	padPath := filepath.Join(dir, config.DirContext, config.FileScratchpadMd)
+	padPath := filepath.Join(dir, dir.DirContext, file.FileScratchpadMd)
 	data, readErr := os.ReadFile(padPath)
 	if readErr != nil {
 		t.Fatal(readErr)
@@ -2774,7 +2776,7 @@ func TestMerge_PreservesOrder(t *testing.T) {
 	}
 
 	// Read the raw pad and verify order.
-	padPath := filepath.Join(dir, config.DirContext, config.FileScratchpadMd)
+	padPath := filepath.Join(dir, dir.DirContext, file.FileScratchpadMd)
 	data, readErr := os.ReadFile(padPath)
 	if readErr != nil {
 		t.Fatal(readErr)

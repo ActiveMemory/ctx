@@ -9,6 +9,8 @@ package show
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/recall"
+	"github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
@@ -69,7 +71,7 @@ func Run(
 		if len(matches) > 1 {
 			lines := core.FormatSessionMatchLines(matches)
 			write.AmbiguousSessionMatchWithHint(
-				cmd, args[0], lines, matches[0].ID[:config.SessionIDHintLen],
+				cmd, args[0], lines, matches[0].ID[:recall.SessionIDHintLen],
 			)
 			return ctxerr.AmbiguousQuery()
 		}
@@ -84,7 +86,7 @@ func Run(
 		Project:   session.Project,
 		Branch:    session.GitBranch,
 		Model:     session.Model,
-		Started:   session.StartTime.Format(config.DateTimePreciseFormat),
+		Started:   session.StartTime.Format(time.DateTimePreciseFormat),
 		Duration:  core.FormatDuration(session.Duration),
 		Turns:     session.TurnCount,
 		Messages:  len(session.Messages),
@@ -121,7 +123,7 @@ func Run(
 			}
 
 			write.ConversationTurn(
-				cmd, i+1, role, msg.Timestamp.Format(config.TimeFormat),
+				cmd, i+1, role, msg.Timestamp.Format(time.Format),
 			)
 
 			if msg.Text != "" {
@@ -154,13 +156,13 @@ func Run(
 		for _, msg := range session.Messages {
 			if msg.BelongsToUser() && msg.Text != "" {
 				count++
-				if count > config.PreviewMaxTurns {
-					write.MoreTurns(cmd, session.TurnCount-config.PreviewMaxTurns)
+				if count > recall.PreviewMaxTurns {
+					write.MoreTurns(cmd, session.TurnCount-recall.PreviewMaxTurns)
 					break
 				}
 				text := msg.Text
-				if len(text) > config.PreviewMaxTextLen {
-					text = text[:config.PreviewMaxTextLen] + config.Ellipsis
+				if len(text) > recall.PreviewMaxTextLen {
+					text = text[:recall.PreviewMaxTextLen] + config.Ellipsis
 				}
 				write.NumberedItem(cmd, count, text)
 			}

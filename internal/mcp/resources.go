@@ -13,6 +13,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/context"
 )
 
@@ -26,14 +27,14 @@ type resourceMapping struct {
 
 // resourceTable defines all individual context file resources.
 var resourceTable = []resourceMapping{
-	{config.FileConstitution, "constitution", assets.TextDesc(assets.TextDescKeyMCPResConstitution)},
-	{config.FileTask, "tasks", assets.TextDesc(assets.TextDescKeyMCPResTasks)},
-	{config.FileConvention, "conventions", assets.TextDesc(assets.TextDescKeyMCPResConventions)},
-	{config.FileArchitecture, "architecture", assets.TextDesc(assets.TextDescKeyMCPResArchitecture)},
-	{config.FileDecision, "decisions", assets.TextDesc(assets.TextDescKeyMCPResDecisions)},
-	{config.FileLearning, "learnings", assets.TextDesc(assets.TextDescKeyMCPResLearnings)},
-	{config.FileGlossary, "glossary", assets.TextDesc(assets.TextDescKeyMCPResGlossary)},
-	{config.FileAgentPlaybook, "playbook", assets.TextDesc(assets.TextDescKeyMCPResPlaybook)},
+	{file.FileConstitution, "constitution", assets.TextDesc(assets.TextDescKeyMCPResConstitution)},
+	{file.FileTask, "tasks", assets.TextDesc(assets.TextDescKeyMCPResTasks)},
+	{file.FileConvention, "conventions", assets.TextDesc(assets.TextDescKeyMCPResConventions)},
+	{file.FileArchitecture, "architecture", assets.TextDesc(assets.TextDescKeyMCPResArchitecture)},
+	{file.FileDecision, "decisions", assets.TextDesc(assets.TextDescKeyMCPResDecisions)},
+	{file.FileLearning, "learnings", assets.TextDesc(assets.TextDescKeyMCPResLearnings)},
+	{file.FileGlossary, "glossary", assets.TextDesc(assets.TextDescKeyMCPResGlossary)},
+	{file.FileAgentPlaybook, "playbook", assets.TextDesc(assets.TextDescKeyMCPResPlaybook)},
 }
 
 // resourceURI builds a resource URI from a suffix.
@@ -131,7 +132,7 @@ func (s *Server) readAgentPacket(
 	budget := s.tokenBudget
 	var skipped []string
 
-	for _, fileName := range config.FileReadOrder {
+	for _, fileName := range file.FileReadOrder {
 		f := ctx.File(fileName)
 		if f == nil || f.IsEmpty {
 			continue

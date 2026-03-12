@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
 )
 
 // GetLatestContextMtime returns the most recent mtime of any .context/*.md file.
@@ -28,7 +28,7 @@ func GetLatestContextMtime(contextDir string) int64 {
 
 	var latest int64
 	for _, entry := range entries {
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), config.ExtMarkdown) {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), file.ExtMarkdown) {
 			continue
 		}
 		info, infoErr := entry.Info()

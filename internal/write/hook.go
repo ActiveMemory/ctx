@@ -7,8 +7,8 @@
 package write
 
 import (
+	"fmt"
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 )
 
@@ -47,8 +47,8 @@ func InfoHookTool(cmd *cobra.Command, content string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the existing file
 func InfoHookCopilotSkipped(cmd *cobra.Command, targetFile string) {
-	io.sprintf(cmd, config.tplHookCopilotSkipped, targetFile)
-	cmd.Println(config.tplHookCopilotForceHint)
+	cmd.Println(fmt.Sprintf(config.TplHookCopilotSkipped, targetFile))
+	cmd.Println(config.TplHookCopilotForceHint)
 }
 
 // InfoHookCopilotMerged reports that copilot instructions were merged
@@ -58,7 +58,7 @@ func InfoHookCopilotSkipped(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the merged file
 func InfoHookCopilotMerged(cmd *cobra.Command, targetFile string) {
-	io.sprintf(cmd, config.tplHookCopilotMerged, targetFile)
+	cmd.Println(fmt.Sprintf(config.TplHookCopilotMerged, targetFile))
 }
 
 // InfoHookCopilotCreated reports that copilot instructions were created.
@@ -67,7 +67,7 @@ func InfoHookCopilotMerged(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - targetFile: Path to the created file
 func InfoHookCopilotCreated(cmd *cobra.Command, targetFile string) {
-	io.sprintf(cmd, config.tplHookCopilotCreated, targetFile)
+	cmd.Println(fmt.Sprintf(config.TplHookCopilotCreated, targetFile))
 }
 
 // InfoHookCopilotSessionsDir reports that the sessions directory was created.
@@ -76,7 +76,7 @@ func InfoHookCopilotCreated(cmd *cobra.Command, targetFile string) {
 //   - cmd: Cobra command for output
 //   - sessionsDir: Path to the sessions directory
 func InfoHookCopilotSessionsDir(cmd *cobra.Command, sessionsDir string) {
-	io.sprintf(cmd, config.tplHookCopilotSessionsDir, sessionsDir)
+	cmd.Println(fmt.Sprintf(config.TplHookCopilotSessionsDir, sessionsDir))
 }
 
 // InfoHookCopilotSummary prints the post-write summary for copilot.
@@ -85,7 +85,7 @@ func InfoHookCopilotSessionsDir(cmd *cobra.Command, sessionsDir string) {
 //   - cmd: Cobra command for output
 func InfoHookCopilotSummary(cmd *cobra.Command) {
 	cmd.Println()
-	cmd.Println(config.tplHookCopilotSummary)
+	cmd.Println(config.TplHookCopilotSummary)
 }
 
 // InfoHookUnknownTool prints the unknown tool message.
@@ -94,5 +94,5 @@ func InfoHookCopilotSummary(cmd *cobra.Command) {
 //   - cmd: Cobra command for output
 //   - tool: The unrecognized tool name
 func InfoHookUnknownTool(cmd *cobra.Command, tool string) {
-	io.sprintf(cmd, config.tplHookUnknownTool, tool)
+	cmd.Println(fmt.Sprintf(config.TplHookUnknownTool, tool))
 }

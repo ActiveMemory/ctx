@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/write/config"
-	"github.com/ActiveMemory/ctx/internal/write/io"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -26,7 +25,7 @@ func ImportNoEntries(cmd *cobra.Command, filename string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplImportNoEntries, filename)
+	cmd.Println(fmt.Sprintf(config.TplImportNoEntries, filename))
 }
 
 // ImportScanHeader prints the scanning header: source name, entry count,
@@ -40,8 +39,8 @@ func ImportScanHeader(cmd *cobra.Command, filename string, count int) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplImportScanning, filename)
-	io.sprintf(cmd, config.tplImportFound, count)
+	cmd.Println(fmt.Sprintf(config.TplImportScanning, filename))
+	cmd.Println(fmt.Sprintf(config.TplImportFound, count))
 	cmd.Println()
 }
 
@@ -55,8 +54,8 @@ func ImportEntrySkipped(cmd *cobra.Command, title string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplImportEntry, title)
-	cmd.Println(config.tplImportClassifiedSkip)
+	cmd.Println(fmt.Sprintf(config.TplImportEntry, title))
+	cmd.Println(config.TplImportClassifiedSkip)
 	cmd.Println()
 }
 
@@ -72,8 +71,8 @@ func ImportEntryClassified(cmd *cobra.Command, title, targetFile string, keyword
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplImportEntry, title)
-	io.sprintf(cmd, config.tplImportClassified, targetFile, strings.Join(keywords, ", "))
+	cmd.Println(fmt.Sprintf(config.TplImportEntry, title))
+	cmd.Println(fmt.Sprintf(config.TplImportClassified, targetFile, strings.Join(keywords, ", ")))
 	cmd.Println()
 }
 
@@ -88,8 +87,8 @@ func ImportEntryAdded(cmd *cobra.Command, title, targetFile string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, config.tplImportEntry, title)
-	io.sprintf(cmd, config.tplImportAdded, targetFile)
+	cmd.Println(fmt.Sprintf(config.TplImportEntry, title))
+	cmd.Println(fmt.Sprintf(config.TplImportAdded, targetFile))
 	cmd.Println()
 }
 
@@ -132,9 +131,9 @@ func ImportSummary(cmd *cobra.Command, counts ImportCounts, dryRun bool) {
 
 	var summary string
 	if dryRun {
-		summary = fmt.Sprintf(config.tplImportSummaryDryRun, total)
+		summary = fmt.Sprintf(config.TplImportSummaryDryRun, total)
 	} else {
-		summary = fmt.Sprintf(config.tplImportSummary, total)
+		summary = fmt.Sprintf(config.TplImportSummary, total)
 	}
 
 	var parts []string
@@ -160,9 +159,9 @@ func ImportSummary(cmd *cobra.Command, counts ImportCounts, dryRun bool) {
 	cmd.Println(summary)
 
 	if counts.Skipped > 0 {
-		io.sprintf(cmd, config.tplImportSkipped, counts.Skipped)
+		cmd.Println(fmt.Sprintf(config.TplImportSkipped, counts.Skipped))
 	}
 	if counts.Dupes > 0 {
-		io.sprintf(cmd, config.tplImportDuplicates, counts.Dupes)
+		cmd.Println(fmt.Sprintf(config.TplImportDuplicates, counts.Dupes))
 	}
 }

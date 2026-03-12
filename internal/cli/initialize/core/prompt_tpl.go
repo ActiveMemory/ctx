@@ -10,10 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -28,8 +29,8 @@ import (
 // Returns:
 //   - error: Non-nil if directory creation or file write fails
 func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) error {
-	promptDir := filepath.Join(contextDir, config.DirPrompts)
-	if err := os.MkdirAll(promptDir, config.PermExec); err != nil {
+	promptDir := filepath.Join(contextDir, dir.Prompts)
+	if err := os.MkdirAll(promptDir, fs.PermExec); err != nil {
 		return ctxerr.Mkdir(promptDir, err)
 	}
 	promptTemplates, err := assets.ListPromptTemplates()
@@ -46,7 +47,7 @@ func CreatePromptTemplates(cmd *cobra.Command, contextDir string, force bool) er
 		if err != nil {
 			return ctxerr.ReadPromptTemplate(name, err)
 		}
-		if err := os.WriteFile(targetPath, content, config.PermFile); err != nil {
+		if err := os.WriteFile(targetPath, content, fs.PermFile); err != nil {
 			return ctxerr.FileWrite(targetPath, err)
 		}
 		write.InitCreated(cmd, "prompts/"+name)

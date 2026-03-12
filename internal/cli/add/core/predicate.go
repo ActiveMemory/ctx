@@ -6,37 +6,39 @@
 
 package core
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import (
+	"github.com/ActiveMemory/ctx/internal/config/entry"
+)
 
 // FileTypeIsTask reports whether fileType represents a task entry.
 //
 // Parameters:
-//   - fileType: The type string to check (e.g., "task", "tasks")
+//   - fileType: The type string to check
 //
 // Returns:
 //   - bool: True if fileType is a task type
 func FileTypeIsTask(fileType string) bool {
-	return config.UserInputToEntry(fileType) == config.EntryTask
+	return fileType == entry.Task
 }
 
 // FileTypeIsDecision reports whether fileType represents a decision entry.
 //
 // Parameters:
-//   - fileType: The type string to check (e.g., "decision", "decisions")
+//   - fileType: The type string to check
 //
 // Returns:
 //   - bool: True if fileType is a decision type
 func FileTypeIsDecision(fileType string) bool {
-	return config.UserInputToEntry(fileType) == config.EntryDecision
+	return fileType == entry.Decision
 }
 
 // FileTypeIsLearning reports whether fileType represents a learning entry.
 //
 // Parameters:
-//   - fileType: The type string to check (e.g., "learning", "learnings")
+//   - fileType: The type string to check
 //
 // Returns:
 //   - bool: True if fileType is a learning type
 func FileTypeIsLearning(fileType string) bool {
-	return config.UserInputToEntry(fileType) == config.EntryLearning
+	return fileType == entry.Learning
 }

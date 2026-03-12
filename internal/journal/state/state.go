@@ -17,7 +17,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 // CurrentVersion is the schema version for the state file.
@@ -26,7 +27,7 @@ const CurrentVersion = 1
 // Load reads the state file from the journal directory. If the file does
 // not exist, an empty state is returned (not an error).
 func Load(journalDir string) (*JournalState, error) {
-	path := filepath.Join(journalDir, config.FileJournalState)
+	path := filepath.Join(journalDir, file.FileJournalState)
 
 	data, err := os.ReadFile(filepath.Clean(path))
 	if os.IsNotExist(err) {
@@ -58,10 +59,10 @@ func (s *JournalState) Save(journalDir string) error {
 	}
 	data = append(data, '\n')
 
-	path := filepath.Join(journalDir, config.FileJournalState)
+	path := filepath.Join(journalDir, file.FileJournalState)
 	tmp := path + ".tmp"
 
-	if err := os.WriteFile(tmp, data, config.PermFile); err != nil {
+	if err := os.WriteFile(tmp, data, fs.PermFile); err != nil {
 		return err
 	}
 	return os.Rename(tmp, path)
@@ -112,15 +113,15 @@ func (s *JournalState) MarkFencesVerified(filename string) {
 func (s *JournalState) Mark(filename, stage string) bool {
 	fs := s.Entries[filename]
 	switch stage {
-	case config.StageExported:
+	case file.StageExported:
 		fs.Exported = today()
-	case config.StageEnriched:
+	case file.StageEnriched:
 		fs.Enriched = today()
-	case config.StageNormalized:
+	case file.StageNormalized:
 		fs.Normalized = today()
-	case config.StageFencesVerified:
+	case file.StageFencesVerified:
 		fs.FencesVerified = today()
-	case config.StageLocked:
+	case file.StageLocked:
 		fs.Locked = today()
 	default:
 		return false
@@ -140,15 +141,15 @@ func (s *JournalState) Mark(filename, stage string) bool {
 func (s *JournalState) Clear(filename, stage string) bool {
 	fs := s.Entries[filename]
 	switch stage {
-	case config.StageExported:
+	case file.StageExported:
 		fs.Exported = ""
-	case config.StageEnriched:
+	case file.StageEnriched:
 		fs.Enriched = ""
-	case config.StageNormalized:
+	case file.StageNormalized:
 		fs.Normalized = ""
-	case config.StageFencesVerified:
+	case file.StageFencesVerified:
 		fs.FencesVerified = ""
-	case config.StageLocked:
+	case file.StageLocked:
 		fs.Locked = ""
 	default:
 		return false
@@ -217,7 +218,7 @@ func (s *JournalState) CountUnenriched(journalDir string) int {
 
 	count := 0
 	for _, entry := range entries {
-		if entry.IsDir() || filepath.Ext(entry.Name()) != config.ExtMarkdown {
+		if entry.IsDir() || filepath.Ext(entry.Name()) != file.ExtMarkdown {
 			continue
 		}
 		if !s.Enriched(entry.Name()) {
@@ -229,5 +230,5 @@ func (s *JournalState) CountUnenriched(journalDir string) int {
 
 // ValidStages lists the recognized stage names for Mark() and Clear().
 var ValidStages = []string{
-	config.StageExported, config.StageEnriched, config.StageNormalized, config.StageFencesVerified, config.StageLocked,
+	file.StageExported, file.StageEnriched, file.StageNormalized, file.StageFencesVerified, file.StageLocked,
 }

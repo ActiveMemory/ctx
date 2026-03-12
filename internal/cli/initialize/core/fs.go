@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 	"github.com/spf13/cobra"
@@ -90,14 +92,14 @@ func UpdateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) e
 	ctxContent := templateStr[templateStart : templateEnd+len(config.CtxMarkerEnd)]
 	newContent := existing[:startIdx] + ctxContent + existing[endIdx:]
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", config.FileClaudeMd, timestamp)
-	if err := os.WriteFile(backupName, []byte(existing), config.PermFile); err != nil {
+	backupName := fmt.Sprintf("%s.%d.bak", file.FileClaudeMd, timestamp)
+	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
 		return ctxerr.CreateBackupGeneric(err)
 	}
 	write.InitBackup(cmd, backupName)
-	if err := os.WriteFile(config.FileClaudeMd, []byte(newContent), config.PermFile); err != nil {
-		return ctxerr.FileUpdate(config.FileClaudeMd, err)
+	if err := os.WriteFile(file.FileClaudeMd, []byte(newContent), fs.PermFile); err != nil {
+		return ctxerr.FileUpdate(file.FileClaudeMd, err)
 	}
-	write.InitUpdatedCtxSection(cmd, config.FileClaudeMd)
+	write.InitUpdatedCtxSection(cmd, file.FileClaudeMd)
 	return nil
 }

@@ -7,7 +7,8 @@
 package sync
 
 import (
-	"github.com/ActiveMemory/ctx/internal/write"
+	"fmt"
+
 	"github.com/ActiveMemory/ctx/internal/write/config"
 	"github.com/spf13/cobra"
 )
@@ -53,9 +54,9 @@ func CtxSyncAction(cmd *cobra.Command, index int, actionType, description, sugge
 	if cmd == nil {
 		return
 	}
-	write.sprintf(cmd, config.TplSyncAction, index, actionType, description)
+	cmd.Println(fmt.Sprintf(config.TplSyncAction, index, actionType, description))
 	if suggestion != "" {
-		write.sprintf(cmd, config.TplSyncSuggestion, suggestion)
+		cmd.Println(fmt.Sprintf(config.TplSyncSuggestion, suggestion))
 	}
 	cmd.Println()
 }
@@ -71,8 +72,8 @@ func CtxSyncSummary(cmd *cobra.Command, count int, dryRun bool) {
 		return
 	}
 	if dryRun {
-		write.sprintf(cmd, config.TplSyncDryRunSummary, count)
+		cmd.Println(fmt.Sprintf(config.TplSyncDryRunSummary, count))
 	} else {
-		write.sprintf(cmd, config.TplSyncSummary, count)
+		cmd.Println(fmt.Sprintf(config.TplSyncSummary, count))
 	}
 }

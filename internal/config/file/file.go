@@ -4,150 +4,20 @@
 //   \    Copyright 2026-present Context contributors.
 //                 SPDX-License-Identifier: Apache-2.0
 
-package config
+package file
 
 import (
-	"os"
 	"path/filepath"
 	"time"
-)
 
-// AnnotationSkipInit is the cobra.Command annotation key that exempts
-// a command from the PersistentPreRunE initialization guard.
-const AnnotationSkipInit = "skipInitCheck"
-
-// AnnotationTrue is the canonical value for boolean cobra annotations.
-const AnnotationTrue = "true"
-
-// Check result status constants used by doctor, drift, and other health checks.
-const (
-	StatusOK      = "ok"
-	StatusWarning = "warning"
-	StatusError   = "error"
-	StatusInfo    = "info"
-)
-
-// TimeOlderFormat is the Go time layout for dates older than a week.
-// Exported because callers must format the fallback date before calling FormatTimeAgo.
-const TimeOlderFormat = "Jan 2, 2006"
-
-// CmdCompletion is the name of Cobra's built-in completion parent command.
-const CmdCompletion = "completion"
-
-// Global CLI flag names.
-const (
-	FlagContextDir      = "context-dir"
-	FlagNoColor         = "no-color" // Retained for CLI compatibility
-	FlagAllowOutsideCwd = "allow-outside-cwd"
-)
-
-// CLI flag prefixes for display formatting.
-const (
-	FlagPrefixShort = "-"
-	FlagPrefixLong  = "--"
-)
-
-// Add command flag names — used for both flag registration and error display.
-const (
-	FlagContext      = "context"
-	FlagRationale    = "rationale"
-	FlagConsequences = "consequences"
-	FlagLesson       = "lesson"
-	FlagApplication  = "application"
-	FlagPriority     = "priority"
-	FlagSection      = "section"
-	FlagFile         = "file"
-)
-
-// Initialized reports whether the context directory contains all required files.
-func Initialized(contextDir string) bool {
-	for _, f := range FilesRequired {
-		if _, err := os.Stat(filepath.Join(contextDir, f)); err != nil {
-			return false
-		}
-	}
-	return true
-}
-
-// File permission constants.
-const (
-	// PermFile is the standard permission for regular files (owner rw, others r).
-	PermFile = 0644
-	// PermExec is the standard permission for directories and executable files.
-	PermExec = 0755
-	// PermRestrictedDir is the permission for internal directories (owner rwx, group rx).
-	PermRestrictedDir = 0750
-	// PermSecret is the permission for secret files (owner rw only).
-	PermSecret = 0600
-)
-
-// File extension constants.
-const (
-	// ExtMarkdown is the Markdown file extension.
-	ExtMarkdown = ".md"
-	// ExtTxt is the plain text file extension.
-	ExtTxt = ".txt"
-	// ExtJSONL is the JSON Lines file extension.
-	ExtJSONL = ".jsonl"
-)
-
-// Common filenames.
-const (
-	// FilenameReadme is the standard README filename.
-	FilenameReadme = "README.md"
-	// FilenameIndex is the standard index filename for generated sites.
-	FilenameIndex = "index.md"
-)
-
-// Site feed defaults.
-const (
-	// DefaultFeedInputDir is the default blog source directory.
-	DefaultFeedInputDir = "docs/blog"
-	// DefaultFeedOutPath is the default output path for the Atom feed.
-	DefaultFeedOutPath = "site/feed.xml"
-	// DefaultFeedBaseURL is the default base URL for feed entry links.
-	DefaultFeedBaseURL = "https://ctx.ist"
-	// FeedAtomNS is the Atom XML namespace URI.
-	FeedAtomNS = "http://www.w3.org/2005/Atom"
-	// FeedTitle is the default feed title.
-	FeedTitle = "ctx blog"
-	// FeedDefaultAuthor is the default author for feed entries.
-	FeedDefaultAuthor = "Context contributors"
-	// FeedXMLHeader is the XML declaration prepended to feed output.
-	FeedXMLHeader = `<?xml version="1.0" encoding="utf-8"?>` + "\n"
-)
-
-// Journal site configuration.
-const (
-	// FileZensicalToml is the zensical site configuration filename.
-	FileZensicalToml = "zensical.toml"
-	// BinZensical is the zensical binary name.
-	BinZensical = "zensical"
-	// DirStylesheets is the subdirectory for CSS stylesheets in site output.
-	DirStylesheets = "stylesheets"
-	// FileExtraCSS is the custom CSS filename for journal sites.
-	FileExtraCSS = "extra.css"
-	// DefaultCompletionSignal is the default loop completion signal string.
-	DefaultCompletionSignal = "SYSTEM_CONVERGED"
+	"github.com/ActiveMemory/ctx/internal/config/dir"
+	"github.com/ActiveMemory/ctx/internal/config/entry"
 )
 
 // Session defaults.
 const (
-	// DefaultSessionFilename is the fallback filename component when
-	// sanitization produces an empty string.
-	DefaultSessionFilename = "session"
-	// MaxFilenameLen is the maximum character length for sanitized filename components.
-	MaxFilenameLen = 50
-	// DefaultRecallListLimit is the default number of sessions shown by recall list.
-	DefaultRecallListLimit = 20
-)
-
-// Crypto constants.
-const (
-	// CryptoKeySize is the required key length in bytes (256 bits).
-	CryptoKeySize = 32
-	// CryptoNonceSize is the GCM nonce length in bytes.
-	CryptoNonceSize = 12
+	// MaxNameLen is the maximum character length for sanitized filename components.
+	MaxNameLen = 50
 )
 
 // Task archive/snapshot constants.
@@ -703,28 +573,6 @@ const (
 	EventWindowWarning = "window-warning"
 )
 
-// PercentMultiplier is the multiplier for converting ratios to percentages.
-const PercentMultiplier = 100
-
-// Context size hook configuration.
-const (
-	// ContextSizeCounterPrefix is the state file prefix for per-session prompt counters.
-	ContextSizeCounterPrefix = "context-check-"
-	// ContextSizeLogFile is the log file name within .context/logs/.
-	ContextSizeLogFile = "check-context-size.log"
-	// ContextWindowThresholdPct is the percentage of context window usage
-	// that triggers an independent warning, regardless of prompt count.
-	ContextWindowThresholdPct = 80
-	// ContextSizeBillingWarnedPrefix is the state file prefix for the one-shot billing warning guard.
-	ContextSizeBillingWarnedPrefix = "billing-warned-"
-	// ContextSizeInjectionOversizeFlag is the state file name for the injection-oversize one-shot flag.
-	ContextSizeInjectionOversizeFlag = "injection-oversize"
-	// JsonlPathCachePrefix is the state file prefix for cached JSONL file paths.
-	JsonlPathCachePrefix = "jsonl-path-"
-	// ContextSizeOversizeSepLen is the separator length for the oversize flag file header.
-	ContextSizeOversizeSepLen = 35
-)
-
 // Knowledge hook configuration.
 const (
 	// KnowledgeThrottleID is the state file name for daily throttle of knowledge checks.
@@ -745,97 +593,6 @@ const (
 	WrappedUpMarker = "ctx-wrapped-up"
 	// WrappedUpContent is the content written to the wrap-up marker file.
 	WrappedUpContent = "wrapped-up"
-)
-
-// Date and time format constants.
-const (
-	// DateFormat is the canonical YYYY-MM-DD date layout for time.Parse.
-	DateFormat = "2006-01-02"
-	// DateTimeFormat is DateFormat with hours and minutes (HH:MM).
-	DateTimeFormat = "2006-01-02 15:04"
-	// DateTimePreciseFormat is DateFormat with hours, minutes, and seconds.
-	DateTimePreciseFormat = "2006-01-02 15:04:05"
-	// TimeFormat is the hours:minutes:seconds layout for timestamps.
-	TimeFormat = "15:04:05"
-	// TimestampCompact is the YYYYMMDD-HHMMSS layout used in entry headers
-	// and task timestamps (e.g., 2026-01-28-143022).
-	TimestampCompact = "2006-01-02-150405"
-)
-
-// InclusiveUntilOffset is the duration added to an --until date to make
-// it inclusive of the entire day (23:59:59).
-const InclusiveUntilOffset = 24*time.Hour - time.Second
-
-// Parser configuration.
-const (
-	// ParserPeekLines is the number of lines to scan when detecting file format.
-	ParserPeekLines = 50
-	// DirSubagents is the directory name for sidechain sessions that share
-	// the parent sessionId and would cause duplicates if scanned.
-	DirSubagents = "subagents"
-)
-
-// Export configuration.
-const (
-	// MaxMessagesPerPart is the maximum number of messages per exported
-	// journal file. Sessions with more messages are split into multiple
-	// parts for browser performance.
-	MaxMessagesPerPart = 200
-)
-
-// Recall show/list display limits.
-const (
-	// PreviewMaxTurns is the maximum number of user turns shown in
-	// the conversation preview of recall show.
-	PreviewMaxTurns = 5
-	// PreviewMaxTextLen is the maximum character length for a single
-	// turn in the conversation preview.
-	PreviewMaxTextLen = 100
-	// SlugMaxLen is the maximum display length for session slugs in
-	// recall list output.
-	SlugMaxLen = 36
-	// SessionIDShortLen is the prefix length for short session IDs
-	// in summary output.
-	SessionIDShortLen = 8
-	// SessionIDHintLen is the prefix length for session IDs in
-	// disambiguation hints (longer than short for uniqueness).
-	SessionIDHintLen = 12
-)
-
-// Claude API content block types.
-const (
-	// ClaudeBlockText is a text content block.
-	ClaudeBlockText = "text"
-	// ClaudeBlockThinking is an extended thinking content block.
-	ClaudeBlockThinking = "thinking"
-	// ClaudeBlockToolUse is a tool invocation block.
-	ClaudeBlockToolUse = "tool_use"
-	// ClaudeBlockToolResult is a tool execution result block.
-	ClaudeBlockToolResult = "tool_result"
-)
-
-// Claude API content block field keys.
-const (
-	// ClaudeFieldType is the block type discriminator key.
-	ClaudeFieldType = "type"
-	// ClaudeFieldText is the text content key.
-	ClaudeFieldText = "text"
-	// ClaudeFieldThinking is the thinking content key.
-	ClaudeFieldThinking = "thinking"
-	// ClaudeFieldName is the tool name key.
-	ClaudeFieldName = "name"
-	// ClaudeFieldInput is the tool input parameters key.
-	ClaudeFieldInput = "input"
-	// ClaudeFieldContent is the tool result content key.
-	ClaudeFieldContent = "content"
-)
-
-// Claude API message roles.
-const (
-	// RoleUser is a user message.
-	RoleUser = "user"
-	// RoleAssistant is an assistant message.
-	RoleAssistant = "assistant"
 )
 
 // Tool identifiers for session parsers.
@@ -1025,7 +782,7 @@ const (
 
 // PathMemoryMirror is the relative path from the project root to the
 // memory mirror file. Constructed from directory and file constants.
-var PathMemoryMirror = filepath.Join(DirContext, DirMemory, FileMemoryMirror)
+var PathMemoryMirror = filepath.Join(dir.Context, dir.Memory, FileMemoryMirror)
 
 // Event log constants for .context/state/ directory.
 const (
@@ -1041,10 +798,10 @@ const (
 
 // FileType maps short names to actual file names.
 var FileType = map[string]string{
-	EntryDecision:   FileDecision,
-	EntryTask:       FileTask,
-	EntryLearning:   FileLearning,
-	EntryConvention: FileConvention,
+	entry.Decision:   FileDecision,
+	entry.Task:       FileTask,
+	entry.Learning:   FileLearning,
+	entry.Convention: FileConvention,
 }
 
 // FilesRequired lists the essential context files that must be present.

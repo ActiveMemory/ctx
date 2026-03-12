@@ -10,7 +10,10 @@
 // their Markdown representation.
 package task
 
-import "github.com/ActiveMemory/ctx/internal/config"
+import (
+	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/file"
+)
 
 // Match indices for accessing capture groups.
 //
@@ -93,5 +96,5 @@ func Content(match []string) string {
 // Returns:
 //   - bool: True if indent is 2+ spaces
 func SubTask(match []string) bool {
-	return len(Indent(match)) >= config.SubTaskMinIndent
+	return len(Indent(match)) >= file.SubTaskMinIndent
 }

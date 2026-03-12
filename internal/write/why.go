@@ -7,7 +7,7 @@
 package write
 
 import (
-	"github.com/ActiveMemory/ctx/internal/write/io"
+	"fmt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -34,7 +34,7 @@ func WhyMenuItem(cmd *cobra.Command, index int, label string) {
 	if cmd == nil {
 		return
 	}
-	io.sprintf(cmd, assets.TextDesc(assets.TextDescKeyWhyMenuItemFormat), index, label)
+	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyWhyMenuItemFormat), index, label))
 }
 
 // WhyMenuPrompt prints the selection prompt.

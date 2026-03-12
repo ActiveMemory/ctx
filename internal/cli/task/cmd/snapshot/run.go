@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
@@ -48,18 +50,18 @@ func Run(cmd *cobra.Command, args []string) error {
 	}
 
 	// Ensure the archive directory exists
-	if mkdirErr := os.MkdirAll(archivePath, config.PermExec); mkdirErr != nil {
+	if mkdirErr := os.MkdirAll(archivePath, fs.PermExec); mkdirErr != nil {
 		return ctxerr.CreateArchiveDir(mkdirErr)
 	}
 
 	// Generate snapshot filename
 	now := time.Now()
-	name := config.DefaultSnapshotName
+	name := file.DefaultSnapshotName
 	if len(args) > 0 {
 		name = validation.SanitizeFilename(args[0])
 	}
 	snapshotFilename := fmt.Sprintf(
-		config.SnapshotFilenameFormat, name, now.Format(config.SnapshotTimeFormat),
+		file.SnapshotFilenameFormat, name, now.Format(file.SnapshotTimeFormat),
 	)
 	snapshotPath := filepath.Join(archivePath, snapshotFilename)
 
@@ -71,7 +73,7 @@ func Run(cmd *cobra.Command, args []string) error {
 
 	// Write snapshot
 	if writeErr := os.WriteFile(
-		snapshotPath, []byte(snapshotContent), config.PermFile,
+		snapshotPath, []byte(snapshotContent), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.SnapshotWrite(writeErr)
 	}

@@ -7,11 +7,10 @@
 package switchcmd
 
 import (
+	internalConfig "github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	internalConfig "github.com/ActiveMemory/ctx/internal/config"
-
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
 )
 

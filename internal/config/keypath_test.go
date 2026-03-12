@@ -10,6 +10,9 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
 func TestGlobalKeyPath(t *testing.T) {
@@ -17,7 +20,7 @@ func TestGlobalKeyPath(t *testing.T) {
 	t.Setenv("HOME", dir)
 
 	got := GlobalKeyPath()
-	want := filepath.Join(dir, ".ctx", FileContextKey)
+	want := filepath.Join(dir, ".ctx", file.FileContextKey)
 	if got != want {
 		t.Errorf("GlobalKeyPath() = %q, want %q", got, want)
 	}
@@ -68,8 +71,8 @@ func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
 		t.Fatal(err)
 	}
-	localKey := filepath.Join(contextDir, FileContextKey)
-	if err := os.WriteFile(localKey, []byte("local-key"), PermSecret); err != nil {
+	localKey := filepath.Join(contextDir, file.FileContextKey)
+	if err := os.WriteFile(localKey, []byte("local-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 
@@ -77,8 +80,8 @@ func TestResolveKeyPath_ProjectLocalBeforeGlobal(t *testing.T) {
 	if err := os.MkdirAll(globalDir, PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
-	globalKey := filepath.Join(globalDir, FileContextKey)
-	if err := os.WriteFile(globalKey, []byte("global-key"), PermSecret); err != nil {
+	globalKey := filepath.Join(globalDir, file.FileContextKey)
+	if err := os.WriteFile(globalKey, []byte("global-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 
@@ -97,8 +100,8 @@ func TestResolveKeyPath_FallbackToGlobal(t *testing.T) {
 	if err := os.MkdirAll(globalDir, PermKeyDir); err != nil {
 		t.Fatal(err)
 	}
-	globalKey := filepath.Join(globalDir, FileContextKey)
-	if err := os.WriteFile(globalKey, []byte("global-key"), PermSecret); err != nil {
+	globalKey := filepath.Join(globalDir, file.FileContextKey)
+	if err := os.WriteFile(globalKey, []byte("global-key"), fs.PermSecret); err != nil {
 		t.Fatal(err)
 	}
 

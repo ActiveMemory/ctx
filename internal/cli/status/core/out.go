@@ -10,9 +10,9 @@ import (
 	"encoding/json"
 	"time"
 
+	ctxtime "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -102,7 +102,7 @@ func OutputStatusText(
 		d := time.Since(f.ModTime)
 		entries[i] = write.StatusActivityInfo{
 			Name: f.Name,
-			Ago:  write.FormatTimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(config.TimeOlderFormat)),
+			Ago:  write.FormatTimeAgo(d.Hours(), int(d.Minutes()), f.ModTime.Format(ctxtime.OlderFormat)),
 		}
 	}
 	write.StatusActivity(cmd, entries)

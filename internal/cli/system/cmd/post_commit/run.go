@@ -10,11 +10,11 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -56,7 +56,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	hook, variant := config.HookPostCommit, config.VariantNudge
+	hook, variant := file.HookPostCommit, file.VariantNudge
 
 	fallback := assets.TextDesc(assets.TextDescKeyPostCommitFallback)
 	msg := core.LoadMessage(hook, variant, nil, fallback)
@@ -64,7 +64,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 	msg = core.AppendContextDir(msg)
-	core.PrintHookContext(cmd, config.HookEventPostToolUse, msg)
+	core.PrintHookContext(cmd, file.HookEventPostToolUse, msg)
 
 	ref := notify.NewTemplateRef(hook, variant, nil)
 	core.Relay(hook+": "+assets.TextDesc(assets.TextDescKeyPostCommitRelayMessage), input.SessionID, ref)
