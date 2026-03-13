@@ -37,6 +37,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/qareminder"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resources"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/resume"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/sessionevent"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/specsnudge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/stats"
 )
@@ -131,6 +132,7 @@ Hook subcommands (Claude Code plugin — safe to run manually):
 		specsnudge.Cmd(),
 		checkmemorydrift.Cmd(),
 		heartbeat.Cmd(),
+		sessionevent.Cmd(),
 	)
 
 	return cmd

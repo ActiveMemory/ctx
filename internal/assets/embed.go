@@ -19,7 +19,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml
+//go:embed claude/.claude-plugin/plugin.json claude/CLAUDE.md claude/skills/*/references/*.md claude/skills/*/SKILL.md context/*.md project/* entry-templates/*.md hooks/messages/*/*.txt hooks/messages/registry.yaml prompt-templates/*.md ralph/*.md schema/*.json why/*.md permissions/*.txt commands/*.yaml overrides/*/*.md
 var FS embed.FS
 
 // Template reads a template file by name from the embedded filesystem.
@@ -32,6 +32,18 @@ var FS embed.FS
 //   - error: Non-nil if the file is not found or read fails
 func Template(name string) ([]byte, error) {
 	return FS.ReadFile("context/" + name)
+}
+
+// TemplateForCaller reads a template, using a caller-specific override if available.
+// Falls back to the default template when no override exists for the caller.
+func TemplateForCaller(name, caller string) ([]byte, error) {
+	if caller != "" {
+		override, err := FS.ReadFile("overrides/" + caller + "/" + name)
+		if err == nil {
+			return override, nil
+		}
+	}
+	return Template(name)
 }
 
 // List returns all available template file names.
@@ -237,6 +249,18 @@ func ProjectReadme(dir string) ([]byte, error) {
 //   - error: Non-nil if the file is not found or read fails
 func ClaudeMd() ([]byte, error) {
 	return FS.ReadFile("claude/CLAUDE.md")
+}
+
+// ClaudeMdForCaller reads the CLAUDE.md template, using a caller-specific override if available.
+// Falls back to the default CLAUDE.md when no override exists for the caller.
+func ClaudeMdForCaller(caller string) ([]byte, error) {
+	if caller != "" {
+		override, err := FS.ReadFile("overrides/" + caller + "/CLAUDE.md")
+		if err == nil {
+			return override, nil
+		}
+	}
+	return ClaudeMd()
 }
 
 // RalphTemplate reads a Ralph-mode template file by name.

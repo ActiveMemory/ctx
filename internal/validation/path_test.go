@@ -9,6 +9,8 @@ package validation
 import (
 	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -39,6 +41,41 @@ func TestValidateBoundary(t *testing.T) {
 				t.Errorf("ValidateBoundary(%q) error = %v, wantErr %v", tt.dir, err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func TestValidateBoundaryCaseInsensitive(t *testing.T) {
+	if runtime.GOOS != "windows" {
+		t.Skip("case-insensitive path test only applies to Windows")
+	}
+
+	// On Windows, EvalSymlinks normalizes casing to the filesystem's
+	// canonical form. When .context/ doesn't exist yet the fallback
+	// preserves the original cwd casing. The prefix check must be
+	// case-insensitive to avoid false "outside cwd" errors.
+	tmp := t.TempDir()
+
+	// Change cwd to a case-mangled version of the temp dir.
+	// TempDir returns canonical casing; flip it.
+	mangled := strings.ToUpper(tmp)
+	if mangled == tmp {
+		mangled = strings.ToLower(tmp)
+	}
+
+	orig, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = os.Chdir(orig) }()
+
+	if err := os.Chdir(mangled); err != nil {
+		t.Skipf("cannot chdir to case-mangled path %q: %v", mangled, err)
+	}
+
+	// .context doesn't exist — this is the exact scenario that caused the
+	// false positive on Windows.
+	if err := ValidateBoundary(".context"); err != nil {
+		t.Errorf("ValidateBoundary(.context) with case-mangled cwd: %v", err)
 	}
 }
 

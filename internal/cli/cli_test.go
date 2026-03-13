@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -34,7 +35,11 @@ func TestBinaryIntegration(t *testing.T) {
 	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	// Build the binary
-	binaryPath := filepath.Join(tmpDir, "ctx-test-binary")
+	binaryName := "ctx-test-binary"
+	if runtime.GOOS == "windows" {
+		binaryName += ".exe"
+	}
+	binaryPath := filepath.Join(tmpDir, binaryName)
 	buildCmd := exec.Command("go", "build", "-o", binaryPath, "./cmd/ctx") //nolint:gosec // G204: test builds local binary
 	buildCmd.Env = append(os.Environ(), "CGO_ENABLED=0")
 
