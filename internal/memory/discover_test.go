@@ -48,6 +48,7 @@ func TestProjectSlug(t *testing.T) {
 func TestDiscoverMemoryPath_Found(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
+	t.Setenv("USERPROFILE", home)
 
 	projectRoot := filepath.Join(home, "WORKSPACE", "myproject")
 	slug := ProjectSlug(projectRoot)
@@ -73,6 +74,7 @@ func TestDiscoverMemoryPath_Found(t *testing.T) {
 func TestDiscoverMemoryPath_NotFound(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
+	t.Setenv("USERPROFILE", home)
 
 	projectRoot := filepath.Join(home, "WORKSPACE", "nonexistent")
 	_, discoverErr := DiscoverMemoryPath(projectRoot)

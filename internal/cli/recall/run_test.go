@@ -75,6 +75,8 @@ func TestRunRecallExport_ArgValidation(t *testing.T) {
 func TestRunRecallList_NoSessions(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	// Create the expected directory structure (empty)
 	claudeDir := filepath.Join(tmpDir, ".claude", "projects")
@@ -101,6 +103,8 @@ func TestRunRecallList_NoSessions(t *testing.T) {
 func TestRunRecallList_WithSessions(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	// Create session fixture
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-myproject")
@@ -125,6 +129,8 @@ func TestRunRecallList_WithSessions(t *testing.T) {
 func TestRunRecallShow_Latest(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-showproj")
 	createTestSessionJSONL(t, projDir, "sess-show-456", "show-test-session", "/home/test/showproj")
@@ -152,6 +158,8 @@ func TestRunRecallShow_Latest(t *testing.T) {
 func TestRunRecallShow_BySlug(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-slugproj")
 	createTestSessionJSONL(t, projDir, "sess-slug-789", "unique-slug-name", "/home/test/slugproj")
@@ -175,6 +183,8 @@ func TestRunRecallShow_BySlug(t *testing.T) {
 func TestRunRecallExport_SingleSession(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-expproj")
 	createTestSessionJSONL(t, projDir, "sess-exp-aaa", "export-session", "/home/test/expproj")
@@ -246,6 +256,8 @@ func TestRunRecallExport_SingleSession(t *testing.T) {
 func TestRunRecallExport_DedupRenamesOldFile(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dedupproj")
 	sessionID := "dedup123-full-uuid-value"
@@ -350,6 +362,8 @@ func exportHelper(t *testing.T, tmpDir string, extraArgs ...string) (journalDir 
 func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-fmproj")
 	createTestSessionJSONL(t, projDir, "sess-fm-001", "fm-preserve", "/home/test/fmproj")
@@ -403,6 +417,8 @@ func TestRunRecallExport_PreservesFrontmatter(t *testing.T) {
 func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-forceproj")
 	createTestSessionJSONL(t, projDir, "sess-force-002", "force-discard", "/home/test/forceproj")
@@ -460,6 +476,8 @@ func TestRunRecallExport_ForceDiscardsFrontmatter(t *testing.T) {
 func TestRunRecallExport_ForceResetsEnrichmentState(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-stateproj")
 	createTestSessionJSONL(t, projDir, "sess-state-003", "state-reset", "/home/test/stateproj")
@@ -514,6 +532,8 @@ func TestRunRecallExport_ForceResetsEnrichmentState(t *testing.T) {
 func TestRunRecallExport_SkipExistingLeavesFile(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-skipproj")
 	createTestSessionJSONL(t, projDir, "sess-skip-004", "skip-existing", "/home/test/skipproj")
@@ -555,6 +575,8 @@ func TestRunRecallExport_SkipExistingLeavesFile(t *testing.T) {
 func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-safeskip")
 	createTestSessionJSONL(t, projDir, "sess-safe-010", "safe-skip", "/home/test/safeskip")
@@ -595,6 +617,8 @@ func TestRunRecallExport_AllSkipsExistingByDefault(t *testing.T) {
 func TestRunRecallExport_RegenerateReExports(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-regenproj")
 	createTestSessionJSONL(t, projDir, "sess-regen-011", "regen-test", "/home/test/regenproj")
@@ -650,6 +674,8 @@ func TestRunRecallExport_RegenerateRequiresAll(t *testing.T) {
 func TestRunRecallExport_DryRun(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dryproj")
 	createTestSessionJSONL(t, projDir, "sess-dry-012", "dry-run-test", "/home/test/dryproj")
@@ -697,6 +723,8 @@ func TestRunRecallExport_DryRun(t *testing.T) {
 func TestRunRecallExport_DryRunRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-dryregen")
 	createTestSessionJSONL(t, projDir, "sess-dryregen-013", "dryregen-test", "/home/test/dryregen")
@@ -757,6 +785,8 @@ func TestRunRecallExport_BareExportPrintsHelp(t *testing.T) {
 func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-singleproj")
 	createTestSessionJSONL(t, projDir, "sess-single-014", "single-write", "/home/test/singleproj")
@@ -827,6 +857,8 @@ func TestRunRecallExport_SingleSessionAlwaysWrites(t *testing.T) {
 func TestRunRecallExport_YesBypasses(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-yesproj")
 	createTestSessionJSONL(t, projDir, "sess-yes-015", "yes-bypass", "/home/test/yesproj")
@@ -866,6 +898,8 @@ func TestRunRecallExport_YesBypasses(t *testing.T) {
 func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-lockskip")
 	createTestSessionJSONL(t, projDir, "sess-lock-016", "lock-skip", "/home/test/lockskip")
@@ -916,6 +950,8 @@ func TestRunRecallExport_LockedSkippedByDefault(t *testing.T) {
 func TestRunRecallExport_LockedSkippedByForce(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-lockforce")
 	createTestSessionJSONL(t, projDir, "sess-lock-017", "lock-force", "/home/test/lockforce")
@@ -966,6 +1002,8 @@ func TestRunRecallExport_LockedSkippedByForce(t *testing.T) {
 func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-keepfm")
 	createTestSessionJSONL(t, projDir, "sess-keepfm-018", "keepfm-test", "/home/test/keepfm")
@@ -1028,6 +1066,8 @@ func TestRunRecallExport_KeepFrontmatterFalse(t *testing.T) {
 func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-keepdef")
 	createTestSessionJSONL(t, projDir, "sess-keepdef-019", "keepdef-test", "/home/test/keepdef")
@@ -1080,6 +1120,8 @@ func TestRunRecallExport_KeepFrontmatterDefault(t *testing.T) {
 func TestRunRecallExport_DryRunShowsLocked(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-drylocked")
 	createTestSessionJSONL(t, projDir, "sess-drylk-020", "drylk-test", "/home/test/drylocked")
@@ -1167,6 +1209,8 @@ func TestDiscardFrontmatter(t *testing.T) {
 func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-fmlock")
 	createTestSessionJSONL(t, projDir, "sess-fmlock-022", "fmlock-test", "/home/test/fmlock")
@@ -1232,6 +1276,8 @@ func TestRunRecallExport_FrontmatterLockedSkipsAndPromotesToState(t *testing.T) 
 func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-implyregen")
 	createTestSessionJSONL(t, projDir, "sess-implyregen-021", "implyregen-test", "/home/test/implyregen")
@@ -1272,6 +1318,8 @@ func TestRunRecallExport_KeepFrontmatterFalseImpliesRegenerate(t *testing.T) {
 func TestRunRecallExport_MalformedFrontmatterGracefulDegradation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-malformed")
 	createTestSessionJSONL(t, projDir, "sess-malformed-030", "malformed-fm", "/home/test/malformed")
@@ -1348,6 +1396,8 @@ func createLargeTestSessionJSONL(t *testing.T, dir, sessionID, slug, cwd string,
 func TestRunRecallExport_MultipartFrontmatterPreservation(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
+	t.Setenv("USERPROFILE", tmpDir)
+	t.Setenv("APPDATA", tmpDir)
 
 	projDir := filepath.Join(tmpDir, ".claude", "projects", "-home-test-multipart")
 	// 110 pairs = 220 messages, exceeding config.MaxMessagesPerPart (200) → 2 parts.

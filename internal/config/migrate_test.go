@@ -15,6 +15,7 @@ import (
 func TestMigrateKeyFile_GlobalExists_Noop(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	// Create global key.
 	globalDir := filepath.Join(dir, ".ctx")
@@ -47,6 +48,7 @@ func TestMigrateKeyFile_GlobalExists_Noop(t *testing.T) {
 func TestMigrateKeyFile_LegacyLocal_WarnsOnly(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	contextDir := filepath.Join(dir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
@@ -77,6 +79,7 @@ func TestMigrateKeyFile_LegacyLocal_WarnsOnly(t *testing.T) {
 func TestMigrateKeyFile_LegacyUserLevel_WarnsOnly(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	// Create a legacy user-level key at ~/.local/ctx/keys/.
 	legacyKeyDir := filepath.Join(dir, ".local", "ctx", "keys")
@@ -111,6 +114,7 @@ func TestMigrateKeyFile_LegacyUserLevel_WarnsOnly(t *testing.T) {
 func TestMigrateKeyFile_NothingToDo(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
 
 	contextDir := filepath.Join(dir, ".context")
 	if err := os.MkdirAll(contextDir, 0750); err != nil {
