@@ -108,6 +108,13 @@ has a URI, name, and returns Markdown text.
 The `agent` resource assembles all non-empty context files into a
 single Markdown document, ordered by the configured read priority.
 
+### Resource Subscriptions
+
+Clients can subscribe to resource changes via `resources/subscribe`.
+The server polls for file mtime changes (default: 5 seconds) and
+emits `notifications/resources/updated` when a subscribed file
+changes on disk.
+
 ---
 
 ## Tools
@@ -119,7 +126,7 @@ JSON arguments and returns text results.
 
 Show context health: file count, token estimate, and per-file summary.
 
-**Arguments:** None.
+**Arguments:** None. **Read-only.**
 
 ### `ctx_add`
 
@@ -149,6 +156,121 @@ Mark a task as done by number or text match.
 Detect stale or invalid context. Returns violations, warnings, and
 passed checks.
 
-**Arguments:** None.
+**Arguments:** None. **Read-only.**
+
+### `ctx_recall`
+
+Query recent AI session history (summaries, decisions, topics).
+
+| Argument | Type   | Required | Description                              |
+|----------|--------|----------|------------------------------------------|
+| `limit`  | number | No       | Max sessions to return (default: 5)      |
+| `since`  | string | No       | ISO date filter: sessions after this date (YYYY-MM-DD) |
+
+**Read-only.**
+
+### `ctx_watch_update`
+
+Apply a structured context update to `.context/` files. Supports
+task, decision, learning, convention, and complete entry types.
+Human confirmation required before calling.
+
+| Argument       | Type   | Required | Description                              |
+|----------------|--------|----------|------------------------------------------|
+| `type`         | string | Yes      | Entry type: task, decision, learning, convention, complete |
+| `content`      | string | Yes      | Main content                             |
+| `context`      | string | Conditional | Context background (decisions/learnings) |
+| `rationale`    | string | Conditional | Rationale (decisions only)             |
+| `consequences` | string | Conditional | Consequences (decisions only)          |
+| `lesson`       | string | Conditional | Lesson learned (learnings only)        |
+| `application`  | string | Conditional | How to apply (learnings only)          |
+
+### `ctx_compact`
+
+Move completed tasks to the archive section and remove empty
+sections from context files. Human confirmation required.
+
+| Argument  | Type    | Required | Description                              |
+|-----------|---------|----------|------------------------------------------|
+| `archive` | boolean | No       | Also write tasks to `.context/archive/` (default: false) |
+
+### `ctx_next`
+
+Suggest the next pending task based on priority and position.
+
+**Arguments:** None. **Read-only.**
+
+### `ctx_check_task_completion`
+
+Advisory check: after a write operation, detect if any pending tasks
+were silently completed. Returns nudge text if a match is found.
+
+| Argument        | Type   | Required | Description                            |
+|-----------------|--------|----------|----------------------------------------|
+| `recent_action` | string | No       | Brief description of what was just done |
+
+**Read-only.**
+
+### `ctx_session_event`
+
+Signal a session lifecycle event. Type `end` triggers the session-end
+persistence ceremony — human confirmation required.
+
+| Argument | Type   | Required | Description                              |
+|----------|--------|----------|------------------------------------------|
+| `type`   | string | Yes      | Event type: start, end                   |
+| `caller` | string | No       | Caller identifier (cursor, windsurf, vscode, claude-desktop) |
+
+### `ctx_remind`
+
+List pending session-scoped reminders.
+
+**Arguments:** None. **Read-only.**
+
+---
+
+## Prompts
+
+Prompts provide pre-built templates for common workflows. Clients
+can list available prompts via `prompts/list` and retrieve a
+specific prompt via `prompts/get`.
+
+### `ctx-session-start`
+
+Load full context at the beginning of a session. Returns all context
+files assembled in priority read order with session orientation
+instructions.
+
+### `ctx-add-decision`
+
+Format an architectural decision entry with all required fields.
+
+| Argument       | Type   | Required | Description                    |
+|----------------|--------|----------|--------------------------------|
+| `content`      | string | Yes      | Decision title                 |
+| `context`      | string | Yes      | Background context             |
+| `rationale`    | string | Yes      | Why this decision was made     |
+| `consequences` | string | Yes      | Expected consequences          |
+
+### `ctx-add-learning`
+
+Format a learning entry with all required fields.
+
+| Argument      | Type   | Required | Description                     |
+|---------------|--------|----------|---------------------------------|
+| `content`     | string | Yes      | Learning title                  |
+| `context`     | string | Yes      | Background context              |
+| `lesson`      | string | Yes      | The lesson learned              |
+| `application` | string | Yes      | How to apply this lesson        |
+
+### `ctx-reflect`
+
+Guide end-of-session reflection. Returns a structured review prompt
+covering progress assessment and context update recommendations.
+
+### `ctx-checkpoint`
+
+Report session statistics: tool calls made, entries added, and
+pending updates queued during the current session.
 
 

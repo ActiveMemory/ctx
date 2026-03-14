@@ -22,10 +22,18 @@ const (
 	MCPMethodResourcesList = "resources/list"
 	// MCPMethodResourcesRead is the MCP method for reading a resource.
 	MCPMethodResourcesRead = "resources/read"
+	// MCPMethodResourcesSubscribe is the MCP method for subscribing to resource changes.
+	MCPMethodResourcesSubscribe = "resources/subscribe"
+	// MCPMethodResourcesUnsubscribe is the MCP method for unsubscribing from resource changes.
+	MCPMethodResourcesUnsubscribe = "resources/unsubscribe"
 	// MCPMethodToolsList is the MCP method for listing tools.
 	MCPMethodToolsList = "tools/list"
 	// MCPMethodToolsCall is the MCP method for calling a tool.
 	MCPMethodToolsCall = "tools/call"
+	// MCPMethodPromptsList is the MCP method for listing prompts.
+	MCPMethodPromptsList = "prompts/list"
+	// MCPMethodPromptsGet is the MCP method for getting a prompt.
+	MCPMethodPromptsGet = "prompts/get"
 	// MCPJSONRPCVersion is the JSON-RPC protocol version string.
 	MCPJSONRPCVersion = "2.0"
 	// MCPServerName is the server name reported during initialization.
