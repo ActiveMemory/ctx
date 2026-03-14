@@ -10,13 +10,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -35,7 +36,7 @@ import (
 //   - error: Non-nil if TASKS.md doesn't exist or file operations fail
 func runArchive(cmd *cobra.Command, dryRun bool) error {
 	tasksPath := core.TasksFilePath()
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 
 	// Check if TASKS.md exists
 	if _, statErr := os.Stat(tasksPath); os.IsNotExist(statErr) {
@@ -86,12 +87,12 @@ func runArchive(cmd *cobra.Command, dryRun bool) error {
 
 	if dryRun {
 		write.ArchiveDryRun(cmd, len(archivableBlocks), pendingCount,
-			archivedContent.String(), config.Separator)
+			archivedContent.String(), token.Separator)
 		return nil
 	}
 
 	// Write to archive
-	archiveFilePath, writeErr := compactcore.WriteArchive(file.ArchiveScopeTasks, config.HeadingArchivedTasks, archivedContent.String())
+	archiveFilePath, writeErr := compactcore.WriteArchive(archive.ArchiveScopeTasks, assets.HeadingArchivedTasks, archivedContent.String())
 	if writeErr != nil {
 		return writeErr
 	}

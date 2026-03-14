@@ -22,7 +22,7 @@ import (
 // Returns:
 //   - error: Always nil (included for RunE compatibility)
 func Run(cmd *cobra.Command, root string) error {
-	profile := core.DetectProfile(root)
+	profile := core.DetectProfile()
 	switch profile {
 	case core.ProfileDev:
 		write.InfoConfigProfileDev(cmd)

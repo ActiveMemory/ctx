@@ -1,23 +1,33 @@
-# ctx — VS Code Chat Extension
+```text
+#   /    ctx:                         https://ctx.ist
+# ,'`./    do you remember?
+# `.,'\
+#   \    Copyright 2026-present Context contributors.
+#                 SPDX-License-Identifier: Apache-2.0
+```
 
-A VS Code Chat Participant that brings [ctx](https://ctx.ist) — persistent project context for AI coding sessions — directly into GitHub Copilot Chat.
+## `ctx`: VS Code Chat Extension
+
+A VS Code Chat Participant that brings [ctx](https://ctx.ist):
+(*persistent project context for AI coding sessions*) 
+directly into GitHub Copilot Chat.
 
 ## Usage
 
 Type `@ctx` in the VS Code Chat view, then use slash commands:
 
-| Command | Description |
-|---------|-------------|
-| `@ctx /init` | Initialize a `.context/` directory with template files |
-| `@ctx /status` | Show context summary with token estimate |
-| `@ctx /agent` | Print AI-ready context packet |
-| `@ctx /drift` | Detect stale or invalid context |
-| `@ctx /recall` | Browse and search AI session history |
-| `@ctx /hook` | Generate AI tool integration configs |
-| `@ctx /add` | Add a task, decision, or learning |
-| `@ctx /load` | Output assembled context Markdown |
-| `@ctx /compact` | Archive completed tasks and clean up |
-| `@ctx /sync` | Reconcile context with codebase |
+| Command         | Description                                            |
+|-----------------|--------------------------------------------------------|
+| `@ctx /init`    | Initialize a `.context/` directory with template files |
+| `@ctx /status`  | Show context summary with token estimate               |
+| `@ctx /agent`   | Print AI-ready context packet                          |
+| `@ctx /drift`   | Detect stale or invalid context                        |
+| `@ctx /recall`  | Browse and search AI session history                   |
+| `@ctx /hook`    | Generate AI tool integration configs                   |
+| `@ctx /add`     | Add a task, decision, or learning                      |
+| `@ctx /load`    | Output assembled context Markdown                      |
+| `@ctx /compact` | Archive completed tasks and clean up                   |
+| `@ctx /sync`    | Reconcile context with codebase                        |
 
 ## Prerequisites
 
@@ -26,9 +36,9 @@ Type `@ctx` in the VS Code Chat view, then use slash commands:
 
 ## Configuration
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `ctx.executablePath` | `ctx` | Path to the ctx executable |
+| Setting              | Default | Description                |
+|----------------------|---------|----------------------------|
+| `ctx.executablePath` | `ctx`   | Path to the ctx executable |
 
 ## Development
 

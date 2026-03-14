@@ -14,8 +14,8 @@ OUTPUT := $(BINARY)
 # Default target
 all: build
 
-## build: Build for current platform
-build:
+## build: Build for current platform (syncs embedded docs first)
+build: sync-why
 	CGO_ENABLED=0 go build -ldflags="-X github.com/ActiveMemory/ctx/internal/bootstrap.version=$$(cat VERSION | tr -d '[:space:]')" -o $(OUTPUT) ./cmd/ctx
 
 ## test: Run tests with coverage summary

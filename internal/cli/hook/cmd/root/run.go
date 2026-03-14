@@ -13,10 +13,11 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -103,13 +104,13 @@ func WriteCopilotInstructions(cmd *cobra.Command) error {
 
 	if fileExists {
 		existingStr := string(existingContent)
-		if strings.Contains(existingStr, config.CopilotMarkerStart) {
+		if strings.Contains(existingStr, marker.CopilotMarkerStart) {
 			write.InfoHookCopilotSkipped(cmd, targetFile)
 			return nil
 		}
 
 		// File exists without ctx markers: append ctx content
-		merged := existingStr + config.NewlineLF + string(instructions)
+		merged := existingStr + token.NewlineLF + string(instructions)
 		if writeErr := os.WriteFile(targetFile, []byte(merged), fs.PermFile); writeErr != nil {
 			return ctxerr.FileWrite(targetFile, writeErr)
 		}

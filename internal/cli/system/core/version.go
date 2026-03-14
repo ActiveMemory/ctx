@@ -12,11 +12,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/token"
+	"github.com/ActiveMemory/ctx/internal/config/tpl"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -53,7 +55,7 @@ func ParseMajorMinor(ver string) (major, minor int, ok bool) {
 //   - cmd: Cobra command for output
 //   - sessionID: current session identifier
 func CheckKeyAge(cmd *cobra.Command, sessionID string) {
-	config.MigrateKeyFile(rc.ContextDir())
+	crypto.MigrateKeyFile(rc.ContextDir())
 	kp := rc.KeyPath()
 	info, statErr := os.Stat(kp)
 	if statErr != nil {
@@ -70,8 +72,8 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 	keyFallback := fmt.Sprintf(
 		assets.TextDesc(assets.TextDescKeyCheckVersionKeyFallback), ageDays,
 	)
-	keyContent := LoadMessage(file.HookCheckVersion, file.VariantKeyRotation,
-		map[string]any{file.TplVarKeyAgeDays: ageDays}, keyFallback)
+	keyContent := LoadMessage(hook.CheckVersion, hook.VariantKeyRotation,
+		map[string]any{tpl.VarKeyAgeDays: ageDays}, keyFallback)
 	if keyContent == "" {
 		return
 	}
@@ -79,10 +81,10 @@ func CheckKeyAge(cmd *cobra.Command, sessionID string) {
 	boxTitle := assets.TextDesc(assets.TextDescKeyCheckVersionKeyBoxTitle)
 	relayPrefix := assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayPrefix)
 
-	cmd.Println("\n" + NudgeBox(relayPrefix, boxTitle, keyContent))
+	cmd.Println(token.NewlineLF + NudgeBox(relayPrefix, boxTitle, keyContent))
 
-	keyRef := notify.NewTemplateRef(file.HookCheckVersion, file.VariantKeyRotation,
-		map[string]any{file.TplVarKeyAgeDays: ageDays})
-	keyNotifyMsg := file.HookCheckVersion + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayFormat), ageDays)
+	keyRef := notify.NewTemplateRef(hook.CheckVersion, hook.VariantKeyRotation,
+		map[string]any{tpl.VarKeyAgeDays: ageDays})
+	keyNotifyMsg := hook.CheckVersion + ": " + fmt.Sprintf(assets.TextDesc(assets.TextDescKeyCheckVersionKeyRelayFormat), ageDays)
 	NudgeAndRelay(keyNotifyMsg, sessionID, keyRef)
 }

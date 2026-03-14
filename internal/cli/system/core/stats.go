@@ -16,12 +16,13 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/ActiveMemory/ctx/internal/config/recall"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/stats"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -35,7 +36,7 @@ import (
 //   - []StatsEntry: sorted stats entries
 //   - error: non-nil on glob failure
 func ReadStatsDir(dir, sessionFilter string) ([]StatsEntry, error) {
-	pattern := filepath.Join(dir, file.StatsFilePrefix+"*"+file.ExtJSONL)
+	pattern := filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL)
 	matches, globErr := filepath.Glob(pattern)
 	if globErr != nil {
 		return nil, ctxerr.StatsGlob(globErr)
@@ -75,7 +76,7 @@ func ReadStatsDir(dir, sessionFilter string) ([]StatsEntry, error) {
 // Returns:
 //   - string: session ID
 func ExtractStatsSessionID(basename string) string {
-	s := strings.TrimPrefix(basename, file.StatsFilePrefix)
+	s := strings.TrimPrefix(basename, stats.FilePrefix)
 	return strings.TrimSuffix(s, file.ExtJSONL)
 }
 
@@ -95,7 +96,7 @@ func ParseStatsFile(path, sid string) ([]StatsEntry, error) {
 	}
 
 	var entries []StatsEntry
-	for _, line := range strings.Split(strings.TrimSpace(string(data)), config.NewlineLF) {
+	for _, line := range strings.Split(strings.TrimSpace(string(data)), token.NewlineLF) {
 		if line == "" {
 			continue
 		}
@@ -166,13 +167,13 @@ func OutputStatsJSON(cmd *cobra.Command, entries []StatsEntry) error {
 func PrintStatsHeader(cmd *cobra.Command) {
 	fmtStr := assets.TextDesc(assets.TextDescKeyStatsHeaderFormat)
 	cmd.Println(fmt.Sprintf(fmtStr,
-		file.StatsHeaderTime, file.StatsHeaderSession,
-		file.StatsHeaderPrompt, file.StatsHeaderTokens,
-		file.StatsHeaderPct, file.StatsHeaderEvent))
+		stats.HeaderTime, stats.HeaderSession,
+		stats.HeaderPrompt, stats.HeaderTokens,
+		stats.HeaderPct, stats.HeaderEvent))
 	cmd.Println(fmt.Sprintf(fmtStr,
-		file.StatsSepTime, file.StatsSepSession,
-		file.StatsSepPrompt, file.StatsSepTokens,
-		file.StatsSepPct, file.StatsSepEvent))
+		stats.SepTime, stats.SepSession,
+		stats.SepPrompt, stats.SepTokens,
+		stats.SepPct, stats.SepEvent))
 }
 
 // PrintStatsLine prints a single stats entry in human-readable format.
@@ -183,8 +184,8 @@ func PrintStatsHeader(cmd *cobra.Command) {
 func PrintStatsLine(cmd *cobra.Command, e *StatsEntry) {
 	ts := FormatStatsTimestamp(e.Timestamp)
 	sid := e.Session
-	if len(sid) > recall.SessionIDShortLen {
-		sid = sid[:recall.SessionIDShortLen]
+	if len(sid) > journal.SessionIDShortLen {
+		sid = sid[:journal.SessionIDShortLen]
 	}
 	tokens := FormatTokenCount(e.Tokens)
 	cmd.Println(fmt.Sprintf(assets.TextDesc(assets.TextDescKeyStatsLineFormat),
@@ -228,14 +229,14 @@ func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
 		return nil
 	}
 
-	buf := make([]byte, file.StatsReadBufSize)
+	buf := make([]byte, stats.ReadBufSize)
 	n, readErr := f.Read(buf)
 	if readErr != nil || n == 0 {
 		return nil
 	}
 
 	var entries []StatsEntry
-	for _, line := range strings.Split(strings.TrimSpace(string(buf[:n])), config.NewlineLF) {
+	for _, line := range strings.Split(strings.TrimSpace(string(buf[:n])), token.NewlineLF) {
 		if line == "" {
 			continue
 		}
@@ -261,7 +262,7 @@ func ReadNewLines(path string, offset int64, sid string) []StatsEntry {
 func StreamStats(cmd *cobra.Command, dir, sessionFilter string, jsonOut bool) error {
 	// Track file sizes to detect new content.
 	offsets := make(map[string]int64)
-	matches, _ := filepath.Glob(filepath.Join(dir, file.StatsFilePrefix+"*"+file.ExtJSONL))
+	matches, _ := filepath.Glob(filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL))
 	for _, path := range matches {
 		info, statErr := os.Stat(path)
 		if statErr == nil {
@@ -273,7 +274,7 @@ func StreamStats(cmd *cobra.Command, dir, sessionFilter string, jsonOut bool) er
 	defer ticker.Stop()
 
 	for range ticker.C {
-		matches, _ = filepath.Glob(filepath.Join(dir, file.StatsFilePrefix+"*"+file.ExtJSONL))
+		matches, _ = filepath.Glob(filepath.Join(dir, stats.FilePrefix+"*"+file.ExtJSONL))
 		for _, path := range matches {
 			sid := ExtractStatsSessionID(filepath.Base(path))
 			if sessionFilter != "" && !strings.HasPrefix(sid, sessionFilter) {

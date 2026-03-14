@@ -7,34 +7,31 @@
 package check_memory_drift
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/spf13/cobra"
-
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/ActiveMemory/ctx/internal/memory"
+	"github.com/ActiveMemory/ctx/internal/notify"
 	"github.com/ActiveMemory/ctx/internal/rc"
-	"github.com/ActiveMemory/ctx/internal/write"
+	"github.com/spf13/cobra"
 )
 
 // Run executes the check-memory-drift hook logic.
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 
-	_, sessionID, paused := core.HookPreamble(stdin)
+	input, sessionID, paused := core.HookPreamble(stdin)
 	if paused {
 		return nil
 	}
 
 	// Session tombstone: nudge once per session, per session ID
-	tombstone := filepath.Join(core.StateDir(), file.MemoryDriftThrottlePrefix+sessionID)
+	tombstone := filepath.Join(core.StateDir(), hook.PrefixMemoryDriftThrottle+sessionID)
 	if _, statErr := os.Stat(tombstone); statErr == nil {
 		return nil
 	}
@@ -52,13 +49,22 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	content := fmt.Sprintf(assets.TextDesc(
-		assets.TextDescKeyCheckMemoryDriftContent), config.NewlineLF,
-	)
-	write.HookNudge(cmd, core.NudgeBox(
+	fallback := assets.TextDesc(assets.TextDescKeyCheckMemoryDriftContent)
+	content := core.LoadMessage(hook.CheckMemoryDrift, hook.VariantNudge, nil, fallback)
+	if content == "" {
+		return nil
+	}
+
+	cmd.Println(core.NudgeBox(
 		assets.TextDesc(assets.TextDescKeyCheckMemoryDriftRelayPrefix),
 		assets.TextDesc(assets.TextDescKeyCheckMemoryDriftBoxTitle),
 		content))
+
+	ref := notify.NewTemplateRef(hook.CheckMemoryDrift, hook.VariantNudge, nil)
+	core.NudgeAndRelay(
+		hook.CheckMemoryDrift+": "+assets.TextDesc(assets.TextDescKeyCheckMemoryDriftRelayMessage),
+		input.SessionID, ref,
+	)
 
 	core.TouchFile(tombstone)
 

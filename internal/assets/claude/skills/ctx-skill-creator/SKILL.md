@@ -34,14 +34,14 @@ knows: delete). Target: >70% Expert, <10% Redundant.
 **Description is the trigger.** The `description` field in
 frontmatter determines when a skill activates. All "when to
 use" context belongs there, not in the body. Claude tends to
-undertrigger — make descriptions a little "pushy" by listing
+undertrigger: make descriptions a little "pushy" by listing
 concrete situations and synonyms the user might say:
 
 ```yaml
-# Weak — too vague, will undertrigger
+# Weak: too vague, will undertrigger
 description: "Use when starting any conversation"
 
-# Strong — specific triggers, covers synonyms
+# Strong: specific triggers, covers synonyms
 description: >-
   Use after writing code, before commits, or when CI might
   fail. Also use when the user says 'run checks', 'lint this',
@@ -61,7 +61,7 @@ memorizing a rule it might misapply.
 
 **Match communication to user skill level.** Pay attention to
 context cues. Some users are experienced developers; others are
-new to terminals entirely. Briefly explain terms ("assertions —
+new to terminals entirely. Briefly explain terms ("assertions:
 automated checks that verify the output") when in doubt.
 
 ## Skill Anatomy
@@ -92,9 +92,9 @@ skill-name/
 
 Skills use a three-level loading system:
 
-1. **Metadata** (name + description) — always in context (~100 words)
-2. **SKILL.md body** — loaded when skill triggers (<500 lines)
-3. **Bundled resources** — loaded as needed (unlimited size;
+1. **Metadata** (name + description): always in context (~100 words)
+2. **SKILL.md body**: loaded when skill triggers (<500 lines)
+3. **Bundled resources**: loaded as needed (unlimited size;
    scripts can execute without loading into context)
 
 Keep SKILL.md under 500 lines. If approaching that limit, move
@@ -151,7 +151,7 @@ Output: feat(auth): implement JWT-based authentication
 
 ### Workflow Patterns
 
-**Sequential** — overview the steps upfront:
+**Sequential**: overview the steps upfront:
 
 ```markdown
 1. Check formatting (`gofmt -l .`)
@@ -160,7 +160,7 @@ Output: feat(auth): implement JWT-based authentication
 4. Report results
 ```
 
-**Conditional** — guide through decision points:
+**Conditional**: guide through decision points:
 
 ```markdown
 1. Determine the change type:
@@ -175,7 +175,7 @@ Output: feat(auth): implement JWT-based authentication
 Start by understanding what the user wants. Two paths:
 
 **From conversation**: The user says "turn this into a skill."
-Extract answers from the conversation history — the tools used,
+Extract answers from the conversation history: the tools used,
 the sequence of steps, corrections made, input/output formats
 observed. Confirm your understanding before proceeding.
 
@@ -189,7 +189,7 @@ observed. Confirm your understanding before proceeding.
 
 Proactively ask about edge cases, dependencies, and success
 criteria *before* writing. Don't wait for the user to think of
-everything — come prepared with questions based on what you
+everything: come prepared with questions based on what you
 know about the domain.
 
 Check for existing skills in `.claude/skills/` to avoid
@@ -201,7 +201,7 @@ Write the skill following the anatomy above. As you write:
 
 - Tag paragraphs (Expert/Activation/Redundant) and remove
   anything Redundant
-- Write the description field to be "pushy" — cover synonyms,
+- Write the description field to be "pushy": cover synonyms,
   concrete situations, edge-case triggers
 - Explain reasoning behind instructions instead of relying on
   rigid MUST/NEVER directives
@@ -209,7 +209,7 @@ Write the skill following the anatomy above. As you write:
 
 ### 4. Test
 
-Propose 2-3 realistic test prompts — the kind of thing a real
+Propose 2-3 realistic test prompts: the kind of thing a real
 user would actually say. Share them: "Here are a few test cases
 I'd like to try. Do these look right, or do you want to add
 more?"
@@ -296,5 +296,5 @@ Before finalizing a skill:
 - Capability lists ("Masters X, Y, Z...")
 - README, CHANGELOG, or auxiliary documentation
 - References to files that do not exist
-- Great content with a vague description — it will never
+- Great content with a vague description: it will never
   trigger

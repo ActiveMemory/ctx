@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 )
 
 func TestInitialized_AllFilesPresent(t *testing.T) {
 	tmp := t.TempDir()
-	for _, f := range file.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		path := filepath.Join(tmp, f)
 		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)
@@ -30,7 +30,7 @@ func TestInitialized_AllFilesPresent(t *testing.T) {
 func TestInitialized_MissingFile(t *testing.T) {
 	tmp := t.TempDir()
 	// Create all but the last required file.
-	for _, f := range file.FilesRequired[:len(file.FilesRequired)-1] {
+	for _, f := range ctx.FilesRequired[:len(ctx.FilesRequired)-1] {
 		path := filepath.Join(tmp, f)
 		if writeErr := os.WriteFile(path, []byte("# "+f+"\n"), 0o600); writeErr != nil {
 			t.Fatalf("setup: %v", writeErr)

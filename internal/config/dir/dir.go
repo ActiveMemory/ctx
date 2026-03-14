@@ -40,6 +40,8 @@ const (
 	Specs = "specs"
 	// State is the subdirectory for project-scoped runtime state within .context/.
 	State = "state"
+	// CtxData is the user-level ctx data directory (~/.ctx/).
+	CtxData = ".ctx"
 )
 
 // Journal site output directories.

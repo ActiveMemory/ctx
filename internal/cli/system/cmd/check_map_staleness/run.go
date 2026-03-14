@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/architecture"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 	"github.com/spf13/cobra"
 
@@ -32,7 +32,7 @@ import (
 // Returns:
 //   - error: Always nil (hook errors are non-fatal)
 func Run(cmd *cobra.Command, stdin *os.File) error {
-	if !core.IsInitialized() {
+	if !core.Initialized() {
 		return nil
 	}
 
@@ -40,7 +40,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 	if paused {
 		return nil
 	}
-	markerPath := filepath.Join(core.StateDir(), file.MapStalenessThrottleID)
+	markerPath := filepath.Join(core.StateDir(), architecture.MapStalenessThrottleID)
 	if core.IsDailyThrottled(markerPath) {
 		return nil
 	}
@@ -55,7 +55,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return nil
 	}
 
-	if time.Since(lastRun) < time.Duration(file.MapStaleDays)*24*time.Hour {
+	if time.Since(lastRun) < time.Duration(architecture.MapStaleDays)*24*time.Hour {
 		return nil
 	}
 

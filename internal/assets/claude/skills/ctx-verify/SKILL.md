@@ -29,31 +29,31 @@ Run the relevant verification command before claiming a result.
 ## Workflow
 
 1. **Identify** what command proves the claim
-2. **Think through** what a passing result looks like — and what
-   a false positive would look like — before running
+2. **Think through** what a passing result looks like: and what
+   a false positive would look like: before running
 3. **Run** the command (fresh, not a previous run)
 4. **Read** the full output; check exit code, count failures
 5. **Report** actual results with evidence
 
-Run the verification command fresh each time — reusing earlier output
+Run the verification command fresh each time: reusing earlier output
 is unreliable because code changes between runs and stale results
 have caused false confidence.
 
 ## Claim-to-Evidence Map
 
-| Claim             | Required Evidence                                       |
-|-------------------|---------------------------------------------------------|
-| Tests pass        | Test command output showing 0 failures                  |
-| Linter clean      | `golangci-lint run` output showing 0 errors             |
-| Build succeeds    | `go build` exit 0 (linter passing is not enough)        |
-| Bug fixed         | Original symptom no longer reproduces                   |
-| Regression tested | Red-green cycle: test fails without fix, passes with it |
-| All checks pass   | `make audit` output showing all steps pass              |
-| Files match       | `diff` showing no differences (e.g., template vs live)  |
+| Claim             | Required Evidence                                                     |
+|-------------------|-----------------------------------------------------------------------|
+| Tests pass        | Test command output showing 0 failures                                |
+| Linter clean      | `golangci-lint run` output showing 0 errors                           |
+| Build succeeds    | `go build` exit 0 (linter passing is not enough)                      |
+| Bug fixed         | Original symptom no longer reproduces                                 |
+| Regression tested | Red-green cycle: test fails without fix, passes with it               |
+| All checks pass   | `make audit` output showing all steps pass                            |
+| Files match       | `diff` showing no differences (e.g., template vs live)                |
 | Design is sound   | Assumptions listed, failure modes identified, alternatives considered |
-| Doc is accurate   | Claims traced to source code or config; no stale references |
-| Skill works       | Trigger conditions tested, output matches spec, edge cases covered |
-| Config is correct  | Values validated against schema or runtime; no stale references |
+| Doc is accurate   | Claims traced to source code or config; no stale references           |
+| Skill works       | Trigger conditions tested, output matches spec, edge cases covered    |
+| Config is correct | Values validated against schema or runtime; no stale references       |
 
 ## Self-Audit Questions
 
@@ -66,7 +66,7 @@ complete, run this checklist on your own output:
 - What would a reviewer question first?
 
 If any answer reveals a gap, address it before reporting done.
-This applies to all artifact types — not just code.
+This applies to all artifact types: not just code.
 
 ## Transform Vague Tasks into Verifiable Goals
 

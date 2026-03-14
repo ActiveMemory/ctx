@@ -9,10 +9,10 @@ package root
 import (
 	"os"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -52,7 +52,7 @@ func Run(
 	}
 
 	write.InfoLoopGenerated(
-		cmd, outputFile, config.LoopHeadingStart,
+		cmd, outputFile, assets.LoopHeadingStart,
 		tool, promptFile, maxIterations, completionMsg,
 	)
 

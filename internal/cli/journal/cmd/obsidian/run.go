@@ -14,10 +14,11 @@ import (
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/obsidian"
 	"github.com/spf13/cobra"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/journal/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -76,8 +77,8 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	// Create output directory structure
 	dirs := []string{
 		output,
-		filepath.Join(output, config.ObsidianDirEntries),
-		filepath.Join(output, config.ObsidianConfigDir),
+		filepath.Join(output, obsidian.DirEntries),
+		filepath.Join(output, obsidian.DirConfig),
 		filepath.Join(output, dir.JournTopics),
 		filepath.Join(output, dir.JournalFiles),
 		filepath.Join(output, dir.JournalTypes),
@@ -90,10 +91,10 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 
 	// Write .obsidian/app.json
 	appConfigPath := filepath.Join(
-		output, config.ObsidianConfigDir, config.ObsidianAppConfigFile,
+		output, obsidian.DirConfig, obsidian.AppConfigFile,
 	)
 	if writeErr := os.WriteFile(
-		appConfigPath, []byte(config.ObsidianAppConfig), fs.PermFile,
+		appConfigPath, []byte(assets.ObsidianAppConfig), fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(appConfigPath, writeErr)
 	}
@@ -102,7 +103,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	readmePath := filepath.Join(output, file.Readme)
 	if writeErr := os.WriteFile(
 		readmePath,
-		[]byte(fmt.Sprintf(config.ObsidianReadme, journalDir)),
+		[]byte(fmt.Sprintf(assets.ObsidianReadme, journalDir)),
 		fs.PermFile,
 	); writeErr != nil {
 		return ctxerr.FileWrite(readmePath, writeErr)
@@ -126,7 +127,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	// Transform and write entries
 	for _, entry := range entries {
 		src := entry.Path
-		dst := filepath.Join(output, config.ObsidianDirEntries, entry.Filename)
+		dst := filepath.Join(output, obsidian.DirEntries, entry.Filename)
 
 		content, readErr := os.ReadFile(filepath.Clean(src))
 		if readErr != nil {
@@ -164,7 +165,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	// Write topic MOC and pages
 	if len(topics) > 0 {
 		topicsDir := filepath.Join(output, dir.JournTopics)
-		mocPath := filepath.Join(output, config.ObsidianTopicsMOC)
+		mocPath := filepath.Join(output, obsidian.MOCTopics)
 		if writeErr := os.WriteFile(
 			mocPath, []byte(core.GenerateObsidianTopicsMOC(topics)),
 			fs.PermFile,
@@ -189,7 +190,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	// Write key files MOC and pages
 	if len(keyFiles) > 0 {
 		filesDir := filepath.Join(output, dir.JournalFiles)
-		mocPath := filepath.Join(output, config.ObsidianFilesMOC)
+		mocPath := filepath.Join(output, obsidian.MOCFiles)
 		if writeErr := os.WriteFile(
 			mocPath, []byte(core.GenerateObsidianFilesMOC(keyFiles)),
 			fs.PermFile,
@@ -215,7 +216,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	// Write types MOC and pages
 	if len(sessionTypes) > 0 {
 		typesDir := filepath.Join(output, dir.JournalTypes)
-		mocPath := filepath.Join(output, config.ObsidianTypesMOC)
+		mocPath := filepath.Join(output, obsidian.MOCTypes)
 		if writeErr := os.WriteFile(
 			mocPath, []byte(core.GenerateObsidianTypesMOC(sessionTypes)),
 			fs.PermFile,
@@ -235,7 +236,7 @@ func BuildObsidianVault(cmd *cobra.Command, journalDir, output string) error {
 	}
 
 	// Write Home.md
-	homePath := filepath.Join(output, config.ObsidianHomeMOC)
+	homePath := filepath.Join(output, obsidian.MOCHome)
 	if writeErr := os.WriteFile(
 		homePath,
 		[]byte(core.GenerateHomeMOC(

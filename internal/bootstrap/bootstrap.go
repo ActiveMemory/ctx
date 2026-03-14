@@ -22,7 +22,6 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/agent"
 	"github.com/ActiveMemory/ctx/internal/cli/changes"
 	"github.com/ActiveMemory/ctx/internal/cli/compact"
-	"github.com/ActiveMemory/ctx/internal/cli/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/config"
 	"github.com/ActiveMemory/ctx/internal/cli/decision"
 	"github.com/ActiveMemory/ctx/internal/cli/deps"
@@ -59,7 +58,7 @@ import (
 // Initialize registers all ctx subcommands with the root command.
 //
 // This function attaches all available subcommands to the provided root
-// command, including init, status, load, add, complete, agent, drift,
+// command, including init, status, load, add, agent, drift,
 // sync, compact, decision, watch, hook, learnings, tasks, loop, recall,
 // journal, and serve.
 //
@@ -74,7 +73,6 @@ func Initialize(cmd *cobra.Command) *cobra.Command {
 		agent.Cmd,
 		changes.Cmd,
 		compact.Cmd,
-		complete.Cmd,
 		config.Cmd,
 		decision.Cmd,
 		deps.Cmd,

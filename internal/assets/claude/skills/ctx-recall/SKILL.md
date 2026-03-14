@@ -68,17 +68,17 @@ Use `--full` for the complete conversation.
 
 Export sessions to the journal directory as markdown.
 
-| Flag                  | Default | Purpose                                           |
-|-----------------------|---------|---------------------------------------------------|
-| `--all`               | false   | Export all sessions (only new files by default)     |
-| `--all-projects`      | false   | Include all projects                                |
-| `--regenerate`        | false   | Re-export existing files (preserves frontmatter)    |
-| `--keep-frontmatter`  | true    | Preserve enriched YAML frontmatter during regen     |
-| `--yes`, `-y`         | false   | Skip confirmation prompt                            |
-| `--dry-run`           | false   | Preview what would be exported                      |
+| Flag                 | Default | Purpose                                          |
+|----------------------|---------|--------------------------------------------------|
+| `--all`              | false   | Export all sessions (only new files by default)  |
+| `--all-projects`     | false   | Include all projects                             |
+| `--regenerate`       | false   | Re-export existing files (preserves frontmatter) |
+| `--keep-frontmatter` | true    | Preserve enriched YAML frontmatter during regen  |
+| `--yes`, `-y`        | false   | Skip confirmation prompt                         |
+| `--dry-run`          | false   | Preview what would be exported                   |
 
 Accepts a session ID (always writes), or `--all` to export
-everything (safe by default — only new sessions, existing
+everything (safe by default: only new sessions, existing
 files skipped). Use `--regenerate` with `--all` to re-export
 existing files; YAML frontmatter is preserved by default.
 Use `--keep-frontmatter=false` to discard enriched frontmatter.
@@ -155,7 +155,7 @@ ctx recall show <slug>
 ```bash
 ctx recall export --all
 ```
-This only exports new sessions — existing files are skipped.
+This only exports new sessions: existing files are skipped.
 If the user asks what to do next, mention that `/ctx-journal-enrich-all`
 can enrich the exported journals.
 
@@ -172,6 +172,6 @@ Before reporting results, verify:
       or topic
 - [ ] For export, reminded the user about the normalize/enrich
       pipeline as next steps
-- [ ] Used `--all` for bulk export (safe — only new sessions)
+- [ ] Used `--all` for bulk export (safe: only new sessions)
 - [ ] Suggested `--dry-run` when user seems uncertain
 - [ ] Only used `--regenerate` when explicitly needed

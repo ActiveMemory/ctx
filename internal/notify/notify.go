@@ -19,8 +19,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	crypto2 "github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -56,9 +55,9 @@ type Payload struct {
 // (silent noop — webhook not configured).
 func LoadWebhook() (string, error) {
 	contextDir := rc.ContextDir()
-	config.MigrateKeyFile(contextDir)
+	crypto.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, file.FileNotifyEnc)
+	encPath := filepath.Join(contextDir, crypto2.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -89,9 +88,9 @@ func LoadWebhook() (string, error) {
 // If the scratchpad key does not exist, it is generated and saved first.
 func SaveWebhook(url string) error {
 	contextDir := rc.ContextDir()
-	config.MigrateKeyFile(contextDir)
+	crypto.MigrateKeyFile(contextDir)
 	kp := rc.KeyPath()
-	encPath := filepath.Join(contextDir, file.FileNotifyEnc)
+	encPath := filepath.Join(contextDir, crypto2.NotifyEnc)
 
 	key, err := crypto.LoadKey(kp)
 	if err != nil {
@@ -100,7 +99,7 @@ func SaveWebhook(url string) error {
 		if err != nil {
 			return err
 		}
-		if mkdirErr := os.MkdirAll(filepath.Dir(kp), config.PermKeyDir); mkdirErr != nil {
+		if mkdirErr := os.MkdirAll(filepath.Dir(kp), fs.PermKeyDir); mkdirErr != nil {
 			return mkdirErr
 		}
 		if saveErr := crypto.SaveKey(kp, key); saveErr != nil {

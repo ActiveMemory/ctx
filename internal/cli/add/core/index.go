@@ -10,7 +10,7 @@ package core
 // that delegate to the internal/index package.
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
 
@@ -72,7 +72,7 @@ func GenerateIndexTable(entries []IndexEntry, columnHeader string) string {
 // Returns:
 //   - string: Markdown table or empty string if no entries
 func GenerateIndex(entries []DecisionEntry) string {
-	return index.GenerateTable(entries, config.ColumnDecision)
+	return index.GenerateTable(entries, assets.ColumnDecision)
 }
 
 // UpdateIndex regenerates the decision index in DECISIONS.md content.

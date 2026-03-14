@@ -9,7 +9,7 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // CheckRequired returns the names of any fields whose values are empty.
@@ -41,8 +41,8 @@ func CheckRequired(fields [][2]string) []string {
 // Returns:
 //   - string: Normalized section heading (e.g., "## Phase 1")
 func NormalizeTargetSection(section string) string {
-	if !strings.HasPrefix(section, config.HeadingLevelTwoStart) {
-		return config.HeadingLevelTwoStart + section
+	if !strings.HasPrefix(section, token.HeadingLevelTwoStart) {
+		return token.HeadingLevelTwoStart + section
 	}
 	return section
 }

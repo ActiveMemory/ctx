@@ -11,13 +11,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/journal/state"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -27,7 +28,7 @@ import (
 
 // LockedFrontmatterLine is the YAML line inserted into frontmatter when
 // a journal entry is locked.
-var LockedFrontmatterLine = config.FrontmatterLocked + config.Colon + " " +
+var LockedFrontmatterLine = assets.FrontmatterLocked + token.Colon + " " +
 	cli.AnnotationTrue + "  # managed by ctx"
 
 // MatchJournalFiles returns journal .md filenames matching the given
@@ -120,7 +121,7 @@ func MultipartBase(filename string) string {
 }
 
 // lockedPrefix is the frontmatter key prefix for locked lines.
-var lockedPrefix = config.FrontmatterLocked + config.Colon
+var lockedPrefix = assets.FrontmatterLocked + token.Colon
 
 // UpdateLockFrontmatter inserts or removes the "locked: true" line in
 // a journal file's YAML frontmatter. The state file is the source of
@@ -136,15 +137,15 @@ func UpdateLockFrontmatter(path string, lock bool) {
 	}
 	content := string(data)
 
-	nl := config.NewlineLF
-	fmOpen := config.Separator + nl
+	nl := token.NewlineLF
+	fmOpen := token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
 		// No frontmatter — nothing to modify.
 		return
 	}
 
-	closeIdx := strings.Index(content[len(fmOpen):], nl+config.Separator+nl)
+	closeIdx := strings.Index(content[len(fmOpen):], nl+token.Separator+nl)
 	if closeIdx < 0 {
 		return
 	}
@@ -193,14 +194,14 @@ func FrontmatterHasLocked(path string) bool {
 	}
 	content := string(data)
 
-	nl := config.NewlineLF
-	fmOpen := config.Separator + nl
+	nl := token.NewlineLF
+	fmOpen := token.Separator + nl
 
 	if !strings.HasPrefix(content, fmOpen) {
 		return false
 	}
 
-	closeIdx := strings.Index(content[len(fmOpen):], nl+config.Separator+nl)
+	closeIdx := strings.Index(content[len(fmOpen):], nl+token.Separator+nl)
 	if closeIdx < 0 {
 		return false
 	}
@@ -266,9 +267,9 @@ func RunLockUnlock(
 		return nil
 	}
 
-	verb := config.FrontmatterLocked
+	verb := assets.FrontmatterLocked
 	if !lock {
-		verb = config.LabelUnlocked
+		verb = assets.Unlocked
 	}
 
 	count := 0
@@ -283,9 +284,9 @@ func RunLockUnlock(
 
 		// Update state.
 		if lock {
-			jstate.Mark(filename, config.FrontmatterLocked)
+			jstate.Mark(filename, assets.FrontmatterLocked)
 		} else {
-			jstate.Clear(filename, config.FrontmatterLocked)
+			jstate.Clear(filename, assets.FrontmatterLocked)
 		}
 
 		// Update frontmatter for human visibility.

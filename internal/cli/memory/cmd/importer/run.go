@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/ActiveMemory/ctx/internal/config/entry"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/memory/core"
@@ -50,7 +50,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 
 	entries := memory.ParseEntries(string(sourceData))
 	if len(entries) == 0 {
-		write.ImportNoEntries(cmd, file.FileMemorySource)
+		write.ImportNoEntries(cmd, memory2.MemorySource)
 		return nil
 	}
 
@@ -59,7 +59,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 		return ctxerr.LoadState(loadErr)
 	}
 
-	write.ImportScanHeader(cmd, file.FileMemorySource, len(entries))
+	write.ImportScanHeader(cmd, memory2.MemorySource, len(entries))
 
 	var result core.ImportResult
 
@@ -82,7 +82,7 @@ func Run(cmd *cobra.Command, dryRun bool) error {
 			continue
 		}
 
-		targetFile := file.FileType[classification.Target]
+		targetFile := entry.ToCtxFile[classification.Target]
 
 		if dryRun {
 			write.ImportEntryClassified(cmd, title, targetFile, classification.Keywords)

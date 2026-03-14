@@ -9,7 +9,9 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // InsertAfterHeader finds a header line and inserts content after it.
@@ -50,7 +52,7 @@ func InsertAfterHeader(content, entry, header string) []byte {
 		}
 
 		// Not an HTML comment: we found the insertion point.
-		if !strings.HasPrefix(content[insertPoint:], config.CommentOpen) {
+		if !strings.HasPrefix(content[insertPoint:], marker.CommentOpen) {
 			break
 		}
 
@@ -60,7 +62,7 @@ func InsertAfterHeader(content, entry, header string) []byte {
 			break
 		}
 
-		insertPoint += endIdx + len(config.CommentClose)
+		insertPoint += endIdx + len(marker.CommentClose)
 		insertPoint = SkipWhitespace(content, insertPoint)
 	}
 
@@ -79,9 +81,9 @@ func InsertAfterHeader(content, entry, header string) []byte {
 //   - []byte: Content with entry appended
 func AppendAtEnd(content, entry string) []byte {
 	if !EndsWithNewline(content) {
-		content += config.NewlineLF
+		content += token.NewlineLF
 	}
-	return []byte(content + config.NewlineLF + entry)
+	return []byte(content + token.NewlineLF + entry)
 }
 
 // InsertTask inserts a task entry into TASKS.md.
@@ -105,17 +107,17 @@ func InsertTask(entry, existingStr, section string) []byte {
 	}
 
 	// Default: insert before the first unchecked task.
-	pendingIdx := strings.Index(existingStr, config.PrefixTaskUndone)
+	pendingIdx := strings.Index(existingStr, marker.PrefixTaskUndone)
 	if pendingIdx != -1 {
 		return []byte(existingStr[:pendingIdx] + entry +
-			config.NewlineLF + existingStr[pendingIdx:])
+			token.NewlineLF + existingStr[pendingIdx:])
 	}
 
 	// No unchecked tasks: append at the end.
 	if !EndsWithNewline(existingStr) {
-		existingStr += config.NewlineLF
+		existingStr += token.NewlineLF
 	}
-	return []byte(existingStr + config.NewlineLF + entry)
+	return []byte(existingStr + token.NewlineLF + entry)
 }
 
 // InsertTaskAfterSection inserts a task after a named section header.
@@ -137,20 +139,20 @@ func InsertTaskAfterSection(entry, content, section string) []byte {
 	found, idx := Contains(content, header)
 	if !found {
 		if !EndsWithNewline(content) {
-			content += config.NewlineLF
+			content += token.NewlineLF
 		}
-		return []byte(content + config.NewlineLF + entry)
+		return []byte(content + token.NewlineLF + entry)
 	}
 
 	hasNewLine, lineEnd := ContainsNewLine(content[idx:])
 	if hasNewLine {
 		insertPoint := idx + lineEnd
 		insertPoint = SkipNewline(content, insertPoint)
-		return []byte(content[:insertPoint] + config.NewlineLF +
+		return []byte(content[:insertPoint] + token.NewlineLF +
 			entry + content[insertPoint:])
 	}
 
-	return []byte(content + config.NewlineLF + entry)
+	return []byte(content + token.NewlineLF + entry)
 }
 
 // IsInsideHTMLComment reports whether the position idx in content falls
@@ -164,19 +166,19 @@ func InsertTaskAfterSection(entry, content, section string) []byte {
 //   - bool: True if idx is between a <!-- and its closing -->
 func IsInsideHTMLComment(content string, idx int) bool {
 	// Find the last <!-- before idx
-	openIdx := strings.LastIndex(content[:idx], config.CommentOpen)
+	openIdx := strings.LastIndex(content[:idx], marker.CommentOpen)
 	if openIdx == -1 {
 		return false
 	}
 	// Check whether a --> closes that block before idx
-	closeIdx := strings.Index(content[openIdx:], config.CommentClose)
+	closeIdx := strings.Index(content[openIdx:], marker.CommentClose)
 	if closeIdx == -1 {
 		// Unclosed comment — treat as inside
 		return true
 	}
 	// The comment closes at openIdx+closeIdx; if that position is >= idx,
 	// the position is still inside the comment.
-	return openIdx+closeIdx+len(config.CommentClose) > idx
+	return openIdx+closeIdx+len(marker.CommentClose) > idx
 }
 
 // InsertDecision inserts a decision entry before existing entries.
@@ -209,5 +211,5 @@ func InsertDecision(content, entry, header string) []byte {
 // Returns:
 //   - []byte: Modified content with entry inserted
 func InsertLearning(content, entry string) []byte {
-	return insertBeforeFirstEntry(content, entry, config.HeadingLearnings)
+	return insertBeforeFirstEntry(content, entry, assets.HeadingLearnings)
 }

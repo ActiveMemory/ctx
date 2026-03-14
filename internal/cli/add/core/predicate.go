@@ -18,27 +18,27 @@ import (
 // Returns:
 //   - bool: True if fileType is a task type
 func FileTypeIsTask(fileType string) bool {
-	return fileType == entry.Task
+	return entry.FromUserInput(fileType) == entry.Task
 }
 
 // FileTypeIsDecision reports whether fileType represents a decision entry.
 //
 // Parameters:
-//   - fileType: The type string to check
+//   - fileType: The type string to check (e.g., "decision", "decisions")
 //
 // Returns:
 //   - bool: True if fileType is a decision type
 func FileTypeIsDecision(fileType string) bool {
-	return fileType == entry.Decision
+	return entry.FromUserInput(fileType) == entry.Decision
 }
 
 // FileTypeIsLearning reports whether fileType represents a learning entry.
 //
 // Parameters:
-//   - fileType: The type string to check
+//   - fileType: The type string to check (e.g., "learning", "learnings")
 //
 // Returns:
 //   - bool: True if fileType is a learning type
 func FileTypeIsLearning(fileType string) bool {
-	return fileType == entry.Learning
+	return entry.FromUserInput(fileType) == entry.Learning
 }

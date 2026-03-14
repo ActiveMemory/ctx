@@ -949,6 +949,7 @@ var TplTimeDaysAgo = assets.TextDesc(assets.TextDescKeyWriteTimeDaysAgo)
 
 // TplTimeOlderFormat is the Go time layout for dates older than a week.
 // Exported because callers must format the fallback date before calling FormatTimeAgo.
+//
 // Deprecated: Use config.OlderFormat instead.
 const TplTimeOlderFormat = time.OlderFormat
 

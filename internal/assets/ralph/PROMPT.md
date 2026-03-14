@@ -9,11 +9,11 @@ You are working on this project autonomously. Follow these steps each iteration.
 
 Read these files in order:
 
-1. `.context/CONSTITUTION.md` — NEVER violate these rules
-2. `.context/TASKS.md` — Find work to do
-3. `.context/CONVENTIONS.md` — Follow these patterns
-4. `.context/DECISIONS.md` — Understand past choices
-5. `.context/LEARNINGS.md` — Avoid known pitfalls
+1. `.context/CONSTITUTION.md`: NEVER violate these rules
+2. `.context/TASKS.md`: Find work to do
+3. `.context/CONVENTIONS.md`: Follow these patterns
+4. `.context/DECISIONS.md`: Understand past choices
+5. `.context/LEARNINGS.md`: Avoid known pitfalls
 
 ## 2. Pick One Task
 
@@ -33,7 +33,7 @@ From `.context/TASKS.md`, select ONE task that is:
 
 After completing work:
 
-- Mark task complete: `ctx complete "<task>"`
+- Mark task complete: `ctx tasks complete "<task>"`
 - Add learnings: `ctx add learning "..."`
 - Add decisions: `ctx add decision "..."`
 
@@ -45,18 +45,18 @@ Create a focused commit with a clear message. Include `.context/` changes.
 
 End your response with exactly ONE of:
 
-| Signal | When to Use |
-|--------|-------------|
-| `SYSTEM_CONVERGED` | All tasks in TASKS.md are complete |
-| `SYSTEM_BLOCKED` | Cannot proceed without human input (explain why) |
-| *(no signal)* | More work remains, continue to next iteration |
+| Signal             | When to Use                                      |
+|--------------------|--------------------------------------------------|
+| `SYSTEM_CONVERGED` | All tasks in TASKS.md are complete               |
+| `SYSTEM_BLOCKED`   | Cannot proceed without human input (explain why) |
+| *(no signal)*      | More work remains, continue to next iteration    |
 
 ## Rules
 
-- **ONE task per iteration** — stay focused
-- **NEVER skip tests** — verify your work
-- **NEVER violate CONSTITUTION.md** — hard rules are inviolable
-- **Commit after each task** — preserve progress
-- **Don't ask questions** — if blocked, emit SYSTEM_BLOCKED with explanation
+- **ONE task per iteration**: stay focused
+- **NEVER skip tests**: verify your work
+- **NEVER violate CONSTITUTION.md**: hard rules are inviolable
+- **Commit after each task**: preserve progress
+- **Don't ask questions**: if blocked, emit SYSTEM_BLOCKED with explanation
 
 <!-- ctx:prompt:end -->

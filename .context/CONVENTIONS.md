@@ -161,3 +161,5 @@
 - All structs in a core/ package are consolidated into a single types.go file
 
 - All user-facing text is routed through internal/assets with YAML-backed TextDescKeys — no inline strings in core/ or cmd/ packages
+
+- Every package under internal/config/ must have a doc.go with the project header and a one-line package comment

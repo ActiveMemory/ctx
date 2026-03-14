@@ -4,6 +4,8 @@
 # All settings are optional. Missing values use defaults.
 # Priority: CLI flags > environment variables > .ctxrc > defaults
 
+profile: dev
+
 # context_dir: .context
 # token_budget: 8000
 # auto_archive: true

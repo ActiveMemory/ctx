@@ -455,11 +455,11 @@ similarity and merges them with user approval. Originals archived, not deleted.
 Spec: `specs/context-consolidation.md`
 Ref: https://github.com/ActiveMemory/ctx/issues/19 (Phase 3)
 
-### Phase 10: Architecture Mapping Skill (`/ctx-map`)
+### Phase 10: Architecture Mapping Skill (`/ctx-architecture`)
 
 **Context**: Skill that incrementally builds and maintains ARCHITECTURE.md
 and DETAILED_DESIGN.md. Coverage tracked in map-tracking.json.
-Spec: `specs/ctx-map.md`
+Spec: `specs/ctx-architecture.md`
 
 ### Docs: Knowledge Health
 
@@ -478,6 +478,20 @@ output package. All CLI commands should route printed output through this packag
 
 - [x] WC.1: Add godoc docstrings to all functions in `internal/write/`, add `doc.go` #added:2026-03-06 #done:2026-03-06
 - [x] Move add command example strings from core/example.go to assets — user-facing text for i18n #added:2026-03-06-191651
+
+- [ ] SEC.1: Security-sensitive file change hook — PostToolUse on Edit/Write matching security-critical paths (.claude/settings.local.json, .claude/settings.json, CLAUDE.md, .claude/CLAUDE.md, .context/CONSTITUTION.md). Three actions: (1) nudge user in-session, (2) relay to webhook for out-of-band alerting (autonomous loops), (3) append to dedicated security log (.context/state/security-events.jsonl) for forensics. Separate from general event log. Spec needed. #priority:high #added:2026-03-13
+
+- [ ] O.5: Session timeline view — add --sessions flag to ctx system events. Per-session breakdown of eval/fired counts with hook list. See ideas/spec-hook-observability.md Phase 5 #added:2026-03-12-145401
+
+- [ ] O.4: Doctor hook health check — surface hook activity in ctx doctor output (active/evaluated-never-fired/never-evaluated). See ideas/spec-hook-observability.md Phase 4 #added:2026-03-12-145401
+
+- [ ] O.3: Skip reason logging — add eventlog.Skip() with standard reason constants (paused, throttled, condition-not-met). Instrument 19 hook early-exit paths. See ideas/spec-hook-observability.md Phase 3 #added:2026-03-12-145401
+
+- [ ] O.2: Event summary view — add --summary flag to ctx system events. Aggregates eval/fired counts per hook, shows last-eval/last-fired timestamps, lists never-evaluated hooks. See ideas/spec-hook-observability.md Phase 2 #added:2026-03-12-145401
+
+- [ ] O.1: Hook eval logging — wrap hook cobra commands to log 'eval' events on every invocation. Refactor Run() signatures from os.Stdin to io.Reader (peek+replay pattern). Adds eventlog.Eval(), EventTypeEval constant. See ideas/spec-hook-observability.md Phase 1 #added:2026-03-12-145401
+
+- [ ] Companion intelligence recommendation: implement spec from ideas/spec-companion-intelligence.md — ctx doctor companion detection, ctx init recommendation tip, ctx agent awareness in packets #added:2026-03-12-133008
 
 - [ ] Add configurable assets layer: allow users to plug their own YAML files for localization (language selection, custom text overrides). Currently all user-facing text is hardcoded in commands.yaml; need a mechanism to load user-provided YAML that overlays or replaces built-in text. This enables i18n without forking. #priority:low #added:2026-03-07-233756
 

@@ -29,6 +29,7 @@ package rc
 //   - TaskNudgeInterval: Edit/Write calls between task completion nudges (default 5, 0 = disabled)
 //   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)
 type CtxRC struct {
+	Profile             string        `yaml:"profile"`
 	ContextDir          string        `yaml:"context_dir"`
 	TokenBudget         int           `yaml:"token_budget"`
 	PriorityOrder       []string      `yaml:"priority_order"`

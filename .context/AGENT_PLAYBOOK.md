@@ -115,7 +115,7 @@ Users rarely invoke skills explicitly. Recognize natural language:
 | "How's our context looking?"                    | `/ctx-status`                                          |
 | "What should we work on?"                       | `/ctx-next`                                            |
 | "Commit this" / "Ship it"                       | `/ctx-commit`                                          |
-| "The rate limiter is done" / "We finished that" | `ctx complete` (match to TASKS.md)                     |
+| "The rate limiter is done" / "We finished that" | `ctx tasks complete` (match to TASKS.md)                     |
 | "What did we learn?"                            | `/ctx-reflect`                                         |
 | "Save that as a decision"                       | `/ctx-add-decision`                                    |
 | "That's worth remembering" / "Any gotchas?"     | `/ctx-add-learning`                                    |

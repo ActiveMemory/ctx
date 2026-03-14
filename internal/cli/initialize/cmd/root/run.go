@@ -12,13 +12,16 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/pad"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/initialize/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/crypto"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
@@ -64,7 +67,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 				return ctxerr.ReadInput(err)
 			}
 			response = strings.TrimSpace(strings.ToLower(response))
-			if response != file.ConfirmShort && response != file.ConfirmLong {
+			if response != cli.ConfirmShort && response != cli.ConfirmLong {
 				write.InfoInitAborted(cmd)
 				return nil
 			}
@@ -79,7 +82,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	// Get the list of templates to create
 	var templatesToCreate []string
 	if minimal {
-		templatesToCreate = file.FilesRequired
+		templatesToCreate = ctx.FilesRequired
 	} else {
 		var listErr error
 		templatesToCreate, listErr = assets.List()
@@ -125,7 +128,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 	}
 
 	// Migrate legacy key files and promote to global path.
-	config.MigrateKeyFile(contextDir)
+	crypto.MigrateKeyFile(contextDir)
 
 	// Set up scratchpad
 	if err := initScratchpad(cmd, contextDir); err != nil {
@@ -209,7 +212,7 @@ func Run(cmd *cobra.Command, force, minimal, merge, ralph, noPluginEnable bool) 
 func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	if !rc.ScratchpadEncrypt() {
 		// Plaintext mode: create empty scratchpad.md if not present
-		mdPath := filepath.Join(contextDir, file.FileScratchpadMd)
+		mdPath := filepath.Join(contextDir, pad.Md)
 		if _, err := os.Stat(mdPath); err != nil {
 			if err := os.WriteFile(mdPath, nil, fs.PermFile); err != nil {
 				return ctxerr.Mkdir(mdPath, err)
@@ -223,7 +226,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 
 	// Encrypted mode
 	kPath := rc.KeyPath()
-	encPath := filepath.Join(contextDir, file.FileScratchpadEnc)
+	encPath := filepath.Join(contextDir, pad.Enc)
 
 	// Check if key already exists (idempotent)
 	if _, err := os.Stat(kPath); err == nil {
@@ -238,7 +241,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 	}
 
 	// Ensure key directory exists.
-	if mkdirErr := os.MkdirAll(filepath.Dir(kPath), config.PermKeyDir); mkdirErr != nil {
+	if mkdirErr := os.MkdirAll(filepath.Dir(kPath), fs.PermKeyDir); mkdirErr != nil {
 		return ctxerr.MkdirKeyDir(mkdirErr)
 	}
 
@@ -261,7 +264,7 @@ func initScratchpad(cmd *cobra.Command, contextDir string) error {
 // directory with only logs/ or other non-essential content is considered
 // uninitialized.
 func hasEssentialFiles(contextDir string) bool {
-	for _, f := range file.FilesRequired {
+	for _, f := range ctx.FilesRequired {
 		if _, err := os.Stat(filepath.Join(contextDir, f)); err == nil {
 			return true
 		}
@@ -281,7 +284,7 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 
 	// Build set of existing trimmed lines.
 	existing := make(map[string]bool)
-	for _, line := range strings.Split(string(content), config.NewlineLF) {
+	for _, line := range strings.Split(string(content), token.NewlineLF) {
 		existing[strings.TrimSpace(line)] = true
 	}
 
@@ -299,12 +302,12 @@ func ensureGitignoreEntries(cmd *cobra.Command) error {
 
 	// Build block to append.
 	var sb strings.Builder
-	if len(content) > 0 && !strings.HasSuffix(string(content), config.NewlineLF) {
-		sb.WriteString(config.NewlineLF)
+	if len(content) > 0 && !strings.HasSuffix(string(content), token.NewlineLF) {
+		sb.WriteString(token.NewlineLF)
 	}
-	sb.WriteString(config.NewlineLF + gitignoreHeader + config.NewlineLF)
+	sb.WriteString(token.NewlineLF + gitignoreHeader + token.NewlineLF)
 	for _, entry := range missing {
-		sb.WriteString(entry + config.NewlineLF)
+		sb.WriteString(entry + token.NewlineLF)
 	}
 
 	if err := os.WriteFile(gitignorePath, append(content, []byte(sb.String())...), fs.PermFile); err != nil {

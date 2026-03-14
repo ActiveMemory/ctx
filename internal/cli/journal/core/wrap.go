@@ -9,7 +9,8 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // SoftWrapContent wraps long lines in source journal files to ~80 characters.
@@ -23,35 +24,35 @@ import (
 // Returns:
 //   - string: Content with long lines soft-wrapped at word boundaries
 func SoftWrapContent(content string) string {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var out []string
 	inFrontmatter := false
 
 	for i, line := range lines {
 		// Skip frontmatter
-		if i == 0 && strings.TrimSpace(line) == config.Separator {
+		if i == 0 && strings.TrimSpace(line) == token.Separator {
 			inFrontmatter = true
 			out = append(out, line)
 			continue
 		}
 		if inFrontmatter {
 			out = append(out, line)
-			if strings.TrimSpace(line) == config.Separator {
+			if strings.TrimSpace(line) == token.Separator {
 				inFrontmatter = false
 			}
 			continue
 		}
 
 		// Wrap long lines (skip tables)
-		if len(line) > config.JournalLineWrapWidth &&
+		if len(line) > journal.LineWrapWidth &&
 			!strings.HasPrefix(strings.TrimSpace(line), "|") {
-			out = append(out, SoftWrap(line, config.JournalLineWrapWidth)...)
+			out = append(out, SoftWrap(line, journal.LineWrapWidth)...)
 		} else {
 			out = append(out, line)
 		}
 	}
 
-	return strings.Join(out, config.NewlineLF)
+	return strings.Join(out, token.NewlineLF)
 }
 
 // SoftWrap breaks a long line at word boundaries, preserving leading indent.
@@ -63,7 +64,7 @@ func SoftWrapContent(content string) string {
 // Returns:
 //   - []string: Wrapped lines preserving the original indentation
 func SoftWrap(line string, width int) []string {
-	trimmed := strings.TrimLeft(line, config.Whitespace)
+	trimmed := strings.TrimLeft(line, token.Whitespace)
 	indent := line[:len(line)-len(trimmed)]
 
 	words := strings.Fields(trimmed)

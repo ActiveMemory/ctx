@@ -12,9 +12,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 	"github.com/spf13/cobra"
@@ -28,7 +29,7 @@ import (
 // Returns:
 //   - int: Position to insert at
 func FindInsertionPoint(content string) int {
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	pos := 0
 	for i, line := range lines {
 		trimmed := strings.TrimSpace(line)
@@ -73,33 +74,33 @@ func FindInsertionPoint(content string) int {
 // Returns:
 //   - error: Non-nil if markers are missing or file operations fail
 func UpdateCtxSection(cmd *cobra.Command, existing string, newTemplate []byte) error {
-	startIdx := strings.Index(existing, config.CtxMarkerStart)
+	startIdx := strings.Index(existing, marker.CtxMarkerStart)
 	if startIdx == -1 {
 		return ctxerr.MarkerNotFound("ctx")
 	}
-	endIdx := strings.Index(existing, config.CtxMarkerEnd)
+	endIdx := strings.Index(existing, marker.CtxMarkerEnd)
 	if endIdx == -1 {
 		endIdx = len(existing)
 	} else {
-		endIdx += len(config.CtxMarkerEnd)
+		endIdx += len(marker.CtxMarkerEnd)
 	}
 	templateStr := string(newTemplate)
-	templateStart := strings.Index(templateStr, config.CtxMarkerStart)
-	templateEnd := strings.Index(templateStr, config.CtxMarkerEnd)
+	templateStart := strings.Index(templateStr, marker.CtxMarkerStart)
+	templateEnd := strings.Index(templateStr, marker.CtxMarkerEnd)
 	if templateStart == -1 || templateEnd == -1 {
 		return ctxerr.TemplateMissingMarkers("ctx")
 	}
-	ctxContent := templateStr[templateStart : templateEnd+len(config.CtxMarkerEnd)]
+	ctxContent := templateStr[templateStart : templateEnd+len(marker.CtxMarkerEnd)]
 	newContent := existing[:startIdx] + ctxContent + existing[endIdx:]
 	timestamp := time.Now().Unix()
-	backupName := fmt.Sprintf("%s.%d.bak", file.FileClaudeMd, timestamp)
+	backupName := fmt.Sprintf("%s.%d.bak", claude.Md, timestamp)
 	if err := os.WriteFile(backupName, []byte(existing), fs.PermFile); err != nil {
 		return ctxerr.CreateBackupGeneric(err)
 	}
 	write.InitBackup(cmd, backupName)
-	if err := os.WriteFile(file.FileClaudeMd, []byte(newContent), fs.PermFile); err != nil {
-		return ctxerr.FileUpdate(file.FileClaudeMd, err)
+	if err := os.WriteFile(claude.Md, []byte(newContent), fs.PermFile); err != nil {
+		return ctxerr.FileUpdate(claude.Md, err)
 	}
-	write.InitUpdatedCtxSection(cmd, file.FileClaudeMd)
+	write.InitUpdatedCtxSection(cmd, claude.Md)
 	return nil
 }

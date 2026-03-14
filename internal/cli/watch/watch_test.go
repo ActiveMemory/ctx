@@ -14,7 +14,7 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -83,7 +83,7 @@ More output
 	}
 
 	// Verify task was written
-	tasksPath := filepath.Join(rc.ContextDir(), file.FileTask)
+	tasksPath := filepath.Join(rc.ContextDir(), ctx.Task)
 	content, err := os.ReadFile(filepath.Clean(tasksPath))
 	if err != nil {
 		t.Fatal(err)

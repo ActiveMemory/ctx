@@ -36,12 +36,12 @@ If no files are found, tell the user and stop.
 
 The user may pass arguments to narrow the selection:
 
-| Argument | Behavior |
-|---|---|
-| `--today` | Only plans modified today |
-| `--since YYYY-MM-DD` | Only plans modified on or after the given date |
-| `--all` | Import all plans without prompting |
-| *(none)* | Interactive — present the list and ask the user to pick |
+| Argument             | Behavior                                               |
+|----------------------|--------------------------------------------------------|
+| `--today`            | Only plans modified today                              |
+| `--since YYYY-MM-DD` | Only plans modified on or after the given date         |
+| `--all`              | Import all plans without prompting                     |
+| *(none)*             | Interactive: present the list and ask the user to pick |
 
 **Filtering with `--today`:**
 ```bash
@@ -77,10 +77,10 @@ For each selected plan:
    - Collapse multiple hyphens
    - Trim leading/trailing hyphens
    - Example: `Add Authentication Middleware` → `add-authentication-middleware`
-3. **Check for conflicts** — if `specs/{slug}.md` already exists, ask
+3. **Check for conflicts**: if `specs/{slug}.md` already exists, ask
    the user whether to overwrite or pick a different name
 4. **Copy the file** to `specs/{slug}.md`
-5. **Optionally add a task** — ask the user if they want a task in
+5. **Optionally add a task**: ask the user if they want a task in
    TASKS.md referencing the imported spec (use `/ctx-add-task` if yes)
 
 ### 5. Report
@@ -95,10 +95,10 @@ Imported 2 plan(s):
 
 ## Important Notes
 
-- Plan filenames in `~/.claude/plans/` are typically UUIDs or hashes —
+- Plan filenames in `~/.claude/plans/` are typically UUIDs or hashes:
   always use the H1 heading for the spec filename, not the original name
 - If a plan has no H1 heading, use the original filename (minus extension)
   as the slug
-- Do not modify the original plan files — this is a copy, not a move
+- Do not modify the original plan files: this is a copy, not a move
 - The `specs/` directory must exist (it should already be present in
   the project root)

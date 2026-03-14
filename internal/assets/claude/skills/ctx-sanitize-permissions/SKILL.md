@@ -5,7 +5,7 @@ description: "Audit settings.local.json for dangerous permissions. Use periodica
 
 Audit `.claude/settings.local.json` permissions for entries that
 bypass safety hooks, grant overly broad access, or create injection
-vectors. This is a defense-in-depth measure — hooks block dangerous
+vectors. This is a defense-in-depth measure: hooks block dangerous
 commands at runtime, but pre-approved permissions skip the
 confirmation step that makes hooks visible.
 
@@ -47,53 +47,53 @@ Flag any permission matching these categories:
 
 These pre-approve commands that safety hooks are designed to
 intercept. The hook still runs, but the user never sees the
-confirmation dialog — so they cannot reject it.
+confirmation dialog: so they cannot reject it.
 
-| Pattern | Why Dangerous |
-|---------|---------------|
-| `Bash(git push:*)` | Bypasses push-blocking hook confirmation |
-| `Bash(git push)` | Same — exact match variant |
-| `Bash(git push --force:*)` | Force push with no confirmation |
+| Pattern                    | Why Dangerous                            |
+|----------------------------|------------------------------------------|
+| `Bash(git push:*)`         | Bypasses push-blocking hook confirmation |
+| `Bash(git push)`           | Same: exact match variant                |
+| `Bash(git push --force:*)` | Force push with no confirmation          |
 
 #### Category B: Destructive Commands (High)
 
-| Pattern | Why Dangerous |
-|---------|---------------|
-| `Bash(rm -rf:*)` | Recursive delete with no confirmation |
-| `Bash(git reset --hard:*)` | Discards uncommitted work |
-| `Bash(git checkout .:*)` | Discards all unstaged changes |
-| `Bash(git clean -f:*)` | Deletes untracked files |
-| `Bash(git branch -D:*)` | Force-deletes branches |
-| `Bash(sudo:*)` | Escalated privileges |
+| Pattern                    | Why Dangerous                         |
+|----------------------------|---------------------------------------|
+| `Bash(rm -rf:*)`           | Recursive delete with no confirmation |
+| `Bash(git reset --hard:*)` | Discards uncommitted work             |
+| `Bash(git checkout .:*)`   | Discards all unstaged changes         |
+| `Bash(git clean -f:*)`     | Deletes untracked files               |
+| `Bash(git branch -D:*)`    | Force-deletes branches                |
+| `Bash(sudo:*)`             | Escalated privileges                  |
 
 #### Category C: Config Injection Vectors (High)
 
-These allow the agent to modify files that control its own behavior
-— a self-modification vector that could be exploited via prompt
+These allow the agent to modify files that control its own behavior:
+a self-modification vector that could be exploited via prompt
 injection.
 
-| Pattern | Why Dangerous |
-|---------|---------------|
-| Any `Bash(...)` that could write to `.claude/settings.local.json` | Agent modifies its own permissions |
-| Any `Bash(...)` that could write to `CLAUDE.md` | Agent modifies its own instructions |
-| Any `Bash(...)` that could write to `.claude/hooks/*.sh` | Agent modifies safety hooks |
-| Any `Bash(...)` that could write to `.context/CONSTITUTION.md` | Agent modifies its own hard rules |
+| Pattern                                                           | Why Dangerous                       |
+|-------------------------------------------------------------------|-------------------------------------|
+| Any `Bash(...)` that could write to `.claude/settings.local.json` | Agent modifies its own permissions  |
+| Any `Bash(...)` that could write to `CLAUDE.md`                   | Agent modifies its own instructions |
+| Any `Bash(...)` that could write to `.claude/hooks/*.sh`          | Agent modifies safety hooks         |
+| Any `Bash(...)` that could write to `.context/CONSTITUTION.md`    | Agent modifies its own hard rules   |
 
 These are harder to detect by pattern alone. Look for overly broad
 permissions like `Bash(echo:*)`, `Bash(cat:*)`, `Bash(tee:*)`,
 `Bash(cp:*)` that could be composed into writes to sensitive paths.
-Flag them as **informational** — they have legitimate uses but are
+Flag them as **informational**: they have legitimate uses but are
 worth noting.
 
 #### Category D: Overly Broad (Medium)
 
-| Pattern | Why Dangerous |
-|---------|---------------|
-| `Bash(*:*)` or `Bash(*)` | Allows any command |
-| `Bash(curl:*)` | Arbitrary network requests |
-| `Bash(wget:*)` | Arbitrary downloads |
-| `Bash(pip install:*)` | Arbitrary package installation |
-| `Bash(npm install:*)` | Arbitrary package installation |
+| Pattern                  | Why Dangerous                  |
+|--------------------------|--------------------------------|
+| `Bash(*:*)` or `Bash(*)` | Allows any command             |
+| `Bash(curl:*)`           | Arbitrary network requests     |
+| `Bash(wget:*)`           | Arbitrary downloads            |
+| `Bash(pip install:*)`    | Arbitrary package installation |
+| `Bash(npm install:*)`    | Arbitrary package installation |
 
 ### Step 3: Check for Duplicates
 
@@ -119,7 +119,7 @@ Sort both `permissions.allow` and `permissions.deny` arrays in
 This produces a stable, predictable order that makes it easy to spot
 duplicates, find specific entries, and review diffs.
 
-Apply the sort directly to the file — this is a non-destructive
+Apply the sort directly to the file: this is a non-destructive
 reformat. Show the user a summary of what moved (e.g., "Sorted 45
 allow entries and 8 deny entries into 4 tool groups").
 
@@ -131,16 +131,16 @@ Format findings by severity:
 ## Permission Audit Results
 
 ### Critical (hook bypass)
-- `Bash(git push:*)` — bypasses block-git-push.sh
+- `Bash(git push:*)`: bypasses block-git-push.sh
 
 ### High (destructive / injection vector)
-- `Bash(rm -rf:*)` — recursive delete, no confirmation
+- `Bash(rm -rf:*)`: recursive delete, no confirmation
 
 ### Medium (overly broad)
-- `Bash(curl:*)` — arbitrary network access
+- `Bash(curl:*)`: arbitrary network access
 
 ### Informational
-- `Bash(cat:*)` — could compose into config file writes
+- `Bash(cat:*)`: could compose into config file writes
 - 3 duplicate entries found
 
 ### Clean
@@ -152,7 +152,7 @@ Format findings by severity:
 For each finding, offer a specific action:
 
 - **Critical/High**: "Remove this permission? (y/n)"
-- **Medium**: "This is broad — do you want to keep it?"
+- **Medium**: "This is broad: do you want to keep it?"
 - **Duplicates**: "Remove N duplicate entries?"
 - **Informational**: Note only, no action needed
 
@@ -162,12 +162,12 @@ directly. Show the diff before and after.
 ## Important Notes
 
 - Show the user exactly what will be removed and get explicit
-  confirmation before editing — preventing accidental lockout
+  confirmation before editing: preventing accidental lockout
   preserves user agency
 - Permissions the user just granted in this session are more
-  likely intentional — note them but do not alarm
+  likely intentional: note them but do not alarm
 - Some broad permissions are legitimate for development
-  workflows (e.g., `Bash(go test:*)`) — use judgment
+  workflows (e.g., `Bash(go test:*)`): use judgment
 - The goal is awareness, not lockdown. Flag risks, let the
   user decide
 

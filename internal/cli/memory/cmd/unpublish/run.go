@@ -10,8 +10,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	memory2 "github.com/ActiveMemory/ctx/internal/config/memory"
 	"github.com/spf13/cobra"
 
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
@@ -48,7 +48,7 @@ func Run(cmd *cobra.Command) error {
 
 	cleaned, found := memory.RemovePublished(string(data))
 	if !found {
-		write.UnpublishNotFound(cmd, file.FileMemorySource)
+		write.UnpublishNotFound(cmd, memory2.MemorySource)
 		return nil
 	}
 
@@ -58,6 +58,6 @@ func Run(cmd *cobra.Command) error {
 		return ctxerr.WriteMemory(writeErr)
 	}
 
-	write.UnpublishDone(cmd, file.FileMemorySource)
+	write.UnpublishDone(cmd, memory2.MemorySource)
 	return nil
 }

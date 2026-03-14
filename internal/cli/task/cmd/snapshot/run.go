@@ -12,12 +12,12 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/task/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/validation"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -56,19 +56,19 @@ func Run(cmd *cobra.Command, args []string) error {
 
 	// Generate snapshot filename
 	now := time.Now()
-	name := file.DefaultSnapshotName
+	name := archive.DefaultSnapshotName
 	if len(args) > 0 {
 		name = validation.SanitizeFilename(args[0])
 	}
 	snapshotFilename := fmt.Sprintf(
-		file.SnapshotFilenameFormat, name, now.Format(file.SnapshotTimeFormat),
+		archive.SnapshotFilenameFormat, name, now.Format(archive.SnapshotTimeFormat),
 	)
 	snapshotPath := filepath.Join(archivePath, snapshotFilename)
 
 	// Build snapshot content
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	snapshotContent := write.SnapshotContent(
-		name, now.Format(time.RFC3339), config.Separator, nl, string(content),
+		name, now.Format(time.RFC3339), token.Separator, nl, string(content),
 	)
 
 	// Write snapshot

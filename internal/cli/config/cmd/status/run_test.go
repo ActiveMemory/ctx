@@ -16,11 +16,12 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/config/core"
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 const (
-	devContent  = "notify:\n  events:\n    - loop\n"
-	baseContent = "# .ctxrc\n# context_dir: .context\n"
+	devContent  = "profile: dev\nnotify:\n  events:\n    - loop\n"
+	baseContent = "profile: base\n# context_dir: .context\n"
 )
 
 func newTestCmd() *cobra.Command {
@@ -34,6 +35,17 @@ func cmdOutput(cmd *cobra.Command) string {
 	return cmd.OutOrStdout().(*bytes.Buffer).String()
 }
 
+func chdirWithCleanup(t *testing.T, dir string) {
+	t.Helper()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(dir)
+	rc.Reset()
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		rc.Reset()
+	})
+}
+
 func TestStatus_Dev(t *testing.T) {
 	root := t.TempDir()
 	if writeErr := os.WriteFile(
@@ -41,6 +53,7 @@ func TestStatus_Dev(t *testing.T) {
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
+	chdirWithCleanup(t, root)
 
 	cmd := newTestCmd()
 	if statusErr := Run(cmd, root); statusErr != nil {
@@ -60,6 +73,7 @@ func TestStatus_Base(t *testing.T) {
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
+	chdirWithCleanup(t, root)
 
 	cmd := newTestCmd()
 	if statusErr := Run(cmd, root); statusErr != nil {
@@ -74,6 +88,7 @@ func TestStatus_Base(t *testing.T) {
 
 func TestStatus_Missing(t *testing.T) {
 	root := t.TempDir()
+	chdirWithCleanup(t, root)
 
 	cmd := newTestCmd()
 	if statusErr := Run(cmd, root); statusErr != nil {

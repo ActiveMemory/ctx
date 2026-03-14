@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -52,14 +52,14 @@ func CheckVersionDrift(cmd *cobra.Command, sessionID string) {
 	}
 	fallback := "VERSION (" + fileVer + "), plugin.json (" + pluginVer +
 		"), marketplace.json (" + marketVer + ") are out of sync. Update all three before releasing."
-	msg := LoadMessage(file.HookVersionDrift, file.VariantNudge, vars, fallback)
+	msg := LoadMessage(hook.VersionDrift, hook.VariantNudge, vars, fallback)
 	if msg == "" {
 		return
 	}
-	PrintHookContext(cmd, file.HookEventPostToolUse, msg)
+	PrintHookContext(cmd, hook.EventPostToolUse, msg)
 
-	ref := notify.NewTemplateRef(file.HookVersionDrift, file.VariantNudge, vars)
-	Relay(file.HookVersionDrift+": "+assets.TextDesc(assets.TextDescKeyVersionDriftRelayMessage), sessionID, ref)
+	ref := notify.NewTemplateRef(hook.VersionDrift, hook.VariantNudge, vars)
+	Relay(hook.VersionDrift+": "+assets.TextDesc(assets.TextDescKeyVersionDriftRelayMessage), sessionID, ref)
 }
 
 // ReadVersionFile reads and trims the VERSION file from the project root.

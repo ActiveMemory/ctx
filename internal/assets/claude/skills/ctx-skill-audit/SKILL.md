@@ -19,7 +19,7 @@ improvements.
 ## Before Auditing
 
 1. Read `references/anthropic-best-practices.md` from this
-   skill's directory — it contains the condensed audit criteria.
+   skill's directory: it contains the condensed audit criteria.
 2. Identify which skill(s) to audit. If the user names a
    specific skill, audit that one. If they say "audit all
    skills," plan a batch pass.
@@ -50,7 +50,7 @@ comments.
 </fail>
 <pass>
 Edit only the files specified in the task. Preserve existing
-tests and comments — add new ones only when the user requests
+tests and comments: add new ones only when the user requests
 them.
 </pass>
 </example>
@@ -71,7 +71,7 @@ importance.
 You MUST ALWAYS run tests before reporting completion.
 </fail>
 <pass>
-Run tests before reporting completion — untested changes
+Run tests before reporting completion: untested changes
 create silent regressions that compound across sessions.
 </pass>
 </example>
@@ -139,7 +139,7 @@ exist.
 ### 8. Scope Discipline
 
 Check whether the skill encourages work beyond what's
-requested — "while you're in there" improvements, unsolicited
+requested: "while you're in there" improvements, unsolicited
 refactoring, or scope creep. Skills should state the minimum
 viable outcome.
 
@@ -168,16 +168,16 @@ or too narrow (misses common phrasings).
 1. Read the skill's SKILL.md.
 2. Apply all 9 audit dimensions.
 3. Report findings using the output format below.
-4. Suggest specific rewrites for any failures — show the
+4. Suggest specific rewrites for any failures: show the
    current text and the proposed replacement.
 
 ### Batch Audit
 
 1. List all skills to audit (bundled, live, or both).
-2. Audit each skill directly in the main conversation —
+2. Audit each skill directly in the main conversation:
    spawning one subagent per skill adds latency and context
    overhead that outweighs parallelism for typical batch sizes.
-3. Report concisely — only dimensions that fail or have notable
+3. Report concisely: only dimensions that fail or have notable
    findings.
 4. Summarize with a scorecard at the end.
 
@@ -204,7 +204,7 @@ For each audited skill, report:
 
 **Suggested fixes:**
 - [Dimension 2] Line "You MUST ALWAYS run tests" →
-  "Run tests before completion — untested changes create
+  "Run tests before completion: untested changes create
   silent regressions."
 - [Dimension 4] Add example showing expected output format
   after the "Report results" section.
@@ -219,7 +219,7 @@ For batch audits, end with a summary:
 |--------------------|-------|--------------------------|
 | ctx-commit         | 8/9   | Missing example          |
 | ctx-drift          | 7/9   | 2 bare mandates          |
-| ctx-verify         | 9/9   | —                        |
+| ctx-verify         | 9/9   | -                        |
 ```
 
 ## Quality Checklist

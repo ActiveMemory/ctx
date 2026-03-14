@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
 )
 
 func TestParseHeaders(t *testing.T) {
@@ -183,7 +183,7 @@ func TestUpdateDecisions(t *testing.T) {
 		{
 			name:    "empty file with header",
 			content: "# Decisions\n",
-			wantNot: []string{config.IndexStart, config.IndexEnd},
+			wantNot: []string{marker.IndexStart, marker.IndexEnd},
 		},
 		{
 			name: "file with one decision",
@@ -194,8 +194,8 @@ func TestUpdateDecisions(t *testing.T) {
 **Status**: Accepted
 `,
 			wantHas: []string{
-				config.IndexStart,
-				config.IndexEnd,
+				marker.IndexStart,
+				marker.IndexEnd,
 				"| Date | Decision |",
 				"| 2026-01-28 | Test decision |",
 				"## [2026-01-28-051426] Test decision",
@@ -216,8 +216,8 @@ func TestUpdateDecisions(t *testing.T) {
 **Status**: Accepted
 `,
 			wantHas: []string{
-				config.IndexStart,
-				config.IndexEnd,
+				marker.IndexStart,
+				marker.IndexEnd,
 				"| 2026-01-28 | New decision |",
 			},
 			wantNot: []string{
@@ -237,8 +237,8 @@ func TestUpdateDecisions(t *testing.T) {
 Some other content.
 `,
 			wantNot: []string{
-				config.IndexStart,
-				config.IndexEnd,
+				marker.IndexStart,
+				marker.IndexEnd,
 				"| Date | Decision |",
 			},
 			wantHas: []string{
@@ -297,10 +297,10 @@ func TestUpdateDecisions_PreservesContent(t *testing.T) {
 
 	got := UpdateDecisions(content)
 
-	if !strings.Contains(got, config.IndexStart) {
+	if !strings.Contains(got, marker.IndexStart) {
 		t.Error("Missing INDEX:START marker")
 	}
-	if !strings.Contains(got, config.IndexEnd) {
+	if !strings.Contains(got, marker.IndexEnd) {
 		t.Error("Missing INDEX:END marker")
 	}
 
@@ -345,7 +345,7 @@ func TestUpdateLearnings(t *testing.T) {
 		{
 			name:    "empty file with header",
 			content: "# Learnings\n",
-			wantNot: []string{config.IndexStart, config.IndexEnd},
+			wantNot: []string{marker.IndexStart, marker.IndexEnd},
 		},
 		{
 			name: "file with one learning",
@@ -360,8 +360,8 @@ func TestUpdateLearnings(t *testing.T) {
 **Application**: Always use all three flags
 `,
 			wantHas: []string{
-				config.IndexStart,
-				config.IndexEnd,
+				marker.IndexStart,
+				marker.IndexEnd,
 				"| Date | Learning |",
 				"| 2026-01-28 | Required flags now enforced |",
 			},

@@ -19,13 +19,13 @@ import (
 
 func setupStateDir(t *testing.T) string {
 	t.Helper()
-	dir := t.TempDir()
-	t.Setenv("CTX_DIR", dir)
+	tmpDir := t.TempDir()
+	t.Setenv("CTX_DIR", tmpDir)
 	rc.Reset()
-	if mkErr := os.MkdirAll(filepath.Join(dir, dir.DirState), 0o750); mkErr != nil {
+	if mkErr := os.MkdirAll(filepath.Join(tmpDir, dir.State), 0o750); mkErr != nil {
 		t.Fatal(mkErr)
 	}
-	return dir
+	return tmpDir
 }
 
 func TestCmd_WithSessionIDFlag(t *testing.T) {

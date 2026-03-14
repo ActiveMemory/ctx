@@ -45,13 +45,13 @@ Generate a ready-to-use autonomous loop shell script.
 
 ## Flags
 
-| Flag               | Short | Default            | Purpose                       |
-|--------------------|-------|--------------------|-------------------------------|
-| `--prompt`         | `-p`  | `PROMPT.md`        | Prompt file the loop reads    |
+| Flag               | Short | Default            | Purpose                         |
+|--------------------|-------|--------------------|---------------------------------|
+| `--prompt`         | `-p`  | `PROMPT.md`        | Prompt file the loop reads      |
 | `--tool`           | `-t`  | `claude`           | AI tool: claude, aider, generic |
-| `--max-iterations` | `-n`  | `0` (unlimited)    | Stop after N iterations       |
-| `--completion`     | `-c`  | `SYSTEM_CONVERGED` | Signal that ends the loop     |
-| `--output`         | `-o`  | `loop.sh`          | Output script filename        |
+| `--max-iterations` | `-n`  | `0` (unlimited)    | Stop after N iterations         |
+| `--completion`     | `-c`  | `SYSTEM_CONVERGED` | Signal that ends the loop       |
+| `--output`         | `-o`  | `loop.sh`          | Output script filename          |
 
 ## Supported Tools
 
@@ -94,7 +94,7 @@ chmod +x loop.sh   # already done by ctx loop
 - The script captures AI tool errors with `|| true` so one
   failed iteration does not kill the loop
 - Autonomous agents benefit from explicit reasoning prompts in
-  PROMPT.md — adding "think step-by-step before each change"
+  PROMPT.md: adding "think step-by-step before each change"
   to the iteration prompt significantly improves accuracy and
   reduces cascading mistakes in unattended runs
 

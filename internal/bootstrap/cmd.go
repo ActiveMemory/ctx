@@ -14,7 +14,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/cli"
 	"github.com/ActiveMemory/ctx/internal/config/flag"
 	ctxcontext "github.com/ActiveMemory/ctx/internal/context"
@@ -41,8 +40,6 @@ var version = "dev"
 //   - *cobra.Command: The configured root command with usage and version info
 func RootCmd() *cobra.Command {
 	const completionCmd = "completion"
-
-	config.BinaryVersion = version
 
 	var contextDir string
 	var allowOutsideCwd bool

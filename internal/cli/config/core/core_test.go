@@ -10,12 +10,25 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 const (
-	devContent  = "notify:\n  events:\n    - loop\n"
-	baseContent = "# .ctxrc\n# context_dir: .context\n"
+	devContent  = "profile: dev\nnotify:\n  events:\n    - loop\n"
+	baseContent = "profile: base\n# context_dir: .context\n"
 )
+
+func chdirWithCleanup(t *testing.T, dir string) {
+	t.Helper()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(dir)
+	rc.Reset()
+	t.Cleanup(func() {
+		_ = os.Chdir(origDir)
+		rc.Reset()
+	})
+}
 
 // TestCopyProfile_MissingSource verifies error on nonexistent source file.
 func TestCopyProfile_MissingSource(t *testing.T) {
@@ -61,8 +74,9 @@ func TestDetectProfile_Dev(t *testing.T) {
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
+	chdirWithCleanup(t, root)
 
-	got := DetectProfile(root)
+	got := DetectProfile()
 	if got != ProfileDev {
 		t.Errorf("expected dev, got %q", got)
 	}
@@ -76,8 +90,9 @@ func TestDetectProfile_Base(t *testing.T) {
 	); writeErr != nil {
 		t.Fatal(writeErr)
 	}
+	chdirWithCleanup(t, root)
 
-	got := DetectProfile(root)
+	got := DetectProfile()
 	if got != ProfileBase {
 		t.Errorf("expected base, got %q", got)
 	}
@@ -86,7 +101,8 @@ func TestDetectProfile_Base(t *testing.T) {
 // TestDetectProfile_Missing verifies empty string for missing file.
 func TestDetectProfile_Missing(t *testing.T) {
 	root := t.TempDir()
-	got := DetectProfile(root)
+	chdirWithCleanup(t, root)
+	got := DetectProfile()
 	if got != "" {
 		t.Errorf("expected empty for missing file, got %q", got)
 	}

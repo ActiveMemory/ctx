@@ -12,16 +12,18 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
-	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	compactcore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
-	"github.com/ActiveMemory/ctx/internal/config"
+	compactCore "github.com/ActiveMemory/ctx/internal/cli/compact/core"
+	ctxCfg "github.com/ActiveMemory/ctx/internal/config/ctx"
+	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/ActiveMemory/ctx/internal/context"
 	"github.com/ActiveMemory/ctx/internal/drift"
-	ctxerr "github.com/ActiveMemory/ctx/internal/err"
+	ctxErr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 	"github.com/ActiveMemory/ctx/internal/task"
 )
@@ -107,13 +109,13 @@ func ApplyFixes(
 // Returns:
 //   - error: Non-nil if file operations fail
 func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
-	tasksFile := ctx.File(file.FileTask)
+	tasksFile := ctx.File(ctxCfg.Task)
 
 	if tasksFile == nil {
-		return ctxerr.TaskFileNotFound()
+		return ctxErr.TaskFileNotFound()
 	}
 
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	content := string(tasksFile.Content)
 	lines := strings.Split(content, nl)
 
@@ -124,19 +126,19 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 
 	for _, line := range lines {
 		// Track if we're in the Completed section
-		if strings.HasPrefix(line, config.HeadingCompleted) {
+		if strings.HasPrefix(line, assets.HeadingCompleted) {
 			inCompletedSection = true
 			newLines = append(newLines, line)
 			continue
 		}
 		if strings.HasPrefix(
-			line, config.HeadingLevelTwoStart,
+			line, token.HeadingLevelTwoStart,
 		) && inCompletedSection {
 			inCompletedSection = false
 		}
 
 		// Collect completed tasks from the Completed section for archiving
-		match := config.RegExTask.FindStringSubmatch(line)
+		match := regex.Task.FindStringSubmatch(line)
 		if inCompletedSection && match != nil && task.Completed(match) {
 			completedTasks = append(completedTasks, task.Content(match))
 			continue // Remove from the file
@@ -146,16 +148,16 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	}
 
 	if len(completedTasks) == 0 {
-		return ctxerr.NoCompletedTasks()
+		return ctxErr.NoCompletedTasks()
 	}
 
 	// Build archive content
 	var archiveContent string
 	for _, t := range completedTasks {
-		archiveContent += config.PrefixTaskDone + " " + t + nl
+		archiveContent += marker.PrefixTaskDone + " " + t + nl
 	}
 
-	archiveFile, writeErr := compactcore.WriteArchive("tasks", config.HeadingArchivedTasks, archiveContent)
+	archiveFile, writeErr := compactCore.WriteArchive("tasks", assets.HeadingArchivedTasks, archiveContent)
 	if writeErr != nil {
 		return writeErr
 	}
@@ -165,7 +167,7 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 	if writeErr := os.WriteFile(
 		tasksFile.Path, []byte(newContent), fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.TaskFileWrite(writeErr)
+		return ctxErr.TaskFileWrite(writeErr)
 	}
 
 	cmd.Println(fmt.Sprintf("  Archived %d completed tasks to %s",
@@ -184,20 +186,20 @@ func FixStaleness(cmd *cobra.Command, ctx *context.Context) error {
 func FixMissingFile(filename string) error {
 	content, err := assets.Template(filename)
 	if err != nil {
-		return ctxerr.NoTemplate(filename, err)
+		return ctxErr.NoTemplate(filename, err)
 	}
 
 	targetPath := filepath.Join(rc.ContextDir(), filename)
 
 	// Ensure .context/ directory exists
 	if mkErr := os.MkdirAll(rc.ContextDir(), fs.PermExec); mkErr != nil {
-		return ctxerr.Mkdir(rc.ContextDir(), mkErr)
+		return ctxErr.Mkdir(rc.ContextDir(), mkErr)
 	}
 
 	if writeErr := os.WriteFile(
 		targetPath, content, fs.PermFile,
 	); writeErr != nil {
-		return ctxerr.FileWrite(targetPath, writeErr)
+		return ctxErr.FileWrite(targetPath, writeErr)
 	}
 
 	return nil

@@ -705,7 +705,7 @@ func ReadProfile(name string, cause error) error {
 // Returns:
 //   - error: message from assets key parser.git-not-found
 func GitNotFound() error {
-	return fmt.Errorf(assets.TextDesc(assets.TextDescKeyParserGitNotFound))
+	return fmt.Errorf("%s", assets.TextDesc(assets.TextDescKeyParserGitNotFound))
 }
 
 // NotInGitRepo wraps a failure from git rev-parse.

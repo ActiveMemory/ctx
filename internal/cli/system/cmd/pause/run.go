@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/session"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -36,7 +36,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		sessionID = input.SessionID
 	}
 	if sessionID == "" {
-		sessionID = file.SessionUnknown
+		sessionID = session.IDUnknown
 	}
 
 	path := core.PauseMarkerPath(sessionID)

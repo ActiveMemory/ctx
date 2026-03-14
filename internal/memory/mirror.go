@@ -15,11 +15,12 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
 	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -27,7 +28,7 @@ import (
 // previous mirror if one exists. Creates directories as needed.
 func Sync(contextDir, sourcePath string) (SyncResult, error) {
 	mirrorDir := filepath.Join(contextDir, dir.Memory)
-	mirrorPath := filepath.Join(mirrorDir, file.FileMemoryMirror)
+	mirrorPath := filepath.Join(mirrorDir, memory.MemoryMirror)
 
 	sourceData, readErr := os.ReadFile(sourcePath) //nolint:gosec // caller-provided path
 	if readErr != nil {
@@ -64,7 +65,7 @@ func Sync(contextDir, sourcePath string) (SyncResult, error) {
 // Archive copies the current mirror.md to archive/mirror-<timestamp>.md.
 // Returns the archive path. Returns an error if no mirror exists.
 func Archive(contextDir string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, file.FileMemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 	archiveDir := filepath.Join(contextDir, dir.MemoryArchive)
 
 	data, readErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
@@ -77,7 +78,7 @@ func Archive(contextDir string) (string, error) {
 	}
 
 	ts := time.Now().Format(time2.TimestampCompact)
-	archivePath := filepath.Join(archiveDir, config.MemoryMirrorPrefix+ts+file.ExtMarkdown)
+	archivePath := filepath.Join(archiveDir, memory.PrefixMirror+ts+file.ExtMarkdown)
 
 	if writeErr := os.WriteFile(archivePath, data, fs.PermFile); writeErr != nil {
 		return "", ctxerr.MemoryWriteArchive(writeErr)
@@ -89,7 +90,7 @@ func Archive(contextDir string) (string, error) {
 // Diff returns a simple line-based diff between the mirror and the source.
 // Returns empty string when files are identical.
 func Diff(contextDir, sourcePath string) (string, error) {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, file.FileMemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 
 	mirrorData, mirrorErr := os.ReadFile(mirrorPath) //nolint:gosec // project-local path
 	if mirrorErr != nil {
@@ -105,8 +106,8 @@ func Diff(contextDir, sourcePath string) (string, error) {
 		return "", nil
 	}
 
-	mirrorLines := strings.Split(string(mirrorData), config.NewlineLF)
-	sourceLines := strings.Split(string(sourceData), config.NewlineLF)
+	mirrorLines := strings.Split(string(mirrorData), token.NewlineLF)
+	sourceLines := strings.Split(string(sourceData), token.NewlineLF)
 
 	return simpleDiff(mirrorPath, sourcePath, mirrorLines, sourceLines), nil
 }
@@ -114,7 +115,7 @@ func Diff(contextDir, sourcePath string) (string, error) {
 // HasDrift checks whether MEMORY.md has been modified since the last sync.
 // Returns false if either file is missing (no drift to report).
 func HasDrift(contextDir, sourcePath string) bool {
-	mirrorPath := filepath.Join(contextDir, dir.Memory, file.FileMemoryMirror)
+	mirrorPath := filepath.Join(contextDir, dir.Memory, memory.MemoryMirror)
 
 	sourceInfo, sourceErr := os.Stat(sourcePath)
 	if sourceErr != nil {
@@ -138,7 +139,7 @@ func ArchiveCount(contextDir string) int {
 	}
 	count := 0
 	for _, e := range entries {
-		if !e.IsDir() && strings.HasPrefix(e.Name(), config.MemoryMirrorPrefix) {
+		if !e.IsDir() && strings.HasPrefix(e.Name(), memory.PrefixMirror) {
 			count++
 		}
 	}
@@ -149,7 +150,7 @@ func countLines(data []byte) int {
 	if len(data) == 0 {
 		return 0
 	}
-	return bytes.Count(data, []byte(config.NewlineLF))
+	return bytes.Count(data, []byte(token.NewlineLF))
 }
 
 // simpleDiff produces a minimal unified-style diff header with added/removed lines.
@@ -169,12 +170,12 @@ func simpleDiff(oldPath, newPath string, oldLines, newLines []string) string {
 
 	for _, l := range oldLines {
 		if !newSet[l] {
-			buf.WriteString("-" + l + config.NewlineLF)
+			buf.WriteString("-" + l + token.NewlineLF)
 		}
 	}
 	for _, l := range newLines {
 		if !oldSet[l] {
-			buf.WriteString("+" + l + config.NewlineLF)
+			buf.WriteString("+" + l + token.NewlineLF)
 		}
 	}
 

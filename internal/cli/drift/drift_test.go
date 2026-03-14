@@ -15,8 +15,8 @@ import (
 	"testing"
 
 	"github.com/ActiveMemory/ctx/internal/cli/initialize"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
@@ -145,7 +145,7 @@ func TestRunDrift_WithFix(t *testing.T) {
 	defer cleanup()
 
 	// Write TASKS.md with completed tasks to trigger staleness fix
-	tasksPath := filepath.Join(tmpDir, dir.Context, file.FileTask)
+	tasksPath := filepath.Join(tmpDir, dir.Context, ctx.Task)
 	tasksContent := "# Tasks\n\n## In Progress\n\n- [ ] Do something\n\n## Completed\n\n- [x] Done thing 1\n- [x] Done thing 2\n- [x] Done thing 3\n- [x] Done thing 4\n- [x] Done thing 5\n- [x] Done thing 6\n"
 	if err := os.WriteFile(tasksPath, []byte(tasksContent), 0600); err != nil {
 		t.Fatalf("failed to write TASKS.md: %v", err)
@@ -186,7 +186,7 @@ func TestRunDrift_FixWithStaleness(t *testing.T) {
 	defer cleanup()
 
 	// Create TASKS.md with many completed tasks to trigger staleness
-	tasksPath := filepath.Join(tmpDir, dir.Context, file.FileTask)
+	tasksPath := filepath.Join(tmpDir, dir.Context, ctx.Task)
 	var sb strings.Builder
 	sb.WriteString("# Tasks\n\n## In Progress\n\n- [ ] Active task\n\n## Completed\n\n")
 	for i := 0; i < 10; i++ {

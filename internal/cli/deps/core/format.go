@@ -12,7 +12,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // MermaidID converts a package path to a valid Mermaid node ID.
@@ -83,7 +83,7 @@ func RenderTable(graph map[string][]string) string {
 //   - string: Pretty-printed JSON
 func RenderJSON(graph map[string][]string) string {
 	data, _ := json.MarshalIndent(graph, "", "  ")
-	return string(data) + config.NewlineLF
+	return string(data) + token.NewlineLF
 }
 
 // SortedKeys returns the keys of a map sorted alphabetically.

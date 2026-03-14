@@ -12,8 +12,8 @@ import (
 	"os"
 	"strings"
 
+	claude2 "github.com/ActiveMemory/ctx/internal/config/claude"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	"github.com/spf13/cobra"
 
@@ -32,11 +32,11 @@ import (
 //   - error: Non-nil if file operations fail
 func MergeSettingsPermissions(cmd *cobra.Command) error {
 	var settings claude.Settings
-	existingContent, err := os.ReadFile(file.FileSettings)
+	existingContent, err := os.ReadFile(claude2.Settings)
 	fileExists := err == nil
 	if fileExists {
 		if err := json.Unmarshal(existingContent, &settings); err != nil {
-			return ctxerr.ParseFile(file.FileSettings, err)
+			return ctxerr.ParseFile(claude2.Settings, err)
 		}
 	}
 	allowModified := MergePermissions(&settings.Permissions.Allow, assets.DefaultAllowPermissions())
@@ -44,7 +44,7 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	allowDeduped := DeduplicatePermissions(&settings.Permissions.Allow)
 	denyDeduped := DeduplicatePermissions(&settings.Permissions.Deny)
 	if !allowModified && !denyModified && !allowDeduped && !denyDeduped {
-		write.InitNoChanges(cmd, file.FileSettings)
+		write.InitNoChanges(cmd, claude2.Settings)
 		return nil
 	}
 	if err := os.MkdirAll(dir.Claude, fs.PermExec); err != nil {
@@ -57,26 +57,26 @@ func MergeSettingsPermissions(cmd *cobra.Command) error {
 	if err := encoder.Encode(settings); err != nil {
 		return ctxerr.MarshalSettings(err)
 	}
-	if err := os.WriteFile(file.FileSettings, buf.Bytes(), fs.PermFile); err != nil {
-		return ctxerr.FileWrite(file.FileSettings, err)
+	if err := os.WriteFile(claude2.Settings, buf.Bytes(), fs.PermFile); err != nil {
+		return ctxerr.FileWrite(claude2.Settings, err)
 	}
 	if fileExists {
 		deduped := allowDeduped || denyDeduped
 		merged := allowModified || denyModified
 		switch {
 		case merged && deduped:
-			write.InitPermsMergedDeduped(cmd, file.FileSettings)
+			write.InitPermsMergedDeduped(cmd, claude2.Settings)
 		case deduped:
-			write.InitPermsDeduped(cmd, file.FileSettings)
+			write.InitPermsDeduped(cmd, claude2.Settings)
 		case allowModified && denyModified:
-			write.InitPermsAllowDeny(cmd, file.FileSettings)
+			write.InitPermsAllowDeny(cmd, claude2.Settings)
 		case denyModified:
-			write.InitPermsDeny(cmd, file.FileSettings)
+			write.InitPermsDeny(cmd, claude2.Settings)
 		default:
-			write.InitPermsAllow(cmd, file.FileSettings)
+			write.InitPermsAllow(cmd, claude2.Settings)
 		}
 	} else {
-		write.InitCreated(cmd, file.FileSettings)
+		write.InitCreated(cmd, claude2.Settings)
 	}
 	return nil
 }

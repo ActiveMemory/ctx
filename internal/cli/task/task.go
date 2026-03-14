@@ -20,6 +20,7 @@ import (
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/archive"
+	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/complete"
 	"github.com/ActiveMemory/ctx/internal/cli/task/cmd/snapshot"
 )
 
@@ -41,6 +42,7 @@ func Cmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(archive.Cmd())
+	cmd.AddCommand(complete.Cmd())
 	cmd.AddCommand(snapshot.Cmd())
 
 	return cmd

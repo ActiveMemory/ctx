@@ -9,7 +9,7 @@ package core
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // Truncate returns the first line of s, capped at max characters.
@@ -21,9 +21,9 @@ import (
 // Returns:
 //   - string: truncated first line.
 func Truncate(s string, max int) string {
-	line, _, _ := strings.Cut(s, config.NewlineLF)
+	line, _, _ := strings.Cut(s, token.NewlineLF)
 	if len(line) <= max {
 		return line
 	}
-	return line[:max-len(config.Ellipsis)] + config.Ellipsis
+	return line[:max-len(token.Ellipsis)] + token.Ellipsis
 }

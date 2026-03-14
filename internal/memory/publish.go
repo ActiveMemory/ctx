@@ -13,10 +13,12 @@ import (
 	"time"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/ctx"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/marker"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/index"
 )
@@ -29,27 +31,27 @@ func SelectContent(contextDir string, budget int) (PublishResult, error) {
 	var result PublishResult
 
 	// Pending tasks
-	taskPath := filepath.Join(contextDir, file.FileTask)
+	taskPath := filepath.Join(contextDir, ctx.Task)
 	if data, readErr := os.ReadFile(taskPath); readErr == nil { //nolint:gosec // project-local path
-		result.Tasks = extractPendingTasks(string(data), config.PublishMaxTasks)
+		result.Tasks = extractPendingTasks(string(data), memory.PublishMaxTasks)
 	}
 
 	// Recent decisions
-	decPath := filepath.Join(contextDir, file.FileDecision)
+	decPath := filepath.Join(contextDir, ctx.Decision)
 	if data, readErr := os.ReadFile(decPath); readErr == nil { //nolint:gosec // project-local path
-		result.Decisions = extractRecentEntries(string(data), config.PublishMaxDecisions)
+		result.Decisions = extractRecentEntries(string(data), memory.PublishMaxDecisions)
 	}
 
 	// Key conventions (first N lines that are list items)
-	convPath := filepath.Join(contextDir, file.FileConvention)
+	convPath := filepath.Join(contextDir, ctx.Convention)
 	if data, readErr := os.ReadFile(convPath); readErr == nil { //nolint:gosec // project-local path
-		result.Conventions = extractConventionItems(string(data), config.PublishMaxConventions)
+		result.Conventions = extractConventionItems(string(data), memory.PublishMaxConventions)
 	}
 
 	// Recent learnings
-	lrnPath := filepath.Join(contextDir, file.FileLearning)
+	lrnPath := filepath.Join(contextDir, ctx.Learning)
 	if data, readErr := os.ReadFile(lrnPath); readErr == nil { //nolint:gosec // project-local path
-		result.Learnings = extractRecentEntries(string(data), config.PublishMaxLearnings)
+		result.Learnings = extractRecentEntries(string(data), memory.PublishMaxLearnings)
 	}
 
 	// Trim to budget (tasks always fit, trim from bottom)
@@ -65,38 +67,38 @@ func (r PublishResult) Format() string {
 	buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishTitle))
 
 	if len(r.Tasks) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishTasks) + config.NewlineLF)
+		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishTasks) + token.NewlineLF)
 		for _, t := range r.Tasks {
-			buf.WriteString(t + config.NewlineLF)
+			buf.WriteString(t + token.NewlineLF)
 		}
-		buf.WriteString(config.NewlineLF)
+		buf.WriteString(token.NewlineLF)
 	}
 
 	if len(r.Decisions) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishDec) + config.NewlineLF)
+		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishDec) + token.NewlineLF)
 		for _, d := range r.Decisions {
-			buf.WriteString(config.PrefixListDash + d + config.NewlineLF)
+			buf.WriteString(token.PrefixListDash + d + token.NewlineLF)
 		}
-		buf.WriteString(config.NewlineLF)
+		buf.WriteString(token.NewlineLF)
 	}
 
 	if len(r.Conventions) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishConv) + config.NewlineLF)
+		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishConv) + token.NewlineLF)
 		for _, c := range r.Conventions {
-			buf.WriteString(c + config.NewlineLF)
+			buf.WriteString(c + token.NewlineLF)
 		}
-		buf.WriteString(config.NewlineLF)
+		buf.WriteString(token.NewlineLF)
 	}
 
 	if len(r.Learnings) > 0 {
-		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishLrn) + config.NewlineLF)
+		buf.WriteString(assets.TextDesc(assets.TextDescKeyMemoryPublishLrn) + token.NewlineLF)
 		for _, l := range r.Learnings {
-			buf.WriteString(config.PrefixListDash + l + config.NewlineLF)
+			buf.WriteString(token.PrefixListDash + l + token.NewlineLF)
 		}
-		buf.WriteString(config.NewlineLF)
+		buf.WriteString(token.NewlineLF)
 	}
 
-	return strings.TrimRight(buf.String(), config.NewlineLF) + config.NewlineLF
+	return strings.TrimRight(buf.String(), token.NewlineLF) + token.NewlineLF
 }
 
 // MergePublished inserts or replaces the marker block in existing MEMORY.md content.
@@ -104,24 +106,24 @@ func (r PublishResult) Format() string {
 // If markers exist, replaces everything between them. If markers are missing,
 // appends the block at the end (recovery). Returns (merged content, markers were missing).
 func MergePublished(existing, published string) (string, bool) {
-	block := config.PublishMarkerStart + config.NewlineLF + published + config.PublishMarkerEnd + config.NewlineLF
+	block := marker.PublishMarkerStart + token.NewlineLF + published + marker.PublishMarkerEnd + token.NewlineLF
 
-	startIdx := strings.Index(existing, config.PublishMarkerStart)
-	endIdx := strings.Index(existing, config.PublishMarkerEnd)
+	startIdx := strings.Index(existing, marker.PublishMarkerStart)
+	endIdx := strings.Index(existing, marker.PublishMarkerEnd)
 
 	if startIdx >= 0 && endIdx > startIdx {
 		// Replace existing block
 		before := existing[:startIdx]
-		after := existing[endIdx+len(config.PublishMarkerEnd):]
+		after := existing[endIdx+len(marker.PublishMarkerEnd):]
 		// Trim trailing newline from after to avoid double blank lines
-		after = strings.TrimPrefix(after, config.NewlineLF)
+		after = strings.TrimPrefix(after, token.NewlineLF)
 		return before + block + after, false
 	}
 
 	// Markers missing — append
-	sep := config.NewlineLF
-	if !strings.HasSuffix(existing, config.NewlineLF) {
-		sep = config.NewlineLF + config.NewlineLF
+	sep := token.NewlineLF
+	if !strings.HasSuffix(existing, token.NewlineLF) {
+		sep = token.NewlineLF + token.NewlineLF
 	}
 	return existing + sep + block, startIdx < 0
 }
@@ -129,22 +131,22 @@ func MergePublished(existing, published string) (string, bool) {
 // RemovePublished strips the marker block from MEMORY.md content.
 // Returns (cleaned content, true if markers were found and removed).
 func RemovePublished(content string) (string, bool) {
-	startIdx := strings.Index(content, config.PublishMarkerStart)
-	endIdx := strings.Index(content, config.PublishMarkerEnd)
+	startIdx := strings.Index(content, marker.PublishMarkerStart)
+	endIdx := strings.Index(content, marker.PublishMarkerEnd)
 
 	if startIdx < 0 || endIdx <= startIdx {
 		return content, false
 	}
 
 	before := content[:startIdx]
-	after := content[endIdx+len(config.PublishMarkerEnd):]
-	after = strings.TrimPrefix(after, config.NewlineLF)
+	after := content[endIdx+len(marker.PublishMarkerEnd):]
+	after = strings.TrimPrefix(after, token.NewlineLF)
 
-	result := strings.TrimRight(before, config.NewlineLF)
+	result := strings.TrimRight(before, token.NewlineLF)
 	if after != "" {
-		result += config.NewlineLF + after
+		result += token.NewlineLF + after
 	} else {
-		result += config.NewlineLF
+		result += token.NewlineLF
 	}
 
 	return result, true
@@ -182,9 +184,9 @@ func (r *PublishResult) trimToBudget(budget int) {
 // extractPendingTasks finds unchecked task items from TASKS.md.
 func extractPendingTasks(content string, max int) []string {
 	var tasks []string
-	for _, line := range strings.Split(content, config.NewlineLF) {
+	for _, line := range strings.Split(content, token.NewlineLF) {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, config.PrefixTaskUndone+config.Space) {
+		if strings.HasPrefix(trimmed, marker.PrefixTaskUndone+token.Space) {
 			tasks = append(tasks, trimmed)
 			if len(tasks) >= max {
 				break
@@ -197,7 +199,7 @@ func extractPendingTasks(content string, max int) []string {
 // extractRecentEntries returns titles of entries from the last N days.
 func extractRecentEntries(content string, max int) []string {
 	blocks := index.ParseEntryBlocks(content)
-	cutoff := time.Now().AddDate(0, 0, -config.PublishRecentDays).Format(time2.DateFormat)
+	cutoff := time.Now().AddDate(0, 0, -memory.PublishRecentDays).Format(time2.DateFormat)
 
 	var titles []string
 	for _, b := range blocks {
@@ -214,9 +216,9 @@ func extractRecentEntries(content string, max int) []string {
 // extractConventionItems returns the first N list items from CONVENTIONS.md.
 func extractConventionItems(content string, max int) []string {
 	var items []string
-	for _, line := range strings.Split(content, config.NewlineLF) {
+	for _, line := range strings.Split(content, token.NewlineLF) {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, config.PrefixListDash) || strings.HasPrefix(trimmed, config.PrefixListStar) {
+		if strings.HasPrefix(trimmed, token.PrefixListDash) || strings.HasPrefix(trimmed, token.PrefixListStar) {
 			items = append(items, trimmed)
 			if len(items) >= max {
 				break

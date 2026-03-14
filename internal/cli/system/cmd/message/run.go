@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/msg"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
@@ -60,17 +61,17 @@ func RunMessageList(cmd *cobra.Command) error {
 
 	// Table output
 	headerFmt := fmt.Sprintf("%%-%ds %%-%ds %%-%ds %%s",
-		file.MessageColHook, file.MessageColVariant, file.MessageColCategory)
+		msg.MessageColHook, msg.MessageColVariant, msg.MessageColCategory)
 	cmd.Println(fmt.Sprintf(headerFmt,
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderHook),
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderVariant),
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderCategory),
 		assets.TextDesc(assets.TextDescKeyMessageListHeaderOverride)))
 	cmd.Println(fmt.Sprintf(headerFmt,
-		strings.Repeat("\u2500", file.MessageSepHook),
-		strings.Repeat("\u2500", file.MessageSepVariant),
-		strings.Repeat("\u2500", file.MessageSepCategory),
-		strings.Repeat("\u2500", file.MessageSepOverride)))
+		strings.Repeat("\u2500", msg.MessageSepHook),
+		strings.Repeat("\u2500", msg.MessageSepVariant),
+		strings.Repeat("\u2500", msg.MessageSepCategory),
+		strings.Repeat("\u2500", msg.MessageSepOverride)))
 
 	for _, e := range entries {
 		override := ""

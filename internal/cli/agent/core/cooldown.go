@@ -11,14 +11,14 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/agent"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
 
 // DefaultCooldown is the default cooldown duration between context packet
 // emissions within the same session.
-const DefaultCooldown = file.DefaultAgentCooldown
+const DefaultCooldown = agent.DefaultCooldown
 
 // CooldownActive checks whether the cooldown tombstone for the given
 // session is still fresh.
@@ -62,5 +62,5 @@ func TouchTombstone(session string) {
 func TombstonePath(session string) string {
 	stateDir := filepath.Join(rc.ContextDir(), dir.State)
 	_ = os.MkdirAll(stateDir, 0o750)
-	return filepath.Join(stateDir, file.PrefixAgentTombstone+session)
+	return filepath.Join(stateDir, agent.TombstonePrefix+session)
 }

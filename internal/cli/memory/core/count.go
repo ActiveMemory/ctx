@@ -6,7 +6,11 @@
 
 package core
 
-import "bytes"
+import (
+	"bytes"
+
+	"github.com/ActiveMemory/ctx/internal/config/token"
+)
 
 // CountFileLines counts the number of newline characters in data.
 //
@@ -16,5 +20,5 @@ import "bytes"
 // Returns:
 //   - int: number of newline characters
 func CountFileLines(data []byte) int {
-	return bytes.Count(data, []byte("\n"))
+	return bytes.Count(data, []byte(token.NewlineLF))
 }

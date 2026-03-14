@@ -10,12 +10,13 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/hook"
+	"github.com/ActiveMemory/ctx/internal/config/regex"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
 	"github.com/ActiveMemory/ctx/internal/cli/system/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/notify"
 )
 
@@ -42,40 +43,40 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 
 	var variant, fallback string
 
-	if config.RegExRelativeCtxStart.MatchString(command) ||
-		config.RegExRelativeCtxSep.MatchString(command) {
-		variant = file.VariantDotSlash
+	if regex.CtxRelativeStart.MatchString(command) ||
+		regex.CtxRelativeSep.MatchString(command) {
+		variant = hook.VariantDotSlash
 		fallback = assets.TextDesc(assets.TextDescKeyBlockDotSlash)
 	}
 
-	if config.RegExGoRunCtx.MatchString(command) {
-		variant = file.VariantGoRun
+	if regex.CtxGoRun.MatchString(command) {
+		variant = hook.VariantGoRun
 		fallback = assets.TextDesc(assets.TextDescKeyBlockGoRun)
 	}
 
-	if variant == "" && (config.RegExAbsoluteCtxStart.MatchString(command) ||
-		config.RegExAbsoluteCtxSep.MatchString(command)) {
-		if !config.RegExCtxTestException.MatchString(command) {
-			variant = file.VariantAbsolutePath
+	if variant == "" && (regex.CtxAbsoluteStart.MatchString(command) ||
+		regex.AbsoluteSep.MatchString(command)) {
+		if !regex.CtxTestException.MatchString(command) {
+			variant = hook.VariantAbsolutePath
 			fallback = assets.TextDesc(assets.TextDescKeyBlockAbsolutePath)
 		}
 	}
 
 	var reason string
 	if variant != "" {
-		reason = core.LoadMessage(file.HookBlockNonPathCtx, variant, nil, fallback)
+		reason = core.LoadMessage(hook.BlockNonPathCtx, variant, nil, fallback)
 	}
 
 	if reason != "" {
 		resp := core.BlockResponse{
-			Decision: file.HookDecisionBlock,
-			Reason: reason + config.NewlineLF + config.NewlineLF +
+			Decision: hook.HookDecisionBlock,
+			Reason: reason + token.NewlineLF + token.NewlineLF +
 				assets.TextDesc(assets.TextDescKeyBlockConstitutionSuffix),
 		}
 		data, _ := json.Marshal(resp)
 		cmd.Println(string(data))
-		blockRef := notify.NewTemplateRef(file.HookBlockNonPathCtx, variant, nil)
-		core.Relay(file.HookBlockNonPathCtx+": "+
+		blockRef := notify.NewTemplateRef(hook.BlockNonPathCtx, variant, nil)
+		core.Relay(hook.BlockNonPathCtx+": "+
 			assets.TextDesc(assets.TextDescKeyBlockNonPathRelayMessage),
 			input.SessionID, blockRef,
 		)

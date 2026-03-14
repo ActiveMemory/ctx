@@ -19,7 +19,7 @@ import (
 //
 // Parameters:
 //   - dir: absolute path to the directory to scan
-//   - ext: file extension to match (e.g. ".md")
+//   - ext: file extension to match (e.g. file.ExtMarkdown)
 //
 // Returns:
 //   - int64: Unix timestamp of the newest matching file, or 0

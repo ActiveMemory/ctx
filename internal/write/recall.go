@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	config2 "github.com/ActiveMemory/ctx/internal/write/config"
 	"github.com/spf13/cobra"
-
-	"github.com/ActiveMemory/ctx/internal/config"
 )
 
 // SkipFile prints that a file was skipped during export.
@@ -239,26 +239,26 @@ func SessionMetadata(cmd *cobra.Command, info SessionInfo) {
 	}
 	SectionHeader(cmd, 1, info.Slug)
 
-	SessionDetail(cmd, config.MetadataID, info.ID)
-	SessionDetail(cmd, config.MetadataTool, info.Tool)
-	SessionDetail(cmd, config.MetadataProject, info.Project)
+	SessionDetail(cmd, assets.MetadataID, info.ID)
+	SessionDetail(cmd, assets.MetadataTool, info.Tool)
+	SessionDetail(cmd, assets.MetadataProject, info.Project)
 	if info.Branch != "" {
-		SessionDetail(cmd, config.MetadataBranch, info.Branch)
+		SessionDetail(cmd, assets.MetadataBranch, info.Branch)
 	}
 	if info.Model != "" {
-		SessionDetail(cmd, config.MetadataModel, info.Model)
+		SessionDetail(cmd, assets.MetadataModel, info.Model)
 	}
 	BlankLine(cmd)
 
-	SessionDetail(cmd, config.MetadataStarted, info.Started)
-	SessionDetail(cmd, config.MetadataDuration, info.Duration)
-	SessionDetailInt(cmd, config.MetadataTurns, info.Turns)
-	SessionDetailInt(cmd, config.MetadataMessages, info.Messages)
+	SessionDetail(cmd, assets.MetadataStarted, info.Started)
+	SessionDetail(cmd, assets.MetadataDuration, info.Duration)
+	SessionDetailInt(cmd, assets.MetadataTurns, info.Turns)
+	SessionDetailInt(cmd, assets.MetadataMessages, info.Messages)
 	BlankLine(cmd)
 
-	SessionDetail(cmd, config.MetadataInputUsage, info.TokensIn)
-	SessionDetail(cmd, config.MetadataOutputUsage, info.TokensOut)
-	SessionDetail(cmd, config.MetadataTotal, info.TokensAll)
+	SessionDetail(cmd, assets.MetadataInputUsage, info.TokensIn)
+	SessionDetail(cmd, assets.MetadataOutputUsage, info.TokensOut)
+	SessionDetail(cmd, assets.MetadataTotal, info.TokensAll)
 	BlankLine(cmd)
 }
 
@@ -364,7 +364,7 @@ func ListItem(cmd *cobra.Command, format string, args ...any) {
 	if cmd == nil {
 		return
 	}
-	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "- "+format+config.NewlineLF, args...)
+	_, _ = fmt.Fprintf(cmd.OutOrStdout(), "- "+format+token.NewlineLF, args...)
 }
 
 // NumberedItem prints a numbered item to stdout.

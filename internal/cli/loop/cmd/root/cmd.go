@@ -7,7 +7,6 @@
 package root
 
 import (
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/loop"
 	"github.com/spf13/cobra"
 
@@ -53,7 +52,7 @@ func Cmd() *cobra.Command {
 
 	cmd.Flags().StringVarP(&promptFile,
 		"prompt", "p",
-		file.FilePromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
+		loop.PromptMd, assets.FlagDesc(assets.FlagDescKeyLoopPrompt),
 	)
 	cmd.Flags().StringVarP(
 		&tool, "tool", "t", "claude", assets.FlagDesc(assets.FlagDescKeyLoopTool),

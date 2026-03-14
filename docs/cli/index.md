@@ -51,11 +51,10 @@ own guards and no-op gracefully.
 | [`ctx agent`](init-status.md#ctx-agent)         | Print token-budgeted context packet for AI consumption |
 | [`ctx load`](init-status.md#ctx-load)           | Output assembled context in read order                 |
 | [`ctx add`](context.md#ctx-add)                 | Add a task, decision, learning, or convention          |
-| [`ctx complete`](context.md#ctx-complete)       | Mark a task as done                                    |
 | [`ctx drift`](context.md#ctx-drift)             | Detect stale paths, secrets, missing files             |
 | [`ctx sync`](context.md#ctx-sync)               | Reconcile context with codebase state                  |
 | [`ctx compact`](context.md#ctx-compact)         | Archive completed tasks, clean up files                |
-| [`ctx tasks`](context.md#ctx-tasks)             | Task archival and snapshots                            |
+| [`ctx tasks`](context.md#ctx-tasks)             | Task completion, archival, and snapshots               |
 | [`ctx permissions`](context.md#ctx-permissions) | Permission snapshots (golden image)                    |
 | [`ctx reindex`](context.md#ctx-reindex)         | Regenerate indices for `DECISIONS.md` and `LEARNINGS.md` |
 | [`ctx decisions`](context.md#ctx-decisions)     | Manage `DECISIONS.md` (reindex)                        |
@@ -74,6 +73,7 @@ own guards and no-op gracefully.
 | [`ctx prompt`](tools.md#ctx-prompt)             | Manage reusable prompt templates                       |
 | [`ctx remind`](tools.md#ctx-remind)             | Session-scoped reminders that surface at session start |
 | [`ctx completion`](tools.md#ctx-completion)     | Generate shell autocompletion scripts                  |
+| [`ctx guide`](tools.md#ctx-guide)               | Quick-reference cheat sheet                            |
 | [`ctx why`](tools.md#ctx-why)                   | Read the philosophy behind ctx                         |
 | [`ctx site`](tools.md#ctx-site)                 | Site management (feed generation)                      |
 | [`ctx doctor`](doctor.md#ctx-doctor)            | Structural health check (hooks, drift, config)         |

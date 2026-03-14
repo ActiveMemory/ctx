@@ -116,6 +116,11 @@
   description: Architecture map staleness nudge
   vars: [LastRefreshDate, ModuleCount]
 
+- hook: check-memory-drift
+  variant: nudge
+  category: customizable
+  description: Memory drift nudge when MEMORY.md has changed
+
 - hook: check-persistence
   variant: nudge
   category: customizable

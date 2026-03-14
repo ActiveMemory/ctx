@@ -9,12 +9,13 @@ package show
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/recall"
+	"github.com/ActiveMemory/ctx/internal/assets"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 	"github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/recall/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/recall/parser"
 	"github.com/ActiveMemory/ctx/internal/write"
@@ -46,7 +47,7 @@ func Run(
 		if allProjects {
 			return ctxerr.NoSessionsFound("")
 		}
-		return ctxerr.NoSessionsFound(config.HintUseAllProjects)
+		return ctxerr.NoSessionsFound(assets.HintUseAllProjects)
 	}
 
 	var session *parser.Session
@@ -71,7 +72,7 @@ func Run(
 		if len(matches) > 1 {
 			lines := core.FormatSessionMatchLines(matches)
 			write.AmbiguousSessionMatchWithHint(
-				cmd, args[0], lines, matches[0].ID[:recall.SessionIDHintLen],
+				cmd, args[0], lines, matches[0].ID[:journal.SessionIDHintLen],
 			)
 			return ctxerr.AmbiguousQuery()
 		}
@@ -103,7 +104,7 @@ func Run(
 			toolCounts[t.Name]++
 		}
 
-		write.SectionHeader(cmd, 2, config.SectionToolUsage)
+		write.SectionHeader(cmd, 2, assets.SectionToolUsage)
 		for name, count := range toolCounts {
 			write.ListItem(cmd, "%s: %d", name, count)
 		}
@@ -112,14 +113,14 @@ func Run(
 
 	// Messages
 	if full {
-		write.SectionHeader(cmd, 2, config.SectionConversation)
+		write.SectionHeader(cmd, 2, assets.SectionConversation)
 
 		for i, msg := range session.Messages {
-			role := config.LabelRoleUser
+			role := assets.RoleUser
 			if msg.BelongsToAssistant() {
-				role = config.LabelRoleAssistant
+				role = assets.LabelRoleAssistant
 			} else if len(msg.ToolResults) > 0 && msg.Text == "" {
-				role = config.LabelToolOutput
+				role = assets.ToolOutput
 			}
 
 			write.ConversationTurn(
@@ -132,12 +133,12 @@ func Run(
 
 			for _, t := range msg.ToolUses {
 				toolInfo := core.FormatToolUse(t)
-				write.SessionDetail(cmd, config.LabelTool, toolInfo)
+				write.SessionDetail(cmd, assets.LabelTool, toolInfo)
 			}
 
 			for _, tr := range msg.ToolResults {
 				if tr.IsError {
-					write.Hint(cmd, config.LabelError)
+					write.Hint(cmd, assets.LabelError)
 				}
 				if tr.Content != "" {
 					content := core.StripLineNumbers(tr.Content)
@@ -150,25 +151,25 @@ func Run(
 			}
 		}
 	} else {
-		write.SectionHeader(cmd, 2, config.SectionConversationPreview)
+		write.SectionHeader(cmd, 2, assets.SectionConversationPreview)
 
 		count := 0
 		for _, msg := range session.Messages {
 			if msg.BelongsToUser() && msg.Text != "" {
 				count++
-				if count > recall.PreviewMaxTurns {
-					write.MoreTurns(cmd, session.TurnCount-recall.PreviewMaxTurns)
+				if count > journal.PreviewMaxTurns {
+					write.MoreTurns(cmd, session.TurnCount-journal.PreviewMaxTurns)
 					break
 				}
 				text := msg.Text
-				if len(text) > recall.PreviewMaxTextLen {
-					text = text[:recall.PreviewMaxTextLen] + config.Ellipsis
+				if len(text) > journal.PreviewMaxTextLen {
+					text = text[:journal.PreviewMaxTextLen] + token.Ellipsis
 				}
 				write.NumberedItem(cmd, count, text)
 			}
 		}
 		write.BlankLine(cmd)
-		write.Hint(cmd, config.HintUseFullFlag)
+		write.Hint(cmd, assets.HintUseFullFlag)
 	}
 
 	return nil

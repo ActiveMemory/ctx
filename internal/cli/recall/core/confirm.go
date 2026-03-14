@@ -11,11 +11,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/cli"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -33,10 +33,10 @@ func ConfirmExport(cmd *cobra.Command, plan ExportPlan) (bool, error) {
 	write.ExportSummary(cmd, plan.NewCount, plan.RegenCount, plan.SkipCount, plan.LockedCount, false)
 	cmd.Print(assets.TextDesc(assets.TextDescKeyConfirmProceed))
 	reader := bufio.NewReader(os.Stdin)
-	response, readErr := reader.ReadString(config.NewlineLF[0])
+	response, readErr := reader.ReadString(token.NewlineLF[0])
 	if readErr != nil {
 		return false, ctxerr.ReadInput(readErr)
 	}
 	response = strings.TrimSpace(strings.ToLower(response))
-	return response == file.ConfirmShort || response == file.ConfirmLong, nil
+	return response == cli.ConfirmShort || response == cli.ConfirmLong, nil
 }

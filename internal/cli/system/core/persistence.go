@@ -14,9 +14,9 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/nudge"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/validation"
 )
 
@@ -37,23 +37,23 @@ func ReadPersistenceState(path string) (PersistenceState, bool) {
 	}
 
 	var ps PersistenceState
-	for _, line := range strings.Split(strings.TrimSpace(string(data)), config.NewlineLF) {
-		parts := strings.SplitN(line, config.KeyValueSep, 2)
+	for _, line := range strings.Split(strings.TrimSpace(string(data)), token.NewlineLF) {
+		parts := strings.SplitN(line, token.KeyValueSep, 2)
 		if len(parts) != 2 {
 			continue
 		}
 		switch parts[0] {
-		case file.PersistenceKeyCount:
+		case nudge.PersistenceKeyCount:
 			n, parseErr := strconv.Atoi(parts[1])
 			if parseErr == nil {
 				ps.Count = n
 			}
-		case file.PersistenceKeyLastNudge:
+		case nudge.PersistenceKeyLastNudge:
 			n, parseErr := strconv.Atoi(parts[1])
 			if parseErr == nil {
 				ps.LastNudge = n
 			}
-		case file.PersistenceKeyLastMtime:
+		case nudge.PersistenceKeyLastMtime:
 			n, parseErr := strconv.ParseInt(parts[1], 10, 64)
 			if parseErr == nil {
 				ps.LastMtime = n
@@ -84,10 +84,10 @@ func WritePersistenceState(path string, s PersistenceState) {
 // Returns:
 //   - bool: true if a nudge should be emitted
 func PersistenceNudgeNeeded(count, sinceNudge int) bool {
-	if count >= file.PersistenceEarlyMin && count <= file.PersistenceEarlyMax && sinceNudge >= file.PersistenceEarlyInterval {
+	if count >= nudge.PersistenceEarlyMin && count <= nudge.PersistenceEarlyMax && sinceNudge >= nudge.PersistenceEarlyInterval {
 		return true
 	}
-	if count > file.PersistenceEarlyMax && sinceNudge >= file.PersistenceLateInterval {
+	if count > nudge.PersistenceEarlyMax && sinceNudge >= nudge.PersistenceLateInterval {
 		return true
 	}
 	return false

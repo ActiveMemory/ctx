@@ -6,6 +6,8 @@
 
 package entry
 
+import "strings"
+
 // Entry type constants for context updates.
 //
 // These are the canonical internal representations used in switch statements
@@ -24,3 +26,27 @@ const (
 	// Unknown is returned when user input doesn't match any known type.
 	Unknown = "unknown"
 )
+
+// FromUserInput normalizes user input to a canonical entry type.
+//
+// Accepts singular and plural forms, case-insensitive.
+//
+// Parameters:
+//   - s: user-supplied type string (e.g. "tasks", "Decision")
+//
+// Returns:
+//   - string: canonical entry constant, or Unknown
+func FromUserInput(s string) string {
+	switch strings.ToLower(s) {
+	case "task", "tasks":
+		return Task
+	case "decision", "decisions":
+		return Decision
+	case "learning", "learnings":
+		return Learning
+	case "convention", "conventions":
+		return Convention
+	default:
+		return Unknown
+	}
+}

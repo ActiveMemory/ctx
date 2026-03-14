@@ -24,9 +24,9 @@ import (
 // setup creates a temp dir with a .context/ directory and sets the RC override.
 func setup(t *testing.T) string {
 	t.Helper()
-	dir := t.TempDir()
+	tmpDir := t.TempDir()
 	origDir, _ := os.Getwd()
-	if err := os.Chdir(dir); err != nil {
+	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
@@ -35,14 +35,14 @@ func setup(t *testing.T) string {
 	})
 
 	rc.Reset()
-	rc.OverrideContextDir(dir.DirContext)
+	rc.OverrideContextDir(dir.Context)
 
-	ctxDir := filepath.Join(dir, dir.DirContext)
+	ctxDir := filepath.Join(tmpDir, dir.Context)
 	if err := os.MkdirAll(ctxDir, 0750); err != nil {
 		t.Fatal(err)
 	}
 
-	return dir
+	return tmpDir
 }
 
 // runCmd executes a cobra command and captures its output.

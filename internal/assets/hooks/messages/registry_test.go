@@ -13,8 +13,8 @@ func TestRegistryCount(t *testing.T) {
 	if registryErr != nil {
 		t.Fatalf("Registry() parse error: %v", registryErr)
 	}
-	if len(entries) != 30 {
-		t.Errorf("Registry() returned %d entries, want 30", len(entries))
+	if len(entries) != 31 {
+		t.Errorf("Registry() returned %d entries, want 31", len(entries))
 	}
 }
 

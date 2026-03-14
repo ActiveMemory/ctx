@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, root string, args []string) error {
 		profile = core.ProfileBase
 	case "":
 		// Toggle.
-		current := core.DetectProfile(root)
+		current := core.DetectProfile()
 		if current == core.ProfileDev {
 			profile = core.ProfileBase
 		} else {

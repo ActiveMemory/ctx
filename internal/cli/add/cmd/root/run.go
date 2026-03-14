@@ -9,7 +9,7 @@ package root
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	entry2 "github.com/ActiveMemory/ctx/internal/config/entry"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 	"github.com/spf13/cobra"
 
@@ -58,7 +58,7 @@ func Run(cmd *cobra.Command, args []string, flags Config) error {
 		return validateErr
 	}
 
-	fName, ok := file.FileType[fType]
+	fName, ok := entry2.ToCtxFile[fType]
 	if !ok {
 		return add.ErrUnknownType(fType)
 	}

@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Cmd(_ *cobra.Command, _ []string) error {
-	srv := internalmcp.NewServer(rc.ContextDir())
+func Cmd(cmd *cobra.Command, _ []string) error {
+	srv := internalmcp.NewServer(rc.ContextDir(), cmd.Root().Version)
 	return srv.Serve()
 }

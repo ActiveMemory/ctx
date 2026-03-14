@@ -10,10 +10,10 @@ import (
 	"errors"
 	"time"
 
+	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/agent/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	"github.com/ActiveMemory/ctx/internal/context"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
@@ -57,7 +57,7 @@ func Run(
 	}
 
 	var outputErr error
-	if format == config.FormatJSON {
+	if format == fmt.FormatJSON {
 		outputErr = core.OutputAgentJSON(cmd, ctx, budget)
 	} else {
 		outputErr = core.OutputAgentMarkdown(cmd, ctx, budget)

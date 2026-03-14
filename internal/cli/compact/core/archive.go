@@ -12,11 +12,11 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 	time2 "github.com/ActiveMemory/ctx/internal/config/time"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/rc"
 )
@@ -42,15 +42,15 @@ func WriteArchive(prefix, heading, content string) (string, error) {
 	dateStr := now.Format(time2.DateFormat)
 	archiveFile := filepath.Join(
 		archiveDir,
-		fmt.Sprintf(file.TplArchiveFilename, prefix, dateStr),
+		fmt.Sprintf(archive.TplArchiveFilename, prefix, dateStr),
 	)
 
-	nl := config.NewlineLF
+	nl := token.NewlineLF
 	var finalContent string
 	if existing, readErr := os.ReadFile(filepath.Clean(archiveFile)); readErr == nil {
 		finalContent = string(existing) + nl + content
 	} else {
-		finalContent = heading + file.ArchiveDateSep +
+		finalContent = heading + archive.ArchiveDateSep +
 			dateStr + nl + nl + content
 	}
 

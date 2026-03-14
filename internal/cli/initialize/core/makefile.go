@@ -10,12 +10,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
+	"github.com/ActiveMemory/ctx/internal/config/project"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/assets"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -36,13 +36,13 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 	if err != nil {
 		return ctxerr.ReadInitTemplate("Makefile.ctx", err)
 	}
-	if err = os.WriteFile(file.FileMakefileCtx, content, fs.PermFile); err != nil {
-		return ctxerr.FileWrite(file.FileMakefileCtx, err)
+	if err = os.WriteFile(project.MakefileCtx, content, fs.PermFile); err != nil {
+		return ctxerr.FileWrite(project.MakefileCtx, err)
 	}
-	write.InitCreated(cmd, file.FileMakefileCtx)
+	write.InitCreated(cmd, project.MakefileCtx)
 	existing, err := os.ReadFile("Makefile")
 	if err != nil {
-		minimal := IncludeDirective + config.NewlineLF
+		minimal := IncludeDirective + token.NewlineLF
 		if err := os.WriteFile("Makefile", []byte(minimal), fs.PermFile); err != nil {
 			return ctxerr.CreateMakefile(err)
 		}
@@ -50,17 +50,17 @@ func HandleMakefileCtx(cmd *cobra.Command) error {
 		return nil
 	}
 	if strings.Contains(string(existing), IncludeDirective) {
-		write.InitMakefileIncludes(cmd, file.FileMakefileCtx)
+		write.InitMakefileIncludes(cmd, project.MakefileCtx)
 		return nil
 	}
 	amended := string(existing)
-	if !strings.HasSuffix(amended, config.NewlineLF) {
-		amended += config.NewlineLF
+	if !strings.HasSuffix(amended, token.NewlineLF) {
+		amended += token.NewlineLF
 	}
-	amended += config.NewlineLF + IncludeDirective + config.NewlineLF
+	amended += token.NewlineLF + IncludeDirective + token.NewlineLF
 	if err := os.WriteFile("Makefile", []byte(amended), fs.PermFile); err != nil {
 		return ctxerr.FileAmend("Makefile", err)
 	}
-	write.InitMakefileAppended(cmd, file.FileMakefileCtx)
+	write.InitMakefileAppended(cmd, project.MakefileCtx)
 	return nil
 }

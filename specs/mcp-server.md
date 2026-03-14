@@ -325,7 +325,7 @@ server resolves it via the fallback chain (roots > flag > CWD).
 | `ctx_complete` | `cli/complete` logic  | Yes      | Mark a task done by number or text   |
 
 **Critical**: `ctx_complete` **MUST** delegate to the same code path as
-`ctx complete`, not reimplement task parsing: 
+`ctx tasks complete`, not reimplement task parsing: 
 
 PR #27 reimplements this in `tools.go` (*~60 lines of task matching logic*): 
 This **must** use the existing `internal/task` package and the complete 

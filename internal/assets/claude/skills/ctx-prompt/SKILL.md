@@ -5,8 +5,8 @@ allowed-tools: Bash(ctx:*)
 ---
 
 Apply reusable prompt templates from `.context/prompts/` to the
-current task. Prompt templates are plain markdown files — no
-frontmatter, no trigger rules — for common patterns like code
+current task. Prompt templates are plain Markdown files: no
+frontmatter, no trigger rules: for common patterns like code
 review, refactoring, or explaining code.
 
 ## When to Use
@@ -24,13 +24,13 @@ review, refactoring, or explaining code.
 
 ## Command Mapping
 
-| User intent | Command |
-|---|---|
-| "list my prompts" / "what prompts do I have" | `ctx prompt list` |
-| "show the code-review prompt" | `ctx prompt show code-review` |
-| "create a new prompt called debug" | `ctx prompt add debug --stdin` (then ask for content) |
-| "add the refactor template" | `ctx prompt add refactor` |
-| "delete the debug prompt" | `ctx prompt rm debug` |
+| User intent                                  | Command                                               |
+|----------------------------------------------|-------------------------------------------------------|
+| "list my prompts" / "what prompts do I have" | `ctx prompt list`                                     |
+| "show the code-review prompt"                | `ctx prompt show code-review`                         |
+| "create a new prompt called debug"           | `ctx prompt add debug --stdin` (then ask for content) |
+| "add the refactor template"                  | `ctx prompt add refactor`                             |
+| "delete the debug prompt"                    | `ctx prompt rm debug`                                 |
 
 ## Execution
 
@@ -50,7 +50,7 @@ ctx prompt show <name>
 
 Read the prompt content, then **follow the instructions in the prompt**
 applied to the user's current context. The prompt template tells you
-what to do — treat it as your working instructions.
+what to do: treat it as your working instructions.
 
 ## Interpreting User Intent
 
@@ -68,7 +68,7 @@ When the user wants to create a prompt:
 
 ## Important Notes
 
-- Prompt templates are plain markdown — no frontmatter parsing needed
+- Prompt templates are plain markdown: no frontmatter parsing needed
 - Templates live in `.context/prompts/` and are committed to git by default
 - `ctx init` stamps starter templates (code-review, refactor, explain)
 - If a prompt is not found, suggest running `ctx prompt list` to see

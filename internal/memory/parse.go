@@ -9,7 +9,7 @@ package memory
 import (
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 )
 
 // ParseEntries splits MEMORY.md content into discrete entries.
@@ -25,7 +25,7 @@ func ParseEntries(content string) []Entry {
 		return nil
 	}
 
-	lines := strings.Split(content, config.NewlineLF)
+	lines := strings.Split(content, token.NewlineLF)
 	var entries []Entry
 	var current []string
 	var currentKind EntryKind
@@ -33,7 +33,7 @@ func ParseEntries(content string) []Entry {
 	inEntry := false
 
 	flush := func() {
-		text := strings.TrimSpace(strings.Join(current, config.NewlineLF))
+		text := strings.TrimSpace(strings.Join(current, token.NewlineLF))
 		if text != "" {
 			entries = append(entries, Entry{
 				Text:      text,
@@ -50,7 +50,7 @@ func ParseEntries(content string) []Entry {
 		trimmed := strings.TrimSpace(line)
 
 		// Skip top-level heading
-		if strings.HasPrefix(trimmed, config.HeadingLevelOneStart) && !strings.HasPrefix(trimmed, config.HeadingLevelTwoStart) {
+		if strings.HasPrefix(trimmed, token.HeadingLevelOneStart) && !strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) {
 			if inEntry {
 				flush()
 			}
@@ -58,7 +58,7 @@ func ParseEntries(content string) []Entry {
 		}
 
 		// Section header (## or ###) starts a new entry
-		if strings.HasPrefix(trimmed, config.HeadingLevelTwoStart) || strings.HasPrefix(trimmed, config.HeadingLevelThreeStart) {
+		if strings.HasPrefix(trimmed, token.HeadingLevelTwoStart) || strings.HasPrefix(trimmed, token.HeadingLevelThreeStart) {
 			if inEntry {
 				flush()
 			}
@@ -78,7 +78,7 @@ func ParseEntries(content string) []Entry {
 		}
 
 		// List item — each top-level item is a separate entry for classification
-		if strings.HasPrefix(trimmed, config.PrefixListDash) || strings.HasPrefix(trimmed, config.PrefixListStar) {
+		if strings.HasPrefix(trimmed, token.PrefixListDash) || strings.HasPrefix(trimmed, token.PrefixListStar) {
 			if inEntry {
 				flush()
 			}

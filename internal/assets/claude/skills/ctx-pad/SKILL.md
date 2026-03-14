@@ -23,23 +23,23 @@ command.
 
 ## Command Mapping
 
-| User intent | Command |
-|---|---|
-| "show my scratchpad" / "what's on my pad" | `ctx pad` |
-| "show me entry 3" / "what's in entry 3" | `ctx pad show 3` |
-| "add a note: check DNS" / "jot down: check DNS" | `ctx pad add "check DNS"` |
-| "delete the third one" / "remove entry 3" | `ctx pad rm 3` |
-| "change entry 2 to ..." / "replace entry 2 with ..." | `ctx pad edit 2 "new text"` |
-| "append '-- important' to entry 3" / "add to entry 3: ..." | `ctx pad edit 3 --append "-- important"` |
-| "prepend 'URGENT:' to entry 1" | `ctx pad edit 1 --prepend "URGENT:"` |
-| "move entry 4 to the top" / "prioritize entry 4" | `ctx pad mv 4 1` |
-| "move entry 1 to the bottom" | `ctx pad mv 1 N` (where N = last position) |
-| "import my notes from notes.txt" | `ctx pad import notes.txt` |
-| "import from stdin" / pipe into pad | `cmd \| ctx pad import -` |
-| "export all blobs" / "extract blobs to DIR" | `ctx pad export [DIR]` |
-| "export blobs, overwrite existing" | `ctx pad export --force [DIR]` |
-| "merge entries from another pad" | `ctx pad merge FILE...` |
-| "merge with a different key" | `ctx pad merge --key /path/to/key FILE` |
+| User intent                                                | Command                                    |
+|------------------------------------------------------------|--------------------------------------------|
+| "show my scratchpad" / "what's on my pad"                  | `ctx pad`                                  |
+| "show me entry 3" / "what's in entry 3"                    | `ctx pad show 3`                           |
+| "add a note: check DNS" / "jot down: check DNS"            | `ctx pad add "check DNS"`                  |
+| "delete the third one" / "remove entry 3"                  | `ctx pad rm 3`                             |
+| "change entry 2 to ..." / "replace entry 2 with ..."       | `ctx pad edit 2 "new text"`                |
+| "append '-- important' to entry 3" / "add to entry 3: ..." | `ctx pad edit 3 --append "-- important"`   |
+| "prepend 'URGENT:' to entry 1"                             | `ctx pad edit 1 --prepend "URGENT:"`       |
+| "move entry 4 to the top" / "prioritize entry 4"           | `ctx pad mv 4 1`                           |
+| "move entry 1 to the bottom"                               | `ctx pad mv 1 N` (where N = last position) |
+| "import my notes from notes.txt"                           | `ctx pad import notes.txt`                 |
+| "import from stdin" / pipe into pad                        | `cmd \| ctx pad import -`                  |
+| "export all blobs" / "extract blobs to DIR"                | `ctx pad export [DIR]`                     |
+| "export blobs, overwrite existing"                         | `ctx pad export --force [DIR]`             |
+| "merge entries from another pad"                           | `ctx pad merge FILE...`                    |
+| "merge with a different key"                               | `ctx pad merge --key /path/to/key FILE`    |
 
 ## Execution
 
@@ -70,7 +70,7 @@ ctx pad edit 1 "updated note text"
 
 **Append to an entry:**
 ```bash
-ctx pad edit 3 --append " -- this is important"
+ctx pad edit 3 --append " - this is important"
 ```
 
 **Prepend to an entry:**
@@ -122,16 +122,16 @@ When the user's intent is ambiguous:
 - "prioritize" / "bump up" / "move to top" → **mv N 1**
 - "deprioritize" / "move to bottom" → **mv N last**
 
-When the user says "add" — check context:
+When the user says "add": check context:
 - "add a note" / "add to my pad" → `ctx pad add` (new entry)
 - "add to entry 3" / "add this to the third one" → `ctx pad edit 3 --append` (modify existing)
 
 ## Important Notes
 
 - Keep the encryption key path (`~/.ctx/.ctx.key`) internal to
-  `ctx pad` commands — exposing it grants full decryption access
+  `ctx pad` commands: exposing it grants full decryption access
   to all pad entries
-- Always use `ctx pad` to access entries — reading `scratchpad.enc`
+- Always use `ctx pad` to access entries: reading `scratchpad.enc`
   directly yields unreadable ciphertext
 - If the user gets a "no key" error, tell them to obtain the
   key file from a teammate

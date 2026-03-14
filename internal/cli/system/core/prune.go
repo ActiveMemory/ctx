@@ -13,7 +13,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	time2 "github.com/ActiveMemory/ctx/internal/config/time"
 )
 
 // UUIDPattern matches a UUID (v4) anywhere in a filename.
@@ -39,7 +39,7 @@ func AutoPrune(days int) int {
 		return 0
 	}
 
-	cutoff := time.Now().Add(-time.Duration(days) * file.HoursPerDay * time.Hour)
+	cutoff := time.Now().Add(-time.Duration(days) * time2.HoursPerDay * time.Hour)
 	var pruned int
 
 	for _, entry := range entries {

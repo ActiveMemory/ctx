@@ -9,10 +9,10 @@ package root
 import (
 	"strings"
 
+	"github.com/ActiveMemory/ctx/internal/config/fmt"
 	"github.com/spf13/cobra"
 
 	"github.com/ActiveMemory/ctx/internal/cli/deps/core"
-	"github.com/ActiveMemory/ctx/internal/config"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 	"github.com/ActiveMemory/ctx/internal/write"
 )
@@ -30,11 +30,11 @@ import (
 //     or graph building fails
 func Run(cmd *cobra.Command, format string, external bool, projType string) error {
 	supportedFormats := strings.Join([]string{
-		config.FormatMermaid, config.FormatTable, config.FormatJSON,
+		fmt.FormatMermaid, fmt.FormatTable, fmt.FormatJSON,
 	}, ", ")
 
 	switch format {
-	case config.FormatMermaid, config.FormatTable, config.FormatJSON:
+	case fmt.FormatMermaid, fmt.FormatTable, fmt.FormatJSON:
 	default:
 		return ctxerr.UnknownFormat(format, supportedFormats)
 	}
@@ -64,11 +64,11 @@ func Run(cmd *cobra.Command, format string, external bool, projType string) erro
 	}
 
 	switch format {
-	case config.FormatMermaid:
+	case fmt.FormatMermaid:
 		cmd.Print(core.RenderMermaid(graph))
-	case config.FormatTable:
+	case fmt.FormatTable:
 		cmd.Print(core.RenderTable(graph))
-	case config.FormatJSON:
+	case fmt.FormatJSON:
 		cmd.Print(core.RenderJSON(graph))
 	}
 

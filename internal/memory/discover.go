@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/ActiveMemory/ctx/internal/config/dir"
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/memory"
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
 )
 
@@ -35,7 +35,7 @@ func DiscoverMemoryPath(projectRoot string) (string, error) {
 	}
 
 	slug := ProjectSlug(abs)
-	memPath := filepath.Join(home, dir.Claude, dir.Projects, slug, dir.Memory, file.FileMemorySource)
+	memPath := filepath.Join(home, dir.Claude, dir.Projects, slug, dir.Memory, memory.MemorySource)
 
 	if _, statErr := os.Stat(memPath); statErr != nil {
 		return "", ctxerr.DiscoverNoMemory(memPath)

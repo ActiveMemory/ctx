@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/crypto"
 	"github.com/spf13/cobra"
 
 	ctxerr "github.com/ActiveMemory/ctx/internal/err"
@@ -45,7 +45,7 @@ func Run(cmd *cobra.Command, stdin *os.File) error {
 		return ctxerr.SaveWebhook(saveErr)
 	}
 
-	write.SetupDone(cmd, notifylib.MaskURL(url), file.FileNotifyEnc)
+	write.SetupDone(cmd, notifylib.MaskURL(url), crypto.NotifyEnc)
 
 	return nil
 }

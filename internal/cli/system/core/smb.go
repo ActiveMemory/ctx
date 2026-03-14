@@ -13,7 +13,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/ActiveMemory/ctx/internal/config/file"
+	"github.com/ActiveMemory/ctx/internal/config/archive"
 	"github.com/ActiveMemory/ctx/internal/config/fs"
 )
 
@@ -52,7 +52,7 @@ func ParseSMBConfig(smbURL, subdir string) (*SMBConfig, error) {
 	}
 
 	if subdir == "" {
-		subdir = file.BackupDefaultSubdir
+		subdir = archive.BackupDefaultSubdir
 	}
 
 	gvfsPath := fmt.Sprintf("/run/user/%d/gvfs/smb-share:server=%s,share=%s",

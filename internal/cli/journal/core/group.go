@@ -9,7 +9,7 @@ package core
 import (
 	"sort"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/journal"
 )
 
 // GroupByMonth groups journal entries by their YYYY-MM date prefix,
@@ -28,8 +28,8 @@ func GroupByMonth(
 	var monthOrder []string
 
 	for _, e := range entries {
-		if len(e.Date) >= config.JournalMonthPrefixLen {
-			month := e.Date[:config.JournalMonthPrefixLen]
+		if len(e.Date) >= journal.MonthPrefixLen {
+			month := e.Date[:journal.MonthPrefixLen]
 			if _, exists := months[month]; !exists {
 				monthOrder = append(monthOrder, month)
 			}
@@ -65,7 +65,7 @@ func BuildGroupedIndex(
 		result = append(result, GroupedIndex{
 			Key:     key,
 			Entries: ents,
-			Popular: len(ents) >= config.JournalPopularityThreshold,
+			Popular: len(ents) >= journal.PopularityThreshold,
 		})
 	}
 

@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ActiveMemory/ctx/internal/config"
+	"github.com/ActiveMemory/ctx/internal/config/token"
 	"github.com/ActiveMemory/ctx/internal/write/add"
 )
 
@@ -56,7 +56,7 @@ func ExtractContent(args []string, flags Config) (string, error) {
 		if err := scanner.Err(); err != nil {
 			return "", add.ErrStdinRead(err)
 		}
-		return strings.TrimSpace(strings.Join(lines, config.NewlineLF)), nil
+		return strings.TrimSpace(strings.Join(lines, token.NewlineLF)), nil
 	}
 	return "", add.ErrNoContent()
 }
