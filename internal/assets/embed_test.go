@@ -581,6 +581,9 @@ func TestDefaultPermissions(t *testing.T) {
 		}
 
 		for _, skill := range skills {
+			if strings.HasPrefix(skill, "_") {
+				continue // internal skills don't need allow entries
+			}
 			entry := fmt.Sprintf("Skill(%s)", skill)
 			if !allowSet[entry] {
 				t.Errorf("allow list missing bundled skill: %s", entry)

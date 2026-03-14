@@ -19,6 +19,8 @@ const (
 	CheckCeremonies = "check-ceremonies"
 	// CheckContextSize is the hook name for context window size checks.
 	CheckContextSize = "check-context-size"
+	// CheckFreshness is the hook name for technology constant freshness checks.
+	CheckFreshness = "check-freshness"
 	// CheckJournal is the hook name for journal health checks.
 	CheckJournal = "check-journal"
 	// CheckKnowledge is the hook name for knowledge file health checks.

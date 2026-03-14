@@ -310,7 +310,6 @@ These have no CLI equivalent. They require the agent's reasoning.
 | `/ctx-commit`             | Commit with integrated context capture                                                  |
 | `/ctx-reflect`            | Pause and assess session progress                                                       |
 | `/ctx-consolidate`        | Merge overlapping learnings or decisions                                                |
-| `/ctx-alignment-audit`    | Verify docs claims match agent instructions                                             |
 | `/ctx-prompt-audit`       | Analyze prompting patterns for improvement                                              |
 | `/ctx-import-plans`       | Import Claude Code plan files into project specs                                        |
 | `/ctx-implement`          | Execute a plan step-by-step with verification                                           |

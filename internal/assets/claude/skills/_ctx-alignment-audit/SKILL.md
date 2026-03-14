@@ -1,5 +1,5 @@
 ---
-name: ctx-alignment-audit
+name: _ctx-alignment-audit
 description: "Audit alignment between docs and agent instructions. Use when recipes or docs make claims about agent behavior that may not be backed by the playbook or skills."
 allowed-tools: Bash(ctx:*), Read, Grep, Glob
 ---
@@ -39,7 +39,7 @@ agent **will do**, **may do**, or **offers to do**. They appear in:
 ### Step 1: Collect Claims
 
 Read the target documentation file(s). Extract every behavioral
-claim — each statement that describes agent behavior the user
+claim: each statement that describes agent behavior the user
 should expect. Record:
 
 - File and line number
@@ -50,11 +50,11 @@ should expect. Record:
 
 For each claim, search for matching instructions in:
 
-1. **AGENT_PLAYBOOK.md** (in the context directory) — the primary
+1. **`AGENT_PLAYBOOK.md`** (in the context directory): the primary
    behavioral source; the agent reads this at session start
-2. **`.claude/skills/*/SKILL.md`** — skill-specific instructions
+2. **`.claude/skills/*/SKILL.md`**: skill-specific instructions
    loaded when a skill is invoked
-3. **`CLAUDE.md`** — project-level instructions always in context
+3. **`CLAUDE.md`**: project-level instructions always in context
 
 For each claim, determine:
 
@@ -69,10 +69,10 @@ For each claim, determine:
 
 Present findings as a table:
 
-| Claim (file:line) | Status | Backing instruction | Gap description |
-|--------------------|--------|---------------------|-----------------|
-| "agent creates follow-up tasks" (task-mgmt:57) | Gap | None | Playbook doesn't teach follow-up task identification |
-| "agent offers to save learnings" (knowledge:237) | Covered | Playbook: Proactive Behavior During Work | — |
+| Claim (file:line)                                | Status  | Backing instruction                      | Gap description                                      |
+|--------------------------------------------------|---------|------------------------------------------|------------------------------------------------------|
+| "agent creates follow-up tasks" (task-mgmt:57)   | Gap     | None                                     | Playbook doesn't teach follow-up task identification |
+| "agent offers to save learnings" (knowledge:237) | Covered | Playbook: Proactive Behavior During Work | -                                                    |
 
 ### Step 4: Fix (if requested)
 
@@ -122,17 +122,17 @@ produce** the described behavior. Check:
 
 After auditing alignment, check that instruction files are still
 a healthy size for agent consumption. Bloated instruction files
-get ignored — agents stop following rules buried deep in long
+get ignored: agents stop following rules buried deep in long
 documents.
 
 ### Size Heuristics
 
-| File | Healthy | Warning | Danger |
-|------|---------|---------|--------|
-| AGENT_PLAYBOOK.md | < 5k tokens | 5-8k tokens | > 8k tokens |
-| Individual SKILL.md | < 2k tokens | 2-3k tokens | > 3k tokens |
-| CLAUDE.md | < 2k tokens | 2-3k tokens | > 3k tokens |
-| Total context dir  | < 25k tokens | 25-40k tokens | > 40k tokens |
+| File                | Healthy      | Warning       | Danger       |
+|---------------------|--------------|---------------|--------------|
+| AGENT_PLAYBOOK.md   | < 5k tokens  | 5-8k tokens   | > 8k tokens  |
+| Individual SKILL.md | < 2k tokens  | 2-3k tokens   | > 3k tokens  |
+| CLAUDE.md           | < 2k tokens  | 2-3k tokens   | > 3k tokens  |
+| Total context dir   | < 25k tokens | 25-40k tokens | > 40k tokens |
 
 ### How to Measure
 

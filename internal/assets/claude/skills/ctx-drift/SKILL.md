@@ -8,7 +8,7 @@ Detect context drift at two layers: **structural** (stale paths,
 missing files, constitution violations) via `ctx drift`, and
 **semantic** (outdated conventions, superseded decisions,
 irrelevant learnings) via agent analysis. The semantic layer is
-where the real value is — the CLI cannot do it.
+where the real value is: the CLI cannot do it.
 
 ## When to Use
 
@@ -49,14 +49,14 @@ ctx drift
 ```
 
 This catches dead paths, missing files, staleness indicators,
-and constitution violations. These are necessary but insufficient
-— they only detect structural problems.
+and constitution violations. These are necessary but insufficient:
+they only detect structural problems.
 
 ### Layer 2: Semantic Analysis
 
 After the structural check, read the context files yourself and
 compare them to what you know about the codebase. This is where
-you add real value — the CLI tool cannot do this.
+you add real value: the CLI tool cannot do this.
 
 Check for:
 
@@ -99,15 +99,15 @@ After both layers, do **not** dump raw output. Instead:
 
 ## Interpreting Results
 
-| Finding                        | What It Means                          | Suggested Action                       |
-|--------------------------------|----------------------------------------|----------------------------------------|
-| Path does not exist            | Context references a deleted file/dir  | Remove reference or update path        |
-| Directory is empty             | Referenced dir exists but has no files | Remove reference or populate directory |
-| Many completed tasks           | TASKS.md is cluttered                  | Run `ctx compact --archive`            |
-| File not modified in 30+ days  | Content may be outdated                | Review and update or confirm current   |
-| Constitution violation         | A hard rule may be broken              | Fix immediately                        |
-| Missing packages               | An `internal/` package is not in ARCHITECTURE.md | Add it with `/ctx-architecture` or document manually |
-| Required file missing          | A core context file does not exist     | Create it with `ctx init` or manually  |
+| Finding                       | What It Means                                    | Suggested Action                                     |
+|-------------------------------|--------------------------------------------------|------------------------------------------------------|
+| Path does not exist           | Context references a deleted file/dir            | Remove reference or update path                      |
+| Directory is empty            | Referenced dir exists but has no files           | Remove reference or populate directory               |
+| Many completed tasks          | TASKS.md is cluttered                            | Run `ctx compact --archive`                          |
+| File not modified in 30+ days | Content may be outdated                          | Review and update or confirm current                 |
+| Constitution violation        | A hard rule may be broken                        | Fix immediately                                      |
+| Missing packages              | An `internal/` package is not in ARCHITECTURE.md | Add it with `/ctx-architecture` or document manually |
+| Required file missing         | A core context file does not exist               | Create it with `ctx init` or manually                |
 
 ## Auto-Fix
 
@@ -151,12 +151,12 @@ templates shipped with `ctx`.
 
 ### Interpreting Skill Drift
 
-| Finding                              | Action                                              |
-|--------------------------------------|-----------------------------------------------------|
-| Skill missing from project           | Offer to install: copy from template                |
-| Skill differs from template          | Show the diff; offer to update to latest template   |
-| Project has extra skills (no match)  | These are custom — leave them alone                 |
-| No differences                       | Skills are up to date; report clean                 |
+| Finding                              | Action                                            |
+|--------------------------------------|---------------------------------------------------|
+| Skill missing from project           | Offer to install: copy from template              |
+| Skill differs from template          | Show the diff; offer to update to latest template |
+| Project has extra skills (no match)  | These are custom:  leave them alone               |
+| No differences                       | Skills are up to date; report clean               |
 
 When reporting skill drift, distinguish between:
 
@@ -185,8 +185,8 @@ drifts independently from the codebase.
    `internal/assets/permissions/allow.txt`) should be present. The current
    expected set is:
 
-   - `Bash(ctx:*)` — covers all ctx subcommands
-   - `Skill(ctx-*)` — one entry per ctx-shipped skill
+   - `Bash(ctx:*)`: covers all ctx subcommands
+   - `Skill(ctx-*)`: one entry per ctx-shipped skill
 
    To get the authoritative list:
 
@@ -207,19 +207,19 @@ drifts independently from the codebase.
 
 ### Interpreting Permission Drift
 
-| Finding                           | Action                                          |
-|-----------------------------------|-------------------------------------------------|
-| Missing `Bash(ctx:*)`            | Suggest adding — required for ctx to work       |
-| Missing `Skill(ctx-*)` entry     | Suggest adding — skill will prompt every time   |
-| Stale `Skill(ctx-*)` entry       | Suggest removing — dead reference               |
-| Granular `Bash(ctx <sub>:*)`     | Suggest consolidating to `Bash(ctx:*)`          |
-| One-off / session debris entries  | Note as hygiene issue (see `hack/runbooks/sanitize-permissions.md`) |
+| Finding                          | Action                                                              |
+|----------------------------------|---------------------------------------------------------------------|
+| Missing `Bash(ctx:*)`            | Suggest adding: required for ctx to work                            |
+| Missing `Skill(ctx-*)` entry     | Suggest adding: skill will prompt every time                        |
+| Stale `Skill(ctx-*)` entry       | Suggest removing: dead reference                                    |
+| Granular `Bash(ctx <sub>:*)`     | Suggest consolidating to `Bash(ctx:*)`                              |
+| One-off / session debris entries | Note as hygiene issue (see `hack/runbooks/sanitize-permissions.md`) |
 
 ### Important
 
 Do **not** edit `settings.local.json` directly. Report findings
 and let the user make changes. This file controls agent
-permissions — self-modification is a security concern. Refer
+permissions: self-modification is a security concern. Refer
 users to `hack/runbooks/sanitize-permissions.md` for the manual cleanup
 procedure.
 
@@ -237,7 +237,7 @@ Run drift detection without being asked when:
 When running proactively, keep the report brief:
 
 > I ran a quick drift check after the refactor. Two stale
-> path references in ARCHITECTURE.md — want me to clean
+> path references in ARCHITECTURE.md. Want me to clean
 > them up?
 
 ## Quality Checklist

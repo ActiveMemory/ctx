@@ -3,6 +3,7 @@
 <!-- INDEX:START -->
 | Date | Decision |
 |------|--------|
+| 2026-03-13 | Delete ctx-context-monitor skill — hook output is self-sufficient |
 | 2026-03-13 | build target depends on sync-why to prevent embedded doc drift |
 | 2026-03-13 | Templates and user-facing text live in assets, structural constants stay in config |
 | 2026-03-12 | Recommend companion RAGs as peer MCP servers not bridge through ctx |
@@ -40,6 +41,20 @@
 | 2026-02-26 | Security and permissions (consolidated) |
 | 2026-02-27 | Webhook and notification design (consolidated) |
 <!-- INDEX:END -->
+
+## [2026-03-13-223111] Delete ctx-context-monitor skill — hook output is self-sufficient
+
+**Status**: Accepted
+
+**Context**: The skill documented how to relay context window warnings, but the hook message already includes IMPORTANT: Relay this context window warning to the user VERBATIM which agents follow without the skill.
+
+**Decision**: Delete ctx-context-monitor skill — hook output is self-sufficient
+
+**Rationale**: No mechanism exists for hooks to trigger skills. The skill was never loaded during sessions. Adding enforcement elsewhere would either be too far back in context (playbook) or dilute the already-crisp hook message.
+
+**Consequences**: One fewer skill to maintain. No behavioral change — agents continue relaying warnings as before.
+
+---
 
 ## [2026-03-13-151955] build target depends on sync-why to prevent embedded doc drift
 

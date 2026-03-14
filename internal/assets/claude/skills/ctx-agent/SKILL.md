@@ -14,14 +14,14 @@ Load the full context packet for AI consumption.
 
 ## When NOT to Use
 
-- The PreToolUse hook already runs `ctx agent` automatically with a cooldown
-  — you rarely need to invoke this manually
+- The PreToolUse hook already runs `ctx agent` automatically with a cooldown:
+  you rarely need to invoke this manually
 - Don't run it just to "refresh" if you already have the context loaded in
   this session
 
 ## After Loading
 
-**Read the files listed in "Read These Files (in order)"** — the packet is a
+**Read the files listed in "Read These Files (in order)"**: the packet is a
 summary, not a substitute. In particular, read CONVENTIONS.md before writing
 any code.
 
@@ -44,22 +44,22 @@ implementation.
 ctx agent $ARGUMENTS
 ```
 
-**Example — default load:**
+**Example: default load:**
 ```bash
 ctx agent
 ```
 
-**Example — smaller packet for limited contexts:**
+**Example: smaller packet for limited contexts:**
 ```bash
 ctx agent --budget 4000
 ```
 
-**Example — with cooldown (how the PreToolUse hook invokes it):**
+**Example: with cooldown (how the PreToolUse hook invokes it):**
 ```bash
 ctx agent --budget 4000 --session $PPID
 ```
 
-**Example — JSON for programmatic use:**
+**Example: JSON for programmatic use:**
 ```bash
 ctx agent --format json --budget 8000
 ```

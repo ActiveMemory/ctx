@@ -136,9 +136,9 @@ Five core flows define how data moves through the system:
 
 <!-- drift-check: grep -c 'ctx system check-' internal/assets/claude/hooks/hooks.json -->
 5. **Hook lifecycle**: Claude Code plugin fires hooks at 3 lifecycle
-   points — `UserPromptSubmit` (11 checks: context size, ceremonies,
+   points — `UserPromptSubmit` (12 checks: context size, ceremonies,
    persistence, journal, reminders, version, resources, knowledge,
-   map staleness, memory drift, heartbeat), `PreToolUse` (block-non-path-ctx for
+   map staleness, memory drift, freshness, heartbeat), `PreToolUse` (block-non-path-ctx for
    Bash, qa-reminder for Bash, context-load-gate for all tools,
    specs-nudge for EnterPlanMode, agent context for all tools),
    `PostToolUse` (post-commit for Bash). All hooks execute

@@ -143,6 +143,7 @@ never distributed to users.
 | `/_ctx-qa`                   | Run QA checks before committing                               |
 | `/_ctx-release`              | Run the full release process                                  |
 | `/_ctx-release-notes`        | Generate release notes for `dist/RELEASE_NOTES.md`            |
+| `/_ctx-alignment-audit`      | Audit doc claims against agent instructions                   |
 | `/_ctx-update-docs`          | Check docs/code consistency after changes                     |
 
 Six skills previously in this list have been promoted to bundled plugin skills

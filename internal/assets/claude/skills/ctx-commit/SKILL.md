@@ -13,12 +13,12 @@ recording the context behind it.
   refactor)
 - When the commit involves a design choice or trade-off that
   future sessions should know about
-- When the user says "commit" or "commit this" — prefer this
+- When the user says "commit" or "commit this": prefer this
   over raw git commit to capture context
 
 ## When NOT to Use
 
-- For trivial commits (typo, formatting) — just commit normally
+- For trivial commits (typo, formatting): just commit normally
 - When the user explicitly says "just commit, no context"
 - When nothing has changed (no staged or unstaged modifications)
 
@@ -39,7 +39,7 @@ Unless the user says `--skip-qa` or "skip checks":
 - Run `git diff --name-only` to see what changed
 - If Go files changed, run `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`
   to verify the build
-- If build fails, stop and report — do not commit broken code
+- If build fails, stop and report: do not commit broken code
 
 ### 2. Stage and commit
 
@@ -61,7 +61,7 @@ After a successful commit, ask the user:
 >   (I'll record it with `ctx add decision`)
 > - **Learning**: Did you hit a gotcha or discover something?
 >   (I'll record it with `ctx add learning`)
-> - **Neither**: No context to capture — we're done.
+> - **Neither**: No context to capture: we're done.
 
 Wait for the user's response. If they provide a decision or
 learning, record it using the appropriate command:
@@ -80,7 +80,7 @@ If the committed files include source code that could affect
 documentation (Go files in `internal/cli/`, `internal/config/`,
 `internal/assets/`, `cmd/`), remind the user:
 
-> Source files changed — want me to run `/_ctx-update-docs` to check
+> Source files changed - want me to run `/_ctx-update-docs` to check
 > for doc drift?
 
 Skip this prompt if:
@@ -97,7 +97,7 @@ bug), suggest a reflection:
 > This looks like a good checkpoint. Want me to run a quick
 > `/ctx-reflect` to capture the bigger picture?
 
-Only suggest this for substantial commits — not every commit
+Only suggest this for substantial commits: not every commit
 needs reflection. Signs a reflection is warranted:
 - Multiple files changed across different packages
 - The commit closes out a task from TASKS.md
@@ -127,9 +127,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 - **Confirm the message** with the user before committing (or use
   their provided message)
-- **Always present the context prompt** — this is the whole point
+- **Always present the context prompt**: this is the whole point
   of the skill; without it, use raw git commit
-- **Suggest reflection only when warranted** — and accept "no"
+- **Suggest reflection only when warranted**: and accept "no"
   gracefully
 - **Check for secrets** (`.env`, credentials, tokens) in the diff
   before staging

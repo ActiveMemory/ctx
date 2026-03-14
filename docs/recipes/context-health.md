@@ -48,7 +48,6 @@ Or just ask your agent: *"Is our context clean?"*
 | `ctx status`           | Command | Quick health overview                          |
 | `/ctx-drift`           | Skill   | Structural plus semantic drift detection       |
 | `/ctx-architecture`             | Skill   | Refresh `ARCHITECTURE.md` from actual codebase |
-| `/ctx-alignment-audit` | Skill   | Audit doc claims against agent instructions    |
 | `/ctx-status`          | Skill   | In-session context summary                     |
 | `/ctx-prompt-audit`    | Skill   | Audit prompt quality and token efficiency      |
 
@@ -205,25 +204,6 @@ originals.
 See also: [Knowledge Capture](knowledge-capture.md) for the recording
 workflow that feeds into this maintenance cycle.
 
-### Step 5: Alignment Audits
-
-A related problem is **alignment drift**: Documentation that makes claims about
-agent behavior not backed by actual playbook or skill instructions. 
-
-Over time, docs accumulate aspirational statements that no instruction teaches 
-the agent to do.
-
-Use `/ctx-alignment-audit` to trace behavioral claims in documentation against
-the playbook and skill files. The skill identifies gaps, proposes fixes, and
-checks instruction file health (*token budgets, bloat signals*).
-
-To avoid confusion with `/ctx-prompt-audit`:
-
-* `/ctx-alignment-audit` checks whether documentation claims are supported by
-  actual instructions (*playbook, skills, `CLAUDE.md`*).
-* `/ctx-prompt-audit` checks whether your context files are clear, compact, and
-  token-efficient for the model.
-
 ---
 
 ## `ctx doctor`: The Superset Check
@@ -348,18 +328,12 @@ ctx status --verbose
 Shows file counts, token estimates, modification times, and drift warnings in a
 single glance.
 
-### `/ctx-alignment-audit` and `/ctx-prompt-audit`
+### `/ctx-prompt-audit`
 
-These are both audits, but they answer different questions:
-
-* `/ctx-alignment-audit`: are our behavioral claims backed by actual
-  instructions?
-* `/ctx-prompt-audit`: are our context files readable, compact, and efficient?
-
-Run them inside your AI assistant:
+Checks whether your context files are readable, compact, and
+token-efficient for the model.
 
 ```text
-/ctx-alignment-audit
 /ctx-prompt-audit
 ```
 

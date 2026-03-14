@@ -128,6 +128,10 @@ injection_token_warn: 15000  # Oversize injection warning (0 = disable)
 context_window: 200000       # Auto-detected for Claude Code; override for other tools
 billing_token_warn: 0        # One-shot billing warning at this token count (0 = disabled)
 key_rotation_days: 90        # Days before key rotation nudge
+freshness_files:             # Files with technology-dependent constants (opt-in)
+  - path: config/thresholds.yaml
+    desc: Model token limits and batch sizes
+    review_url: https://docs.example.com/limits  # Optional
 notify:                      # Webhook notification settings
   events:                    # Required: only listed events fire
     - loop
@@ -153,6 +157,7 @@ notify:                      # Webhook notification settings
 | `context_window`        | `int`      | `200000`      | Context window size in tokens. Auto-detected for Claude Code (200k/1M); override for other AI tools |
 | `billing_token_warn`    | `int`      | `0` *(off)*   | One-shot warning when session tokens exceed this threshold (0 = disabled) |
 | `key_rotation_days`     | `int`      | `90`          | Days before encryption key rotation nudge                              |
+| `freshness_files`       | `[]object` | *(none)*      | Files to track for staleness (path, desc, optional review_url). Hook warns after 6 months without modification |
 | `notify.events`         | `[]string` | *(all)*       | Event filter for webhook notifications (empty = all)                   |
 
 **Priority order:** CLI flags > Environment variables > `.ctxrc` > Defaults

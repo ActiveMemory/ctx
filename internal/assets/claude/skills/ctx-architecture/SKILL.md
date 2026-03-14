@@ -49,20 +49,23 @@ Determine if this is a **first run** or **subsequent run**:
 - **First run**: no `.context/map-tracking.json` exists
 - **Subsequent run**: tracking file exists with coverage data
 
-For subsequent runs, identify the **frontier** — modules that need
+For subsequent runs, identify the **frontier**: modules that need
 analysis:
 
 1. Read `map-tracking.json` for coverage state
 2. For each covered module, check staleness:
-   ```bash
-   git log --oneline --since="<last_analyzed>" -- <module_path>/
-   ```
+
+```bash
+git log --oneline --since="<last_analyzed>" \
+-- <module_path>/
+```
+
 3. Frontier = uncovered modules + stale modules (commits after
    `last_analyzed`) + low-confidence modules (confidence < 0.7)
 
 ### Phase 2: Survey (First Run) or Analyze Frontier (Subsequent Run)
 
-**First run — full survey:**
+**First run: full survey:**
 
 0. Run `ctx deps` to bootstrap the dependency graph:
    ```bash
@@ -70,10 +73,10 @@ analysis:
    ```
    Auto-detects the ecosystem (Go, Node.js, Python, Rust) from
    manifest files. Use this as the starting point for "Package
-   Dependency Graph" — verify and enrich with semantic context.
+   Dependency Graph": verify and enrich with semantic context.
 
 1. Read the project manifest for project identity (name, version,
-   description) — `ctx deps` covers the dependency tree
+   description): `ctx deps` covers the dependency tree
 2. Explore directory structure:
    ```bash
    ctx status
@@ -84,7 +87,7 @@ analysis:
 5. Identify architectural patterns (dependency injection,
    interfaces, registries)
 
-**Subsequent run — targeted analysis:**
+**Subsequent run: targeted analysis:**
 
 1. For each frontier module, read its source files
 2. Trace data flow and dependencies
@@ -93,7 +96,7 @@ analysis:
 
 ### Phase 3: Update Documents
 
-**ARCHITECTURE.md** — update ONLY if module boundaries, dependency
+**ARCHITECTURE.md**: update ONLY if module boundaries, dependency
 graph, data flow, or key patterns changed. Internal implementation
 changes do NOT warrant updates. Target: under 4000 tokens (~16KB)
 so ARCHITECTURE.md loads within the session-start context budget.
@@ -106,7 +109,7 @@ Required sections:
 - Key Architectural Patterns
 - File Layout (ASCII tree)
 
-**DETAILED_DESIGN.md** — update per-module sections using this
+**DETAILED_DESIGN.md**: update per-module sections using this
 format:
 
 ```markdown
@@ -117,8 +120,8 @@ format:
 **Key types**: List main structs/interfaces.
 
 **Exported API**:
-- `FuncName()` — what it does
-- `Type.Method()` — what it does
+- `FuncName()`: what it does
+- `Type.Method()`: what it does
 
 **Data flow**: Entry → Processing → Output
 
@@ -165,12 +168,12 @@ Summarize what was done:
 
 Use these levels for honest self-assessment:
 
-| Level     | Meaning |
-|-----------|---------|
-| 0.0 – 0.3 | Stubbed — directory listed but contents not examined |
-| 0.4 – 0.6 | Shallow — purpose understood, key exports known, internal flow unclear |
-| 0.7 – 0.8 | Solid — can explain exports, data flow, and main code paths |
-| 0.9 – 1.0 | Deep — can explain edge cases, error handling, design rationale |
+| Level     | Meaning                                                               |
+|-----------|-----------------------------------------------------------------------|
+| 0.0 - 0.3 | Stubbed: directory listed but contents not examined                   |
+| 0.4 - 0.6 | Shallow: purpose understood, key exports known, internal flow unclear |
+| 0.7 - 0.8 | Solid: can explain exports, data flow, and main code paths            |
+| 0.9 - 1.0 | Deep: can explain edge cases, error handling, design rationale        |
 
 A confidence of 0.9 means "I could explain every exported function's
 purpose and the data flow through this module." Not "I read the file."
@@ -181,7 +184,7 @@ If the user says "never", "don't ask again", or similar:
 
 1. Set `opted_out: true` and `opted_out_at: "<timestamp>"` in
    map-tracking.json
-2. Confirm: "Noted — won't ask again. Delete
+2. Confirm: "Noted: won't ask again. Delete
    `.context/map-tracking.json` to re-enable."
 3. On future invocations, exit immediately with brief message
 

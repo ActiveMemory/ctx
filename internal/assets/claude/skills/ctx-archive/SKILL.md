@@ -8,7 +8,7 @@ Move completed tasks from TASKS.md to the archive.
 
 ## Before Archiving
 
-Two questions — if any answer is "no", don't archive:
+Two questions: if any answer is "no", don't archive:
 
 1. **"Are the completed tasks cluttering the view?"** → If TASKS.md is
    still easy to scan, there's no urgency
@@ -25,15 +25,15 @@ Two questions — if any answer is "no", don't archive:
 
 - When there are only a few completed tasks (not worth the noise)
 - When you're unsure if tasks are truly complete (verify first)
-- **Never delete tasks** — only archive (CONSTITUTION invariant)
+- **Never delete tasks**: only archive (CONSTITUTION invariant)
 
 ## Constitution Rules
 
 These are inviolable:
 
-- **Archival is allowed, deletion is not** — never delete context history
-- **Archive preserves structure** — Phase headers are kept for traceability
-- **Never move tasks** — tasks stay in their Phase section; archiving is
+- **Archival is allowed, deletion is not**: never delete context history
+- **Archive preserves structure**: Phase headers are kept for traceability
+- **Never move tasks**: tasks stay in their Phase section; archiving is
   the only sanctioned "move" and it's to the archive directory
 
 ## Execution
@@ -42,12 +42,12 @@ These are inviolable:
 ctx tasks archive $ARGUMENTS
 ```
 
-**Example — preview first (recommended):**
+**Example: preview first (recommended):**
 ```bash
 ctx tasks archive --dry-run
 ```
 
-**Example — archive after confirming the preview:**
+**Example: archive after confirming the preview:**
 ```bash
 ctx tasks archive
 ```

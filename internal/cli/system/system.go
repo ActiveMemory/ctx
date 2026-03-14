@@ -17,6 +17,7 @@ import (
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_backup_age"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_ceremonies"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_context_size"
+	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_freshness"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_journal"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_knowledge"
 	"github.com/ActiveMemory/ctx/internal/cli/system/cmd/check_map_staleness"
@@ -74,6 +75,7 @@ func Cmd() *cobra.Command {
 		check_backup_age.Cmd(),
 		check_ceremonies.Cmd(),
 		check_context_size.Cmd(),
+		check_freshness.Cmd(),
 		check_journal.Cmd(),
 		check_knowledge.Cmd(),
 		check_map_staleness.Cmd(),

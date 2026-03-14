@@ -176,7 +176,7 @@ manually.
 Not all messages are equal. The `list` command shows each message's
 category:
 
-### Customizable (16 messages)
+### Customizable (17 messages)
 
 Messages that are **opinions**: project-specific wording that benefits
 from customization. These are the primary targets for override.
@@ -184,6 +184,7 @@ from customization. These are the primary targets for override.
 | Hook                | Variant    | Description                              |
 |---------------------|------------|------------------------------------------|
 | check-backup-age    | warning    | Backup staleness warning                 |
+| check-freshness     | stale      | Technology constant freshness warning    |
 | check-ceremonies    | both       | Both ceremonies missing                  |
 | check-ceremonies    | remember   | Start-of-session ceremony                |
 | check-ceremonies    | wrapup     | End-of-session ceremony                  |
@@ -225,6 +226,7 @@ them, but `edit` will warn you first.
 | Hook                     | Variant                | Variables                                      |
 |--------------------------|------------------------|------------------------------------------------|
 | check-backup-age         | warning                | `{{.Warnings}}`                                |
+| check-freshness          | stale                  | `{{.StaleFiles}}`                              |
 | check-context-size       | checkpoint             | *(none)*                                       |
 | check-context-size       | oversize               | `{{.TokenCount}}`                              |
 | check-context-size       | window                 | `{{.TokenCount}}`, `{{.Percentage}}`           |

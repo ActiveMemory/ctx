@@ -230,12 +230,10 @@ Works with IFTTT, Slack, Discord, ntfy.sh, or any HTTP endpoint.
 
 Keep context files accurate by detecting **structural drift**
 (*stale paths, missing files, stale file ages*) and task
-staleness. Includes alignment audits to verify documentation
-claims match agent instructions.
+staleness.
 
 **Uses**: `ctx drift`, `ctx sync`, `ctx compact`, `ctx status`,
-`/ctx-drift`, `/ctx-alignment-audit`, `/ctx-status`,
-`/ctx-prompt-audit`
+`/ctx-drift`, `/ctx-status`, `/ctx-prompt-audit`
 
 ---
 
@@ -339,7 +337,7 @@ This recipe shows how `ctx` supports long-running agent loops
 without losing context or intent.
 
 **Uses**: `ctx init --ralph`, `ctx loop`, `ctx watch`, `ctx load`,
-`/ctx-loop`, `/ctx-implement`, `/ctx-context-monitor`
+`/ctx-loop`, `/ctx-implement`
 
 ---
 

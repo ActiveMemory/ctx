@@ -4,14 +4,26 @@ description: "Audit docs for dead links. Use before releases, after restructurin
 allowed-tools: Bash(curl:*), Read, Grep, Glob
 ---
 
-Scan all markdown files under `docs/` for broken links. Two passes:
+Scan markdown files for broken links. Two passes:
 internal (file targets) and external (HTTP URLs).
+
+## Scope Discovery
+
+Determine which directories to scan:
+
+1. If the user specifies a path, use that
+2. Otherwise, glob for common doc directories: `docs/`, `doc/`,
+   `documentation/`, `site/`
+3. If none exist, fall back to scanning all `.md` files in the
+   project root (excluding `node_modules/`, `.git/`, `vendor/`)
+
+Report which directories are being scanned at the start of output.
 
 ## When to Use
 
 - Before releases or doc deployments
 - After renaming, moving, or deleting doc pages
-- After restructuring the `docs/` directory or nav
+- After restructuring documentation directories or nav
 - When `/_ctx-audit` runs (audit check #12)
 - When a user reports a 404 on the site
 
@@ -24,16 +36,16 @@ internal (file targets) and external (HTTP URLs).
 
 ### Pass 1: Internal Links
 
-Scan every `.md` file in `docs/` for markdown links pointing to
-other files: `[text](target.md)`, `[text](../path/file.md)`,
-`[text](path/file.md#anchor)`.
+Scan every `.md` file in the discovered scope for markdown links
+pointing to other files: `[text](target.md)`,
+`[text](../path/file.md)`, `[text](path/file.md#anchor)`.
 
 For each link:
 
 1. Resolve the target **relative to the source file's directory**
 2. Strip any `#anchor` fragment before checking file existence
 3. Skip external URLs (`http://`, `https://`, `mailto:`)
-4. Skip bare anchors (`#section-name`) — these are intra-page
+4. Skip bare anchors (`#section-name`): these are intra-page
 5. Verify the target file exists on disk
 
 Collect all broken internal links as:
@@ -44,8 +56,8 @@ BROKEN: source-file.md:LINE → target.md (file not found)
 
 ### Pass 2: External Links
 
-Scan every `.md` file in `docs/` for `http://` and `https://` URLs
-in markdown link syntax.
+Scan every `.md` file in the discovered scope for `http://` and
+`https://` URLs in markdown link syntax.
 
 For each URL:
 
@@ -64,7 +76,7 @@ WARN: source-file.md:LINE → https://example.com (timeout)
 rate limiting, and transient outages are common. Report them but
 do not fail the check.
 
-Exceptions — skip these URLs:
+Exceptions: skip these URLs:
 - `localhost` / `127.0.0.1` URLs (local dev servers)
 - `example.com` / `example.org` (placeholder domains)
 
@@ -124,9 +136,8 @@ When invoked as check #12 from `/_ctx-audit`:
 ## Quality Checklist
 
 After running the check:
-- [ ] All `.md` files under `docs/` were scanned
+- [ ] All `.md` files in the discovered scope were scanned
 - [ ] Relative path resolution accounts for subdirectories
-  (`recipes/`, `blog/`)
 - [ ] Anchors stripped before file existence check
 - [ ] External check used timeouts (not hanging on slow hosts)
 - [ ] localhost/example URLs were skipped

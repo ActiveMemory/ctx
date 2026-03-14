@@ -43,6 +43,12 @@
   description: Backup staleness warning
   vars: [Warnings]
 
+- hook: check-freshness
+  variant: stale
+  category: customizable
+  description: Technology constant freshness warning
+  vars: [StaleFiles]
+
 - hook: check-ceremonies
   variant: both
   category: customizable

@@ -15,12 +15,12 @@ steps.
   execution
 - When the user wants checkpointed progress with verification
   at each step
-- After `/brainstorm` or plan mode produces an approved plan
+- After `/ctx-brainstorm` or plan mode produces an approved plan
 
 ## When NOT to Use
 
-- For single-step tasks — just do them directly
-- When the plan is vague or incomplete — use `/brainstorm`
+- For single-step tasks: just do them directly
+- When the plan is vague or incomplete: use `/ctx-brainstorm`
   first to refine it
 - When the user wants to explore or discuss, not execute
 - When changes are trivial (typo fix, config tweak)
@@ -56,8 +56,8 @@ Present the step list to the user for confirmation:
 
 > **Implementation plan** (N steps):
 >
-> 1. [Step description] — verify: [check]
-> 2. [Step description] — verify: [check]
+> 1. [Step description] - verify: [check]
+> 2. [Step description] - verify: [check]
 > 3. ...
 >
 > Ready to start?
@@ -67,7 +67,7 @@ Present the step list to the user for confirmation:
 For each step:
 
 1. **Announce** what you're doing (one line)
-2. **Think through** the change before writing code — what does
+2. **Think through** the change before writing code: what does
    it touch, what could break, what's the simplest correct path?
 3. **Implement** the change
 3. **Verify** with the appropriate check:
@@ -99,21 +99,21 @@ After all steps complete:
 
 ## Step Verification Map
 
-| Change type          | Verification command                          |
-|----------------------|-----------------------------------------------|
-| Go source code       | `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx` |
-| Test files           | `CGO_ENABLED=0 go test ./...`                 |
-| Templates/embeds     | `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx` |
-| Makefile             | Run the new/changed target                    |
-| Skill files          | Build (to verify embed) + check live copy matches |
-| Docs/markdown only   | None required                                 |
-| Shell scripts        | `bash -n script.sh` (syntax check)            |
+| Change type        | Verification command                              |
+|--------------------|---------------------------------------------------|
+| Go source code     | `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`   |
+| Test files         | `CGO_ENABLED=0 go test ./...`                     |
+| Templates/embeds   | `CGO_ENABLED=0 go build -o /dev/null ./cmd/ctx`   |
+| Makefile           | Run the new/changed target                        |
+| Skill files        | Build (to verify embed) + check live copy matches |
+| Docs/markdown only | None required                                     |
+| Shell scripts      | `bash -n script.sh` (syntax check)                |
 
 ## Handling Failures
 
 When a step fails verification:
 
-1. **Don't panic** — read the error output carefully
+1. **Don't panic**: read the error output carefully
 2. **Reason through** the failure step-by-step before attempting
    a fix; understand the cause, not just the symptom
 3. **Fix** the issue in the current step
@@ -154,7 +154,7 @@ All 6 steps complete. Build and tests pass.
 > *[makes all changes at once without verification]*
 > "Done! Everything should work."
 
-(No step-by-step, no verification, no checkpoints — this
+(No step-by-step, no verification, no checkpoints: this
 defeats the purpose of the skill.)
 
 ## Quality Checklist

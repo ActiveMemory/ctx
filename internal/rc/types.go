@@ -28,26 +28,41 @@ package rc
 //   - KeyRotationDays: Days before encryption key rotation nudge (default 90)
 //   - TaskNudgeInterval: Edit/Write calls between task completion nudges (default 5, 0 = disabled)
 //   - KeyPathOverride: Explicit encryption key file path (default: auto-resolved)
+//   - FreshnessFiles: Files to track for technology-dependent constant staleness (opt-in)
 type CtxRC struct {
-	Profile             string        `yaml:"profile"`
-	ContextDir          string        `yaml:"context_dir"`
-	TokenBudget         int           `yaml:"token_budget"`
-	PriorityOrder       []string      `yaml:"priority_order"`
-	AutoArchive         bool          `yaml:"auto_archive"`
-	ArchiveAfterDays    int           `yaml:"archive_after_days"`
-	ScratchpadEncrypt   *bool         `yaml:"scratchpad_encrypt"`
-	AllowOutsideCwd     bool          `yaml:"allow_outside_cwd"`
-	EntryCountLearnings int           `yaml:"entry_count_learnings"`
-	EntryCountDecisions int           `yaml:"entry_count_decisions"`
-	ConventionLineCount int           `yaml:"convention_line_count"`
-	InjectionTokenWarn  int           `yaml:"injection_token_warn"`
-	ContextWindow       int           `yaml:"context_window"`
-	BillingTokenWarn    int           `yaml:"billing_token_warn"`
-	EventLog            bool          `yaml:"event_log"`
-	KeyRotationDays     int           `yaml:"key_rotation_days"`
-	TaskNudgeInterval   int           `yaml:"task_nudge_interval"`
-	KeyPathOverride     string        `yaml:"key_path"`
-	Notify              *NotifyConfig `yaml:"notify"`
+	Profile             string          `yaml:"profile"`
+	ContextDir          string          `yaml:"context_dir"`
+	TokenBudget         int             `yaml:"token_budget"`
+	PriorityOrder       []string        `yaml:"priority_order"`
+	AutoArchive         bool            `yaml:"auto_archive"`
+	ArchiveAfterDays    int             `yaml:"archive_after_days"`
+	ScratchpadEncrypt   *bool           `yaml:"scratchpad_encrypt"`
+	AllowOutsideCwd     bool            `yaml:"allow_outside_cwd"`
+	EntryCountLearnings int             `yaml:"entry_count_learnings"`
+	EntryCountDecisions int             `yaml:"entry_count_decisions"`
+	ConventionLineCount int             `yaml:"convention_line_count"`
+	InjectionTokenWarn  int             `yaml:"injection_token_warn"`
+	ContextWindow       int             `yaml:"context_window"`
+	BillingTokenWarn    int             `yaml:"billing_token_warn"`
+	EventLog            bool            `yaml:"event_log"`
+	KeyRotationDays     int             `yaml:"key_rotation_days"`
+	TaskNudgeInterval   int             `yaml:"task_nudge_interval"`
+	KeyPathOverride     string          `yaml:"key_path"`
+	FreshnessFiles      []FreshnessFile `yaml:"freshness_files"`
+	Notify              *NotifyConfig   `yaml:"notify"`
+}
+
+// FreshnessFile describes a source file containing technology-dependent
+// constants that should be periodically reviewed.
+//
+// Fields:
+//   - Path: File path relative to the project root
+//   - Desc: Summary of what constants live in the file
+//   - ReviewURL: Optional URL to check against when reviewing (e.g., vendor docs)
+type FreshnessFile struct {
+	Path      string `yaml:"path"`
+	Desc      string `yaml:"desc"`
+	ReviewURL string `yaml:"review_url"`
 }
 
 // NotifyConfig holds webhook notification settings.

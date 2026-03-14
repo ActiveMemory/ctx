@@ -342,6 +342,18 @@ context-load-gate.oversize-timestamp:
     Timestamp: %s
 context-load-gate.webhook:
   short: 'context-load-gate: injected %d files (~%d tokens)'
+freshness.box-title:
+  short: Technology Constants Stale
+freshness.file-entry:
+  short: '  %s (%d days ago) — %s'
+freshness.relay-message:
+  short: Technology constant freshness check triggered
+freshness.relay-prefix:
+  short: 'IMPORTANT: Relay this freshness notice to the user VERBATIM before answering their question.'
+freshness.review-url:
+  short: '  Review against: %s'
+freshness.touch-hint:
+  short: Touch each file to mark it as reviewed.
 doctor.context-file.format:
   short: '%-22s ~%d tokens'
 doctor.context-initialized.error:

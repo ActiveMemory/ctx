@@ -60,12 +60,10 @@ opinionated behavior on top.
 | [`/ctx-blog-changelog`](#ctx-blog-changelog)         | Generate themed blog post from a commit range                   | user-invocable   |
 | [`/ctx-consolidate`](#ctx-consolidate)               | Consolidate redundant learnings or decisions                    | user-invocable   |
 | [`/ctx-drift`](#ctx-drift)                           | Detect and fix context drift                                    | user-invocable   |
-| [`/ctx-alignment-audit`](#ctx-alignment-audit)       | Audit docs claims against agent instructions                    | user-invocable   |
 | [`/ctx-prompt-audit`](#ctx-prompt-audit)             | Analyze prompting patterns for improvement                      | user-invocable   |
 | [`/ctx-check-links`](#ctx-check-links)               | Audit docs for dead internal and external links                 | user-invocable   |
 | [`/ctx-sanitize-permissions`](#ctx-sanitize-permissions) | Audit Claude Code permissions for security risks            | user-invocable   |
 | [`/ctx-verify`](#ctx-verify)                         | Verify claims before reporting completion                       | user-invocable   |
-| [`/ctx-context-monitor`](#ctx-context-monitor)       | Respond to context checkpoint signals                           | automatic        |
 | [`/ctx-brainstorm`](#ctx-brainstorm)                 | Structured design dialogue before implementation                | user-invocable   |
 | [`/ctx-spec`](#ctx-spec)                             | Scaffold a feature spec from a project template                 | user-invocable   |
 | [`/ctx-import-plans`](#ctx-import-plans)             | Import Claude Code plan files into project specs                | user-invocable   |
@@ -383,20 +381,6 @@ templates.
 
 ---
 
-### `/ctx-alignment-audit`
-
-Audit behavioral claims in docs and recipes against actual agent
-instructions. Traces each claim to its backing instruction and reports
-coverage as Covered, Partial, or Gap.
-
-**Wraps**: reads AGENT_PLAYBOOK.md, plugin skill definitions, CLAUDE.md,
-and docs/recipes
-
-**See also**:
-[Detecting and Fixing Drift](../recipes/context-health.md)
-
----
-
 ### `/ctx-prompt-audit`
 
 Analyze recent prompting patterns to identify vague or ineffective
@@ -484,22 +468,6 @@ gaps before reporting done.
 
 **See also**:
 [Detecting and Fixing Drift](../recipes/context-health.md)
-
----
-
-### `/ctx-context-monitor`
-
-Respond to context checkpoint signals when usage hits high thresholds.
-Fires at adaptive intervals and offers context persistence before
-the session ends.
-
-**Type**: Automatic: Triggered by the `check-context-size` hook,
-not user-invocable
-
-**Wraps**: hook-driven; suggests `/ctx-reflect`
-
-**See also**:
-[Running an Unattended AI Agent](../recipes/autonomous-loops.md)
 
 ---
 

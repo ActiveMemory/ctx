@@ -45,7 +45,6 @@ Read on for permissions, isolation, and completion signals.
 | `ctx load`              | Command | Display assembled context (for debugging)                          |
 | `/ctx-loop`             | Skill   | Generate loop script from inside Claude Code                       |
 | `/ctx-implement`        | Skill   | Execute a plan step-by-step with verification                      |
-| `/ctx-context-monitor`  | Skill   | Automated context capacity alerts during long sessions             |
 
 ## The Workflow
 
@@ -452,8 +451,6 @@ Break any part of this contract and the loop degrades.
   in `PROMPT.md`.
 * Commit after context updates. Finish code, update `.context/`, commit including
   `.context/`, then signal.
-* Use `/ctx-context-monitor` for long runs. It can warn when context capacity is
-  running low, so the agent saves before hitting limits.
 * Set up [webhook notifications](webhook-notifications.md) to get notified
   when the loop completes, hits max iterations, or when hooks fire nudges.
   The generated loop script includes `ctx notify` calls automatically.

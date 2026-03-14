@@ -47,7 +47,7 @@ automatically at specific events during your AI session:
 
 | Event              | When                              | Hooks                               |
 |--------------------|-----------------------------------|-------------------------------------|
-| `UserPromptSubmit` | Before the agent sees your prompt | 9 check hooks + heartbeat           |
+| `UserPromptSubmit` | Before the agent sees your prompt | 10 check hooks + heartbeat          |
 | `PreToolUse`       | Before the agent uses a tool      | `block-non-path-ctx`, `qa-reminder` |
 | `PostToolUse`      | After a tool call succeeds        | `post-commit`                       |
 
@@ -210,6 +210,45 @@ dismisses them.
 │ Dismiss: ctx remind dismiss <id>
 │ Dismiss all: ctx remind dismiss --all
 └──────────────────────────────────────────────────
+```
+
+---
+
+#### `check-freshness`: Technology Constant Staleness
+
+**What**: Stats files listed in `.ctxrc` `freshness_files` and warns if
+any haven't been modified in over 6 months. Daily throttle. Silent when
+no files are configured (opt-in via `.ctxrc`).
+
+**Why**: Model capabilities evolve — token budgets, attention limits,
+and context window sizes that were accurate 6 months ago may no longer
+reflect best practices. This hook reminds you to review and touch the
+file to confirm values are still current.
+
+**Config** (`.ctxrc`):
+
+```yaml
+freshness_files:
+  - path: config/thresholds.yaml
+    desc: Model token limits and batch sizes
+    review_url: https://docs.example.com/limits  # optional
+```
+
+Each entry has a `path` (relative to project root), `desc` (what
+constants live there), and optional `review_url` (where to check
+current values). When `review_url` is set, the nudge includes
+"Review against: {url}". When absent, just "Touch the file to mark
+it as reviewed."
+
+**Output**: VERBATIM relay listing stale files, silent otherwise.
+
+```
+┌─ Technology Constants Stale ──────────────────────
+│   config/thresholds.yaml (210 days ago)
+│     — Model token limits and batch sizes
+│   Review against: https://docs.example.com/limits
+│ Touch each file to mark it as reviewed.
+└───────────────────────────────────────────────────
 ```
 
 ---
@@ -385,6 +424,7 @@ includes:
 | `check-knowledge`     | `relay` + `nudge`           |
 | `check-version`       | `relay` + `nudge`           |
 | `check-reminders`     | `relay` + `nudge`           |
+| `check-freshness`    | `relay` + `nudge`           |
 | `check-map-staleness` | `relay` + `nudge`           |
 | `heartbeat`           | `heartbeat` only            |
 | `block-non-path-ctx`  | `relay` only                |
