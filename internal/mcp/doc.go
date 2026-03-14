@@ -74,14 +74,4 @@
 //   - Human authority: tools propose changes through file writes
 //   - Local-first: no network required for core operation
 //   - No telemetry: no data leaves the local machine
-//
-// # File Organization
-//
-//   - prompts.go: MCP prompt definitions and handlers
-//   - protocol.go: JSON-RPC 2.0 message types for MCP
-//   - resources.go: MCP resource definitions, handlers, and subscription poller
-//   - server.go: Server lifecycle, dispatch, and I/O handling
-//   - session.go: Per-session advisory state tracking
-//   - tools.go: MCP tool definitions and handlers
-//   - types.go: Server struct definition
 package mcp

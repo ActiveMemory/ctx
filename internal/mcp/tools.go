@@ -110,15 +110,15 @@ var toolDefs = []Tool{
 		Name:        mcp.MCPToolRecall,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolRecallDesc),
 		InputSchema: InputSchema{
-			Type: "object",
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
 				"limit": {
-					Type:        "number",
-					Description: "Max sessions to return (default: 5)",
+					Type:        mcp.MCPSchemaNumber,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropLimit),
 				},
 				"since": {
-					Type:        "string",
-					Description: "ISO date filter: sessions after this date (YYYY-MM-DD)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropSince),
 				},
 			},
 		},
@@ -128,35 +128,35 @@ var toolDefs = []Tool{
 		Name:        mcp.MCPToolWatchUpdate,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolWatchUpdateDesc),
 		InputSchema: InputSchema{
-			Type: "object",
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
 				"type": {
-					Type:        "string",
-					Description: "Entry type: task|decision|learning|convention|complete",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropEntryType),
 				},
 				"content": {
-					Type:        "string",
-					Description: "Main content",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropMainContent),
 				},
 				"context": {
-					Type:        "string",
-					Description: "Context background (required for decisions/learnings)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropCtxBg),
 				},
 				"rationale": {
-					Type:        "string",
-					Description: "Rationale (required for decisions)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropRationale),
 				},
 				"consequences": {
-					Type:        "string",
-					Description: "Consequences (required for decisions)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropConseq),
 				},
 				"lesson": {
-					Type:        "string",
-					Description: "Lesson learned (required for learnings)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropLesson),
 				},
 				"application": {
-					Type:        "string",
-					Description: "How to apply this lesson (required for learnings)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropApplication),
 				},
 			},
 			Required: []string{"type", "content"},
@@ -167,11 +167,11 @@ var toolDefs = []Tool{
 		Name:        mcp.MCPToolCompact,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolCompactDesc),
 		InputSchema: InputSchema{
-			Type: "object",
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
 				"archive": {
-					Type:        "boolean",
-					Description: "Also write tasks to .context/archive/ (default: false)",
+					Type:        mcp.MCPSchemaBoolean,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropArchive),
 				},
 			},
 		},
@@ -180,18 +180,18 @@ var toolDefs = []Tool{
 	{
 		Name:        mcp.MCPToolNext,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolNextDesc),
-		InputSchema: InputSchema{Type: "object"},
+		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 	{
 		Name:        mcp.MCPToolCheckTaskCompletion,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolCheckTaskDesc),
 		InputSchema: InputSchema{
-			Type: "object",
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
 				"recent_action": {
-					Type:        "string",
-					Description: "Brief description of what was just done",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropRecentAct),
 				},
 			},
 		},
@@ -201,15 +201,15 @@ var toolDefs = []Tool{
 		Name:        mcp.MCPToolSessionEvent,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolSessionDesc),
 		InputSchema: InputSchema{
-			Type: "object",
+			Type: mcp.MCPSchemaObject,
 			Properties: map[string]Property{
 				"type": {
-					Type:        "string",
-					Description: "Event type: start|end",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropEventType),
 				},
 				"caller": {
-					Type:        "string",
-					Description: "Caller identifier (cursor|windsurf|vscode|claude-desktop)",
+					Type:        mcp.MCPSchemaString,
+					Description: assets.TextDesc(assets.TextDescKeyMCPToolPropCaller),
 				},
 			},
 			Required: []string{"type"},
@@ -219,7 +219,7 @@ var toolDefs = []Tool{
 	{
 		Name:        mcp.MCPToolRemind,
 		Description: assets.TextDesc(assets.TextDescKeyMCPToolRemindDesc),
-		InputSchema: InputSchema{Type: "object"},
+		InputSchema: InputSchema{Type: mcp.MCPSchemaObject},
 		Annotations: &ToolAnnotations{ReadOnlyHint: true},
 	},
 }
@@ -296,7 +296,7 @@ func (s *Server) toolAdd(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf("boundary violation: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
 	}
 
 	entryType, _ := args[cli.AttrType].(string)
@@ -350,7 +350,7 @@ func (s *Server) toolComplete(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf("boundary violation: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
 	}
 
 	query, _ := args["query"].(string)
@@ -434,14 +434,14 @@ func (s *Server) toolRecall(
 	if v, ok := args["since"].(string); ok && v != "" {
 		parsed, parseErr := time.Parse("2006-01-02", v)
 		if parseErr != nil {
-			return s.toolError(id, fmt.Sprintf("invalid since date (use YYYY-MM-DD): %v", parseErr))
+			return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPInvalidSinceDate), parseErr))
 		}
 		sinceFilter = parsed
 	}
 
 	sessions, err := parser.FindSessions()
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf("failed to find sessions: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPFindSessionsFailed), err))
 	}
 
 	// Apply since filter.
@@ -461,11 +461,11 @@ func (s *Server) toolRecall(
 	}
 
 	if len(sessions) == 0 {
-		return s.toolOK(id, "No sessions found.")
+		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPNoSessions))
 	}
 
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "Found %d session(s):%s%s", len(sessions), token.NewlineLF, token.NewlineLF)
+	fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPSessionsFoundFormat)+"%s%s", len(sessions), token.NewlineLF, token.NewlineLF)
 
 	for i, sess := range sessions {
 		duration := sess.Duration.Round(time.Second)
@@ -490,14 +490,14 @@ func (s *Server) toolWatchUpdate(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf("boundary violation: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
 	}
 
 	entryType, _ := args["type"].(string)
 	content, _ := args["content"].(string)
 
 	if entryType == "" || content == "" {
-		return s.toolError(id, "type and content are required")
+		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPTypeContentRequired))
 	}
 
 	// Handle "complete" type as a special case — delegate to ctx_complete.
@@ -512,8 +512,8 @@ func (s *Server) toolWatchUpdate(
 			QueuedAt: time.Now(),
 		})
 		return s.toolOK(id,
-			fmt.Sprintf("Completed: %s", completedTask)+token.NewlineLF+
-				"Review with: ctx status")
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWatchCompletedFormat), completedTask)+token.NewlineLF+
+				assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
 	}
 
 	params := entry.Params{
@@ -543,7 +543,7 @@ func (s *Server) toolWatchUpdate(
 	}
 
 	if wErr := entry.Write(params); wErr != nil {
-		return s.toolError(id, fmt.Sprintf("write failed: %v", wErr))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), wErr))
 	}
 
 	fileName := entry2.ToCtxFile[strings.ToLower(entryType)]
@@ -558,8 +558,8 @@ func (s *Server) toolWatchUpdate(
 	})
 
 	return s.toolOK(id,
-		fmt.Sprintf("Wrote %s to .context/%s.", entryType, fileName)+token.NewlineLF+
-			"Review with: ctx status")
+		fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWroteFormat), entryType, fileName)+token.NewlineLF+
+			assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
 }
 
 // toolCompact moves completed tasks to the archive section.
@@ -567,7 +567,7 @@ func (s *Server) toolCompact(
 	id json.RawMessage, args map[string]interface{},
 ) *Response {
 	if err := validation.ValidateBoundary(s.contextDir); err != nil {
-		return s.toolError(id, fmt.Sprintf("boundary violation: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPBoundaryViolation), err))
 	}
 
 	archive := false
@@ -577,7 +577,7 @@ func (s *Server) toolCompact(
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf("failed to load context: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	var sb strings.Builder
@@ -626,7 +626,7 @@ func (s *Server) toolCompact(
 			newContent := strings.Join(newLines, token.NewlineLF)
 			if newContent != content {
 				if writeErr := writeContextFile(tasksFile.Path, []byte(newContent)); writeErr != nil {
-					return s.toolError(id, fmt.Sprintf("write failed: %v", writeErr))
+					return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPWriteFailed), writeErr))
 				}
 			}
 			changes += len(archivableBlocks)
@@ -660,12 +660,12 @@ func (s *Server) toolCompact(
 	}
 
 	if changes == 0 {
-		return s.toolOK(id, "Nothing to compact — context is already clean.")
+		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPCompactClean))
 	}
 
-	fmt.Fprintf(&sb, "%sCompacted %d items. This reorganized TASKS.md.%s",
+	fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPCompactedFormat)+"%s",
 		token.NewlineLF, changes, token.NewlineLF)
-	sb.WriteString("Review with: ctx status")
+	sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewStatus))
 
 	return s.toolOK(id, sb.String())
 }
@@ -674,12 +674,12 @@ func (s *Server) toolCompact(
 func (s *Server) toolNext(id json.RawMessage) *Response {
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf("failed to load context: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	tasksFile := ctx.File(ctxCfg.Task)
 	if tasksFile == nil {
-		return s.toolOK(id, "No TASKS.md found.")
+		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPNoTasks))
 	}
 
 	content := string(tasksFile.Content)
@@ -713,10 +713,10 @@ func (s *Server) toolNext(id json.RawMessage) *Response {
 
 		pendingIdx++
 		return s.toolOK(id, fmt.Sprintf(
-			"Next task (#%d): %s", pendingIdx, task.Content(match)))
+			assets.TextDesc(assets.TextDescKeyMCPNextTaskFormat), pendingIdx, task.Content(match)))
 	}
 
-	return s.toolOK(id, "All tasks completed. No pending work.")
+	return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPAllTasksComplete))
 }
 
 // toolCheckTaskCompletion checks if a recent action completed any pending tasks.
@@ -727,7 +727,7 @@ func (s *Server) toolCheckTaskCompletion(
 
 	ctx, err := context.Load(s.contextDir)
 	if err != nil {
-		return s.toolError(id, fmt.Sprintf("failed to load context: %v", err))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPLoadContext), err))
 	}
 
 	tasksFile := ctx.File(ctxCfg.Task)
@@ -767,8 +767,8 @@ func (s *Server) toolCheckTaskCompletion(
 		// Check for keyword overlap between the recent action and the task.
 		if recentAction != "" && containsOverlap(recentAction, taskText) {
 			return s.toolOK(id, fmt.Sprintf(
-				"Did this complete task #%d: \"%s\"?"+token.NewlineLF+
-					"If yes, run: ctx complete %d", taskNum, taskText, taskNum))
+				assets.TextDesc(assets.TextDescKeyMCPCheckTaskFormat)+token.NewlineLF+
+					assets.TextDesc(assets.TextDescKeyMCPCheckTaskHint), taskNum, taskText, taskNum))
 		}
 	}
 
@@ -781,7 +781,7 @@ func (s *Server) toolSessionEvent(
 ) *Response {
 	eventType, _ := args["type"].(string)
 	if eventType == "" {
-		return s.toolError(id, "type is required (start|end)")
+		return s.toolError(id, assets.TextDesc(assets.TextDescKeyMCPEventTypeRequired))
 	}
 
 	switch eventType {
@@ -789,37 +789,37 @@ func (s *Server) toolSessionEvent(
 		s.session = newSessionState(s.contextDir)
 		if caller, ok := args["caller"].(string); ok && caller != "" {
 			return s.toolOK(id, fmt.Sprintf(
-				"Session started for %s. Context: %s", caller, s.contextDir))
+				assets.TextDesc(assets.TextDescKeyMCPSessionStartedCallerFormat), caller, s.contextDir))
 		}
 		return s.toolOK(id, fmt.Sprintf(
-			"Session started. Context: %s", s.contextDir))
+			assets.TextDesc(assets.TextDescKeyMCPSessionStartedFormat), s.contextDir))
 
 	case "end":
 		pending := s.session.pendingCount()
 		var sb strings.Builder
-		sb.WriteString("Session ending.")
+		sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPSessionEnding))
 		sb.WriteString(token.NewlineLF)
 
 		if pending > 0 {
-			fmt.Fprintf(&sb, "%d pending updates queued.%s",
+			fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPPendingUpdatesFormat)+"%s",
 				pending, token.NewlineLF)
 			for i, pu := range s.session.pendingFlush {
 				fmt.Fprintf(&sb, "  %d. [%s] %s%s",
 					i+1, pu.Type, core.TruncateString(pu.Content, 60), token.NewlineLF)
 			}
-			sb.WriteString("Review pending context updates before persisting.")
+			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPReviewPending))
 		} else {
-			sb.WriteString("No pending updates.")
+			sb.WriteString(assets.TextDesc(assets.TextDescKeyMCPNoPending))
 		}
 
-		fmt.Fprintf(&sb, "%sSession stats: %d tool calls, %d entries added.",
+		fmt.Fprintf(&sb, "%s"+assets.TextDesc(assets.TextDescKeyMCPSessionStatsFormat),
 			token.NewlineLF, s.session.toolCalls, totalAdds(s.session.addsPerformed))
 
 		return s.toolOK(id, sb.String())
 
 	default:
 		return s.toolError(id,
-			fmt.Sprintf("unknown event type: %s (use start|end)", eventType))
+			fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPUnknownEventType), eventType))
 	}
 }
 
@@ -827,16 +827,16 @@ func (s *Server) toolSessionEvent(
 func (s *Server) toolRemind(id json.RawMessage) *Response {
 	reminders, readErr := remindcore.ReadReminders()
 	if readErr != nil {
-		return s.toolError(id, fmt.Sprintf("failed to read reminders: %v", readErr))
+		return s.toolError(id, fmt.Sprintf(assets.TextDesc(assets.TextDescKeyMCPReadRemindersFailed), readErr))
 	}
 
 	if len(reminders) == 0 {
-		return s.toolOK(id, "No reminders.")
+		return s.toolOK(id, assets.TextDesc(assets.TextDescKeyMCPNoReminders))
 	}
 
 	today := time.Now().Format("2006-01-02")
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "%d reminder(s):%s", len(reminders), token.NewlineLF)
+	fmt.Fprintf(&sb, assets.TextDesc(assets.TextDescKeyMCPRemindersFormat)+"%s", len(reminders), token.NewlineLF)
 
 	for _, r := range reminders {
 		annotation := ""

@@ -196,6 +196,10 @@ func newResourcePoller(contextDir string, notify func(Notification)) *resourcePo
 }
 
 // subscribe adds a URI to the watch set and starts polling if needed.
+//
+// Goroutine lifecycle: the poller goroutine is started on the first
+// subscription and stopped when the last subscription is removed or
+// when Server.Serve returns (via poller.stop in the deferred cleanup).
 func (p *resourcePoller) subscribe(uri string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -309,10 +313,10 @@ func (p *resourcePoller) checkChanges() {
 func (s *Server) handleResourcesSubscribe(req Request) *Response {
 	var params SubscribeParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, "invalid params")
+		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 	if params.URI == "" {
-		return s.error(req.ID, errCodeInvalidArg, "uri is required")
+		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
 	}
 	s.poller.subscribe(params.URI)
 	return s.ok(req.ID, struct{}{})
@@ -322,10 +326,10 @@ func (s *Server) handleResourcesSubscribe(req Request) *Response {
 func (s *Server) handleResourcesUnsubscribe(req Request) *Response {
 	var params UnsubscribeParams
 	if err := json.Unmarshal(req.Params, &params); err != nil {
-		return s.error(req.ID, errCodeInvalidArg, "invalid params")
+		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPInvalidParams))
 	}
 	if params.URI == "" {
-		return s.error(req.ID, errCodeInvalidArg, "uri is required")
+		return s.error(req.ID, errCodeInvalidArg, assets.TextDesc(assets.TextDescKeyMCPURIRequired))
 	}
 	s.poller.unsubscribe(params.URI)
 	return s.ok(req.ID, struct{}{})
